@@ -1,0 +1,1547 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "swagger",
+    "version": "v1.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/base",
+  "schemes": ["http"],
+  "paths": {
+    "/api/v{api-version}/no+tag": {
+      "tags": [],
+      "get": {
+        "operationId": "ServiceWithEmptyTag"
+      },
+      "patch": {
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "operationId": "foo+Wow",
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/simple": {
+      "get": {
+        "tags": ["Simple"],
+        "operationId": "GetCallWithoutParametersAndResponse"
+      },
+      "put": {
+        "tags": ["Simple"],
+        "operationId": "PutCallWithoutParametersAndResponse"
+      },
+      "post": {
+        "tags": ["Simple"],
+        "operationId": "PostCallWithoutParametersAndResponse"
+      },
+      "delete": {
+        "tags": ["Simple"],
+        "operationId": "DeleteCallWithoutParametersAndResponse"
+      },
+      "options": {
+        "tags": ["Simple"],
+        "operationId": "OptionsCallWithoutParametersAndResponse"
+      },
+      "head": {
+        "tags": ["Simple"],
+        "operationId": "HeadCallWithoutParametersAndResponse"
+      },
+      "patch": {
+        "tags": ["Simple"],
+        "operationId": "PatchCallWithoutParametersAndResponse"
+      }
+    },
+    "/api/v{api-version}/descriptions/": {
+      "post": {
+        "tags": ["Descriptions"],
+        "operationId": "CallWithDescriptions",
+        "parameters": [
+          {
+            "description": "Testing multiline comments in string: First line\nSecond line\n\nFourth line",
+            "name": "parameterWithBreaks",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "description": "Testing backticks in string: `backticks` and ```multiple backticks``` should work",
+            "name": "parameterWithBackticks",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "description": "Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work",
+            "name": "parameterWithSlashes",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "description": "Testing expression placeholders in string: ${expression} should work",
+            "name": "parameterWithExpressionPlaceholders",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "description": "Testing quotes in string: 'single quote''' and \"double quotes\"\"\" should work",
+            "name": "parameterWithQuotes",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "description": "Testing reserved characters in string: /* inline */ and /** inline **/ should work",
+            "name": "parameterWithReservedCharacters",
+            "in": "query",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/api/v{api-version}/parameters/{parameterPath}": {
+      "post": {
+        "tags": ["Parameters"],
+        "operationId": "CallWithParameters",
+        "parameters": [
+          {
+            "description": "This is the parameter that goes into the header",
+            "name": "parameterHeader",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "description": "This is the parameter that goes into the query params",
+            "name": "parameterQuery",
+            "in": "query",
+            "type": "string",
+            "required": true
+          },
+          {
+            "description": "This is the parameter that goes into the form data",
+            "name": "parameterForm",
+            "in": "formData",
+            "type": "string",
+            "required": true
+          },
+          {
+            "description": "This is the parameter that is sent as request body",
+            "name": "parameterBody",
+            "in": "body",
+            "type": "string",
+            "required": true
+          },
+          {
+            "description": "This is the parameter that goes into the path",
+            "name": "parameterPath",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "description": "api-version should be required in standalone clients",
+            "name": "api-version",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}": {
+      "post": {
+        "tags": ["Parameters"],
+        "operationId": "CallWithWeirdParameterNames",
+        "parameters": [
+          {
+            "description": "This is the parameter that goes into the path",
+            "name": "parameter.path.1",
+            "in": "path",
+            "type": "string",
+            "required": false
+          },
+          {
+            "description": "This is the parameter that goes into the path",
+            "name": "parameter-path-2",
+            "in": "path",
+            "type": "string",
+            "required": false
+          },
+          {
+            "description": "This is the parameter that goes into the path",
+            "name": "PARAMETER-PATH-3",
+            "in": "path",
+            "type": "string",
+            "required": false
+          },
+          {
+            "description": "This is the parameter with a reserved keyword",
+            "name": "default",
+            "in": "query",
+            "type": "string",
+            "required": false
+          },
+          {
+            "description": "This is the parameter that goes into the request header",
+            "name": "parameter.header",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "description": "This is the parameter that goes into the request query params",
+            "name": "parameter-query",
+            "in": "query",
+            "type": "string",
+            "required": true
+          },
+          {
+            "description": "This is the parameter that goes into the request form data",
+            "name": "parameter_form",
+            "in": "formData",
+            "type": "string",
+            "required": true
+          },
+          {
+            "description": "This is the parameter that is sent as request body",
+            "name": "PARAMETER-BODY",
+            "in": "body",
+            "type": "string",
+            "required": true
+          },
+          {
+            "description": "api-version should be required in standalone clients",
+            "name": "api-version",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/api/v{api-version}/defaults": {
+      "get": {
+        "tags": ["Defaults"],
+        "operationId": "CallWithDefaultParameters",
+        "parameters": [
+          {
+            "description": "This is a simple string with default value",
+            "name": "parameterString",
+            "in": "query",
+            "required": true,
+            "default": "Hello World!",
+            "type": "string"
+          },
+          {
+            "description": "This is a simple number with default value",
+            "name": "parameterNumber",
+            "in": "query",
+            "required": true,
+            "default": 123,
+            "type": "number"
+          },
+          {
+            "description": "This is a simple boolean with default value",
+            "name": "parameterBoolean",
+            "in": "query",
+            "required": true,
+            "default": true,
+            "type": "boolean"
+          },
+          {
+            "description": "This is a simple enum with default value",
+            "name": "parameterEnum",
+            "in": "query",
+            "required": true,
+            "default": 0,
+            "enum": ["Success", "Warning", "Error"]
+          },
+          {
+            "description": "This is a simple model with default value",
+            "name": "parameterModel",
+            "in": "query",
+            "required": true,
+            "default": {
+              "prop": "Hello World!"
+            },
+            "$ref": "#/definitions/ModelWithString"
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Defaults"],
+        "operationId": "CallWithDefaultOptionalParameters",
+        "parameters": [
+          {
+            "description": "This is a simple string that is optional with default value",
+            "name": "parameterString",
+            "in": "query",
+            "default": "Hello World!",
+            "type": "string"
+          },
+          {
+            "description": "This is a simple number that is optional with default value",
+            "name": "parameterNumber",
+            "in": "query",
+            "default": 123,
+            "type": "number"
+          },
+          {
+            "description": "This is a simple boolean that is optional with default value",
+            "name": "parameterBoolean",
+            "in": "query",
+            "default": true,
+            "type": "boolean"
+          },
+          {
+            "description": "This is a simple enum that is optional with default value",
+            "name": "parameterEnum",
+            "in": "query",
+            "default": 0,
+            "enum": ["Success", "Warning", "Error"]
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Defaults"],
+        "operationId": "CallToTestOrderOfParams",
+        "parameters": [
+          {
+            "description": "This is a optional string with default",
+            "name": "parameterOptionalStringWithDefault",
+            "in": "query",
+            "required": false,
+            "default": "Hello World!",
+            "type": "string"
+          },
+          {
+            "description": "This is a optional string with empty default",
+            "name": "parameterOptionalStringWithEmptyDefault",
+            "in": "query",
+            "required": false,
+            "default": "",
+            "type": "string"
+          },
+          {
+            "description": "This is a optional string with no default",
+            "name": "parameterOptionalStringWithNoDefault",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "This is a string with default",
+            "name": "parameterStringWithDefault",
+            "in": "query",
+            "required": true,
+            "default": "Hello World!",
+            "type": "string"
+          },
+          {
+            "description": "This is a string with empty default",
+            "name": "parameterStringWithEmptyDefault",
+            "in": "query",
+            "required": true,
+            "default": "",
+            "type": "string"
+          },
+          {
+            "description": "This is a string with no default",
+            "name": "parameterStringWithNoDefault",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "x-nullable": true,
+            "description": "This is a string that can be null with no default",
+            "name": "parameterStringNullableWithNoDefault",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "x-nullable": true,
+            "description": "This is a string that can be null with default",
+            "name": "parameterStringNullableWithDefault",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": null
+          }
+        ]
+      }
+    },
+    "/api/v{api-version}/duplicate": {
+      "delete": {
+        "tags": ["Duplicate"],
+        "operationId": "DuplicateName"
+      },
+      "get": {
+        "tags": ["Duplicate"],
+        "operationId": "DuplicateName2"
+      },
+      "post": {
+        "tags": ["Duplicate"],
+        "operationId": "DuplicateName3"
+      },
+      "put": {
+        "tags": ["Duplicate"],
+        "operationId": "DuplicateName4"
+      }
+    },
+    "/api/v{api-version}/no-content": {
+      "get": {
+        "tags": ["NoContent"],
+        "operationId": "CallWithNoContentResponse",
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/multiple-tags/response-and-no-content": {
+      "get": {
+        "tags": ["Response", "NoContent"],
+        "operationId": "CallWithResponseAndNoContentResponse",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Response is a simple number",
+            "schema": {
+              "type": "number"
+            }
+          },
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/multiple-tags/a": {
+      "get": {
+        "tags": ["MultipleTags1", "MultipleTags2"],
+        "operationId": "DummyA",
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/multiple-tags/b": {
+      "get": {
+        "tags": ["MultipleTags1", "MultipleTags2", "MultipleTags3"],
+        "operationId": "DummyB",
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/response": {
+      "get": {
+        "tags": ["Response"],
+        "operationId": "CallWithResponse",
+        "responses": {
+          "default": {
+            "description": "Message for default response",
+            "schema": {
+              "$ref": "#/definitions/ModelWithString"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Response"],
+        "operationId": "CallWithDuplicateResponses",
+        "responses": {
+          "default": {
+            "description": "Message for default response",
+            "schema": {
+              "$ref": "#/definitions/ModelWithString"
+            }
+          },
+          "201": {
+            "description": "Message for 201 response",
+            "schema": {
+              "$ref": "#/definitions/ModelWithString"
+            }
+          },
+          "202": {
+            "description": "Message for 202 response",
+            "schema": {
+              "$ref": "#/definitions/ModelWithString"
+            }
+          },
+          "500": {
+            "description": "Message for 500 error",
+            "schema": {
+              "$ref": "#/definitions/ModelWithStringError"
+            }
+          },
+          "501": {
+            "description": "Message for 501 error",
+            "schema": {
+              "$ref": "#/definitions/ModelWithStringError"
+            }
+          },
+          "502": {
+            "description": "Message for 502 error",
+            "schema": {
+              "$ref": "#/definitions/ModelWithStringError"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Response"],
+        "operationId": "CallWithResponses",
+        "responses": {
+          "default": {
+            "description": "Message for default response",
+            "schema": {
+              "$ref": "#/definitions/ModelWithString"
+            }
+          },
+          "200": {
+            "description": "Message for 200 response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@namespace.string": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "@namespace.integer": {
+                  "type": "integer",
+                  "readOnly": true
+                },
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/ModelWithString"
+                  },
+                  "readOnly": true
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Message for 201 response",
+            "schema": {
+              "$ref": "#/definitions/ModelThatExtends"
+            }
+          },
+          "202": {
+            "description": "Message for 202 response",
+            "schema": {
+              "$ref": "#/definitions/ModelThatExtendsExtends"
+            }
+          },
+          "500": {
+            "description": "Message for 500 error",
+            "schema": {
+              "$ref": "#/definitions/ModelWithStringError"
+            }
+          },
+          "501": {
+            "description": "Message for 501 error",
+            "schema": {
+              "$ref": "#/definitions/ModelWithStringError"
+            }
+          },
+          "502": {
+            "description": "Message for 502 error",
+            "schema": {
+              "$ref": "#/definitions/ModelWithStringError"
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/collectionFormat": {
+      "get": {
+        "tags": ["CollectionFormat"],
+        "operationId": "CollectionFormat",
+        "parameters": [
+          {
+            "description": "This is an array parameter that is sent as csv format (comma-separated values)",
+            "name": "parameterArrayCSV",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "csv"
+          },
+          {
+            "description": "This is an array parameter that is sent as ssv format (space-separated values)",
+            "name": "parameterArraySSV",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "ssv"
+          },
+          {
+            "description": "This is an array parameter that is sent as tsv format (tab-separated values)",
+            "name": "parameterArrayTSV",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "tsv"
+          },
+          {
+            "description": "This is an array parameter that is sent as pipes format (pipe-separated values)",
+            "name": "parameterArrayPipes",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "pipes"
+          },
+          {
+            "description": "This is an array parameter that is sent as multi format (multiple parameter instances)",
+            "name": "parameterArrayMulti",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ]
+      }
+    },
+    "/api/v{api-version}/types": {
+      "get": {
+        "tags": ["Types"],
+        "operationId": "Types",
+        "parameters": [
+          {
+            "description": "This is a number parameter",
+            "name": "parameterNumber",
+            "in": "query",
+            "required": true,
+            "default": 123,
+            "type": "number"
+          },
+          {
+            "description": "This is a string parameter",
+            "name": "parameterString",
+            "in": "query",
+            "required": true,
+            "default": "default",
+            "type": "string"
+          },
+          {
+            "description": "This is a boolean parameter",
+            "name": "parameterBoolean",
+            "in": "query",
+            "required": true,
+            "default": true,
+            "type": "boolean"
+          },
+          {
+            "description": "This is an object parameter",
+            "name": "parameterObject",
+            "in": "query",
+            "required": true,
+            "default": null,
+            "type": "object"
+          },
+          {
+            "description": "This is an array parameter",
+            "name": "parameterArray",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "This is a dictionary parameter",
+            "name": "parameterDictionary",
+            "in": "query",
+            "required": true,
+            "type": "object",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "This is an enum parameter",
+            "name": "parameterEnum",
+            "in": "query",
+            "required": true,
+            "enum": ["Success", "Warning", "Error"]
+          },
+          {
+            "description": "This is a number parameter",
+            "name": "id",
+            "in": "path",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response is a simple number",
+            "schema": {
+              "type": "number"
+            }
+          },
+          "201": {
+            "description": "Response is a simple string",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "202": {
+            "description": "Response is a simple boolean",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          "203": {
+            "description": "Response is a simple object",
+            "default": null,
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/complex": {
+      "get": {
+        "tags": ["Complex"],
+        "operationId": "ComplexTypes",
+        "parameters": [
+          {
+            "description": "Parameter containing object",
+            "name": "parameterObject",
+            "in": "query",
+            "required": true,
+            "type": "object",
+            "properties": {
+              "first": {
+                "type": "object",
+                "properties": {
+                  "second": {
+                    "type": "object",
+                    "properties": {
+                      "third": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "description": "Parameter containing reference",
+            "name": "parameterReference",
+            "in": "query",
+            "required": true,
+            "$ref": "#/definitions/ModelWithString"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ModelWithString"
+              }
+            }
+          },
+          "400": {
+            "description": "400 server error"
+          },
+          "500": {
+            "description": "500 server error"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/header": {
+      "post": {
+        "tags": ["Header"],
+        "operationId": "CallWithResultFromHeader",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "headers": {
+              "operation-location": {
+                "type": "string"
+              }
+            }
+          },
+          "400": {
+            "description": "400 server error"
+          },
+          "500": {
+            "description": "500 server error"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/error": {
+      "post": {
+        "tags": ["Error"],
+        "operationId": "testErrorCode",
+        "parameters": [
+          {
+            "description": "Status code to return",
+            "name": "status",
+            "in": "query",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Custom message: Successful response"
+          },
+          "500": {
+            "description": "Custom message: Internal Server Error"
+          },
+          "501": {
+            "description": "Custom message: Not Implemented"
+          },
+          "502": {
+            "description": "Custom message: Bad Gateway"
+          },
+          "503": {
+            "description": "Custom message: Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串": {
+      "post": {
+        "tags": ["Non-Ascii-æøåÆØÅöôêÊ"],
+        "operationId": "nonAsciiæøåÆØÅöôêÊ字符串",
+        "parameters": [
+          {
+            "description": "Dummy input param",
+            "name": "nonAsciiParamæøåÆØÅöôêÊ",
+            "in": "query",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/NonAsciiStringæøåÆØÅöôêÊ字符串"
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/body": {
+      "post": {
+        "description": "Body should not be unknown",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "summary": "Body should not be unknown",
+        "parameters": [
+          {
+            "description": "Body should not be unknown",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/parameter.ActivityParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/response.PostActivityResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/failure.Failure"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/failure.Failure"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CommentWithBreaks": {
+      "description": "Testing multiline comments in string: First line\nSecond line\n\nFourth line",
+      "type": "integer"
+    },
+    "CommentWithBackticks": {
+      "description": "Testing backticks in string: `backticks` and ```multiple backticks``` should work",
+      "type": "integer"
+    },
+    "CommentWithBackticksAndQuotes": {
+      "description": "Testing backticks and quotes in string: `backticks`, 'quotes', \"double quotes\" and ```multiple backticks``` should work",
+      "type": "integer"
+    },
+    "CommentWithSlashes": {
+      "description": "Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work",
+      "type": "integer"
+    },
+    "CommentWithExpressionPlaceholders": {
+      "description": "Testing expression placeholders in string: ${expression} should work",
+      "type": "integer"
+    },
+    "CommentWithQuotes": {
+      "description": "Testing quotes in string: 'single quote''' and \"double quotes\"\"\" should work",
+      "type": "integer"
+    },
+    "CommentWithReservedCharacters": {
+      "description": "Testing reserved characters in string: /* inline */ and /** inline **/ should work",
+      "type": "integer"
+    },
+    "SimpleInteger": {
+      "description": "This is a simple number",
+      "type": "integer"
+    },
+    "SimpleBoolean": {
+      "description": "This is a simple boolean",
+      "type": "boolean"
+    },
+    "SimpleString": {
+      "description": "This is a simple string",
+      "type": "string"
+    },
+    "NonAsciiStringæøåÆØÅöôêÊ字符串": {
+      "description": "A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)",
+      "type": "string"
+    },
+    "SimpleFile": {
+      "description": "This is a simple file",
+      "format": "binary",
+      "type": "string"
+    },
+    "SimpleReference": {
+      "description": "This is a simple reference",
+      "$ref": "#/definitions/ModelWithString"
+    },
+    "SimpleStringWithPattern": {
+      "description": "This is a simple string",
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^[a-zA-Z0-9_]*$"
+    },
+    "EnumWithStrings": {
+      "description": "This is a simple enum with strings",
+      "enum": [
+        "Success",
+        "Warning",
+        "Error",
+        "'Single Quote'",
+        "\"Double Quotes\"",
+        "Non-ascii: øæåôöØÆÅÔÖ字符串"
+      ]
+    },
+    "EnumWithNumbers": {
+      "description": "This is a simple enum with numbers",
+      "enum": [
+        1, 2, 3, 1.1, 1.2, 1.3, 100, 200, 300, -100, -200, -300, -1.1, -1.2,
+        -1.3
+      ]
+    },
+    "EnumFromDescription": {
+      "description": "Success=1,Warning=2,Error=3",
+      "type": "number"
+    },
+    "EnumWithExtensions": {
+      "description": "This is a simple enum with numbers",
+      "enum": [200, 400, 500],
+      "x-enum-varnames": ["CUSTOM_SUCCESS", "CUSTOM_WARNING", "CUSTOM_ERROR"],
+      "x-enum-descriptions": [
+        "Used when the status of something is successful",
+        "Used when the status of something has a warning",
+        "Used when the status of something has an error"
+      ]
+    },
+    "ArrayWithNumbers": {
+      "description": "This is a simple array with numbers",
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "ArrayWithBooleans": {
+      "description": "This is a simple array with booleans",
+      "type": "array",
+      "items": {
+        "type": "boolean"
+      }
+    },
+    "ArrayWithStrings": {
+      "description": "This is a simple array with strings",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ArrayWithReferences": {
+      "description": "This is a simple array with references",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ModelWithString"
+      }
+    },
+    "ArrayWithArray": {
+      "description": "This is a simple array containing an array",
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ModelWithString"
+        }
+      }
+    },
+    "ArrayWithProperties": {
+      "description": "This is a simple array with properties",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "string"
+          },
+          "bar": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "DictionaryWithString": {
+      "description": "This is a string dictionary",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "DictionaryWithReference": {
+      "description": "This is a string reference",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ModelWithString"
+      }
+    },
+    "DictionaryWithArray": {
+      "description": "This is a complex dictionary",
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ModelWithString"
+        }
+      }
+    },
+    "DictionaryWithDictionary": {
+      "description": "This is a string dictionary",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
+    },
+    "DictionaryWithProperties": {
+      "description": "This is a complex dictionary",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "string"
+          },
+          "bar": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Date": {
+      "description": "This is a type-only model that defines Date as a string",
+      "type": "string"
+    },
+    "ModelWithInteger": {
+      "description": "This is a model with one number property",
+      "type": "object",
+      "properties": {
+        "prop": {
+          "description": "This is a simple number property",
+          "type": "integer"
+        }
+      }
+    },
+    "ModelWithBoolean": {
+      "description": "This is a model with one boolean property",
+      "type": "object",
+      "properties": {
+        "prop": {
+          "description": "This is a simple boolean property",
+          "type": "boolean"
+        }
+      }
+    },
+    "ModelWithString": {
+      "description": "This is a model with one string property",
+      "type": "object",
+      "properties": {
+        "prop": {
+          "description": "This is a simple string property",
+          "type": "string"
+        }
+      }
+    },
+    "ModelWithStringError": {
+      "description": "This is a model with one string property",
+      "type": "object",
+      "properties": {
+        "prop": {
+          "description": "This is a simple string property",
+          "type": "string"
+        }
+      }
+    },
+    "ModelWithNullableString": {
+      "description": "This is a model with one string property",
+      "type": "object",
+      "required": ["nullableRequiredProp"],
+      "properties": {
+        "nullableProp": {
+          "description": "This is a simple string property",
+          "type": "string",
+          "x-nullable": true
+        },
+        "nullableRequiredProp": {
+          "description": "This is a simple string property",
+          "type": "string",
+          "x-nullable": true
+        }
+      }
+    },
+    "ModelWithEnum": {
+      "description": "This is a model with one enum",
+      "type": "object",
+      "properties": {
+        "test": {
+          "description": "This is a simple enum with strings",
+          "enum": ["Success", "Warning", "Error", "ØÆÅ字符串"]
+        },
+        "statusCode": {
+          "description": "These are the HTTP error code enums",
+          "enum": [
+            "100",
+            "200 FOO",
+            "300 FOO_BAR",
+            "400 foo-bar",
+            "500 foo.bar",
+            "600 foo&bar"
+          ]
+        },
+        "bool": {
+          "description": "Simple boolean enum",
+          "type": "boolean",
+          "enum": [true]
+        }
+      }
+    },
+    "ModelWithEnumFromDescription": {
+      "description": "This is a model with one enum",
+      "type": "object",
+      "properties": {
+        "test": {
+          "type": "integer",
+          "description": "Success=1,Warning=2,Error=3"
+        }
+      }
+    },
+    "ModelWithNestedEnums": {
+      "description": "This is a model with nested enums",
+      "type": "object",
+      "properties": {
+        "dictionaryWithEnum": {
+          "type": "object",
+          "additionalProperties": {
+            "enum": ["Success", "Warning", "Error"]
+          }
+        },
+        "dictionaryWithEnumFromDescription": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "description": "Success=1,Warning=2,Error=3"
+          }
+        },
+        "arrayWithEnum": {
+          "type": "array",
+          "items": {
+            "enum": ["Success", "Warning", "Error"]
+          }
+        },
+        "arrayWithDescription": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "description": "Success=1,Warning=2,Error=3"
+          }
+        }
+      }
+    },
+    "ModelWithReference": {
+      "description": "This is a model with one property containing a reference",
+      "type": "object",
+      "properties": {
+        "prop": {
+          "$ref": "#/definitions/ModelWithProperties"
+        }
+      }
+    },
+    "ModelWithArray": {
+      "description": "This is a model with one property containing an array",
+      "type": "object",
+      "properties": {
+        "prop": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModelWithString"
+          }
+        },
+        "propWithFile": {
+          "type": "array",
+          "items": {
+            "format": "binary",
+            "type": "string"
+          }
+        },
+        "propWithNumber": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "ModelWithDictionary": {
+      "description": "This is a model with one property containing a dictionary",
+      "type": "object",
+      "properties": {
+        "prop": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ModelWithCircularReference": {
+      "description": "This is a model with one property containing a circular reference",
+      "type": "object",
+      "properties": {
+        "prop": {
+          "$ref": "#/definitions/ModelWithCircularReference"
+        }
+      }
+    },
+    "ModelWithProperties": {
+      "description": "This is a model with one nested property",
+      "type": "object",
+      "required": ["required", "requiredAndReadOnly"],
+      "properties": {
+        "required": {
+          "type": "string"
+        },
+        "requiredAndReadOnly": {
+          "type": "string",
+          "readOnly": true
+        },
+        "string": {
+          "type": "string"
+        },
+        "number": {
+          "type": "number"
+        },
+        "boolean": {
+          "type": "boolean"
+        },
+        "reference": {
+          "$ref": "#/definitions/ModelWithString"
+        },
+        "property with space": {
+          "type": "string"
+        },
+        "default": {
+          "type": "string"
+        },
+        "try": {
+          "type": "string"
+        },
+        "@namespace.string": {
+          "type": "string",
+          "readOnly": true
+        },
+        "@namespace.integer": {
+          "type": "integer",
+          "readOnly": true
+        }
+      }
+    },
+    "ModelWithNestedProperties": {
+      "description": "This is a model with one nested property",
+      "type": "object",
+      "required": ["first"],
+      "properties": {
+        "first": {
+          "type": "object",
+          "required": ["second"],
+          "readOnly": true,
+          "properties": {
+            "second": {
+              "type": "object",
+              "required": ["third"],
+              "readOnly": true,
+              "properties": {
+                "third": {
+                  "type": "string",
+                  "readOnly": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ModelWithDuplicateProperties": {
+      "description": "This is a model with duplicated properties",
+      "type": "object",
+      "properties": {
+        "prop": {
+          "$ref": "#/definitions/ModelWithString"
+        },
+        "prop": {
+          "$ref": "#/definitions/ModelWithString"
+        },
+        "prop": {
+          "$ref": "#/definitions/ModelWithString"
+        }
+      }
+    },
+    "ModelWithOrderedProperties": {
+      "description": "This is a model with ordered properties",
+      "type": "object",
+      "properties": {
+        "zebra": {
+          "type": "string"
+        },
+        "apple": {
+          "type": "string"
+        },
+        "hawaii": {
+          "type": "string"
+        }
+      }
+    },
+    "ModelWithDuplicateImports": {
+      "description": "This is a model with duplicated imports",
+      "type": "object",
+      "properties": {
+        "propA": {
+          "$ref": "#/definitions/ModelWithString"
+        },
+        "propB": {
+          "$ref": "#/definitions/ModelWithString"
+        },
+        "propC": {
+          "$ref": "#/definitions/ModelWithString"
+        }
+      }
+    },
+    "ModelThatExtends": {
+      "description": "This is a model that extends another model",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ModelWithString"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "propExtendsA": {
+              "type": "string"
+            },
+            "propExtendsB": {
+              "$ref": "#/definitions/ModelWithString"
+            }
+          }
+        }
+      ]
+    },
+    "ModelThatExtendsExtends": {
+      "description": "This is a model that extends another model",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ModelWithString"
+        },
+        {
+          "$ref": "#/definitions/ModelThatExtends"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "propExtendsC": {
+              "type": "string"
+            },
+            "propExtendsD": {
+              "$ref": "#/definitions/ModelWithString"
+            }
+          }
+        }
+      ]
+    },
+    "default": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "ModelWithPattern": {
+      "description": "This is a model that contains a some patterns",
+      "type": "object",
+      "required": ["key", "name"],
+      "properties": {
+        "key": {
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_]*$",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 255,
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean",
+          "readOnly": true
+        },
+        "modified": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{3}-\\d{4}$"
+        },
+        "text": {
+          "type": "string",
+          "pattern": "^\\w+$"
+        },
+        "patternWithSingleQuotes": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9']*$"
+        },
+        "patternWithNewline": {
+          "type": "string",
+          "pattern": "aaa\\nbbb"
+        },
+        "patternWithBacktick": {
+          "type": "string",
+          "pattern": "aaa`bbb"
+        }
+      }
+    },
+    "parameter.ActivityParams": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "graduate_id": {
+          "type": "integer"
+        },
+        "organization_id": {
+          "type": "integer"
+        },
+        "parent_activity": {
+          "type": "integer"
+        },
+        "post_id": {
+          "type": "integer"
+        }
+      }
+    },
+    "response.PostActivityResponse": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "graduate_id": {
+          "type": "integer"
+        },
+        "organization_id": {
+          "type": "integer"
+        },
+        "parent_activity_id": {
+          "type": "integer"
+        },
+        "post_id": {
+          "type": "integer"
+        }
+      }
+    },
+    "failure.Failure": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "reference_code": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

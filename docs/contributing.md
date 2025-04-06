@@ -9,7 +9,7 @@ Thank you for considering contributing to Hey API. In order to increase the like
 
 ## Prerequisites
 
-You should have a working knowledge of [git](https://git-scm.com/), [node](https://nodejs.org/en), and [pnpm](https://pnpm.io/).
+You should have a working knowledge of [git](https://git-scm.com), [node](https://nodejs.org/en), and [pnpm](https://pnpm.io).
 
 ## Guidelines
 

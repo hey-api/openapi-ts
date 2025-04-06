@@ -1,6 +1,10 @@
 import type { IR } from '../../../ir/types';
 import type { Operation } from '../../../types/client';
-import type { Plugin } from '../../types';
+import type {
+  Plugin,
+  PluginClientNames,
+  PluginValidatorNames,
+} from '../../types';
 
 export interface Config extends Plugin.Name<'@hey-api/sdk'> {
   /**
@@ -24,17 +28,24 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   auth?: boolean;
   /**
-   * @deprecated
+   * Use an internal client instance to send HTTP requests? This is useful if
+   * you don't want to manually pass the client to each SDK function.
    *
-   * **This feature works only with the legacy parser**
+   * Ensure you have declared the selected library as a dependency to avoid
+   * errors. You can customize the selected client output through its plugin.
+   * You can also set `client` to `true` to automatically choose the client
+   * from your defined plugins.
    *
-   * Filter endpoints to be included in the generated SDK. The provided
-   * string should be a regular expression where matched results will be
-   * included in the output. The input pattern this string will be tested
-   * against is `{method} {path}`. For example, you can match
-   * `POST /api/v1/foo` with `^POST /api/v1/foo$`.
+   * @default true
    */
-  filter?: string;
+  client?: PluginClientNames | boolean;
+  /**
+   * Should the exports from the generated files be re-exported in the index
+   * barrel file?
+   *
+   * @default true
+   */
+  exportFromIndex?: boolean;
   /**
    * Include only service classes with names matching regular expression
    *
@@ -59,14 +70,6 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   output?: string;
   /**
-   * Define shape of returned value from service calls
-   *
-   * @default 'body'
-   *
-   * @deprecated
-   */
-  response?: 'body' | 'response';
-  /**
    * Customize the generated service class names. The name variable is
    * obtained from your OpenAPI specification tags.
    *
@@ -75,12 +78,6 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    * @default '{{name}}Service'
    */
   serviceNameBuilder?: string;
-  /**
-   * Throw an error instead of returning it in the response?
-   *
-   * @default false
-   */
-  throwOnError?: boolean;
   /**
    * Transform response data before returning. This is useful if you want to
    * convert for example ISO strings into Date objects. However, transformation
@@ -106,5 +103,29 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    *
    * @default false
    */
-  validator?: 'zod' | boolean;
+  validator?: PluginValidatorNames | boolean;
+
+  // DEPRECATED OPTIONS BELOW
+
+  /**
+   * @deprecated
+   *
+   * **This feature works only with the legacy parser**
+   *
+   * Filter endpoints to be included in the generated SDK. The provided
+   * string should be a regular expression where matched results will be
+   * included in the output. The input pattern this string will be tested
+   * against is `{method} {path}`. For example, you can match
+   * `POST /api/v1/foo` with `^POST /api/v1/foo$`.
+   */
+  // eslint-disable-next-line typescript-sort-keys/interface
+  filter?: string;
+  /**
+   * @deprecated
+   *
+   * Define shape of returned value from service calls
+   *
+   * @default 'body'
+   */
+  response?: 'body' | 'response';
 }

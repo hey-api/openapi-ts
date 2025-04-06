@@ -1,8 +1,7 @@
 {
   "name": "@hey-api/client-core",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "private": true,
-  "type": "module",
   "description": "Core utilities for type-safe @hey-api/openapi-ts clients",
   "homepage": "https://heyapi.dev/",
   "repository": {
@@ -13,17 +12,43 @@
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
   "license": "MIT",
-  "exports": {
-    "import": "./dist/node/index.mjs",
-    "require": "./dist/node/index.cjs",
-    "types": "./dist/node/index.d.ts"
+  "author": {
+    "email": "lubos@heyapi.dev",
+    "name": "Hey API",
+    "url": "https://heyapi.dev"
   },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "src"
+  ],
   "scripts": {
+    "build": "tsup && pnpm check-exports",
+    "check-exports": "attw --pack .",
+    "dev": "tsup --watch",
     "prepublishOnly": "pnpm build",
-    "test:coverage:disabled": "vitest run --coverage",
-    "test:update:disabled": "vitest watch --update",
-    "test:watch:disabled": "vitest watch",
-    "test:disabled": "vitest run",
-    "typecheck:disabled": "tsc --noEmit"
+    "test:coverage": "vitest run --coverage",
+    "test:update": "vitest watch --update",
+    "test:watch": "vitest watch",
+    "test": "vitest run",
+    "typecheck": "vitest --typecheck --watch=false"
   }
 }

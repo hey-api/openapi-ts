@@ -1,0 +1,60 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "OpenAPI 3.0.3 transformers any of null example",
+    "version": "1"
+  },
+  "paths": {
+    "/foo": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Foo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "bar": {
+            "anyOf": [
+              {
+                "type": "string",
+                "nullable": true,
+                "format": "date-time"
+              }
+            ]
+          },
+          "requiredBaz": {
+            "anyOf": [
+              {
+                "type": "string",
+                "nullable": true,
+                "format": "date-time"
+              }
+            ]
+          }
+        },
+        "required": ["requiredBaz"]
+      }
+    }
+  }
+}

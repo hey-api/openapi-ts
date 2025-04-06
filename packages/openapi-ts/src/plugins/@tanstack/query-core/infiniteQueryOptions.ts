@@ -185,15 +185,15 @@ const createInfiniteParamsFunction = ({
           }),
         }),
         compiler.returnVariable({
-          expression: ts.factory.createAsExpression(
-            ts.factory.createAsExpression(
-              compiler.identifier({ text: 'params' }),
-              ts.factory.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword),
-            ),
-            ts.factory.createTypeQueryNode(
+          expression: compiler.asExpression({
+            expression: compiler.asExpression({
+              expression: compiler.identifier({ text: 'params' }),
+              type: compiler.keywordTypeNode({ keyword: 'unknown' }),
+            }),
+            type: ts.factory.createTypeQueryNode(
               compiler.identifier({ text: 'page' }),
             ),
-          ),
+          }),
         }),
       ],
       types: [
@@ -290,16 +290,20 @@ export const createInfiniteQueryOptions = ({
   const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
   // TODO: parser - this is a bit clunky, need to compile type to string because
   // `compiler.returnFunctionCall()` accepts only strings, should be cleaned up
-  const typePageParam = `${tsNodeToString({
-    node: schemaToType({
-      context,
-      plugin: context.config.plugins['@hey-api/typescript'] as Parameters<
-        typeof schemaToType
-      >[0]['plugin'],
-      schema: pagination.schema,
-    }),
-    unescape: true,
-  })} | ${typePageObjectParam}`;
+  const type = schemaToType({
+    context,
+    plugin: context.config.plugins['@hey-api/typescript'] as Parameters<
+      typeof schemaToType
+    >[0]['plugin'],
+    schema: pagination.schema,
+    state: undefined,
+  });
+  const typePageParam = type
+    ? `${tsNodeToString({
+        node: type,
+        unescape: true,
+      })} | ${typePageObjectParam}`
+    : `${typePageObjectParam}`;
 
   const node = queryKeyStatement({
     context,

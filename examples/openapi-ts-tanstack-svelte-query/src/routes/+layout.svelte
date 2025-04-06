@@ -2,7 +2,7 @@
 	import Header from './Header.svelte';
 	import '../app.css';
 	import { QueryClientProvider, QueryClient } from '@tanstack/svelte-query';
-	import { client } from '../client/sdk.gen';
+	import { client } from '../client/client.gen';
 	import { browser } from '$app/environment';
 
 	// configure internal service client

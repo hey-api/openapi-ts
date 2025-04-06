@@ -29,11 +29,11 @@ You can modify the contents of `sdk.gen.ts` by configuring the `@hey-api/sdk` pl
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     {
       asClass: false, // default // [!code ++]
       name: '@hey-api/sdk',
@@ -46,11 +46,11 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     {
       asClass: true, // [!code ++]
       name: '@hey-api/sdk',
@@ -61,10 +61,10 @@ export default {
 
 ```js [none]
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
+    '@hey-api/client-fetch',
     '@hey-api/typescript',
     '@hey-api/sdk', // [!code --]
   ],
@@ -80,28 +80,32 @@ Below are different outputs depending on your chosen style. No SDKs approach wil
 ::: code-group
 
 ```ts [flat]
-import { client, type Options } from '@hey-api/client-fetch';
+import type { Options } from '@hey-api/client-fetch';
 
+import { client as _heyApiClient } from './client.gen';
 import type { AddPetData, AddPetError, AddPetResponse } from './types.gen';
 
 export const addPet = (options: Options<AddPetData>) =>
-  (options?.client ?? client).post<AddPetResponse, AddPetError>({
-    ...options,
+  (options?.client ?? _heyApiClient).post<AddPetResponse, AddPetError>({
     url: '/pet',
+    ...options,
   });
 ```
 
 ```ts [class]
-import { client, type Options } from '@hey-api/client-fetch';
+import type { Options } from '@hey-api/client-fetch';
 
+import { client as _heyApiClient } from './client.gen';
 import type { AddPetData, AddPetError, AddPetResponse } from './types.gen';
 
 export class PetService {
   public static addPet(options: Options<AddPetData>) {
-    return (options?.client ?? client).post<AddPetResponse, AddPetError>({
-      ...options,
-      url: '/pet',
-    });
+    return (options?.client ?? _heyApiClient).post<AddPetResponse, AddPetError>(
+      {
+        url: '/pet',
+        ...options,
+      },
+    );
   }
 }
 ```

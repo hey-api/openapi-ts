@@ -1,5 +1,6 @@
 import type { ImportExportItemObject } from '../../../compiler/utils';
 import type { IR } from '../../../ir/types';
+import { getClientPlugin } from '../../@hey-api/client-core/utils';
 import { operationOptionsType } from '../../@hey-api/sdk/plugin';
 import {
   importIdentifierError,
@@ -48,7 +49,8 @@ export const useTypeError = ({
       name: 'DefaultError',
     });
   }
-  if (context.config.client.name === '@hey-api/client-axios') {
+  const client = getClientPlugin(context.config);
+  if (client.name === '@hey-api/client-axios') {
     const axiosError = file.import({
       asType: true,
       module: 'axios',

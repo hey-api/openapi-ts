@@ -2,14 +2,17 @@ import { compiler, type Property } from '../../../compiler';
 import { clientApi } from '../../../generate/client';
 import { hasOperationDataRequired } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
+import { getClientBaseUrlKey } from '../../@hey-api/client-core/utils';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
-import { getClientBaseUrlKey } from './client';
 import type { PluginInstance } from './types';
 import { useTypeData } from './useType';
 
 const createQueryKeyFn = 'createQueryKey';
 export const queryKeyName = 'QueryKey';
 const TOptionsType = 'TOptions';
+
+const infiniteIdentifier = compiler.identifier({ text: 'infinite' });
+const optionsIdentifier = compiler.identifier({ text: 'options' });
 
 export const createQueryKeyFunction = ({
   context,
@@ -20,191 +23,195 @@ export const createQueryKeyFunction = ({
 }) => {
   const file = context.file({ id: plugin.name })!;
 
-  const returnType = compiler.indexedAccessTypeNode({
-    indexType: compiler.literalTypeNode({
-      literal: compiler.ots.number(0),
-    }),
-    objectType: compiler.typeReferenceNode({
-      typeArguments: [compiler.typeReferenceNode({ typeName: TOptionsType })],
-      typeName: queryKeyName,
-    }),
-  });
-
-  const infiniteIdentifier = compiler.identifier({ text: 'infinite' });
-
   const identifierCreateQueryKey = file.identifier({
     $ref: `#/ir/${createQueryKeyFn}`,
     create: true,
     namespace: 'value',
   });
 
-  const fn = compiler.constVariable({
-    expression: compiler.arrowFunction({
-      multiLine: true,
-      parameters: [
-        {
-          name: 'id',
-          type: compiler.typeReferenceNode({ typeName: 'string' }),
-        },
-        {
-          isRequired: false,
-          name: 'options',
-          type: compiler.typeReferenceNode({ typeName: TOptionsType }),
-        },
-        {
-          isRequired: false,
-          name: 'infinite',
-          type: compiler.typeReferenceNode({ typeName: 'boolean' }),
-        },
-      ],
-      returnType,
-      statements: [
-        compiler.constVariable({
-          assertion: returnType,
-          expression: compiler.objectExpression({
-            multiLine: false,
-            obj: [
-              {
-                key: '_id',
-                value: compiler.identifier({ text: 'id' }),
-              },
-              {
-                key: getClientBaseUrlKey(),
-                value: compiler.identifier({
-                  text: `(options?.client ?? client).getConfig().${getClientBaseUrlKey()}`,
-                }),
-              },
-            ],
-          }),
-          name: 'params',
-          typeName: returnType,
+  if (identifierCreateQueryKey.name) {
+    const returnType = compiler.indexedAccessTypeNode({
+      indexType: compiler.literalTypeNode({
+        literal: compiler.ots.number(0),
+      }),
+      objectType: compiler.typeReferenceNode({
+        typeArguments: [compiler.typeReferenceNode({ typeName: TOptionsType })],
+        typeName: queryKeyName,
+      }),
+    });
+
+    const fn = compiler.constVariable({
+      expression: compiler.arrowFunction({
+        multiLine: true,
+        parameters: [
+          {
+            name: 'id',
+            type: compiler.typeReferenceNode({ typeName: 'string' }),
+          },
+          {
+            isRequired: false,
+            name: 'options',
+            type: compiler.typeReferenceNode({ typeName: TOptionsType }),
+          },
+          {
+            isRequired: false,
+            name: 'infinite',
+            type: compiler.typeReferenceNode({ typeName: 'boolean' }),
+          },
+        ],
+        returnType: compiler.typeTupleNode({
+          types: [returnType],
         }),
-        compiler.ifStatement({
-          expression: infiniteIdentifier,
-          thenStatement: compiler.block({
-            statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
-                    expression: 'params',
-                    name: '_infinite',
+        statements: [
+          compiler.constVariable({
+            assertion: returnType,
+            expression: compiler.objectExpression({
+              multiLine: false,
+              obj: [
+                {
+                  key: '_id',
+                  value: compiler.identifier({ text: 'id' }),
+                },
+                {
+                  key: getClientBaseUrlKey(context.config),
+                  value: compiler.identifier({
+                    text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey(context.config)}`,
                   }),
-                  right: infiniteIdentifier,
-                }),
-              }),
-            ],
+                },
+              ],
+            }),
+            name: 'params',
+            typeName: returnType,
           }),
-        }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({ text: 'options' }),
-            isOptional: true,
-            name: compiler.identifier({ text: 'body' }),
-          }),
-          thenStatement: compiler.block({
-            statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'body',
-                  }),
-                  right: compiler.propertyAccessExpression({
-                    expression: 'options',
-                    name: 'body',
+          compiler.ifStatement({
+            expression: infiniteIdentifier,
+            thenStatement: compiler.block({
+              statements: [
+                compiler.expressionToStatement({
+                  expression: compiler.binaryExpression({
+                    left: compiler.propertyAccessExpression({
+                      expression: 'params',
+                      name: '_infinite',
+                    }),
+                    right: infiniteIdentifier,
                   }),
                 }),
-              }),
-            ],
-          }),
-        }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({ text: 'options' }),
-            isOptional: true,
-            name: compiler.identifier({ text: 'headers' }),
-          }),
-          thenStatement: compiler.block({
-            statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'headers',
-                  }),
-                  right: compiler.propertyAccessExpression({
-                    expression: 'options',
-                    name: 'headers',
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({ text: 'options' }),
-            isOptional: true,
-            name: compiler.identifier({ text: 'path' }),
-          }),
-          thenStatement: compiler.block({
-            statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'path',
-                  }),
-                  right: compiler.propertyAccessExpression({
-                    expression: 'options',
-                    name: 'path',
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({ text: 'options' }),
-            isOptional: true,
-            name: compiler.identifier({ text: 'query' }),
-          }),
-          thenStatement: compiler.block({
-            statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'query',
-                  }),
-                  right: compiler.propertyAccessExpression({
-                    expression: 'options',
-                    name: 'query',
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-        compiler.returnVariable({
-          expression: 'params',
-        }),
-      ],
-      types: [
-        {
-          extends: compiler.typeReferenceNode({
-            typeName: compiler.identifier({
-              text: clientApi.Options.name,
+              ],
             }),
           }),
-          name: TOptionsType,
-        },
-      ],
-    }),
-    name: identifierCreateQueryKey.name || '',
-  });
-  file.add(fn);
+          compiler.ifStatement({
+            expression: compiler.propertyAccessExpression({
+              expression: optionsIdentifier,
+              isOptional: true,
+              name: compiler.identifier({ text: 'body' }),
+            }),
+            thenStatement: compiler.block({
+              statements: [
+                compiler.expressionToStatement({
+                  expression: compiler.binaryExpression({
+                    left: compiler.propertyAccessExpression({
+                      expression: 'params',
+                      name: 'body',
+                    }),
+                    right: compiler.propertyAccessExpression({
+                      expression: 'options',
+                      name: 'body',
+                    }),
+                  }),
+                }),
+              ],
+            }),
+          }),
+          compiler.ifStatement({
+            expression: compiler.propertyAccessExpression({
+              expression: optionsIdentifier,
+              isOptional: true,
+              name: compiler.identifier({ text: 'headers' }),
+            }),
+            thenStatement: compiler.block({
+              statements: [
+                compiler.expressionToStatement({
+                  expression: compiler.binaryExpression({
+                    left: compiler.propertyAccessExpression({
+                      expression: 'params',
+                      name: 'headers',
+                    }),
+                    right: compiler.propertyAccessExpression({
+                      expression: 'options',
+                      name: 'headers',
+                    }),
+                  }),
+                }),
+              ],
+            }),
+          }),
+          compiler.ifStatement({
+            expression: compiler.propertyAccessExpression({
+              expression: optionsIdentifier,
+              isOptional: true,
+              name: compiler.identifier({ text: 'path' }),
+            }),
+            thenStatement: compiler.block({
+              statements: [
+                compiler.expressionToStatement({
+                  expression: compiler.binaryExpression({
+                    left: compiler.propertyAccessExpression({
+                      expression: 'params',
+                      name: 'path',
+                    }),
+                    right: compiler.propertyAccessExpression({
+                      expression: 'options',
+                      name: 'path',
+                    }),
+                  }),
+                }),
+              ],
+            }),
+          }),
+          compiler.ifStatement({
+            expression: compiler.propertyAccessExpression({
+              expression: optionsIdentifier,
+              isOptional: true,
+              name: compiler.identifier({ text: 'query' }),
+            }),
+            thenStatement: compiler.block({
+              statements: [
+                compiler.expressionToStatement({
+                  expression: compiler.binaryExpression({
+                    left: compiler.propertyAccessExpression({
+                      expression: 'params',
+                      name: 'query',
+                    }),
+                    right: compiler.propertyAccessExpression({
+                      expression: 'options',
+                      name: 'query',
+                    }),
+                  }),
+                }),
+              ],
+            }),
+          }),
+          compiler.returnStatement({
+            expression: compiler.arrayLiteralExpression({
+              elements: [compiler.identifier({ text: 'params' })],
+            }),
+          }),
+        ],
+        types: [
+          {
+            extends: compiler.typeReferenceNode({
+              typeName: compiler.identifier({
+                text: clientApi.Options.name,
+              }),
+            }),
+            name: TOptionsType,
+          },
+        ],
+      }),
+      name: identifierCreateQueryKey.name,
+    });
+    file.add(fn);
+  }
 };
 
 const createQueryKeyLiteral = ({
@@ -223,20 +230,15 @@ const createQueryKeyLiteral = ({
     $ref: `#/ir/${createQueryKeyFn}`,
     namespace: 'value',
   });
-  const queryKeyLiteral = compiler.arrayLiteralExpression({
-    elements: [
-      compiler.callExpression({
-        functionName: identifierCreateQueryKey.name || '',
-        parameters: [
-          compiler.ots.string(id),
-          'options',
-          isInfinite ? compiler.ots.boolean(true) : undefined,
-        ],
-      }),
+  const createQueryKeyCallExpression = compiler.callExpression({
+    functionName: identifierCreateQueryKey.name || '',
+    parameters: [
+      compiler.ots.string(id),
+      'options',
+      isInfinite ? compiler.ots.boolean(true) : undefined,
     ],
-    multiLine: false,
   });
-  return queryKeyLiteral;
+  return createQueryKeyCallExpression;
 };
 
 export const createQueryKeyType = ({
@@ -265,13 +267,14 @@ export const createQueryKeyType = ({
   ];
 
   const queryKeyType = compiler.typeAliasDeclaration({
+    exportType: true,
     name: queryKeyName,
     type: compiler.typeTupleNode({
       types: [
         compiler.typeIntersectionNode({
           types: [
             compiler.typeReferenceNode({
-              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey()}' | 'body' | 'headers' | 'path' | 'query'>`,
+              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(context.config)}' | 'body' | 'headers' | 'path' | 'query'>`,
             }),
             compiler.typeInterfaceNode({
               properties,

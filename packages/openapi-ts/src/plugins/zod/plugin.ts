@@ -527,21 +527,12 @@ const stringTypeToZodSchema = ({
   }
 
   if (schema.pattern) {
-    const text = schema.pattern
-      .replace(/\\/g, '\\\\') // backslashes
-      .replace(/\n/g, '\\n') // newlines
-      .replace(/\r/g, '\\r') // carriage returns
-      .replace(/\t/g, '\\t') // tabs
-      .replace(/\f/g, '\\f') // form feeds
-      .replace(/\v/g, '\\v') // vertical tabs
-      .replace(/'/g, "\\'") // single quotes
-      .replace(/"/g, '\\"'); // double quotes
     stringExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: stringExpression,
         name: regexIdentifier,
       }),
-      parameters: [compiler.regularExpressionLiteral({ text })],
+      parameters: [compiler.regularExpressionLiteral({ text: schema.pattern })],
     });
   }
 

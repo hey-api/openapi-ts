@@ -1,4 +1,5 @@
 import { compiler } from '../compiler';
+import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import type { Files } from '../types/utils';
 import { getConfig, legacyNameFromConfig } from '../utils/config';
 import { TypeScriptFile } from './files';
@@ -43,7 +44,8 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
         }),
       );
     }
-    if (config.client.name !== 'legacy/angular') {
+    const clientPlugin = getClientPlugin(config);
+    if (clientPlugin.name !== 'legacy/angular') {
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: ['CancelablePromise', 'CancelError'],

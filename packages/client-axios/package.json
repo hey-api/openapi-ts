@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-axios",
-  "version": "0.5.0",
+  "version": "0.7.0",
   "description": "🚀 Axios client for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {
@@ -20,6 +20,7 @@
   "keywords": [
     "axios",
     "client",
+    "codegen",
     "http",
     "javascript",
     "openapi",
@@ -54,7 +55,7 @@
     "src"
   ],
   "scripts": {
-    "build": "tsup && pnpm check-exports",
+    "build": "tsup && rollup -c && pnpm check-exports",
     "check-exports": "attw --pack .",
     "dev": "tsup --watch",
     "prepublishOnly": "pnpm build",
@@ -65,9 +66,12 @@
     "typecheck": "vitest --typecheck --watch=false"
   },
   "peerDependencies": {
+    "@hey-api/openapi-ts": "< 2",
     "axios": ">= 1.0.0 < 2"
   },
   "devDependencies": {
-    "axios": "1.7.9"
+    "@hey-api/client-core": "workspace:*",
+    "@hey-api/openapi-ts": "workspace:*",
+    "axios": "1.8.2"
   }
 }

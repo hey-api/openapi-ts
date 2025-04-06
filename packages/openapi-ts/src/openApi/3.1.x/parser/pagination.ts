@@ -1,8 +1,8 @@
-import { paginationKeywordsRegExp } from '../../../ir/pagination';
+import { getPaginationKeywordsRegExp } from '../../../ir/pagination';
 import type { IR } from '../../../ir/types';
 import type { SchemaType } from '../../shared/types/schema';
 import type { ParameterObject, RequestBodyObject } from '../types/spec';
-import { type SchemaObject } from '../types/spec';
+import type { SchemaObject } from '../types/spec';
 import { mediaTypeObject } from './mediaType';
 import { getSchemaTypes } from './schema';
 
@@ -24,8 +24,10 @@ export const paginationField = ({
   name: string;
   schema: SchemaObject;
 }): boolean | string => {
-  paginationKeywordsRegExp.lastIndex = 0;
-  if (paginationKeywordsRegExp.test(name)) {
+  const paginationRegExp = getPaginationKeywordsRegExp(
+    context.config.input.pagination,
+  );
+  if (paginationRegExp.test(name)) {
     return true;
   }
 
@@ -68,9 +70,11 @@ export const paginationField = ({
   }
 
   for (const name in schema.properties) {
-    paginationKeywordsRegExp.lastIndex = 0;
+    const paginationRegExp = getPaginationKeywordsRegExp(
+      context.config.input.pagination,
+    );
 
-    if (paginationKeywordsRegExp.test(name)) {
+    if (paginationRegExp.test(name)) {
       const property = schema.properties[name]!;
 
       if (typeof property !== 'boolean') {

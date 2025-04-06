@@ -39,7 +39,8 @@ export const createCallExpression = ({
     | string
     | ts.PropertyAccessExpression
     | ts.PropertyAccessChain
-    | ts.ElementAccessExpression;
+    | ts.ElementAccessExpression
+    | ts.Expression;
   parameters?: Array<string | ts.Expression | undefined>;
   types?: ReadonlyArray<ts.TypeNode>;
 }) => {

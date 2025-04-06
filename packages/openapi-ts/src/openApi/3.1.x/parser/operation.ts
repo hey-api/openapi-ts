@@ -108,6 +108,7 @@ const operationToIrOperation = ({
               ? operation.requestBody
               : content.schema),
           },
+          state: undefined,
         }),
       };
 
@@ -148,6 +149,7 @@ const operationToIrOperation = ({
             description: responseObject.description,
             ...contentToSchema({ content }),
           },
+          state: undefined,
         }),
       };
     } else {
@@ -207,6 +209,7 @@ export const parseOperation = ({
   securitySchemesMap: Map<string, SecuritySchemeObject>;
 }) => {
   ensureUniqueOperationId({
+    context,
     id: operation.operationId,
     method,
     operationIds,
@@ -219,6 +222,10 @@ export const parseOperation = ({
 
   if (!context.ir.paths[path]) {
     context.ir.paths[path] = {};
+  }
+
+  if (operation.servers) {
+    context.ir.servers = [...(context.ir.servers ?? []), ...operation.servers];
   }
 
   operation.id = operationToId({

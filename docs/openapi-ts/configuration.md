@@ -13,27 +13,27 @@ description: Configure @hey-api/openapi-ts.
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
 });
 ```
 
 ```js [openapi-ts.config.cjs]
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 module.exports = {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
 ```js [openapi-ts.config.mjs]
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -59,7 +59,7 @@ You should treat the output folder as a dependency. Do not directly modify its c
 
 ## Client
 
-Clients are responsible for sending the actual HTTP requests. The `client` value is not required, but you must define it if you're generating SDKs (enabled by default).
+Clients are responsible for sending the actual HTTP requests. Using clients is not required, but you must add a client to `plugins` if you're generating SDKs (enabled by default).
 
 You can learn more on the [Clients](/openapi-ts/clients) page.
 
@@ -76,14 +76,14 @@ import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig([
   {
-    client: 'legacy/fetch',
     input: 'path/to/openapi_one.json',
     output: 'src/client_one',
+    plugins: ['legacy/fetch'],
   },
   {
-    client: 'legacy/axios',
     input: 'path/to/openapi_two.json',
     output: 'src/client_two',
+    plugins: ['legacy/axios'],
   },
 ])
 ``` -->
@@ -102,34 +102,34 @@ To format your output folder contents, set `output.format` to a valid formatter.
 
 ```js [disabled]
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     format: false, // [!code ++]
     path: 'src/client',
   },
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
 ```js [prettier]
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     format: 'prettier', // [!code ++]
     path: 'src/client',
   },
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
 ```js [biome]
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     format: 'biome', // [!code ++]
     path: 'src/client',
   },
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -145,45 +145,45 @@ To lint your output folder contents, set `output.lint` to a valid linter.
 
 ```js [disabled]
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     lint: false, // [!code ++]
     path: 'src/client',
   },
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
 ```js [eslint]
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     lint: 'eslint', // [!code ++]
     path: 'src/client',
   },
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
 ```js [biome]
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     lint: 'biome', // [!code ++]
     path: 'src/client',
   },
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
 ```js [oxlint]
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     lint: 'oxlint', // [!code ++]
     path: 'src/client',
   },
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -199,25 +199,25 @@ If you work with large specifications and want to generate output from their sub
 
 ```js [include]
 export default {
-  client: '@hey-api/client-fetch',
   input: {
     // match only the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
     include: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
-    path: 'path/to/openapi.json',
+    path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
 ```js [exclude]
 export default {
-  client: '@hey-api/client-fetch',
   input: {
     // match everything except for the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
     exclude: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
-    path: 'path/to/openapi.json',
+    path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -235,18 +235,18 @@ If your schema changes frequently, you may want to automatically regenerate the 
 
 ```js [config]
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
   watch: true, // [!code ++]
 };
 ```
 
 ```sh [cli]
 npx @hey-api/openapi-ts \
-  -c @hey-api/client-fetch \
-  -i path/to/openapi.json \
+  -i https://get.heyapi.dev/hey-api/backend \
   -o src/client \
+  -c @hey-api/client-fetch \
   -w  # [!code ++]
 ```
 
@@ -258,12 +258,12 @@ By default, you can't keep custom files in the `output.path` folder because it's
 
 ```js
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     clean: false, // [!code ++]
     path: 'src/client',
   },
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -273,7 +273,7 @@ Setting `output.clean` to `false` may result in broken output. Ensure you typech
 
 ## Config API
 
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/types/config.ts) interface.
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/types/config.d.ts) interface.
 
 <!--@include: ../examples.md-->
 <!--@include: ../sponsors.md-->

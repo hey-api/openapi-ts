@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import type { Config } from '../../types/config';
 import { type OpenApi, parseLegacy, parseOpenApiSpec } from '..';
 import type { OpenApiV3_0_X } from '../3.0.x';
 import { parseV3_0_X } from '../3.0.x';
@@ -14,6 +15,20 @@ vi.mock('../3.0.x', () => ({
 vi.mock('../3.1.x', () => ({
   parseV3_1_X: vi.fn(),
 }));
+vi.mock('../../utils/config', () => {
+  const config: Partial<Config> = {
+    logs: {
+      file: false,
+      level: 'silent',
+      path: '',
+    },
+    pluginOrder: [],
+  };
+  return {
+    getConfig: () => config,
+    isLegacyClient: vi.fn().mockReturnValue(true),
+  };
+});
 
 describe('parse', () => {
   afterEach(() => {

@@ -208,7 +208,7 @@ export const operationNameFn = ({
   urlWithoutPlaceholders = urlWithoutPlaceholders
     .replace(/{(.*?)}/g, 'by-$1')
     // replace slashes with hyphens for camelcase method at the end
-    .replace(/[/:]/g, '-');
+    .replace(/[/:+]/g, '-');
 
   return stringCase({
     case: 'camelCase',

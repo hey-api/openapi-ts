@@ -12,9 +12,11 @@ yarn-error.log*
 dist
 coverage
 .env
+.next
 .nuxt
 .output
 .svelte-kit
+.turbo
 
 # test files
 test/generated

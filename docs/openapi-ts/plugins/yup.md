@@ -9,6 +9,8 @@ description: Yup plugin for Hey API. Compatible with all our features.
 This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1478).
 :::
 
+### About
+
 [Yup](https://github.com/jquense/yup) is a schema builder for runtime value parsing and validation.
 
 <!--@include: ../../sponsors.md-->

@@ -1,0 +1,49 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "OpenAPI 3.0.4 validators example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "default": null,
+        "nullable": true,
+        "properties": {
+          "foo": {
+            "pattern": "^\\d{3}-\\d{2}-\\d{4}$",
+            "type": "string"
+          },
+          "bar": {
+            "$ref": "#/components/schemas/Bar"
+          },
+          "baz": {
+            "items": {
+              "$ref": "#/components/schemas/Foo"
+            },
+            "type": "array"
+          },
+          "qux": {
+            "default": 0,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "Bar": {
+        "properties": {
+          "foo": {
+            "$ref": "#/components/schemas/Foo"
+          }
+        },
+        "type": "object"
+      },
+      "Baz": {
+        "default": "baz",
+        "pattern": "foo\\nbar",
+        "readOnly": true,
+        "type": "string"
+      }
+    }
+  }
+}

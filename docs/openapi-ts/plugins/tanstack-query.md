@@ -13,10 +13,14 @@ import { embedProject } from '../../embed'
 TanStack Query plugin is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
+### About
+
 [TanStack Query](https://tanstack.com/query) is a powerful asynchronous state management solution for TypeScript/JavaScript, React, Solid, Vue, Svelte, and Angular.
 
+### Demo
+
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-tanstack-react-query-example')(event)">
-Live demo
+Launch demo
 </button>
 
 ## Features
@@ -36,11 +40,11 @@ In your [configuration](/openapi-ts/get-started), add TanStack Query to your plu
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     '@tanstack/react-query', // [!code ++]
   ],
 };
@@ -50,11 +54,11 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     '@tanstack/vue-query', // [!code ++]
   ],
 };
@@ -64,11 +68,11 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     '@tanstack/angular-query-experimental', // [!code ++]
   ],
 };
@@ -78,11 +82,11 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     '@tanstack/svelte-query', // [!code ++]
   ],
 };
@@ -92,11 +96,11 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     '@tanstack/solid-query', // [!code ++]
   ],
 };
@@ -137,6 +141,15 @@ const { data, error } = useInfiniteQuery({
   initialPageParam: 0,
 });
 ```
+
+Infinite queries are recognized by having one of these keywords in the endpoint's parameters:
+
+- after
+- before
+- cursor
+- offset
+- page
+- start
 
 ## Mutations
 

@@ -7,6 +7,7 @@ import { irRef } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
 import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
+import { typesId } from '../typescript/ref';
 import type { Config } from './types';
 
 interface OperationIRRef {
@@ -242,6 +243,15 @@ const processSchemaType = ({
       });
 
       if (dataExpression) {
+        // In a map callback, the item needs to be returned, not just the transformation result
+        if (typeof dataExpression === 'string' && dataExpression === 'item') {
+          return [
+            compiler.returnStatement({
+              expression: callExpression,
+            }),
+          ];
+        }
+
         return [
           typeof dataExpression === 'string'
             ? callExpression
@@ -266,15 +276,32 @@ const processSchemaType = ({
       ? []
       : processSchemaType({
           context,
+          dataExpression: 'item',
           plugin,
-          schema: {
-            ...schema,
-            type: undefined,
-          },
+          schema: schema.items?.[0]
+            ? schema.items[0]
+            : {
+                ...schema,
+                type: undefined,
+              },
         });
 
     if (!nodes.length) {
       return [];
+    }
+
+    // Ensure the map callback has a return statement for the item
+    const mapCallbackStatements = ensureStatements(nodes);
+    const hasReturnStatement = mapCallbackStatements.some((stmt) =>
+      isNodeReturnStatement({ node: stmt }),
+    );
+
+    if (!hasReturnStatement) {
+      mapCallbackStatements.push(
+        compiler.returnStatement({
+          expression: compiler.identifier({ text: 'item' }),
+        }),
+      );
     }
 
     return [
@@ -294,16 +321,7 @@ const processSchemaType = ({
                   type: 'any',
                 },
               ],
-              statements:
-                nodes.length === 1
-                  ? ts.isStatement(nodes[0]!)
-                    ? []
-                    : [
-                        compiler.returnStatement({
-                          expression: nodes[0],
-                        }),
-                      ]
-                  : ensureStatements(nodes),
+              statements: mapCallbackStatements,
             }),
           ],
         }),
@@ -327,31 +345,30 @@ const processSchemaType = ({
         plugin,
         schema: property,
       });
-      if (propertyNodes.length) {
-        if (required.includes(name)) {
-          nodes = nodes.concat(propertyNodes);
-        } else {
-          nodes.push(
-            compiler.ifStatement({
-              expression: propertyAccessExpression,
-              thenStatement: compiler.block({
-                statements: ensureStatements(propertyNodes),
-              }),
-            }),
-          );
-        }
+      if (!propertyNodes.length) {
+        continue;
       }
-    }
-
-    if (nodes.length) {
-      nodes.push(
-        compiler.returnStatement({
-          expression:
-            typeof dataExpression === 'string'
-              ? compiler.identifier({ text: dataExpression })
-              : dataExpression,
-        }),
+      const noNullableTypesInSchema = !property.items?.find(
+        (x) => x.type === 'null',
       );
+      const requiredField = required.includes(name);
+      // Cannot fully rely on required fields
+      // Such value has to be present, but it doesn't guarantee that this value is not nullish
+      if (requiredField && noNullableTypesInSchema) {
+        nodes = nodes.concat(propertyNodes);
+      } else {
+        nodes.push(
+          // todo: Probably, it would make more sense to go with if(x !== undefined && x !== null) instead of if(x)
+          // this place influences all underlying transformers, while it's not exactly transformer itself
+          // Keep in mind that !!0 === false, so it already makes output for Bigint undesirable
+          compiler.ifStatement({
+            expression: propertyAccessExpression,
+            thenStatement: compiler.block({
+              statements: ensureStatements(propertyNodes),
+            }),
+          }),
+        );
+      }
     }
 
     return nodes;
@@ -405,16 +422,7 @@ const processSchemaType = ({
               compiler.ifStatement({
                 expression: identifierItem,
                 thenStatement: compiler.block({
-                  statements:
-                    nodes.length === 1
-                      ? ts.isStatement(nodes[0]!)
-                        ? []
-                        : [
-                            compiler.returnStatement({
-                              expression: nodes[0],
-                            }),
-                          ]
-                      : ensureStatements(nodes),
+                  statements: ensureStatements(nodes),
                 }),
               }),
               compiler.returnStatement({ expression: identifierItem }),
@@ -460,7 +468,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       return;
     }
 
-    const identifierResponse = context.file({ id: 'types' })!.identifier({
+    const identifierResponse = context.file({ id: typesId })!.identifier({
       $ref: operationIrRef({ id: operation.id, type: 'response' }),
       namespace: 'type',
     });
@@ -486,7 +494,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     if (nodes.length) {
       file.import({
         asType: true,
-        module: file.relativePathToFile({ context, id: 'types' }),
+        module: file.relativePathToFile({ context, id: typesId }),
         name: identifierResponse.name,
       });
       const responseTransformerNode = compiler.constVariable({

@@ -1,5 +1,61 @@
 # @example/openapi-ts-axios
 
+## 0.0.31
+
+### Patch Changes
+
+- Updated dependencies [[`67c385b`](https://github.com/hey-api/openapi-ts/commit/67c385bf6289a79726b0cdd85fd81ca501cf2248)]:
+  - @hey-api/client-axios@0.7.0
+
+## 0.0.30
+
+### Patch Changes
+
+- Updated dependencies [[`fe43b88`](https://github.com/hey-api/openapi-ts/commit/fe43b889c20a2001f56e259f93f64851a1caa1d1)]:
+  - @hey-api/client-axios@0.6.3
+
+## 0.0.29
+
+### Patch Changes
+
+- Updated dependencies [[`c0b36b9`](https://github.com/hey-api/openapi-ts/commit/c0b36b95645d484034c3af145c5554867568979b)]:
+  - @hey-api/client-axios@0.6.2
+
+## 0.0.28
+
+### Patch Changes
+
+- Updated dependencies [[`7f0f4a7`](https://github.com/hey-api/openapi-ts/commit/7f0f4a76b06c8fafb33581b522faf8efc6fd85ac)]:
+  - @hey-api/client-axios@0.6.1
+
+## 0.0.27
+
+### Patch Changes
+
+- Updated dependencies [[`bb6d46a`](https://github.com/hey-api/openapi-ts/commit/bb6d46ae119ce4e7e3a2ab3fded74ac4fb4cdff2)]:
+  - @hey-api/client-axios@0.6.0
+
+## 0.0.26
+
+### Patch Changes
+
+- Updated dependencies [[`2dc380e`](https://github.com/hey-api/openapi-ts/commit/2dc380eabc17c723654beb04ecd7bce6d33d3b49), [`603541e`](https://github.com/hey-api/openapi-ts/commit/603541e307dc2953da7dddd300176865629b50bb), [`2cbffeb`](https://github.com/hey-api/openapi-ts/commit/2cbffeb2cdd6c6143cd68cac68369584879dda31), [`2cbffeb`](https://github.com/hey-api/openapi-ts/commit/2cbffeb2cdd6c6143cd68cac68369584879dda31)]:
+  - @hey-api/client-axios@0.5.3
+
+## 0.0.25
+
+### Patch Changes
+
+- Updated dependencies [[`8eba19d`](https://github.com/hey-api/openapi-ts/commit/8eba19d4092fc0903572ab9fdadf0b4c26928ba2)]:
+  - @hey-api/client-axios@0.5.2
+
+## 0.0.24
+
+### Patch Changes
+
+- Updated dependencies [[`0432418`](https://github.com/hey-api/openapi-ts/commit/0432418d72c94ef94865f8216ed2f723ad5191f9), [`4784727`](https://github.com/hey-api/openapi-ts/commit/47847276e8bc854045044dd414382080270dd779)]:
+  - @hey-api/client-axios@0.5.1
+
 ## 0.0.23
 
 ### Patch Changes

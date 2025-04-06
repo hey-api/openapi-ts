@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}=${{ github.head_ref }}
   cancel-in-progress: true
+  group: ${{ github.workflow }}=${{ github.head_ref }}
 
 jobs:
   ci:
@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4.0.0
+      - uses: pnpm/action-setup@v4.1.0
 
       - uses: actions/setup-node@v4
         with:
@@ -35,11 +35,11 @@ jobs:
         run: pnpm install
 
       - name: Build packages
-        run: pnpm --filter './packages/**' run build
+        run: pnpm build --filter="@hey-api/**"
 
       - name: Build examples
         if: matrix.node-version == '22.11.0' && matrix.os == 'ubuntu-latest'
-        run: pnpm --filter './examples/**' run build
+        run: pnpm build --filter="@examples/**"
 
       - name: Run linter
         run: pnpm lint
@@ -55,4 +55,6 @@ jobs:
 
       - name: Publish preview packages
         if: github.event_name == 'pull_request' && matrix.node-version == '22.11.0' && matrix.os == 'ubuntu-latest'
-        run: ./scripts/publish-preview-packages.sh ${{ github.event.pull_request.base.ref }}
+        run: ./scripts/publish-preview-packages.sh
+        env:
+          TURBO_SCM_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}

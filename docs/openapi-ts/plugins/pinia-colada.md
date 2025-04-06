@@ -9,6 +9,8 @@ description: Pinia Colada plugin for Hey API. Compatible with all our features.
 This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1242).
 :::
 
-[Pinia Colada](https://pinia-colada.esm.dev/) is the data fetching layer for Pinia.
+### About
+
+[Pinia Colada](https://pinia-colada.esm.dev) is the data fetching layer for Pinia.
 
 <!--@include: ../../sponsors.md-->

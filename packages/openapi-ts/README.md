@@ -30,12 +30,19 @@
 
 ## Features
 
-- works with CLI, Node.js 18+, or npx
-- supports OpenAPI 2.0, 3.0, and 3.1 specifications
-- supports JSON and YAML input files
-- generates TypeScript interfaces and SDKs
-- Fetch API, Axios, Angular, Node.js, and XHR clients available
+- runs in CLI, Node.js 18+, or npx
+- works with OpenAPI 2.0, 3.0, and 3.1
+- customizable types and SDKs
+- clients for your runtime (Fetch API, Axios, Next.js, Nuxt, etc.)
 - plugin ecosystem to reduce third-party boilerplate
+- custom plugins and custom clients
+- [integration](https://heyapi.dev/openapi-ts/integrations) with Hey API platform
+
+## Dashboard
+
+Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with our platform.
+
+[Sign In](https://app.heyapi.dev) to Hey API platform.
 
 ## Sponsors
 
@@ -47,19 +54,15 @@ Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
   </a>
 </p>
 
-## GitHub Integration (coming 2025)
-
-Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.dev/openapi-ts/integrations.html).
-
 ## Quick Start
 
 The fastest way to use `@hey-api/openapi-ts` is via npx
 
 ```sh
 npx @hey-api/openapi-ts \
-  -c @hey-api/client-fetch \
-  -i path/to/openapi.json \
+  -i https://get.heyapi.dev/hey-api/backend \
   -o src/client \
+  -c @hey-api/client-fetch
 ```
 
 Congratulations on creating your first client! 🎉 You can learn more about the generated files on the [Output](https://heyapi.dev/openapi-ts/output) page.
@@ -114,9 +117,9 @@ You can also generate clients programmatically by importing `@hey-api/openapi-ts
 import { createClient } from '@hey-api/openapi-ts';
 
 createClient({
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
 });
 ```
 
@@ -130,9 +133,9 @@ createClient({
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
 });
 ```
 
@@ -141,9 +144,9 @@ export default defineConfig({
 ```js
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 module.exports = {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -152,9 +155,9 @@ module.exports = {
 ```js
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -174,9 +177,16 @@ Output is the next thing to define. It can be either a string pointing to the de
 
 ### Client
 
-Clients are responsible for sending the actual HTTP requests. The `client` value is not required, but you must define it if you're generating SDKs (enabled by default).
+Clients are responsible for sending the actual HTTP requests. Using clients is not required, but you must add a client to `plugins` if you're generating SDKs (enabled by default).
 
-You can learn more on the [Clients](https://heyapi.dev/openapi-ts/clients) page.
+### Native Clients
+
+- [`@hey-api/client-fetch`](https://heyapi.dev/openapi-ts/clients/fetch)
+- [`@hey-api/client-axios`](https://heyapi.dev/openapi-ts/clients/axios)
+- [`@hey-api/client-next`](https://heyapi.dev/openapi-ts/clients/next-js)
+- [`@hey-api/client-nuxt`](https://heyapi.dev/openapi-ts/clients/nuxt)
+
+Don't see your client? [Build your own](https://heyapi.dev/openapi-ts/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
 ## Plugins
 
@@ -220,6 +230,8 @@ The following plugins are planned but not in development yet. You can help us pr
 - [Valibot](https://heyapi.dev/openapi-ts/plugins/valibot)
 - [Yup](https://heyapi.dev/openapi-ts/plugins/yup)
 - [Zustand](https://heyapi.dev/openapi-ts/plugins/zustand)
+
+Don't see your plugin? [Build your own](https://heyapi.dev/openapi-ts/plugins/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
 ## Migration Guides
 

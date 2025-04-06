@@ -1,5 +1,6 @@
 import { type FastifyInstance } from 'fastify';
-import { client, showPetById } from 'src/client';
+import { showPetById } from 'src/client';
+import { client } from 'src/client/client.gen';
 import { buildServer } from 'src/server';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 

@@ -1,5 +1,18 @@
 # @hey-api/client-core
 
+## 0.1.4
+
+### Patch Changes
+
+- [#1850](https://github.com/hey-api/openapi-ts/pull/1850) [`fe43b88`](https://github.com/hey-api/openapi-ts/commit/fe43b889c20a2001f56e259f93f64851a1caa1d1) Thanks [@kelnos](https://github.com/kelnos)! - feat: add support for cookies auth
+
+## 0.1.3
+
+### Patch Changes
+
+- [#1674](https://github.com/hey-api/openapi-ts/pull/1674) [`7f0f4a7`](https://github.com/hey-api/openapi-ts/commit/7f0f4a76b06c8fafb33581b522faf8efc6fd85ac) Thanks [@ale18V](https://github.com/ale18V)! - Return a string from urlSearchParamsBodySerializer instead of a URLSearchParams object.
+  This is due to some runtimes not being able to handle the URLSearchParams object as fetch body.
+
 ## 0.1.2
 
 ### Patch Changes

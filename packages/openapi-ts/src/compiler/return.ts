@@ -12,10 +12,9 @@ export const createReturnStatement = ({
 
 /**
  * Create a return function call statement.
- * Example `return fn<string>(params)`.
- * @param args arguments to pass to the function.
- * @param name name of the function to call.
- * @param types list of function types
+ *
+ * @example `return fn<string>(params)`
+ *
  * @returns ts.ReturnStatement
  */
 export const createReturnFunctionCall = ({
@@ -23,8 +22,17 @@ export const createReturnFunctionCall = ({
   name,
   types = [],
 }: {
+  /**
+   * Arguments to pass to the function.
+   */
   args: any[];
-  name: string;
+  /**
+   * Name of the function to call or expression.
+   */
+  name: string | ts.Expression;
+  /**
+   * List of function types.
+   */
   types?: string[];
 }) => {
   const typeArguments = types.map((type) =>

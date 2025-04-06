@@ -18,6 +18,13 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   enumsCase?: StringCase;
   /**
+   * Should the exports from the generated files be re-exported in the index
+   * barrel file?
+   *
+   * @default true
+   */
+  exportFromIndex?: boolean;
+  /**
    * By default, inline enums (enums not defined as reusable components in
    * the input file) are generated as inlined union types. You can set
    * `exportInlineEnums` to `true` to treat inline enums as reusable components.
@@ -33,19 +40,45 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   identifierCase?: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
   /**
+   * Name of the generated file.
+   *
+   * @default 'types'
+   */
+  output?: string;
+  /**
+   * Choose how to handle types containing read-only or write-only fields?
+   * This option exists for backward compatibility with outputs created before
+   * this feature existed.
+   *
+   * @default 'split'
+   */
+  readOnlyWriteOnlyBehavior?: 'off' | 'split';
+  /**
+   * Customize the name of types used in responses or containing read-only
+   * fields.
+   *
+   * @default '{{name}}Readable'
+   */
+  readableNameBuilder?: string;
+  /**
+   * Customize the name of types used in payloads or containing write-only
+   * fields.
+   *
+   * @default '{{name}}Writable'
+   */
+  writableNameBuilder?: string;
+
+  // DEPRECATED OPTIONS BELOW
+
+  /**
    * @deprecated
    *
    * **This feature works only with the legacy parser**
    *
    * Include only types matching regular expression.
    */
+  // eslint-disable-next-line typescript-sort-keys/interface
   include?: string;
-  /**
-   * Name of the generated file.
-   *
-   * @default 'types'
-   */
-  output?: string;
   /**
    * @deprecated
    *

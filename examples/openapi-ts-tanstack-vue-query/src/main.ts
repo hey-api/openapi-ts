@@ -5,7 +5,7 @@ import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
 import App from './App.vue'
-import { client } from './client/sdk.gen'
+import { client } from './client/client.gen'
 import router from './router'
 
 // configure internal service client

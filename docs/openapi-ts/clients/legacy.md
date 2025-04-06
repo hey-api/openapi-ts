@@ -19,41 +19,41 @@ Before client packages, clients were generated using `@hey-api/openapi-ts`. In f
 
 ```js [fetch]
 export default {
-  client: 'legacy/fetch', // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['legacy/fetch'], // [!code ++]
 };
 ```
 
 ```js [axios]
 export default {
-  client: 'legacy/axios', // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['legacy/axios'], // [!code ++]
 };
 ```
 
 ```js [angular]
 export default {
-  client: 'legacy/angular', // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['legacy/angular'], // [!code ++]
 };
 ```
 
 ```js [node]
 export default {
-  client: 'legacy/node', // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['legacy/node'], // [!code ++]
 };
 ```
 
 ```js [xhr]
 export default {
-  client: 'legacy/xhr', // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
+  plugins: ['legacy/xhr'], // [!code ++]
 };
 ```
 
@@ -61,10 +61,10 @@ export default {
 
 ## Available Clients
 
-- [angular](https://angular.io/) (using [RxJS](https://rxjs.dev/))
-- [axios](https://axios-http.com/)
+- [angular](https://angular.io) (using [RxJS](https://rxjs.dev))
+- [axios](https://axios-http.com)
 - [fetch](https://developer.mozilla.org/docs/Web/API/Fetch_API)
-- [node](https://nodejs.org/) (using [node-fetch](https://www.npmjs.com/package/node-fetch))
+- [node](https://nodejs.org) (using [node-fetch](https://www.npmjs.com/package/node-fetch))
 - [xhr](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest)
 
 ## Caveats

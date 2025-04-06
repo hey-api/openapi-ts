@@ -10,9 +10,6 @@ import {
 describe('registerHandlebarHelpers', () => {
   it('should register the helpers', () => {
     setConfig({
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -21,6 +18,7 @@ describe('registerHandlebarHelpers', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },
@@ -28,7 +26,12 @@ describe('registerHandlebarHelpers', () => {
         format: 'prettier',
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -46,11 +49,18 @@ describe('registerHandlebarHelpers', () => {
           enums: 'javascript',
           name: '@hey-api/typescript',
         },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
+        },
       },
       useOptions: false,
       watch: {
         enabled: false,
-        interval: 1000,
+        interval: 1_000,
+        timeout: 60_000,
       },
     });
     registerHandlebarHelpers();
@@ -67,9 +77,6 @@ describe('registerHandlebarHelpers', () => {
 describe('registerHandlebarTemplates', () => {
   it('should return correct templates', () => {
     setConfig({
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -78,6 +85,7 @@ describe('registerHandlebarTemplates', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },
@@ -85,7 +93,12 @@ describe('registerHandlebarTemplates', () => {
         format: 'prettier',
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -103,11 +116,18 @@ describe('registerHandlebarTemplates', () => {
           enums: 'javascript',
           name: '@hey-api/typescript',
         },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
+        },
       },
       useOptions: false,
       watch: {
         enabled: false,
-        interval: 1000,
+        interval: 1_000,
+        timeout: 60_000,
       },
     });
     const templates = registerHandlebarTemplates();

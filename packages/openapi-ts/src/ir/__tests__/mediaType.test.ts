@@ -1,70 +1,106 @@
 import { describe, expect, it } from 'vitest';
 
-import { isMediaTypeFileLike } from '../mediaType';
+import type { IRMediaType } from '../mediaType';
+import { isMediaTypeFileLike, mediaTypeToIrMediaType } from '../mediaType';
 
 describe('isMediaTypeFileLike', () => {
   const scenarios: Array<{
-    fileLike: ReturnType<typeof isMediaTypeFileLike>;
-    mediaType: Parameters<typeof isMediaTypeFileLike>[0]['mediaType'];
+    mediaType: string;
+    response: boolean;
   }> = [
     {
-      fileLike: false,
       mediaType: 'application/json',
+      response: false,
     },
     {
-      fileLike: true,
       mediaType: 'application/json+download',
+      response: true,
     },
     {
-      fileLike: false,
       mediaType: 'application/json; charset=ascii',
+      response: false,
     },
     {
-      fileLike: true,
       mediaType: 'application/octet-stream',
+      response: true,
     },
     {
-      fileLike: true,
       mediaType: 'application/pdf',
+      response: true,
     },
     {
-      fileLike: true,
       mediaType: 'application/xml; charset=utf-8',
+      response: true,
     },
     {
-      fileLike: true,
       mediaType: 'application/zip',
+      response: true,
     },
     {
-      fileLike: false,
       mediaType: 'image/jpeg',
+      response: false,
     },
     {
-      fileLike: false,
       mediaType: 'image/jpeg; charset=utf-8',
+      response: false,
     },
     {
-      fileLike: false,
       mediaType: 'text/html; charset=utf-8',
+      response: false,
     },
     {
-      fileLike: true,
       mediaType: 'text/javascript; charset=ISO-8859-1',
+      response: true,
     },
     {
-      fileLike: true,
       mediaType: 'text/plain; charset=utf-8',
+      response: false,
     },
     {
-      fileLike: true,
       mediaType: 'video/mp4',
+      response: true,
     },
   ];
 
   it.each(scenarios)(
-    'detects $mediaType as file-like? $fileLike',
-    async ({ fileLike, mediaType }) => {
-      expect(isMediaTypeFileLike({ mediaType })).toEqual(fileLike);
+    'detects $mediaType as file-like? $response',
+    async ({ mediaType, response }) => {
+      expect(isMediaTypeFileLike({ mediaType })).toEqual(response);
+    },
+  );
+});
+
+describe('mediaTypeToIrMediaType', () => {
+  const scenarios: Array<{
+    mediaType: string;
+    response: IRMediaType | undefined;
+  }> = [
+    {
+      mediaType: 'multipart/form-data',
+      response: 'form-data',
+    },
+    {
+      mediaType: 'application/json',
+      response: 'json',
+    },
+    {
+      mediaType: 'text/plain; charset=utf-8',
+      response: 'text',
+    },
+    {
+      mediaType: 'application/x-www-form-urlencoded',
+      response: 'url-search-params',
+    },
+    {
+      mediaType: 'application/foo',
+      response: undefined,
+    },
+  ];
+
+  it.each(scenarios)(
+    'ir media type for $mediaType: $response',
+    async ({ mediaType, response }) => {
+      expect(mediaTypeToIrMediaType({ mediaType })).toEqual(response);
     },
   );
 });

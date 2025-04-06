@@ -15,10 +15,17 @@
 - granular request and response customization options
 - minimal learning curve thanks to extending the underlying technology
 - support bundling inside the generated output
+- [platform](https://heyapi.dev/openapi-ts/integrations) for automating codegen builds
+
+## Dashboard
+
+Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with our platform.
+
+[Sign In](https://app.heyapi.dev) to Hey API platform.
 
 ## Documentation
 
-Please visit our [website](https://heyapi.dev/) for documentation, guides, migrating, and more.
+Please visit our [website](https://heyapi.dev) for documentation, guides, migrating, and more.
 
 ## Sponsors
 
@@ -30,10 +37,6 @@ Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
   </a>
 </p>
 
-## GitHub Integration (coming soon)
-
-Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.dev/openapi-ts/integrations.html).
-
 ## Migration Guides
 
-[OpenAPI Typescript Codegen](https://heyapi.dev/openapi-ts/migrating.html#openapi-typescript-codegen)
+[OpenAPI Typescript Codegen](https://heyapi.dev/openapi-ts/migrating#openapi-typescript-codegen)

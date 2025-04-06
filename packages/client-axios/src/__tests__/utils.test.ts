@@ -1,62 +1,7 @@
+import type { Auth } from '@hey-api/client-core';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { Auth } from '../types';
-import {
-  axiosHeadersKeywords,
-  getAuthToken,
-  mergeHeaders,
-  setAuthParams,
-} from '../utils';
-
-describe('getAuthToken', () => {
-  it('returns bearer token', async () => {
-    const auth = vi.fn().mockReturnValue('foo');
-    const token = await getAuthToken(
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-      auth,
-    );
-    expect(auth).toHaveBeenCalled();
-    expect(token).toBe('Bearer foo');
-  });
-
-  it('returns basic token', async () => {
-    const auth = vi.fn().mockReturnValue('foo:bar');
-    const token = await getAuthToken(
-      {
-        scheme: 'basic',
-        type: 'http',
-      },
-      auth,
-    );
-    expect(auth).toHaveBeenCalled();
-    expect(token).toBe(`Basic ${btoa('foo:bar')}`);
-  });
-
-  it('returns raw token', async () => {
-    const auth = vi.fn().mockReturnValue('foo');
-    const token = await getAuthToken(
-      {
-        type: 'http',
-      },
-      auth,
-    );
-    expect(auth).toHaveBeenCalled();
-    expect(token).toBe('foo');
-  });
-
-  it('returns nothing when auth function is undefined', async () => {
-    const token = await getAuthToken(
-      {
-        type: 'http',
-      },
-      undefined,
-    );
-    expect(token).toBeUndefined();
-  });
-});
+import { axiosHeadersKeywords, mergeHeaders, setAuthParams } from '../utils';
 
 describe('mergeHeaders', () => {
   it.each(axiosHeadersKeywords)(
@@ -142,6 +87,27 @@ describe('setAuthParams', () => {
     });
     expect(auth).toHaveBeenCalled();
     expect(headers.Authorization).toBe('foo');
+    expect(query).toEqual({});
+  });
+
+  it('sets an API key in a cookie', async () => {
+    const auth = vi.fn().mockReturnValue('foo');
+    const headers: Record<any, unknown> = {};
+    const query: Record<any, unknown> = {};
+    await setAuthParams({
+      auth,
+      headers,
+      query,
+      security: [
+        {
+          in: 'cookie',
+          name: 'baz',
+          type: 'apiKey',
+        },
+      ],
+    });
+    expect(auth).toHaveBeenCalled();
+    expect(headers.Cookie).toBe('baz=foo');
     expect(query).toEqual({});
   });
 
