@@ -141,6 +141,7 @@ const parameterToIrParameter = ({
     schema: schemaToIrSchema({
       context,
       schema: finalSchema,
+      state: undefined,
     }),
     style,
   };

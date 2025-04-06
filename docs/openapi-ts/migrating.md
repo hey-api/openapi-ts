@@ -27,6 +27,99 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.66.0
+
+### Read-only and write-only fields
+
+Starting with v0.66.0, `@hey-api/typescript` will generate separate types for payloads and responses if it detects any read-only or write-only fields. To preserve the previous behavior and generate a single type regardless, set `readOnlyWriteOnlyBehavior` to `off`.
+
+```js
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@hey-api/typescript',
+      readOnlyWriteOnlyBehavior: 'off', // [!code ++]
+    },
+  ],
+};
+```
+
+## v0.64.0
+
+### Added `ClientOptions` interface
+
+The `Config` interface now accepts an optional generic extending `ClientOptions` instead of `boolean` type `ThrowOnError`.
+
+```ts
+type Foo = Config<false>; // [!code --]
+type Foo = Config<{ throwOnError: false }>; // [!code ++]
+```
+
+### Added `client.baseUrl` option
+
+You can use this option to configure the default base URL for the generated client. By default, we will attempt to resolve the first defined server or infer the base URL from the input path. If you'd like to preserve the previous behavior, set `baseUrl` to `false`.
+
+```js
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    {
+      baseUrl: false, // [!code ++]
+      name: '@hey-api/client-fetch',
+    },
+  ],
+};
+```
+
+## v0.63.0
+
+### Client plugins
+
+Clients are now plugins generating their own `client.gen.ts` file. There's no migration needed if you're using CLI. If you're using the configuration file, move `client` options to `plugins`.
+
+```js
+export default {
+  client: '@hey-api/client-fetch', // [!code --]
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'], // [!code ++]
+};
+```
+
+### Added `client.gen.ts` file
+
+Related to above, the internal `client` instance previously located in `sdk.gen.ts` is now defined in `client.gen.ts`. If you're importing it in your code, update the import module.
+
+```js
+import { client } from 'client/sdk.gen'; // [!code --]
+import { client } from 'client/client.gen'; // [!code ++]
+```
+
+### Moved `sdk.throwOnError` option
+
+This SDK configuration option has been moved to the client plugins where applicable. Not every client can be configured to throw on error, so it didn't make sense to expose the option when it didn't have any effect.
+
+```js
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@hey-api/client-fetch',
+      throwOnError: true, // [!code ++]
+    },
+    {
+      name: '@hey-api/sdk',
+      throwOnError: true, // [!code --]
+    },
+  ],
+};
+```
+
 ## v0.62.0
 
 ### Changed parser
@@ -37,7 +130,7 @@ Formerly known as the experimental parser, this is now the default parser. This 
 export default {
   client: '@hey-api/client-fetch',
   experimentalParser: false, // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
 };
 ```
@@ -81,7 +174,7 @@ import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
   client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
@@ -107,7 +200,7 @@ You can now configure different log levels. As part of this feature, we had to i
 export default {
   client: '@hey-api/client-fetch',
   debug: true, // [!code --]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   logs: {
     level: 'debug', // [!code ++]
   },
@@ -125,7 +218,7 @@ import { defaultPlugins } from '@hey-api/openapi-ts';
 export default {
   client: '@hey-api/client-fetch',
   experimentalParser: true,
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
@@ -161,7 +254,7 @@ By default, the `output.path` folder will be emptied on every run. To preserve t
 ```js
 export default {
   client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     clean: false, // [!code ++]
     path: 'src/client',
@@ -177,7 +270,7 @@ export default {
 export default {
   client: '@hey-api/client-fetch',
   experimentalParser: true,
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -218,7 +311,7 @@ This is a breaking change since in the previous versions, inline enums were alwa
 export default {
   client: '@hey-api/client-fetch',
   experimentalParser: true,
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -260,7 +353,7 @@ export default {
   experimentalParser: true,
   input: {
     include: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
-    path: 'path/to/openapi.json',
+    path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
 };
@@ -285,7 +378,7 @@ Previously, you could explicitly disable export of certain artifacts using the `
 ```js [shorthand]
 export default {
   client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   schemas: false, // [!code --]
   plugins: ['@hey-api/types', '@hey-api/services'], // [!code ++]
@@ -295,7 +388,7 @@ export default {
 ```js [*.export]
 export default {
   client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   schemas: {
     export: false, // [!code --]
@@ -313,7 +406,7 @@ Each plugin definition contains a `name` field. This was conflicting with the `s
 ```js
 export default {
   client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   schemas: {
     name: (name) => `${name}Schema`, // [!code --]
@@ -335,7 +428,7 @@ Previously, you could use a string value as a shorthand for the `services.includ
 ```js
 export default {
   client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   services: '^MySchema', // [!code --]
   plugins: [
@@ -355,7 +448,7 @@ Each plugin definition contains a `name` field. This was conflicting with the `s
 ```js
 export default {
   client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   services: {
     name: '{{name}}Service', // [!code --]
@@ -377,7 +470,7 @@ Previously, you could set `types.dates` to a boolean or a string value, dependin
 ```js
 export default {
   client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   types: {
     dates: 'types+transform', // [!code --]
@@ -399,7 +492,7 @@ Previously, you could use a string value as a shorthand for the `types.include` 
 ```js
 export default {
   client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   types: '^MySchema', // [!code --]
   plugins: [
@@ -419,7 +512,7 @@ Each plugin definition contains a `name` field. This was conflicting with the `t
 ```js
 export default {
   client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   types: {
     name: 'PascalCase', // [!code --]
@@ -442,7 +535,7 @@ Previously, generated schemas would have their definition names prefixed with `$
 
 ```js
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   schemas: {
     name: (name) => `$${name}`, // [!code ++]
@@ -460,7 +553,7 @@ Legacy clients were renamed to signal they are deprecated more clearly. To conti
 export default {
   client: 'fetch', // [!code --]
   client: 'legacy/fetch', // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
 };
 ```
@@ -469,7 +562,7 @@ export default {
 export default {
   client: 'axios', // [!code --]
   client: 'legacy/axios', // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
 };
 ```
@@ -478,7 +571,7 @@ export default {
 export default {
   client: 'angular', // [!code --]
   client: 'legacy/angular', // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
 };
 ```
@@ -487,7 +580,7 @@ export default {
 export default {
   client: 'node', // [!code --]
   client: 'legacy/node', // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
 };
 ```
@@ -496,7 +589,7 @@ export default {
 export default {
   client: 'xhr', // [!code --]
   client: 'legacy/xhr', // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
 };
 ```
@@ -542,7 +635,7 @@ Client now has to be explicitly specified and `@hey-api/openapi-ts` will no long
 ```js
 export default {
   client: 'fetch', // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
 };
 ```
@@ -557,7 +650,7 @@ The `services.methodNameBuilder()` function now provides a single `operation` ar
 import { createClient } from '@hey-api/openapi-ts';
 
 createClient({
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   services: {
     methodNameBuilder: (service, name) => name, // [!code --]
@@ -592,7 +685,7 @@ If you want to preserve the old behavior, you can set the newly exposed `service
 
 ```js
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   services: {
     asClass: true, // [!code ++]
@@ -609,7 +702,7 @@ export default {
 ```js
 export default {
   client: 'axios', // [!code ++]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
 };
 ```
@@ -623,7 +716,7 @@ This config option has been moved. You can now configure formatter using the `ou
 ```js
 export default {
   format: 'prettier', // [!code --]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     format: 'prettier', // [!code ++]
     path: 'src/client',
@@ -637,7 +730,7 @@ This config option has been moved. You can now configure linter using the `outpu
 
 ```js
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   lint: 'eslint', // [!code --]
   output: {
     lint: 'eslint', // [!code ++]
@@ -684,7 +777,7 @@ This config option has been moved. You can now configure enums using the `types.
 ```js
 export default {
   enums: 'javascript', // [!code --]
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   types: {
     enums: 'javascript', // [!code ++]
@@ -701,7 +794,7 @@ This config option has changed. You now need to specify a value (`biome` or `pre
 ```js{2}
 export default {
   format: 'prettier',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
 }
 ```
@@ -712,7 +805,7 @@ This config option has changed. You now need to specify a value (`biome` or `esl
 
 ```js{3}
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   lint: 'eslint',
   output: 'src/client',
 }
@@ -724,7 +817,7 @@ This config option has been moved. You can now configure it using the `services.
 
 ```js{5}
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   services: {
     operationId: true,
@@ -740,7 +833,7 @@ This config option has been removed. You can now transform service names using t
 
 ```js{5}
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   services: {
     name: 'myAwesome{{name}}Api',
@@ -754,7 +847,7 @@ This config option has been removed. You can now configure service responses usi
 
 ```js{5}
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   services: {
     response: 'body',
@@ -768,7 +861,7 @@ This config option has been removed. You can now configure date type using the `
 
 ```js{5}
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   type: {
     dates: true,
@@ -797,7 +890,7 @@ You can now choose to export types using the PascalCase naming convention.
 
 ```js{5}
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   types: {
     name: 'PascalCase',

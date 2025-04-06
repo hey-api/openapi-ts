@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import type { Client } from '../types/client';
 import { getConfig, legacyNameFromConfig } from '../utils/config';
 import { getHttpRequestName } from '../utils/getHttpRequestName';
@@ -20,8 +21,9 @@ export const generateLegacyCore = async (
   const config = getConfig();
 
   if (config.exportCore) {
+    const clientPlugin = getClientPlugin(config);
     const context = {
-      httpRequest: getHttpRequestName(config.client),
+      httpRequest: getHttpRequestName(clientPlugin.name),
       server: config.base !== undefined ? config.base : client.server,
       version: client.version,
     };
@@ -62,7 +64,7 @@ export const generateLegacyCore = async (
         ...context,
       }),
     );
-    if (config.client.name !== 'legacy/angular') {
+    if (clientPlugin.name !== 'legacy/angular') {
       await fs.writeFileSync(
         path.resolve(outputPath, 'CancelablePromise.ts'),
         templates.core.cancelablePromise({

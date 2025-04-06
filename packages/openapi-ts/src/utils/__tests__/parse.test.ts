@@ -5,9 +5,6 @@ import { setConfig } from '../config';
 
 describe('operationNameFn', () => {
   const optionsCommon: Parameters<typeof setConfig>[0] = {
-    client: {
-      name: 'legacy/fetch',
-    },
     configFile: '',
     dryRun: true,
     experimentalParser: false,
@@ -16,13 +13,14 @@ describe('operationNameFn', () => {
       path: '',
     },
     logs: {
+      file: true,
       level: 'info',
       path: process.cwd(),
     },
     output: {
       path: '',
     },
-    pluginOrder: [],
+    pluginOrder: ['legacy/fetch', '@hey-api/sdk'],
     plugins: {
       '@hey-api/sdk': {
         _handler: () => {},
@@ -31,17 +29,25 @@ describe('operationNameFn', () => {
         operationId: true,
         response: 'body',
       },
+      'legacy/fetch': {
+        _handler: () => {},
+        _handlerLegacy: () => {},
+        _tags: ['client'],
+        name: 'legacy/fetch',
+      },
     },
     useOptions: false,
     watch: {
       enabled: false,
-      interval: 1000,
+      interval: 1_000,
+      timeout: 60_000,
     },
   };
 
   const options1: Parameters<typeof setConfig>[0] = {
     ...optionsCommon,
     plugins: {
+      ...optionsCommon.plugins,
       '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
@@ -55,6 +61,7 @@ describe('operationNameFn', () => {
   const options2: Parameters<typeof setConfig>[0] = {
     ...optionsCommon,
     plugins: {
+      ...optionsCommon.plugins,
       '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
@@ -67,10 +74,14 @@ describe('operationNameFn', () => {
 
   const options3: Parameters<typeof setConfig>[0] = {
     ...optionsCommon,
-    client: {
-      name: '@hey-api/client-fetch',
-    },
+    pluginOrder: ['@hey-api/client-fetch', '@hey-api/sdk'],
     plugins: {
+      '@hey-api/client-fetch': {
+        _handler: () => {},
+        _handlerLegacy: () => {},
+        _tags: ['client'],
+        name: '@hey-api/client-fetch',
+      },
       '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
@@ -83,10 +94,14 @@ describe('operationNameFn', () => {
 
   const options4: Parameters<typeof setConfig>[0] = {
     ...optionsCommon,
-    client: {
-      name: '@hey-api/client-fetch',
-    },
+    pluginOrder: ['@hey-api/client-fetch', '@hey-api/sdk'],
     plugins: {
+      '@hey-api/client-fetch': {
+        _handler: () => {},
+        _handlerLegacy: () => {},
+        _tags: ['client'],
+        name: '@hey-api/client-fetch',
+      },
       '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},

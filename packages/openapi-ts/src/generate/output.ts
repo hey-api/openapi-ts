@@ -4,6 +4,7 @@ import { compiler } from '../compiler';
 import { parseIR } from '../ir/parser';
 import type { IR } from '../ir/types';
 import type { OpenApi } from '../openApi';
+import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig, isLegacyClient } from '../utils/config';
@@ -58,8 +59,16 @@ export const generateLegacyOutput = async ({
     removeDirSync(outputPath);
   }
 
-  if (!isLegacyClient(config) && config.client.bundle) {
-    await generateClientBundle({ name: config.client.name, outputPath });
+  const clientPlugin = getClientPlugin(config);
+  if (
+    !isLegacyClient(config) &&
+    'bundle' in clientPlugin &&
+    clientPlugin.bundle
+  ) {
+    generateClientBundle({
+      outputPath,
+      plugin: clientPlugin,
+    });
   }
 
   // deprecated files
@@ -113,10 +122,11 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
     removeDirSync(outputPath);
   }
 
-  if (context.config.client.bundle) {
+  const client = getClientPlugin(context.config);
+  if ('bundle' in client && client.bundle) {
     generateClientBundle({
-      name: context.config.client.name,
       outputPath,
+      plugin: client,
     });
   }
 

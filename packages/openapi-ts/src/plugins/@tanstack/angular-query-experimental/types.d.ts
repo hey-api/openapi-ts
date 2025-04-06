@@ -1,25 +1,31 @@
 import type { Plugin } from '../../types';
+import type { TanStackQuery } from '../query-core/types';
 
 export interface Config
-  extends Plugin.Name<'@tanstack/angular-query-experimental'> {
+  extends Plugin.Name<'@tanstack/angular-query-experimental'>,
+    TanStackQuery.Config {
   /**
    * Generate {@link https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions `infiniteQueryOptions()`} helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
+   *
    * @default true
    */
   infiniteQueryOptions?: boolean;
   /**
    * Generate {@link https://tanstack.com/query/v5/docs/framework/angular/reference/useMutation `useMutation()`} helpers? These will be generated from DELETE, PATCH, POST, and PUT requests.
+   *
    * @default true
    */
   mutationOptions?: boolean;
   /**
    * Name of the generated file.
+   *
    * @default '@tanstack/angular-query-experimental'
    */
   output?: string;
   /**
    * Generate {@link https://tanstack.com/query/v5/docs/framework/angular/reference/queryOptions `queryOptions()`} helpers?
    * These will be generated from all requests.
+   *
    * @default true
    */
   queryOptions?: boolean;

@@ -1,14 +1,28 @@
 import type { IR } from '../ir/types';
 import type { OpenApi as LegacyOpenApi } from '../openApi';
 import type { OpenApi } from '../openApi/types';
-import type { Client } from '../types/client';
+import type { Client as LegacyClient } from '../types/client';
 import type { Files } from '../types/utils';
 
 type OmitUnderscoreKeys<T> = {
   [K in keyof T as K extends `_${string}` ? never : K]: T[K];
 };
 
+export type PluginClientNames =
+  | '@hey-api/client-axios'
+  | '@hey-api/client-fetch'
+  | '@hey-api/client-next'
+  | '@hey-api/client-nuxt'
+  | 'legacy/angular'
+  | 'legacy/axios'
+  | 'legacy/fetch'
+  | 'legacy/node'
+  | 'legacy/xhr';
+
+export type PluginValidatorNames = 'zod';
+
 export type PluginNames =
+  | PluginClientNames
   | '@hey-api/schemas'
   | '@hey-api/sdk'
   | '@hey-api/transformers'
@@ -20,15 +34,18 @@ export type PluginNames =
   | '@tanstack/svelte-query'
   | '@tanstack/vue-query'
   | 'fastify'
-  | 'zod';
+  | PluginValidatorNames;
 
 export type AnyPluginName = PluginNames | (string & {});
 
-type PluginTag = 'transformer' | 'validator';
+type PluginTag = 'client' | 'transformer' | 'validator';
 
 export interface PluginContext {
   ensureDependency: (name: PluginNames | true) => void;
-  pluginByTag: (tag: PluginTag) => AnyPluginName | undefined;
+  pluginByTag: (
+    tag: PluginTag,
+    errorMessage?: string,
+  ) => AnyPluginName | undefined;
 }
 
 interface BaseConfig {
@@ -83,7 +100,7 @@ export namespace Plugin {
     };
 
   export type DefineConfig<Config extends BaseConfig> = (
-    config?: Plugin.UserConfig<Config>,
+    config?: Plugin.UserConfig<Omit<Config, 'name'>>,
   ) => Omit<Plugin.Config<Config>, 'name'> & {
     /**
      * Cast name to `any` so it doesn't throw type error in `plugins` array.
@@ -97,10 +114,10 @@ export namespace Plugin {
   /**
    * Plugin implementation for experimental parser.
    */
-  export type Handler<Config extends BaseConfig> = (args: {
+  export type Handler<Config extends BaseConfig, ReturnType = void> = (args: {
     context: IR.Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
     plugin: Plugin.Instance<Config>;
-  }) => void;
+  }) => ReturnType;
 
   export type Instance<Config extends BaseConfig> = OmitUnderscoreKeys<Config> &
     Pick<Required<BaseConfig>, 'exportFromIndex' | 'output'>;
@@ -111,7 +128,7 @@ export namespace Plugin {
    * Plugin implementation for legacy parser.
    */
   export type LegacyHandler<Config extends BaseConfig> = (args: {
-    client: Client;
+    client: LegacyClient;
     files: Files;
     openApi: LegacyOpenApi;
     plugin: Plugin.Instance<Config>;

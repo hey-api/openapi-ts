@@ -8,6 +8,15 @@ const { Layout } = DefaultTheme;
   <Layout>
     <template #layout-top>
       <div class="announcement">
+        <span> Build better APIs with our platform </span>
+        <a
+          href="https://app.heyapi.dev/"
+          rel="noopener noreferrer"
+          target="_blank"
+          >Dashboard</a
+        >
+      </div>
+      <!-- <div class="announcement">
         <span>
           Request a feature<span class="hide-sm"> for your business</span>
         </span>
@@ -18,7 +27,7 @@ const { Layout } = DefaultTheme;
         >
           Let's Talk
         </a>
-      </div>
+      </div> -->
     </template>
   </Layout>
 </template>
@@ -29,7 +38,7 @@ const { Layout } = DefaultTheme;
   background-color: var(--vp-c-bg);
   border-bottom: 1px solid var(--vp-c-divider);
   color: var(--vp-c-text-1);
-  column-gap: 1.5rem;
+  column-gap: 0.5rem;
   display: flex;
   font-size: var(--announcement-font-size);
   height: var(--announcement-height);

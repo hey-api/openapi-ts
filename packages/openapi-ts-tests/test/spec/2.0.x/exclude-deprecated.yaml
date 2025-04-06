@@ -1,0 +1,38 @@
+swagger: '2.0'
+info:
+  title: OpenAPI 2.0 exclude deprecated example
+  version: '1'
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /foo:
+    post:
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Foo'
+      responses:
+        '200':
+          description: OK
+  /bar:
+    post:
+      deprecated: true
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Bar'
+      responses:
+        '200':
+          description: OK
+definitions:
+  Foo:
+    type: string
+  Bar:
+    deprecated: true
+    type: string

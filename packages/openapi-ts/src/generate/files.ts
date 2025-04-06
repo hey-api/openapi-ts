@@ -51,6 +51,8 @@ interface Namespaces {
   value: Namespace;
 }
 
+export type FileImportResult = Pick<ImportExportItemObject, 'asType' | 'name'>;
+
 export class TypeScriptFile {
   /**
    * Should the exports from this file be re-exported in the index barrel file?
@@ -150,14 +152,16 @@ export class TypeScriptFile {
   }
 
   /**
-   * Adds an import to the provided module. Handles duplication, returns added import.
+   * Adds an import to the provided module. Handles duplication, returns added
+   * import. Returns the imported name. If we import an aliased export, `name`
+   * will be equal to the specified `alias`.
    */
   public import({
     module,
     ...importedItem
   }: ImportExportItemObject & {
     module: string;
-  }): ImportExportItemObject {
+  }): FileImportResult {
     let moduleMap = this._imports.get(module);
 
     if (!moduleMap) {
@@ -167,11 +171,17 @@ export class TypeScriptFile {
 
     const match = moduleMap.get(importedItem.name);
     if (match) {
-      return match;
+      return {
+        ...match,
+        name: match.alias || match.name,
+      };
     }
 
     moduleMap.set(importedItem.name, importedItem);
-    return importedItem;
+    return {
+      ...importedItem,
+      name: importedItem.alias || importedItem.name,
+    };
   }
 
   public isEmpty() {
@@ -190,22 +200,54 @@ export class TypeScriptFile {
     context: IR.Context;
     id: string;
   }): string {
-    const file = context.file({ id });
-    if (!file) {
-      throw new Error(`File with id ${id} does not exist`);
+    let filePath = '';
+
+    // relative file path
+    if (id.startsWith('.')) {
+      let configFileParts: Array<string> = [];
+      // if providing a custom configuration file, relative paths must resolve
+      // relative to the configuration file.
+      if (context.config.configFile) {
+        const cfgParts = context.config.configFile.split('/');
+        configFileParts = cfgParts.slice(0, cfgParts.length - 1);
+      }
+      filePath = path.resolve(process.cwd(), ...configFileParts, id);
+    } else {
+      const file = context.file({ id });
+      if (!file) {
+        throw new Error(`File with id ${id} does not exist`);
+      }
+      filePath = file._path;
     }
 
-    const thisRelativePath = this._path.substring(
-      context.config.output.path.length + 1,
-    );
-    const fileRelativePath = file._path.substring(
-      context.config.output.path.length + 1,
-    );
-    const outputParts = thisRelativePath.split(path.sep);
-    const relativePath =
-      new Array(outputParts.length).fill('').join('../') || './';
+    const thisPathParts = this._path.split(path.sep);
+    const filePathParts = filePath.split(path.sep);
+
+    let index = -1;
+    let relativePath = '';
+    for (const part of thisPathParts) {
+      index += 1;
+      if (filePathParts[index] !== part) {
+        const pathArray = Array.from({
+          length: thisPathParts.length - index,
+        }).fill('');
+        const relativePathToFile = filePathParts.slice(index);
+        const relativeFolder = relativePathToFile.slice(
+          0,
+          relativePathToFile.length - 1,
+        );
+        if (relativeFolder.length) {
+          relativeFolder.push('');
+        }
+        relativePath =
+          (pathArray.join('../') || './') + relativeFolder.join('/');
+        break;
+      }
+    }
+
+    const fileName = filePathParts[filePathParts.length - 1]!;
     // TODO: parser - cache responses
-    return `${relativePath}${splitNameAndExtension(fileRelativePath).name}`;
+    return `${relativePath}${splitNameAndExtension(fileName).name}`;
   }
 
   public remove(options?: Parameters<typeof fs.rmSync>[1]) {

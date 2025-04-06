@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-fetch",
-  "version": "0.7.0",
+  "version": "0.10.0",
   "description": "🚀 Fetch API client for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {
@@ -19,6 +19,7 @@
   "funding": "https://github.com/sponsors/hey-api",
   "keywords": [
     "client",
+    "codegen",
     "fetch",
     "http",
     "javascript",
@@ -54,7 +55,7 @@
     "src"
   ],
   "scripts": {
-    "build": "tsup && pnpm check-exports",
+    "build": "tsup && rollup -c && pnpm check-exports",
     "check-exports": "attw --pack .",
     "dev": "tsup --watch",
     "prepublishOnly": "pnpm build",
@@ -63,5 +64,12 @@
     "test:watch": "vitest watch",
     "test": "vitest run",
     "typecheck": "vitest --typecheck --watch=false"
+  },
+  "peerDependencies": {
+    "@hey-api/openapi-ts": "< 2"
+  },
+  "devDependencies": {
+    "@hey-api/client-core": "workspace:*",
+    "@hey-api/openapi-ts": "workspace:*"
   }
 }

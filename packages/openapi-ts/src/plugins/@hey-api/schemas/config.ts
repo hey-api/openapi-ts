@@ -6,6 +6,7 @@ import type { Config } from './types';
 export const defaultConfig: Plugin.Config<Config> = {
   _handler: handler,
   _handlerLegacy: handlerLegacy,
+  exportFromIndex: false,
   name: '@hey-api/schemas',
   nameBuilder: (name) => `${name}Schema`,
   output: 'schemas',

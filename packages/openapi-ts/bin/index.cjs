@@ -13,7 +13,7 @@ const params = program
   .version(pkg.version)
   .option(
     '-c, --client <value>',
-    'HTTP client to generate [@hey-api/client-axios, @hey-api/client-fetch, legacy/angular, legacy/axios, legacy/fetch, legacy/node, legacy/xhr]',
+    'HTTP client to generate [@hey-api/client-axios, @hey-api/client-fetch, @hey-api/client-next, @hey-api/client-nuxt, legacy/angular, legacy/axios, legacy/fetch, legacy/node, legacy/xhr]',
   )
   .option('-d, --debug', 'Set log level to debug')
   .option('--dry-run [value]', 'Skip writing files to disk?')
@@ -34,6 +34,10 @@ const params = program
     'DEPRECATED. Manually set base in OpenAPI config instead of inferring from server value',
   )
   .option('-s, --silent', 'Set log level to silent')
+  .option(
+    '--no-log-file',
+    'Disable writing a log file. Works like --silent but without supressing console output',
+  )
   .option(
     '-w, --watch [value]',
     'Regenerate the client when the input file changes?',
@@ -83,6 +87,7 @@ async function start() {
 
     userConfig = processParams(params, [
       'dryRun',
+      'logFile',
       'experimentalParser',
       'exportCore',
       'useOptions',
@@ -92,6 +97,13 @@ async function start() {
       userConfig.plugins = [];
     } else if (params.plugins) {
       userConfig.plugins = params.plugins;
+    } else if (userConfig.client) {
+      userConfig.plugins = ['@hey-api/typescript', '@hey-api/sdk'];
+    }
+
+    if (userConfig.client) {
+      userConfig.plugins.push(userConfig.client);
+      delete userConfig.client;
     }
 
     userConfig.logs = userConfig.logs
@@ -106,8 +118,14 @@ async function start() {
       userConfig.logs.level = 'silent';
     }
 
+    userConfig.logs.file = userConfig.logFile;
+
     if (typeof params.watch === 'string') {
       userConfig.watch = Number.parseInt(params.watch, 10);
+    }
+
+    if (!Object.keys(userConfig.logs).length) {
+      delete userConfig.logs;
     }
 
     const context = await createClient(userConfig);

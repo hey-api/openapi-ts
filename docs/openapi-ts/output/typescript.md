@@ -42,11 +42,11 @@ You can modify the contents of `types.gen.ts` by configuring the `@hey-api/types
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     {
       name: '@hey-api/typescript',
       // ...custom options // [!code ++]
@@ -65,11 +65,11 @@ By default, `@hey-api/openapi-ts` will only emit enums as types. You may want to
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     {
       enums: false, // default // [!code ++]
       name: '@hey-api/typescript',
@@ -82,11 +82,11 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     {
       enums: 'javascript', // [!code ++]
       name: '@hey-api/typescript',
@@ -99,11 +99,11 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     {
       enums: 'typescript', // [!code ++]
       name: '@hey-api/typescript',

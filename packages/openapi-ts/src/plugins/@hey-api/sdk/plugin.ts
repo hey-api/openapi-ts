@@ -15,6 +15,7 @@ import { transformServiceName } from '../../../utils/transform';
 import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
 import { zodId } from '../../zod/plugin';
+import { clientId, getClientPlugin } from '../client-core/utils';
 import {
   operationTransformerIrRef,
   transformersId,
@@ -24,12 +25,24 @@ import {
   importIdentifierError,
   importIdentifierResponse,
 } from '../typescript/ref';
+import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { serviceFunctionIdentifier } from './plugin-legacy';
+import { createTypeOptions } from './typeOptions';
 import type { Config } from './types';
 
-// type copied from client packages
-interface Auth {
-  in?: 'header' | 'query';
+// copy-pasted from @hey-api/client-core
+export interface Auth {
+  /**
+   * Which part of the request do we use to send the auth?
+   *
+   * @default 'header'
+   */
+  in?: 'header' | 'query' | 'cookie';
+  /**
+   * Header or query parameter name.
+   *
+   * @default 'Authorization'
+   */
   name?: string;
   scheme?: 'basic' | 'bearer';
   type: 'apiKey' | 'http';
@@ -47,24 +60,29 @@ export const operationOptionsType = ({
   throwOnError?: string;
 }) => {
   const identifierData = importIdentifierData({ context, file, operation });
+  const identifierResponse = importIdentifierResponse({
+    context,
+    file,
+    operation,
+  });
 
   const optionsName = clientApi.Options.name;
 
-  // if (context.config.client.name === '@hey-api/client-nuxt') {
-  //   const identifierError = importIdentifierError({ context, file, operation });
-  //   return `${optionsName}<${identifierData?.name || 'unknown'}, ${identifierError?.name || 'unknown'}, TComposable>`;
-  // }
+  const client = getClientPlugin(context.config);
+  if (client.name === '@hey-api/client-nuxt') {
+    return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}, ${identifierResponse.name || 'unknown'}, ${nuxtTypeDefault}>`;
+  }
 
   // TODO: refactor this to be more generic, works for now
   if (throwOnError) {
-    return `${optionsName}<${identifierData?.name || 'unknown'}, ${throwOnError}>`;
+    return `${optionsName}<${identifierData.name || 'unknown'}, ${throwOnError}>`;
   }
-  return identifierData
+  return identifierData.name
     ? `${optionsName}<${identifierData.name}>`
     : optionsName;
 };
 
-const sdkId = 'sdk';
+export const sdkId = 'sdk';
 
 /**
  * Infers `responseType` value from provided response content type. This is
@@ -126,9 +144,20 @@ const securitySchemeObjectToAuthObject = ({
 }: {
   securitySchemeObject: IR.SecurityObject;
 }): Auth | undefined => {
+  if (securitySchemeObject.type === 'openIdConnect') {
+    return {
+      scheme: 'bearer',
+      type: 'http',
+    };
+  }
+
   if (securitySchemeObject.type === 'oauth2') {
-    // TODO: parser - handle more/multiple oauth2 flows
-    if (securitySchemeObject.flows.password) {
+    if (
+      securitySchemeObject.flows.password ||
+      securitySchemeObject.flows.authorizationCode ||
+      securitySchemeObject.flows.clientCredentials ||
+      securitySchemeObject.flows.implicit
+    ) {
       return {
         scheme: 'bearer',
         type: 'http',
@@ -146,8 +175,10 @@ const securitySchemeObjectToAuthObject = ({
       };
     }
 
-    // TODO: parser - support cookies auth
-    if (securitySchemeObject.in === 'query') {
+    if (
+      securitySchemeObject.in === 'query' ||
+      securitySchemeObject.in == 'cookie'
+    ) {
       return {
         in: securitySchemeObject.in,
         name: securitySchemeObject.name,
@@ -159,12 +190,10 @@ const securitySchemeObjectToAuthObject = ({
   }
 
   if (securitySchemeObject.type === 'http') {
-    if (
-      securitySchemeObject.scheme === 'bearer' ||
-      securitySchemeObject.scheme === 'basic'
-    ) {
+    const scheme = securitySchemeObject.scheme.toLowerCase();
+    if (scheme === 'bearer' || scheme === 'basic') {
       return {
-        scheme: securitySchemeObject.scheme,
+        scheme: scheme as 'bearer' | 'basic',
         type: 'http',
       };
     }
@@ -205,10 +234,12 @@ const operationAuth = ({
 
 const operationStatements = ({
   context,
+  isRequiredOptions,
   operation,
   plugin,
 }: {
   context: IR.Context;
+  isRequiredOptions: boolean;
   operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
 }): Array<ts.Statement> => {
@@ -253,6 +284,14 @@ const operationStatements = ({
         });
         break;
       case 'json':
+        // jsonBodySerializer is the default, no need to specify
+        break;
+      case 'text':
+        // ensure we don't use any serializer by default
+        requestOptions.push({
+          key: 'bodySerializer',
+          value: null,
+        });
         break;
       case 'url-search-params':
         requestOptions.push({ spread: 'urlSearchParamsBodySerializer' });
@@ -267,7 +306,8 @@ const operationStatements = ({
     }
   }
 
-  if (context.config.client.name === '@hey-api/client-axios') {
+  const client = getClientPlugin(context.config);
+  if (client.name === '@hey-api/client-axios') {
     // try to infer `responseType` option for Axios. We don't need this in
     // Fetch API client because it automatically detects the correct response
     // during runtime.
@@ -427,6 +467,27 @@ const operationStatements = ({
     });
   }
 
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const responseType = identifierResponse.name || 'unknown';
+  const errorType = identifierError.name || 'unknown';
+
+  const heyApiClient = plugin.client
+    ? file.import({
+        alias: '_heyApiClient',
+        module: file.relativePathToFile({
+          context,
+          id: clientId,
+        }),
+        name: 'client',
+      })
+    : undefined;
+
+  const optionsClient = compiler.propertyAccessExpression({
+    expression: compiler.identifier({ text: 'options' }),
+    isOptional: !isRequiredOptions,
+    name: 'client',
+  });
+
   return [
     compiler.returnFunctionCall({
       args: [
@@ -435,12 +496,24 @@ const operationStatements = ({
           obj: requestOptions,
         }),
       ],
-      name: `(options?.client ?? client).${operation.method}`,
-      types: [
-        identifierResponse.name || 'unknown',
-        identifierError.name || 'unknown',
-        'ThrowOnError',
-      ],
+      name: compiler.propertyAccessExpression({
+        expression: heyApiClient?.name
+          ? compiler.binaryExpression({
+              left: optionsClient,
+              operator: '??',
+              right: compiler.identifier({ text: heyApiClient.name }),
+            })
+          : optionsClient,
+        name: compiler.identifier({ text: operation.method }),
+      }),
+      types: isNuxtClient
+        ? [
+            nuxtTypeComposable,
+            `${responseType} | ${nuxtTypeDefault}`,
+            errorType,
+            nuxtTypeDefault,
+          ]
+        : [responseType, errorType, 'ThrowOnError'],
     }),
   ];
 };
@@ -452,10 +525,19 @@ const generateClassSdk = ({
   context: IR.Context;
   plugin: Plugin.Instance<Config>;
 }) => {
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = context.file({ id: sdkId })!;
   const sdks = new Map<string, Array<ts.MethodDeclaration>>();
 
   context.subscribe('operation', ({ operation }) => {
+    const isRequiredOptions =
+      !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
+    const identifierResponse = importIdentifierResponse({
+      context,
+      file,
+      operation,
+    });
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
       comment: [
@@ -472,29 +554,53 @@ const generateClassSdk = ({
       }),
       parameters: [
         {
-          isRequired: hasOperationDataRequired(operation),
+          isRequired: isRequiredOptions,
           name: 'options',
           type: operationOptionsType({
             context,
             file,
             operation,
-            throwOnError: 'ThrowOnError',
+            throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
           }),
         },
       ],
       returnType: undefined,
       statements: operationStatements({
         context,
+        isRequiredOptions,
         operation,
         plugin,
       }),
-      types: [
-        {
-          default: plugin.throwOnError,
-          extends: 'boolean',
-          name: 'ThrowOnError',
-        },
-      ],
+      types: isNuxtClient
+        ? [
+            {
+              // default: compiler.ots.string('$fetch'),
+              extends: compiler.typeNode('Composable'),
+              name: nuxtTypeComposable,
+            },
+            {
+              default: identifierResponse.name
+                ? compiler.typeReferenceNode({
+                    typeName: identifierResponse.name,
+                  })
+                : compiler.typeNode('undefined'),
+              extends: identifierResponse.name
+                ? compiler.typeReferenceNode({
+                    typeName: identifierResponse.name,
+                  })
+                : undefined,
+              name: nuxtTypeDefault,
+            },
+          ]
+        : [
+            {
+              default:
+                ('throwOnError' in client ? client.throwOnError : false) ??
+                false,
+              extends: 'boolean',
+              name: 'ThrowOnError',
+            },
+          ],
     });
 
     const uniqueTags = Array.from(new Set(operation.tags));
@@ -532,9 +638,18 @@ const generateFlatSdk = ({
   context: IR.Context;
   plugin: Plugin.Instance<Config>;
 }) => {
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = context.file({ id: sdkId })!;
 
   context.subscribe('operation', ({ operation }) => {
+    const isRequiredOptions =
+      !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
+    const identifierResponse = importIdentifierResponse({
+      context,
+      file,
+      operation,
+    });
     const node = compiler.constVariable({
       comment: [
         operation.deprecated && '@deprecated',
@@ -545,29 +660,53 @@ const generateFlatSdk = ({
       expression: compiler.arrowFunction({
         parameters: [
           {
-            isRequired: hasOperationDataRequired(operation),
+            isRequired: isRequiredOptions,
             name: 'options',
             type: operationOptionsType({
               context,
               file,
               operation,
-              throwOnError: 'ThrowOnError',
+              throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
             }),
           },
         ],
         returnType: undefined,
         statements: operationStatements({
           context,
+          isRequiredOptions,
           operation,
           plugin,
         }),
-        types: [
-          {
-            default: plugin.throwOnError,
-            extends: 'boolean',
-            name: 'ThrowOnError',
-          },
-        ],
+        types: isNuxtClient
+          ? [
+              {
+                // default: compiler.ots.string('$fetch'),
+                extends: compiler.typeNode('Composable'),
+                name: nuxtTypeComposable,
+              },
+              {
+                default: identifierResponse.name
+                  ? compiler.typeReferenceNode({
+                      typeName: identifierResponse.name,
+                    })
+                  : compiler.typeNode('undefined'),
+                extends: identifierResponse.name
+                  ? compiler.typeReferenceNode({
+                      typeName: identifierResponse.name,
+                    })
+                  : undefined,
+                name: nuxtTypeDefault,
+              },
+            ]
+          : [
+              {
+                default:
+                  ('throwOnError' in client ? client.throwOnError : false) ??
+                  false,
+                extends: 'boolean',
+                name: 'ThrowOnError',
+              },
+            ],
       }),
       name: serviceFunctionIdentifier({
         config: context.config,
@@ -581,63 +720,38 @@ const generateFlatSdk = ({
 };
 
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  if (!context.config.client.name) {
-    throw new Error(
-      '🚫 client needs to be set to generate SDKs - which HTTP client do you want to use?',
-    );
-  }
-
   const file = context.createFile({
     exportFromIndex: plugin.exportFromIndex,
     id: sdkId,
     path: plugin.output,
   });
-  const sdkOutput = file.nameWithoutExtension();
 
   // import required packages and core files
   const clientModule = clientModulePath({
     config: context.config,
-    sourceOutput: sdkOutput,
+    sourceOutput: file.nameWithoutExtension(),
   });
-  file.import({
-    module: clientModule,
-    name: 'createClient',
-  });
-  file.import({
-    module: clientModule,
-    name: 'createConfig',
-  });
-  file.import({
+  const clientOptions = file.import({
     ...clientApi.Options,
+    alias: 'ClientOptions',
     module: clientModule,
   });
 
-  // define client first
-  const statement = compiler.constVariable({
-    exportConst: true,
-    expression: compiler.callExpression({
-      functionName: 'createClient',
-      parameters: [
-        compiler.callExpression({
-          functionName: 'createConfig',
-          parameters: [
-            plugin.throwOnError
-              ? compiler.objectExpression({
-                  obj: [
-                    {
-                      key: 'throwOnError',
-                      value: plugin.throwOnError,
-                    },
-                  ],
-                })
-              : undefined,
-          ],
-        }),
-      ],
-    }),
-    name: 'client',
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  if (isNuxtClient) {
+    file.import({
+      asType: true,
+      module: clientModule,
+      name: 'Composable',
+    });
+  }
+
+  createTypeOptions({
+    clientOptions,
+    context,
+    plugin,
   });
-  file.add(statement);
 
   if (plugin.asClass) {
     generateClassSdk({ context, plugin });

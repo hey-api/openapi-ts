@@ -1,0 +1,3637 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "swagger",
+    "version": "v1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/base"
+    }
+  ],
+  "paths": {
+    "/api/v{api-version}/no+tag": {
+      "tags": [],
+      "get": {
+        "operationId": "export"
+      },
+      "patch": {
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "operationId": "import",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ModelWithReadOnlyAndWriteOnly"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ModelWithArrayReadOnlyAndWriteOnly"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "Default success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithReadOnlyAndWriteOnly"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model-From.Zendesk"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "foo+Wow",
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/simple/$count": {
+      "get": {
+        "tags": ["Simple"],
+        "operationId": "api/v{version}/ODataController/$count",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model-From.Zendesk"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/simple:operation": {
+      "get": {
+        "parameters": [
+          {
+            "description": "foo in method",
+            "in": "path",
+            "name": "foo_param",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithBoolean"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Response is a simple number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/simple": {
+      "get": {
+        "tags": ["Simple"],
+        "operationId": "GetCallWithoutParametersAndResponse"
+      },
+      "put": {
+        "tags": ["Simple"],
+        "operationId": "PutCallWithoutParametersAndResponse"
+      },
+      "post": {
+        "tags": ["Simple"],
+        "operationId": "PostCallWithoutParametersAndResponse"
+      },
+      "delete": {
+        "tags": ["Simple"],
+        "operationId": "DeleteCallWithoutParametersAndResponse"
+      },
+      "options": {
+        "tags": ["Simple"],
+        "operationId": "OptionsCallWithoutParametersAndResponse"
+      },
+      "head": {
+        "tags": ["Simple"],
+        "operationId": "HeadCallWithoutParametersAndResponse"
+      },
+      "patch": {
+        "tags": ["Simple"],
+        "operationId": "PatchCallWithoutParametersAndResponse"
+      }
+    },
+    "/api/v{api-version}/foo/{foo_param}/bar/{BarParam}": {
+      "delete": {
+        "tags": ["Parameters"],
+        "operationId": "deleteFoo",
+        "parameters": [
+          {
+            "description": "foo in method",
+            "in": "path",
+            "name": "foo_param",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "bar in method",
+            "in": "path",
+            "name": "BarParam",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Parameter with illegal characters",
+            "name": "x-Foo-Bar",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithString"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "description": "foo in global parameters",
+          "in": "path",
+          "name": "foo_param",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "description": "bar in global parameters",
+          "in": "path",
+          "name": "BarParam",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/api/v{api-version}/descriptions": {
+      "post": {
+        "tags": ["Descriptions"],
+        "operationId": "CallWithDescriptions",
+        "parameters": [
+          {
+            "description": "Testing multiline comments in string: First line\nSecond line\n\nFourth line",
+            "name": "parameterWithBreaks",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Testing backticks in string: `backticks` and ```multiple backticks``` should work",
+            "name": "parameterWithBackticks",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work",
+            "name": "parameterWithSlashes",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Testing expression placeholders in string: ${expression} should work",
+            "name": "parameterWithExpressionPlaceholders",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Testing quotes in string: 'single quote''' and \"double quotes\"\"\" should work",
+            "name": "parameterWithQuotes",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Testing reserved characters in string: /* inline */ and /** inline **/ should work",
+            "name": "parameterWithReservedCharacters",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v{api-version}/parameters/deprecated": {
+      "post": {
+        "tags": ["Deprecated"],
+        "deprecated": true,
+        "operationId": "DeprecatedCall",
+        "parameters": [
+          {
+            "deprecated": true,
+            "description": "This parameter is deprecated",
+            "name": "parameter",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/DeprecatedModel"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/api/v{api-version}/parameters/{parameterPath}": {
+      "post": {
+        "tags": ["Parameters"],
+        "operationId": "CallWithParameters",
+        "parameters": [
+          {
+            "description": "This is the parameter that goes into the header",
+            "name": "parameterHeader",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": ["string", "null"]
+            }
+          },
+          {
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/ModelWithNestedArrayEnumsDataFoo"
+            },
+            "name": "foo_ref_enum",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ModelWithNestedArrayEnumsDataFoo"
+                }
+              ]
+            },
+            "name": "foo_all_of_enum",
+            "in": "query"
+          },
+          {
+            "description": "This is the parameter that goes into the query params",
+            "name": "cursor",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": ["string", "null"]
+            }
+          },
+          {
+            "description": "This is the parameter that goes into the cookie",
+            "name": "parameterCookie",
+            "in": "cookie",
+            "required": true,
+            "schema": {
+              "type": ["string", "null"]
+            }
+          },
+          {
+            "description": "This is the parameter that goes into the path",
+            "name": "parameterPath",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": ["string", "null"]
+            }
+          },
+          {
+            "description": "api-version should be required in standalone clients",
+            "name": "api-version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": ["string", "null"]
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "This is the parameter that goes into the body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {},
+                "type": ["object", "null"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}": {
+      "post": {
+        "tags": ["Parameters"],
+        "operationId": "CallWithWeirdParameterNames",
+        "parameters": [
+          {
+            "description": "This is the parameter that goes into the path",
+            "name": "parameter.path.1",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "This is the parameter that goes into the path",
+            "name": "parameter-path-2",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "This is the parameter that goes into the path",
+            "name": "PARAMETER-PATH-3",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "This is the parameter with a reserved keyword",
+            "name": "default",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "This is the parameter that goes into the request header",
+            "name": "parameter.header",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": ["string", "null"]
+            }
+          },
+          {
+            "description": "This is the parameter that goes into the request query params",
+            "name": "parameter-query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": ["string", "null"]
+            }
+          },
+          {
+            "description": "This is the parameter that goes into the cookie",
+            "name": "PARAMETER-COOKIE",
+            "in": "cookie",
+            "required": true,
+            "schema": {
+              "type": ["string", "null"]
+            }
+          },
+          {
+            "description": "api-version should be required in standalone clients",
+            "name": "api-version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": ["string", "null"]
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "This is the parameter that goes into the body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ModelWithString"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/parameters": {
+      "get": {
+        "tags": ["Parameters"],
+        "operationId": "GetCallWithOptionalParam",
+        "parameters": [
+          {
+            "description": "This is an optional parameter",
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "This is a required parameter",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelWithOneOfEnum"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Parameters"],
+        "operationId": "PostCallWithOptionalParam",
+        "parameters": [
+          {
+            "description": "This is a required parameter",
+            "name": "parameter",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "This is an optional parameter",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "offset": {
+                    "required": true,
+                    "type": ["number", "null"]
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response is a simple number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/requestBody": {
+      "post": {
+        "tags": ["RequestBody"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SimpleParameter"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SimpleRequestBody"
+        }
+      }
+    },
+    "/api/v{api-version}/formData": {
+      "post": {
+        "tags": ["FormData"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SimpleParameter"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SimpleFormData"
+        }
+      }
+    },
+    "/api/v{api-version}/defaults": {
+      "get": {
+        "tags": ["Defaults"],
+        "operationId": "CallWithDefaultParameters",
+        "parameters": [
+          {
+            "description": "This is a simple string with default value",
+            "name": "parameterString",
+            "in": "query",
+            "schema": {
+              "default": "Hello World!",
+              "type": ["string", "null"]
+            }
+          },
+          {
+            "description": "This is a simple number with default value",
+            "name": "parameterNumber",
+            "in": "query",
+            "schema": {
+              "default": 123,
+              "type": ["number", "null"]
+            }
+          },
+          {
+            "description": "This is a simple boolean with default value",
+            "name": "parameterBoolean",
+            "in": "query",
+            "schema": {
+              "default": true,
+              "type": ["boolean", "null"]
+            }
+          },
+          {
+            "description": "This is a simple enum with default value",
+            "name": "parameterEnum",
+            "in": "query",
+            "schema": {
+              "enum": ["Success", "Warning", "Error"],
+              "default": 0
+            }
+          },
+          {
+            "description": "This is a simple model with default value",
+            "name": "parameterModel",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ModelWithString",
+                  "default": {
+                    "prop": "Hello World!"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Defaults"],
+        "operationId": "CallWithDefaultOptionalParameters",
+        "parameters": [
+          {
+            "description": "This is a simple string that is optional with default value",
+            "name": "parameterString",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "Hello World!"
+            }
+          },
+          {
+            "description": "This is a simple number that is optional with default value",
+            "name": "parameterNumber",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 123
+            }
+          },
+          {
+            "description": "This is a simple boolean that is optional with default value",
+            "name": "parameterBoolean",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "description": "This is a simple enum that is optional with default value",
+            "name": "parameterEnum",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": ["Success", "Warning", "Error"],
+              "default": 0
+            }
+          },
+          {
+            "description": "This is a simple model that is optional with default value",
+            "name": "parameterModel",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/ModelWithString",
+              "default": {
+                "prop": "Hello World!"
+              }
+            }
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Defaults"],
+        "operationId": "CallToTestOrderOfParams",
+        "parameters": [
+          {
+            "description": "This is a optional string with default",
+            "name": "parameterOptionalStringWithDefault",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "Hello World!"
+            }
+          },
+          {
+            "description": "This is a optional string with empty default",
+            "name": "parameterOptionalStringWithEmptyDefault",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "description": "This is a optional string with no default",
+            "name": "parameterOptionalStringWithNoDefault",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "This is a string with default",
+            "name": "parameterStringWithDefault",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "Hello World!"
+            }
+          },
+          {
+            "description": "This is a string with empty default",
+            "name": "parameterStringWithEmptyDefault",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "description": "This is a string with no default",
+            "name": "parameterStringWithNoDefault",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "This is a string that can be null with no default",
+            "name": "parameterStringNullableWithNoDefault",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": ["string", "null"]
+            }
+          },
+          {
+            "description": "This is a string that can be null with default",
+            "name": "parameterStringNullableWithDefault",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": null,
+              "type": ["string", "null"]
+            }
+          }
+        ]
+      }
+    },
+    "/api/v{api-version}/duplicate": {
+      "delete": {
+        "tags": ["Duplicate", "Duplicate"],
+        "operationId": "DuplicateName"
+      },
+      "get": {
+        "tags": ["Duplicate"],
+        "operationId": "DuplicateName2"
+      },
+      "post": {
+        "tags": ["Duplicate"],
+        "operationId": "DuplicateName3"
+      },
+      "put": {
+        "tags": ["Duplicate"],
+        "operationId": "DuplicateName4"
+      }
+    },
+    "/api/v{api-version}/no-content": {
+      "get": {
+        "tags": ["noContent"],
+        "operationId": "CallWithNoContentResponse",
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/multiple-tags/response-and-no-content": {
+      "get": {
+        "tags": ["Response", "NoContent"],
+        "operationId": "CallWithResponseAndNoContentResponse",
+        "responses": {
+          "200": {
+            "description": "Response is a simple number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/multiple-tags/a": {
+      "get": {
+        "tags": ["MultipleTags1", "MultipleTags2"],
+        "operationId": "DummyA",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/400"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/multiple-tags/b": {
+      "get": {
+        "tags": ["MultipleTags1", "MultipleTags2", "MultipleTags3"],
+        "operationId": "DummyB",
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/response": {
+      "get": {
+        "tags": ["Response"],
+        "operationId": "CallWithResponse",
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/import"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Response"],
+        "operationId": "CallWithDuplicateResponses",
+        "responses": {
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithBoolean"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Message for 200 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ModelWithBoolean"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ModelWithInteger"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Message for 201 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithString"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Message for 202 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithString"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Message for 4XX errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DictionaryWithArray"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Message for 500 error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithStringError"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Message for 501 error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithStringError"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Message for 502 error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithStringError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Response"],
+        "operationId": "CallWithResponses",
+        "responses": {
+          "default": {
+            "description": "Message for default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithStringError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Message for 200 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "@namespace.string": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "@namespace.integer": {
+                      "type": "integer",
+                      "readOnly": true
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ModelWithString"
+                      },
+                      "readOnly": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Message for 201 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelThatExtends"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Message for 202 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelThatExtendsExtends"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Message for 500 error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithStringError"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Message for 501 error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithStringError"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Message for 502 error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithStringError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/collectionFormat": {
+      "get": {
+        "tags": ["CollectionFormat"],
+        "operationId": "CollectionFormat",
+        "parameters": [
+          {
+            "description": "This is an array parameter that is sent as csv format (comma-separated values)",
+            "name": "parameterArrayCSV",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": ["array", "null"],
+              "items": {
+                "type": "string"
+              }
+            },
+            "collectionFormat": "csv"
+          },
+          {
+            "description": "This is an array parameter that is sent as ssv format (space-separated values)",
+            "name": "parameterArraySSV",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": ["array", "null"],
+              "items": {
+                "type": "string"
+              }
+            },
+            "collectionFormat": "ssv"
+          },
+          {
+            "description": "This is an array parameter that is sent as tsv format (tab-separated values)",
+            "name": "parameterArrayTSV",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": ["array", "null"],
+              "items": {
+                "type": "string"
+              }
+            },
+            "collectionFormat": "tsv"
+          },
+          {
+            "description": "This is an array parameter that is sent as pipes format (pipe-separated values)",
+            "name": "parameterArrayPipes",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": ["array", "null"],
+              "items": {
+                "type": "string"
+              }
+            },
+            "collectionFormat": "pipes"
+          },
+          {
+            "description": "This is an array parameter that is sent as multi format (multiple parameter instances)",
+            "name": "parameterArrayMulti",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": ["array", "null"],
+              "items": {
+                "type": "string"
+              }
+            },
+            "collectionFormat": "multi"
+          }
+        ]
+      }
+    },
+    "/api/v{api-version}/types": {
+      "get": {
+        "tags": ["Types"],
+        "operationId": "Types",
+        "parameters": [
+          {
+            "description": "This is a number parameter",
+            "name": "parameterNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "default": 123
+            }
+          },
+          {
+            "description": "This is a string parameter",
+            "name": "parameterString",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": ["string", "null"],
+              "default": "default"
+            }
+          },
+          {
+            "description": "This is a boolean parameter",
+            "name": "parameterBoolean",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": ["boolean", "null"],
+              "default": true
+            }
+          },
+          {
+            "description": "This is an object parameter",
+            "name": "parameterObject",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": ["object", "null"],
+              "default": null
+            }
+          },
+          {
+            "description": "This is an array parameter",
+            "name": "parameterArray",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": ["array", "null"],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "description": "This is a dictionary parameter",
+            "name": "parameterDictionary",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": ["object", "null"],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "description": "This is an enum parameter",
+            "name": "parameterEnum",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "enum": ["Success", "Warning", "Error"]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          {
+            "description": "This is a number parameter",
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response is a simple number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Response is a simple string",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Response is a simple boolean",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "203": {
+            "description": "Response is a simple object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/upload": {
+      "post": {
+        "tags": ["Upload"],
+        "operationId": "UploadFile",
+        "parameters": [
+          {
+            "description": "api-version should be required in standalone clients",
+            "name": "api-version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": ["string", "null"]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "description": "Supply a file reference for upload",
+              "schema": {
+                "format": "binary",
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/file/{id}": {
+      "get": {
+        "tags": ["FileResponse"],
+        "operationId": "FileResponse",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "api-version should be required in standalone clients",
+            "name": "api-version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "audio/*": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "video/*": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/complex": {
+      "get": {
+        "tags": ["Complex"],
+        "operationId": "ComplexTypes",
+        "parameters": [
+          {
+            "description": "Parameter containing object",
+            "name": "parameterObject",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "first": {
+                  "type": "object",
+                  "properties": {
+                    "second": {
+                      "type": "object",
+                      "properties": {
+                        "third": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "description": "Parameter containing reference",
+            "name": "parameterReference",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ModelWithString"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModelWithString"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 `server` error"
+          },
+          "500": {
+            "description": "500 server error"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/multipart": {
+      "post": {
+        "tags": ["multipart"],
+        "operationId": "MultipartRequest",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "data": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ModelWithString"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              "encoding": {
+                "content": {
+                  "style": "form"
+                },
+                "data": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["multipart"],
+        "operationId": "MultipartResponse",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "multipart/mixed": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "foo": {
+                          "type": "string"
+                        },
+                        "bar": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/complex/{id}": {
+      "put": {
+        "tags": ["Complex"],
+        "operationId": "ComplexParams",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "description": "api-version should be required in standalone clients",
+            "name": "api-version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "required": ["key", "name", "parameters", "type"],
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "maxLength": 64,
+                    "pattern": "^[a-zA-Z0-9_]*$",
+                    "type": ["string", "null"],
+                    "readOnly": true
+                  },
+                  "name": {
+                    "maxLength": 255,
+                    "type": ["string", "null"]
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "type": {
+                    "enum": ["Monkey", "Horse", "Bird"],
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "listOfModels": {
+                    "type": ["array", "null"],
+                    "items": {
+                      "$ref": "#/components/schemas/ModelWithString"
+                    }
+                  },
+                  "listOfStrings": {
+                    "type": ["array", "null"],
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ModelWithString"
+                      },
+                      {
+                        "$ref": "#/components/schemas/ModelWithEnum"
+                      },
+                      {
+                        "$ref": "#/components/schemas/ModelWithArray"
+                      },
+                      {
+                        "$ref": "#/components/schemas/ModelWithDictionary"
+                      }
+                    ]
+                  },
+                  "user": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "format": "int32",
+                        "readOnly": true
+                      },
+                      "name": {
+                        "type": ["string", "null"],
+                        "readOnly": true
+                      }
+                    },
+                    "readOnly": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/header": {
+      "post": {
+        "tags": ["Header"],
+        "operationId": "CallWithResultFromHeader",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "headers": {
+              "operation-location": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 server error"
+          },
+          "500": {
+            "description": "500 server error"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/error": {
+      "post": {
+        "tags": ["Error"],
+        "operationId": "testErrorCode",
+        "parameters": [
+          {
+            "description": "Status code to return",
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Custom message: Successful response"
+          },
+          "500": {
+            "description": "Custom message: Internal Server Error"
+          },
+          "501": {
+            "description": "Custom message: Not Implemented"
+          },
+          "502": {
+            "description": "Custom message: Bad Gateway"
+          },
+          "503": {
+            "description": "Custom message: Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串": {
+      "post": {
+        "tags": ["Non-Ascii-æøåÆØÅöôêÊ"],
+        "operationId": "nonAsciiæøåÆØÅöôêÊ字符串",
+        "parameters": [
+          {
+            "description": "Dummy input param",
+            "name": "nonAsciiParamæøåÆØÅöôêÊ",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Non-Ascii-æøåÆØÅöôêÊ"],
+        "summary": "Login User",
+        "operationId": "putWithFormUrlEncoded",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/ArrayWithStrings"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    }
+  },
+  "components": {
+    "requestBodies": {
+      "SimpleRequestBody": {
+        "x-body-name": "foo",
+        "description": "A reusable request body",
+        "required": false,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ModelWithString"
+            }
+          }
+        }
+      },
+      "SimpleFormData": {
+        "description": "A reusable request body",
+        "required": false,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "$ref": "#/components/schemas/ModelWithString"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "SimpleParameter": {
+        "description": "This is a reusable parameter",
+        "name": "parameter",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "x-Foo-Bar": {
+        "description": "Parameter with illegal characters",
+        "name": "x-Foo-Bar",
+        "in": "header",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ModelWithString"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "camelCaseCommentWithBreaks": {
+        "description": "Testing multiline comments in string: First line\nSecond line\n\nFourth line",
+        "type": "integer"
+      },
+      "CommentWithBreaks": {
+        "description": "Testing multiline comments in string: First line\nSecond line\n\nFourth line",
+        "type": "integer"
+      },
+      "CommentWithBackticks": {
+        "description": "Testing backticks in string: `backticks` and ```multiple backticks``` should work",
+        "type": "integer"
+      },
+      "CommentWithBackticksAndQuotes": {
+        "description": "Testing backticks and quotes in string: `backticks`, 'quotes', \"double quotes\" and ```multiple backticks``` should work",
+        "type": "integer"
+      },
+      "CommentWithSlashes": {
+        "description": "Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work",
+        "type": "integer"
+      },
+      "CommentWithExpressionPlaceholders": {
+        "description": "Testing expression placeholders in string: ${expression} should work",
+        "type": "integer"
+      },
+      "CommentWithQuotes": {
+        "description": "Testing quotes in string: 'single quote''' and \"double quotes\"\"\" should work",
+        "type": "integer"
+      },
+      "CommentWithReservedCharacters": {
+        "description": "Testing reserved characters in string: /* inline */ and /** inline **/ should work",
+        "type": "integer"
+      },
+      "SimpleInteger": {
+        "description": "This is a simple number",
+        "type": "integer"
+      },
+      "SimpleBoolean": {
+        "description": "This is a simple boolean",
+        "type": "boolean"
+      },
+      "SimpleString": {
+        "description": "This is a simple string",
+        "type": "string"
+      },
+      "NonAsciiStringæøåÆØÅöôêÊ字符串": {
+        "description": "A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)",
+        "type": "string"
+      },
+      "SimpleFile": {
+        "description": "This is a simple file",
+        "format": "binary",
+        "type": "string"
+      },
+      "SimpleReference": {
+        "description": "This is a simple reference",
+        "$ref": "#/components/schemas/ModelWithString"
+      },
+      "SimpleStringWithPattern": {
+        "description": "This is a simple string",
+        "maxLength": 64,
+        "pattern": "^[a-zA-Z0-9_]*$",
+        "type": ["string", "null"]
+      },
+      "EnumWithStrings": {
+        "description": "This is a simple enum with strings",
+        "enum": [
+          "Success",
+          "Warning",
+          "Error",
+          "'Single Quote'",
+          "\"Double Quotes\"",
+          "Non-ascii: øæåôöØÆÅÔÖ字符串"
+        ]
+      },
+      "EnumWithReplacedCharacters": {
+        "enum": [
+          "'Single Quote'",
+          "\"Double Quotes\"",
+          "øæåôöØÆÅÔÖ字符串",
+          3.1,
+          ""
+        ],
+        "type": "string"
+      },
+      "EnumWithNumbers": {
+        "description": "This is a simple enum with numbers",
+        "enum": [
+          1, 2, 3, 1.1, 1.2, 1.3, 100, 200, 300, -100, -200, -300, -1.1, -1.2,
+          -1.3
+        ],
+        "default": 200
+      },
+      "EnumFromDescription": {
+        "description": "Success=1,Warning=2,Error=3",
+        "type": "number"
+      },
+      "EnumWithExtensions": {
+        "description": "This is a simple enum with numbers",
+        "enum": [200, 400, 500],
+        "x-enum-varnames": ["CUSTOM_SUCCESS", "CUSTOM_WARNING", "CUSTOM_ERROR"],
+        "x-enum-descriptions": [
+          "Used when the status of something is successful",
+          "Used when the status of something has a warning",
+          "Used when the status of something has an error"
+        ]
+      },
+      "EnumWithXEnumNames": {
+        "enum": [0, 1, 2],
+        "x-enumNames": ["zero", "one", "two"]
+      },
+      "ArrayWithNumbers": {
+        "description": "This is a simple array with numbers",
+        "type": "array",
+        "items": {
+          "type": "integer"
+        }
+      },
+      "ArrayWithBooleans": {
+        "description": "This is a simple array with booleans",
+        "type": "array",
+        "items": {
+          "type": "boolean"
+        }
+      },
+      "ArrayWithStrings": {
+        "description": "This is a simple array with strings",
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "default": ["test"]
+      },
+      "ArrayWithReferences": {
+        "description": "This is a simple array with references",
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ModelWithString"
+        }
+      },
+      "ArrayWithArray": {
+        "description": "This is a simple array containing an array",
+        "type": "array",
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ModelWithString"
+          }
+        }
+      },
+      "ArrayWithProperties": {
+        "description": "This is a simple array with properties",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "16x16": {
+              "$ref": "#/components/schemas/camelCaseCommentWithBreaks"
+            },
+            "bar": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ArrayWithAnyOfProperties": {
+        "description": "This is a simple array with any of properties",
+        "type": "array",
+        "items": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "foo": {
+                  "type": "string",
+                  "default": "test"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "bar": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "AnyOfAnyAndNull": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "AnyOfArrays": {
+        "description": "This is a simple array with any of properties",
+        "type": "object",
+        "properties": {
+          "results": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "bar": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "type": "array"
+          }
+        }
+      },
+      "DictionaryWithString": {
+        "description": "This is a string dictionary",
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "DictionaryWithPropertiesAndAdditionalProperties": {
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "number"
+          },
+          "bar": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "DictionaryWithReference": {
+        "description": "This is a string reference",
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/ModelWithString"
+        }
+      },
+      "DictionaryWithArray": {
+        "description": "This is a complex dictionary",
+        "type": "object",
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ModelWithString"
+          }
+        }
+      },
+      "DictionaryWithDictionary": {
+        "description": "This is a string dictionary",
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "DictionaryWithProperties": {
+        "description": "This is a complex dictionary",
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "foo": {
+              "type": "string"
+            },
+            "bar": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ModelWithInteger": {
+        "description": "This is a model with one number property",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "description": "This is a simple number property",
+            "type": "integer"
+          }
+        }
+      },
+      "ModelWithBoolean": {
+        "description": "This is a model with one boolean property",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "description": "This is a simple boolean property",
+            "type": "boolean"
+          }
+        }
+      },
+      "ModelWithString": {
+        "description": "This is a model with one string property",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "description": "This is a simple string property",
+            "type": "string"
+          }
+        }
+      },
+      "ModelWithStringError": {
+        "description": "This is a model with one string property",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "description": "This is a simple string property",
+            "type": "string"
+          }
+        }
+      },
+      "Model-From.Zendesk": {
+        "description": "`Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)",
+        "type": "string"
+      },
+      "ModelWithNullableString": {
+        "description": "This is a model with one string property",
+        "type": "object",
+        "required": ["nullableRequiredProp1", "nullableRequiredProp2"],
+        "properties": {
+          "nullableProp1": {
+            "description": "This is a simple string property",
+            "type": ["string", "null"]
+          },
+          "nullableRequiredProp1": {
+            "description": "This is a simple string property",
+            "type": ["string", "null"]
+          },
+          "nullableProp2": {
+            "description": "This is a simple string property",
+            "type": ["string", "null"]
+          },
+          "nullableRequiredProp2": {
+            "description": "This is a simple string property",
+            "type": ["string", "null"]
+          },
+          "foo_bar-enum": {
+            "description": "This is a simple enum with strings",
+            "enum": ["Success", "Warning", "Error", "ØÆÅ字符串"]
+          }
+        }
+      },
+      "ModelWithEnum": {
+        "description": "This is a model with one enum",
+        "type": "object",
+        "properties": {
+          "foo_bar-enum": {
+            "description": "This is a simple enum with strings",
+            "enum": ["Success", "Warning", "Error", "ØÆÅ字符串"]
+          },
+          "statusCode": {
+            "description": "These are the HTTP error code enums",
+            "enum": [
+              "100",
+              "200 FOO",
+              "300 FOO_BAR",
+              "400 foo-bar",
+              "500 foo.bar",
+              "600 foo&bar"
+            ]
+          },
+          "bool": {
+            "description": "Simple boolean enum",
+            "type": "boolean",
+            "enum": [true]
+          }
+        }
+      },
+      "ModelWithEnumWithHyphen": {
+        "description": "This is a model with one enum with escaped name",
+        "type": "object",
+        "properties": {
+          "foo-bar-baz-qux": {
+            "type": "string",
+            "enum": ["3.0"],
+            "title": "Foo-Bar-Baz-Qux",
+            "default": "3.0"
+          }
+        }
+      },
+      "ModelWithEnumFromDescription": {
+        "description": "This is a model with one enum",
+        "type": "object",
+        "properties": {
+          "test": {
+            "type": "integer",
+            "description": "Success=1,Warning=2,Error=3"
+          }
+        }
+      },
+      "ModelWithNestedEnums": {
+        "description": "This is a model with nested enums",
+        "type": "object",
+        "properties": {
+          "dictionaryWithEnum": {
+            "type": "object",
+            "additionalProperties": {
+              "enum": ["Success", "Warning", "Error"]
+            }
+          },
+          "dictionaryWithEnumFromDescription": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "description": "Success=1,Warning=2,Error=3"
+            }
+          },
+          "arrayWithEnum": {
+            "type": "array",
+            "items": {
+              "enum": ["Success", "Warning", "Error"]
+            }
+          },
+          "arrayWithDescription": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "description": "Success=1,Warning=2,Error=3"
+            }
+          },
+          "foo_bar-enum": {
+            "description": "This is a simple enum with strings",
+            "enum": ["Success", "Warning", "Error", "ØÆÅ字符串"]
+          }
+        }
+      },
+      "ModelWithReference": {
+        "description": "This is a model with one property containing a reference",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "$ref": "#/components/schemas/ModelWithProperties"
+          }
+        }
+      },
+      "ModelWithArrayReadOnlyAndWriteOnly": {
+        "description": "This is a model with one property containing an array",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModelWithReadOnlyAndWriteOnly"
+            }
+          },
+          "propWithFile": {
+            "type": "array",
+            "items": {
+              "format": "binary",
+              "type": "string"
+            }
+          },
+          "propWithNumber": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "ModelWithArray": {
+        "description": "This is a model with one property containing an array",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModelWithString"
+            }
+          },
+          "propWithFile": {
+            "type": "array",
+            "items": {
+              "format": "binary",
+              "type": "string"
+            }
+          },
+          "propWithNumber": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "ModelWithDictionary": {
+        "description": "This is a model with one property containing a dictionary",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DeprecatedModel": {
+        "deprecated": true,
+        "description": "This is a deprecated model with a deprecated property",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "deprecated": true,
+            "description": "This is a deprecated property",
+            "type": "string"
+          }
+        }
+      },
+      "ModelWithCircularReference": {
+        "description": "This is a model with one property containing a circular reference",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "$ref": "#/components/schemas/ModelWithCircularReference"
+          }
+        }
+      },
+      "CompositionWithOneOf": {
+        "description": "This is a model with one property with a 'one of' relationship",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ModelWithString"
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithEnum"
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithArray"
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithDictionary"
+              }
+            ]
+          }
+        }
+      },
+      "CompositionWithOneOfAnonymous": {
+        "description": "This is a model with one property with a 'one of' relationship where the options are not $ref",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "type": "object",
+            "oneOf": [
+              {
+                "description": "Anonymous object type",
+                "type": "object",
+                "properties": {
+                  "propA": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "description": "Anonymous string type",
+                "type": "string"
+              },
+              {
+                "description": "Anonymous integer type",
+                "type": "integer"
+              }
+            ]
+          }
+        }
+      },
+      "ModelCircle": {
+        "description": "Circle",
+        "type": "object",
+        "required": ["kind"],
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "radius": {
+            "type": "number"
+          }
+        }
+      },
+      "ModelSquare": {
+        "description": "Square",
+        "type": "object",
+        "required": ["kind"],
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "sideLength": {
+            "type": "number"
+          }
+        }
+      },
+      "CompositionWithOneOfDiscriminator": {
+        "description": "This is a model with one property with a 'one of' relationship where the options are not $ref",
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ModelCircle"
+          },
+          {
+            "$ref": "#/components/schemas/ModelSquare"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "circle": "#/components/schemas/ModelCircle",
+            "square": "#/components/schemas/ModelSquare"
+          }
+        }
+      },
+      "CompositionWithAnyOf": {
+        "description": "This is a model with one property with a 'any of' relationship",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "type": "object",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelWithString"
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithEnum"
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithArray"
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithDictionary"
+              }
+            ]
+          }
+        }
+      },
+      "CompositionWithAnyOfAnonymous": {
+        "description": "This is a model with one property with a 'any of' relationship where the options are not $ref",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "type": "object",
+            "anyOf": [
+              {
+                "description": "Anonymous object type",
+                "type": "object",
+                "properties": {
+                  "propA": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "description": "Anonymous string type",
+                "type": "string"
+              },
+              {
+                "description": "Anonymous integer type",
+                "type": "integer"
+              }
+            ]
+          }
+        }
+      },
+      "CompositionWithNestedAnyAndTypeNull": {
+        "description": "This is a model with nested 'any of' property with a type null",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "type": "object",
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ModelWithDictionary"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ModelWithArray"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          }
+        }
+      },
+      "3e-num_1Период": {
+        "enum": ["Bird", "Dog"],
+        "type": "string"
+      },
+      "ConstValue": {
+        "type": "string",
+        "const": "ConstValue"
+      },
+      "CompositionWithNestedAnyOfAndNull": {
+        "description": "This is a model with one property with a 'any of' relationship where the options are not $ref",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/3e-num_1Период"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ConstValue"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scopes"
+          }
+        }
+      },
+      "CompositionWithOneOfAndNullable": {
+        "description": "This is a model with one property with a 'one of' relationship",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "type": ["object", "null"],
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "boolean": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithEnum"
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithArray"
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithDictionary"
+              }
+            ]
+          }
+        }
+      },
+      "CompositionWithOneOfAndSimpleDictionary": {
+        "description": "This is a model that contains a simple dictionary within composition",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "CompositionWithOneOfAndSimpleArrayDictionary": {
+        "description": "This is a model that contains a dictionary of simple arrays within composition",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "CompositionWithOneOfAndComplexArrayDictionary": {
+        "description": "This is a model that contains a dictionary of complex arrays (composited) within composition",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "CompositionWithAllOfAndNullable": {
+        "description": "This is a model with one property with a 'all of' relationship",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "type": ["object", "null"],
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "boolean": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithEnum"
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithArray"
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithDictionary"
+              }
+            ]
+          }
+        }
+      },
+      "CompositionWithAnyOfAndNullable": {
+        "description": "This is a model with one property with a 'any of' relationship",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "type": ["object", "null"],
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "boolean": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithEnum"
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithArray"
+              },
+              {
+                "$ref": "#/components/schemas/ModelWithDictionary"
+              }
+            ]
+          }
+        }
+      },
+      "CompositionBaseModel": {
+        "description": "This is a base model with two simple optional properties",
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          }
+        }
+      },
+      "CompositionExtendedModel": {
+        "description": "This is a model that extends the base model",
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CompositionBaseModel"
+          }
+        ],
+        "properties": {
+          "age": {
+            "type": "number"
+          }
+        },
+        "required": ["firstName", "lastname", "age"]
+      },
+      "ModelWithProperties": {
+        "description": "This is a model with one nested property",
+        "type": "object",
+        "required": ["required", "requiredAndReadOnly", "requiredAndNullable"],
+        "properties": {
+          "required": {
+            "type": "string"
+          },
+          "requiredAndReadOnly": {
+            "type": "string",
+            "readOnly": true
+          },
+          "requiredAndNullable": {
+            "type": ["string", "null"]
+          },
+          "string": {
+            "type": "string"
+          },
+          "number": {
+            "type": "number"
+          },
+          "boolean": {
+            "type": "boolean"
+          },
+          "reference": {
+            "$ref": "#/components/schemas/ModelWithString"
+          },
+          "property with space": {
+            "type": "string"
+          },
+          "default": {
+            "type": "string"
+          },
+          "try": {
+            "type": "string"
+          },
+          "@namespace.string": {
+            "type": "string",
+            "readOnly": true
+          },
+          "@namespace.integer": {
+            "type": "integer",
+            "readOnly": true
+          }
+        }
+      },
+      "ModelWithNestedProperties": {
+        "description": "This is a model with one nested property",
+        "type": "object",
+        "required": ["first"],
+        "properties": {
+          "first": {
+            "type": ["object", "null"],
+            "required": ["second"],
+            "readOnly": true,
+            "properties": {
+              "second": {
+                "type": ["object", "null"],
+                "required": ["third"],
+                "readOnly": true,
+                "properties": {
+                  "third": {
+                    "type": ["string", "null"],
+                    "required": true,
+                    "readOnly": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ModelWithDuplicateProperties": {
+        "description": "This is a model with duplicated properties",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "$ref": "#/components/schemas/ModelWithString"
+          },
+          "prop": {
+            "$ref": "#/components/schemas/ModelWithString"
+          },
+          "prop": {
+            "$ref": "#/components/schemas/ModelWithString"
+          }
+        }
+      },
+      "ModelWithOrderedProperties": {
+        "description": "This is a model with ordered properties",
+        "type": "object",
+        "properties": {
+          "zebra": {
+            "type": "string"
+          },
+          "apple": {
+            "type": "string"
+          },
+          "hawaii": {
+            "type": "string"
+          }
+        }
+      },
+      "ModelWithDuplicateImports": {
+        "description": "This is a model with duplicated imports",
+        "type": "object",
+        "properties": {
+          "propA": {
+            "$ref": "#/components/schemas/ModelWithString"
+          },
+          "propB": {
+            "$ref": "#/components/schemas/ModelWithString"
+          },
+          "propC": {
+            "$ref": "#/components/schemas/ModelWithString"
+          }
+        }
+      },
+      "ModelThatExtends": {
+        "description": "This is a model that extends another model",
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelWithString"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "propExtendsA": {
+                "type": "string"
+              },
+              "propExtendsB": {
+                "$ref": "#/components/schemas/ModelWithString"
+              }
+            }
+          }
+        ]
+      },
+      "ModelThatExtendsExtends": {
+        "description": "This is a model that extends another model",
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelWithString"
+          },
+          {
+            "$ref": "#/components/schemas/ModelThatExtends"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "propExtendsC": {
+                "type": "string"
+              },
+              "propExtendsD": {
+                "$ref": "#/components/schemas/ModelWithString"
+              }
+            }
+          }
+        ]
+      },
+      "ModelWithPattern": {
+        "description": "This is a model that contains a some patterns",
+        "type": "object",
+        "required": ["key", "name"],
+        "properties": {
+          "key": {
+            "maxLength": 64,
+            "pattern": "^[a-zA-Z0-9_]*$",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 255,
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "modified": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^\\d{2}-\\d{3}-\\d{4}$"
+          },
+          "text": {
+            "type": "string",
+            "pattern": "^\\w+$"
+          },
+          "patternWithSingleQuotes": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9']*$"
+          },
+          "patternWithNewline": {
+            "type": "string",
+            "pattern": "aaa\\nbbb"
+          },
+          "patternWithBacktick": {
+            "type": "string",
+            "pattern": "aaa`bbb"
+          }
+        }
+      },
+      "File": {
+        "required": ["mime"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "readOnly": true,
+            "minLength": 1
+          },
+          "updated_at": {
+            "title": "Updated at",
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "created_at": {
+            "title": "Created at",
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "mime": {
+            "title": "Mime",
+            "type": "string",
+            "maxLength": 24,
+            "minLength": 1
+          },
+          "file": {
+            "title": "File",
+            "type": "string",
+            "readOnly": true,
+            "format": "uri"
+          }
+        }
+      },
+      "default": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Pageable": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          "size": {
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "FreeFormObjectWithoutAdditionalProperties": {
+        "description": "This is a free-form object without additionalProperties.",
+        "type": "object"
+      },
+      "FreeFormObjectWithAdditionalPropertiesEqTrue": {
+        "description": "This is a free-form object with additionalProperties: true.",
+        "type": "object",
+        "additionalProperties": true
+      },
+      "FreeFormObjectWithAdditionalPropertiesEqEmptyObject": {
+        "description": "This is a free-form object with additionalProperties: {}.",
+        "type": "object",
+        "additionalProperties": {}
+      },
+      "ModelWithConst": {
+        "type": "object",
+        "properties": {
+          "String": {
+            "const": "String"
+          },
+          "number": {
+            "const": 0
+          },
+          "null": {
+            "const": null
+          },
+          "withType": {
+            "type": "string",
+            "const": "Some string"
+          }
+        }
+      },
+      "ModelWithAdditionalPropertiesEqTrue": {
+        "description": "This is a model with one property and additionalProperties: true",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "description": "This is a simple string property",
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "NestedAnyOfArraysNullable": {
+        "properties": {
+          "nullableArray": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "boolean"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "CompositionWithOneOfAndProperties": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["foo"],
+            "properties": {
+              "foo": {
+                "$ref": "#/components/parameters/SimpleParameter"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["bar"],
+            "properties": {
+              "bar": {
+                "$ref": "#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "required": ["baz", "qux"],
+        "properties": {
+          "baz": {
+            "type": ["integer", "null"],
+            "format": "uint16",
+            "minimum": 0.0
+          },
+          "qux": {
+            "type": "integer",
+            "format": "uint8",
+            "minimum": 0.0
+          }
+        }
+      },
+      "NullableObject": {
+        "type": ["object", "null"],
+        "description": "An object that can be null",
+        "properties": {
+          "foo": {
+            "type": "string"
+          }
+        },
+        "default": null
+      },
+      "CharactersInDescription": {
+        "type": "string",
+        "description": "Some % character"
+      },
+      "ModelWithNullableObject": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NullableObject"
+          }
+        }
+      },
+      "ModelWithOneOfEnum": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["foo"],
+            "properties": {
+              "foo": {
+                "type": "string",
+                "enum": ["Bar"]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["foo"],
+            "properties": {
+              "foo": {
+                "type": "string",
+                "enum": ["Baz"]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["foo"],
+            "properties": {
+              "foo": {
+                "type": "string",
+                "enum": ["Qux"]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["content", "foo"],
+            "properties": {
+              "content": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "foo": {
+                "type": "string",
+                "enum": ["Quux"]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["content", "foo"],
+            "properties": {
+              "content": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "maxItems": 2,
+                "minItems": 2
+              },
+              "foo": {
+                "type": "string",
+                "enum": ["Corge"]
+              }
+            }
+          }
+        ]
+      },
+      "ModelWithNestedArrayEnumsDataFoo": {
+        "enum": ["foo", "bar"],
+        "type": "string"
+      },
+      "ModelWithNestedArrayEnumsDataBar": {
+        "enum": ["baz", "qux"],
+        "type": "string"
+      },
+      "ModelWithNestedArrayEnumsData": {
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModelWithNestedArrayEnumsDataFoo"
+            }
+          },
+          "bar": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModelWithNestedArrayEnumsDataBar"
+            }
+          }
+        }
+      },
+      "ModelWithNestedArrayEnums": {
+        "type": "object",
+        "properties": {
+          "array_strings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ModelWithNestedArrayEnumsData"
+              }
+            ]
+          }
+        }
+      },
+      "ModelWithNestedCompositionEnums": {
+        "type": "object",
+        "properties": {
+          "foo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ModelWithNestedArrayEnumsDataFoo"
+              }
+            ]
+          }
+        }
+      },
+      "ModelWithReadOnlyAndWriteOnly": {
+        "type": "object",
+        "required": ["foo", "bar", "baz"],
+        "properties": {
+          "foo": {
+            "type": "string"
+          },
+          "bar": {
+            "readOnly": true,
+            "type": "string"
+          },
+          "baz": {
+            "type": "string",
+            "writeOnly": true
+          }
+        }
+      },
+      "ModelWithConstantSizeArray": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "ModelWithAnyOfConstantSizeArray": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minItems": 3,
+        "maxItems": 3
+      },
+      "ModelWithPrefixItemsConstantSizeArray": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "$ref": "#/components/schemas/ModelWithInteger"
+          },
+          {
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          {
+            "type": "string"
+          }
+        ]
+      },
+      "ModelWithAnyOfConstantSizeArrayNullable": {
+        "type": ["array"],
+        "items": {
+          "oneOf": [
+            {
+              "type": ["number", "null"]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minItems": 3,
+        "maxItems": 3
+      },
+      "ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/components/schemas/import"
+            }
+          ]
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "ModelWithAnyOfConstantSizeArrayAndIntersect": {
+        "type": "array",
+        "items": {
+          "allOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "ModelWithNumericEnumUnion": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "description": "Период",
+            "enum": [-10, -1, 0, 1, 3, 6, 12]
+          }
+        }
+      },
+      "ModelWithBackticksInDescription": {
+        "description": "Some description with `back ticks`",
+        "type": "object",
+        "properties": {
+          "template": {
+            "type": "string",
+            "description": "The template `that` should be used for parsing and importing the contents of the CSV file.\n\n<br/><p>There is one placeholder currently supported:<ul>     <li><b>${x}</b> - refers to the n-th column in the CSV file, e.g. ${1}, ${2}, ...)</li></ul><p>Example of a correct JSON template:</p>\n<pre>\n[\n  {\n    \"resourceType\": \"Asset\",\n    \"identifier\": {\n      \"name\": \"${1}\",\n      \"domain\": {\n        \"name\": \"${2}\",\n        \"community\": {\n          \"name\": \"Some Community\"\n        }\n      }\n    },\n    \"attributes\" : {\n      \"00000000-0000-0000-0000-000000003115\" : [ {\n        \"value\" : \"${3}\" \n      } ],\n      \"00000000-0000-0000-0000-000000000222\" : [ {\n        \"value\" : \"${4}\"\n      } ]\n    }\n  }\n]\n</pre>"
+          }
+        }
+      },
+      "ModelWithOneOfAndProperties": {
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/parameters/SimpleParameter"
+          },
+          {
+            "$ref": "#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串"
+          }
+        ],
+        "required": ["baz", "qux"],
+        "properties": {
+          "baz": {
+            "type": ["integer", "null"],
+            "format": "uint16",
+            "minimum": 0.0
+          },
+          "qux": {
+            "type": "integer",
+            "format": "uint8",
+            "minimum": 0.0
+          }
+        }
+      },
+      "ParameterSimpleParameterUnused": {
+        "description": "Model used to test deduplication strategy (unused)",
+        "type": "string"
+      },
+      "PostServiceWithEmptyTagResponse": {
+        "description": "Model used to test deduplication strategy",
+        "type": "string"
+      },
+      "PostServiceWithEmptyTagResponse2": {
+        "description": "Model used to test deduplication strategy",
+        "type": "string"
+      },
+      "DeleteFooData": {
+        "description": "Model used to test deduplication strategy",
+        "type": "string"
+      },
+      "DeleteFooData2": {
+        "description": "Model used to test deduplication strategy",
+        "type": "string"
+      },
+      "import": {
+        "description": "Model with restricted keyword name",
+        "type": "string"
+      },
+      "400": {
+        "description": "Model with number-only name",
+        "type": "string"
+      },
+      "SchemaWithFormRestrictedKeys": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "x-enum-descriptions": {
+            "type": "string"
+          },
+          "x-enum-varnames": {
+            "type": "string"
+          },
+          "x-enumNames": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "object": {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "x-enum-descriptions": {
+                "type": "string"
+              },
+              "x-enum-varnames": {
+                "type": "string"
+              },
+              "x-enumNames": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "array": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "x-enum-descriptions": {
+                  "type": "string"
+                },
+                "x-enum-varnames": {
+                  "type": "string"
+                },
+                "x-enumNames": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions": {
+        "description": "This schema was giving PascalCase transformations a hard time",
+        "properties": {
+          "preconditions": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/io.k8s.apimachinery.pkg.apis.meta.v1.Preconditions"
+              }
+            ],
+            "description": "Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be returned."
+          }
+        },
+        "type": "object"
+      },
+      "io.k8s.apimachinery.pkg.apis.meta.v1.Preconditions": {
+        "description": "This schema was giving PascalCase transformations a hard time",
+        "properties": {
+          "resourceVersion": {
+            "description": "Specifies the target ResourceVersion",
+            "type": "string"
+          },
+          "uid": {
+            "description": "Specifies the target UID.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "AdditionalPropertiesUnknownIssue": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "AdditionalPropertiesUnknownIssue2": {
+        "type": "object",
+        "additionalProperties": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "AdditionalPropertiesUnknownIssue3": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "required": ["entries"],
+            "properties": {
+              "entries": {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/AdditionalPropertiesUnknownIssue"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "AdditionalPropertiesIntegerIssue": {
+        "type": "object",
+        "required": ["value"],
+        "properties": {
+          "value": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": {
+          "type": "integer"
+        }
+      },
+      "OneOfAllOfIssue": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ConstValue"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.Boolean]"
+                  }
+                ]
+              },
+              {
+                "$ref": "#/components/schemas/3e-num_1Период"
+              }
+            ]
+          },
+          {
+            "$ref": "#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.String]"
+          }
+        ]
+      },
+      "Generic.Schema.Duplicate.Issue`1[System.Boolean]": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": ["string", "null"]
+          },
+          "hasError": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "Generic.Schema.Duplicate.Issue`1[System.String]": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": ["string", "null"]
+          },
+          "error": {
+            "type": ["string", "null"]
+          },
+          "hasError": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

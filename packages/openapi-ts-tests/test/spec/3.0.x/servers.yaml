@@ -1,0 +1,18 @@
+openapi: 3.0.4
+info:
+  title: OpenAPI 3.0.4 servers example
+  version: 1
+servers:
+  - url: https://foo.com/v1
+    description: foo
+  - url: /v1
+paths:
+  /foo:
+    get:
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK

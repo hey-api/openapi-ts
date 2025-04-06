@@ -9,6 +9,13 @@ import type { Plugin } from '../../types';
 
 export interface Config extends Plugin.Name<'@hey-api/schemas'> {
   /**
+   * Should the exports from the generated files be re-exported in the index
+   * barrel file?
+   *
+   * @default false
+   */
+  exportFromIndex?: boolean;
+  /**
    * Customise the schema name. By default, `{{name}}Schema` is used. `name` is a
    * valid JavaScript/TypeScript identifier, e.g. if your schema name is
    * "Foo-Bar", `name` value would be "FooBar".
@@ -25,6 +32,7 @@ export interface Config extends Plugin.Name<'@hey-api/schemas'> {
   ) => string;
   /**
    * Name of the generated file.
+   *
    * @default 'schemas'
    */
   output?: string;
@@ -32,6 +40,7 @@ export interface Config extends Plugin.Name<'@hey-api/schemas'> {
    * Choose schema type to generate. Select 'form' if you don't want
    * descriptions to reduce bundle size and you plan to use schemas
    * for form validation
+   *
    * @default 'json'
    */
   type?: 'form' | 'json';

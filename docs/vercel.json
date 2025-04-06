@@ -9,6 +9,11 @@
       "source": "/openapi-ts",
       "destination": "/openapi-ts/get-started",
       "permanent": true
+    },
+    {
+      "source": "/openapi-ts/custom-plugin",
+      "destination": "/openapi-ts/plugins/custom",
+      "permanent": true
     }
   ],
   "trailingSlash": false
