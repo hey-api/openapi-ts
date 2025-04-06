@@ -84,8 +84,17 @@
                 "format": "date-time"
               }
             ]
+          },
+          "requiredQux": {
+            "anyOf": [
+              {
+                "type": ["string", "null"],
+                "format": "date-time"
+              }
+            ]
           }
-        }
+        },
+        "required": ["requiredQux"]
       }
     }
   }

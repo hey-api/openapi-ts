@@ -1,0 +1,35 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 exclude deprecated example
+  version: 1
+paths:
+  /foo:
+    post:
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Foo'
+        required: true
+      responses:
+        '200':
+          description: OK
+  /bar:
+    post:
+      deprecated: true
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Bar'
+        required: true
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    Foo:
+      type: string
+    Bar:
+      deprecated: true
+      type: string

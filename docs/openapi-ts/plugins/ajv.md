@@ -11,6 +11,6 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 ### About
 
-[Ajv](https://ajv.js.org/) is the fastest JSON validator for Node.js and browser.
+[Ajv](https://ajv.js.org) is the fastest JSON validator for Node.js and browser.
 
 <!--@include: ../../sponsors.md-->

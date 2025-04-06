@@ -11,7 +11,11 @@ Nuxt client is currently in beta. The interface might change before it becomes s
 
 ### About
 
-[Nuxt](https://nuxt.com/) is an open source framework that makes web development intuitive and powerful.
+[Nuxt](https://nuxt.com) is an open source framework that makes web development intuitive and powerful.
+
+::: tip
+You might be interested in the [Nuxt module](https://www.npmjs.com/package/@hey-api/nuxt) instead. It offers all the features mentioned in this guide in a more familiar way.
+:::
 
 <!-- <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-example')(event)">
 Launch demo

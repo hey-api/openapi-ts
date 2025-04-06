@@ -44,7 +44,7 @@ We're constantly learning about the ways in which you use our tools. If you have
 
 ## Hall of Fame
 
-These are the people with significant contributions to Hey API. A special thank you goes to [Ferdi Koomen](https://madebyferdi.com/) for allowing us to use the original source code from OpenAPI TypeScript Codegen. None of this would've been possible without you!
+These are the people with significant contributions to Hey API. A special thank you goes to [Ferdi Koomen](https://madebyferdi.com) for allowing us to use the original source code from OpenAPI TypeScript Codegen. None of this would've been possible without you!
 
 <VPTeamMembers size="small" :members="hallOfFame" />
 

@@ -61,10 +61,10 @@ export default {
 
 ## Available Clients
 
-- [angular](https://angular.io/) (using [RxJS](https://rxjs.dev/))
-- [axios](https://axios-http.com/)
+- [angular](https://angular.io) (using [RxJS](https://rxjs.dev))
+- [axios](https://axios-http.com)
 - [fetch](https://developer.mozilla.org/docs/Web/API/Fetch_API)
-- [node](https://nodejs.org/) (using [node-fetch](https://www.npmjs.com/package/node-fetch))
+- [node](https://nodejs.org) (using [node-fetch](https://www.npmjs.com/package/node-fetch))
 - [xhr](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest)
 
 ## Caveats

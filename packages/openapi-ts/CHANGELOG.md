@@ -1,5 +1,25 @@
 # @hey-api/openapi-ts
 
+## 0.66.3
+
+### Patch Changes
+
+- [#1917](https://github.com/hey-api/openapi-ts/pull/1917) [`d7af22c`](https://github.com/hey-api/openapi-ts/commit/d7af22c771af4bd2dab28acc69430717da390670) Thanks [@Freddis](https://github.com/Freddis)! - fix: handle nullable dates in transformers
+
+## 0.66.2
+
+### Patch Changes
+
+- [#1913](https://github.com/hey-api/openapi-ts/pull/1913) [`7cfa4a7`](https://github.com/hey-api/openapi-ts/commit/7cfa4a76b13ca97d49c5f0366ba7264f94753d8b) Thanks [@BogdanMaier](https://github.com/BogdanMaier)! - fix: prevent crash when optional pagination field is missing
+
+## 0.66.1
+
+### Patch Changes
+
+- [#1906](https://github.com/hey-api/openapi-ts/pull/1906) [`d1928d1`](https://github.com/hey-api/openapi-ts/commit/d1928d17710240bb42a6aa12da4618a9dd962df2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: exclude and include expressions can be an array
+
+- [#1906](https://github.com/hey-api/openapi-ts/pull/1906) [`d1928d1`](https://github.com/hey-api/openapi-ts/commit/d1928d17710240bb42a6aa12da4618a9dd962df2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support excluding deprecated fields with '@deprecated'
+
 ## 0.66.0
 
 ### Minor Changes
