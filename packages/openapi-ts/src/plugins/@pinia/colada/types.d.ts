@@ -59,12 +59,6 @@ export interface Config extends Plugin.Name<'@pinia/colada'> {
   includeTypes?: boolean;
 
   /**
-   * Plugin name.
-   * @default '@pinia/colada'
-   */
-  name: string;
-
-  /**
    * Custom hook to customize or skip mutation generation.
    * Return false to skip generating a mutation for this operation.
    * @default undefined
