@@ -15,23 +15,34 @@ const version = '3.0.x';
 const outputDir = path.join(__dirname, 'generated', version);
 
 describe(`OpenAPI ${version}`, () => {
-  const createConfig = (userConfig: UserConfig): UserConfig => ({
-    plugins: ['@hey-api/typescript'],
-    ...userConfig,
-    input: path.join(
+  const createConfig = (userConfig: UserConfig): UserConfig => {
+    const inputPath = path.join(
       __dirname,
       'spec',
       version,
-      typeof userConfig.input === 'string' ? userConfig.input : '',
-    ),
-    logs: {
-      level: 'silent',
-    },
-    output: path.join(
-      outputDir,
-      typeof userConfig.output === 'string' ? userConfig.output : '',
-    ),
-  });
+      typeof userConfig.input === 'string'
+        ? userConfig.input
+        : (userConfig.input.path as string),
+    );
+    return {
+      plugins: ['@hey-api/typescript'],
+      ...userConfig,
+      input:
+        typeof userConfig.input === 'string'
+          ? inputPath
+          : {
+              ...userConfig.input,
+              path: inputPath,
+            },
+      logs: {
+        level: 'silent',
+      },
+      output: path.join(
+        outputDir,
+        typeof userConfig.output === 'string' ? userConfig.output : '',
+      ),
+    };
+  };
 
   const scenarios = [
     {
@@ -387,6 +398,16 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-null',
       }),
       description: 'handles null enums',
+    },
+    {
+      config: createConfig({
+        input: {
+          exclude: ['@deprecated'],
+          path: 'exclude-deprecated.yaml',
+        },
+        output: 'exclude-deprecated',
+      }),
+      description: 'excludes deprecated fields',
     },
     {
       config: createConfig({

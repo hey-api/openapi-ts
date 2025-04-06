@@ -16,7 +16,10 @@ export default defineConfig(() => {
     // experimentalParser: false,
     input: {
       // branch: 'main',
-      // exclude: '^#/components/schemas/ModelWithCircularReference$',
+      // exclude: [
+      //   '^#/components/schemas/ModelWithCircularReference$',
+      //   '@deprecated',
+      // ],
       // fetch: {
       //   headers: {
       //     'x-foo': 'bar',
@@ -33,7 +36,7 @@ export default defineConfig(() => {
       //   openapi: '3.1.0',
       //   paths: {},
       // },
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'validators.json'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.json'),
       // path: path.resolve(__dirname, 'spec', '3.1.x', 'read-write-only.yaml'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',

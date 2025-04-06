@@ -11,7 +11,7 @@ Fastify plugin is currently in beta. The interface might change before it become
 
 ### About
 
-[Fastify](https://fastify.dev/) is a fast and low overhead web framework for Node.js.
+[Fastify](https://fastify.dev) is a fast and low overhead web framework for Node.js.
 
 <!-- ### Demo
 

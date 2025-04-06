@@ -24,7 +24,7 @@ Before you can generate clients, you must publish your OpenAPI specifications to
 
 ### Prerequisites
 
-1. Create a **free account** with [Hey API](https://app.heyapi.dev/).
+1. Create a **free account** with [Hey API](https://app.heyapi.dev).
 1. Create a new **organization** and **project** for your API provider. We recommend your naming matches your GitHub structure as it will be referenced by API clients. For example, we are using **hey-api/backend** for the platform.
 1. Inside your project, go to _Integrations_ > _APIs_ and generate an **API key**. Keep this value secret, it will be used to upload files.
 
@@ -78,7 +78,7 @@ In addition to the required `path-to-file` input, you must provide the following
 
 #### `API_KEY`
 
-This is the project API key you obtained from [Hey API](https://app.heyapi.dev/).
+This is the project API key you obtained from [Hey API](https://app.heyapi.dev).
 
 ::: warning
 Personal API keys can't be used to upload specifications.

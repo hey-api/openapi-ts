@@ -11,7 +11,7 @@ This feature is in development! :tada: Try it out and provide feedback on [GitHu
 
 ### About
 
-[Zod](https://zod.dev/) is a TypeScript-first schema validation library with static type inference.
+[Zod](https://zod.dev) is a TypeScript-first schema validation library with static type inference.
 
 <!-- ### Demo
 

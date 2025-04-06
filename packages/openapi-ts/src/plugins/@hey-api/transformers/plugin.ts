@@ -345,19 +345,29 @@ const processSchemaType = ({
         plugin,
         schema: property,
       });
-      if (propertyNodes.length) {
-        if (required.includes(name)) {
-          nodes = nodes.concat(propertyNodes);
-        } else {
-          nodes.push(
-            compiler.ifStatement({
-              expression: propertyAccessExpression,
-              thenStatement: compiler.block({
-                statements: ensureStatements(propertyNodes),
-              }),
+      if (!propertyNodes.length) {
+        continue;
+      }
+      const noNullableTypesInSchema = !property.items?.find(
+        (x) => x.type === 'null',
+      );
+      const requiredField = required.includes(name);
+      // Cannot fully rely on required fields
+      // Such value has to be present, but it doesn't guarantee that this value is not nullish
+      if (requiredField && noNullableTypesInSchema) {
+        nodes = nodes.concat(propertyNodes);
+      } else {
+        nodes.push(
+          // todo: Probably, it would make more sense to go with if(x !== undefined && x !== null) instead of if(x)
+          // this place influences all underlying transformers, while it's not exactly transformer itself
+          // Keep in mind that !!0 === false, so it already makes output for Bigint undesirable
+          compiler.ifStatement({
+            expression: propertyAccessExpression,
+            thenStatement: compiler.block({
+              statements: ensureStatements(propertyNodes),
             }),
-          );
-        }
+          }),
+        );
       }
     }
 

@@ -30,17 +30,19 @@
 
 ## Features
 
-- works with CLI, Node.js 18+, or npx
-- supports OpenAPI 2.0, 3.0, and 3.1 specifications
-- supports JSON and YAML input files
-- generates TypeScript interfaces and SDKs
-- Fetch API, Axios, Nuxt, Angular, Node.js, and XHR clients available
+- runs in CLI, Node.js 18+, or npx
+- works with OpenAPI 2.0, 3.0, and 3.1
+- customizable types and SDKs
+- clients for your runtime (Fetch API, Axios, Next.js, Nuxt, etc.)
 - plugin ecosystem to reduce third-party boilerplate
-- [platform](https://heyapi.dev/openapi-ts/integrations) for automating codegen builds
+- custom plugins and custom clients
+- [integration](https://heyapi.dev/openapi-ts/integrations) with Hey API platform
 
-## Platform
+## Dashboard
 
-Our platform for OpenAPI specifications is now available. Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.dev/openapi-ts/integrations).
+Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with our platform.
+
+[Sign In](https://app.heyapi.dev) to Hey API platform.
 
 ## Sponsors
 
@@ -177,7 +179,14 @@ Output is the next thing to define. It can be either a string pointing to the de
 
 Clients are responsible for sending the actual HTTP requests. Using clients is not required, but you must add a client to `plugins` if you're generating SDKs (enabled by default).
 
-You can learn more on the [Clients](https://heyapi.dev/openapi-ts/clients) page.
+### Native Clients
+
+- [`@hey-api/client-fetch`](https://heyapi.dev/openapi-ts/clients/fetch)
+- [`@hey-api/client-axios`](https://heyapi.dev/openapi-ts/clients/axios)
+- [`@hey-api/client-next`](https://heyapi.dev/openapi-ts/clients/next-js)
+- [`@hey-api/client-nuxt`](https://heyapi.dev/openapi-ts/clients/nuxt)
+
+Don't see your client? [Build your own](https://heyapi.dev/openapi-ts/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
 ## Plugins
 
@@ -221,6 +230,8 @@ The following plugins are planned but not in development yet. You can help us pr
 - [Valibot](https://heyapi.dev/openapi-ts/plugins/valibot)
 - [Yup](https://heyapi.dev/openapi-ts/plugins/yup)
 - [Zustand](https://heyapi.dev/openapi-ts/plugins/zustand)
+
+Don't see your plugin? [Build your own](https://heyapi.dev/openapi-ts/plugins/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
 ## Migration Guides
 
