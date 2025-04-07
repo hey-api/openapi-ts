@@ -91,6 +91,7 @@ export const createClient = async (
 export const defineConfig = async (config: Configs): Promise<UserConfig> =>
   typeof config === 'function' ? await config() : config;
 
+export { getSpec } from './getSpec';
 export { defaultPlugins } from './initConfigs';
 export type { IR } from './ir/types';
 export type { OpenApi } from './openApi/types';
