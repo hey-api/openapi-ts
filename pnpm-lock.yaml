@@ -836,6 +836,9 @@ importers:
       '@apidevtools/swagger-parser':
         specifier: 10.1.1
         version: 10.1.1(openapi-types@12.1.3)
+      '@hey-api/json-schema-ref-parser':
+        specifier: 1.0.4
+        version: 1.0.4
       '@hey-api/openapi-ts':
         specifier: workspace:*
         version: link:../openapi-ts
