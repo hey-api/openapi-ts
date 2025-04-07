@@ -904,6 +904,9 @@ importers:
       '@config/vite-base':
         specifier: workspace:*
         version: link:../config-vite-base
+      '@hey-api/json-schema-ref-parser':
+        specifier: 1.0.4
+        version: 1.0.4
       '@hey-api/openapi-ts':
         specifier: workspace:*
         version: link:../openapi-ts

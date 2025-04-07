@@ -1,5 +1,6 @@
-import { bundle } from '@apidevtools/swagger-parser';
+import type { JSONSchema } from '@hey-api/json-schema-ref-parser';
 import { createClient } from '@hey-api/openapi-ts';
+import { getSpec } from '@hey-api/openapi-ts';
 import { logger } from '@nx/devkit';
 import { execSync } from 'child_process';
 import OpenApiDiff from 'openapi-diff';
@@ -91,20 +92,41 @@ export function bundleAndDereferenceSpecFile({
   }
 }
 
-export async function compareSpecs(
-  existingSpecPath: string,
-  newSpecPath: string,
-) {
-  logger.debug('Parsing existing spec...');
-  const parsedExistingSpec = await bundle(existingSpecPath);
-  logger.debug('Existing spec parsed.');
-  const parsedNewSpec = await bundle(newSpecPath);
-  logger.debug('New spec parsed.');
+/**
+ * Fetches an unparsed spec file
+ */
+async function getSpecFile(path: string) {
+  const spec = await getSpec({
+    inputPath: path,
+    timeout: 10000,
+    watch: { headers: new Headers() },
+  });
+  if (spec.error) {
+    throw new Error('Failed to read spec file');
+  }
 
-  const existingSpec = JSON.parse(JSON.stringify(parsedExistingSpec));
-  const existingSpecVersion = existingSpec.openapi || existingSpec.swagger;
-  const newSpec = JSON.parse(JSON.stringify(parsedNewSpec));
-  const newSpecVersion = newSpec.openapi || newSpec.swagger;
+  return spec.data;
+}
+
+function getSpecVersion(spec: JSONSchema) {
+  if ('openapi' in spec && typeof spec.openapi === 'string') {
+    return spec.openapi;
+  }
+
+  if ('swagger' in spec && typeof spec.swagger === 'string') {
+    return spec.swagger;
+  }
+  return 'unknown';
+}
+
+function validateSpecVersions(
+  newSpecVersion: string,
+  existingSpecVersion: string,
+) {
+  if (!newSpecVersion.startsWith('3') && !newSpecVersion.startsWith('2')) {
+    throw new Error('New spec is not a valid OpenAPI spec version of 2 or 3.');
+  }
+
   logger.debug('Checking spec versions...');
   logger.debug(`Existing spec version: ${existingSpecVersion}`);
   logger.debug(`New spec version: ${newSpecVersion}`);
@@ -114,7 +136,6 @@ export async function compareSpecs(
   const newSpecVersionIs2 = newSpecVersion.startsWith('2');
 
   if (!newSpecVersionIs3 && !newSpecVersionIs2) {
-    logger.error('New spec is not a valid OpenAPI spec version of 2 or 3.');
     throw new Error('New spec is not a valid OpenAPI spec version of 2 or 3.');
   }
 
@@ -127,16 +148,80 @@ export async function compareSpecs(
     );
   }
 
+  return {
+    existingVersionIs2,
+    existingVersionIs3,
+    newSpecVersionIs2,
+    newSpecVersionIs3,
+  };
+}
+
+/**
+ * Fetches two spec files and returns them
+ */
+export async function getSpecFiles(
+  existingSpecPath: string,
+  newSpecPath: string,
+) {
+  logger.debug('Loading spec files...');
+  const parsedExistingSpecTask = getSpecFile(existingSpecPath);
+  const parsedNewSpecTask = getSpecFile(newSpecPath);
+  const tasks = await Promise.allSettled([
+    parsedExistingSpecTask,
+    parsedNewSpecTask,
+  ]);
+
+  if (tasks[0].status === 'rejected' && tasks[1].status === 'rejected') {
+    throw new Error('Failed to read both spec files');
+  }
+
+  if (tasks[0].status === 'rejected') {
+    throw new Error('Failed to read existing spec file');
+  }
+
+  if (tasks[1].status === 'rejected') {
+    throw new Error('Failed to read updated spec file.');
+  }
+
+  const existingSpec = await parsedExistingSpecTask;
+  const newSpec = await parsedNewSpecTask;
+
+  return {
+    existingSpec,
+    newSpec,
+  };
+}
+
+/**
+ * Fetches two spec files and compares them for differences
+ */
+export async function compareSpecs(
+  existingSpecPath: string,
+  newSpecPath: string,
+) {
+  const { existingSpec, newSpec } = await getSpecFiles(
+    existingSpecPath,
+    newSpecPath,
+  );
+
+  const existingSpecVersion = getSpecVersion(existingSpec);
+  const newSpecVersion = getSpecVersion(newSpec);
+
+  const { existingVersionIs3, newSpecVersionIs3 } = validateSpecVersions(
+    newSpecVersion,
+    existingSpecVersion,
+  );
+
   logger.debug('Comparing specs...');
   // Compare specs
   const diff = await OpenApiDiff.diffSpecs({
     destinationSpec: {
-      content: JSON.stringify(parsedNewSpec),
+      content: JSON.stringify(newSpec),
       format: newSpecVersionIs3 ? 'openapi3' : 'swagger2',
       location: newSpecPath,
     },
     sourceSpec: {
-      content: JSON.stringify(parsedExistingSpec),
+      content: JSON.stringify(existingSpec),
       format: existingVersionIs3 ? 'openapi3' : 'swagger2',
       location: existingSpecPath,
     },
