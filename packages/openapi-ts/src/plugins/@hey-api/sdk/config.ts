@@ -46,6 +46,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   name: '@hey-api/sdk',
   operationId: true,
   output: 'sdk',
+  params: 'namespaced',
   response: 'body',
   serviceNameBuilder: '{{name}}Service',
 };

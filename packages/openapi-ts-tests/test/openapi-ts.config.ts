@@ -85,8 +85,9 @@ export default defineConfig(() => {
         // auth: false,
         // client: false,
         // include...
-        // name: '@hey-api/sdk',
+        name: '@hey-api/sdk',
         // operationId: false,
+        params: 'flattened',
         // serviceNameBuilder: '^Parameters',
         // throwOnError: true,
         // transformer: '@hey-api/transformers',
