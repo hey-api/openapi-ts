@@ -47,10 +47,19 @@ async function setup({
     throw new Error(`No existing spec file found at ${existingSpecPath}.`);
   }
 
-  bundleAndDereferenceSpecFile({
+  const dereferencedSpec = await bundleAndDereferenceSpecFile({
+    client: options.client,
     outputPath: tempSpecPath,
-    specFile: options.spec,
+    plugins: options.plugins,
+    specPath: options.spec,
   });
+  // save the dereferenced spec to the temp spec file
+  try {
+    await writeFile(tempSpecPath, JSON.stringify(dereferencedSpec, null, 2));
+  } catch (error) {
+    logger.error(`Failed to write dereferenced spec to temp file: ${error}.`);
+    throw error;
+  }
 
   logger.info('Reading existing and new spec files...');
   const absoluteTempSpecPath = join(process.cwd(), tempSpecPath);

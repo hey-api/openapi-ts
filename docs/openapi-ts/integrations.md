@@ -195,3 +195,7 @@ We'd love your feedback! You can contact us on social media (search Hey API), [e
 The platform is currently in beta with our focus being on delivering a great experience. We plan to announce pricing once we have gathered enough data around usage patterns. However, we can guarantee there will always be a free plan available. Our mission to bring the finest tooling for working with APIs remains unchanged.
 
 <!--@include: ../sponsors.md-->
+
+# NX Plugin
+
+The `@hey-api/plugin-nx` plugin allows you to generate and regenerate client code from within NX using an NX generator and executor. This can be tied in to automation and CI workflows to ensure your API clients are always up to date.
