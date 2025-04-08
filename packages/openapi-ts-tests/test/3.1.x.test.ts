@@ -520,6 +520,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'negative-property-names.json',
+        output: 'negative-property-names',
+      }),
+      description: 'handles negative property names correctly',
+    },
+    {
+      config: createConfig({
         input: 'schema-const.yaml',
         output: 'schema-const',
         plugins: ['@hey-api/typescript', 'zod'],
