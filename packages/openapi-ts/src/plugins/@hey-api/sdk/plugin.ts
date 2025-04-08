@@ -3,7 +3,6 @@ import type ts from 'typescript';
 import { compiler } from '../../../compiler';
 import type { ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
-import type { TypeScriptFile } from '../../../generate/files';
 import {
   hasOperationDataRequired,
   statusCodeToGroup,
@@ -21,13 +20,13 @@ import {
   transformersId,
 } from '../transformers/plugin';
 import {
-  importIdentifierData,
   importIdentifierError,
   importIdentifierResponse,
 } from '../typescript/ref';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
+import { createParameters } from './params';
 import { serviceFunctionIdentifier } from './plugin-legacy';
-import { createTypeOptions } from './typeOptions';
+import { createTypeOmitNever, createTypeOptions } from './typeOptions';
 import type { Config } from './types';
 
 // copy-pasted from @hey-api/client-core
@@ -47,40 +46,6 @@ export interface Auth {
   scheme?: 'basic' | 'bearer';
   type: 'apiKey' | 'http';
 }
-
-export const operationOptionsType = ({
-  context,
-  file,
-  operation,
-  throwOnError,
-}: {
-  context: IR.Context;
-  file: TypeScriptFile;
-  operation: IR.OperationObject;
-  throwOnError?: string;
-}) => {
-  const identifierData = importIdentifierData({ context, file, operation });
-  const identifierResponse = importIdentifierResponse({
-    context,
-    file,
-    operation,
-  });
-
-  const optionsName = clientApi.Options.name;
-
-  const client = getClientPlugin(context.config);
-  if (client.name === '@hey-api/client-nuxt') {
-    return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}, ${identifierResponse.name || 'unknown'}, ${nuxtTypeDefault}>`;
-  }
-
-  // TODO: refactor this to be more generic, works for now
-  if (throwOnError) {
-    return `${optionsName}<${identifierData.name || 'unknown'}, ${throwOnError}>`;
-  }
-  return identifierData.name
-    ? `${optionsName}<${identifierData.name}>`
-    : optionsName;
-};
 
 export const sdkId = 'sdk';
 
@@ -552,18 +517,12 @@ const generateClassSdk = ({
         id: operation.id,
         operation,
       }),
-      parameters: [
-        {
-          isRequired: isRequiredOptions,
-          name: 'options',
-          type: operationOptionsType({
-            context,
-            file,
-            operation,
-            throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
-          }),
-        },
-      ],
+      parameters: createParameters({
+        context,
+        file,
+        operation,
+        plugin,
+      }),
       returnType: undefined,
       statements: operationStatements({
         context,
@@ -658,18 +617,12 @@ const generateFlatSdk = ({
       ],
       exportConst: true,
       expression: compiler.arrowFunction({
-        parameters: [
-          {
-            isRequired: isRequiredOptions,
-            name: 'options',
-            type: operationOptionsType({
-              context,
-              file,
-              operation,
-              throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
-            }),
-          },
-        ],
+        parameters: createParameters({
+          context,
+          file,
+          operation,
+          plugin,
+        }),
         returnType: undefined,
         statements: operationStatements({
           context,
@@ -751,6 +704,9 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     clientOptions,
     context,
     plugin,
+  });
+  createTypeOmitNever({
+    context,
   });
 
   if (plugin.asClass) {
