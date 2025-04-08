@@ -2099,6 +2099,54 @@
           }
         }
       },
+      "ModelWithInt64": {
+        "description": "This is a model with one int64 property",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "description": "This is a simple int64 property",
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ModelWithInt32": {
+        "description": "This is a model with one int32 property",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "description": "This is a simple int32 property",
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ModelWithInt64AndMinMax": {
+        "description": "This is a model with one int64 property",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "description": "This is a simple int64 property",
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 100
+          }
+        }
+      },
+      "ModelWithInt32AndMinMax": {
+        "description": "This is a model with one int32 property",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "description": "This is a simple int32 property",
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "maximum": 100
+          }
+        }
+      },
       "ModelWithBoolean": {
         "description": "This is a model with one boolean property",
         "type": "object",

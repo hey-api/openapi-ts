@@ -224,6 +224,46 @@ export type ModelWithInteger = {
 };
 
 /**
+ * This is a model with one int64 property
+ */
+export type ModelWithInt64 = {
+    /**
+     * This is a simple int64 property
+     */
+    prop?: number;
+};
+
+/**
+ * This is a model with one int32 property
+ */
+export type ModelWithInt32 = {
+    /**
+     * This is a simple int32 property
+     */
+    prop?: number;
+};
+
+/**
+ * This is a model with one int64 property
+ */
+export type ModelWithInt64AndMinMax = {
+    /**
+     * This is a simple int64 property
+     */
+    prop?: number;
+};
+
+/**
+ * This is a model with one int32 property
+ */
+export type ModelWithInt32AndMinMax = {
+    /**
+     * This is a simple int32 property
+     */
+    prop?: number;
+};
+
+/**
  * This is a model with one boolean property
  */
 export type ModelWithBoolean = {
