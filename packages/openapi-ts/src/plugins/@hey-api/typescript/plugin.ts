@@ -852,6 +852,7 @@ const operationToDataType = ({
     data.properties.body = {
       type: 'never',
     };
+    dataRequired.push('body');
   }
 
   // TODO: parser - handle cookie parameters
@@ -879,6 +880,7 @@ const operationToDataType = ({
     data.properties.path = {
       type: 'never',
     };
+    dataRequired.push('path');
   }
 
   if (operation.parameters?.query) {
@@ -893,6 +895,7 @@ const operationToDataType = ({
     data.properties.query = {
       type: 'never',
     };
+    dataRequired.push('query');
   }
 
   data.properties.url = {

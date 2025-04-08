@@ -1,3 +1,5 @@
+import ts from 'typescript';
+
 import { compiler } from '../../../compiler';
 import { clientModulePath } from '../../../generate/client';
 import type { FileImportResult } from '../../../generate/files';
@@ -130,4 +132,42 @@ export const createTypeOptions = ({
   });
 
   file.add(typeOptions);
+};
+
+export const createTypeOmitNever = ({ context }: { context: IR.Context }) => {
+  const file = context.file({ id: sdkId })!;
+
+  const neverType = compiler.keywordTypeNode({ keyword: 'never' });
+  const kType = compiler.typeReferenceNode({ typeName: 'K' });
+  const tType = compiler.typeReferenceNode({ typeName: 'T' });
+  const kOfTType = compiler.indexedAccessTypeNode({
+    indexType: kType,
+    objectType: tType,
+  });
+
+  const omitNeverTypeAlias = compiler.typeAliasDeclaration({
+    exportType: true,
+    name: 'OmitNever',
+    type: ts.factory.createMappedTypeNode(
+      undefined,
+      ts.factory.createTypeParameterDeclaration(
+        undefined,
+        'K',
+        ts.factory.createTypeOperatorNode(ts.SyntaxKind.KeyOfKeyword, tType),
+        undefined,
+      ),
+      ts.factory.createConditionalTypeNode(
+        kOfTType,
+        neverType,
+        neverType,
+        kType,
+      ),
+      undefined,
+      kOfTType,
+      undefined,
+    ),
+    typeParameters: [{ name: 'T' }],
+  });
+
+  file.add(omitNeverTypeAlias);
 };

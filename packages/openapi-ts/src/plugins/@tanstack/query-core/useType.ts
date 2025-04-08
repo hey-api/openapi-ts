@@ -1,7 +1,7 @@
 import type { ImportExportItemObject } from '../../../compiler/utils';
 import type { IR } from '../../../ir/types';
 import { getClientPlugin } from '../../@hey-api/client-core/utils';
-import { operationOptionsType } from '../../@hey-api/sdk/plugin';
+import { operationOptionsType } from '../../@hey-api/sdk/params';
 import {
   importIdentifierError,
   importIdentifierResponse,

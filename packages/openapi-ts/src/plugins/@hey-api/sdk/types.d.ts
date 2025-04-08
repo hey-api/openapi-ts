@@ -70,6 +70,12 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   output?: string;
   /**
+   * TODO
+   *
+   * @default 'namespaced'
+   */
+  params?: 'flattened' | 'namespaced';
+  /**
    * Customize the generated service class names. The name variable is
    * obtained from your OpenAPI specification tags.
    *
