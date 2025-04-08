@@ -2,8 +2,6 @@
 
 This NX generator creates a new library project from an OpenAPI specification file. It uses the `@hey-api/openapi-ts` package to generate TypeScript clients, SDKs, and types from the OpenAPI spec.
 
-The generator automatically bundles and dereferences the OpenAPI spec file using Redocly CLI before saving it to the project.
-
 ## Usage
 
 ```bash
@@ -66,15 +64,6 @@ libs/<name>/
 └── openapi-ts.config.ts # Configuration for @hey-api/openapi-ts
 ```
 
-## Spec Bundling
-
-The generator uses Redocly CLI (`@redocly/cli`) to bundle and dereference the OpenAPI spec file:
-
-1. Redocly CLI bundles and dereferences the spec file
-2. The bundled version is saved to `api/spec.yaml`
-
-This ensures that the spec file used for code generation is self-contained with all references resolved.
-
 ## Generating the API Client
 
 After the project is created, you can regenerate the API client at any time:
@@ -95,8 +84,6 @@ The generator adds the following dependencies to the created project:
 - `@hey-api/client-fetch` or `@hey-api/client-axios` or whichever client is provided - Client implementation (dependency)
 - `axios` - If using the axios client (dependency)
 
-The generator also uses `@redocly/cli` for bundling the spec file.
-
 ## TODO
 
 - [x] Generate the client code
@@ -104,5 +91,6 @@ The generator also uses `@redocly/cli` for bundling the spec file.
 - [x] Add generator to update the API spec file and regenerate the client code
 - [x] Make plugins configurable and ability to add additional plugins
 - [x] Support additional client types
+- [x] Dogfood the spec bundling and dereferencing
 - [ ] Support different test frameworks
 - [ ] Add linting generation for

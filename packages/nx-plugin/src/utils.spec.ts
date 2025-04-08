@@ -1,6 +1,8 @@
 import { createClient } from '@hey-api/openapi-ts';
-import { execSync } from 'child_process';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { getSpec, type initConfigs } from '@hey-api/openapi-ts/internal';
+import { rm, writeFile } from 'fs/promises';
+import { join } from 'path';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   bundleAndDereferenceSpecFile,
@@ -10,22 +12,45 @@ import {
   getVersionOfPackage,
 } from './utils';
 
-// Mock execSync to prevent actual command execution
-vi.mock('child_process', () => ({
-  execSync: vi.fn(),
-}));
+vi.mock('@hey-api/openapi-ts', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@hey-api/openapi-ts')>();
+  return {
+    ...actual,
+    createClient: vi.fn(),
+  };
+});
 
-vi.mock('@hey-api/openapi-ts', () => ({
-  createClient: vi.fn(),
-}));
+vi.mock('@hey-api/openapi-ts/internal', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@hey-api/openapi-ts/internal')>();
+  return {
+    ...actual,
+    getSpec: vi.fn(() =>
+      Promise.resolve({
+        data: {},
+        error: null,
+      }),
+    ),
+    initConfigs: vi.fn((config: Parameters<typeof initConfigs>[0]) =>
+      Promise.resolve([
+        {
+          input: config?.input ?? 'default-input',
+          output: config?.output ?? 'default-output',
+          plugins: config?.plugins ?? [],
+        },
+      ]),
+    ),
+    parseOpenApiSpec: vi.fn(() => ({
+      spec: {
+        name: 'test-name',
+      },
+    })),
+  };
+});
 
 describe('utils', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  afterEach(() => {
-    vi.resetAllMocks();
   });
 
   describe('generateClientCommand', () => {
@@ -135,29 +160,69 @@ describe('utils', () => {
       vi.clearAllMocks();
     });
 
-    it('should execute bundle command successfully', () => {
-      bundleAndDereferenceSpecFile({
-        outputPath: './dist/spec.yaml',
-        specFile: './api/spec.yaml',
+    it('should execute bundle command successfully', async () => {
+      // write temp spec file
+      const specAsYaml = `openapi: 3.0.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /test:
+    get:
+      summary: Test endpoint
+      responses:
+        '200':
+          description: A successful response
+`;
+      const tempSpecFile = join(process.cwd(), 'temp-spec.yaml');
+      await writeFile(tempSpecFile, specAsYaml);
+
+      const dereferencedSpec = await bundleAndDereferenceSpecFile({
+        client: '@hey-api/client-fetch',
+        outputPath: './output/dereferenced-spec.yaml',
+        plugins: [],
+        specPath: tempSpecFile,
       });
 
-      expect(execSync).toHaveBeenCalledWith(
-        'npx redocly bundle ./api/spec.yaml --output ./dist/spec.yaml --ext yaml --dereferenced',
-        { stdio: 'inherit' },
-      );
+      expect(dereferencedSpec).toBeDefined();
+      expect((dereferencedSpec as any).name).toBe('test-name');
+
+      // delete temp spec file
+      await rm(tempSpecFile);
     });
 
-    it('should throw error when bundle command fails', () => {
-      vi.mocked(execSync).mockImplementationOnce(() => {
+    it('should throw error when bundle command fails', async () => {
+      vi.mocked(getSpec).mockImplementationOnce(() => {
         throw new Error('Bundle failed');
       });
 
-      expect(() =>
+      // write temp spec file
+      const specAsYaml = `openapi: 3.0.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /test:
+    get:
+      summary: Test endpoint
+      responses:
+        '200':
+          description: A successful response
+`;
+      const tempSpecFile = join(process.cwd(), 'temp-spec2.yaml');
+      await writeFile(tempSpecFile, specAsYaml);
+
+      await expect(() =>
         bundleAndDereferenceSpecFile({
-          outputPath: './dist/spec.yaml',
-          specFile: './api/spec.yaml',
+          client: '@hey-api/client-fetch',
+          outputPath: './output/dereferenced-spec.yaml',
+          plugins: [],
+          specPath: tempSpecFile,
         }),
-      ).toThrow('Bundle failed');
+      ).rejects.toThrow('Bundle failed');
+
+      // delete temp spec file
+      await rm(tempSpecFile);
     });
   });
 });

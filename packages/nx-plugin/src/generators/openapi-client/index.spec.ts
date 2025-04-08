@@ -1,8 +1,8 @@
+import type { initConfigs } from '@hey-api/openapi-ts/internal';
 import { readJson } from '@nx/devkit';
-import { execSync } from 'child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync } from 'fs';
 import { rm } from 'fs/promises';
-import { dirname, join } from 'path';
+import { join } from 'path';
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getGeneratorOptions } from '../../test-utils';
@@ -15,40 +15,22 @@ import {
   updatePackageJson,
 } from './index';
 
-// Mock execSync to prevent actual command execution
-vi.mock('child_process', () => ({
-  execSync: vi.fn((command: string) => {
-    // Mock successful bundling by copying the spec file
-    if (command.includes('redocly bundle')) {
-      const args = command.split(' ');
-      const specFileIndex = args.indexOf('bundle') + 1;
-      const outputFileIndex = args.indexOf('--output') + 1;
-
-      if (specFileIndex > 0 && outputFileIndex > 0) {
-        const specFile = args[specFileIndex];
-        const outputFile = args[outputFileIndex];
-
-        if (!specFile || !existsSync(specFile)) {
-          throw new Error(
-            `ENOENT: no such file or directory, open '${specFile}'`,
-          );
-        }
-
-        if (!outputFile) {
-          throw new Error(
-            `ENOENT: no such file or directory, open '${outputFile}'`,
-          );
-        }
-
-        const content = readFileSync(specFile, 'utf-8');
-        mkdirSync(dirname(outputFile), { recursive: true });
-        writeFileSync(outputFile, content);
-      }
-      return '';
-    }
-    return '';
-  }),
-}));
+vi.mock('@hey-api/openapi-ts', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@hey-api/openapi-ts/internal')>();
+  return {
+    ...actual,
+    initConfigs: vi.fn((config: Parameters<typeof initConfigs>[0]) =>
+      Promise.resolve([
+        {
+          input: config?.input ?? 'default-input',
+          output: config?.output ?? 'default-output',
+          plugins: config?.plugins ?? [],
+        },
+      ]),
+    ),
+  };
+});
 
 // Mock generateClientCode to prevent actual code generation
 vi.mock('../../utils', async () => {
@@ -185,16 +167,14 @@ describe('openapi-client generator', () => {
       const { projectRoot } = normalizedOptions;
 
       await generateApi({
+        client: '@hey-api/client-fetch',
+        plugins: [],
         projectRoot,
         specFile: specPath,
         tempFolder: tempDirectory,
         tree,
       });
 
-      expect(execSync).toHaveBeenCalledWith(
-        expect.stringContaining(`redocly bundle ${specPath}`),
-        expect.any(Object),
-      );
       expect(tree.exists(`${projectRoot}/api/spec.yaml`)).toBeTruthy();
     });
 
@@ -208,6 +188,8 @@ describe('openapi-client generator', () => {
 
       await expect(
         generateApi({
+          client: '@hey-api/client-fetch',
+          plugins: [],
           projectRoot,
           specFile: 'non-existent.yaml',
           tempFolder: tempDirectory,
@@ -353,7 +335,7 @@ describe('openapi-client generator', () => {
 
   describe('full generator', () => {
     it('should run the full generator successfully', async () => {
-      const { options, specPath, tree } = await getGeneratorOptions({
+      const { options, tree } = await getGeneratorOptions({
         name: 'test-api-11',
         tempDirectory,
       });
@@ -367,12 +349,6 @@ describe('openapi-client generator', () => {
       expect(tree.exists(`${projectRoot}/package.json`)).toBeTruthy();
       expect(tree.exists(`${projectRoot}/tsconfig.json`)).toBeTruthy();
       expect(tree.exists(`${projectRoot}/api/spec.yaml`)).toBeTruthy();
-
-      // Verify the generator was called with correct parameters
-      expect(execSync).toHaveBeenCalledWith(
-        expect.stringContaining(`redocly bundle ${specPath}`),
-        expect.any(Object),
-      );
     });
   });
 });

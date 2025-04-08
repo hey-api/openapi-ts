@@ -10,14 +10,14 @@ import {
   names,
   updateJson,
 } from '@nx/devkit';
-import { execSync } from 'child_process';
 import { existsSync } from 'fs';
-import { mkdir, readFile, rm } from 'fs/promises';
+import { mkdir, rm, writeFile } from 'fs/promises';
 import { join } from 'path';
 
 import packageJson from '../../../package.json';
 import type { UpdateApiExecutorSchema } from '../../executors/update-api/schema';
 import {
+  bundleAndDereferenceSpecFile,
   generateClientCode,
   generateClientCommand,
   getPackageName,
@@ -197,6 +197,8 @@ export default async function (
 
   // Generate the api client code
   await generateApi({
+    client: clientType,
+    plugins,
     projectRoot,
     specFile,
     tempFolder,
@@ -298,6 +300,7 @@ export function generateNxProject({
   normalizedOptions: NormalizedOptions;
   tree: Tree;
 }) {
+  logger.debug(`Generating Nx project...`);
   const {
     clientType,
     plugins,
@@ -332,7 +335,7 @@ export function generateNxProject({
   addProjectConfiguration(tree, `${projectScope}/${projectName}`, {
     projectType: 'library',
     root: projectRoot,
-    sourceRoot: `${projectRoot}/src`,
+    sourceRoot: `{projectRoot}/src`,
     tags: tagArray,
     targets: {
       build: {
@@ -342,14 +345,14 @@ export function generateNxProject({
           assets: [
             {
               glob: 'README.md',
-              input: `./${projectRoot}`,
+              input: `./{projectRoot}`,
               output: '.',
             },
           ],
-          main: `${projectRoot}/src/index.ts`,
-          outputPath: `${projectRoot}/dist`,
-          rootDir: `${projectRoot}/src`,
-          tsConfig: `${projectRoot}/${CONSTANTS.TS_LIB_CONFIG_NAME}`,
+          main: `{projectRoot}/src/index.ts`,
+          outputPath: `{projectRoot}/dist`,
+          rootDir: `{projectRoot}/src`,
+          tsConfig: `{projectRoot}/${CONSTANTS.TS_LIB_CONFIG_NAME}`,
         },
         outputs: ['{options.outputPath}'],
       },
@@ -362,7 +365,15 @@ export function generateNxProject({
             plugins,
             specFile: `./${CONSTANTS.SPEC_DIR_NAME}/${CONSTANTS.SPEC_FILE_NAME}`,
           }),
-          cwd: projectRoot,
+          cwd: `{projectRoot}`,
+          inputs: [
+            `{projectRoot}/${CONSTANTS.SPEC_DIR_NAME}`,
+            '{projectRoot}/package.json',
+            '{projectRoot}/tsconfig.json',
+            '{projectRoot}/tsconfig.lib.json',
+            '{projectRoot}/openapi-ts.config.ts',
+          ],
+          outputs: ['{options.outputPath}'],
         },
       },
       // this adds the update-api executor to the generated project
@@ -403,6 +414,7 @@ export function generateNxProject({
       tree,
     });
   }
+  logger.debug(`Nx project generated successfully.`);
 }
 
 function handlePlugin({
@@ -469,11 +481,15 @@ export function generateTestFiles({
  * Generates the api client code using the spec file
  */
 export async function generateApi({
+  client,
+  plugins,
   projectRoot,
   specFile,
   tempFolder,
   tree,
 }: {
+  client: string;
+  plugins: string[];
   projectRoot: string;
   specFile: string;
   tempFolder: string;
@@ -487,10 +503,12 @@ export async function generateApi({
     apiDirectory,
     CONSTANTS.SPEC_FILE_NAME,
   );
+
+  const tempSpecFolder = joinPathFragments(tempFolder, CONSTANTS.SPEC_DIR_NAME);
+
   // Create a full file path for the temp spec files
   const tempSpecDestination = joinPathFragments(
-    tempFolder,
-    CONSTANTS.SPEC_DIR_NAME,
+    tempSpecFolder,
     CONSTANTS.SPEC_FILE_NAME,
   );
 
@@ -504,26 +522,45 @@ export async function generateApi({
     logger.info(`Full spec path: ${fullSpecPath}`);
 
     try {
-      // Ensure the directories exist in the actual file system for redocly to work with
-      tree.write(specDestination, ''); // Just to ensure the directory exists
-
-      // Bundle the spec file using Redocly CLI
-      logger.info(`Bundling OpenAPI spec file using Redocly CLI...`);
-      // Copy bundled and dereferenced spec file to project
-      execSync(
-        `npx redocly bundle ${specFile} --output ${tempSpecDestination} --ext yaml --dereferenced`,
-        {
-          stdio: 'inherit',
-        },
+      const absoluteTempSpecDestination = join(
+        process.cwd(),
+        tempSpecDestination,
       );
+      // Ensure the directories exist in the tree file system
+      tree.write(specDestination, '');
+
+      const dereferencedSpec = await bundleAndDereferenceSpecFile({
+        client,
+        outputPath: absoluteTempSpecDestination,
+        plugins,
+        specPath: specFile,
+      });
       logger.info(`OpenAPI spec file bundled successfully.`);
 
+      const dereferencedSpecString = JSON.stringify(dereferencedSpec, null, 2);
+      const absoluteSpecDestination = join(process.cwd(), tempSpecFolder);
       // Read the bundled file back into the tree
-      if (existsSync(tempSpecDestination)) {
-        const bundledContent = await readFile(tempSpecDestination, 'utf-8');
-        tree.write(specDestination, bundledContent);
+      if (dereferencedSpec) {
+        try {
+          logger.debug(
+            `Writing dereferenced spec to temp file ${absoluteTempSpecDestination}...`,
+          );
+          // write to temp spec destination
+          await mkdir(absoluteSpecDestination, { recursive: true });
+          await writeFile(absoluteTempSpecDestination, dereferencedSpecString);
+        } catch (error: unknown) {
+          const errorMessage =
+            error instanceof Error ? error.message : String(error);
+          logger.error(
+            `Failed to write dereferenced spec to temp file: ${errorMessage}.`,
+          );
+          throw error;
+        }
+        // write to to destination in the tree
+        // TODO: do we need this after we write to disk?
+        tree.write(specDestination, dereferencedSpecString);
       } else {
-        throw new Error('Failed to find bundled spec file');
+        throw new Error('Failed to bundled spec file');
       }
     } catch (error: unknown) {
       const errorMessage =

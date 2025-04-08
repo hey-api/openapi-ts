@@ -1,8 +1,11 @@
 import type { JSONSchema } from '@hey-api/json-schema-ref-parser';
 import { createClient } from '@hey-api/openapi-ts';
-import { getSpec } from '@hey-api/openapi-ts';
+import {
+  getSpec,
+  initConfigs,
+  parseOpenApiSpec,
+} from '@hey-api/openapi-ts/internal';
 import { logger } from '@nx/devkit';
-import { execSync } from 'child_process';
 import OpenApiDiff from 'openapi-diff';
 
 export function generateClientCommand({
@@ -72,22 +75,63 @@ export async function generateClientCode({
 /**
  * Bundle and dereference the new spec file
  */
-export function bundleAndDereferenceSpecFile({
+export async function bundleAndDereferenceSpecFile({
+  client,
   outputPath,
-  specFile,
+  plugins,
+  specPath,
 }: {
+  client: string;
   outputPath: string;
-  specFile: string;
+  plugins: string[];
+  specPath: string;
 }) {
   try {
-    logger.debug(`Bundling OpenAPI spec file using Redocly CLI...`);
-    execSync(
-      `npx redocly bundle ${specFile} --output ${outputPath} --ext yaml --dereferenced`,
-      { stdio: 'inherit' },
-    );
-    logger.debug(`spec bundled.`);
+    logger.debug(`Bundling OpenAPI spec file ${specPath}...`);
+
+    logger.debug(`Getting spec file...`);
+    const { data, error } = await getSpec({
+      inputPath: specPath,
+      timeout: 10000,
+      watch: { headers: new Headers() },
+    });
+    if (error) {
+      logger.error(`Failed to get spec file: ${error}`);
+      throw new Error(`Failed to get spec file: ${error}`);
+    }
+    logger.debug(`Spec file loaded.`);
+    const spec = data;
+    // loading default config
+    logger.debug(`Loading default config...`);
+    const configs = await initConfigs({
+      input: specPath,
+      output: outputPath,
+      plugins: [client, ...plugins] as ClientConfig['plugins'],
+    });
+    // getting the first config
+    const config = configs[0];
+    if (!config) {
+      logger.error('Failed to load config.');
+      throw new Error('Failed to load config.');
+    }
+    logger.debug(`Parsing spec...`);
+    const context = parseOpenApiSpec({
+      config,
+      spec,
+    });
+    if (!context) {
+      logger.error('Failed to parse spec.');
+      throw new Error('Failed to parse spec.');
+    }
+    const dereferencedSpec = context?.spec;
+    if (!dereferencedSpec) {
+      logger.error('Failed to dereference spec.');
+      throw new Error('Failed to dereference spec.');
+    }
+    logger.debug(`Spec bundled and dereferenced.`);
+    return dereferencedSpec as JSONSchema;
   } catch (error) {
-    logger.error(`Failed to bundle and dereference spec file: ${error}`);
+    logger.error(`Failed to bundle and dereference spec file: ${error}.`);
     throw error;
   }
 }
