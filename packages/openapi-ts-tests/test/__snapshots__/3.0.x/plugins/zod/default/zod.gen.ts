@@ -111,6 +111,22 @@ export const zModelWithInteger = z.object({
     prop: z.number().int().optional()
 });
 
+export const zModelWithInt64 = z.object({
+    prop: z.coerce.bigint().optional()
+});
+
+export const zModelWithInt32 = z.object({
+    prop: z.coerce.bigint().optional()
+});
+
+export const zModelWithInt64AndMinMax = z.object({
+    prop: z.coerce.bigint().gte(0).lte(100).optional()
+});
+
+export const zModelWithInt32AndMinMax = z.object({
+    prop: z.number().int().gte(0).lte(100).optional()
+});
+
 export const zModelWithBoolean = z.object({
     prop: z.boolean().optional()
 });

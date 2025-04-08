@@ -337,6 +337,58 @@ export const ModelWithIntegerSchema = {
     }
 } as const;
 
+export const ModelWithInt64Schema = {
+    description: 'This is a model with one int64 property',
+    type: 'object',
+    properties: {
+        prop: {
+            description: 'This is a simple int64 property',
+            type: 'integer',
+            format: 'int64'
+        }
+    }
+} as const;
+
+export const ModelWithInt32Schema = {
+    description: 'This is a model with one int32 property',
+    type: 'object',
+    properties: {
+        prop: {
+            description: 'This is a simple int32 property',
+            type: 'integer',
+            format: 'int64'
+        }
+    }
+} as const;
+
+export const ModelWithInt64AndMinMaxSchema = {
+    description: 'This is a model with one int64 property',
+    type: 'object',
+    properties: {
+        prop: {
+            description: 'This is a simple int64 property',
+            type: 'integer',
+            format: 'int64',
+            minimum: 0,
+            maximum: 100
+        }
+    }
+} as const;
+
+export const ModelWithInt32AndMinMaxSchema = {
+    description: 'This is a model with one int32 property',
+    type: 'object',
+    properties: {
+        prop: {
+            description: 'This is a simple int32 property',
+            type: 'integer',
+            format: 'int32',
+            minimum: 0,
+            maximum: 100
+        }
+    }
+} as const;
+
 export const ModelWithBooleanSchema = {
     description: 'This is a model with one boolean property',
     type: 'object',
