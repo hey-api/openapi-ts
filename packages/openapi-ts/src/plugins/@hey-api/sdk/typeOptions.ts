@@ -63,7 +63,7 @@ export const createTypeOptions = ({
                 'individual options. This might be also useful if you want to implement a',
                 'custom client.',
               ],
-              isRequired: !plugin.client,
+              isRequired: !plugin.client && !plugin.asInstance,
               name: 'client',
               type: compiler.typeReferenceNode({ typeName: clientType.name }),
             },

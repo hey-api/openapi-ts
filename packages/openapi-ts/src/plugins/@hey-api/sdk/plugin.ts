@@ -488,6 +488,31 @@ const operationStatements = ({
     name: 'client',
   });
 
+  const thisClient = plugin.asInstance
+    ? compiler.propertyAccessExpression({
+        expression: compiler.identifier({ text: 'this' }),
+        isOptional: false,
+        name: 'client',
+      })
+    : undefined;
+
+  let clientExpression;
+  if (heyApiClient?.name) {
+    clientExpression = compiler.binaryExpression({
+      left: optionsClient,
+      operator: '??',
+      right: compiler.identifier({ text: heyApiClient.name }),
+    });
+  } else if (thisClient) {
+    clientExpression = compiler.binaryExpression({
+      left: optionsClient,
+      operator: '??',
+      right: thisClient,
+    });
+  } else {
+    clientExpression = optionsClient;
+  }
+
   return [
     compiler.returnFunctionCall({
       args: [
@@ -497,13 +522,7 @@ const operationStatements = ({
         }),
       ],
       name: compiler.propertyAccessExpression({
-        expression: heyApiClient?.name
-          ? compiler.binaryExpression({
-              left: optionsClient,
-              operator: '??',
-              right: compiler.identifier({ text: heyApiClient.name }),
-            })
-          : optionsClient,
+        expression: clientExpression,
         name: compiler.identifier({ text: operation.method }),
       }),
       types: isNuxtClient
@@ -545,7 +564,7 @@ const generateClassSdk = ({
         operation.summary && escapeComment(operation.summary),
         operation.description && escapeComment(operation.description),
       ],
-      isStatic: true,
+      isStatic: !plugin.asInstance,
       name: serviceFunctionIdentifier({
         config: context.config,
         handleIllegal: false,
@@ -618,6 +637,22 @@ const generateClassSdk = ({
 
   context.subscribe('after', () => {
     for (const [name, nodes] of sdks) {
+      if (plugin.asInstance) {
+        nodes.unshift(
+          compiler.constructorDeclaration({
+            multiLine: false,
+            parameters: [
+              {
+                accessLevel: 'public',
+                isReadOnly: false,
+                name: 'client',
+                type: 'Client',
+              },
+            ],
+          }),
+        );
+      }
+
       const node = compiler.classDeclaration({
         decorator: undefined,
         members: nodes,
