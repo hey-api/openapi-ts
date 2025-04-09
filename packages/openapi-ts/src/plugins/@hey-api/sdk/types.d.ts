@@ -20,6 +20,13 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   asClass?: boolean;
   /**
+   * SDK functions are non-static methods and the class must be instantiated
+   * with a client.
+   *
+   * @default false
+   */
+  asInstance?: boolean;
+  /**
    * Should the generated functions contain auth mechanisms? You may want to
    * disable this option if you're handling auth yourself or defining it
    * globally on the client and want to reduce the size of generated code.
