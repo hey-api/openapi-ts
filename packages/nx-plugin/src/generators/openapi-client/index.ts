@@ -10,8 +10,8 @@ import {
   names,
   updateJson,
 } from '@nx/devkit';
-import { existsSync } from 'fs';
-import { mkdir, rm, writeFile } from 'fs/promises';
+import { existsSync, writeFileSync } from 'fs';
+import { mkdir, rm } from 'fs/promises';
 import { join } from 'path';
 
 import packageJson from '../../../package.json';
@@ -547,7 +547,7 @@ export async function generateApi({
           );
           // write to temp spec destination
           await mkdir(absoluteSpecDestination, { recursive: true });
-          await writeFile(absoluteTempSpecDestination, dereferencedSpecString);
+          writeFileSync(absoluteTempSpecDestination, dereferencedSpecString);
         } catch (error: unknown) {
           const errorMessage =
             error instanceof Error ? error.message : String(error);
