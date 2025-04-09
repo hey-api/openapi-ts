@@ -1,7 +1,7 @@
 import type { PromiseExecutor } from '@nx/devkit';
 import { logger } from '@nx/devkit';
-import { existsSync } from 'fs';
-import { cp, mkdir, readFile, rm, writeFile } from 'fs/promises';
+import { existsSync, writeFileSync } from 'fs';
+import { cp, mkdir, readFile, rm } from 'fs/promises';
 import { join } from 'path';
 
 import {
@@ -55,7 +55,7 @@ async function setup({
   });
   // save the dereferenced spec to the temp spec file
   try {
-    await writeFile(tempSpecPath, JSON.stringify(dereferencedSpec, null, 2));
+    writeFileSync(tempSpecPath, JSON.stringify(dereferencedSpec, null, 2));
   } catch (error) {
     logger.error(`Failed to write dereferenced spec to temp file: ${error}.`);
     throw error;
@@ -156,7 +156,7 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
       } else {
         logger.debug('No existing spec file found. Creating...');
       }
-      await writeFile(absoluteExistingSpecPath, newSpecString);
+      writeFileSync(absoluteExistingSpecPath, newSpecString);
     } else {
       logger.error(
         `No API directory found at ${apiDirectory} after checking once, exiting.`,
