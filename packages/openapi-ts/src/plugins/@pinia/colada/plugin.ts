@@ -1,4 +1,5 @@
 import type { IR } from '../../../ir/types';
+import { clientId } from '../../@hey-api/client-core/utils.js';
 import type { Plugin } from '../../types';
 import { createMutationFunction } from './mutation';
 import { createQueryFunction } from './query';
@@ -80,7 +81,8 @@ export const handler: Plugin.Handler<Config> = ({
       if (fileId.startsWith(name)) {
         // Make sure we have a client import
         file.import({
-          module: '@pinia/colada/client',
+          alias: '_heyApiClient',
+          module: file.relativePathToFile({ context, id: clientId }),
           name: 'client',
         });
       }

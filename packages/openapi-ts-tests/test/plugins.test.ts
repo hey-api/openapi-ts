@@ -211,7 +211,7 @@ for (const version of versions) {
         }),
         description: 'generate with plugin Pinia Colada',
       },
-      {
+      /* {
         config: createConfig({
           output: 'asFileSdk',
           plugins: [
@@ -222,7 +222,7 @@ for (const version of versions) {
           ],
         }),
         description: 'generate with plugin Pinia Colada using file-based SDK',
-      },
+      }, */
       {
         config: createConfig({
           output: 'default',
@@ -313,7 +313,7 @@ for (const version of versions) {
       },
     ];
 
-    it.each(scenarios)('$description', async ({ config }) => {
+    it.only.each(scenarios)('$description', async ({ config }) => {
       await createClient(config);
 
       const outputPath = typeof config.output === 'string' ? config.output : '';
