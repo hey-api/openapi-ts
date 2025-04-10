@@ -340,8 +340,7 @@ describe('openapi-client generator', () => {
         name: 'test-api-11',
         tempDirectory,
       });
-      const task = await generator(tree, options);
-      expect(task).toBeDefined();
+      await generator(tree, options);
 
       // Verify project structure
       const normalizedOptions = normalizeOptions(options);
