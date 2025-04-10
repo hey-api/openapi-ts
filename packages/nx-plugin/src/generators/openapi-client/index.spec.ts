@@ -1,5 +1,5 @@
-import { existsSync, mkdirSync } from 'node:fs';
-import { rm } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
+import { existsSync, mkdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 
 import type { initConfigs } from '@hey-api/openapi-ts/internal';
@@ -48,7 +48,7 @@ vi.mock('latest-version', () => ({
   default: vi.fn(() => '1.0.0'),
 }));
 
-const tempDirectory = 'temp-openapi-client';
+const tempDirectory = `temp-openapi-client-${randomUUID()}`;
 
 describe('openapi-client generator', () => {
   beforeEach(() => {
@@ -56,17 +56,21 @@ describe('openapi-client generator', () => {
     vi.clearAllMocks();
   });
 
-  afterAll(async () => {
-    const tempDir = join(process.cwd(), tempDirectory);
-    if (existsSync(tempDir)) {
-      await rm(tempDir, { recursive: true });
+  afterAll(() => {
+    try {
+      const tempDir = join(process.cwd(), tempDirectory);
+      if (existsSync(tempDir)) {
+        rmSync(tempDir, { force: true, recursive: true });
+      }
+    } catch (error) {
+      console.error(error);
     }
   });
 
   describe('normalizeOptions', () => {
     it('should normalize options with default values', async () => {
       const { options, specPath } = await getGeneratorOptions({
-        name: 'test-api-1',
+        name: `test-api-${randomUUID()}`,
         tempDirectory,
       });
       const normalized = normalizeOptions(options);
@@ -87,7 +91,7 @@ describe('openapi-client generator', () => {
 
     it('should normalize options with custom directory and tags', async () => {
       const { options, specPath } = await getGeneratorOptions({
-        name: 'test-api-2',
+        name: `test-api-${randomUUID()}`,
         tempDirectory,
       });
 
@@ -117,7 +121,7 @@ describe('openapi-client generator', () => {
   describe('generateNxProject', () => {
     it('should generate project configuration', async () => {
       const { options, tree } = await getGeneratorOptions({
-        name: 'test-api-3',
+        name: `test-api-${randomUUID()}`,
         tempDirectory,
       });
       const normalizedOptions = normalizeOptions(options);
@@ -136,7 +140,7 @@ describe('openapi-client generator', () => {
 
     it('should generate project files', async () => {
       const { options, tree } = await getGeneratorOptions({
-        name: 'test-api-4',
+        name: `test-api-${randomUUID()}`,
         tempDirectory,
       });
       const normalizedOptions = normalizeOptions(options);
@@ -161,7 +165,7 @@ describe('openapi-client generator', () => {
   describe('generateApi', () => {
     it('should process and bundle the OpenAPI spec file', async () => {
       const { options, specPath, tree } = await getGeneratorOptions({
-        name: 'test-api-5',
+        name: `test-api-${randomUUID()}`,
         tempDirectory,
       });
       const normalizedOptions = normalizeOptions(options);
@@ -181,7 +185,7 @@ describe('openapi-client generator', () => {
 
     it('should throw error for invalid spec file', async () => {
       const { options, tree } = await getGeneratorOptions({
-        name: 'test-api-6',
+        name: `test-api-${randomUUID()}`,
         tempDirectory,
       });
       const normalizedOptions = normalizeOptions(options);
@@ -203,7 +207,7 @@ describe('openapi-client generator', () => {
   describe('updatePackageJson', () => {
     it('should update package.json with correct dependencies', async () => {
       const { options, tree } = await getGeneratorOptions({
-        name: 'test-api-7',
+        name: `test-api-${randomUUID()}`,
         tempDirectory,
       });
       const normalizedOptions = normalizeOptions(options);
@@ -241,7 +245,7 @@ describe('openapi-client generator', () => {
 
     it('should update tsconfig with correct dependencies', async () => {
       const { options, tree } = await getGeneratorOptions({
-        name: 'test-api-8',
+        name: `test-api-${randomUUID()}`,
         tempDirectory,
       });
       const normalizedOptions = normalizeOptions(options);
@@ -281,7 +285,7 @@ describe('openapi-client generator', () => {
 
     it('should update package.json with axios dependencies when clientType is axios', async () => {
       const { options, tree } = await getGeneratorOptions({
-        name: 'test-api-9',
+        name: `test-api-${randomUUID()}`,
         tempDirectory,
       });
       const normalizedOptions = normalizeOptions(options);
@@ -311,7 +315,7 @@ describe('openapi-client generator', () => {
   describe('generateClientCode', () => {
     it('should generate client code without errors', async () => {
       const { options, specPath } = await getGeneratorOptions({
-        name: 'test-api-10',
+        name: `test-api-${randomUUID()}`,
         tempDirectory,
       });
       const normalizedOptions = normalizeOptions(options);
@@ -337,7 +341,7 @@ describe('openapi-client generator', () => {
   describe('full generator', () => {
     it('should run the full generator successfully', async () => {
       const { options, tree } = await getGeneratorOptions({
-        name: 'test-api-11',
+        name: `test-api-${randomUUID()}`,
         tempDirectory,
       });
       await generator(tree, options);
