@@ -284,9 +284,15 @@ export function normalizeOptions(
   const name = names(options.name).fileName;
   const projectDirectory = names(options.directory).fileName.replace('./', '');
   const projectName = name.replace(new RegExp('/', 'g'), '-');
-  logger.info(`Project name: ${options.tags}`);
   const projectRoot = `${projectDirectory}/${projectName}`;
-  const tagArray = (options.tags ?? []).map((s) => s.trim());
+  const tagArray = Array.from(
+    new Set(
+      (typeof options.tags === 'string'
+        ? (options.tags as string).split(',')
+        : (options.tags ?? [])
+      ).map((s) => s.trim()),
+    ),
+  );
 
   const tempFolder = options.tempFolderDir ?? defaultTempFolder;
 
