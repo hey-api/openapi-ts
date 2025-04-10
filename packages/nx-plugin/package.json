@@ -54,7 +54,8 @@
     "latest-version": "9.0.0",
     "nx": "20.7.1",
     "openapi-diff": "0.23.7",
-    "tslib": "2.3.0"
+    "tslib": "2.3.0",
+    "xcurl": "2.1.2"
   },
   "devDependencies": {
     "typescript": "5.5.3",
