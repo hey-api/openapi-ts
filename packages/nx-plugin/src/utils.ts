@@ -24,7 +24,9 @@ export function generateClientCommand({
   return `npx @hey-api/openapi-ts -i ${specFile} -o ${outputPath} -c ${clientType}${plugins.length > 0 ? ` -p ${plugins.join(',')}` : ''}`;
 }
 
-// example package name: @hey-api/client-fetch@0.9.0
+/**
+ * example package name: @hey-api/client-fetch@0.9.0
+ */
 export function getVersionOfPackage(packageName: string) {
   // we compare the index of the @ symbol and we check greater than 0 over -1 because if the @ symbol is at the 0 position then that is not a version
   const atIndex = packageName.lastIndexOf('@');
@@ -284,8 +286,8 @@ export async function compareSpecs(
 
 export function isUrl(url: string) {
   try {
-    new URL(url);
-    return true;
+    const urlObject = new URL(url);
+    return urlObject.protocol === 'http:' || urlObject.protocol === 'https:';
   } catch {
     return false;
   }
@@ -295,10 +297,8 @@ export function isUrl(url: string) {
  * Checks if the spec is a file on the local file system
  */
 export function isAFile(isFileSystemFile: string) {
-  try {
-    new URL(isFileSystemFile);
+  if (isUrl(isFileSystemFile)) {
     return false;
-  } catch {
-    return existsSync(isFileSystemFile) && lstatSync(isFileSystemFile).isFile();
   }
+  return existsSync(isFileSystemFile) && lstatSync(isFileSystemFile).isFile();
 }
