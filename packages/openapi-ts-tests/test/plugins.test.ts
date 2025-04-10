@@ -357,7 +357,7 @@ for (const version of versions) {
         output: 'my-plugin',
       };
 
-      await expect(() =>
+      await expect(
         createClient({
           input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
           logs: {
@@ -383,7 +383,7 @@ for (const version of versions) {
         output: 'my-plugin',
       };
 
-      await expect(() =>
+      await expect(
         createClient({
           input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
           logs: {

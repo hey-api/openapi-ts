@@ -7,7 +7,7 @@
       "outputs": ["dist/**"]
     },
     "test": {
-      // "dependsOn": ["build"] // disabled for now since build is failing
+      "dependsOn": ["build"]
     }
   }
 }

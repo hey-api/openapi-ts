@@ -1,16 +1,18 @@
 import { fileURLToPath } from 'node:url';
 
-import { configDefaults, defineConfig } from 'vitest/config';
+import { configDefaults, mergeConfig } from 'vitest/config';
 
-export default defineConfig({
-  plugins: [],
+import { createBaseConfig } from '../../vitest.config.base';
+
+const baseConfig = createBaseConfig(
+  fileURLToPath(new URL('./', import.meta.url)),
+);
+
+export default mergeConfig(baseConfig, {
   test: {
     coverage: {
       exclude: ['bin', 'dist', 'src/**/*.d.ts'],
-      include: ['src/**/*.ts'],
-      provider: 'v8',
     },
     exclude: [...configDefaults.exclude],
-    root: fileURLToPath(new URL('./', import.meta.url)),
   },
 });
