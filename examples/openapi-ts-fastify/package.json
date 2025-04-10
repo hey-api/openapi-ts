@@ -11,7 +11,8 @@
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
     "fastify": "5.2.0",
-    "fastify-openapi-glue": "4.8.0"
+    "fastify-openapi-glue": "4.8.0",
+    "find-my-way": "9.2.0"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
@@ -19,5 +20,10 @@
     "prettier": "3.4.2",
     "typescript": "5.5.3",
     "vitest": "1.6.0"
+  },
+  "overrides": {
+    "fastify": {
+      "find-my-way": "$find-my-way"
+    }
   }
 }

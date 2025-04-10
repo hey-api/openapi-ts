@@ -9,6 +9,7 @@ export default defineConfig({
     // And that the port was not previously taken.
     fileParallelism: false,
     include: ['test/e2e/**/*.test.ts'],
+    name: 'openapi-ts-e2e',
     root: fileURLToPath(new URL('./', import.meta.url)),
   },
 });

@@ -300,18 +300,20 @@ for (const version of versions) {
       const outputPath = typeof config.output === 'string' ? config.output : '';
       const filePaths = getFilePaths(outputPath);
 
-      filePaths.forEach((filePath) => {
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        expect(fileContent).toMatchFileSnapshot(
-          path.join(
-            __dirname,
-            '__snapshots__',
-            version,
-            namespace,
-            filePath.slice(outputDir.length + 1),
-          ),
-        );
-      });
+      await Promise.all(
+        filePaths.map(async (filePath) => {
+          const fileContent = fs.readFileSync(filePath, 'utf-8');
+          await expect(fileContent).toMatchFileSnapshot(
+            path.join(
+              __dirname,
+              '__snapshots__',
+              version,
+              namespace,
+              filePath.slice(outputDir.length + 1),
+            ),
+          );
+        }),
+      );
     });
   });
 
@@ -355,7 +357,7 @@ for (const version of versions) {
         output: 'my-plugin',
       };
 
-      await expect(() =>
+      await expect(
         createClient({
           input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
           logs: {
@@ -381,7 +383,7 @@ for (const version of versions) {
         output: 'my-plugin',
       };
 
-      await expect(() =>
+      await expect(
         createClient({
           input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
           logs: {

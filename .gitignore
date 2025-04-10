@@ -24,3 +24,5 @@ test/e2e/generated
 
 # error files
 openapi-ts-error-*
+vitest.config.ts.timestamp-*
+vite.config.ts.timestamp-*
