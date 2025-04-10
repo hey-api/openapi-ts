@@ -54,12 +54,11 @@
     "latest-version": "9.0.0",
     "nx": "20.7.1",
     "openapi-diff": "0.23.7",
-    "tslib": "2.3.0",
+    "tslib": "2.8.1",
     "xcurl": "2.1.2"
   },
   "devDependencies": {
-    "typescript": "5.5.3",
-    "vitest": "1.6.0"
+    "typescript": "5.8.3"
   },
   "files": [
     "dist",
