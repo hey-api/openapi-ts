@@ -1,8 +1,9 @@
+import { existsSync } from 'node:fs';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+
 import type { initConfigs } from '@hey-api/openapi-ts/internal';
 import { type ExecutorContext, logger } from '@nx/devkit';
-import { existsSync } from 'fs';
-import { mkdir, readFile, rm, writeFile } from 'fs/promises';
-import { join } from 'path';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
 import generator from '../../generators/openapi-client';

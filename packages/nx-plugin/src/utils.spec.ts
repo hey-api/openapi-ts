@@ -1,7 +1,8 @@
+import { rm, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+
 import { createClient } from '@hey-api/openapi-ts';
 import { getSpec, type initConfigs } from '@hey-api/openapi-ts/internal';
-import { rm, writeFile } from 'fs/promises';
-import { join } from 'path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -10,6 +11,8 @@ import {
   generateClientCommand,
   getPackageName,
   getVersionOfPackage,
+  isAFile,
+  isUrl,
 } from './utils';
 
 vi.mock('@hey-api/openapi-ts', async (importOriginal) => {
@@ -223,6 +226,37 @@ paths:
 
       // delete temp spec file
       await rm(tempSpecFile);
+    });
+  });
+
+  describe('isUrl', () => {
+    it('should return true for valid URLs', () => {
+      expect(isUrl('https://example.com')).toBe(true);
+      expect(isUrl('http://example.com')).toBe(true);
+    });
+
+    it('should return false for invalid URLs', () => {
+      expect(isUrl('not-a-url')).toBe(false);
+    });
+
+    it('should return false for file paths', () => {
+      expect(isUrl('/path/to/spec.yaml')).toBe(false);
+    });
+  });
+
+  describe('isAFile', () => {
+    it('should return true for valid file paths', async () => {
+      await writeFile('./spec.yaml', 'openapi: 3.0.0');
+      expect(isAFile('./spec.yaml')).toBe(true);
+      await rm('./spec.yaml');
+    });
+
+    it('should return false for valid URLs', () => {
+      expect(isAFile('https://example.com')).toBe(false);
+    });
+
+    it('should return false for invalid file paths', () => {
+      expect(isAFile('not-a-file')).toBe(false);
     });
   });
 });

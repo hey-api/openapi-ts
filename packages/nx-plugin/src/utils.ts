@@ -1,3 +1,5 @@
+import { existsSync, lstatSync } from 'node:fs';
+
 import type { JSONSchema } from '@hey-api/json-schema-ref-parser';
 import { createClient } from '@hey-api/openapi-ts';
 import {
@@ -278,4 +280,25 @@ export async function compareSpecs(
 
   logger.debug(`Are specs equal: ${areSpecsEqual}`);
   return areSpecsEqual;
+}
+
+export function isUrl(url: string) {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Checks if the spec is a file on the local file system
+ */
+export function isAFile(isFileSystemFile: string) {
+  try {
+    new URL(isFileSystemFile);
+    return false;
+  } catch {
+    return existsSync(isFileSystemFile) && lstatSync(isFileSystemFile).isFile();
+  }
 }

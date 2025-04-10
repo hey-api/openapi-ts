@@ -922,6 +922,9 @@ importers:
       tslib:
         specifier: 2.8.1
         version: 2.8.1
+      xcurl:
+        specifier: 2.1.2
+        version: 2.1.2
     devDependencies:
       typescript:
         specifier: 5.8.3
@@ -12129,6 +12132,11 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+
+  xcurl@2.1.2:
+    resolution: {integrity: sha512-y3IKd4a+kuUUUZUwSLmpKBZWcZeCpOOYc9r2ROBuhv4DYWiusExuVCcaouPXXlOFpLJLf4qH64/JjqW0PbJtdg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
 
   xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
@@ -25292,6 +25300,8 @@ snapshots:
   ws@8.17.1: {}
 
   ws@8.18.1: {}
+
+  xcurl@2.1.2: {}
 
   xml-name-validator@4.0.0: {}
 

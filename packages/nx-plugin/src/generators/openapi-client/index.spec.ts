@@ -1,8 +1,9 @@
+import { existsSync, mkdirSync } from 'node:fs';
+import { rm } from 'node:fs/promises';
+import { join } from 'node:path';
+
 import type { initConfigs } from '@hey-api/openapi-ts/internal';
 import { readJson } from '@nx/devkit';
-import { existsSync, mkdirSync } from 'fs';
-import { rm } from 'fs/promises';
-import { join } from 'path';
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getGeneratorOptions } from '../../test-utils';

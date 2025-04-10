@@ -1,8 +1,9 @@
+import { existsSync, writeFileSync } from 'node:fs';
+import { cp, mkdir, readFile, rm } from 'node:fs/promises';
+import { join } from 'node:path';
+
 import type { PromiseExecutor } from '@nx/devkit';
 import { logger } from '@nx/devkit';
-import { existsSync, writeFileSync } from 'fs';
-import { cp, mkdir, readFile, rm } from 'fs/promises';
-import { join } from 'path';
 
 import {
   bundleAndDereferenceSpecFile,

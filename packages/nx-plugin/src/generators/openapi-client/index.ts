@@ -1,4 +1,8 @@
-import type { Tree } from '@nx/devkit';
+import { existsSync, writeFileSync } from 'node:fs';
+import { mkdir, rm } from 'node:fs/promises';
+import { join } from 'node:path';
+
+import type { ProjectConfiguration, Tree } from '@nx/devkit';
 import {
   addDependenciesToPackageJson,
   addProjectConfiguration,
@@ -10,9 +14,6 @@ import {
   names,
   updateJson,
 } from '@nx/devkit';
-import { existsSync, writeFileSync } from 'fs';
-import { mkdir, rm } from 'fs/promises';
-import { join } from 'path';
 
 import packageJson from '../../../package.json';
 import type { UpdateApiExecutorSchema } from '../../executors/update-api/schema';
@@ -22,6 +23,8 @@ import {
   generateClientCommand,
   getPackageName,
   getVersionOfPackage,
+  isAFile,
+  isUrl,
 } from '../../utils';
 import { CONSTANTS } from '../../vars';
 
@@ -67,7 +70,7 @@ const getClientPlugins = ({
 }): Record<string, ClientPluginOptions> => {
   const plugins: Record<string, ClientPluginOptions> = {
     '@tanstack/react-query': {
-      additionalEntryPoints: [`${projectRoot}/src/rq.ts`],
+      additionalEntryPoints: [`{projectRoot}/src/rq.ts`],
       packageJsonExports: {
         './rq': {
           default: './dist/rq.js',
@@ -89,7 +92,12 @@ const getClientPlugins = ({
     .reduce(
       (acc, plugin) => {
         const keyedPlugin = plugin as keyof typeof plugins;
-        acc[plugin] = plugins[keyedPlugin]!;
+        const foundPlugin = plugins[keyedPlugin];
+        if (!foundPlugin) {
+          return acc;
+        }
+        acc[plugin] = foundPlugin;
+
         return acc;
       },
       {} as Record<string, ClientPluginOptions>,
@@ -110,7 +118,6 @@ export type TestRunner = 'vitest';
 const testRunners: Record<
   TestRunner,
   {
-    addToTsConfigIncludes?: string[];
     /**
      * The template path to the test files
      */
@@ -118,7 +125,6 @@ const testRunners: Record<
   }
 > = {
   vitest: {
-    addToTsConfigIncludes: ['vite.config.ts'],
     templatePath: './tests/vitest',
   },
 };
@@ -259,6 +265,16 @@ export interface NormalizedOptions {
 
 export type GeneratedOptions = NormalizedOptions & typeof CONSTANTS;
 
+type ProjectConfigurationTargets = NonNullable<ProjectConfiguration['targets']>;
+type ValueType<T extends Record<string, any>> = T[keyof T];
+
+type Input = NonNullable<
+  ValueType<ProjectConfigurationTargets>['inputs']
+>[number];
+type Output = NonNullable<
+  ValueType<ProjectConfigurationTargets>['outputs']
+>[number];
+
 /**
  * Normalizes the CLI input options
  */
@@ -322,6 +338,9 @@ export function generateNxProject({
     spec: specFile,
   };
 
+  const specIsAFile = isAFile(specFile);
+  const specIsRemote = isUrl(specFile);
+
   const additionalEntryPoints: string[] = [];
 
   for (const plugin of plugins) {
@@ -331,6 +350,34 @@ export function generateNxProject({
     }
   }
 
+  const baseInputs: Input[] = [
+    `{projectRoot}/${CONSTANTS.SPEC_DIR_NAME}`,
+    '{projectRoot}/package.json',
+    '{projectRoot}/tsconfig.json',
+    '{projectRoot}/tsconfig.lib.json',
+    '{projectRoot}/openapi-ts.config.ts',
+  ];
+
+  const updateInputs: Input[] = [...baseInputs];
+
+  if (specIsAFile) {
+    // if the spec file is a file then we need to add it to inputs so that it is watched by NX
+    updateInputs.push(specFile);
+  } else if (specIsRemote) {
+    // here we should add a hash of the spec file to the inputs so that NX will watch for changes
+    // fetch the spec file from url and get the hash
+    const apiHash: Input = {
+      runtime: `npx node -e "console.log(require('crypto').createHash('sha256').update(process.argv[1]).digest('hex'))" "$(npx -y xcurl -s ${specFile})"`,
+    };
+    updateInputs.push(apiHash);
+  } else {
+    logger.error(`Spec file ${specFile} is not a file or valid URI.`);
+    throw new Error(`Spec file ${specFile} is not a file or valid URI.`);
+  }
+
+  const generateOutputs: Output[] = ['{options.outputPath}'];
+  const generateOutputPath = `./src/${CONSTANTS.GENERATED_DIR_NAME}`;
+
   // Create basic project structure
   addProjectConfiguration(tree, `${projectScope}/${projectName}`, {
     projectType: 'library',
@@ -339,7 +386,13 @@ export function generateNxProject({
     tags: tagArray,
     targets: {
       build: {
+        dependsOn: ['updateApi'],
         executor: '@nx/js:tsc',
+        inputs: [
+          { dependentTasksOutputFiles: '**/*.ts' },
+          '^build',
+          ...baseInputs,
+        ],
         options: {
           additionalEntryPoints,
           assets: [
@@ -354,32 +407,33 @@ export function generateNxProject({
           rootDir: `{projectRoot}/src`,
           tsConfig: `{projectRoot}/${CONSTANTS.TS_LIB_CONFIG_NAME}`,
         },
-        outputs: ['{options.outputPath}'],
+        outputs: ['{projectRoot}/dist'],
       },
       generateApi: {
         executor: 'nx:run-commands',
+        inputs: baseInputs,
         options: {
           command: generateClientCommand({
             clientType,
-            outputPath: `./src/${CONSTANTS.GENERATED_DIR_NAME}`,
+            outputPath: generateOutputPath,
             plugins,
             specFile: `./${CONSTANTS.SPEC_DIR_NAME}/${CONSTANTS.SPEC_FILE_NAME}`,
           }),
           cwd: `{projectRoot}`,
-          inputs: [
-            `{projectRoot}/${CONSTANTS.SPEC_DIR_NAME}`,
-            '{projectRoot}/package.json',
-            '{projectRoot}/tsconfig.json',
-            '{projectRoot}/tsconfig.lib.json',
-            '{projectRoot}/openapi-ts.config.ts',
-          ],
-          outputs: ['{options.outputPath}'],
+          outputPath: generateOutputPath,
         },
+        outputs: generateOutputs,
       },
       // this adds the update-api executor to the generated project
       updateApi: {
+        cache: true,
         executor: `${packageJson.name}:update-api`,
+        inputs: updateInputs,
         options: updateOptions,
+        outputs: [
+          `{projectRoot}/src/${CONSTANTS.GENERATED_DIR_NAME}`,
+          `{projectRoot}/${CONSTANTS.SPEC_DIR_NAME}`,
+        ],
       },
     },
   });
@@ -456,25 +510,24 @@ export function generateTestFiles({
   test: TestRunner;
   tree: Tree;
 }) {
-  const { addToTsConfigIncludes, templatePath } = testRunners[test];
+  // link the tsconfig.spec.json to the tsconfig.json
+  updateJson(tree, `${projectRoot}/tsconfig.json`, (json) => {
+    json.references = [
+      ...(json.references ?? []),
+      {
+        path: `./${CONSTANTS.TS_SPEC_CONFIG_NAME}`,
+      },
+    ];
+    return json;
+  });
+
+  const { templatePath } = testRunners[test];
   generateFiles(
     tree,
     join(__dirname, templatePath),
     projectRoot,
     generatedOptions,
   );
-  if (addToTsConfigIncludes?.length) {
-    updateJson(
-      tree,
-      `${projectRoot}/${CONSTANTS.TS_LIB_CONFIG_NAME}`,
-      (json) => {
-        const setOfIncludes = new Set<string>(json.include ?? []);
-        addToTsConfigIncludes.forEach((include) => setOfIncludes.add(include));
-        json.include = Array.from(setOfIncludes);
-        return json;
-      },
-    );
-  }
 }
 
 /**
@@ -512,65 +565,52 @@ export async function generateApi({
     CONSTANTS.SPEC_FILE_NAME,
   );
 
-  logger.info(`Temp spec destination: ${tempSpecDestination}`);
-
   try {
-    // Create a full file path for the final spec files
-    const workspacePath = process.cwd();
-    const fullSpecPath = join(workspacePath, specDestination);
+    const absoluteTempSpecDestination = join(
+      process.cwd(),
+      tempSpecDestination,
+    );
+    // Ensure the directories exist in the tree file system
+    tree.write(specDestination, '');
 
-    logger.info(`Full spec path: ${fullSpecPath}`);
+    const dereferencedSpec = await bundleAndDereferenceSpecFile({
+      client,
+      outputPath: absoluteTempSpecDestination,
+      plugins,
+      specPath: specFile,
+    });
+    logger.info(`OpenAPI spec file bundled successfully.`);
 
-    try {
-      const absoluteTempSpecDestination = join(
-        process.cwd(),
-        tempSpecDestination,
-      );
-      // Ensure the directories exist in the tree file system
-      tree.write(specDestination, '');
-
-      const dereferencedSpec = await bundleAndDereferenceSpecFile({
-        client,
-        outputPath: absoluteTempSpecDestination,
-        plugins,
-        specPath: specFile,
-      });
-      logger.info(`OpenAPI spec file bundled successfully.`);
-
-      const dereferencedSpecString = JSON.stringify(dereferencedSpec, null, 2);
-      const absoluteSpecDestination = join(process.cwd(), tempSpecFolder);
-      // Read the bundled file back into the tree
-      if (dereferencedSpec) {
-        try {
-          logger.debug(
-            `Writing dereferenced spec to temp file ${absoluteTempSpecDestination}...`,
-          );
-          // write to temp spec destination
-          await mkdir(absoluteSpecDestination, { recursive: true });
-          writeFileSync(absoluteTempSpecDestination, dereferencedSpecString);
-        } catch (error: unknown) {
-          const errorMessage =
-            error instanceof Error ? error.message : String(error);
-          logger.error(
-            `Failed to write dereferenced spec to temp file: ${errorMessage}.`,
-          );
-          throw error;
-        }
-        // write to to destination in the tree
-        // TODO: do we need this after we write to disk?
-        tree.write(specDestination, dereferencedSpecString);
-      } else {
-        throw new Error('Failed to bundled spec file');
+    const dereferencedSpecString = JSON.stringify(dereferencedSpec, null, 2);
+    const absoluteSpecDestination = join(process.cwd(), tempSpecFolder);
+    // Read the bundled file back into the tree
+    if (dereferencedSpec) {
+      try {
+        logger.debug(
+          `Writing dereferenced spec to temp file ${absoluteTempSpecDestination}...`,
+        );
+        // write to temp spec destination
+        await mkdir(absoluteSpecDestination, { recursive: true });
+        writeFileSync(absoluteTempSpecDestination, dereferencedSpecString);
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        logger.error(
+          `Failed to write dereferenced spec to temp file: ${errorMessage}.`,
+        );
+        throw error;
       }
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      logger.error(`Failed to bundle OpenAPI spec: ${errorMessage}`);
-      throw error;
+      // write to to destination in the tree
+      // TODO: do we need this after we write to disk?
+      tree.write(specDestination, dereferencedSpecString);
+    } else {
+      logger.error('Failed to bundled spec file.');
+      throw new Error('Failed to bundled spec file.');
     }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    throw new Error(`Error processing spec file: ${errorMessage}`);
+    logger.error(`Failed to bundle OpenAPI spec: ${errorMessage}.`);
+    throw error;
   }
 }
 
@@ -637,7 +677,10 @@ export function updateTsConfig({
         `./${projectRoot}/src/index.ts`,
       ];
       for (const plugin of Object.keys(clientPlugins)) {
-        const item = clientPlugins[plugin]!;
+        const item = clientPlugins[plugin];
+        if (!item) {
+          continue;
+        }
         const pluginTsConfigPath = item.tsConfigCompilerPaths;
         if (pluginTsConfigPath) {
           // for each key in the pluginTsConfigPath object, add it to the paths object
