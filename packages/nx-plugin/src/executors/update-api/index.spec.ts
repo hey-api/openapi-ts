@@ -1,5 +1,6 @@
 import type { initConfigs } from '@hey-api/openapi-ts';
 import { type ExecutorContext, logger } from '@nx/devkit';
+import { randomUUID } from 'crypto';
 import { existsSync } from 'fs';
 import { mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { join } from 'path';
@@ -31,7 +32,7 @@ vi.mock('latest-version', () => ({
   default: vi.fn(() => '1.0.0'),
 }));
 
-const tempDirectory = 'temp-update-api';
+const tempDirectory = `temp-update-api-${randomUUID()}`;
 
 const defaultOptions: UpdateApiExecutorSchema = {
   client: TestOptions.client,
@@ -119,7 +120,7 @@ describe('UpdateApi Executor', () => {
 
   it('can run', async () => {
     const { context, options } = await getExecutorOptions(
-      defaultOptions.name + '1',
+      defaultOptions.name + `-${randomUUID()}`,
     );
     const output = await executor(options, context);
     expect(output.success).toBe(true);
@@ -127,7 +128,7 @@ describe('UpdateApi Executor', () => {
 
   it('handles invalid spec file', async () => {
     const { context, options } = await getExecutorOptions(
-      defaultOptions.name + '2',
+      defaultOptions.name + `-${randomUUID()}`,
     );
     const invalidSpecPath = join(
       process.cwd(),
@@ -148,7 +149,7 @@ describe('UpdateApi Executor', () => {
 
   it('handles non-existent spec file', async () => {
     const { context, options } = await getExecutorOptions(
-      defaultOptions.name + '3',
+      defaultOptions.name + `-${randomUUID()}`,
     );
     options.spec = 'non-existent.yaml';
     const output = await executor(options, context);
@@ -157,7 +158,7 @@ describe('UpdateApi Executor', () => {
 
   it('handles different client types', async () => {
     const { context, options } = await getExecutorOptions(
-      defaultOptions.name + '4',
+      defaultOptions.name + `-${randomUUID()}`,
     );
     options.client = '@hey-api/client-axios';
     const output = await executor(options, context);
@@ -166,7 +167,7 @@ describe('UpdateApi Executor', () => {
 
   it('handles plugins', async () => {
     const { context, options } = await getExecutorOptions(
-      defaultOptions.name + '5',
+      defaultOptions.name + `-${randomUUID()}`,
     );
     options.plugins = ['@tanstack/react-query'];
     const output = await executor(options, context);
@@ -175,7 +176,7 @@ describe('UpdateApi Executor', () => {
 
   it('handles identical specs', async () => {
     const { context, options } = await getExecutorOptions(
-      defaultOptions.name + '6',
+      defaultOptions.name + `-${randomUUID()}`,
     );
     // Create a copy of the existing spec
     const existingSpecPath = join(
@@ -217,7 +218,7 @@ describe('UpdateApi Executor', () => {
       specPath,
       tree,
     } = await getGeneratorOptions({
-      name: defaultOptions.name + '7',
+      name: defaultOptions.name + `-${randomUUID()}`,
       tempDirectory,
     });
     const { context, options } = await getExecutorOptions(
