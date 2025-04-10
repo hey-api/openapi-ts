@@ -69,8 +69,9 @@ describe('openapi-client generator', () => {
 
   describe('normalizeOptions', () => {
     it('should normalize options with default values', async () => {
+      const uuid = randomUUID();
       const { options, specPath } = await getGeneratorOptions({
-        name: `test-api-${randomUUID()}`,
+        name: `test-api-${uuid}`,
         tempDirectory,
       });
       const normalized = normalizeOptions(options);
@@ -78,9 +79,9 @@ describe('openapi-client generator', () => {
       expect(normalized).toEqual({
         clientType: '@hey-api/client-fetch',
         plugins: [],
-        projectDirectory: `${tempDirectory}/test-api-1`,
+        projectDirectory: `${tempDirectory}/test-api-${uuid}`,
         projectName: 'test-api',
-        projectRoot: `${tempDirectory}/test-api-1/test-api`,
+        projectRoot: `${tempDirectory}/test-api-${uuid}/test-api`,
         projectScope: '@test-api',
         specFile: specPath,
         tagArray: ['api', 'openapi'],

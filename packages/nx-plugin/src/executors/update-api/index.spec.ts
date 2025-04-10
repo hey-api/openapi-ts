@@ -39,7 +39,7 @@ const tempDirectory = `temp-update-api-${randomUUID()}`;
 const defaultOptions: UpdateApiExecutorSchema = {
   client: TestOptions.client,
   // don't use tmp, as it is used internally in the lib code for temp files
-  directory: 'temp-update-api',
+  directory: tempDirectory,
   name: TestOptions.name,
   plugins: [],
   scope: TestOptions.scope,
