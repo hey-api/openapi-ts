@@ -52,7 +52,7 @@ vi.mock('@hey-api/openapi-ts/internal', async (importOriginal) => {
   };
 });
 
-describe.skip('utils', () => {
+describe('utils', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -158,12 +158,16 @@ describe.skip('utils', () => {
         // If we get here, fail the test
         expect.fail('Expected function to throw');
       } catch (error) {
-        expect(error.message).toContain('Command failed');
+        if (error instanceof Error) {
+          expect(error.message).toContain('Command failed');
+        } else {
+          expect.fail('Expected error to be an instance of Error');
+        }
       }
     });
   });
 
-  describe.skip('bundleAndDereferenceSpecFile', () => {
+  describe('bundleAndDereferenceSpecFile', () => {
     it('should execute bundle command successfully', async () => {
       // write temp spec file
       const specAsYaml = `openapi: 3.0.0

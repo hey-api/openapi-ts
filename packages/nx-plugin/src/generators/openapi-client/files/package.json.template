@@ -2,15 +2,6 @@
   "name": "<%= projectScope %>/<%= projectName %>",
   "version": "0.1.0",
   "type": "commonjs",
-  "exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "development": "./src/index.ts",
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
-    }
-  },
   "scripts": {
     "update": "nx run <%= projectScope %>/<%= projectName %>:updateApi"
   }

@@ -40,7 +40,7 @@ vi.mock('latest-version', () => ({
 
 const tempDirectory = `temp-openapi-client-${randomUUID()}`;
 
-describe.skip('openapi-client generator', () => {
+describe('openapi-client generator', () => {
   beforeEach(() => {
     // Clear mocks
     vi.clearAllMocks();
@@ -68,6 +68,7 @@ describe.skip('openapi-client generator', () => {
 
       expect(normalized).toEqual({
         clientType: '@hey-api/client-fetch',
+        isPrivate: true,
         plugins: [],
         projectDirectory: `${tempDirectory}/test-api-${uuid}`,
         projectName: 'test-api',
@@ -96,6 +97,7 @@ describe.skip('openapi-client generator', () => {
 
       expect(normalized).toEqual({
         clientType: '@hey-api/client-fetch',
+        isPrivate: true,
         plugins: [],
         projectDirectory: 'custom-dir',
         projectName: 'test-api',
@@ -109,7 +111,7 @@ describe.skip('openapi-client generator', () => {
     });
   });
 
-  describe.skip('generateNxProject', () => {
+  describe('generateNxProject', () => {
     it('should generate project configuration', async () => {
       const { options, tree } = await getGeneratorOptions({
         name: `test-api-${randomUUID()}`,
@@ -153,7 +155,7 @@ describe.skip('openapi-client generator', () => {
     });
   });
 
-  describe.skip('generateApi', () => {
+  describe('generateApi', () => {
     it('should process and bundle the OpenAPI spec file', async () => {
       const { options, specPath, tree } = await getGeneratorOptions({
         name: `test-api-${randomUUID()}`,
@@ -195,7 +197,7 @@ describe.skip('openapi-client generator', () => {
     });
   });
 
-  describe.skip('updatePackageJson', () => {
+  describe('updatePackageJson', () => {
     it('should update package.json with correct dependencies', async () => {
       const { options, tree } = await getGeneratorOptions({
         name: `test-api-${randomUUID()}`,
@@ -226,6 +228,8 @@ describe.skip('openapi-client generator', () => {
 
       await updatePackageJson({
         clientType: '@hey-api/client-fetch',
+        isPrivate: true,
+        plugins: [],
         projectRoot,
         tree,
       });
@@ -294,6 +298,8 @@ describe.skip('openapi-client generator', () => {
 
       await updatePackageJson({
         clientType: '@hey-api/client-axios',
+        isPrivate: true,
+        plugins: [],
         projectRoot,
         tree,
       });
@@ -303,7 +309,7 @@ describe.skip('openapi-client generator', () => {
     });
   });
 
-  describe.skip('generateClientCode', () => {
+  describe('generateClientCode', () => {
     it('should generate client code without errors', async () => {
       const { options, specPath } = await getGeneratorOptions({
         name: `test-api-${randomUUID()}`,
@@ -329,7 +335,7 @@ describe.skip('openapi-client generator', () => {
     });
   });
 
-  describe.skip('full generator', () => {
+  describe('full generator', () => {
     it('should run the full generator successfully', async () => {
       const { options, tree } = await getGeneratorOptions({
         name: `test-api-${randomUUID()}`,

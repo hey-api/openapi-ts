@@ -39,18 +39,6 @@ export type ClientPluginOptions = {
    */
   additionalEntryPoints?: string[];
   /**
-   * Package.json exports to be added for this plugin to the package.json file
-   */
-  packageJsonExports?: Record<
-    string,
-    {
-      default: string;
-      development: string;
-      import: string;
-      types: string;
-    }
-  >;
-  /**
    * Path to the template files to be added for this plugin to the project
    */
   templateFilesPath?: string;
@@ -71,14 +59,6 @@ const getClientPlugins = ({
   const plugins: Record<string, ClientPluginOptions> = {
     '@tanstack/react-query': {
       additionalEntryPoints: [`{projectRoot}/src/rq.ts`],
-      packageJsonExports: {
-        './rq': {
-          default: './dist/rq.js',
-          development: './src/rq.ts',
-          import: './dist/rq.js',
-          types: './dist/rq.d.ts',
-        },
-      },
       templateFilesPath: './plugins/rq',
       tsConfigCompilerPaths: {
         [`${projectScope}/${projectName}/rq`]: `./${projectRoot}/src/rq.ts`,
@@ -147,6 +127,10 @@ export interface OpenApiClientGeneratorSchema {
    */
   plugins: string[];
   /**
+   * Whether to make the generated package private, defaults to `true`
+   */
+  private?: boolean;
+  /**
    * The scope of the project
    */
   scope: string;
@@ -184,6 +168,7 @@ export default async function (
 
     const {
       clientType,
+      isPrivate,
       plugins,
       projectName,
       projectRoot,
@@ -234,6 +219,8 @@ export default async function (
     logger.info(`Updating package.json with dependencies`);
     const installDeps = await updatePackageJson({
       clientType,
+      isPrivate,
+      plugins,
       projectRoot,
       tree,
     });
@@ -285,6 +272,7 @@ export default async function (
 
 export interface NormalizedOptions {
   clientType: string;
+  isPrivate: boolean;
   plugins: string[];
   projectDirectory: string;
   projectName: string;
@@ -331,6 +319,7 @@ export function normalizeOptions(
 
   return {
     clientType: options.client,
+    isPrivate: options.private ?? true,
     plugins: options.plugins,
     projectDirectory,
     projectName,
@@ -441,6 +430,8 @@ export function generateNxProject({
               output: '.',
             },
           ],
+          generateExportsField: true,
+          generatePackageJson: true,
           main: `{projectRoot}/src/index.ts`,
           outputPath: `{projectRoot}/dist`,
           rootDir: `{projectRoot}/src`,
@@ -526,17 +517,6 @@ function handlePlugin({
   if (plugin.templateFilesPath) {
     const pluginTemplatePath = join(__dirname, plugin.templateFilesPath);
     generateFiles(tree, pluginTemplatePath, projectRoot, generatedOptions);
-  }
-
-  const packageJsonExports = plugin.packageJsonExports;
-  if (packageJsonExports) {
-    updateJson(tree, `${projectRoot}/package.json`, (json) => {
-      json.exports = {
-        ...json.exports,
-        ...packageJsonExports,
-      };
-      return json;
-    });
   }
 }
 
@@ -652,35 +632,62 @@ export async function generateApi({
   }
 }
 
+async function getPackageDetails(name: string) {
+  const { default: latestVersion } = await import('latest-version');
+
+  const packageName = getPackageName(name);
+  const packageVersion =
+    getVersionOfPackage(name) || `^${await latestVersion(packageName)}`;
+
+  return {
+    packageName,
+    packageVersion,
+  };
+}
 /**
  * Updates the package.json file to add dependencies and scripts
  */
 export async function updatePackageJson({
   clientType,
+  isPrivate,
+  plugins,
   projectRoot,
   tree,
 }: {
   clientType: string;
+  /**
+   * Whether to make the generated package private
+   */
+  isPrivate: boolean;
+  plugins: string[];
   projectRoot: string;
   tree: Tree;
 }) {
   const { default: latestVersion } = await import('latest-version');
 
-  const packageName = getPackageName(clientType);
-  const packageVersion =
-    getVersionOfPackage(clientType) || `^${await latestVersion(packageName)}`;
+  // add the client as a dependency
+  const clientDetails = getPackageDetails(clientType);
+  // add the openapi-ts as a dependency
+  const openApiTsDetails = getPackageDetails('@hey-api/openapi-ts');
+  // add the plugins as dependencies
+  const pluginDetails = plugins.map(getPackageDetails);
 
-  const latestOpenApiTsVersion = `^${await latestVersion(
-    '@hey-api/openapi-ts',
-  )}`;
+  const results = await Promise.all([
+    clientDetails,
+    openApiTsDetails,
+    ...pluginDetails,
+  ]);
 
   // Update package.json to add dependencies and scripts
-  const deps: Record<string, string> = {
-    '@hey-api/openapi-ts': latestOpenApiTsVersion,
-    [packageName]: packageVersion,
-  };
+  const deps = results.reduce(
+    (acc, result) => {
+      acc[result.packageName] = result.packageVersion;
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
 
-  if (packageName === '@hey-api/client-axios') {
+  if ((await clientDetails).packageName === '@hey-api/client-axios') {
     const axiosVersion = await latestVersion('axios');
     deps['axios'] = `^${axiosVersion}`;
   }
@@ -691,6 +698,18 @@ export async function updatePackageJson({
     {},
     join(projectRoot, 'package.json'),
   );
+
+  // update the private and publishConfig field in the package.json file
+  updateJson(tree, join(projectRoot, 'package.json'), (json) => {
+    if (isPrivate) {
+      json.private = isPrivate;
+    } else {
+      json.publishConfig = {
+        access: 'public',
+      };
+    }
+    return json;
+  });
 
   return installDeps;
 }

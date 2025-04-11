@@ -57,6 +57,11 @@
       "description": "Test to use",
       "default": "none",
       "enum": ["none", "vitest"]
+    },
+    "private": {
+      "type": "boolean",
+      "description": "Whether to make the generated package private",
+      "default": true
     }
   },
   "required": ["name", "spec", "scope"]

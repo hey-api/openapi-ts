@@ -112,7 +112,7 @@ paths:
   };
 };
 
-describe.skip('UpdateApi Executor', () => {
+describe('UpdateApi Executor', () => {
   afterAll(async () => {
     const apiDir = join(process.cwd(), tempDirectory);
     if (existsSync(apiDir)) {

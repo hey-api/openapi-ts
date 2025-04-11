@@ -24,6 +24,7 @@ export default defineVitestConfig({
     ...baseConfig.test,
     environment: 'nuxt',
     environmentOptions: {
+      ...baseConfig.test?.environmentOptions,
       nuxt: {
         domEnvironment: 'jsdom',
       },

@@ -6,10 +6,10 @@ This NX generator creates a new library project from an OpenAPI specification fi
 
 ```bash
 # Using nx directly
-nx generate openapi-client <name> --spec=<path-to-spec> --client=<client-type> --scope=<project-scope>
+nx generate @hey-api/nx-plugin:openapi-client <name> --spec=<path-to-spec> --client=<client-type> --scope=<project-scope>
 
 # Interactive mode
-nx generate openapi-client
+nx generate @hey-api/nx-plugin:openapi-client
 ```
 
 ## Options
@@ -24,21 +24,22 @@ nx generate openapi-client
 | `tags`      | Add tags to the library (comma-separated)         | No       | `api,openapi`           | string[]           |
 | `plugins`   | Additional plugins for client                     | No       | []                      | string[]           |
 | `test`      | Tests to generate                                 | No       | `none`                  | 'none' or 'vitest' |
+| `private`   | Whether to make the generated package private     | No       | `true`                  | boolean            |
 
 ## Examples
 
 ```bash
 # Generate a fetch API client
-nx generate openapi-client my-api --spec=https://example.com/api-spec.yaml --client=@hey-api/client-fetch
+nx generate @hey-api/nx-plugin:openapi-client my-api --spec=https://example.com/api-spec.yaml --client=@hey-api/client-fetch
 
 # Generate an axios client from a local file
-nx generate openapi-client my-api --spec=./api-specs/my-api.yaml --client=@hey-api/client-axios
+nx generate @hey-api/nx-plugin:openapi-client my-api --spec=./api-specs/my-api.yaml --client=@hey-api/client-axios
 
 # Generate with custom directory and tags
-nx generate openapi-client my-api --spec=./api-specs/my-api.yaml --directory=libs/api --tags=api,openapi,my-service
+nx generate @hey-api/nx-plugin:openapi-client my-api --spec=./api-specs/my-api.yaml --directory=libs/api --tags=api,openapi,my-service
 
 # Generates with test files
-nx generate openapi-client my-api --spec=./api-specs/my-api.yaml --directory=libs/api --test=vitest
+nx generate @hey-api/nx-plugin:openapi-client my-api --spec=./api-specs/my-api.yaml --directory=libs/api --test=vitest
 ```
 
 ## Generated Project Structure
@@ -53,14 +54,14 @@ libs/<name>/
 │   ├── generated/       # Generated API client code (not committed to git)
 |   ├── client.spec.ts   # Unit test for the client code
 │   ├── index.ts         # Exports everything from generated/
-|   └── rq.ts            # Exports tanstack query client code
+|   └── rq.ts            # Exports tanstack query client code (if @tanstack/react-query is in the plugins array)
 ├── package.json
-├── vitest.config.ts     # Vitest configuration
+├── vitest.config.ts     # Vitest configuration (if test is set to 'vitest')
 ├── README.md
 ├── project.json         # NX project configuration
 ├── tsconfig.json        # root config
 ├── tsconfig.lib.json    # library config
-├── tsconfig.spec.json   # test config
+├── tsconfig.spec.json   # test config (if test is set to a value other than none)
 └── openapi-ts.config.ts # Configuration for @hey-api/openapi-ts
 ```
 

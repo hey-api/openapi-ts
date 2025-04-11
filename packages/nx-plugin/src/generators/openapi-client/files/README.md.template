@@ -9,17 +9,16 @@ This package provides a TypeScript client for interacting with the API described
 ### Usage with <%= clientType %>
 
 ```typescript
-import { ApiClient } from '<%= projectScope %>/<%= projectName %>';
+import { client, myEndpointCall } from '<%= projectScope %>/<%= projectName %>';
 
-// Create client instance
-const client = new ApiClient({
-  BASE: 'https://api.example.com',
-  // Add any additional configuration here
+// set the client instance
+client.setConfig({
+  baseUrl: 'https://example.com'
 });
 
 // Example API call
 async function getData() {
-  const result = await client.someEndpoint.getData();
+  const result = await myEndpointCall();
   console.log(result);
 }
 ```
@@ -31,8 +30,7 @@ If the API specification changes, you can regenerate the client:
 ```bash
 # From the project root
 nx run <%= projectScope %>/<%= projectName %>:updateApi
+
+## Force the client to rebuild
+nx run <%= projectScope %>/<%= projectName %>:updateApi --force --skip-nx-cache
 ```
-
-## License
-
-[MIT](LICENSE)
