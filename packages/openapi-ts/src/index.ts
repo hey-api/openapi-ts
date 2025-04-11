@@ -91,8 +91,11 @@ export const createClient = async (
 export const defineConfig = async (config: Configs): Promise<UserConfig> =>
   typeof config === 'function' ? await config() : config;
 
+export { getSpec } from './getSpec';
 export { defaultPlugins } from './initConfigs';
+export { initConfigs } from './initConfigs';
 export type { IR } from './ir/types';
+export { parseOpenApiSpec } from './openApi';
 export type { OpenApi } from './openApi/types';
 export { clientDefaultConfig } from './plugins/@hey-api/client-core/config';
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
