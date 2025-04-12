@@ -10,6 +10,7 @@ export {
   jsonBodySerializer,
   urlSearchParamsBodySerializer,
 } from './bodySerializer';
+export { buildClientParams } from './params';
 export type {
   ArraySeparatorStyle,
   ArrayStyle,
