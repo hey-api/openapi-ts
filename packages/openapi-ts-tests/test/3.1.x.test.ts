@@ -489,6 +489,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'parameter-tuple.json',
+        output: 'parameter-tuple',
+      }),
+      description: 'handles tuple query parameters',
+    },
+    {
+      config: createConfig({
         input: 'read-write-only.yaml',
         output: 'read-write-only',
         plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
