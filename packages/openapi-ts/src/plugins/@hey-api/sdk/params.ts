@@ -61,7 +61,7 @@ export const createParameters = ({
   file: TypeScriptFile;
   operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
-}): Array<FunctionParameter> | undefined => {
+}): Array<FunctionParameter> => {
   const client = getClientPlugin(context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
@@ -74,7 +74,7 @@ export const createParameters = ({
       parameters.push({
         isRequired: hasOperationDataRequired(operation),
         name: 'params',
-        type: `OmitNever<Omit<${identifierData.name}, 'url'>>`,
+        type: `Params<${identifierData.name}>`,
       });
     }
 
@@ -106,5 +106,5 @@ export const createParameters = ({
     });
   }
 
-  return parameters.length ? parameters : undefined;
+  return parameters;
 };

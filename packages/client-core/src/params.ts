@@ -86,9 +86,9 @@ export const buildClientParams = (
 
   let config: Config[number] | undefined;
 
-  for (const [i, arg] of args.entries()) {
-    if (configs[i]) {
-      config = configs[i];
+  for (const [index, arg] of args.entries()) {
+    if (configs[index]) {
+      config = configs[index];
     }
 
     if (!config) {
