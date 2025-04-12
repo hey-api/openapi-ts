@@ -164,3 +164,9 @@ export type OptionsLegacyParser<
         TData &
         Pick<RequestOptions<ThrowOnError>, 'body'>
     : OmitKeys<RequestOptions<ThrowOnError>, 'url'> & TData;
+
+export type OmitNever<T> = {
+  [K in keyof T as T[K] extends never ? never : K]: T[K];
+};
+
+export type Params<T extends TDataShape> = OmitNever<Omit<T, 'url'>>;

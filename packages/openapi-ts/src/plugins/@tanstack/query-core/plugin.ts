@@ -2,7 +2,7 @@ import { clientApi } from '../../../generate/client';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
 import { clientId } from '../../@hey-api/client-core/utils';
-import { sdkId } from '../../@hey-api/sdk/plugin';
+import { sdkId } from '../../@hey-api/sdk/constants';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { createInfiniteQueryOptions } from './infiniteQueryOptions';
 import { createMutationOptions } from './mutationOptions';
