@@ -17,7 +17,7 @@ export const deduplicateSchema = <T extends IR.SchemaObject>({
 
   for (const item of schema.items) {
     // skip nested schemas for now, handle if necessary
-    if (!item.type && item.items) {
+    if ((!item.type && item.items) || schema.type === 'tuple') {
       uniqueItems.push(item);
       continue;
     }

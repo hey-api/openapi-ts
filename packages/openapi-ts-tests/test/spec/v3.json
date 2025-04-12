@@ -1221,6 +1221,20 @@
             }
           },
           {
+            "description": "This is tuple parameter",
+            "name": "parameterTuple",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "maxItems": 4,
+              "minItems": 4
+            }
+          },
+          {
             "description": "This is a number parameter",
             "name": "id",
             "in": "path",

@@ -1392,6 +1392,15 @@ export type TypesData = {
      * This is a string parameter
      */
     parameterString: (string) | null;
+    /**
+     * This is tuple parameter
+     */
+    parameterTuple: [
+        number,
+        number,
+        number,
+        number
+    ];
 };
 
 export type TypesResponse = (number | string | boolean | {
