@@ -14,7 +14,7 @@ export default defineConfig((options) => ({
   },
   clean: true,
   dts: true,
-  entry: ['src/index.ts'],
+  entry: ['src/index.ts', 'src/internal.ts'],
   format: ['cjs', 'esm'],
   minify: !options.watch,
   shims: false,

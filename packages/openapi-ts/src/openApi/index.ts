@@ -57,6 +57,7 @@ export function parseLegacy({
 }
 
 /**
+ * @internal
  * Parse the resolved OpenAPI specification. This will populate and return
  * `context` with intermediate representation obtained from the parsed spec.
  */
