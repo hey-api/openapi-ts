@@ -67,6 +67,10 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.alias[options.alias!] = folder;
 
+    nuxt.hooks.hookOnce('app:templates', async () => {
+      await createClient(config);
+    });
+
     // auto-import enabled
     if (options.autoImport) {
       await createClient(config);
@@ -107,10 +111,6 @@ export default defineNuxtModule<ModuleOptions>({
           imports,
         });
       }
-    } else {
-      nuxt.hooks.hookOnce('app:templates', async () => {
-        await createClient(config);
-      });
     }
   },
 });
