@@ -17,9 +17,10 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
-    "@tanstack/svelte-query": "5.62.12"
+    "@tanstack/svelte-query": "5.73.3"
   },
   "devDependencies": {
+    "@config/vite-base": "workspace:*",
     "@fontsource/fira-mono": "5.0.0",
     "@hey-api/openapi-ts": "workspace:*",
     "@neoconfetti/svelte": "2.0.0",
@@ -35,9 +36,9 @@
     "prettier-plugin-svelte": "3.1.2",
     "svelte": "5.19.9",
     "svelte-check": "4.1.4",
-    "typescript": "5.5.3",
-    "typescript-eslint": "8.19.1",
-    "vite": "6.0.13",
-    "vitest": "1.6.0"
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.29.1",
+    "vite": "6.2.6",
+    "vitest": "3.1.1"
   }
 }

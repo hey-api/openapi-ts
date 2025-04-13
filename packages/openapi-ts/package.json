@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-ts",
-  "version": "0.66.3",
+  "version": "0.66.4",
   "description": "🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.",
   "homepage": "https://heyapi.dev/",
   "repository": {
@@ -52,6 +52,16 @@
         "default": "./dist/index.cjs"
       }
     },
+    "./internal": {
+      "import": {
+        "types": "./dist/internal.d.ts",
+        "default": "./dist/internal.js"
+      },
+      "require": {
+        "types": "./dist/internal.d.cts",
+        "default": "./dist/internal.cjs"
+      }
+    },
     "./package.json": "./package.json"
   },
   "bin": {
@@ -64,7 +74,7 @@
   ],
   "scripts": {
     "build": "tsup && pnpm check-exports",
-    "check-exports": "attw --pack .",
+    "check-exports": "attw --pack . --profile node16",
     "dev": "tsup --watch",
     "handlebars": "node src/legacy/handlebars/handlebars.cjs",
     "prepublishOnly": "pnpm build",
@@ -87,6 +97,7 @@
     "typescript": "^5.5.3"
   },
   "devDependencies": {
+    "@config/vite-base": "workspace:*",
     "@hey-api/client-core": "workspace:*",
     "@types/cross-spawn": "6.0.6",
     "@types/express": "4.17.21",
@@ -99,6 +110,6 @@
     "prettier": "3.4.2",
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
-    "typescript": "5.5.3"
+    "typescript": "5.8.3"
   }
 }

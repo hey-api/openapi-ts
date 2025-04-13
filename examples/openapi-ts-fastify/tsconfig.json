@@ -9,5 +9,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": "."
-  }
+  },
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

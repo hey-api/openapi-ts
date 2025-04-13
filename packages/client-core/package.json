@@ -50,5 +50,8 @@
     "test:watch": "vitest watch",
     "test": "vitest run",
     "typecheck": "vitest --typecheck --watch=false"
+  },
+  "devDependencies": {
+    "@config/vite-base": "workspace:*"
   }
 }
