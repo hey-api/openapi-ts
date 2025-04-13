@@ -1,5 +1,5 @@
 export { createClient } from './client';
-export { provideHeyApiClient, updateHeyApiHttpClient } from './client';
+export { provideHeyApiClient } from './client';
 export type {
   Client,
   ClientOptions,
