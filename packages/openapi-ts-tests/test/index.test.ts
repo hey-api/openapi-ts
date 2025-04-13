@@ -53,10 +53,12 @@ describe('OpenAPI v2', () => {
       input: V2_SPEC_PATH,
       output,
     });
-    sync(`${output}**/*.ts`).forEach((file) => {
-      const content = fs.readFileSync(file, 'utf8').toString();
-      expect(content).toMatchFileSnapshot(toSnapshotPath(file));
-    });
+    await Promise.all(
+      sync(`${output}**/*.ts`).map(async (file) => {
+        const content = fs.readFileSync(file, 'utf8').toString();
+        await expect(content).toMatchFileSnapshot(toSnapshotPath(file));
+      }),
+    );
   });
 });
 
@@ -455,10 +457,12 @@ describe('OpenAPI v3', () => {
           path: output,
         },
       });
-      sync(`${output}**/*.ts`).forEach((file) => {
-        const content = fs.readFileSync(file, 'utf8').toString();
-        expect(content).toMatchFileSnapshot(toSnapshotPath(file));
-      });
+      await Promise.all(
+        sync(`${output}**/*.ts`).map(async (file) => {
+          const content = fs.readFileSync(file, 'utf8').toString();
+          await expect(content).toMatchFileSnapshot(toSnapshotPath(file));
+        }),
+      );
     },
   );
 
@@ -499,10 +503,12 @@ describe('OpenAPI v3', () => {
         ],
       });
 
-      sync(`${output}**/*.ts`).forEach((file) => {
-        const content = fs.readFileSync(file, 'utf8').toString();
-        expect(content).toMatchFileSnapshot(toSnapshotPath(file));
-      });
+      await Promise.all(
+        sync(`${output}**/*.ts`).map(async (file) => {
+          const content = fs.readFileSync(file, 'utf8').toString();
+          await expect(content).toMatchFileSnapshot(toSnapshotPath(file));
+        }),
+      );
     },
   );
 });

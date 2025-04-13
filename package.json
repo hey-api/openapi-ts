@@ -42,7 +42,7 @@
     "node": "^18.18.0 || ^20.9.0 || >=22.10.0"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "0.17.2",
+    "@arethetypeswrong/cli": "0.17.4",
     "@changesets/changelog-github": "0.5.0",
     "@changesets/cli": "2.27.8",
     "@hey-api/client-axios": "workspace:*",
@@ -51,8 +51,8 @@
     "@hey-api/client-next": "workspace:*",
     "@hey-api/client-nuxt": "workspace:*",
     "@types/node": "22.10.5",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
-    "@vitest/coverage-v8": "1.6.0",
+    "@typescript-eslint/eslint-plugin": "8.29.1",
+    "@vitest/coverage-v8": "3.1.1",
     "eslint": "9.17.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-simple-import-sort": "12.1.1",
@@ -66,11 +66,11 @@
     "prettier": "3.4.2",
     "rollup": "4.31.0",
     "rollup-plugin-dts": "6.1.1",
-    "tsup": "8.3.5",
-    "turbo": "2.4.0",
-    "typescript": "5.5.3",
-    "typescript-eslint": "8.19.1",
-    "vitest": "1.6.0"
+    "tsup": "8.4.0",
+    "turbo": "2.5.0",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.29.1",
+    "vitest": "3.1.1"
   },
   "packageManager": "pnpm@9.15.1+sha512.1acb565e6193efbebda772702950469150cf12bcc764262e7587e71d19dc98a423dff9536e57ea44c49bdf790ff694e83c27be5faa23d67e0c033b583be4bfcf"
 }

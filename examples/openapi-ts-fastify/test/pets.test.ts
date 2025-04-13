@@ -8,7 +8,7 @@ describe('/pet/findByTags', () => {
   let server: FastifyInstance;
 
   beforeAll(async () => {
-    server = buildServer();
+    server = await buildServer();
     await server.listen();
 
     // @ts-ignore
