@@ -52,6 +52,16 @@
         "default": "./dist/index.cjs"
       }
     },
+    "./internal": {
+      "import": {
+        "types": "./dist/internal.d.ts",
+        "default": "./dist/internal.js"
+      },
+      "require": {
+        "types": "./dist/internal.d.cts",
+        "default": "./dist/internal.cjs"
+      }
+    },
     "./package.json": "./package.json"
   },
   "bin": {
@@ -64,7 +74,7 @@
   ],
   "scripts": {
     "build": "tsup && pnpm check-exports",
-    "check-exports": "attw --pack .",
+    "check-exports": "attw --pack . --profile node16",
     "dev": "tsup --watch",
     "handlebars": "node src/legacy/handlebars/handlebars.cjs",
     "prepublishOnly": "pnpm build",
