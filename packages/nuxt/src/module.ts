@@ -48,7 +48,7 @@ export default defineNuxtModule<ModuleOptions>({
       output: {
         path: path.join(nuxt.options.buildDir, 'client'),
       },
-      plugins: options.config.plugins.some((plugin: any) => {
+      plugins: (options.config.plugins || []).some((plugin: any) => {
         const pluginName = typeof plugin === 'string' ? plugin : plugin.name;
         return pluginName === '@hey-api/plugin-nuxt';
       })
