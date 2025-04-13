@@ -4,7 +4,11 @@ import {
   HttpHeaders,
   type HttpResponse,
 } from '@angular/common/http';
-import { inject, provideAppInitializer } from '@angular/core';
+import {
+  assertInInjectionContext,
+  inject,
+  provideAppInitializer,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import type { Client, Config } from './types';
@@ -16,11 +20,10 @@ import {
   setAuthParams,
 } from './utils';
 
-export let _defaultHttpClient: HttpClient;
-
-export function provideHeyApiClient() {
+export function provideHeyApiClient(client: Client) {
   return provideAppInitializer(() => {
-    _defaultHttpClient = inject(HttpClient);
+    const httpClient = inject(HttpClient);
+    client.setConfig({ httpClient });
   });
 }
 
@@ -58,7 +61,12 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     const url = buildUrl(opts);
-    const _httpClient = opts.httpClient ?? _defaultHttpClient;
+    let _httpClient = opts.httpClient;
+
+    if (!_httpClient) {
+      assertInInjectionContext(request);
+      _httpClient = inject(HttpClient);
+    }
 
     try {
       // Return the raw HTTP response directly
