@@ -36,6 +36,7 @@
     "@hey-api/client-next": "workspace:*",
     "@hey-api/client-nuxt": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
+    "@config/vite-base": "workspace:*",
     "@tanstack/angular-query-experimental": "5.73.3",
     "@tanstack/react-query": "5.73.3",
     "@tanstack/solid-query": "5.73.3",
