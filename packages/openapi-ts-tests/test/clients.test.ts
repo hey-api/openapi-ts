@@ -153,30 +153,32 @@ for (const client of clients) {
       const outputPath = typeof config.output === 'string' ? config.output : '';
       const filePaths = getFilePaths(outputPath);
 
-      filePaths.forEach((filePath) => {
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
+      await Promise.all(
+        filePaths.map(async (filePath) => {
+          const fileContent = fs.readFileSync(filePath, 'utf-8');
 
-        // flaky test reordering client imports, skip
-        if (
-          client === '@hey-api/client-nuxt' &&
-          typeof config.output === 'string' &&
-          config.output.includes('bundle')
-        ) {
-          expect(1).toBe(1);
-          return;
-        }
+          // flaky test reordering client imports, skip
+          if (
+            client === '@hey-api/client-nuxt' &&
+            typeof config.output === 'string' &&
+            config.output.includes('bundle')
+          ) {
+            expect(1).toBe(1);
+            return;
+          }
 
-        expect(fileContent).toMatchFileSnapshot(
-          path.join(
-            __dirname,
-            '__snapshots__',
-            '3.1.x',
-            namespace,
-            client,
-            filePath.slice(outputDir.length + 1),
-          ),
-        );
-      });
+          await expect(fileContent).toMatchFileSnapshot(
+            path.join(
+              __dirname,
+              '__snapshots__',
+              '3.1.x',
+              namespace,
+              client,
+              filePath.slice(outputDir.length + 1),
+            ),
+          );
+        }),
+      );
     });
   });
 }
@@ -307,20 +309,22 @@ describe('custom-client', () => {
     const outputPath = typeof config.output === 'string' ? config.output : '';
     const filePaths = getFilePaths(outputPath);
 
-    filePaths.forEach((filePath) => {
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
+    await Promise.all(
+      filePaths.map(async (filePath) => {
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
 
-      expect(fileContent).toMatchFileSnapshot(
-        path.join(
-          __dirname,
-          '__snapshots__',
-          '3.1.x',
-          namespace,
-          'client-custom',
-          filePath.slice(outputDir.length + 1),
-        ),
-      );
-    });
+        await expect(fileContent).toMatchFileSnapshot(
+          path.join(
+            __dirname,
+            '__snapshots__',
+            '3.1.x',
+            namespace,
+            'client-custom',
+            filePath.slice(outputDir.length + 1),
+          ),
+        );
+      }),
+    );
   });
 });
 
@@ -450,19 +454,21 @@ describe('my-client', () => {
     const outputPath = typeof config.output === 'string' ? config.output : '';
     const filePaths = getFilePaths(outputPath);
 
-    filePaths.forEach((filePath) => {
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
+    await Promise.all(
+      filePaths.map(async (filePath) => {
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
 
-      expect(fileContent).toMatchFileSnapshot(
-        path.join(
-          __dirname,
-          '__snapshots__',
-          '3.1.x',
-          namespace,
-          'my-client',
-          filePath.slice(outputDir.length + 1),
-        ),
-      );
-    });
+        await expect(fileContent).toMatchFileSnapshot(
+          path.join(
+            __dirname,
+            '__snapshots__',
+            '3.1.x',
+            namespace,
+            'my-client',
+            filePath.slice(outputDir.length + 1),
+          ),
+        );
+      }),
+    );
   });
 });

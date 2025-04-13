@@ -1,22 +1,22 @@
 import Fastify from 'fastify';
 import glue from 'fastify-openapi-glue';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 import { serviceHandlers } from './handlers';
 
-export const buildServer = () => {
+export const buildServer = async () => {
   const fastify = Fastify();
 
-  const specification = fetch(
-    'https://gist.githubusercontent.com/seriousme/55bd4c8ba2e598e416bb5543dcd362dc/raw/cf0b86ba37bb54bf1a6bf047c0ecf2a0ce4c62e0/petstore-v3.1.json',
-  )
-    .then((reply) => reply.json())
-    .then((data) => data);
-  console.log(specification);
+  const specificationPath = join(__dirname, '..', 'openapi.json');
+  const specificationJson = JSON.parse(
+    readFileSync(specificationPath, 'utf-8'),
+  );
 
   fastify.register(glue, {
     prefix: 'v3',
     serviceHandlers,
-    specification,
+    specification: specificationJson,
   });
 
   return fastify;

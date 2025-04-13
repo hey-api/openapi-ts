@@ -12,19 +12,6 @@ export type Order = {
   status?: 'placed' | 'approved' | 'delivered'
 }
 
-export type Customer = {
-  address?: Array<Address>
-  id?: number
-  username?: string
-}
-
-export type Address = {
-  city?: string
-  state?: string
-  street?: string
-  zip?: string
-}
-
 export type Category = {
   id?: number
   name?: string
@@ -88,7 +75,15 @@ export type AddPetErrors = {
   /**
    * Invalid input
    */
-  405: unknown
+  400: unknown
+  /**
+   * Validation exception
+   */
+  422: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
 }
 
 export type AddPetResponses = {
@@ -122,7 +117,11 @@ export type UpdatePetErrors = {
   /**
    * Validation exception
    */
-  405: unknown
+  422: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
 }
 
 export type UpdatePetResponses = {
@@ -151,6 +150,10 @@ export type FindPetsByStatusErrors = {
    * Invalid status value
    */
   400: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
 }
 
 export type FindPetsByStatusResponses = {
@@ -179,6 +182,10 @@ export type FindPetsByTagsErrors = {
    * Invalid tag value
    */
   400: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
 }
 
 export type FindPetsByTagsResponses = {
@@ -210,6 +217,17 @@ export type DeletePetErrors = {
    * Invalid pet value
    */
   400: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
+}
+
+export type DeletePetResponses = {
+  /**
+   * Pet deleted
+   */
+  200: unknown
 }
 
 export type GetPetByIdData = {
@@ -233,6 +251,10 @@ export type GetPetByIdErrors = {
    * Pet not found
    */
   404: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
 }
 
 export type GetPetByIdResponses = {
@@ -269,8 +291,21 @@ export type UpdatePetWithFormErrors = {
   /**
    * Invalid input
    */
-  405: unknown
+  400: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
 }
+
+export type UpdatePetWithFormResponses = {
+  /**
+   * successful operation
+   */
+  200: Pet
+}
+
+export type UpdatePetWithFormResponse = UpdatePetWithFormResponses[keyof UpdatePetWithFormResponses]
 
 export type UploadFileData = {
   body?: Blob | File
@@ -289,6 +324,21 @@ export type UploadFileData = {
   url: '/pet/{petId}/uploadImage'
 }
 
+export type UploadFileErrors = {
+  /**
+   * No file uploaded
+   */
+  400: unknown
+  /**
+   * Pet not found
+   */
+  404: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
+}
+
 export type UploadFileResponses = {
   /**
    * successful operation
@@ -303,6 +353,13 @@ export type GetInventoryData = {
   path?: never
   query?: never
   url: '/store/inventory'
+}
+
+export type GetInventoryErrors = {
+  /**
+   * Unexpected error
+   */
+  default: unknown
 }
 
 export type GetInventoryResponses = {
@@ -327,7 +384,15 @@ export type PlaceOrderErrors = {
   /**
    * Invalid input
    */
-  405: unknown
+  400: unknown
+  /**
+   * Validation exception
+   */
+  422: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
 }
 
 export type PlaceOrderResponses = {
@@ -360,6 +425,17 @@ export type DeleteOrderErrors = {
    * Order not found
    */
   404: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
+}
+
+export type DeleteOrderResponses = {
+  /**
+   * order deleted
+   */
+  200: unknown
 }
 
 export type GetOrderByIdData = {
@@ -383,6 +459,10 @@ export type GetOrderByIdErrors = {
    * Order not found
    */
   404: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
 }
 
 export type GetOrderByIdResponses = {
@@ -404,11 +484,18 @@ export type CreateUserData = {
   url: '/user'
 }
 
+export type CreateUserErrors = {
+  /**
+   * Unexpected error
+   */
+  default: unknown
+}
+
 export type CreateUserResponses = {
   /**
    * successful operation
    */
-  default: User
+  200: User
 }
 
 export type CreateUserResponse = CreateUserResponses[keyof CreateUserResponses]
@@ -420,15 +507,18 @@ export type CreateUsersWithListInputData = {
   url: '/user/createWithList'
 }
 
+export type CreateUsersWithListInputErrors = {
+  /**
+   * Unexpected error
+   */
+  default: unknown
+}
+
 export type CreateUsersWithListInputResponses = {
   /**
    * Successful operation
    */
   200: User
-  /**
-   * successful operation
-   */
-  default: unknown
 }
 
 export type CreateUsersWithListInputResponse =
@@ -455,6 +545,10 @@ export type LoginUserErrors = {
    * Invalid username/password supplied
    */
   400: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
 }
 
 export type LoginUserResponses = {
@@ -473,11 +567,18 @@ export type LogoutUserData = {
   url: '/user/logout'
 }
 
+export type LogoutUserErrors = {
+  /**
+   * Unexpected error
+   */
+  default: unknown
+}
+
 export type LogoutUserResponses = {
   /**
    * successful operation
    */
-  default: unknown
+  200: unknown
 }
 
 export type DeleteUserData = {
@@ -501,13 +602,24 @@ export type DeleteUserErrors = {
    * User not found
    */
   404: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
+}
+
+export type DeleteUserResponses = {
+  /**
+   * User deleted
+   */
+  200: unknown
 }
 
 export type GetUserByNameData = {
   body?: never
   path: {
     /**
-     * The name that needs to be fetched. Use user1 for testing.
+     * The name that needs to be fetched. Use user1 for testing
      */
     username: string
   }
@@ -524,6 +636,10 @@ export type GetUserByNameErrors = {
    * User not found
    */
   404: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
 }
 
 export type GetUserByNameResponses = {
@@ -542,7 +658,7 @@ export type UpdateUserData = {
   body?: User
   path: {
     /**
-     * name that needs to be updated
+     * name that need to be deleted
      */
     username: string
   }
@@ -550,9 +666,28 @@ export type UpdateUserData = {
   url: '/user/{username}'
 }
 
+export type UpdateUserErrors = {
+  /**
+   * bad request
+   */
+  400: unknown
+  /**
+   * user not found
+   */
+  404: unknown
+  /**
+   * Unexpected error
+   */
+  default: unknown
+}
+
 export type UpdateUserResponses = {
   /**
    * successful operation
    */
-  default: unknown
+  200: unknown
+}
+
+export type ClientOptions = {
+  baseUrl: 'https://petstore3.swagger.io/api/v3' | (string & {})
 }
