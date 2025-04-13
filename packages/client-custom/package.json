@@ -66,6 +66,7 @@
     "@hey-api/openapi-ts": "< 2"
   },
   "devDependencies": {
+    "@config/vite-base": "workspace:*",
     "@hey-api/client-core": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*"
   }

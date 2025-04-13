@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.66.4
+
+### Patch Changes
+
+- [#1936](https://github.com/hey-api/openapi-ts/pull/1936) [`ba2e5ca`](https://github.com/hey-api/openapi-ts/commit/ba2e5ca8af1cfe478963d72ff76d7d7ae026c5a5) Thanks [@seriouslag](https://github.com/seriouslag)! - fix: add return type to TanStack Query mutations
+
+- [#1934](https://github.com/hey-api/openapi-ts/pull/1934) [`d4df550`](https://github.com/hey-api/openapi-ts/commit/d4df5503369b7aa105c7f6a49e1c7b43e0e50f49) Thanks [@seriouslag](https://github.com/seriouslag)! - fix: export some internal functions
+
 ## 0.66.3
 
 ### Patch Changes
