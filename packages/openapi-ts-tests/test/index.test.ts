@@ -515,58 +515,68 @@ describe('OpenAPI v3', () => {
 
 describe('index', () => {
   it('parses v2 without issues', async () => {
-    await createClient({
-      dryRun: true,
-      input: './test/spec/v2.json',
-      output: './generated/v2/',
-      plugins: ['@hey-api/client-fetch'],
-    });
+    await expect(
+      createClient({
+        dryRun: true,
+        input: './test/spec/v2.json',
+        output: './generated/v2/',
+        plugins: ['@hey-api/client-fetch'],
+      }),
+    ).resolves.not.toThrow();
   });
 
   it('parses v3 without issues', async () => {
-    await createClient({
-      dryRun: true,
-      input: './test/spec/v3.json',
-      output: './generated/v3/',
-      plugins: ['@hey-api/client-fetch'],
-    });
+    await expect(
+      createClient({
+        dryRun: true,
+        input: './test/spec/v3.json',
+        output: './generated/v3/',
+        plugins: ['@hey-api/client-fetch'],
+      }),
+    ).resolves.not.toThrow();
   });
 
   it('parses v3-transforms without issues', async () => {
-    await createClient({
-      dryRun: true,
-      input: './test/spec/v3-transforms.json',
-      output: './generated/v3/',
-      plugins: [
-        '@hey-api/client-fetch',
-        '@hey-api/schemas',
-        '@hey-api/sdk',
-        '@hey-api/typescript',
-        {
-          dates: true,
-          name: '@hey-api/transformers',
-        },
-      ],
-    });
+    await expect(
+      createClient({
+        dryRun: true,
+        input: './test/spec/v3-transforms.json',
+        output: './generated/v3/',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/schemas',
+          '@hey-api/sdk',
+          '@hey-api/typescript',
+          {
+            dates: true,
+            name: '@hey-api/transformers',
+          },
+        ],
+      }),
+    ).resolves.not.toThrow();
   });
 
   it('downloads and parses v2 without issues', async () => {
-    await createClient({
-      dryRun: true,
-      input:
-        'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts-tests/test/spec/v2.json',
-      output: './generated/v2-downloaded/',
-      plugins: ['@hey-api/client-fetch'],
-    });
+    await expect(
+      createClient({
+        dryRun: true,
+        input:
+          'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts-tests/test/spec/v2.json',
+        output: './generated/v2-downloaded/',
+        plugins: ['@hey-api/client-fetch'],
+      }),
+    ).resolves.not.toThrow();
   });
 
   it('downloads and parses v3 without issues', async () => {
-    await createClient({
-      dryRun: true,
-      input:
-        'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts-tests/test/spec/v3.json',
-      output: './generated/v3-downloaded/',
-      plugins: ['@hey-api/client-fetch'],
-    });
+    await expect(
+      createClient({
+        dryRun: true,
+        input:
+          'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts-tests/test/spec/v3.json',
+        output: './generated/v3-downloaded/',
+        plugins: ['@hey-api/client-fetch'],
+      }),
+    ).resolves.not.toThrow();
   });
 });

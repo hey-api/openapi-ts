@@ -1,7 +1,8 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import Fastify from 'fastify';
 import glue from 'fastify-openapi-glue';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 
 import { serviceHandlers } from './handlers';
 
