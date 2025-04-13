@@ -4,7 +4,8 @@ import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <RouterView />
-
-  <VueQueryDevtools />
+  <div>
+    <RouterView />
+    <VueQueryDevtools />
+  </div>
 </template>

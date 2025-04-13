@@ -53,7 +53,7 @@ export const createOptions = (options?: Options<CreateData>) => {
     });
 };
 
-export const createMutation = (options?: Partial<Options<CreateData>>) => {
+export const createMutation = (options?: Partial<Options<CreateData>>): UseMutationOptions<unknown, DefaultError, Options<CreateData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<CreateData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await create({

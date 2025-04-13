@@ -108,7 +108,7 @@ export const postFooInfiniteOptions = (options: Options<PostFooData>) => {
     });
 };
 
-export const postFooMutation = (options?: Partial<Options<PostFooData>>) => {
+export const postFooMutation = (options?: Partial<Options<PostFooData>>): UseMutationOptions<unknown, DefaultError, Options<PostFooData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostFooData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await postFoo({
