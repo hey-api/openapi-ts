@@ -48,8 +48,17 @@ export default defineNuxtModule<ModuleOptions>({
       output: {
         path: path.join(nuxt.options.buildDir, 'client'),
       },
-      plugins: ['@hey-api/client-nuxt'],
+      plugins: options.config.plugins.some((plugin: any) => {
+        const pluginName = typeof plugin === 'string' ? plugin : plugin.name;
+        return pluginName === '@hey-api/plugin-nuxt';
+      })
+        ? []
+        : ['@hey-api/client-nuxt'],
     } satisfies Partial<UserConfig>) as UserConfig;
+
+    if (nuxt.options._prepare) {
+      config.watch = false;
+    }
 
     const folder = path.resolve(
       nuxt.options.rootDir,
@@ -57,10 +66,6 @@ export default defineNuxtModule<ModuleOptions>({
     );
 
     nuxt.options.alias[options.alias!] = folder;
-
-    nuxt.hooks.hookOnce('app:templates', async () => {
-      await createClient(config);
-    });
 
     // auto-import enabled
     if (options.autoImport) {
@@ -102,6 +107,10 @@ export default defineNuxtModule<ModuleOptions>({
           imports,
         });
       }
+    } else {
+      nuxt.hooks.hookOnce('app:templates', async () => {
+        await createClient(config);
+      });
     }
   },
 });
