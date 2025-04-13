@@ -546,6 +546,7 @@ const generateClassSdk = ({
         operation.description && escapeComment(operation.description),
       ],
       isStatic: true,
+      // isStatic: client.name !== '@hey-api/client-angular',
       name: serviceFunctionIdentifier({
         config: context.config,
         handleIllegal: false,
@@ -617,15 +618,31 @@ const generateClassSdk = ({
   });
 
   context.subscribe('after', () => {
+    const injectableDecoratorExpr = 'Injectable';
+
+    if (client.name === '@hey-api/client-angular') {
+      file.import({
+        module: '@angular/core',
+        name: injectableDecoratorExpr,
+      });
+    }
+
     for (const [name, nodes] of sdks) {
       const node = compiler.classDeclaration({
-        decorator: undefined,
+        decorator:
+          client.name === '@hey-api/client-angular'
+            ? {
+                args: [{ providedIn: 'root' }],
+                name: injectableDecoratorExpr,
+              }
+            : undefined,
         members: nodes,
         name: transformServiceName({
           config: context.config,
           name,
         }),
       });
+
       file.add(node);
     }
   });
