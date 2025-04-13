@@ -17,13 +17,15 @@
 - support bundling inside the generated output
 - [platform](https://heyapi.dev/openapi-ts/integrations) for automating codegen builds
 
-## Platform
+## Dashboard
 
-Our platform for OpenAPI specifications is now available. Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.dev/openapi-ts/integrations).
+Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with our platform.
+
+[Sign In](https://app.heyapi.dev) to Hey API platform.
 
 ## Documentation
 
-Please visit our [website](https://heyapi.dev/) for documentation, guides, migrating, and more.
+Please visit our [website](https://heyapi.dev) for documentation, guides, migrating, and more.
 
 ## Sponsors
 

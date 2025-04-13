@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-next",
   "private": true,
-  "version": "0.1.6",
+  "version": "0.1.8",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@hey-api/client-next": "workspace:*",
-    "next": "15.1.6",
+    "next": "15.2.4",
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },

@@ -37,7 +37,7 @@ export interface Auth {
    *
    * @default 'header'
    */
-  in?: 'header' | 'query';
+  in?: 'header' | 'query' | 'cookie';
   /**
    * Header or query parameter name.
    *
@@ -175,8 +175,10 @@ const securitySchemeObjectToAuthObject = ({
       };
     }
 
-    // TODO: parser - support cookies auth
-    if (securitySchemeObject.in === 'query') {
+    if (
+      securitySchemeObject.in === 'query' ||
+      securitySchemeObject.in == 'cookie'
+    ) {
       return {
         in: securitySchemeObject.in,
         name: securitySchemeObject.name,
@@ -188,12 +190,10 @@ const securitySchemeObjectToAuthObject = ({
   }
 
   if (securitySchemeObject.type === 'http') {
-    if (
-      securitySchemeObject.scheme === 'bearer' ||
-      securitySchemeObject.scheme === 'basic'
-    ) {
+    const scheme = securitySchemeObject.scheme.toLowerCase();
+    if (scheme === 'bearer' || scheme === 'basic') {
       return {
-        scheme: securitySchemeObject.scheme,
+        scheme: scheme as 'bearer' | 'basic',
         type: 'http',
       };
     }

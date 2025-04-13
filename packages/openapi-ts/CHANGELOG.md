@@ -1,5 +1,95 @@
 # @hey-api/openapi-ts
 
+## 0.66.3
+
+### Patch Changes
+
+- [#1917](https://github.com/hey-api/openapi-ts/pull/1917) [`d7af22c`](https://github.com/hey-api/openapi-ts/commit/d7af22c771af4bd2dab28acc69430717da390670) Thanks [@Freddis](https://github.com/Freddis)! - fix: handle nullable dates in transformers
+
+## 0.66.2
+
+### Patch Changes
+
+- [#1913](https://github.com/hey-api/openapi-ts/pull/1913) [`7cfa4a7`](https://github.com/hey-api/openapi-ts/commit/7cfa4a76b13ca97d49c5f0366ba7264f94753d8b) Thanks [@BogdanMaier](https://github.com/BogdanMaier)! - fix: prevent crash when optional pagination field is missing
+
+## 0.66.1
+
+### Patch Changes
+
+- [#1906](https://github.com/hey-api/openapi-ts/pull/1906) [`d1928d1`](https://github.com/hey-api/openapi-ts/commit/d1928d17710240bb42a6aa12da4618a9dd962df2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: exclude and include expressions can be an array
+
+- [#1906](https://github.com/hey-api/openapi-ts/pull/1906) [`d1928d1`](https://github.com/hey-api/openapi-ts/commit/d1928d17710240bb42a6aa12da4618a9dd962df2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support excluding deprecated fields with '@deprecated'
+
+## 0.66.0
+
+### Minor Changes
+
+- [#1896](https://github.com/hey-api/openapi-ts/pull/1896) [`8840ed7`](https://github.com/hey-api/openapi-ts/commit/8840ed73df5ee718e803aa6e27b66e0c82ec3651) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support read-only and write-only properties
+
+  ### Read-only and write-only fields
+
+  Starting with v0.66.0, `@hey-api/typescript` will generate separate types for payloads and responses if it detects any read-only or write-only fields. To preserve the previous behavior and generate a single type regardless, set `readOnlyWriteOnlyBehavior` to `off`.
+
+  ```js
+  export default {
+    input: 'https://get.heyapi.dev/hey-api/backend',
+    output: 'src/client',
+    plugins: [
+      // ...other plugins
+      {
+        name: '@hey-api/typescript',
+        readOnlyWriteOnlyBehavior: 'off', // [!code ++]
+      },
+    ],
+  };
+  ```
+
+## 0.65.0
+
+### Minor Changes
+
+- [#1889](https://github.com/hey-api/openapi-ts/pull/1889) [`67c385b`](https://github.com/hey-api/openapi-ts/commit/67c385bf6289a79726b0cdd85fd81ca501cf2248) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support custom clients
+
+### Patch Changes
+
+- [#1892](https://github.com/hey-api/openapi-ts/pull/1892) [`29fa764`](https://github.com/hey-api/openapi-ts/commit/29fa764986af3d3af842793c74d61681c7e967a1) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow passing fetch options to the request resolving a specification
+
+- [#1877](https://github.com/hey-api/openapi-ts/pull/1877) [`6971f5b`](https://github.com/hey-api/openapi-ts/commit/6971f5bca4dd17ea65400c504ad0a4ffb083a38b) Thanks [@Matsuuu](https://github.com/Matsuuu)! - feat: ability to disable writing a log file via a `--no-log-file` flag or `logs.file` = `false`
+
+## 0.64.15
+
+### Patch Changes
+
+- [#1850](https://github.com/hey-api/openapi-ts/pull/1850) [`fe43b88`](https://github.com/hey-api/openapi-ts/commit/fe43b889c20a2001f56e259f93f64851a1caa1d1) Thanks [@kelnos](https://github.com/kelnos)! - feat: add support for cookies auth
+
+## 0.64.14
+
+### Patch Changes
+
+- [#1827](https://github.com/hey-api/openapi-ts/pull/1827) [`9dd43db`](https://github.com/hey-api/openapi-ts/commit/9dd43db54f2b7ebf87c5c7c118fdf149162a533d) Thanks [@john-cremit](https://github.com/john-cremit)! - feat: allow customizing pagination keywords using `input.pagination.keywords`
+
+## 0.64.13
+
+### Patch Changes
+
+- [#1822](https://github.com/hey-api/openapi-ts/pull/1822) [`c73b0d4`](https://github.com/hey-api/openapi-ts/commit/c73b0d401c2bfa6f0b0d89d844a6aa09f2685a69) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: bump json-schema-ref-parser package
+
+- [#1826](https://github.com/hey-api/openapi-ts/pull/1826) [`90886c1`](https://github.com/hey-api/openapi-ts/commit/90886c1372a999e8cb59d5da218762f6ee6cd459) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow config to be a function
+
+## 0.64.12
+
+### Patch Changes
+
+- [#1816](https://github.com/hey-api/openapi-ts/pull/1816) [`b9e1b4b`](https://github.com/hey-api/openapi-ts/commit/b9e1b4bec5e1c5d1f2b5b9cfc7fa145274ae604d) Thanks [@shemsiu](https://github.com/shemsiu)! - Allow `scheme` property to be case-insensitive
+
+## 0.64.11
+
+### Patch Changes
+
+- [#1800](https://github.com/hey-api/openapi-ts/pull/1800) [`a4811bd`](https://github.com/hey-api/openapi-ts/commit/a4811bdf178ec1a7f1602e0483a32fe7303f4eac) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support Hey API platform input arguments
+
+- [#1800](https://github.com/hey-api/openapi-ts/pull/1800) [`a4811bd`](https://github.com/hey-api/openapi-ts/commit/a4811bdf178ec1a7f1602e0483a32fe7303f4eac) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle raw OpenAPI specification input
+
 ## 0.64.10
 
 ### Patch Changes

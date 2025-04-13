@@ -13,7 +13,7 @@ import { embedProject } from '../embed'
 This package is in initial development. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
-[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an OpenAPI to TypeScript codegen trusted more than 900k times each month to generate reliable API clients and SDKs. The code is [MIT-licensed](/license) and free to use. Discover available features below or view our [roadmap](https://github.com/orgs/hey-api/discussions/1495) to learn what's coming next.
+[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an OpenAPI to TypeScript codegen trusted over 1,000,000 times each month to generate reliable API clients and SDKs. The code is [MIT-licensed](/license) and free to use. Discover available features below or view our [roadmap](https://github.com/orgs/hey-api/discussions/1495) to learn what's coming next.
 
 ### Demo
 
@@ -23,13 +23,13 @@ Launch demo
 
 ## Features
 
-- works with CLI, Node.js 18+, or npx
-- supports OpenAPI 2.0, 3.0, and 3.1 specifications
-- supports JSON and YAML input files
-- generates TypeScript interfaces and SDKs
-- Fetch API, Axios, Nuxt, Angular, Node.js, and XHR clients available
+- runs in CLI, Node.js 18+, or npx
+- works with OpenAPI 2.0, 3.0, and 3.1
+- customizable types and SDKs
+- clients for your runtime (Fetch API, Axios, Next.js, Nuxt, etc.)
 - plugin ecosystem to reduce third-party boilerplate
-- [platform](https://heyapi.dev/openapi-ts/integrations) for automating codegen builds
+- custom plugins and custom clients
+- [integration](/openapi-ts/integrations) with Hey API Platform
 
 ## Quick Start
 

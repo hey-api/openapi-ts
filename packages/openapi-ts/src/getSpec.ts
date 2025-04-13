@@ -5,6 +5,7 @@ import {
   sendRequest,
 } from '@hey-api/json-schema-ref-parser';
 
+import { mergeHeaders } from './mergeHeaders';
 import type { Config } from './types/config';
 import type { WatchValues } from './types/types';
 
@@ -21,10 +22,12 @@ interface SpecError {
 }
 
 export const getSpec = async ({
+  fetchOptions,
   inputPath,
   timeout,
   watch,
 }: {
+  fetchOptions?: RequestInit;
   inputPath: Config['input']['path'];
   timeout: number;
   watch: WatchValues;
@@ -40,23 +43,31 @@ export const getSpec = async ({
   if (resolvedInput.type === 'url') {
     // do NOT send HEAD request on first run or if unsupported
     if (watch.lastValue && watch.isHeadMethodSupported !== false) {
-      let request;
       try {
-        request = await sendRequest({
-          init: {
-            headers: watch.headers,
+        const request = await sendRequest({
+          fetchOptions: {
             method: 'HEAD',
+            ...fetchOptions,
+            headers: mergeHeaders(fetchOptions?.headers, watch.headers),
           },
           timeout,
           url: resolvedInput.path,
         });
-      } catch (ex) {
+
+        if (request.response.status >= 300) {
+          return {
+            error: 'not-ok',
+            response: request.response,
+          };
+        }
+
+        response = request.response;
+      } catch (error) {
         return {
           error: 'not-ok',
-          response: new Response(ex.message),
+          response: new Response(error.message),
         };
       }
-      response = request.response;
 
       if (!response.ok && watch.isHeadMethodSupported) {
         // assume the server is no longer running
@@ -110,18 +121,27 @@ export const getSpec = async ({
     }
 
     try {
-      const fileRequest = await sendRequest({
-        init: {
+      const request = await sendRequest({
+        fetchOptions: {
           method: 'GET',
+          ...fetchOptions,
         },
         timeout,
         url: resolvedInput.path,
       });
-      response = fileRequest.response;
-    } catch (ex) {
+
+      if (request.response.status >= 300) {
+        return {
+          error: 'not-ok',
+          response: request.response,
+        };
+      }
+
+      response = request.response;
+    } catch (error) {
       return {
         error: 'not-ok',
-        response: new Response(ex.message),
+        response: new Response(error.message),
       };
     }
 

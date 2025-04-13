@@ -100,7 +100,7 @@ export namespace Plugin {
     };
 
   export type DefineConfig<Config extends BaseConfig> = (
-    config?: Plugin.UserConfig<Config>,
+    config?: Plugin.UserConfig<Omit<Config, 'name'>>,
   ) => Omit<Plugin.Config<Config>, 'name'> & {
     /**
      * Cast name to `any` so it doesn't throw type error in `plugins` array.

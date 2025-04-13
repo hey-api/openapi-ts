@@ -1,9 +1,5 @@
 import type { ClientPlugins, UserPlugins } from '../plugins';
-import type {
-  ArrayOfObjectsToObjectMap,
-  ExtractArrayOfObjects,
-  ExtractWithDiscriminator,
-} from './utils';
+import type { ArrayOfObjectsToObjectMap, ExtractArrayOfObjects } from './utils';
 
 export type Formatters = 'biome' | 'prettier';
 
@@ -15,6 +11,113 @@ export type StringCase =
   | 'preserve'
   | 'snake_case'
   | 'SCREAMING_SNAKE_CASE';
+
+interface Input {
+  /**
+   * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
+   *
+   * Projects are private by default, you will need to be authenticated
+   * to download OpenAPI specifications. We recommend using project API
+   * keys in CI workflows and personal API keys for local development.
+   *
+   * API key isn't required for public projects. You can also omit this
+   * parameter and provide an environment variable `HEY_API_TOKEN`.
+   */
+  api_key?: string;
+  /**
+   * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
+   *
+   * You can fetch the last build from branch by providing the branch
+   * name.
+   */
+  branch?: string;
+  /**
+   * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
+   *
+   * You can fetch an exact specification by providing a commit sha.
+   * This will always return the same file.
+   */
+  commit_sha?: string;
+  /**
+   * Prevent parts matching the regular expression(s) from being processed.
+   * You can select both operations and components by reference within
+   * the bundled input.
+   *
+   * In case of conflicts, `exclude` takes precedence over `include`.
+   *
+   * @example
+   * operation: '^#/paths/api/v1/foo/get$'
+   * schema: '^#/components/schemas/Foo$'
+   * deprecated: '@deprecated'
+   */
+  exclude?: ReadonlyArray<string> | string;
+  /**
+   * You pass any valid Fetch API options to the request for fetching your
+   * specification. This is useful if your file is behind auth for example.
+   */
+  fetch?: RequestInit;
+  /**
+   * Process only parts matching the regular expression(s). You can select both
+   * operations and components by reference within the bundled input.
+   *
+   * In case of conflicts, `exclude` takes precedence over `include`.
+   *
+   * @example
+   * operation: '^#/paths/api/v1/foo/get$'
+   * schema: '^#/components/schemas/Foo$'
+   */
+  include?: ReadonlyArray<string> | string;
+  /**
+   * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
+   *
+   * Organization created in Hey API platform.
+   */
+  organization?: string;
+  /**
+   * Pagination configuration
+   */
+  pagination?: {
+    /**
+     * Array of keywords to be considered as pagination field names.
+     * These will be used to detect pagination fields in schemas and parameters.
+     *
+     * @default ['after', 'before', 'cursor', 'offset', 'page', 'start']
+     */
+    keywords?: ReadonlyArray<string>;
+  };
+  /**
+   * Path to the OpenAPI specification. This can be either local or remote path.
+   * Both JSON and YAML file formats are supported. You can also pass the parsed
+   * object directly if you're fetching the file yourself.
+   */
+  path?:
+    | 'https://get.heyapi.dev/<organization>/<project>'
+    | (string & {})
+    | Record<string, unknown>;
+  /**
+   * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
+   *
+   * Project created in Hey API platform.
+   */
+  project?: string;
+  /**
+   * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
+   *
+   * If you're tagging your specifications with custom tags, you can use
+   * them to filter the results. When you provide multiple tags, only
+   * the first match will be returned.
+   */
+  tags?: ReadonlyArray<string>;
+
+  /**
+   * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
+   *
+   * Every OpenAPI document contains a required version field. You can
+   * use this value to fetch the last uploaded specification matching
+   * the value.
+   */
+  version?: string;
+}
 
 export interface UserConfig {
   /**
@@ -36,37 +139,10 @@ export interface UserConfig {
    * Alternatively, you can define a configuration object with more options.
    */
   input:
-    | string
-    | Record<string, unknown>
-    | {
-        /**
-         * Prevent parts matching the regular expression from being processed.
-         * You can select both operations and components by reference within
-         * the bundled input. In case of conflicts, `exclude` takes precedence
-         * over `include`.
-         *
-         * @example
-         * operation: '^#/paths/api/v1/foo/get$'
-         * schema: '^#/components/schemas/Foo$'
-         */
-        exclude?: string;
-        /**
-         * Process only parts matching the regular expression. You can select both
-         * operations and components by reference within the bundled input. In
-         * case of conflicts, `exclude` takes precedence over `include`.
-         *
-         * @example
-         * operation: '^#/paths/api/v1/foo/get$'
-         * schema: '^#/components/schemas/Foo$'
-         */
-        include?: string;
-        /**
-         * Path to the OpenAPI specification. This can be either local or remote path.
-         * Both JSON and YAML file formats are supported. You can also pass the parsed
-         * object directly if you're fetching the file yourself.
-         */
-        path: string | Record<string, unknown>;
-      };
+    | 'https://get.heyapi.dev/<organization>/<project>'
+    | (string & {})
+    | (Record<string, unknown> & { path?: never })
+    | Input;
   /**
    * The relative location of the logs folder
    *
@@ -75,6 +151,12 @@ export interface UserConfig {
   logs?:
     | string
     | {
+        /**
+         * Whether or not error logs should be written to a file or not
+         *
+         * @default true
+         * */
+        file?: boolean;
         /**
          * The logging level to control the verbosity of log output.
          * Determines which messages are logged based on their severity.
@@ -100,6 +182,7 @@ export interface UserConfig {
           | 'silent'
           | 'trace'
           | 'warn';
+
         /**
          * The relative location of the logs folder
          *
@@ -191,6 +274,9 @@ export interface UserConfig {
          */
         timeout?: number;
       };
+
+  // DEPRECATED OPTIONS BELOW
+
   /**
    * @deprecated
    *
@@ -257,7 +343,7 @@ export type Config = Omit<
   | 'watch'
 > &
   Pick<UserConfig, 'base' | 'name' | 'request'> & {
-    input: ExtractWithDiscriminator<UserConfig['input'], { path: unknown }>;
+    input: Omit<Input, 'path'> & Pick<Required<Input>, 'path'>;
     logs: Extract<Required<UserConfig['logs']>, object>;
     output: Extract<UserConfig['output'], object>;
     pluginOrder: ReadonlyArray<ClientPlugins['name']>;

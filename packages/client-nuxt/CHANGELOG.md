@@ -1,5 +1,23 @@
 # @hey-api/client-nuxt
 
+## 0.4.0
+
+### Minor Changes
+
+- [#1889](https://github.com/hey-api/openapi-ts/pull/1889) [`67c385b`](https://github.com/hey-api/openapi-ts/commit/67c385bf6289a79726b0cdd85fd81ca501cf2248) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add @hey-api/openapi-ts to peer dependencies
+
+## 0.3.1
+
+### Patch Changes
+
+- [#1850](https://github.com/hey-api/openapi-ts/pull/1850) [`fe43b88`](https://github.com/hey-api/openapi-ts/commit/fe43b889c20a2001f56e259f93f64851a1caa1d1) Thanks [@kelnos](https://github.com/kelnos)! - feat: add support for cookies auth
+
+## 0.3.0
+
+### Minor Changes
+
+- [#1800](https://github.com/hey-api/openapi-ts/pull/1800) [`d80f835`](https://github.com/hey-api/openapi-ts/commit/d80f835b46775a01451f02f832ceb288c2b561d2) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: drop cjs support
+
 ## 0.2.4
 
 ### Patch Changes

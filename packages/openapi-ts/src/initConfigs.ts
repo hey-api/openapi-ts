@@ -28,15 +28,19 @@ const getInput = (userConfig: UserConfig): Config['input'] => {
   };
   if (typeof userConfig.input === 'string') {
     input.path = userConfig.input;
-  } else if (userConfig.input && userConfig.input.path) {
+  } else if (
+    userConfig.input &&
+    (userConfig.input.path || userConfig.input.organization)
+  ) {
     input = {
       ...input,
+      path: 'https://get.heyapi.dev',
       ...userConfig.input,
     };
   } else {
     input = {
       ...input,
-      path: userConfig.input,
+      path: userConfig.input as Record<string, unknown>,
     };
   }
   return input;
@@ -102,7 +106,8 @@ const getPluginsConfig = ({
           pluginByTag: (tag, errorMessage) => {
             for (const userPlugin of userPlugins) {
               const defaultConfig =
-                defaultPluginConfigs[userPlugin as PluginNames];
+                defaultPluginConfigs[userPlugin as PluginNames] ||
+                pluginConfigs[userPlugin as PluginNames];
               if (
                 defaultConfig &&
                 defaultConfig._tags?.includes(tag) &&
@@ -162,6 +167,19 @@ const getOutput = (userConfig: UserConfig): Config['output'] => {
   return output;
 };
 
+const isPluginClient = (plugin: Required<UserConfig>['plugins'][number]) => {
+  if (typeof plugin === 'string') {
+    return plugin.startsWith('@hey-api/client') || plugin.startsWith('legacy/');
+  }
+
+  return (
+    plugin.name.startsWith('@hey-api/client') ||
+    plugin.name.startsWith('legacy/') ||
+    // @ts-expect-error
+    (plugin._tags && plugin._tags.includes('client'))
+  );
+};
+
 const getPlugins = (
   userConfig: UserConfig,
 ): Pick<Config, 'plugins' | 'pluginOrder'> => {
@@ -169,14 +187,14 @@ const getPlugins = (
 
   let definedPlugins: UserConfig['plugins'] = defaultPlugins;
   if (userConfig.plugins) {
+    userConfig.plugins = userConfig.plugins.filter(
+      (plugin) =>
+        (typeof plugin === 'string' && plugin) ||
+        (typeof plugin !== 'string' && plugin.name),
+    );
     if (
       userConfig.plugins.length === 1 &&
-      ((typeof userConfig.plugins[0] === 'string' &&
-        (userConfig.plugins[0].startsWith('@hey-api/client') ||
-          userConfig.plugins[0].startsWith('legacy/'))) ||
-        (typeof userConfig.plugins[0] !== 'string' &&
-          (userConfig.plugins[0]?.name.startsWith('@hey-api/client') ||
-            userConfig.plugins[0]?.name.startsWith('legacy/'))))
+      isPluginClient(userConfig.plugins[0]!)
     ) {
       definedPlugins = [...defaultPlugins, ...userConfig.plugins];
     } else {
@@ -236,10 +254,10 @@ const getWatch = (
 };
 
 export const initConfigs = async (
-  userConfig: UserConfig,
+  userConfig: UserConfig | undefined,
 ): Promise<Config[]> => {
   let configurationFile: string | undefined = undefined;
-  if (userConfig.configFile) {
+  if (userConfig?.configFile) {
     const parts = userConfig.configFile.split('.');
     configurationFile = parts.slice(0, parts.length - 1).join('.');
   }

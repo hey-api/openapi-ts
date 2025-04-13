@@ -1,0 +1,101 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "OpenAPI 3.1.1 transformers any of null example",
+    "version": "1"
+  },
+  "paths": {
+    "/foo": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Foo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/nested-date-object": {
+      "get": {
+        "operationId": "nestedDateObject",
+        "responses": {
+          "200": {
+            "description": "Object with nested date",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NestedDateObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NestedDateObject": {
+        "description": "Object with a nested date structure",
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "object",
+            "properties": {
+              "bar": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "Foo": {
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "bar": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "baz": {
+            "anyOf": [
+              {
+                "type": ["string", "null"],
+                "format": "date-time"
+              }
+            ]
+          },
+          "requiredQux": {
+            "anyOf": [
+              {
+                "type": ["string", "null"],
+                "format": "date-time"
+              }
+            ]
+          }
+        },
+        "required": ["requiredQux"]
+      }
+    }
+  }
+}

@@ -7,6 +7,26 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4,
   },
+  heyApi: {
+    config: {
+      input:
+        'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
+      plugins: [
+        '@hey-api/schemas',
+        {
+          name: '@hey-api/sdk',
+          transformer: true,
+          validator: true,
+        },
+        {
+          enums: 'javascript',
+          name: '@hey-api/typescript',
+        },
+        '@hey-api/transformers',
+        'zod',
+      ],
+    },
+  },
   imports: {
     transform: {
       // Build was throwing an error.
@@ -14,4 +34,5 @@ export default defineNuxtConfig({
       exclude: [/\bclient-nuxt\b/],
     },
   },
+  modules: ['@hey-api/nuxt'],
 });

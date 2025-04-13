@@ -65,7 +65,10 @@ export const generateLegacyOutput = async ({
     'bundle' in clientPlugin &&
     clientPlugin.bundle
   ) {
-    await generateClientBundle({ name: clientPlugin.name, outputPath });
+    generateClientBundle({
+      outputPath,
+      plugin: clientPlugin,
+    });
   }
 
   // deprecated files
@@ -122,8 +125,8 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
   const client = getClientPlugin(context.config);
   if ('bundle' in client && client.bundle) {
     generateClientBundle({
-      name: client.name,
       outputPath,
+      plugin: client,
     });
   }
 

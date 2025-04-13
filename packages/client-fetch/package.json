@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-fetch",
-  "version": "0.8.3",
+  "version": "0.10.0",
   "description": "🚀 Fetch API client for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {
@@ -65,7 +65,11 @@
     "test": "vitest run",
     "typecheck": "vitest --typecheck --watch=false"
   },
+  "peerDependencies": {
+    "@hey-api/openapi-ts": "< 2"
+  },
   "devDependencies": {
-    "@hey-api/client-core": "workspace:*"
+    "@hey-api/client-core": "workspace:*",
+    "@hey-api/openapi-ts": "workspace:*"
   }
 }
