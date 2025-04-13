@@ -253,6 +253,9 @@ const getWatch = (
   return watch;
 };
 
+/**
+ * @internal
+ */
 export const initConfigs = async (
   userConfig: UserConfig | undefined,
 ): Promise<Config[]> => {

@@ -21,6 +21,9 @@ interface SpecError {
   response: Response;
 }
 
+/**
+ * @internal
+ */
 export const getSpec = async ({
   fetchOptions,
   inputPath,
