@@ -15,8 +15,6 @@ function App() {
   const onClick = async () => {
     const response = await getPetById({
       path: {
-        // @ts-expect-error
-        foo: 3,
         petId: 3,
       },
     });
