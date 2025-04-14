@@ -65,6 +65,8 @@ export const createMutationOptions = ({
   const typeData = useTypeData({ context, operation, plugin });
   const typeError = useTypeError({ context, operation, plugin });
   const typeResponse = useTypeResponse({ context, operation, plugin });
+  // TODO: better types syntax
+  const mutationType = `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`;
 
   const expression = compiler.arrowFunction({
     parameters: [
@@ -74,6 +76,7 @@ export const createMutationOptions = ({
         type: `Partial<${typeData}>`,
       },
     ],
+    returnType: mutationType,
     statements: [
       compiler.constVariable({
         expression: compiler.objectExpression({
@@ -124,8 +127,7 @@ export const createMutationOptions = ({
           ],
         }),
         name: mutationOptionsFn,
-        // TODO: better types syntax
-        typeName: `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`,
+        typeName: mutationType,
       }),
       compiler.returnVariable({
         expression: mutationOptionsFn,

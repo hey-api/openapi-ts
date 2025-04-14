@@ -48,8 +48,17 @@ export default defineNuxtModule<ModuleOptions>({
       output: {
         path: path.join(nuxt.options.buildDir, 'client'),
       },
-      plugins: ['@hey-api/client-nuxt'],
+      plugins: (options.config.plugins || []).some((plugin: any) => {
+        const pluginName = typeof plugin === 'string' ? plugin : plugin.name;
+        return pluginName === '@hey-api/plugin-nuxt';
+      })
+        ? []
+        : ['@hey-api/client-nuxt'],
     } satisfies Partial<UserConfig>) as UserConfig;
+
+    if (nuxt.options._prepare) {
+      config.watch = false;
+    }
 
     const folder = path.resolve(
       nuxt.options.rootDir,

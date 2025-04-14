@@ -48,12 +48,13 @@ import type {
   UpdatePetData,
   UpdatePetResponse,
   UpdatePetWithFormData,
+  UpdatePetWithFormResponse,
   UpdateUserData,
   UploadFileData,
   UploadFileResponse
 } from '../types.gen'
 
-type QueryKey<TOptions extends Options> = [
+export type QueryKey<TOptions extends Options> = [
   Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
     _id: string
     _infinite?: boolean
@@ -64,7 +65,7 @@ const createQueryKey = <TOptions extends Options>(
   id: string,
   options?: TOptions,
   infinite?: boolean
-): QueryKey<TOptions>[0] => {
+): [QueryKey<TOptions>[0]] => {
   const params: QueryKey<TOptions>[0] = {
     _id: id,
     baseUrl: (options?.client ?? _heyApiClient).getConfig().baseUrl
@@ -84,10 +85,10 @@ const createQueryKey = <TOptions extends Options>(
   if (options?.query) {
     params.query = options.query
   }
-  return params
+  return [params]
 }
 
-export const addPetQueryKey = (options: Options<AddPetData>) => [createQueryKey('addPet', options)]
+export const addPetQueryKey = (options: Options<AddPetData>) => createQueryKey('addPet', options)
 
 export const addPetOptions = (options: Options<AddPetData>) =>
   queryOptions({
@@ -103,7 +104,9 @@ export const addPetOptions = (options: Options<AddPetData>) =>
     queryKey: addPetQueryKey(options)
   })
 
-export const addPetMutation = (options?: Partial<Options<AddPetData>>) => {
+export const addPetMutation = (
+  options?: Partial<Options<AddPetData>>
+): UseMutationOptions<AddPetResponse, DefaultError, Options<AddPetData>> => {
   const mutationOptions: UseMutationOptions<AddPetResponse, DefaultError, Options<AddPetData>> = {
     mutationFn: async (localOptions) => {
       const { data } = await addPet({
@@ -117,7 +120,9 @@ export const addPetMutation = (options?: Partial<Options<AddPetData>>) => {
   return mutationOptions
 }
 
-export const updatePetMutation = (options?: Partial<Options<UpdatePetData>>) => {
+export const updatePetMutation = (
+  options?: Partial<Options<UpdatePetData>>
+): UseMutationOptions<UpdatePetResponse, DefaultError, Options<UpdatePetData>> => {
   const mutationOptions: UseMutationOptions<
     UpdatePetResponse,
     DefaultError,
@@ -135,9 +140,8 @@ export const updatePetMutation = (options?: Partial<Options<UpdatePetData>>) => 
   return mutationOptions
 }
 
-export const findPetsByStatusQueryKey = (options?: Options<FindPetsByStatusData>) => [
+export const findPetsByStatusQueryKey = (options?: Options<FindPetsByStatusData>) =>
   createQueryKey('findPetsByStatus', options)
-]
 
 export const findPetsByStatusOptions = (options?: Options<FindPetsByStatusData>) =>
   queryOptions({
@@ -153,9 +157,8 @@ export const findPetsByStatusOptions = (options?: Options<FindPetsByStatusData>)
     queryKey: findPetsByStatusQueryKey(options)
   })
 
-export const findPetsByTagsQueryKey = (options?: Options<FindPetsByTagsData>) => [
+export const findPetsByTagsQueryKey = (options?: Options<FindPetsByTagsData>) =>
   createQueryKey('findPetsByTags', options)
-]
 
 export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
   queryOptions({
@@ -171,7 +174,9 @@ export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
     queryKey: findPetsByTagsQueryKey(options)
   })
 
-export const deletePetMutation = (options?: Partial<Options<DeletePetData>>) => {
+export const deletePetMutation = (
+  options?: Partial<Options<DeletePetData>>
+): UseMutationOptions<unknown, DefaultError, Options<DeletePetData>> => {
   const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<DeletePetData>> = {
     mutationFn: async (localOptions) => {
       const { data } = await deletePet({
@@ -185,9 +190,8 @@ export const deletePetMutation = (options?: Partial<Options<DeletePetData>>) => 
   return mutationOptions
 }
 
-export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) => [
+export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) =>
   createQueryKey('getPetById', options)
-]
 
 export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
   queryOptions({
@@ -203,9 +207,8 @@ export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
     queryKey: getPetByIdQueryKey(options)
   })
 
-export const updatePetWithFormQueryKey = (options: Options<UpdatePetWithFormData>) => [
+export const updatePetWithFormQueryKey = (options: Options<UpdatePetWithFormData>) =>
   createQueryKey('updatePetWithForm', options)
-]
 
 export const updatePetWithFormOptions = (options: Options<UpdatePetWithFormData>) =>
   queryOptions({
@@ -221,9 +224,11 @@ export const updatePetWithFormOptions = (options: Options<UpdatePetWithFormData>
     queryKey: updatePetWithFormQueryKey(options)
   })
 
-export const updatePetWithFormMutation = (options?: Partial<Options<UpdatePetWithFormData>>) => {
+export const updatePetWithFormMutation = (
+  options?: Partial<Options<UpdatePetWithFormData>>
+): UseMutationOptions<UpdatePetWithFormResponse, DefaultError, Options<UpdatePetWithFormData>> => {
   const mutationOptions: UseMutationOptions<
-    unknown,
+    UpdatePetWithFormResponse,
     DefaultError,
     Options<UpdatePetWithFormData>
   > = {
@@ -239,9 +244,8 @@ export const updatePetWithFormMutation = (options?: Partial<Options<UpdatePetWit
   return mutationOptions
 }
 
-export const uploadFileQueryKey = (options: Options<UploadFileData>) => [
+export const uploadFileQueryKey = (options: Options<UploadFileData>) =>
   createQueryKey('uploadFile', options)
-]
 
 export const uploadFileOptions = (options: Options<UploadFileData>) =>
   queryOptions({
@@ -257,7 +261,9 @@ export const uploadFileOptions = (options: Options<UploadFileData>) =>
     queryKey: uploadFileQueryKey(options)
   })
 
-export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>) => {
+export const uploadFileMutation = (
+  options?: Partial<Options<UploadFileData>>
+): UseMutationOptions<UploadFileResponse, DefaultError, Options<UploadFileData>> => {
   const mutationOptions: UseMutationOptions<
     UploadFileResponse,
     DefaultError,
@@ -275,9 +281,8 @@ export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>) =
   return mutationOptions
 }
 
-export const getInventoryQueryKey = (options?: Options<GetInventoryData>) => [
+export const getInventoryQueryKey = (options?: Options<GetInventoryData>) =>
   createQueryKey('getInventory', options)
-]
 
 export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
   queryOptions({
@@ -293,9 +298,8 @@ export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
     queryKey: getInventoryQueryKey(options)
   })
 
-export const placeOrderQueryKey = (options?: Options<PlaceOrderData>) => [
+export const placeOrderQueryKey = (options?: Options<PlaceOrderData>) =>
   createQueryKey('placeOrder', options)
-]
 
 export const placeOrderOptions = (options?: Options<PlaceOrderData>) =>
   queryOptions({
@@ -311,7 +315,9 @@ export const placeOrderOptions = (options?: Options<PlaceOrderData>) =>
     queryKey: placeOrderQueryKey(options)
   })
 
-export const placeOrderMutation = (options?: Partial<Options<PlaceOrderData>>) => {
+export const placeOrderMutation = (
+  options?: Partial<Options<PlaceOrderData>>
+): UseMutationOptions<PlaceOrderResponse, DefaultError, Options<PlaceOrderData>> => {
   const mutationOptions: UseMutationOptions<
     PlaceOrderResponse,
     DefaultError,
@@ -329,7 +335,9 @@ export const placeOrderMutation = (options?: Partial<Options<PlaceOrderData>>) =
   return mutationOptions
 }
 
-export const deleteOrderMutation = (options?: Partial<Options<DeleteOrderData>>) => {
+export const deleteOrderMutation = (
+  options?: Partial<Options<DeleteOrderData>>
+): UseMutationOptions<unknown, DefaultError, Options<DeleteOrderData>> => {
   const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<DeleteOrderData>> = {
     mutationFn: async (localOptions) => {
       const { data } = await deleteOrder({
@@ -343,9 +351,8 @@ export const deleteOrderMutation = (options?: Partial<Options<DeleteOrderData>>)
   return mutationOptions
 }
 
-export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) => [
+export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) =>
   createQueryKey('getOrderById', options)
-]
 
 export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
   queryOptions({
@@ -361,9 +368,8 @@ export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
     queryKey: getOrderByIdQueryKey(options)
   })
 
-export const createUserQueryKey = (options?: Options<CreateUserData>) => [
+export const createUserQueryKey = (options?: Options<CreateUserData>) =>
   createQueryKey('createUser', options)
-]
 
 export const createUserOptions = (options?: Options<CreateUserData>) =>
   queryOptions({
@@ -379,7 +385,9 @@ export const createUserOptions = (options?: Options<CreateUserData>) =>
     queryKey: createUserQueryKey(options)
   })
 
-export const createUserMutation = (options?: Partial<Options<CreateUserData>>) => {
+export const createUserMutation = (
+  options?: Partial<Options<CreateUserData>>
+): UseMutationOptions<CreateUserResponse, DefaultError, Options<CreateUserData>> => {
   const mutationOptions: UseMutationOptions<
     CreateUserResponse,
     DefaultError,
@@ -397,9 +405,8 @@ export const createUserMutation = (options?: Partial<Options<CreateUserData>>) =
   return mutationOptions
 }
 
-export const createUsersWithListInputQueryKey = (
-  options?: Options<CreateUsersWithListInputData>
-) => [createQueryKey('createUsersWithListInput', options)]
+export const createUsersWithListInputQueryKey = (options?: Options<CreateUsersWithListInputData>) =>
+  createQueryKey('createUsersWithListInput', options)
 
 export const createUsersWithListInputOptions = (options?: Options<CreateUsersWithListInputData>) =>
   queryOptions({
@@ -417,7 +424,11 @@ export const createUsersWithListInputOptions = (options?: Options<CreateUsersWit
 
 export const createUsersWithListInputMutation = (
   options?: Partial<Options<CreateUsersWithListInputData>>
-) => {
+): UseMutationOptions<
+  CreateUsersWithListInputResponse,
+  DefaultError,
+  Options<CreateUsersWithListInputData>
+> => {
   const mutationOptions: UseMutationOptions<
     CreateUsersWithListInputResponse,
     DefaultError,
@@ -435,9 +446,8 @@ export const createUsersWithListInputMutation = (
   return mutationOptions
 }
 
-export const loginUserQueryKey = (options?: Options<LoginUserData>) => [
+export const loginUserQueryKey = (options?: Options<LoginUserData>) =>
   createQueryKey('loginUser', options)
-]
 
 export const loginUserOptions = (options?: Options<LoginUserData>) =>
   queryOptions({
@@ -453,9 +463,8 @@ export const loginUserOptions = (options?: Options<LoginUserData>) =>
     queryKey: loginUserQueryKey(options)
   })
 
-export const logoutUserQueryKey = (options?: Options<LogoutUserData>) => [
+export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
   createQueryKey('logoutUser', options)
-]
 
 export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
   queryOptions({
@@ -471,7 +480,9 @@ export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
     queryKey: logoutUserQueryKey(options)
   })
 
-export const deleteUserMutation = (options?: Partial<Options<DeleteUserData>>) => {
+export const deleteUserMutation = (
+  options?: Partial<Options<DeleteUserData>>
+): UseMutationOptions<unknown, DefaultError, Options<DeleteUserData>> => {
   const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<DeleteUserData>> = {
     mutationFn: async (localOptions) => {
       const { data } = await deleteUser({
@@ -485,9 +496,8 @@ export const deleteUserMutation = (options?: Partial<Options<DeleteUserData>>) =
   return mutationOptions
 }
 
-export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) => [
+export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) =>
   createQueryKey('getUserByName', options)
-]
 
 export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
   queryOptions({
@@ -503,7 +513,9 @@ export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
     queryKey: getUserByNameQueryKey(options)
   })
 
-export const updateUserMutation = (options?: Partial<Options<UpdateUserData>>) => {
+export const updateUserMutation = (
+  options?: Partial<Options<UpdateUserData>>
+): UseMutationOptions<unknown, DefaultError, Options<UpdateUserData>> => {
   const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<UpdateUserData>> = {
     mutationFn: async (localOptions) => {
       const { data } = await updateUser({
