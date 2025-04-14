@@ -21,7 +21,7 @@ export default defineConfig((options) => ({
   },
   format: ['cjs', 'esm'],
   minify: !options.watch,
-  onSuccess: 'node --loader ts-node/esm scripts/copy-json-files.mts',
+  onSuccess: 'node scripts/copy-json-files.mjs',
   outDir: 'dist',
   outExtension({ format }) {
     return {
