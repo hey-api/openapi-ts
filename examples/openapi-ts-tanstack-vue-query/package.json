@@ -16,14 +16,15 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
-    "@tanstack/vue-query": "5.62.12",
-    "@tanstack/vue-query-devtools": "5.62.12",
+    "@tanstack/vue-query": "5.73.3",
+    "@tanstack/vue-query-devtools": "5.73.3",
     "pinia": "2.3.0",
     "vue": "3.5.13",
     "vue-router": "4.5.0"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
+    "@config/vite-base": "workspace:*",
     "@rushstack/eslint-patch": "1.10.5",
     "@tsconfig/node20": "20.1.4",
     "@types/jsdom": "21.1.7",
@@ -42,10 +43,10 @@
     "postcss": "8.4.41",
     "prettier": "3.4.2",
     "tailwindcss": "3.4.9",
-    "typescript": "5.5.3",
-    "vite": "6.0.13",
+    "typescript": "5.8.3",
+    "vite": "6.2.6",
     "vite-plugin-vue-devtools": "7.7.0",
-    "vitest": "1.6.0",
+    "vitest": "3.1.1",
     "vue-tsc": "2.2.0"
   }
 }

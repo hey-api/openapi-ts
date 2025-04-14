@@ -70,6 +70,7 @@
   },
   "devDependencies": {
     "@hey-api/client-core": "workspace:*",
-    "@hey-api/openapi-ts": "workspace:*"
+    "@hey-api/openapi-ts": "workspace:*",
+    "@config/vite-base": "workspace:*"
   }
 }

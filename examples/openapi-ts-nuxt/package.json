@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-nuxt",
   "private": true,
-  "version": "0.0.15",
+  "version": "0.0.16",
   "type": "module",
   "scripts": {
     "build": "nuxt build",
@@ -19,6 +19,6 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "vite": "6.0.13"
+    "vite": "6.2.6"
   }
 }
