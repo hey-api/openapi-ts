@@ -9,14 +9,14 @@ import {
   Section,
 } from '@radix-ui/themes';
 
-// @ts-expect-error
-import { postFoo } from './client/sdk.gen';
+import { addPet } from './client/sdk.gen';
 
 function App() {
   const onClick = async () => {
-    postFoo({
+    addPet({
       body: {
-        foo: [[1, 2]],
+        name: 'test',
+        photoUrls: ['test'],
       },
     });
   };
