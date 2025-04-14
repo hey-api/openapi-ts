@@ -20,7 +20,8 @@
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       }
-    }
+    },
+    "./setup": "./src/setup.ts"
   },
   "dependencies": {
     "vite": "^6.2.7",
