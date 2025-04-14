@@ -11,6 +11,14 @@
         ".svelte-kit/**",
         ".vitepress/dist/**",
         "dist/**"
+      ],
+      "inputs": [
+        "src",
+        "package.json",
+        "tsconfig.json",
+        "tsconfig.base.json",
+        "turbo.json",
+        "tsup.config.ts"
       ]
     },
     "dev": {
