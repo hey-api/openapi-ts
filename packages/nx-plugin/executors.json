@@ -1,7 +1,7 @@
 {
   "executors": {
     "update-api": {
-      "implementation": "./dist/executors/update-api/index.js",
+      "implementation": "./dist/updateApi.js",
       "schema": "./dist/executors/update-api/schema.json",
       "description": "Updates the OpenAPI spec file and generates new client code if needed."
     }

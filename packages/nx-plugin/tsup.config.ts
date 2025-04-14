@@ -14,9 +14,20 @@ export default defineConfig((options) => ({
   },
   clean: true,
   dts: true,
-  entry: ['src/index.ts'],
+  entry: {
+    index: 'src/index.ts',
+    openapiClient: 'src/generators/openapi-client/index.ts',
+    updateApi: 'src/executors/update-api/index.ts',
+  },
   format: ['cjs', 'esm'],
   minify: !options.watch,
+  onSuccess: 'node --loader ts-node/esm scripts/copy-json-files.mts',
+  outDir: 'dist',
+  outExtension({ format }) {
+    return {
+      js: format === 'cjs' ? '.cjs' : '.js',
+    };
+  },
   shims: false,
   sourcemap: true,
   treeshake: true,

@@ -25,8 +25,8 @@
     "nx",
     "swagger"
   ],
-  "type": "commonjs",
-  "main": "./dist/index.js",
+  "type": "module",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -38,16 +38,20 @@
     "prepublishOnly": "pnpm build"
   },
   "exports": {
-    "./package.json": "./package.json",
     ".": {
-      "development": "./src/index.ts",
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
-    }
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
   },
-  "executors": "./executors.json",
-  "generators": "./generators.json",
+  "executors": "./dist/executors.json",
+  "generators": "./dist/generators.json",
   "dependencies": {
     "@hey-api/json-schema-ref-parser": "1.0.4",
     "@hey-api/openapi-ts": "workspace:*",
@@ -59,13 +63,13 @@
   },
   "devDependencies": {
     "@config/vite-base": "workspace:*",
+    "ts-node": "10.9.2",
     "typescript": "5.8.3",
     "vitest": "3.1.1"
   },
   "files": [
+    "package.json",
     "dist",
-    "LICENSE.md",
-    "generators.json",
-    "executors.json"
+    "LICENSE.md"
   ]
 }
