@@ -25,7 +25,7 @@ export function createVitestConfig(
         },
       },
       root,
-      setupFiles: ['./setup.ts'],
+      setupFiles: ['@config/vite-base/setup'],
       testTimeout: platform() === 'win32' ? 10000 : 5000,
     },
   });
