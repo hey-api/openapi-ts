@@ -8,38 +8,35 @@
     "name": {
       "type": "string",
       "description": "The name of the project",
-      "x-prompt": "What is the name of the project? (e.g. my-api)",
       "$default": {
         "$source": "argv",
         "index": 0
-      }
+      },
+      "x-prompt": "What name would you like to use for the library? (e.g. my-api)"
     },
-    "spec": {
+    "directory": {
       "type": "string",
-      "description": "The path to the OpenAPI spec file",
-      "x-prompt": "What is the path to the OpenAPI spec file? (URI or local file path)"
-    },
-    "client": {
-      "type": "string",
-      "description": "The type of client to generate",
-      "x-prompt": "What is the type of client to generate? (@hey-api/client-fetch, @hey-api/client-axios)",
-      "default": "@hey-api/client-fetch"
+      "description": "Directory where the library will be created",
+      "default": "libs"
     },
     "scope": {
       "type": "string",
       "description": "The scope of the project",
       "x-prompt": "What is the scope of the project? (e.g. @my-org)"
     },
-    "directory": {
+    "spec": {
       "type": "string",
-      "description": "The directory of the project",
-      "x-prompt": "What is the directory of the project? (e.g. libs)",
-      "default": "libs"
+      "description": "Path to the OpenAPI spec file (URL or local path)",
+      "x-prompt": "What is the path to the OpenAPI spec file? (URI or local file path)"
+    },
+    "client": {
+      "type": "string",
+      "description": "The type of client to generate (@hey-api/client-fetch, @hey-api/client-axios, etc)",
+      "default": "@hey-api/client-fetch"
     },
     "plugins": {
       "type": "array",
-      "description": "The plugins to use",
-      "x-prompt": "What plugins would you like to use? (e.g. @tanstack/react-query)",
+      "description": "The plugins to be provided to @hey-api/openapi-ts",
       "default": [],
       "items": {
         "type": "string"
@@ -47,7 +44,7 @@
     },
     "force": {
       "type": "boolean",
-      "description": "If true, the Client code will be regenerated even if the spec has not changed",
+      "description": "If true, the Client code will be regenerated even if the spec has not changed, also pass --skip-nx-cache to avoid caching issues",
       "default": false
     }
   },
