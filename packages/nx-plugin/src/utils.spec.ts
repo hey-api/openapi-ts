@@ -129,12 +129,14 @@ describe('utils', () => {
 
   describe('generateClientCode', () => {
     it('should execute command successfully', async () => {
-      await generateClientCode({
-        clientType: '@hey-api/client-fetch',
-        outputPath: './src/generated',
-        plugins: [],
-        specFile: './api/spec.yaml',
-      });
+      await expect(
+        generateClientCode({
+          clientType: '@hey-api/client-fetch',
+          outputPath: './src/generated',
+          plugins: [],
+          specFile: './api/spec.yaml',
+        }),
+      ).resolves.not.toThrow();
 
       expect(createClient).toHaveBeenCalledWith({
         input: './api/spec.yaml',
@@ -148,22 +150,14 @@ describe('utils', () => {
         throw new Error('Command failed');
       });
 
-      try {
-        await generateClientCode({
+      await expect(
+        generateClientCode({
           clientType: '@hey-api/client-fetch',
           outputPath: './src/generated',
           plugins: [],
           specFile: './api/spec.yaml',
-        });
-        // If we get here, fail the test
-        expect.fail('Expected function to throw');
-      } catch (error) {
-        if (error instanceof Error) {
-          expect(error.message).toContain('Command failed');
-        } else {
-          expect.fail('Expected error to be an instance of Error');
-        }
-      }
+        }),
+      ).rejects.toThrow('Command failed');
     });
   });
 

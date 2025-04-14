@@ -25,6 +25,7 @@ export function createVitestConfig(
         },
       },
       root,
+      setupFiles: ['./setup.ts'],
       testTimeout: platform() === 'win32' ? 10000 : 5000,
     },
   });
