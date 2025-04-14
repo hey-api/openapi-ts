@@ -1,0 +1,36 @@
+# <%= projectName %> - OpenAPI Client
+
+This library was generated with [NX](https://nx.dev) using the OpenAPI client generator.
+
+## Usage
+
+This package provides a TypeScript client for interacting with the API described by the OpenAPI spec in the `api/` directory.
+
+### Usage with <%= clientType %>
+
+```typescript
+import { client, myEndpointCall } from '<%= projectScope %>/<%= projectName %>';
+
+// set the client instance
+client.setConfig({
+  baseUrl: 'https://example.com'
+});
+
+// Example API call
+async function getData() {
+  const result = await myEndpointCall();
+  console.log(result);
+}
+```
+
+## Regenerating the API Client
+
+If the API specification changes, you can regenerate the client:
+
+```bash
+# From the project root
+nx run <%= projectScope %>/<%= projectName %>:updateApi
+
+## Force the client to rebuild
+nx run <%= projectScope %>/<%= projectName %>:updateApi --force --skip-nx-cache
+```
