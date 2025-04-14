@@ -8,19 +8,25 @@ import {
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Get current directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Function to recursively create directories
-function ensureDirectoryExists(dirPath: string) {
+/**
+ * Recursively creates a directory if it does not exist.
+ * @param {string} dirPath
+ */
+function ensureDirectoryExists(dirPath) {
   if (!existsSync(dirPath)) {
     mkdirSync(dirPath, { recursive: true });
   }
 }
 
-// Function to recursively copy JSON files from source to destination
-function copyJsonFiles(sourceDir: string, targetDir: string) {
+/**
+ * Recursively copies JSON files from a source directory to a target directory.
+ * @param {string} sourceDir
+ * @param {string} targetDir
+ */
+function copyJsonFiles(sourceDir, targetDir) {
   // Read all files and directories in the source directory
   const items = readdirSync(sourceDir);
 
