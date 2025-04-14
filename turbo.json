@@ -2,7 +2,7 @@
   "$schema": "./node_modules/turbo/schema.json",
   "tasks": {
     "build": {
-      "cache": false,
+      "cache": true,
       "dependsOn": ["^build"],
       "outputs": [
         ".next/**",
