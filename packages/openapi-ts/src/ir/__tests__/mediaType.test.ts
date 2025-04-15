@@ -92,6 +92,10 @@ describe('mediaTypeToIrMediaType', () => {
       response: 'url-search-params',
     },
     {
+      mediaType: 'application/octet-stream',
+      response: 'octet-stream',
+    },
+    {
       mediaType: 'application/foo',
       response: undefined,
     },
