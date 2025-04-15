@@ -287,6 +287,7 @@ const operationStatements = ({
         // jsonBodySerializer is the default, no need to specify
         break;
       case 'text':
+      case 'octet-stream':
         // ensure we don't use any serializer by default
         requestOptions.push({
           key: 'bodySerializer',
