@@ -23,7 +23,7 @@ export type FunctionParameter =
       type?: any | ts.TypeNode;
     }
   | {
-      destructure: FunctionParameter[];
+      destructure: ReadonlyArray<FunctionParameter>;
     };
 
 export interface FunctionTypeParameter {
@@ -196,7 +196,9 @@ export const toAccessLevelModifiers = (
  * @param parameters - the parameters to convert to declarations
  * @returns ts.ParameterDeclaration[]
  */
-export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
+export const toParameterDeclarations = (
+  parameters: ReadonlyArray<FunctionParameter>,
+) =>
   parameters.map((parameter) => {
     if ('destructure' in parameter) {
       return createParameterDeclaration({
@@ -398,7 +400,7 @@ export const createArrowFunction = ({
   async?: boolean;
   comment?: Comments;
   multiLine?: boolean;
-  parameters?: FunctionParameter[];
+  parameters?: ReadonlyArray<FunctionParameter>;
   returnType?: string | ts.TypeNode;
   statements?: ts.Statement[] | ts.Expression;
   types?: FunctionTypeParameter[];

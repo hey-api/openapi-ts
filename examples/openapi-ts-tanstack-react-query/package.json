@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
-    "@config/vite-base": "workspace:*",
     "@radix-ui/react-form": "0.1.1",
     "@radix-ui/react-icons": "1.3.2",
     "@radix-ui/themes": "3.1.6",
@@ -23,6 +22,7 @@
     "react-dom": "19.0.0"
   },
   "devDependencies": {
+    "@config/vite-base": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.1",
