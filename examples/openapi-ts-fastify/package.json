@@ -16,8 +16,8 @@
   "devDependencies": {
     "@config/vite-base": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
-    "eslint": "9.17.0",
-    "prettier": "3.4.2",
+    "eslint": "9.24.0",
+    "prettier": "3.5.3",
     "typescript": "5.8.3",
     "vite": "6.2.6",
     "vitest": "3.1.1"
