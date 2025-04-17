@@ -5,8 +5,14 @@ const multipartFormDataMimeRegExp = /^multipart\/form-data(;.*)?$/i;
 const textMimeRegExp = /^text\/[a-z0-9.+-]+(;.*)?$/i;
 const xWwwFormUrlEncodedMimeRegExp =
   /^application\/x-www-form-urlencoded(;.*)?$/i;
+const octetStreamMimeRegExp = /^application\/octet-stream(;.*)?$/i;
 
-export type IRMediaType = 'form-data' | 'json' | 'text' | 'url-search-params';
+export type IRMediaType =
+  | 'form-data'
+  | 'json'
+  | 'text'
+  | 'url-search-params'
+  | 'octet-stream';
 
 export const isMediaTypeFileLike = ({
   mediaType,
@@ -40,5 +46,10 @@ export const mediaTypeToIrMediaType = ({
   xWwwFormUrlEncodedMimeRegExp.lastIndex = 0;
   if (xWwwFormUrlEncodedMimeRegExp.test(mediaType)) {
     return 'url-search-params';
+  }
+
+  octetStreamMimeRegExp.lastIndex = 0;
+  if (octetStreamMimeRegExp.test(mediaType)) {
+    return 'octet-stream';
   }
 };
