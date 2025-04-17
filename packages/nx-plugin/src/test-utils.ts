@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { logger, type Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 
-import type { OpenApiClientGeneratorSchema } from './generators/openapi-client';
+import type { OpenApiClientGeneratorSchema } from './generators/openapi-client/openapiClient';
 
 export const TestOptions = {
   client: '@hey-api/client-fetch',
