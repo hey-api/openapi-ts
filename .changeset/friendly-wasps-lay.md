@@ -1,5 +1,5 @@
 ---
-"@test/openapi-ts": patch
+'@hey-api/openapi-ts': patch
 ---
 
 fix: repeat tuple type `maxItems` times
