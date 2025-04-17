@@ -972,6 +972,7 @@ export class TypesService {
      * @param data.parameterArray This is an array parameter
      * @param data.parameterDictionary This is a dictionary parameter
      * @param data.parameterEnum This is an enum parameter
+     * @param data.parameterTuple This is tuple parameter
      * @param data.parameterNumber This is a number parameter
      * @param data.parameterString This is a string parameter
      * @param data.parameterBoolean This is a boolean parameter
@@ -997,7 +998,8 @@ export class TypesService {
                 parameterObject: data.parameterObject,
                 parameterArray: data.parameterArray,
                 parameterDictionary: data.parameterDictionary,
-                parameterEnum: data.parameterEnum
+                parameterEnum: data.parameterEnum,
+                parameterTuple: data.parameterTuple
             }
         });
     }
