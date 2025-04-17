@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.66.5
+
+### Patch Changes
+
+- [#1951](https://github.com/hey-api/openapi-ts/pull/1951) [`4be46e5`](https://github.com/hey-api/openapi-ts/commit/4be46e506db1b2c53d1ddbf66e9919b5072f1cc0) Thanks [@devNameAsyraf](https://github.com/devNameAsyraf)! - fix: don't use JSON serializer for `application/octet-stream`
+
+- [#1938](https://github.com/hey-api/openapi-ts/pull/1938) [`2a03e37`](https://github.com/hey-api/openapi-ts/commit/2a03e371715b5948ba568009975ad65ccbf7bfd7) Thanks [@sredni](https://github.com/sredni)! - fix: repeat tuple type `maxItems` times
+
 ## 0.66.4
 
 ### Patch Changes
