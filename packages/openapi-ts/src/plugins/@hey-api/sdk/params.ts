@@ -1,3 +1,5 @@
+import type { Field, FieldsConfig } from '@hey-api/client-core';
+
 import type { FunctionParameter } from '../../../compiler';
 import { clientApi } from '../../../generate/client';
 import type { TypeScriptFile } from '../../../generate/files';
@@ -51,6 +53,32 @@ export const operationOptionsType = ({
     : optionsName;
 };
 
+export type SdkParameter = FunctionParameter & {
+  fields?: FieldsConfig;
+};
+
+const operationToFields = ({
+  operation,
+}: {
+  operation: IR.OperationObject;
+}): ReadonlyArray<FieldsConfig[number]> => {
+  const fields: Array<FieldsConfig[number]> = [];
+  const args: Array<Field> = [];
+
+  if (operation.body) {
+    args.push({
+      in: 'body',
+      key: 'body',
+    });
+  }
+
+  if (args.length) {
+    fields.push({ args });
+  }
+
+  return fields;
+};
+
 export const createParameters = ({
   context,
   file,
@@ -61,17 +89,20 @@ export const createParameters = ({
   file: TypeScriptFile;
   operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
-}): Array<FunctionParameter> => {
+}): ReadonlyArray<SdkParameter> => {
   const client = getClientPlugin(context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  const parameters: Array<FunctionParameter> = [];
+  const parameters: Array<SdkParameter> = [];
 
   if (plugin.params === 'flattened') {
     const identifierData = importIdentifierData({ context, file, operation });
 
     if (identifierData.name) {
       parameters.push({
+        fields: operationToFields({
+          operation,
+        }),
         isRequired: hasOperationDataRequired(operation),
         name: 'params',
         type: `Params<${identifierData.name}>`,

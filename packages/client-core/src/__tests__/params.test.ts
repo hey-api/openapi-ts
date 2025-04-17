@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Config } from '../params';
+import type { FieldsConfig } from '../params';
 import { buildClientParams } from '../params';
 
 describe('buildClientParams', () => {
   const scenarios: ReadonlyArray<{
     args: ReadonlyArray<unknown>;
-    config: Config;
+    config: FieldsConfig;
     description: string;
     params: Record<string, unknown>;
   }> = [

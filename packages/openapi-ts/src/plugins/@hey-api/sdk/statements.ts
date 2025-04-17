@@ -2,7 +2,7 @@ import type { Auth } from '@hey-api/client-core';
 import type ts from 'typescript';
 
 import { compiler } from '../../../compiler';
-import type { FunctionParameter, ObjectValue } from '../../../compiler/types';
+import type { ObjectValue } from '../../../compiler/types';
 import { clientModulePath } from '../../../generate/client';
 import { statusCodeToGroup } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
@@ -19,8 +19,11 @@ import {
   importIdentifierResponse,
 } from '../typescript/ref';
 import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
+import type { SdkParameter } from './params';
 import { getResponseType } from './response';
 import type { Config } from './types';
+
+const clientParamsName = 'clientParams';
 
 // TODO: parser - handle more security types
 const securitySchemeObjectToAuthObject = ({
@@ -116,6 +119,108 @@ const operationAuth = ({
   return auth;
 };
 
+const fieldsToArgsConfig = ({
+  argsConfig,
+  parameter,
+}: {
+  argsConfig: Array<unknown>;
+  parameter: SdkParameter;
+}) => {
+  if (parameter.fields) {
+    for (const field of parameter.fields) {
+      if ('in' in field) {
+        // TODO: handle positional arguments
+        // field.in
+      } else if (field.args) {
+        const obj: Array<unknown> = [];
+
+        for (const config of field.args) {
+          obj.push({
+            key: 'in',
+            value: config.in,
+          });
+
+          if (config.key) {
+            obj.push({
+              key: 'key',
+              value: config.key,
+            });
+          }
+
+          if (config.map) {
+            obj.push({
+              key: 'map',
+              value: config.map,
+            });
+          }
+        }
+
+        argsConfig.push(
+          compiler.objectExpression({
+            obj: [
+              {
+                key: 'args',
+                value: compiler.arrayLiteralExpression({
+                  elements: [compiler.objectExpression({ obj })],
+                }),
+              },
+            ],
+          }),
+        );
+      }
+    }
+  }
+};
+
+const buildClientParamsNode = ({
+  context,
+  parameters,
+}: {
+  context: IR.Context;
+  operation: IR.OperationObject;
+  parameters: ReadonlyArray<SdkParameter>;
+  plugin: Plugin.Instance<Config>;
+}) => {
+  const file = context.file({ id: sdkId })!;
+  const sdkOutput = file.nameWithoutExtension();
+
+  const buildClientParams = file.import({
+    alias: '_buildClientParams',
+    module: clientModulePath({
+      config: context.config,
+      sourceOutput: sdkOutput,
+    }),
+    name: 'buildClientParams',
+  });
+
+  const args: Array<unknown> = [];
+  const argsConfig: Array<unknown> = [];
+
+  for (const [index, parameter] of parameters.entries()) {
+    if ('name' in parameter && index !== parameters.length - 1) {
+      args.push(compiler.identifier({ text: parameter.name }));
+    }
+
+    fieldsToArgsConfig({
+      argsConfig,
+      parameter,
+    });
+  }
+
+  const clientParamsNode = compiler.constVariable({
+    expression: compiler.callExpression({
+      functionName: buildClientParams.name,
+      parameters: [
+        compiler.arrayLiteralExpression({ elements: args }),
+        compiler.arrayLiteralExpression({ elements: argsConfig }),
+      ],
+    }),
+    name: clientParamsName,
+  });
+
+  return clientParamsNode;
+};
+
 export const createStatements = ({
   context,
   operation,
@@ -124,7 +229,7 @@ export const createStatements = ({
 }: {
   context: IR.Context;
   operation: IR.OperationObject;
-  parameters: Array<FunctionParameter>;
+  parameters: ReadonlyArray<SdkParameter>;
   plugin: Plugin.Instance<Config>;
 }): Array<ts.Statement> => {
   const file = context.file({ id: sdkId })!;
@@ -330,7 +435,6 @@ export const createStatements = ({
     value: operation.path,
   });
 
-  const clientParamsName = 'clientParams';
   const hasClientParams = plugin.params !== 'namespaced';
 
   // options must go last to allow overriding parameters above
@@ -429,59 +533,11 @@ export const createStatements = ({
   ];
 
   if (hasClientParams) {
-    const buildClientParams = file.import({
-      alias: '_buildClientParams',
-      module: clientModulePath({
-        config: context.config,
-        sourceOutput: sdkOutput,
-      }),
-      name: 'buildClientParams',
-    });
-    const args: Array<unknown> = [];
-    for (const [index, parameter] of parameters.entries()) {
-      if ('name' in parameter && index !== parameters.length - 1) {
-        args.push(compiler.identifier({ text: parameter.name }));
-      }
-    }
-    const argsConfig: Array<unknown> = [];
-    if (plugin.params === 'flattened') {
-      // TODO: construct config
-      // operation.body.
-      argsConfig.push(
-        compiler.objectExpression({
-          obj: [
-            {
-              key: 'args',
-              value: compiler.arrayLiteralExpression({
-                elements: [
-                  compiler.objectExpression({
-                    obj: [
-                      {
-                        key: 'in',
-                        value: 'path',
-                      },
-                      {
-                        key: 'key',
-                        value: 'params',
-                      },
-                    ],
-                  }),
-                ],
-              }),
-            },
-          ],
-        }),
-      );
-    }
-    const clientParamsNode = compiler.constVariable({
-      expression: compiler.callExpression({
-        functionName: buildClientParams.name,
-        parameters: [
-          compiler.arrayLiteralExpression({ elements: args }),
-          compiler.arrayLiteralExpression({ elements: argsConfig }),
-        ],
-      }),
-      name: clientParamsName,
+    const clientParamsNode = buildClientParamsNode({
+      context,
+      operation,
+      parameters,
+      plugin,
     });
     statements.unshift(clientParamsNode);
   }
