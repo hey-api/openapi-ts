@@ -514,9 +514,6 @@ importers:
 
   examples/openapi-ts-tanstack-react-query:
     dependencies:
-      '@config/vite-base':
-        specifier: workspace:*
-        version: link:../../packages/config-vite-base
       '@hey-api/client-fetch':
         specifier: workspace:*
         version: link:../../packages/client-fetch
@@ -542,6 +539,9 @@ importers:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
     devDependencies:
+      '@config/vite-base':
+        specifier: workspace:*
+        version: link:../../packages/config-vite-base
       '@hey-api/openapi-ts':
         specifier: workspace:*
         version: link:../../packages/openapi-ts
@@ -590,9 +590,6 @@ importers:
 
   examples/openapi-ts-tanstack-svelte-query:
     dependencies:
-      '@config/vite-base':
-        specifier: workspace:*
-        version: link:../../packages/config-vite-base
       '@hey-api/client-fetch':
         specifier: workspace:*
         version: link:../../packages/client-fetch
@@ -600,6 +597,9 @@ importers:
         specifier: 5.73.3
         version: 5.73.3(svelte@5.19.9)
     devDependencies:
+      '@config/vite-base':
+        specifier: workspace:*
+        version: link:../../packages/config-vite-base
       '@fontsource/fira-mono':
         specifier: 5.0.0
         version: 5.0.0
@@ -911,6 +911,9 @@ importers:
       '@config/vite-base':
         specifier: workspace:*
         version: link:../config-vite-base
+      '@hey-api/client-core':
+        specifier: workspace:*
+        version: link:../client-core
       '@types/cross-spawn':
         specifier: 6.0.6
         version: 6.0.6

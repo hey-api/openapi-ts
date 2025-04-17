@@ -70,9 +70,9 @@
     "axios": ">= 1.0.0 < 2"
   },
   "devDependencies": {
+    "@config/vite-base": "workspace:*",
     "@hey-api/client-core": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
-    "@config/vite-base": "workspace:*",
     "axios": "1.8.2"
   }
 }

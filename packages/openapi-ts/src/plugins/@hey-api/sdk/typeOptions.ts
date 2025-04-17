@@ -4,8 +4,7 @@ import type { FileImportResult } from '../../../generate/files';
 import type { IR } from '../../../ir/types';
 import type { Plugin } from '../../types';
 import { getClientPlugin } from '../client-core/utils';
-import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
-import { sdkId } from './plugin';
+import { nuxtTypeDefault, nuxtTypeResponse, sdkId } from './constants';
 import type { Config } from './types';
 
 export const createTypeOptions = ({
