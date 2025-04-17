@@ -79,7 +79,7 @@ export const createMethodDeclaration = ({
   isStatic?: boolean;
   multiLine?: boolean;
   name: string;
-  parameters?: FunctionParameter[];
+  parameters?: ReadonlyArray<FunctionParameter>;
   returnType?: string | ts.TypeNode;
   statements?: ts.Statement[];
   types?: FunctionTypeParameter[];

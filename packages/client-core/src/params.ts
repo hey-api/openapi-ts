@@ -1,6 +1,6 @@
 type Slot = 'body' | 'headers' | 'path' | 'query';
 
-type Field =
+export type Field =
   | {
       in: Exclude<Slot, 'body'>;
       key: string;
@@ -12,12 +12,12 @@ type Field =
       map?: string;
     };
 
-interface Fields {
+export interface Fields {
   allowExtra?: Partial<Record<Slot, boolean>>;
   args?: ReadonlyArray<Field>;
 }
 
-export type Config = ReadonlyArray<Field | Fields>;
+export type FieldsConfig = ReadonlyArray<Field | Fields>;
 
 const extraPrefixesMap: Record<string, Slot> = {
   $body_: 'body',
@@ -35,12 +35,12 @@ type KeyMap = Map<
   }
 >;
 
-const buildKeyMap = (configs: Config, map?: KeyMap): KeyMap => {
+const buildKeyMap = (fields: FieldsConfig, map?: KeyMap): KeyMap => {
   if (!map) {
     map = new Map();
   }
 
-  for (const config of configs) {
+  for (const config of fields) {
     if ('in' in config) {
       if (config.key) {
         map.set(config.key, {
@@ -73,7 +73,7 @@ const stripEmptySlots = (params: Params) => {
 
 export const buildClientParams = (
   args: ReadonlyArray<unknown>,
-  configs: Config,
+  fields: FieldsConfig,
 ) => {
   const params: Params = {
     body: {},
@@ -82,13 +82,13 @@ export const buildClientParams = (
     query: {},
   };
 
-  const map = buildKeyMap(configs);
+  const map = buildKeyMap(fields);
 
-  let config: Config[number] | undefined;
+  let config: FieldsConfig[number] | undefined;
 
   for (const [index, arg] of args.entries()) {
-    if (configs[index]) {
-      config = configs[index];
+    if (fields[index]) {
+      config = fields[index];
     }
 
     if (!config) {
