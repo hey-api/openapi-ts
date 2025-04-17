@@ -56,3 +56,10 @@ Run `nx run @my-org/my-generated-package:updateApi`
 - `client`: The type of client to generate. [ string ] (optional) (default: `@hey-api/client-fetch`)
 - `directory`: The directory to create the project in. [ string ] (optional) (default: `libs`)
 - `plugins`: Additional plugins to provide to the client api. [ string[] ] (optional) (default:[])
+
+###### Spec File Notes
+
+If the spec file is a relative path and is located in the workspace then the containing project will be listed as an implicit dependency.
+The assumption is made that that project will generate the API spec file on build.
+
+If the spec file is a URL then we fetch the spec during cache checks to determine if we should rebuild the client code.

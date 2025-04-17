@@ -8,13 +8,13 @@ import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getGeneratorOptions } from '../../test-utils';
 import { generateClientCode } from '../../utils';
-import generator, { updateTsConfig } from './index';
+import generator, { updateTsConfig } from './openapiClient';
 import {
   generateApi,
   generateNxProject,
   normalizeOptions,
   updatePackageJson,
-} from './index';
+} from './openapiClient';
 
 vi.mock('@hey-api/openapi-ts', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@hey-api/openapi-ts')>();
@@ -128,7 +128,7 @@ describe('openapi-client generator', () => {
       });
       const normalizedOptions = normalizeOptions(options);
 
-      generateNxProject({ clientPlugins: {}, normalizedOptions, tree });
+      await generateNxProject({ clientPlugins: {}, normalizedOptions, tree });
 
       const config = readJson(
         tree,
@@ -147,7 +147,7 @@ describe('openapi-client generator', () => {
       });
       const normalizedOptions = normalizeOptions(options);
 
-      generateNxProject({ clientPlugins: {}, normalizedOptions, tree });
+      await generateNxProject({ clientPlugins: {}, normalizedOptions, tree });
 
       expect(
         tree.exists(`${normalizedOptions.projectRoot}/tsconfig.json`),
