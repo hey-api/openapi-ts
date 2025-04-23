@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.66.6
+
+### Patch Changes
+
+- [#1971](https://github.com/hey-api/openapi-ts/pull/1971) [`e1fb199`](https://github.com/hey-api/openapi-ts/commit/e1fb199a22a30653b95d498e6aaca2c59ed2b13b) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle Zod circular reference
+
 ## 0.66.5
 
 ### Patch Changes
