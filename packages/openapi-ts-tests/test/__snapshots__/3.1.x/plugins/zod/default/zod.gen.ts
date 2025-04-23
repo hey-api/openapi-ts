@@ -30,9 +30,11 @@ export const zNonAsciiStringæøåÆøÅöôêÊ字符串 = z.string();
 
 export const zSimpleFile = z.string();
 
-export const zSimpleReference = z.object({
+export const zModelWithString = z.object({
     prop: z.string().optional()
 });
+
+export const zSimpleReference = zModelWithString;
 
 export const zSimpleStringWithPattern = z.union([
     z.string().max(64).regex(/^[a-zA-Z0-9_]*$/),
@@ -69,13 +71,9 @@ export const zArrayWithBooleans = z.array(z.boolean());
 
 export const zArrayWithStrings = z.array(z.string()).default(['test']);
 
-export const zArrayWithReferences = z.array(z.object({
-    prop: z.string().optional()
-}));
+export const zArrayWithReferences = z.array(zModelWithString);
 
-export const zArrayWithArray = z.array(z.array(z.object({
-    prop: z.string().optional()
-})));
+export const zArrayWithArray = z.array(z.array(zModelWithString));
 
 export const zArrayWithProperties = z.array(z.object({
     '16x16': zCamelCaseCommentWithBreaks.optional(),
@@ -116,10 +114,6 @@ export const zModelWithInteger = z.object({
 
 export const zModelWithBoolean = z.object({
     prop: z.boolean().optional()
-});
-
-export const zModelWithString = z.object({
-    prop: z.string().optional()
 });
 
 export const zModelWithStringError = z.object({
@@ -198,32 +192,36 @@ export const zModelWithNestedEnums = z.object({
     ]).optional()
 });
 
+export const zModelWithProperties = z.object({
+    required: z.string(),
+    requiredAndReadOnly: z.string().readonly(),
+    requiredAndNullable: z.union([
+        z.string(),
+        z.null()
+    ]),
+    string: z.string().optional(),
+    number: z.number().optional(),
+    boolean: z.boolean().optional(),
+    reference: zModelWithString.optional(),
+    'property with space': z.string().optional(),
+    default: z.string().optional(),
+    try: z.string().optional(),
+    '@namespace.string': z.string().readonly().optional(),
+    '@namespace.integer': z.number().int().readonly().optional()
+});
+
 export const zModelWithReference = z.object({
-    prop: z.object({
-        required: z.string(),
-        requiredAndReadOnly: z.string().readonly(),
-        requiredAndNullable: z.union([
-            z.string(),
-            z.null()
-        ]),
-        string: z.string().optional(),
-        number: z.number().optional(),
-        boolean: z.boolean().optional(),
-        reference: zModelWithString.optional(),
-        'property with space': z.string().optional(),
-        default: z.string().optional(),
-        try: z.string().optional(),
-        '@namespace.string': z.string().readonly().optional(),
-        '@namespace.integer': z.number().int().readonly().optional()
-    }).optional()
+    prop: zModelWithProperties.optional()
+});
+
+export const zModelWithReadOnlyAndWriteOnly = z.object({
+    foo: z.string(),
+    bar: z.string().readonly(),
+    baz: z.string()
 });
 
 export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
-    prop: z.array(z.object({
-        foo: z.string(),
-        bar: z.string().readonly(),
-        baz: z.string()
-    })).optional(),
+    prop: z.array(zModelWithReadOnlyAndWriteOnly).optional(),
     propWithFile: z.array(z.string()).optional(),
     propWithNumber: z.array(z.number()).optional()
 });
@@ -242,7 +240,7 @@ export const zDeprecatedModel = z.object({
     prop: z.string().optional()
 });
 
-export const zModelWithCircularReference: z.ZodTypeAny = z.object({
+export const zModelWithCircularReference: z.AnyZodObject = z.object({
     prop: z.lazy(() => {
         return zModelWithCircularReference;
     }).optional()
@@ -391,24 +389,6 @@ export const zCompositionExtendedModel = zCompositionBaseModel.merge(z.object({
     lastname: z.string()
 }));
 
-export const zModelWithProperties = z.object({
-    required: z.string(),
-    requiredAndReadOnly: z.string().readonly(),
-    requiredAndNullable: z.union([
-        z.string(),
-        z.null()
-    ]),
-    string: z.string().optional(),
-    number: z.number().optional(),
-    boolean: z.boolean().optional(),
-    reference: zModelWithString.optional(),
-    'property with space': z.string().optional(),
-    default: z.string().optional(),
-    try: z.string().optional(),
-    '@namespace.string': z.string().readonly().optional(),
-    '@namespace.integer': z.number().int().readonly().optional()
-});
-
 export const zModelWithNestedProperties = z.object({
     first: z.union([
         z.object({
@@ -506,9 +486,11 @@ export const zNestedAnyOfArraysNullable = z.object({
     ]).optional()
 });
 
+export const zSimpleParameter = z.unknown();
+
 export const zCompositionWithOneOfAndProperties = z.intersection(z.union([
     z.object({
-        foo: z.unknown()
+        foo: zSimpleParameter
     }),
     z.object({
         bar: zNonAsciiStringæøåÆøÅöôêÊ字符串
@@ -588,12 +570,6 @@ export const zModelWithNestedCompositionEnums = z.object({
     foo: zModelWithNestedArrayEnumsDataFoo.optional()
 });
 
-export const zModelWithReadOnlyAndWriteOnly = z.object({
-    foo: z.string(),
-    bar: z.string().readonly(),
-    baz: z.string()
-});
-
 export const zModelWithConstantSizeArray = z.unknown();
 
 export const zModelWithAnyOfConstantSizeArray = z.unknown();
@@ -615,7 +591,7 @@ export const zModelWithBackticksInDescription = z.object({
 });
 
 export const zModelWithOneOfAndProperties = z.intersection(z.union([
-    z.unknown(),
+    zSimpleParameter,
     zNonAsciiStringæøåÆøÅöôêÊ字符串
 ]), z.object({
     baz: z.union([
@@ -659,16 +635,13 @@ export const zSchemaWithFormRestrictedKeys = z.object({
     })).optional()
 });
 
-export const zIoK8sApimachineryPkgApisMetaV1DeleteOptions = z.object({
-    preconditions: z.object({
-        resourceVersion: z.string().optional(),
-        uid: z.string().optional()
-    }).optional()
-});
-
 export const zIoK8sApimachineryPkgApisMetaV1Preconditions = z.object({
     resourceVersion: z.string().optional(),
     uid: z.string().optional()
+});
+
+export const zIoK8sApimachineryPkgApisMetaV1DeleteOptions = z.object({
+    preconditions: zIoK8sApimachineryPkgApisMetaV1Preconditions.optional()
 });
 
 export const zAdditionalPropertiesUnknownIssue = z.object({});
@@ -682,32 +655,6 @@ export const zAdditionalPropertiesUnknownIssue3 = z.intersection(z.string(), z.o
 export const zAdditionalPropertiesIntegerIssue = z.object({
     value: z.number().int()
 });
-
-export const zOneOfAllOfIssue = z.union([
-    z.intersection(z.union([
-        zConstValue,
-        z.object({
-            item: z.boolean().optional(),
-            error: z.union([
-                z.string(),
-                z.null()
-            ]).optional(),
-            hasError: z.boolean().readonly().optional(),
-            data: z.object({}).optional()
-        })
-    ]), z3eNum1Период),
-    z.object({
-        item: z.union([
-            z.string(),
-            z.null()
-        ]).optional(),
-        error: z.union([
-            z.string(),
-            z.null()
-        ]).optional(),
-        hasError: z.boolean().readonly().optional()
-    })
-]);
 
 export const zGenericSchemaDuplicateIssue1SystemBoolean = z.object({
     item: z.boolean().optional(),
@@ -730,6 +677,14 @@ export const zGenericSchemaDuplicateIssue1SystemString = z.object({
     ]).optional(),
     hasError: z.boolean().readonly().optional()
 });
+
+export const zOneOfAllOfIssue = z.union([
+    z.intersection(z.union([
+        zConstValue,
+        zGenericSchemaDuplicateIssue1SystemBoolean
+    ]), z3eNum1Период),
+    zGenericSchemaDuplicateIssue1SystemString
+]);
 
 export const zImportResponse = z.union([
     zModelFromZendesk,
