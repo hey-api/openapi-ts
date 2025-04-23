@@ -26,9 +26,11 @@ export const zNonAsciiStringæøåÆøÅöôêÊ字符串 = z.string();
 
 export const zSimpleFile = z.string();
 
-export const zSimpleReference = z.object({
+export const zModelWithString = z.object({
     prop: z.string().optional()
 });
+
+export const zSimpleReference = zModelWithString;
 
 export const zSimpleStringWithPattern = z.string().max(64).regex(/^[a-zA-Z0-9_]*$/);
 
@@ -53,13 +55,9 @@ export const zArrayWithBooleans = z.array(z.boolean());
 
 export const zArrayWithStrings = z.array(z.string());
 
-export const zArrayWithReferences = z.array(z.object({
-    prop: z.string().optional()
-}));
+export const zArrayWithReferences = z.array(zModelWithString);
 
-export const zArrayWithArray = z.array(z.array(z.object({
-    prop: z.string().optional()
-})));
+export const zArrayWithArray = z.array(z.array(zModelWithString));
 
 export const zArrayWithProperties = z.array(z.object({
     foo: z.string().optional(),
@@ -84,10 +82,6 @@ export const zModelWithInteger = z.object({
 
 export const zModelWithBoolean = z.object({
     prop: z.boolean().optional()
-});
-
-export const zModelWithString = z.object({
-    prop: z.string().optional()
 });
 
 export const zModelWithStringError = z.object({
@@ -138,38 +132,6 @@ export const zModelWithNestedEnums = z.object({
     arrayWithDescription: z.array(z.number().int()).optional()
 });
 
-export const zModelWithReference = z.object({
-    prop: z.object({
-        required: z.string(),
-        requiredAndReadOnly: z.string().readonly(),
-        string: z.string().optional(),
-        number: z.number().optional(),
-        boolean: z.boolean().optional(),
-        reference: zModelWithString.optional(),
-        'property with space': z.string().optional(),
-        default: z.string().optional(),
-        try: z.string().optional(),
-        '@namespace.string': z.string().readonly().optional(),
-        '@namespace.integer': z.number().int().readonly().optional()
-    }).optional()
-});
-
-export const zModelWithArray = z.object({
-    prop: z.array(zModelWithString).optional(),
-    propWithFile: z.array(z.string()).optional(),
-    propWithNumber: z.array(z.number()).optional()
-});
-
-export const zModelWithDictionary = z.object({
-    prop: z.object({}).optional()
-});
-
-export const zModelWithCircularReference: z.ZodTypeAny = z.object({
-    prop: z.lazy(() => {
-        return zModelWithCircularReference;
-    }).optional()
-});
-
 export const zModelWithProperties = z.object({
     required: z.string(),
     requiredAndReadOnly: z.string().readonly(),
@@ -182,6 +144,26 @@ export const zModelWithProperties = z.object({
     try: z.string().optional(),
     '@namespace.string': z.string().readonly().optional(),
     '@namespace.integer': z.number().int().readonly().optional()
+});
+
+export const zModelWithReference = z.object({
+    prop: zModelWithProperties.optional()
+});
+
+export const zModelWithArray = z.object({
+    prop: z.array(zModelWithString).optional(),
+    propWithFile: z.array(z.string()).optional(),
+    propWithNumber: z.array(z.number()).optional()
+});
+
+export const zModelWithDictionary = z.object({
+    prop: z.object({}).optional()
+});
+
+export const zModelWithCircularReference: z.AnyZodObject = z.object({
+    prop: z.lazy(() => {
+        return zModelWithCircularReference;
+    }).optional()
 });
 
 export const zModelWithNestedProperties = z.object({

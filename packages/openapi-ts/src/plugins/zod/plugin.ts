@@ -31,6 +31,7 @@ const literalIdentifier = compiler.identifier({ text: 'literal' });
 const maxIdentifier = compiler.identifier({ text: 'max' });
 const mergeIdentifier = compiler.identifier({ text: 'merge' });
 const minIdentifier = compiler.identifier({ text: 'min' });
+const objectIdentifier = compiler.identifier({ text: 'object' });
 const optionalIdentifier = compiler.identifier({ text: 'optional' });
 const readonlyIdentifier = compiler.identifier({ text: 'readonly' });
 const regexIdentifier = compiler.identifier({ text: 'regex' });
@@ -338,7 +339,10 @@ const objectTypeToZodSchema = ({
   context: IR.Context;
   result: Result;
   schema: SchemaWithType<'object'>;
-}) => {
+}): {
+  anyType: string;
+  expression: ts.CallExpression;
+} => {
   // TODO: parser - handle constants
   const properties: Array<ts.PropertyAssignment> = [];
 
@@ -424,11 +428,14 @@ const objectTypeToZodSchema = ({
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
-      name: compiler.identifier({ text: schema.type }),
+      name: objectIdentifier,
     }),
     parameters: [ts.factory.createObjectLiteralExpression(properties, true)],
   });
-  return expression;
+  return {
+    anyType: 'AnyZodObject',
+    expression,
+  };
 };
 
 const stringTypeToZodSchema = ({
@@ -649,40 +656,55 @@ const schemaTypeToZodSchema = ({
   context: IR.Context;
   result: Result;
   schema: IR.SchemaObject;
-}): ts.Expression => {
+}): {
+  anyType?: string;
+  expression: ts.Expression;
+} => {
   switch (schema.type as Required<IR.SchemaObject>['type']) {
     case 'array':
-      return arrayTypeToZodSchema({
-        context,
-        result,
-        schema: schema as SchemaWithType<'array'>,
-      });
+      return {
+        expression: arrayTypeToZodSchema({
+          context,
+          result,
+          schema: schema as SchemaWithType<'array'>,
+        }),
+      };
     case 'boolean':
-      return booleanTypeToZodSchema({
-        context,
-        schema: schema as SchemaWithType<'boolean'>,
-      });
+      return {
+        expression: booleanTypeToZodSchema({
+          context,
+          schema: schema as SchemaWithType<'boolean'>,
+        }),
+      };
     case 'enum':
-      return enumTypeToZodSchema({
-        context,
-        schema: schema as SchemaWithType<'enum'>,
-      });
+      return {
+        expression: enumTypeToZodSchema({
+          context,
+          schema: schema as SchemaWithType<'enum'>,
+        }),
+      };
     case 'integer':
     case 'number':
-      return numberTypeToZodSchema({
-        context,
-        schema: schema as SchemaWithType<'integer' | 'number'>,
-      });
+      return {
+        expression: numberTypeToZodSchema({
+          context,
+          schema: schema as SchemaWithType<'integer' | 'number'>,
+        }),
+      };
     case 'never':
-      return neverTypeToZodSchema({
-        context,
-        schema: schema as SchemaWithType<'never'>,
-      });
+      return {
+        expression: neverTypeToZodSchema({
+          context,
+          schema: schema as SchemaWithType<'never'>,
+        }),
+      };
     case 'null':
-      return nullTypeToZodSchema({
-        context,
-        schema: schema as SchemaWithType<'null'>,
-      });
+      return {
+        expression: nullTypeToZodSchema({
+          context,
+          schema: schema as SchemaWithType<'null'>,
+        }),
+      };
     case 'object':
       return objectTypeToZodSchema({
         context,
@@ -690,30 +712,40 @@ const schemaTypeToZodSchema = ({
         schema: schema as SchemaWithType<'object'>,
       });
     case 'string':
-      return stringTypeToZodSchema({
-        context,
-        schema: schema as SchemaWithType<'string'>,
-      });
+      return {
+        expression: stringTypeToZodSchema({
+          context,
+          schema: schema as SchemaWithType<'string'>,
+        }),
+      };
     case 'tuple':
-      return tupleTypeToZodSchema({
-        context,
-        schema: schema as SchemaWithType<'tuple'>,
-      });
+      return {
+        expression: tupleTypeToZodSchema({
+          context,
+          schema: schema as SchemaWithType<'tuple'>,
+        }),
+      };
     case 'undefined':
-      return undefinedTypeToZodSchema({
-        context,
-        schema: schema as SchemaWithType<'undefined'>,
-      });
+      return {
+        expression: undefinedTypeToZodSchema({
+          context,
+          schema: schema as SchemaWithType<'undefined'>,
+        }),
+      };
     case 'unknown':
-      return unknownTypeToZodSchema({
-        context,
-        schema: schema as SchemaWithType<'unknown'>,
-      });
+      return {
+        expression: unknownTypeToZodSchema({
+          context,
+          schema: schema as SchemaWithType<'unknown'>,
+        }),
+      };
     case 'void':
-      return voidTypeToZodSchema({
-        context,
-        schema: schema as SchemaWithType<'void'>,
-      });
+      return {
+        expression: voidTypeToZodSchema({
+          context,
+          schema: schema as SchemaWithType<'void'>,
+        }),
+      };
   }
 };
 
@@ -767,6 +799,7 @@ const schemaToZodSchema = ({
 }): ts.Expression => {
   const file = context.file({ id: zodId })!;
 
+  let anyType: string | undefined;
   let expression: ts.Expression | undefined;
   let identifier: ReturnType<typeof file.identifier> | undefined;
 
@@ -798,6 +831,7 @@ const schemaToZodSchema = ({
     if (!identifierRef.name) {
       const ref = context.resolveIrRef<IR.SchemaObject>(schema.$ref);
       expression = schemaToZodSchema({
+        $ref: schema.$ref,
         context,
         result,
         schema: ref,
@@ -835,11 +869,13 @@ const schemaToZodSchema = ({
       }
     }
   } else if (schema.type) {
-    expression = schemaTypeToZodSchema({
+    const zodSchema = schemaTypeToZodSchema({
       context,
       result,
       schema,
     });
+    anyType = zodSchema.anyType;
+    expression = zodSchema.expression;
   } else if (schema.items) {
     schema = deduplicateSchema({ schema });
 
@@ -902,13 +938,15 @@ const schemaToZodSchema = ({
     }
   } else {
     // catch-all fallback for failed schemas
-    expression = schemaTypeToZodSchema({
+    const zodSchema = schemaTypeToZodSchema({
       context,
       result,
       schema: {
         type: 'unknown',
       },
     });
+    anyType = zodSchema.anyType;
+    expression = zodSchema.expression;
   }
 
   if ($ref) {
@@ -951,7 +989,7 @@ const schemaToZodSchema = ({
   }
 
   // emit nodes only if $ref points to a reusable component
-  if (identifier?.name) {
+  if (identifier && identifier.name && identifier.created) {
     const statement = compiler.constVariable({
       exportConst: true,
       expression: expression!,
@@ -959,7 +997,7 @@ const schemaToZodSchema = ({
       typeName: result.hasCircularReference
         ? (compiler.propertyAccessExpression({
             expression: zIdentifier,
-            name: 'ZodTypeAny',
+            name: anyType || 'ZodTypeAny',
           }) as unknown as ts.TypeNode)
         : undefined,
     });
