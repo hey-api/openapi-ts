@@ -650,6 +650,22 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'generates Zod schemas',
     },
+    {
+      config: createConfig({
+        input: 'zod-circular-ref.json',
+        output: 'zod-circular-ref',
+        plugins: ['zod'],
+      }),
+      description: 'Zod schemas with circular reference',
+    },
+    {
+      config: createConfig({
+        input: 'zod-circular-ref-2.yaml',
+        output: 'zod-circular-ref-2',
+        plugins: ['zod'],
+      }),
+      description: 'Zod schemas with circular reference 2',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
