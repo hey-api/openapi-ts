@@ -1,3 +1,5 @@
+import type { Plugin } from '../../utils';
+
 export interface UpdateApiExecutorSchema {
   client: string;
   directory: string;
@@ -6,7 +8,7 @@ export interface UpdateApiExecutorSchema {
    */
   force?: boolean;
   name: string;
-  plugins: string[];
+  plugins: Plugin[];
   scope: string;
   spec: string;
   /**

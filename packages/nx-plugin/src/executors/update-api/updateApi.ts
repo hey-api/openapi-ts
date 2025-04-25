@@ -1,14 +1,17 @@
 import { existsSync, writeFileSync } from 'node:fs';
-import { cp, mkdir, readFile, rm } from 'node:fs/promises';
+import { cp, readFile, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import type { PromiseExecutor } from '@nx/devkit';
-import { logger } from '@nx/devkit';
+import { logger, names } from '@nx/devkit';
+import { format } from 'prettier';
 
 import {
   bundleAndDereferenceSpecFile,
   compareSpecs,
+  formatFiles,
   generateClientCode,
+  makeDir,
 } from '../../utils';
 import { CONSTANTS } from '../../vars';
 import type { UpdateApiExecutorSchema } from './schema';
@@ -40,7 +43,7 @@ async function setup({
 
   if (!existsSync(absoluteTempApiFolder)) {
     logger.debug(`Creating executor temp api folder: ${absoluteTempApiFolder}`);
-    await mkdir(absoluteTempApiFolder, { recursive: true });
+    await makeDir(absoluteTempApiFolder);
     logger.debug(`Created temp API folder: ${absoluteTempApiFolder}`);
   } else {
     logger.debug(`Temp API folder already exists: ${absoluteTempApiFolder}`);
@@ -129,7 +132,11 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _context,
 ) => {
-  const tempFolder = options.tempFolder ?? CONSTANTS.TMP_DIR_NAME;
+  const tempFolder =
+    // use the provided temp folder or use the default temp folder and append the project name to it
+    // we append the project name to the temp folder to avoid conflicts between different projects using the same temp folder
+    options.tempFolder ??
+    join(CONSTANTS.TMP_DIR_NAME, names(options.name).fileName);
   const absoluteTempFolder = join(process.cwd(), tempFolder);
   const force = options.force ?? false;
 
@@ -160,6 +167,7 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
       logger.info('No changes detected in the API spec.');
       if (!force) {
         logger.info('Force flag is false. Skipping client code generation.');
+        await cleanup(absoluteTempFolder);
         return { success: true };
       } else {
         logger.info('Force flag is true. Generating new client code...');
@@ -175,7 +183,7 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
     const absoluteGeneratedTempDir = join(process.cwd(), generatedTempDir);
 
     if (!existsSync(absoluteGeneratedTempDir)) {
-      await mkdir(absoluteGeneratedTempDir);
+      await makeDir(absoluteGeneratedTempDir);
     }
 
     // Generate new client code
@@ -200,7 +208,10 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
       } else {
         logger.debug('No existing spec file found. Creating...');
       }
-      writeFileSync(absoluteExistingSpecPath, newSpecString);
+      const formattedSpec = await format(newSpecString, {
+        parser: 'yaml',
+      });
+      writeFileSync(absoluteExistingSpecPath, formattedSpec);
       logger.debug(`Spec file updated successfully`);
     } else {
       logger.error(
@@ -224,10 +235,16 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
 
     // Remove old generated directory if it exists
     if (existsSync(absoluteProjectGeneratedDir)) {
+      logger.debug(
+        `Removing old generated directory: ${absoluteProjectGeneratedDir}`,
+      );
       await rm(absoluteProjectGeneratedDir, {
         force: true,
         recursive: true,
       });
+      logger.debug(
+        `Old generated directory removed successfully: ${absoluteProjectGeneratedDir}`,
+      );
     }
 
     // Copy new generated directory
@@ -235,23 +252,33 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
       recursive: true,
     });
 
+    logger.debug('Formatting generated directory...');
+    await formatFiles(absoluteProjectGeneratedDir);
+
     logger.info('Successfully updated API client and spec files.');
+    await cleanup(absoluteTempFolder);
     return { success: true };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.debug(`Error details: ${errorMessage}.`);
-    return { success: false };
-  } finally {
+    logger.error(`Error details: ${errorMessage}.`);
     await cleanup(absoluteTempFolder);
+    return { error: errorMessage, success: false };
   }
 };
 
-async function cleanup(tempFolder: string) {
-  const absoluteTempFolder = join(process.cwd(), tempFolder);
+async function cleanup(absoluteTempFolder: string) {
+  logger.debug('Cleaning up executor environment...');
 
   if (existsSync(absoluteTempFolder)) {
+    logger.debug(`Removing temp folder: ${absoluteTempFolder}`);
     await rm(absoluteTempFolder, { force: true, recursive: true });
+    logger.debug(`Temp folder removed successfully: ${absoluteTempFolder}`);
+  } else {
+    logger.debug(
+      `Temp folder does not exist: ${absoluteTempFolder}. Skipping cleanup.`,
+    );
   }
+  logger.debug('Executor  cleaned up successfully.');
 }
 
 export default runExecutor;

@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     '<%= clientType %>',
     <% for(let x = 0; x < plugins.length; x++) { %>
-      '<%= plugins[x] %>'
+      '<%= plugins[x] %>',
     <% } %>
   ],
 });

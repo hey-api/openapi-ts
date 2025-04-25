@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import type { initConfigs } from '@hey-api/openapi-ts/internal';
@@ -9,6 +9,7 @@ import { afterAll, describe, expect, it, vi } from 'vitest';
 
 import generator from '../../generators/openapi-client/openapiClient';
 import { getGeneratorOptions, TestOptions } from '../../test-utils';
+import { makeDir } from '../../utils';
 import { CONSTANTS } from '../../vars';
 import type { UpdateApiExecutorSchema } from './schema';
 import executor from './updateApi';
@@ -55,7 +56,7 @@ const getExecutorOptions = async (name: string) => {
   // Create the API directory and spec file
   const absoluteApiDir = join(process.cwd(), apiDir);
   if (!existsSync(absoluteApiDir)) {
-    await mkdir(absoluteApiDir, { recursive: true });
+    await makeDir(absoluteApiDir);
   }
   const specPath = join(apiDir, testSpecName);
   const absoluteSpecPath = join(process.cwd(), specPath);
@@ -140,9 +141,7 @@ describe('UpdateApi Executor', () => {
       'api',
       'invalid.yaml',
     );
-    await mkdir(join(process.cwd(), options.directory, options.name, 'api'), {
-      recursive: true,
-    });
+    await makeDir(join(process.cwd(), options.directory, options.name, 'api'));
     await writeFile(invalidSpecPath, 'invalid: yaml');
     options.spec = invalidSpecPath;
 
@@ -197,16 +196,13 @@ describe('UpdateApi Executor', () => {
       'new-spec.yaml',
     );
     const existingSpec = await readFile(existingSpecPath, 'utf-8');
-    await mkdir(
+    await makeDir(
       join(
         process.cwd(),
         options.directory,
         options.name,
         CONSTANTS.SPEC_DIR_NAME,
       ),
-      {
-        recursive: true,
-      },
     );
     await writeFile(newSpecPath, existingSpec);
     options.spec = newSpecPath;
@@ -257,9 +253,7 @@ paths:
 `;
     await generator(tree, generatorOptions);
 
-    await mkdir(absoluteApiDir, {
-      recursive: true,
-    });
+    await makeDir(absoluteApiDir);
     if (existsSync(v2SpecPath)) {
       logger.debug(`Spec file already exists: ${v2SpecPath}`);
       await writeFile(v2SpecPath, v2Spec);
