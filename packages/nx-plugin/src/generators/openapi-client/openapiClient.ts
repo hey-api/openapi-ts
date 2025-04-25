@@ -1,7 +1,8 @@
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { mkdir, rm } from 'node:fs/promises';
+import { existsSync, writeFileSync } from 'node:fs';
+import { rm } from 'node:fs/promises';
 import { isAbsolute, join, resolve } from 'node:path';
 
+import { defaultPlugins } from '@hey-api/openapi-ts';
 import type { ProjectConfiguration, Tree } from '@nx/devkit';
 import {
   addDependenciesToPackageJson,
@@ -22,14 +23,17 @@ import {
 
 import packageJson from '../../../package.json';
 import type { UpdateApiExecutorSchema } from '../../executors/update-api/schema';
+import type { Plugin } from '../../utils';
 import {
   bundleAndDereferenceSpecFile,
   generateClientCode,
   generateClientCommand,
   getPackageName,
+  getPluginName,
   getVersionOfPackage,
   isAFile,
   isUrl,
+  makeDir,
 } from '../../utils';
 import { CONSTANTS } from '../../vars';
 
@@ -59,7 +63,7 @@ const getClientPlugins = ({
   projectRoot,
   projectScope,
 }: NormalizedOptions & {
-  inputPlugins: string[];
+  inputPlugins: Plugin[];
 }): Record<string, ClientPluginOptions> => {
   const plugins: Record<string, ClientPluginOptions> = {
     '@tanstack/react-query': {
@@ -73,7 +77,7 @@ const getClientPlugins = ({
 
   // Filter the plugins that are in the inputPlugins array
   const filteredPlugins = Object.keys(plugins)
-    .filter((plugin) => inputPlugins.includes(plugin))
+    .filter((plugin) => inputPlugins.map(getPluginName).includes(plugin))
     .reduce(
       (acc, plugin) => {
         const keyedPlugin = plugin as keyof typeof plugins;
@@ -120,6 +124,10 @@ const testRunners: Record<
 };
 
 export interface OpenApiClientGeneratorSchema {
+  /**
+   * Whether to use the class style for the generated code, defaults to `false`
+   */
+  asClass?: boolean;
   /**
    * The client to use for the OpenAPI client
    */
@@ -199,7 +207,7 @@ export default async function (
     // Create the temp folder
     if (!existsSync(tempFolder)) {
       logger.debug(`Creating temp folder: ${tempFolder}`);
-      await mkdir(tempFolder);
+      await makeDir(tempFolder);
     } else {
       logger.debug(`Temp folder already exists: ${tempFolder}`);
     }
@@ -225,7 +233,7 @@ export default async function (
 
     // Update the package.json file
     logger.info(`Updating package.json with dependencies`);
-    const installDeps = await updatePackageJson({
+    await updatePackageJson({
       clientType,
       isPrivate,
       plugins,
@@ -262,12 +270,9 @@ export default async function (
     // Return a function that installs the packages
     return async () => {
       logger.info(`Installing dependencies for ${projectName}`);
-      await installDeps();
       const packageManager = detectPackageManager(workspaceRoot);
-      const installDirectory = isWorkspacesEnabled(packageManager)
-        ? workspaceRoot
-        : projectRoot;
-      installPackagesTask(tree, true, installDirectory, packageManager);
+
+      installPackagesTask(tree, true, workspaceRoot, packageManager);
       logger.info(`Dependencies installed successfully`);
     };
   } catch (error) {
@@ -283,7 +288,7 @@ export default async function (
 export interface NormalizedOptions {
   clientType: string;
   isPrivate: boolean;
-  plugins: string[];
+  plugins: Plugin[];
   projectDirectory: string;
   projectName: string;
   projectRoot: string;
@@ -325,12 +330,28 @@ export function normalizeOptions(
       ).map((s) => s.trim()),
     ),
   );
-  const tempFolder = options.tempFolderDir ?? defaultTempFolder;
+  // use the provided temp folder or use the default temp folder and append the project name to it
+  // we append the project name to the temp folder to avoid conflicts between different projects using the same temp folder
+  const tempFolder =
+    options.tempFolderDir ?? join(defaultTempFolder, projectName);
+  const [default1, default2, ...rest] = defaultPlugins;
+  logger.debug('As Class', options.asClass);
+  const plugins = [
+    default1,
+    options.asClass
+      ? {
+          asClass: true,
+          name: default2,
+        }
+      : default2,
+    ...rest,
+    ...options.plugins,
+  ];
 
   return {
     clientType: options.client,
     isPrivate: options.private ?? true,
-    plugins: options.plugins,
+    plugins,
     projectDirectory,
     projectName,
     projectRoot,
@@ -408,7 +429,7 @@ export async function generateNxProject({
   const additionalEntryPoints: string[] = [];
 
   for (const plugin of plugins) {
-    const clientPlugin = clientPlugins[plugin];
+    const clientPlugin = clientPlugins[getPluginName(plugin)];
     if (clientPlugin) {
       additionalEntryPoints.push(...(clientPlugin.additionalEntryPoints ?? []));
     }
@@ -518,6 +539,7 @@ export async function generateNxProject({
   const generatedOptions: GeneratedOptions = {
     ...normalizedOptions,
     ...CONSTANTS,
+    plugins: plugins.map(getPluginName),
   };
 
   // Create directory structure
@@ -525,11 +547,11 @@ export async function generateNxProject({
   generateFiles(tree, templatePath, projectRoot, generatedOptions);
 
   for (const plugin of plugins) {
-    const pluginConfig = clientPlugins[plugin];
-    if (pluginConfig) {
+    const pluginConfiguration = clientPlugins[getPluginName(plugin)];
+    if (pluginConfiguration) {
       handlePlugin({
         generatedOptions,
-        plugin: pluginConfig,
+        pluginConfiguration,
         projectRoot,
         tree,
       });
@@ -552,17 +574,20 @@ export async function generateNxProject({
 
 function handlePlugin({
   generatedOptions,
-  plugin,
+  pluginConfiguration,
   projectRoot,
   tree,
 }: {
   generatedOptions: GeneratedOptions;
-  plugin: ClientPluginOptions;
+  pluginConfiguration: ClientPluginOptions;
   projectRoot: string;
   tree: Tree;
 }) {
-  if (plugin.templateFilesPath) {
-    const pluginTemplatePath = join(__dirname, plugin.templateFilesPath);
+  if (pluginConfiguration.templateFilesPath) {
+    const pluginTemplatePath = join(
+      __dirname,
+      pluginConfiguration.templateFilesPath,
+    );
     generateFiles(tree, pluginTemplatePath, projectRoot, generatedOptions);
   }
 }
@@ -619,7 +644,7 @@ export async function generateTestFiles({
 }
 
 /**
- * Generates the api client code using the spec file
+ * Gathers the OpenAPI spec file from the project and writes it to the temp folder
  */
 export async function generateApi({
   client,
@@ -630,7 +655,7 @@ export async function generateApi({
   tree,
 }: {
   client: string;
-  plugins: string[];
+  plugins: Plugin[];
   projectRoot: string;
   specFile: string;
   tempFolder: string;
@@ -680,7 +705,7 @@ export async function generateApi({
     // Read the bundled file back into the tree
     try {
       // write to temp spec destination
-      mkdirSync(absoluteSpecDestination, { recursive: true });
+      await makeDir(absoluteSpecDestination);
       writeFileSync(absoluteTempSpecDestination, dereferencedSpecString);
       logger.debug(
         `Dereferenced spec written to temp file: ${absoluteTempSpecDestination}`,
@@ -717,6 +742,7 @@ async function getPackageDetails(name: string) {
     packageVersion,
   };
 }
+
 /**
  * Updates the package.json file to add dependencies and scripts
  */
@@ -732,7 +758,7 @@ export async function updatePackageJson({
    * Whether to make the generated package private
    */
   isPrivate: boolean;
-  plugins: string[];
+  plugins: Plugin[];
   projectRoot: string;
   tree: Tree;
 }) {
@@ -743,7 +769,15 @@ export async function updatePackageJson({
   // add the openapi-ts as a dependency
   const openApiTsDetails = getPackageDetails('@hey-api/openapi-ts');
   // add the plugins as dependencies
-  const pluginDetails = plugins.map(getPackageDetails);
+  const pluginDetails = plugins
+    // filter out the default plugins as they are not packages
+    .filter(
+      (plugin) =>
+        !(defaultPlugins as unknown as string[]).includes(
+          getPluginName(plugin),
+        ),
+    )
+    .map((plugin) => getPackageDetails(getPluginName(plugin)));
 
   const results = await Promise.all([
     clientDetails,
@@ -765,12 +799,28 @@ export async function updatePackageJson({
     deps['axios'] = `^${axiosVersion}`;
   }
 
-  const installDeps = addDependenciesToPackageJson(
+  addDependenciesToPackageJson(
     tree,
     deps,
     {},
     join(projectRoot, 'package.json'),
   );
+
+  if (!isWorkspacesEnabled(detectPackageManager(workspaceRoot))) {
+    if (tree.exists(join(workspaceRoot, 'package.json'))) {
+      // if workspaces are not enabled then we need to install the dependencies to the root
+      addDependenciesToPackageJson(
+        tree,
+        deps,
+        {},
+        join(workspaceRoot, 'package.json'),
+      );
+    } else {
+      logger.warn(
+        'Could not add dependencies to root package.json. Packages may needed to be added manually.',
+      );
+    }
+  }
 
   // update the private and publishConfig field in the package.json file
   updateJson(tree, join(projectRoot, 'package.json'), (json) => {
@@ -783,8 +833,6 @@ export async function updatePackageJson({
     }
     return json;
   });
-
-  return installDeps;
 }
 
 export function updateTsConfig({
