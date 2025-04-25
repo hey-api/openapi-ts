@@ -1,11 +1,12 @@
 import { existsSync } from 'node:fs';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { logger, type Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 
 import type { OpenApiClientGeneratorSchema } from './generators/openapi-client/openapiClient';
+import { makeDir } from './utils';
 
 export const TestOptions = {
   client: '@hey-api/client-fetch',
@@ -49,7 +50,7 @@ paths:
   const tempDir = `${tempDirectory}/${name}`;
   const apiDir = `${tempDir}/api`;
   if (!existsSync(apiDir)) {
-    await mkdir(join(process.cwd(), apiDir), { recursive: true });
+    await makeDir(join(process.cwd(), apiDir));
   }
 
   // Write the spec file

@@ -1,4 +1,6 @@
 import { existsSync, lstatSync } from 'node:fs';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
 import type { JSONSchema } from '@hey-api/json-schema-ref-parser';
 import { createClient } from '@hey-api/openapi-ts';
@@ -9,6 +11,9 @@ import {
 } from '@hey-api/openapi-ts/internal';
 import { logger } from '@nx/devkit';
 import OpenApiDiff from 'openapi-diff';
+import { format } from 'prettier';
+
+export type Plugin = string | { asClass: boolean; name: string };
 
 export function generateClientCommand({
   clientType,
@@ -18,10 +23,10 @@ export function generateClientCommand({
 }: {
   clientType: string;
   outputPath: string;
-  plugins: string[];
+  plugins: Plugin[];
   specFile: string;
 }) {
-  return `npx @hey-api/openapi-ts -i ${specFile} -o ${outputPath} -c ${clientType}${plugins.length > 0 ? ` -p ${plugins.join(',')}` : ''}`;
+  return `npx @hey-api/openapi-ts -i ${specFile} -o ${outputPath} -c ${clientType}${plugins.length > 0 ? ` -p ${plugins.map(getPluginName).join(',')}` : ''}`;
 }
 
 /**
@@ -59,21 +64,30 @@ export async function generateClientCode({
 }: {
   clientType: string;
   outputPath: string;
-  plugins: string[];
+  plugins: Plugin[];
   specFile: string;
 }) {
   try {
+    const pluginNames = plugins.map(getPluginName);
     logger.info(`Generating client code using spec file...`);
+
     await createClient({
       input: specFile,
       output: outputPath,
-      plugins: [clientType, ...plugins] as ClientConfig['plugins'],
+      plugins: [clientType, ...pluginNames] as ClientConfig['plugins'],
     });
     logger.info(`Generated client code successfully.`);
   } catch (error) {
     logger.error(`Failed to generate client code: ${error}`);
     throw error;
   }
+}
+
+export function getPluginName(plugin: Plugin) {
+  if (typeof plugin === 'string') {
+    return plugin;
+  }
+  return plugin.name;
 }
 
 /**
@@ -87,7 +101,7 @@ export async function bundleAndDereferenceSpecFile({
 }: {
   client: string;
   outputPath: string;
-  plugins: string[];
+  plugins: Plugin[];
   specPath: string;
 }) {
   try {
@@ -210,7 +224,10 @@ function validateSpecVersions(
 export async function getSpecFiles(
   existingSpecPath: string,
   newSpecPath: string,
-) {
+): Promise<{
+  existingSpec: JSONSchema;
+  newSpec: JSONSchema;
+}> {
   logger.debug('Loading spec files...');
   const parsedExistingSpecTask = getSpecFile(existingSpecPath);
   const parsedNewSpecTask = getSpecFile(newSpecPath);
@@ -301,4 +318,28 @@ export function isAFile(isFileSystemFile: string) {
     return false;
   }
   return existsSync(isFileSystemFile) && lstatSync(isFileSystemFile).isFile();
+}
+
+/**
+ * Creates a directory if it does not exist
+ */
+export async function makeDir(path: string) {
+  await mkdir(path, { recursive: true });
+}
+
+export async function formatFiles(dir: string) {
+  const files = await readdir(dir, { withFileTypes: true });
+  const tasks = files.map(async (file) => {
+    const filePath = join(dir, file.name);
+    if (file.isDirectory()) {
+      await formatFiles(filePath);
+    } else if (file.name.endsWith('.ts')) {
+      const content = await readFile(filePath, 'utf-8');
+      const formatted = await format(content, {
+        parser: 'typescript',
+      });
+      await writeFile(filePath, formatted);
+    }
+  });
+  await Promise.all(tasks);
 }

@@ -61,6 +61,11 @@
       "type": "boolean",
       "description": "Whether to make the generated package private, put false if you want to publish the package.",
       "default": true
+    },
+    "asClass": {
+      "type": "boolean",
+      "description": "** not working ** Whether to use the class style for the generated code, defaults to `false`",
+      "default": false
     }
   },
   "required": ["name", "spec", "scope"]
