@@ -94,4 +94,4 @@ The generator adds the following dependencies to the created project:
 - [x] Support additional client types
 - [x] Dogfood the spec bundling and dereferencing
 - [ ] Support different test frameworks
-- [ ] Add linting generation for
+- [ ] Add linting generation
