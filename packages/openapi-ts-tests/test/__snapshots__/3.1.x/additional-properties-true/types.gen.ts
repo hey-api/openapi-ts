@@ -14,6 +14,10 @@ export type Baz = Foo & {
     [key: string]: unknown | string;
 };
 
+export type Qux = {
+    [key: string]: unknown;
+};
+
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };

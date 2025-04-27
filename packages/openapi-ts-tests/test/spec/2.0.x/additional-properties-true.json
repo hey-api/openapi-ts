@@ -1,0 +1,51 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenAPI 2.0 additional properties true example",
+    "version": "1"
+  },
+  "definitions": {
+    "Foo": {
+      "required": ["foo"],
+      "type": "object",
+      "properties": {
+        "foo": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "Bar": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Foo"
+        },
+        {
+          "type": "object",
+          "additionalProperties": true
+        }
+      ]
+    },
+    "Baz": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Foo"
+        },
+        {
+          "required": ["bar"],
+          "type": "object",
+          "properties": {
+            "bar": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "Qux": {
+      "type": "object",
+      "additionalProperties": {}
+    }
+  }
+}
