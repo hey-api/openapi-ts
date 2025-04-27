@@ -18,20 +18,28 @@ export type FooWriteWritable = BarWriteWritable & {
     foo?: string;
 };
 
-export type BarReadReadable = Baz | {
+export type BarReadReadable = Baz | QuxAllRead | {
     readonly bar?: string;
 };
 
-export type BarReadWritable = Baz;
+export type BarReadWritable = Baz | QuxAllWrite;
 
-export type BarWriteReadable = Baz;
+export type BarWriteReadable = Baz | QuxAllRead;
 
-export type BarWriteWritable = Baz | {
+export type BarWriteWritable = Baz | QuxAllWrite | {
     bar?: string;
 };
 
 export type Baz = {
     baz?: string;
+};
+
+export type QuxAllWrite = {
+    baz?: string;
+};
+
+export type QuxAllRead = {
+    readonly baz?: string;
 };
 
 export type PostFooReadWriteData = {
