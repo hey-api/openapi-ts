@@ -43,6 +43,10 @@
             "additionalProperties": true
           }
         ]
+      },
+      "Qux": {
+        "type": "object",
+        "additionalProperties": {}
       }
     }
   }

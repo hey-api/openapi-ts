@@ -47,6 +47,13 @@ describe(`OpenAPI ${version}`, () => {
   const scenarios = [
     {
       config: createConfig({
+        input: 'additional-properties-true.json',
+        output: 'additional-properties-true',
+      }),
+      description: 'allows arbitrary properties on objects',
+    },
+    {
+      config: createConfig({
         input: 'body-response-text-plain.yaml',
         output: 'body-response-text-plain',
         plugins: [

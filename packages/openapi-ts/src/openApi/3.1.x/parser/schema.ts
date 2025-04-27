@@ -321,13 +321,7 @@ const parseObject = ({
       schema: schema.additionalProperties,
       state,
     });
-    // no need to add "any" additional properties if there are no defined properties
-    if (
-      irSchema.properties ||
-      irAdditionalPropertiesSchema.type !== 'unknown'
-    ) {
-      irSchema.additionalProperties = irAdditionalPropertiesSchema;
-    }
+    irSchema.additionalProperties = irAdditionalPropertiesSchema;
   }
 
   if (schema.required) {
