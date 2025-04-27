@@ -48,9 +48,11 @@ const parseSchemaJsDoc = ({
 const parseSchemaMeta = ({
   irSchema,
   schema,
+  state,
 }: {
   irSchema: IR.SchemaObject;
   schema: SchemaObject;
+  state: SchemaState;
 }) => {
   if (schema.default !== undefined) {
     irSchema.default = schema.default;
@@ -105,6 +107,10 @@ const parseSchemaMeta = ({
     irSchema.accessScope = 'write';
     irSchema.accessScopes = mergeSchemaAccessScopes(irSchema.accessScopes, [
       'write',
+    ]);
+  } else if (state.isProperty) {
+    irSchema.accessScopes = mergeSchemaAccessScopes(irSchema.accessScopes, [
+      'both',
     ]);
   }
 };
@@ -223,7 +229,10 @@ const parseObject = ({
       const irPropertySchema = schemaToIrSchema({
         context,
         schema: property,
-        state,
+        state: {
+          ...state,
+          isProperty: true,
+        },
       });
       irSchema.accessScopes = mergeSchemaAccessScopes(
         irSchema.accessScopes,
@@ -786,6 +795,7 @@ const parseNullableType = ({
   parseSchemaMeta({
     irSchema: typeIrSchema,
     schema,
+    state,
   });
 
   if (typeIrSchema.default === null) {
@@ -828,6 +838,7 @@ const parseType = ({
   parseSchemaMeta({
     irSchema,
     schema,
+    state,
   });
 
   const type = getSchemaType({ schema });
@@ -876,6 +887,7 @@ const parseOneType = ({
     parseSchemaMeta({
       irSchema,
       schema,
+      state,
     });
   }
 
@@ -930,6 +942,7 @@ const parseOneType = ({
 const parseUnknown = ({
   irSchema,
   schema,
+  state,
 }: {
   context: IR.Context;
   irSchema?: IR.SchemaObject;
@@ -945,6 +958,7 @@ const parseUnknown = ({
   parseSchemaMeta({
     irSchema,
     schema,
+    state,
   });
 
   return irSchema;

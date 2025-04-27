@@ -48,10 +48,10 @@ const scopeToRef = ({
   plugin,
 }: {
   $ref: string;
-  accessScope?: 'read' | 'write';
+  accessScope?: 'both' | 'read' | 'write';
   plugin: Plugin.Instance<Config>;
 }) => {
-  if (!accessScope) {
+  if (!accessScope || accessScope === 'both') {
     return $ref;
   }
 
@@ -1063,6 +1063,32 @@ const operationToType = ({
   }
 };
 
+/**
+ * Is this schema split into a readable and writable variant? We won't split
+ * schemas if they don't contain any read-only or write-only fields or if they
+ * contain ONLY read-only or write-only fields. We split only when there's a
+ * mix of different access scopes for the schema.
+ */
+const isSchemaSplit = ({ schema }: { schema: IR.SchemaObject }): boolean => {
+  const scopes = schema.accessScopes;
+  return scopes !== undefined && scopes.length > 1;
+};
+
+const hasSchemaScope = ({
+  accessScope,
+  schema,
+}: {
+  accessScope: Required<State>['accessScope'];
+  schema: IR.SchemaObject;
+}): boolean => {
+  const scopes = schema.accessScopes;
+  return (
+    !scopes ||
+    (scopes !== undefined &&
+      (scopes.includes(accessScope) || scopes.includes('both')))
+  );
+};
+
 export const schemaToType = ({
   $ref,
   context,
@@ -1084,21 +1110,27 @@ export const schemaToType = ({
 
   if (schema.$ref) {
     const refSchema = context.resolveIrRef<IR.SchemaObject>(schema.$ref);
-    const finalRef = scopeToRef({
-      $ref: schema.$ref,
-      accessScope: refSchema.accessScopes?.length
-        ? state?.accessScope
-        : undefined,
-      plugin,
-    });
-    const identifier = file.identifier({
-      $ref: finalRef,
-      create: true,
-      namespace: 'type',
-    });
-    type = compiler.typeReferenceNode({
-      typeName: identifier.name || '',
-    });
+
+    if (
+      !state?.accessScope ||
+      hasSchemaScope({ accessScope: state.accessScope, schema: refSchema })
+    ) {
+      const finalRef = scopeToRef({
+        $ref: schema.$ref,
+        accessScope: isSchemaSplit({ schema: refSchema })
+          ? state?.accessScope
+          : undefined,
+        plugin,
+      });
+      const identifier = file.identifier({
+        $ref: finalRef,
+        create: true,
+        namespace: 'type',
+      });
+      type = compiler.typeReferenceNode({
+        typeName: identifier.name || '',
+      });
+    }
   } else if (schema.type) {
     type = schemaTypeToIdentifier({
       $ref,
@@ -1205,8 +1237,8 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
   context.subscribe('schema', ({ $ref, schema }) => {
     if (
-      !schema.accessScopes?.length ||
-      plugin.readOnlyWriteOnlyBehavior === 'off'
+      plugin.readOnlyWriteOnlyBehavior === 'off' ||
+      !isSchemaSplit({ schema })
     ) {
       schemaToType({
         $ref,
@@ -1218,34 +1250,37 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       return;
     }
 
-    // we need both scopes because as soon as the schema contains one,
-    // it cannot be used for both payloads and responses
-    schemaToType({
-      $ref: scopeToRef({
-        $ref,
-        accessScope: 'read',
+    if (hasSchemaScope({ accessScope: 'read', schema })) {
+      schemaToType({
+        $ref: scopeToRef({
+          $ref,
+          accessScope: 'read',
+          plugin,
+        }),
+        context,
         plugin,
-      }),
-      context,
-      plugin,
-      schema,
-      state: {
-        accessScope: 'read',
-      },
-    });
-    schemaToType({
-      $ref: scopeToRef({
-        $ref,
-        accessScope: 'write',
+        schema,
+        state: {
+          accessScope: 'read',
+        },
+      });
+    }
+
+    if (hasSchemaScope({ accessScope: 'write', schema })) {
+      schemaToType({
+        $ref: scopeToRef({
+          $ref,
+          accessScope: 'write',
+          plugin,
+        }),
+        context,
         plugin,
-      }),
-      context,
-      plugin,
-      schema,
-      state: {
-        accessScope: 'write',
-      },
-    });
+        schema,
+        state: {
+          accessScope: 'write',
+        },
+      });
+    }
   });
 
   context.subscribe('parameter', ({ $ref, parameter }) => {

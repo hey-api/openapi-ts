@@ -77,6 +77,8 @@ components:
     BarRead:
       anyOf:
         - $ref: '#/components/schemas/Baz'
+        - $ref: '#/components/schemas/QuxAllWrite'
+        - $ref: '#/components/schemas/QuxAllRead'
         - type: object
           properties:
             bar:
@@ -85,6 +87,8 @@ components:
     BarWrite:
       anyOf:
         - $ref: '#/components/schemas/Baz'
+        - $ref: '#/components/schemas/QuxAllWrite'
+        - $ref: '#/components/schemas/QuxAllRead'
         - type: object
           properties:
             bar:
@@ -94,4 +98,16 @@ components:
       type: object
       properties:
         baz:
+          type: string
+    QuxAllWrite:
+      type: object
+      properties:
+        baz:
+          writeOnly: true
+          type: string
+    QuxAllRead:
+      type: object
+      properties:
+        baz:
+          readOnly: true
           type: string

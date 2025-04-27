@@ -36,7 +36,8 @@ export default defineConfig(() => {
       //   openapi: '3.1.0',
       //   paths: {},
       // },
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'zod-bigint-min-max.json'),
+      // path: path.resolve(__dirname, 'spec', '3.1.x', 'read-write-only.yaml'),
+      path: path.resolve(__dirname, 'spec', 'v2.json'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -117,7 +118,7 @@ export default defineConfig(() => {
       },
       {
         // exportFromIndex: true,
-        name: 'zod',
+        // name: 'zod',
       },
     ],
     // useOptions: false,

@@ -150,7 +150,7 @@ interface IRSchemaObject
    * contains any read-only or write-only fields. This value controls whether
    * we split the schema into individual schemas for payloads and responses.
    */
-  accessScopes?: ReadonlyArray<'read' | 'write'>;
+  accessScopes?: ReadonlyArray<'both' | 'read' | 'write'>;
   /**
    * If type is `object`, `additionalProperties` can be used to either define
    * a schema for properties not included in `properties` or disallow such

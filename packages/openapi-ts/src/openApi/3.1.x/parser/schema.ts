@@ -54,9 +54,11 @@ const parseSchemaJsDoc = ({
 const parseSchemaMeta = ({
   irSchema,
   schema,
+  state,
 }: {
   irSchema: IR.SchemaObject;
   schema: SchemaObject;
+  state: SchemaState;
 }) => {
   if (schema.const !== undefined) {
     irSchema.const = schema.const;
@@ -135,6 +137,10 @@ const parseSchemaMeta = ({
     irSchema.accessScope = 'write';
     irSchema.accessScopes = mergeSchemaAccessScopes(irSchema.accessScopes, [
       'write',
+    ]);
+  } else if (state.isProperty) {
+    irSchema.accessScopes = mergeSchemaAccessScopes(irSchema.accessScopes, [
+      'both',
     ]);
   }
 };
@@ -282,7 +288,10 @@ const parseObject = ({
       const irPropertySchema = schemaToIrSchema({
         context,
         schema: property,
-        state,
+        state: {
+          ...state,
+          isProperty: true,
+        },
       });
       irSchema.accessScopes = mergeSchemaAccessScopes(
         irSchema.accessScopes,
@@ -843,6 +852,7 @@ const parseOneType = ({
     parseSchemaMeta({
       irSchema,
       schema,
+      state,
     });
   }
 
@@ -892,6 +902,7 @@ const parseOneType = ({
         context,
         irSchema,
         schema,
+        state,
       });
   }
 };
@@ -918,6 +929,7 @@ const parseManyTypes = ({
   parseSchemaMeta({
     irSchema: typeIrSchema,
     schema,
+    state,
   });
 
   if (schema.type.includes('null') && typeIrSchema.default === null) {
@@ -973,6 +985,7 @@ const parseType = ({
   parseSchemaMeta({
     irSchema,
     schema,
+    state,
   });
 
   const schemaTypes = getSchemaTypes({ schema });
@@ -1003,10 +1016,12 @@ const parseType = ({
 const parseUnknown = ({
   irSchema,
   schema,
+  state,
 }: {
   context: IR.Context;
   irSchema?: IR.SchemaObject;
   schema: SchemaObject;
+  state: SchemaState;
 }): IR.SchemaObject => {
   if (!irSchema) {
     irSchema = initIrSchema({ schema });
@@ -1017,6 +1032,7 @@ const parseUnknown = ({
   parseSchemaMeta({
     irSchema,
     schema,
+    state,
   });
 
   return irSchema;
@@ -1093,6 +1109,7 @@ export const schemaToIrSchema = ({
   return parseUnknown({
     context,
     schema,
+    state,
   });
 };
 
