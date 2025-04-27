@@ -434,6 +434,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'negative-property-names.json',
+        output: 'negative-property-names',
+      }),
+      description: 'handles negative property names correctly',
+    },
+    {
+      config: createConfig({
         input: 'object-properties-all-of.json',
         output: 'object-properties-all-of',
       }),
@@ -506,7 +513,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'ref-type.json',
         output: 'ref-type',
-        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
       }),
       description: 'handles extended $ref with type keyword',
     },
@@ -532,13 +538,6 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description:
         'does not set oneOf composition ref model properties as required',
-    },
-    {
-      config: createConfig({
-        input: 'negative-property-names.json',
-        output: 'negative-property-names',
-      }),
-      description: 'handles negative property names correctly',
     },
     {
       config: createConfig({
@@ -664,6 +663,14 @@ describe(`OpenAPI ${version}`, () => {
         plugins: ['zod'],
       }),
       description: 'generates Zod schemas',
+    },
+    {
+      config: createConfig({
+        input: 'zod-bigint-min-max.json',
+        output: 'zod-bigint-min-max',
+        plugins: ['zod'],
+      }),
+      description: 'Zod schemas with BigInt and min/max constraints',
     },
     {
       config: createConfig({
