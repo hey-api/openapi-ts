@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': patch
 ---
 
-"Fix handling of negative property names in TypeScript code generation"
+fix: correctly handle numeric property names with signs
