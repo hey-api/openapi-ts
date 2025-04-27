@@ -1,0 +1,63 @@
+openapi: 3.0.0
+info:
+  title: Test API
+  version: 1.0.0
+  description: A test API for testing spec comparison
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+security:
+  - apiKey: []
+paths:
+  /users:
+    get:
+      summary: Get all users
+      parameters:
+        - name: limit
+          in: query
+          description: Number of users to return
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+              example:
+                - id: 1
+                  name: John Doe
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: X-API-Key
+      in: header

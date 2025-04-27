@@ -10,7 +10,7 @@ import {
   parseOpenApiSpec,
 } from '@hey-api/openapi-ts/internal';
 import { logger } from '@nx/devkit';
-import OpenApiDiff from 'openapi-diff';
+import { compareOpenApi } from 'api-smart-diff';
 import { format } from 'prettier';
 
 export type Plugin = string | { asClass: boolean; name: string };
@@ -170,64 +170,13 @@ async function getSpecFile(path: string) {
   return spec.data;
 }
 
-function getSpecVersion(spec: JSONSchema) {
-  if ('openapi' in spec && typeof spec.openapi === 'string') {
-    return spec.openapi;
-  }
-
-  if ('swagger' in spec && typeof spec.swagger === 'string') {
-    return spec.swagger;
-  }
-  return 'unknown';
-}
-
-function validateSpecVersions(
-  newSpecVersion: string,
-  existingSpecVersion: string,
-) {
-  if (!newSpecVersion.startsWith('3') && !newSpecVersion.startsWith('2')) {
-    throw new Error('New spec is not a valid OpenAPI spec version of 2 or 3.');
-  }
-
-  logger.debug('Checking spec versions...');
-  logger.debug(`Existing spec version: ${existingSpecVersion}`);
-  logger.debug(`New spec version: ${newSpecVersion}`);
-  const existingVersionIs3 = existingSpecVersion.startsWith('3');
-  const newSpecVersionIs3 = newSpecVersion.startsWith('3');
-  const existingVersionIs2 = existingSpecVersion.startsWith('2');
-  const newSpecVersionIs2 = newSpecVersion.startsWith('2');
-
-  if (!newSpecVersionIs3 && !newSpecVersionIs2) {
-    throw new Error('New spec is not a valid OpenAPI spec version of 2 or 3.');
-  }
-
-  if (!existingVersionIs3 && !existingVersionIs2) {
-    logger.error(
-      'Existing spec is not a valid OpenAPI spec version of 2 or 3.',
-    );
-    throw new Error(
-      'Existing spec is not a valid OpenAPI spec version of 2 or 3.',
-    );
-  }
-
-  return {
-    existingVersionIs2,
-    existingVersionIs3,
-    newSpecVersionIs2,
-    newSpecVersionIs3,
-  };
-}
-
 /**
  * Fetches two spec files and returns them
  */
 export async function getSpecFiles(
   existingSpecPath: string,
   newSpecPath: string,
-): Promise<{
-  existingSpec: JSONSchema;
-  newSpec: JSONSchema;
-}> {
+) {
   logger.debug('Loading spec files...');
   const parsedExistingSpecTask = getSpecFile(existingSpecPath);
   const parsedNewSpecTask = getSpecFile(newSpecPath);
@@ -269,33 +218,16 @@ export async function compareSpecs(
     newSpecPath,
   );
 
-  const existingSpecVersion = getSpecVersion(existingSpec);
-  const newSpecVersion = getSpecVersion(newSpec);
-
-  const { existingVersionIs3, newSpecVersionIs3 } = validateSpecVersions(
-    newSpecVersion,
-    existingSpecVersion,
-  );
-
   logger.debug('Comparing specs...');
   // Compare specs
-  const diff = await OpenApiDiff.diffSpecs({
-    destinationSpec: {
-      content: JSON.stringify(newSpec),
-      format: newSpecVersionIs3 ? 'openapi3' : 'swagger2',
-      location: newSpecPath,
-    },
-    sourceSpec: {
-      content: JSON.stringify(existingSpec),
-      format: existingVersionIs3 ? 'openapi3' : 'swagger2',
-      location: existingSpecPath,
-    },
+  const { diffs } = compareOpenApi(existingSpec, newSpec);
+  const filteredDiffs = diffs.filter((diff) => {
+    if (diff.path.includes('examples') || diff.path.includes('example')) {
+      return false;
+    }
+    return true;
   });
-  const areSpecsEqual =
-    diff.breakingDifferencesFound === false &&
-    diff.nonBreakingDifferences.length === 0 &&
-    // TODO: figure out if we should check unclassifiedDifferences
-    diff.unclassifiedDifferences.length === 0;
+  const areSpecsEqual = filteredDiffs.length === 0;
 
   logger.debug(`Are specs equal: ${areSpecsEqual}`);
   return areSpecsEqual;
