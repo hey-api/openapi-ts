@@ -12,16 +12,24 @@ export type FooWrite = BarWrite & {
     foo?: string;
 };
 
-export type BarRead = Baz | {
+export type BarRead = Baz | QuxAllWrite | QuxAllRead | {
     readonly bar?: string;
 };
 
-export type BarWrite = Baz | {
+export type BarWrite = Baz | QuxAllWrite | QuxAllRead | {
     bar?: string;
 };
 
 export type Baz = {
     baz?: string;
+};
+
+export type QuxAllWrite = {
+    baz?: string;
+};
+
+export type QuxAllRead = {
+    readonly baz?: string;
 };
 
 export type PostFooReadWriteData = {
