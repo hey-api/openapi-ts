@@ -588,7 +588,7 @@ export type ModelWithPropertiesWritable = {
 /**
  * This is a model with one nested property
  */
-export type ModelWithNestedPropertiesReadable = {
+export type ModelWithNestedProperties = {
     readonly first: {
         readonly second: {
             readonly third: string | null;
