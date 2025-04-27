@@ -19,5 +19,5 @@ export type Qux = {
 };
 
 export type ClientOptions = {
-    baseUrl: `${string}://${string}` | (string & {});
+    baseUrl: string;
 };
