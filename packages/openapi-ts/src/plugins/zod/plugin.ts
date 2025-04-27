@@ -364,9 +364,16 @@ const objectTypeToZodSchema = ({
     });
 
     numberRegExp.lastIndex = 0;
-    let propertyName = numberRegExp.test(name)
-      ? ts.factory.createNumericLiteral(name)
-      : name;
+    let propertyName;
+    if (numberRegExp.test(name)) {
+      // For numeric literals, we'll handle negative numbers by using a string literal
+      // instead of trying to use a PrefixUnaryExpression
+      propertyName = name.startsWith('-')
+        ? ts.factory.createStringLiteral(name)
+        : ts.factory.createNumericLiteral(name);
+    } else {
+      propertyName = name;
+    }
     // TODO: parser - abstract safe property name logic
     if (
       ((name.match(/^[0-9]/) && name.match(/\D+/g)) || name.match(/\W/g)) &&
