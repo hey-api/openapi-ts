@@ -504,6 +504,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'ref-type.json',
+        output: 'ref-type',
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
+      }),
+      description: 'handles extended $ref with type keyword',
+    },
+    {
+      config: createConfig({
         input: 'required-all-of-ref.json',
         output: 'required-all-of-ref',
       }),
