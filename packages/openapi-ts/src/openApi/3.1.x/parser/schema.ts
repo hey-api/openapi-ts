@@ -782,15 +782,17 @@ const parseRef = ({
   schema: SchemaWithRequired<SchemaObject, '$ref'>;
   state: SchemaState;
 }): IR.SchemaObject => {
-  const irSchema = initIrSchema({ schema });
+  let irSchema = initIrSchema({ schema });
+
+  const irRefSchema: IR.SchemaObject = {};
 
   // refs using unicode characters become encoded, didn't investigate why
   // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
-  irSchema.$ref = decodeURI(schema.$ref);
+  irRefSchema.$ref = decodeURI(schema.$ref);
 
   if (!state.circularReferenceTracker.has(schema.$ref)) {
     const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
-    const irRefSchema = schemaToIrSchema({
+    const irResolvedRefSchema = schemaToIrSchema({
       context,
       schema: refSchema,
       state: {
@@ -798,11 +800,26 @@ const parseRef = ({
         $ref: schema.$ref,
       },
     });
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
+    irRefSchema.accessScopes = mergeSchemaAccessScopes(
       irRefSchema.accessScopes,
+      irResolvedRefSchema.accessScopes,
     );
   }
+
+  const schemaItems: Array<IR.SchemaObject> = [];
+  schemaItems.push(irRefSchema);
+
+  if (schema.type && typeof schema.type !== 'string') {
+    if (schema.type.includes('null')) {
+      schemaItems.push({ type: 'null' });
+    }
+  }
+
+  irSchema = addItemsToSchema({
+    items: schemaItems,
+    mutateSchemaOneItem: true,
+    schema: irSchema,
+  });
 
   return irSchema;
 };
