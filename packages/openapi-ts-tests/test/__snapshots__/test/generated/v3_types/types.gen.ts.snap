@@ -656,7 +656,9 @@ export type FreeFormObjectWithAdditionalPropertiesEqTrue = {
 /**
  * This is a free-form object with additionalProperties: {}.
  */
-export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = {};
+export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = {
+    [key: string]: unknown;
+};
 
 export type ModelWithConst = {
     String?: 'String';
