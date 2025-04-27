@@ -244,6 +244,25 @@ const nullTypeToZodSchema = ({
   return expression;
 };
 
+const numberParameter = ({
+  isBigInt,
+  value,
+}: {
+  isBigInt: boolean;
+  value: number;
+}) => {
+  const expression = compiler.valueToExpression({ value });
+
+  if (isBigInt) {
+    return compiler.callExpression({
+      functionName: 'BigInt',
+      parameters: [expression],
+    });
+  }
+
+  return expression;
+};
+
 const numberTypeToZodSchema = ({
   schema,
 }: {
@@ -295,7 +314,7 @@ const numberTypeToZodSchema = ({
         name: compiler.identifier({ text: 'gt' }),
       }),
       parameters: [
-        compiler.valueToExpression({ value: schema.exclusiveMinimum }),
+        numberParameter({ isBigInt, value: schema.exclusiveMinimum }),
       ],
     });
   } else if (schema.minimum !== undefined) {
@@ -304,7 +323,7 @@ const numberTypeToZodSchema = ({
         expression: numberExpression,
         name: compiler.identifier({ text: 'gte' }),
       }),
-      parameters: [compiler.valueToExpression({ value: schema.minimum })],
+      parameters: [numberParameter({ isBigInt, value: schema.minimum })],
     });
   }
 
@@ -315,7 +334,7 @@ const numberTypeToZodSchema = ({
         name: compiler.identifier({ text: 'lt' }),
       }),
       parameters: [
-        compiler.valueToExpression({ value: schema.exclusiveMaximum }),
+        numberParameter({ isBigInt, value: schema.exclusiveMaximum }),
       ],
     });
   } else if (schema.maximum !== undefined) {
@@ -324,7 +343,7 @@ const numberTypeToZodSchema = ({
         expression: numberExpression,
         name: compiler.identifier({ text: 'lte' }),
       }),
-      parameters: [compiler.valueToExpression({ value: schema.maximum })],
+      parameters: [numberParameter({ isBigInt, value: schema.maximum })],
     });
   }
 
