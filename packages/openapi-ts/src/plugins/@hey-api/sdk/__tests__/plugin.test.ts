@@ -111,6 +111,7 @@ describe('handlerLegacy', () => {
 
     files.types = new TypeScriptFile({
       dir: '/',
+      id: 'types',
       name: 'types.ts',
     });
 
@@ -234,6 +235,7 @@ describe('methodNameBuilder', () => {
 
     files.types = new TypeScriptFile({
       dir: '/',
+      id: 'types',
       name: 'types.ts',
     });
 
@@ -318,6 +320,7 @@ describe('methodNameBuilder', () => {
 
     files.types = new TypeScriptFile({
       dir: '/',
+      id: 'types',
       name: 'types.ts',
     });
 
@@ -404,6 +407,7 @@ describe('methodNameBuilder', () => {
 
     files.types = new TypeScriptFile({
       dir: '/',
+      id: 'types',
       name: 'types.ts',
     });
 

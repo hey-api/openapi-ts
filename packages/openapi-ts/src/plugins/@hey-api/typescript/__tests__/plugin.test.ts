@@ -103,6 +103,7 @@ describe('generateLegacyTypes', () => {
     const files = {
       types: new TypeScriptFile({
         dir: '/',
+        id: 'types',
         name: 'types.ts',
       }),
     };
