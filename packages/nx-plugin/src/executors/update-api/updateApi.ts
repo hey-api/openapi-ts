@@ -3,8 +3,12 @@ import { cp, readFile, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import type { PromiseExecutor } from '@nx/devkit';
-import { logger, names } from '@nx/devkit';
-import { format } from 'prettier';
+import { logger, names, workspaceRoot } from '@nx/devkit';
+import {
+  format,
+  type Options as PrettierOptions,
+  resolveConfig,
+} from 'prettier';
 
 import {
   bundleAndDereferenceSpecFile,
@@ -201,6 +205,13 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
     const apiDirectoryExists = existsSync(absoluteApiDirectory);
     const existingSpecFileExists = existsSync(absoluteExistingSpecPath);
 
+    const prettierConfig = await resolveConfig(workspaceRoot, {
+      editorconfig: true,
+    });
+    const prettierOptions: PrettierOptions = {
+      ...prettierConfig,
+    };
+
     // Copy new spec to project
     if (apiDirectoryExists) {
       if (existingSpecFileExists) {
@@ -209,8 +220,10 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
         logger.debug('No existing spec file found. Creating...');
       }
       const formattedSpec = await format(newSpecString, {
-        parser: 'yaml',
+        ...prettierOptions,
+        filepath: absoluteTempSpecPath,
       });
+
       writeFileSync(absoluteExistingSpecPath, formattedSpec);
       logger.debug(`Spec file updated successfully`);
     } else {
@@ -253,7 +266,7 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
     });
 
     logger.debug('Formatting generated directory...');
-    await formatFiles(absoluteProjectGeneratedDir);
+    await formatFiles(absoluteProjectGeneratedDir, prettierOptions);
 
     logger.info('Successfully updated API client and spec files.');
     await cleanup(absoluteTempFolder);
