@@ -32,6 +32,8 @@ Run in interactive mode `nx g @hey-api/nx-plugin:openapi-client`
   The defaults tags will not be added to the project if you specify this option.
 - `plugins`: Additional plugins to provide to the client api. [ string[] ] (optional)
 - `test`: The type of tests to setup. [ 'none' | 'vitest' ] (optional) (default: `none`)
+- `baseTsConfigName`: The name of the base tsconfig file that contains the compiler paths used to resolve the imports. Use this if the base tsconfig file is in the workspace root. If provided with a baseTsConfigPath then the baseTsConfigName will be added to the path. Do not use this if the baseTsConfigPath is a file. [ string ] (optional)
+- `baseTsConfigPath`: The path to the base tsconfig file that contains the compiler paths used to resolve the imports. Use this if the base tsconfig file is not in the workspace root. This can be a file or a directory. If it is a directory and the baseTsConfigName is provided then the baseTsConfigName will be added to the path. If it is a file and the baseTsConfigName is provided then there will be an error. [ string ] (optional)
 
 ##### Example
 
@@ -45,6 +47,8 @@ nx g @hey-api/nx-plugin:openapi-client --name=my-api --client=@hey-api/client-fe
 
 This executor updates the OpenAPI spec file and generates a new client.
 The options for the executor will be populated from the generator.
+
+No need to add them yourself, to modify the options manually edit the `project.json` of the generated project.
 
 Run `nx run @my-org/my-generated-package:updateApi`
 
