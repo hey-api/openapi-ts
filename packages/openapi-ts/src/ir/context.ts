@@ -136,6 +136,7 @@ export class IRContext<Spec extends Record<string, any> = any> {
     const createdFile = new TypeScriptFile({
       dir: outputDir,
       exportFromIndex: file.exportFromIndex,
+      id: file.id,
       identifierCase: file.identifierCase,
       name: `${outputParts[outputParts.length - 1]}.ts`,
     });

@@ -77,6 +77,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
 
   files.schemas = new TypeScriptFile({
     dir: config.output.path,
+    id: 'schemas',
     name: 'schemas.ts',
   });
 

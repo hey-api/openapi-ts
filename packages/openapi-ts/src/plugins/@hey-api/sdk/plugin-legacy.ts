@@ -802,6 +802,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
 
   files.sdk = new TypeScriptFile({
     dir: config.output.path,
+    id: 'sdk',
     name: `${sdkOutput}.ts`,
   });
 

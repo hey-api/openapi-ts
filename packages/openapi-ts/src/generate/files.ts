@@ -59,6 +59,7 @@ export class TypeScriptFile {
    */
   private _exportFromIndex: boolean;
   private _headers: Array<string> = [];
+  private _id: string;
   private _identifierCase: StringCase | undefined;
   private _imports = new Map<string, Map<string, ImportExportItemObject>>();
   private _items: Array<ts.Node | string> = [];
@@ -80,6 +81,7 @@ export class TypeScriptFile {
     dir,
     exportFromIndex = false,
     header = true,
+    id,
     identifierCase,
     name,
   }: {
@@ -89,10 +91,17 @@ export class TypeScriptFile {
      */
     exportFromIndex?: boolean;
     header?: boolean;
+    /**
+     * Unique file ID. Used to generate correct relative paths to the file.
+     * This should be refactored later as it's basically the file name unless
+     * nested inside another folder.
+     */
+    id: string;
     identifierCase?: StringCase;
     name: string;
   }) {
     this._exportFromIndex = exportFromIndex;
+    this._id = id;
     this._identifierCase = identifierCase;
     this._name = this._setName(name);
     this._path = path.resolve(dir, this._name);
@@ -136,6 +145,10 @@ export class TypeScriptFile {
 
   public get exportFromIndex(): boolean {
     return this._exportFromIndex;
+  }
+
+  public get id(): string {
+    return this._id;
   }
 
   public identifier({

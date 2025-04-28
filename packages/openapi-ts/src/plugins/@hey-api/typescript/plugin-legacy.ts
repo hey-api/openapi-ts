@@ -614,6 +614,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
 
   files.types = new TypeScriptFile({
     dir: config.output.path,
+    id: 'types',
     name: 'types.ts',
   });
 
