@@ -190,12 +190,12 @@ export const zModelWithDuplicateImports = z.object({
     propC: zModelWithString.optional()
 });
 
-export const zModelThatExtends = zModelWithString.merge(z.object({
+export const zModelThatExtends = zModelWithString.and(z.object({
     propExtendsA: z.string().optional(),
     propExtendsB: zModelWithString.optional()
 }));
 
-export const zModelThatExtendsExtends = zModelWithString.merge(zModelThatExtends).merge(z.object({
+export const zModelThatExtendsExtends = zModelWithString.and(zModelThatExtends).and(z.object({
     propExtendsC: z.string().optional(),
     propExtendsD: zModelWithString.optional()
 }));

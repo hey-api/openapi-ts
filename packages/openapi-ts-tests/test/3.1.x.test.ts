@@ -696,6 +696,14 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'Zod schemas with circular reference 2',
     },
+    {
+      config: createConfig({
+        input: 'zod-union-merge.json',
+        output: 'zod-union-merge',
+        plugins: ['zod'],
+      }),
+      description: "Zod schemas with merged unions (can't use .merge())",
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

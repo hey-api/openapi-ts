@@ -22,6 +22,7 @@ interface Result {
 export const zodId = 'zod';
 
 // frequently used identifiers
+const andIdentifier = compiler.identifier({ text: 'and' });
 const coerceIdentifier = compiler.identifier({ text: 'coerce' });
 const defaultIdentifier = compiler.identifier({ text: 'default' });
 const intersectionIdentifier = compiler.identifier({ text: 'intersection' });
@@ -29,7 +30,6 @@ const lazyIdentifier = compiler.identifier({ text: 'lazy' });
 const lengthIdentifier = compiler.identifier({ text: 'length' });
 const literalIdentifier = compiler.identifier({ text: 'literal' });
 const maxIdentifier = compiler.identifier({ text: 'max' });
-const mergeIdentifier = compiler.identifier({ text: 'merge' });
 const minIdentifier = compiler.identifier({ text: 'min' });
 const objectIdentifier = compiler.identifier({ text: 'object' });
 const optionalIdentifier = compiler.identifier({ text: 'optional' });
@@ -954,7 +954,7 @@ const schemaToZodSchema = ({
             expression = compiler.callExpression({
               functionName: compiler.propertyAccessExpression({
                 expression: expression!,
-                name: mergeIdentifier,
+                name: andIdentifier,
               }),
               parameters: [item],
             });
