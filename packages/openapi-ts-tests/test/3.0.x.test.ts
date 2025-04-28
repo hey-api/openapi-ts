@@ -168,6 +168,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-mapped-many.yaml',
+        output: 'discriminator-mapped-many',
+      }),
+      description: 'handles discriminator with multiple mappings',
+    },
+    {
+      config: createConfig({
         input: 'discriminator-one-of.yaml',
         output: 'discriminator-one-of',
       }),
