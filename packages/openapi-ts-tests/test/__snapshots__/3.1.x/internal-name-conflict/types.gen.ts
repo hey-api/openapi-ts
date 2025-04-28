@@ -14,6 +14,34 @@ export type CreateResponses = {
     200: unknown;
 };
 
+export type Create2Data = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/foo';
+};
+
+export type Create2Responses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type Create3Data = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/foo';
+};
+
+export type Create3Responses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };

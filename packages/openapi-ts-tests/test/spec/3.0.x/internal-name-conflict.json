@@ -6,6 +6,22 @@
   },
   "paths": {
     "/foo": {
+      "get": {
+        "operationId": "create__",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "create_",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "post": {
         "operationId": "create",
         "responses": {

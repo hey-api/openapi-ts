@@ -1,4 +1,5 @@
 import type { IR } from '../../../ir/types';
+import type { State } from '../../shared/types/state';
 import {
   ensureUniqueOperationId,
   operationToId,
@@ -16,7 +17,7 @@ import { schemaToIrSchema } from './schema';
 
 interface Operation
   extends Omit<OperationObject, 'parameters'>,
-    Pick<IR.OperationObject, 'id' | 'parameters'> {}
+    Pick<IR.OperationObject, 'parameters'> {}
 
 const parseOperationJsDoc = ({
   irOperation,
@@ -43,14 +44,24 @@ const parseOperationJsDoc = ({
 };
 
 const initIrOperation = ({
+  context,
   method,
   operation,
   path,
+  state,
 }: Pick<IR.OperationObject, 'method' | 'path'> & {
+  context: IR.Context;
   operation: Operation;
+  state: State;
 }): IR.OperationObject => {
   const irOperation: IR.OperationObject = {
-    id: operation.id,
+    id: operationToId({
+      context,
+      id: operation.operationId,
+      method,
+      path,
+      state,
+    }),
     method,
     path,
   };
@@ -69,12 +80,20 @@ const operationToIrOperation = ({
   operation,
   path,
   securitySchemesMap,
+  state,
 }: Pick<IR.OperationObject, 'method' | 'path'> & {
   context: IR.Context;
   operation: Operation;
   securitySchemesMap: Map<string, SecuritySchemeObject>;
+  state: State;
 }): IR.OperationObject => {
-  const irOperation = initIrOperation({ method, operation, path });
+  const irOperation = initIrOperation({
+    context,
+    method,
+    operation,
+    path,
+    state,
+  });
 
   if (operation.parameters) {
     irOperation.parameters = operation.parameters;
@@ -209,9 +228,9 @@ export const parseOperation = ({
   context,
   method,
   operation,
-  operationIds,
   path,
   securitySchemesMap,
+  state,
 }: {
   context: IR.Context;
   method: Extract<
@@ -219,15 +238,15 @@ export const parseOperation = ({
     'delete' | 'get' | 'head' | 'options' | 'patch' | 'post' | 'put' | 'trace'
   >;
   operation: Operation;
-  operationIds: Map<string, string>;
   path: keyof IR.PathsObject;
   securitySchemesMap: Map<string, SecuritySchemeObject>;
+  state: State;
 }) => {
   ensureUniqueOperationId({
     context,
     id: operation.operationId,
     method,
-    operationIds,
+    operationIds: state.operationIds,
     path,
   });
 
@@ -243,18 +262,12 @@ export const parseOperation = ({
     context.ir.servers = [...(context.ir.servers ?? []), ...operation.servers];
   }
 
-  operation.id = operationToId({
-    context,
-    id: operation.operationId,
-    method,
-    path,
-  });
-
   context.ir.paths[path][method] = operationToIrOperation({
     context,
     method,
     operation,
     path,
     securitySchemesMap,
+    state,
   });
 };
