@@ -791,6 +791,7 @@ const parseRef = ({
       state: {
         ...state,
         $ref: schema.$ref,
+        isProperty: false,
       },
     });
     irSchema.accessScopes = mergeSchemaAccessScopes(
