@@ -1,4 +1,5 @@
 import type { IR } from '../../../ir/types';
+import type { State } from '../../shared/types/state';
 import { canProcessRef, createFilters } from '../../shared/utils/filter';
 import { mergeParametersObjects } from '../../shared/utils/parameter';
 import type {
@@ -17,7 +18,10 @@ type PathKeys<T extends keyof PathsObject = keyof PathsObject> =
   keyof T extends infer K ? (K extends `/${string}` ? K : never) : never;
 
 export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
-  const operationIds = new Map<string, string>();
+  const state: State = {
+    ids: new Map(),
+    operationIds: new Map(),
+  };
   const securitySchemesMap = new Map<string, SecuritySchemeObject>();
 
   const excludeFilters = createFilters(context.config.input.exclude);
@@ -80,16 +84,15 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
         context,
         operation: {
           ...commonOperation,
-          id: '',
           parameters: parametersArrayToObject({
             context,
             operation: commonOperation,
             parameters: finalPathItem.parameters,
           }),
         },
-        operationIds,
         path: path as PathKeys,
         securitySchemesMap,
+        state,
       };
 
     const $refDelete = `#/paths${path}/delete`;

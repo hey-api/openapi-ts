@@ -52,6 +52,9 @@ describe('operationToId', () => {
           id,
           method,
           path,
+          state: {
+            ids: new Map(),
+          },
         }),
       ).toEqual(output);
     },

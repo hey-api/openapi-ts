@@ -1,4 +1,5 @@
 import type { IR } from '../../../ir/types';
+import type { State } from '../../shared/types/state';
 import { canProcessRef, createFilters } from '../../shared/utils/filter';
 import { mergeParametersObjects } from '../../shared/utils/parameter';
 import type {
@@ -16,7 +17,10 @@ import { parseSchema } from './schema';
 import { parseServers } from './server';
 
 export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
-  const operationIds = new Map<string, string>();
+  const state: State = {
+    ids: new Map(),
+    operationIds: new Map(),
+  };
   const securitySchemesMap = new Map<string, SecuritySchemeObject>();
 
   const excludeFilters = createFilters(context.config.input.exclude);
@@ -114,7 +118,6 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
         context,
         operation: {
           description: finalPathItem.description,
-          id: '',
           parameters: parametersArrayToObject({
             context,
             parameters: finalPathItem.parameters,
@@ -123,9 +126,9 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
           servers: finalPathItem.servers,
           summary: finalPathItem.summary,
         },
-        operationIds,
         path: path as keyof PathsObject,
         securitySchemesMap,
+        state,
       };
 
     const $refDelete = `#/paths${path}/delete`;
