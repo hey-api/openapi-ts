@@ -275,10 +275,10 @@ export const zModelSquare = z.object({
 export const zCompositionWithOneOfDiscriminator = z.union([
     z.object({
         kind: z.literal('circle').optional()
-    }).merge(zModelCircle),
+    }).and(zModelCircle),
     z.object({
         kind: z.literal('square').optional()
-    }).merge(zModelSquare)
+    }).and(zModelSquare)
 ]);
 
 export const zCompositionWithAnyOf = z.object({
@@ -366,7 +366,7 @@ export const zCompositionWithAllOfAndNullable = z.object({
     propA: z.union([
         z.object({
             boolean: z.boolean().optional()
-        }).merge(zModelWithEnum).merge(zModelWithArray).merge(zModelWithDictionary),
+        }).and(zModelWithEnum).and(zModelWithArray).and(zModelWithDictionary),
         z.null()
     ]).optional()
 });
@@ -388,7 +388,7 @@ export const zCompositionBaseModel = z.object({
     lastname: z.string().optional()
 });
 
-export const zCompositionExtendedModel = zCompositionBaseModel.merge(z.object({
+export const zCompositionExtendedModel = zCompositionBaseModel.and(z.object({
     age: z.number(),
     firstName: z.string(),
     lastname: z.string()
@@ -427,12 +427,12 @@ export const zModelWithDuplicateImports = z.object({
     propC: zModelWithString.optional()
 });
 
-export const zModelThatExtends = zModelWithString.merge(z.object({
+export const zModelThatExtends = zModelWithString.and(z.object({
     propExtendsA: z.string().optional(),
     propExtendsB: zModelWithString.optional()
 }));
 
-export const zModelThatExtendsExtends = zModelWithString.merge(zModelThatExtends).merge(z.object({
+export const zModelThatExtendsExtends = zModelWithString.and(zModelThatExtends).and(z.object({
     propExtendsC: z.string().optional(),
     propExtendsD: zModelWithString.optional()
 }));
@@ -723,7 +723,7 @@ export const zDummyBResponse = z.void();
 export const zCallWithResponseResponse = zImport;
 
 export const zCallWithDuplicateResponsesResponse = z.union([
-    zModelWithBoolean.merge(zModelWithInteger),
+    zModelWithBoolean.and(zModelWithInteger),
     zModelWithString
 ]);
 
