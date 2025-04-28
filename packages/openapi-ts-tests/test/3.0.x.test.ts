@@ -396,6 +396,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
+        plugins: ['@hey-api/typescript', 'zod'],
       }),
       description: 'handles null enums',
     },
