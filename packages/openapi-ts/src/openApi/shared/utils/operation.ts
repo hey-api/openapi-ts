@@ -1,6 +1,7 @@
 import type { IR } from '../../../ir/types';
 import { stringCase } from '../../../utils/stringCase';
 import { sanitizeNamespaceIdentifier } from '../../common/parser/sanitize';
+import type { State } from '../types/state';
 
 /**
  * Verifies that operation ID is unique. For now, we only warn when this isn't
@@ -45,33 +46,59 @@ export const ensureUniqueOperationId = ({
  */
 export const operationToId = ({
   context,
+  count = 1,
   id,
   method,
   path,
+  state,
 }: {
   context: IR.Context;
+  count?: number;
   id: string | undefined;
   method: string;
   path: string;
+  state: Pick<State, 'ids'>;
 }): string => {
+  let result: string;
+
   if (
     id &&
     (!context.config.plugins['@hey-api/sdk'] ||
       context.config.plugins['@hey-api/sdk'].operationId)
   ) {
-    return stringCase({
+    result = stringCase({
       case: 'camelCase',
       value: sanitizeNamespaceIdentifier(id),
     });
+  } else {
+    const urlWithoutPlaceholders = path
+      .replace(/{(.*?)}/g, 'by-$1')
+      // replace slashes with hyphens for camelcase method at the end
+      .replace(/[/:+]/g, '-');
+
+    result = stringCase({
+      case: 'camelCase',
+      value: `${method}-${urlWithoutPlaceholders}`,
+    });
   }
 
-  const urlWithoutPlaceholders = path
-    .replace(/{(.*?)}/g, 'by-$1')
-    // replace slashes with hyphens for camelcase method at the end
-    .replace(/[/:+]/g, '-');
+  if (count > 1) {
+    result = `${result}${count}`;
+  }
 
-  return stringCase({
-    case: 'camelCase',
-    value: `${method}-${urlWithoutPlaceholders}`,
-  });
+  if (state.ids.has(result)) {
+    return operationToId({
+      context,
+      count: count + 1,
+      id,
+      method,
+      path,
+      state,
+    });
+  }
+
+  const operationKey = `${method.toUpperCase()} ${path}`;
+  state.ids.set(result, operationKey);
+
+  return result;
 };

@@ -36,7 +36,12 @@ export default defineConfig(() => {
       //   openapi: '3.1.0',
       //   paths: {},
       // },
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.json'),
+      path: path.resolve(
+        __dirname,
+        'spec',
+        '3.0.x',
+        'internal-name-conflict.json',
+      ),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -83,7 +88,7 @@ export default defineConfig(() => {
         // auth: false,
         // client: false,
         // include...
-        // name: '@hey-api/sdk',
+        name: '@hey-api/sdk',
         // operationId: false,
         // serviceNameBuilder: '^Parameters',
         // throwOnError: true,
@@ -114,7 +119,7 @@ export default defineConfig(() => {
       },
       {
         exportFromIndex: true,
-        name: '@tanstack/react-query',
+        // name: '@tanstack/react-query',
       },
       {
         // exportFromIndex: true,

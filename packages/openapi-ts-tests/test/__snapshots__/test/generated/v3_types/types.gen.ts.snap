@@ -1428,21 +1428,21 @@ export type DuplicateNameData = {
     url: '/api/v{api-version}/duplicate';
 };
 
-export type DuplicateNameData = {
+export type DuplicateName2Data = {
     body?: never;
     path?: never;
     query?: never;
     url: '/api/v{api-version}/duplicate';
 };
 
-export type DuplicateNameData = {
+export type DuplicateName3Data = {
     body?: never;
     path?: never;
     query?: never;
     url: '/api/v{api-version}/duplicate';
 };
 
-export type DuplicateNameData = {
+export type DuplicateName4Data = {
     body?: never;
     path?: never;
     query?: never;
