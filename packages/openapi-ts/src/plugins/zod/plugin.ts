@@ -51,7 +51,7 @@ const arrayTypeToZodSchema = ({
 }): ts.CallExpression => {
   const functionName = compiler.propertyAccessExpression({
     expression: zIdentifier,
-    name: compiler.identifier({ text: schema.type }),
+    name: compiler.identifier({ text: 'array' }),
   });
 
   let arrayExpression: ts.CallExpression | undefined;
@@ -163,7 +163,7 @@ const booleanTypeToZodSchema = ({
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
-      name: compiler.identifier({ text: schema.type }),
+      name: compiler.identifier({ text: 'boolean' }),
     }),
   });
   return expression;
@@ -178,6 +178,8 @@ const enumTypeToZodSchema = ({
 }): ts.CallExpression => {
   const enumMembers: Array<ts.LiteralExpression> = [];
 
+  let isNullable = false;
+
   for (const item of schema.items ?? []) {
     // Zod supports only string enums
     if (item.type === 'string' && typeof item.const === 'string') {
@@ -186,6 +188,8 @@ const enumTypeToZodSchema = ({
           text: item.const,
         }),
       );
+    } else if (item.type === 'null' || item.const === null) {
+      isNullable = true;
     }
   }
 
@@ -198,10 +202,10 @@ const enumTypeToZodSchema = ({
     });
   }
 
-  const enumExpression = compiler.callExpression({
+  let enumExpression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
-      name: compiler.identifier({ text: schema.type }),
+      name: compiler.identifier({ text: 'enum' }),
     }),
     parameters: [
       compiler.arrayLiteralExpression({
@@ -211,10 +215,20 @@ const enumTypeToZodSchema = ({
     ],
   });
 
+  if (isNullable) {
+    enumExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: enumExpression,
+        name: compiler.identifier({ text: 'nullable' }),
+      }),
+    });
+  }
+
   return enumExpression;
 };
 
 const neverTypeToZodSchema = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
   context: IR.Context;
@@ -223,13 +237,14 @@ const neverTypeToZodSchema = ({
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
-      name: compiler.identifier({ text: schema.type }),
+      name: compiler.identifier({ text: 'never' }),
     }),
   });
   return expression;
 };
 
 const nullTypeToZodSchema = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
   context: IR.Context;
@@ -238,7 +253,7 @@ const nullTypeToZodSchema = ({
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
-      name: compiler.identifier({ text: schema.type }),
+      name: compiler.identifier({ text: 'null' }),
     }),
   });
   return expression;
@@ -484,7 +499,7 @@ const stringTypeToZodSchema = ({
   let stringExpression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
-      name: compiler.identifier({ text: schema.type }),
+      name: compiler.identifier({ text: 'string' }),
     }),
   });
 
@@ -630,6 +645,7 @@ const tupleTypeToZodSchema = ({
 };
 
 const undefinedTypeToZodSchema = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
   context: IR.Context;
@@ -638,13 +654,14 @@ const undefinedTypeToZodSchema = ({
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
-      name: compiler.identifier({ text: schema.type }),
+      name: compiler.identifier({ text: 'undefined' }),
     }),
   });
   return expression;
 };
 
 const unknownTypeToZodSchema = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
   context: IR.Context;
@@ -653,13 +670,14 @@ const unknownTypeToZodSchema = ({
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
-      name: compiler.identifier({ text: schema.type }),
+      name: compiler.identifier({ text: 'unknown' }),
     }),
   });
   return expression;
 };
 
 const voidTypeToZodSchema = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
   context: IR.Context;
@@ -668,7 +686,7 @@ const voidTypeToZodSchema = ({
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
-      name: compiler.identifier({ text: schema.type }),
+      name: compiler.identifier({ text: 'void' }),
     }),
   });
   return expression;
