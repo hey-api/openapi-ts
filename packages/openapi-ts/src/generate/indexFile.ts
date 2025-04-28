@@ -9,6 +9,7 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
 
   files.index = new TypeScriptFile({
     dir: config.output.path,
+    id: 'index',
     name: 'index.ts',
   });
 

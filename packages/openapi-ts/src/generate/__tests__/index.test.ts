@@ -68,14 +68,17 @@ describe('generateIndexFile', () => {
     const files: Parameters<typeof generateIndexFile>[0]['files'] = {
       schemas: new TypeScriptFile({
         dir: '/',
+        id: 'schemas',
         name: 'schemas.ts',
       }),
       sdk: new TypeScriptFile({
         dir: '/',
+        id: 'sdk',
         name: 'sdk.ts',
       }),
       types: new TypeScriptFile({
         dir: '/',
+        id: 'types',
         name: 'types.ts',
       }),
     };
