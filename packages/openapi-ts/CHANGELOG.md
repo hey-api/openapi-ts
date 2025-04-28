@@ -1,5 +1,29 @@
 # @hey-api/openapi-ts
 
+## 0.66.7
+
+### Patch Changes
+
+- [#1981](https://github.com/hey-api/openapi-ts/pull/1981) [`955b95a`](https://github.com/hey-api/openapi-ts/commit/955b95ab051401bdbeaa8cfb93a7a7b707cb7529) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle schemas with all write-only or read-only fields
+
+- [#1990](https://github.com/hey-api/openapi-ts/pull/1990) [`2fb1689`](https://github.com/hey-api/openapi-ts/commit/2fb1689b6538d32d123235175159d412df988241) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: avoid generating duplicate operation ids when sanitizing input
+
+- [#1991](https://github.com/hey-api/openapi-ts/pull/1991) [`b6e654a`](https://github.com/hey-api/openapi-ts/commit/b6e654a6e18698f3c554848f8b8113e30f108fc4) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: Zod schemas use .and() instead of .merge()
+
+- [#1919](https://github.com/hey-api/openapi-ts/pull/1919) [`ec62470`](https://github.com/hey-api/openapi-ts/commit/ec624709b1fb07da8d7234fe851561054dc68150) Thanks [@ngalluzzo](https://github.com/ngalluzzo)! - fix: correctly handle numeric property names with signs
+
+- [#1984](https://github.com/hey-api/openapi-ts/pull/1984) [`0f305e0`](https://github.com/hey-api/openapi-ts/commit/0f305e06337758ee16c801ad437d9ce0996fc8b0) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: Zod plugin handles nullable enums
+
+- [#1986](https://github.com/hey-api/openapi-ts/pull/1986) [`dbebff8`](https://github.com/hey-api/openapi-ts/commit/dbebff8dcba4c93d0c534e6e48e59e2aaaffd540) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle discriminator with multiple mappings to the same schema
+
+- [#1980](https://github.com/hey-api/openapi-ts/pull/1980) [`0d7bede`](https://github.com/hey-api/openapi-ts/commit/0d7bede6e40553ae1c4c888770c84e55732b3cae) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: Zod schemas with BigInt and min/max constraints
+
+- [#1987](https://github.com/hey-api/openapi-ts/pull/1987) [`71e2fd0`](https://github.com/hey-api/openapi-ts/commit/71e2fd029f2374ed8d2eaa01beecf254757e08d8) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correct path to nested plugin files when using exportFromIndex
+
+- [#1978](https://github.com/hey-api/openapi-ts/pull/1978) [`267f4b3`](https://github.com/hey-api/openapi-ts/commit/267f4b3730f2a477906e4e1593154dcd1723e554) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle extended `$ref` with `type` keyword in OpenAPI 3.1
+
+- [#1982](https://github.com/hey-api/openapi-ts/pull/1982) [`1e6d74f`](https://github.com/hey-api/openapi-ts/commit/1e6d74f8321af5c61f86318b835d25db38609b03) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle additionalProperties empty object as unknown instead of preserving an empty interface
+
 ## 0.66.6
 
 ### Patch Changes
