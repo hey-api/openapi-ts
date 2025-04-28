@@ -1,14 +1,20 @@
 import { refToName } from '../../../utils/ref';
 
-export const discriminatorValue = (
+export const discriminatorValues = (
   $ref: string,
   mapping?: Record<string, string>,
-) => {
+): ReadonlyArray<string> => {
+  const values: Array<string> = [];
+
   for (const name in mapping) {
-    const refMapped = mapping[name];
-    if (refMapped === $ref) {
-      return name;
+    if (mapping[name] === $ref) {
+      values.push(name);
     }
   }
-  return refToName($ref);
+
+  if (!values.length) {
+    return [refToName($ref)];
+  }
+
+  return values;
 };

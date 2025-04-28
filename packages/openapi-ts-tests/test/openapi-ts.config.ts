@@ -36,7 +36,12 @@ export default defineConfig(() => {
       //   openapi: '3.1.0',
       //   paths: {},
       // },
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'enum-null.json'),
+      path: path.resolve(
+        __dirname,
+        'spec',
+        '3.1.x',
+        'discriminator-mapped-many.yaml',
+      ),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',

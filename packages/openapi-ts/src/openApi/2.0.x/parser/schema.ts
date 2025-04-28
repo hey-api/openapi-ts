@@ -6,7 +6,7 @@ import type {
   SchemaType,
   SchemaWithRequired,
 } from '../../shared/types/schema';
-import { discriminatorValue } from '../../shared/utils/discriminator';
+import { discriminatorValues } from '../../shared/utils/discriminator';
 import { mergeSchemaAccessScopes } from '../../shared/utils/schema';
 import type { SchemaObject } from '../types/spec';
 
@@ -335,12 +335,22 @@ const parseAllOf = ({
       const ref = context.resolveRef<SchemaObject>(compositionSchema.$ref);
       // `$ref` should be passed from the root `parseSchema()` call
       if (ref.discriminator && state.$ref) {
+        const values = discriminatorValues(state.$ref);
+        const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
+          (value) => ({
+            const: value,
+            type: 'string',
+          }),
+        );
         const irDiscriminatorSchema: IR.SchemaObject = {
           properties: {
-            [ref.discriminator]: {
-              const: discriminatorValue(state.$ref),
-              type: 'string',
-            },
+            [ref.discriminator]:
+              valueSchemas.length > 1
+                ? {
+                    items: valueSchemas,
+                    logicalOperator: 'or',
+                  }
+                : valueSchemas[0]!,
           },
           type: 'object',
         };
