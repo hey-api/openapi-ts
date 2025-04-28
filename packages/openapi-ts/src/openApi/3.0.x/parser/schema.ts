@@ -6,7 +6,7 @@ import type {
   SchemaType,
   SchemaWithRequired,
 } from '../../shared/types/schema';
-import { discriminatorValue } from '../../shared/utils/discriminator';
+import { discriminatorValues } from '../../shared/utils/discriminator';
 import { mergeSchemaAccessScopes } from '../../shared/utils/schema';
 import type { ReferenceObject, SchemaObject } from '../types/spec';
 
@@ -345,12 +345,25 @@ const parseAllOf = ({
       const ref = context.resolveRef<SchemaObject>(compositionSchema.$ref);
       // `$ref` should be passed from the root `parseSchema()` call
       if (ref.discriminator && state.$ref) {
+        const values = discriminatorValues(
+          state.$ref,
+          ref.discriminator.mapping,
+        );
+        const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
+          (value) => ({
+            const: value,
+            type: 'string',
+          }),
+        );
         const irDiscriminatorSchema: IR.SchemaObject = {
           properties: {
-            [ref.discriminator.propertyName]: {
-              const: discriminatorValue(state.$ref, ref.discriminator.mapping),
-              type: 'string',
-            },
+            [ref.discriminator.propertyName]:
+              valueSchemas.length > 1
+                ? {
+                    items: valueSchemas,
+                    logicalOperator: 'or',
+                  }
+                : valueSchemas[0]!,
           },
           type: 'object',
         };
@@ -502,15 +515,25 @@ const parseAnyOf = ({
 
     // `$ref` should be defined with discriminators
     if (schema.discriminator && '$ref' in compositionSchema) {
+      const values = discriminatorValues(
+        compositionSchema.$ref,
+        schema.discriminator.mapping,
+      );
+      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
+        (value) => ({
+          const: value,
+          type: 'string',
+        }),
+      );
       const irDiscriminatorSchema: IR.SchemaObject = {
         properties: {
-          [schema.discriminator.propertyName]: {
-            const: discriminatorValue(
-              compositionSchema.$ref,
-              schema.discriminator.mapping,
-            ),
-            type: 'string',
-          },
+          [schema.discriminator.propertyName]:
+            valueSchemas.length > 1
+              ? {
+                  items: valueSchemas,
+                  logicalOperator: 'or',
+                }
+              : valueSchemas[0]!,
         },
         type: 'object',
       };
@@ -667,15 +690,25 @@ const parseOneOf = ({
 
     // `$ref` should be defined with discriminators
     if (schema.discriminator && '$ref' in compositionSchema) {
+      const values = discriminatorValues(
+        compositionSchema.$ref,
+        schema.discriminator.mapping,
+      );
+      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
+        (value) => ({
+          const: value,
+          type: 'string',
+        }),
+      );
       const irDiscriminatorSchema: IR.SchemaObject = {
         properties: {
-          [schema.discriminator.propertyName]: {
-            const: discriminatorValue(
-              compositionSchema.$ref,
-              schema.discriminator.mapping,
-            ),
-            type: 'string',
-          },
+          [schema.discriminator.propertyName]:
+            valueSchemas.length > 1
+              ? {
+                  items: valueSchemas,
+                  logicalOperator: 'or',
+                }
+              : valueSchemas[0]!,
         },
         type: 'object',
       };
