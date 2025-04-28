@@ -90,6 +90,7 @@ export const generateLegacyOutput = async ({
     );
     files[plugin.name] = new TypeScriptFile({
       dir: outputDir,
+      id: `legacy-unused-${plugin.name}`,
       name: `${outputParts[outputParts.length - 1]}.ts`,
     });
     plugin._handlerLegacy({
@@ -162,7 +163,10 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
         // what's exported so we can support named exports
         indexFile.add(
           compiler.exportAllDeclaration({
-            module: `./${fileName}`,
+            module: indexFile.relativePathToFile({
+              context,
+              id: file.id,
+            }),
           }),
         );
       }
