@@ -39,7 +39,16 @@
       "description": "The plugins to be provided to @hey-api/openapi-ts",
       "default": [],
       "items": {
-        "type": "string"
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "properties": {
+              "asClass": { "type": "boolean" },
+              "name": { "type": "string" }
+            }
+          }
+        ]
       }
     },
     "force": {

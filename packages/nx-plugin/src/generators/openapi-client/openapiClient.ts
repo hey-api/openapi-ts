@@ -28,6 +28,7 @@ import {
   bundleAndDereferenceSpecFile,
   generateClientCode,
   generateClientCommand,
+  getBaseTsConfigPath,
   getPackageName,
   getPluginName,
   getVersionOfPackage,
@@ -128,6 +129,18 @@ export interface OpenApiClientGeneratorSchema {
    * Whether to use the class style for the generated code, defaults to `false`
    */
   asClass?: boolean;
+  /**
+   * The name of the base tsconfig file that contains the compiler paths used to resolve the imports, use this if the base tsconfig file is in the workspace root,
+   * if provided with a baseTsConfigPath then the baseTsConfigName will be added to the path.
+   * DO not use this if the baseTsConfigPath is a file.
+   */
+  baseTsConfigName?: string;
+  /**
+   * The path to the base tsconfig file that contains the compiler paths used to resolve the imports, use this if the base tsconfig file is not in the workspace root.
+   * This can be a file or a directory. If it is a directory and the baseTsConfigName is provided then the baseTsConfigName will be added to the path.
+   * If it is a file and the baseTsConfigName is provided then there will be an error.
+   */
+  baseTsConfigPath?: string;
   /**
    * The client to use for the OpenAPI client
    */
@@ -286,6 +299,8 @@ export default async function (
 }
 
 export interface NormalizedOptions {
+  baseTsConfigName: string | undefined;
+  baseTsConfigPath: string | undefined;
   clientType: string;
   isPrivate: boolean;
   plugins: Plugin[];
@@ -299,7 +314,11 @@ export interface NormalizedOptions {
   test: TestRunner | 'none';
 }
 
-export type GeneratedOptions = NormalizedOptions & typeof CONSTANTS;
+export type GeneratedOptions = NormalizedOptions &
+  typeof CONSTANTS & {
+    pathToTsConfig: string;
+    tsConfigName: string;
+  };
 
 type ProjectConfigurationTargets = NonNullable<ProjectConfiguration['targets']>;
 type ValueType<T extends Record<string, any>> = T[keyof T];
@@ -335,7 +354,6 @@ export function normalizeOptions(
   const tempFolder =
     options.tempFolderDir ?? join(defaultTempFolder, projectName);
   const [default1, default2, ...rest] = defaultPlugins;
-  logger.debug('As Class', options.asClass);
   const plugins = [
     default1,
     options.asClass
@@ -349,6 +367,8 @@ export function normalizeOptions(
   ];
 
   return {
+    baseTsConfigName: options.baseTsConfigName,
+    baseTsConfigPath: options.baseTsConfigPath,
     clientType: options.client,
     isPrivate: options.private ?? true,
     plugins,
@@ -413,6 +433,8 @@ export async function generateNxProject({
 }) {
   logger.debug(`Generating Nx project...`);
   const {
+    baseTsConfigName,
+    baseTsConfigPath,
     clientType,
     plugins,
     projectName,
@@ -476,6 +498,12 @@ export async function generateNxProject({
     );
   }
 
+  const { tsConfigDirectory, tsConfigName } = await getBaseTsConfigPath({
+    baseTsConfigName,
+    baseTsConfigPath,
+    projectRoot,
+  });
+
   // Create basic project structure
   addProjectConfiguration(tree, `${projectScope}/${projectName}`, {
     implicitDependencies: dependsOnProject ? [dependsOnProject] : [],
@@ -536,10 +564,15 @@ export async function generateNxProject({
     },
   });
 
+  /**
+   * The variables that are passed to the template files
+   */
   const generatedOptions: GeneratedOptions = {
     ...normalizedOptions,
     ...CONSTANTS,
+    pathToTsConfig: tsConfigDirectory,
     plugins: plugins.map(getPluginName),
+    tsConfigName,
   };
 
   // Create directory structure

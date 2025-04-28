@@ -66,6 +66,14 @@
       "type": "boolean",
       "description": "** not working ** Whether to use the class style for the generated code, defaults to `false`",
       "default": false
+    },
+    "baseTsConfigName": {
+      "type": "string",
+      "description": "The name of the base tsconfig file that contains the compiler paths used to resolve the imports, use this if the base tsconfig file is in the workspace root, if provided with a baseTsConfigPath then the baseTsConfigName will be added to the path. DO not use this if the baseTsConfigPath is a file."
+    },
+    "baseTsConfigPath": {
+      "type": "string",
+      "description": "The path to the base tsconfig file that contains the compiler paths used to resolve the imports, use this if the base tsconfig file is not in the workspace root. This can be a file or a directory. If it is a directory and the baseTsConfigName is provided then the baseTsConfigName will be added to the path. If it is a file and the baseTsConfigName is provided then there will be an error."
     }
   },
   "required": ["name", "spec", "scope"]

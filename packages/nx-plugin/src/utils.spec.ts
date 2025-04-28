@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { existsSync, lstatSync } from 'node:fs';
 import { rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -10,11 +11,17 @@ import {
   bundleAndDereferenceSpecFile,
   generateClientCode,
   generateClientCommand,
+  getBaseTsConfigPath,
   getPackageName,
   getVersionOfPackage,
   isAFile,
   isUrl,
 } from './utils';
+
+vi.mock('node:fs', () => ({
+  existsSync: vi.fn(),
+  lstatSync: vi.fn(),
+}));
 
 vi.mock('@hey-api/openapi-ts', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@hey-api/openapi-ts')>();
@@ -49,6 +56,14 @@ vi.mock('@hey-api/openapi-ts/internal', async (importOriginal) => {
         name: 'test-name',
       },
     })),
+  };
+});
+
+vi.mock('@nx/devkit', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@nx/devkit')>();
+  return {
+    ...actual,
+    workspaceRoot: '/',
   };
 });
 
@@ -255,9 +270,12 @@ paths:
 
   describe('isAFile', () => {
     it('should return true for valid file paths', async () => {
-      await writeFile('./spec.yaml', 'openapi: 3.0.0');
+      vi.mocked(existsSync).mockReturnValue(true);
+      vi.mocked(lstatSync).mockReturnValue({
+        isDirectory: () => false,
+        isFile: () => true,
+      } as any);
       expect(isAFile('./spec.yaml')).toBe(true);
-      await rm('./spec.yaml');
     });
 
     it('should return false for valid URLs', () => {
@@ -265,11 +283,149 @@ paths:
     });
 
     it('should return false for invalid file paths', () => {
+      vi.mocked(existsSync).mockReturnValue(false);
       expect(isAFile('not-a-file')).toBe(false);
     });
 
     it('should fail if provided a url', () => {
       expect(isAFile('http://example.com')).toBe(false);
+    });
+  });
+
+  describe('getBaseTsConfigPath', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('success when no baseTsConfigPath is provided', async () => {
+      const projectRoot = '/path/to/project';
+      vi.mocked(existsSync).mockReturnValue(true);
+      vi.mocked(lstatSync).mockReturnValue({ isDirectory: () => false } as any);
+      const { tsConfigDirectory, tsConfigName } = await getBaseTsConfigPath({
+        projectRoot,
+      });
+      expect(join(tsConfigDirectory)).toBe(join('../../..'));
+      expect(tsConfigName).toBe('tsconfig.base.json');
+    });
+
+    it('success when no baseTsConfigPath is provided', async () => {
+      const projectRoot = '/path/to/project';
+
+      // fail first time
+      vi.mocked(existsSync).mockReturnValueOnce(false);
+      // then succeed
+      vi.mocked(existsSync).mockReturnValueOnce(true);
+      vi.mocked(lstatSync).mockReturnValue({ isDirectory: () => false } as any);
+      const { tsConfigDirectory, tsConfigName } = await getBaseTsConfigPath({
+        projectRoot,
+      });
+      expect(join(tsConfigDirectory)).toBe(join('../../..'));
+      expect(tsConfigName).toBe('tsconfig.json');
+    });
+
+    it('should return path when baseTsConfigPath is a file', async () => {
+      const mockPath = '/path/to/tsconfig.json';
+      const projectRoot = '/path/to/project';
+      vi.mocked(existsSync).mockReturnValue(true);
+      vi.mocked(lstatSync).mockReturnValue({ isDirectory: () => false } as any);
+
+      const { tsConfigDirectory, tsConfigName } = await getBaseTsConfigPath({
+        baseTsConfigPath: mockPath,
+        projectRoot,
+      });
+      expect(join(tsConfigDirectory)).toBe(join('..'));
+      expect(tsConfigName).toBe('tsconfig.json');
+    });
+
+    it('should throw error when baseTsConfigPath is a file and baseTsConfigName is provided', async () => {
+      const mockPath = '/path/to/tsconfig.json';
+      const projectRoot = '/path/to/project';
+      vi.mocked(existsSync).mockReturnValue(true);
+      vi.mocked(lstatSync).mockReturnValue({ isDirectory: () => false } as any);
+
+      await expect(
+        getBaseTsConfigPath({
+          baseTsConfigName: 'tsconfig.json',
+          baseTsConfigPath: mockPath,
+          projectRoot,
+        }),
+      ).rejects.toThrow('Base tsconfig name');
+    });
+
+    it('should throw error when baseTsConfigPath file does not exist', async () => {
+      const mockPath = '/path/to/tsconfig.json';
+      const projectRoot = '/path/to/project';
+      vi.mocked(existsSync).mockReturnValue(false);
+      vi.mocked(lstatSync).mockReturnValue({ isDirectory: () => false } as any);
+
+      await expect(
+        getBaseTsConfigPath({
+          baseTsConfigPath: mockPath,
+          projectRoot,
+        }),
+      ).rejects.toThrow('Base tsconfig file');
+    });
+
+    it('should throw error when baseTsConfigPath is neither file nor directory', async () => {
+      const mockPath = '/path/to/invalid';
+      const projectRoot = '/path/to/project';
+      vi.mocked(existsSync).mockReturnValue(false);
+      vi.mocked(lstatSync).mockReturnValue({ isDirectory: () => false } as any);
+
+      await expect(
+        getBaseTsConfigPath({
+          baseTsConfigPath: mockPath,
+          projectRoot,
+        }),
+      ).rejects.toThrow('not a directory or a file');
+    });
+
+    it('should use workspaceRoot when baseTsConfigPath is a directory', async () => {
+      const mockPath = '/path/to/dir';
+      const projectRoot = '/path/to/project';
+      const mockConfigName = 'tsconfig.test.json';
+      vi.mocked(existsSync).mockImplementation(
+        (path) => path === join(mockPath, mockConfigName),
+      );
+      vi.mocked(lstatSync).mockReturnValue({ isDirectory: () => true } as any);
+
+      const { tsConfigDirectory, tsConfigName } = await getBaseTsConfigPath({
+        baseTsConfigName: mockConfigName,
+        baseTsConfigPath: mockPath,
+        projectRoot,
+      });
+      expect(join(tsConfigDirectory)).toBe(join('../dir'));
+      expect(tsConfigName).toBe(mockConfigName);
+    });
+
+    it('should try default config names when no baseTsConfigName is provided', async () => {
+      const mockPath = '/path/to/dir';
+      const projectRoot = '/path/to/project';
+      vi.mocked(existsSync).mockImplementation(
+        (path) => path === join(mockPath, 'tsconfig.json'),
+      );
+      vi.mocked(lstatSync).mockReturnValue({ isDirectory: () => true } as any);
+
+      const { tsConfigDirectory, tsConfigName } = await getBaseTsConfigPath({
+        baseTsConfigPath: mockPath,
+        projectRoot,
+      });
+      expect(join(tsConfigDirectory)).toBe(join('../dir'));
+      expect(tsConfigName).toBe('tsconfig.json');
+    });
+
+    it('should throw error when no config file is found', async () => {
+      const mockPath = '/path/to/dir';
+      const projectRoot = '/path/to/project';
+      vi.mocked(existsSync).mockReturnValue(false);
+      vi.mocked(lstatSync).mockReturnValue({ isDirectory: () => true } as any);
+
+      await expect(
+        getBaseTsConfigPath({
+          baseTsConfigPath: mockPath,
+          projectRoot,
+        }),
+      ).rejects.toThrow('Failed to find base tsconfig file');
     });
   });
 });
