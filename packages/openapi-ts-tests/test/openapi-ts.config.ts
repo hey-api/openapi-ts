@@ -118,7 +118,7 @@ export default defineConfig(() => {
       },
       {
         // exportFromIndex: true,
-        name: 'zod',
+        // name: 'zod',
       },
     ],
     // useOptions: false,
