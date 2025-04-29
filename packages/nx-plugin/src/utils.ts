@@ -12,6 +12,7 @@ import {
 import { logger, workspaceRoot } from '@nx/devkit';
 import { compareOpenApi } from 'api-smart-diff';
 import { format, type Options as PrettierOptions } from 'prettier';
+import { convert } from 'swagger2openapi';
 
 import { CONSTANTS } from './vars';
 
@@ -208,6 +209,58 @@ export async function getSpecFiles(
   };
 }
 
+export function getSpecFileVersion(spec: JSONSchema) {
+  if ('openapi' in spec) {
+    if (typeof spec.openapi === 'string') {
+      return spec.openapi;
+    }
+    throw new Error('Spec file openapi version is not a string');
+  }
+  if ('swagger' in spec) {
+    if (typeof spec.swagger === 'string') {
+      return spec.swagger;
+    }
+    throw new Error('Spec file swagger version is not a string');
+  }
+  throw new Error('Spec file does not contain an openapi or swagger version');
+}
+
+export async function convertSwaggerToOpenApi(spec: JSONSchema) {
+  const openapi = await convert(spec as any, {
+    resolve: false,
+  });
+  return openapi.openapi as JSONSchema;
+}
+
+/**
+ * Upgrades the spec file to at least OpenAPI 3.0
+ */
+export async function standardizeSpec(spec: JSONSchema) {
+  const version = getSpecFileVersion(spec);
+  if (version.startsWith('2.')) {
+    return await convertSwaggerToOpenApi(spec);
+  }
+  return spec;
+}
+
+/**
+ * Removes examples from the spec file
+ *
+ * This is done to avoid false positives when comparing specs
+ * We do not want to compare examples as they are not part of the spec, and do not affect code generation
+ */
+export function removeExamples(spec: JSONSchema) {
+  for (const key in spec) {
+    const typedKey = key as keyof JSONSchema;
+    if (typedKey === 'examples' || key === 'example') {
+      delete spec[typedKey];
+    } else if (typeof spec[typedKey] === 'object' && spec[typedKey] !== null) {
+      removeExamples(spec[typedKey]);
+    }
+  }
+  return spec;
+}
+
 /**
  * Fetches two spec files and compares them for differences
  */
@@ -220,9 +273,21 @@ export async function compareSpecs(
     newSpecPath,
   );
 
+  const existingSpecWithoutExamples = removeExamples(existingSpec);
+  const newSpecWithoutExamples = removeExamples(newSpec);
+
+  const [standardizedExistingSpec, standardizedNewSpec] = await Promise.all([
+    standardizeSpec(existingSpecWithoutExamples),
+    standardizeSpec(newSpecWithoutExamples),
+  ]);
+
   logger.debug('Comparing specs...');
+
   // Compare specs
-  const { diffs } = compareOpenApi(existingSpec, newSpec);
+  const { diffs } = compareOpenApi(
+    standardizedExistingSpec,
+    standardizedNewSpec,
+  );
   const filteredDiffs = diffs.filter((diff) => {
     if (diff.path.includes('examples') || diff.path.includes('example')) {
       return false;

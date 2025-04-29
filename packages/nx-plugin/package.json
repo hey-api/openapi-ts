@@ -51,13 +51,15 @@
     "@hey-api/json-schema-ref-parser": "1.0.5",
     "@hey-api/openapi-ts": "workspace:*",
     "@nx/devkit": "20.8.1",
-    "latest-version": "9.0.0",
     "api-smart-diff": "^1.0.6",
+    "latest-version": "9.0.0",
+    "swagger2openapi": "^7.0.8",
     "tslib": "2.8.1",
     "xcurl": "2.1.2"
   },
   "devDependencies": {
     "@config/vite-base": "workspace:*",
+    "@types/swagger2openapi": "^7.0.4",
     "typescript": "5.8.3",
     "vitest": "3.1.1"
   },
