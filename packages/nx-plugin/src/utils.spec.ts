@@ -13,9 +13,12 @@ import {
   generateClientCommand,
   getBaseTsConfigPath,
   getPackageName,
+  getSpecFileVersion,
   getVersionOfPackage,
   isAFile,
   isUrl,
+  removeExamples,
+  standardizeSpec,
 } from './utils';
 
 vi.mock('node:fs', () => ({
@@ -426,6 +429,264 @@ paths:
           projectRoot,
         }),
       ).rejects.toThrow('Failed to find base tsconfig file');
+    });
+  });
+
+  describe('removeExamples', () => {
+    it('should remove examples from root level', () => {
+      const schema = {
+        example: 'single example',
+        examples: ['example1', 'example2'],
+        otherProperty: 'value',
+      };
+
+      const result = removeExamples(schema);
+      expect(result).toEqual({
+        otherProperty: 'value',
+      });
+    });
+
+    it('should remove examples from nested objects', () => {
+      const schema = {
+        properties: {
+          age: {
+            example: 25,
+            type: 'number' as const,
+          },
+          name: {
+            examples: ['John', 'Jane'],
+            type: 'string' as const,
+          },
+        },
+      };
+
+      const result = removeExamples(schema);
+      expect(result).toEqual({
+        properties: {
+          age: {
+            type: 'number',
+          },
+          name: {
+            type: 'string',
+          },
+        },
+      });
+    });
+
+    it('should remove examples from arrays of objects', () => {
+      const schema = {
+        items: [
+          {
+            examples: ['item1', 'item2'],
+            type: 'string' as const,
+          },
+          {
+            example: 42,
+            type: 'number' as const,
+          },
+        ],
+      };
+
+      const result = removeExamples(schema);
+      expect(result).toEqual({
+        items: [
+          {
+            type: 'string',
+          },
+          {
+            type: 'number',
+          },
+        ],
+      });
+    });
+
+    it('should handle empty objects', () => {
+      const schema = {};
+      const result = removeExamples(schema);
+      expect(result).toEqual({});
+    });
+
+    it('should handle null values', () => {
+      const schema = {
+        examples: null,
+        property: null,
+      };
+
+      const result = removeExamples(schema);
+      expect(result).toEqual({
+        property: null,
+      });
+    });
+
+    it('should preserve other properties', () => {
+      const schema = {
+        properties: {
+          name: {
+            description: 'User name',
+            type: 'string' as const,
+          },
+        },
+        required: ['name'],
+        type: 'object' as const,
+      };
+
+      const result = removeExamples(schema);
+      expect(result).toEqual(schema);
+    });
+  });
+
+  describe('standardizeSpec', () => {
+    it('should return OpenAPI 3.0 spec unchanged', async () => {
+      const spec = {
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        openapi: '3.0.0',
+        paths: {},
+      };
+
+      const result = await standardizeSpec(spec);
+      expect(result).toEqual(spec);
+    });
+
+    it('should convert Swagger 2.0 spec to OpenAPI 3.0', async () => {
+      const swaggerSpec = {
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        paths: {
+          '/test': {
+            get: {
+              summary: 'Test endpoint',
+            },
+          },
+        },
+        swagger: '2.0',
+      };
+
+      const convertedSpec = {
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        openapi: '3.0.0',
+        paths: {
+          '/test': {
+            get: {
+              responses: {
+                default: {
+                  description: 'Default response',
+                },
+              },
+              summary: 'Test endpoint',
+            },
+          },
+        },
+      };
+
+      const result = await standardizeSpec(swaggerSpec);
+      expect(result).toEqual(convertedSpec);
+    });
+
+    it('should handle OpenAPI 3.1 spec', async () => {
+      const spec = {
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        openapi: '3.1.0',
+        paths: {},
+      };
+
+      const result = await standardizeSpec(spec);
+      expect(result).toEqual(spec);
+    });
+
+    it('should throw error for invalid spec version', async () => {
+      const spec = {
+        // Invalid: not a string
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        openapi: 3.0,
+        paths: {},
+      };
+
+      await expect(standardizeSpec(spec)).rejects.toThrow(
+        'Spec file openapi version is not a string',
+      );
+    });
+  });
+
+  describe('getSpecFileVersion', () => {
+    it('should return OpenAPI version when present', () => {
+      const spec = {
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        openapi: '3.0.0',
+      };
+
+      const version = getSpecFileVersion(spec);
+      expect(version).toBe('3.0.0');
+    });
+
+    it('should return Swagger version when present', () => {
+      const spec = {
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        swagger: '2.0',
+      };
+
+      const version = getSpecFileVersion(spec);
+      expect(version).toBe('2.0');
+    });
+
+    it('should throw error when OpenAPI version is not a string', () => {
+      const spec = {
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        openapi: 3.0,
+      };
+
+      expect(() => getSpecFileVersion(spec)).toThrow(
+        'Spec file openapi version is not a string',
+      );
+    });
+
+    it('should throw error when Swagger version is not a string', () => {
+      const spec = {
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        swagger: 2.0,
+      };
+
+      expect(() => getSpecFileVersion(spec)).toThrow(
+        'Spec file swagger version is not a string',
+      );
+    });
+
+    it('should throw error when neither OpenAPI nor Swagger version is present', () => {
+      const spec = {
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+      };
+
+      expect(() => getSpecFileVersion(spec)).toThrow(
+        'Spec file does not contain an openapi or swagger version',
+      );
     });
   });
 });
