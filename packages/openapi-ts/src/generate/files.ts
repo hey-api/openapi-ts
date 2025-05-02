@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import type ts from 'typescript';
+import type { ParsedCommandLine } from 'typescript';
+import { ModuleResolutionKind } from 'typescript';
 
 import { compiler } from '../compiler';
 import { type ImportExportItemObject, tsNodeToString } from '../compiler/utils';
@@ -283,17 +285,31 @@ export class TypeScriptFile {
     return [name, 'gen', extension].filter(Boolean).join('.');
   }
 
-  public toString(separator: string = '\n') {
-    let output: string[] = [];
+  private _toString(separator: string, tsConfig: ParsedCommandLine | null) {
+    let output: Array<string> = [];
     if (this._headers.length) {
       output.push(this._headers.join('\n'));
     }
-    const importsStringArray: string[] = [];
+
+    const shouldAppendJs =
+      tsConfig?.options.moduleResolution === ModuleResolutionKind.NodeNext;
+
+    const importsStringArray: Array<string> = [];
+
     for (const [_module, moduleMap] of this._imports.entries()) {
       const imports = Array.from(moduleMap.values());
+
+      let resolvedModule = _module;
+      if (
+        shouldAppendJs &&
+        (resolvedModule.startsWith('./') || resolvedModule.startsWith('../'))
+      ) {
+        resolvedModule = `${resolvedModule}.js`;
+      }
+
       const node = compiler.namedImportDeclarations({
         imports,
-        module: _module,
+        module: resolvedModule,
       });
       importsStringArray.push(tsNodeToString({ node }));
     }
@@ -310,7 +326,7 @@ export class TypeScriptFile {
     return output.join(separator);
   }
 
-  public write(separator = '\n') {
+  public write(separator = '\n', tsConfig: ParsedCommandLine | null = null) {
     if (this.isEmpty()) {
       this.remove({ force: true });
       return;
@@ -322,7 +338,7 @@ export class TypeScriptFile {
       dir = parts.slice(0, parts.length - 1).join(path.sep);
     }
     ensureDirSync(dir);
-    fs.writeFileSync(this._path, this.toString(separator));
+    fs.writeFileSync(this._path, this._toString(separator, tsConfig));
   }
 }
 
