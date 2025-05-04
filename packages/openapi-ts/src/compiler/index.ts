@@ -10,7 +10,6 @@ import * as utils from './utils';
 export type { Property } from './typedef';
 export type { FunctionParameter } from './types';
 export type { Comments } from './utils';
-export type { ClassElement, Node, TypeNode } from 'typescript';
 
 export const compiler = {
   anonymousFunction: types.createAnonymousFunction,

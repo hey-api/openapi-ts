@@ -1,4 +1,6 @@
-import { compiler, type Property, type TypeNode } from '../compiler';
+import type ts from 'typescript';
+
+import { compiler, type Property } from '../compiler';
 import type { Model } from '../openApi';
 import { sanitizeOperationParameterName } from '../openApi';
 import type { Client } from '../types/client';
@@ -191,7 +193,7 @@ const typeInterface = (model: Model) => {
   });
 };
 
-export const toType = (model: Model): TypeNode => {
+export const toType = (model: Model): ts.TypeNode => {
   switch (model.export) {
     case 'all-of':
       return typeUnionOrIntersection({
