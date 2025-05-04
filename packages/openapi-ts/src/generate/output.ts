@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { ModuleResolutionKind } from 'typescript';
+import ts from 'typescript';
 
 import { compiler } from '../compiler';
 import { parseIR } from '../ir/parser';
@@ -157,7 +157,7 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
       findTsConfigPath(context.config.output.tsConfigPath),
     );
     const shouldAppendJs =
-      tsConfig?.options.moduleResolution === ModuleResolutionKind.NodeNext;
+      tsConfig?.options.moduleResolution === ts.ModuleResolutionKind.NodeNext;
 
     for (const file of Object.values(context.files)) {
       const fileName = file.nameWithoutExtension();

@@ -1,6 +1,6 @@
-import type { EnumDeclaration } from 'typescript';
+import type ts from 'typescript';
 
-import { type Comments, compiler, type Node } from '../../../compiler';
+import { type Comments, compiler } from '../../../compiler';
 import { TypeScriptFile } from '../../../generate/files';
 import { isOperationParameterRequired } from '../../../openApi';
 import type {
@@ -29,7 +29,7 @@ import type { Config } from './types';
 export interface TypesProps {
   client: Client;
   model: Model;
-  onNode: (node: Node) => void;
+  onNode: (node: ts.Node) => void;
   onRemoveNode?: VoidFunction;
 }
 
@@ -131,7 +131,7 @@ export const generateType = ({
 const processComposition = (props: TypesProps) => {
   const config = getConfig();
 
-  const enumDeclarations = [] as EnumDeclaration[];
+  const enumDeclarations = [] as ts.EnumDeclaration[];
 
   processType(props);
 
@@ -149,7 +149,7 @@ const processComposition = (props: TypesProps) => {
       ...props,
       model: enumerator,
       onNode: (node) => {
-        enumDeclarations.push(node as EnumDeclaration);
+        enumDeclarations.push(node as ts.EnumDeclaration);
       },
     });
   });
