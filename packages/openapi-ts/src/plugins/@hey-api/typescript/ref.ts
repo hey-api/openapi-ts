@@ -27,7 +27,11 @@ export const importIdentifierData = ({
   operation: IR.OperationObject;
 }): Identifier => {
   const identifierData = context.file({ id: typesId })!.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'data' }),
+    $ref: operationIrRef({
+      config: context.config,
+      id: operation.id,
+      type: 'data',
+    }),
     namespace: 'type',
   });
   return refIdentifier(identifierData, (identifier) => {
@@ -51,7 +55,11 @@ export const importIdentifierError = ({
   operation: IR.OperationObject;
 }): Identifier => {
   const identifierError = context.file({ id: typesId })!.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'error' }),
+    $ref: operationIrRef({
+      config: context.config,
+      id: operation.id,
+      type: 'error',
+    }),
     namespace: 'type',
   });
   return refIdentifier(identifierError, (identifier) => {
@@ -75,7 +83,11 @@ export const importIdentifierResponse = ({
   operation: IR.OperationObject;
 }): Identifier => {
   const identifierResponse = context.file({ id: typesId })!.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'response' }),
+    $ref: operationIrRef({
+      config: context.config,
+      id: operation.id,
+      type: 'response',
+    }),
     namespace: 'type',
   });
   return refIdentifier(identifierResponse, (identifier) => {
