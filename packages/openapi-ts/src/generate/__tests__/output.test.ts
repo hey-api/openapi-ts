@@ -8,7 +8,19 @@ import { setConfig } from '../../utils/config';
 import { generateLegacyOutput } from '../output';
 import { mockTemplates, openApi } from './mocks';
 
-vi.mock('node:fs');
+vi.mock('node:fs', () => {
+  const exports = {
+    existsSync: vi.fn(),
+    mkdirSync: vi.fn(),
+    readdirSync: vi.fn().mockReturnValue([]),
+    rmSync: vi.fn(),
+    writeFileSync: vi.fn(),
+  };
+  return {
+    ...exports,
+    default: exports,
+  };
+});
 
 describe('generateLegacyOutput', () => {
   it('writes to filesystem', async () => {
