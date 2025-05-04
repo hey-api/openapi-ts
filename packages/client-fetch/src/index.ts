@@ -4,8 +4,10 @@ export type {
   ClientOptions,
   Config,
   CreateClientConfig,
+  OmitNever,
   Options,
   OptionsLegacyParser,
+  Params,
   RequestOptions,
   RequestResult,
   TDataShape,
@@ -13,6 +15,7 @@ export type {
 export { createConfig } from './utils';
 export type { Auth, QuerySerializerOptions } from '@hey-api/client-core';
 export {
+  buildClientParams,
   formDataBodySerializer,
   jsonBodySerializer,
   urlSearchParamsBodySerializer,
