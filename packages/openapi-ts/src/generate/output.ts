@@ -1,5 +1,7 @@
 import path from 'node:path';
 
+import { ModuleResolutionKind } from 'typescript';
+
 import { compiler } from '../compiler';
 import { parseIR } from '../ir/parser';
 import type { IR } from '../ir/types';
@@ -14,6 +16,7 @@ import { generateClientBundle } from './client';
 import { generateLegacyCore } from './core';
 import { TypeScriptFile } from './files';
 import { generateIndexFile } from './indexFile';
+import { findTsConfigPath, loadTsConfig } from './tsConfig';
 import { removeDirSync } from './utils';
 
 /**
@@ -101,7 +104,10 @@ export const generateLegacyOutput = async ({
     });
   }
 
+  // TODO: exports do not support .js extensions
   generateIndexFile({ files });
+
+  const tsConfig = loadTsConfig(findTsConfigPath(config.output.tsConfigPath));
 
   Object.entries(files).forEach(([name, file]) => {
     if (config.dryRun) {
@@ -109,9 +115,9 @@ export const generateLegacyOutput = async ({
     }
 
     if (name === 'index') {
-      file.write();
+      file.write('\n', tsConfig);
     } else {
-      file.write('\n\n');
+      file.write('\n\n', tsConfig);
     }
   });
 };
@@ -147,6 +153,12 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
       path: 'index',
     });
 
+    const tsConfig = loadTsConfig(
+      findTsConfigPath(context.config.output.tsConfigPath),
+    );
+    const shouldAppendJs =
+      tsConfig?.options.moduleResolution === ModuleResolutionKind.NodeNext;
+
     for (const file of Object.values(context.files)) {
       const fileName = file.nameWithoutExtension();
 
@@ -159,23 +171,28 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
         file.exportFromIndex &&
         context.config.output.indexFile
       ) {
+        let resolvedModule = indexFile.relativePathToFile({
+          context,
+          id: file.id,
+        });
+        if (
+          shouldAppendJs &&
+          (resolvedModule.startsWith('./') || resolvedModule.startsWith('../'))
+        ) {
+          resolvedModule = `${resolvedModule}.js`;
+        }
         // TODO: parser - add export method for more granular control over
         // what's exported so we can support named exports
         indexFile.add(
-          compiler.exportAllDeclaration({
-            module: indexFile.relativePathToFile({
-              context,
-              id: file.id,
-            }),
-          }),
+          compiler.exportAllDeclaration({ module: resolvedModule }),
         );
       }
 
-      file.write('\n\n');
+      file.write('\n\n', tsConfig);
     }
 
     if (context.config.output.indexFile) {
-      indexFile.write();
+      indexFile.write('\n', tsConfig);
     }
   }
 };
