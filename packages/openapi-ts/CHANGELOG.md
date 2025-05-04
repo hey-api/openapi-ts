@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.67.1
+
+### Patch Changes
+
+- [#2010](https://github.com/hey-api/openapi-ts/pull/2010) [`13c9577`](https://github.com/hey-api/openapi-ts/commit/13c9577f122eab7b7fdd92f67ac77cb334cbdcd5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not use named imports from typescript module
+
 ## 0.67.0
 
 ### Minor Changes
