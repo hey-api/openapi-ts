@@ -2,7 +2,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import type { ParsedCommandLine } from 'typescript';
 import ts from 'typescript';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -41,7 +40,7 @@ export const findTsConfigPath = (
 
 export const loadTsConfig = (
   configPath: string | null,
-): ParsedCommandLine | null => {
+): ts.ParsedCommandLine | null => {
   if (!configPath) {
     return null;
   }

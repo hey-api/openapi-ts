@@ -1,9 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import type ts from 'typescript';
-import type { ParsedCommandLine } from 'typescript';
-import { ModuleResolutionKind } from 'typescript';
+import ts from 'typescript';
 
 import { compiler } from '../compiler';
 import { type ImportExportItemObject, tsNodeToString } from '../compiler/utils';
@@ -285,14 +283,14 @@ export class TypeScriptFile {
     return [name, 'gen', extension].filter(Boolean).join('.');
   }
 
-  private _toString(separator: string, tsConfig: ParsedCommandLine | null) {
+  private _toString(separator: string, tsConfig: ts.ParsedCommandLine | null) {
     let output: Array<string> = [];
     if (this._headers.length) {
       output.push(this._headers.join('\n'));
     }
 
     const shouldAppendJs =
-      tsConfig?.options.moduleResolution === ModuleResolutionKind.NodeNext;
+      tsConfig?.options.moduleResolution === ts.ModuleResolutionKind.NodeNext;
 
     const importsStringArray: Array<string> = [];
 
@@ -326,7 +324,7 @@ export class TypeScriptFile {
     return output.join(separator);
   }
 
-  public write(separator = '\n', tsConfig: ParsedCommandLine | null = null) {
+  public write(separator = '\n', tsConfig: ts.ParsedCommandLine | null = null) {
     if (this.isEmpty()) {
       this.remove({ force: true });
       return;

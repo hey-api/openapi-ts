@@ -1,9 +1,6 @@
-import type {
-  ClassElement,
-  Comments,
-  FunctionParameter,
-  Node,
-} from '../../../compiler';
+import type ts from 'typescript';
+
+import type { Comments, FunctionParameter } from '../../../compiler';
 import { compiler } from '../../../compiler';
 import type {
   FunctionTypeParameter,
@@ -36,7 +33,7 @@ import type { Plugin } from '../../types';
 import { getClientPlugin } from '../client-core/utils';
 import type { Config } from './types';
 
-type OnNode = (node: Node) => void;
+type OnNode = (node: ts.Node) => void;
 type OnImport = (name: string) => void;
 
 export const generateImport = ({
@@ -712,7 +709,7 @@ const processService = ({
     return;
   }
 
-  let members: ClassElement[] = service.operations.map((operation) => {
+  let members: ts.ClassElement[] = service.operations.map((operation) => {
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
       comment: toOperationComment(operation),
