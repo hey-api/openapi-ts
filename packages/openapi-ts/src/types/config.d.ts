@@ -236,6 +236,13 @@ export interface UserConfig {
          * The relative location of the output folder
          */
         path: string;
+        /**
+         * Relative or absolute path to the tsconfig file we should use to
+         * generate the output. If a path to tsconfig file is not provided, we
+         * attempt to find one starting from the location of the
+         * `@hey-api/openapi-ts` configuration file and traversing up.
+         */
+        tsConfigPath?: 'off' | (string & {});
       };
   /**
    * Plugins generate artifacts from `input`. By default, we generate SDK

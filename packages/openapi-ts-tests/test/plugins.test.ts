@@ -297,7 +297,8 @@ for (const version of versions) {
     it.each(scenarios)('$description', async ({ config }) => {
       await createClient(config);
 
-      const outputPath = typeof config.output === 'string' ? config.output : '';
+      const outputPath =
+        typeof config.output === 'string' ? config.output : config.output.path;
       const filePaths = getFilePaths(outputPath);
 
       await Promise.all(

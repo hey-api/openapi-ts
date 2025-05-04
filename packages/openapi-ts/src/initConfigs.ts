@@ -155,6 +155,7 @@ const getOutput = (userConfig: UserConfig): Config['output'] => {
     indexFile: true,
     lint: false,
     path: '',
+    tsConfigPath: '',
   };
   if (typeof userConfig.output === 'string') {
     output.path = userConfig.output;
