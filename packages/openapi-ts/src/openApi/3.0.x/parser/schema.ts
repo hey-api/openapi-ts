@@ -710,6 +710,7 @@ const parseOneOf = ({
                 }
               : valueSchemas[0]!,
         },
+        required: [schema.discriminator.propertyName],
         type: 'object',
       };
       irCompositionSchema = {

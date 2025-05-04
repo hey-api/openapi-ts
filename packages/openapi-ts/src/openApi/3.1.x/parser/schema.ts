@@ -423,6 +423,7 @@ const parseAllOf = ({
                   }
                 : valueSchemas[0]!,
           },
+          required: [ref.discriminator.propertyName],
           type: 'object',
         };
         if (ref.required?.includes(ref.discriminator.propertyName)) {
