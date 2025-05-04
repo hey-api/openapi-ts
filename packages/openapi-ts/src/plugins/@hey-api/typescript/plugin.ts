@@ -904,7 +904,11 @@ const operationToDataType = ({
   data.required = dataRequired;
 
   const identifier = file.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'data' }),
+    $ref: operationIrRef({
+      config: context.config,
+      id: operation.id,
+      type: 'data',
+    }),
     create: true,
     namespace: 'type',
   });
@@ -952,7 +956,11 @@ const operationToType = ({
 
   if (errors) {
     const identifierErrors = file.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'errors' }),
+      $ref: operationIrRef({
+        config: context.config,
+        id: operation.id,
+        type: 'errors',
+      }),
       create: true,
       namespace: 'type',
     });
@@ -980,7 +988,11 @@ const operationToType = ({
 
       if (error) {
         const identifierError = file.identifier({
-          $ref: operationIrRef({ id: operation.id, type: 'error' }),
+          $ref: operationIrRef({
+            config: context.config,
+            id: operation.id,
+            type: 'error',
+          }),
           create: true,
           namespace: 'type',
         });
@@ -1008,7 +1020,11 @@ const operationToType = ({
 
   if (responses) {
     const identifierResponses = file.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'responses' }),
+      $ref: operationIrRef({
+        config: context.config,
+        id: operation.id,
+        type: 'responses',
+      }),
       create: true,
       namespace: 'type',
     });
@@ -1036,7 +1052,11 @@ const operationToType = ({
 
       if (response) {
         const identifierResponse = file.identifier({
-          $ref: operationIrRef({ id: operation.id, type: 'response' }),
+          $ref: operationIrRef({
+            config: context.config,
+            id: operation.id,
+            type: 'response',
+          }),
           create: true,
           namespace: 'type',
         });

@@ -1,4 +1,4 @@
-import type { StringCase } from '../../../types/config';
+import type { Config, StringCase } from '../../../types/config';
 import { irRef } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
 
@@ -11,36 +11,30 @@ interface OperationIRRef {
 
 export const operationIrRef = ({
   case: _case = 'PascalCase',
+  config,
   id,
   type,
 }: OperationIRRef & {
   readonly case?: StringCase;
+  config: Pick<Config, 'plugins'>;
   type: 'data' | 'error' | 'errors' | 'response' | 'responses';
 }): string => {
   let affix = '';
   switch (type) {
     case 'data':
-      affix = 'Data';
+    case 'error': // error union
+    case 'errors': // errors map
+    case 'response': // response union
+    case 'responses': // responses map
+      affix = `${(type[0] ?? '').toLocaleUpperCase()}${type.slice(1)}`;
       break;
-    case 'error':
-      // error union
-      affix = 'Error';
-      break;
-    case 'errors':
-      // errors map
-      affix = 'Errors';
-      break;
-    case 'response':
-      // response union
-      affix = 'Response';
-      break;
-    case 'responses':
-      // responses map
-      affix = 'Responses';
-      break;
+  }
+  let separator = true;
+  if (config.plugins['@hey-api/typescript']?.identifierCase === 'preserve') {
+    separator = false;
   }
   return `${irRef}${stringCase({
     case: _case,
     value: id,
-  })}-${affix}`;
+  })}${separator ? '-' : ''}${affix}`;
 };

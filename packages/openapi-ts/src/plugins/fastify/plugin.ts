@@ -24,7 +24,11 @@ const operationToRouteHandler = ({
   const properties: Array<Property> = [];
 
   const identifierData = fileTypes.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'data' }),
+    $ref: operationIrRef({
+      config: context.config,
+      id: operation.id,
+      type: 'data',
+    }),
     namespace: 'type',
   });
   if (identifierData.name) {
@@ -93,7 +97,11 @@ const operationToRouteHandler = ({
 
   let errorsTypeReference: ts.TypeReferenceNode | undefined = undefined;
   const identifierErrors = fileTypes.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'errors' }),
+    $ref: operationIrRef({
+      config: context.config,
+      id: operation.id,
+      type: 'errors',
+    }),
     namespace: 'type',
   });
   if (identifierErrors.name && errors && errors.properties) {
@@ -131,7 +139,11 @@ const operationToRouteHandler = ({
 
   let responsesTypeReference: ts.TypeReferenceNode | undefined = undefined;
   const identifierResponses = fileTypes.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'responses' }),
+    $ref: operationIrRef({
+      config: context.config,
+      id: operation.id,
+      type: 'responses',
+    }),
     namespace: 'type',
   });
   if (identifierResponses.name && responses && responses.properties) {

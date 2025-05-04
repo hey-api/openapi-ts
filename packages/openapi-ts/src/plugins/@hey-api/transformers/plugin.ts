@@ -469,7 +469,11 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     }
 
     const identifierResponse = context.file({ id: typesId })!.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'response' }),
+      $ref: operationIrRef({
+        config: context.config,
+        id: operation.id,
+        type: 'response',
+      }),
       namespace: 'type',
     });
     if (!identifierResponse.name) {
