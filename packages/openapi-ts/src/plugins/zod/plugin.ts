@@ -809,6 +809,7 @@ const operationToZodSchema = ({
       schemaToZodSchema({
         $ref: operationIrRef({
           case: 'camelCase',
+          config: context.config,
           id: operation.id,
           type: 'response',
         }),

@@ -89,10 +89,10 @@ describe(`OpenAPI ${version}`, () => {
     {
       config: createConfig({
         input: 'case.json',
-        output: 'case',
+        output: 'case-preserve',
         plugins: [
           {
-            identifierCase: undefined,
+            identifierCase: 'preserve',
             name: '@hey-api/typescript',
           },
         ],

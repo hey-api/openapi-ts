@@ -398,6 +398,7 @@ const operationStatements = ({
     const identifierSchema = context.file({ id: zodId })!.identifier({
       $ref: operationIrRef({
         case: 'camelCase',
+        config: context.config,
         id: operation.id,
         type: 'response',
       }),

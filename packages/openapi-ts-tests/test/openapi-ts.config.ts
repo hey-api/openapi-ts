@@ -103,7 +103,7 @@ export default defineConfig(() => {
         // enums: 'javascript',
         // enumsCase: 'camelCase',
         // exportInlineEnums: true,
-        // identifierCase: 'preserve',
+        identifierCase: 'preserve',
         name: '@hey-api/typescript',
         // readOnlyWriteOnlyBehavior: 'off',
         // readableNameBuilder: 'Readable{{name}}',
