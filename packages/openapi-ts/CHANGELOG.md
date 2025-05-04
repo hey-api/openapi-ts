@@ -1,5 +1,31 @@
 # @hey-api/openapi-ts
 
+## 0.67.0
+
+### Minor Changes
+
+- [#2003](https://github.com/hey-api/openapi-ts/pull/2003) [`1504a06`](https://github.com/hey-api/openapi-ts/commit/1504a0642fdb4f856d1650fade2d30988b35b4ff) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: respect `moduleResolution` value in `tsconfig.json`
+
+  ### Respecting `moduleResolution` value in `tsconfig.json`
+
+  This release introduces functionality related to your `tsconfig.json` file. The initial feature properly respects the value of your `moduleResolution` field. If you're using `nodenext`, the relative module paths in your output will be appended with `.js`. To preserve the previous behavior where we never appended `.js` to relative module paths, set `output.tsConfigPath` to `off`.
+
+  ```js
+  export default {
+    input: 'https://get.heyapi.dev/hey-api/backend',
+    output: {
+      path: 'src/client',
+      tsConfigPath: 'off',
+    },
+  };
+  ```
+
+### Patch Changes
+
+- [#2006](https://github.com/hey-api/openapi-ts/pull/2006) [`aa10522`](https://github.com/hey-api/openapi-ts/commit/aa10522f2bd018a417d875e5ab12ed0a848d2e49) Thanks [@Liooo](https://github.com/Liooo)! - fix: make discriminator field required when used with `oneOf` keyword
+
+- [#2009](https://github.com/hey-api/openapi-ts/pull/2009) [`f45ba8e`](https://github.com/hey-api/openapi-ts/commit/f45ba8e96872a13be71c0d07e134f8c6717458d4) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: avoid including underscore for appended types (e.g. data, error, response) when preserving identifier case
+
 ## 0.66.7
 
 ### Patch Changes
