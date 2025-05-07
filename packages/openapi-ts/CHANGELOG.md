@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.67.3
+
+### Patch Changes
+
+- [#2020](https://github.com/hey-api/openapi-ts/pull/2020) [`27cb409`](https://github.com/hey-api/openapi-ts/commit/27cb4095383aff35f1d78094b8b73fb36f432d33) Thanks [@0xfurai](https://github.com/0xfurai)! - fix: handle references to properties
+
 ## 0.67.2
 
 ### Patch Changes
