@@ -340,6 +340,40 @@ export class TypeScriptFile {
   }
 }
 
+function parseRefPath(ref: string): {
+  baseRef: string;
+  name: string;
+  properties: string[];
+} {
+  let baseRef = ref;
+  const properties: string[] = [];
+
+  const parts = baseRef.split('/');
+  let name = parts[parts.length - 1] || '';
+
+  let propIndex = parts.indexOf('properties');
+
+  if (propIndex !== -1) {
+    baseRef = parts.slice(0, propIndex).join('/');
+    name = parts[propIndex - 1] || '';
+
+    while (propIndex + 1 < parts.length) {
+      const prop = parts[propIndex + 1];
+      if (!prop) {
+        throw new Error(`Invalid $ref: ${ref}`);
+      }
+      properties.push(prop);
+      propIndex += 2;
+    }
+  }
+
+  return {
+    baseRef,
+    name,
+    properties,
+  };
+}
+
 interface EnsureUniqueIdentifierData {
   $ref: string;
   case: StringCase | undefined;
@@ -360,8 +394,7 @@ const ensureUniqueIdentifier = ({
   nameTransformer,
   namespace,
 }: EnsureUniqueIdentifierData): Identifier => {
-  const parts = $ref.split('/');
-  const name = parts[parts.length - 1] || '';
+  const { baseRef, name, properties } = parseRefPath($ref);
 
   if (!name) {
     return {
@@ -370,11 +403,15 @@ const ensureUniqueIdentifier = ({
     };
   }
 
-  const refValue = namespace[$ref];
+  const refValue = namespace[baseRef];
   if (refValue) {
+    let name = refValue.name;
+    if (properties.length) {
+      name += properties.map((property) => `['${property}']`).join('');
+    }
     return {
       created: false,
-      name: refValue.name,
+      name: name as string,
     };
   }
 
@@ -390,7 +427,7 @@ const ensureUniqueIdentifier = ({
 
   let nameValue = namespace[nameWithCasing];
   if (nameValue) {
-    if (nameValue.$ref === $ref) {
+    if (nameValue.$ref === baseRef) {
       return {
         created: false,
         name: nameValue.name,
@@ -398,7 +435,7 @@ const ensureUniqueIdentifier = ({
     }
 
     return ensureUniqueIdentifier({
-      $ref,
+      $ref: baseRef,
       case: identifierCase,
       count: count + 1,
       create,
@@ -415,7 +452,7 @@ const ensureUniqueIdentifier = ({
   }
 
   nameValue = {
-    $ref,
+    $ref: baseRef,
     name: ensureValidIdentifier(nameWithCasing),
   };
   namespace[nameWithCasing] = nameValue;
