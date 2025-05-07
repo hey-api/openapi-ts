@@ -1,9 +1,9 @@
 import { compiler } from '../../../compiler';
 import { clientModulePath } from '../../../generate/client';
 import { parseUrl } from '../../../utils/url';
-import { clientId, getClientBaseUrlKey } from '../client-core/utils';
 import { typesId } from '../typescript/ref';
 import type { PluginHandler } from './types';
+import { clientId, getClientBaseUrlKey } from './utils';
 
 const resolveBaseUrlString: PluginHandler<string | undefined> = ({
   context,
@@ -68,6 +68,14 @@ export const createClient: PluginHandler = ({ context, plugin }) => {
       defaultValues.push({
         key: getClientBaseUrlKey(context.config),
         value: resolvedBaseUrl,
+      });
+    } else if (resolvedBaseUrl !== '/' && resolvedBaseUrl.startsWith('/')) {
+      const baseUrl = resolvedBaseUrl.endsWith('/')
+        ? resolvedBaseUrl.slice(0, -1)
+        : resolvedBaseUrl;
+      defaultValues.push({
+        key: getClientBaseUrlKey(context.config),
+        value: baseUrl,
       });
     }
   }
