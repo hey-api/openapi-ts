@@ -473,3 +473,9 @@ const splitNameAndExtension = (fileName: string) => {
   );
   return { extension, name };
 };
+
+export const _test = {
+  ensureUniqueIdentifier,
+  parseRefPath,
+  splitNameAndExtension,
+};
