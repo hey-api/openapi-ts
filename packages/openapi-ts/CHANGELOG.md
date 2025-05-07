@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.67.2
+
+### Patch Changes
+
+- [#2023](https://github.com/hey-api/openapi-ts/pull/2023) [`c6f01f3`](https://github.com/hey-api/openapi-ts/commit/c6f01f39493e241f01dd7997ccdb8b6bc3d1519c) Thanks [@kennidenni](https://github.com/kennidenni)! - fix: handle relative paths in client's `baseUrl` field
+
 ## 0.67.1
 
 ### Patch Changes
