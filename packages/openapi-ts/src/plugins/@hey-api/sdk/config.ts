@@ -40,6 +40,7 @@ export const defaultConfig: Plugin.Config<Config> = {
     }
   },
   asClass: false,
+  asInstance: false,
   auth: true,
   client: true,
   exportFromIndex: true,
