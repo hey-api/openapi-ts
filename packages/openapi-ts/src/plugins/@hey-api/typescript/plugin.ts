@@ -1150,6 +1150,10 @@ export const schemaToType = ({
       type = compiler.typeReferenceNode({
         typeName: identifier.name || '',
       });
+    } else {
+      type = compiler.typeReferenceNode({
+        typeName: 'Record<string, never>', // only empty object
+      });
     }
   } else if (schema.type) {
     type = schemaTypeToIdentifier({
