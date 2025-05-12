@@ -65,7 +65,9 @@ export const createClient = (config: Config = {}): Client => {
     let request = new Request(url, requestInit);
 
     for (const fn of interceptors.request._fns) {
-      request = await fn(request, opts);
+      if (fn) {
+        request = await fn(request, opts);
+      }
     }
 
     // fetch must be assigned here, otherwise it would throw the error:
@@ -74,7 +76,9 @@ export const createClient = (config: Config = {}): Client => {
     let response = await _fetch(request);
 
     for (const fn of interceptors.response._fns) {
-      response = await fn(response, request, opts);
+      if (fn) {
+        response = await fn(response, request, opts);
+      }
     }
 
     const result = {
@@ -133,7 +137,9 @@ export const createClient = (config: Config = {}): Client => {
     let finalError = error;
 
     for (const fn of interceptors.error._fns) {
-      finalError = (await fn(error, response, request, opts)) as string;
+      if (fn) {
+        finalError = (await fn(error, response, request, opts)) as string;
+      }
     }
 
     finalError = finalError || ({} as string);
