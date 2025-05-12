@@ -18,6 +18,7 @@ import {
   transformersId,
 } from '../transformers/plugin';
 import { typesId } from '../typescript/ref';
+import type { PluginState } from '../typescript/types';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
 import type { HeyApiSdkPlugin } from './types';
@@ -211,6 +212,9 @@ export const operationParameters = ({
   };
 
   const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const typescriptState: PluginState = {
+    usedTypeIDs: new Set<string>(),
+  };
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
@@ -243,6 +247,7 @@ export const operationParameters = ({
             },
             plugin: pluginTypeScript,
             schema: parameter.schema,
+            state: typescriptState,
           }),
         });
       }
@@ -274,6 +279,7 @@ export const operationParameters = ({
             },
             plugin: pluginTypeScript,
             schema: parameter.schema,
+            state: typescriptState,
           }),
         });
       }
@@ -300,6 +306,7 @@ export const operationParameters = ({
           },
           plugin: pluginTypeScript,
           schema: operation.body.schema,
+          state: typescriptState,
         }),
       });
     }

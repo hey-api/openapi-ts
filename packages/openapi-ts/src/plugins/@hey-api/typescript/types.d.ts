@@ -425,4 +425,8 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
   tree: boolean;
 };
 
+export interface PluginState {
+  usedTypeIDs: Set<string>;
+}
+
 export type HeyApiTypeScriptPlugin = DefinePlugin<UserConfig, Config, Api>;
