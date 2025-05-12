@@ -17,6 +17,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   readableNameBuilder: '{{name}}Readable',
   style: 'preserve',
   tree: false,
+  typeids: false,
   writableNameBuilder: '{{name}}Writable',
 };
 
