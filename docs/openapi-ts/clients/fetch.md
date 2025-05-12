@@ -162,7 +162,7 @@ Interceptors (middleware) can be used to modify requests before they're sent or 
 import { client } from 'client/client.gen';
 
 // Supports async functions
-interceptorId = client.interceptors.request.use(async (request) => {
+const interceptorId = client.interceptors.request.use(async (request) => {
   // do something
   return request;
 });
@@ -192,14 +192,13 @@ and an example response interceptor
 
 ::: code-group
 
-
 ```js [use]
 import { client } from 'client/client.gen';
 
 // Supports async functions
 interceptorId = client.interceptors.response.use(async (response) => {
   // do something
-  return request;
+  return response;
 });
 ```
 
@@ -208,7 +207,7 @@ import { client } from 'client/client.gen';
 
 client.interceptors.response.eject((interceptorId) => {
   // do something
-  return request;
+  return response;
 });
 ```
 
@@ -217,9 +216,10 @@ import { client } from 'client/client.gen';
 
 client.interceptors.response.update(async (interceptorId, response) => {
   // do something
-  return request;
+  return response;
 });
 ```
+
 :::
 
 ::: tip
