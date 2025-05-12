@@ -332,22 +332,32 @@ class Interceptors<Interceptor> {
     this._fns = [];
   }
 
-  exists(id: number) {
-    return !!this._fns[id]
+  getInterceptorIndex(id: number | Interceptor): number {
+    if (typeof id === 'number') {
+      return this._fns[id] ? id : -1;
+    } else {
+      return this._fns.indexOf(id);
+    }
+  }
+  exists(id: number | Interceptor) {
+    const index = this.getInterceptorIndex(id);
+    return !!this._fns[index];
   }
 
-  eject(id: number) {
-    if (this._fns[id]) {
-      this._fns[id] = null;
+  eject(id: number | Interceptor) {
+    const index = this.getInterceptorIndex(id);
+    if (this._fns[index]) {
+      this._fns[index] = null;
     }
   }
 
-  update(id: number, fn: Interceptor) {
-    if (this._fns[id]) {
-      this._fns[id] = fn
-      return id
+  update(id: number | Interceptor, fn: Interceptor) {
+    const index = this.getInterceptorIndex(id);
+    if (this._fns[index]) {
+      this._fns[index] = fn;
+      return id;
     } else {
-      return false
+      return false;
     }
   }
 

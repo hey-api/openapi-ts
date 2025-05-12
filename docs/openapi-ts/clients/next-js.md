@@ -154,30 +154,36 @@ Interceptors (middleware) can be used to modify requests before they're sent or 
 
 ```js [use]
 import { client } from 'client/client.gen';
-
 // Supports async functions
-const interceptorId = client.interceptors.request.use(async (request) => {
+async function myInterceptor(request) {
   // do something
   return request;
-});
+}
+interceptorId = client.interceptors.request.use(myInterceptor);
 ```
 
 ```js [eject]
 import { client } from 'client/client.gen';
 
-client.interceptors.request.eject((interceptorId) => {
-  // do something
-  return request;
-});
+// eject interceptor by interceptor id
+client.interceptors.request.eject(interceptorId);
+
+// eject interceptor by reference to interceptor function
+client.interceptors.request.eject(myInterceptor);
 ```
 
 ```js [update]
 import { client } from 'client/client.gen';
 
-client.interceptors.request.update(async (interceptorId, request) => {
+async function myNewInterceptor(request) {
   // do something
   return request;
-});
+}
+// update interceptor by interceptor id
+client.interceptors.request.update(interceptorId, myNewInterceptor);
+
+// update interceptor by reference to interceptor function
+client.interceptors.request.update(myInterceptor, myNewInterceptor);
 ```
 
 :::
@@ -188,35 +194,42 @@ and an example response interceptor
 
 ```js [use]
 import { client } from 'client/client.gen';
-
-// Supports async functions
-interceptorId = client.interceptors.response.use(async (response) => {
+async function myInterceptor(response) {
   // do something
   return response;
-});
+}
+// Supports async functions
+interceptorId = client.interceptors.response.use(myInterceptor);
 ```
 
 ```js [eject]
 import { client } from 'client/client.gen';
 
-client.interceptors.response.eject((interceptorId) => {
-  // do something
-  return response;
-});
+// eject interceptor by interceptor id
+client.interceptors.response.eject(interceptorId);
+
+// eject interceptor by reference to interceptor function
+client.interceptors.response.eject(myInterceptor);
 ```
 
 ```js [update]
 import { client } from 'client/client.gen';
 
-client.interceptors.response.update(async (interceptorId, response) => {
+async function myNewInterceptor(response) {
   // do something
   return response;
-});
+}
+// update interceptor by interceptor id
+client.interceptors.response.update(interceptorId, myNewInterceptor);
+
+// update interceptor by reference to interceptor function
+client.interceptors.response.update(myInterceptor, myNewInterceptor);
 ```
 
 :::
+
 ::: tip
-To eject, you must provide the id of the interceptor passed to `use()`, this is the value returned by `use()`.
+To eject, you must provide the id or reference of the interceptor passed to `use()`, the id is the value returned by `use()` and `update()`.
 :::
 
 ## Auth
