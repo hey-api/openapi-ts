@@ -790,7 +790,7 @@ const schemaTypeToIdentifier = ({
   }
 };
 
-const irParametersToIrSchema = ({
+export const irParametersToIrSchema = ({
   parameters,
 }: {
   parameters: Record<string, IR.ParameterObject>;

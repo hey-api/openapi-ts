@@ -51,6 +51,10 @@ import {
   defaultConfig as heyApiTypeScript,
 } from './@hey-api/typescript';
 import {
+  type Config as PiniaColadaSdk,
+  defaultConfig as piniaColadaSdk,
+} from './@pinia/colada';
+import {
   type Config as TanStackAngularQueryExperimental,
   defaultConfig as tanStackAngularQueryExperimental,
 } from './@tanstack/angular-query-experimental';
@@ -91,6 +95,7 @@ export type UserPlugins =
   | Plugin.UserConfig<HeyApiSdk>
   | Plugin.UserConfig<HeyApiTransformers>
   | Plugin.UserConfig<HeyApiTypeScript>
+  | Plugin.UserConfig<PiniaColadaSdk>
   | Plugin.UserConfig<TanStackAngularQueryExperimental>
   | Plugin.UserConfig<TanStackReactQuery>
   | Plugin.UserConfig<TanStackSolidQuery>
@@ -116,6 +121,7 @@ export type ClientPlugins =
   | Plugin.Config<HeyApiSdk>
   | Plugin.Config<HeyApiTransformers>
   | Plugin.Config<HeyApiTypeScript>
+  | Plugin.Config<PiniaColadaSdk>
   | Plugin.Config<TanStackAngularQueryExperimental>
   | Plugin.Config<TanStackReactQuery>
   | Plugin.Config<TanStackSolidQuery>
@@ -133,6 +139,7 @@ export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
   '@hey-api/sdk': heyApiSdk,
   '@hey-api/transformers': heyApiTransformers,
   '@hey-api/typescript': heyApiTypeScript,
+  '@pinia/colada': piniaColadaSdk,
   '@tanstack/angular-query-experimental': tanStackAngularQueryExperimental,
   '@tanstack/react-query': tanStackReactQuery,
   '@tanstack/solid-query': tanStackSolidQuery,
