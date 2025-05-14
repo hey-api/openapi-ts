@@ -656,6 +656,8 @@ const parseEnum = ({
       typeOfEnumValue === 'boolean'
     ) {
       enumType = typeOfEnumValue;
+    } else if (typeOfEnumValue === 'object' && Array.isArray(enumValue)) {
+      enumType = 'array';
     } else if (enumValue === null) {
       // type must contain null
       if (schemaTypes.includes('null')) {
