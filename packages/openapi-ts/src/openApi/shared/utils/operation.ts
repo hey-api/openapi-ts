@@ -1,7 +1,7 @@
-import type { IR } from "../../../ir/types";
-import { stringCase } from "../../../utils/stringCase";
-import { sanitizeNamespaceIdentifier } from "../../common/parser/sanitize";
-import type { State } from "../types/state";
+import type { IR } from '../../../ir/types';
+import { stringCase } from '../../../utils/stringCase';
+import { sanitizeNamespaceIdentifier } from '../../common/parser/sanitize';
+import type { State } from '../types/state';
 
 /**
  * Verifies that operation ID is unique. For now, we only warn when this isn't
@@ -17,7 +17,7 @@ export const ensureUniqueOperationId = ({
 }: {
   context: IR.Context;
   id: string | undefined;
-  method: IR.OperationObject["method"];
+  method: IR.OperationObject['method'];
   operationIds: Map<string, string>;
   path: keyof IR.PathsObject;
 }) => {
@@ -28,10 +28,10 @@ export const ensureUniqueOperationId = ({
   const operationKey = `${method.toUpperCase()} ${path}`;
 
   if (operationIds.has(id)) {
-    if (context.config.logs.level !== "silent") {
+    if (context.config.logs.level !== 'silent') {
       // TODO: parser - support throw on duplicate
       console.warn(
-        `❗️ Duplicate operationId: ${id} in ${operationKey}. Please ensure your operation IDs are unique. This behavior is not supported and will likely lead to unexpected results.`
+        `❗️ Duplicate operationId: ${id} in ${operationKey}. Please ensure your operation IDs are unique. This behavior is not supported and will likely lead to unexpected results.`,
       );
     }
   } else {
@@ -57,19 +57,19 @@ export const operationToId = ({
   id: string | undefined;
   method: string;
   path: string;
-  state: Pick<State, "ids">;
+  state: Pick<State, 'ids'>;
 }): string => {
   let result: string;
 
   const { output } = context.config;
   const targetCase =
-    (output !== void 0 && "case" in output ? output.case : void 0) ??
-    "camelCase";
+    (output !== void 0 && 'case' in output ? output.case : void 0) ??
+    'camelCase';
 
   if (
     id &&
-    (!context.config.plugins["@hey-api/sdk"] ||
-      context.config.plugins["@hey-api/sdk"].operationId)
+    (!context.config.plugins['@hey-api/sdk'] ||
+      context.config.plugins['@hey-api/sdk'].operationId)
   ) {
     result = stringCase({
       case: targetCase,
@@ -77,9 +77,9 @@ export const operationToId = ({
     });
   } else {
     const urlWithoutPlaceholders = path
-      .replace(/{(.*?)}/g, "by-$1")
+      .replace(/{(.*?)}/g, 'by-$1')
       // replace slashes with hyphens for camelcase method at the end
-      .replace(/[/:+]/g, "-");
+      .replace(/[/:+]/g, '-');
 
     result = stringCase({
       case: targetCase,
