@@ -42,6 +42,26 @@ describe('buildUrl', () => {
       },
       url: '/foo/1?bar=baz',
     },
+    {
+      options: {
+        query: {
+          foo: [],
+          bar: [],
+        },
+        url: '/',
+      },
+      url: '/',
+    },
+    {
+      options: {
+        query: {
+          foo: ['abc', 'def'],
+          bar: [],
+        },
+        url: '/',
+      },
+      url: '/?foo=abc&foo=def',
+    },
   ];
 
   it.each(scenarios)('returns $url', ({ options, url }) => {
