@@ -1,5 +1,12 @@
 # @example/openapi-ts-nuxt
 
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @hey-api/nuxt@0.1.6
+
 ## 0.0.16
 
 ### Patch Changes
