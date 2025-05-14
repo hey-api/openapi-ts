@@ -53,6 +53,7 @@
     "@nx/devkit": "21.0.3",
     "api-smart-diff": "^1.0.6",
     "latest-version": "9.0.0",
+    "nx": "21.0.3",
     "swagger2openapi": "^7.0.8",
     "tslib": "2.8.1",
     "xcurl": "2.1.2"

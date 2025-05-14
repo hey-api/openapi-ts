@@ -807,6 +807,9 @@ importers:
       latest-version:
         specifier: 9.0.0
         version: 9.0.0
+      nx:
+        specifier: 21.0.3
+        version: 21.0.3
       swagger2openapi:
         specifier: ^7.0.8
         version: 7.0.8(encoding@0.1.13)
