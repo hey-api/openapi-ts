@@ -55,6 +55,11 @@
       "type": "boolean",
       "description": "If true, the Client code will be regenerated even if the spec has not changed, also pass --skip-nx-cache to avoid caching issues",
       "default": false
+    },
+    "watch": {
+      "type": "boolean",
+      "description": "If true, the client will be watched for changes and regenerated when they occur",
+      "default": false
     }
   },
   "required": ["spec", "scope", "name"]

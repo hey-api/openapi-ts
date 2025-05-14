@@ -1,8 +1,8 @@
 {
-  "name": "<%= projectScope %>/<%= projectName %>",
+  "name": "<%= projectScope %>/<%- projectName %>",
   "version": "0.1.0",
   "type": "commonjs",
   "scripts": {
-    "update": "nx run <%= projectScope %>/<%= projectName %>:updateApi"
+    "update": "nx run <%- projectScope %>/<%- projectName %>:updateApi"
   }
 }
