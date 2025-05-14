@@ -74,6 +74,10 @@
     "baseTsConfigPath": {
       "type": "string",
       "description": "The path to the base tsconfig file that contains the compiler paths used to resolve the imports, use this if the base tsconfig file is not in the workspace root. This can be a file or a directory. If it is a directory and the baseTsConfigName is provided then the baseTsConfigName will be added to the path. If it is a file and the baseTsConfigName is provided then there will be an error."
+    },
+    "serveCmdName": {
+      "type": "string",
+      "description": "The command name to use to serve the implicit dependencies, defaults to `serve`. This is used to watch the implicit dependencies for changes."
     }
   },
   "required": ["name", "spec", "scope"]

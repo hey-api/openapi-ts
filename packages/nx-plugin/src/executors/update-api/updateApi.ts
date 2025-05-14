@@ -1,5 +1,11 @@
 import { existsSync, writeFileSync } from 'node:fs';
-import { cp, readFile, rm } from 'node:fs/promises';
+import {
+  cp,
+  readFile,
+  rm,
+  watch as fileWatch,
+  writeFile,
+} from 'node:fs/promises';
 import { join } from 'node:path';
 
 import type { PromiseExecutor } from '@nx/devkit';
@@ -15,6 +21,7 @@ import {
   compareSpecs,
   formatFiles,
   generateClientCode,
+  isUrl,
   makeDir,
 } from '../../utils';
 import { CONSTANTS } from '../../vars';
@@ -130,12 +137,41 @@ async function setup({
   };
 }
 
+const handleWatch: PromiseExecutor<UpdateApiExecutorSchema> = async (
+  options,
+  context,
+) => {
+  // Do not watch spec files if they are URLs
+  const isSpecFileUrl = isUrl(options.spec);
+  if (isSpecFileUrl) {
+    logger.error('Spec file is a url.');
+    throw new Error('Spec file is a url, not watching.');
+  }
+
+  const { watch, ...rest } = options;
+  if (!watch) {
+    return { success: false };
+  }
+  logger.info(`Watching spec file ${options.spec} for changes...`);
+  const watcher = fileWatch(rest.spec);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  for await (const _ of watcher) {
+    logger.info(`Spec file ${options.spec} has changed, updating...`);
+    // do not pass the watch flag to the runExecutor as it will cause an infinite loop
+    await runExecutor(rest, context);
+    logger.info(`Spec file ${options.spec} updated successfully.`);
+  }
+  return { success: true };
+};
+
 const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
   options,
-  // this is added to stop the CI from complaining about not using the context and to stop the linter from complaining
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _context,
+  context,
 ) => {
+  if (options.watch) {
+    return handleWatch(options, context);
+  }
+
   const tempFolder =
     // use the provided temp folder or use the default temp folder and append the project name to it
     // we append the project name to the temp folder to avoid conflicts between different projects using the same temp folder
@@ -224,7 +260,7 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
         filepath: absoluteTempSpecPath,
       });
 
-      writeFileSync(absoluteExistingSpecPath, formattedSpec);
+      await writeFile(absoluteExistingSpecPath, formattedSpec);
       logger.debug(`Spec file updated successfully`);
     } else {
       logger.error(

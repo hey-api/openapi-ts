@@ -16,7 +16,10 @@ import { convert } from 'swagger2openapi';
 
 import { CONSTANTS } from './vars';
 
-export type Plugin = string | { asClass: boolean; name: string };
+export type Plugin =
+  | string
+  | { asClass: boolean; name: '@hey-api/sdk' }
+  | { name: '@hey-api/schemas'; type: 'json' | 'form' };
 
 export function generateClientCommand({
   clientType,
@@ -64,11 +67,13 @@ export async function generateClientCode({
   outputPath,
   plugins,
   specFile,
+  watch,
 }: {
   clientType: string;
   outputPath: string;
   plugins: Plugin[];
   specFile: string;
+  watch?: boolean;
 }) {
   try {
     const pluginNames = plugins.map(getPluginName);
@@ -78,6 +83,7 @@ export async function generateClientCode({
       input: specFile,
       output: outputPath,
       plugins: [clientType, ...pluginNames] as ClientConfig['plugins'],
+      watch,
     });
     logger.info(`Generated client code successfully.`);
   } catch (error) {
@@ -179,7 +185,10 @@ async function getSpecFile(path: string) {
 export async function getSpecFiles(
   existingSpecPath: string,
   newSpecPath: string,
-) {
+): Promise<{
+  existingSpec: JSONSchema;
+  newSpec: JSONSchema;
+}> {
   logger.debug('Loading spec files...');
   const parsedExistingSpecTask = getSpecFile(existingSpecPath);
   const parsedNewSpecTask = getSpecFile(newSpecPath);

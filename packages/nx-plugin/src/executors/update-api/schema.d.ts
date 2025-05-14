@@ -15,4 +15,5 @@ export interface UpdateApiExecutorSchema {
    * Temporary folder used to store files, only change for testing
    */
   tempFolder?: string;
+  watch?: boolean;
 }

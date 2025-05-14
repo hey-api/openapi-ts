@@ -64,6 +64,7 @@ paths:
     directory: tempDir,
     name: TestOptions.name,
     plugins: [],
+    preformInstall: false,
     scope: TestOptions.scope,
     spec: tempSpecPath,
     tags: TestOptions.tags,

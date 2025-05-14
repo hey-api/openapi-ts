@@ -3,7 +3,11 @@ import { rm } from 'node:fs/promises';
 import { isAbsolute, join, resolve } from 'node:path';
 
 import { defaultPlugins } from '@hey-api/openapi-ts';
-import type { ProjectConfiguration, Tree } from '@nx/devkit';
+import type {
+  ProjectConfiguration,
+  TargetConfiguration,
+  Tree,
+} from '@nx/devkit';
 import {
   addDependenciesToPackageJson,
   addProjectConfiguration,
@@ -65,13 +69,27 @@ const getClientPlugins = ({
   projectScope,
 }: NormalizedOptions & {
   inputPlugins: Plugin[];
-}): Record<string, ClientPluginOptions> => {
+}) => {
   const plugins: Record<string, ClientPluginOptions> = {
+    '@hey-api/schemas': {
+      additionalEntryPoints: [`{projectRoot}/src/schemas.ts`],
+      templateFilesPath: './plugins/schemas',
+      tsConfigCompilerPaths: {
+        [`${projectScope}/${projectName}/schemas`]: `./${projectRoot}/src/schemas.ts`,
+      },
+    },
     '@tanstack/react-query': {
       additionalEntryPoints: [`{projectRoot}/src/rq.ts`],
       templateFilesPath: './plugins/rq',
       tsConfigCompilerPaths: {
         [`${projectScope}/${projectName}/rq`]: `./${projectRoot}/src/rq.ts`,
+      },
+    },
+    zod: {
+      additionalEntryPoints: [`{projectRoot}/src/zod.ts`],
+      templateFilesPath: './plugins/zod',
+      tsConfigCompilerPaths: {
+        [`${projectScope}/${projectName}/zod`]: `./${projectRoot}/src/zod.ts`,
       },
     },
   };
@@ -84,6 +102,7 @@ const getClientPlugins = ({
         const keyedPlugin = plugin as keyof typeof plugins;
         const foundPlugin = plugins[keyedPlugin];
         if (!foundPlugin) {
+          acc[plugin] = {};
           return acc;
         }
         acc[plugin] = foundPlugin;
@@ -158,6 +177,10 @@ export interface OpenApiClientGeneratorSchema {
    */
   plugins: string[];
   /**
+   * Whether to perform the install of the dependencies, defaults to `true`
+   */
+  preformInstall?: boolean;
+  /**
    * Whether to make the generated package private, defaults to `true`
    */
   private?: boolean;
@@ -165,6 +188,10 @@ export interface OpenApiClientGeneratorSchema {
    * The scope of the project
    */
   scope: string;
+  /**
+   * The command name to use to serve the implicit dependencies, defaults to `serve`. This is used to watch the implicit dependencies for changes.
+   */
+  serveCmdName?: string;
   /**
    * The spec file to use for the OpenAPI client
    */
@@ -199,6 +226,7 @@ export default async function (
     clientType,
     isPrivate,
     plugins,
+    preformInstall,
     projectName,
     projectRoot,
     projectScope,
@@ -233,6 +261,21 @@ export default async function (
       tree,
     });
 
+    // Update the package.json file
+    logger.info(`Updating package.json with dependencies`);
+    const installDeps = await updatePackageJson({
+      clientType,
+      isPrivate,
+      plugins,
+      projectRoot,
+      tree,
+    });
+
+    // Install the dependencies for the project as we need to do this before generating the api client code in case any plugins are missing
+    if (preformInstall) {
+      await installDeps();
+    }
+
     // Generate the api client code
     logger.info(`Generating API client code using spec file: ${specFile}`);
     const { specFileLocalLocations } = await generateApi({
@@ -241,16 +284,6 @@ export default async function (
       projectRoot,
       specFile,
       tempFolder,
-      tree,
-    });
-
-    // Update the package.json file
-    logger.info(`Updating package.json with dependencies`);
-    await updatePackageJson({
-      clientType,
-      isPrivate,
-      plugins,
-      projectRoot,
       tree,
     });
 
@@ -282,11 +315,13 @@ export default async function (
     );
     // Return a function that installs the packages
     return async () => {
-      logger.info(`Installing dependencies for ${projectName}`);
-      const packageManager = detectPackageManager(workspaceRoot);
+      if (preformInstall) {
+        logger.info(`Installing dependencies for ${projectName}`);
+        const packageManager = detectPackageManager(workspaceRoot);
 
-      installPackagesTask(tree, true, workspaceRoot, packageManager);
-      logger.info(`Dependencies installed successfully`);
+        installPackagesTask(tree, true, workspaceRoot, packageManager);
+        logger.info(`Dependencies installed successfully`);
+      }
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -304,10 +339,12 @@ export interface NormalizedOptions {
   clientType: string;
   isPrivate: boolean;
   plugins: Plugin[];
+  preformInstall?: boolean;
   projectDirectory: string;
   projectName: string;
   projectRoot: string;
   projectScope: string;
+  serveCmdName: string;
   specFile: string;
   tagArray: string[];
   tempFolder: string;
@@ -317,6 +354,7 @@ export interface NormalizedOptions {
 export type GeneratedOptions = NormalizedOptions &
   typeof CONSTANTS & {
     pathToTsConfig: string;
+    stringifyPlugin: (plugin: Plugin) => string;
     tsConfigName: string;
   };
 
@@ -354,8 +392,18 @@ export function normalizeOptions(
   const tempFolder =
     options.tempFolderDir ?? join(defaultTempFolder, projectName);
   const [default1, default2, ...rest] = defaultPlugins;
+  const mappedProvidedPlugins = options.plugins.map((plugin) => {
+    if (plugin === '@hey-api/schemas') {
+      return {
+        name: plugin,
+        type: 'json',
+      } as const;
+    }
+    return plugin;
+  });
   const plugins = [
     default1,
+    // TODO: asClass is not working
     options.asClass
       ? {
           asClass: true,
@@ -363,7 +411,7 @@ export function normalizeOptions(
         }
       : default2,
     ...rest,
-    ...options.plugins,
+    ...mappedProvidedPlugins,
   ];
 
   return {
@@ -372,10 +420,12 @@ export function normalizeOptions(
     clientType: options.client,
     isPrivate: options.private ?? true,
     plugins,
+    preformInstall: options.preformInstall ?? true,
     projectDirectory,
     projectName,
     projectRoot,
     projectScope: options.scope,
+    serveCmdName: options.serveCmdName ?? 'serve',
     specFile: options.spec,
     tagArray,
     tempFolder,
@@ -387,14 +437,17 @@ export function normalizeOptions(
  * Builds the spec path
  */
 export function buildSpecPath(specPath: string) {
+  // if the spec path is a url then we can just return it
   const isSpecFileUrl = isUrl(specPath);
   if (isSpecFileUrl) {
     return specPath;
   }
+  // if the spec path is an absolute path then we can just return it
   const isSpecFileAbsolutePath = isAbsolute(specPath);
   if (isSpecFileAbsolutePath) {
     return specPath;
   }
+  // if the spec path is a relative path then we convert it one in the workspace
   const newSpecPath = specPath.replace('./', `{workspaceRoot}/`);
   return newSpecPath;
 }
@@ -440,6 +493,7 @@ export async function generateNxProject({
     projectName,
     projectRoot,
     projectScope,
+    serveCmdName,
     specFile,
     tagArray,
     test,
@@ -452,7 +506,7 @@ export async function generateNxProject({
 
   for (const plugin of plugins) {
     const clientPlugin = clientPlugins[getPluginName(plugin)];
-    if (clientPlugin) {
+    if (clientPlugin && typeof clientPlugin !== 'boolean') {
       additionalEntryPoints.push(...(clientPlugin.additionalEntryPoints ?? []));
     }
   }
@@ -503,6 +557,25 @@ export async function generateNxProject({
     baseTsConfigPath,
     projectRoot,
   });
+
+  // TODO: we should check if the serveCmdName is a valid command in the `dependsOnProject`; user feedback could be better
+  const serve = dependsOnProject
+    ? ({
+        cache: false,
+        continuous: true,
+        dependsOn: [{ projects: [dependsOnProject], target: serveCmdName }],
+        executor: `${packageJson.name}:update-api`,
+        inputs: updateInputs,
+        options: {
+          ...buildUpdateOptions(normalizedOptions),
+          watch: true,
+        },
+        outputs: [
+          `{projectRoot}/src/${CONSTANTS.GENERATED_DIR_NAME}`,
+          `{projectRoot}/${CONSTANTS.SPEC_DIR_NAME}`,
+        ],
+      } satisfies TargetConfiguration)
+    : undefined;
 
   // Create basic project structure
   addProjectConfiguration(tree, `${projectScope}/${projectName}`, {
@@ -561,8 +634,29 @@ export async function generateNxProject({
           `{projectRoot}/${CONSTANTS.SPEC_DIR_NAME}`,
         ],
       },
+      ...(serve ? { serve } : {}),
     },
   });
+
+  const stringifyPlugin = (plugin: unknown): string => {
+    if (typeof plugin === 'string') {
+      return `'${plugin}'`;
+    }
+    if (typeof plugin === 'object' && plugin !== null) {
+      const entries = Object.entries(plugin);
+      return `{
+      ${entries
+        .map(([key, value]) => {
+          if (typeof value === 'object') {
+            return `${key}: ${stringifyPlugin(value)}`;
+          }
+          return `${key}: ${typeof value === 'string' ? `'${value}'` : value}`;
+        })
+        .join(',\n      ')}
+    }`;
+    }
+    return String(plugin);
+  };
 
   /**
    * The variables that are passed to the template files
@@ -571,7 +665,8 @@ export async function generateNxProject({
     ...normalizedOptions,
     ...CONSTANTS,
     pathToTsConfig: tsConfigDirectory,
-    plugins: plugins.map(getPluginName),
+    plugins: plugins.map((plugin) => JSON.stringify(plugin)),
+    stringifyPlugin,
     tsConfigName,
   };
 
@@ -580,10 +675,12 @@ export async function generateNxProject({
   generateFiles(tree, templatePath, projectRoot, generatedOptions);
 
   for (const plugin of plugins) {
-    const pluginConfiguration = clientPlugins[getPluginName(plugin)];
+    const name = getPluginName(plugin);
+    const pluginConfiguration = clientPlugins[name];
     if (pluginConfiguration) {
       handlePlugin({
         generatedOptions,
+        name,
         pluginConfiguration,
         projectRoot,
         tree,
@@ -607,15 +704,18 @@ export async function generateNxProject({
 
 function handlePlugin({
   generatedOptions,
+  name,
   pluginConfiguration,
   projectRoot,
   tree,
 }: {
   generatedOptions: GeneratedOptions;
+  name: string;
   pluginConfiguration: ClientPluginOptions;
   projectRoot: string;
   tree: Tree;
 }) {
+  logger.debug(`Handling plugin: ${name}`);
   if (pluginConfiguration.templateFilesPath) {
     const pluginTemplatePath = join(
       __dirname,
@@ -801,6 +901,8 @@ export async function updatePackageJson({
   const clientDetails = getPackageDetails(clientType);
   // add the openapi-ts as a dependency
   const openApiTsDetails = getPackageDetails('@hey-api/openapi-ts');
+
+  const nonPackagePlugins = ['@hey-api/schemas'];
   // add the plugins as dependencies
   const pluginDetails = plugins
     // filter out the default plugins as they are not packages
@@ -810,6 +912,8 @@ export async function updatePackageJson({
           getPluginName(plugin),
         ),
     )
+    // also filter out non-package plugins
+    .filter((plugin) => !nonPackagePlugins.includes(getPluginName(plugin)))
     .map((plugin) => getPackageDetails(getPluginName(plugin)));
 
   const results = await Promise.all([
@@ -832,21 +936,29 @@ export async function updatePackageJson({
     deps['axios'] = `^${axiosVersion}`;
   }
 
-  addDependenciesToPackageJson(
-    tree,
-    deps,
-    {},
-    join(projectRoot, 'package.json'),
+  const tasks: (() => Promise<void> | void)[] = [];
+
+  tasks.push(
+    addDependenciesToPackageJson(
+      tree,
+      deps,
+      {},
+      join(projectRoot, 'package.json'),
+    ),
   );
 
   if (!isWorkspacesEnabled(detectPackageManager(workspaceRoot))) {
     if (tree.exists(join(workspaceRoot, 'package.json'))) {
       // if workspaces are not enabled then we need to install the dependencies to the root
-      addDependenciesToPackageJson(
-        tree,
-        deps,
-        {},
-        join(workspaceRoot, 'package.json'),
+      // we need to remove the previous task as we are adding the dependencies to the root package.json
+      tasks.pop();
+      tasks.push(
+        addDependenciesToPackageJson(
+          tree,
+          deps,
+          {},
+          join(workspaceRoot, 'package.json'),
+        ),
       );
     } else {
       logger.warn(
@@ -866,6 +978,8 @@ export async function updatePackageJson({
     }
     return json;
   });
+
+  return async () => await Promise.all(tasks.map(async (task) => await task()));
 }
 
 export function updateTsConfig({
@@ -893,6 +1007,9 @@ export function updateTsConfig({
       for (const plugin of Object.keys(clientPlugins)) {
         const item = clientPlugins[plugin];
         if (!item) {
+          continue;
+        }
+        if (typeof item === 'boolean') {
           continue;
         }
         const pluginTsConfigPath = item.tsConfigCompilerPaths;
@@ -932,17 +1049,30 @@ export async function getProjectThatSpecIsIn(tree: Tree, specFile: string) {
         logger.debug('Provided spec file is in project: ', projectJsonName);
         return projectJsonName;
       }
-      const packageJsonPath = join(project.root, 'package.json');
-      const packageJson = readJson(tree, packageJsonPath);
-      const projectName = packageJson.name;
-      if (!projectName) {
-        throw new Error('No name found in package.json.');
-      } else if (typeof projectName === 'string') {
-        logger.debug('Provided spec file is in project: ', projectName);
-        return projectName;
-      }
-      throw new Error('Project name is not a valid string.');
+
+      const projectName = getProjectName(tree, project);
+      return projectName;
     }
   }
   return null;
 }
+
+export const getProjectName = (tree: Tree, project: ProjectConfiguration) => {
+  const packageJsonPath = join(project.root, 'package.json');
+  const projectJsonPath = join(project.root, 'project.json');
+  if (tree.exists(packageJsonPath)) {
+    const packageJson = readJson(tree, packageJsonPath);
+    const projectName = packageJson.name;
+    if (typeof projectName === 'string') {
+      return projectName;
+    }
+  }
+  if (tree.exists(projectJsonPath)) {
+    const projectJson = readJson(tree, projectJsonPath);
+    const projectName = projectJson.name;
+    if (typeof projectName === 'string') {
+      return projectName;
+    }
+  }
+  throw new Error('No name found in package.json.');
+};
