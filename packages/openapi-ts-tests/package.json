@@ -48,7 +48,7 @@
     "cross-spawn": "7.0.5",
     "eslint": "9.17.0",
     "express": "4.21.0",
-    "fastify": "5.2.0",
+    "fastify": "5.3.2",
     "glob": "10.4.3",
     "node-fetch": "3.3.2",
     "nuxt": "3.14.1592",
