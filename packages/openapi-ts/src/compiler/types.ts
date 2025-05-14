@@ -601,7 +601,8 @@ export const createObjectType = <
           } else {
             let initializer: ts.Expression | undefined = isTsNode(value.value)
               ? value.value
-              : Array.isArray(value.value)
+              : Array.isArray(value.value) &&
+                  (!value.value.length || typeof value.value[0] === 'object')
                 ? createObjectType({
                     multiLine,
                     obj: value.value,

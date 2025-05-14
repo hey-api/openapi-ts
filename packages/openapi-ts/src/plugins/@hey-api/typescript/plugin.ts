@@ -154,7 +154,7 @@ const schemaToEnumObject = ({
     | 'undefined'
   > = [];
 
-  const obj = (schema.items ?? []).map((item) => {
+  const obj = (schema.items ?? []).map((item, index) => {
     const typeOfItemConst = typeof item.const;
 
     if (!typeofItems.includes(typeOfItemConst)) {
@@ -172,6 +172,8 @@ const schemaToEnumObject = ({
       key = item.const ? 'true' : 'false';
     } else if (item.const === null) {
       key = 'null';
+    } else {
+      key = `${index}`;
     }
 
     if (key) {

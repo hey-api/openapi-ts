@@ -10,6 +10,14 @@ export type Foo = 'foo' | 'bar' | '' | true | false;
 
 export type Numbers = 100 | 200 | 300 | -100 | -200 | -300;
 
+export type Arrays = [
+    'foo'
+] | [
+    'bar'
+] | [
+    'baz'
+];
+
 export type ClientOptions = {
     baseUrl: string;
 };
