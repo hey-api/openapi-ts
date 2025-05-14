@@ -50,11 +50,6 @@ The generator creates a new library project with the following structure:
 libs/<name>/
 ├── api/
 │   └── spec.yaml        # Bundled and dereferenced OpenAPI spec file
-├── src/
-│   ├── generated/       # Generated API client code (not committed to git)
-|   ├── client.spec.ts   # Unit test for the client code
-│   ├── index.ts         # Exports everything from generated/
-|   └── rq.ts            # Exports tanstack query client code (if @tanstack/react-query is in the plugins array)
 ├── package.json
 ├── vitest.config.ts     # Vitest configuration (if test is set to 'vitest')
 ├── README.md
@@ -62,7 +57,15 @@ libs/<name>/
 ├── tsconfig.json        # root config
 ├── tsconfig.lib.json    # library config
 ├── tsconfig.spec.json   # test config (if test is set to a value other than none)
-└── openapi-ts.config.ts # Configuration for @hey-api/openapi-ts
+├── openapi-ts.config.ts # Configuration for @hey-api/openapi-ts
+└── src/
+    ├── generated/       # Generated API client code (not committed to git)
+    ├── client.spec.ts   # Unit test for the client code
+    ├── index.ts         # Exports everything from generated/
+    │   # conditional
+    ├── rq.ts            # Exports tanstack query client code (if @tanstack/react-query is in the plugins array)
+    ├── schemas.ts       # Exports json schemas (if @hey-api/schemas is in the plugins array)
+    └── zod.ts           # Exports zod schemas (if zod is in the plugins array)
 ```
 
 ## Generating the API Client

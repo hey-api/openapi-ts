@@ -48,9 +48,9 @@
   "executors": "./executors.json",
   "generators": "./generators.json",
   "dependencies": {
-    "@hey-api/json-schema-ref-parser": "1.0.5",
+    "@hey-api/json-schema-ref-parser": "1.0.6",
     "@hey-api/openapi-ts": "workspace:*",
-    "@nx/devkit": "20.8.1",
+    "@nx/devkit": "21.0.3",
     "api-smart-diff": "^1.0.6",
     "latest-version": "9.0.0",
     "swagger2openapi": "^7.0.8",
