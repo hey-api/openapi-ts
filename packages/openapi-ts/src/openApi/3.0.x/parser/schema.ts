@@ -608,6 +608,8 @@ const parseEnum = ({
       typeOfEnumValue === 'boolean'
     ) {
       enumType = typeOfEnumValue;
+    } else if (typeOfEnumValue === 'object' && Array.isArray(enumValue)) {
+      enumType = 'array';
     } else if (enumValue === null) {
       // nullable must be true
       if (schema.nullable) {
@@ -642,6 +644,10 @@ const parseEnum = ({
     // cast enum back
     if (enumType === 'null') {
       irTypeSchema.type = enumType;
+    }
+
+    if (irTypeSchema.type === 'array') {
+      irTypeSchema.type = 'tuple';
     }
 
     irSchema.accessScopes = mergeSchemaAccessScopes(
