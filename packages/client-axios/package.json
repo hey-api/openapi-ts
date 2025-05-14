@@ -73,6 +73,6 @@
     "@config/vite-base": "workspace:*",
     "@hey-api/client-core": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
-    "axios": "1.8.2"
+    "axios": "1.9.0"
   }
 }
