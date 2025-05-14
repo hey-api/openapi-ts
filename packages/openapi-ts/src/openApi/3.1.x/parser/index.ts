@@ -15,7 +15,6 @@ import { parametersArrayToObject, parseParameter } from './parameter';
 import { parseRequestBody } from './requestBody';
 import { parseSchema } from './schema';
 import { parseServers } from './server';
-
 export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
   const state: State = {
     ids: new Map(),
