@@ -61,7 +61,9 @@ export const operationToId = ({
 }): string => {
   let result: string;
 
-  const targetCase = context.config.output.case ?? 'camelCase';
+  const { output } = context.config;
+  const targetCase = (output !== void 0 && 'case' in output ? output.case : void 0) ?? 'camelCase';
+
   if (
     id &&
     (!context.config.plugins['@hey-api/sdk'] ||
