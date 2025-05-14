@@ -98,7 +98,7 @@ export const createQuerySerializer = <T = unknown>({
   object,
 }: QuerySerializerOptions = {}) => {
   const querySerializer = (queryParams: T) => {
-    let search: string[] = [];
+    const search: string[] = [];
     if (queryParams && typeof queryParams === 'object') {
       for (const name in queryParams) {
         const value = queryParams[name];
@@ -108,43 +108,33 @@ export const createQuerySerializer = <T = unknown>({
         }
 
         if (Array.isArray(value)) {
-          search = [
-            ...search,
-            serializeArrayParam({
-              allowReserved,
-              explode: true,
-              name,
-              style: 'form',
-              value,
-              ...array,
-            }),
-          ];
-          continue;
-        }
-
-        if (typeof value === 'object') {
-          search = [
-            ...search,
-            serializeObjectParam({
-              allowReserved,
-              explode: true,
-              name,
-              style: 'deepObject',
-              value: value as Record<string, unknown>,
-              ...object,
-            }),
-          ];
-          continue;
-        }
-
-        search = [
-          ...search,
-          serializePrimitiveParam({
+          const serializedArray = serializeArrayParam({
+            allowReserved,
+            explode: true,
+            name,
+            style: 'form',
+            value,
+            ...array,
+          });
+          if (serializedArray) search.push(serializedArray);
+        } else if (typeof value === 'object') {
+          const serializedObject = serializeObjectParam({
+            allowReserved,
+            explode: true,
+            name,
+            style: 'deepObject',
+            value: value as Record<string, unknown>,
+            ...object,
+          });
+          if (serializedObject) search.push(serializedObject);
+        } else {
+          const serializedPrimitive = serializePrimitiveParam({
             allowReserved,
             name,
             value: value as string,
-          }),
-        ];
+          });
+          if (serializedPrimitive) search.push(serializedPrimitive);
+        }
       }
     }
     return search.join('&');
