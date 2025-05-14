@@ -61,13 +61,14 @@ export const operationToId = ({
 }): string => {
   let result: string;
 
+  const targetCase = context.config.output.case ?? 'camelCase';
   if (
     id &&
     (!context.config.plugins['@hey-api/sdk'] ||
       context.config.plugins['@hey-api/sdk'].operationId)
   ) {
     result = stringCase({
-      case: 'camelCase',
+      case: targetCase,
       value: sanitizeNamespaceIdentifier(id),
     });
   } else {
@@ -77,7 +78,7 @@ export const operationToId = ({
       .replace(/[/:+]/g, '-');
 
     result = stringCase({
-      case: 'camelCase',
+      case: targetCase,
       value: `${method}-${urlWithoutPlaceholders}`,
     });
   }
