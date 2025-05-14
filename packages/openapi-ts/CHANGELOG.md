@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.67.4
+
+### Patch Changes
+
+- [#2043](https://github.com/hey-api/openapi-ts/pull/2043) [`e3997c8`](https://github.com/hey-api/openapi-ts/commit/e3997c8d9a9e8a6da7bc4b417769e751887ff6ac) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle enum keyword with array type
+
 ## 0.67.3
 
 ### Patch Changes

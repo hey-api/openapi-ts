@@ -1,5 +1,12 @@
 # @example/openapi-ts-next
 
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [[`565e0b8`](https://github.com/hey-api/openapi-ts/commit/565e0b89fbab4556ecdc63dfe08250942681140e)]:
+  - @hey-api/client-next@0.3.1
+
 ## 0.1.8
 
 ### Patch Changes
