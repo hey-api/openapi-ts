@@ -45,8 +45,8 @@ describe('buildUrl', () => {
     {
       options: {
         query: {
-          foo: [],
           bar: [],
+          foo: [],
         },
         url: '/',
       },
@@ -55,8 +55,8 @@ describe('buildUrl', () => {
     {
       options: {
         query: {
-          foo: ['abc', 'def'],
           bar: [],
+          foo: ['abc', 'def'],
         },
         url: '/',
       },

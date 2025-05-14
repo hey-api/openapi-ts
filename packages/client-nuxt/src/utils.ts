@@ -100,7 +100,7 @@ export const createQuerySerializer = <T = unknown>({
   object,
 }: QuerySerializerOptions = {}) => {
   const querySerializer = (queryParams: T) => {
-    let search: string[] = [];
+    const search: string[] = [];
     const qParams = toValue(queryParams);
     if (qParams && typeof qParams === 'object') {
       for (const name in qParams) {
