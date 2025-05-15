@@ -6,8 +6,7 @@ import {
   serializeObjectParam,
   serializePrimitiveParam,
 } from '@hey-api/client-core';
-import type { ComputedRef, Ref } from 'vue';
-import { isRef, toValue, unref } from 'vue';
+import { toValue } from 'vue';
 
 import type {
   ArraySeparatorStyle,
@@ -23,10 +22,12 @@ type PathSerializer = Pick<Required<BuildUrlOptions>, 'path' | 'url'>;
 
 const PATH_PARAM_RE = /\{[^{}]+\}/g;
 
-type MaybeArray<T> = T | T[];
-
 const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
+  const pathValue = toValue(toValue(path)); // TODO: this shouldn't be required.
   let url = _url;
+
+  if (!pathValue) return url;
+
   const matches = _url.match(PATH_PARAM_RE);
   if (matches) {
     for (const match of matches) {
@@ -47,8 +48,7 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
         style = 'matrix';
       }
 
-      const value = toValue(toValue(path)[name]);
-
+      const value = toValue(pathValue[name]);
       if (value === undefined || value === null) {
         continue;
       }
@@ -155,44 +155,43 @@ export const createQuerySerializer = <T = unknown>({
   return querySerializer;
 };
 
-export const setAuthParams = async ({
-  security,
-  ...options
-}: Pick<Required<RequestOptions>, 'security'> &
-  Pick<RequestOptions, 'auth' | 'query'> & {
-    headers: Headers;
-  }) => {
-  for (const auth of security) {
-    const token = await getAuthToken(auth, options.auth);
+export const generateAuthParams = async (
+  security: NonNullable<RequestOptions['security']>,
+  auth: RequestOptions['auth'],
+) => {
+  const results = {
+    headers: new Headers(),
+    query: new URLSearchParams(),
+  };
+
+  for (const sauth of security) {
+    const token = await getAuthToken(sauth, auth);
 
     if (!token) {
       continue;
     }
 
-    const name = auth.name ?? 'Authorization';
+    const name = sauth.name ?? 'Authorization';
 
-    switch (auth.in) {
+    switch (sauth.in) {
       case 'query':
-        if (!options.query) {
-          options.query = {};
-        }
-        toValue(options.query)[name] = token;
+        results.query.append(name, token);
         break;
       case 'cookie':
-        options.headers.append('Cookie', `${name}=${token}`);
+        results.headers.append('Cookie', `${name}=${token}`);
         break;
       case 'header':
       default:
-        options.headers.set(name, token);
+        results.headers.set(name, token);
         break;
     }
-
-    return;
+    return results;
   }
+  return results;
 };
 
-export const buildUrl: Client['buildUrl'] = (options) => {
-  const url = getUrl({
+export const buildUrl: Client['buildUrl'] = (options) =>
+  getUrl({
     baseUrl: options.baseURL as string,
     path: options.path,
     query: options.query,
@@ -202,8 +201,6 @@ export const buildUrl: Client['buildUrl'] = (options) => {
         : createQuerySerializer(options.querySerializer),
     url: options.url,
   });
-  return url;
-};
 
 export const getUrl = ({
   baseUrl,
@@ -239,18 +236,23 @@ export const mergeConfigs = (a: Config, b: Config): Config => {
   return config;
 };
 
+/**
+ * Merges headers from multiple sources. Lowercases header names, to match
+ * the behavior of ofetch/nuxt.
+ * @param headers - The headers to merge.
+ * @returns A new Headers object with the merged headers.
+ */
 export const mergeHeaders = (
-  ...headers: Array<Required<Config>['headers'] | undefined>
+  ...headers: Array<
+    RequestOptions['headers'] | Record<string, unknown> | undefined
+  >
 ): Headers => {
   const mergedHeaders = new Headers();
-  for (const header of headers) {
-    if (!header || typeof header !== 'object') {
-      continue;
-    }
 
-    let h: unknown = header;
-    if (isRef(h)) {
-      h = unref(h);
+  for (const header of headers) {
+    const h = toValue(header);
+    if (!h || typeof h !== 'object') {
+      continue;
     }
 
     const iterator =
@@ -260,17 +262,17 @@ export const mergeHeaders = (
 
     for (const [key, value] of iterator) {
       if (value === null) {
-        mergedHeaders.delete(key);
+        mergedHeaders.delete(key.toLowerCase());
       } else if (Array.isArray(value)) {
         for (const v of value) {
-          mergedHeaders.append(key, unwrapRefs(v) as string);
+          mergedHeaders.append(key.toLowerCase(), toValue(v) as string);
         }
       } else if (value !== undefined) {
-        const v = unwrapRefs(value);
+        const v = toValue(value);
         // assume object headers are meant to be JSON stringified, i.e. their
         // content value in OpenAPI specification is 'application/json'
         mergedHeaders.set(
-          key,
+          key.toLowerCase(),
           typeof v === 'object' ? JSON.stringify(v) : (v as string),
         );
       }
@@ -279,7 +281,7 @@ export const mergeHeaders = (
   return mergedHeaders;
 };
 
-export const mergeInterceptors = <T>(...args: Array<MaybeArray<T>>): Array<T> =>
+export const mergeInterceptors = <T>(...args: Array<T | T[]>): Array<T> =>
   args.reduce<Array<T>>((acc, item) => {
     if (typeof item === 'function') {
       acc.push(item);
@@ -303,7 +305,7 @@ const defaultQuerySerializer = createQuerySerializer({
 
 const defaultHeaders = {
   'Content-Type': 'application/json',
-};
+} as const;
 
 export const createConfig = <T extends ClientOptions = ClientOptions>(
   override: Config<Omit<ClientOptions, keyof T> & T> = {},
@@ -314,54 +316,11 @@ export const createConfig = <T extends ClientOptions = ClientOptions>(
   ...override,
 });
 
-type UnwrapRefs<T> =
-  T extends Ref<infer V>
-    ? V
-    : T extends ComputedRef<infer V>
-      ? V
-      : T extends Record<string, unknown> // this doesn't handle functions well
-        ? { [K in keyof T]: UnwrapRefs<T[K]> }
-        : T;
-
-const unwrapRefs = <T>(value: T): UnwrapRefs<T> => {
-  if (value === null || typeof value !== 'object' || value instanceof Headers) {
-    return (isRef(value) ? unref(value) : value) as UnwrapRefs<T>;
-  }
-
-  if (Array.isArray(value)) {
-    return value.map((item) => unwrapRefs(item)) as UnwrapRefs<T>;
-  }
-
-  if (isRef(value)) {
-    return unwrapRefs(unref(value) as T);
-  }
-
-  // unwrap into new object to avoid modifying the source
-  const result: Record<string, unknown> = {};
-  for (const key in value) {
-    result[key] = unwrapRefs(value[key] as T);
-  }
-  return result as UnwrapRefs<T>;
-};
-
 export const serializeBody = (
   opts: Pick<Parameters<Client['request']>[0], 'body' | 'bodySerializer'>,
 ) => {
   if (opts.body && opts.bodySerializer) {
-    return opts.bodySerializer(opts.body);
+    return opts.bodySerializer(toValue(opts.body));
   }
-  return opts.body;
-};
-
-export const executeFetchFn = (
-  opts: Omit<Parameters<Client['request']>[0], 'composable'>,
-  fetchFn: Required<Config>['$fetch'],
-) => {
-  const unwrappedOpts = unwrapRefs(opts);
-  unwrappedOpts.body = serializeBody(unwrappedOpts);
-  return fetchFn(
-    buildUrl(opts),
-    // @ts-expect-error
-    unwrappedOpts,
-  );
+  return toValue(opts.body);
 };

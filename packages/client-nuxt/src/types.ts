@@ -12,7 +12,7 @@ import type {
   useLazyAsyncData,
   useLazyFetch,
 } from 'nuxt/app';
-import type { Ref } from 'vue';
+import type { MaybeRefOrGetter } from 'vue';
 
 export type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';
@@ -24,28 +24,26 @@ export type QuerySerializer = (
   query: Parameters<Client['buildUrl']>[0]['query'],
 ) => string;
 
-type WithRefs<TData> = {
-  [K in keyof TData]: NonNullable<TData[K]> extends object
-    ? WithRefs<NonNullable<TData[K]>> | Ref<NonNullable<TData[K]>>
-    : NonNullable<TData[K]> | Ref<NonNullable<TData[K]>>;
-};
-
-// copied from Nuxt
+/**
+ * KeysOf, copied from Nuxt, is used depending on the composable to "pick" the keys
+ * on the return type, so only a sub-set of the data is returned via hydration,
+ * making loading more efficient/faster.
+ */
 export type KeysOf<T> = Array<
   T extends T ? (keyof T extends string ? keyof T : never) : never
 >;
 
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<
-      FetchOptions<unknown>,
-      'baseURL' | 'body' | 'headers' | 'method' | 'query'
+      FetchOptions,
+      'baseURL' | 'body' | 'headers' | 'method' | 'query' | 'path'
     >,
-    WithRefs<Pick<FetchOptions<unknown>, 'query'>>,
-    Omit<CoreConfig, 'querySerializer'> {
+    Omit<CoreConfig, 'querySerializer' | 'headers'> {
   /**
    * Base URL for all requests made by this client.
    */
   baseURL?: T['baseURL'];
+  headers?: FetchOptions['headers'];
   /**
    * A function for serializing request query parameters. By default, arrays
    * will be exploded in form style, objects will be exploded in deepObject
@@ -62,18 +60,15 @@ export interface RequestOptions<
   DefaultT = undefined,
   Url extends string = string,
 > extends Config,
-    WithRefs<{
-      /**
-       * Any body that you want to add to your request.
-       *
-       * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
-       */
-      body?: unknown;
-      path?: FetchOptions<unknown>['query'];
-      query?: FetchOptions<unknown>['query'];
-    }> {
+    Pick<RefTDataShape<TDataShape>, 'body' | 'path' | 'query'> {
   asyncDataOptions?: AsyncDataOptions<ResT, ResT, KeysOf<ResT>, DefaultT>;
+  /**
+   * Any body that you want to add to your request.
+   *
+   * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
+   */
   composable: TComposable;
+  headers?: FetchOptions['headers'];
   key?: string;
   /**
    * Security mechanism(s) to use for the request.
@@ -82,6 +77,10 @@ export interface RequestOptions<
   url: Url;
 }
 
+/**
+ * RequestResult is the return type of the request method, depending on the specific
+ * nuxt composable used.
+ */
 export type RequestResult<
   TComposable extends Composable,
   ResT,
@@ -102,13 +101,21 @@ export interface ClientOptions {
   baseURL?: string;
 }
 
+/**
+ * MethodFn is the signature of the generic method function (e.g. client.get()).
+ */
 type MethodFn = <
   TComposable extends Composable,
   ResT = unknown,
   TError = unknown,
   DefaultT = undefined,
 >(
-  options: Omit<RequestOptions<TComposable, ResT, DefaultT>, 'method'>,
+  options: Omit<
+    RequestOptions<TComposable, ResT, DefaultT>,
+    'method' | 'headers'
+  > & {
+    headers?: FetchOptions['headers'];
+  },
 ) => RequestResult<TComposable, ResT, TError>;
 
 type RequestFn = <
@@ -134,53 +141,71 @@ export type CreateClientConfig<T extends ClientOptions = ClientOptions> = (
 ) => Config<Required<ClientOptions> & T>;
 
 export interface TDataShape {
-  body?: unknown;
+  body?: FetchOptions['body'];
   headers?: unknown;
-  path?: FetchOptions<unknown>['query'];
-  query?: FetchOptions<unknown>['query'];
+  path?: FetchOptions['query'];
+  query?: FetchOptions['query'];
   url: string;
 }
 
+/**
+ * TDataShape is the base type for input data of the request.
+ */
+export interface RefTDataShape<T>
+  extends Omit<TDataShape, 'body' | 'path' | 'query'> {
+  body?: T extends { body?: infer B }
+    ? MaybeRefOrGetter<B>
+    : TDataShape['body'];
+  path?: T extends { path?: infer P }
+    ? MaybeRefOrGetter<NonNullable<P>>
+    : TDataShape['path'];
+  query?: T extends { query?: infer Q }
+    ? MaybeRefOrGetter<NonNullable<Q>>
+    : TDataShape['query'];
+}
+
 export type BuildUrlOptions<
-  TData extends Omit<TDataShape, 'headers'> = Omit<TDataShape, 'headers'>,
-> = Pick<WithRefs<TData>, 'path' | 'query'> &
-  Pick<TData, 'url'> &
+  TData extends RefTDataShape<TDataShape> = RefTDataShape<TDataShape>,
+> = Pick<TData, 'path' | 'query' | 'url'> &
   Pick<Options<'$fetch', TData>, 'baseURL' | 'querySerializer'>;
 
-type BuildUrlFn = <TData extends Omit<TDataShape, 'headers'>>(
-  options: BuildUrlOptions<TData>,
-) => string;
+type BuildUrlFn<
+  TData extends RefTDataShape<TDataShape> = RefTDataShape<TDataShape>,
+> = (options: BuildUrlOptions<TData>) => string;
 
 export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn>;
 
-type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
-
 export type Options<
   TComposable extends Composable,
-  TData extends TDataShape = TDataShape,
+  TData extends RefTDataShape<TDataShape> = RefTDataShape<TDataShape>,
   ResT = unknown,
   DefaultT = undefined,
-> = OmitKeys<
+> = Omit<
   RequestOptions<TComposable, ResT, DefaultT>,
-  'body' | 'path' | 'query' | 'url'
+  'body' | 'url' | 'query' | 'path'
 > &
-  WithRefs<Omit<TData, 'url'>>;
+  Pick<RefTDataShape<TData>, 'body' | 'query' | 'path'> & {
+    headers?: FetchOptions['headers'];
+  };
 
 export type OptionsLegacyParser<TData = unknown> = TData extends { body?: any }
   ? TData extends { headers?: any }
-    ? OmitKeys<RequestOptions, 'body' | 'headers' | 'url'> & TData
-    : OmitKeys<RequestOptions, 'body' | 'url'> &
+    ? Omit<RequestOptions, 'body' | 'headers' | 'url'> & TData
+    : Omit<RequestOptions, 'body' | 'url'> &
         TData &
         Pick<RequestOptions, 'headers'>
   : TData extends { headers?: any }
-    ? OmitKeys<RequestOptions, 'headers' | 'url'> &
+    ? Omit<RequestOptions, 'headers' | 'url'> &
         TData &
         Pick<RequestOptions, 'body'>
-    : OmitKeys<RequestOptions, 'url'> & TData;
+    : Omit<RequestOptions, 'url'> & TData;
 
-type FetchOptions<TData> = Omit<
-  UseFetchOptions<TData, TData>,
-  keyof AsyncDataOptions<TData>
+/**
+ * FetchOptions are the additional optional args that can be passed to $fetch.
+ */
+type FetchOptions = Omit<
+  UseFetchOptions<unknown, unknown>,
+  keyof AsyncDataOptions<unknown>
 >;
 
 export type Composable =

@@ -4,18 +4,16 @@ import {
   useLazyAsyncData,
   useLazyFetch,
 } from 'nuxt/app';
-import { reactive, ref, watch } from 'vue';
 
 import type { Client, Config } from './types';
 import {
   buildUrl,
   createConfig,
-  executeFetchFn,
+  generateAuthParams,
   mergeConfigs,
   mergeHeaders,
   mergeInterceptors,
   serializeBody,
-  setAuthParams,
 } from './utils';
 
 export const createClient = (config: Config = {}): Client => {
@@ -34,28 +32,46 @@ export const createClient = (config: Config = {}): Client => {
     key,
     ...options
   }) => {
+    // Note: it's crucial that anything that might have reactive data (e.g. path params, query params,
+    // body, etc) or on-demand data (e.g. auth tokens), is only handled via interceptors. This is
+    // because Nuxt composables control when the request is sent (or re-sent) -- we don't invoke the
+    // request here. if we do logic outside of interceptors, it has the potential to become stale
+    // or cause hydration errors.
     const opts = {
       ..._config,
       ...options,
       $fetch: options.$fetch ?? _config.$fetch ?? $fetch,
       headers: mergeHeaders(_config.headers, options.headers),
-      onRequest: mergeInterceptors(_config.onRequest, options.onRequest),
+      onRequest: mergeInterceptors(
+        ({ options: req }) =>
+          (req.body = serializeBody({
+            ...options,
+            bodySerializer: options.bodySerializer ?? _config.bodySerializer,
+          })),
+        ({ options: req }) => {
+          // remove Content-Type header if body is empty to avoid sending invalid requests
+          if (req.body === undefined || req.body === '') {
+            req.headers.delete('Content-Type');
+          }
+        },
+        _config.onRequest,
+        options.onRequest,
+      ),
       onResponse: mergeInterceptors(_config.onResponse, options.onResponse),
     };
 
     const { responseTransformer, responseValidator, security } = opts;
     if (security) {
-      // auth must happen in interceptors otherwise we'd need to require
-      // asyncContext enabled
-      // https://nuxt.com/docs/guide/going-further/experimental-features#asynccontext
       opts.onRequest = [
-        async ({ options }) => {
-          await setAuthParams({
-            auth: opts.auth,
-            headers: options.headers,
-            query: options.query,
-            security,
-          });
+        async ({ options: req }) => {
+          const params = await generateAuthParams(security, opts.auth);
+          if (params.headers) {
+            req.headers = mergeHeaders(req.headers, params.headers);
+          }
+          req.query = {
+            ...req.query,
+            ...Object.fromEntries(params.query.entries()),
+          };
         },
         ...opts.onRequest,
       ];
@@ -84,33 +100,31 @@ export const createClient = (config: Config = {}): Client => {
       ];
     }
 
-    // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (opts.body === undefined || opts.body === '') {
-      opts.headers.delete('Content-Type');
-    }
-
-    const fetchFn = opts.$fetch;
-
     if (composable === '$fetch') {
-      return executeFetchFn(opts, fetchFn);
+      return opts.$fetch(
+        buildUrl(opts),
+        // @ts-expect-error
+        opts,
+      );
     }
 
     if (composable === 'useFetch' || composable === 'useLazyFetch') {
-      const bodyParams = reactive({
-        body: opts.body,
-        bodySerializer: opts.bodySerializer,
-      });
-      const body = ref(serializeBody(opts));
-      opts.body = body;
-      watch(bodyParams, (changed) => {
-        body.value = serializeBody(changed);
-      });
+      const fetchOpts = {
+        ...opts,
+        ...asyncDataOptions,
+      };
+
       return composable === 'useLazyFetch'
-        ? useLazyFetch(() => buildUrl(opts), opts)
-        : useFetch(() => buildUrl(opts), opts);
+        ? useLazyFetch(() => buildUrl(opts), fetchOpts)
+        : useFetch(() => buildUrl(opts), fetchOpts);
     }
 
-    const handler: any = () => executeFetchFn(opts, fetchFn);
+    const handler: any = () =>
+      opts.$fetch(
+        buildUrl(opts),
+        // @ts-expect-error
+        opts,
+      );
 
     if (composable === 'useAsyncData') {
       return key

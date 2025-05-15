@@ -7,6 +7,7 @@ export type {
   CreateClientConfig,
   Options,
   OptionsLegacyParser,
+  RefTDataShape,
   RequestOptions,
   RequestResult,
   TDataShape,
