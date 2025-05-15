@@ -11,7 +11,7 @@ import {
 } from '@hey-api/openapi-ts/internal';
 import { logger, workspaceRoot } from '@nx/devkit';
 import { compareOpenApi } from 'api-smart-diff';
-import { format, type Options as PrettierOptions } from 'prettier';
+import { format, resolveConfig } from 'prettier';
 import { convert } from 'swagger2openapi';
 
 import { CONSTANTS } from './vars';
@@ -335,22 +335,17 @@ export async function makeDir(path: string) {
   await mkdir(path, { recursive: true });
 }
 
-export async function formatFiles(
-  dir: string,
-  prettierOptions?: PrettierOptions,
-) {
+/**
+ * Formats all files in a directory
+ */
+export async function formatFiles(dir: string) {
   const files = await readdir(dir, { withFileTypes: true });
   const tasks = files.map(async (file) => {
     const filePath = join(dir, file.name);
     if (file.isDirectory()) {
-      await formatFiles(filePath, prettierOptions);
-    } else if (file.name.endsWith('.ts')) {
-      const content = await readFile(filePath, 'utf-8');
-      const formatted = await format(content, {
-        ...prettierOptions,
-        filepath: filePath,
-      });
-      await writeFile(filePath, formatted);
+      await formatFiles(filePath);
+    } else if (file.isFile()) {
+      await formatFile(filePath);
     }
   });
   await Promise.all(tasks);
@@ -433,4 +428,22 @@ export async function getBaseTsConfigPath({
   const message = `Failed to find base tsconfig file. If your project has a non standard tsconfig name then, pass in the path to the tsconfig file using the baseTsConfigPath option or the baseTsConfigName option.`;
   logger.error(message);
   throw new Error(message);
+}
+
+export async function formatFile(filePath: string) {
+  const content = await readFile(filePath, 'utf-8');
+  const formatted = await formatStringFromFilePath(content, filePath);
+  await writeFile(filePath, formatted);
+}
+
+export async function formatStringFromFilePath(
+  content: string,
+  filePath: string,
+) {
+  const prettierOptions = await resolveConfig(filePath);
+  const formatted = await format(content, {
+    ...prettierOptions,
+    filepath: filePath,
+  });
+  return formatted;
 }
