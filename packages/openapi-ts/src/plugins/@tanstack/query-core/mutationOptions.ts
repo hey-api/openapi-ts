@@ -1,6 +1,7 @@
 import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
+import { createOperationComment } from '../../shared/utils/operation';
 import type { PluginInstance, PluginState } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
 
@@ -135,8 +136,9 @@ export const createMutationOptions = ({
     ],
   });
   const statement = compiler.constVariable({
-    // TODO: describe options, same as the actual function call
-    comment: [],
+    comment: plugin.comments
+      ? createOperationComment({ operation })
+      : undefined,
     exportConst: true,
     expression,
     name: mutationOptionsFunctionIdentifier({ context, operation }),

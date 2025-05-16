@@ -679,6 +679,10 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
 
 export const postApiVbyApiVersionBodyQueryKey = (options: Options<PostApiVbyApiVersionBodyData>) => createQueryKey('postApiVbyApiVersionBody', options);
 
+/**
+ * Body should not be unknown
+ * Body should not be unknown
+ */
 export const postApiVbyApiVersionBodyOptions = (options: Options<PostApiVbyApiVersionBodyData>) => {
     return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
@@ -694,6 +698,10 @@ export const postApiVbyApiVersionBodyOptions = (options: Options<PostApiVbyApiVe
     });
 };
 
+/**
+ * Body should not be unknown
+ * Body should not be unknown
+ */
 export const postApiVbyApiVersionBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionBodyData>>): UseMutationOptions<PostApiVbyApiVersionBodyResponse, AxiosError<PostApiVbyApiVersionBodyError>, Options<PostApiVbyApiVersionBodyData>> => {
     const mutationOptions: UseMutationOptions<PostApiVbyApiVersionBodyResponse, AxiosError<PostApiVbyApiVersionBodyError>, Options<PostApiVbyApiVersionBodyData>> = {
         mutationFn: async (localOptions) => {

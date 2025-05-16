@@ -284,6 +284,9 @@ export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithD
 
 export const deprecatedCallQueryKey = (options: Options<DeprecatedCallData>) => createQueryKey('deprecatedCall', options);
 
+/**
+ * @deprecated
+ */
 export const deprecatedCallOptions = (options: Options<DeprecatedCallData>) => {
     return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
@@ -299,6 +302,9 @@ export const deprecatedCallOptions = (options: Options<DeprecatedCallData>) => {
     });
 };
 
+/**
+ * @deprecated
+ */
 export const deprecatedCallMutation = (options?: Partial<Options<DeprecatedCallData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<DeprecatedCallData>> => {
     const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<DeprecatedCallData>> = {
         mutationFn: async (localOptions) => {
@@ -1114,6 +1120,9 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
     return mutationOptions;
 };
 
+/**
+ * Login User
+ */
 export const putWithFormUrlEncodedMutation = (options?: Partial<Options<PutWithFormUrlEncodedData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PutWithFormUrlEncodedData>> => {
     const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PutWithFormUrlEncodedData>> = {
         mutationFn: async (localOptions) => {
