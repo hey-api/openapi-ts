@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.67.5
+
+### Patch Changes
+
+- [#2052](https://github.com/hey-api/openapi-ts/pull/2052) [`f430eaa`](https://github.com/hey-api/openapi-ts/commit/f430eaad13d83d2191fff12802d9283099d7a527) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): add SDK function comments to TanStack Query output
+
 ## 0.67.4
 
 ### Patch Changes
