@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": 2,
+  "title": "UpdateApi executor",
+  "description": "Update the OpenAPI spec file and client",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the project",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What name would you like to use for the library? (e.g. my-api)"
+    },
+    "directory": {
+      "type": "string",
+      "description": "Directory where the library will be created",
+      "default": "libs"
+    },
+    "scope": {
+      "type": "string",
+      "description": "The scope of the project",
+      "x-prompt": "What is the scope of the project? (e.g. @my-org)"
+    },
+    "spec": {
+      "type": "string",
+      "description": "Path to the OpenAPI spec file (URL or local path)",
+      "x-prompt": "What is the path to the OpenAPI spec file? (URI or local file path)"
+    },
+    "client": {
+      "type": "string",
+      "description": "The type of client to generate (@hey-api/client-fetch, @hey-api/client-axios, etc)",
+      "default": "@hey-api/client-fetch"
+    },
+    "plugins": {
+      "type": "array",
+      "description": "The plugins to be provided to @hey-api/openapi-ts",
+      "default": [],
+      "items": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "properties": {
+              "asClass": { "type": "boolean" },
+              "name": { "type": "string" }
+            }
+          }
+        ]
+      }
+    },
+    "force": {
+      "type": "boolean",
+      "description": "If true, the Client code will be regenerated even if the spec has not changed, also pass --skip-nx-cache to avoid caching issues",
+      "default": false
+    },
+    "watch": {
+      "type": "boolean",
+      "description": "If true, the client will be watched for changes and regenerated when they occur",
+      "default": false
+    }
+  },
+  "required": ["spec", "scope", "name"]
+}
