@@ -7,6 +7,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   _dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   _handler: handler,
   _handlerLegacy: handlerLegacy,
+  comments: true,
   exportFromIndex: false,
   infiniteQueryOptions: true,
   mutationOptions: true,
