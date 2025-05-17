@@ -23,7 +23,9 @@ type PathSerializer = Pick<Required<BuildUrlOptions>, 'path' | 'url'>;
 const PATH_PARAM_RE = /\{[^{}]+\}/g;
 
 const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
-  const pathValue = toValue(toValue(path)); // TODO: this shouldn't be required.
+  // TODO: type has potentially double-wrapped Ref, even though I don't think
+  // it's actually double wrapped. Harmless, but should look into it.
+  const pathValue = toValue(toValue(path));
   let url = _url;
 
   if (!pathValue) return url;

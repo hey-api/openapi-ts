@@ -44,9 +44,9 @@ const asyncData = await getPetById({
   },
   composable: 'useAsyncData',
   key: 'item',
-  path: {
-    petId,
-  },
+  path: computed(() => ({
+    petId: petId.value,
+  })),
 });
 watch(asyncData.data, (newPet) => {
   console.log('pet', newPet);
@@ -91,13 +91,13 @@ await addPet({
   asyncDataOptions: {
     watch: [name],
   },
-  body: {
+  body: computed(() => ({
     category: {
       id: BigInt(0),
       name: 'Cats',
     },
     id: BigInt(0),
-    name,
+    name: name.value,
     photoUrls: ['string'],
     status: 'available',
     tags: [
@@ -106,7 +106,7 @@ await addPet({
         name: 'pet',
       },
     ],
-  },
+  })),
   composable: 'useAsyncData',
   key: 'addPet',
 });
@@ -166,9 +166,9 @@ async function handleFetch() {
           console.log('onResponse: local');
         },
       ],
-      path: {
-        petId,
-      },
+      path: computed(() => ({
+        petId: petId.value,
+      })),
     });
     console.log(result);
   } catch (error) {

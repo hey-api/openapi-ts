@@ -42,6 +42,13 @@ export default defineNuxtModule<ModuleOptions>({
   async setup(options) {
     const nuxt = useNuxt();
 
+    // ref: https://github.com/nuxt/nuxt/issues/18823#issuecomment-1419704343
+    if (!nuxt.options.imports.transform) nuxt.options.imports.transform = {};
+    nuxt.options.imports.transform.exclude = [
+      ...(nuxt.options.imports.transform?.exclude || []),
+      /\bclient-nuxt\b/,
+    ];
+
     nuxt.options.build.transpile.push('@hey-api/client-nuxt');
 
     const config = defu(options.config, {
