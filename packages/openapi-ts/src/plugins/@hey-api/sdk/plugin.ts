@@ -9,9 +9,9 @@ import {
   statusCodeToGroup,
 } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
-import { escapeComment } from '../../../utils/escape';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
+import { createOperationComment } from '../../shared/utils/operation';
 import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
 import { zodId } from '../../zod/plugin';
@@ -542,11 +542,7 @@ const generateClassSdk = ({
     });
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
-      comment: [
-        operation.deprecated && '@deprecated',
-        operation.summary && escapeComment(operation.summary),
-        operation.description && escapeComment(operation.description),
-      ],
+      comment: createOperationComment({ operation }),
       isStatic: true,
       name: serviceFunctionIdentifier({
         config: context.config,
@@ -653,11 +649,7 @@ const generateFlatSdk = ({
       operation,
     });
     const node = compiler.constVariable({
-      comment: [
-        operation.deprecated && '@deprecated',
-        operation.summary && escapeComment(operation.summary),
-        operation.description && escapeComment(operation.description),
-      ],
+      comment: createOperationComment({ operation }),
       exportConst: true,
       expression: compiler.arrowFunction({
         parameters: [

@@ -43,6 +43,20 @@ export const Numbers = {
     '-300': -300
 } as const;
 
+export type Arrays = [
+    'foo'
+] | [
+    'bar'
+] | [
+    'baz'
+];
+
+export const Arrays = {
+    0: ['foo'],
+    1: ['bar'],
+    2: ['baz']
+} as const;
+
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };

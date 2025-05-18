@@ -2,6 +2,7 @@ import { compiler } from '../../../compiler';
 import { hasOperationDataRequired } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
+import { createOperationComment } from '../../shared/utils/operation';
 import {
   createQueryKeyFunction,
   createQueryKeyType,
@@ -87,8 +88,9 @@ export const createQueryOptions = ({
   });
 
   const statement = compiler.constVariable({
-    // TODO: describe options, same as the actual function call
-    comment: [],
+    comment: plugin.comments
+      ? createOperationComment({ operation })
+      : undefined,
     exportConst: true,
     expression: compiler.arrowFunction({
       parameters: [

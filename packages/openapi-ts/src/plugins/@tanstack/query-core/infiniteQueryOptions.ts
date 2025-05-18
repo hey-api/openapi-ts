@@ -10,6 +10,7 @@ import {
 import type { IR } from '../../../ir/types';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { schemaToType } from '../../@hey-api/typescript/plugin';
+import { createOperationComment } from '../../shared/utils/operation';
 import {
   createQueryKeyFunction,
   createQueryKeyType,
@@ -325,8 +326,9 @@ export const createInfiniteQueryOptions = ({
   });
 
   const statement = compiler.constVariable({
-    // TODO: describe options, same as the actual function call
-    comment: [],
+    comment: plugin.comments
+      ? createOperationComment({ operation })
+      : undefined,
     exportConst: true,
     expression: compiler.arrowFunction({
       parameters: [

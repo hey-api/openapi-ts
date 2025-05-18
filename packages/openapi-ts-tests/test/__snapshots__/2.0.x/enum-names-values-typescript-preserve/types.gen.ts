@@ -26,6 +26,14 @@ export enum Numbers {
     '_-300' = -300
 }
 
+export type Arrays = [
+    'foo'
+] | [
+    'bar'
+] | [
+    'baz'
+];
+
 export type ClientOptions = {
     baseUrl: string;
 };
