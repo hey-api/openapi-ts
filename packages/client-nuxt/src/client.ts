@@ -13,6 +13,7 @@ import {
   mergeConfigs,
   mergeHeaders,
   mergeInterceptors,
+  removeNullHeaders,
   serializeBody,
 } from './utils';
 
@@ -37,18 +38,27 @@ export const createClient = (config: Config = {}): Client => {
     // because Nuxt composables control when the request is sent (or re-sent) -- we don't invoke the
     // request here. if we do logic outside of interceptors, it has the potential to become stale
     // or cause hydration errors.
+
     const opts = {
       ..._config,
       ...options,
       $fetch: options.$fetch ?? _config.$fetch ?? $fetch,
-      headers: mergeHeaders(_config.headers, options.headers),
+      // headers here can be ignored, just here to make sure nuxt keeps reactivity. all headers
+      // will be merged in interceptors.
+      headers: removeNullHeaders(options.headers),
       onRequest: mergeInterceptors(
         ({ options: req }) =>
-          (req.body = serializeBody({
+          (req.headers = mergeHeaders(
+            _config.headers,
+            req.headers,
+            options.headers,
+          )),
+        ({ options: req }) => {
+          req.body = serializeBody({
             ...options,
             bodySerializer: options.bodySerializer ?? _config.bodySerializer,
-          })),
-        ({ options: req }) => {
+          });
+
           // remove Content-Type header if body is empty to avoid sending invalid requests
           if (req.body === undefined || req.body === '') {
             req.headers.delete('Content-Type');

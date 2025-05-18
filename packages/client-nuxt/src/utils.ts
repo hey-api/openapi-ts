@@ -6,7 +6,7 @@ import {
   serializeObjectParam,
   serializePrimitiveParam,
 } from '@hey-api/client-core';
-import { toValue } from 'vue';
+import { isRef, toValue } from 'vue';
 
 import type {
   ArraySeparatorStyle,
@@ -235,9 +235,7 @@ export const mergeConfigs = (a: Config, b: Config): Config => {
  * @returns A new Headers object with the merged headers.
  */
 export const mergeHeaders = (
-  ...headers: Array<
-    RequestOptions['headers'] | Record<string, unknown> | undefined
-  >
+  ...headers: Array<RequestOptions['headers'] | undefined>
 ): Headers => {
   const mergedHeaders = new Headers();
 
@@ -272,6 +270,15 @@ export const mergeHeaders = (
   }
   return mergedHeaders;
 };
+
+/**
+ * removeNullHeaders removes null values from headers, which are accepted to allow
+ * unsetting a previously set header.
+ */
+export const removeNullHeaders = (
+  headers: RequestOptions['headers'],
+): Exclude<RequestOptions['headers'], Record<string, unknown>> =>
+  isRef(headers) ? headers : mergeHeaders(headers);
 
 export const mergeInterceptors = <T>(...args: Array<T | T[]>): Array<T> =>
   args.reduce<Array<T>>((acc, item) => {

@@ -458,7 +458,6 @@ describe('authentication', () => {
 
     const result = await client.get<'useFetch', http.VerboseResponse>({
       composable: 'useFetch',
-      query: { liam: 1 },
       security: [
         {
           name: 'baz',

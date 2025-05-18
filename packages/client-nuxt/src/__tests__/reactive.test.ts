@@ -152,3 +152,32 @@ test('reactive body re-triggers POST on body ref update', async () => {
   expect(result.data.value?.species).toEqual(newPet.value.species);
   expect(server.spy('post', '/pets')).toHaveBeenCalledTimes(2);
 });
+
+test('reactive headers re-triggers GET on header ref update', async () => {
+  const client = createClient({ baseURL: 'https://localhost' });
+  const server = http.newServer([http.mockVerboseHandler('https://localhost')]);
+
+  const species = ref(
+    new Headers({
+      'X-Example-Header': 'example',
+    }),
+  );
+
+  const result = await client.get<'useFetch', http.VerboseResponse>({
+    composable: 'useFetch',
+    headers: species,
+    url: '/verbose',
+  });
+
+  const received = new Headers(result.data.value?.headers);
+  expect(received.get('X-Example-Header')).toEqual('example');
+
+  species.value = new Headers({
+    'X-Example-Header': 'example2',
+  });
+  await waitStatusFinished(result.status);
+  const received2 = new Headers(result.data.value?.headers);
+  expect(received2.get('X-Example-Header')).toEqual('example2');
+
+  server.expectAllCalled();
+});

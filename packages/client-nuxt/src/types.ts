@@ -12,7 +12,7 @@ import type {
   useLazyAsyncData,
   useLazyFetch,
 } from 'nuxt/app';
-import type { MaybeRefOrGetter } from 'vue';
+import type { MaybeRef, MaybeRefOrGetter } from 'vue';
 
 export type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';
@@ -23,6 +23,11 @@ type ObjectStyle = 'form' | 'deepObject';
 export type QuerySerializer = (
   query: Parameters<Client['buildUrl']>[0]['query'],
 ) => string;
+
+export type FetchHeaders =
+  | HeadersInit
+  | MaybeRef<HeadersInit>
+  | Record<string, unknown>;
 
 /**
  * KeysOf, copied from Nuxt, is used depending on the composable to "pick" the keys
@@ -43,7 +48,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * Base URL for all requests made by this client.
    */
   baseURL?: T['baseURL'];
-  headers?: FetchOptions['headers'];
+  headers?: FetchHeaders;
   /**
    * A function for serializing request query parameters. By default, arrays
    * will be exploded in form style, objects will be exploded in deepObject
@@ -60,7 +65,7 @@ export interface RequestOptions<
   DefaultT = undefined,
   Url extends string = string,
 > extends Config,
-    Pick<RefTDataShape<TDataShape>, 'body' | 'path' | 'query'> {
+    Pick<RefTDataShape<TDataShape>, 'body' | 'path' | 'query' | 'headers'> {
   asyncDataOptions?: AsyncDataOptions<ResT, ResT, KeysOf<ResT>, DefaultT>;
   /**
    * Any body that you want to add to your request.
@@ -68,7 +73,6 @@ export interface RequestOptions<
    * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
    */
   composable: TComposable;
-  headers?: FetchOptions['headers'];
   key?: string;
   /**
    * Security mechanism(s) to use for the request.
@@ -110,12 +114,7 @@ type MethodFn = <
   TError = unknown,
   DefaultT = undefined,
 >(
-  options: Omit<
-    RequestOptions<TComposable, ResT, DefaultT>,
-    'method' | 'headers'
-  > & {
-    headers?: FetchOptions['headers'];
-  },
+  options: Omit<RequestOptions<TComposable, ResT, DefaultT>, 'method'>,
 ) => RequestResult<TComposable, ResT, TError>;
 
 type RequestFn = <
@@ -142,7 +141,7 @@ export type CreateClientConfig<T extends ClientOptions = ClientOptions> = (
 
 export interface TDataShape {
   body?: FetchOptions['body'];
-  headers?: unknown;
+  headers?: FetchHeaders;
   path?: FetchOptions['query'];
   query?: FetchOptions['query'];
   url: string;
@@ -182,11 +181,9 @@ export type Options<
   DefaultT = undefined,
 > = Omit<
   RequestOptions<TComposable, ResT, DefaultT>,
-  'body' | 'url' | 'query' | 'path'
+  'body' | 'url' | 'query' | 'path' | 'headers'
 > &
-  Pick<RefTDataShape<TData>, 'body' | 'query' | 'path'> & {
-    headers?: FetchOptions['headers'];
-  };
+  Pick<RefTDataShape<TData>, 'body' | 'query' | 'path' | 'headers'>;
 
 export type OptionsLegacyParser<TData = unknown> = TData extends { body?: any }
   ? TData extends { headers?: any }
