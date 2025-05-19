@@ -8,6 +8,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   _handlerLegacy: handlerLegacy,
   enums: false,
   enumsCase: 'SCREAMING_SNAKE_CASE',
+  enumsConstantsIgnoreNull: false,
   exportFromIndex: true,
   exportInlineEnums: false,
   identifierCase: 'PascalCase',
