@@ -16,6 +16,19 @@ export type Baz = {
     baz?: string;
 };
 
+export type QuxAllRead = {
+    readonly baz?: string;
+};
+
+export type ReadableQuux = {
+    baz?: Array<Baz>;
+    qux?: QuxAllRead;
+};
+
+export type WritableQuux = {
+    baz?: Array<Baz>;
+};
+
 export type PostFooReadData = {
     body: WritableFooRead;
     path?: never;
