@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI 3.1.0 zod circular reference example",
+    "title": "OpenAPI 3.1.0 validators circular reference example",
     "version": "1"
   },
   "components": {
