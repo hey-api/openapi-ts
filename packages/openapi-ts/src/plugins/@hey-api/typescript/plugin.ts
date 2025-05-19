@@ -125,6 +125,14 @@ const addJavaScriptEnum = ({
 
   const enumObject = schemaToEnumObject({ plugin, schema });
 
+  // JavaScript enums might want to ignore null values
+  if (
+    plugin.enumsConstantsIgnoreNull &&
+    enumObject.typeofItems.includes('object')
+  ) {
+    enumObject.obj = enumObject.obj.filter((item) => item.value !== null);
+  }
+
   const expression = compiler.objectExpression({
     multiLine: true,
     obj: enumObject.obj,
