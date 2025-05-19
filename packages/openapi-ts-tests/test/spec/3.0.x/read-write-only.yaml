@@ -95,3 +95,18 @@ components:
       properties:
         baz:
           type: string
+    QuxAllRead:
+      type: object
+      properties:
+        baz:
+          readOnly: true
+          type: string
+    Quux:
+      type: object
+      properties:
+        baz:
+          type: array
+          items:
+            $ref: '#/components/schemas/Baz'
+        qux:
+          $ref: '#/components/schemas/QuxAllRead'

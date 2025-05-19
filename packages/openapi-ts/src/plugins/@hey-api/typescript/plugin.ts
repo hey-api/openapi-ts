@@ -89,8 +89,11 @@ const shouldSkipSchema = ({
 }) =>
   Boolean(
     state?.accessScope &&
-      schema.accessScope &&
-      state.accessScope !== schema.accessScope,
+      ((schema.accessScope && state.accessScope !== schema.accessScope) ||
+        (schema.$ref &&
+          schema.accessScopes &&
+          !schema.accessScopes.includes(state.accessScope) &&
+          !schema.accessScopes.includes('both'))),
   );
 
 const addJavaScriptEnum = ({
