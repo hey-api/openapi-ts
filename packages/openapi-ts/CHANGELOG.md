@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.67.5
+
+### Patch Changes
+
+- [#2052](https://github.com/hey-api/openapi-ts/pull/2052) [`f430eaa`](https://github.com/hey-api/openapi-ts/commit/f430eaad13d83d2191fff12802d9283099d7a527) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): add SDK function comments to TanStack Query output
+
+- [#2058](https://github.com/hey-api/openapi-ts/pull/2058) [`e9fda0b`](https://github.com/hey-api/openapi-ts/commit/e9fda0bff09c534333691f981363f445dc97129f) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): exclude $refs in readable/writable schemas when referenced schemas don't contain any readable/writable fields
+
+- [#2059](https://github.com/hey-api/openapi-ts/pull/2059) [`af2082f`](https://github.com/hey-api/openapi-ts/commit/af2082f75dd02a52f8196709d7497dc99c5321e5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): add enumsConstantsIgnoreNull option to skip nulls from generated JavaScript objects
+
 ## 0.67.4
 
 ### Patch Changes
