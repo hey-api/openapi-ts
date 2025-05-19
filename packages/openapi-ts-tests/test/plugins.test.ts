@@ -241,6 +241,13 @@ for (const version of versions) {
       {
         config: createConfig({
           output: 'default',
+          plugins: ['valibot'],
+        }),
+        description: 'generate Valibot schemas with Valibot plugin',
+      },
+      {
+        config: createConfig({
+          output: 'default',
           plugins: ['zod'],
         }),
         description: 'generate Zod schemas with Zod plugin',
@@ -248,7 +255,24 @@ for (const version of versions) {
       {
         config: createConfig({
           input: 'type-format.yaml',
-          output: 'type-format',
+          output: 'type-format-valibot',
+          plugins: [
+            '@hey-api/transformers',
+            '@hey-api/client-fetch',
+            'valibot',
+            {
+              name: '@hey-api/sdk',
+              transformer: true,
+              validator: true,
+            },
+          ],
+        }),
+        description: 'handles various schema types and formats',
+      },
+      {
+        config: createConfig({
+          input: 'type-format.yaml',
+          output: 'type-format-zod',
           plugins: [
             '@hey-api/transformers',
             '@hey-api/client-fetch',

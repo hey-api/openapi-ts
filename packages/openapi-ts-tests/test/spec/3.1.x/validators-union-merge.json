@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI 3.1.0 zod union merge example",
+    "title": "OpenAPI 3.1.0 validators union merge example",
     "version": "1"
   },
   "components": {
