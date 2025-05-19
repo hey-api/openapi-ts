@@ -327,6 +327,22 @@ describe(`OpenAPI ${version}`, () => {
     {
       config: createConfig({
         input: 'enum-names-values.json',
+        output: 'enum-names-values-javascript-ignore-null',
+        plugins: [
+          {
+            enums: 'javascript',
+            enumsCase: 'preserve',
+            enumsConstantsIgnoreNull: true,
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description:
+        'handles various enum names and values (JavaScript, preserve, ignore null)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names-values.json',
         output: 'enum-names-values-typescript-SCREAMING_SNAKE_CASE',
         plugins: [
           {

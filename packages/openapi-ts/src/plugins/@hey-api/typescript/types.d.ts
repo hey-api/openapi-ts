@@ -18,6 +18,15 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   enumsCase?: StringCase;
   /**
+   * When generating enums as JavaScript objects, they'll contain a null value
+   * if they're nullable. This might be undesirable if you want to do
+   * `Object.values(Foo)` and have all values be of the same type. This setting
+   * is disabled by default to preserve the source schemas.
+   *
+   * @default false
+   */
+  enumsConstantsIgnoreNull?: boolean;
+  /**
    * Should the exports from the generated files be re-exported in the index
    * barrel file?
    *
