@@ -75,7 +75,7 @@ export const createQueryKeyFunction = ({
                 {
                   key: getClientBaseUrlKey(context.config),
                   value: compiler.identifier({
-                    text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey(context.config)}`,
+                    text: `options.baseUrl || (options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey(context.config)}`,
                   }),
                 },
               ],
