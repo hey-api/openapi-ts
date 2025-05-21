@@ -12,9 +12,7 @@ import type { IR } from '../../../ir/types';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
 import { createOperationComment } from '../../shared/utils/operation';
-import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
-import { zodId } from '../../zod/plugin';
 import { clientId, getClientPlugin } from '../client-core/utils';
 import {
   operationTransformerIrRef,
@@ -29,6 +27,7 @@ import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import { createTypeOptions } from './typeOptions';
 import type { Config } from './types';
+import { createResponseValidator } from './validator';
 
 // copy-pasted from @hey-api/client-core
 export interface Auth {
@@ -394,53 +393,16 @@ const operationStatements = ({
     }
   }
 
-  if (plugin.validator === 'zod') {
-    const identifierSchema = context.file({ id: zodId })!.identifier({
-      $ref: operationIrRef({
-        case: 'camelCase',
-        config: context.config,
-        id: operation.id,
-        type: 'response',
-      }),
-      namespace: 'value',
+  const responseValidator = createResponseValidator({
+    context,
+    operation,
+    plugin,
+  });
+  if (responseValidator) {
+    requestOptions.push({
+      key: 'responseValidator',
+      value: responseValidator,
     });
-
-    if (identifierSchema.name) {
-      file.import({
-        module: file.relativePathToFile({
-          context,
-          id: zodId,
-        }),
-        name: identifierSchema.name,
-      });
-
-      requestOptions.push({
-        key: 'responseValidator',
-        value: compiler.arrowFunction({
-          async: true,
-          parameters: [
-            {
-              name: 'data',
-            },
-          ],
-          statements: [
-            compiler.returnStatement({
-              expression: compiler.awaitExpression({
-                expression: compiler.callExpression({
-                  functionName: compiler.propertyAccessExpression({
-                    expression: compiler.identifier({
-                      text: identifierSchema.name,
-                    }),
-                    name: compiler.identifier({ text: 'parseAsync' }),
-                  }),
-                  parameters: [compiler.identifier({ text: 'data' })],
-                }),
-              }),
-            }),
-          ],
-        }),
-      });
-    }
   }
 
   requestOptions.push({

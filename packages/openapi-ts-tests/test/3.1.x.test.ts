@@ -433,7 +433,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
-        plugins: ['@hey-api/typescript', 'zod'],
+        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
       }),
       description: 'handles null enums',
     },
@@ -567,7 +567,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'schema-const.yaml',
         output: 'schema-const',
-        plugins: ['@hey-api/typescript', 'zod'],
+        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
       }),
       description: 'handles various constants',
     },
@@ -684,41 +684,41 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'validators.json',
         output: 'validators',
-        plugins: ['zod'],
+        plugins: ['valibot', 'zod'],
       }),
-      description: 'generates Zod schemas',
+      description: 'generates validator schemas',
     },
     {
       config: createConfig({
-        input: 'zod-bigint-min-max.json',
-        output: 'zod-bigint-min-max',
-        plugins: ['zod'],
+        input: 'validators-bigint-min-max.json',
+        output: 'validators-bigint-min-max',
+        plugins: ['valibot', 'zod'],
       }),
-      description: 'Zod schemas with BigInt and min/max constraints',
+      description: 'validator schemas with BigInt and min/max constraints',
     },
     {
       config: createConfig({
-        input: 'zod-circular-ref.json',
-        output: 'zod-circular-ref',
-        plugins: ['zod'],
+        input: 'validators-circular-ref.json',
+        output: 'validators-circular-ref',
+        plugins: ['valibot', 'zod'],
       }),
-      description: 'Zod schemas with circular reference',
+      description: 'validator schemas with circular reference',
     },
     {
       config: createConfig({
-        input: 'zod-circular-ref-2.yaml',
-        output: 'zod-circular-ref-2',
-        plugins: ['zod'],
+        input: 'validators-circular-ref-2.yaml',
+        output: 'validators-circular-ref-2',
+        plugins: ['valibot', 'zod'],
       }),
-      description: 'Zod schemas with circular reference 2',
+      description: 'validator schemas with circular reference 2',
     },
     {
       config: createConfig({
-        input: 'zod-union-merge.json',
-        output: 'zod-union-merge',
-        plugins: ['zod'],
+        input: 'validators-union-merge.json',
+        output: 'validators-union-merge',
+        plugins: ['valibot', 'zod'],
       }),
-      description: "Zod schemas with merged unions (can't use .merge())",
+      description: "validator schemas with merged unions (can't use .merge())",
     },
   ];
 
