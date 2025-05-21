@@ -95,6 +95,10 @@ export default defineConfig({
             collapsed: true,
             items: [
               {
+                link: '/openapi-ts/plugins/valibot',
+                text: 'Valibot',
+              },
+              {
                 link: '/openapi-ts/plugins/zod',
                 text: 'Zod',
               },
@@ -117,10 +121,6 @@ export default defineConfig({
               {
                 link: '/openapi-ts/plugins/typebox',
                 text: 'TypeBox <span data-soon>soon</span>',
-              },
-              {
-                link: '/openapi-ts/plugins/valibot',
-                text: 'Valibot <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/yup',

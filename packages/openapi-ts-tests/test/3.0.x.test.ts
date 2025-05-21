@@ -419,7 +419,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
-        plugins: ['@hey-api/typescript', 'zod'],
+        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
       }),
       description: 'handles null enums',
     },
@@ -586,9 +586,9 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'validators.json',
         output: 'validators',
-        plugins: ['zod'],
+        plugins: ['valibot', 'zod'],
       }),
-      description: 'generates Zod schemas',
+      description: 'generates validator schemas',
     },
   ];
 

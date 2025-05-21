@@ -187,15 +187,27 @@ export const createNamedImportDeclarations = ({
   const hasNonTypeImport = importedTypes.some(
     (item) => typeof item !== 'object' || !item.asType,
   );
-  const elements = importedTypes.map((name) => {
+  let namespaceImport: ImportExportItemObject | undefined;
+  const elements: Array<ts.ImportSpecifier> = [];
+  importedTypes.forEach((name) => {
     const item = typeof name === 'string' ? { name } : name;
-    return ots.import({
-      alias: item.alias,
-      asType: hasNonTypeImport && item.asType,
-      name: item.name,
-    });
+    if (item.name === '*' && item.alias) {
+      namespaceImport = item;
+    } else {
+      elements.push(
+        ots.import({
+          alias: item.alias,
+          asType: hasNonTypeImport && item.asType,
+          name: item.name,
+        }),
+      );
+    }
   });
-  const namedBindings = ts.factory.createNamedImports(elements);
+  const namedBindings = namespaceImport
+    ? ts.factory.createNamespaceImport(
+        createIdentifier({ text: namespaceImport.alias! }),
+      )
+    : ts.factory.createNamedImports(elements);
   const importClause = ts.factory.createImportClause(
     !hasNonTypeImport,
     undefined,

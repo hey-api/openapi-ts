@@ -72,6 +72,7 @@ import {
 } from './@tanstack/vue-query';
 import { type Config as Fastify, defaultConfig as fastify } from './fastify';
 import type { DefaultPluginConfigs, Plugin } from './types';
+import { type Config as Valibot, defaultConfig as valibot } from './valibot';
 import { type Config as Zod, defaultConfig as zod } from './zod';
 
 /**
@@ -97,6 +98,7 @@ export type UserPlugins =
   | Plugin.UserConfig<TanStackSvelteQuery>
   | Plugin.UserConfig<TanStackVueQuery>
   | Plugin.UserConfig<Fastify>
+  | Plugin.UserConfig<Valibot>
   | Plugin.UserConfig<Zod>;
 
 /**
@@ -122,6 +124,7 @@ export type ClientPlugins =
   | Plugin.Config<TanStackSvelteQuery>
   | Plugin.Config<TanStackVueQuery>
   | Plugin.Config<Fastify>
+  | Plugin.Config<Valibot>
   | Plugin.Config<Zod>;
 
 export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
@@ -144,5 +147,6 @@ export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
   'legacy/fetch': heyApiLegacyFetch,
   'legacy/node': heyApiLegacyNode,
   'legacy/xhr': heyApiLegacyXhr,
+  valibot,
   zod,
 };
