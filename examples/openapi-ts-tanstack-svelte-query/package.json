@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
-    "@tanstack/svelte-query": "5.73.3"
+    "@tanstack/svelte-query": "5.76.0"
   },
   "devDependencies": {
     "@config/vite-base": "workspace:*",
@@ -38,7 +38,7 @@
     "svelte-check": "4.1.4",
     "typescript": "5.8.3",
     "typescript-eslint": "8.29.1",
-    "vite": "6.2.6",
-    "vitest": "3.1.1"
+    "vite": "6.3.5",
+    "vitest": "3.1.4"
   }
 }
