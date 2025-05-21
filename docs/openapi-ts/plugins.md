@@ -26,6 +26,7 @@ These plugins help reduce boilerplate associated with third-party dependencies. 
 - [`@tanstack/svelte-query`](/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/vue-query`](/openapi-ts/plugins/tanstack-query)
 - [`fastify`](/openapi-ts/plugins/fastify)
+- [`valibot`](/openapi-ts/plugins/valibot)
 - [`zod`](/openapi-ts/plugins/zod)
 
 ## Upcoming
@@ -47,7 +48,6 @@ The following plugins are planned but not in development yet. You can help us pr
 - [Supertest](/openapi-ts/plugins/supertest) <span data-soon>Soon</span>
 - [SWR](/openapi-ts/plugins/swr) <span data-soon>Soon</span>
 - [TypeBox](/openapi-ts/plugins/typebox) <span data-soon>Soon</span>
-- [Valibot](/openapi-ts/plugins/valibot) <span data-soon>Soon</span>
 - [Yup](/openapi-ts/plugins/yup) <span data-soon>Soon</span>
 - [Zustand](/openapi-ts/plugins/zustand) <span data-soon>Soon</span>
 

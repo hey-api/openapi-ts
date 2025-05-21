@@ -13,12 +13,12 @@ Whatever your reason to use validators might be, you can rest assured that you'r
 
 Hey API natively supports the following validators.
 
+- [Valibot](/openapi-ts/plugins/valibot)
 - [Zod](/openapi-ts/plugins/zod)
 - [Ajv](/openapi-ts/plugins/ajv) <span data-soon>Soon</span>
 - [Arktype](/openapi-ts/plugins/arktype) <span data-soon>Soon</span>
 - [Joi](/openapi-ts/plugins/joi) <span data-soon>Soon</span>
 - [TypeBox](/openapi-ts/plugins/typebox) <span data-soon>Soon</span>
-- [Valibot](/openapi-ts/plugins/valibot) <span data-soon>Soon</span>
 - [Yup](/openapi-ts/plugins/yup) <span data-soon>Soon</span>
 
 Don't see your validator? Let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
