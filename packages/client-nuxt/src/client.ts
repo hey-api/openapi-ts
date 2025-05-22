@@ -31,9 +31,9 @@ export const createClient = (config: Config = {}): Client => {
   const request: Client['request'] = ({
     asyncDataOptions,
     composable,
-    key,
     ...options
   }) => {
+    const key = options.key;
     const opts = {
       ..._config,
       ...options,
