@@ -1,6 +1,9 @@
 import type { IR } from '../../../ir/types';
 import type { State } from '../../shared/types/state';
-import { canProcessRef, createFilters } from '../../shared/utils/filter';
+import {
+  canProcessRef,
+  createFilters as createFiltersOld,
+} from '../../shared/utils/filter';
 import { mergeParametersObjects } from '../../shared/utils/parameter';
 import type {
   OpenApiV3_1_X,
@@ -10,28 +13,53 @@ import type {
   RequestBodyObject,
   SecuritySchemeObject,
 } from '../types/spec';
+import {
+  createDependencyGraph,
+  createFilters,
+  filterSpec,
+} from './dependencyGraph';
 import { parseOperation } from './operation';
 import { parametersArrayToObject, parseParameter } from './parameter';
 import { parseRequestBody } from './requestBody';
 import { parseSchema } from './schema';
 import { parseServers } from './server';
+
 export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
+  // const mockIncludeConfig = {
+  //   operations: [/^POST \/foo-read-write$/],
+  //   schemas: [/^FooReadWrite$/],
+  // };
+
+  // TODO: skip filtering if no filters are defined
+  const dependencyGraph = createDependencyGraph(context.spec);
+  const filters = createFilters();
+  // filters.include.operations.add('POST /foo-read');
+  // filters.exclude.schemas.add('Bar');
+  // filters.include.operations.add('POST /foo-read-write');
+  // filters.include.schemas.add('FooReadWrite');
+  // console.log(dependencyGraph)
+  filterSpec({
+    dependencyGraph,
+    filters,
+    spec: context.spec,
+  });
   const state: State = {
     ids: new Map(),
     operationIds: new Map(),
   };
   const securitySchemesMap = new Map<string, SecuritySchemeObject>();
 
-  const excludeFilters = createFilters(context.config.input.exclude);
-  const includeFilters = createFilters(context.config.input.include);
+  const excludeFilters = createFiltersOld(context.config.input.exclude);
+  const includeFilters = createFiltersOld(context.config.input.include);
 
+  // TODO: remove shouldProcessRef
   const shouldProcessRef = ($ref: string, schema: Record<string, any>) =>
     canProcessRef({
       $ref,
       excludeFilters,
       includeFilters,
       schema,
-    });
+    }) || true;
 
   // TODO: parser - handle more component types, old parser handles only parameters and schemas
   if (context.spec.components) {
