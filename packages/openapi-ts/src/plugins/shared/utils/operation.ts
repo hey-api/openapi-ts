@@ -1,6 +1,8 @@
 import type { Comments } from '../../../compiler';
+import { hasOperationDataRequired } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { escapeComment } from '../../../utils/escape';
+import { getClientPlugin } from '../../@hey-api/client-core/utils';
 
 export const createOperationComment = ({
   operation,
@@ -22,4 +24,21 @@ export const createOperationComment = ({
   }
 
   return comments.length ? comments : undefined;
+};
+
+export const isOperationOptionsRequired = ({
+  context,
+  operation,
+}: {
+  context: IR.Context;
+  operation: IR.OperationObject;
+}): boolean => {
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const plugin = context.config.plugins['@hey-api/sdk'];
+  return (
+    (plugin && !plugin.client) ||
+    isNuxtClient ||
+    hasOperationDataRequired(operation)
+  );
 };

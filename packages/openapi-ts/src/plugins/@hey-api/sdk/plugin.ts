@@ -4,14 +4,14 @@ import { compiler } from '../../../compiler';
 import type { ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
 import type { TypeScriptFile } from '../../../generate/files';
-import {
-  hasOperationDataRequired,
-  statusCodeToGroup,
-} from '../../../ir/operation';
+import { statusCodeToGroup } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
-import { createOperationComment } from '../../shared/utils/operation';
+import {
+  createOperationComment,
+  isOperationOptionsRequired,
+} from '../../shared/utils/operation';
 import type { Plugin } from '../../types';
 import { clientId, getClientPlugin } from '../client-core/utils';
 import {
@@ -495,8 +495,10 @@ const generateClassSdk = ({
   const sdks = new Map<string, Array<ts.MethodDeclaration>>();
 
   context.subscribe('operation', ({ operation }) => {
-    const isRequiredOptions =
-      !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
+    const isRequiredOptions = isOperationOptionsRequired({
+      context,
+      operation,
+    });
     const identifierResponse = importIdentifierResponse({
       context,
       file,
@@ -603,8 +605,10 @@ const generateFlatSdk = ({
   const file = context.file({ id: sdkId })!;
 
   context.subscribe('operation', ({ operation }) => {
-    const isRequiredOptions =
-      !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
+    const isRequiredOptions = isOperationOptionsRequired({
+      context,
+      operation,
+    });
     const identifierResponse = importIdentifierResponse({
       context,
       file,
