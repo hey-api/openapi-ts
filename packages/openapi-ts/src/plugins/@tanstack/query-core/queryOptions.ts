@@ -1,8 +1,10 @@
 import { compiler } from '../../../compiler';
-import { hasOperationDataRequired } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
-import { createOperationComment } from '../../shared/utils/operation';
+import {
+  createOperationComment,
+  isOperationOptionsRequired,
+} from '../../shared/utils/operation';
 import {
   createQueryKeyFunction,
   createQueryKeyType,
@@ -48,7 +50,7 @@ export const createQueryOptions = ({
   }
 
   const file = context.file({ id: plugin.name })!;
-  const isRequired = hasOperationDataRequired(operation);
+  const isRequiredOptions = isOperationOptionsRequired({ context, operation });
 
   if (!state.hasQueries) {
     state.hasQueries = true;
@@ -95,7 +97,7 @@ export const createQueryOptions = ({
     expression: compiler.arrowFunction({
       parameters: [
         {
-          isRequired,
+          isRequired: isRequiredOptions,
           name: 'options',
           type: typeData,
         },

@@ -80,9 +80,9 @@ export default defineConfig(() => {
         // type: 'json',
       },
       {
-        // asClass: true,
+        asClass: true,
         // auth: false,
-        // client: false,
+        client: false,
         // include...
         name: '@hey-api/sdk',
         // operationId: false,
@@ -115,7 +115,7 @@ export default defineConfig(() => {
       },
       {
         exportFromIndex: true,
-        // name: '@tanstack/react-query',
+        name: '@tanstack/react-query',
       },
       {
         // exportFromIndex: true,
