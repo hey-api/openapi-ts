@@ -1,5 +1,11 @@
 # @hey-api/client-nuxt
 
+## 0.4.2
+
+### Patch Changes
+
+- [#2066](https://github.com/hey-api/openapi-ts/pull/2066) [`96cd12c`](https://github.com/hey-api/openapi-ts/commit/96cd12c87ca11a396e0df47771ceb1f9f20860d7) Thanks [@alexanderhorner](https://github.com/alexanderhorner)! - fix(client-nuxt): fixed an issue where key was stripped from options
+
 ## 0.4.1
 
 ### Patch Changes
