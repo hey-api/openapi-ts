@@ -193,15 +193,22 @@ You can also prevent your output from being linted by adding your output path to
 
 ## Filters
 
-If you work with large specifications and want to generate output from their subset, you can use regular expressions to select the relevant definitions. Set `input.include` to match resource references to be included or `input.exclude` to match resource references to be excluded. When both regular expressions match the same definition, `input.exclude` takes precedence over `input.include`.
+If you work with large specifications and want to generate output from their subset, you can use `input.filters` to select the relevant resources.
+
+### Operations
+
+Set `include` to match operations to be included or `exclude` to match operations to be excluded. When both rules match the same operation, `exclude` takes precedence over `include`.
 
 ::: code-group
 
 ```js [include]
 export default {
   input: {
-    // match only the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
-    include: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
+    filters: {
+      operations: {
+        include: ['GET /api/v1/foo'], // [!code ++]
+      },
+    },
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
@@ -212,8 +219,11 @@ export default {
 ```js [exclude]
 export default {
   input: {
-    // match everything except for the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
-    exclude: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
+    filters: {
+      operations: {
+        exclude: ['GET /api/v1/foo'], // [!code ++]
+      },
+    },
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
@@ -222,6 +232,171 @@ export default {
 ```
 
 :::
+
+### Tags
+
+Set `include` to match tags to be included or `exclude` to match tags to be excluded. When both rules match the same tag, `exclude` takes precedence over `include`.
+
+::: code-group
+
+```js [include]
+export default {
+  input: {
+    filters: {
+      tags: {
+        include: ['v2'], // [!code ++]
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+```js [exclude]
+export default {
+  input: {
+    filters: {
+      tags: {
+        exclude: ['v1'], // [!code ++]
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+:::
+
+### Deprecated
+
+You can filter out deprecated resources by setting `deprecated` to `false`.
+
+```js
+export default {
+  input: {
+    filters: {
+      deprecated: false, // [!code ++]
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+### Schemas
+
+Set `include` to match schemas to be included or `exclude` to match schemas to be excluded. When both rules match the same schema, `exclude` takes precedence over `include`.
+
+::: code-group
+
+```js [include]
+export default {
+  input: {
+    filters: {
+      schemas: {
+        include: ['Foo'], // [!code ++]
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+```js [exclude]
+export default {
+  input: {
+    filters: {
+      schemas: {
+        exclude: ['Foo'], // [!code ++]
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+:::
+
+### Request Bodies
+
+Set `include` to match request bodies to be included or `exclude` to match request bodies to be excluded. When both rules match the same request body, `exclude` takes precedence over `include`.
+
+::: code-group
+
+```js [include]
+export default {
+  input: {
+    filters: {
+      requestBodies: {
+        include: ['Payload'], // [!code ++]
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+```js [exclude]
+export default {
+  input: {
+    filters: {
+      requestBodies: {
+        exclude: ['Payload'], // [!code ++]
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+:::
+
+### Orphaned resources
+
+If you only want to exclude orphaned resources, set `orphans` to `false`. This is the default value when combined with any other filters. If this isn't the desired behavior, you may want to set `orphans` to `true` to always preserve unused resources.
+
+```js
+export default {
+  input: {
+    filters: {
+      orphans: false, // [!code ++]
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+### Order
+
+For performance reasons, we don't preserve the original order when filtering out resources. If maintaining the original order is important to you, set `preserveOrder` to `true`.
+
+```js
+export default {
+  input: {
+    filters: {
+      preserveOrder: true, // [!code ++]
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
 
 ## Watch Mode
 
