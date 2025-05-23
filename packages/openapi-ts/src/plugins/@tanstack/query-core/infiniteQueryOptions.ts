@@ -3,14 +3,14 @@ import ts from 'typescript';
 import { compiler } from '../../../compiler';
 import { tsNodeToString } from '../../../compiler/utils';
 import { clientApi } from '../../../generate/client';
-import {
-  hasOperationDataRequired,
-  operationPagination,
-} from '../../../ir/operation';
+import { operationPagination } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { schemaToType } from '../../@hey-api/typescript/plugin';
-import { createOperationComment } from '../../shared/utils/operation';
+import {
+  createOperationComment,
+  isOperationOptionsRequired,
+} from '../../shared/utils/operation';
 import {
   createQueryKeyFunction,
   createQueryKeyType,
@@ -253,7 +253,7 @@ export const createInfiniteQueryOptions = ({
   }
 
   const file = context.file({ id: plugin.name })!;
-  const isRequired = hasOperationDataRequired(operation);
+  const isRequiredOptions = isOperationOptionsRequired({ context, operation });
 
   if (!state.hasInfiniteQueries) {
     state.hasInfiniteQueries = true;
@@ -333,7 +333,7 @@ export const createInfiniteQueryOptions = ({
     expression: compiler.arrowFunction({
       parameters: [
         {
-          isRequired,
+          isRequired: isRequiredOptions,
           name: 'options',
           type: typeData,
         },
