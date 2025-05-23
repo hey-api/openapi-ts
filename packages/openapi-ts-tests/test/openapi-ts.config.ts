@@ -16,17 +16,22 @@ export default defineConfig(() => {
     // experimentalParser: false,
     input: {
       // branch: 'main',
-      // exclude: [
-      //   '^#/components/schemas/ModelWithCircularReference$',
-      //   '@deprecated',
-      // ],
       // fetch: {
       //   headers: {
       //     'x-foo': 'bar',
       //   },
       // },
-      // include:
-      //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
+      filters: {
+        deprecated: false,
+        // operations: {
+        //   include: ['POST /foo'],
+        // },
+        orphans: false,
+        // preserveOrder: true,
+        // tags: {
+        //   exclude: ['bar'],
+        // },
+      },
       // organization: 'hey-api',
       // path: {
       //   components: {},
@@ -115,7 +120,7 @@ export default defineConfig(() => {
       },
       {
         exportFromIndex: true,
-        name: '@tanstack/react-query',
+        // name: '@tanstack/react-query',
       },
       {
         // exportFromIndex: true,
