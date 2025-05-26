@@ -148,25 +148,42 @@ const response = await getFoo({
 
 ## Interceptors
 
-Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application. They can be added with `use` and removed with `eject`. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
+Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application. They can be added with `use`, removed with `eject`, and updated wth `update`. The `use` and `update` methods will return the id of the interceptor for use with `eject` and `update`. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
 
 ::: code-group
 
 ```js [use]
 import { client } from 'client/client.gen';
-
 // Supports async functions
-client.interceptors.request.use(async (options) => {
+async function myInterceptor(request) {
   // do something
-});
+  return request;
+}
+interceptorId = client.interceptors.request.use(myInterceptor);
 ```
 
 ```js [eject]
 import { client } from 'client/client.gen';
 
-client.interceptors.request.eject((options) => {
+// eject interceptor by interceptor id
+client.interceptors.request.eject(interceptorId);
+
+// eject interceptor by reference to interceptor function
+client.interceptors.request.eject(myInterceptor);
+```
+
+```js [update]
+import { client } from 'client/client.gen';
+
+async function myNewInterceptor(request) {
   // do something
-});
+  return request;
+}
+// update interceptor by interceptor id
+client.interceptors.request.update(interceptorId, myNewInterceptor);
+
+// update interceptor by reference to interceptor function
+client.interceptors.request.update(myInterceptor, myNewInterceptor);
 ```
 
 :::
@@ -177,26 +194,42 @@ and an example response interceptor
 
 ```js [use]
 import { client } from 'client/client.gen';
-
-client.interceptors.response.use((response) => {
+async function myInterceptor(response) {
   // do something
   return response;
-});
+}
+// Supports async functions
+interceptorId = client.interceptors.response.use(myInterceptor);
 ```
 
 ```js [eject]
 import { client } from 'client/client.gen';
 
-client.interceptors.response.eject((response) => {
+// eject interceptor by interceptor id
+client.interceptors.response.eject(interceptorId);
+
+// eject interceptor by reference to interceptor function
+client.interceptors.response.eject(myInterceptor);
+```
+
+```js [update]
+import { client } from 'client/client.gen';
+
+async function myNewInterceptor(response) {
   // do something
   return response;
-});
+}
+// update interceptor by interceptor id
+client.interceptors.response.update(interceptorId, myNewInterceptor);
+
+// update interceptor by reference to interceptor function
+client.interceptors.response.update(myInterceptor, myNewInterceptor);
 ```
 
 :::
 
 ::: tip
-To eject, you must provide a reference to the function that was passed to `use()`.
+To eject, you must provide the id or reference of the interceptor passed to `use()`, the id is the value returned by `use()` and `update()`.
 :::
 
 ## Auth
