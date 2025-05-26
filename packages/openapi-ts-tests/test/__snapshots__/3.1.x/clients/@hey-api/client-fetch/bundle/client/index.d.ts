@@ -112,12 +112,14 @@ type ErrInterceptor<Err, Res, Req, Options> = (error: Err, response: Res, reques
 type ReqInterceptor<Req, Options> = (request: Req, options: Options) => Req | Promise<Req>;
 type ResInterceptor<Res, Req, Options> = (response: Res, request: Req, options: Options) => Res | Promise<Res>;
 declare class Interceptors<Interceptor> {
-    _fns: Interceptor[];
+    _fns: (Interceptor | null)[];
     constructor();
     clear(): void;
-    exists(fn: Interceptor): boolean;
-    eject(fn: Interceptor): void;
-    use(fn: Interceptor): void;
+    getInterceptorIndex(id: number | Interceptor): number;
+    exists(id: number | Interceptor): boolean;
+    eject(id: number | Interceptor): void;
+    update(id: number | Interceptor, fn: Interceptor): number | false | Interceptor;
+    use(fn: Interceptor): number;
 }
 interface Middleware<Req, Res, Err, Options> {
     error: Pick<Interceptors<ErrInterceptor<Err, Res, Req, Options>>, 'eject' | 'use'>;
