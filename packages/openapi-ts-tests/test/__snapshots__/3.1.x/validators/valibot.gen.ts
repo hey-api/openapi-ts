@@ -15,7 +15,7 @@ export const vFoo: v.GenericSchema = v.optional(v.union([
         baz: v.optional(v.array(v.lazy(() => {
             return vFoo;
         }))),
-        qux: v.optional(v.number(), 0)
+        qux: v.optional(v.pipe(v.number(), v.integer(), v.gtValue(0)), 0)
     }),
     v.null()
 ]), null);
