@@ -160,6 +160,7 @@ export const duplicateName4 = <ThrowOnError extends boolean = false>(options?: O
 
 export const callWithNoContentResponse = <ThrowOnError extends boolean = false>(options?: Options<CallWithNoContentResponseData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).get<unknown, unknown, ThrowOnError>({
+        responseType: 'json',
         url: '/api/v{api-version}/no-content',
         ...options
     });
@@ -167,6 +168,7 @@ export const callWithNoContentResponse = <ThrowOnError extends boolean = false>(
 
 export const callWithResponseAndNoContentResponse = <ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).get<CallWithResponseAndNoContentResponseResponse, unknown, ThrowOnError>({
+        responseType: 'json',
         url: '/api/v{api-version}/multiple-tags/response-and-no-content',
         ...options
     });
@@ -174,6 +176,7 @@ export const callWithResponseAndNoContentResponse = <ThrowOnError extends boolea
 
 export const dummyA = <ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).get<unknown, unknown, ThrowOnError>({
+        responseType: 'json',
         url: '/api/v{api-version}/multiple-tags/a',
         ...options
     });
@@ -181,6 +184,7 @@ export const dummyA = <ThrowOnError extends boolean = false>(options?: Options<D
 
 export const dummyB = <ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).get<unknown, unknown, ThrowOnError>({
+        responseType: 'json',
         url: '/api/v{api-version}/multiple-tags/b',
         ...options
     });
@@ -195,6 +199,7 @@ export const callWithResponse = <ThrowOnError extends boolean = false>(options?:
 
 export const callWithDuplicateResponses = <ThrowOnError extends boolean = false>(options?: Options<CallWithDuplicateResponsesData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).post<CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesError, ThrowOnError>({
+        responseType: 'json',
         url: '/api/v{api-version}/response',
         ...options
     });
@@ -202,6 +207,7 @@ export const callWithDuplicateResponses = <ThrowOnError extends boolean = false>
 
 export const callWithResponses = <ThrowOnError extends boolean = false>(options?: Options<CallWithResponsesData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).put<CallWithResponsesResponse, CallWithResponsesError, ThrowOnError>({
+        responseType: 'json',
         url: '/api/v{api-version}/response',
         ...options
     });
@@ -222,6 +228,7 @@ export const collectionFormat = <ThrowOnError extends boolean = false>(options: 
 
 export const types = <ThrowOnError extends boolean = false>(options: Options<TypesData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).get<TypesResponse, unknown, ThrowOnError>({
+        responseType: 'json',
         querySerializer: {
             array: {
                 explode: false,
@@ -235,6 +242,7 @@ export const types = <ThrowOnError extends boolean = false>(options: Options<Typ
 
 export const complexTypes = <ThrowOnError extends boolean = false>(options: Options<ComplexTypesData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).get<ComplexTypesResponse, unknown, ThrowOnError>({
+        responseType: 'json',
         url: '/api/v{api-version}/complex',
         ...options
     });
@@ -242,6 +250,7 @@ export const complexTypes = <ThrowOnError extends boolean = false>(options: Opti
 
 export const callWithResultFromHeader = <ThrowOnError extends boolean = false>(options?: Options<CallWithResultFromHeaderData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+        responseType: 'json',
         url: '/api/v{api-version}/header',
         ...options
     });
@@ -249,6 +258,7 @@ export const callWithResultFromHeader = <ThrowOnError extends boolean = false>(o
 
 export const testErrorCode = <ThrowOnError extends boolean = false>(options: Options<TestErrorCodeData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+        responseType: 'json',
         url: '/api/v{api-version}/error',
         ...options
     });
@@ -256,6 +266,7 @@ export const testErrorCode = <ThrowOnError extends boolean = false>(options: Opt
 
 export const nonAsciiæøåÆøÅöôêÊ字符串 = <ThrowOnError extends boolean = false>(options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).post<NonAsciiæøåÆøÅöôêÊ字符串Response, unknown, ThrowOnError>({
+        responseType: 'json',
         url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
         ...options
     });
@@ -267,6 +278,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串 = <ThrowOnError extends boole
  */
 export const postApiVbyApiVersionBody = <ThrowOnError extends boolean = false>(options: Options<PostApiVbyApiVersionBodyData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).post<PostApiVbyApiVersionBodyResponse, PostApiVbyApiVersionBodyError, ThrowOnError>({
+        responseType: 'json',
         url: '/api/v{api-version}/body',
         ...options,
         headers: {
