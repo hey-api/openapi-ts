@@ -316,12 +316,12 @@ const operationStatements = ({
       if (statusCodeToGroup({ statusCode }) === '2XX') {
         const response = operation.responses[statusCode];
         const responseType = getResponseType(response?.mediaType);
-        // json is the default, skip it
-        if (responseType && responseType !== 'json') {
+        if (responseType) {
           requestOptions.push({
             key: 'responseType',
             value: responseType,
           });
+          break;
         }
       }
     }
