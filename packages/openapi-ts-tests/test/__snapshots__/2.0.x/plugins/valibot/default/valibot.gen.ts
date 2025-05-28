@@ -2,38 +2,86 @@
 
 import * as v from 'valibot';
 
+/**
+ * Testing multiline comments in string: First line
+ * Second line
+ *
+ * Fourth line
+ */
 export const vCommentWithBreaks = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+ */
 export const vCommentWithBackticks = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing backticks and quotes in string: `backticks`, 'quotes', "double quotes" and ```multiple backticks``` should work
+ */
 export const vCommentWithBackticksAndQuotes = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing slashes in string: \backwards\\\ and /forwards/// should work
+ */
 export const vCommentWithSlashes = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing expression placeholders in string: ${expression} should work
+ */
 export const vCommentWithExpressionPlaceholders = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing quotes in string: 'single quote''' and "double quotes""" should work
+ */
 export const vCommentWithQuotes = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing reserved characters in string: * inline * and ** inline ** should work
+ */
 export const vCommentWithReservedCharacters = v.pipe(v.number(), v.integer());
 
+/**
+ * This is a simple number
+ */
 export const vSimpleInteger = v.pipe(v.number(), v.integer());
 
+/**
+ * This is a simple boolean
+ */
 export const vSimpleBoolean = v.boolean();
 
+/**
+ * This is a simple string
+ */
 export const vSimpleString = v.string();
 
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
 export const vNonAsciiStringæøåÆøÅöôêÊ字符串 = v.string();
 
+/**
+ * This is a simple file
+ */
 export const vSimpleFile = v.string();
 
+/**
+ * This is a model with one string property
+ */
 export const vModelWithString = v.object({
     prop: v.optional(v.string())
 });
 
 export const vSimpleReference = vModelWithString;
 
+/**
+ * This is a simple string
+ */
 export const vSimpleStringWithPattern = v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/));
 
+/**
+ * This is a simple enum with strings
+ */
 export const vEnumWithStrings = v.picklist([
     'Success',
     'Warning',
@@ -43,51 +91,108 @@ export const vEnumWithStrings = v.picklist([
     'Non-ascii: øæåôöØÆÅÔÖ字符串'
 ]);
 
+/**
+ * This is a simple enum with numbers
+ */
 export const vEnumWithNumbers = v.unknown();
 
+/**
+ * Success=1,Warning=2,Error=3
+ */
 export const vEnumFromDescription = v.number();
 
+/**
+ * This is a simple enum with numbers
+ */
 export const vEnumWithExtensions = v.unknown();
 
+/**
+ * This is a simple array with numbers
+ */
 export const vArrayWithNumbers = v.array(v.pipe(v.number(), v.integer()));
 
+/**
+ * This is a simple array with booleans
+ */
 export const vArrayWithBooleans = v.array(v.boolean());
 
+/**
+ * This is a simple array with strings
+ */
 export const vArrayWithStrings = v.array(v.string());
 
+/**
+ * This is a simple array with references
+ */
 export const vArrayWithReferences = v.array(vModelWithString);
 
+/**
+ * This is a simple array containing an array
+ */
 export const vArrayWithArray = v.array(v.array(vModelWithString));
 
+/**
+ * This is a simple array with properties
+ */
 export const vArrayWithProperties = v.array(v.object({
     foo: v.optional(v.string()),
     bar: v.optional(v.string())
 }));
 
+/**
+ * This is a string dictionary
+ */
 export const vDictionaryWithString = v.object({});
 
+/**
+ * This is a string reference
+ */
 export const vDictionaryWithReference = v.object({});
 
+/**
+ * This is a complex dictionary
+ */
 export const vDictionaryWithArray = v.object({});
 
+/**
+ * This is a string dictionary
+ */
 export const vDictionaryWithDictionary = v.object({});
 
+/**
+ * This is a complex dictionary
+ */
 export const vDictionaryWithProperties = v.object({});
 
+/**
+ * This is a type-only model that defines Date as a string
+ */
 export const vDate = v.string();
 
+/**
+ * This is a model with one number property
+ */
 export const vModelWithInteger = v.object({
     prop: v.optional(v.pipe(v.number(), v.integer()))
 });
 
+/**
+ * This is a model with one boolean property
+ */
 export const vModelWithBoolean = v.object({
     prop: v.optional(v.boolean())
 });
 
+/**
+ * This is a model with one string property
+ */
 export const vModelWithStringError = v.object({
     prop: v.optional(v.string())
 });
 
+/**
+ * This is a model with one string property
+ */
 export const vModelWithNullableString = v.object({
     nullableProp: v.optional(v.union([
         v.string(),
@@ -99,6 +204,9 @@ export const vModelWithNullableString = v.object({
     ])
 });
 
+/**
+ * This is a model with one enum
+ */
 export const vModelWithEnum = v.object({
     test: v.optional(v.picklist([
         'Success',
@@ -117,10 +225,16 @@ export const vModelWithEnum = v.object({
     bool: v.optional(v.unknown())
 });
 
+/**
+ * This is a model with one enum
+ */
 export const vModelWithEnumFromDescription = v.object({
     test: v.optional(v.pipe(v.number(), v.integer()))
 });
 
+/**
+ * This is a model with nested enums
+ */
 export const vModelWithNestedEnums = v.object({
     dictionaryWithEnum: v.optional(v.object({})),
     dictionaryWithEnumFromDescription: v.optional(v.object({})),
@@ -132,6 +246,9 @@ export const vModelWithNestedEnums = v.object({
     arrayWithDescription: v.optional(v.array(v.pipe(v.number(), v.integer())))
 });
 
+/**
+ * This is a model with one nested property
+ */
 export const vModelWithProperties = v.object({
     required: v.string(),
     requiredAndReadOnly: v.pipe(v.string(), v.readonly()),
@@ -146,26 +263,41 @@ export const vModelWithProperties = v.object({
     '@namespace.integer': v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly()))
 });
 
+/**
+ * This is a model with one property containing a reference
+ */
 export const vModelWithReference = v.object({
     prop: v.optional(vModelWithProperties)
 });
 
+/**
+ * This is a model with one property containing an array
+ */
 export const vModelWithArray = v.object({
     prop: v.optional(v.array(vModelWithString)),
     propWithFile: v.optional(v.array(v.string())),
     propWithNumber: v.optional(v.array(v.number()))
 });
 
+/**
+ * This is a model with one property containing a dictionary
+ */
 export const vModelWithDictionary = v.object({
     prop: v.optional(v.object({}))
 });
 
+/**
+ * This is a model with one property containing a circular reference
+ */
 export const vModelWithCircularReference: v.GenericSchema = v.object({
     prop: v.optional(v.lazy(() => {
         return vModelWithCircularReference;
     }))
 });
 
+/**
+ * This is a model with one nested property
+ */
 export const vModelWithNestedProperties = v.object({
     first: v.pipe(v.object({
         second: v.pipe(v.object({
@@ -174,22 +306,34 @@ export const vModelWithNestedProperties = v.object({
     }), v.readonly())
 });
 
+/**
+ * This is a model with duplicated properties
+ */
 export const vModelWithDuplicateProperties = v.object({
     prop: v.optional(vModelWithString)
 });
 
+/**
+ * This is a model with ordered properties
+ */
 export const vModelWithOrderedProperties = v.object({
     zebra: v.optional(v.string()),
     apple: v.optional(v.string()),
     hawaii: v.optional(v.string())
 });
 
+/**
+ * This is a model with duplicated imports
+ */
 export const vModelWithDuplicateImports = v.object({
     propA: v.optional(vModelWithString),
     propB: v.optional(vModelWithString),
     propC: v.optional(vModelWithString)
 });
 
+/**
+ * This is a model that extends another model
+ */
 export const vModelThatExtends = v.intersect([
     vModelWithString,
     v.object({
@@ -198,6 +342,9 @@ export const vModelThatExtends = v.intersect([
     })
 ]);
 
+/**
+ * This is a model that extends another model
+ */
 export const vModelThatExtendsExtends = v.intersect([
     vModelWithString,
     vModelThatExtends,
@@ -211,6 +358,9 @@ export const vDefault = v.object({
     name: v.optional(v.string())
 });
 
+/**
+ * This is a model that contains a some patterns
+ */
 export const vModelWithPattern = v.object({
     key: v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)),
     name: v.pipe(v.string(), v.maxLength(255)),
@@ -250,8 +400,14 @@ export const vCallWithResponseAndNoContentResponseResponse = v.union([
     v.unknown()
 ]);
 
+/**
+ * Message for default response
+ */
 export const vCallWithResponseResponse = vModelWithString;
 
+/**
+ * Message for 201 response
+ */
 export const vCallWithDuplicateResponsesResponse = vModelWithString;
 
 export const vCallWithResponsesResponse = v.union([
@@ -271,8 +427,17 @@ export const vTypesResponse = v.union([
     v.object({})
 ]);
 
+/**
+ * Successful response
+ */
 export const vComplexTypesResponse = v.array(vModelWithString);
 
+/**
+ * Successful response
+ */
 export const vNonAsciiæøåÆøÅöôêÊ字符串Response = vNonAsciiStringæøåÆøÅöôêÊ字符串;
 
+/**
+ * OK
+ */
 export const vPostApiVbyApiVersionBodyResponse = vResponsePostActivityResponse;

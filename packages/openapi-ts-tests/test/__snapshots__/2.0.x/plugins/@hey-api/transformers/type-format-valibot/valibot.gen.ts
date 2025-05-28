@@ -12,4 +12,7 @@ export const vBar = v.object({
     foo: v.pipe(v.number(), v.integer())
 });
 
+/**
+ * OK
+ */
 export const vPostFooResponse = vFoo;

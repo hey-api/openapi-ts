@@ -6,6 +6,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   _handler: handler,
   _handlerLegacy: () => {},
   _tags: ['validator'],
+  comments: true,
   exportFromIndex: false,
   name: 'valibot',
   output: 'valibot',
