@@ -24,7 +24,8 @@
           },
           "qux": {
             "default": 0,
-            "type": "number"
+            "exclusiveMinimum": 0,
+            "type": "integer"
           }
         },
         "type": ["object", "null"]

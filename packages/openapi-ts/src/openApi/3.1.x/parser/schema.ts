@@ -88,11 +88,11 @@ const parseSchemaMeta = ({
     irSchema.default = schema.default;
   }
 
-  if (schema.exclusiveMaximum) {
+  if (schema.exclusiveMaximum !== undefined) {
     irSchema.exclusiveMaximum = schema.exclusiveMaximum;
   }
 
-  if (schema.exclusiveMinimum) {
+  if (schema.exclusiveMinimum !== undefined) {
     irSchema.exclusiveMinimum = schema.exclusiveMinimum;
   }
 
