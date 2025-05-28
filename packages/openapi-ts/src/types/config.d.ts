@@ -39,34 +39,108 @@ interface Input {
    */
   commit_sha?: string;
   /**
-   * Prevent parts matching the regular expression(s) from being processed.
-   * You can select both operations and components by reference within
-   * the bundled input.
-   *
-   * In case of conflicts, `exclude` takes precedence over `include`.
-   *
-   * @example
-   * operation: '^#/paths/api/v1/foo/get$'
-   * schema: '^#/components/schemas/Foo$'
-   * deprecated: '@deprecated'
-   */
-  exclude?: ReadonlyArray<string> | string;
-  /**
    * You pass any valid Fetch API options to the request for fetching your
    * specification. This is useful if your file is behind auth for example.
    */
   fetch?: RequestInit;
   /**
-   * Process only parts matching the regular expression(s). You can select both
-   * operations and components by reference within the bundled input.
-   *
-   * In case of conflicts, `exclude` takes precedence over `include`.
-   *
-   * @example
-   * operation: '^#/paths/api/v1/foo/get$'
-   * schema: '^#/components/schemas/Foo$'
+   * Filters can be used to select a subset of your input before it's processed
+   * by plugins.
    */
-  include?: ReadonlyArray<string> | string;
+  filters?: {
+    /**
+     * Include deprecated resources in the output?
+     *
+     * @default true
+     */
+    deprecated?: boolean;
+    operations?: {
+      /**
+       * Prevent operations matching the `exclude` filters from being processed.
+       *
+       * In case of conflicts, `exclude` takes precedence over `include`.
+       *
+       * @example ['GET /api/v1/foo']
+       */
+      exclude?: ReadonlyArray<string>;
+      /**
+       * Process only operations matching the `include` filters.
+       *
+       * In case of conflicts, `exclude` takes precedence over `include`.
+       *
+       * @example ['GET /api/v1/foo']
+       */
+      include?: ReadonlyArray<string>;
+    };
+    /**
+     * Keep reusable components without any references in the output? By
+     * default, we exclude orphaned resources.
+     *
+     * @default false
+     */
+    orphans?: boolean;
+    /**
+     * Should we preserve the key order when overwriting your input? This
+     * option is disabled by default to improve performance.
+     *
+     * @default false
+     */
+    preserveOrder?: boolean;
+    requestBodies?: {
+      /**
+       * Prevent request bodies matching the `exclude` filters from being processed.
+       *
+       * In case of conflicts, `exclude` takes precedence over `include`.
+       *
+       * @example ['Foo']
+       */
+      exclude?: ReadonlyArray<string>;
+      /**
+       * Process only request bodies matching the `include` filters.
+       *
+       * In case of conflicts, `exclude` takes precedence over `include`.
+       *
+       * @example ['Foo']
+       */
+      include?: ReadonlyArray<string>;
+    };
+    schemas?: {
+      /**
+       * Prevent schemas matching the `exclude` filters from being processed.
+       *
+       * In case of conflicts, `exclude` takes precedence over `include`.
+       *
+       * @example ['Foo']
+       */
+      exclude?: ReadonlyArray<string>;
+      /**
+       * Process only schemas matching the `include` filters.
+       *
+       * In case of conflicts, `exclude` takes precedence over `include`.
+       *
+       * @example ['Foo']
+       */
+      include?: ReadonlyArray<string>;
+    };
+    tags?: {
+      /**
+       * Prevent tags matching the `exclude` filters from being processed.
+       *
+       * In case of conflicts, `exclude` takes precedence over `include`.
+       *
+       * @example ['foo']
+       */
+      exclude?: ReadonlyArray<string>;
+      /**
+       * Process only tags matching the `include` filters.
+       *
+       * In case of conflicts, `exclude` takes precedence over `include`.
+       *
+       * @example ['foo']
+       */
+      include?: ReadonlyArray<string>;
+    };
+  };
   /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
    *

@@ -3,6 +3,17 @@ import { stringCase } from '../../../utils/stringCase';
 import { sanitizeNamespaceIdentifier } from '../../common/parser/sanitize';
 import type { State } from '../types/state';
 
+export const httpMethods = [
+  'delete',
+  'get',
+  'head',
+  'options',
+  'patch',
+  'post',
+  'put',
+  'trace',
+] as const;
+
 /**
  * Verifies that operation ID is unique. For now, we only warn when this isn't
  * true as people like to not follow this part of the specification. In the
