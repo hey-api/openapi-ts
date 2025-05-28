@@ -11,16 +11,16 @@ export const createOperationComment = ({
 }): Comments | undefined => {
   const comments: Array<string> = [];
 
-  if (operation.deprecated) {
-    comments.push('@deprecated');
-  }
-
   if (operation.summary) {
     comments.push(escapeComment(operation.summary));
   }
 
   if (operation.description) {
     comments.push(escapeComment(operation.description));
+  }
+
+  if (operation.deprecated) {
+    comments.push('@deprecated');
   }
 
   return comments.length ? comments : undefined;

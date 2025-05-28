@@ -123,10 +123,12 @@ export default defineConfig(() => {
         // name: '@tanstack/react-query',
       },
       {
+        // comments: false,
         // exportFromIndex: true,
         name: 'valibot',
       },
       {
+        // comments: false,
         // exportFromIndex: true,
         name: 'zod',
       },

@@ -2,38 +2,86 @@
 
 import { z } from 'zod';
 
+/**
+ * Testing multiline comments in string: First line
+ * Second line
+ *
+ * Fourth line
+ */
 export const zCommentWithBreaks = z.number().int();
 
+/**
+ * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+ */
 export const zCommentWithBackticks = z.number().int();
 
+/**
+ * Testing backticks and quotes in string: `backticks`, 'quotes', "double quotes" and ```multiple backticks``` should work
+ */
 export const zCommentWithBackticksAndQuotes = z.number().int();
 
+/**
+ * Testing slashes in string: \backwards\\\ and /forwards/// should work
+ */
 export const zCommentWithSlashes = z.number().int();
 
+/**
+ * Testing expression placeholders in string: ${expression} should work
+ */
 export const zCommentWithExpressionPlaceholders = z.number().int();
 
+/**
+ * Testing quotes in string: 'single quote''' and "double quotes""" should work
+ */
 export const zCommentWithQuotes = z.number().int();
 
+/**
+ * Testing reserved characters in string: * inline * and ** inline ** should work
+ */
 export const zCommentWithReservedCharacters = z.number().int();
 
+/**
+ * This is a simple number
+ */
 export const zSimpleInteger = z.number().int();
 
+/**
+ * This is a simple boolean
+ */
 export const zSimpleBoolean = z.boolean();
 
+/**
+ * This is a simple string
+ */
 export const zSimpleString = z.string();
 
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
 export const zNonAsciiStringæøåÆøÅöôêÊ字符串 = z.string();
 
+/**
+ * This is a simple file
+ */
 export const zSimpleFile = z.string();
 
+/**
+ * This is a model with one string property
+ */
 export const zModelWithString = z.object({
     prop: z.string().optional()
 });
 
 export const zSimpleReference = zModelWithString;
 
+/**
+ * This is a simple string
+ */
 export const zSimpleStringWithPattern = z.string().max(64).regex(/^[a-zA-Z0-9_]*$/);
 
+/**
+ * This is a simple enum with strings
+ */
 export const zEnumWithStrings = z.enum([
     'Success',
     'Warning',
@@ -43,51 +91,108 @@ export const zEnumWithStrings = z.enum([
     'Non-ascii: øæåôöØÆÅÔÖ字符串'
 ]);
 
+/**
+ * This is a simple enum with numbers
+ */
 export const zEnumWithNumbers = z.unknown();
 
+/**
+ * Success=1,Warning=2,Error=3
+ */
 export const zEnumFromDescription = z.number();
 
+/**
+ * This is a simple enum with numbers
+ */
 export const zEnumWithExtensions = z.unknown();
 
+/**
+ * This is a simple array with numbers
+ */
 export const zArrayWithNumbers = z.array(z.number().int());
 
+/**
+ * This is a simple array with booleans
+ */
 export const zArrayWithBooleans = z.array(z.boolean());
 
+/**
+ * This is a simple array with strings
+ */
 export const zArrayWithStrings = z.array(z.string());
 
+/**
+ * This is a simple array with references
+ */
 export const zArrayWithReferences = z.array(zModelWithString);
 
+/**
+ * This is a simple array containing an array
+ */
 export const zArrayWithArray = z.array(z.array(zModelWithString));
 
+/**
+ * This is a simple array with properties
+ */
 export const zArrayWithProperties = z.array(z.object({
     foo: z.string().optional(),
     bar: z.string().optional()
 }));
 
+/**
+ * This is a string dictionary
+ */
 export const zDictionaryWithString = z.object({});
 
+/**
+ * This is a string reference
+ */
 export const zDictionaryWithReference = z.object({});
 
+/**
+ * This is a complex dictionary
+ */
 export const zDictionaryWithArray = z.object({});
 
+/**
+ * This is a string dictionary
+ */
 export const zDictionaryWithDictionary = z.object({});
 
+/**
+ * This is a complex dictionary
+ */
 export const zDictionaryWithProperties = z.object({});
 
+/**
+ * This is a type-only model that defines Date as a string
+ */
 export const zDate = z.string();
 
+/**
+ * This is a model with one number property
+ */
 export const zModelWithInteger = z.object({
     prop: z.number().int().optional()
 });
 
+/**
+ * This is a model with one boolean property
+ */
 export const zModelWithBoolean = z.object({
     prop: z.boolean().optional()
 });
 
+/**
+ * This is a model with one string property
+ */
 export const zModelWithStringError = z.object({
     prop: z.string().optional()
 });
 
+/**
+ * This is a model with one string property
+ */
 export const zModelWithNullableString = z.object({
     nullableProp: z.union([
         z.string(),
@@ -99,6 +204,9 @@ export const zModelWithNullableString = z.object({
     ])
 });
 
+/**
+ * This is a model with one enum
+ */
 export const zModelWithEnum = z.object({
     test: z.enum([
         'Success',
@@ -117,10 +225,16 @@ export const zModelWithEnum = z.object({
     bool: z.unknown().optional()
 });
 
+/**
+ * This is a model with one enum
+ */
 export const zModelWithEnumFromDescription = z.object({
     test: z.number().int().optional()
 });
 
+/**
+ * This is a model with nested enums
+ */
 export const zModelWithNestedEnums = z.object({
     dictionaryWithEnum: z.object({}).optional(),
     dictionaryWithEnumFromDescription: z.object({}).optional(),
@@ -132,6 +246,9 @@ export const zModelWithNestedEnums = z.object({
     arrayWithDescription: z.array(z.number().int()).optional()
 });
 
+/**
+ * This is a model with one nested property
+ */
 export const zModelWithProperties = z.object({
     required: z.string(),
     requiredAndReadOnly: z.string().readonly(),
@@ -146,26 +263,41 @@ export const zModelWithProperties = z.object({
     '@namespace.integer': z.number().int().readonly().optional()
 });
 
+/**
+ * This is a model with one property containing a reference
+ */
 export const zModelWithReference = z.object({
     prop: zModelWithProperties.optional()
 });
 
+/**
+ * This is a model with one property containing an array
+ */
 export const zModelWithArray = z.object({
     prop: z.array(zModelWithString).optional(),
     propWithFile: z.array(z.string()).optional(),
     propWithNumber: z.array(z.number()).optional()
 });
 
+/**
+ * This is a model with one property containing a dictionary
+ */
 export const zModelWithDictionary = z.object({
     prop: z.object({}).optional()
 });
 
+/**
+ * This is a model with one property containing a circular reference
+ */
 export const zModelWithCircularReference: z.AnyZodObject = z.object({
     prop: z.lazy(() => {
         return zModelWithCircularReference;
     }).optional()
 });
 
+/**
+ * This is a model with one nested property
+ */
 export const zModelWithNestedProperties = z.object({
     first: z.object({
         second: z.object({
@@ -174,27 +306,42 @@ export const zModelWithNestedProperties = z.object({
     }).readonly()
 });
 
+/**
+ * This is a model with duplicated properties
+ */
 export const zModelWithDuplicateProperties = z.object({
     prop: zModelWithString.optional()
 });
 
+/**
+ * This is a model with ordered properties
+ */
 export const zModelWithOrderedProperties = z.object({
     zebra: z.string().optional(),
     apple: z.string().optional(),
     hawaii: z.string().optional()
 });
 
+/**
+ * This is a model with duplicated imports
+ */
 export const zModelWithDuplicateImports = z.object({
     propA: zModelWithString.optional(),
     propB: zModelWithString.optional(),
     propC: zModelWithString.optional()
 });
 
+/**
+ * This is a model that extends another model
+ */
 export const zModelThatExtends = zModelWithString.and(z.object({
     propExtendsA: z.string().optional(),
     propExtendsB: zModelWithString.optional()
 }));
 
+/**
+ * This is a model that extends another model
+ */
 export const zModelThatExtendsExtends = zModelWithString.and(zModelThatExtends).and(z.object({
     propExtendsC: z.string().optional(),
     propExtendsD: zModelWithString.optional()
@@ -204,6 +351,9 @@ export const zDefault = z.object({
     name: z.string().optional()
 });
 
+/**
+ * This is a model that contains a some patterns
+ */
 export const zModelWithPattern = z.object({
     key: z.string().max(64).regex(/^[a-zA-Z0-9_]*$/),
     name: z.string().max(255),
@@ -243,8 +393,14 @@ export const zCallWithResponseAndNoContentResponseResponse = z.union([
     z.unknown()
 ]);
 
+/**
+ * Message for default response
+ */
 export const zCallWithResponseResponse = zModelWithString;
 
+/**
+ * Message for 201 response
+ */
 export const zCallWithDuplicateResponsesResponse = zModelWithString;
 
 export const zCallWithResponsesResponse = z.union([
@@ -264,8 +420,17 @@ export const zTypesResponse = z.union([
     z.object({})
 ]);
 
+/**
+ * Successful response
+ */
 export const zComplexTypesResponse = z.array(zModelWithString);
 
+/**
+ * Successful response
+ */
 export const zNonAsciiæøåÆøÅöôêÊ字符串Response = zNonAsciiStringæøåÆøÅöôêÊ字符串;
 
+/**
+ * OK
+ */
 export const zPostApiVbyApiVersionBodyResponse = zResponsePostActivityResponse;
