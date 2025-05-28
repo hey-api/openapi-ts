@@ -23,9 +23,12 @@ export default defineConfig(() => {
       // },
       filters: {
         // deprecated: false,
-        // operations: {
-        //   include: ['POST /foo'],
-        // },
+        operations: {
+          include: [
+            // 'PUT /foo',
+            '/^[A-Z]+ /v1//',
+          ],
+        },
         // orphans: false,
         // preserveOrder: true,
         // tags: {
@@ -41,7 +44,7 @@ export default defineConfig(() => {
       //   openapi: '3.1.0',
       //   paths: {},
       // },
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'validators.json'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'parser-filters.yaml'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -85,7 +88,7 @@ export default defineConfig(() => {
         // type: 'json',
       },
       {
-        asClass: true,
+        // asClass: true,
         // auth: false,
         client: false,
         // include...
@@ -125,12 +128,12 @@ export default defineConfig(() => {
       {
         // comments: false,
         // exportFromIndex: true,
-        name: 'valibot',
+        // name: 'valibot',
       },
       {
         // comments: false,
         // exportFromIndex: true,
-        name: 'zod',
+        // name: 'zod',
       },
     ],
     // useOptions: false,

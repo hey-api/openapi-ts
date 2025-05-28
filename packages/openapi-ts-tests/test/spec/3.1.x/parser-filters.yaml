@@ -3,12 +3,14 @@ info:
   title: OpenAPI 3.1.1 parser filters example
   version: 1
 paths:
-  /foo:
+  /v1/foo:
     post:
       deprecated: true
       tags:
         - foo
         - bar
+      parameters:
+        - $ref: '#/components/parameters/Foo'
       requestBody:
         $ref: '#/components/requestBodies/Foo'
       responses:
@@ -30,7 +32,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Baz'
           description: OK
-  /bar:
+  /v2/bar:
     post:
       requestBody:
         content:
@@ -46,6 +48,14 @@ paths:
                 $ref: '#/components/schemas/Bar'
           description: OK
 components:
+  parameters:
+    Foo:
+      name: foo
+      in: query
+      description: Query parameter
+      required: false
+      schema:
+        type: string
   requestBodies:
     Foo:
       required: true
