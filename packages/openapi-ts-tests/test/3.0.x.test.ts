@@ -426,7 +426,9 @@ describe(`OpenAPI ${version}`, () => {
     {
       config: createConfig({
         input: {
-          exclude: ['@deprecated'],
+          filters: {
+            deprecated: false,
+          },
           path: 'exclude-deprecated.yaml',
         },
         output: 'exclude-deprecated',
