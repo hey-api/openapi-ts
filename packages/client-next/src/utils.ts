@@ -317,7 +317,7 @@ type ResInterceptor<Res, Options> = (
 ) => Res | Promise<Res>;
 
 class Interceptors<Interceptor> {
-  _fns: Interceptor[];
+  _fns: (Interceptor | null)[];
 
   constructor() {
     this._fns = [];
@@ -327,19 +327,38 @@ class Interceptors<Interceptor> {
     this._fns = [];
   }
 
-  exists(fn: Interceptor) {
-    return this._fns.indexOf(fn) !== -1;
+  getInterceptorIndex(id: number | Interceptor): number {
+    if (typeof id === 'number') {
+      return this._fns[id] ? id : -1;
+    } else {
+      return this._fns.indexOf(id);
+    }
+  }
+  exists(id: number | Interceptor) {
+    const index = this.getInterceptorIndex(id);
+    return !!this._fns[index];
   }
 
-  eject(fn: Interceptor) {
-    const index = this._fns.indexOf(fn);
-    if (index !== -1) {
-      this._fns = [...this._fns.slice(0, index), ...this._fns.slice(index + 1)];
+  eject(id: number | Interceptor) {
+    const index = this.getInterceptorIndex(id);
+    if (this._fns[index]) {
+      this._fns[index] = null;
+    }
+  }
+
+  update(id: number | Interceptor, fn: Interceptor) {
+    const index = this.getInterceptorIndex(id);
+    if (this._fns[index]) {
+      this._fns[index] = fn;
+      return id;
+    } else {
+      return false;
     }
   }
 
   use(fn: Interceptor) {
     this._fns = [...this._fns, fn];
+    return this._fns.length - 1;
   }
 }
 
