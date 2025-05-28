@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.68.1
+
+### Patch Changes
+
+- [#2086](https://github.com/hey-api/openapi-ts/pull/2086) [`ae8aacd`](https://github.com/hey-api/openapi-ts/commit/ae8aacd8bf2a80bb4a2af2cae2b7993e988ee17a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): add back support for regular expressions in input filters
+
+- [#2086](https://github.com/hey-api/openapi-ts/pull/2086) [`ae8aacd`](https://github.com/hey-api/openapi-ts/commit/ae8aacd8bf2a80bb4a2af2cae2b7993e988ee17a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): extend input filters to handle reusable parameters and responses
+
 ## 0.68.0
 
 ### Minor Changes
@@ -2313,6 +2321,7 @@
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
   };
+
   ```
 
   ```
