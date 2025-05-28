@@ -76,7 +76,7 @@ export default defineConfig(() => {
         // bundle: true,
         // bundleSource_EXPERIMENTAL: true,
         // exportFromIndex: true,
-        name: '@hey-api/client-fetch',
+        name: '@hey-api/client-axios',
         // name: 'legacy/fetch',
         // strictBaseUrl: true,
       },
@@ -95,7 +95,7 @@ export default defineConfig(() => {
         // throwOnError: true,
         // transformer: '@hey-api/transformers',
         // transformer: true,
-        validator: 'valibot',
+        validator: 'zod',
       },
       {
         bigInt: true,
