@@ -17,8 +17,21 @@ export type Graph = {
       tags: Set<string>;
     }
   >;
-  // TODO: add parameters
+  parameters: Map<
+    string,
+    {
+      dependencies: Set<string>;
+      deprecated: boolean;
+    }
+  >;
   requestBodies: Map<
+    string,
+    {
+      dependencies: Set<string>;
+      deprecated: boolean;
+    }
+  >;
+  responses: Map<
     string,
     {
       dependencies: Set<string>;
@@ -34,16 +47,26 @@ export type Graph = {
   >;
 };
 
-type Type = 'body' | 'operation' | 'schema' | 'unknown';
+export type GraphType =
+  | 'body'
+  | 'operation'
+  | 'parameter'
+  | 'response'
+  | 'schema'
+  | 'unknown';
 
 /**
  * Converts reference strings from OpenAPI $ref keywords into namespaces.
  * @example '#/components/schemas/Foo' -> 'schema'
  */
-export const stringToNamespace = (value: string): Type => {
+export const stringToNamespace = (value: string): GraphType => {
   switch (value) {
+    case 'parameters':
+      return 'parameter';
     case 'requestBodies':
       return 'body';
+    case 'responses':
+      return 'response';
     case 'definitions':
     case 'schemas':
       return 'schema';
@@ -52,19 +75,24 @@ export const stringToNamespace = (value: string): Type => {
   }
 };
 
-export const addNamespace = (namespace: Type, value: string = ''): string =>
-  `${namespace}/${value}`;
+const namespaceNeedle = '/';
+
+export const addNamespace = (
+  namespace: GraphType,
+  value: string = '',
+): string => `${namespace}${namespaceNeedle}${value}`;
 
 export const removeNamespace = (
   key: string,
 ): {
   name: string;
-  namespace: Type;
+  namespace: GraphType;
 } => {
-  const [namespace, name] = key.split('/');
+  const index = key.indexOf(namespaceNeedle);
+  const name = key.slice(index + 1);
   return {
-    name: name!,
-    namespace: namespace! as Type,
+    name,
+    namespace: key.slice(0, index)! as GraphType,
   };
 };
 
@@ -80,7 +108,11 @@ const collectSchemaDependencies = (
     const type = parts[parts.length - 2];
     const name = parts[parts.length - 1];
     if (type && name) {
-      dependencies.add(addNamespace(stringToNamespace(type), name));
+      const namespace = stringToNamespace(type);
+      if (namespace === 'unknown') {
+        console.warn(`unsupported type: ${type}`);
+      }
+      dependencies.add(addNamespace(namespace, name));
     }
   }
 
@@ -237,7 +269,33 @@ const collectOpenApiV3Dependencies = (
       }
     }
 
-    // TODO: add parameters
+    if (spec.components.parameters) {
+      type Parameter = ExtractedType<typeof spec.components.parameters>;
+      for (const [key, value] of Object.entries(spec.components.parameters)) {
+        const parameter = value as Parameter;
+        const dependencies = new Set<string>();
+        if ('$ref' in parameter) {
+          collectSchemaDependencies(parameter, dependencies);
+        } else {
+          if (parameter.schema) {
+            collectSchemaDependencies(parameter.schema, dependencies);
+          }
+
+          if (parameter.content) {
+            for (const media of Object.values(parameter.content)) {
+              if (media.schema) {
+                collectSchemaDependencies(media.schema, dependencies);
+              }
+            }
+          }
+        }
+        graph.parameters.set(addNamespace('parameter', key), {
+          dependencies,
+          deprecated:
+            'deprecated' in parameter ? Boolean(parameter.deprecated) : false,
+        });
+      }
+    }
 
     if (spec.components.requestBodies) {
       type RequestBody = ExtractedType<typeof spec.components.requestBodies>;
@@ -256,6 +314,29 @@ const collectOpenApiV3Dependencies = (
           }
         }
         graph.requestBodies.set(addNamespace('body', key), {
+          dependencies,
+          deprecated: false,
+        });
+      }
+    }
+
+    if (spec.components.responses) {
+      type Response = ExtractedType<typeof spec.components.responses>;
+      for (const [key, value] of Object.entries(spec.components.responses)) {
+        const response = value as Response;
+        const dependencies = new Set<string>();
+        if ('$ref' in response) {
+          collectSchemaDependencies(response, dependencies);
+        } else {
+          if (response.content) {
+            for (const media of Object.values(response.content)) {
+              if (media.schema) {
+                collectSchemaDependencies(media.schema, dependencies);
+              }
+            }
+          }
+        }
+        graph.responses.set(addNamespace('response', key), {
           dependencies,
           deprecated: false,
         });
@@ -333,7 +414,9 @@ export const createGraph = (
 ): Graph => {
   const graph: Graph = {
     operations: new Map(),
+    parameters: new Map(),
     requestBodies: new Map(),
+    responses: new Map(),
     schemas: new Map(),
   };
 

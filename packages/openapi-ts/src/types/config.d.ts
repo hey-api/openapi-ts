@@ -79,6 +79,24 @@ interface Input {
      * @default false
      */
     orphans?: boolean;
+    parameters?: {
+      /**
+       * Prevent parameters matching the `exclude` filters from being processed.
+       *
+       * In case of conflicts, `exclude` takes precedence over `include`.
+       *
+       * @example ['QueryParam']
+       */
+      exclude?: ReadonlyArray<string>;
+      /**
+       * Process only parameters matching the `include` filters.
+       *
+       * In case of conflicts, `exclude` takes precedence over `include`.
+       *
+       * @example ['QueryParam']
+       */
+      include?: ReadonlyArray<string>;
+    };
     /**
      * Should we preserve the key order when overwriting your input? This
      * option is disabled by default to improve performance.
@@ -97,6 +115,24 @@ interface Input {
       exclude?: ReadonlyArray<string>;
       /**
        * Process only request bodies matching the `include` filters.
+       *
+       * In case of conflicts, `exclude` takes precedence over `include`.
+       *
+       * @example ['Foo']
+       */
+      include?: ReadonlyArray<string>;
+    };
+    responses?: {
+      /**
+       * Prevent responses matching the `exclude` filters from being processed.
+       *
+       * In case of conflicts, `exclude` takes precedence over `include`.
+       *
+       * @example ['Foo']
+       */
+      exclude?: ReadonlyArray<string>;
+      /**
+       * Process only responses matching the `include` filters.
        *
        * In case of conflicts, `exclude` takes precedence over `include`.
        *
