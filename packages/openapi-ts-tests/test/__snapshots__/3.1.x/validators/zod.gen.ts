@@ -15,7 +15,7 @@ export const zFoo: z.ZodTypeAny = z.union([
         baz: z.array(z.lazy(() => {
             return zFoo;
         })).optional(),
-        qux: z.number().optional().default(0)
+        qux: z.number().int().gt(0).optional().default(0)
     }),
     z.null()
 ]).default(null);
