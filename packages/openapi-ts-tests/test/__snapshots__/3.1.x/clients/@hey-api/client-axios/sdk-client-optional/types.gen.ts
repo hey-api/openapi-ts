@@ -306,6 +306,9 @@ export type ModelWithEnum = {
  * This is a model with one enum with escaped name
  */
 export type ModelWithEnumWithHyphen = {
+    /**
+     * Foo-Bar-Baz-Qux
+     */
     'foo-bar-baz-qux'?: '3.0';
 };
 
@@ -478,6 +481,9 @@ export type ConstValue = 'ConstValue';
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export type CompositionWithNestedAnyOfAndNull = {
+    /**
+     * Scopes
+     */
     propA?: Array<_3eNum1Период | ConstValue> | null;
 };
 
@@ -666,14 +672,32 @@ export type ModelWithPatternWritable = {
 };
 
 export type FileReadable = {
+    /**
+     * Id
+     */
     readonly id?: string;
+    /**
+     * Updated at
+     */
     readonly updated_at?: string;
+    /**
+     * Created at
+     */
     readonly created_at?: string;
+    /**
+     * Mime
+     */
     mime: string;
+    /**
+     * File
+     */
     readonly file?: string;
 };
 
 export type FileWritable = {
+    /**
+     * Mime
+     */
     mime: string;
 };
 

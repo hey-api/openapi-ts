@@ -6,6 +6,7 @@ import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
 import { numberRegExp } from '../../utils/regexp';
 import { operationIrRef } from '../shared/utils/ref';
+import { createSchemaComment } from '../shared/utils/schema';
 import type { Plugin } from '../types';
 import type { Config } from './types';
 
@@ -42,10 +43,12 @@ const nameTransformer = (name: string) => `z-${name}`;
 
 const arrayTypeToZodSchema = ({
   context,
+  plugin,
   result,
   schema,
 }: {
   context: IR.Context;
+  plugin: Plugin.Instance<Config>;
   result: Result;
   schema: SchemaWithType<'array'>;
 }): ts.CallExpression => {
@@ -75,6 +78,7 @@ const arrayTypeToZodSchema = ({
     const itemExpressions = schema.items!.map((item) =>
       schemaToZodSchema({
         context,
+        plugin,
         result,
         schema: item,
       }),
@@ -367,10 +371,12 @@ const numberTypeToZodSchema = ({
 
 const objectTypeToZodSchema = ({
   context,
+  plugin,
   result,
   schema,
 }: {
   context: IR.Context;
+  plugin: Plugin.Instance<Config>;
   result: Result;
   schema: SchemaWithType<'object'>;
 }): {
@@ -393,6 +399,7 @@ const objectTypeToZodSchema = ({
     const propertyExpression = schemaToZodSchema({
       context,
       optional: !isRequired,
+      plugin,
       result,
       schema: property,
     });
@@ -694,10 +701,12 @@ const voidTypeToZodSchema = ({
 
 const schemaTypeToZodSchema = ({
   context,
+  plugin,
   result,
   schema,
 }: {
   context: IR.Context;
+  plugin: Plugin.Instance<Config>;
   result: Result;
   schema: IR.SchemaObject;
 }): {
@@ -709,6 +718,7 @@ const schemaTypeToZodSchema = ({
       return {
         expression: arrayTypeToZodSchema({
           context,
+          plugin,
           result,
           schema: schema as SchemaWithType<'array'>,
         }),
@@ -752,6 +762,7 @@ const schemaTypeToZodSchema = ({
     case 'object':
       return objectTypeToZodSchema({
         context,
+        plugin,
         result,
         schema: schema as SchemaWithType<'object'>,
       });
@@ -796,10 +807,12 @@ const schemaTypeToZodSchema = ({
 const operationToZodSchema = ({
   context,
   operation,
+  plugin,
   result,
 }: {
   context: IR.Context;
   operation: IR.OperationObject;
+  plugin: Plugin.Instance<Config>;
   result: Result;
 }) => {
   if (operation.responses) {
@@ -814,6 +827,7 @@ const operationToZodSchema = ({
           type: 'response',
         }),
         context,
+        plugin,
         result,
         schema: response,
       });
@@ -825,6 +839,7 @@ const schemaToZodSchema = ({
   $ref,
   context,
   optional,
+  plugin,
   result,
   schema,
 }: {
@@ -839,6 +854,7 @@ const schemaToZodSchema = ({
    * `.default()` which is handled in this function.
    */
   optional?: boolean;
+  plugin: Plugin.Instance<Config>;
   result: Result;
   schema: IR.SchemaObject;
 }): ts.Expression => {
@@ -878,6 +894,7 @@ const schemaToZodSchema = ({
       expression = schemaToZodSchema({
         $ref: schema.$ref,
         context,
+        plugin,
         result,
         schema: ref,
       });
@@ -916,6 +933,7 @@ const schemaToZodSchema = ({
   } else if (schema.type) {
     const zodSchema = schemaTypeToZodSchema({
       context,
+      plugin,
       result,
       schema,
     });
@@ -928,6 +946,7 @@ const schemaToZodSchema = ({
       const itemTypes = schema.items.map((item) =>
         schemaToZodSchema({
           context,
+          plugin,
           result,
           schema: item,
         }),
@@ -977,6 +996,7 @@ const schemaToZodSchema = ({
     } else {
       expression = schemaToZodSchema({
         context,
+        plugin,
         result,
         schema,
       });
@@ -985,6 +1005,7 @@ const schemaToZodSchema = ({
     // catch-all fallback for failed schemas
     const zodSchema = schemaTypeToZodSchema({
       context,
+      plugin,
       result,
       schema: {
         type: 'unknown',
@@ -1036,6 +1057,7 @@ const schemaToZodSchema = ({
   // emit nodes only if $ref points to a reusable component
   if (identifier && identifier.name && identifier.created) {
     const statement = compiler.constVariable({
+      comment: plugin.comments ? createSchemaComment({ schema }) : undefined,
       exportConst: true,
       expression: expression!,
       name: identifier.name,
@@ -1074,6 +1096,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     operationToZodSchema({
       context,
       operation,
+      plugin,
       result,
     });
   });
@@ -1087,6 +1110,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     schemaToZodSchema({
       $ref,
       context,
+      plugin,
       result,
       schema,
     });

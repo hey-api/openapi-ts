@@ -12,6 +12,9 @@ export const vFoo: v.GenericSchema = v.object({
     foo: v.optional(vBar)
 });
 
+/**
+ * description caused circular reference error
+ */
 export const vQux: v.GenericSchema = v.lazy(() => {
     return vQux;
 });

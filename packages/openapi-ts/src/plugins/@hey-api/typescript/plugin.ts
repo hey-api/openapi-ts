@@ -5,12 +5,12 @@ import { compiler } from '../../../compiler';
 import { operationResponsesMap } from '../../../ir/operation';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
-import { escapeComment } from '../../../utils/escape';
 import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
 import { numberRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { fieldName } from '../../shared/utils/case';
 import { operationIrRef } from '../../shared/utils/ref';
+import { createSchemaComment } from '../../shared/utils/schema';
 import type { Plugin } from '../../types';
 import { createClientOptions } from './clientOptions';
 import { typesId } from './ref';
@@ -28,19 +28,6 @@ interface State {
    */
   accessScope?: 'read' | 'write';
 }
-
-const parseSchemaJsDoc = ({ schema }: { schema: IR.SchemaObject }) => {
-  const comments = [
-    schema.description && escapeComment(schema.description),
-    schema.deprecated && '@deprecated',
-  ].filter(Boolean);
-
-  if (!comments.length) {
-    return;
-  }
-
-  return comments;
-};
 
 const scopeToRef = ({
   $ref,
@@ -139,7 +126,7 @@ const addJavaScriptEnum = ({
   });
   const node = compiler.constVariable({
     assertion: 'const',
-    comment: parseSchemaJsDoc({ schema }),
+    comment: createSchemaComment({ schema }),
     exportConst: true,
     expression,
     name: identifier.name || '',
@@ -206,7 +193,7 @@ const schemaToEnumObject = ({
     }
 
     return {
-      comments: parseSchemaJsDoc({ schema: item }),
+      comments: createSchemaComment({ schema: item }),
       key,
       value: item.const,
     };
@@ -263,7 +250,7 @@ const addTypeEnum = ({
 
   if (type) {
     const node = compiler.typeAliasDeclaration({
-      comment: parseSchemaJsDoc({ schema }),
+      comment: createSchemaComment({ schema }),
       exportType: true,
       name: identifier.name || '',
       type,
@@ -320,7 +307,7 @@ const addTypeScriptEnum = ({
   }
 
   const node = compiler.enumDeclaration({
-    leadingComment: parseSchemaJsDoc({ schema }),
+    leadingComment: createSchemaComment({ schema }),
     name: identifier.name || '',
     obj: enumObject.obj,
   });
@@ -562,7 +549,7 @@ const objectTypeToIdentifier = ({
 
     const isRequired = required.includes(name);
     schemaProperties.push({
-      comment: parseSchemaJsDoc({ schema: property }),
+      comment: createSchemaComment({ schema: property }),
       isReadOnly: property.accessScope === 'read',
       isRequired,
       name: fieldName({ context, name }),
@@ -1241,7 +1228,7 @@ export const schemaToType = ({
         namespace: 'type',
       });
       const node = compiler.typeAliasDeclaration({
-        comment: parseSchemaJsDoc({ schema }),
+        comment: createSchemaComment({ schema }),
         exportType: true,
         name: identifier.name || '',
         type,
