@@ -25,7 +25,7 @@ import { parseServers } from './server';
 export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
   if (hasFilters(context.config.input.filters)) {
     const graph = createGraph(context.spec);
-    const filters = createFilters(context.config.input.filters);
+    const filters = createFilters(context.config.input.filters, context.spec);
     const sets = createFilteredDependencies({ filters, graph });
     filterSpec({
       ...sets,

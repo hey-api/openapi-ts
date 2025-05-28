@@ -197,7 +197,7 @@ If you work with large specifications and want to generate output from their sub
 
 ### Operations
 
-Set `include` to match operations to be included or `exclude` to match operations to be excluded. When both rules match the same operation, `exclude` takes precedence over `include`.
+Set `include` to match operations to be included or `exclude` to match operations to be excluded. Both exact keys and regular expressions are supported. When both rules match the same operation, `exclude` takes precedence over `include`.
 
 ::: code-group
 
@@ -206,7 +206,7 @@ export default {
   input: {
     filters: {
       operations: {
-        include: ['GET /api/v1/foo'], // [!code ++]
+        include: ['GET /api/v1/foo', '/^[A-Z]+ /api/v1//'], // [!code ++]
       },
     },
     path: 'https://get.heyapi.dev/hey-api/backend',
@@ -221,7 +221,7 @@ export default {
   input: {
     filters: {
       operations: {
-        exclude: ['GET /api/v1/foo'], // [!code ++]
+        exclude: ['GET /api/v1/foo', '/^[A-Z]+ /api/v1//'], // [!code ++]
       },
     },
     path: 'https://get.heyapi.dev/hey-api/backend',
@@ -290,7 +290,7 @@ export default {
 
 ### Schemas
 
-Set `include` to match schemas to be included or `exclude` to match schemas to be excluded. When both rules match the same schema, `exclude` takes precedence over `include`.
+Set `include` to match schemas to be included or `exclude` to match schemas to be excluded. Both exact keys and regular expressions are supported. When both rules match the same schema, `exclude` takes precedence over `include`.
 
 ::: code-group
 
@@ -299,7 +299,7 @@ export default {
   input: {
     filters: {
       schemas: {
-        include: ['Foo'], // [!code ++]
+        include: ['Foo', '/^Bar/'], // [!code ++]
       },
     },
     path: 'https://get.heyapi.dev/hey-api/backend',
@@ -314,7 +314,45 @@ export default {
   input: {
     filters: {
       schemas: {
-        exclude: ['Foo'], // [!code ++]
+        exclude: ['Foo', '/^Bar/'], // [!code ++]
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+:::
+
+### Parameters
+
+Set `include` to match parameters to be included or `exclude` to match parameters to be excluded. Both exact keys and regular expressions are supported. When both rules match the same parameter, `exclude` takes precedence over `include`.
+
+::: code-group
+
+```js [include]
+export default {
+  input: {
+    filters: {
+      parameters: {
+        include: ['QueryParameter', '/^MyQueryParameter/'], // [!code ++]
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+```js [exclude]
+export default {
+  input: {
+    filters: {
+      parameters: {
+        exclude: ['QueryParameter', '/^MyQueryParameter/'], // [!code ++]
       },
     },
     path: 'https://get.heyapi.dev/hey-api/backend',
@@ -328,7 +366,7 @@ export default {
 
 ### Request Bodies
 
-Set `include` to match request bodies to be included or `exclude` to match request bodies to be excluded. When both rules match the same request body, `exclude` takes precedence over `include`.
+Set `include` to match request bodies to be included or `exclude` to match request bodies to be excluded. Both exact keys and regular expressions are supported. When both rules match the same request body, `exclude` takes precedence over `include`.
 
 ::: code-group
 
@@ -337,7 +375,7 @@ export default {
   input: {
     filters: {
       requestBodies: {
-        include: ['Payload'], // [!code ++]
+        include: ['Payload', '/^SpecialPayload/'], // [!code ++]
       },
     },
     path: 'https://get.heyapi.dev/hey-api/backend',
@@ -352,7 +390,45 @@ export default {
   input: {
     filters: {
       requestBodies: {
-        exclude: ['Payload'], // [!code ++]
+        exclude: ['Payload', '/^SpecialPayload/'], // [!code ++]
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+:::
+
+### Responses
+
+Set `include` to match responses to be included or `exclude` to match responses to be excluded. Both exact keys and regular expressions are supported. When both rules match the same response, `exclude` takes precedence over `include`.
+
+::: code-group
+
+```js [include]
+export default {
+  input: {
+    filters: {
+      responses: {
+        include: ['Foo', '/^Bar/'], // [!code ++]
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+```js [exclude]
+export default {
+  input: {
+    filters: {
+      responses: {
+        exclude: ['Foo', '/^Bar/'], // [!code ++]
       },
     },
     path: 'https://get.heyapi.dev/hey-api/backend',

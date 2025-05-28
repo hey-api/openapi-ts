@@ -17,8 +17,10 @@ export const filterSpec = ({
   spec,
 }: {
   operations: Set<string>;
+  parameters: Set<string>;
   preserveOrder: boolean;
   requestBodies: Set<string>;
+  responses: Set<string>;
   schemas: Set<string>;
   spec: OpenApiV2_0_X;
 }) => {

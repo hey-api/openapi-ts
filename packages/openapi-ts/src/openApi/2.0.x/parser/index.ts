@@ -26,7 +26,7 @@ type PathKeys<T extends keyof PathsObject = keyof PathsObject> =
 export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
   if (hasFilters(context.config.input.filters)) {
     const graph = createGraph(context.spec);
-    const filters = createFilters(context.config.input.filters);
+    const filters = createFilters(context.config.input.filters, context.spec);
     const sets = createFilteredDependencies({ filters, graph });
     filterSpec({
       ...sets,
