@@ -3,6 +3,12 @@ import type { Plugin } from '../types';
 
 export interface Config extends Plugin.Name<'valibot'> {
   /**
+   * Add comments from input to the generated Valibot schemas?
+   *
+   * @default true
+   */
+  comments?: boolean;
+  /**
    * Should the exports from the generated files be re-exported in the index
    * barrel file?
    *

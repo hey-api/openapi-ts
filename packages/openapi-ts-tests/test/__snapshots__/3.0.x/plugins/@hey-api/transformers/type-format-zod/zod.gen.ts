@@ -12,4 +12,7 @@ export const zBar = z.object({
     foo: z.number().int()
 });
 
+/**
+ * OK
+ */
 export const zPostFooResponse = zFoo;

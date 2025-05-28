@@ -2,45 +2,105 @@
 
 import * as v from 'valibot';
 
+/**
+ * Model with number-only name
+ */
 export const v400 = v.string();
 
+/**
+ * Testing multiline comments in string: First line
+ * Second line
+ *
+ * Fourth line
+ */
 export const vCamelCaseCommentWithBreaks = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing multiline comments in string: First line
+ * Second line
+ *
+ * Fourth line
+ */
 export const vCommentWithBreaks = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+ */
 export const vCommentWithBackticks = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing backticks and quotes in string: `backticks`, 'quotes', "double quotes" and ```multiple backticks``` should work
+ */
 export const vCommentWithBackticksAndQuotes = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing slashes in string: \backwards\\\ and /forwards/// should work
+ */
 export const vCommentWithSlashes = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing expression placeholders in string: ${expression} should work
+ */
 export const vCommentWithExpressionPlaceholders = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing quotes in string: 'single quote''' and "double quotes""" should work
+ */
 export const vCommentWithQuotes = v.pipe(v.number(), v.integer());
 
+/**
+ * Testing reserved characters in string: * inline * and ** inline ** should work
+ */
 export const vCommentWithReservedCharacters = v.pipe(v.number(), v.integer());
 
+/**
+ * This is a simple number
+ */
 export const vSimpleInteger = v.pipe(v.number(), v.integer());
 
+/**
+ * This is a simple boolean
+ */
 export const vSimpleBoolean = v.boolean();
 
+/**
+ * This is a simple string
+ */
 export const vSimpleString = v.string();
 
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
 export const vNonAsciiStringæøåÆøÅöôêÊ字符串 = v.string();
 
+/**
+ * This is a simple file
+ */
 export const vSimpleFile = v.string();
 
+/**
+ * This is a model with one string property
+ */
 export const vModelWithString = v.object({
     prop: v.optional(v.string())
 });
 
+/**
+ * This is a simple reference
+ */
 export const vSimpleReference = vModelWithString;
 
+/**
+ * This is a simple string
+ */
 export const vSimpleStringWithPattern = v.union([
     v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)),
     v.null()
 ]);
 
+/**
+ * This is a simple enum with strings
+ */
 export const vEnumWithStrings = v.picklist([
     'Success',
     'Warning',
@@ -57,39 +117,75 @@ export const vEnumWithReplacedCharacters = v.picklist([
     ''
 ]);
 
+/**
+ * This is a simple enum with numbers
+ */
 export const vEnumWithNumbers = v.unknown();
 
+/**
+ * Success=1,Warning=2,Error=3
+ */
 export const vEnumFromDescription = v.number();
 
+/**
+ * This is a simple enum with numbers
+ */
 export const vEnumWithExtensions = v.unknown();
 
 export const vEnumWithXEnumNames = v.unknown();
 
+/**
+ * This is a simple array with numbers
+ */
 export const vArrayWithNumbers = v.array(v.pipe(v.number(), v.integer()));
 
+/**
+ * This is a simple array with booleans
+ */
 export const vArrayWithBooleans = v.array(v.boolean());
 
+/**
+ * This is a simple array with strings
+ */
 export const vArrayWithStrings = v.optional(v.array(v.string()), ['test']);
 
+/**
+ * This is a simple array with references
+ */
 export const vArrayWithReferences = v.array(vModelWithString);
 
+/**
+ * This is a simple array containing an array
+ */
 export const vArrayWithArray = v.array(v.array(vModelWithString));
 
+/**
+ * This is a simple array with properties
+ */
 export const vArrayWithProperties = v.array(v.object({
     '16x16': v.optional(vCamelCaseCommentWithBreaks),
     bar: v.optional(v.string())
 }));
 
+/**
+ * This is a simple array with any of properties
+ */
 export const vArrayWithAnyOfProperties = v.array(v.unknown());
 
 export const vAnyOfAnyAndNull = v.object({
     data: v.optional(v.unknown())
 });
 
+/**
+ * This is a simple array with any of properties
+ */
 export const vAnyOfArrays = v.object({
     results: v.optional(v.array(v.unknown()))
 });
 
+/**
+ * This is a string dictionary
+ */
 export const vDictionaryWithString = v.object({});
 
 export const vDictionaryWithPropertiesAndAdditionalProperties = v.object({
@@ -97,28 +193,55 @@ export const vDictionaryWithPropertiesAndAdditionalProperties = v.object({
     bar: v.optional(v.boolean())
 });
 
+/**
+ * This is a string reference
+ */
 export const vDictionaryWithReference = v.object({});
 
+/**
+ * This is a complex dictionary
+ */
 export const vDictionaryWithArray = v.object({});
 
+/**
+ * This is a string dictionary
+ */
 export const vDictionaryWithDictionary = v.object({});
 
+/**
+ * This is a complex dictionary
+ */
 export const vDictionaryWithProperties = v.object({});
 
+/**
+ * This is a model with one number property
+ */
 export const vModelWithInteger = v.object({
     prop: v.optional(v.pipe(v.number(), v.integer()))
 });
 
+/**
+ * This is a model with one boolean property
+ */
 export const vModelWithBoolean = v.object({
     prop: v.optional(v.boolean())
 });
 
+/**
+ * This is a model with one string property
+ */
 export const vModelWithStringError = v.object({
     prop: v.optional(v.string())
 });
 
+/**
+ * `Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)
+ */
 export const vModelFromZendesk = v.string();
 
+/**
+ * This is a model with one string property
+ */
 export const vModelWithNullableString = v.object({
     nullableProp1: v.optional(v.union([
         v.string(),
@@ -144,6 +267,9 @@ export const vModelWithNullableString = v.object({
     ]))
 });
 
+/**
+ * This is a model with one enum
+ */
 export const vModelWithEnum = v.object({
     'foo_bar-enum': v.optional(v.picklist([
         'Success',
@@ -162,16 +288,25 @@ export const vModelWithEnum = v.object({
     bool: v.optional(v.unknown())
 });
 
+/**
+ * This is a model with one enum with escaped name
+ */
 export const vModelWithEnumWithHyphen = v.object({
     'foo-bar-baz-qux': v.optional(v.picklist([
         '3.0'
     ]))
 });
 
+/**
+ * This is a model with one enum
+ */
 export const vModelWithEnumFromDescription = v.object({
     test: v.optional(v.pipe(v.number(), v.integer()))
 });
 
+/**
+ * This is a model with nested enums
+ */
 export const vModelWithNestedEnums = v.object({
     dictionaryWithEnum: v.optional(v.object({})),
     dictionaryWithEnumFromDescription: v.optional(v.object({})),
@@ -189,6 +324,9 @@ export const vModelWithNestedEnums = v.object({
     ]))
 });
 
+/**
+ * This is a model with one nested property
+ */
 export const vModelWithProperties = v.object({
     required: v.string(),
     requiredAndReadOnly: v.pipe(v.string(), v.readonly()),
@@ -207,6 +345,9 @@ export const vModelWithProperties = v.object({
     '@namespace.integer': v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly()))
 });
 
+/**
+ * This is a model with one property containing a reference
+ */
 export const vModelWithReference = v.object({
     prop: v.optional(vModelWithProperties)
 });
@@ -217,32 +358,51 @@ export const vModelWithReadOnlyAndWriteOnly = v.object({
     baz: v.string()
 });
 
+/**
+ * This is a model with one property containing an array
+ */
 export const vModelWithArrayReadOnlyAndWriteOnly = v.object({
     prop: v.optional(v.array(vModelWithReadOnlyAndWriteOnly)),
     propWithFile: v.optional(v.array(v.string())),
     propWithNumber: v.optional(v.array(v.number()))
 });
 
+/**
+ * This is a model with one property containing an array
+ */
 export const vModelWithArray = v.object({
     prop: v.optional(v.array(vModelWithString)),
     propWithFile: v.optional(v.array(v.string())),
     propWithNumber: v.optional(v.array(v.number()))
 });
 
+/**
+ * This is a model with one property containing a dictionary
+ */
 export const vModelWithDictionary = v.object({
     prop: v.optional(v.object({}))
 });
 
+/**
+ * This is a deprecated model with a deprecated property
+ * @deprecated
+ */
 export const vDeprecatedModel = v.object({
     prop: v.optional(v.string())
 });
 
+/**
+ * This is a model with one property containing a circular reference
+ */
 export const vModelWithCircularReference: v.GenericSchema = v.object({
     prop: v.optional(v.lazy(() => {
         return vModelWithCircularReference;
     }))
 });
 
+/**
+ * This is a model with one property with a 'one of' relationship
+ */
 export const vCompositionWithOneOf = v.object({
     propA: v.optional(v.union([
         vModelWithString,
@@ -252,6 +412,9 @@ export const vCompositionWithOneOf = v.object({
     ]))
 });
 
+/**
+ * This is a model with one property with a 'one of' relationship where the options are not $ref
+ */
 export const vCompositionWithOneOfAnonymous = v.object({
     propA: v.optional(v.union([
         v.object({
@@ -262,16 +425,25 @@ export const vCompositionWithOneOfAnonymous = v.object({
     ]))
 });
 
+/**
+ * Circle
+ */
 export const vModelCircle = v.object({
     kind: v.string(),
     radius: v.optional(v.number())
 });
 
+/**
+ * Square
+ */
 export const vModelSquare = v.object({
     kind: v.string(),
     sideLength: v.optional(v.number())
 });
 
+/**
+ * This is a model with one property with a 'one of' relationship where the options are not $ref
+ */
 export const vCompositionWithOneOfDiscriminator = v.union([
     v.intersect([
         v.object({
@@ -287,6 +459,9 @@ export const vCompositionWithOneOfDiscriminator = v.union([
     ])
 ]);
 
+/**
+ * This is a model with one property with a 'any of' relationship
+ */
 export const vCompositionWithAnyOf = v.object({
     propA: v.optional(v.union([
         vModelWithString,
@@ -296,6 +471,9 @@ export const vCompositionWithAnyOf = v.object({
     ]))
 });
 
+/**
+ * This is a model with one property with a 'any of' relationship where the options are not $ref
+ */
 export const vCompositionWithAnyOfAnonymous = v.object({
     propA: v.optional(v.union([
         v.object({
@@ -306,6 +484,9 @@ export const vCompositionWithAnyOfAnonymous = v.object({
     ]))
 });
 
+/**
+ * This is a model with nested 'any of' property with a type null
+ */
 export const vCompositionWithNestedAnyAndTypeNull = v.object({
     propA: v.optional(v.union([
         v.array(v.union([
@@ -328,6 +509,9 @@ export const vConstValue = v.picklist([
     'ConstValue'
 ]);
 
+/**
+ * This is a model with one property with a 'any of' relationship where the options are not $ref
+ */
 export const vCompositionWithNestedAnyOfAndNull = v.object({
     propA: v.optional(v.union([
         v.array(v.unknown()),
@@ -335,6 +519,9 @@ export const vCompositionWithNestedAnyOfAndNull = v.object({
     ]))
 });
 
+/**
+ * This is a model with one property with a 'one of' relationship
+ */
 export const vCompositionWithOneOfAndNullable = v.object({
     propA: v.optional(v.union([
         v.object({
@@ -347,6 +534,9 @@ export const vCompositionWithOneOfAndNullable = v.object({
     ]))
 });
 
+/**
+ * This is a model that contains a simple dictionary within composition
+ */
 export const vCompositionWithOneOfAndSimpleDictionary = v.object({
     propA: v.optional(v.union([
         v.boolean(),
@@ -354,6 +544,9 @@ export const vCompositionWithOneOfAndSimpleDictionary = v.object({
     ]))
 });
 
+/**
+ * This is a model that contains a dictionary of simple arrays within composition
+ */
 export const vCompositionWithOneOfAndSimpleArrayDictionary = v.object({
     propA: v.optional(v.union([
         v.boolean(),
@@ -361,6 +554,9 @@ export const vCompositionWithOneOfAndSimpleArrayDictionary = v.object({
     ]))
 });
 
+/**
+ * This is a model that contains a dictionary of complex arrays (composited) within composition
+ */
 export const vCompositionWithOneOfAndComplexArrayDictionary = v.object({
     propA: v.optional(v.union([
         v.boolean(),
@@ -368,6 +564,9 @@ export const vCompositionWithOneOfAndComplexArrayDictionary = v.object({
     ]))
 });
 
+/**
+ * This is a model with one property with a 'all of' relationship
+ */
 export const vCompositionWithAllOfAndNullable = v.object({
     propA: v.optional(v.union([
         v.intersect([
@@ -382,6 +581,9 @@ export const vCompositionWithAllOfAndNullable = v.object({
     ]))
 });
 
+/**
+ * This is a model with one property with a 'any of' relationship
+ */
 export const vCompositionWithAnyOfAndNullable = v.object({
     propA: v.optional(v.union([
         v.object({
@@ -394,11 +596,17 @@ export const vCompositionWithAnyOfAndNullable = v.object({
     ]))
 });
 
+/**
+ * This is a base model with two simple optional properties
+ */
 export const vCompositionBaseModel = v.object({
     firstName: v.optional(v.string()),
     lastname: v.optional(v.string())
 });
 
+/**
+ * This is a model that extends the base model
+ */
 export const vCompositionExtendedModel = v.intersect([
     vCompositionBaseModel,
     v.object({
@@ -408,6 +616,9 @@ export const vCompositionExtendedModel = v.intersect([
     })
 ]);
 
+/**
+ * This is a model with one nested property
+ */
 export const vModelWithNestedProperties = v.object({
     first: v.pipe(v.union([
         v.pipe(v.object({
@@ -425,22 +636,34 @@ export const vModelWithNestedProperties = v.object({
     ]), v.readonly())
 });
 
+/**
+ * This is a model with duplicated properties
+ */
 export const vModelWithDuplicateProperties = v.object({
     prop: v.optional(vModelWithString)
 });
 
+/**
+ * This is a model with ordered properties
+ */
 export const vModelWithOrderedProperties = v.object({
     zebra: v.optional(v.string()),
     apple: v.optional(v.string()),
     hawaii: v.optional(v.string())
 });
 
+/**
+ * This is a model with duplicated imports
+ */
 export const vModelWithDuplicateImports = v.object({
     propA: v.optional(vModelWithString),
     propB: v.optional(vModelWithString),
     propC: v.optional(vModelWithString)
 });
 
+/**
+ * This is a model that extends another model
+ */
 export const vModelThatExtends = v.intersect([
     vModelWithString,
     v.object({
@@ -449,6 +672,9 @@ export const vModelThatExtends = v.intersect([
     })
 ]);
 
+/**
+ * This is a model that extends another model
+ */
 export const vModelThatExtendsExtends = v.intersect([
     vModelWithString,
     vModelThatExtends,
@@ -458,6 +684,9 @@ export const vModelThatExtendsExtends = v.intersect([
     })
 ]);
 
+/**
+ * This is a model that contains a some patterns
+ */
 export const vModelWithPattern = v.object({
     key: v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)),
     name: v.pipe(v.string(), v.maxLength(255)),
@@ -488,10 +717,19 @@ export const vPageable = v.object({
     sort: v.optional(v.array(v.string()))
 });
 
+/**
+ * This is a free-form object without additionalProperties.
+ */
 export const vFreeFormObjectWithoutAdditionalProperties = v.object({});
 
+/**
+ * This is a free-form object with additionalProperties: true.
+ */
 export const vFreeFormObjectWithAdditionalPropertiesEqTrue = v.object({});
 
+/**
+ * This is a free-form object with additionalProperties: {}.
+ */
 export const vFreeFormObjectWithAdditionalPropertiesEqEmptyObject = v.object({});
 
 export const vModelWithConst = v.object({
@@ -505,6 +743,9 @@ export const vModelWithConst = v.object({
     ]))
 });
 
+/**
+ * This is a model with one property and additionalProperties: true
+ */
 export const vModelWithAdditionalPropertiesEqTrue = v.object({
     prop: v.optional(v.string())
 });
@@ -516,6 +757,9 @@ export const vNestedAnyOfArraysNullable = v.object({
     ]))
 });
 
+/**
+ * This is a reusable parameter
+ */
 export const vSimpleParameter = v.unknown();
 
 export const vCompositionWithOneOfAndProperties = v.intersect([
@@ -536,6 +780,9 @@ export const vCompositionWithOneOfAndProperties = v.intersect([
     })
 ]);
 
+/**
+ * An object that can be null
+ */
 export const vNullableObject = v.optional(v.union([
     v.object({
         foo: v.optional(v.string())
@@ -543,6 +790,9 @@ export const vNullableObject = v.optional(v.union([
     v.null()
 ]), null);
 
+/**
+ * Some % character
+ */
 export const vCharactersInDescription = v.string();
 
 export const vModelWithNullableObject = v.object({
@@ -646,6 +896,9 @@ export const vModelWithAnyOfConstantSizeArrayNullable = v.tuple([
     ])
 ]);
 
+/**
+ * Model with restricted keyword name
+ */
 export const vImport = v.string();
 
 export const vModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = v.tuple([
@@ -674,6 +927,9 @@ export const vModelWithNumericEnumUnion = v.object({
     value: v.optional(v.unknown())
 });
 
+/**
+ * Some description with `back ticks`
+ */
 export const vModelWithBackticksInDescription = v.object({
     template: v.optional(v.string())
 });
@@ -692,14 +948,29 @@ export const vModelWithOneOfAndProperties = v.intersect([
     })
 ]);
 
+/**
+ * Model used to test deduplication strategy (unused)
+ */
 export const vParameterSimpleParameterUnused = v.string();
 
+/**
+ * Model used to test deduplication strategy
+ */
 export const vPostServiceWithEmptyTagResponse = v.string();
 
+/**
+ * Model used to test deduplication strategy
+ */
 export const vPostServiceWithEmptyTagResponse2 = v.string();
 
+/**
+ * Model used to test deduplication strategy
+ */
 export const vDeleteFooData = v.string();
 
+/**
+ * Model used to test deduplication strategy
+ */
 export const vDeleteFooData2 = v.string();
 
 export const vSchemaWithFormRestrictedKeys = v.object({
@@ -724,11 +995,17 @@ export const vSchemaWithFormRestrictedKeys = v.object({
     })))
 });
 
+/**
+ * This schema was giving PascalCase transformations a hard time
+ */
 export const vIoK8sApimachineryPkgApisMetaV1Preconditions = v.object({
     resourceVersion: v.optional(v.string()),
     uid: v.optional(v.string())
 });
 
+/**
+ * This schema was giving PascalCase transformations a hard time
+ */
 export const vIoK8sApimachineryPkgApisMetaV1DeleteOptions = v.object({
     preconditions: v.optional(vIoK8sApimachineryPkgApisMetaV1Preconditions)
 });
@@ -786,8 +1063,14 @@ export const vImportResponse = v.union([
     vModelWithReadOnlyAndWriteOnly
 ]);
 
+/**
+ * Success
+ */
 export const vApiVVersionODataControllerCountResponse = vModelFromZendesk;
 
+/**
+ * Response is a simple number
+ */
 export const vGetApiVbyApiVersionSimpleOperationResponse = v.number();
 
 export const vPostCallWithOptionalParamResponse = v.union([
@@ -795,6 +1078,9 @@ export const vPostCallWithOptionalParamResponse = v.union([
     v.void()
 ]);
 
+/**
+ * Success
+ */
 export const vCallWithNoContentResponseResponse = v.void();
 
 export const vCallWithResponseAndNoContentResponseResponse = v.union([
@@ -804,6 +1090,9 @@ export const vCallWithResponseAndNoContentResponseResponse = v.union([
 
 export const vDummyAResponse = v400;
 
+/**
+ * Success
+ */
 export const vDummyBResponse = v.void();
 
 export const vCallWithResponseResponse = vImport;
@@ -835,10 +1124,19 @@ export const vTypesResponse = v.union([
 
 export const vUploadFileResponse = v.boolean();
 
+/**
+ * Success
+ */
 export const vFileResponseResponse = v.string();
 
+/**
+ * Successful response
+ */
 export const vComplexTypesResponse = v.array(vModelWithString);
 
+/**
+ * OK
+ */
 export const vMultipartResponseResponse = v.object({
     file: v.optional(v.string()),
     metadata: v.optional(v.object({
@@ -847,6 +1145,12 @@ export const vMultipartResponseResponse = v.object({
     }))
 });
 
+/**
+ * Success
+ */
 export const vComplexParamsResponse = vModelWithString;
 
+/**
+ * Successful response
+ */
 export const vNonAsciiæøåÆøÅöôêÊ字符串Response = v.array(vNonAsciiStringæøåÆøÅöôêÊ字符串);

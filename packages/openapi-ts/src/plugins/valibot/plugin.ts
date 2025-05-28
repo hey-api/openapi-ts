@@ -6,6 +6,7 @@ import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
 import { numberRegExp } from '../../utils/regexp';
 import { operationIrRef } from '../shared/utils/ref';
+import { createSchemaComment } from '../shared/utils/schema';
 import type { Plugin } from '../types';
 import { identifiers, valibotId } from './constants';
 import type { Config } from './types';
@@ -39,10 +40,12 @@ const pipesToExpression = (pipes: Array<ts.Expression>) => {
 
 const arrayTypeToValibotSchema = ({
   context,
+  plugin,
   result,
   schema,
 }: {
   context: IR.Context;
+  plugin: Plugin.Instance<Config>;
   result: Result;
   schema: SchemaWithType<'array'>;
 }): ts.CallExpression => {
@@ -72,6 +75,7 @@ const arrayTypeToValibotSchema = ({
     const itemExpressions = schema.items!.map((item) => {
       const schemaPipes = schemaToValibotSchema({
         context,
+        plugin,
         result,
         schema: item,
       });
@@ -372,10 +376,12 @@ const numberTypeToValibotSchema = ({
 
 const objectTypeToValibotSchema = ({
   context,
+  plugin,
   result,
   schema,
 }: {
   context: IR.Context;
+  plugin: Plugin.Instance<Config>;
   result: Result;
   schema: SchemaWithType<'object'>;
 }): {
@@ -398,6 +404,7 @@ const objectTypeToValibotSchema = ({
     const schemaPipes = schemaToValibotSchema({
       context,
       optional: !isRequired,
+      plugin,
       result,
       schema: property,
     });
@@ -610,10 +617,12 @@ const stringTypeToValibotSchema = ({
 
 const tupleTypeToValibotSchema = ({
   context,
+  plugin,
   result,
   schema,
 }: {
   context: IR.Context;
+  plugin: Plugin.Instance<Config>;
   result: Result;
   schema: SchemaWithType<'tuple'>;
 }) => {
@@ -645,6 +654,7 @@ const tupleTypeToValibotSchema = ({
     const tupleElements = schema.items.map((item) => {
       const schemaPipes = schemaToValibotSchema({
         context,
+        plugin,
         result,
         schema: item,
       });
@@ -722,10 +732,12 @@ const voidTypeToValibotSchema = ({
 
 const schemaTypeToValibotSchema = ({
   context,
+  plugin,
   result,
   schema,
 }: {
   context: IR.Context;
+  plugin: Plugin.Instance<Config>;
   result: Result;
   schema: IR.SchemaObject;
 }): {
@@ -737,6 +749,7 @@ const schemaTypeToValibotSchema = ({
       return {
         expression: arrayTypeToValibotSchema({
           context,
+          plugin,
           result,
           schema: schema as SchemaWithType<'array'>,
         }),
@@ -780,6 +793,7 @@ const schemaTypeToValibotSchema = ({
     case 'object':
       return objectTypeToValibotSchema({
         context,
+        plugin,
         result,
         schema: schema as SchemaWithType<'object'>,
       });
@@ -794,6 +808,7 @@ const schemaTypeToValibotSchema = ({
       return {
         expression: tupleTypeToValibotSchema({
           context,
+          plugin,
           result,
           schema: schema as SchemaWithType<'tuple'>,
         }),
@@ -825,10 +840,12 @@ const schemaTypeToValibotSchema = ({
 const operationToValibotSchema = ({
   context,
   operation,
+  plugin,
   result,
 }: {
   context: IR.Context;
   operation: IR.OperationObject;
+  plugin: Plugin.Instance<Config>;
   result: Result;
 }) => {
   if (operation.responses) {
@@ -843,6 +860,7 @@ const operationToValibotSchema = ({
           type: 'response',
         }),
         context,
+        plugin,
         result,
         schema: response,
       });
@@ -854,6 +872,7 @@ const schemaToValibotSchema = ({
   $ref,
   context,
   optional,
+  plugin,
   result,
   schema,
 }: {
@@ -868,6 +887,7 @@ const schemaToValibotSchema = ({
    * `.default()` which is handled in this function.
    */
   optional?: boolean;
+  plugin: Plugin.Instance<Config>;
   result: Result;
   schema: IR.SchemaObject;
 }): Array<ts.Expression> => {
@@ -907,6 +927,7 @@ const schemaToValibotSchema = ({
       const schemaPipes = schemaToValibotSchema({
         $ref: schema.$ref,
         context,
+        plugin,
         result,
         schema: ref,
       });
@@ -947,6 +968,7 @@ const schemaToValibotSchema = ({
   } else if (schema.type) {
     const valibotSchema = schemaTypeToValibotSchema({
       context,
+      plugin,
       result,
       schema,
     });
@@ -959,6 +981,7 @@ const schemaToValibotSchema = ({
       const itemTypes = schema.items.map((item) => {
         const schemaPipes = schemaToValibotSchema({
           context,
+          plugin,
           result,
           schema: item,
         });
@@ -995,6 +1018,7 @@ const schemaToValibotSchema = ({
     } else {
       const schemaPipes = schemaToValibotSchema({
         context,
+        plugin,
         result,
         schema,
       });
@@ -1004,6 +1028,7 @@ const schemaToValibotSchema = ({
     // catch-all fallback for failed schemas
     const valibotSchema = schemaTypeToValibotSchema({
       context,
+      plugin,
       result,
       schema: {
         type: 'unknown',
@@ -1065,6 +1090,7 @@ const schemaToValibotSchema = ({
   // emit nodes only if $ref points to a reusable component
   if (identifier && identifier.name && identifier.created) {
     const statement = compiler.constVariable({
+      comment: plugin.comments ? createSchemaComment({ schema }) : undefined,
       exportConst: true,
       expression: pipesToExpression(pipes),
       name: identifier.name,
@@ -1106,6 +1132,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     operationToValibotSchema({
       context,
       operation,
+      plugin,
       result,
     });
   });
@@ -1119,6 +1146,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     schemaToValibotSchema({
       $ref,
       context,
+      plugin,
       result,
       schema,
     });
