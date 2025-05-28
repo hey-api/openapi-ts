@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.10.2
+
+### Patch Changes
+
+- [#2029](https://github.com/hey-api/openapi-ts/pull/2029) [`1f99066`](https://github.com/hey-api/openapi-ts/commit/1f99066efbb2d0e6b9e3710c701293c2cc09d65e) Thanks [@henry-encord](https://github.com/henry-encord)! - feat: support referencing interceptors by index
+
 ## 0.10.1
 
 ### Patch Changes

@@ -52,7 +52,9 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     for (const fn of interceptors.request._fns) {
-      await fn(opts);
+      if (fn) {
+        await fn(opts);
+      }
     }
 
     const url = buildUrl(opts);
@@ -65,7 +67,9 @@ export const createClient = (config: Config = {}): Client => {
     });
 
     for (const fn of interceptors.response._fns) {
-      response = await fn(response, opts);
+      if (fn) {
+        response = await fn(response, opts);
+      }
     }
 
     const result = {
@@ -123,7 +127,9 @@ export const createClient = (config: Config = {}): Client => {
     let finalError = error;
 
     for (const fn of interceptors.error._fns) {
-      finalError = (await fn(error, response, opts)) as string;
+      if (fn) {
+        finalError = (await fn(error, response, opts)) as string;
+      }
     }
 
     finalError = finalError || ({} as string);

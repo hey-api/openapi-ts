@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-next",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "🚀 Next.js client for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {
