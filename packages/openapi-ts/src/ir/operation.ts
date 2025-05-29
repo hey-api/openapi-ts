@@ -31,7 +31,10 @@ export const operationPagination = ({
   const body = operation.body;
 
   if (!body || !body.pagination) {
-    return parameterWithPagination(operation.parameters);
+    return parameterWithPagination({
+      context,
+      parameters: operation.parameters,
+    });
   }
 
   if (body.pagination === true) {
@@ -52,7 +55,10 @@ export const operationPagination = ({
   const paginationProp = finalSchema?.properties?.[body.pagination];
 
   if (!paginationProp) {
-    return parameterWithPagination(operation.parameters);
+    return parameterWithPagination({
+      context,
+      parameters: operation.parameters,
+    });
   }
 
   return {
