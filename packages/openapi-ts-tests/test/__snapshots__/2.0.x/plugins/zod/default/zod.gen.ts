@@ -431,6 +431,11 @@ export const zComplexTypesResponse = z.array(zModelWithString);
 export const zNonAsciiæøåÆøÅöôêÊ字符串Response = zNonAsciiStringæøåÆøÅöôêÊ字符串;
 
 /**
+ * Body should not be unknown
+ */
+export const zPostApiVbyApiVersionBodyData = zParameterActivityParams;
+
+/**
  * OK
  */
 export const zPostApiVbyApiVersionBodyResponse = zResponsePostActivityResponse;

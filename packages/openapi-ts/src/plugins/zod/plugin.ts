@@ -815,6 +815,21 @@ const operationToZodSchema = ({
   plugin: Plugin.Instance<Config>;
   result: Result;
 }) => {
+  if (operation.body) {
+    schemaToZodSchema({
+      $ref: operationIrRef({
+        case: 'camelCase',
+        config: context.config,
+        id: operation.id,
+        type: 'data',
+      }),
+      context,
+      plugin,
+      result,
+      schema: operation.body.schema,
+    });
+  }
+
   if (operation.responses) {
     const { response } = operationResponsesMap(operation);
 
@@ -1098,6 +1113,21 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       operation,
       plugin,
       result,
+    });
+  });
+
+  context.subscribe('requestBody', ({ $ref, requestBody }) => {
+    const result: Result = {
+      circularReferenceTracker: new Set(),
+      hasCircularReference: false,
+    };
+
+    schemaToZodSchema({
+      $ref,
+      context,
+      plugin,
+      result,
+      schema: requestBody.schema,
     });
   });
 
