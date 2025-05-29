@@ -27,7 +27,9 @@ interface ModuleOptions {
   /**
    * `@hey-api/openapi-ts` configuration options.
    */
-  config: Omit<UserConfig, 'output'> & Partial<Pick<UserConfig, 'output'>>;
+  config:
+    | (Omit<UserConfig, 'output'> & Partial<Pick<UserConfig, 'output'>>)
+    | (Omit<UserConfig, 'output'> & Partial<Pick<UserConfig, 'output'>>)[];
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -44,74 +46,80 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.build.transpile.push('@hey-api/client-nuxt');
 
-    const config = defu(options.config, {
-      output: {
-        path: path.join(nuxt.options.buildDir, 'client'),
-      },
-      plugins: (options.config.plugins || []).some(
-        (plugin: Required<UserConfig>['plugins'][number]) => {
-          const pluginName = typeof plugin === 'string' ? plugin : plugin.name;
-          return pluginName === '@hey-api/client-nuxt';
+    const optionsConfigs = Array.isArray(options.config)
+      ? options.config
+      : [options.config];
+
+    for (const optionsConfig of optionsConfigs) {
+      const config = defu(optionsConfig, {
+        output: {
+          path: path.join(nuxt.options.buildDir, 'client'),
         },
-      )
-        ? []
-        : ['@hey-api/client-nuxt'],
-    } satisfies Partial<UserConfig>) as UserConfig;
+        plugins: (optionsConfig.plugins || []).some(
+          (plugin: Required<UserConfig>['plugins'][number]) => {
+            const pluginName = typeof plugin === 'string' ? plugin : plugin.name;
+            return pluginName === '@hey-api/client-nuxt';
+          },
+        )
+          ? []
+          : ['@hey-api/client-nuxt'],
+      } satisfies Partial<UserConfig>) as UserConfig;
 
-    if (nuxt.options._prepare) {
-      config.watch = false;
-    }
-
-    const folder = path.resolve(
-      nuxt.options.rootDir,
-      typeof config.output === 'string' ? config.output : config.output.path,
-    );
-
-    nuxt.options.alias[options.alias!] = folder;
-
-    nuxt.hooks.hookOnce('app:templates', async () => {
-      await createClient(config);
-    });
-
-    // auto-import enabled
-    if (options.autoImport) {
-      await createClient(config);
-      const typeImports = new Set<string>();
-      const valueImports = new Set<string>();
-      const files = findExports(
-        fs.readFileSync(path.join(folder, 'index.ts'), 'utf-8'),
-      );
-      for (const file of files) {
-        if (!file.specifier || !/^\.{1,2}\//.test(file.specifier)) {
-          continue;
-        }
-        const filePath = await findPath(path.resolve(folder, file.specifier));
-        if (!filePath) {
-          continue;
-        }
-        const blob = fs.readFileSync(filePath, 'utf-8');
-        for (const { names } of findTypeExports(blob)) {
-          for (const name of names) {
-            typeImports.add(name);
-          }
-        }
-        for (const { names } of findExports(blob)) {
-          for (const name of names) {
-            valueImports.add(name);
-          }
-        }
+      if (nuxt.options._prepare) {
+        config.watch = false;
       }
 
-      const imports = [
-        ...[...typeImports].map((name) => ({ name, type: true })),
-        ...valueImports,
-      ];
+      const folder = path.resolve(
+        nuxt.options.rootDir,
+        typeof config.output === 'string' ? config.output : config.output.path,
+      );
 
-      if (imports.length && options.alias) {
-        addImportsSources({
-          from: options.alias,
-          imports,
-        });
+      nuxt.options.alias[options.alias!] = folder;
+
+      nuxt.hooks.hookOnce('app:templates', async () => {
+        await createClient(config);
+      });
+
+      // auto-import enabled
+      if (options.autoImport) {
+        await createClient(config);
+        const typeImports = new Set<string>();
+        const valueImports = new Set<string>();
+        const files = findExports(
+          fs.readFileSync(path.join(folder, 'index.ts'), 'utf-8'),
+        );
+        for (const file of files) {
+          if (!file.specifier || !/^\.{1,2}\//.test(file.specifier)) {
+            continue;
+          }
+          const filePath = await findPath(path.resolve(folder, file.specifier));
+          if (!filePath) {
+            continue;
+          }
+          const blob = fs.readFileSync(filePath, 'utf-8');
+          for (const { names } of findTypeExports(blob)) {
+            for (const name of names) {
+              typeImports.add(name);
+            }
+          }
+          for (const { names } of findExports(blob)) {
+            for (const name of names) {
+              valueImports.add(name);
+            }
+          }
+        }
+
+        const imports = [
+          ...[...typeImports].map((name) => ({ name, type: true })),
+          ...valueImports,
+        ];
+
+        if (imports.length && options.alias) {
+          addImportsSources({
+            from: options.alias,
+            imports,
+          });
+        }
       }
     }
   },
