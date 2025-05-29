@@ -21,3 +21,13 @@ export const zFoo: z.ZodTypeAny = z.union([
 ]).default(null);
 
 export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
+
+export const zFoo2 = z.object({
+    foo: zBar.optional()
+});
+
+export const zPatchFooData = z.object({
+    foo: z.string().optional()
+});
+
+export const zPostFooData = zFoo2;
