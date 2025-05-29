@@ -48,11 +48,62 @@ Hey API is an ecosystem of products helping you build better APIs. Superpower yo
 
 Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
 
-<p>
-  <a href="https://kutt.it/pkEZyc" target="_blank">
-    <img alt="Stainless logo" height="50" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg" />
-  </a>
-</p>
+### Gold
+
+<table>
+  <tr>
+    <td align="center">
+      <p></p>
+      <p>
+        <a href="https://kutt.it/pkEZyc" target="_blank">
+          <picture height="50px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
+            <img alt="Stainless logo" height="50px" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
+          </picture>
+        </a>
+      </p>
+      <p></p>
+    </td>
+  </tr>
+</table>
+
+### Silver
+
+<table>
+  <tr>
+    <td align="center">
+      <p></p>
+      <p>
+        <a href="https://kutt.it/pkEZyc" target="_blank">
+          <picture height="50px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
+            <img alt="Stainless logo" height="50px" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
+          </picture>
+        </a>
+      </p>
+      <p></p>
+    </td>
+  </tr>
+</table>
+
+### Bronze
+
+<table>
+  <tr>
+    <td align="center">
+      <p></p>
+      <p>
+        <a href="https://kutt.it/pkEZyc" target="_blank">
+          <picture height="50px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
+            <img alt="Stainless logo" height="50px" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
+          </picture>
+        </a>
+      </p>
+      <p></p>
+    </td>
+  </tr>
+</table>
 
 ## Quick Start
 
