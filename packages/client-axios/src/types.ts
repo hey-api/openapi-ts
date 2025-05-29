@@ -77,10 +77,23 @@ export type RequestResult<
   TError = unknown,
   ThrowOnError extends boolean = boolean,
 > = ThrowOnError extends true
-  ? Promise<AxiosResponse<TData>>
+  ? Promise<
+      AxiosResponse<
+        TData extends Record<string, unknown> ? TData[keyof TData] : TData
+      >
+    >
   : Promise<
-      | (AxiosResponse<TData> & { error: undefined })
-      | (AxiosError<TError> & { data: undefined; error: TError })
+      | (AxiosResponse<
+          TData extends Record<string, unknown> ? TData[keyof TData] : TData
+        > & { error: undefined })
+      | (AxiosError<
+          TError extends Record<string, unknown> ? TError[keyof TError] : TError
+        > & {
+          data: undefined;
+          error: TError extends Record<string, unknown>
+            ? TError[keyof TError]
+            : TError;
+        })
     >;
 
 export interface ClientOptions {
