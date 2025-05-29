@@ -9,38 +9,62 @@ import type {
 import { client as _heyApiClient } from './client.gen';
 import type {
   AddPetData,
-  AddPetResponse,
+  AddPetErrors,
+  AddPetResponses,
   CreateUserData,
-  CreateUserResponse,
+  CreateUserErrors,
+  CreateUserResponses,
   CreateUsersWithListInputData,
-  CreateUsersWithListInputResponse,
+  CreateUsersWithListInputErrors,
+  CreateUsersWithListInputResponses,
   DeleteOrderData,
+  DeleteOrderErrors,
+  DeleteOrderResponses,
   DeletePetData,
+  DeletePetErrors,
+  DeletePetResponses,
   DeleteUserData,
+  DeleteUserErrors,
+  DeleteUserResponses,
   FindPetsByStatusData,
-  FindPetsByStatusResponse,
+  FindPetsByStatusErrors,
+  FindPetsByStatusResponses,
   FindPetsByTagsData,
-  FindPetsByTagsResponse,
+  FindPetsByTagsErrors,
+  FindPetsByTagsResponses,
   GetInventoryData,
-  GetInventoryResponse,
+  GetInventoryErrors,
+  GetInventoryResponses,
   GetOrderByIdData,
-  GetOrderByIdResponse,
+  GetOrderByIdErrors,
+  GetOrderByIdResponses,
   GetPetByIdData,
-  GetPetByIdResponse,
+  GetPetByIdErrors,
+  GetPetByIdResponses,
   GetUserByNameData,
-  GetUserByNameResponse,
+  GetUserByNameErrors,
+  GetUserByNameResponses,
   LoginUserData,
-  LoginUserResponse,
+  LoginUserErrors,
+  LoginUserResponses,
   LogoutUserData,
+  LogoutUserErrors,
+  LogoutUserResponses,
   PlaceOrderData,
-  PlaceOrderResponse,
+  PlaceOrderErrors,
+  PlaceOrderResponses,
   UpdatePetData,
-  UpdatePetResponse,
+  UpdatePetErrors,
+  UpdatePetResponses,
   UpdatePetWithFormData,
-  UpdatePetWithFormResponse,
+  UpdatePetWithFormErrors,
+  UpdatePetWithFormResponses,
   UpdateUserData,
+  UpdateUserErrors,
+  UpdateUserResponses,
   UploadFileData,
-  UploadFileResponse,
+  UploadFileErrors,
+  UploadFileResponses,
 } from './types.gen';
 
 export type Options<
@@ -67,22 +91,24 @@ export type Options<
 export const addPet = <ThrowOnError extends boolean = false>(
   options: Options<AddPetData, ThrowOnError>,
 ) =>
-  (options.client ?? _heyApiClient).post<AddPetResponse, unknown, ThrowOnError>(
-    {
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
-      url: '/pet',
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
+  (options.client ?? _heyApiClient).post<
+    AddPetResponses,
+    AddPetErrors,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
       },
+    ],
+    url: '/pet',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
     },
-  );
+  });
 
 /**
  * Update an existing pet.
@@ -92,8 +118,8 @@ export const updatePet = <ThrowOnError extends boolean = false>(
   options: Options<UpdatePetData, ThrowOnError>,
 ) =>
   (options.client ?? _heyApiClient).put<
-    UpdatePetResponse,
-    unknown,
+    UpdatePetResponses,
+    UpdatePetErrors,
     ThrowOnError
   >({
     security: [
@@ -118,8 +144,8 @@ export const findPetsByStatus = <ThrowOnError extends boolean = false>(
   options?: Options<FindPetsByStatusData, ThrowOnError>,
 ) =>
   (options?.client ?? _heyApiClient).get<
-    FindPetsByStatusResponse,
-    unknown,
+    FindPetsByStatusResponses,
+    FindPetsByStatusErrors,
     ThrowOnError
   >({
     security: [
@@ -140,8 +166,8 @@ export const findPetsByTags = <ThrowOnError extends boolean = false>(
   options?: Options<FindPetsByTagsData, ThrowOnError>,
 ) =>
   (options?.client ?? _heyApiClient).get<
-    FindPetsByTagsResponse,
-    unknown,
+    FindPetsByTagsResponses,
+    FindPetsByTagsErrors,
     ThrowOnError
   >({
     security: [
@@ -161,7 +187,11 @@ export const findPetsByTags = <ThrowOnError extends boolean = false>(
 export const deletePet = <ThrowOnError extends boolean = false>(
   options: Options<DeletePetData, ThrowOnError>,
 ) =>
-  (options.client ?? _heyApiClient).delete<unknown, unknown, ThrowOnError>({
+  (options.client ?? _heyApiClient).delete<
+    DeletePetResponses,
+    DeletePetErrors,
+    ThrowOnError
+  >({
     security: [
       {
         scheme: 'bearer',
@@ -180,8 +210,8 @@ export const getPetById = <ThrowOnError extends boolean = false>(
   options: Options<GetPetByIdData, ThrowOnError>,
 ) =>
   (options.client ?? _heyApiClient).get<
-    GetPetByIdResponse,
-    unknown,
+    GetPetByIdResponses,
+    GetPetByIdErrors,
     ThrowOnError
   >({
     security: [
@@ -206,8 +236,8 @@ export const updatePetWithForm = <ThrowOnError extends boolean = false>(
   options: Options<UpdatePetWithFormData, ThrowOnError>,
 ) =>
   (options.client ?? _heyApiClient).post<
-    UpdatePetWithFormResponse,
-    unknown,
+    UpdatePetWithFormResponses,
+    UpdatePetWithFormErrors,
     ThrowOnError
   >({
     security: [
@@ -228,10 +258,11 @@ export const uploadFile = <ThrowOnError extends boolean = false>(
   options: Options<UploadFileData, ThrowOnError>,
 ) =>
   (options.client ?? _heyApiClient).post<
-    UploadFileResponse,
-    unknown,
+    UploadFileResponses,
+    UploadFileErrors,
     ThrowOnError
   >({
+    bodySerializer: null,
     security: [
       {
         scheme: 'bearer',
@@ -254,8 +285,8 @@ export const getInventory = <ThrowOnError extends boolean = false>(
   options?: Options<GetInventoryData, ThrowOnError>,
 ) =>
   (options?.client ?? _heyApiClient).get<
-    GetInventoryResponse,
-    unknown,
+    GetInventoryResponses,
+    GetInventoryErrors,
     ThrowOnError
   >({
     security: [
@@ -276,8 +307,8 @@ export const placeOrder = <ThrowOnError extends boolean = false>(
   options?: Options<PlaceOrderData, ThrowOnError>,
 ) =>
   (options?.client ?? _heyApiClient).post<
-    PlaceOrderResponse,
-    unknown,
+    PlaceOrderResponses,
+    PlaceOrderErrors,
     ThrowOnError
   >({
     url: '/store/order',
@@ -295,7 +326,11 @@ export const placeOrder = <ThrowOnError extends boolean = false>(
 export const deleteOrder = <ThrowOnError extends boolean = false>(
   options: Options<DeleteOrderData, ThrowOnError>,
 ) =>
-  (options.client ?? _heyApiClient).delete<unknown, unknown, ThrowOnError>({
+  (options.client ?? _heyApiClient).delete<
+    DeleteOrderResponses,
+    DeleteOrderErrors,
+    ThrowOnError
+  >({
     url: '/store/order/{orderId}',
     ...options,
   });
@@ -308,8 +343,8 @@ export const getOrderById = <ThrowOnError extends boolean = false>(
   options: Options<GetOrderByIdData, ThrowOnError>,
 ) =>
   (options.client ?? _heyApiClient).get<
-    GetOrderByIdResponse,
-    unknown,
+    GetOrderByIdResponses,
+    GetOrderByIdErrors,
     ThrowOnError
   >({
     url: '/store/order/{orderId}',
@@ -324,8 +359,8 @@ export const createUser = <ThrowOnError extends boolean = false>(
   options?: Options<CreateUserData, ThrowOnError>,
 ) =>
   (options?.client ?? _heyApiClient).post<
-    CreateUserResponse,
-    unknown,
+    CreateUserResponses,
+    CreateUserErrors,
     ThrowOnError
   >({
     url: '/user',
@@ -344,8 +379,8 @@ export const createUsersWithListInput = <ThrowOnError extends boolean = false>(
   options?: Options<CreateUsersWithListInputData, ThrowOnError>,
 ) =>
   (options?.client ?? _heyApiClient).post<
-    CreateUsersWithListInputResponse,
-    unknown,
+    CreateUsersWithListInputResponses,
+    CreateUsersWithListInputErrors,
     ThrowOnError
   >({
     url: '/user/createWithList',
@@ -364,8 +399,8 @@ export const loginUser = <ThrowOnError extends boolean = false>(
   options?: Options<LoginUserData, ThrowOnError>,
 ) =>
   (options?.client ?? _heyApiClient).get<
-    LoginUserResponse,
-    unknown,
+    LoginUserResponses,
+    LoginUserErrors,
     ThrowOnError
   >({
     url: '/user/login',
@@ -379,7 +414,11 @@ export const loginUser = <ThrowOnError extends boolean = false>(
 export const logoutUser = <ThrowOnError extends boolean = false>(
   options?: Options<LogoutUserData, ThrowOnError>,
 ) =>
-  (options?.client ?? _heyApiClient).get<unknown, unknown, ThrowOnError>({
+  (options?.client ?? _heyApiClient).get<
+    LogoutUserResponses,
+    LogoutUserErrors,
+    ThrowOnError
+  >({
     url: '/user/logout',
     ...options,
   });
@@ -391,7 +430,11 @@ export const logoutUser = <ThrowOnError extends boolean = false>(
 export const deleteUser = <ThrowOnError extends boolean = false>(
   options: Options<DeleteUserData, ThrowOnError>,
 ) =>
-  (options.client ?? _heyApiClient).delete<unknown, unknown, ThrowOnError>({
+  (options.client ?? _heyApiClient).delete<
+    DeleteUserResponses,
+    DeleteUserErrors,
+    ThrowOnError
+  >({
     url: '/user/{username}',
     ...options,
   });
@@ -404,8 +447,8 @@ export const getUserByName = <ThrowOnError extends boolean = false>(
   options: Options<GetUserByNameData, ThrowOnError>,
 ) =>
   (options.client ?? _heyApiClient).get<
-    GetUserByNameResponse,
-    unknown,
+    GetUserByNameResponses,
+    GetUserByNameErrors,
     ThrowOnError
   >({
     url: '/user/{username}',
@@ -419,7 +462,11 @@ export const getUserByName = <ThrowOnError extends boolean = false>(
 export const updateUser = <ThrowOnError extends boolean = false>(
   options: Options<UpdateUserData, ThrowOnError>,
 ) =>
-  (options.client ?? _heyApiClient).put<unknown, unknown, ThrowOnError>({
+  (options.client ?? _heyApiClient).put<
+    UpdateUserResponses,
+    UpdateUserErrors,
+    ThrowOnError
+  >({
     url: '/user/{username}',
     ...options,
     headers: {
