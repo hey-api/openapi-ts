@@ -972,6 +972,15 @@ export const zOneOfAllOfIssue = z.union([
     zGenericSchemaDuplicateIssue1SystemString
 ]);
 
+export const zSimpleRequestBody = zModelWithString;
+
+export const zSimpleFormData = zModelWithString;
+
+export const zImportData = z.union([
+    zModelWithReadOnlyAndWriteOnly,
+    zModelWithArrayReadOnlyAndWriteOnly
+]);
+
 export const zImportResponse = z.union([
     zModelFromZendesk,
     zModelWithReadOnlyAndWriteOnly
@@ -987,10 +996,51 @@ export const zApiVVersionODataControllerCountResponse = zModelFromZendesk;
  */
 export const zGetApiVbyApiVersionSimpleOperationResponse = z.number();
 
+/**
+ * This is the parameter that goes into the body
+ */
+export const zCallWithParametersData = z.union([
+    z.object({}),
+    z.null()
+]);
+
+/**
+ * This is the parameter that goes into the body
+ */
+export const zCallWithWeirdParameterNamesData = z.union([
+    zModelWithString,
+    z.null()
+]);
+
+/**
+ * This is a required parameter
+ */
+export const zGetCallWithOptionalParamData = zModelWithOneOfEnum;
+
+/**
+ * This is an optional parameter
+ */
+export const zPostCallWithOptionalParamData = z.object({
+    offset: z.union([
+        z.number(),
+        z.null()
+    ]).optional()
+});
+
 export const zPostCallWithOptionalParamResponse = z.union([
     z.number(),
     z.void()
 ]);
+
+/**
+ * A reusable request body
+ */
+export const zPostApiVbyApiVersionRequestBodyData = zSimpleRequestBody;
+
+/**
+ * A reusable request body
+ */
+export const zPostApiVbyApiVersionFormDataData = zSimpleFormData;
 
 /**
  * Success
@@ -1033,6 +1083,8 @@ export const zTypesResponse = z.union([
     z.object({})
 ]);
 
+export const zUploadFileData = z.string();
+
 export const zUploadFileResponse = z.boolean();
 
 /**
@@ -1056,6 +1108,52 @@ export const zMultipartResponseResponse = z.object({
     }).optional()
 });
 
+export const zMultipartRequestData = z.object({
+    content: z.string().optional(),
+    data: z.union([
+        zModelWithString,
+        z.null()
+    ]).optional()
+});
+
+export const zComplexParamsData = z.object({
+    key: z.union([
+        z.string().max(64).regex(/^[a-zA-Z0-9_]*$/).readonly(),
+        z.null()
+    ]).readonly(),
+    name: z.union([
+        z.string().max(255),
+        z.null()
+    ]),
+    enabled: z.boolean().optional().default(true),
+    type: z.enum([
+        'Monkey',
+        'Horse',
+        'Bird'
+    ]),
+    listOfModels: z.union([
+        z.array(zModelWithString),
+        z.null()
+    ]).optional(),
+    listOfStrings: z.union([
+        z.array(z.string()),
+        z.null()
+    ]).optional(),
+    parameters: z.union([
+        zModelWithString,
+        zModelWithEnum,
+        zModelWithArray,
+        zModelWithDictionary
+    ]),
+    user: z.object({
+        id: z.number().int().readonly().optional(),
+        name: z.union([
+            z.string().readonly(),
+            z.null()
+        ]).readonly().optional()
+    }).readonly().optional()
+});
+
 /**
  * Success
  */
@@ -1065,3 +1163,5 @@ export const zComplexParamsResponse = zModelWithString;
  * Successful response
  */
 export const zNonAsciiæøåÆøÅöôêÊ字符串Response = z.array(zNonAsciiStringæøåÆøÅöôêÊ字符串);
+
+export const zPutWithFormUrlEncodedData = zArrayWithStrings;

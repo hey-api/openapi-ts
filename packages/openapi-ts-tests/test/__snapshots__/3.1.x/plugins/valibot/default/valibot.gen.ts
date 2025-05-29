@@ -1056,6 +1056,21 @@ export const vOneOfAllOfIssue = v.union([
     vGenericSchemaDuplicateIssue1SystemString
 ]);
 
+/**
+ * A reusable request body
+ */
+export const vSimpleRequestBody = vModelWithString;
+
+/**
+ * A reusable request body
+ */
+export const vSimpleFormData = vModelWithString;
+
+export const vImportData = v.union([
+    vModelWithReadOnlyAndWriteOnly,
+    vModelWithArrayReadOnlyAndWriteOnly
+]);
+
 export const vImportResponse = v.union([
     vModelFromZendesk,
     vModelWithReadOnlyAndWriteOnly
@@ -1071,10 +1086,51 @@ export const vApiVVersionODataControllerCountResponse = vModelFromZendesk;
  */
 export const vGetApiVbyApiVersionSimpleOperationResponse = v.number();
 
+/**
+ * This is the parameter that goes into the body
+ */
+export const vCallWithParametersData = v.union([
+    v.object({}),
+    v.null()
+]);
+
+/**
+ * This is the parameter that goes into the body
+ */
+export const vCallWithWeirdParameterNamesData = v.union([
+    vModelWithString,
+    v.null()
+]);
+
+/**
+ * This is a required parameter
+ */
+export const vGetCallWithOptionalParamData = vModelWithOneOfEnum;
+
+/**
+ * This is an optional parameter
+ */
+export const vPostCallWithOptionalParamData = v.object({
+    offset: v.optional(v.union([
+        v.number(),
+        v.null()
+    ]))
+});
+
 export const vPostCallWithOptionalParamResponse = v.union([
     v.number(),
     v.void()
 ]);
+
+/**
+ * A reusable request body
+ */
+export const vPostApiVbyApiVersionRequestBodyData = vSimpleRequestBody;
+
+/**
+ * A reusable request body
+ */
+export const vPostApiVbyApiVersionFormDataData = vSimpleFormData;
 
 /**
  * Success
@@ -1120,6 +1176,8 @@ export const vTypesResponse = v.union([
     v.object({})
 ]);
 
+export const vUploadFileData = v.string();
+
 export const vUploadFileResponse = v.boolean();
 
 /**
@@ -1143,6 +1201,52 @@ export const vMultipartResponseResponse = v.object({
     }))
 });
 
+export const vMultipartRequestData = v.object({
+    content: v.optional(v.string()),
+    data: v.optional(v.union([
+        vModelWithString,
+        v.null()
+    ]))
+});
+
+export const vComplexParamsData = v.object({
+    key: v.pipe(v.union([
+        v.pipe(v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)), v.readonly()),
+        v.null()
+    ]), v.readonly()),
+    name: v.union([
+        v.pipe(v.string(), v.maxLength(255)),
+        v.null()
+    ]),
+    enabled: v.optional(v.boolean(), true),
+    type: v.picklist([
+        'Monkey',
+        'Horse',
+        'Bird'
+    ]),
+    listOfModels: v.optional(v.union([
+        v.array(vModelWithString),
+        v.null()
+    ])),
+    listOfStrings: v.optional(v.union([
+        v.array(v.string()),
+        v.null()
+    ])),
+    parameters: v.union([
+        vModelWithString,
+        vModelWithEnum,
+        vModelWithArray,
+        vModelWithDictionary
+    ]),
+    user: v.optional(v.pipe(v.object({
+        id: v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly())),
+        name: v.optional(v.pipe(v.union([
+            v.pipe(v.string(), v.readonly()),
+            v.null()
+        ]), v.readonly()))
+    }), v.readonly()))
+});
+
 /**
  * Success
  */
@@ -1152,3 +1256,5 @@ export const vComplexParamsResponse = vModelWithString;
  * Successful response
  */
 export const vNonAsciiæøåÆøÅöôêÊ字符串Response = v.array(vNonAsciiStringæøåÆøÅöôêÊ字符串);
+
+export const vPutWithFormUrlEncodedData = vArrayWithStrings;
