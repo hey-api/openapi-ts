@@ -451,6 +451,18 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'headers.yaml',
+        output: 'headers',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/typescript',
+          '@hey-api/sdk',
+        ],
+      }),
+      description: 'handles various headers',
+    },
+    {
+      config: createConfig({
         input: 'internal-name-conflict.json',
         output: 'internal-name-conflict',
         plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],

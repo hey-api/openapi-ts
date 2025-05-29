@@ -38,7 +38,7 @@ export const import_ = <ThrowOnError extends boolean = true>(options: Options<Im
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -143,7 +143,7 @@ export const callWithParameters = <ThrowOnError extends boolean = true>(options:
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -154,7 +154,7 @@ export const callWithWeirdParameterNames = <ThrowOnError extends boolean = true>
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -165,7 +165,7 @@ export const getCallWithOptionalParam = <ThrowOnError extends boolean = true>(op
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -176,7 +176,7 @@ export const postCallWithOptionalParam = <ThrowOnError extends boolean = true>(o
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -323,7 +323,7 @@ export const uploadFile = <ThrowOnError extends boolean = true>(options: Options
         ...options,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -367,7 +367,7 @@ export const complexParams = <ThrowOnError extends boolean = true>(options: Opti
         ...options,
         headers: {
             'Content-Type': 'application/json-patch+json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -403,7 +403,7 @@ export const putWithFormUrlEncoded = <ThrowOnError extends boolean = true>(optio
         ...options,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            ...options?.headers
+            ...options.headers
         }
     });
 };

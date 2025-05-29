@@ -283,7 +283,7 @@ export const postApiVbyApiVersionBody = <ThrowOnError extends boolean = false>(o
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
