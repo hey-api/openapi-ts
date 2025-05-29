@@ -696,7 +696,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'validators.json',
+        input: 'validators.yaml',
         output: 'validators',
         plugins: ['valibot', 'zod'],
       }),

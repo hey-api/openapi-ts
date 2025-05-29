@@ -1,0 +1,72 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI 3.1.0 validators example
+  version: '1'
+paths:
+  /foo:
+    patch:
+      parameters:
+        - in: query
+          name: foo
+          required: true
+          schema:
+            $ref: '#/components/schemas/Bar'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              properties:
+                foo:
+                  type: string
+              type: object
+        required: true
+      responses:
+        '200':
+          description: OK
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/Foo'
+      responses:
+        '200':
+          description: OK
+components:
+  requestBodies:
+    Foo:
+      required: true
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              foo:
+                $ref: '#/components/schemas/Bar'
+  schemas:
+    Foo:
+      default: null
+      properties:
+        foo:
+          pattern: ^\d{3}-\d{2}-\d{4}$
+          type: string
+        bar:
+          $ref: '#/components/schemas/Bar'
+        baz:
+          items:
+            $ref: '#/components/schemas/Foo'
+          type: array
+        qux:
+          default: 0
+          exclusiveMinimum: 0
+          type: integer
+      type:
+        - object
+        - 'null'
+    Bar:
+      properties:
+        foo:
+          $ref: '#/components/schemas/Foo'
+      type: object
+    Baz:
+      default: baz
+      pattern: foo\nbar
+      readOnly: true
+      type: string

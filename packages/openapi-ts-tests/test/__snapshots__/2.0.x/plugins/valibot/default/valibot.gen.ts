@@ -438,6 +438,11 @@ export const vComplexTypesResponse = v.array(vModelWithString);
 export const vNonAsciiæøåÆøÅöôêÊ字符串Response = vNonAsciiStringæøåÆøÅöôêÊ字符串;
 
 /**
+ * Body should not be unknown
+ */
+export const vPostApiVbyApiVersionBodyData = vParameterActivityParams;
+
+/**
  * OK
  */
 export const vPostApiVbyApiVersionBodyResponse = vResponsePostActivityResponse;
