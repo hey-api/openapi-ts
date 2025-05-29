@@ -66,6 +66,7 @@ export const getSpec = async ({
 
         response = request.response;
       } catch (error) {
+        console.log('error', error, resolvedInput);
         return {
           error: 'not-ok',
           response: new Response(error.message),
@@ -142,6 +143,7 @@ export const getSpec = async ({
 
       response = request.response;
     } catch (error) {
+      console.log('error', error, resolvedInput);
       return {
         error: 'not-ok',
         response: new Response(error.message),

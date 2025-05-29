@@ -204,6 +204,7 @@ export const createClient = async ({
   // if in watch mode, subsequent errors won't throw to gracefully handle
   // cases where server might be reloading
   if (error && !_watch) {
+    console.warn(error);
     throw new Error(
       `Request failed with status ${response.status}: ${response.statusText}`,
     );

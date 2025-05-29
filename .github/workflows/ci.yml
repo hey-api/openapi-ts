@@ -37,6 +37,12 @@ jobs:
       - name: Build packages
         run: pnpm build --filter="@hey-api/**"
 
+      - name: Publish preview packages
+        if: github.event_name == 'pull_request' && matrix.node-version == '22.11.0' && matrix.os == 'ubuntu-latest'
+        run: ./scripts/publish-preview-packages.sh
+        env:
+          TURBO_SCM_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+
       - name: Build examples
         if: matrix.node-version == '22.11.0' && matrix.os == 'ubuntu-latest'
         run: pnpm build --filter="@examples/**"
@@ -52,9 +58,3 @@ jobs:
 
       - name: Run e2e tests
         run: pnpm test:e2e
-
-      - name: Publish preview packages
-        if: github.event_name == 'pull_request' && matrix.node-version == '22.11.0' && matrix.os == 'ubuntu-latest'
-        run: ./scripts/publish-preview-packages.sh
-        env:
-          TURBO_SCM_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
