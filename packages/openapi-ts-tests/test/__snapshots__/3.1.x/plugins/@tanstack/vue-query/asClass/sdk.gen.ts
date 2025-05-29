@@ -39,7 +39,7 @@ export class DefaultService {
             ...options,
             headers: {
                 'Content-Type': 'application/json',
-                ...options?.headers
+                ...options.headers
             }
         });
     }
@@ -133,7 +133,7 @@ export class ParametersService {
             ...options,
             headers: {
                 'Content-Type': 'application/json',
-                ...options?.headers
+                ...options.headers
             }
         });
     }
@@ -144,7 +144,7 @@ export class ParametersService {
             ...options,
             headers: {
                 'Content-Type': 'application/json',
-                ...options?.headers
+                ...options.headers
             }
         });
     }
@@ -155,7 +155,7 @@ export class ParametersService {
             ...options,
             headers: {
                 'Content-Type': 'application/json',
-                ...options?.headers
+                ...options.headers
             }
         });
     }
@@ -166,7 +166,7 @@ export class ParametersService {
             ...options,
             headers: {
                 'Content-Type': 'application/json',
-                ...options?.headers
+                ...options.headers
             }
         });
     }
@@ -400,7 +400,7 @@ export class UploadService {
             ...options,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                ...options?.headers
+                ...options.headers
             }
         });
     }
@@ -431,7 +431,7 @@ export class ComplexService {
             ...options,
             headers: {
                 'Content-Type': 'application/json-patch+json',
-                ...options?.headers
+                ...options.headers
             }
         });
     }
@@ -498,7 +498,7 @@ export class NonAsciiÆøåÆøÅöôêÊService {
             ...options,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                ...options?.headers
+                ...options.headers
             }
         });
     }

@@ -71,17 +71,19 @@ export const parametersArrayToObject = ({
   for (const parameterOrReference of parameters) {
     const parameter =
       '$ref' in parameterOrReference
-        ? context.resolveRef<ParameterObject>(parameterOrReference.$ref)
+        ? context.dereference<ParameterObject>(parameterOrReference)
         : parameterOrReference;
 
     if (!parametersObject[parameter.in]) {
       parametersObject[parameter.in] = {};
     }
 
-    parametersObject[parameter.in]![parameter.name] = parameterToIrParameter({
-      context,
-      parameter,
-    });
+    // lowercase keys for case insensitive access
+    parametersObject[parameter.in]![parameter.name.toLocaleLowerCase()] =
+      parameterToIrParameter({
+        context,
+        parameter,
+      });
   }
 
   return parametersObject;

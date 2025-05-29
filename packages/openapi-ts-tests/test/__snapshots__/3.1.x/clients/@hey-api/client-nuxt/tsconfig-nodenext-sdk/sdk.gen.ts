@@ -38,7 +38,7 @@ export const import_ = <TComposable extends Composable, DefaultT extends ImportR
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -143,7 +143,7 @@ export const callWithParameters = <TComposable extends Composable, DefaultT = un
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -154,7 +154,7 @@ export const callWithWeirdParameterNames = <TComposable extends Composable, Defa
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -165,7 +165,7 @@ export const getCallWithOptionalParam = <TComposable extends Composable, Default
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -176,7 +176,7 @@ export const postCallWithOptionalParam = <TComposable extends Composable, Defaul
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -187,7 +187,7 @@ export const postApiVbyApiVersionRequestBody = <TComposable extends Composable, 
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -199,7 +199,7 @@ export const postApiVbyApiVersionFormData = <TComposable extends Composable, Def
         ...options,
         headers: {
             'Content-Type': null,
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -323,7 +323,7 @@ export const uploadFile = <TComposable extends Composable, DefaultT extends Uplo
         ...options,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -356,7 +356,7 @@ export const multipartRequest = <TComposable extends Composable, DefaultT = unde
         ...options,
         headers: {
             'Content-Type': null,
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -367,7 +367,7 @@ export const complexParams = <TComposable extends Composable, DefaultT extends C
         ...options,
         headers: {
             'Content-Type': 'application/json-patch+json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -403,7 +403,7 @@ export const putWithFormUrlEncoded = <TComposable extends Composable, DefaultT =
         ...options,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
