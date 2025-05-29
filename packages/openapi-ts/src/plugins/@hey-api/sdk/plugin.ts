@@ -424,23 +424,34 @@ const operationStatements = ({
 
   // options must go last to allow overriding parameters above
   requestOptions.push({ spread: 'options' });
+
   if (operation.body) {
-    requestOptions.push({
-      key: 'headers',
-      value: [
-        {
-          key: 'Content-Type',
-          // form-data does not need Content-Type header, browser will set it automatically
-          value:
-            operation.body.type === 'form-data'
-              ? null
-              : operation.body.mediaType,
-        },
-        {
-          spread: 'options?.headers',
-        },
-      ],
-    });
+    const parameterContentType = operation.parameters?.header?.['content-type'];
+    const hasRequiredContentType = Boolean(parameterContentType?.required);
+    // spreading required Content-Type on generated header would throw a TypeScript error
+    if (!hasRequiredContentType) {
+      const spread = compiler.propertyAccessExpression({
+        expression: compiler.identifier({ text: 'options' }),
+        isOptional: !isRequiredOptions,
+        name: 'headers',
+      });
+      requestOptions.push({
+        key: 'headers',
+        value: [
+          {
+            key: parameterContentType?.name ?? 'Content-Type',
+            // form-data does not need Content-Type header, browser will set it automatically
+            value:
+              operation.body.type === 'form-data'
+                ? null
+                : operation.body.mediaType,
+          },
+          {
+            spread,
+          },
+        ],
+      });
+    }
   }
 
   const responseType = identifierResponse.name || 'unknown';

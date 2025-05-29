@@ -27,7 +27,7 @@ export const sendEmail = <ThrowOnError extends boolean = false>(options: Options
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
