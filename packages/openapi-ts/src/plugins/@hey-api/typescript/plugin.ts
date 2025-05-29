@@ -801,15 +801,15 @@ const irParametersToIrSchema = ({
     const properties: Record<string, IR.SchemaObject> = {};
     const required: Array<string> = [];
 
-    for (const name in parameters) {
-      const parameter = parameters[name]!;
+    for (const key in parameters) {
+      const parameter = parameters[key]!;
 
-      properties[name] = deduplicateSchema({
+      properties[parameter.name] = deduplicateSchema({
         schema: parameter.schema,
       });
 
       if (parameter.required) {
-        required.push(name);
+        required.push(parameter.name);
       }
     }
 

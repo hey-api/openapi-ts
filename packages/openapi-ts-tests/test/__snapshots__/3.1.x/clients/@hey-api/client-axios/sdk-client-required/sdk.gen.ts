@@ -38,7 +38,7 @@ export const import_ = <ThrowOnError extends boolean = false>(options: Options<I
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -145,7 +145,7 @@ export const callWithParameters = <ThrowOnError extends boolean = false>(options
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -156,7 +156,7 @@ export const callWithWeirdParameterNames = <ThrowOnError extends boolean = false
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -167,7 +167,7 @@ export const getCallWithOptionalParam = <ThrowOnError extends boolean = false>(o
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -179,7 +179,7 @@ export const postCallWithOptionalParam = <ThrowOnError extends boolean = false>(
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -190,7 +190,7 @@ export const postApiVbyApiVersionRequestBody = <ThrowOnError extends boolean = f
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -202,7 +202,7 @@ export const postApiVbyApiVersionFormData = <ThrowOnError extends boolean = fals
         ...options,
         headers: {
             'Content-Type': null,
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -332,7 +332,7 @@ export const uploadFile = <ThrowOnError extends boolean = false>(options: Option
         ...options,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -367,7 +367,7 @@ export const multipartRequest = <ThrowOnError extends boolean = false>(options: 
         ...options,
         headers: {
             'Content-Type': null,
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -379,7 +379,7 @@ export const complexParams = <ThrowOnError extends boolean = false>(options: Opt
         ...options,
         headers: {
             'Content-Type': 'application/json-patch+json',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
@@ -416,7 +416,7 @@ export const putWithFormUrlEncoded = <ThrowOnError extends boolean = false>(opti
         ...options,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            ...options?.headers
+            ...options.headers
         }
     });
 };
