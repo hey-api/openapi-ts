@@ -153,11 +153,11 @@ interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends str
     security?: ReadonlyArray<Auth>;
     url: Url;
 }
-type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boolean = boolean> = ThrowOnError extends true ? Promise<AxiosResponse<TData>> : Promise<(AxiosResponse<TData> & {
+type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boolean = boolean> = ThrowOnError extends true ? Promise<AxiosResponse<TData extends Record<string, unknown> ? TData[keyof TData] : TData>> : Promise<(AxiosResponse<TData extends Record<string, unknown> ? TData[keyof TData] : TData> & {
     error: undefined;
-}) | (AxiosError<TError> & {
+}) | (AxiosError<TError extends Record<string, unknown> ? TError[keyof TError] : TError> & {
     data: undefined;
-    error: TError;
+    error: TError extends Record<string, unknown> ? TError[keyof TError] : TError;
 })>;
 interface ClientOptions {
     baseURL?: string;

@@ -52,12 +52,13 @@ import type {
   UpdatePetData,
   UpdatePetResponse,
   UpdatePetWithFormData,
+  UpdatePetWithFormResponse,
   UpdateUserData,
   UploadFileData,
   UploadFileResponse,
 } from '../types.gen';
 
-type QueryKey<TOptions extends Options> = [
+export type QueryKey<TOptions extends Options> = [
   Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
     _id: string;
     _infinite?: boolean;
@@ -68,7 +69,7 @@ const createQueryKey = <TOptions extends Options>(
   id: string,
   options?: TOptions,
   infinite?: boolean,
-): QueryKey<TOptions>[0] => {
+): [QueryKey<TOptions>[0]] => {
   const params: QueryKey<TOptions>[0] = {
     _id: id,
     baseUrl: (options?.client ?? _heyApiClient).getConfig().baseUrl,
@@ -88,13 +89,16 @@ const createQueryKey = <TOptions extends Options>(
   if (options?.query) {
     params.query = options.query;
   }
-  return params;
+  return [params];
 };
 
-export const addPetQueryKey = (options: Options<AddPetData>) => [
-  createQueryKey('addPet', options),
-];
+export const addPetQueryKey = (options: Options<AddPetData>) =>
+  createQueryKey('addPet', options);
 
+/**
+ * Add a new pet to the store.
+ * Add a new pet to the store.
+ */
 export const addPetOptions = (options: Options<AddPetData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -109,7 +113,13 @@ export const addPetOptions = (options: Options<AddPetData>) =>
     queryKey: addPetQueryKey(options),
   });
 
-export const addPetMutation = (options?: Partial<Options<AddPetData>>) => {
+/**
+ * Add a new pet to the store.
+ * Add a new pet to the store.
+ */
+export const addPetMutation = (
+  options?: Partial<Options<AddPetData>>,
+): UseMutationOptions<AddPetResponse, DefaultError, Options<AddPetData>> => {
   const mutationOptions: UseMutationOptions<
     AddPetResponse,
     DefaultError,
@@ -127,9 +137,17 @@ export const addPetMutation = (options?: Partial<Options<AddPetData>>) => {
   return mutationOptions;
 };
 
+/**
+ * Update an existing pet.
+ * Update an existing pet by Id.
+ */
 export const updatePetMutation = (
   options?: Partial<Options<UpdatePetData>>,
-) => {
+): UseMutationOptions<
+  UpdatePetResponse,
+  DefaultError,
+  Options<UpdatePetData>
+> => {
   const mutationOptions: UseMutationOptions<
     UpdatePetResponse,
     DefaultError,
@@ -149,8 +167,12 @@ export const updatePetMutation = (
 
 export const findPetsByStatusQueryKey = (
   options?: Options<FindPetsByStatusData>,
-) => [createQueryKey('findPetsByStatus', options)];
+) => createQueryKey('findPetsByStatus', options);
 
+/**
+ * Finds Pets by status.
+ * Multiple status values can be provided with comma separated strings.
+ */
 export const findPetsByStatusOptions = (
   options?: Options<FindPetsByStatusData>,
 ) =>
@@ -167,10 +189,13 @@ export const findPetsByStatusOptions = (
     queryKey: findPetsByStatusQueryKey(options),
   });
 
-export const findPetsByTagsQueryKey = (
-  options?: Options<FindPetsByTagsData>,
-) => [createQueryKey('findPetsByTags', options)];
+export const findPetsByTagsQueryKey = (options?: Options<FindPetsByTagsData>) =>
+  createQueryKey('findPetsByTags', options);
 
+/**
+ * Finds Pets by tags.
+ * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
+ */
 export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -185,9 +210,13 @@ export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
     queryKey: findPetsByTagsQueryKey(options),
   });
 
+/**
+ * Deletes a pet.
+ * Delete a pet.
+ */
 export const deletePetMutation = (
   options?: Partial<Options<DeletePetData>>,
-) => {
+): UseMutationOptions<unknown, DefaultError, Options<DeletePetData>> => {
   const mutationOptions: UseMutationOptions<
     unknown,
     DefaultError,
@@ -205,10 +234,13 @@ export const deletePetMutation = (
   return mutationOptions;
 };
 
-export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) => [
-  createQueryKey('getPetById', options),
-];
+export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) =>
+  createQueryKey('getPetById', options);
 
+/**
+ * Find pet by ID.
+ * Returns a single pet.
+ */
 export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -225,8 +257,12 @@ export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
 
 export const updatePetWithFormQueryKey = (
   options: Options<UpdatePetWithFormData>,
-) => [createQueryKey('updatePetWithForm', options)];
+) => createQueryKey('updatePetWithForm', options);
 
+/**
+ * Updates a pet in the store with form data.
+ * Updates a pet resource based on the form data.
+ */
 export const updatePetWithFormOptions = (
   options: Options<UpdatePetWithFormData>,
 ) =>
@@ -243,11 +279,19 @@ export const updatePetWithFormOptions = (
     queryKey: updatePetWithFormQueryKey(options),
   });
 
+/**
+ * Updates a pet in the store with form data.
+ * Updates a pet resource based on the form data.
+ */
 export const updatePetWithFormMutation = (
   options?: Partial<Options<UpdatePetWithFormData>>,
-) => {
+): UseMutationOptions<
+  UpdatePetWithFormResponse,
+  DefaultError,
+  Options<UpdatePetWithFormData>
+> => {
   const mutationOptions: UseMutationOptions<
-    unknown,
+    UpdatePetWithFormResponse,
     DefaultError,
     Options<UpdatePetWithFormData>
   > = {
@@ -263,10 +307,13 @@ export const updatePetWithFormMutation = (
   return mutationOptions;
 };
 
-export const uploadFileQueryKey = (options: Options<UploadFileData>) => [
-  createQueryKey('uploadFile', options),
-];
+export const uploadFileQueryKey = (options: Options<UploadFileData>) =>
+  createQueryKey('uploadFile', options);
 
+/**
+ * Uploads an image.
+ * Upload image of the pet.
+ */
 export const uploadFileOptions = (options: Options<UploadFileData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -281,9 +328,17 @@ export const uploadFileOptions = (options: Options<UploadFileData>) =>
     queryKey: uploadFileQueryKey(options),
   });
 
+/**
+ * Uploads an image.
+ * Upload image of the pet.
+ */
 export const uploadFileMutation = (
   options?: Partial<Options<UploadFileData>>,
-) => {
+): UseMutationOptions<
+  UploadFileResponse,
+  DefaultError,
+  Options<UploadFileData>
+> => {
   const mutationOptions: UseMutationOptions<
     UploadFileResponse,
     DefaultError,
@@ -301,10 +356,13 @@ export const uploadFileMutation = (
   return mutationOptions;
 };
 
-export const getInventoryQueryKey = (options?: Options<GetInventoryData>) => [
-  createQueryKey('getInventory', options),
-];
+export const getInventoryQueryKey = (options?: Options<GetInventoryData>) =>
+  createQueryKey('getInventory', options);
 
+/**
+ * Returns pet inventories by status.
+ * Returns a map of status codes to quantities.
+ */
 export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -319,10 +377,13 @@ export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
     queryKey: getInventoryQueryKey(options),
   });
 
-export const placeOrderQueryKey = (options?: Options<PlaceOrderData>) => [
-  createQueryKey('placeOrder', options),
-];
+export const placeOrderQueryKey = (options?: Options<PlaceOrderData>) =>
+  createQueryKey('placeOrder', options);
 
+/**
+ * Place an order for a pet.
+ * Place a new order in the store.
+ */
 export const placeOrderOptions = (options?: Options<PlaceOrderData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -337,9 +398,17 @@ export const placeOrderOptions = (options?: Options<PlaceOrderData>) =>
     queryKey: placeOrderQueryKey(options),
   });
 
+/**
+ * Place an order for a pet.
+ * Place a new order in the store.
+ */
 export const placeOrderMutation = (
   options?: Partial<Options<PlaceOrderData>>,
-) => {
+): UseMutationOptions<
+  PlaceOrderResponse,
+  DefaultError,
+  Options<PlaceOrderData>
+> => {
   const mutationOptions: UseMutationOptions<
     PlaceOrderResponse,
     DefaultError,
@@ -357,9 +426,13 @@ export const placeOrderMutation = (
   return mutationOptions;
 };
 
+/**
+ * Delete purchase order by identifier.
+ * For valid response try integer IDs with value < 1000. Anything above 1000 or non-integers will generate API errors.
+ */
 export const deleteOrderMutation = (
   options?: Partial<Options<DeleteOrderData>>,
-) => {
+): UseMutationOptions<unknown, DefaultError, Options<DeleteOrderData>> => {
   const mutationOptions: UseMutationOptions<
     unknown,
     DefaultError,
@@ -377,10 +450,13 @@ export const deleteOrderMutation = (
   return mutationOptions;
 };
 
-export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) => [
-  createQueryKey('getOrderById', options),
-];
+export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) =>
+  createQueryKey('getOrderById', options);
 
+/**
+ * Find purchase order by ID.
+ * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
+ */
 export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -395,10 +471,13 @@ export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
     queryKey: getOrderByIdQueryKey(options),
   });
 
-export const createUserQueryKey = (options?: Options<CreateUserData>) => [
-  createQueryKey('createUser', options),
-];
+export const createUserQueryKey = (options?: Options<CreateUserData>) =>
+  createQueryKey('createUser', options);
 
+/**
+ * Create user.
+ * This can only be done by the logged in user.
+ */
 export const createUserOptions = (options?: Options<CreateUserData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -413,9 +492,17 @@ export const createUserOptions = (options?: Options<CreateUserData>) =>
     queryKey: createUserQueryKey(options),
   });
 
+/**
+ * Create user.
+ * This can only be done by the logged in user.
+ */
 export const createUserMutation = (
   options?: Partial<Options<CreateUserData>>,
-) => {
+): UseMutationOptions<
+  CreateUserResponse,
+  DefaultError,
+  Options<CreateUserData>
+> => {
   const mutationOptions: UseMutationOptions<
     CreateUserResponse,
     DefaultError,
@@ -435,8 +522,12 @@ export const createUserMutation = (
 
 export const createUsersWithListInputQueryKey = (
   options?: Options<CreateUsersWithListInputData>,
-) => [createQueryKey('createUsersWithListInput', options)];
+) => createQueryKey('createUsersWithListInput', options);
 
+/**
+ * Creates list of users with given input array.
+ * Creates list of users with given input array.
+ */
 export const createUsersWithListInputOptions = (
   options?: Options<CreateUsersWithListInputData>,
 ) =>
@@ -453,9 +544,17 @@ export const createUsersWithListInputOptions = (
     queryKey: createUsersWithListInputQueryKey(options),
   });
 
+/**
+ * Creates list of users with given input array.
+ * Creates list of users with given input array.
+ */
 export const createUsersWithListInputMutation = (
   options?: Partial<Options<CreateUsersWithListInputData>>,
-) => {
+): UseMutationOptions<
+  CreateUsersWithListInputResponse,
+  DefaultError,
+  Options<CreateUsersWithListInputData>
+> => {
   const mutationOptions: UseMutationOptions<
     CreateUsersWithListInputResponse,
     DefaultError,
@@ -473,10 +572,13 @@ export const createUsersWithListInputMutation = (
   return mutationOptions;
 };
 
-export const loginUserQueryKey = (options?: Options<LoginUserData>) => [
-  createQueryKey('loginUser', options),
-];
+export const loginUserQueryKey = (options?: Options<LoginUserData>) =>
+  createQueryKey('loginUser', options);
 
+/**
+ * Logs user into the system.
+ * Log into the system.
+ */
 export const loginUserOptions = (options?: Options<LoginUserData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -491,10 +593,13 @@ export const loginUserOptions = (options?: Options<LoginUserData>) =>
     queryKey: loginUserQueryKey(options),
   });
 
-export const logoutUserQueryKey = (options?: Options<LogoutUserData>) => [
-  createQueryKey('logoutUser', options),
-];
+export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
+  createQueryKey('logoutUser', options);
 
+/**
+ * Logs out current logged in user session.
+ * Log user out of the system.
+ */
 export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -509,9 +614,13 @@ export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
     queryKey: logoutUserQueryKey(options),
   });
 
+/**
+ * Delete user resource.
+ * This can only be done by the logged in user.
+ */
 export const deleteUserMutation = (
   options?: Partial<Options<DeleteUserData>>,
-) => {
+): UseMutationOptions<unknown, DefaultError, Options<DeleteUserData>> => {
   const mutationOptions: UseMutationOptions<
     unknown,
     DefaultError,
@@ -529,10 +638,13 @@ export const deleteUserMutation = (
   return mutationOptions;
 };
 
-export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) => [
-  createQueryKey('getUserByName', options),
-];
+export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) =>
+  createQueryKey('getUserByName', options);
 
+/**
+ * Get user by user name.
+ * Get user detail based on username.
+ */
 export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -547,9 +659,13 @@ export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
     queryKey: getUserByNameQueryKey(options),
   });
 
+/**
+ * Update user resource.
+ * This can only be done by the logged in user.
+ */
 export const updateUserMutation = (
   options?: Partial<Options<UpdateUserData>>,
-) => {
+): UseMutationOptions<unknown, DefaultError, Options<UpdateUserData>> => {
   const mutationOptions: UseMutationOptions<
     unknown,
     DefaultError,
