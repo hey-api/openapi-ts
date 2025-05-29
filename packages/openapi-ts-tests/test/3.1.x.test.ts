@@ -498,11 +498,11 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'pagination-ref-any-of.yaml',
-        output: 'pagination-ref-any-of',
+        input: 'pagination-ref.yaml',
+        output: 'pagination-ref',
         plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
       }),
-      description: 'detects pagination for composite types with null',
+      description: 'detects pagination fields',
     },
     {
       config: createConfig({
