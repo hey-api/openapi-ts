@@ -96,3 +96,7 @@ export type ShowPetByIdResponses = {
 
 export type ShowPetByIdResponse =
   ShowPetByIdResponses[keyof ShowPetByIdResponses];
+
+export type ClientOptions = {
+  baseUrl: 'http://petstore.swagger.io/v1' | (string & {});
+};

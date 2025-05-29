@@ -9,13 +9,14 @@ import type {
 import { client as _heyApiClient } from './client.gen';
 import type {
   CreatePetsData,
-  CreatePetsError,
+  CreatePetsErrors,
+  CreatePetsResponses,
   ListPetsData,
-  ListPetsError,
-  ListPetsResponse,
+  ListPetsErrors,
+  ListPetsResponses,
   ShowPetByIdData,
-  ShowPetByIdError,
-  ShowPetByIdResponse,
+  ShowPetByIdErrors,
+  ShowPetByIdResponses,
 } from './types.gen';
 
 export type Options<
@@ -28,6 +29,11 @@ export type Options<
    * custom client.
    */
   client?: Client;
+  /**
+   * You can pass arbitrary values through the `meta` object. This can be
+   * used to access values that aren't defined as part of the SDK function.
+   */
+  meta?: Record<string, unknown>;
 };
 
 /**
@@ -37,8 +43,8 @@ export const listPets = <ThrowOnError extends boolean = false>(
   options?: Options<ListPetsData, ThrowOnError>,
 ) =>
   (options?.client ?? _heyApiClient).get<
-    ListPetsResponse,
-    ListPetsError,
+    ListPetsResponses,
+    ListPetsErrors,
     ThrowOnError
   >({
     url: '/pets',
@@ -52,8 +58,8 @@ export const createPets = <ThrowOnError extends boolean = false>(
   options?: Options<CreatePetsData, ThrowOnError>,
 ) =>
   (options?.client ?? _heyApiClient).post<
-    unknown,
-    CreatePetsError,
+    CreatePetsResponses,
+    CreatePetsErrors,
     ThrowOnError
   >({
     url: '/pets',
@@ -67,8 +73,8 @@ export const showPetById = <ThrowOnError extends boolean = false>(
   options: Options<ShowPetByIdData, ThrowOnError>,
 ) =>
   (options.client ?? _heyApiClient).get<
-    ShowPetByIdResponse,
-    ShowPetByIdError,
+    ShowPetByIdResponses,
+    ShowPetByIdErrors,
     ThrowOnError
   >({
     url: '/pets/{petId}',

@@ -26,7 +26,7 @@ export default defineConfig(() => {
         operations: {
           include: [
             // 'PUT /foo',
-            '/^[A-Z]+ /v1//',
+            // '/^[A-Z]+ /v1//',
           ],
         },
         // orphans: false,
@@ -44,7 +44,7 @@ export default defineConfig(() => {
       //   openapi: '3.1.0',
       //   paths: {},
       // },
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'parser-filters.yaml'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.json'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -79,8 +79,7 @@ export default defineConfig(() => {
         // bundle: true,
         // bundleSource_EXPERIMENTAL: true,
         // exportFromIndex: true,
-        name: '@hey-api/client-axios',
-        // name: 'legacy/fetch',
+        name: '@hey-api/client-next',
         // strictBaseUrl: true,
       },
       {

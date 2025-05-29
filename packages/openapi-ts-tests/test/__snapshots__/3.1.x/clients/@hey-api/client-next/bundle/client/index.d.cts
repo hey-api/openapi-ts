@@ -174,14 +174,14 @@ interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends str
     url: Url;
 }
 type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boolean = boolean> = ThrowOnError extends true ? Promise<{
-    data: TData;
+    data: TData extends Record<string, unknown> ? TData[keyof TData] : TData;
     response: Response;
 }> : Promise<({
-    data: TData;
+    data: TData extends Record<string, unknown> ? TData[keyof TData] : TData;
     error: undefined;
 } | {
     data: undefined;
-    error: TError;
+    error: TError extends Record<string, unknown> ? TError[keyof TError] : TError;
 }) & {
     response: Response;
 }>;
