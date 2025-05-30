@@ -19,17 +19,21 @@ export interface Config extends Plugin.Name<'@hey-api/schemas'> {
    * Customise the schema name. By default, `{{name}}Schema` is used. `name` is a
    * valid JavaScript/TypeScript identifier, e.g. if your schema name is
    * "Foo-Bar", `name` value would be "FooBar".
+   *
+   * @default '{{name}}Schema'
    */
-  nameBuilder?: (
-    name: string,
-    schema:
-      | OpenApiV2Schema
-      | OpenApiV3Schema
-      | OpenApiV2_0_XSchemaObject
-      | OpenApiV3_0_XReferenceObject
-      | OpenApiV3_0_XSchemaObject
-      | OpenApiV3_1_XSchemaObject,
-  ) => string;
+  nameBuilder?:
+    | string
+    | ((
+        name: string,
+        schema:
+          | OpenApiV2Schema
+          | OpenApiV3Schema
+          | OpenApiV2_0_XSchemaObject
+          | OpenApiV3_0_XReferenceObject
+          | OpenApiV3_0_XSchemaObject
+          | OpenApiV3_1_XSchemaObject,
+      ) => string);
   /**
    * Name of the generated file.
    *
