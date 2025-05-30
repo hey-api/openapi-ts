@@ -521,6 +521,16 @@ const stringTypeToValibotSchema = ({
 
   if (schema.format) {
     switch (schema.format) {
+      case 'date':
+        pipes.push(
+          compiler.callExpression({
+            functionName: compiler.propertyAccessExpression({
+              expression: identifiers.v,
+              name: identifiers.actions.isoDate,
+            }),
+          }),
+        );
+        break;
       case 'date-time':
         pipes.push(
           compiler.callExpression({
@@ -552,7 +562,6 @@ const stringTypeToValibotSchema = ({
           }),
         );
         break;
-      case 'date':
       case 'email':
       case 'time':
       case 'uuid':

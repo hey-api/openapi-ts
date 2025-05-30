@@ -20,6 +20,18 @@ paths:
               baz:
                 type: string
             type: object
+        - in: query
+          name: qux
+          required: false
+          schema:
+            format: date
+            type: string
+        - in: query
+          name: quux
+          required: false
+          schema:
+            format: date-time
+            type: string
       requestBody:
         content:
           'application/json':

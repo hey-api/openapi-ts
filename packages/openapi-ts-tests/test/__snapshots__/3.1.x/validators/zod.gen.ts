@@ -46,4 +46,8 @@ export const zPatchFooParameterBaz = z.object({
     baz: z.string().optional()
 });
 
+export const zPatchFooParameterQux = z.string().date();
+
+export const zPatchFooParameterQuux = z.string().datetime();
+
 export const zPostFooData = zFoo3;
