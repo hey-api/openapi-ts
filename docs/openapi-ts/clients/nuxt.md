@@ -21,6 +21,16 @@ You might be interested in the [Nuxt module](https://www.npmjs.com/package/@hey-
 Launch demo
 </button> -->
 
+## Features
+
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- type-safe response data and errors
+- response data validation and transformation
+- access to the original request and response
+- granular request and response customization options
+- minimal learning curve thanks to extending the underlying technology
+- support bundling inside the generated output
+
 ## Installation
 
 Start by adding `@hey-api/client-nuxt` to your dependencies.
