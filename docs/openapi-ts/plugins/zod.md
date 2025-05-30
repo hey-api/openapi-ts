@@ -3,10 +3,14 @@ title: Zod
 description: Zod plugin for Hey API. Compatible with all our features.
 ---
 
+<!-- <script setup>
+import { embedProject } from '../../embed'
+</script> -->
+
 # Zod
 
 ::: warning
-This feature is in development! :tada: Try it out and provide feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues/876).
+Zod plugin is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues/876).
 :::
 
 ### About
@@ -22,7 +26,7 @@ Launch demo
 ## Features
 
 - seamless integration with `@hey-api/openapi-ts` ecosystem
-- Zod schemas for requests, responses, and reusable components
+- Zod schemas for request payloads, parameters, and responses
 
 ## Installation
 
@@ -42,7 +46,7 @@ export default {
 };
 ```
 
-## SDKs
+### SDKs
 
 To automatically validate response data in your SDKs, set `sdk.validator` to `true`.
 
@@ -68,9 +72,53 @@ export default {
 
 The Zod plugin will generate the following artifacts, depending on the input specification.
 
+## Responses
+
+A single Zod schema is generated for all endpoint's responses. If the endpoint describes multiple responses, the generated schema is a union of all possible response shapes.
+
+```ts
+const zResponse = z.union([
+  z.object({
+    foo: z.string().optional(),
+  }),
+  z.object({
+    bar: z.number().optional(),
+  }),
+]);
+```
+
+## Request Bodies
+
+If an endpoint describes a request body, we will generate a Zod schema representing its shape.
+
+```ts
+const zData = z.object({
+  foo: z.string().optional(),
+  bar: z.union([z.number(), z.null()]).optional(),
+});
+```
+
+## Parameters
+
+A separate Zod schema is generated for every request parameter.
+
+```ts
+const zParameterFoo = z.number().int();
+
+const zParameterBar = z.string();
+```
+
 ## Schemas
 
-More information will be provided as we finalize the plugin.
+A separate Zod schema is generated for every reusable schema.
+
+```ts
+const zFoo = z.number().int();
+
+const zBar = z.object({
+  bar: z.array(z.number().int()).optional(),
+});
+```
 
 <!--@include: ../../examples.md-->
 <!--@include: ../../sponsors.md-->
