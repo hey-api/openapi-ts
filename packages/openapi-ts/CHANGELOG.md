@@ -1,5 +1,23 @@
 # @hey-api/openapi-ts
 
+## 0.69.0
+
+### Minor Changes
+
+- [#2094](https://github.com/hey-api/openapi-ts/pull/2094) [`8152aaf`](https://github.com/hey-api/openapi-ts/commit/8152aaf4892c48b79fd3dc486eb3c0ea333dc3e6) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): use responses/errors map instead of union
+
+  **BREAKING**: Update your client to the latest version.
+
+### Patch Changes
+
+- [#2100](https://github.com/hey-api/openapi-ts/pull/2100) [`54757a2`](https://github.com/hey-api/openapi-ts/commit/54757a2cf266a0ee49277baaa6765e078c95f2a3) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(validators): generate schemas for request parameters
+
+- [#2099](https://github.com/hey-api/openapi-ts/pull/2099) [`a9484e0`](https://github.com/hey-api/openapi-ts/commit/a9484e0792dded8ccba280f0f4b55b72d22b3d83) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(validators): generate schemas for request bodies
+
+- [#2097](https://github.com/hey-api/openapi-ts/pull/2097) [`d95802f`](https://github.com/hey-api/openapi-ts/commit/d95802f92e504f19130bd2e18a4355ce51e38ce0) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(sdk): skip spreading required headers when there are conflicting Content-Type headers
+
+- [#2096](https://github.com/hey-api/openapi-ts/pull/2096) [`22e0b3b`](https://github.com/hey-api/openapi-ts/commit/22e0b3bccf94b49fd82665e96074ab76eb241109) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(pagination): improved schema resolver for parameters
+
 ## 0.68.1
 
 ### Patch Changes
