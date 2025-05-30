@@ -660,14 +660,6 @@
             "type": "boolean"
           },
           {
-            "description": "This is an object parameter",
-            "name": "parameterObject",
-            "in": "query",
-            "required": true,
-            "default": null,
-            "type": "object"
-          },
-          {
             "description": "This is an array parameter",
             "name": "parameterArray",
             "in": "query",
