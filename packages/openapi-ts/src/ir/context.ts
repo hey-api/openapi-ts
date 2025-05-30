@@ -145,6 +145,20 @@ export class IRContext<Spec extends Record<string, any> = any> {
   }
 
   /**
+   * Returns a resolved and dereferenced schema from `spec`.
+   */
+  public dereference<T>(schema: { $ref: string }) {
+    const resolved = this.resolveRef<T>(schema.$ref);
+    const dereferenced = {
+      ...schema,
+      ...resolved,
+    } as T;
+    // @ts-expect-error
+    delete dereferenced.$ref;
+    return dereferenced;
+  }
+
+  /**
    * Returns a specific file by ID from `files`.
    */
   public file({ id }: Pick<ContextFile, 'id'>): TypeScriptFile | undefined {

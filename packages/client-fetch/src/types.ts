@@ -71,14 +71,24 @@ export type RequestResult<
   ThrowOnError extends boolean = boolean,
 > = ThrowOnError extends true
   ? Promise<{
-      data: TData;
+      data: TData extends Record<string, unknown> ? TData[keyof TData] : TData;
       request: Request;
       response: Response;
     }>
   : Promise<
       (
-        | { data: TData; error: undefined }
-        | { data: undefined; error: TError }
+        | {
+            data: TData extends Record<string, unknown>
+              ? TData[keyof TData]
+              : TData;
+            error: undefined;
+          }
+        | {
+            data: undefined;
+            error: TError extends Record<string, unknown>
+              ? TError[keyof TError]
+              : TError;
+          }
       ) & {
         request: Request;
         response: Response;

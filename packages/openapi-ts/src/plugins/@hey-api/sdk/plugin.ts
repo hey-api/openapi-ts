@@ -18,11 +18,7 @@ import {
   operationTransformerIrRef,
   transformersId,
 } from '../transformers/plugin';
-import {
-  importIdentifierData,
-  importIdentifierError,
-  importIdentifierResponse,
-} from '../typescript/ref';
+import { importIdentifier } from '../typescript/ref';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import { createTypeOptions } from './typeOptions';
@@ -58,17 +54,25 @@ export const operationOptionsType = ({
   operation: IR.OperationObject;
   throwOnError?: string;
 }) => {
-  const identifierData = importIdentifierData({ context, file, operation });
-  const identifierResponse = importIdentifierResponse({
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
+
+  const identifierData = importIdentifier({
     context,
     file,
     operation,
+    type: 'data',
+  });
+  const identifierResponse = importIdentifier({
+    context,
+    file,
+    operation,
+    type: isNuxtClient ? 'response' : 'responses',
   });
 
   const optionsName = clientApi.Options.name;
 
-  const client = getClientPlugin(context.config);
-  if (client.name === '@hey-api/client-nuxt') {
+  if (isNuxtClient) {
     return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}, ${identifierResponse.name || 'unknown'}, ${nuxtTypeDefault}>`;
   }
 
@@ -245,11 +249,20 @@ const operationStatements = ({
   const file = context.file({ id: sdkId })!;
   const sdkOutput = file.nameWithoutExtension();
 
-  const identifierError = importIdentifierError({ context, file, operation });
-  const identifierResponse = importIdentifierResponse({
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
+
+  const identifierError = importIdentifier({
     context,
     file,
     operation,
+    type: isNuxtClient ? 'error' : 'errors',
+  });
+  const identifierResponse = importIdentifier({
+    context,
+    file,
+    operation,
+    type: isNuxtClient ? 'response' : 'responses',
   });
 
   // TODO: transform parameters
@@ -306,7 +319,6 @@ const operationStatements = ({
     }
   }
 
-  const client = getClientPlugin(context.config);
   if (client.name === '@hey-api/client-axios') {
     // try to infer `responseType` option for Axios. We don't need this in
     // Fetch API client because it automatically detects the correct response
@@ -412,26 +424,36 @@ const operationStatements = ({
 
   // options must go last to allow overriding parameters above
   requestOptions.push({ spread: 'options' });
+
   if (operation.body) {
-    requestOptions.push({
-      key: 'headers',
-      value: [
-        {
-          key: 'Content-Type',
-          // form-data does not need Content-Type header, browser will set it automatically
-          value:
-            operation.body.type === 'form-data'
-              ? null
-              : operation.body.mediaType,
-        },
-        {
-          spread: 'options?.headers',
-        },
-      ],
-    });
+    const parameterContentType = operation.parameters?.header?.['content-type'];
+    const hasRequiredContentType = Boolean(parameterContentType?.required);
+    // spreading required Content-Type on generated header would throw a TypeScript error
+    if (!hasRequiredContentType) {
+      const spread = compiler.propertyAccessExpression({
+        expression: compiler.identifier({ text: 'options' }),
+        isOptional: !isRequiredOptions,
+        name: 'headers',
+      });
+      requestOptions.push({
+        key: 'headers',
+        value: [
+          {
+            key: parameterContentType?.name ?? 'Content-Type',
+            // form-data does not need Content-Type header, browser will set it automatically
+            value:
+              operation.body.type === 'form-data'
+                ? null
+                : operation.body.mediaType,
+          },
+          {
+            spread,
+          },
+        ],
+      });
+    }
   }
 
-  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const responseType = identifierResponse.name || 'unknown';
   const errorType = identifierError.name || 'unknown';
 
@@ -499,10 +521,11 @@ const generateClassSdk = ({
       context,
       operation,
     });
-    const identifierResponse = importIdentifierResponse({
+    const identifierResponse = importIdentifier({
       context,
       file,
       operation,
+      type: 'response',
     });
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
@@ -609,10 +632,11 @@ const generateFlatSdk = ({
       context,
       operation,
     });
-    const identifierResponse = importIdentifierResponse({
+    const identifierResponse = importIdentifier({
       context,
       file,
       operation,
+      type: 'response',
     });
     const node = compiler.constVariable({
       comment: createOperationComment({ operation }),

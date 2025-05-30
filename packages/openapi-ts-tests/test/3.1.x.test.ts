@@ -451,6 +451,18 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'headers.yaml',
+        output: 'headers',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/typescript',
+          '@hey-api/sdk',
+        ],
+      }),
+      description: 'handles various headers',
+    },
+    {
+      config: createConfig({
         input: 'internal-name-conflict.json',
         output: 'internal-name-conflict',
         plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
@@ -498,11 +510,11 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'pagination-ref-any-of.yaml',
-        output: 'pagination-ref-any-of',
+        input: 'pagination-ref.yaml',
+        output: 'pagination-ref',
         plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
       }),
-      description: 'detects pagination for composite types with null',
+      description: 'detects pagination fields',
     },
     {
       config: createConfig({
@@ -684,7 +696,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'validators.json',
+        input: 'validators.yaml',
         output: 'validators',
         plugins: ['valibot', 'zod'],
       }),

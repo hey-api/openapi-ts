@@ -645,6 +645,15 @@ export type CallWithDefaultParametersData = {
          * This is a simple enum with default value
          */
         parameterEnum: 'Success' | 'Warning' | 'Error';
+        /**
+         * This is a model with one string property
+         */
+        parameterModel: {
+            /**
+             * This is a simple string property
+             */
+            prop?: string;
+        };
     };
     url: '/api/v{api-version}/defaults';
 };
@@ -959,12 +968,6 @@ export type TypesData = {
          */
         parameterBoolean: boolean;
         /**
-         * This is an object parameter
-         */
-        parameterObject: {
-            [key: string]: unknown;
-        };
-        /**
          * This is an array parameter
          */
         parameterArray: Array<string>;
@@ -1018,6 +1021,15 @@ export type ComplexTypesData = {
                     third?: string;
                 };
             };
+        };
+        /**
+         * This is a model with one string property
+         */
+        parameterReference: {
+            /**
+             * This is a simple string property
+             */
+            prop?: string;
         };
     };
     url: '/api/v{api-version}/complex';

@@ -38,59 +38,6 @@ export const OrderSchema = {
   },
 } as const;
 
-export const CustomerSchema = {
-  properties: {
-    address: {
-      items: {
-        $ref: '#/components/schemas/Address',
-      },
-      type: 'array',
-      xml: {
-        name: 'addresses',
-        wrapped: true,
-      },
-    },
-    id: {
-      example: 100000,
-      format: 'int64',
-      type: 'integer',
-    },
-    username: {
-      example: 'fehguy',
-      type: 'string',
-    },
-  },
-  type: 'object',
-  xml: {
-    name: 'customer',
-  },
-} as const;
-
-export const AddressSchema = {
-  properties: {
-    city: {
-      example: 'Palo Alto',
-      type: 'string',
-    },
-    state: {
-      example: 'CA',
-      type: 'string',
-    },
-    street: {
-      example: '437 Lytton',
-      type: 'string',
-    },
-    zip: {
-      example: 94301,
-      type: 'string',
-    },
-  },
-  type: 'object',
-  xml: {
-    name: 'address',
-  },
-} as const;
-
 export const CategorySchema = {
   properties: {
     id: {
@@ -130,11 +77,11 @@ export const UserSchema = {
       type: 'string',
     },
     password: {
-      example: 12345,
+      example: '12345',
       type: 'string',
     },
     phone: {
-      example: 12345,
+      example: '12345',
       type: 'string',
     },
     userStatus: {
@@ -206,9 +153,6 @@ export const PetSchema = {
     tags: {
       items: {
         $ref: '#/components/schemas/Tag',
-        xml: {
-          name: 'tag',
-        },
       },
       type: 'array',
       xml: {

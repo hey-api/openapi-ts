@@ -2,10 +2,7 @@ import type { ImportExportItemObject } from '../../../compiler/utils';
 import type { IR } from '../../../ir/types';
 import { getClientPlugin } from '../../@hey-api/client-core/utils';
 import { operationOptionsType } from '../../@hey-api/sdk/plugin';
-import {
-  importIdentifierError,
-  importIdentifierResponse,
-} from '../../@hey-api/typescript/ref';
+import { importIdentifier } from '../../@hey-api/typescript/ref';
 import type { PluginInstance } from './types';
 
 export const useTypeData = ({
@@ -37,7 +34,12 @@ export const useTypeError = ({
   plugin: PluginInstance;
 }) => {
   const file = context.file({ id: plugin.name })!;
-  const identifierError = importIdentifierError({ context, file, operation });
+  const identifierError = importIdentifier({
+    context,
+    file,
+    operation,
+    type: 'error',
+  });
   let typeError: ImportExportItemObject = {
     asType: true,
     name: identifierError.name || '',
@@ -74,10 +76,11 @@ export const useTypeResponse = ({
   plugin: PluginInstance;
 }) => {
   const file = context.file({ id: plugin.name })!;
-  const identifierResponse = importIdentifierResponse({
+  const identifierResponse = importIdentifier({
     context,
     file,
     operation,
+    type: 'response',
   });
   const typeResponse = identifierResponse.name || 'unknown';
   return typeResponse;
