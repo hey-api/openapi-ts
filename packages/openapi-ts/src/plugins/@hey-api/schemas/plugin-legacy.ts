@@ -62,8 +62,14 @@ const toSchemaName = (
 
   const validName = ensureValidTypeScriptJavaScriptIdentifier(name);
 
-  if (config.plugins['@hey-api/schemas']?.nameBuilder) {
-    return config.plugins['@hey-api/schemas'].nameBuilder(validName, schema);
+  const plugin = config.plugins['@hey-api/schemas'];
+
+  if (plugin?.nameBuilder) {
+    if (typeof plugin.nameBuilder === 'function') {
+      return plugin.nameBuilder(validName, schema);
+    } else {
+      return plugin.nameBuilder.replace('{{name}}', validName);
+    }
   }
 
   return `${validName}Schema`;

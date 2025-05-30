@@ -77,7 +77,7 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    *
    * @default '{{name}}Service'
    */
-  serviceNameBuilder?: string;
+  serviceNameBuilder?: string | ((name: string) => string);
   /**
    * Transform response data before returning. This is useful if you want to
    * convert for example ISO strings into Date objects. However, transformation
