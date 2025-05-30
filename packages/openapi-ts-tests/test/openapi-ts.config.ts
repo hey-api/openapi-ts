@@ -26,7 +26,7 @@ export default defineConfig(() => {
         operations: {
           include: [
             // 'PUT /foo',
-            '/^[A-Z]+ /v1//',
+            // '/^[A-Z]+ /v1//',
           ],
         },
         // orphans: false,
@@ -44,7 +44,7 @@ export default defineConfig(() => {
       //   openapi: '3.1.0',
       //   paths: {},
       // },
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'parser-filters.yaml'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.json'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -56,7 +56,7 @@ export default defineConfig(() => {
       // version: '1.0.0',
     },
     logs: {
-      // level: 'debug',
+      // level: 'silent',
       path: './logs',
     },
     // name: 'foo',
@@ -79,8 +79,7 @@ export default defineConfig(() => {
         // bundle: true,
         // bundleSource_EXPERIMENTAL: true,
         // exportFromIndex: true,
-        name: '@hey-api/client-axios',
-        // name: 'legacy/fetch',
+        name: '@hey-api/client-fetch',
         // strictBaseUrl: true,
       },
       {
@@ -90,7 +89,7 @@ export default defineConfig(() => {
       {
         // asClass: true,
         // auth: false,
-        client: false,
+        // client: false,
         // include...
         name: '@hey-api/sdk',
         // operationId: false,
@@ -98,10 +97,10 @@ export default defineConfig(() => {
         // throwOnError: true,
         // transformer: '@hey-api/transformers',
         // transformer: true,
-        validator: 'zod',
+        // validator: 'zod',
       },
       {
-        bigInt: true,
+        // bigInt: true,
         dates: true,
         // name: '@hey-api/transformers',
       },
@@ -109,9 +108,9 @@ export default defineConfig(() => {
         // enums: 'typescript+namespace',
         enums: 'javascript',
         // enumsCase: 'camelCase',
-        enumsConstantsIgnoreNull: true,
-        exportInlineEnums: true,
-        // identifierCase: 'preserve',
+        // enumsConstantsIgnoreNull: true,
+        // exportInlineEnums: true,
+        identifierCase: 'snake_case',
         name: '@hey-api/typescript',
         // readOnlyWriteOnlyBehavior: 'off',
         // readableNameBuilder: 'Readable{{name}}',
@@ -123,17 +122,17 @@ export default defineConfig(() => {
       },
       {
         exportFromIndex: true,
-        // name: '@tanstack/react-query',
+        // name: '@tanstack/vue-query',
       },
       {
         // comments: false,
         // exportFromIndex: true,
-        // name: 'valibot',
+        name: 'valibot',
       },
       {
         // comments: false,
         // exportFromIndex: true,
-        // name: 'zod',
+        name: 'zod',
       },
     ],
     // useOptions: false,

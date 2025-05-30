@@ -110,7 +110,7 @@ export default {
 
 ## Output
 
-The TanStack Query plugin will optionally generate the following artifacts, depending on the input specification.
+The TanStack Query plugin will generate the following artifacts, depending on the input specification.
 
 ## Queries
 

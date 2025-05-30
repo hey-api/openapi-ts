@@ -435,9 +435,11 @@ const processSchemaType = ({
 
     // assume enums do not contain transformable values
     if (schema.type !== 'enum') {
-      console.warn(
-        `❗️ Transformers warning: schema ${JSON.stringify(schema)} is too complex and won't be currently processed. This will likely produce an incomplete transformer which is not what you want. Please open an issue if you'd like this improved https://github.com/hey-api/openapi-ts/issues`,
-      );
+      if (!schema.items.every((item) => item.type === 'number')) {
+        console.warn(
+          `❗️ Transformers warning: schema ${JSON.stringify(schema)} is too complex and won't be currently processed. This will likely produce an incomplete transformer which is not what you want. Please open an issue if you'd like this improved https://github.com/hey-api/openapi-ts/issues`,
+        );
+      }
     }
   }
 
