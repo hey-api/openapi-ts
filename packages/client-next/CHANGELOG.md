@@ -1,5 +1,13 @@
 # @hey-api/client-next
 
+## 0.4.0
+
+### Minor Changes
+
+- [#2094](https://github.com/hey-api/openapi-ts/pull/2094) [`8152aaf`](https://github.com/hey-api/openapi-ts/commit/8152aaf4892c48b79fd3dc486eb3c0ea333dc3e6) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: accept responses/errors map instead of union
+
+  **BREAKING**: Update `@hey-api/openapi-ts` to the latest version.
+
 ## 0.3.2
 
 ### Patch Changes
