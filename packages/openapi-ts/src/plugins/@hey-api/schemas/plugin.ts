@@ -336,7 +336,20 @@ const schemaName = ({
     | OpenApiV3_0_XSchemaObject
     | OpenApiV3_1_XSchemaObject;
 }): string => {
-  const customName = plugin.nameBuilder?.(name, schema) ?? `${name}Schema`;
+  let customName = '';
+
+  if (plugin.nameBuilder) {
+    if (typeof plugin.nameBuilder === 'function') {
+      customName = plugin.nameBuilder(name, schema);
+    } else {
+      customName = plugin.nameBuilder.replace('{{name}}', name);
+    }
+  }
+
+  if (!customName) {
+    customName = `${name}Schema`;
+  }
+
   return ensureValidIdentifier(customName);
 };
 

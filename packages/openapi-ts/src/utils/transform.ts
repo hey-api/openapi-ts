@@ -11,11 +11,17 @@ export const transformServiceName = ({
   config: Config;
   name: string;
 }) => {
-  if (config.plugins['@hey-api/sdk']?.serviceNameBuilder) {
-    return config.plugins['@hey-api/sdk'].serviceNameBuilder.replace(
-      '{{name}}',
-      name,
-    );
+  const plugin = config.plugins['@hey-api/sdk'];
+  if (plugin?.serviceNameBuilder) {
+    let customName = '';
+
+    if (typeof plugin.serviceNameBuilder === 'function') {
+      customName = plugin.serviceNameBuilder(name);
+    } else {
+      customName = plugin.serviceNameBuilder.replace('{{name}}', name);
+    }
+
+    return customName;
   }
 
   return name;
