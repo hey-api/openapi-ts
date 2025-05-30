@@ -22,7 +22,12 @@ export const zFoo: z.ZodTypeAny = z.union([
 
 export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
 
-export const zFoo2 = z.object({
+/**
+ * aaaaa
+ */
+export const zFoo2 = z.string();
+
+export const zFoo3 = z.object({
     foo: zBar.optional()
 });
 
@@ -30,4 +35,15 @@ export const zPatchFooData = z.object({
     foo: z.string().optional()
 });
 
-export const zPostFooData = zFoo2;
+/**
+ * aaaaa
+ */
+export const zPatchFooParameterFoo = z.string();
+
+export const zPatchFooParameterBar = zBar;
+
+export const zPatchFooParameterBaz = z.object({
+    baz: z.string().optional()
+});
+
+export const zPostFooData = zFoo3;

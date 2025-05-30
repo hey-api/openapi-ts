@@ -968,12 +968,6 @@ export type TypesData = {
          */
         parameterBoolean: boolean;
         /**
-         * This is an object parameter
-         */
-        parameterObject: {
-            [key: string]: unknown;
-        };
-        /**
          * This is an array parameter
          */
         parameterArray: Array<string>;

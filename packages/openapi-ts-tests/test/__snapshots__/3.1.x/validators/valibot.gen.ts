@@ -22,7 +22,12 @@ export const vFoo: v.GenericSchema = v.optional(v.union([
 
 export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), 'baz');
 
-export const vFoo2 = v.object({
+/**
+ * aaaaa
+ */
+export const vFoo2 = v.string();
+
+export const vFoo3 = v.object({
     foo: v.optional(vBar)
 });
 
@@ -30,4 +35,15 @@ export const vPatchFooData = v.object({
     foo: v.optional(v.string())
 });
 
-export const vPostFooData = vFoo2;
+/**
+ * aaaaa
+ */
+export const vPatchFooParameterFoo = v.string();
+
+export const vPatchFooParameterBar = vBar;
+
+export const vPatchFooParameterBaz = v.object({
+    baz: v.optional(v.string())
+});
+
+export const vPostFooData = vFoo3;

@@ -863,6 +863,28 @@ const operationToValibotSchema = ({
     });
   }
 
+  if (operation.parameters) {
+    for (const type in operation.parameters) {
+      const group = operation.parameters[type as keyof IR.ParametersObject]!;
+      for (const key in group) {
+        const parameter = group[key]!;
+        schemaToValibotSchema({
+          $ref: operationIrRef({
+            case: 'camelCase',
+            config: context.config,
+            id: operation.id,
+            parameterId: parameter.name,
+            type: 'parameter',
+          }),
+          context,
+          plugin,
+          result,
+          schema: parameter.schema,
+        });
+      }
+    }
+  }
+
   if (operation.responses) {
     const { response } = operationResponsesMap(operation);
 
@@ -1149,6 +1171,21 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       operation,
       plugin,
       result,
+    });
+  });
+
+  context.subscribe('parameter', ({ $ref, parameter }) => {
+    const result: Result = {
+      circularReferenceTracker: new Set(),
+      hasCircularReference: false,
+    };
+
+    schemaToValibotSchema({
+      $ref,
+      context,
+      plugin,
+      result,
+      schema: parameter.schema,
     });
   });
 
