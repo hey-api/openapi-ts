@@ -1,0 +1,31 @@
+openapi: 3.0.3
+info:
+  title: OpenAPI 3.0.3 array nested one of example
+  version: 1
+components:
+  schemas:
+    Foo:
+      oneOf:
+        - type: array
+          items:
+            oneOf:
+              - type: object
+                properties:
+                  foo:
+                    type: string
+                  bar:
+                    type: string
+              - type: object
+                properties:
+                  baz:
+                    type: string
+                  qux:
+                    type: string
+        - type: array
+          items:
+            type: object
+            properties:
+              foo:
+                type: string
+              bar:
+                type: string

@@ -76,6 +76,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'array-nested-one-of.yaml',
+        output: 'array-nested-one-of',
+      }),
+      description: 'generates union of arrays when items use nested oneOf',
+    },
+    {
+      config: createConfig({
         input: 'body-response-text-plain.yaml',
         output: 'body-response-text-plain',
         plugins: [
