@@ -395,6 +395,197 @@ export const vFailureFailure = v.object({
     reference_code: v.optional(v.string())
 });
 
+/**
+ * Testing multiline comments in string: First line
+ * Second line
+ *
+ * Fourth line
+ */
+export const vCallWithDescriptionsParameterParameterWithBreaks = v.string();
+
+/**
+ * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+ */
+export const vCallWithDescriptionsParameterParameterWithBackticks = v.string();
+
+/**
+ * Testing slashes in string: \backwards\\\ and /forwards/// should work
+ */
+export const vCallWithDescriptionsParameterParameterWithSlashes = v.string();
+
+/**
+ * Testing expression placeholders in string: ${expression} should work
+ */
+export const vCallWithDescriptionsParameterParameterWithExpressionPlaceholders = v.string();
+
+/**
+ * Testing quotes in string: 'single quote''' and "double quotes""" should work
+ */
+export const vCallWithDescriptionsParameterParameterWithQuotes = v.string();
+
+/**
+ * Testing reserved characters in string: * inline * and ** inline ** should work
+ */
+export const vCallWithDescriptionsParameterParameterWithReservedCharacters = v.string();
+
+/**
+ * This is the parameter that goes into the header
+ */
+export const vCallWithParametersParameterParameterHeader = v.string();
+
+/**
+ * This is the parameter that goes into the path
+ */
+export const vCallWithParametersParameterParameterPath = v.string();
+
+/**
+ * api-version should be required in standalone clients
+ */
+export const vCallWithParametersParameterApiVersion = v.string();
+
+/**
+ * This is the parameter that goes into the query params
+ */
+export const vCallWithParametersParameterParameterQuery = v.string();
+
+/**
+ * This is the parameter that goes into the request header
+ */
+export const vCallWithWeirdParameterNamesParameterParameterHeader = v.string();
+
+/**
+ * This is the parameter that goes into the path
+ */
+export const vCallWithWeirdParameterNamesParameterParameterPath1 = v.string();
+
+/**
+ * This is the parameter that goes into the path
+ */
+export const vCallWithWeirdParameterNamesParameterParameterPath2 = v.string();
+
+/**
+ * This is the parameter that goes into the path
+ */
+export const vCallWithWeirdParameterNamesParameterParameterPath3 = v.string();
+
+/**
+ * api-version should be required in standalone clients
+ */
+export const vCallWithWeirdParameterNamesParameterApiVersion = v.string();
+
+/**
+ * This is the parameter with a reserved keyword
+ */
+export const vCallWithWeirdParameterNamesParameterDefault = v.string();
+
+/**
+ * This is the parameter that goes into the request query params
+ */
+export const vCallWithWeirdParameterNamesParameterParameterQuery = v.string();
+
+/**
+ * This is a simple string with default value
+ */
+export const vCallWithDefaultParametersParameterParameterString = v.optional(v.string(), 'Hello World!');
+
+/**
+ * This is a simple number with default value
+ */
+export const vCallWithDefaultParametersParameterParameterNumber = v.optional(v.number(), 123);
+
+/**
+ * This is a simple boolean with default value
+ */
+export const vCallWithDefaultParametersParameterParameterBoolean = v.optional(v.boolean(), true);
+
+/**
+ * This is a simple enum with default value
+ */
+export const vCallWithDefaultParametersParameterParameterEnum = v.picklist([
+    'Success',
+    'Warning',
+    'Error'
+]);
+
+/**
+ * This is a model with one string property
+ */
+export const vCallWithDefaultParametersParameterParameterModel = v.optional(v.object({
+    prop: v.optional(v.string())
+}), {
+    prop: 'Hello World!'
+});
+
+/**
+ * This is a simple string that is optional with default value
+ */
+export const vCallWithDefaultOptionalParametersParameterParameterString = v.optional(v.string(), 'Hello World!');
+
+/**
+ * This is a simple number that is optional with default value
+ */
+export const vCallWithDefaultOptionalParametersParameterParameterNumber = v.optional(v.number(), 123);
+
+/**
+ * This is a simple boolean that is optional with default value
+ */
+export const vCallWithDefaultOptionalParametersParameterParameterBoolean = v.optional(v.boolean(), true);
+
+/**
+ * This is a simple enum that is optional with default value
+ */
+export const vCallWithDefaultOptionalParametersParameterParameterEnum = v.picklist([
+    'Success',
+    'Warning',
+    'Error'
+]);
+
+/**
+ * This is a optional string with default
+ */
+export const vCallToTestOrderOfParamsParameterParameterOptionalStringWithDefault = v.optional(v.string(), 'Hello World!');
+
+/**
+ * This is a optional string with empty default
+ */
+export const vCallToTestOrderOfParamsParameterParameterOptionalStringWithEmptyDefault = v.optional(v.string(), '');
+
+/**
+ * This is a optional string with no default
+ */
+export const vCallToTestOrderOfParamsParameterParameterOptionalStringWithNoDefault = v.string();
+
+/**
+ * This is a string with default
+ */
+export const vCallToTestOrderOfParamsParameterParameterStringWithDefault = v.optional(v.string(), 'Hello World!');
+
+/**
+ * This is a string with empty default
+ */
+export const vCallToTestOrderOfParamsParameterParameterStringWithEmptyDefault = v.optional(v.string(), '');
+
+/**
+ * This is a string with no default
+ */
+export const vCallToTestOrderOfParamsParameterParameterStringWithNoDefault = v.string();
+
+/**
+ * This is a string that can be null with no default
+ */
+export const vCallToTestOrderOfParamsParameterParameterStringNullableWithNoDefault = v.union([
+    v.string(),
+    v.null()
+]);
+
+/**
+ * This is a string that can be null with default
+ */
+export const vCallToTestOrderOfParamsParameterParameterStringNullableWithDefault = v.optional(v.union([
+    v.string(),
+    v.null()
+]), null);
+
 export const vCallWithResponseAndNoContentResponseResponse = v.union([
     v.number(),
     v.unknown()
@@ -420,6 +611,70 @@ export const vCallWithResponsesResponse = v.union([
     vModelThatExtendsExtends
 ]);
 
+/**
+ * This is an array parameter that is sent as csv format (comma-separated values)
+ */
+export const vCollectionFormatParameterParameterArrayCsv = v.array(v.string());
+
+/**
+ * This is an array parameter that is sent as ssv format (space-separated values)
+ */
+export const vCollectionFormatParameterParameterArraySsv = v.array(v.string());
+
+/**
+ * This is an array parameter that is sent as tsv format (tab-separated values)
+ */
+export const vCollectionFormatParameterParameterArrayTsv = v.array(v.string());
+
+/**
+ * This is an array parameter that is sent as pipes format (pipe-separated values)
+ */
+export const vCollectionFormatParameterParameterArrayPipes = v.array(v.string());
+
+/**
+ * This is an array parameter that is sent as multi format (multiple parameter instances)
+ */
+export const vCollectionFormatParameterParameterArrayMulti = v.array(v.string());
+
+/**
+ * This is a number parameter
+ */
+export const vTypesParameterId = v.pipe(v.number(), v.integer());
+
+/**
+ * This is a number parameter
+ */
+export const vTypesParameterParameterNumber = v.optional(v.number(), 123);
+
+/**
+ * This is a string parameter
+ */
+export const vTypesParameterParameterString = v.optional(v.string(), 'default');
+
+/**
+ * This is a boolean parameter
+ */
+export const vTypesParameterParameterBoolean = v.optional(v.boolean(), true);
+
+/**
+ * This is an array parameter
+ */
+export const vTypesParameterParameterArray = v.array(v.string());
+
+/**
+ * This is a dictionary parameter
+ */
+export const vTypesParameterParameterDictionary = v.object({});
+
+/**
+ * This is an enum parameter
+ */
+export const vTypesParameterParameterEnum = v.picklist([
+    'Success',
+    'Warning',
+    'Error'
+]);
+
 export const vTypesResponse = v.union([
     v.number(),
     v.string(),
@@ -428,9 +683,37 @@ export const vTypesResponse = v.union([
 ]);
 
 /**
+ * Parameter containing object
+ */
+export const vComplexTypesParameterParameterObject = v.object({
+    first: v.optional(v.object({
+        second: v.optional(v.object({
+            third: v.optional(v.string())
+        }))
+    }))
+});
+
+/**
+ * This is a model with one string property
+ */
+export const vComplexTypesParameterParameterReference = v.object({
+    prop: v.optional(v.string())
+});
+
+/**
  * Successful response
  */
 export const vComplexTypesResponse = v.array(vModelWithString);
+
+/**
+ * Status code to return
+ */
+export const vTestErrorCodeParameterStatus = v.string();
+
+/**
+ * Dummy input param
+ */
+export const vNonAsciiæøåÆøÅöôêÊ字符串ParameterNonAsciiParamæøåÆøÅöôêÊ = v.pipe(v.number(), v.integer());
 
 /**
  * Successful response

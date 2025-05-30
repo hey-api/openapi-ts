@@ -6,11 +6,20 @@ paths:
   /foo:
     patch:
       parameters:
+        - $ref: '#/components/parameters/Foo'
         - in: query
-          name: foo
-          required: true
+          name: bar
+          required: false
           schema:
             $ref: '#/components/schemas/Bar'
+        - in: query
+          name: baz
+          required: false
+          schema:
+            properties:
+              baz:
+                type: string
+            type: object
       requestBody:
         content:
           'application/json':
@@ -30,6 +39,14 @@ paths:
         '200':
           description: OK
 components:
+  parameters:
+    Foo:
+      description: aaaaa
+      name: foo
+      in: query
+      required: false
+      schema:
+        type: string
   requestBodies:
     Foo:
       required: true
