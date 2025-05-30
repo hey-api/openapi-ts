@@ -1,5 +1,12 @@
 # @example/openapi-ts-fastify
 
+## 0.1.13
+
+### Patch Changes
+
+- Updated dependencies [[`8152aaf`](https://github.com/hey-api/openapi-ts/commit/8152aaf4892c48b79fd3dc486eb3c0ea333dc3e6)]:
+  - @hey-api/client-fetch@0.11.0
+
 ## 0.1.12
 
 ### Patch Changes
