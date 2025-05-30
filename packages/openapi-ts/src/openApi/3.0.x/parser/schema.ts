@@ -730,6 +730,7 @@ const parseOneOf = ({
     // to avoid unnecessary brackets
     if (
       irCompositionSchema.logicalOperator === 'or' &&
+      irCompositionSchema.type !== 'array' &&
       irCompositionSchema.items
     ) {
       schemaItems = schemaItems.concat(irCompositionSchema.items);
