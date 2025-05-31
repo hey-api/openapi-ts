@@ -22,6 +22,12 @@ describe('handlerLegacy', () => {
       exportCore: true,
       input: {
         path: '',
+        validate_EXPERIMENTAL: false,
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
       logs: {
         file: true,
@@ -62,11 +68,6 @@ describe('handlerLegacy', () => {
         },
       },
       useOptions: false,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     const client: Parameters<typeof handlerLegacy>[0]['client'] = {
@@ -184,6 +185,12 @@ describe('methodNameBuilder', () => {
       exportCore: true,
       input: {
         path: '',
+        validate_EXPERIMENTAL: false,
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
       logs: {
         file: true,
@@ -224,11 +231,6 @@ describe('methodNameBuilder', () => {
         },
       },
       useOptions: false,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     const files: Files = {};
@@ -268,6 +270,12 @@ describe('methodNameBuilder', () => {
       exportCore: true,
       input: {
         path: '',
+        validate_EXPERIMENTAL: false,
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
       logs: {
         file: true,
@@ -309,11 +317,6 @@ describe('methodNameBuilder', () => {
         },
       },
       useOptions: false,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     const files: Files = {};
@@ -355,6 +358,12 @@ describe('methodNameBuilder', () => {
       exportCore: true,
       input: {
         path: '',
+        validate_EXPERIMENTAL: false,
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
       logs: {
         file: true,
@@ -396,11 +405,6 @@ describe('methodNameBuilder', () => {
         },
       },
       useOptions: false,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     const files: Files = {};

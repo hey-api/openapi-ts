@@ -108,8 +108,6 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
   // DEPRECATED OPTIONS BELOW
 
   /**
-   * @deprecated
-   *
    * **This feature works only with the legacy parser**
    *
    * Filter endpoints to be included in the generated SDK. The provided
@@ -117,14 +115,15 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    * included in the output. The input pattern this string will be tested
    * against is `{method} {path}`. For example, you can match
    * `POST /api/v1/foo` with `^POST /api/v1/foo$`.
+   *
+   * @deprecated
    */
   // eslint-disable-next-line typescript-sort-keys/interface
   filter?: string;
   /**
-   * @deprecated
-   *
    * Define shape of returned value from service calls
    *
+   * @deprecated
    * @default 'body'
    */
   response?: 'body' | 'response';

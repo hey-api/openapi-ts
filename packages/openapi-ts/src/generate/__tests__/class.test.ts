@@ -18,6 +18,12 @@ describe('generateLegacyClientClass', () => {
       exportCore: true,
       input: {
         path: '',
+        validate_EXPERIMENTAL: false,
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
       logs: {
         file: true,
@@ -59,11 +65,6 @@ describe('generateLegacyClientClass', () => {
         },
       },
       useOptions: true,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     const client: Parameters<typeof generateLegacyClientClass>[2] = {

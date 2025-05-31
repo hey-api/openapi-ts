@@ -1,5 +1,7 @@
 import path from 'node:path';
 
+import colors from 'ansi-colors';
+
 import { generateLegacyOutput, generateOutput } from './generate/output';
 import { getSpec } from './getSpec';
 import type { IR } from './ir/types';
@@ -17,7 +19,9 @@ const isPlatformPath = (path: string) =>
   path.startsWith('https://get.heyapi.dev');
 // || path.startsWith('http://localhost:4000')
 
-export const compileInputPath = (input: Config['input']) => {
+export const compileInputPath = (
+  input: Omit<Config['input'], 'validate_EXPERIMENTAL' | 'watch'>,
+) => {
   const result: Pick<
     Partial<Config['input']>,
     | 'api_key'
@@ -144,26 +148,34 @@ const logInputPath = ({
   }
 
   const baseString = watch
-    ? 'Input changed, generating from'
-    : 'Generating from';
+    ? colors.magenta('Input changed, generating from')
+    : colors.cyan('Generating from');
 
   if (typeof inputPath.path === 'string') {
     const baseInput = isPlatformPath(inputPath.path)
-      ? `${inputPath.organization}/${inputPath.project}`
+      ? `${inputPath.organization ?? ''}/${inputPath.project ?? ''}`
       : inputPath.path;
     console.log(`⏳ ${baseString} ${baseInput}`);
     if (isPlatformPath(inputPath.path)) {
       if (inputPath.branch) {
-        console.log(`branch: ${inputPath.branch}`);
+        console.log(
+          `${colors.gray('branch:')} ${colors.green(inputPath.branch)}`,
+        );
       }
       if (inputPath.commit_sha) {
-        console.log(`commit: ${inputPath.commit_sha}`);
+        console.log(
+          `${colors.gray('commit:')} ${colors.green(inputPath.commit_sha)}`,
+        );
       }
       if (inputPath.tags?.length) {
-        console.log(`tags: ${inputPath.tags.join(', ')}`);
+        console.log(
+          `${colors.gray('tags:')} ${colors.green(inputPath.tags.join(', '))}`,
+        );
       }
       if (inputPath.version) {
-        console.log(`version: ${inputPath.version}`);
+        console.log(
+          `${colors.gray('version:')} ${colors.green(inputPath.version)}`,
+        );
       }
     }
   } else {
@@ -181,7 +193,7 @@ export const createClient = async ({
   watch?: WatchValues;
 }) => {
   const inputPath = compileInputPath(config.input);
-  const timeout = config.watch.timeout;
+  const { timeout } = config.input.watch;
 
   const watch: WatchValues = _watch || { headers: new Headers() };
 
@@ -245,16 +257,18 @@ export const createClient = async ({
         const outputPath = process.env.INIT_CWD
           ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
           : config.output.path;
-        console.log(`🚀 Done! Your output is in ${outputPath}`);
+        console.log(
+          `${colors.green('🚀 Done!')} Your output is in ${colors.cyanBright(outputPath)}`,
+        );
       }
     }
     Performance.end('postprocess');
   }
 
-  if (config.watch.enabled && typeof inputPath.path === 'string') {
+  if (config.input.watch.enabled && typeof inputPath.path === 'string') {
     setTimeout(() => {
       createClient({ config, templates, watch });
-    }, config.watch.interval);
+    }, config.input.watch.interval);
   }
 
   return context || client;
