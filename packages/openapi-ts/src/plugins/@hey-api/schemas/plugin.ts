@@ -471,6 +471,6 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       });
       break;
     default:
-      break;
+      throw new Error('Unsupported OpenAPI specification');
   }
 };

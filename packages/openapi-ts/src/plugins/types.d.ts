@@ -122,9 +122,9 @@ export namespace Plugin {
     Pick<Required<BaseConfig>, 'exportFromIndex' | 'output'>;
 
   /**
-   * @deprecated
-   *
    * Plugin implementation for legacy parser.
+   *
+   * @deprecated
    */
   export type LegacyHandler<Config extends BaseConfig> = (args: {
     client: LegacyClient;

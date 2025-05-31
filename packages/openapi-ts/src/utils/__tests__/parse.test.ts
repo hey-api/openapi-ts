@@ -11,6 +11,12 @@ describe('operationNameFn', () => {
     exportCore: false,
     input: {
       path: '',
+      validate_EXPERIMENTAL: false,
+      watch: {
+        enabled: false,
+        interval: 1_000,
+        timeout: 60_000,
+      },
     },
     logs: {
       file: true,
@@ -37,11 +43,6 @@ describe('operationNameFn', () => {
       },
     },
     useOptions: false,
-    watch: {
-      enabled: false,
-      interval: 1_000,
-      timeout: 60_000,
-    },
   };
 
   const options1: Parameters<typeof setConfig>[0] = {
