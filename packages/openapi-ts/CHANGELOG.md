@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.69.1
+
+### Patch Changes
+
+- [#2109](https://github.com/hey-api/openapi-ts/pull/2109) [`6d6b087`](https://github.com/hey-api/openapi-ts/commit/6d6b08771e78d184c6b17c97c6baa5a750b84581) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(valibot): use isoDate instead of date for date strings
+
+- [#2108](https://github.com/hey-api/openapi-ts/pull/2108) [`7e604fa`](https://github.com/hey-api/openapi-ts/commit/7e604fa03f34bcf621033f3ca633fa2365a79c53) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): generates union of arrays when items use nested oneOf
+
+- [#2106](https://github.com/hey-api/openapi-ts/pull/2106) [`b0cb0ab`](https://github.com/hey-api/openapi-ts/commit/b0cb0abe0f63f144380cde5fe3a2381f61038e5f) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(schema): nameBuilder can be a string
+
+- [#2106](https://github.com/hey-api/openapi-ts/pull/2106) [`b0cb0ab`](https://github.com/hey-api/openapi-ts/commit/b0cb0abe0f63f144380cde5fe3a2381f61038e5f) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(sdk): serviceNameBuilder can be a function
+
 ## 0.69.0
 
 ### Minor Changes
