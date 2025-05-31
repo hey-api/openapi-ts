@@ -1,4 +1,4 @@
-import * as colors from 'ansi-colors';
+import colors from 'ansi-colors';
 
 import type { IR } from '../../../ir/types';
 

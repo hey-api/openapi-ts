@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import * as colors from 'ansi-colors';
+import colors from 'ansi-colors';
 
 import { generateLegacyOutput, generateOutput } from './generate/output';
 import { getSpec } from './getSpec';

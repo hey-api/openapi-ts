@@ -904,6 +904,9 @@ importers:
       c12:
         specifier: 2.0.1
         version: 2.0.1(magicast@0.3.5)
+      color-support:
+        specifier: 1.1.3
+        version: 1.1.3
       commander:
         specifier: 13.0.0
         version: 13.0.0
@@ -1048,7 +1051,7 @@ importers:
         version: 9.17.0(jiti@2.4.2)
       express:
         specifier: 4.21.0
-        version: 4.21.0
+        version: 4.21.0(supports-color@10.0.0)
       fastify:
         specifier: 5.2.0
         version: 5.2.0
@@ -6361,6 +6364,10 @@ packages:
 
   color-string@1.9.1:
     resolution: {integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==}
+
+  color-support@1.1.3:
+    resolution: {integrity: sha512-qiBjkpbMLO/HL68y+lh4q0/O1MZFj2RX6X/KmMa3+gJD3z+WwI1ZzDHysvqHGS3mP6mznPckpXmw1nI9cJjyRg==}
+    hasBin: true
 
   color@4.2.3:
     resolution: {integrity: sha512-1rXeuUUiGGrykh+CeBdu5Ie7OJwinCgQY0bc7GCRxy5xVHy+moaqkpL/jqQq0MtQOeYcrqEz4abc5f0KtU7W4A==}
@@ -14082,7 +14089,7 @@ snapshots:
   '@eslint/config-array@0.19.2':
     dependencies:
       '@eslint/object-schema': 2.1.6
-      debug: 4.4.0(supports-color@9.4.0)
+      debug: 4.4.0
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -14098,7 +14105,7 @@ snapshots:
   '@eslint/eslintrc@3.3.0':
     dependencies:
       ajv: 6.12.6
-      debug: 4.4.0(supports-color@9.4.0)
+      debug: 4.4.0
       espree: 10.3.0
       globals: 14.0.0
       ignore: 5.3.2
@@ -17660,7 +17667,7 @@ snapshots:
 
   axios@1.8.2:
     dependencies:
-      follow-redirects: 1.15.9(debug@4.4.0)
+      follow-redirects: 1.15.9
       form-data: 4.0.2
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -17782,6 +17789,23 @@ snapshots:
       bytes: 3.1.2
       content-type: 1.0.5
       debug: 2.6.9
+      depd: 2.0.0
+      destroy: 1.2.0
+      http-errors: 2.0.0
+      iconv-lite: 0.4.24
+      on-finished: 2.4.1
+      qs: 6.13.0
+      raw-body: 2.5.2
+      type-is: 1.6.18
+      unpipe: 1.0.0
+    transitivePeerDependencies:
+      - supports-color
+
+  body-parser@1.20.3(supports-color@10.0.0):
+    dependencies:
+      bytes: 3.1.2
+      content-type: 1.0.5
+      debug: 2.6.9(supports-color@10.0.0)
       depd: 2.0.0
       destroy: 1.2.0
       http-errors: 2.0.0
@@ -18080,6 +18104,8 @@ snapshots:
       color-name: 1.1.4
       simple-swizzle: 0.2.2
 
+  color-support@1.1.3: {}
+
   color@4.2.3:
     dependencies:
       color-convert: 2.0.1
@@ -18133,7 +18159,7 @@ snapshots:
     dependencies:
       bytes: 3.1.2
       compressible: 2.0.18
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@10.0.0)
       negotiator: 0.6.4
       on-headers: 1.0.2
       safe-buffer: 5.2.1
@@ -18156,7 +18182,7 @@ snapshots:
 
   connect@3.7.0:
     dependencies:
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@10.0.0)
       finalhandler: 1.1.2
       parseurl: 1.3.3
       utils-merge: 1.0.1
@@ -18400,6 +18426,12 @@ snapshots:
     dependencies:
       ms: 2.0.0
 
+  debug@2.6.9(supports-color@10.0.0):
+    dependencies:
+      ms: 2.0.0
+    optionalDependencies:
+      supports-color: 10.0.0
+
   debug@3.2.7:
     dependencies:
       ms: 2.1.3
@@ -18409,6 +18441,10 @@ snapshots:
       ms: 2.1.2
 
   debug@4.3.7:
+    dependencies:
+      ms: 2.1.3
+
+  debug@4.4.0:
     dependencies:
       ms: 2.1.3
 
@@ -19185,7 +19221,7 @@ snapshots:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.6
-      debug: 4.4.0(supports-color@9.4.0)
+      debug: 4.4.0
       escape-string-regexp: 4.0.0
       eslint-scope: 8.3.0
       eslint-visitor-keys: 4.2.0
@@ -19344,21 +19380,57 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  express@4.21.2:
+  express@4.21.0(supports-color@10.0.0):
     dependencies:
       accepts: 1.3.8
       array-flatten: 1.1.1
-      body-parser: 1.20.3
+      body-parser: 1.20.3(supports-color@10.0.0)
       content-disposition: 0.5.4
       content-type: 1.0.5
-      cookie: 0.7.1
+      cookie: 0.6.0
       cookie-signature: 1.0.6
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@10.0.0)
       depd: 2.0.0
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
-      finalhandler: 1.3.1
+      finalhandler: 1.3.1(supports-color@10.0.0)
+      fresh: 0.5.2
+      http-errors: 2.0.0
+      merge-descriptors: 1.0.3
+      methods: 1.1.2
+      on-finished: 2.4.1
+      parseurl: 1.3.3
+      path-to-regexp: 0.1.10
+      proxy-addr: 2.0.7
+      qs: 6.13.0
+      range-parser: 1.2.1
+      safe-buffer: 5.2.1
+      send: 0.19.0(supports-color@10.0.0)
+      serve-static: 1.16.2(supports-color@10.0.0)
+      setprototypeof: 1.2.0
+      statuses: 2.0.1
+      type-is: 1.6.18
+      utils-merge: 1.0.1
+      vary: 1.1.2
+    transitivePeerDependencies:
+      - supports-color
+
+  express@4.21.2:
+    dependencies:
+      accepts: 1.3.8
+      array-flatten: 1.1.1
+      body-parser: 1.20.3(supports-color@10.0.0)
+      content-disposition: 0.5.4
+      content-type: 1.0.5
+      cookie: 0.7.1
+      cookie-signature: 1.0.6
+      debug: 2.6.9(supports-color@10.0.0)
+      depd: 2.0.0
+      encodeurl: 2.0.0
+      escape-html: 1.0.3
+      etag: 1.8.1
+      finalhandler: 1.3.1(supports-color@10.0.0)
       fresh: 0.5.2
       http-errors: 2.0.0
       merge-descriptors: 1.0.3
@@ -19370,8 +19442,8 @@ snapshots:
       qs: 6.13.0
       range-parser: 1.2.1
       safe-buffer: 5.2.1
-      send: 0.19.0
-      serve-static: 1.16.2
+      send: 0.19.0(supports-color@10.0.0)
+      serve-static: 1.16.2(supports-color@10.0.0)
       setprototypeof: 1.2.0
       statuses: 2.0.1
       type-is: 1.6.18
@@ -19524,7 +19596,7 @@ snapshots:
 
   finalhandler@1.1.2:
     dependencies:
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@10.0.0)
       encodeurl: 1.0.2
       escape-html: 1.0.3
       on-finished: 2.3.0
@@ -19537,6 +19609,18 @@ snapshots:
   finalhandler@1.3.1:
     dependencies:
       debug: 2.6.9
+      encodeurl: 2.0.0
+      escape-html: 1.0.3
+      on-finished: 2.4.1
+      parseurl: 1.3.3
+      statuses: 2.0.1
+      unpipe: 1.0.0
+    transitivePeerDependencies:
+      - supports-color
+
+  finalhandler@1.3.1(supports-color@10.0.0):
+    dependencies:
+      debug: 2.6.9(supports-color@10.0.0)
       encodeurl: 2.0.0
       escape-html: 1.0.3
       on-finished: 2.4.1
@@ -19584,6 +19668,8 @@ snapshots:
   focus-trap@7.6.4:
     dependencies:
       tabbable: 6.2.0
+
+  follow-redirects@1.15.9: {}
 
   follow-redirects@1.15.9(debug@4.4.0):
     optionalDependencies:
@@ -20568,7 +20654,7 @@ snapshots:
   karma@6.4.4:
     dependencies:
       '@colors/colors': 1.5.0
-      body-parser: 1.20.3
+      body-parser: 1.20.3(supports-color@10.0.0)
       braces: 3.0.3
       chokidar: 3.6.0
       connect: 3.7.0
@@ -21252,7 +21338,7 @@ snapshots:
       scule: 1.3.0
       semver: 7.7.1
       serve-placeholder: 2.0.2
-      serve-static: 1.16.2
+      serve-static: 1.16.2(supports-color@10.0.0)
       source-map: 0.7.4
       std-env: 3.8.1
       ufo: 1.5.4
@@ -23026,6 +23112,24 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  send@0.19.0(supports-color@10.0.0):
+    dependencies:
+      debug: 2.6.9(supports-color@10.0.0)
+      depd: 2.0.0
+      destroy: 1.2.0
+      encodeurl: 1.0.2
+      escape-html: 1.0.3
+      etag: 1.8.1
+      fresh: 0.5.2
+      http-errors: 2.0.0
+      mime: 1.6.0
+      ms: 2.1.3
+      on-finished: 2.4.1
+      range-parser: 1.2.1
+      statuses: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
+
   serialize-javascript@6.0.2:
     dependencies:
       randombytes: 2.1.0
@@ -23040,7 +23144,7 @@ snapshots:
     dependencies:
       accepts: 1.3.8
       batch: 0.6.1
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@10.0.0)
       escape-html: 1.0.3
       http-errors: 1.6.3
       mime-types: 2.1.35
@@ -23058,6 +23162,15 @@ snapshots:
       escape-html: 1.0.3
       parseurl: 1.3.3
       send: 0.19.0
+    transitivePeerDependencies:
+      - supports-color
+
+  serve-static@1.16.2(supports-color@10.0.0):
+    dependencies:
+      encodeurl: 2.0.0
+      escape-html: 1.0.3
+      parseurl: 1.3.3
+      send: 0.19.0(supports-color@10.0.0)
     transitivePeerDependencies:
       - supports-color
 
