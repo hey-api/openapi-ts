@@ -50,8 +50,15 @@ const createInfiniteParamsFunction = ({
       ],
       statements: [
         compiler.constVariable({
-          expression: compiler.identifier({
-            text: 'queryKey[0]',
+          expression: compiler.objectExpression({
+            obj: [
+              {
+                spread: compiler.propertyAccessExpression({
+                  expression: 'queryKey',
+                  name: 0,
+                }),
+              },
+            ],
           }),
           name: 'params',
         }),
