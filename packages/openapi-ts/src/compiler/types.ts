@@ -1006,7 +1006,13 @@ export const createRegularExpressionLiteral = ({
 }: {
   flags?: ReadonlyArray<'g' | 'i' | 'm' | 's' | 'u' | 'y'>;
   text: string;
-}) => ts.factory.createRegularExpressionLiteral(`/${text}/${flags.join('')}`);
+}) => {
+  const textWithSlashes =
+    text.startsWith('/') && text.endsWith('/') ? text : `/${text}/`;
+  return ts.factory.createRegularExpressionLiteral(
+    `${textWithSlashes}${flags.join('')}`,
+  );
+};
 
 export const createAsExpression = ({
   expression,
