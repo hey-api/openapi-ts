@@ -72,7 +72,7 @@ export const createPropertyAccessExpression = ({
 }: {
   expression: string | ts.Expression;
   isOptional?: boolean;
-  name: string | ts.MemberName;
+  name: string | number | ts.MemberName;
 }):
   | ts.PropertyAccessChain
   | ts.PropertyAccessExpression
@@ -82,7 +82,7 @@ export const createPropertyAccessExpression = ({
       ? createIdentifier({ text: expression })
       : expression;
 
-  if (isOptional) {
+  if (isOptional && typeof name !== 'number') {
     return createPropertyAccessChain({
       expression: nodeExpression,
       name,
@@ -100,12 +100,17 @@ export const createPropertyAccessExpression = ({
       const nodeName = createIdentifier({ text: name });
       return ts.factory.createElementAccessExpression(nodeExpression, nodeName);
     }
+
+    const nodeName = createIdentifier({ text: name });
+    return ts.factory.createPropertyAccessExpression(nodeExpression, nodeName);
   }
 
-  const nodeName =
-    typeof name === 'string' ? createIdentifier({ text: name }) : name;
+  if (typeof name === 'number') {
+    const nodeName = ts.factory.createNumericLiteral(name);
+    return ts.factory.createElementAccessExpression(nodeExpression, nodeName);
+  }
 
-  return ts.factory.createPropertyAccessExpression(nodeExpression, nodeName);
+  return ts.factory.createPropertyAccessExpression(nodeExpression, name);
 };
 
 export const createNull = (): ts.NullLiteral => ts.factory.createNull();
