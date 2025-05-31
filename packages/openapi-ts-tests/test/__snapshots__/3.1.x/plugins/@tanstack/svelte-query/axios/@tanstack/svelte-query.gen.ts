@@ -337,7 +337,9 @@ export const callWithParametersOptions = (options: Options<CallWithParametersDat
 };
 
 const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>>(queryKey: QueryKey<Options>, page: K) => {
-    const params = queryKey[0];
+    const params = {
+        ...queryKey[0]
+    };
     if (page.body) {
         params.body = {
             ...queryKey[0].body as any,
