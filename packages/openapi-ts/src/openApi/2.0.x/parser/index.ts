@@ -5,6 +5,7 @@ import {
   createFilters,
   hasFilters,
 } from '../../shared/utils/filter';
+import type { Graph } from '../../shared/utils/graph';
 import { createGraph } from '../../shared/utils/graph';
 import { mergeParametersObjects } from '../../shared/utils/parameter';
 import type {
@@ -24,8 +25,23 @@ type PathKeys<T extends keyof PathsObject = keyof PathsObject> =
   keyof T extends infer K ? (K extends `/${string}` ? K : never) : never;
 
 export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
-  if (hasFilters(context.config.input.filters)) {
-    const graph = createGraph(context.spec);
+  const shouldFilterSpec = hasFilters(context.config.input.filters);
+
+  let graph: Graph | undefined;
+
+  if (shouldFilterSpec || context.config.input.validate_EXPERIMENTAL) {
+    const result = createGraph({
+      spec: context.spec,
+      validate: context.config.input.validate_EXPERIMENTAL,
+    });
+    graph = result.graph;
+
+    if (result.errors.length) {
+      // TODO: print errors
+    }
+  }
+
+  if (shouldFilterSpec && graph) {
     const filters = createFilters(context.config.input.filters, context.spec);
     const sets = createFilteredDependencies({ filters, graph });
     filterSpec({
