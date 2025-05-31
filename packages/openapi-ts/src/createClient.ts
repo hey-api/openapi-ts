@@ -17,7 +17,9 @@ const isPlatformPath = (path: string) =>
   path.startsWith('https://get.heyapi.dev');
 // || path.startsWith('http://localhost:4000')
 
-export const compileInputPath = (input: Config['input']) => {
+export const compileInputPath = (
+  input: Omit<Config['input'], 'validate_EXPERIMENTAL' | 'watch'>,
+) => {
   const result: Pick<
     Partial<Config['input']>,
     | 'api_key'
@@ -181,7 +183,7 @@ export const createClient = async ({
   watch?: WatchValues;
 }) => {
   const inputPath = compileInputPath(config.input);
-  const timeout = config.watch.timeout;
+  const { timeout } = config.input.watch;
 
   const watch: WatchValues = _watch || { headers: new Headers() };
 
@@ -251,10 +253,10 @@ export const createClient = async ({
     Performance.end('postprocess');
   }
 
-  if (config.watch.enabled && typeof inputPath.path === 'string') {
+  if (config.input.watch.enabled && typeof inputPath.path === 'string') {
     setTimeout(() => {
       createClient({ config, templates, watch });
-    }, config.watch.interval);
+    }, config.input.watch.interval);
   }
 
   return context || client;

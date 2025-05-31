@@ -16,6 +16,12 @@ describe('registerHandlebarHelpers', () => {
       exportCore: true,
       input: {
         path: '',
+        validate_EXPERIMENTAL: false,
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
       logs: {
         file: true,
@@ -57,11 +63,6 @@ describe('registerHandlebarHelpers', () => {
         },
       },
       useOptions: false,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
     registerHandlebarHelpers();
     const helpers = Object.keys(Handlebars.helpers);
@@ -83,6 +84,12 @@ describe('registerHandlebarTemplates', () => {
       exportCore: true,
       input: {
         path: '',
+        validate_EXPERIMENTAL: false,
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
       logs: {
         file: true,
@@ -124,11 +131,6 @@ describe('registerHandlebarTemplates', () => {
         },
       },
       useOptions: false,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
     const templates = registerHandlebarTemplates();
     expect(templates.core.settings).toBeDefined();

@@ -80,32 +80,30 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
   // DEPRECATED OPTIONS BELOW
 
   /**
-   * @deprecated
-   *
    * **This feature works only with the legacy parser**
    *
    * Include only types matching regular expression.
+   *
+   * @deprecated
    */
   // eslint-disable-next-line typescript-sort-keys/interface
   include?: string;
   /**
-   * @deprecated
-   *
    * **This feature works only with the legacy parser**
    *
    * Use your preferred naming pattern
    *
+   * @deprecated
    * @default 'preserve'
    */
   style?: 'PascalCase' | 'preserve';
   /**
-   * @deprecated
-   *
    * **This feature works only with the legacy parser**
    *
    * Generate a tree of types containing all operations? It will be named
    * $OpenApiTs.
    *
+   * @deprecated
    * @default false
    */
   tree?: boolean;

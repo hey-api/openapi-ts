@@ -8,6 +8,10 @@ import type {
 import type { OpenApi } from '../../types';
 import { httpMethods } from './operation';
 
+interface ValidationError {
+  message: string;
+}
+
 export type Graph = {
   operations: Map<
     string,
@@ -168,7 +172,15 @@ const collectSchemaDependencies = (
   }
 };
 
-const collectOpenApiV2Dependencies = (spec: OpenApi.V2_0_X, graph: Graph) => {
+const collectOpenApiV2Dependencies = ({
+  graph,
+  spec,
+}: {
+  errors: Array<ValidationError>;
+  graph: Graph;
+  spec: OpenApi.V2_0_X;
+  validate: boolean;
+}): void => {
   if (spec.definitions) {
     for (const [key, schema] of Object.entries(spec.definitions)) {
       const dependencies = new Set<string>();
@@ -247,10 +259,17 @@ const collectOpenApiV2Dependencies = (spec: OpenApi.V2_0_X, graph: Graph) => {
   }
 };
 
-const collectOpenApiV3Dependencies = (
-  spec: OpenApi.V3_0_X | OpenApi.V3_1_X,
-  graph: Graph,
-) => {
+const collectOpenApiV3Dependencies = ({
+  errors,
+  graph,
+  spec,
+  validate,
+}: {
+  errors: Array<ValidationError>;
+  graph: Graph;
+  spec: OpenApi.V3_0_X | OpenApi.V3_1_X;
+  validate: boolean;
+}): void => {
   type ExtractedType<T> = T extends Record<string, infer V> ? V : never;
 
   if (spec.components) {
@@ -407,11 +426,45 @@ const collectOpenApiV3Dependencies = (
       }
     }
   }
+
+  if (validate) {
+    if (spec.servers) {
+      if (typeof spec.servers !== 'object' || !Array.isArray(spec.servers)) {
+        // TODO: validate
+        errors.push({
+          message: 'oh no',
+        });
+      }
+
+      for (const server of spec.servers) {
+        if (!server || typeof server !== 'object') {
+          // TODO: validate
+          errors.push({
+            message: 'oh no',
+          });
+        } else {
+          if (!server.url) {
+            // TODO: validate
+            errors.push({
+              message: 'oh no',
+            });
+          }
+        }
+      }
+    }
+  }
 };
 
-export const createGraph = (
-  spec: OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X,
-): Graph => {
+export const createGraph = ({
+  spec,
+  validate,
+}: {
+  spec: OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X;
+  validate: boolean;
+}): {
+  errors: ReadonlyArray<ValidationError>;
+  graph: Graph;
+} => {
   const graph: Graph = {
     operations: new Map(),
     parameters: new Map(),
@@ -419,12 +472,13 @@ export const createGraph = (
     responses: new Map(),
     schemas: new Map(),
   };
+  const errors: Array<ValidationError> = [];
 
   if ('swagger' in spec) {
-    collectOpenApiV2Dependencies(spec, graph);
+    collectOpenApiV2Dependencies({ errors, graph, spec, validate });
   } else {
-    collectOpenApiV3Dependencies(spec, graph);
+    collectOpenApiV3Dependencies({ errors, graph, spec, validate });
   }
 
-  return graph;
+  return { errors, graph };
 };

@@ -33,6 +33,12 @@ describe('generateLegacyCore', () => {
       exportCore: true,
       input: {
         path: '',
+        validate_EXPERIMENTAL: false,
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
       logs: {
         file: true,
@@ -74,11 +80,6 @@ describe('generateLegacyCore', () => {
         },
       },
       useOptions: true,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     await generateLegacyCore('/', client, templates);
@@ -126,6 +127,12 @@ describe('generateLegacyCore', () => {
       exportCore: true,
       input: {
         path: '',
+        validate_EXPERIMENTAL: false,
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
       logs: {
         file: true,
@@ -167,11 +174,6 @@ describe('generateLegacyCore', () => {
         },
       },
       useOptions: true,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     await generateLegacyCore('/', client, templates);
@@ -202,6 +204,12 @@ describe('generateLegacyCore', () => {
       exportCore: true,
       input: {
         path: '',
+        validate_EXPERIMENTAL: false,
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
       logs: {
         file: true,
@@ -243,11 +251,6 @@ describe('generateLegacyCore', () => {
         },
       },
       useOptions: true,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     await generateLegacyCore('/', client, templates);
