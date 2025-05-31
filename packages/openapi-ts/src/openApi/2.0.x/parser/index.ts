@@ -5,8 +5,9 @@ import {
   createFilters,
   hasFilters,
 } from '../../shared/utils/filter';
-import { createGraph } from '../../shared/utils/graph';
+import type { Graph } from '../../shared/utils/graph';
 import { mergeParametersObjects } from '../../shared/utils/parameter';
+import { handleValidatorResult } from '../../shared/utils/validator';
 import type {
   OpenApiV2_0_X,
   OperationObject,
@@ -15,6 +16,7 @@ import type {
   SecuritySchemeObject,
 } from '../types/spec';
 import { filterSpec } from './filter';
+import { createGraph } from './graph';
 import { parseOperation } from './operation';
 import { parametersArrayToObject } from './parameter';
 import { parseSchema } from './schema';
@@ -24,8 +26,20 @@ type PathKeys<T extends keyof PathsObject = keyof PathsObject> =
   keyof T extends infer K ? (K extends `/${string}` ? K : never) : never;
 
 export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
-  if (hasFilters(context.config.input.filters)) {
-    const graph = createGraph(context.spec);
+  const shouldFilterSpec = hasFilters(context.config.input.filters);
+
+  let graph: Graph | undefined;
+
+  if (shouldFilterSpec || context.config.input.validate_EXPERIMENTAL) {
+    const result = createGraph({
+      spec: context.spec,
+      validate: context.config.input.validate_EXPERIMENTAL,
+    });
+    graph = result.graph;
+    handleValidatorResult({ context, result });
+  }
+
+  if (shouldFilterSpec && graph) {
     const filters = createFilters(context.config.input.filters, context.spec);
     const sets = createFilteredDependencies({ filters, graph });
     filterSpec({

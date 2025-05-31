@@ -29,7 +29,7 @@ export default defineConfig(() => {
             // '/^[A-Z]+ /v1//',
           ],
         },
-        // orphans: false,
+        orphans: false,
         // preserveOrder: true,
         // tags: {
         //   exclude: ['bar'],
@@ -44,7 +44,14 @@ export default defineConfig(() => {
       //   openapi: '3.1.0',
       //   paths: {},
       // },
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'validators.yaml'),
+      path: path.resolve(
+        __dirname,
+        'spec',
+        '3.1.x',
+        'invalid',
+        'servers-entry.yaml',
+      ),
+      // path: path.resolve(__dirname, 'spec', '3.1.x', 'servers.yaml'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -53,7 +60,14 @@ export default defineConfig(() => {
       // path: 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
       // project: 'backend',
       // project: 'upload-openapi-spec',
+      validate_EXPERIMENTAL: true,
       // version: '1.0.0',
+      // watch: 5_000,
+      // watch: {
+      //   enabled: true,
+      //   interval: 500,
+      //   timeout: 30_000,
+      // },
     },
     logs: {
       // level: 'silent',
@@ -136,10 +150,6 @@ export default defineConfig(() => {
       },
     ],
     // useOptions: false,
-    // watch: {
-    //   enabled: true,
-    //   interval: 1_000,
-    //   timeout: 60_000,
-    // },
+    // watch: 3_000,
   };
 });

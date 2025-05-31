@@ -12,6 +12,27 @@ export type StringCase =
   | 'snake_case'
   | 'SCREAMING_SNAKE_CASE';
 
+interface Watch {
+  /**
+   * Regenerate the client when the input file changes?
+   *
+   * @default false
+   */
+  enabled?: boolean;
+  /**
+   * How often should we attempt to detect the input file change? (in ms)
+   *
+   * @default 1000
+   */
+  interval?: number;
+  /**
+   * How long will we wait before the request times out?
+   *
+   * @default 60_000
+   */
+  timeout?: number;
+}
+
 interface Input {
   /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
@@ -218,7 +239,15 @@ interface Input {
    * the first match will be returned.
    */
   tags?: ReadonlyArray<string>;
-
+  /**
+   * **This is an experimental feature.**
+   *
+   * Validate the input before generating output? This is an experimental,
+   * lightweight feature and support will be added on an ad hoc basis.
+   *
+   * @default false
+   */
+  validate_EXPERIMENTAL?: boolean;
   /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
    *
@@ -227,6 +256,13 @@ interface Input {
    * the value.
    */
   version?: string;
+  /**
+   * Regenerate the client when the input file changes? You can alternatively
+   * pass a numeric value for the interval in ms.
+   *
+   * @default false
+   */
+  watch?: boolean | number | Watch;
 }
 
 export interface UserConfig {
@@ -362,90 +398,59 @@ export interface UserConfig {
    * @default ['@hey-api/typescript', '@hey-api/sdk']
    */
   plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
-  /**
-   * Regenerate the client when the input file changes? You can alternatively
-   * pass a numeric value for the interval in ms.
-   *
-   * @default false
-   */
-  watch?:
-    | boolean
-    | number
-    | {
-        /**
-         * Regenerate the client when the input file changes?
-         *
-         * @default false
-         */
-        enabled?: boolean;
-        /**
-         * How often should we attempt to detect the input file change? (in ms)
-         *
-         * @default 1000
-         */
-        interval?: number;
-        /**
-         * How long will we wait before the request times out?
-         *
-         * @default 60_000
-         */
-        timeout?: number;
-      };
 
   // DEPRECATED OPTIONS BELOW
 
   /**
-   * @deprecated
-   *
    * Manually set base in OpenAPI config instead of inferring from server value
+   *
+   * @deprecated
    */
   // eslint-disable-next-line typescript-sort-keys/interface
   base?: string;
   /**
-   * @deprecated
-   *
    * Opt in to the experimental parser?
    *
+   * @deprecated
    * @default true
    */
   experimentalParser?: boolean;
   /**
-   * @deprecated
-   *
    * Generate core client classes?
    *
+   * @deprecated
    * @default true
    */
   exportCore?: boolean;
   /**
-   * @deprecated
-   *
    * Custom client class name. Please note this option is deprecated and
    * will be removed in favor of clients.
    *
+   * @deprecated
    * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
    */
   name?: string;
   /**
-   * @deprecated
-   *
    * Path to custom request file. Please note this option is deprecated and
    * will be removed in favor of clients.
    *
+   * @deprecated
    * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-request
    */
   request?: string;
   /**
-   * @deprecated
-   *
    * Use options or arguments functions. Please note this option is deprecated and
    * will be removed in favor of clients.
    *
-   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-useoptions
-   *
+   * @deprecated
    * @default true
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-useoptions
    */
   useOptions?: boolean;
+  /**
+   * @deprecated use `input.watch` instead
+   */
+  watch?: boolean | number | Watch;
 }
 
 export type Config = Omit<
@@ -460,7 +465,10 @@ export type Config = Omit<
   | 'watch'
 > &
   Pick<UserConfig, 'base' | 'name' | 'request'> & {
-    input: Omit<Input, 'path'> & Pick<Required<Input>, 'path'>;
+    input: Omit<Input, 'path' | 'validate_EXPERIMENTAL' | 'watch'> &
+      Pick<Required<Input>, 'path' | 'validate_EXPERIMENTAL'> & {
+        watch: Extract<Required<Required<Input>['watch']>, object>;
+      };
     logs: Extract<Required<UserConfig['logs']>, object>;
     output: Extract<UserConfig['output'], object>;
     pluginOrder: ReadonlyArray<ClientPlugins['name']>;
@@ -468,5 +476,4 @@ export type Config = Omit<
       ExtractArrayOfObjects<ReadonlyArray<ClientPlugins>, { name: string }>,
       'name'
     >;
-    watch: Extract<Required<UserConfig['watch']>, object>;
   };
