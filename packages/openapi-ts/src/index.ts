@@ -1,6 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import colors from 'ansi-colors';
+// @ts-expect-error
+import colorSupport from 'color-support';
+
 import { createClient as pCreateClient } from './createClient';
 import { ensureDirSync } from './generate/utils';
 import { getLogs } from './getLogs';
@@ -12,6 +16,8 @@ import { registerHandlebarTemplates } from './utils/handlebars';
 import { Performance, PerformanceReport } from './utils/performance';
 
 type Configs = UserConfig | (() => UserConfig) | (() => Promise<UserConfig>);
+
+colors.enabled = colorSupport().hasBasic;
 
 /**
  * Generate a client from the provided configuration.
