@@ -27,6 +27,12 @@ interface State {
    * strip the other type.
    */
   accessScope?: 'read' | 'write';
+  /**
+   * Path to the currently processed field. This can be used to generate
+   * deduplicated inline types. For example, if two schemas define a different
+   * enum `foo`, we want to generate two unique types instead of one.
+   */
+  path: ReadonlyArray<string>;
 }
 
 const scopeToRef = ({
@@ -554,7 +560,7 @@ const objectTypeToIdentifier = ({
       isRequired,
       name: fieldName({ context, name }),
       type: schemaToType({
-        $ref: `${irRef}${name}`,
+        $ref: state ? [...state.path, name].join('/') : `${irRef}${name}`,
         context,
         namespace,
         plugin,
@@ -918,9 +924,12 @@ const operationToDataType = ({
     schema: data,
     state:
       plugin.readOnlyWriteOnlyBehavior === 'off'
-        ? undefined
+        ? {
+            path: [operation.method, operation.path, 'data'],
+          }
         : {
             accessScope: 'write',
+            path: [operation.method, operation.path, 'data'],
           },
   });
 
@@ -971,9 +980,12 @@ const operationToType = ({
         schema: errors,
         state:
           plugin.readOnlyWriteOnlyBehavior === 'off'
-            ? undefined
+            ? {
+                path: [operation.method, operation.path, 'errors'],
+              }
             : {
                 accessScope: 'read',
+                path: [operation.method, operation.path, 'errors'],
               },
       });
 
@@ -1035,9 +1047,12 @@ const operationToType = ({
         schema: responses,
         state:
           plugin.readOnlyWriteOnlyBehavior === 'off'
-            ? undefined
+            ? {
+                path: [operation.method, operation.path, 'responses'],
+              }
             : {
                 accessScope: 'read',
+                path: [operation.method, operation.path, 'responses'],
               },
       });
 
@@ -1166,6 +1181,7 @@ export const schemaToType = ({
       const itemTypes: Array<ts.TypeNode> = [];
 
       for (const item of schema.items) {
+        // TODO: correctly populate state.path
         const type = schemaToType({
           context,
           namespace,
@@ -1183,6 +1199,7 @@ export const schemaToType = ({
           ? compiler.typeIntersectionNode({ types: itemTypes })
           : compiler.typeUnionNode({ types: itemTypes });
     } else {
+      // TODO: correctly populate state.path
       type = schemaToType({
         context,
         namespace,
@@ -1265,7 +1282,10 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
         context,
         plugin,
         schema,
-        state: undefined,
+        state: {
+          // TODO: correctly populate state.path
+          path: [],
+        },
       });
       return;
     }
@@ -1282,6 +1302,8 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
         schema,
         state: {
           accessScope: 'read',
+          // TODO: correctly populate state.path
+          path: [],
         },
       });
     }
@@ -1298,6 +1320,8 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
         schema,
         state: {
           accessScope: 'write',
+          // TODO: correctly populate state.path
+          path: [],
         },
       });
     }
@@ -1309,7 +1333,10 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       context,
       plugin,
       schema: parameter.schema,
-      state: undefined,
+      state: {
+        // TODO: correctly populate state.path
+        path: [],
+      },
     });
   });
 
@@ -1321,9 +1348,14 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       schema: requestBody.schema,
       state:
         plugin.readOnlyWriteOnlyBehavior === 'off'
-          ? undefined
+          ? {
+              // TODO: correctly populate state.path
+              path: [],
+            }
           : {
               accessScope: 'write',
+              // TODO: correctly populate state.path
+              path: [],
             },
     });
   });

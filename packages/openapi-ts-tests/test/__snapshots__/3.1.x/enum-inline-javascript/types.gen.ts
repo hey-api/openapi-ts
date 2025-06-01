@@ -11,6 +11,55 @@ export type Foo = {
     type?: 'foo' | 'bar';
 };
 
+export type GetFooData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/foo';
+};
+
+export type Foo2 = 'foo' | 'bar';
+
+export const Foo = {
+    FOO: 'foo',
+    BAR: 'bar'
+} as const;
+
+export type GetFooResponses = {
+    /**
+     * OK
+     */
+    200: {
+        foo?: 'foo' | 'bar';
+    };
+};
+
+export type GetFooResponse = GetFooResponses[keyof GetFooResponses];
+
+export type PostFooData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/foo';
+};
+
+export type Foo3 = 'baz';
+
+export const Foo2 = {
+    BAZ: 'baz'
+} as const;
+
+export type PostFooResponses = {
+    /**
+     * OK
+     */
+    200: {
+        foo?: 'baz';
+    };
+};
+
+export type PostFooResponse = PostFooResponses[keyof PostFooResponses];
+
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
