@@ -9,6 +9,51 @@ export type Foo = {
     type?: 'foo' | 'bar';
 };
 
+export type GetFooData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/foo';
+};
+
+export enum Foo {
+    FOO = 'foo',
+    BAR = 'bar'
+}
+
+export type GetFooResponses = {
+    /**
+     * OK
+     */
+    200: {
+        foo?: 'foo' | 'bar';
+    };
+};
+
+export type GetFooResponse = GetFooResponses[keyof GetFooResponses];
+
+export type PostFooData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/foo';
+};
+
+export enum Foo2 {
+    BAZ = 'baz'
+}
+
+export type PostFooResponses = {
+    /**
+     * OK
+     */
+    200: {
+        foo?: 'baz';
+    };
+};
+
+export type PostFooResponse = PostFooResponses[keyof PostFooResponses];
+
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
