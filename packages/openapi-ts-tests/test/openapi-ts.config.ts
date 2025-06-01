@@ -29,7 +29,7 @@ export default defineConfig(() => {
             // '/^[A-Z]+ /v1//',
           ],
         },
-        orphans: false,
+        // orphans: false,
         // preserveOrder: true,
         // tags: {
         //   exclude: ['bar'],
