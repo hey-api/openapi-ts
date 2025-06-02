@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.69.2
+
+### Patch Changes
+
+- [#2110](https://github.com/hey-api/openapi-ts/pull/2110) [`323a966`](https://github.com/hey-api/openapi-ts/commit/323a9661213e41723af1d7944232064022814d2b) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): add validate_EXPERIMENTAL option
+
+- [#2114](https://github.com/hey-api/openapi-ts/pull/2114) [`55980f5`](https://github.com/hey-api/openapi-ts/commit/55980f533812cb33dc32e034f22aee1d58fe6c19) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(validators): do not wrap regular expression in slashes if the pattern is already wrapped
+
+- [#2115](https://github.com/hey-api/openapi-ts/pull/2115) [`a94d3c0`](https://github.com/hey-api/openapi-ts/commit/a94d3c0503bbeeff026e9fea362f907a0e5d4cb7) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): create a shallow copy of queryKey in createInfiniteParams function
+
 ## 0.69.1
 
 ### Patch Changes
