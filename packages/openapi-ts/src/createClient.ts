@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import colors from 'ansi-colors';
 
+import { fixSchema } from './fixSchema';
 import { generateLegacyOutput, generateOutput } from './generate/output';
 import { getSpec } from './getSpec';
 import type { IR } from './ir/types';
@@ -211,6 +212,12 @@ export const createClient = async ({
     watch,
   });
   Performance.end('spec');
+
+  if (config.input.fix) {
+    Performance.start('fix');
+    fixSchema({ data, fix: config.input.fix });
+    Performance.end('fix');
+  }
 
   // throw on first run if there's an error to preserve user experience
   // if in watch mode, subsequent errors won't throw to gracefully handle
