@@ -1,3 +1,4 @@
+import type { OpenApiSchemaObject } from '../openApi/types';
 import type { ClientPlugins, UserPlugins } from '../plugins';
 import type { ArrayOfObjectsToObjectMap, ExtractArrayOfObjects } from './utils';
 
@@ -197,6 +198,17 @@ interface Input {
        */
       include?: ReadonlyArray<string>;
     };
+  };
+  fix?: {
+    schema?: Record<
+      string,
+      (
+        schema:
+          | OpenApiSchemaObject.V2_0_X
+          | OpenApiSchemaObject.V4_0_X
+          | OpenApiSchemaObject.V3_1_X,
+      ) => void
+    >;
   };
   /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
