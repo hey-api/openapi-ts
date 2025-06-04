@@ -1,0 +1,43 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI 3.1.0 enum inline example
+  version: '1'
+paths:
+  /foo:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  foo:
+                    type: string
+                    enum:
+                      - foo
+                      - bar
+    post:
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  foo:
+                    type: string
+                    enum:
+                      - baz
+components:
+  schemas:
+    Foo:
+      properties:
+        type:
+          enum:
+            - foo
+            - bar
+          type: string
+      type: object

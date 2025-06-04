@@ -1,53 +1,54 @@
 import { describe, expect, it } from 'vitest';
 
+import type { Identifiers } from '../files';
 import { _test } from '../files';
 
-const { ensureUniqueIdentifier, parseRefPath, splitNameAndExtension } = _test;
+const { ensureUniqueIdentifier, parseRef, splitNameAndExtension } = _test;
 
-describe('parseRefPath', () => {
+describe('parseRef', () => {
   it('should parse simple ref without properties', () => {
     const ref = '#/components/schemas/User';
-    const result = parseRefPath(ref);
+    const result = parseRef(ref);
     expect(result).toEqual({
-      baseRef: '#/components/schemas/User',
       name: 'User',
       properties: [],
+      ref: '#/components/schemas/User',
     });
   });
 
   it('should parse ref with single property', () => {
     const ref = '#/components/schemas/User/properties/name';
-    const result = parseRefPath(ref);
+    const result = parseRef(ref);
     expect(result).toEqual({
-      baseRef: '#/components/schemas/User',
       name: 'User',
       properties: ['name'],
+      ref: '#/components/schemas/User',
     });
   });
 
   it('should parse ref with multiple properties', () => {
     const ref = '#/components/schemas/User/properties/address/properties/city';
-    const result = parseRefPath(ref);
+    const result = parseRef(ref);
     expect(result).toEqual({
-      baseRef: '#/components/schemas/User',
       name: 'User',
       properties: ['address', 'city'],
+      ref: '#/components/schemas/User',
     });
   });
 
   it('should handle ref with empty name', () => {
     const ref = '#/components/schemas/';
-    const result = parseRefPath(ref);
+    const result = parseRef(ref);
     expect(result).toEqual({
-      baseRef: '#/components/schemas/',
       name: '',
       properties: [],
+      ref: '#/components/schemas/',
     });
   });
 
   it('should throw error for invalid ref with empty property', () => {
     const ref = '#/components/schemas/User/properties/';
-    expect(() => parseRefPath(ref)).toThrow('Invalid $ref: ' + ref);
+    expect(() => parseRef(ref)).toThrow('Invalid $ref: ' + ref);
   });
 });
 
@@ -85,10 +86,13 @@ describe('splitNameAndExtension', () => {
 
 describe('ensureUniqueIdentifier', () => {
   it('returns empty name when no name is parsed from ref', () => {
+    const identifiers: Identifiers = {};
+
     const result = ensureUniqueIdentifier({
       $ref: '#/components/',
       case: 'camelCase',
-      namespace: {},
+      identifiers,
+      namespace: 'type',
     });
 
     expect(result).toEqual({
@@ -98,14 +102,19 @@ describe('ensureUniqueIdentifier', () => {
   });
 
   it('returns existing name from namespace when ref exists', () => {
-    const namespace = {
-      '#/components/User': { $ref: '#/components/User', name: 'User' },
+    const identifiers: Identifiers = {
+      user: {
+        type: {
+          '#/components/User': { $ref: '#/components/User', name: 'User' },
+        },
+      },
     };
 
     const result = ensureUniqueIdentifier({
       $ref: '#/components/User',
       case: 'camelCase',
-      namespace,
+      identifiers,
+      namespace: 'type',
     });
 
     expect(result).toEqual({
@@ -115,14 +124,19 @@ describe('ensureUniqueIdentifier', () => {
   });
 
   it('handles nested properties in ref', () => {
-    const namespace = {
-      '#/components/User': { $ref: '#/components/User', name: 'User' },
+    const identifiers: Identifiers = {
+      user: {
+        type: {
+          '#/components/User': { $ref: '#/components/User', name: 'User' },
+        },
+      },
     };
 
     const result = ensureUniqueIdentifier({
       $ref: '#/components/User/properties/id',
       case: 'camelCase',
-      namespace,
+      identifiers,
+      namespace: 'type',
     });
 
     expect(result).toEqual({
@@ -132,59 +146,90 @@ describe('ensureUniqueIdentifier', () => {
   });
 
   it('applies nameTransformer and case transformation', () => {
-    const namespace = {};
     const nameTransformer = (name: string) => `prefix${name}`;
+    const identifiers: Identifiers = {
+      user: {
+        type: {},
+      },
+    };
 
     const result = ensureUniqueIdentifier({
       $ref: '#/components/User',
       case: 'camelCase',
       create: true,
+      identifiers,
       nameTransformer,
-      namespace,
+      namespace: 'type',
     });
 
     expect(result).toEqual({
       created: true,
       name: 'prefixUser',
     });
-    expect(namespace).toHaveProperty('prefixUser', {
-      $ref: '#/components/User',
-      name: 'prefixUser',
+    expect(identifiers).toHaveProperty('user', {
+      type: {
+        '#/components/User': {
+          $ref: '#/components/User',
+          name: 'prefixUser',
+        },
+        prefixUser: {
+          $ref: '#/components/User',
+          name: 'prefixUser',
+        },
+      },
     });
   });
 
   it('resolves naming conflicts by appending count', () => {
-    const namespace = {
-      user: { $ref: '#/components/Other', name: 'user' },
+    const identifiers: Identifiers = {
+      user: {
+        type: {
+          user: { $ref: '#/components/Other', name: 'user' },
+        },
+      },
     };
 
     const result = ensureUniqueIdentifier({
       $ref: '#/components/User',
       case: 'camelCase',
       create: true,
-      namespace,
+      identifiers,
+      namespace: 'type',
     });
 
     expect(result).toEqual({
       created: true,
       name: 'user2',
     });
-    expect(namespace).toHaveProperty('user2', {
-      $ref: '#/components/User',
-      name: 'user2',
+    expect(identifiers).toHaveProperty('user2', {
+      type: {
+        '#/components/User': {
+          $ref: '#/components/User',
+          name: 'user2',
+        },
+        user2: {
+          $ref: '#/components/User',
+          name: 'user2',
+        },
+      },
     });
   });
 
   it('returns existing name when ref matches in namespace', () => {
-    const namespace = {
-      '#/components/User': { $ref: '#/components/User', name: 'user' },
-      user: { $ref: '#/components/User', name: 'user' },
+    const identifiers: Identifiers = {
+      user: {
+        type: {
+          '#/components/User': { $ref: '#/components/User', name: 'user' },
+          user: { $ref: '#/components/User', name: 'user' },
+        },
+      },
     };
 
     const result = ensureUniqueIdentifier({
       $ref: '#/components/User',
       case: 'camelCase',
-      namespace,
+      identifiers,
+      namespace: 'type',
     });
 
     expect(result).toEqual({
@@ -194,34 +239,106 @@ describe('ensureUniqueIdentifier', () => {
   });
 
   it('does not create new entry when create is false', () => {
-    const namespace = {};
+    const identifiers: Identifiers = {};
 
     const result = ensureUniqueIdentifier({
       $ref: '#/components/User',
       case: 'camelCase',
       create: false,
-      namespace,
+      identifiers,
+      namespace: 'type',
     });
 
     expect(result).toEqual({
       created: false,
       name: '',
     });
-    expect(namespace).toEqual({});
+    expect(identifiers).toEqual({
+      user: {},
+    });
   });
 
-  it('returns existing identifier if name collision matches same baseRef', () => {
-    const namespace: any = {
-      User: { $ref: '#/components/schemas/User', name: 'User' },
+  it('returns existing identifier if name collision matches same ref', () => {
+    const identifiers: Identifiers = {
+      user: {
+        type: {
+          User: { $ref: '#/components/schemas/User', name: 'User' },
+        },
+      },
     };
 
     const result = ensureUniqueIdentifier({
       $ref: '#/components/schemas/User',
       case: 'PascalCase',
       create: true,
-      namespace,
+      identifiers,
+      namespace: 'type',
     });
 
     expect(result).toEqual({ created: false, name: 'User' });
+  });
+
+  it('creates a new identifier for enum if name collision matches non-enum', () => {
+    const identifiers: Identifiers = {
+      user: {
+        type: {
+          User: { $ref: '#/components/schemas/User', name: 'User' },
+        },
+      },
+    };
+
+    const result = ensureUniqueIdentifier({
+      $ref: '#/components/schemas/User',
+      case: 'PascalCase',
+      create: true,
+      identifiers,
+      namespace: 'enum',
+    });
+
+    expect(result).toEqual({ created: true, name: 'User2' });
+    expect(identifiers).toHaveProperty('user2', {
+      enum: {
+        '#/components/schemas/User': {
+          $ref: '#/components/schemas/User',
+          name: 'User2',
+        },
+        User2: {
+          $ref: '#/components/schemas/User',
+          name: 'User2',
+        },
+      },
+    });
+  });
+
+  it('creates a new identifier for non-enum if name collision matches enum', () => {
+    const identifiers: Identifiers = {
+      user: {
+        enum: {
+          User: { $ref: '#/components/schemas/User', name: 'User' },
+        },
+      },
+    };
+
+    const result = ensureUniqueIdentifier({
+      $ref: '#/components/schemas/User',
+      case: 'PascalCase',
+      create: true,
+      identifiers,
+      namespace: 'type',
+    });
+
+    expect(result).toEqual({ created: true, name: 'User2' });
+    expect(identifiers).toHaveProperty('user2', {
+      type: {
+        '#/components/schemas/User': {
+          $ref: '#/components/schemas/User',
+          name: 'User2',
+        },
+        User2: {
+          $ref: '#/components/schemas/User',
+          name: 'User2',
+        },
+      },
+    });
   });
 });

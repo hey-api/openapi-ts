@@ -210,7 +210,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-inline.json',
+        input: 'enum-inline.yaml',
         output: 'enum-inline',
         plugins: [
           {
@@ -223,7 +223,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-inline.json',
+        input: 'enum-inline.yaml',
         output: 'enum-inline-javascript',
         plugins: [
           {
@@ -237,7 +237,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-inline.json',
+        input: 'enum-inline.yaml',
         output: 'enum-inline-typescript',
         plugins: [
           {
@@ -251,7 +251,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-inline.json',
+        input: 'enum-inline.yaml',
         output: 'enum-inline-typescript-namespace',
         plugins: [
           {

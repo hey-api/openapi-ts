@@ -22,34 +22,49 @@ export interface Identifier {
   name: string | false;
 }
 
-type Namespace = Record<
+type NamespaceEntry = Pick<Identifier, 'name'> & {
+  /**
+   * Ref to the type in OpenAPI specification.
+   */
+  $ref: string;
+};
+
+export type Identifiers = Record<
   string,
-  Pick<Identifier, 'name'> & {
+  {
     /**
-     * Ref to the type in OpenAPI specification.
+     * TypeScript enum only namespace.
+     *
+     * @example
+     * ```ts
+     * export enum Foo = {
+     *   FOO = 'foo'
+     * }
+     * ```
      */
-    $ref: string;
+    enum?: Record<string, NamespaceEntry>;
+    /**
+     * Type namespace. Types, interfaces, and type aliases exist here.
+     *
+     * @example
+     * ```ts
+     * export type Foo = string;
+     * ```
+     */
+    type?: Record<string, NamespaceEntry>;
+    /**
+     * Value namespace. Variables, functions, classes, and constants exist here.
+     *
+     * @example
+     * ```js
+     * export const foo = '';
+     * ```
+     */
+    value?: Record<string, NamespaceEntry>;
   }
 >;
 
-interface Namespaces {
-  /**
-   * Type namespace. Types, interfaces, and type aliases exist here.
-   * @example
-   * ```ts
-   * export type Foo = string;
-   * ```
-   */
-  type: Namespace;
-  /**
-   * Value namespace. Variables, functions, classes, and constants exist here.
-   * @example
-   * ```js
-   * export const foo = '';
-   * ```
-   */
-  value: Namespace;
-}
+type Namespace = keyof Identifiers[keyof Identifiers];
 
 export type FileImportResult = Pick<ImportExportItemObject, 'asType' | 'name'>;
 
@@ -66,10 +81,8 @@ export class TypeScriptFile {
   private _name: string;
   private _path: string;
 
-  public namespaces: Namespaces = {
-    type: {},
-    value: {},
-  };
+  public identifiers: Identifiers = {};
+
   /**
    * Path relative to the client output root.
    */
@@ -126,9 +139,11 @@ export class TypeScriptFile {
     $ref,
     namespace,
   }: Pick<EnsureUniqueIdentifierData, '$ref'> & {
-    namespace: keyof Namespaces;
+    namespace: Namespace;
   }): Identifier {
-    const refValue = this.namespaces[namespace][$ref];
+    const { name, ref } = parseRef($ref);
+    const refValue =
+      this.identifiers[name.toLocaleLowerCase()]?.[namespace]?.[ref];
     if (!refValue) {
       throw new Error(
         `Identifier for $ref ${$ref} in namespace ${namespace} not found`,
@@ -151,15 +166,17 @@ export class TypeScriptFile {
     return this._id;
   }
 
-  public identifier({
-    namespace,
-    ...args
-  }: Omit<EnsureUniqueIdentifierData, 'case' | 'namespace'> & {
-    namespace: keyof Namespaces;
-  }): Identifier {
+  public identifier(
+    args: Pick<
+      EnsureUniqueIdentifierData,
+      '$ref' | 'count' | 'create' | 'nameTransformer'
+    > & {
+      namespace: Namespace;
+    },
+  ): Identifier {
     return ensureUniqueIdentifier({
       case: this._identifierCase,
-      namespace: this.namespaces[namespace],
+      identifiers: this.identifiers,
       ...args,
     });
   }
@@ -340,27 +357,39 @@ export class TypeScriptFile {
   }
 }
 
-function parseRefPath(ref: string): {
-  baseRef: string;
+const parseRef = (
+  $ref: string,
+): {
+  /**
+   * Extracted name from `$ref`, equal to the last part or property name.
+   */
   name: string;
-  properties: string[];
-} {
-  let baseRef = ref;
+  /**
+   * List of properties extracted from `$ref`, if any.
+   */
+  properties: ReadonlyArray<string>;
+  /**
+   * `$ref` without properties if they're included in `$ref`, otherwise
+   * `ref` is equal to `$ref`.
+   */
+  ref: string;
+} => {
+  let ref = $ref;
   const properties: string[] = [];
 
-  const parts = baseRef.split('/');
+  const parts = ref.split('/');
   let name = parts[parts.length - 1] || '';
 
   let propIndex = parts.indexOf('properties');
 
   if (propIndex !== -1) {
-    baseRef = parts.slice(0, propIndex).join('/');
+    ref = parts.slice(0, propIndex).join('/');
     name = parts[propIndex - 1] || '';
 
     while (propIndex + 1 < parts.length) {
       const prop = parts[propIndex + 1];
       if (!prop) {
-        throw new Error(`Invalid $ref: ${ref}`);
+        throw new Error(`Invalid $ref: ${$ref}`);
       }
       properties.push(prop);
       propIndex += 2;
@@ -368,17 +397,18 @@ function parseRefPath(ref: string): {
   }
 
   return {
-    baseRef,
     name,
     properties,
+    ref,
   };
-}
+};
 
 interface EnsureUniqueIdentifierData {
   $ref: string;
   case: StringCase | undefined;
   count?: number;
   create?: boolean;
+  identifiers: Identifiers;
   /**
    * Transforms name obtained from `$ref` before it's passed to `stringCase()`.
    */
@@ -391,10 +421,11 @@ const ensureUniqueIdentifier = ({
   case: identifierCase,
   count = 1,
   create = false,
+  identifiers,
   nameTransformer,
   namespace,
 }: EnsureUniqueIdentifierData): Identifier => {
-  const { baseRef, name, properties } = parseRefPath($ref);
+  const { name, properties, ref } = parseRef($ref);
 
   if (!name) {
     return {
@@ -403,7 +434,42 @@ const ensureUniqueIdentifier = ({
     };
   }
 
-  const refValue = namespace[baseRef];
+  let nameWithCasing = stringCase({
+    case: identifierCase,
+    value: name,
+  });
+  if (count > 1) {
+    nameWithCasing = `${nameWithCasing}${count}`;
+  }
+  const lowercaseName = nameWithCasing.toLocaleLowerCase();
+  if (!identifiers[lowercaseName]) {
+    identifiers[lowercaseName] = {};
+  }
+  const identifier = identifiers[lowercaseName];
+
+  // Enum declarations can only merge with namespace or other enum
+  // declarations, so we need to ensure we don't mix them up.
+  if (
+    (namespace === 'enum' && (identifier.type || identifier.value)) ||
+    (namespace !== 'enum' && identifier.enum)
+  ) {
+    return ensureUniqueIdentifier({
+      $ref: ref,
+      case: identifierCase,
+      count: count + 1,
+      create,
+      identifiers,
+      nameTransformer,
+      namespace,
+    });
+  }
+
+  if (!identifier[namespace]) {
+    identifier[namespace] = {};
+  }
+  const id = identifier[namespace];
+
+  const refValue = id[ref];
   if (refValue) {
     let name = refValue.name;
     if (properties.length) {
@@ -415,19 +481,17 @@ const ensureUniqueIdentifier = ({
     };
   }
 
-  const nameWithTransform = nameTransformer?.(name) ?? name;
-  let nameWithCasing = stringCase({
+  let nameWithCasingAndTransformer = stringCase({
     case: identifierCase,
-    value: nameWithTransform,
+    value: nameTransformer?.(name) ?? name,
   });
-
   if (count > 1) {
-    nameWithCasing = `${nameWithCasing}${count}`;
+    nameWithCasingAndTransformer = `${nameWithCasingAndTransformer}${count}`;
   }
 
-  let nameValue = namespace[nameWithCasing];
+  let nameValue = id[nameWithCasingAndTransformer];
   if (nameValue) {
-    if (nameValue.$ref === baseRef) {
+    if (nameValue.$ref === ref) {
       return {
         created: false,
         name: nameValue.name,
@@ -435,16 +499,18 @@ const ensureUniqueIdentifier = ({
     }
 
     return ensureUniqueIdentifier({
-      $ref: baseRef,
+      $ref: ref,
       case: identifierCase,
       count: count + 1,
       create,
+      identifiers,
       nameTransformer,
       namespace,
     });
   }
 
   if (!create) {
+    delete identifier[namespace];
     return {
       created: false,
       name: '',
@@ -452,11 +518,11 @@ const ensureUniqueIdentifier = ({
   }
 
   nameValue = {
-    $ref: baseRef,
-    name: ensureValidIdentifier(nameWithCasing),
+    $ref: ref,
+    name: ensureValidIdentifier(nameWithCasingAndTransformer),
   };
-  namespace[nameWithCasing] = nameValue;
-  namespace[nameValue.$ref] = nameValue;
+  id[nameWithCasingAndTransformer] = nameValue;
+  id[nameValue.$ref] = nameValue;
 
   return {
     created: true,
@@ -476,6 +542,6 @@ const splitNameAndExtension = (fileName: string) => {
 
 export const _test = {
   ensureUniqueIdentifier,
-  parseRefPath,
+  parseRef,
   splitNameAndExtension,
 };
