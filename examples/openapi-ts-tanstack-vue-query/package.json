@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-tanstack-vue-query",
   "private": true,
-  "version": "0.0.36",
+  "version": "0.0.37",
   "type": "module",
   "scripts": {
     "build-only": "vite build",

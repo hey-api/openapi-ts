@@ -1,5 +1,13 @@
 # @hey-api/client-fetch
 
+## 0.12.0
+
+### Minor Changes
+
+- [#2123](https://github.com/hey-api/openapi-ts/pull/2123) [`4d8c030`](https://github.com/hey-api/openapi-ts/commit/4d8c03038979c9a75315cc158789b3c198c62f90) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add responseStyle option
+
+  **BREAKING**: Update `@hey-api/openapi-ts` to the latest version.
+
 ## 0.11.0
 
 ### Minor Changes

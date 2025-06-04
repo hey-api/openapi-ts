@@ -1,5 +1,12 @@
 # @example/openapi-ts-tanstack-vue-query
 
+## 0.0.37
+
+### Patch Changes
+
+- Updated dependencies [[`4d8c030`](https://github.com/hey-api/openapi-ts/commit/4d8c03038979c9a75315cc158789b3c198c62f90)]:
+  - @hey-api/client-fetch@0.12.0
+
 ## 0.0.36
 
 ### Patch Changes
