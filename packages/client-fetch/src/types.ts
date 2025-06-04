@@ -6,6 +6,8 @@ import type {
 
 import type { Middleware } from './utils';
 
+export type ResponseStyle = 'data' | 'fields';
+
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
     CoreConfig {
@@ -37,6 +39,12 @@ export interface Config<T extends ClientOptions = ClientOptions>
    */
   parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'auto' | 'stream';
   /**
+   * Should we return only data or multiple fields (data, error, response, etc.)?
+   *
+   * @default 'fields'
+   */
+  responseStyle?: ResponseStyle;
+  /**
    * Throw an error instead of returning it in the response?
    *
    * @default false
@@ -45,9 +53,11 @@ export interface Config<T extends ClientOptions = ClientOptions>
 }
 
 export interface RequestOptions<
+  TResponseStyle extends ResponseStyle = 'fields',
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
 > extends Config<{
+    responseStyle: TResponseStyle;
     throwOnError: ThrowOnError;
   }> {
   /**
@@ -69,34 +79,50 @@ export type RequestResult<
   TData = unknown,
   TError = unknown,
   ThrowOnError extends boolean = boolean,
+  TResponseStyle extends ResponseStyle = 'fields',
 > = ThrowOnError extends true
-  ? Promise<{
-      data: TData extends Record<string, unknown> ? TData[keyof TData] : TData;
-      request: Request;
-      response: Response;
-    }>
-  : Promise<
-      (
-        | {
+  ? Promise<
+      TResponseStyle extends 'data'
+        ? TData extends Record<string, unknown>
+          ? TData[keyof TData]
+          : TData
+        : {
             data: TData extends Record<string, unknown>
               ? TData[keyof TData]
               : TData;
-            error: undefined;
+            request: Request;
+            response: Response;
           }
-        | {
-            data: undefined;
-            error: TError extends Record<string, unknown>
-              ? TError[keyof TError]
-              : TError;
+    >
+  : Promise<
+      TResponseStyle extends 'data'
+        ?
+            | (TData extends Record<string, unknown>
+                ? TData[keyof TData]
+                : TData)
+            | undefined
+        : (
+            | {
+                data: TData extends Record<string, unknown>
+                  ? TData[keyof TData]
+                  : TData;
+                error: undefined;
+              }
+            | {
+                data: undefined;
+                error: TError extends Record<string, unknown>
+                  ? TError[keyof TError]
+                  : TError;
+              }
+          ) & {
+            request: Request;
+            response: Response;
           }
-      ) & {
-        request: Request;
-        response: Response;
-      }
     >;
 
 export interface ClientOptions {
   baseUrl?: string;
+  responseStyle?: ResponseStyle;
   throwOnError?: boolean;
 }
 
@@ -104,18 +130,20 @@ type MethodFn = <
   TData = unknown,
   TError = unknown,
   ThrowOnError extends boolean = false,
+  TResponseStyle extends ResponseStyle = 'fields',
 >(
-  options: Omit<RequestOptions<ThrowOnError>, 'method'>,
-) => RequestResult<TData, TError, ThrowOnError>;
+  options: Omit<RequestOptions<TResponseStyle, ThrowOnError>, 'method'>,
+) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
 
 type RequestFn = <
   TData = unknown,
   TError = unknown,
   ThrowOnError extends boolean = false,
+  TResponseStyle extends ResponseStyle = 'fields',
 >(
-  options: Omit<RequestOptions<ThrowOnError>, 'method'> &
-    Pick<Required<RequestOptions<ThrowOnError>>, 'method'>,
-) => RequestResult<TData, TError, ThrowOnError>;
+  options: Omit<RequestOptions<TResponseStyle, ThrowOnError>, 'method'> &
+    Pick<Required<RequestOptions<TResponseStyle, ThrowOnError>>, 'method'>,
+) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
 
 type BuildUrlFn = <
   TData extends {
@@ -157,20 +185,32 @@ type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 export type Options<
   TData extends TDataShape = TDataShape,
   ThrowOnError extends boolean = boolean,
-> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> &
+  TResponseStyle extends ResponseStyle = 'fields',
+> = OmitKeys<
+  RequestOptions<TResponseStyle, ThrowOnError>,
+  'body' | 'path' | 'query' | 'url'
+> &
   Omit<TData, 'url'>;
 
 export type OptionsLegacyParser<
   TData = unknown,
   ThrowOnError extends boolean = boolean,
+  TResponseStyle extends ResponseStyle = 'fields',
 > = TData extends { body?: any }
   ? TData extends { headers?: any }
-    ? OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'headers' | 'url'> & TData
-    : OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'url'> &
+    ? OmitKeys<
+        RequestOptions<TResponseStyle, ThrowOnError>,
+        'body' | 'headers' | 'url'
+      > &
+        TData
+    : OmitKeys<RequestOptions<TResponseStyle, ThrowOnError>, 'body' | 'url'> &
         TData &
-        Pick<RequestOptions<ThrowOnError>, 'headers'>
+        Pick<RequestOptions<TResponseStyle, ThrowOnError>, 'headers'>
   : TData extends { headers?: any }
-    ? OmitKeys<RequestOptions<ThrowOnError>, 'headers' | 'url'> &
+    ? OmitKeys<
+        RequestOptions<TResponseStyle, ThrowOnError>,
+        'headers' | 'url'
+      > &
         TData &
-        Pick<RequestOptions<ThrowOnError>, 'body'>
-    : OmitKeys<RequestOptions<ThrowOnError>, 'url'> & TData;
+        Pick<RequestOptions<TResponseStyle, ThrowOnError>, 'body'>
+    : OmitKeys<RequestOptions<TResponseStyle, ThrowOnError>, 'url'> & TData;
