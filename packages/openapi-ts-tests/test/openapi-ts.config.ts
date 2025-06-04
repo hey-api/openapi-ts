@@ -51,7 +51,7 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'type-format.yaml'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.json'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -93,7 +93,8 @@ export default defineConfig(() => {
         // bundle: true,
         // bundleSource_EXPERIMENTAL: true,
         // exportFromIndex: true,
-        name: '@hey-api/client-fetch',
+        name: '@hey-api/client-axios',
+        // name: '@hey-api/client-fetch',
         // strictBaseUrl: true,
       },
       {
@@ -107,6 +108,7 @@ export default defineConfig(() => {
         // include...
         name: '@hey-api/sdk',
         // operationId: false,
+        responseStyle: 'data',
         // serviceNameBuilder: '{{name}}',
         // throwOnError: true,
         // transformer: '@hey-api/transformers',
@@ -135,7 +137,7 @@ export default defineConfig(() => {
       },
       {
         exportFromIndex: true,
-        // name: '@tanstack/vue-query',
+        name: '@tanstack/react-query',
       },
       {
         // comments: false,
