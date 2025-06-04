@@ -623,10 +623,12 @@ const objectTypeToIdentifier = ({
 
 const stringTypeToIdentifier = ({
   context,
+  plugin,
   schema,
 }: {
   context: IR.Context;
   namespace: Array<ts.Statement>;
+  plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'string'>;
 }): ts.TypeNode => {
   if (schema.const !== undefined) {
@@ -654,6 +656,20 @@ const stringTypeToIdentifier = ({
       if (context.config.plugins['@hey-api/transformers']?.dates) {
         return compiler.typeReferenceNode({ typeName: 'Date' });
       }
+    }
+
+    if (schema.format === 'typeid' && schema.example && plugin.typeids) {
+      const type = String(schema.example).split('_')[0]!;
+      return compiler.typeReferenceNode({
+        typeArguments: [
+          compiler.literalTypeNode({
+            literal: compiler.stringLiteral({
+              text: type,
+            }),
+          }),
+        ],
+        typeName: 'TypeID',
+      });
     }
   }
 
@@ -769,6 +785,7 @@ const schemaTypeToIdentifier = ({
       return stringTypeToIdentifier({
         context,
         namespace,
+        plugin,
         schema: schema as SchemaWithType<'string'>,
       });
     case 'tuple':
@@ -1271,6 +1288,31 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     create: true,
     namespace: 'type',
   });
+
+  if (plugin.typeids) {
+    const typeParameter = compiler.typeParameterDeclaration({
+      constraint: compiler.keywordTypeNode({
+        keyword: 'string',
+      }),
+      name: 'T',
+    });
+    const node = compiler.typeAliasDeclaration({
+      name: 'TypeID',
+      type: compiler.templateLiteralType({
+        value: [
+          compiler.typeReferenceNode({
+            typeName: 'T',
+          }),
+          '_',
+          compiler.keywordTypeNode({
+            keyword: 'string',
+          }),
+        ],
+      }),
+      typeParameters: [typeParameter],
+    });
+    file.add(node);
+  }
 
   context.subscribe('schema', ({ $ref, schema }) => {
     if (
