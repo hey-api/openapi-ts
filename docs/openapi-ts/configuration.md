@@ -474,6 +474,101 @@ export default {
 };
 ```
 
+## Patch Schemas
+
+If you need to modify schemas in your OpenAPI specification before code generation, you can use `input.patch.schemas` to apply custom transformations to specific schemas.
+
+You can provide patch functions for individual schemas by their names. Each function receives the schema object and can modify it directly.
+
+::: code-group
+
+```js [date-time to timestamp]
+export default {
+  input: {
+    patch: {
+      schemas: {
+        UserResponseDto: (schema) => {
+          // Convert date-time format to timestamp
+          if (schema.properties?.updatedAt) {
+            delete schema.properties.updatedAt.format;
+            schema.properties.updatedAt.type = 'number';
+          }
+        },
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+```js [add properties]
+export default {
+  input: {
+    patch: {
+      schemas: {
+        ProductModel: (schema) => {
+          // Add metadata property
+          schema.properties.metadata = {
+            type: 'object',
+            additionalProperties: true,
+          };
+          schema.required = ['id'];
+        },
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+```js [remove properties]
+export default {
+  input: {
+    patch: {
+      schemas: {
+        ApiResponseDto: (schema) => {
+          // Remove internal fields
+          delete schema.properties.internalField;
+        },
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+```ts [typescript]
+import { defineConfig, type OpenApiSchemaObject } from '@hey-api/openapi-ts';
+
+export default defineConfig({
+  input: {
+    patch: {
+      schemas: {
+        ApiResponseDto: (schema: OpenApiSchemaObject.V3_1_X) => {
+          if (typeof schema.properties?.updatedAt === 'object') {
+            delete schema.properties.updatedAt.format;
+            schema.properties.updatedAt.type = 'number';
+          }
+        },
+      },
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+});
+```
+
+:::
+
+Patch functions work with both OpenAPI v3.x schemas (in `components.schemas`) and Swagger v2.0 schemas (in `definitions`).
+
 ## Watch Mode
 
 ::: warning

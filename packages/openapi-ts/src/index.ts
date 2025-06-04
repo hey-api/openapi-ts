@@ -99,7 +99,7 @@ export const defineConfig = async (config: Configs): Promise<UserConfig> =>
 
 export { defaultPlugins } from './initConfigs';
 export type { IR } from './ir/types';
-export type { OpenApi } from './openApi/types';
+export type { OpenApi, OpenApiSchemaObject } from './openApi/types';
 export { clientDefaultConfig } from './plugins/@hey-api/client-core/config';
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
 export type { Client } from './plugins/@hey-api/client-core/types';
