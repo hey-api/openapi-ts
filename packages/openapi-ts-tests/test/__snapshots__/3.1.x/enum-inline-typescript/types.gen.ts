@@ -16,7 +16,7 @@ export type GetFooData = {
     url: '/foo';
 };
 
-export enum Foo {
+export enum Foo2 {
     FOO = 'foo',
     BAR = 'bar'
 }
@@ -39,7 +39,7 @@ export type PostFooData = {
     url: '/foo';
 };
 
-export enum Foo2 {
+export enum Foo3 {
     BAZ = 'baz'
 }
 

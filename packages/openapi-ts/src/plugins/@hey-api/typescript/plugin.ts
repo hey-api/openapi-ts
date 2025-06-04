@@ -278,22 +278,6 @@ const addTypeScriptEnum = ({
   schema: SchemaWithType<'enum'>;
   state: State | undefined;
 }) => {
-  const file = context.file({ id: typesId })!;
-  const identifier = file.identifier({
-    $ref,
-    create: true,
-    namespace: 'value',
-  });
-
-  // TODO: parser - this is the old parser behavior where we would NOT
-  // print nested enum identifiers if they already exist. This is a
-  // blocker for referencing these identifiers within the file as
-  // we cannot guarantee just because they have a duplicate identifier,
-  // they have a duplicate value.
-  if (!identifier.created && plugin.enums !== 'typescript+namespace') {
-    return;
-  }
-
   const enumObject = schemaToEnumObject({ plugin, schema });
 
   // TypeScript enums support only string and number values so we need to fallback to types
@@ -310,6 +294,22 @@ const addTypeScriptEnum = ({
       state,
     });
     return node;
+  }
+
+  const file = context.file({ id: typesId })!;
+  const identifier = file.identifier({
+    $ref,
+    create: true,
+    namespace: 'enum',
+  });
+
+  // TODO: parser - this is the old parser behavior where we would NOT
+  // print nested enum identifiers if they already exist. This is a
+  // blocker for referencing these identifiers within the file as
+  // we cannot guarantee just because they have a duplicate identifier,
+  // they have a duplicate value.
+  if (!identifier.created && plugin.enums !== 'typescript+namespace') {
+    return;
   }
 
   const node = compiler.enumDeclaration({
