@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.70.0
+
+### Minor Changes
+
+- [#2123](https://github.com/hey-api/openapi-ts/pull/2123) [`4d8c030`](https://github.com/hey-api/openapi-ts/commit/4d8c03038979c9a75315cc158789b3c198c62f90) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): add responseStyle option
+
+  **BREAKING**: Update your client to the latest version.
+
+### Patch Changes
+
+- [#2116](https://github.com/hey-api/openapi-ts/pull/2116) [`21ddf25`](https://github.com/hey-api/openapi-ts/commit/21ddf252fd556827240334a8f1f8cf3bae8ff5da) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): ensure generated enum uses unique namespace to avoid conflicts with non-enum declarations
+
+- [#2116](https://github.com/hey-api/openapi-ts/pull/2116) [`08f3f89`](https://github.com/hey-api/openapi-ts/commit/08f3f898a8b5939a9e6eed70f6424d2bc5084da8) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): handle duplicate inline enum names
+
 ## 0.69.2
 
 ### Patch Changes
