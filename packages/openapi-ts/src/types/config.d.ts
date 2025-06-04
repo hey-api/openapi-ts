@@ -1,3 +1,4 @@
+import type { OpenApiSchemaObject } from '../openApi/types';
 import type { ClientPlugins, UserPlugins } from '../plugins';
 import type { ArrayOfObjectsToObjectMap, ExtractArrayOfObjects } from './utils';
 
@@ -215,6 +216,56 @@ interface Input {
      * @default ['after', 'before', 'cursor', 'offset', 'page', 'start']
      */
     keywords?: ReadonlyArray<string>;
+  };
+  patch?: {
+    /**
+     * Apply custom transformations to schemas after parsing the OpenAPI specification.
+     * This allows you to modify, fix, or enhance schema definitions before code generation.
+     *
+     * Each function receives the schema object and can modify it in place. Common use cases
+     * include fixing incorrect data types, removing unwanted properties, adding missing
+     * fields, or standardizing date/time formats.
+     *
+     * Works with both OpenAPI v2 (Swagger) and v3.x specifications, automatically
+     * detecting the correct schema location (`definitions` for v2, `components.schemas` for v3).
+     *
+     * @example
+     * ```js
+     * patch: {
+     *   schemas: {
+     *     // Fix date-time format issues
+     *     'UserResponseDto': (schema) => {
+     *       if (schema.properties?.updatedAt) {
+     *         delete schema.properties.updatedAt.format;
+     *         schema.properties.updatedAt.type = 'number';
+     *       }
+     *     },
+     *     // Add missing required fields
+     *     'ProductModel': (schema) => {
+     *       schema.required = ['id', 'name'];
+     *       schema.properties.metadata = {
+     *         type: 'object',
+     *         additionalProperties: true
+     *       };
+     *     },
+     *     // Remove internal fields
+     *     'PublicApiModel': (schema) => {
+     *       delete schema.properties.internalId;
+     *       delete schema.properties.secretKey;
+     *     }
+     *   }
+     * }
+     * ```
+     */
+    schemas?: Record<
+      string,
+      (
+        schema:
+          | OpenApiSchemaObject.V2_0_X
+          | OpenApiSchemaObject.V3_0_X
+          | OpenApiSchemaObject.V3_1_X,
+      ) => void
+    >;
   };
   /**
    * Path to the OpenAPI specification. This can be either local or remote path.
