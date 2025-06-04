@@ -2,11 +2,11 @@ import path from 'node:path';
 
 import colors from 'ansi-colors';
 
-import { fixSchema } from './fixSchema';
 import { generateLegacyOutput, generateOutput } from './generate/output';
 import { getSpec } from './getSpec';
 import type { IR } from './ir/types';
 import { parseLegacy, parseOpenApiSpec } from './openApi';
+import { patchSchemas } from './patchSchemas';
 import { processOutput } from './processOutput';
 import type { Client } from './types/client';
 import type { Config } from './types/config';
@@ -213,10 +213,10 @@ export const createClient = async ({
   });
   Performance.end('spec');
 
-  if (config.input.fix) {
-    Performance.start('fix');
-    fixSchema({ data, fix: config.input.fix });
-    Performance.end('fix');
+  if (config.input.patch) {
+    Performance.start('patch');
+    patchSchemas({ data, patch: config.input.patch });
+    Performance.end('patch');
   }
 
   // throw on first run if there's an error to preserve user experience
