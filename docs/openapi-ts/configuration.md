@@ -474,19 +474,19 @@ export default {
 };
 ```
 
-## Fix Schema
+## Patch Schemas
 
-If you need to modify schemas in your OpenAPI specification before code generation, you can use `input.fix.schema` to apply custom transformations to specific schemas.
+If you need to modify schemas in your OpenAPI specification before code generation, you can use `input.patch.schemas` to apply custom transformations to specific schemas.
 
-You can provide fix functions for individual schemas by their names. Each function receives the schema object and can modify it directly.
+You can provide patch functions for individual schemas by their names. Each function receives the schema object and can modify it directly.
 
 ::: code-group
 
 ```js [date-time to timestamp]
 export default {
   input: {
-    fix: {
-      schema: {
+    patch: {
+      schemas: {
         UserResponseDto: (schema) => {
           // Convert date-time format to timestamp
           if (schema.properties?.updatedAt) {
@@ -506,8 +506,8 @@ export default {
 ```js [add properties]
 export default {
   input: {
-    fix: {
-      schema: {
+    patch: {
+      schemas: {
         ProductModel: (schema) => {
           // Add metadata property
           schema.properties.metadata = {
@@ -528,8 +528,8 @@ export default {
 ```js [remove properties]
 export default {
   input: {
-    fix: {
-      schema: {
+    patch: {
+      schemas: {
         ApiResponseDto: (schema) => {
           // Remove internal fields
           delete schema.properties.internalField;
@@ -548,8 +548,8 @@ import { defineConfig, type OpenApiSchemaObject } from '@hey-api/openapi-ts';
 
 export default defineConfig({
   input: {
-    fix: {
-      schema: {
+    patch: {
+      schemas: {
         ApiResponseDto: (schema: OpenApiSchemaObject.V3_1_X) => {
           if (typeof schema.properties?.updatedAt === 'object') {
             delete schema.properties.updatedAt.format;
@@ -567,7 +567,7 @@ export default defineConfig({
 
 :::
 
-Fix functions work with both OpenAPI v3.x schemas (in `components.schemas`) and Swagger v2.0 schemas (in `definitions`).
+Patch functions work with both OpenAPI v3.x schemas (in `components.schemas`) and Swagger v2.0 schemas (in `definitions`).
 
 ## Watch Mode
 

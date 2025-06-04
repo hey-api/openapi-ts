@@ -1,17 +1,17 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { fixSchema } from '../fixSchema';
 import type { OpenApi } from '../openApi/types';
+import { patchSchemas } from '../patchSchemas';
 
-describe('fixSchema', () => {
+describe('patchSchemas', () => {
   describe('edge cases', () => {
     it('should return early when data is null', () => {
       const fixFn = vi.fn();
 
-      fixSchema({
+      patchSchemas({
         data: null,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             TestSchema: fixFn,
           },
         },
@@ -23,10 +23,10 @@ describe('fixSchema', () => {
     it('should return early when data is undefined', () => {
       const fixFn = vi.fn();
 
-      fixSchema({
+      patchSchemas({
         data: undefined,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             TestSchema: fixFn,
           },
         },
@@ -51,7 +51,7 @@ describe('fixSchema', () => {
         openapi: '3.1.0',
       };
 
-      fixSchema({ data: mockSpec });
+      patchSchemas({ data: mockSpec });
 
       expect(mockSpec.components?.schemas?.TestSchema).toEqual({
         properties: {
@@ -78,9 +78,9 @@ describe('fixSchema', () => {
         openapi: '3.1.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {},
+        patch: {},
       });
 
       expect(fixFn).not.toHaveBeenCalled();
@@ -106,10 +106,10 @@ describe('fixSchema', () => {
         openapi: '3.1.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             TestSchema: fixFn,
           },
         },
@@ -141,10 +141,10 @@ describe('fixSchema', () => {
         openapi: '3.1.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             TestSchema: (schema: any) => {
               if (schema.properties?.updatedAt) {
                 delete schema.properties.updatedAt.format;
@@ -184,10 +184,10 @@ describe('fixSchema', () => {
         openapi: '3.1.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             ProductSchema: fixFn2,
             UserSchema: fixFn1,
           },
@@ -223,10 +223,10 @@ describe('fixSchema', () => {
         openapi: '3.1.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             TestSchema: fixFn,
           },
         },
@@ -246,10 +246,10 @@ describe('fixSchema', () => {
         openapi: '3.1.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             TestSchema: fixFn,
           },
         },
@@ -266,10 +266,10 @@ describe('fixSchema', () => {
         openapi: '3.1.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             TestSchema: fixFn,
           },
         },
@@ -296,10 +296,10 @@ describe('fixSchema', () => {
         openapi: '3.1.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             NumberSchema: fixFn,
             StringSchema: fixFn,
             TestSchema: fixFn,
@@ -334,10 +334,10 @@ describe('fixSchema', () => {
         swagger: '2.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             TestModel: fixFn,
           },
         },
@@ -368,10 +368,10 @@ describe('fixSchema', () => {
         swagger: '2.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             TestModel: (schema: any) => {
               if (schema.properties?.timestamp) {
                 delete schema.properties.timestamp.format;
@@ -399,10 +399,10 @@ describe('fixSchema', () => {
         swagger: '2.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             TestModel: fixFn,
           },
         },
@@ -430,10 +430,10 @@ describe('fixSchema', () => {
         swagger: '2.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             Product: fixFn2,
             User: fixFn1,
           },
@@ -466,10 +466,10 @@ describe('fixSchema', () => {
         swagger: '2.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             InvalidModel: fixFn,
             StringModel: fixFn,
             ValidModel: fixFn,
@@ -507,10 +507,10 @@ describe('fixSchema', () => {
         openapi: '3.1.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             ChatAgentSkinItemAdminResponseDto: (schema: any) => {
               if (typeof schema.properties?.updatedAt === 'object') {
                 delete schema.properties.updatedAt.format;
@@ -551,10 +551,10 @@ describe('fixSchema', () => {
         openapi: '3.1.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             UserModel: (schema: any) => {
               schema.properties.metadata = {
                 additionalProperties: true,
@@ -597,10 +597,10 @@ describe('fixSchema', () => {
         openapi: '3.1.0',
       };
 
-      fixSchema({
+      patchSchemas({
         data: mockSpec,
-        fix: {
-          schema: {
+        patch: {
+          schemas: {
             UserModel: (schema: any) => {
               delete schema.properties.internalField;
             },
