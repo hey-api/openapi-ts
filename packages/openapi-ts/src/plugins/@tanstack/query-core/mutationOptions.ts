@@ -1,3 +1,5 @@
+import type ts from 'typescript';
+
 import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
@@ -69,6 +71,50 @@ export const createMutationOptions = ({
   // TODO: better types syntax
   const mutationType = `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`;
 
+  const awaitSdkExpression = compiler.awaitExpression({
+    expression: compiler.callExpression({
+      functionName: queryFn,
+      parameters: [
+        compiler.objectExpression({
+          multiLine: true,
+          obj: [
+            {
+              spread: 'options',
+            },
+            {
+              spread: 'localOptions',
+            },
+            {
+              key: 'throwOnError',
+              value: true,
+            },
+          ],
+        }),
+      ],
+    }),
+  });
+
+  const statements: Array<ts.Statement> = [];
+
+  if (context.config.plugins['@hey-api/sdk']?.responseStyle === 'data') {
+    statements.push(
+      compiler.returnVariable({
+        expression: awaitSdkExpression,
+      }),
+    );
+  } else {
+    statements.push(
+      compiler.constVariable({
+        destructure: true,
+        expression: awaitSdkExpression,
+        name: 'data',
+      }),
+      compiler.returnVariable({
+        expression: 'data',
+      }),
+    );
+  }
+
   const expression = compiler.arrowFunction({
     parameters: [
       {
@@ -92,37 +138,7 @@ export const createMutationOptions = ({
                     name: 'localOptions',
                   },
                 ],
-                statements: [
-                  compiler.constVariable({
-                    destructure: true,
-                    expression: compiler.awaitExpression({
-                      expression: compiler.callExpression({
-                        functionName: queryFn,
-                        parameters: [
-                          compiler.objectExpression({
-                            multiLine: true,
-                            obj: [
-                              {
-                                spread: 'options',
-                              },
-                              {
-                                spread: 'localOptions',
-                              },
-                              {
-                                key: 'throwOnError',
-                                value: true,
-                              },
-                            ],
-                          }),
-                        ],
-                      }),
-                    }),
-                    name: 'data',
-                  }),
-                  compiler.returnVariable({
-                    expression: 'data',
-                  }),
-                ],
+                statements,
               }),
             },
           ],

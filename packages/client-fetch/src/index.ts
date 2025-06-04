@@ -8,6 +8,7 @@ export type {
   OptionsLegacyParser,
   RequestOptions,
   RequestResult,
+  ResponseStyle,
   TDataShape,
 } from './types';
 export { createConfig } from './utils';

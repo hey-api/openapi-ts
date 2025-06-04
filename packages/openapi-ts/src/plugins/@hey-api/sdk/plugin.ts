@@ -417,6 +417,13 @@ const operationStatements = ({
     });
   }
 
+  if (plugin.responseStyle === 'data') {
+    requestOptions.push({
+      key: 'responseStyle',
+      value: plugin.responseStyle,
+    });
+  }
+
   requestOptions.push({
     key: 'url',
     value: operation.path,
@@ -474,6 +481,22 @@ const operationStatements = ({
     name: 'client',
   });
 
+  const types: Array<string | ts.StringLiteral> = [];
+  if (isNuxtClient) {
+    types.push(
+      nuxtTypeComposable,
+      `${responseType} | ${nuxtTypeDefault}`,
+      errorType,
+      nuxtTypeDefault,
+    );
+  } else {
+    types.push(responseType, errorType, 'ThrowOnError');
+  }
+
+  if (plugin.responseStyle === 'data') {
+    types.push(compiler.stringLiteral({ text: plugin.responseStyle }));
+  }
+
   return [
     compiler.returnFunctionCall({
       args: [
@@ -492,14 +515,7 @@ const operationStatements = ({
           : optionsClient,
         name: compiler.identifier({ text: operation.method }),
       }),
-      types: isNuxtClient
-        ? [
-            nuxtTypeComposable,
-            `${responseType} | ${nuxtTypeDefault}`,
-            errorType,
-            nuxtTypeDefault,
-          ]
-        : [responseType, errorType, 'ThrowOnError'],
+      types,
     }),
   ];
 };

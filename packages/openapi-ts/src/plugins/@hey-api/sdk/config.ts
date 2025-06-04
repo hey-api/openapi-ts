@@ -38,6 +38,11 @@ export const defaultConfig: Plugin.Config<Config> = {
 
       context.ensureDependency(config.validator);
     }
+
+    // TODO: add responseStyle field to all clients
+    if (config.client !== '@hey-api/client-fetch') {
+      config.responseStyle = 'fields';
+    }
   },
   asClass: false,
   auth: true,
@@ -47,6 +52,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   operationId: true,
   output: 'sdk',
   response: 'body',
+  responseStyle: 'fields',
   serviceNameBuilder: '{{name}}Service',
 };
 

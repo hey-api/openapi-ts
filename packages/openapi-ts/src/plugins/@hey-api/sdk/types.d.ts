@@ -70,6 +70,14 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   output?: string;
   /**
+   * **This feature works only with the Fetch client**
+   *
+   * Should we return only data or multiple fields (data, error, response, etc.)?
+   *
+   * @default 'fields'
+   */
+  responseStyle?: 'data' | 'fields';
+  /**
    * Customize the generated service class names. The name variable is
    * obtained from your OpenAPI specification tags.
    *
