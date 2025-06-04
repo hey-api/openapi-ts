@@ -31,7 +31,6 @@ export const createClient = (config: Config = {}): Client => {
     RequestOptions
   >();
 
-  // @ts-expect-error
   const request: Client['request'] = async (options) => {
     const opts = {
       ..._config,
@@ -91,10 +90,12 @@ export const createClient = (config: Config = {}): Client => {
         response.status === 204 ||
         response.headers.get('Content-Length') === '0'
       ) {
-        return {
-          data: {},
-          ...result,
-        };
+        return opts.responseStyle === 'data'
+          ? {}
+          : {
+              data: {},
+              ...result,
+            };
       }
 
       const parseAs =
@@ -103,10 +104,12 @@ export const createClient = (config: Config = {}): Client => {
           : opts.parseAs) ?? 'json';
 
       if (parseAs === 'stream') {
-        return {
-          data: response.body,
-          ...result,
-        };
+        return opts.responseStyle === 'data'
+          ? response.body
+          : {
+              data: response.body,
+              ...result,
+            };
       }
 
       let data = await response[parseAs]();
@@ -120,10 +123,12 @@ export const createClient = (config: Config = {}): Client => {
         }
       }
 
-      return {
-        data,
-        ...result,
-      };
+      return opts.responseStyle === 'data'
+        ? data
+        : {
+            data,
+            ...result,
+          };
     }
 
     let error = await response.text();
@@ -148,10 +153,13 @@ export const createClient = (config: Config = {}): Client => {
       throw finalError;
     }
 
-    return {
-      error: finalError,
-      ...result,
-    };
+    // TODO: we probably want to return error and improve types
+    return opts.responseStyle === 'data'
+      ? undefined
+      : {
+          error: finalError,
+          ...result,
+        };
   };
 
   return {

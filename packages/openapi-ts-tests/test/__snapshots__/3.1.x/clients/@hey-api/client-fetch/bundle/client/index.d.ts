@@ -128,6 +128,7 @@ interface Middleware<Req, Res, Err, Options> {
 }
 declare const createConfig: <T extends ClientOptions = ClientOptions>(override?: Config<Omit<ClientOptions, keyof T> & T>) => Config<Omit<ClientOptions, keyof T> & T>;
 
+type ResponseStyle = 'data' | 'fields';
 interface Config<T extends ClientOptions = ClientOptions> extends Omit<RequestInit, 'body' | 'headers' | 'method'>, Config$1 {
     /**
      * Base URL for all requests made by this client.
@@ -157,13 +158,20 @@ interface Config<T extends ClientOptions = ClientOptions> extends Omit<RequestIn
      */
     parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'auto' | 'stream';
     /**
+     * Should we return only data or multiple fields (data, error, response, etc.)?
+     *
+     * @default 'fields'
+     */
+    responseStyle?: ResponseStyle;
+    /**
      * Throw an error instead of returning it in the response?
      *
      * @default false
      */
     throwOnError?: T['throwOnError'];
 }
-interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends string = string> extends Config<{
+interface RequestOptions<TResponseStyle extends ResponseStyle = 'fields', ThrowOnError extends boolean = boolean, Url extends string = string> extends Config<{
+    responseStyle: TResponseStyle;
     throwOnError: ThrowOnError;
 }> {
     /**
@@ -180,11 +188,11 @@ interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends str
     security?: ReadonlyArray<Auth>;
     url: Url;
 }
-type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boolean = boolean> = ThrowOnError extends true ? Promise<{
+type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boolean = boolean, TResponseStyle extends ResponseStyle = 'fields'> = ThrowOnError extends true ? Promise<TResponseStyle extends 'data' ? TData extends Record<string, unknown> ? TData[keyof TData] : TData : {
     data: TData extends Record<string, unknown> ? TData[keyof TData] : TData;
     request: Request;
     response: Response;
-}> : Promise<({
+}> : Promise<TResponseStyle extends 'data' ? (TData extends Record<string, unknown> ? TData[keyof TData] : TData) | undefined : ({
     data: TData extends Record<string, unknown> ? TData[keyof TData] : TData;
     error: undefined;
 } | {
@@ -196,10 +204,11 @@ type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boole
 }>;
 interface ClientOptions {
     baseUrl?: string;
+    responseStyle?: ResponseStyle;
     throwOnError?: boolean;
 }
-type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions<ThrowOnError>, 'method'>) => RequestResult<TData, TError, ThrowOnError>;
-type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions<ThrowOnError>, 'method'> & Pick<Required<RequestOptions<ThrowOnError>>, 'method'>) => RequestResult<TData, TError, ThrowOnError>;
+type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false, TResponseStyle extends ResponseStyle = 'fields'>(options: Omit<RequestOptions<TResponseStyle, ThrowOnError>, 'method'>) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
+type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false, TResponseStyle extends ResponseStyle = 'fields'>(options: Omit<RequestOptions<TResponseStyle, ThrowOnError>, 'method'> & Pick<Required<RequestOptions<TResponseStyle, ThrowOnError>>, 'method'>) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
 type BuildUrlFn = <TData extends {
     body?: unknown;
     path?: Record<string, unknown>;
@@ -226,15 +235,15 @@ interface TDataShape {
     url: string;
 }
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
-type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
-type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean> = TData extends {
+type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponseStyle extends ResponseStyle = 'fields'> = OmitKeys<RequestOptions<TResponseStyle, ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
+type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean, TResponseStyle extends ResponseStyle = 'fields'> = TData extends {
     body?: any;
 } ? TData extends {
     headers?: any;
-} ? OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'headers' | 'url'> & TData : OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'url'> & TData & Pick<RequestOptions<ThrowOnError>, 'headers'> : TData extends {
+} ? OmitKeys<RequestOptions<TResponseStyle, ThrowOnError>, 'body' | 'headers' | 'url'> & TData : OmitKeys<RequestOptions<TResponseStyle, ThrowOnError>, 'body' | 'url'> & TData & Pick<RequestOptions<TResponseStyle, ThrowOnError>, 'headers'> : TData extends {
     headers?: any;
-} ? OmitKeys<RequestOptions<ThrowOnError>, 'headers' | 'url'> & TData & Pick<RequestOptions<ThrowOnError>, 'body'> : OmitKeys<RequestOptions<ThrowOnError>, 'url'> & TData;
+} ? OmitKeys<RequestOptions<TResponseStyle, ThrowOnError>, 'headers' | 'url'> & TData & Pick<RequestOptions<TResponseStyle, ThrowOnError>, 'body'> : OmitKeys<RequestOptions<TResponseStyle, ThrowOnError>, 'url'> & TData;
 
 declare const createClient: (config?: Config) => Client;
 
-export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type ResponseStyle, type TDataShape, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

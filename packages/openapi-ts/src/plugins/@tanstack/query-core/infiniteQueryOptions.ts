@@ -332,6 +332,106 @@ export const createInfiniteQueryOptions = ({
     namespace: 'value',
   });
 
+  const awaitSdkExpression = compiler.awaitExpression({
+    expression: compiler.callExpression({
+      functionName: queryFn,
+      parameters: [
+        compiler.objectExpression({
+          multiLine: true,
+          obj: [
+            {
+              spread: 'options',
+            },
+            {
+              spread: 'params',
+            },
+            {
+              key: 'signal',
+              shorthand: true,
+              value: compiler.identifier({
+                text: 'signal',
+              }),
+            },
+            {
+              key: 'throwOnError',
+              value: true,
+            },
+          ],
+        }),
+      ],
+    }),
+  });
+
+  const statements: Array<ts.Statement> = [
+    compiler.constVariable({
+      comment: [
+        {
+          jsdoc: false,
+          lines: ['@ts-ignore'],
+        },
+      ],
+      expression: compiler.conditionalExpression({
+        condition: compiler.binaryExpression({
+          left: compiler.typeOfExpression({
+            text: 'pageParam',
+          }),
+          operator: '===',
+          right: compiler.ots.string('object'),
+        }),
+        whenFalse: compiler.objectExpression({
+          multiLine: true,
+          obj: [
+            {
+              key: pagination.in,
+              value: compiler.objectExpression({
+                multiLine: true,
+                obj: [
+                  {
+                    key: pagination.name,
+                    value: compiler.identifier({
+                      text: 'pageParam',
+                    }),
+                  },
+                ],
+              }),
+            },
+          ],
+        }),
+        whenTrue: compiler.identifier({
+          text: 'pageParam',
+        }),
+      }),
+      name: 'page',
+      typeName: typePageObjectParam,
+    }),
+    compiler.constVariable({
+      expression: compiler.callExpression({
+        functionName: createInfiniteParamsFn,
+        parameters: ['queryKey', 'page'],
+      }),
+      name: 'params',
+    }),
+  ];
+
+  if (context.config.plugins['@hey-api/sdk']?.responseStyle === 'data') {
+    statements.push(
+      compiler.returnVariable({
+        expression: awaitSdkExpression,
+      }),
+    );
+  } else {
+    statements.push(
+      compiler.constVariable({
+        destructure: true,
+        expression: awaitSdkExpression,
+        name: 'data',
+      }),
+      compiler.returnVariable({
+        expression: 'data',
+      }),
+    );
+  }
+
   const statement = compiler.constVariable({
     comment: plugin.comments
       ? createOperationComment({ operation })
@@ -376,92 +476,7 @@ export const createInfiniteQueryOptions = ({
                         ],
                       },
                     ],
-                    statements: [
-                      compiler.constVariable({
-                        comment: [
-                          {
-                            jsdoc: false,
-                            lines: ['@ts-ignore'],
-                          },
-                        ],
-                        expression: compiler.conditionalExpression({
-                          condition: compiler.binaryExpression({
-                            left: compiler.typeOfExpression({
-                              text: 'pageParam',
-                            }),
-                            operator: '===',
-                            right: compiler.ots.string('object'),
-                          }),
-                          whenFalse: compiler.objectExpression({
-                            multiLine: true,
-                            obj: [
-                              {
-                                key: pagination.in,
-                                value: compiler.objectExpression({
-                                  multiLine: true,
-                                  obj: [
-                                    {
-                                      key: pagination.name,
-                                      value: compiler.identifier({
-                                        text: 'pageParam',
-                                      }),
-                                    },
-                                  ],
-                                }),
-                              },
-                            ],
-                          }),
-                          whenTrue: compiler.identifier({
-                            text: 'pageParam',
-                          }),
-                        }),
-                        name: 'page',
-                        typeName: typePageObjectParam,
-                      }),
-                      compiler.constVariable({
-                        expression: compiler.callExpression({
-                          functionName: createInfiniteParamsFn,
-                          parameters: ['queryKey', 'page'],
-                        }),
-                        name: 'params',
-                      }),
-                      compiler.constVariable({
-                        destructure: true,
-                        expression: compiler.awaitExpression({
-                          expression: compiler.callExpression({
-                            functionName: queryFn,
-                            parameters: [
-                              compiler.objectExpression({
-                                multiLine: true,
-                                obj: [
-                                  {
-                                    spread: 'options',
-                                  },
-                                  {
-                                    spread: 'params',
-                                  },
-                                  {
-                                    key: 'signal',
-                                    shorthand: true,
-                                    value: compiler.identifier({
-                                      text: 'signal',
-                                    }),
-                                  },
-                                  {
-                                    key: 'throwOnError',
-                                    value: true,
-                                  },
-                                ],
-                              }),
-                            ],
-                          }),
-                        }),
-                        name: 'data',
-                      }),
-                      compiler.returnVariable({
-                        expression: 'data',
-                      }),
-                    ],
+                    statements,
                   }),
                 },
                 {
