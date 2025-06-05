@@ -24,6 +24,7 @@ export type FunctionParameter =
     }
   | {
       destructure: ReadonlyArray<FunctionParameter>;
+      type?: any | ts.TypeNode;
     };
 
 export interface FunctionTypeParameter {
@@ -225,6 +226,10 @@ export const toParameterDeclarations = (
             })
             .filter(Boolean) as ts.BindingElement[],
         ),
+        type:
+          parameter.type !== undefined
+            ? createTypeNode(parameter.type)
+            : undefined,
       });
     }
 

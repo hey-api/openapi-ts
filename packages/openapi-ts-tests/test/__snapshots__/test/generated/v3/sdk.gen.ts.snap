@@ -5,7 +5,7 @@ import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
 import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, PatchApiNoTagResponse, ImportData, ImportResponse, FooWowResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DeprecatedCallData, CallWithDescriptionsData, TestErrorCodeData, TestErrorCodeResponse, FileResponseData, FileResponseResponse, PostApiFormDataData, CallWithResultFromHeaderResponse, MultipartRequestData, MultipartResponseResponse, DummyAResponse, DummyBResponse, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, ApiVVersionODataControllerCountResponse, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from './types.gen';
 
-export class CollectionFormatService {
+export class CollectionFormat {
     /**
      * @param data The data for the request.
      * @param data.parameterArrayCsv This is an array parameter that is sent as csv format (comma-separated values)
@@ -28,10 +28,9 @@ export class CollectionFormatService {
             }
         });
     }
-    
 }
 
-export class ComplexService {
+export class Complex {
     /**
      * @param data The data for the request.
      * @param data.parameterObject Parameter containing object
@@ -72,10 +71,9 @@ export class ComplexService {
             mediaType: 'application/json-patch+json'
         });
     }
-    
 }
 
-export class DefaultService {
+export class Default {
     /**
      * @throws ApiError
      */
@@ -142,10 +140,9 @@ export class DefaultService {
             }
         });
     }
-    
 }
 
-export class DefaultsService {
+export class Defaults {
     /**
      * @param data The data for the request.
      * @param data.parameterString This is a simple string with default value
@@ -220,10 +217,9 @@ export class DefaultsService {
             }
         });
     }
-    
 }
 
-export class DeprecatedService {
+export class Deprecated {
     /**
      * @deprecated
      * @param data The data for the request.
@@ -239,10 +235,9 @@ export class DeprecatedService {
             }
         });
     }
-    
 }
 
-export class DescriptionsService {
+export class Descriptions {
     /**
      * @param data The data for the request.
      * @param data.parameterWithBreaks Testing multiline comments in string: First line
@@ -270,10 +265,9 @@ export class DescriptionsService {
             }
         });
     }
-    
 }
 
-export class DuplicateService {
+export class Duplicate {
     /**
      * @throws ApiError
      */
@@ -313,10 +307,9 @@ export class DuplicateService {
             url: '/api/v{api-version}/duplicate'
         });
     }
-    
 }
 
-export class ErrorService {
+export class Error {
     /**
      * @param data The data for the request.
      * @param data.status Status code to return
@@ -338,10 +331,9 @@ export class ErrorService {
             }
         });
     }
-    
 }
 
-export class FileResponseService {
+export class FileResponse {
     /**
      * @param data The data for the request.
      * @param data.id
@@ -357,10 +349,9 @@ export class FileResponseService {
             }
         });
     }
-    
 }
 
-export class FormDataService {
+export class FormData {
     /**
      * @param data The data for the request.
      * @param data.parameter This is a reusable parameter
@@ -378,10 +369,9 @@ export class FormDataService {
             mediaType: 'multipart/form-data'
         });
     }
-    
 }
 
-export class HeaderService {
+export class Header {
     /**
      * @returns string Successful response
      * @throws ApiError
@@ -397,10 +387,9 @@ export class HeaderService {
             }
         });
     }
-    
 }
 
-export class MultipartService {
+export class Multipart {
     /**
      * @param data The data for the request.
      * @param data.formData
@@ -425,10 +414,9 @@ export class MultipartService {
             url: '/api/v{api-version}/multipart'
         });
     }
-    
 }
 
-export class MultipleTags1Service {
+export class MultipleTags1 {
     /**
      * @returns _400
      * @throws ApiError
@@ -450,10 +438,9 @@ export class MultipleTags1Service {
             url: '/api/v{api-version}/multiple-tags/b'
         });
     }
-    
 }
 
-export class MultipleTags2Service {
+export class MultipleTags2 {
     /**
      * @returns _400
      * @throws ApiError
@@ -475,10 +462,9 @@ export class MultipleTags2Service {
             url: '/api/v{api-version}/multiple-tags/b'
         });
     }
-    
 }
 
-export class MultipleTags3Service {
+export class MultipleTags3 {
     /**
      * @returns void Success
      * @throws ApiError
@@ -489,10 +475,9 @@ export class MultipleTags3Service {
             url: '/api/v{api-version}/multiple-tags/b'
         });
     }
-    
 }
 
-export class NoContentService {
+export class NoContent {
     /**
      * @returns void Success
      * @throws ApiError
@@ -515,10 +500,9 @@ export class NoContentService {
             url: '/api/v{api-version}/multiple-tags/response-and-no-content'
         });
     }
-    
 }
 
-export class NonAsciiÆøåÆøÅöôêÊService {
+export class NonAsciiÆøåÆøÅöôêÊ {
     /**
      * @param data The data for the request.
      * @param data.nonAsciiParamæøåÆøÅöôêÊ Dummy input param
@@ -549,10 +533,9 @@ export class NonAsciiÆøåÆøÅöôêÊService {
             mediaType: 'application/x-www-form-urlencoded'
         });
     }
-    
 }
 
-export class ParametersService {
+export class Parameters {
     /**
      * @param data The data for the request.
      * @param data.fooParam foo in method
@@ -681,10 +664,9 @@ export class ParametersService {
             mediaType: 'application/json'
         });
     }
-    
 }
 
-export class RequestBodyService {
+export class RequestBody {
     /**
      * @param data The data for the request.
      * @param data.parameter This is a reusable parameter
@@ -702,10 +684,9 @@ export class RequestBodyService {
             mediaType: 'application/json'
         });
     }
-    
 }
 
-export class ResponseService {
+export class Response {
     /**
      * @returns number Response is a simple number
      * @returns void Success
@@ -767,10 +748,9 @@ export class ResponseService {
             }
         });
     }
-    
 }
 
-export class SimpleService {
+export class Simple {
     /**
      * @returns Model_From_Zendesk Success
      * @throws ApiError
@@ -851,10 +831,9 @@ export class SimpleService {
             url: '/api/v{api-version}/simple'
         });
     }
-    
 }
 
-export class TypesService {
+export class Types {
     /**
      * @param data The data for the request.
      * @param data.parameterArray This is an array parameter
@@ -891,10 +870,9 @@ export class TypesService {
             }
         });
     }
-    
 }
 
-export class UploadService {
+export class Upload {
     /**
      * @param data The data for the request.
      * @param data.formData
@@ -909,5 +887,4 @@ export class UploadService {
             mediaType: 'application/x-www-form-urlencoded'
         });
     }
-    
 }

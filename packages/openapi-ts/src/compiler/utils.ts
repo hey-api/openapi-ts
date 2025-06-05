@@ -83,6 +83,27 @@ export const createIdentifier = ({ text }: { text: string }) => {
   return identifier;
 };
 
+export const createThis = () => ts.factory.createThis();
+
+export const createPropertyDeclaration = ({
+  initializer,
+  name,
+  type,
+}: {
+  initializer?: ts.Expression;
+  name: string | ts.PropertyName;
+  type?: ts.TypeNode;
+}) => {
+  const node = ts.factory.createPropertyDeclaration(
+    undefined,
+    name,
+    undefined,
+    type,
+    initializer,
+  );
+  return node;
+};
+
 /**
  * ots for @hey-api/openapi-ts are helpers to reduce repetition of basic TypeScript
  * factory functions.

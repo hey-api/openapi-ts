@@ -4,7 +4,7 @@ import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, PatchApiNoTagResponse, ImportData, ImportResponse, FooWowResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DeprecatedCallData, CallWithDescriptionsData, TestErrorCodeData, TestErrorCodeResponse, FileResponseData, FileResponseResponse, PostApiFormDataData, CallWithResultFromHeaderResponse, MultipartRequestData, MultipartResponseResponse, DummyAResponse, DummyBResponse, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, ApiVVersionODataControllerCountResponse, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from './types.gen';
 
-export class CollectionFormatService {
+export class CollectionFormat {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -29,10 +29,9 @@ export class CollectionFormatService {
             }
         });
     }
-    
 }
 
-export class ComplexService {
+export class Complex {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -75,10 +74,9 @@ export class ComplexService {
             mediaType: 'application/json-patch+json'
         });
     }
-    
 }
 
-export class DefaultService {
+export class Default {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -147,10 +145,9 @@ export class DefaultService {
             }
         });
     }
-    
 }
 
-export class DefaultsService {
+export class Defaults {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -227,10 +224,9 @@ export class DefaultsService {
             }
         });
     }
-    
 }
 
-export class DeprecatedService {
+export class Deprecated {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -248,10 +244,9 @@ export class DeprecatedService {
             }
         });
     }
-    
 }
 
-export class DescriptionsService {
+export class Descriptions {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -281,10 +276,9 @@ export class DescriptionsService {
             }
         });
     }
-    
 }
 
-export class DuplicateService {
+export class Duplicate {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -326,10 +320,9 @@ export class DuplicateService {
             url: '/api/v{api-version}/duplicate'
         });
     }
-    
 }
 
-export class ErrorService {
+export class Error {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -353,10 +346,9 @@ export class ErrorService {
             }
         });
     }
-    
 }
 
-export class FileResponseService {
+export class FileResponse {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -374,10 +366,9 @@ export class FileResponseService {
             }
         });
     }
-    
 }
 
-export class FormDataService {
+export class FormData {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -397,10 +388,9 @@ export class FormDataService {
             mediaType: 'multipart/form-data'
         });
     }
-    
 }
 
-export class HeaderService {
+export class Header {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -418,10 +408,9 @@ export class HeaderService {
             }
         });
     }
-    
 }
 
-export class MultipartService {
+export class Multipart {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -448,10 +437,9 @@ export class MultipartService {
             url: '/api/v{api-version}/multipart'
         });
     }
-    
 }
 
-export class MultipleTags1Service {
+export class MultipleTags1 {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -475,10 +463,9 @@ export class MultipleTags1Service {
             url: '/api/v{api-version}/multiple-tags/b'
         });
     }
-    
 }
 
-export class MultipleTags2Service {
+export class MultipleTags2 {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -502,10 +489,9 @@ export class MultipleTags2Service {
             url: '/api/v{api-version}/multiple-tags/b'
         });
     }
-    
 }
 
-export class MultipleTags3Service {
+export class MultipleTags3 {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -518,10 +504,9 @@ export class MultipleTags3Service {
             url: '/api/v{api-version}/multiple-tags/b'
         });
     }
-    
 }
 
-export class NoContentService {
+export class NoContent {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -546,10 +531,9 @@ export class NoContentService {
             url: '/api/v{api-version}/multiple-tags/response-and-no-content'
         });
     }
-    
 }
 
-export class NonAsciiÆøåÆøÅöôêÊService {
+export class NonAsciiÆøåÆøÅöôêÊ {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -582,10 +566,9 @@ export class NonAsciiÆøåÆøÅöôêÊService {
             mediaType: 'application/x-www-form-urlencoded'
         });
     }
-    
 }
 
-export class ParametersService {
+export class Parameters {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -716,10 +699,9 @@ export class ParametersService {
             mediaType: 'application/json'
         });
     }
-    
 }
 
-export class RequestBodyService {
+export class RequestBody {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -739,10 +721,9 @@ export class RequestBodyService {
             mediaType: 'application/json'
         });
     }
-    
 }
 
-export class ResponseService {
+export class Response {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -806,10 +787,9 @@ export class ResponseService {
             }
         });
     }
-    
 }
 
-export class SimpleService {
+export class Simple {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -892,10 +872,9 @@ export class SimpleService {
             url: '/api/v{api-version}/simple'
         });
     }
-    
 }
 
-export class TypesService {
+export class Types {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -934,10 +913,9 @@ export class TypesService {
             }
         });
     }
-    
 }
 
-export class UploadService {
+export class Upload {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
@@ -954,5 +932,4 @@ export class UploadService {
             mediaType: 'application/x-www-form-urlencoded'
         });
     }
-    
 }

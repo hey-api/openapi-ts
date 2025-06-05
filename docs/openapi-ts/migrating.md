@@ -27,6 +27,29 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.71.0
+
+### Renamed `sdk.serviceNameBuilder` option
+
+This option has been renamed to `sdk.classNameBuilder` to better represent its functionality. Additionally, it's no longer set by default. To preserve the previous behavior, update your configuration.
+
+```js
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    ...defaultPlugins,
+    {
+      classNameBuilder: '{{name}}Service', // [!code ++]
+      name: '@hey-api/sdk',
+      serviceNameBuilder: '{{name}}Service', // [!code --]
+    },
+  ],
+};
+```
+
 ## v0.68.0
 
 ### Upgraded input filters
