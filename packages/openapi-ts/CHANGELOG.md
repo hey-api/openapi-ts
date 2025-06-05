@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.71.0
+
+### Minor Changes
+
+- [#2130](https://github.com/hey-api/openapi-ts/pull/2130) [`dc7535e`](https://github.com/hey-api/openapi-ts/commit/dc7535e6ed5b01ef722d536b909202e28ab16b46) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(sdk): rename `serviceNameBuilder` to `classNameBuilder`
+
+### Patch Changes
+
+- [#2117](https://github.com/hey-api/openapi-ts/pull/2117) [`a1435b9`](https://github.com/hey-api/openapi-ts/commit/a1435b915a272d9ffa599c194ee52c2a33f77fcd) Thanks [@johnny-mh](https://github.com/johnny-mh)! - feat(parser): allow patching specs with `input.patch`
+
+- [#2132](https://github.com/hey-api/openapi-ts/pull/2132) [`9473613`](https://github.com/hey-api/openapi-ts/commit/9473613187a72a4ae4ed3047994b076c89285737) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): better detect enum namespace
+
+- [#2130](https://github.com/hey-api/openapi-ts/pull/2130) [`dc7535e`](https://github.com/hey-api/openapi-ts/commit/dc7535e6ed5b01ef722d536b909202e28ab16b46) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): add `instance` option for instantiable SDKs
+
 ## 0.70.0
 
 ### Minor Changes
