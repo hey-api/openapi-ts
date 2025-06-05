@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': patch
 ---
 
-feat: add `input.patch.schemas` feature
+feat: allow patching specs with `input.patch`
