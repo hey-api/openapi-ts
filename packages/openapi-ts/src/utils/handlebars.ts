@@ -90,7 +90,7 @@ import xhrRequest from '../legacy/handlebars/compiled/core/xhr/request.js';
 import xhrSendRequest from '../legacy/handlebars/compiled/core/xhr/sendRequest.js';
 import { getConfig } from './config';
 import { stringCase } from './stringCase';
-import { transformServiceName } from './transform';
+import { transformClassName } from './transform';
 
 export const registerHandlebarHelpers = (): void => {
   Handlebars.registerHelper(
@@ -147,7 +147,7 @@ export const registerHandlebarHelpers = (): void => {
   Handlebars.registerHelper(
     'transformServiceName',
     function (this: unknown, name: string) {
-      return transformServiceName({
+      return transformClassName({
         config: getConfig(),
         name,
       });

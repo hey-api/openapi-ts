@@ -94,6 +94,25 @@ Plugins are responsible for generating artifacts from your input. By default, He
 
 You can learn more on the [Output](/openapi-ts/output) page.
 
+## Validating
+
+To validate your input, set `input.validate_EXPERIMENTAL` to `true`.
+
+::: warning
+The validator feature is very limited. You can help improve it by submitting more [use cases](https://github.com/hey-api/openapi-ts/issues/1970#issuecomment-2933189789).
+:::
+
+```js
+export default {
+  input: {
+    path: 'https://get.heyapi.dev/hey-api/backend',
+    validate_EXPERIMENTAL: true, // [!code ++]
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
 ## Formatting
 
 To format your output folder contents, set `output.format` to a valid formatter.

@@ -137,6 +137,7 @@ for (const version of versions) {
             '@hey-api/client-fetch',
             {
               asClass: true,
+              classNameBuilder: '{{name}}Service',
               name: '@hey-api/sdk',
             },
           ],
@@ -152,6 +153,7 @@ for (const version of versions) {
             '@hey-api/client-fetch',
             {
               asClass: true,
+              classNameBuilder: '{{name}}Service',
               name: '@hey-api/sdk',
             },
           ],
@@ -167,6 +169,7 @@ for (const version of versions) {
             '@hey-api/client-fetch',
             {
               asClass: true,
+              classNameBuilder: '{{name}}Service',
               name: '@hey-api/sdk',
             },
           ],
@@ -182,6 +185,7 @@ for (const version of versions) {
             '@hey-api/client-fetch',
             {
               asClass: true,
+              classNameBuilder: '{{name}}Service',
               name: '@hey-api/sdk',
             },
           ],
@@ -197,6 +201,7 @@ for (const version of versions) {
             '@hey-api/client-fetch',
             {
               asClass: true,
+              classNameBuilder: '{{name}}Service',
               name: '@hey-api/sdk',
             },
           ],
@@ -230,6 +235,19 @@ for (const version of versions) {
           ],
         }),
         description: 'generate SDK that throws on error',
+      },
+      {
+        config: createConfig({
+          output: 'instance',
+          plugins: [
+            {
+              instance: true,
+              name: '@hey-api/sdk',
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description: 'generate SDK instance',
       },
       {
         config: createConfig({

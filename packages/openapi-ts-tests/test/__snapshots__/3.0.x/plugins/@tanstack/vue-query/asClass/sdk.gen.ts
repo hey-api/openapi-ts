@@ -57,7 +57,6 @@ export class DefaultService {
             ...options
         });
     }
-    
 }
 
 export class SimpleService {
@@ -116,7 +115,6 @@ export class SimpleService {
             ...options
         });
     }
-    
 }
 
 export class ParametersService {
@@ -170,7 +168,6 @@ export class ParametersService {
             }
         });
     }
-    
 }
 
 export class DescriptionsService {
@@ -180,7 +177,6 @@ export class DescriptionsService {
             ...options
         });
     }
-    
 }
 
 export class DeprecatedService {
@@ -193,7 +189,6 @@ export class DeprecatedService {
             ...options
         });
     }
-    
 }
 
 export class RequestBodyService {
@@ -207,7 +202,6 @@ export class RequestBodyService {
             }
         });
     }
-    
 }
 
 export class FormDataService {
@@ -222,7 +216,6 @@ export class FormDataService {
             }
         });
     }
-    
 }
 
 export class DefaultsService {
@@ -246,7 +239,6 @@ export class DefaultsService {
             ...options
         });
     }
-    
 }
 
 export class DuplicateService {
@@ -277,7 +269,6 @@ export class DuplicateService {
             ...options
         });
     }
-    
 }
 
 export class NoContentService {
@@ -294,7 +285,6 @@ export class NoContentService {
             ...options
         });
     }
-    
 }
 
 export class ResponseService {
@@ -325,7 +315,6 @@ export class ResponseService {
             ...options
         });
     }
-    
 }
 
 export class MultipleTags1Service {
@@ -342,7 +331,6 @@ export class MultipleTags1Service {
             ...options
         });
     }
-    
 }
 
 export class MultipleTags2Service {
@@ -359,7 +347,6 @@ export class MultipleTags2Service {
             ...options
         });
     }
-    
 }
 
 export class MultipleTags3Service {
@@ -369,7 +356,6 @@ export class MultipleTags3Service {
             ...options
         });
     }
-    
 }
 
 export class CollectionFormatService {
@@ -379,7 +365,6 @@ export class CollectionFormatService {
             ...options
         });
     }
-    
 }
 
 export class TypesService {
@@ -389,7 +374,6 @@ export class TypesService {
             ...options
         });
     }
-    
 }
 
 export class UploadService {
@@ -404,7 +388,6 @@ export class UploadService {
             }
         });
     }
-    
 }
 
 export class FileResponseService {
@@ -414,7 +397,6 @@ export class FileResponseService {
             ...options
         });
     }
-    
 }
 
 export class ComplexService {
@@ -435,7 +417,6 @@ export class ComplexService {
             }
         });
     }
-    
 }
 
 export class MultipartService {
@@ -457,7 +438,6 @@ export class MultipartService {
             }
         });
     }
-    
 }
 
 export class HeaderService {
@@ -467,7 +447,6 @@ export class HeaderService {
             ...options
         });
     }
-    
 }
 
 export class ErrorService {
@@ -477,7 +456,6 @@ export class ErrorService {
             ...options
         });
     }
-    
 }
 
 export class NonAsciiÆøåÆøÅöôêÊService {
@@ -502,5 +480,4 @@ export class NonAsciiÆøåÆøÅöôêÊService {
             }
         });
     }
-    
 }

@@ -84,13 +84,10 @@ export const createMethodDeclaration = ({
   statements?: ts.Statement[];
   types?: FunctionTypeParameter[];
 }) => {
-  let modifiers = toAccessLevelModifiers(accessLevel);
+  const modifiers = toAccessLevelModifiers(accessLevel);
 
   if (isStatic) {
-    modifiers = [
-      ...modifiers,
-      ts.factory.createModifier(ts.SyntaxKind.StaticKeyword),
-    ];
+    modifiers.push(ts.factory.createModifier(ts.SyntaxKind.StaticKeyword));
   }
 
   const node = ts.factory.createMethodDeclaration(
@@ -119,26 +116,38 @@ type ClassDecorator = {
 
 /**
  * Create a class declaration.
- * @param decorator - the class decorator
- * @param members - elements in the class.
- * @param name - name of the class.
- * @returns ts.ClassDeclaration
  */
 export const createClassDeclaration = ({
   decorator,
-  members = [],
+  exportClass,
   name,
+  nodes,
 }: {
+  /**
+   * Class decorator.
+   */
   decorator?: ClassDecorator;
-  members?: ts.ClassElement[];
+  /**
+   * @default false
+   */
+  exportClass?: boolean;
+  /**
+   * Class name.
+   */
   name: string;
-}) => {
-  let modifiers: ts.ModifierLike[] = [
-    ts.factory.createModifier(ts.SyntaxKind.ExportKeyword),
-  ];
+  /**
+   * Class elements.
+   */
+  nodes: ReadonlyArray<ts.ClassElement>;
+}): ts.ClassDeclaration => {
+  const modifiers: Array<ts.ModifierLike> = [];
+
+  if (exportClass) {
+    modifiers.push(ts.factory.createModifier(ts.SyntaxKind.ExportKeyword));
+  }
 
   if (decorator) {
-    modifiers = [
+    modifiers.unshift(
       ts.factory.createDecorator(
         createCallExpression({
           functionName: decorator.name,
@@ -147,22 +156,14 @@ export const createClassDeclaration = ({
             .filter(isType<ts.Expression>),
         }),
       ),
-      ...modifiers,
-    ];
+    );
   }
-
-  // Add newline between each class member.
-  let m: ts.ClassElement[] = [];
-  members.forEach((member) => {
-    // @ts-expect-error
-    m = [...m, member, createIdentifier({ text: '\n' })];
-  });
 
   return ts.factory.createClassDeclaration(
     modifiers,
     createIdentifier({ text: name }),
-    [],
-    [],
-    m,
+    undefined,
+    undefined,
+    nodes,
   );
 };
