@@ -57,6 +57,8 @@ features:
 
 ### Sponsors
 
+<br/>
+
 <!--@include: ./sponsors-list.md-->
 
 </div>

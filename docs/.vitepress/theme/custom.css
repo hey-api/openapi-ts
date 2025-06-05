@@ -151,11 +151,48 @@ h3#demo + button {
 
 .sponsors-list li {
   align-items: center;
+  border: 1px solid transparent;
+  border-radius: 10px;
   display: flex;
-  height: 100px;
+  flex-direction: column;
+  row-gap: 0.5rem;
   justify-content: center;
   max-width: 240px;
+  padding: 1rem;
+  transition: border-color ease-out 300ms;
   width: 100%;
+}
+
+.sponsors-list li a:first-of-type {
+  height: 66px;
+}
+
+.sponsors-list li a:first-of-type picture,
+.sponsors-list li a:first-of-type img {
+  height: 100%;
+}
+
+.sponsors-list li p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 120%;
+}
+
+.sponsors-list li a:last-of-type {
+  font-size: 0.86rem;
+  line-height: 100%;
+}
+
+.sponsors-list .gold li {
+  max-width: 240px;
+}
+
+.sponsors-list .silver li {
+  max-width: 180px;
+}
+
+.sponsors-list .bronze li {
+  max-width: 100px;
 }
 
 .sponsors-list li + li {
@@ -164,14 +201,9 @@ h3#demo + button {
 
 .sponsors-list li > a {
   align-items: center;
-  border: 1px solid transparent;
-  border-radius: 10px;
   display: flex;
-  height: 100%;
   justify-content: center;
-  padding: 1rem;
   text-decoration: none;
-  transition: border-color ease-out 300ms;
   width: 100%;
 }
 
@@ -187,8 +219,8 @@ html.dark .sponsors-list li > a {
 
 .authors-list li > a:hover,
 .authors-list li > a:focus,
-.sponsors-list li > a:hover,
-.sponsors-list li > a:focus {
+.sponsors-list li:has(> a:hover),
+.sponsors-list li:has(> a:focus) {
   border-color: var(--vp-c-brand-1);
 }
 
