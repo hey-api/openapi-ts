@@ -235,6 +235,27 @@ html.dark .sponsors-list li {
   max-width: initial;
 }
 
+.migration {
+  background-color: var(--vp-c-brand-3);
+  border-radius: 10px;
+  border: 1px solid transparent;
+  column-gap: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0 auto 1rem;
+  max-width: 392px;
+  padding: 1rem;
+  row-gap: 1rem;
+  transition: border-color ease-out 250ms;
+  width: auto;
+}
+
+a.migration:hover,
+a.migration:focus {
+  border-color: var(--vp-c-brand-1);
+}
+
 .VPFeatures.VPHomeFeatures > .container > .items {
   gap: 1rem;
   justify-content: center;
@@ -251,6 +272,13 @@ html.dark .sponsors-list li {
   .home-list > ul,
   .sponsors-list > ul {
     flex-direction: row;
+  }
+}
+
+@media (min-width: 892px) {
+  .migration {
+    flex-direction: row;
+    max-width: 798px;
   }
 }
 

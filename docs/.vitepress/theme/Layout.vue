@@ -29,6 +29,16 @@ const { Layout } = DefaultTheme;
         </a>
       </div> -->
     </template>
+    <template #home-features-before>
+      <a
+        aria-label="Send an email to Lubos"
+        class="migration"
+        href="mailto:lubos@heyapi.dev?subject=Migrate%20TypeScript%20SDKs"
+      >
+        <p>Migrate your existing TypeScript SDKs</p>
+        <p>Contact us</p>
+      </a>
+    </template>
   </Layout>
 </template>
 
