@@ -26,7 +26,7 @@ import {
 import { escapeComment, escapeName } from '../../../utils/escape';
 import { reservedJavaScriptKeywordsRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
-import { transformServiceName } from '../../../utils/transform';
+import { transformClassName } from '../../../utils/transform';
 import { setUniqueTypeName } from '../../../utils/type';
 import { unique } from '../../../utils/unique';
 import type { Plugin } from '../../types';
@@ -773,16 +773,28 @@ const processService = ({
     ];
   }
 
+  const _members: Array<ts.ClassElement> = [];
+  members.forEach((member, index) => {
+    // add newline between each class member
+    if (index) {
+      // @ts-expect-error
+      _members.push(compiler.identifier({ text: '\n' }));
+    }
+
+    _members.push(member);
+  });
+
   const statement = compiler.classDeclaration({
     decorator:
       clientPlugin.name === 'legacy/angular'
         ? { args: [{ providedIn: 'root' }], name: 'Injectable' }
         : undefined,
-    members,
-    name: transformServiceName({
+    exportClass: true,
+    name: transformClassName({
       config,
       name: service.name,
     }),
+    nodes: _members,
   });
   onNode(statement);
 };

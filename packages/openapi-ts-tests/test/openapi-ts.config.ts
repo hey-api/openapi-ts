@@ -93,8 +93,7 @@ export default defineConfig(() => {
         // bundle: true,
         // bundleSource_EXPERIMENTAL: true,
         // exportFromIndex: true,
-        name: '@hey-api/client-axios',
-        // name: '@hey-api/client-fetch',
+        name: '@hey-api/client-fetch',
         // strictBaseUrl: true,
       },
       {
@@ -102,18 +101,19 @@ export default defineConfig(() => {
         // type: 'json',
       },
       {
-        // asClass: true,
+        asClass: true,
         // auth: false,
+        // classNameBuilder: '{{name}}',
         // client: false,
         // include...
+        // instance: true,
         name: '@hey-api/sdk',
         // operationId: false,
-        responseStyle: 'data',
-        // serviceNameBuilder: '{{name}}',
+        // responseStyle: 'data',
         // throwOnError: true,
         // transformer: '@hey-api/transformers',
         // transformer: true,
-        validator: 'zod',
+        // validator: 'zod',
       },
       {
         // bigInt: true,

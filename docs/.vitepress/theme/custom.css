@@ -208,7 +208,7 @@ h3#demo + button {
 }
 
 html.dark .authors-list li > a,
-html.dark .sponsors-list li > a {
+html.dark .sponsors-list li {
   background-color: var(--vp-button-brand-bg);
 }
 

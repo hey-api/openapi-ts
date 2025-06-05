@@ -1,7 +1,7 @@
 import type { ImportExportItemObject } from '../../../compiler/utils';
 import type { IR } from '../../../ir/types';
 import { getClientPlugin } from '../../@hey-api/client-core/utils';
-import { operationOptionsType } from '../../@hey-api/sdk/plugin';
+import { operationOptionsType } from '../../@hey-api/sdk/operation';
 import { importIdentifier } from '../../@hey-api/typescript/ref';
 import type { PluginInstance } from './types';
 

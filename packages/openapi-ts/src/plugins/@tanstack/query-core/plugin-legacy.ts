@@ -19,7 +19,7 @@ import type {
 import type { Config } from '../../../types/config';
 import type { Files } from '../../../types/utils';
 import { getConfig, isLegacyClient } from '../../../utils/config';
-import { transformServiceName } from '../../../utils/transform';
+import { transformClassName } from '../../../utils/transform';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
@@ -720,7 +720,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
 
       const queryFn = [
         config.plugins['@hey-api/sdk']?.asClass &&
-          transformServiceName({
+          transformClassName({
             config,
             name: service.name,
           }),

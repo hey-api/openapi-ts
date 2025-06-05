@@ -10,7 +10,7 @@ import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, Comp
 @Injectable({
     providedIn: 'root'
 })
-export class CollectionFormatService {
+export class CollectionFormat {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -35,13 +35,12 @@ export class CollectionFormatService {
             }
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class ComplexService {
+export class Complex {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -84,13 +83,12 @@ export class ComplexService {
             mediaType: 'application/json-patch+json'
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class DefaultService {
+export class Default {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -159,13 +157,12 @@ export class DefaultService {
             }
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class DefaultsService {
+export class Defaults {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -242,13 +239,12 @@ export class DefaultsService {
             }
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class DeprecatedService {
+export class Deprecated {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -266,13 +262,12 @@ export class DeprecatedService {
             }
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class DescriptionsService {
+export class Descriptions {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -302,13 +297,12 @@ export class DescriptionsService {
             }
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class DuplicateService {
+export class Duplicate {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -350,13 +344,12 @@ export class DuplicateService {
             url: '/api/v{api-version}/duplicate'
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class ErrorService {
+export class Error {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -380,13 +373,12 @@ export class ErrorService {
             }
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class FileResponseService {
+export class FileResponse {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -404,13 +396,12 @@ export class FileResponseService {
             }
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class FormDataService {
+export class FormData {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -430,13 +421,12 @@ export class FormDataService {
             mediaType: 'multipart/form-data'
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class HeaderService {
+export class Header {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -454,13 +444,12 @@ export class HeaderService {
             }
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class MultipartService {
+export class Multipart {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -487,13 +476,12 @@ export class MultipartService {
             url: '/api/v{api-version}/multipart'
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class MultipleTags1Service {
+export class MultipleTags1 {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -517,13 +505,12 @@ export class MultipleTags1Service {
             url: '/api/v{api-version}/multiple-tags/b'
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class MultipleTags2Service {
+export class MultipleTags2 {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -547,13 +534,12 @@ export class MultipleTags2Service {
             url: '/api/v{api-version}/multiple-tags/b'
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class MultipleTags3Service {
+export class MultipleTags3 {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -566,13 +552,12 @@ export class MultipleTags3Service {
             url: '/api/v{api-version}/multiple-tags/b'
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class NoContentService {
+export class NoContent {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -597,13 +582,12 @@ export class NoContentService {
             url: '/api/v{api-version}/multiple-tags/response-and-no-content'
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class NonAsciiÆøåÆøÅöôêÊService {
+export class NonAsciiÆøåÆøÅöôêÊ {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -636,13 +620,12 @@ export class NonAsciiÆøåÆøÅöôêÊService {
             mediaType: 'application/x-www-form-urlencoded'
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class ParametersService {
+export class Parameters {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -773,13 +756,12 @@ export class ParametersService {
             mediaType: 'application/json'
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class RequestBodyService {
+export class RequestBody {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -799,13 +781,12 @@ export class RequestBodyService {
             mediaType: 'application/json'
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class ResponseService {
+export class Response {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -869,13 +850,12 @@ export class ResponseService {
             }
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class SimpleService {
+export class Simple {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -958,13 +938,12 @@ export class SimpleService {
             url: '/api/v{api-version}/simple'
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class TypesService {
+export class Types {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -1003,13 +982,12 @@ export class TypesService {
             }
         });
     }
-    
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class UploadService {
+export class Upload {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -1026,5 +1004,4 @@ export class UploadService {
             mediaType: 'application/x-www-form-urlencoded'
         });
     }
-    
 }
