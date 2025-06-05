@@ -1,11 +1,8 @@
 import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
-import type { SchemaObject as OpenApiV2_0_XSchemaObject } from '../../../openApi/2.0.x/types/spec';
-import type {
-  ReferenceObject as OpenApiV3_0_XReferenceObject,
-  SchemaObject as OpenApiV3_0_XSchemaObject,
-} from '../../../openApi/3.0.x/types/spec';
-import type { SchemaObject as OpenApiV3_1_XSchemaObject } from '../../../openApi/3.1.x/types/spec';
+import type { OpenApiV2_0_XTypes } from '../../../openApi/2.0.x';
+import type { OpenApiV3_0_XTypes } from '../../../openApi/3.0.x';
+import type { OpenApiV3_1_XTypes } from '../../../openApi/3.1.x';
 import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
 import type { OpenApi } from '../../../openApi/types';
 import type { Plugin } from '../../types';
@@ -19,9 +16,9 @@ const stripSchema = ({
 }: {
   plugin: Plugin.Instance<Config>;
   schema:
-    | OpenApiV2_0_XSchemaObject
-    | OpenApiV3_0_XSchemaObject
-    | OpenApiV3_1_XSchemaObject;
+    | OpenApiV2_0_XTypes['SchemaObject']
+    | OpenApiV3_0_XTypes['SchemaObject']
+    | OpenApiV3_1_XTypes['SchemaObject'];
 }) => {
   if (plugin.type === 'form') {
     if (schema.description) {
@@ -53,8 +50,8 @@ const schemaToJsonSchemaDraft_04 = ({
 }: {
   context: IR.Context;
   plugin: Plugin.Instance<Config>;
-  schema: OpenApiV2_0_XSchemaObject;
-}): OpenApiV2_0_XSchemaObject => {
+  schema: OpenApiV2_0_XTypes['SchemaObject'];
+}): OpenApiV2_0_XTypes['SchemaObject'] => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchemaDraft_04({
@@ -62,7 +59,7 @@ const schemaToJsonSchemaDraft_04 = ({
         plugin,
         schema: item,
       }),
-    ) as unknown as OpenApiV2_0_XSchemaObject;
+    ) as unknown as OpenApiV2_0_XTypes['SchemaObject'];
   }
 
   const schema = structuredClone(_schema);
@@ -101,7 +98,7 @@ const schemaToJsonSchemaDraft_04 = ({
     schema.items = schemaToJsonSchemaDraft_04({
       context,
       plugin,
-      schema: schema.items as OpenApiV2_0_XSchemaObject,
+      schema: schema.items as OpenApiV2_0_XTypes['SchemaObject'],
     });
   }
 
@@ -129,8 +126,12 @@ const schemaToJsonSchemaDraft_05 = ({
 }: {
   context: IR.Context;
   plugin: Plugin.Instance<Config>;
-  schema: OpenApiV3_0_XSchemaObject | OpenApiV3_0_XReferenceObject;
-}): OpenApiV3_0_XSchemaObject | OpenApiV3_0_XReferenceObject => {
+  schema:
+    | OpenApiV3_0_XTypes['SchemaObject']
+    | OpenApiV3_0_XTypes['ReferenceObject'];
+}):
+  | OpenApiV3_0_XTypes['SchemaObject']
+  | OpenApiV3_0_XTypes['ReferenceObject'] => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchemaDraft_05({
@@ -138,7 +139,9 @@ const schemaToJsonSchemaDraft_05 = ({
         plugin,
         schema: item,
       }),
-    ) as OpenApiV3_0_XSchemaObject | OpenApiV3_0_XReferenceObject;
+    ) as
+      | OpenApiV3_0_XTypes['SchemaObject']
+      | OpenApiV3_0_XTypes['ReferenceObject'];
   }
 
   const schema = structuredClone(_schema);
@@ -225,8 +228,8 @@ const schemaToJsonSchema2020_12 = ({
 }: {
   context: IR.Context;
   plugin: Plugin.Instance<Config>;
-  schema: OpenApiV3_1_XSchemaObject;
-}): OpenApiV3_1_XSchemaObject => {
+  schema: OpenApiV3_1_XTypes['SchemaObject'];
+}): OpenApiV3_1_XTypes['SchemaObject'] => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchema2020_12({
@@ -234,7 +237,7 @@ const schemaToJsonSchema2020_12 = ({
         plugin,
         schema: item,
       }),
-    ) as OpenApiV3_1_XSchemaObject;
+    ) as OpenApiV3_1_XTypes['SchemaObject'];
   }
 
   const schema = structuredClone(_schema);
@@ -331,10 +334,10 @@ const schemaName = ({
   name: string;
   plugin: Plugin.Instance<Config>;
   schema:
-    | OpenApiV2_0_XSchemaObject
-    | OpenApiV3_0_XReferenceObject
-    | OpenApiV3_0_XSchemaObject
-    | OpenApiV3_1_XSchemaObject;
+    | OpenApiV2_0_XTypes['SchemaObject']
+    | OpenApiV3_0_XTypes['ReferenceObject']
+    | OpenApiV3_0_XTypes['SchemaObject']
+    | OpenApiV3_1_XTypes['SchemaObject'];
 }): string => {
   let customName = '';
 

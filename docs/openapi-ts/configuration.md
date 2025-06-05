@@ -474,64 +474,32 @@ export default {
 };
 ```
 
-## Patch Schemas
+## Patch
 
-If you need to modify schemas in your OpenAPI specification before code generation, you can use `input.patch.schemas` to apply custom transformations to specific schemas.
+There are times when you need to modify your input before it's processed further. A common use case is fixing an invalid specification or adding a missing field. You can apply custom patches with `input.patch`.
 
-You can provide patch functions for individual schemas by their names. Each function receives the schema object and can modify it directly.
+You can patch individual schemas by their name. All patches work with raw input data and are applied before we generate any code.
 
-::: code-group
-
-```js [date-time to timestamp]
+```js
 export default {
   input: {
     patch: {
       schemas: {
-        UserResponseDto: (schema) => {
-          // Convert date-time format to timestamp
-          if (schema.properties?.updatedAt) {
-            delete schema.properties.updatedAt.format;
-            schema.properties.updatedAt.type = 'number';
-          }
+        Foo: (schema) => {
+          // convert date-time format to timestamp
+          delete schema.properties.updatedAt.format;
+          schema.properties.updatedAt.type = 'number';
         },
-      },
-    },
-    path: 'https://get.heyapi.dev/hey-api/backend',
-  },
-  output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
-};
-```
-
-```js [add properties]
-export default {
-  input: {
-    patch: {
-      schemas: {
-        ProductModel: (schema) => {
-          // Add metadata property
-          schema.properties.metadata = {
-            type: 'object',
+        Bar: (schema) => {
+          // add missing property
+          schema.properties.meta = {
             additionalProperties: true,
+            type: 'object',
           };
-          schema.required = ['id'];
+          schema.required = ['meta'];
         },
-      },
-    },
-    path: 'https://get.heyapi.dev/hey-api/backend',
-  },
-  output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
-};
-```
-
-```js [remove properties]
-export default {
-  input: {
-    patch: {
-      schemas: {
-        ApiResponseDto: (schema) => {
-          // Remove internal fields
+        Baz: (schema) => {
+          // remove property
           delete schema.properties.internalField;
         },
       },
@@ -543,48 +511,24 @@ export default {
 };
 ```
 
-```ts [typescript]
-import { defineConfig, type OpenApiSchemaObject } from '@hey-api/openapi-ts';
-
-export default defineConfig({
-  input: {
-    patch: {
-      schemas: {
-        ApiResponseDto: (schema: OpenApiSchemaObject.V3_1_X) => {
-          if (typeof schema.properties?.updatedAt === 'object') {
-            delete schema.properties.updatedAt.format;
-            schema.properties.updatedAt.type = 'number';
-          }
-        },
-      },
-    },
-    path: 'https://get.heyapi.dev/hey-api/backend',
-  },
-  output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
-});
-```
-
-:::
-
-Patch functions work with both OpenAPI v3.x schemas (in `components.schemas`) and Swagger v2.0 schemas (in `definitions`).
-
 ## Watch Mode
 
 ::: warning
 Watch mode currently supports only remote files via URL.
 :::
 
-If your schema changes frequently, you may want to automatically regenerate the output during development. To watch your input file for changes, enable `watch` mode in your configuration or pass the `--watch` flag to the CLI.
+If your schema changes frequently, you may want to automatically regenerate the output during development. To watch your input file for changes, enable `input.watch` mode in your configuration or pass the `--watch` flag to the CLI.
 
 ::: code-group
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: {
+    path: 'https://get.heyapi.dev/hey-api/backend',
+    watch: true, // [!code ++]
+  },
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
-  watch: true, // [!code ++]
 };
 ```
 
