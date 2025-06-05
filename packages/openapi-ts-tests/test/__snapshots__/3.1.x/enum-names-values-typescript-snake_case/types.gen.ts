@@ -34,6 +34,10 @@ export type Arrays = [
     'baz'
 ];
 
+export type MyFooRef = {
+    foo?: Array<MyFoo2>;
+};
+
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };

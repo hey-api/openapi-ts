@@ -265,14 +265,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values',
       }),
       description: 'handles various enum names and values',
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-javascript-SCREAMING_SNAKE_CASE',
         plugins: [
           {
@@ -287,7 +287,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-javascript-PascalCase',
         plugins: [
           {
@@ -302,7 +302,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-javascript-camelCase',
         plugins: [
           {
@@ -317,7 +317,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-javascript-snake_case',
         plugins: [
           {
@@ -332,7 +332,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-javascript-preserve',
         plugins: [
           {
@@ -347,7 +347,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-javascript-ignore-null',
         plugins: [
           {
@@ -363,7 +363,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-typescript-SCREAMING_SNAKE_CASE',
         plugins: [
           {
@@ -378,7 +378,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-typescript-PascalCase',
         plugins: [
           {
@@ -393,7 +393,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-typescript-camelCase',
         plugins: [
           {
@@ -408,7 +408,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-typescript-snake_case',
         plugins: [
           {
@@ -423,7 +423,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-typescript-preserve',
         plugins: [
           {
