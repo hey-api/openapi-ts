@@ -845,11 +845,13 @@ export const handlerLegacy: Plugin.LegacyHandler<
                                             text: 'signal',
                                           }),
                                         },
-                                        {
-                                          key: 'throwOnError',
-                                          value: true,
-                                        },
-                                      ],
+                                        plugin.throwOnError === false
+                                          ? null
+                                          : {
+                                              key: 'throwOnError',
+                                              value: true,
+                                            },
+                                      ].filter((o) => o),
                                     }),
                                   ],
                                 }),
