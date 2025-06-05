@@ -265,6 +265,20 @@ const addTypeEnum = ({
   }
 };
 
+const shouldCreateTypeScriptEnum = ({
+  plugin,
+  schema,
+}: {
+  plugin: Plugin.Instance<Config>;
+  schema: SchemaWithType<'enum'>;
+}) => {
+  const enumObject = schemaToEnumObject({ plugin, schema });
+  // TypeScript enums support only string and number values
+  return !enumObject.typeofItems.filter(
+    (type) => type !== 'number' && type !== 'string',
+  ).length;
+};
+
 const addTypeScriptEnum = ({
   $ref,
   context,
@@ -280,12 +294,8 @@ const addTypeScriptEnum = ({
 }) => {
   const enumObject = schemaToEnumObject({ plugin, schema });
 
-  // TypeScript enums support only string and number values so we need to fallback to types
-  if (
-    enumObject.typeofItems.filter(
-      (type) => type !== 'number' && type !== 'string',
-    ).length
-  ) {
+  // fallback to types
+  if (!shouldCreateTypeScriptEnum({ plugin, schema })) {
     const node = addTypeEnum({
       $ref,
       context,
@@ -302,16 +312,6 @@ const addTypeScriptEnum = ({
     create: true,
     namespace: 'enum',
   });
-
-  // TODO: parser - this is the old parser behavior where we would NOT
-  // print nested enum identifiers if they already exist. This is a
-  // blocker for referencing these identifiers within the file as
-  // we cannot guarantee just because they have a duplicate identifier,
-  // they have a duplicate value.
-  if (!identifier.created && plugin.enums !== 'typescript+namespace') {
-    return;
-  }
-
   const node = compiler.enumDeclaration({
     leadingComment: createSchemaComment({ schema }),
     name: identifier.name || '',
@@ -1160,7 +1160,16 @@ export const schemaToType = ({
       const identifier = file.identifier({
         $ref: finalRef,
         create: true,
-        namespace: 'type',
+        namespace:
+          refSchema.type === 'enum' &&
+          (plugin.enums === 'typescript' ||
+            plugin.enums === 'typescript+namespace') &&
+          shouldCreateTypeScriptEnum({
+            plugin,
+            schema: refSchema as SchemaWithType<'enum'>,
+          })
+            ? 'enum'
+            : 'type',
       });
       type = compiler.typeReferenceNode({
         typeName: identifier.name || '',

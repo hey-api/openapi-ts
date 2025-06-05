@@ -51,7 +51,12 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.json'),
+      path: path.resolve(
+        __dirname,
+        'spec',
+        '3.1.x',
+        'discriminator-one-of.yaml',
+      ),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -121,7 +126,7 @@ export default defineConfig(() => {
         // name: '@hey-api/transformers',
       },
       {
-        enums: 'typescript',
+        enums: 'typescript+namespace',
         enumsCase: 'PascalCase',
         // enumsConstantsIgnoreNull: true,
         // exportInlineEnums: true,
