@@ -1,10 +1,7 @@
 import type { OpenApiV2Schema, OpenApiV3Schema } from '../../../openApi';
-import type { SchemaObject as OpenApiV2_0_XSchemaObject } from '../../../openApi/2.0.x/types/spec';
-import type {
-  ReferenceObject as OpenApiV3_0_XReferenceObject,
-  SchemaObject as OpenApiV3_0_XSchemaObject,
-} from '../../../openApi/3.0.x/types/spec';
-import type { SchemaObject as OpenApiV3_1_XSchemaObject } from '../../../openApi/3.1.x/types/spec';
+import type { OpenApiV2_0_XTypes } from '../../../openApi/2.0.x';
+import type { OpenApiV3_0_XTypes } from '../../../openApi/3.0.x';
+import type { OpenApiV3_1_XTypes } from '../../../openApi/3.1.x';
 import type { Plugin } from '../../types';
 
 export interface Config extends Plugin.Name<'@hey-api/schemas'> {
@@ -29,10 +26,10 @@ export interface Config extends Plugin.Name<'@hey-api/schemas'> {
         schema:
           | OpenApiV2Schema
           | OpenApiV3Schema
-          | OpenApiV2_0_XSchemaObject
-          | OpenApiV3_0_XReferenceObject
-          | OpenApiV3_0_XSchemaObject
-          | OpenApiV3_1_XSchemaObject,
+          | OpenApiV2_0_XTypes['SchemaObject']
+          | OpenApiV3_0_XTypes['ReferenceObject']
+          | OpenApiV3_0_XTypes['SchemaObject']
+          | OpenApiV3_1_XTypes['SchemaObject'],
       ) => string);
   /**
    * Name of the generated file.
