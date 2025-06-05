@@ -784,7 +784,7 @@ const createEnumMember = ({
 }) => {
   let key = name;
   if (typeof key === 'string') {
-    if (key.startsWith("'") && key.endsWith("'")) {
+    if (key.includes("'")) {
       key = createStringLiteral({
         isSingleQuote: false,
         text: key,
