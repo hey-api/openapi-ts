@@ -5,7 +5,7 @@ import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
 import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, PatchApiNoTagResponse, FooWowResponse, PostApiBodyData, PostApiBodyResponse, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithDescriptionsData, TestErrorCodeData, TestErrorCodeResponse, CallWithResultFromHeaderResponse, DummyAResponse, DummyBResponse, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, CallWithParametersData, CallWithWeirdParameterNamesData, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, TypesData, TypesResponse } from './types.gen';
 
-export class CollectionFormatService {
+export class CollectionFormat {
     /**
      * @param data The data for the request.
      * @param data.parameterArrayCsv This is an array parameter that is sent as csv format (comma-separated values)
@@ -28,10 +28,9 @@ export class CollectionFormatService {
             }
         });
     }
-    
 }
 
-export class ComplexService {
+export class Complex {
     /**
      * @param data The data for the request.
      * @param data.parameterObject Parameter containing object
@@ -53,10 +52,9 @@ export class ComplexService {
             }
         });
     }
-    
 }
 
-export class DefaultService {
+export class Default {
     /**
      * @throws ApiError
      */
@@ -108,10 +106,9 @@ export class DefaultService {
             }
         });
     }
-    
 }
 
-export class DefaultsService {
+export class Defaults {
     /**
      * @param data The data for the request.
      * @param data.parameterString This is a simple string with default value
@@ -186,10 +183,9 @@ export class DefaultsService {
             }
         });
     }
-    
 }
 
-export class DescriptionsService {
+export class Descriptions {
     /**
      * @param data The data for the request.
      * @param data.parameterWithBreaks Testing multiline comments in string: First line
@@ -217,10 +213,9 @@ export class DescriptionsService {
             }
         });
     }
-    
 }
 
-export class DuplicateService {
+export class Duplicate {
     /**
      * @throws ApiError
      */
@@ -260,10 +255,9 @@ export class DuplicateService {
             url: '/api/v{api-version}/duplicate'
         });
     }
-    
 }
 
-export class ErrorService {
+export class Error {
     /**
      * @param data The data for the request.
      * @param data.status Status code to return
@@ -285,10 +279,9 @@ export class ErrorService {
             }
         });
     }
-    
 }
 
-export class HeaderService {
+export class Header {
     /**
      * @returns string Successful response
      * @throws ApiError
@@ -304,10 +297,9 @@ export class HeaderService {
             }
         });
     }
-    
 }
 
-export class MultipleTags1Service {
+export class MultipleTags1 {
     /**
      * @returns void Success
      * @throws ApiError
@@ -329,10 +321,9 @@ export class MultipleTags1Service {
             url: '/api/v{api-version}/multiple-tags/b'
         });
     }
-    
 }
 
-export class MultipleTags2Service {
+export class MultipleTags2 {
     /**
      * @returns void Success
      * @throws ApiError
@@ -354,10 +345,9 @@ export class MultipleTags2Service {
             url: '/api/v{api-version}/multiple-tags/b'
         });
     }
-    
 }
 
-export class MultipleTags3Service {
+export class MultipleTags3 {
     /**
      * @returns void Success
      * @throws ApiError
@@ -368,10 +358,9 @@ export class MultipleTags3Service {
             url: '/api/v{api-version}/multiple-tags/b'
         });
     }
-    
 }
 
-export class NoContentService {
+export class NoContent {
     /**
      * @returns void Success
      * @throws ApiError
@@ -394,10 +383,9 @@ export class NoContentService {
             url: '/api/v{api-version}/multiple-tags/response-and-no-content'
         });
     }
-    
 }
 
-export class NonAsciiÆøåÆøÅöôêÊService {
+export class NonAsciiÆøåÆøÅöôêÊ {
     /**
      * @param data The data for the request.
      * @param data.nonAsciiParamæøåÆøÅöôêÊ Dummy input param
@@ -413,10 +401,9 @@ export class NonAsciiÆøåÆøÅöôêÊService {
             }
         });
     }
-    
 }
 
-export class ParametersService {
+export class Parameters {
     /**
      * @param data The data for the request.
      * @param data.parameterHeader This is the parameter that goes into the header
@@ -480,10 +467,9 @@ export class ParametersService {
             body: data.parameterBody
         });
     }
-    
 }
 
-export class ResponseService {
+export class Response {
     /**
      * @returns unknown Response is a simple number
      * @returns void Success
@@ -543,10 +529,9 @@ export class ResponseService {
             }
         });
     }
-    
 }
 
-export class SimpleService {
+export class Simple {
     /**
      * @throws ApiError
      */
@@ -616,10 +601,9 @@ export class SimpleService {
             url: '/api/v{api-version}/simple'
         });
     }
-    
 }
 
-export class TypesService {
+export class Types {
     /**
      * @param data The data for the request.
      * @param data.parameterArray This is an array parameter
@@ -654,5 +638,4 @@ export class TypesService {
             }
         });
     }
-    
 }

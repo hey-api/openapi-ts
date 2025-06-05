@@ -373,9 +373,9 @@ describe('OpenAPI v3', () => {
           },
           {
             asClass: true,
+            classNameBuilder: 'myAwesome{{name}}Api',
             include: '^(Simple|Parameters)',
             name: '@hey-api/sdk',
-            serviceNameBuilder: 'myAwesome{{name}}Api',
           },
         ],
       }),

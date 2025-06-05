@@ -1,524 +1,27 @@
-import type ts from 'typescript';
+import ts from 'typescript';
 
 import { compiler } from '../../../compiler';
-import type { ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
-import type { TypeScriptFile } from '../../../generate/files';
-import { statusCodeToGroup } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
-import { getServiceName } from '../../../utils/postprocess';
-import { transformServiceName } from '../../../utils/transform';
+import { sanitizeNamespaceIdentifier } from '../../../openApi';
+import { stringCase } from '../../../utils/stringCase';
+import { transformClassName } from '../../../utils/transform';
 import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
 import type { Plugin } from '../../types';
-import { clientId, getClientPlugin } from '../client-core/utils';
-import {
-  operationTransformerIrRef,
-  transformersId,
-} from '../transformers/plugin';
+import { getClientPlugin } from '../client-core/utils';
 import { importIdentifier } from '../typescript/ref';
-import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
+import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
+import {
+  getOperationTags,
+  operationOptionsType,
+  operationStatements,
+} from './operation';
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import { createTypeOptions } from './typeOptions';
 import type { Config } from './types';
-import { createResponseValidator } from './validator';
-
-// copy-pasted from @hey-api/client-core
-export interface Auth {
-  /**
-   * Which part of the request do we use to send the auth?
-   *
-   * @default 'header'
-   */
-  in?: 'header' | 'query' | 'cookie';
-  /**
-   * Header or query parameter name.
-   *
-   * @default 'Authorization'
-   */
-  name?: string;
-  scheme?: 'basic' | 'bearer';
-  type: 'apiKey' | 'http';
-}
-
-export const operationOptionsType = ({
-  context,
-  file,
-  operation,
-  throwOnError,
-}: {
-  context: IR.Context;
-  file: TypeScriptFile;
-  operation: IR.OperationObject;
-  throwOnError?: string;
-}) => {
-  const client = getClientPlugin(context.config);
-  const isNuxtClient = client.name === '@hey-api/client-nuxt';
-
-  const identifierData = importIdentifier({
-    context,
-    file,
-    operation,
-    type: 'data',
-  });
-  const identifierResponse = importIdentifier({
-    context,
-    file,
-    operation,
-    type: isNuxtClient ? 'response' : 'responses',
-  });
-
-  const optionsName = clientApi.Options.name;
-
-  if (isNuxtClient) {
-    return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}, ${identifierResponse.name || 'unknown'}, ${nuxtTypeDefault}>`;
-  }
-
-  // TODO: refactor this to be more generic, works for now
-  if (throwOnError) {
-    return `${optionsName}<${identifierData.name || 'unknown'}, ${throwOnError}>`;
-  }
-  return identifierData.name
-    ? `${optionsName}<${identifierData.name}>`
-    : optionsName;
-};
-
-export const sdkId = 'sdk';
-
-/**
- * Infers `responseType` value from provided response content type. This is
- * an adapted version of `getParseAs()` from the Fetch API client.
- *
- * From Axios documentation:
- * `responseType` indicates the type of data that the server will respond with
- * options are: 'arraybuffer', 'document', 'json', 'text', 'stream'
- * browser only: 'blob'
- */
-export const getResponseType = (
-  contentType: string | null | undefined,
-):
-  | 'arraybuffer'
-  | 'blob'
-  | 'document'
-  | 'json'
-  | 'stream'
-  | 'text'
-  | undefined => {
-  if (!contentType) {
-    return;
-  }
-
-  const cleanContent = contentType.split(';')[0]?.trim();
-
-  if (!cleanContent) {
-    return;
-  }
-
-  if (
-    cleanContent.startsWith('application/json') ||
-    cleanContent.endsWith('+json')
-  ) {
-    return 'json';
-  }
-
-  // Axios does not handle form data out of the box
-  // if (cleanContent === 'multipart/form-data') {
-  //   return 'formData';
-  // }
-
-  if (
-    ['application/', 'audio/', 'image/', 'video/'].some((type) =>
-      cleanContent.startsWith(type),
-    )
-  ) {
-    return 'blob';
-  }
-
-  if (cleanContent.startsWith('text/')) {
-    return 'text';
-  }
-};
-
-// TODO: parser - handle more security types
-const securitySchemeObjectToAuthObject = ({
-  securitySchemeObject,
-}: {
-  securitySchemeObject: IR.SecurityObject;
-}): Auth | undefined => {
-  if (securitySchemeObject.type === 'openIdConnect') {
-    return {
-      scheme: 'bearer',
-      type: 'http',
-    };
-  }
-
-  if (securitySchemeObject.type === 'oauth2') {
-    if (
-      securitySchemeObject.flows.password ||
-      securitySchemeObject.flows.authorizationCode ||
-      securitySchemeObject.flows.clientCredentials ||
-      securitySchemeObject.flows.implicit
-    ) {
-      return {
-        scheme: 'bearer',
-        type: 'http',
-      };
-    }
-
-    return;
-  }
-
-  if (securitySchemeObject.type === 'apiKey') {
-    if (securitySchemeObject.in === 'header') {
-      return {
-        name: securitySchemeObject.name,
-        type: 'apiKey',
-      };
-    }
-
-    if (
-      securitySchemeObject.in === 'query' ||
-      securitySchemeObject.in == 'cookie'
-    ) {
-      return {
-        in: securitySchemeObject.in,
-        name: securitySchemeObject.name,
-        type: 'apiKey',
-      };
-    }
-
-    return;
-  }
-
-  if (securitySchemeObject.type === 'http') {
-    const scheme = securitySchemeObject.scheme.toLowerCase();
-    if (scheme === 'bearer' || scheme === 'basic') {
-      return {
-        scheme: scheme as 'bearer' | 'basic',
-        type: 'http',
-      };
-    }
-
-    return;
-  }
-};
-
-const operationAuth = ({
-  operation,
-  plugin,
-}: {
-  context: IR.Context;
-  operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
-}): Array<Auth> => {
-  if (!operation.security || !plugin.auth) {
-    return [];
-  }
-
-  const auth: Array<Auth> = [];
-
-  for (const securitySchemeObject of operation.security) {
-    const authObject = securitySchemeObjectToAuthObject({
-      securitySchemeObject,
-    });
-    if (authObject) {
-      auth.push(authObject);
-    } else {
-      console.warn(
-        `❗️ SDK warning: unsupported security scheme. Please open an issue if you'd like it added https://github.com/hey-api/openapi-ts/issues\n${JSON.stringify(securitySchemeObject, null, 2)}`,
-      );
-    }
-  }
-
-  return auth;
-};
-
-const operationStatements = ({
-  context,
-  isRequiredOptions,
-  operation,
-  plugin,
-}: {
-  context: IR.Context;
-  isRequiredOptions: boolean;
-  operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
-}): Array<ts.Statement> => {
-  const file = context.file({ id: sdkId })!;
-  const sdkOutput = file.nameWithoutExtension();
-
-  const client = getClientPlugin(context.config);
-  const isNuxtClient = client.name === '@hey-api/client-nuxt';
-
-  const identifierError = importIdentifier({
-    context,
-    file,
-    operation,
-    type: isNuxtClient ? 'error' : 'errors',
-  });
-  const identifierResponse = importIdentifier({
-    context,
-    file,
-    operation,
-    type: isNuxtClient ? 'response' : 'responses',
-  });
-
-  // TODO: transform parameters
-  // const query = {
-  //   BarBaz: options.query.bar_baz,
-  //   qux_quux: options.query.qux_quux,
-  //   fooBar: options.query.foo_bar,
-  // };
-
-  // if (operation.parameters) {
-  //   for (const name in operation.parameters.query) {
-  //     const parameter = operation.parameters.query[name]
-  //     if (parameter.name !== fieldName({ context, name: parameter.name })) {
-  //       console.warn(parameter.name)
-  //     }
-  //   }
-  // }
-
-  const requestOptions: ObjectValue[] = [];
-
-  if (operation.body) {
-    switch (operation.body.type) {
-      case 'form-data':
-        requestOptions.push({ spread: 'formDataBodySerializer' });
-        file.import({
-          module: clientModulePath({
-            config: context.config,
-            sourceOutput: sdkOutput,
-          }),
-          name: 'formDataBodySerializer',
-        });
-        break;
-      case 'json':
-        // jsonBodySerializer is the default, no need to specify
-        break;
-      case 'text':
-      case 'octet-stream':
-        // ensure we don't use any serializer by default
-        requestOptions.push({
-          key: 'bodySerializer',
-          value: null,
-        });
-        break;
-      case 'url-search-params':
-        requestOptions.push({ spread: 'urlSearchParamsBodySerializer' });
-        file.import({
-          module: clientModulePath({
-            config: context.config,
-            sourceOutput: sdkOutput,
-          }),
-          name: 'urlSearchParamsBodySerializer',
-        });
-        break;
-    }
-  }
-
-  if (client.name === '@hey-api/client-axios') {
-    // try to infer `responseType` option for Axios. We don't need this in
-    // Fetch API client because it automatically detects the correct response
-    // during runtime.
-    for (const statusCode in operation.responses) {
-      // this doesn't handle default status code for now
-      if (statusCodeToGroup({ statusCode }) === '2XX') {
-        const response = operation.responses[statusCode];
-        const responseType = getResponseType(response?.mediaType);
-        if (responseType) {
-          requestOptions.push({
-            key: 'responseType',
-            value: responseType,
-          });
-          break;
-        }
-      }
-    }
-  }
-
-  // TODO: parser - set parseAs to skip inference if every response has the same
-  // content type. currently impossible because successes do not contain
-  // header information
-
-  const auth = operationAuth({ context, operation, plugin });
-  if (auth.length) {
-    requestOptions.push({
-      key: 'security',
-      value: compiler.arrayLiteralExpression({ elements: auth }),
-    });
-  }
-
-  for (const name in operation.parameters?.query) {
-    const parameter = operation.parameters.query[name]!;
-    if (
-      (parameter.schema.type === 'array' ||
-        parameter.schema.type === 'tuple') &&
-      (parameter.style !== 'form' || !parameter.explode)
-    ) {
-      // override the default settings for `querySerializer`
-      requestOptions.push({
-        key: 'querySerializer',
-        value: [
-          {
-            key: 'array',
-            value: [
-              {
-                key: 'explode',
-                value: false,
-              },
-              {
-                key: 'style',
-                value: 'form',
-              },
-            ],
-          },
-        ],
-      });
-      break;
-    }
-  }
-
-  if (plugin.transformer === '@hey-api/transformers') {
-    const identifierTransformer = context
-      .file({ id: transformersId })!
-      .identifier({
-        $ref: operationTransformerIrRef({ id: operation.id, type: 'response' }),
-        namespace: 'value',
-      });
-
-    if (identifierTransformer.name) {
-      file.import({
-        module: file.relativePathToFile({
-          context,
-          id: transformersId,
-        }),
-        name: identifierTransformer.name,
-      });
-
-      requestOptions.push({
-        key: 'responseTransformer',
-        value: identifierTransformer.name,
-      });
-    }
-  }
-
-  const responseValidator = createResponseValidator({
-    context,
-    operation,
-    plugin,
-  });
-  if (responseValidator) {
-    requestOptions.push({
-      key: 'responseValidator',
-      value: responseValidator,
-    });
-  }
-
-  if (plugin.responseStyle === 'data') {
-    requestOptions.push({
-      key: 'responseStyle',
-      value: plugin.responseStyle,
-    });
-  }
-
-  requestOptions.push({
-    key: 'url',
-    value: operation.path,
-  });
-
-  // options must go last to allow overriding parameters above
-  requestOptions.push({ spread: 'options' });
-
-  if (operation.body) {
-    const parameterContentType = operation.parameters?.header?.['content-type'];
-    const hasRequiredContentType = Boolean(parameterContentType?.required);
-    // spreading required Content-Type on generated header would throw a TypeScript error
-    if (!hasRequiredContentType) {
-      const spread = compiler.propertyAccessExpression({
-        expression: compiler.identifier({ text: 'options' }),
-        isOptional: !isRequiredOptions,
-        name: 'headers',
-      });
-      requestOptions.push({
-        key: 'headers',
-        value: [
-          {
-            key: parameterContentType?.name ?? 'Content-Type',
-            // form-data does not need Content-Type header, browser will set it automatically
-            value:
-              operation.body.type === 'form-data'
-                ? null
-                : operation.body.mediaType,
-          },
-          {
-            spread,
-          },
-        ],
-      });
-    }
-  }
-
-  const responseType = identifierResponse.name || 'unknown';
-  const errorType = identifierError.name || 'unknown';
-
-  const heyApiClient = plugin.client
-    ? file.import({
-        alias: '_heyApiClient',
-        module: file.relativePathToFile({
-          context,
-          id: clientId,
-        }),
-        name: 'client',
-      })
-    : undefined;
-
-  const optionsClient = compiler.propertyAccessExpression({
-    expression: compiler.identifier({ text: 'options' }),
-    isOptional: !isRequiredOptions,
-    name: 'client',
-  });
-
-  const types: Array<string | ts.StringLiteral> = [];
-  if (isNuxtClient) {
-    types.push(
-      nuxtTypeComposable,
-      `${responseType} | ${nuxtTypeDefault}`,
-      errorType,
-      nuxtTypeDefault,
-    );
-  } else {
-    types.push(responseType, errorType, 'ThrowOnError');
-  }
-
-  if (plugin.responseStyle === 'data') {
-    types.push(compiler.stringLiteral({ text: plugin.responseStyle }));
-  }
-
-  return [
-    compiler.returnFunctionCall({
-      args: [
-        compiler.objectExpression({
-          identifiers: ['responseTransformer'],
-          obj: requestOptions,
-        }),
-      ],
-      name: compiler.propertyAccessExpression({
-        expression: heyApiClient?.name
-          ? compiler.binaryExpression({
-              left: optionsClient,
-              operator: '??',
-              right: compiler.identifier({ text: heyApiClient.name }),
-            })
-          : optionsClient,
-        name: compiler.identifier({ text: operation.method }),
-      }),
-      types,
-    }),
-  ];
-};
 
 const generateClassSdk = ({
   context,
@@ -530,7 +33,7 @@ const generateClassSdk = ({
   const client = getClientPlugin(context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = context.file({ id: sdkId })!;
-  const sdks = new Map<string, Array<ts.MethodDeclaration>>();
+  const sdks = new Map<string, Array<ts.ClassElement>>();
 
   context.subscribe('operation', ({ operation }) => {
     const isRequiredOptions = isOperationOptionsRequired({
@@ -546,7 +49,7 @@ const generateClassSdk = ({
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
       comment: createOperationComment({ operation }),
-      isStatic: true,
+      isStatic: !plugin.instance,
       name: serviceFunctionIdentifier({
         config: context.config,
         handleIllegal: false,
@@ -604,14 +107,17 @@ const generateClassSdk = ({
           ],
     });
 
-    const uniqueTags = Array.from(new Set(operation.tags));
-    if (!uniqueTags.length) {
-      uniqueTags.push('default');
-    }
-
-    for (const tag of uniqueTags) {
-      const name = getServiceName(tag);
+    const tags = getOperationTags({ operation, plugin });
+    for (const tag of tags) {
+      const name = stringCase({
+        case: 'PascalCase',
+        value: sanitizeNamespaceIdentifier(tag),
+      });
       const nodes = sdks.get(name) ?? [];
+      if (nodes.length) {
+        // @ts-expect-error
+        nodes.push(compiler.identifier({ text: '\n' }));
+      }
       nodes.push(node);
       sdks.set(name, nodes);
     }
@@ -619,13 +125,70 @@ const generateClassSdk = ({
 
   context.subscribe('after', () => {
     for (const [name, nodes] of sdks) {
+      if (plugin.instance) {
+        const clientAssignmentStatement = compiler.expressionToStatement({
+          expression: compiler.binaryExpression({
+            left: compiler.propertyAccessExpression({
+              expression: compiler.this(),
+              name: 'client',
+            }),
+            operator: '=',
+            right: compiler.identifier({ text: 'client' }),
+          }),
+        });
+        nodes.unshift(
+          compiler.propertyDeclaration({
+            initializer: plugin.client
+              ? compiler.identifier({ text: '_heyApiClient' })
+              : undefined,
+            name: 'client',
+            type: ts.factory.createTypeReferenceNode('Client'),
+          }),
+          // @ts-expect-error
+          compiler.identifier({ text: '\n' }),
+          compiler.constructorDeclaration({
+            multiLine: true,
+            parameters: [
+              {
+                destructure: [
+                  {
+                    name: 'client',
+                  },
+                ],
+                type: compiler.typeInterfaceNode({
+                  properties: [
+                    {
+                      isRequired: !plugin.client,
+                      name: 'client',
+                      type: 'Client',
+                    },
+                  ],
+                  useLegacyResolution: false,
+                }),
+              },
+            ],
+            statements: [
+              !plugin.client
+                ? clientAssignmentStatement
+                : compiler.ifStatement({
+                    expression: compiler.identifier({ text: 'client' }),
+                    thenStatement: compiler.block({
+                      statements: [clientAssignmentStatement],
+                    }),
+                  }),
+            ],
+          }),
+          compiler.identifier({ text: '\n' }),
+        );
+      }
+
       const node = compiler.classDeclaration({
-        decorator: undefined,
-        members: nodes,
-        name: transformServiceName({
+        exportClass: true,
+        name: transformClassName({
           config: context.config,
           name,
         }),
+        nodes,
       });
       file.add(node);
     }

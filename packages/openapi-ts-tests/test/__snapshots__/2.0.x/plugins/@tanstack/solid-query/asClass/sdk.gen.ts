@@ -54,7 +54,6 @@ export class DefaultService {
             }
         });
     }
-    
 }
 
 export class SimpleService {
@@ -106,7 +105,6 @@ export class SimpleService {
             ...options
         });
     }
-    
 }
 
 export class DescriptionsService {
@@ -116,7 +114,6 @@ export class DescriptionsService {
             ...options
         });
     }
-    
 }
 
 export class ParametersService {
@@ -133,7 +130,6 @@ export class ParametersService {
             ...options
         });
     }
-    
 }
 
 export class DefaultsService {
@@ -157,7 +153,6 @@ export class DefaultsService {
             ...options
         });
     }
-    
 }
 
 export class DuplicateService {
@@ -188,7 +183,6 @@ export class DuplicateService {
             ...options
         });
     }
-    
 }
 
 export class NoContentService {
@@ -205,7 +199,6 @@ export class NoContentService {
             ...options
         });
     }
-    
 }
 
 export class ResponseService {
@@ -236,7 +229,6 @@ export class ResponseService {
             ...options
         });
     }
-    
 }
 
 export class MultipleTags1Service {
@@ -253,7 +245,6 @@ export class MultipleTags1Service {
             ...options
         });
     }
-    
 }
 
 export class MultipleTags2Service {
@@ -270,7 +261,6 @@ export class MultipleTags2Service {
             ...options
         });
     }
-    
 }
 
 export class MultipleTags3Service {
@@ -280,7 +270,6 @@ export class MultipleTags3Service {
             ...options
         });
     }
-    
 }
 
 export class CollectionFormatService {
@@ -296,7 +285,6 @@ export class CollectionFormatService {
             ...options
         });
     }
-    
 }
 
 export class TypesService {
@@ -312,7 +300,6 @@ export class TypesService {
             ...options
         });
     }
-    
 }
 
 export class ComplexService {
@@ -322,7 +309,6 @@ export class ComplexService {
             ...options
         });
     }
-    
 }
 
 export class HeaderService {
@@ -332,7 +318,6 @@ export class HeaderService {
             ...options
         });
     }
-    
 }
 
 export class ErrorService {
@@ -342,7 +327,6 @@ export class ErrorService {
             ...options
         });
     }
-    
 }
 
 export class NonAsciiÆøåÆøÅöôêÊService {
@@ -352,5 +336,4 @@ export class NonAsciiÆøåÆøÅöôêÊService {
             ...options
         });
     }
-    
 }

@@ -3,13 +3,13 @@ import type { OpenAPIConfig } from './core/OpenAPI';
 import { Interceptors } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 
-import { DefaultService } from './sdk.gen';
+import { Default } from './sdk.gen';
 
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 
 export class ApiClient {
 
-	public readonly default: DefaultService;
+	public readonly default: Default;
 
 	public readonly request: BaseHttpRequest;
 
@@ -30,6 +30,6 @@ export class ApiClient {
       },
 		});
 
-		this.default = new DefaultService(this.request);
+		this.default = new Default(this.request);
 	}
 }

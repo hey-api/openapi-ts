@@ -8,9 +8,9 @@ import type {
 
 export interface Config extends Plugin.Name<'@hey-api/sdk'> {
   /**
-   * Group operation methods into classes? When enabled, you can
-   * select which classes to export with `sdk.include` and/or
-   * transform their names with `sdk.serviceNameBuilder`.
+   * Group operation methods into classes? When enabled, you can select which
+   * classes to export with `sdk.include` and/or transform their names with
+   * `sdk.classNameBuilder`.
    *
    * Note that by enabling this option, your SDKs will **NOT**
    * support {@link https://developer.mozilla.org/docs/Glossary/Tree_shaking tree-shaking}.
@@ -27,6 +27,13 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    * @default true
    */
   auth?: boolean;
+  /**
+   * Customize the generated class names. The name variable is obtained from
+   * your OpenAPI specification tags or `instance` value.
+   *
+   * This option has no effect if `sdk.asClass` is `false`.
+   */
+  classNameBuilder?: string | ((name: string) => string);
   /**
    * Use an internal client instance to send HTTP requests? This is useful if
    * you don't want to manually pass the client to each SDK function.
@@ -53,6 +60,14 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   include?: string;
   /**
+   * Set `instance` to create an instantiable SDK. Using `true` will use the
+   * default instance name; in practice, you want to define your own by passing
+   * a string value.
+   *
+   * @default false
+   */
+  instance?: string | boolean;
+  /**
    * Customise the name of methods within the service. By default, {@link IR.OperationObject.id} or {@link Operation.name} is used.
    */
   methodNameBuilder?: (operation: IR.OperationObject | Operation) => string;
@@ -77,15 +92,6 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    * @default 'fields'
    */
   responseStyle?: 'data' | 'fields';
-  /**
-   * Customize the generated service class names. The name variable is
-   * obtained from your OpenAPI specification tags.
-   *
-   * This option has no effect if `sdk.asClass` is `false`.
-   *
-   * @default '{{name}}Service'
-   */
-  serviceNameBuilder?: string | ((name: string) => string);
   /**
    * Transform response data before returning. This is useful if you want to
    * convert for example ISO strings into Date objects. However, transformation

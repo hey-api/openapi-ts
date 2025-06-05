@@ -4,7 +4,7 @@ import { getConfig } from './config';
 import { reservedJavaScriptKeywordsRegExp } from './regexp';
 import { stringCase } from './stringCase';
 
-export const transformServiceName = ({
+export const transformClassName = ({
   config,
   name,
 }: {
@@ -12,13 +12,13 @@ export const transformServiceName = ({
   name: string;
 }) => {
   const plugin = config.plugins['@hey-api/sdk'];
-  if (plugin?.serviceNameBuilder) {
+  if (plugin?.classNameBuilder) {
     let customName = '';
 
-    if (typeof plugin.serviceNameBuilder === 'function') {
-      customName = plugin.serviceNameBuilder(name);
+    if (typeof plugin.classNameBuilder === 'function') {
+      customName = plugin.classNameBuilder(name);
     } else {
-      customName = plugin.serviceNameBuilder.replace('{{name}}', name);
+      customName = plugin.classNameBuilder.replace('{{name}}', name);
     }
 
     return customName;
