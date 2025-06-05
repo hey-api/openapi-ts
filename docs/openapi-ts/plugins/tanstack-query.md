@@ -108,6 +108,29 @@ export default {
 
 :::
 
+## Configs
+
+### throwOnError
+
+default: `true`
+
+When set to `true`, generated queries will have `throwOnError` set to `true`.
+
+```js
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    ...defaultPlugins,
+    '@hey-api/client-fetch',
+    {
+      name: '@tanstack/solid-query',
+      throwOnError: false, // [!code ++]
+    },
+  ],
+};
+```
+
 ## Output
 
 The TanStack Query plugin will generate the following artifacts, depending on the input specification.
