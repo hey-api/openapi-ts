@@ -79,15 +79,41 @@ const shouldSkipSchema = ({
 }: {
   schema: IR.SchemaObject;
   state: State | undefined;
-}) =>
-  Boolean(
-    state?.accessScope &&
-      ((schema.accessScope && state.accessScope !== schema.accessScope) ||
-        (schema.$ref &&
-          schema.accessScopes &&
-          !schema.accessScopes.includes(state.accessScope) &&
-          !schema.accessScopes.includes('both'))),
-  );
+}) => {
+  const stateAccessScope = state?.accessScope;
+
+  if (!stateAccessScope) {
+    return false;
+  }
+
+  if (schema.accessScope && stateAccessScope !== schema.accessScope) {
+    return true;
+  }
+
+  if (
+    schema.$ref &&
+    schema.accessScopes &&
+    !schema.accessScopes.includes(stateAccessScope) &&
+    !schema.accessScopes.includes('both')
+  ) {
+    return true;
+  }
+
+  if (
+    (schema.type === 'array' || schema.type === 'tuple') &&
+    schema.items &&
+    schema.items.every(
+      (item) =>
+        item.accessScopes &&
+        !item.accessScopes.includes(stateAccessScope) &&
+        !item.accessScopes.includes('both'),
+    )
+  ) {
+    return true;
+  }
+
+  return false;
+};
 
 const addJavaScriptEnum = ({
   $ref,
@@ -332,7 +358,7 @@ const arrayTypeToIdentifier = ({
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'array'>;
   state: State | undefined;
-}): ts.TypeNode => {
+}): ts.TypeNode | undefined => {
   if (!schema.items) {
     return compiler.typeArrayNode(
       compiler.keywordTypeNode({
@@ -345,7 +371,6 @@ const arrayTypeToIdentifier = ({
 
   const itemTypes: Array<ts.TypeNode> = [];
 
-  // at least one item is guaranteed (or at least was before read/write only)
   for (const item of schema.items!) {
     const type = schemaToType({
       context,
@@ -358,6 +383,10 @@ const arrayTypeToIdentifier = ({
     if (type) {
       itemTypes.push(type);
     }
+  }
+
+  if (!itemTypes.length) {
+    return;
   }
 
   if (itemTypes.length === 1) {
@@ -674,7 +703,7 @@ const tupleTypeToIdentifier = ({
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'tuple'>;
   state: State | undefined;
-}): ts.TypeNode => {
+}): ts.TypeNode | undefined => {
   let itemTypes: Array<ts.Expression | ts.TypeNode> = [];
 
   if (schema.const && Array.isArray(schema.const)) {
@@ -696,6 +725,10 @@ const tupleTypeToIdentifier = ({
         itemTypes.push(type);
       }
     }
+  }
+
+  if (!itemTypes.length) {
+    return;
   }
 
   return compiler.typeTupleNode({
