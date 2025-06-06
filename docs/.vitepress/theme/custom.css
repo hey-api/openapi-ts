@@ -239,6 +239,7 @@ html.dark .sponsors-list li {
   background-color: var(--vp-c-brand-3);
   border-radius: 10px;
   border: 1px solid transparent;
+  color: var(--vp-button-brand-text);
   column-gap: 3rem;
   display: flex;
   flex-direction: column;
