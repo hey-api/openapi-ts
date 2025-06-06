@@ -1,9 +1,6 @@
 import type { IR } from '../../../ir/types';
 import type { State } from '../../shared/types/state';
-import {
-  ensureUniqueOperationId,
-  operationToId,
-} from '../../shared/utils/operation';
+import { operationToId } from '../../shared/utils/operation';
 import type {
   OperationObject,
   PathItemObject,
@@ -242,14 +239,6 @@ export const parseOperation = ({
   securitySchemesMap: Map<string, SecuritySchemeObject>;
   state: State;
 }) => {
-  ensureUniqueOperationId({
-    context,
-    id: operation.operationId,
-    method,
-    operationIds: state.operationIds,
-    path,
-  });
-
   if (!context.ir.paths) {
     context.ir.paths = {};
   }

@@ -30,56 +30,74 @@ describe('validate', () => {
   > = [
     {
       description: 'servers must be array',
-      errors: [
+      file: path.join(specsFolder, 'servers-array.yaml'),
+      issues: [
         {
           code: 'invalid_type',
-          message: '`servers` must be an array',
+          message: '`servers` must be an array.',
           path: [],
           severity: 'error',
         },
       ],
-      file: path.join(specsFolder, 'servers-array.yaml'),
       valid: false,
     },
     {
       description: 'servers entry must be object',
-      errors: [
+      file: path.join(specsFolder, 'servers-entry.yaml'),
+      issues: [
         {
           code: 'invalid_type',
           context: {
             actual: 'string',
             expected: 'object',
           },
-          message: 'Each entry in `servers` must be an object',
+          message: 'Each entry in `servers` must be an object.',
           path: ['servers', 0],
           severity: 'error',
         },
       ],
-      file: path.join(specsFolder, 'servers-entry.yaml'),
       valid: false,
     },
     {
       description: 'servers entry required fields',
-      errors: [
+      file: path.join(specsFolder, 'servers-required.yaml'),
+      issues: [
         {
           code: 'missing_required_field',
           context: {
             field: 'url',
           },
-          message: 'Missing required field `url` in server object',
+          message: 'Missing required field `url` in server object.',
           path: ['servers', 0],
           severity: 'error',
         },
       ],
-      file: path.join(specsFolder, 'servers-required.yaml'),
+      valid: false,
+    },
+    {
+      description: 'operationId must be unique',
+      file: path.join(specsFolder, 'operationId-unique.yaml'),
+      issues: [
+        {
+          code: 'duplicate_key',
+          context: {
+            key: 'operationId',
+            value: 'foo',
+          },
+          message:
+            'Duplicate `operationId` found. Each `operationId` must be unique.',
+          path: ['paths', '/foo', 'post', 'operationId'],
+          severity: 'error',
+        },
+      ],
       valid: false,
     },
   ];
 
-  it.each(scenarios)('$description', ({ errors, file, valid }) => {
+  it.each(scenarios)('$description', ({ file, issues, valid }) => {
     const spec = specFileToJson(file);
     const result = createGraph({ spec, validate: true });
     expect(result.valid).toBe(valid);
-    expect(result.errors).toEqual(errors);
+    expect(result.issues).toEqual(issues);
   });
 });
