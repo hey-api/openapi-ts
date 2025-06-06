@@ -93,13 +93,13 @@ export default defineConfig(() => {
         // bundle: true,
         // bundleSource_EXPERIMENTAL: true,
         // exportFromIndex: true,
-        // name: '@hey-api/client-fetch',
-        name: 'legacy/fetch',
+        name: '@hey-api/client-fetch',
+        // name: 'legacy/fetch',
         // strictBaseUrl: true,
       },
       {
         exportFromIndex: true,
-        name: '@hey-api/schemas',
+        // name: '@hey-api/schemas',
         // type: 'json',
       },
       {
