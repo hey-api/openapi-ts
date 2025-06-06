@@ -91,11 +91,12 @@ export interface Input {
    * **This is an experimental feature.**
    *
    * Validate the input before generating output? This is an experimental,
-   * lightweight feature and support will be added on an ad hoc basis.
+   * lightweight feature and support will be added on an ad hoc basis. Setting
+   * `validate_EXPERIMENTAL` to `true` is the same as `warn`.
    *
    * @default false
    */
-  validate_EXPERIMENTAL?: boolean;
+  validate_EXPERIMENTAL?: boolean | 'strict' | 'warn';
   /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
    *

@@ -5,7 +5,7 @@ import {
 } from '../../shared/utils/graph';
 import { httpMethods } from '../../shared/utils/operation';
 import type {
-  ValidatorError,
+  ValidatorIssue,
   ValidatorResult,
 } from '../../shared/utils/validator';
 import type {
@@ -66,6 +66,7 @@ const collectSchemaDependencies = (
 
 export const createGraph = ({
   spec,
+  validate,
 }: {
   spec: OpenApiV2_0_X;
   validate: boolean;
@@ -79,7 +80,8 @@ export const createGraph = ({
     responses: new Map(),
     schemas: new Map(),
   };
-  const errors: Array<ValidatorError> = [];
+  const issues: Array<ValidatorIssue> = [];
+  const operationIds = new Map();
 
   if (spec.definitions) {
     for (const [key, schema] of Object.entries(spec.definitions)) {
@@ -110,6 +112,26 @@ export const createGraph = ({
           continue;
         }
 
+        const operationKey = `${method.toUpperCase()} ${path}`;
+
+        if (validate && operation.operationId) {
+          if (!operationIds.has(operation.operationId)) {
+            operationIds.set(operation.operationId, operationKey);
+          } else {
+            issues.push({
+              code: 'duplicate_key',
+              context: {
+                key: 'operationId',
+                value: operation.operationId,
+              },
+              message:
+                'Duplicate `operationId` found. Each `operationId` must be unique.',
+              path: ['paths', path, method, 'operationId'],
+              severity: 'error',
+            });
+          }
+        }
+
         const dependencies = new Set<string>();
 
         if (operation.responses) {
@@ -132,17 +154,18 @@ export const createGraph = ({
           }
         }
 
-        graph.operations.set(
-          addNamespace('operation', `${method.toUpperCase()} ${path}`),
-          {
-            dependencies,
-            deprecated: Boolean(operation.deprecated),
-            tags: new Set(operation.tags),
-          },
-        );
+        graph.operations.set(addNamespace('operation', operationKey), {
+          dependencies,
+          deprecated: Boolean(operation.deprecated),
+          tags: new Set(operation.tags),
+        });
       }
     }
   }
 
-  return { errors, graph, valid: !errors.length };
+  return {
+    graph,
+    issues,
+    valid: !issues.some((issue) => issue.severity === 'error'),
+  };
 };

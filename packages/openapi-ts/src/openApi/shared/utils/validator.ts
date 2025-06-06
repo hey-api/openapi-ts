@@ -2,14 +2,14 @@ import colors from 'ansi-colors';
 
 import type { IR } from '../../../ir/types';
 
-export interface ValidatorError {
+export interface ValidatorIssue {
   /**
-   * Machine-readable error code
+   * Machine-readable issue code
    *
    * @example
    * 'invalid_type'
    */
-  code: 'invalid_type' | 'missing_required_field';
+  code: 'duplicate_key' | 'invalid_type' | 'missing_required_field';
   /**
    * Optional additional data.
    *
@@ -18,11 +18,11 @@ export interface ValidatorError {
    */
   context?: Record<string, any>;
   /**
-   * Human-readable error summary.
+   * Human-readable issue summary.
    */
   message: string;
   /**
-   * JSONPath-like array to pinpoint error location.
+   * JSONPath-like array to pinpoint issue location.
    */
   path: ReadonlyArray<string | number>;
   /**
@@ -32,23 +32,58 @@ export interface ValidatorError {
 }
 
 export interface ValidatorResult {
-  errors: ReadonlyArray<ValidatorError>;
+  issues: ReadonlyArray<ValidatorIssue>;
   valid: boolean;
 }
 
-const formatValidatorError = (error: ValidatorError): string => {
-  const pathStr = error.path
-    .map((segment) => (typeof segment === 'number' ? `[${segment}]` : segment))
-    .join('')
-    .replace(/\.\[/g, '[');
-  const level =
-    error.severity === 'error' ? colors.bold.red : colors.bold.yellow;
+const isSimpleKey = (key: string) => /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key);
 
-  const highlightedMessage = error.message.replace(/`([^`]+)`/g, (_, code) =>
+const formatPath = (path: ReadonlyArray<string | number>): string =>
+  path
+    .map((segment, i) => {
+      if (typeof segment === 'number') {
+        return `[${segment}]`;
+      }
+
+      if (i === 0) {
+        // first segment no dot or brackets
+        return segment;
+      }
+
+      return isSimpleKey(segment)
+        ? `.${segment}`
+        : `['${segment.replace(/"/g, "\\'")}']`;
+    })
+    .join('');
+
+const formatValidatorIssue = (issue: ValidatorIssue): string => {
+  const pathStr = formatPath(issue.path);
+  const level =
+    issue.severity === 'error' ? colors.bold.red : colors.bold.yellow;
+
+  const highlightedMessage = issue.message.replace(/`([^`]+)`/g, (_, code) =>
     colors.yellow(`\`${code}\``),
   );
 
-  return `${level(`[${error.severity.toUpperCase()}]`)} ${colors.cyan(pathStr)}: ${highlightedMessage}`;
+  return `${level(`[${issue.severity.toUpperCase()}]`)} ${colors.cyan(pathStr)}: ${highlightedMessage}`;
+};
+
+const shouldPrint = ({
+  context,
+  issue,
+}: {
+  context: IR.Context;
+  issue: ValidatorIssue;
+}) => {
+  if (context.config.logs.level === 'silent') {
+    return false;
+  }
+
+  if (issue.severity === 'error') {
+    return context.config.logs.level !== 'warn';
+  }
+
+  return true;
 };
 
 export const handleValidatorResult = ({
@@ -58,13 +93,17 @@ export const handleValidatorResult = ({
   context: IR.Context;
   result: ValidatorResult;
 }) => {
-  if (!context.config.input.validate_EXPERIMENTAL || result.valid) {
+  if (!context.config.input.validate_EXPERIMENTAL) {
     return;
   }
 
-  for (const error of result.errors) {
-    console.log(formatValidatorError(error));
+  for (const issue of result.issues) {
+    if (shouldPrint({ context, issue })) {
+      console.log(formatValidatorIssue(issue));
+    }
   }
 
-  process.exit(1);
+  if (!result.valid) {
+    process.exit(1);
+  }
 };
