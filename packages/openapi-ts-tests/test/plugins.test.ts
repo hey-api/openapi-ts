@@ -238,6 +238,7 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          input: 'sdk-instance.yaml',
           output: 'instance',
           plugins: [
             {

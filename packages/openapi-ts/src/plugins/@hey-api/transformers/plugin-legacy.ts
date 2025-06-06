@@ -1,7 +1,7 @@
 import type ts from 'typescript';
 
 import { compiler } from '../../../compiler';
-import { getOperationKey } from '../../../openApi/common/parser/operation';
+import { createOperationKey } from '../../../ir/operation';
 import type { ModelMeta, OperationResponse } from '../../../types/client';
 import { getConfig } from '../../../utils/config';
 import { isModelDate, unsetUniqueTypeName } from '../../../utils/type';
@@ -283,7 +283,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
       if (nonVoidResponses.length > 1) {
         if (config.logs.level === 'debug') {
           console.warn(
-            `❗️ Transformers warning: route ${getOperationKey(operation)} has ${nonVoidResponses.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
+            `❗️ Transformers warning: route ${createOperationKey(operation)} has ${nonVoidResponses.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
           );
         }
         continue;

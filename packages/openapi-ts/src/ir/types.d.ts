@@ -30,6 +30,7 @@ interface IROperationObject {
   description?: string;
   id: string;
   method: keyof IRPathItemObject;
+  operationId?: string;
   parameters?: IRParametersObject;
   path: keyof IRPathsObject;
   responses?: IRResponsesObject;

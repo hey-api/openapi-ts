@@ -1,0 +1,53 @@
+openapi: 3.0.4
+info:
+  title: OpenAPI 3.0.4 sdk instance example
+  version: 1
+paths:
+  /foo:
+    post:
+      tags:
+        - foo
+      operationId: foo.-post
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK
+    put:
+      tags:
+        - foo
+      operationId: /foo/-put/
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK
+  /foo/bar:
+    post:
+      tags:
+        - foo
+        - bar
+      operationId: foo.bar.post
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK
+    put:
+      tags:
+        - foo
+        - bar
+      operationId: /foo/bar/put/
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK

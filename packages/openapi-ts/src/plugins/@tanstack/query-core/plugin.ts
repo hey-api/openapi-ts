@@ -1,9 +1,7 @@
 import { clientApi } from '../../../generate/client';
-import { stringCase } from '../../../utils/stringCase';
-import { transformClassName } from '../../../utils/transform';
 import { clientId } from '../../@hey-api/client-core/utils';
 import { sdkId } from '../../@hey-api/sdk/constants';
-import { getOperationTags } from '../../@hey-api/sdk/operation';
+import { operationClasses } from '../../@hey-api/sdk/operation';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { createInfiniteQueryOptions } from './infiniteQueryOptions';
 import { createMutationOptions } from './mutationOptions';
@@ -38,25 +36,22 @@ export const handler: PluginHandler = ({ context, plugin }) => {
     state.hasUsedQueryFn = false;
 
     const sdk = context.config.plugins['@hey-api/sdk'];
-    const queryFn = [
-      sdk?.asClass &&
-        transformClassName({
-          config: context.config,
-          name: stringCase({
-            case: 'PascalCase',
-            value: getOperationTags({ operation, plugin: sdk }).values().next()
-              .value!,
-          }),
-        }),
-      serviceFunctionIdentifier({
-        config: context.config,
-        handleIllegal: !sdk?.asClass,
-        id: operation.id,
-        operation,
-      }),
-    ]
-      .filter(Boolean)
-      .join('.');
+    const classes = sdk?.asClass
+      ? operationClasses({ context, operation, plugin: sdk })
+      : undefined;
+    const entry = classes ? classes.values().next().value : undefined;
+    const queryFn = (
+      entry
+        ? [entry.className, entry.methodName]
+        : [
+            serviceFunctionIdentifier({
+              config: context.config,
+              handleIllegal: true,
+              id: operation.id,
+              operation,
+            }),
+          ]
+    ).join('.');
 
     createQueryOptions({
       context,

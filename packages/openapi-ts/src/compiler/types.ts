@@ -6,12 +6,13 @@ import {
   addLeadingComments,
   type Comments,
   createIdentifier,
+  createModifier,
   isTsNode,
   isType,
   ots,
 } from './utils';
 
-export type AccessLevel = 'public' | 'protected' | 'private';
+export type AccessLevel = 'private' | 'protected' | 'public';
 
 export type FunctionParameter =
   | {
@@ -175,29 +176,6 @@ export const toExpression = <T = unknown>({
 };
 
 /**
- * Convert AccessLevel to proper TypeScript compiler API modifier.
- * @param access - the access level.
- * @returns ts.ModifierLike[]
- */
-export const toAccessLevelModifiers = (
-  access?: AccessLevel,
-): ts.ModifierLike[] => {
-  const keyword =
-    access === 'public'
-      ? ts.SyntaxKind.PublicKeyword
-      : access === 'protected'
-        ? ts.SyntaxKind.ProtectedKeyword
-        : access === 'private'
-          ? ts.SyntaxKind.PrivateKeyword
-          : undefined;
-  const modifiers: ts.ModifierLike[] = [];
-  if (keyword) {
-    modifiers.push(ts.factory.createModifier(keyword));
-  }
-  return modifiers;
-};
-
-/**
  * Convert parameters to the declaration array expected by compiler API.
  * @param parameters - the parameters to convert to declarations
  * @returns ts.ParameterDeclaration[]
@@ -233,13 +211,12 @@ export const toParameterDeclarations = (
       });
     }
 
-    let modifiers = toAccessLevelModifiers(parameter.accessLevel);
+    const modifiers = parameter.accessLevel
+      ? [createModifier({ keyword: parameter.accessLevel })]
+      : [];
 
     if (parameter.isReadOnly) {
-      modifiers = [
-        ...modifiers,
-        ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword),
-      ];
+      modifiers.push(createModifier({ keyword: 'readonly' }));
     }
 
     return createParameterDeclaration({
@@ -257,10 +234,91 @@ export const toParameterDeclarations = (
     });
   });
 
+export type SyntaxKindKeyword =
+  | 'any'
+  | 'async'
+  | 'boolean'
+  | 'export'
+  | 'never'
+  | 'number'
+  | 'private'
+  | 'protected'
+  | 'public'
+  | 'readonly'
+  | 'static'
+  | 'string'
+  | 'undefined'
+  | 'unknown'
+  | 'void';
+
+export const syntaxKindKeyword = <T extends SyntaxKindKeyword>({
+  keyword,
+}: {
+  keyword: T;
+}): T extends 'protected'
+  ? ts.SyntaxKind.ProtectedKeyword
+  : T extends 'public'
+    ? ts.SyntaxKind.PublicKeyword
+    : T extends 'private'
+      ? ts.SyntaxKind.PrivateKeyword
+      : T extends 'export'
+        ? ts.SyntaxKind.ExportKeyword
+        : T extends 'async'
+          ? ts.SyntaxKind.ExportKeyword
+          : T extends 'readonly'
+            ? ts.SyntaxKind.ExportKeyword
+            : T extends 'static'
+              ? ts.SyntaxKind.ExportKeyword
+              :
+                  | ts.SyntaxKind.AnyKeyword
+                  | ts.SyntaxKind.BooleanKeyword
+                  | ts.SyntaxKind.NeverKeyword
+                  | ts.SyntaxKind.NumberKeyword
+                  | ts.SyntaxKind.StringKeyword
+                  | ts.SyntaxKind.UndefinedKeyword
+                  | ts.SyntaxKind.UnknownKeyword
+                  | ts.SyntaxKind.VoidKeyword => {
+  switch (keyword) {
+    case 'any':
+      return ts.SyntaxKind.AnyKeyword as any;
+    case 'async':
+      return ts.SyntaxKind.AsyncKeyword as any;
+    case 'boolean':
+      return ts.SyntaxKind.BooleanKeyword as any;
+    case 'export':
+      return ts.SyntaxKind.ExportKeyword as any;
+    case 'never':
+      return ts.SyntaxKind.NeverKeyword as any;
+    case 'number':
+      return ts.SyntaxKind.NumberKeyword as any;
+    case 'private':
+      return ts.SyntaxKind.PrivateKeyword as any;
+    case 'protected':
+      return ts.SyntaxKind.ProtectedKeyword as any;
+    case 'public':
+      return ts.SyntaxKind.PublicKeyword as any;
+    case 'readonly':
+      return ts.SyntaxKind.ReadonlyKeyword as any;
+    case 'static':
+      return ts.SyntaxKind.StaticKeyword as any;
+    case 'string':
+      return ts.SyntaxKind.StringKeyword as any;
+    case 'undefined':
+      return ts.SyntaxKind.UndefinedKeyword as any;
+    case 'unknown':
+      return ts.SyntaxKind.UnknownKeyword as any;
+    case 'void':
+      return ts.SyntaxKind.VoidKeyword as any;
+    default:
+      throw new Error(`unsupported syntax kind keyword "${keyword}"`);
+  }
+};
+
 export const createKeywordTypeNode = ({
   keyword,
 }: {
-  keyword:
+  keyword: Extract<
+    SyntaxKindKeyword,
     | 'any'
     | 'boolean'
     | 'never'
@@ -268,32 +326,10 @@ export const createKeywordTypeNode = ({
     | 'string'
     | 'undefined'
     | 'unknown'
-    | 'void';
+    | 'void'
+  >;
 }) => {
-  let kind: ts.KeywordTypeSyntaxKind = ts.SyntaxKind.AnyKeyword;
-  switch (keyword) {
-    case 'boolean':
-      kind = ts.SyntaxKind.BooleanKeyword;
-      break;
-    case 'never':
-      kind = ts.SyntaxKind.NeverKeyword;
-      break;
-    case 'number':
-      kind = ts.SyntaxKind.NumberKeyword;
-      break;
-    case 'string':
-      kind = ts.SyntaxKind.StringKeyword;
-      break;
-    case 'undefined':
-      kind = ts.SyntaxKind.UndefinedKeyword;
-      break;
-    case 'unknown':
-      kind = ts.SyntaxKind.UnknownKeyword;
-      break;
-    case 'void':
-      kind = ts.SyntaxKind.VoidKeyword;
-      break;
-  }
+  const kind = syntaxKindKeyword({ keyword });
   return ts.factory.createKeywordTypeNode(kind);
 };
 
@@ -416,7 +452,7 @@ export const createArrowFunction = ({
   types?: FunctionTypeParameter[];
 }) => {
   const expression = ts.factory.createArrowFunction(
-    async ? [ts.factory.createModifier(ts.SyntaxKind.AsyncKeyword)] : undefined,
+    async ? [createModifier({ keyword: 'async' })] : undefined,
     types ? toTypeParameters(types) : undefined,
     toParameterDeclarations(parameters),
     returnType ? createTypeNode(returnType) : undefined,
@@ -455,7 +491,7 @@ export const createAnonymousFunction = ({
   types?: FunctionTypeParameter[];
 }) => {
   const expression = ts.factory.createFunctionExpression(
-    async ? [ts.factory.createModifier(ts.SyntaxKind.AsyncKeyword)] : undefined,
+    async ? [createModifier({ keyword: 'async' })] : undefined,
     undefined,
     undefined,
     types ? toTypeParameters(types) : undefined,
@@ -762,7 +798,7 @@ export const createEnumDeclaration = <
       });
 
   const node = ts.factory.createEnumDeclaration(
-    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    [createModifier({ keyword: 'export' })],
     createIdentifier({ text: name }),
     members,
   );
@@ -810,7 +846,7 @@ export const createNamespaceDeclaration = ({
   statements: Array<ts.Statement>;
 }) =>
   ts.factory.createModuleDeclaration(
-    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    [createModifier({ keyword: 'export' })],
     createIdentifier({ text: name }),
     ts.factory.createModuleBlock(statements),
     ts.NodeFlags.Namespace,
@@ -888,9 +924,7 @@ export const createTypeAliasDeclaration = ({
   typeParameters?: FunctionTypeParameter[];
 }): ts.TypeAliasDeclaration => {
   const node = ts.factory.createTypeAliasDeclaration(
-    exportType
-      ? [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)]
-      : undefined,
+    exportType ? [createModifier({ keyword: 'export' })] : undefined,
     createIdentifier({ text: name }),
     toTypeParameters(typeParameters),
     createTypeNode(type),
@@ -932,7 +966,7 @@ export const createParameterDeclaration = ({
   type,
 }: {
   initializer?: ts.Expression;
-  modifiers?: ts.ModifierLike[];
+  modifiers?: ReadonlyArray<ts.ModifierLike>;
   name: string | ts.BindingName;
   required?: boolean;
   type?: ts.TypeNode;
