@@ -1,8 +1,8 @@
-import { compiler } from '../compiler';
-import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
-import type { Files } from '../types/utils';
-import { getConfig, legacyNameFromConfig } from '../utils/config';
-import { TypeScriptFile } from './files';
+import { compiler } from '../../compiler';
+import { getClientPlugin } from '../../plugins/@hey-api/client-core/utils';
+import type { Files } from '../../types/utils';
+import { getConfig, legacyNameFromConfig } from '../../utils/config';
+import { TypeScriptFile } from '../files';
 
 export const generateIndexFile = ({ files }: { files: Files }): void => {
   const config = getConfig();
@@ -71,7 +71,7 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
         return;
       }
 
-      if (['sdk', 'types'].includes(name)) {
+      if (file.exportFromIndex) {
         files.index!.add(
           compiler.exportAllDeclaration({
             module: `./${file.nameWithoutExtension()}`,

@@ -802,6 +802,7 @@ const processService = ({
 export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
   client,
   files,
+  plugin,
 }) => {
   const config = getConfig();
 
@@ -811,6 +812,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
 
   files.sdk = new TypeScriptFile({
     dir: config.output.path,
+    exportFromIndex: plugin.exportFromIndex,
     id: 'sdk',
     name: `${sdkOutput}.ts`,
   });

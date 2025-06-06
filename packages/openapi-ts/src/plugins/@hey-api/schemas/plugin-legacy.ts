@@ -78,11 +78,13 @@ const toSchemaName = (
 export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
   files,
   openApi,
+  plugin,
 }) => {
   const config = getConfig();
 
   files.schemas = new TypeScriptFile({
     dir: config.output.path,
+    exportFromIndex: plugin.exportFromIndex,
     id: 'schemas',
     name: 'schemas.ts',
   });
