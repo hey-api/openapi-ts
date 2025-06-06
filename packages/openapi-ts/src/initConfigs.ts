@@ -47,6 +47,7 @@ const getInput = (userConfig: UserConfig): Config['input'] => {
       ...userConfig.input,
     };
 
+    // watch only remote files
     if (input.watch !== undefined) {
       input.watch = getWatch(input);
     }
@@ -55,6 +56,10 @@ const getInput = (userConfig: UserConfig): Config['input'] => {
       ...input,
       path: userConfig.input as Record<string, unknown>,
     };
+  }
+
+  if (input.validate_EXPERIMENTAL === true) {
+    input.validate_EXPERIMENTAL = 'warn';
   }
 
   if (
@@ -277,6 +282,37 @@ const getWatch = (
   return watch;
 };
 
+const mergeObjects = (
+  objA: Record<string, unknown> | undefined,
+  objB: Record<string, unknown> | undefined,
+): Record<string, unknown> => {
+  const a = objA || {};
+  const b = objB || {};
+  return {
+    ...a,
+    ...b,
+  };
+};
+
+const mergeConfigs = (
+  configA: UserConfig | undefined,
+  configB: UserConfig | undefined,
+): UserConfig => {
+  const a: Partial<UserConfig> = configA || {};
+  const b: Partial<UserConfig> = configB || {};
+  const merged: UserConfig = {
+    ...(a as UserConfig),
+    ...(b as UserConfig),
+  };
+  if (typeof merged.logs === 'object') {
+    merged.logs = mergeObjects(
+      a.logs as Record<string, unknown>,
+      b.logs as Record<string, unknown>,
+    );
+  }
+  return merged;
+};
+
 /**
  * @internal
  */
@@ -294,14 +330,11 @@ export const initConfigs = async (
     name: 'openapi-ts',
   });
 
-  const userConfigs: UserConfig[] = Array.isArray(userConfig)
+  const userConfigs: ReadonlyArray<UserConfig> = Array.isArray(userConfig)
     ? userConfig
     : Array.isArray(configFromFile)
-      ? configFromFile.map((config) => ({
-          ...config,
-          ...userConfig,
-        }))
-      : [{ ...(configFromFile ?? {}), ...userConfig }];
+      ? configFromFile.map((config) => mergeConfigs(config, userConfig))
+      : [mergeConfigs(configFromFile, userConfig)];
 
   return userConfigs.map((userConfig) => {
     const {
