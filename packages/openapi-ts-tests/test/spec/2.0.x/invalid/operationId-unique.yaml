@@ -1,0 +1,22 @@
+swagger: 2.0
+info:
+  title: Invalid OpenAPI 2.0 operationId unique example
+  version: 1
+paths:
+  /foo:
+    get:
+      operationId: foo
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+    post:
+      operationId: foo
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string

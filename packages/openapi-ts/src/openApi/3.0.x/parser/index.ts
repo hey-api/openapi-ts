@@ -32,7 +32,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
   if (shouldFilterSpec || context.config.input.validate_EXPERIMENTAL) {
     const result = createGraph({
       spec: context.spec,
-      validate: context.config.input.validate_EXPERIMENTAL,
+      validate: Boolean(context.config.input.validate_EXPERIMENTAL),
     });
     graph = result.graph;
     handleValidatorResult({ context, result });
@@ -50,7 +50,6 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
 
   const state: State = {
     ids: new Map(),
-    operationIds: new Map(),
   };
   const securitySchemesMap = new Map<string, SecuritySchemeObject>();
 

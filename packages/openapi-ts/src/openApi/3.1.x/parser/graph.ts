@@ -2,7 +2,7 @@ import type { Graph } from '../../shared/utils/graph';
 import { addNamespace, stringToNamespace } from '../../shared/utils/graph';
 import { httpMethods } from '../../shared/utils/operation';
 import type {
-  ValidatorError,
+  ValidatorIssue,
   ValidatorResult,
 } from '../../shared/utils/validator';
 import type {
@@ -97,7 +97,8 @@ export const createGraph = ({
     responses: new Map(),
     schemas: new Map(),
   };
-  const errors: Array<ValidatorError> = [];
+  const issues: Array<ValidatorIssue> = [];
+  const operationIds = new Map();
 
   if (spec.components) {
     // TODO: add other components
@@ -194,6 +195,26 @@ export const createGraph = ({
           continue;
         }
 
+        const operationKey = `${method.toUpperCase()} ${path}`;
+
+        if (validate && operation.operationId) {
+          if (!operationIds.has(operation.operationId)) {
+            operationIds.set(operation.operationId, operationKey);
+          } else {
+            issues.push({
+              code: 'duplicate_key',
+              context: {
+                key: 'operationId',
+                value: operation.operationId,
+              },
+              message:
+                'Duplicate `operationId` found. Each `operationId` must be unique.',
+              path: ['paths', path, method, 'operationId'],
+              severity: 'error',
+            });
+          }
+        }
+
         const dependencies = new Set<string>();
 
         if (operation.requestBody) {
@@ -236,14 +257,11 @@ export const createGraph = ({
           }
         }
 
-        graph.operations.set(
-          addNamespace('operation', `${method.toUpperCase()} ${path}`),
-          {
-            dependencies,
-            deprecated: Boolean(operation.deprecated),
-            tags: new Set(operation.tags),
-          },
-        );
+        graph.operations.set(addNamespace('operation', operationKey), {
+          dependencies,
+          deprecated: Boolean(operation.deprecated),
+          tags: new Set(operation.tags),
+        });
       }
     }
   }
@@ -251,9 +269,9 @@ export const createGraph = ({
   if (validate) {
     if (spec.servers) {
       if (typeof spec.servers !== 'object' || !Array.isArray(spec.servers)) {
-        errors.push({
+        issues.push({
           code: 'invalid_type',
-          message: '`servers` must be an array',
+          message: '`servers` must be an array.',
           path: [],
           severity: 'error',
         });
@@ -262,24 +280,24 @@ export const createGraph = ({
       for (let index = 0; index < spec.servers.length; index++) {
         const server = spec.servers[index];
         if (!server || typeof server !== 'object') {
-          errors.push({
+          issues.push({
             code: 'invalid_type',
             context: {
               actual: typeof server,
               expected: 'object',
             },
-            message: 'Each entry in `servers` must be an object',
+            message: 'Each entry in `servers` must be an object.',
             path: ['servers', index],
             severity: 'error',
           });
         } else {
           if (!server.url) {
-            errors.push({
+            issues.push({
               code: 'missing_required_field',
               context: {
                 field: 'url',
               },
-              message: 'Missing required field `url` in server object',
+              message: 'Missing required field `url` in server object.',
               path: ['servers', index],
               severity: 'error',
             });
@@ -289,5 +307,9 @@ export const createGraph = ({
     }
   }
 
-  return { errors, graph, valid: !errors.length };
+  return {
+    graph,
+    issues,
+    valid: !issues.some((issue) => issue.severity === 'error'),
+  };
 };

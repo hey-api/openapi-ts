@@ -17,7 +17,7 @@ const specsFolder = path.join(
   'openapi-ts-tests',
   'test',
   'spec',
-  '3.0.x',
+  '2.0.x',
   'invalid',
 );
 
@@ -28,52 +28,6 @@ describe('validate', () => {
       file: string;
     }
   > = [
-    {
-      description: 'servers must be array',
-      file: path.join(specsFolder, 'servers-array.yaml'),
-      issues: [
-        {
-          code: 'invalid_type',
-          message: '`servers` must be an array.',
-          path: [],
-          severity: 'error',
-        },
-      ],
-      valid: false,
-    },
-    {
-      description: 'servers entry must be object',
-      file: path.join(specsFolder, 'servers-entry.yaml'),
-      issues: [
-        {
-          code: 'invalid_type',
-          context: {
-            actual: 'string',
-            expected: 'object',
-          },
-          message: 'Each entry in `servers` must be an object.',
-          path: ['servers', 0],
-          severity: 'error',
-        },
-      ],
-      valid: false,
-    },
-    {
-      description: 'servers entry required fields',
-      file: path.join(specsFolder, 'servers-required.yaml'),
-      issues: [
-        {
-          code: 'missing_required_field',
-          context: {
-            field: 'url',
-          },
-          message: 'Missing required field `url` in server object.',
-          path: ['servers', 0],
-          severity: 'error',
-        },
-      ],
-      valid: false,
-    },
     {
       description: 'operationId must be unique',
       file: path.join(specsFolder, 'operationId-unique.yaml'),
