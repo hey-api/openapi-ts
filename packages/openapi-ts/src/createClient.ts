@@ -2,7 +2,8 @@ import path from 'node:path';
 
 import colors from 'ansi-colors';
 
-import { generateLegacyOutput, generateOutput } from './generate/output';
+import { generateLegacyOutput } from './generate/legacy/output';
+import { generateOutput } from './generate/output';
 import { getSpec } from './getSpec';
 import type { IR } from './ir/types';
 import { parseLegacy, parseOpenApiSpec } from './openApi';

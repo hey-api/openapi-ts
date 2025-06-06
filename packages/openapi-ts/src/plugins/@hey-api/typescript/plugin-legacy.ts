@@ -609,11 +609,13 @@ const processServiceTypes = ({
 export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
   client,
   files,
+  plugin,
 }) => {
   const config = getConfig();
 
   files.types = new TypeScriptFile({
     dir: config.output.path,
+    exportFromIndex: plugin.exportFromIndex,
     id: 'types',
     name: 'types.ts',
   });
