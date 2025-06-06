@@ -1,3 +1,4 @@
+import { createOperationKey } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { stringCase } from '../../../utils/stringCase';
 import { sanitizeNamespaceIdentifier } from '../../common/parser/sanitize';
@@ -72,8 +73,7 @@ export const operationToId = ({
     });
   }
 
-  const operationKey = `${method.toUpperCase()} ${path}`;
-  state.ids.set(result, operationKey);
+  state.ids.set(result, createOperationKey({ method, path }));
 
   return result;
 };

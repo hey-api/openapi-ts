@@ -3,9 +3,7 @@ import ts from 'typescript';
 import { compiler } from '../../../compiler';
 import { clientApi, clientModulePath } from '../../../generate/client';
 import type { IR } from '../../../ir/types';
-import { sanitizeNamespaceIdentifier } from '../../../openApi';
 import { stringCase } from '../../../utils/stringCase';
-import { transformClassName } from '../../../utils/transform';
 import {
   createOperationComment,
   isOperationOptionsRequired,
@@ -15,13 +13,94 @@ import { getClientPlugin } from '../client-core/utils';
 import { importIdentifier } from '../typescript/ref';
 import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
 import {
-  getOperationTags,
+  operationClasses,
   operationOptionsType,
   operationStatements,
 } from './operation';
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import { createTypeOptions } from './typeOptions';
 import type { Config } from './types';
+
+const createClientClassNodes = ({
+  plugin,
+}: {
+  plugin: Plugin.Instance<Config>;
+}): ReadonlyArray<ts.ClassElement> => {
+  const clientAssignmentStatement = compiler.expressionToStatement({
+    expression: compiler.binaryExpression({
+      left: compiler.propertyAccessExpression({
+        expression: compiler.this(),
+        name: '_client',
+      }),
+      operator: '=',
+      right: compiler.propertyAccessExpression({
+        expression: compiler.identifier({ text: 'args' }),
+        name: 'client',
+      }),
+    }),
+  });
+
+  return [
+    compiler.propertyDeclaration({
+      initializer: plugin.client
+        ? compiler.identifier({ text: '_heyApiClient' })
+        : undefined,
+      modifier: 'protected',
+      name: '_client',
+      type: ts.factory.createTypeReferenceNode('Client'),
+    }),
+    // @ts-expect-error
+    compiler.identifier({ text: '\n' }),
+    compiler.constructorDeclaration({
+      multiLine: true,
+      parameters: [
+        {
+          isRequired: !plugin.client,
+          name: 'args',
+          type: compiler.typeInterfaceNode({
+            properties: [
+              {
+                isRequired: !plugin.client,
+                name: 'client',
+                type: 'Client',
+              },
+            ],
+            useLegacyResolution: false,
+          }),
+        },
+      ],
+      statements: [
+        !plugin.client
+          ? clientAssignmentStatement
+          : compiler.ifStatement({
+              expression: compiler.propertyAccessExpression({
+                expression: compiler.identifier({ text: 'args' }),
+                isOptional: true,
+                name: 'client',
+              }),
+              thenStatement: compiler.block({
+                statements: [clientAssignmentStatement],
+              }),
+            }),
+      ],
+    }),
+  ];
+};
+
+interface SdkClassEntry {
+  /**
+   * Name of the class.
+   */
+  className: string;
+  /**
+   * List of class nodes containing methods.
+   */
+  nodes: Array<ts.ClassElement>;
+  /**
+   * JSONPath-like array to class location.
+   */
+  path: ReadonlyArray<string>;
+}
 
 const generateClassSdk = ({
   context,
@@ -33,7 +112,11 @@ const generateClassSdk = ({
   const client = getClientPlugin(context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = context.file({ id: sdkId })!;
-  const sdks = new Map<string, Array<ts.ClassElement>>();
+  const sdkClasses = new Map<string, SdkClassEntry>();
+
+  const clientClassNodes = plugin.instance
+    ? createClientClassNodes({ plugin })
+    : [];
 
   context.subscribe('operation', ({ operation }) => {
     const isRequiredOptions = isOperationOptionsRequired({
@@ -46,149 +129,147 @@ const generateClassSdk = ({
       operation,
       type: 'response',
     });
-    const node = compiler.methodDeclaration({
-      accessLevel: 'public',
-      comment: createOperationComment({ operation }),
-      isStatic: !plugin.instance,
-      name: serviceFunctionIdentifier({
-        config: context.config,
-        handleIllegal: false,
-        id: operation.id,
-        operation,
-      }),
-      parameters: [
-        {
-          isRequired: isRequiredOptions,
-          name: 'options',
-          type: operationOptionsType({
-            context,
-            file,
-            operation,
-            throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
-          }),
-        },
-      ],
-      returnType: undefined,
-      statements: operationStatements({
-        context,
-        isRequiredOptions,
-        operation,
-        plugin,
-      }),
-      types: isNuxtClient
-        ? [
-            {
-              // default: compiler.ots.string('$fetch'),
-              extends: compiler.typeNode('Composable'),
-              name: nuxtTypeComposable,
-            },
-            {
-              default: identifierResponse.name
-                ? compiler.typeReferenceNode({
-                    typeName: identifierResponse.name,
-                  })
-                : compiler.typeNode('undefined'),
-              extends: identifierResponse.name
-                ? compiler.typeReferenceNode({
-                    typeName: identifierResponse.name,
-                  })
-                : undefined,
-              name: nuxtTypeDefault,
-            },
-          ]
-        : [
-            {
-              default:
-                ('throwOnError' in client ? client.throwOnError : false) ??
-                false,
-              extends: 'boolean',
-              name: 'ThrowOnError',
-            },
-          ],
-    });
 
-    const tags = getOperationTags({ operation, plugin });
-    for (const tag of tags) {
-      const name = stringCase({
-        case: 'PascalCase',
-        value: sanitizeNamespaceIdentifier(tag),
-      });
-      const nodes = sdks.get(name) ?? [];
-      if (nodes.length) {
-        // @ts-expect-error
-        nodes.push(compiler.identifier({ text: '\n' }));
+    const classes = operationClasses({ context, operation, plugin });
+    for (const entry of classes.values()) {
+      if (!sdkClasses.has(entry.className)) {
+        sdkClasses.set(entry.className, {
+          className: entry.className,
+          nodes: [],
+          path: entry.path,
+        });
       }
-      nodes.push(node);
-      sdks.set(name, nodes);
+
+      const sdkClass = sdkClasses.get(entry.className)!;
+
+      const functionNode = compiler.methodDeclaration({
+        accessLevel: 'public',
+        comment: createOperationComment({ operation }),
+        isStatic: !plugin.instance,
+        name: entry.methodName,
+        parameters: [
+          {
+            isRequired: isRequiredOptions,
+            name: 'options',
+            type: operationOptionsType({
+              context,
+              file,
+              operation,
+              throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
+            }),
+          },
+        ],
+        returnType: undefined,
+        statements: operationStatements({
+          context,
+          isRequiredOptions,
+          operation,
+          plugin,
+        }),
+        types: isNuxtClient
+          ? [
+              {
+                // default: compiler.ots.string('$fetch'),
+                extends: compiler.typeNode('Composable'),
+                name: nuxtTypeComposable,
+              },
+              {
+                default: identifierResponse.name
+                  ? compiler.typeReferenceNode({
+                      typeName: identifierResponse.name,
+                    })
+                  : compiler.typeNode('undefined'),
+                extends: identifierResponse.name
+                  ? compiler.typeReferenceNode({
+                      typeName: identifierResponse.name,
+                    })
+                  : undefined,
+                name: nuxtTypeDefault,
+              },
+            ]
+          : [
+              {
+                default:
+                  ('throwOnError' in client ? client.throwOnError : false) ??
+                  false,
+                extends: 'boolean',
+                name: 'ThrowOnError',
+              },
+            ],
+      });
+
+      if (!sdkClass.nodes.length) {
+        sdkClass.nodes.push(functionNode);
+      } else {
+        sdkClass.nodes.push(
+          // @ts-expect-error
+          compiler.identifier({ text: '\n' }),
+          functionNode,
+        );
+      }
+
+      sdkClasses.set(entry.className, sdkClass);
     }
   });
 
   context.subscribe('after', () => {
-    for (const [name, nodes] of sdks) {
-      if (plugin.instance) {
-        const clientAssignmentStatement = compiler.expressionToStatement({
-          expression: compiler.binaryExpression({
-            left: compiler.propertyAccessExpression({
-              expression: compiler.this(),
-              name: 'client',
-            }),
-            operator: '=',
-            right: compiler.identifier({ text: 'client' }),
-          }),
-        });
-        nodes.unshift(
+    if (clientClassNodes.length) {
+      const node = compiler.classDeclaration({
+        exportClass: false,
+        name: '_HeyApiClient',
+        nodes: clientClassNodes,
+      });
+      file.add(node);
+    }
+
+    for (const sdkClass of sdkClasses.values()) {
+      const parentClassName = sdkClass.path[sdkClass.path.length - 2];
+      if (parentClassName) {
+        // this should happen only for root
+        if (!sdkClasses.has(parentClassName)) {
+          sdkClasses.set(parentClassName, {
+            className: parentClassName,
+            nodes: [],
+            path: [],
+          });
+        }
+
+        const parentClass = sdkClasses.get(parentClassName)!;
+
+        parentClass.nodes.push(
           compiler.propertyDeclaration({
-            initializer: plugin.client
-              ? compiler.identifier({ text: '_heyApiClient' })
-              : undefined,
-            name: 'client',
-            type: ts.factory.createTypeReferenceNode('Client'),
-          }),
-          // @ts-expect-error
-          compiler.identifier({ text: '\n' }),
-          compiler.constructorDeclaration({
-            multiLine: true,
-            parameters: [
-              {
-                destructure: [
-                  {
-                    name: 'client',
-                  },
-                ],
-                type: compiler.typeInterfaceNode({
-                  properties: [
+            initializer: compiler.newExpression({
+              argumentsArray: [
+                compiler.objectExpression({
+                  multiLine: false,
+                  obj: [
                     {
-                      isRequired: !plugin.client,
-                      name: 'client',
-                      type: 'Client',
+                      key: 'client',
+                      value: compiler.propertyAccessExpression({
+                        expression: compiler.this(),
+                        name: '_client',
+                      }),
                     },
                   ],
-                  useLegacyResolution: false,
                 }),
-              },
-            ],
-            statements: [
-              !plugin.client
-                ? clientAssignmentStatement
-                : compiler.ifStatement({
-                    expression: compiler.identifier({ text: 'client' }),
-                    thenStatement: compiler.block({
-                      statements: [clientAssignmentStatement],
-                    }),
-                  }),
-            ],
+              ],
+              expression: compiler.identifier({ text: sdkClass.className }),
+            }),
+            name: stringCase({
+              case: 'camelCase',
+              value: sdkClass.className,
+            }),
           }),
-          compiler.identifier({ text: '\n' }),
         );
       }
+    }
 
+    for (const sdkClass of sdkClasses.values()) {
       const node = compiler.classDeclaration({
-        exportClass: true,
-        name: transformClassName({
-          config: context.config,
-          name,
-        }),
-        nodes,
+        exportClass: !sdkClass.path.length,
+        extendedClasses: plugin.instance ? ['_HeyApiClient'] : undefined,
+        name: sdkClass.className,
+        nodes: sdkClass.nodes,
       });
       file.add(node);
     }

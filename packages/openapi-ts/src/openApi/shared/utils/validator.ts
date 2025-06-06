@@ -22,7 +22,7 @@ export interface ValidatorIssue {
    */
   message: string;
   /**
-   * JSONPath-like array to pinpoint issue location.
+   * JSONPath-like array to issue location.
    */
   path: ReadonlyArray<string | number>;
   /**

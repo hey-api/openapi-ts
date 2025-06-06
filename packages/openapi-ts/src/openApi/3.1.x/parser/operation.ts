@@ -63,6 +63,10 @@ const initIrOperation = ({
     path,
   };
 
+  if (operation.operationId) {
+    irOperation.operationId = operation.operationId;
+  }
+
   parseOperationJsDoc({
     irOperation,
     operation,

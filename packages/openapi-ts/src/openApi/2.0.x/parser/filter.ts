@@ -1,3 +1,4 @@
+import { createOperationKey } from '../../../ir/operation';
 import { addNamespace, removeNamespace } from '../../shared/utils/graph';
 import { httpMethods } from '../../shared/utils/operation';
 import type {
@@ -60,7 +61,7 @@ export const filterSpec = ({
 
         const key = addNamespace(
           'operation',
-          `${method.toUpperCase()} ${path}`,
+          createOperationKey({ method, path }),
         );
         if (!operations.has(key)) {
           // @ts-expect-error

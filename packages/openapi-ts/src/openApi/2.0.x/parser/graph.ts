@@ -1,3 +1,4 @@
+import { createOperationKey } from '../../../ir/operation';
 import {
   addNamespace,
   type Graph,
@@ -112,7 +113,7 @@ export const createGraph = ({
           continue;
         }
 
-        const operationKey = `${method.toUpperCase()} ${path}`;
+        const operationKey = createOperationKey({ method, path });
 
         if (validate && operation.operationId) {
           if (!operationIds.has(operation.operationId)) {

@@ -2,7 +2,8 @@ import ts from 'typescript';
 
 import { getConfig } from '../utils/config';
 import { unescapeName } from '../utils/escape';
-import { createStringLiteral } from './types';
+import type { AccessLevel } from './types';
+import { createStringLiteral, syntaxKindKeyword } from './types';
 
 export interface ImportExportItemObject {
   alias?: string;
@@ -85,17 +86,26 @@ export const createIdentifier = ({ text }: { text: string }) => {
 
 export const createThis = () => ts.factory.createThis();
 
+type Modifier = AccessLevel | 'async' | 'export' | 'readonly' | 'static';
+
+export const createModifier = ({ keyword }: { keyword: Modifier }) => {
+  const kind = syntaxKindKeyword({ keyword });
+  return ts.factory.createModifier(kind);
+};
+
 export const createPropertyDeclaration = ({
   initializer,
+  modifier,
   name,
   type,
 }: {
   initializer?: ts.Expression;
+  modifier?: Modifier;
   name: string | ts.PropertyName;
   type?: ts.TypeNode;
 }) => {
   const node = ts.factory.createPropertyDeclaration(
-    undefined,
+    modifier ? [createModifier({ keyword: modifier })] : undefined,
     name,
     undefined,
     type,

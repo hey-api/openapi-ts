@@ -7,13 +7,17 @@ import {
   createTypeNode,
   type FunctionParameter,
   type FunctionTypeParameter,
-  toAccessLevelModifiers,
   toExpression,
   toParameterDeclarations,
   toTypeParameters,
 } from './types';
 import type { Comments } from './utils';
-import { addLeadingComments, createIdentifier, isType } from './utils';
+import {
+  addLeadingComments,
+  createIdentifier,
+  createModifier,
+  isType,
+} from './utils';
 
 /**
  * Create a class constructor declaration.
@@ -37,8 +41,11 @@ export const createConstructorDeclaration = ({
   parameters?: FunctionParameter[];
   statements?: ts.Statement[];
 }) => {
+  const modifiers = accessLevel
+    ? [createModifier({ keyword: accessLevel })]
+    : undefined;
   const node = ts.factory.createConstructorDeclaration(
-    toAccessLevelModifiers(accessLevel),
+    modifiers,
     toParameterDeclarations(parameters),
     createBlock({ multiLine, statements }),
   );
@@ -84,10 +91,12 @@ export const createMethodDeclaration = ({
   statements?: ts.Statement[];
   types?: FunctionTypeParameter[];
 }) => {
-  const modifiers = toAccessLevelModifiers(accessLevel);
+  const modifiers = accessLevel
+    ? [createModifier({ keyword: accessLevel })]
+    : [];
 
   if (isStatic) {
-    modifiers.push(ts.factory.createModifier(ts.SyntaxKind.StaticKeyword));
+    modifiers.push(createModifier({ keyword: 'static' }));
   }
 
   const node = ts.factory.createMethodDeclaration(
@@ -120,6 +129,7 @@ type ClassDecorator = {
 export const createClassDeclaration = ({
   decorator,
   exportClass,
+  extendedClasses,
   name,
   nodes,
 }: {
@@ -132,6 +142,10 @@ export const createClassDeclaration = ({
    */
   exportClass?: boolean;
   /**
+   * List of extended classes.
+   */
+  extendedClasses?: ReadonlyArray<string>;
+  /**
    * Class name.
    */
   name: string;
@@ -143,7 +157,7 @@ export const createClassDeclaration = ({
   const modifiers: Array<ts.ModifierLike> = [];
 
   if (exportClass) {
-    modifiers.push(ts.factory.createModifier(ts.SyntaxKind.ExportKeyword));
+    modifiers.push(createModifier({ keyword: 'export' }));
   }
 
   if (decorator) {
@@ -159,11 +173,26 @@ export const createClassDeclaration = ({
     );
   }
 
+  const heritageClauses: Array<ts.HeritageClause> = [];
+
+  if (extendedClasses) {
+    for (const extendedClass of extendedClasses) {
+      heritageClauses.push(
+        ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, [
+          ts.factory.createExpressionWithTypeArguments(
+            createIdentifier({ text: extendedClass }),
+            undefined,
+          ),
+        ]),
+      );
+    }
+  }
+
   return ts.factory.createClassDeclaration(
     modifiers,
     createIdentifier({ text: name }),
     undefined,
-    undefined,
+    heritageClauses,
     nodes,
   );
 };

@@ -1,3 +1,4 @@
+import { createOperationKey } from '../../../ir/operation';
 import type { Graph } from '../../shared/utils/graph';
 import { addNamespace, stringToNamespace } from '../../shared/utils/graph';
 import { httpMethods } from '../../shared/utils/operation';
@@ -190,7 +191,7 @@ export const createGraph = ({
           continue;
         }
 
-        const operationKey = `${method.toUpperCase()} ${path}`;
+        const operationKey = createOperationKey({ method, path });
 
         if (validate && operation.operationId) {
           if (!operationIds.has(operation.operationId)) {
