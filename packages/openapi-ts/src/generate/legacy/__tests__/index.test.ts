@@ -3,8 +3,8 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { setConfig } from '../../utils/config';
-import { TypeScriptFile } from '../files';
+import { setConfig } from '../../../utils/config';
+import { TypeScriptFile } from '../../files';
 import { generateIndexFile } from '../indexFile';
 
 vi.mock('node:fs');
