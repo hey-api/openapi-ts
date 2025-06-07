@@ -12,6 +12,7 @@ import {
   addLeadingComments,
   type Comments,
   createIdentifier,
+  createModifier,
   tsNodeToString,
 } from './utils';
 
@@ -73,7 +74,7 @@ export const createTypeInterfaceNode = ({
 
   const members: Array<ts.TypeElement> = properties.map((property) => {
     const modifiers: readonly ts.Modifier[] | undefined = property.isReadOnly
-      ? [ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword)]
+      ? [createModifier({ keyword: 'readonly' })]
       : undefined;
 
     const questionToken: ts.QuestionToken | undefined =
@@ -107,7 +108,7 @@ export const createTypeInterfaceNode = ({
   if (indexProperty) {
     const modifiers: readonly ts.Modifier[] | undefined =
       indexProperty.isReadOnly
-        ? [ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword)]
+        ? [createModifier({ keyword: 'readonly' })]
         : undefined;
     const indexSignature = ts.factory.createIndexSignature(
       modifiers,

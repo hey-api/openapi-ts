@@ -1,3 +1,4 @@
+import { createOperationKey } from '../../../ir/operation';
 import type { Config } from '../../../types/config';
 import type { PathItemObject, PathsObject } from '../../3.1.x/types/spec';
 import type { OpenApi } from '../../types';
@@ -78,7 +79,7 @@ const collectFiltersSetFromRegExpsOpenApiV2 = ({
           continue;
         }
 
-        const key = `${method.toUpperCase()} ${path}`;
+        const key = createOperationKey({ method, path });
         if (excludeOperations.regexps.some((regexp) => regexp.test(key))) {
           excludeOperations.set.add(addNamespace('operation', key));
         }
@@ -133,7 +134,7 @@ const collectFiltersSetFromRegExpsOpenApiV3 = ({
           continue;
         }
 
-        const key = `${method.toUpperCase()} ${path}`;
+        const key = createOperationKey({ method, path });
         if (excludeOperations.regexps.some((regexp) => regexp.test(key))) {
           excludeOperations.set.add(addNamespace('operation', key));
         }

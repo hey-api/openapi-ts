@@ -27,6 +27,26 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.72.0
+
+### Added `sdk.classStructure` option
+
+When generating class-based SDKs, we now try to infer the ideal structure using `operationId` keywords. If you'd like to preserve the previous behavior, set `classStructure` to `off`.
+
+```js
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      classStructure: 'off', // [!code ++]
+      name: '@hey-api/sdk',
+    },
+  ],
+};
+```
+
 ## v0.71.0
 
 ### Renamed `sdk.serviceNameBuilder` option
@@ -34,13 +54,11 @@ This config option is deprecated and will be removed.
 This option has been renamed to `sdk.classNameBuilder` to better represent its functionality. Additionally, it's no longer set by default. To preserve the previous behavior, update your configuration.
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     {
       classNameBuilder: '{{name}}Service', // [!code ++]
       name: '@hey-api/sdk',
@@ -259,14 +277,12 @@ The Fetch API client will return raw response body as `ReadableStream` when `Con
 When generating SDKs, you now have to specify `transformer` in order to modify response data. By default, adding `@hey-api/transformers` to your plugins will only produce additional output. To preserve the previous functionality, set `sdk.transformer` to `true`.
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   client: '@hey-api/client-fetch',
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     {
       dates: true,
       name: '@hey-api/transformers',
@@ -302,15 +318,13 @@ export default {
 `@hey-api/schemas` has been removed from the default plugins. To continue using it, add it to your plugins array.
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   client: '@hey-api/client-fetch',
   experimentalParser: true,
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     '@hey-api/schemas', // [!code ++]
   ],
 };

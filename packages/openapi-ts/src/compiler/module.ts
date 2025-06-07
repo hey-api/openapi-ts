@@ -5,6 +5,7 @@ import {
   addLeadingComments,
   type Comments,
   createIdentifier,
+  createModifier,
   type ImportExportItemObject,
   ots,
 } from './utils';
@@ -156,9 +157,7 @@ export const createConstVariable = ({
     initializer,
   );
   const statement = ts.factory.createVariableStatement(
-    exportConst
-      ? [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)]
-      : undefined,
+    exportConst ? [createModifier({ keyword: 'export' })] : undefined,
     ts.factory.createVariableDeclarationList([declaration], ts.NodeFlags.Const),
   );
 

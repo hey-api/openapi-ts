@@ -21,6 +21,14 @@ export const hasOperationDataRequired = (
   return false;
 };
 
+export const createOperationKey = ({
+  method,
+  path,
+}: {
+  method: string;
+  path: string;
+}) => `${method.toUpperCase()} ${path}`;
+
 export const operationPagination = ({
   context,
   operation,

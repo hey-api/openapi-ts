@@ -32,7 +32,7 @@ for (const version of versions) {
         __dirname,
         'spec',
         version,
-        typeof userConfig.input === 'string' ? userConfig.input : 'full.json',
+        typeof userConfig.input === 'string' ? userConfig.input : 'full.yaml',
       ),
       logs: {
         level: 'silent',
@@ -131,6 +131,7 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          input: 'sdk-instance.yaml',
           output: 'asClass',
           plugins: [
             '@tanstack/angular-query-experimental',
@@ -147,6 +148,7 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          input: 'sdk-instance.yaml',
           output: 'asClass',
           plugins: [
             '@tanstack/react-query',
@@ -163,6 +165,7 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          input: 'sdk-instance.yaml',
           output: 'asClass',
           plugins: [
             '@tanstack/solid-query',
@@ -179,6 +182,7 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          input: 'sdk-instance.yaml',
           output: 'asClass',
           plugins: [
             '@tanstack/svelte-query',
@@ -195,6 +199,7 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          input: 'sdk-instance.yaml',
           output: 'asClass',
           plugins: [
             '@tanstack/vue-query',
@@ -238,6 +243,7 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          input: 'sdk-instance.yaml',
           output: 'instance',
           plugins: [
             {
@@ -376,7 +382,7 @@ for (const version of versions) {
       };
 
       await createClient({
-        input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+        input: path.join(__dirname, 'spec', '3.1.x', 'full.yaml'),
         logs: {
           level: 'silent',
         },
@@ -402,7 +408,7 @@ for (const version of versions) {
 
       await expect(() =>
         createClient({
-          input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+          input: path.join(__dirname, 'spec', '3.1.x', 'full.yaml'),
           logs: {
             level: 'silent',
           },
@@ -428,7 +434,7 @@ for (const version of versions) {
 
       await expect(() =>
         createClient({
-          input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+          input: path.join(__dirname, 'spec', '3.1.x', 'full.yaml'),
           logs: {
             level: 'silent',
           },
