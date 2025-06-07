@@ -29,4 +29,10 @@ export interface Config
    * @default true
    */
   queryOptions?: boolean;
+  /**
+   * Generate queries with `throwOnError` option when `true`, queries will throw errors instead of returning them in the error state, allowing for easier error handling with error boundaries.
+   *
+   * @default true
+   */
+  throwOnError?: boolean;
 }
