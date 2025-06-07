@@ -1,5 +1,29 @@
 # @hey-api/openapi-ts
 
+## 0.72.0
+
+### Minor Changes
+
+- [#2141](https://github.com/hey-api/openapi-ts/pull/2141) [`557769d`](https://github.com/hey-api/openapi-ts/commit/557769d10a7b4da55489239a437c9611a3c41a24) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): add `classStructure` option supporting dot or slash `operationId` notation when generating class-based SDKs
+
+  ### Added `sdk.classStructure` option
+
+  When generating class-based SDKs, we now try to infer the ideal structure using `operationId` keywords. If you'd like to preserve the previous behavior, set `classStructure` to `off`.
+
+  ```js
+  export default {
+    input: 'https://get.heyapi.dev/hey-api/backend',
+    output: 'src/client',
+    plugins: [
+      // ...other plugins
+      {
+        classStructure: 'off',
+        name: '@hey-api/sdk',
+      },
+    ],
+  };
+  ```
+
 ## 0.71.1
 
 ### Patch Changes
