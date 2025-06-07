@@ -27,6 +27,7 @@ export type PluginNames =
   | '@hey-api/sdk'
   | '@hey-api/transformers'
   | '@hey-api/typescript'
+  | '@pinia/colada'
   | '@tanstack/angular-query-experimental'
   | '@tanstack/react-query'
   | '@tanstack/solid-query'
@@ -83,7 +84,7 @@ export type DefaultPluginConfigs<T> = {
   [K in PluginNames]: BaseConfig &
     Meta<any> & {
       _handler: Plugin.Handler<Required<Extract<T, { name: K }>>>;
-      _handlerLegacy: Plugin.LegacyHandler<Required<Extract<T, { name: K }>>>;
+      _handlerLegacy?: Plugin.LegacyHandler<Required<Extract<T, { name: K }>>>;
     };
 };
 
@@ -94,7 +95,7 @@ export namespace Plugin {
   export type Config<Config extends BaseConfig> = Config &
     Meta<Config> & {
       _handler: Plugin.Handler<Config>;
-      _handlerLegacy: Plugin.LegacyHandler<Config>;
+      _handlerLegacy?: Plugin.LegacyHandler<Config>;
       exportFromIndex?: boolean;
     };
 
