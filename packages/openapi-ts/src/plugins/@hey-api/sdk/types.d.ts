@@ -35,6 +35,14 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   classNameBuilder?: string | ((name: string) => string);
   /**
+   * How should we structure your SDK? By default, we try to infer the ideal
+   * structure using `operationId` keywords. If you prefer a flatter structure,
+   * you can set `classStructure` to `off` to disable this behavior.
+   *
+   * @default 'auto'
+   */
+  classStructure?: 'auto' | 'off';
+  /**
    * Use an internal client instance to send HTTP requests? This is useful if
    * you don't want to manually pass the client to each SDK function.
    *

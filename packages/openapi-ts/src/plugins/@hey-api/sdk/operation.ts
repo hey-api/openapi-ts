@@ -83,62 +83,50 @@ export const operationClasses = ({
 }: {
   context: IR.Context;
   operation: IR.OperationObject;
-  plugin: Pick<Plugin.Instance<Config>, 'asClass' | 'instance'>;
+  plugin: Pick<
+    Plugin.Instance<Config>,
+    'asClass' | 'classStructure' | 'instance'
+  >;
 }): Map<string, ClassNameEntry> => {
   const classNames = new Map<string, ClassNameEntry>();
 
-  if (plugin.instance) {
-    let className: string | undefined;
-    let methodName: string | undefined;
-    let classCandidates: Array<string> = [];
+  let className: string | undefined;
+  let methodName: string | undefined;
+  let classCandidates: Array<string> = [];
 
-    if (operation.operationId) {
-      classCandidates = operation.operationId.split(/[./]/).filter(Boolean);
-      if (classCandidates.length > 1) {
-        const methodCandidate = classCandidates.pop()!;
-        methodName = stringCase({
-          case: 'camelCase',
-          value: sanitizeNamespaceIdentifier(methodCandidate),
-        });
-        className = classCandidates.pop()!;
-      }
+  if (plugin.classStructure === 'auto' && operation.operationId) {
+    classCandidates = operation.operationId.split(/[./]/).filter(Boolean);
+    if (classCandidates.length > 1) {
+      const methodCandidate = classCandidates.pop()!;
+      methodName = stringCase({
+        case: 'camelCase',
+        value: sanitizeNamespaceIdentifier(methodCandidate),
+      });
+      className = classCandidates.pop()!;
     }
+  }
 
+  const rootClasses = plugin.instance
+    ? [plugin.instance as string]
+    : (operation.tags ?? ['default']);
+
+  for (const rootClass of rootClasses) {
     const finalClassName = operationClassName({
       context,
-      value: className || (plugin.instance as string),
+      value: className || rootClass,
     });
-    classNames.set(finalClassName, {
+    classNames.set(rootClass, {
       className: finalClassName,
       methodName: methodName || getOperationMethodName({ operation, plugin }),
-      path: className
-        ? [plugin.instance as string, ...classCandidates, className].map(
-            (value) =>
-              operationClassName({
-                context,
-                value,
-              }),
-          )
-        : [],
-    });
-    return classNames;
-  }
-
-  if (operation.tags) {
-    for (const tag of operation.tags) {
-      classNames.set(tag, {
-        className: operationClassName({ context, value: tag }),
-        methodName: getOperationMethodName({ operation, plugin }),
-        path: [],
-      });
-    }
-  }
-
-  if (!classNames.size) {
-    classNames.set('default', {
-      className: operationClassName({ context, value: 'default' }),
-      methodName: getOperationMethodName({ operation, plugin }),
-      path: [],
+      path: (className
+        ? [rootClass, ...classCandidates, className]
+        : [rootClass]
+      ).map((value) =>
+        operationClassName({
+          context,
+          value,
+        }),
+      ),
     });
   }
 

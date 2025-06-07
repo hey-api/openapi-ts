@@ -106,9 +106,10 @@ export default defineConfig(() => {
         asClass: true,
         // auth: false,
         // classNameBuilder: '{{name}}',
+        // classStructure: 'off',
         // client: false,
         // include...
-        instance: true,
+        // instance: true,
         name: '@hey-api/sdk',
         // operationId: false,
         // responseStyle: 'data',

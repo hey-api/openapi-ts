@@ -54,6 +54,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   },
   asClass: false,
   auth: true,
+  classStructure: 'auto',
   client: true,
   exportFromIndex: true,
   instance: false,
