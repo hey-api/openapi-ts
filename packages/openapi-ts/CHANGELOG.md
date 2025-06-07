@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.71.1
+
+### Patch Changes
+
+- [#2139](https://github.com/hey-api/openapi-ts/pull/2139) [`0c27937`](https://github.com/hey-api/openapi-ts/commit/0c279378b9be7bf0eaa29586999ecd3b983a26a4) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): skip schema if it's an array or tuple and its items don't have any matching readable or writable scopes
+
+- [#2140](https://github.com/hey-api/openapi-ts/pull/2140) [`54049fe`](https://github.com/hey-api/openapi-ts/commit/54049fe262336f5b439a540cbe362478ecbe8317) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): validate operationId keyword
+
+- [#2137](https://github.com/hey-api/openapi-ts/pull/2137) [`058dbc9`](https://github.com/hey-api/openapi-ts/commit/058dbc9fa81c95dca02788ad58231915cb1c4de3) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): respect exportFromIndex option when using legacy clients
+
 ## 0.71.0
 
 ### Minor Changes
