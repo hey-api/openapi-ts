@@ -93,13 +93,21 @@ interface SdkClassEntry {
    */
   className: string;
   /**
+   * Child classes located inside this class.
+   */
+  classes: Set<string>;
+  /**
+   * Track unique added method nodes.
+   */
+  methods: Set<string>;
+  /**
    * List of class nodes containing methods.
    */
   nodes: Array<ts.ClassElement>;
   /**
-   * JSONPath-like array to class location.
+   * Is this a root class?
    */
-  path: ReadonlyArray<string>;
+  root: boolean;
 }
 
 const generateClassSdk = ({
@@ -113,6 +121,10 @@ const generateClassSdk = ({
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = context.file({ id: sdkId })!;
   const sdkClasses = new Map<string, SdkClassEntry>();
+  /**
+   * Track unique added classes.
+   */
+  const generatedClasses = new Set<string>();
 
   const clientClassNodes = plugin.instance
     ? createClientClassNodes({ plugin })
@@ -131,86 +143,166 @@ const generateClassSdk = ({
     });
 
     const classes = operationClasses({ context, operation, plugin });
+
     for (const entry of classes.values()) {
-      if (!sdkClasses.has(entry.className)) {
-        sdkClasses.set(entry.className, {
-          className: entry.className,
-          nodes: [],
-          path: entry.path,
+      entry.path.forEach((currentClassName, index) => {
+        if (!sdkClasses.has(currentClassName)) {
+          sdkClasses.set(currentClassName, {
+            className: currentClassName,
+            classes: new Set(),
+            methods: new Set(),
+            nodes: [],
+            root: !index,
+          });
+        }
+
+        const parentClassName = entry.path[index - 1];
+        if (parentClassName) {
+          const parentClass = sdkClasses.get(parentClassName)!;
+          parentClass.classes.add(currentClassName);
+          sdkClasses.set(parentClassName, parentClass);
+        }
+
+        const isLast = entry.path.length === index + 1;
+        // add methods only to the last class
+        if (!isLast) {
+          return;
+        }
+
+        const currentClass = sdkClasses.get(currentClassName)!;
+
+        // avoid duplicate methods
+        if (currentClass.methods.has(entry.methodName)) {
+          return;
+        }
+
+        const functionNode = compiler.methodDeclaration({
+          accessLevel: 'public',
+          comment: createOperationComment({ operation }),
+          isStatic: !plugin.instance,
+          name: entry.methodName,
+          parameters: [
+            {
+              isRequired: isRequiredOptions,
+              name: 'options',
+              type: operationOptionsType({
+                context,
+                file,
+                operation,
+                throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
+              }),
+            },
+          ],
+          returnType: undefined,
+          statements: operationStatements({
+            context,
+            isRequiredOptions,
+            operation,
+            plugin,
+          }),
+          types: isNuxtClient
+            ? [
+                {
+                  // default: compiler.ots.string('$fetch'),
+                  extends: compiler.typeNode('Composable'),
+                  name: nuxtTypeComposable,
+                },
+                {
+                  default: identifierResponse.name
+                    ? compiler.typeReferenceNode({
+                        typeName: identifierResponse.name,
+                      })
+                    : compiler.typeNode('undefined'),
+                  extends: identifierResponse.name
+                    ? compiler.typeReferenceNode({
+                        typeName: identifierResponse.name,
+                      })
+                    : undefined,
+                  name: nuxtTypeDefault,
+                },
+              ]
+            : [
+                {
+                  default:
+                    ('throwOnError' in client ? client.throwOnError : false) ??
+                    false,
+                  extends: 'boolean',
+                  name: 'ThrowOnError',
+                },
+              ],
         });
-      }
 
-      const sdkClass = sdkClasses.get(entry.className)!;
+        if (!currentClass.nodes.length) {
+          currentClass.nodes.push(functionNode);
+        } else {
+          currentClass.nodes.push(
+            // @ts-expect-error
+            compiler.identifier({ text: '\n' }),
+            functionNode,
+          );
+        }
 
-      const functionNode = compiler.methodDeclaration({
-        accessLevel: 'public',
-        comment: createOperationComment({ operation }),
-        isStatic: !plugin.instance,
-        name: entry.methodName,
-        parameters: [
-          {
-            isRequired: isRequiredOptions,
-            name: 'options',
-            type: operationOptionsType({
-              context,
-              file,
-              operation,
-              throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
-            }),
-          },
-        ],
-        returnType: undefined,
-        statements: operationStatements({
-          context,
-          isRequiredOptions,
-          operation,
-          plugin,
-        }),
-        types: isNuxtClient
-          ? [
-              {
-                // default: compiler.ots.string('$fetch'),
-                extends: compiler.typeNode('Composable'),
-                name: nuxtTypeComposable,
-              },
-              {
-                default: identifierResponse.name
-                  ? compiler.typeReferenceNode({
-                      typeName: identifierResponse.name,
-                    })
-                  : compiler.typeNode('undefined'),
-                extends: identifierResponse.name
-                  ? compiler.typeReferenceNode({
-                      typeName: identifierResponse.name,
-                    })
-                  : undefined,
-                name: nuxtTypeDefault,
-              },
-            ]
-          : [
-              {
-                default:
-                  ('throwOnError' in client ? client.throwOnError : false) ??
-                  false,
-                extends: 'boolean',
-                name: 'ThrowOnError',
-              },
-            ],
+        currentClass.methods.add(entry.methodName);
+
+        sdkClasses.set(currentClassName, currentClass);
       });
-
-      if (!sdkClass.nodes.length) {
-        sdkClass.nodes.push(functionNode);
-      } else {
-        sdkClass.nodes.push(
-          // @ts-expect-error
-          compiler.identifier({ text: '\n' }),
-          functionNode,
-        );
-      }
-
-      sdkClasses.set(entry.className, sdkClass);
     }
   });
+
+  const generateClass = (currentClass: SdkClassEntry) => {
+    if (generatedClasses.has(currentClass.className)) {
+      return;
+    }
+
+    if (currentClass.classes.size) {
+      for (const childClassName of currentClass.classes) {
+        const childClass = sdkClasses.get(childClassName)!;
+        generateClass(childClass);
+
+        currentClass.nodes.push(
+          compiler.propertyDeclaration({
+            initializer: plugin.instance
+              ? compiler.newExpression({
+                  argumentsArray: plugin.instance
+                    ? [
+                        compiler.objectExpression({
+                          multiLine: false,
+                          obj: [
+                            {
+                              key: 'client',
+                              value: compiler.propertyAccessExpression({
+                                expression: compiler.this(),
+                                name: '_client',
+                              }),
+                            },
+                          ],
+                        }),
+                      ]
+                    : [],
+                  expression: compiler.identifier({
+                    text: childClass.className,
+                  }),
+                })
+              : compiler.identifier({ text: childClass.className }),
+            modifier: plugin.instance ? undefined : 'static',
+            name: stringCase({
+              case: 'camelCase',
+              value: childClass.className,
+            }),
+          }),
+        );
+      }
+    }
+
+    const node = compiler.classDeclaration({
+      exportClass: currentClass.root,
+      extendedClasses: plugin.instance ? ['_HeyApiClient'] : undefined,
+      name: currentClass.className,
+      nodes: currentClass.nodes,
+    });
+    file.add(node);
+    generatedClasses.add(currentClass.className);
+  };
 
   context.subscribe('after', () => {
     if (clientClassNodes.length) {
@@ -223,55 +315,7 @@ const generateClassSdk = ({
     }
 
     for (const sdkClass of sdkClasses.values()) {
-      const parentClassName = sdkClass.path[sdkClass.path.length - 2];
-      if (parentClassName) {
-        // this should happen only for root
-        if (!sdkClasses.has(parentClassName)) {
-          sdkClasses.set(parentClassName, {
-            className: parentClassName,
-            nodes: [],
-            path: [],
-          });
-        }
-
-        const parentClass = sdkClasses.get(parentClassName)!;
-
-        parentClass.nodes.push(
-          compiler.propertyDeclaration({
-            initializer: compiler.newExpression({
-              argumentsArray: [
-                compiler.objectExpression({
-                  multiLine: false,
-                  obj: [
-                    {
-                      key: 'client',
-                      value: compiler.propertyAccessExpression({
-                        expression: compiler.this(),
-                        name: '_client',
-                      }),
-                    },
-                  ],
-                }),
-              ],
-              expression: compiler.identifier({ text: sdkClass.className }),
-            }),
-            name: stringCase({
-              case: 'camelCase',
-              value: sdkClass.className,
-            }),
-          }),
-        );
-      }
-    }
-
-    for (const sdkClass of sdkClasses.values()) {
-      const node = compiler.classDeclaration({
-        exportClass: !sdkClass.path.length,
-        extendedClasses: plugin.instance ? ['_HeyApiClient'] : undefined,
-        name: sdkClass.className,
-        nodes: sdkClass.nodes,
-      });
-      file.add(node);
+      generateClass(sdkClass);
     }
   });
 };

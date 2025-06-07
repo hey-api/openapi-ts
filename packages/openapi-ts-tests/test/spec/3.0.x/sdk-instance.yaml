@@ -4,9 +4,19 @@ info:
   version: 1
 paths:
   /foo:
+    get:
+      tags:
+        - fooBaz
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK
     post:
       tags:
-        - foo
+        - fooBaz
       operationId: foo.-post
       responses:
         '200':
@@ -17,7 +27,7 @@ paths:
           description: OK
     put:
       tags:
-        - foo
+        - fooBaz
       operationId: /foo/-put/
       responses:
         '200':
@@ -27,10 +37,20 @@ paths:
                 type: string
           description: OK
   /foo/bar:
+    get:
+      tags:
+        - barBaz
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK
     post:
       tags:
-        - foo
-        - bar
+        - fooBaz
+        - barBaz
       operationId: foo.bar.post
       responses:
         '200':
@@ -41,8 +61,8 @@ paths:
           description: OK
     put:
       tags:
-        - foo
-        - bar
+        - fooBaz
+        - barBaz
       operationId: /foo/bar/put/
       responses:
         '200':

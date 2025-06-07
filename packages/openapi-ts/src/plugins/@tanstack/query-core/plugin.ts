@@ -1,4 +1,5 @@
 import { clientApi } from '../../../generate/client';
+import { stringCase } from '../../../utils/stringCase';
 import { clientId } from '../../@hey-api/client-core/utils';
 import { sdkId } from '../../@hey-api/sdk/constants';
 import { operationClasses } from '../../@hey-api/sdk/operation';
@@ -40,18 +41,30 @@ export const handler: PluginHandler = ({ context, plugin }) => {
       ? operationClasses({ context, operation, plugin: sdk })
       : undefined;
     const entry = classes ? classes.values().next().value : undefined;
-    const queryFn = (
-      entry
-        ? [entry.className, entry.methodName]
-        : [
-            serviceFunctionIdentifier({
-              config: context.config,
-              handleIllegal: true,
-              id: operation.id,
-              operation,
-            }),
-          ]
-    ).join('.');
+    const queryFn =
+      // TODO: this should use class graph to determine correct path string
+      // as it's really easy to break once we change the class casing
+      (
+        entry
+          ? [
+              entry.path[0],
+              ...entry.path.slice(1).map((className) =>
+                stringCase({
+                  case: 'camelCase',
+                  value: className,
+                }),
+              ),
+              entry.methodName,
+            ].filter(Boolean)
+          : [
+              serviceFunctionIdentifier({
+                config: context.config,
+                handleIllegal: true,
+                id: operation.id,
+                operation,
+              }),
+            ]
+      ).join('.');
 
     createQueryOptions({
       context,
