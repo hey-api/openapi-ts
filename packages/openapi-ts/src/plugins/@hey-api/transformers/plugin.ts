@@ -1,7 +1,10 @@
 import ts from 'typescript';
 
 import { compiler } from '../../../compiler';
-import { operationResponsesMap } from '../../../ir/operation';
+import {
+  createOperationKey,
+  operationResponsesMap,
+} from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { irRef } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
@@ -472,7 +475,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     if (response.items && response.items.length > 1) {
       if (context.config.logs.level === 'debug') {
         console.warn(
-          `❗️ Transformers warning: route ${`${operation.method.toUpperCase()} ${operation.path}`} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
+          `❗️ Transformers warning: route ${createOperationKey(operation)} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
         );
       }
       return;

@@ -5,10 +5,10 @@ import type { ImportExportItem } from '../../../compiler/module';
 import type { ImportExportItemObject } from '../../../compiler/utils';
 import { clientApi, clientModulePath } from '../../../generate/client';
 import { relativeModulePath } from '../../../generate/utils';
+import { createOperationKey } from '../../../ir/operation';
 import { getPaginationKeywordsRegExp } from '../../../ir/pagination';
 import type { IR } from '../../../ir/types';
 import { isOperationParameterRequired } from '../../../openApi';
-import { getOperationKey } from '../../../openApi/common/parser/operation';
 import type {
   Client,
   Method,
@@ -712,7 +712,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
   for (const service of client.services) {
     for (const operation of service.operations) {
       // track processed operations to avoid creating duplicates
-      const operationKey = getOperationKey(operation);
+      const operationKey = createOperationKey(operation);
       if (processedOperations.has(operationKey)) {
         continue;
       }

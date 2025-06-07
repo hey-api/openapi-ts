@@ -1,9 +1,7 @@
+import { createOperationKey } from '../../../ir/operation';
 import { getConfig } from '../../../utils/config';
 import type { Client, Operation } from '../../common/interfaces/client';
-import {
-  getOperationKey,
-  operationFilterFn,
-} from '../../common/parser/operation';
+import { operationFilterFn } from '../../common/parser/operation';
 import { allowedServiceMethods } from '../../common/parser/service';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getOperationParameters } from './getOperationParameters';
@@ -32,7 +30,7 @@ export const getOperations = ({
     for (const name in pathItem) {
       const method = name as Lowercase<Operation['method']>;
 
-      const operationKey = getOperationKey({
+      const operationKey = createOperationKey({
         method,
         path,
       });

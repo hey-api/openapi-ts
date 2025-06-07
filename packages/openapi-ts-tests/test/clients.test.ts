@@ -37,7 +37,7 @@ for (const client of clients) {
         Pick<Partial<UserConfig>, 'input'>,
     ): UserConfig => ({
       ...userConfig,
-      input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+      input: path.join(__dirname, 'spec', '3.1.x', 'full.yaml'),
       logs: {
         level: 'silent',
       },
@@ -216,7 +216,7 @@ describe('custom-client', () => {
     userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
   ): UserConfig => ({
     ...userConfig,
-    input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+    input: path.join(__dirname, 'spec', '3.1.x', 'full.yaml'),
     logs: {
       level: 'silent',
     },
@@ -362,7 +362,7 @@ describe('my-client', () => {
     userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
   ): UserConfig => ({
     ...userConfig,
-    input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+    input: path.join(__dirname, 'spec', '3.1.x', 'full.yaml'),
     logs: {
       level: 'silent',
     },

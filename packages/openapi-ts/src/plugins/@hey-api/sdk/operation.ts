@@ -6,6 +6,10 @@ import { clientApi, clientModulePath } from '../../../generate/client';
 import type { TypeScriptFile } from '../../../generate/files';
 import { statusCodeToGroup } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
+import { sanitizeNamespaceIdentifier } from '../../../openApi';
+import { reservedJavaScriptKeywordsRegExp } from '../../../utils/regexp';
+import { stringCase } from '../../../utils/stringCase';
+import { transformClassName } from '../../../utils/transform';
 import type { Plugin } from '../../types';
 import { clientId, getClientPlugin } from '../client-core/utils';
 import {
@@ -18,24 +22,115 @@ import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
 import type { Config } from './types';
 import { createResponseValidator } from './validator';
 
-/**
- * Returns unique operation tags. If there are no tags, we return 'default'
- * as a placeholder tag. If SDK instance is enabled, we return its name.
- */
-export const getOperationTags = ({
+interface ClassNameEntry {
+  /**
+   * Name of the class where this function appears.
+   */
+  className: string;
+  /**
+   * Name of the function within the class.
+   */
+  methodName: string;
+  /**
+   * JSONPath-like array to class location.
+   */
+  path: ReadonlyArray<string>;
+}
+
+const operationClassName = ({
+  context,
+  value,
+}: {
+  context: IR.Context;
+  value: string;
+}) => {
+  const name = stringCase({
+    case: 'PascalCase',
+    value: sanitizeNamespaceIdentifier(value),
+  });
+  return transformClassName({
+    config: context.config,
+    name,
+  });
+};
+
+const getOperationMethodName = ({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: Pick<Plugin.Instance<Config>, 'instance'>;
-}): Set<string> => {
-  const tags = new Set(
-    plugin.instance ? [plugin.instance as string] : operation.tags,
-  );
-  if (!tags.size) {
-    tags.add('default');
+  plugin: Pick<Plugin.Instance<Config>, 'asClass' | 'methodNameBuilder'>;
+}) => {
+  if (plugin.methodNameBuilder) {
+    return plugin.methodNameBuilder(operation);
   }
-  return tags;
+
+  const handleIllegal = !plugin.asClass;
+  if (handleIllegal && operation.id.match(reservedJavaScriptKeywordsRegExp)) {
+    return `${operation.id}_`;
+  }
+
+  return operation.id;
+};
+
+/**
+ * Returns a list of classes where this operation appears in the generated SDK.
+ */
+export const operationClasses = ({
+  context,
+  operation,
+  plugin,
+}: {
+  context: IR.Context;
+  operation: IR.OperationObject;
+  plugin: Pick<
+    Plugin.Instance<Config>,
+    'asClass' | 'classStructure' | 'instance'
+  >;
+}): Map<string, ClassNameEntry> => {
+  const classNames = new Map<string, ClassNameEntry>();
+
+  let className: string | undefined;
+  let methodName: string | undefined;
+  let classCandidates: Array<string> = [];
+
+  if (plugin.classStructure === 'auto' && operation.operationId) {
+    classCandidates = operation.operationId.split(/[./]/).filter(Boolean);
+    if (classCandidates.length > 1) {
+      const methodCandidate = classCandidates.pop()!;
+      methodName = stringCase({
+        case: 'camelCase',
+        value: sanitizeNamespaceIdentifier(methodCandidate),
+      });
+      className = classCandidates.pop()!;
+    }
+  }
+
+  const rootClasses = plugin.instance
+    ? [plugin.instance as string]
+    : (operation.tags ?? ['default']);
+
+  for (const rootClass of rootClasses) {
+    const finalClassName = operationClassName({
+      context,
+      value: className || rootClass,
+    });
+    classNames.set(rootClass, {
+      className: finalClassName,
+      methodName: methodName || getOperationMethodName({ operation, plugin }),
+      path: (className
+        ? [rootClass, ...classCandidates, className]
+        : [rootClass]
+      ).map((value) =>
+        operationClassName({
+          context,
+          value,
+        }),
+      ),
+    });
+  }
+
+  return classNames;
 };
 
 export const operationOptionsType = ({
@@ -388,7 +483,7 @@ export const operationStatements = ({
       operator: '??',
       right: compiler.propertyAccessExpression({
         expression: compiler.this(),
-        name: 'client',
+        name: '_client',
       }),
     });
   } else if (heyApiClient?.name) {

@@ -1694,7 +1694,7 @@ export const ModelWithBackticksInDescriptionSchema = {
     },
     "attributes" : {
       "00000000-0000-0000-0000-000000003115" : [ {
-        "value" : "\${3}" 
+        "value" : "\${3}"
       } ],
       "00000000-0000-0000-0000-000000000222" : [ {
         "value" : "\${4}"
