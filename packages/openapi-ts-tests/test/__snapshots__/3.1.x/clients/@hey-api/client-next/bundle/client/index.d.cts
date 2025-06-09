@@ -42,6 +42,29 @@ declare const urlSearchParamsBodySerializer: {
     bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(body: T) => string;
 };
 
+type Slot = 'body' | 'headers' | 'path' | 'query';
+type Field = {
+    in: Exclude<Slot, 'body'>;
+    key: string;
+    map?: string;
+} | {
+    in: Extract<Slot, 'body'>;
+    key?: string;
+    map?: string;
+};
+interface Fields {
+    allowExtra?: Partial<Record<Slot, boolean>>;
+    args?: ReadonlyArray<Field>;
+}
+type FieldsConfig = ReadonlyArray<Field | Fields>;
+interface Params {
+    body: unknown;
+    headers: Record<string, unknown>;
+    path: Record<string, unknown>;
+    query: Record<string, unknown>;
+}
+declare const buildClientParams: (args: ReadonlyArray<unknown>, fields: FieldsConfig) => Params;
+
 interface Client$1<RequestFn = never, Config = unknown, MethodFn = never, BuildUrlFn = never> {
     /**
      * Returns the final request URL.
@@ -228,4 +251,4 @@ type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean
 
 declare const createClient: (config?: Config) => Client;
 
-export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, buildClientParams, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
