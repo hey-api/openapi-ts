@@ -178,6 +178,13 @@ interface IRSchemaObject
    */
   properties?: Record<string, IRSchemaObject>;
   /**
+   * The names of `properties` can be validated against a schema, irrespective
+   * of their values. This can be useful if you don't want to enforce specific
+   * properties, but you want to make sure that the names of those properties
+   * follow a specific convention.
+   */
+  propertyNames?: IRSchemaObject;
+  /**
    * Each schema eventually resolves into `type`.
    */
   type?:
