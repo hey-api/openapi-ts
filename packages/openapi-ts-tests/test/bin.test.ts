@@ -130,7 +130,7 @@ describe('bin', () => {
       'true',
     ]);
     expect(result.stdout.toString()).toBe('');
-    expect(result.stderr.toString()).toContain('Unexpected error occurred');
+    expect(result.stderr.toString()).toContain('encountered an error');
     expect(result.stderr.toString()).toContain('missing input');
   });
 
@@ -143,7 +143,7 @@ describe('bin', () => {
       'true',
     ]);
     expect(result.stdout.toString()).toBe('');
-    expect(result.stderr.toString()).toContain('Unexpected error occurred');
+    expect(result.stderr.toString()).toContain('encountered an error');
     expect(result.stderr.toString()).toContain('missing output');
   });
 
@@ -177,7 +177,7 @@ describe('bin', () => {
       'true',
     ]);
     expect(result.stdout.toString()).toBe('');
-    expect(result.stderr.toString()).toContain('Unexpected error occurred');
+    expect(result.stderr.toString()).toContain('encountered an error');
     expect(result.stderr.toString()).toContain('client needs to be set');
   });
 

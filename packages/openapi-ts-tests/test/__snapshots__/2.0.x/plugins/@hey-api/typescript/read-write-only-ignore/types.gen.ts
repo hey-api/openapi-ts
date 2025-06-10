@@ -21,6 +21,13 @@ export type Quux = {
     qux?: QuxAllRead;
 };
 
+export type Corge = {
+    foo?: string;
+    bar?: {
+        readonly baz?: boolean;
+    };
+};
+
 export type PostFooReadData = {
     body: FooRead;
     path?: never;

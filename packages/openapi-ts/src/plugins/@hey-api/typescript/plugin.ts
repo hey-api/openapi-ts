@@ -582,20 +582,26 @@ const objectTypeToIdentifier = ({
       continue;
     }
 
+    const propertyType = schemaToType({
+      $ref: state ? [...state.path, name].join('/') : `${irRef}${name}`,
+      context,
+      namespace,
+      plugin,
+      schema: property,
+      state,
+    });
+
+    if (!propertyType) {
+      continue;
+    }
+
     const isRequired = required.includes(name);
     schemaProperties.push({
       comment: createSchemaComment({ schema: property }),
       isReadOnly: property.accessScope === 'read',
       isRequired,
       name: fieldName({ context, name }),
-      type: schemaToType({
-        $ref: state ? [...state.path, name].join('/') : `${irRef}${name}`,
-        context,
-        namespace,
-        plugin,
-        schema: property,
-        state,
-      }),
+      type: propertyType,
     });
     indexPropertyItems.push(property);
 

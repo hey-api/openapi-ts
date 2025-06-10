@@ -57,3 +57,14 @@ definitions:
           $ref: '#/definitions/Baz'
       qux:
         $ref: '#/definitions/QuxAllRead'
+  Corge:
+    type: object
+    properties:
+      foo:
+        type: string
+      bar:
+        type: object
+        properties:
+          baz:
+            type: boolean
+            readOnly: true
