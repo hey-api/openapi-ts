@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import colors from 'ansi-colors';
 
+import { findPackageJson } from './generate/tsConfig';
 import { ensureDirSync } from './generate/utils';
 
 export const isInteractive = process.stdin.isTTY && process.stdout.isTTY;
@@ -91,10 +92,28 @@ export const openGitHubIssueWithCrashReport = async (error: unknown) => {
     title: 'Crash Report',
   });
 
-  const url = `https://github.com/hey-api/openapi-ts/issues/new?${search.toString()}`;
+  const packageJson = findPackageJson();
+  let bugsUrl: string | undefined;
+  if (
+    packageJson &&
+    typeof packageJson === 'object' &&
+    'bugs' in packageJson &&
+    packageJson.bugs &&
+    typeof packageJson.bugs === 'object' &&
+    'url' in packageJson.bugs &&
+    typeof packageJson.bugs.url === 'string'
+  ) {
+    bugsUrl = packageJson.bugs.url;
+    if (bugsUrl && !bugsUrl.endsWith('/')) {
+      bugsUrl += '/';
+    }
+  }
 
-  const open = (await import('open')).default;
-  await open(url);
+  if (bugsUrl) {
+    const url = `${bugsUrl}new?${search.toString()}`;
+    const open = (await import('open')).default;
+    await open(url);
+  }
 };
 
 export const printCrashReport = ({
@@ -104,8 +123,18 @@ export const printCrashReport = ({
   error: unknown;
   logPath: string | undefined;
 }) => {
-  process.stdout.write(
-    `\n🛑 ${colors.cyan('@hey-api/openapi-ts')} ${colors.red('encountered an error.')}` +
+  const packageJson = findPackageJson();
+  let name: string | undefined;
+  if (
+    packageJson &&
+    typeof packageJson === 'object' &&
+    'name' in packageJson &&
+    typeof packageJson.name === 'string'
+  ) {
+    name = packageJson.name;
+  }
+  process.stderr.write(
+    `\n🛑 ${colors.cyan(name || '')} ${colors.red('encountered an error.')}` +
       `\n\n${colors.red('❗️ Error:')} ${colors.white(typeof error === 'string' ? error : error instanceof Error ? error.message : 'Unknown error')}` +
       (logPath
         ? `\n\n${colors.cyan('📄 Crash log saved to:')} ${colors.gray(logPath)}`

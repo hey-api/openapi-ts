@@ -38,7 +38,8 @@ const getInput = (userConfig: UserConfig): Config['input'] => {
     input.path = userConfig.input;
   } else if (
     userConfig.input &&
-    (userConfig.input.path || userConfig.input.organization)
+    (userConfig.input.path !== undefined ||
+      userConfig.input.organization !== undefined)
   ) {
     // @ts-expect-error
     input = {
@@ -102,7 +103,7 @@ const getPluginsConfig = ({
       const pluginConfig = pluginConfigs[name as PluginNames];
       if (!pluginConfig) {
         throw new Error(
-          `🚫 unknown plugin dependency "${name}" - do you need to register a custom plugin with this name?`,
+          `unknown plugin dependency "${name}" - do you need to register a custom plugin with this name?`,
         );
       }
 
@@ -114,7 +115,7 @@ const getPluginsConfig = ({
         );
         if (nativePluginOption) {
           throw new Error(
-            `🚫 cannot register plugin "${name}" - attempting to override a native plugin option "${nativePluginOption}"`,
+            `cannot register plugin "${name}" - attempting to override a native plugin option "${nativePluginOption}"`,
           );
         }
       }
@@ -151,7 +152,7 @@ const getPluginsConfig = ({
 
             throw new Error(
               errorMessage ||
-                `🚫 missing plugin - no plugin with tag "${tag}" found`,
+                `missing plugin - no plugin with tag "${tag}" found`,
             );
           },
         };
@@ -359,14 +360,12 @@ export const initConfigs = async (
 
     if (!input.path) {
       throw new Error(
-        '🚫 missing input - which OpenAPI specification should we use to generate your output?',
+        'missing input - which OpenAPI specification should we use to generate your output?',
       );
     }
 
     if (!output.path) {
-      throw new Error(
-        '🚫 missing output - where should we generate your output?',
-      );
+      throw new Error('missing output - where should we generate your output?');
     }
 
     if (!useOptions) {

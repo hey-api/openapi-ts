@@ -678,7 +678,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
   const config = getConfig();
 
   if (isLegacyClient(config)) {
-    throw new Error('🚫 TanStack Query plugin does not support legacy clients');
+    throw new Error('TanStack Query plugin does not support legacy clients');
   }
 
   const file = files[plugin.name]!;

@@ -29,6 +29,17 @@ export type WritableQuux = {
     baz?: Array<Baz>;
 };
 
+export type ReadableCorge = {
+    foo?: string;
+    bar?: {
+        readonly baz?: boolean;
+    };
+};
+
+export type WritableCorge = {
+    foo?: string;
+};
+
 export type PostFooReadData = {
     body: WritableFooRead;
     path?: never;

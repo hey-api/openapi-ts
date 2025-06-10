@@ -33,6 +33,15 @@ export type Quux = {
     qux?: QuxAllRead;
 };
 
+export type Corge = {
+    foo?: {
+        baz?: boolean;
+    };
+    bar?: {
+        readonly baz?: boolean;
+    };
+};
+
 export type PostFooReadWriteData = {
     body: FooReadWrite;
     path?: never;
