@@ -1,5 +1,39 @@
 # @hey-api/openapi-ts
 
+## 0.72.0
+
+### Minor Changes
+
+- [#2141](https://github.com/hey-api/openapi-ts/pull/2141) [`557769d`](https://github.com/hey-api/openapi-ts/commit/557769d10a7b4da55489239a437c9611a3c41a24) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): add `classStructure` option supporting dot or slash `operationId` notation when generating class-based SDKs
+
+  ### Added `sdk.classStructure` option
+
+  When generating class-based SDKs, we now try to infer the ideal structure using `operationId` keywords. If you'd like to preserve the previous behavior, set `classStructure` to `off`.
+
+  ```js
+  export default {
+    input: 'https://get.heyapi.dev/hey-api/backend',
+    output: 'src/client',
+    plugins: [
+      // ...other plugins
+      {
+        classStructure: 'off',
+        name: '@hey-api/sdk',
+      },
+    ],
+  };
+  ```
+
+### Patch Changes
+
+- [#2151](https://github.com/hey-api/openapi-ts/pull/2151) [`0ea8130`](https://github.com/hey-api/openapi-ts/commit/0ea8130ff6b2e047dbc4fd6a30d08f54da367d0c) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add crash report prompt
+
+- [#2153](https://github.com/hey-api/openapi-ts/pull/2153) [`b272bd9`](https://github.com/hey-api/openapi-ts/commit/b272bd9e4adfb0d87a05b023bc078246e7ee4937) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): handle `propertyNames` keyword
+
+- [#2152](https://github.com/hey-api/openapi-ts/pull/2152) [`6d5ad37`](https://github.com/hey-api/openapi-ts/commit/6d5ad37e474ad659efb8ffdc649829ac4e1e1b8a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(validators): correctly generate default value for `BigInt`
+
+- [#2151](https://github.com/hey-api/openapi-ts/pull/2151) [`aef80c3`](https://github.com/hey-api/openapi-ts/commit/aef80c397b254f391543ff11cac417fab8397c8b) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): handle nested inline objects with write/read only fields
+
 ## 0.71.1
 
 ### Patch Changes
