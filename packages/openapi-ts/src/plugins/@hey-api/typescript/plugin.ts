@@ -5,7 +5,7 @@ import { compiler } from '../../../compiler';
 import { operationResponsesMap } from '../../../ir/operation';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
-import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
+import { irRef, isRefOpenApiComponent, refToName } from '../../../utils/ref';
 import { numberRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { fieldName } from '../../shared/utils/case';
@@ -562,6 +562,7 @@ const objectTypeToIdentifier = ({
   state: State | undefined;
 }): ts.TypeNode | undefined => {
   // TODO: parser - handle constants
+  let indexKey: string | undefined;
   let indexProperty: Property | undefined;
   const schemaProperties: Array<Property> = [];
   let indexPropertyItems: Array<IR.SchemaObject> = [];
@@ -627,7 +628,7 @@ const objectTypeToIdentifier = ({
     }
 
     indexProperty = {
-      isRequired: true,
+      isRequired: !schema.propertyNames,
       name: 'key',
       type: schemaToType({
         context,
@@ -643,6 +644,12 @@ const objectTypeToIdentifier = ({
         state,
       }),
     };
+
+    if (schema.propertyNames) {
+      if (schema.propertyNames.$ref) {
+        indexKey = refToName(schema.propertyNames.$ref);
+      }
+    }
   }
 
   if (hasSkippedProperties && !schemaProperties.length && !indexProperty) {
@@ -650,6 +657,7 @@ const objectTypeToIdentifier = ({
   }
 
   return compiler.typeInterfaceNode({
+    indexKey,
     indexProperty,
     properties: schemaProperties,
     useLegacyResolution: false,
