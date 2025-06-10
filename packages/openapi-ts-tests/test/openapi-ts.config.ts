@@ -51,7 +51,7 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'sdk-instance.yaml'),
+      path: path.resolve(__dirname, 'spec', '3.0.x', 'bug.yaml'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
