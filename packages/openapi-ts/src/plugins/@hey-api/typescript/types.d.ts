@@ -76,6 +76,12 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    * @default '{{name}}Writable'
    */
   writableNameBuilder?: string;
+  /**
+   * Generate types for [TypeIDs](https://github.com/jetify-com/typeid/tree/main/spec).
+   *
+   * @default false
+   */
+  typeids?: boolean;
 
   // DEPRECATED OPTIONS BELOW
 

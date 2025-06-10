@@ -36,6 +36,10 @@ const parseSchemaJsDoc = ({
     irSchema.deprecated = schema.deprecated;
   }
 
+  if (schema.example) {
+    irSchema.example = schema.example;
+  }
+
   if (schema.description) {
     irSchema.description = schema.description;
   }
