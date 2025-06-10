@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-fetch",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "🚀 Fetch API client for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {

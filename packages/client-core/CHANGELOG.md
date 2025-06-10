@@ -1,5 +1,11 @@
 # @hey-api/client-core
 
+## 0.2.0
+
+### Minor Changes
+
+- [#2148](https://github.com/hey-api/openapi-ts/pull/2148) [`10d2e03`](https://github.com/hey-api/openapi-ts/commit/10d2e03b8295e4e887fab8d023aa823699efbae8) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: export `buildClientParams` function
+
 ## 0.1.4
 
 ### Patch Changes
