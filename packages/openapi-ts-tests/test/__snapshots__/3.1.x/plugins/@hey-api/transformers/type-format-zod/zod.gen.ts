@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 export const zFoo = z.object({
     bar: z.number().int().optional(),
-    foo: z.coerce.bigint(),
+    foo: z.coerce.bigint().default(BigInt(0)),
     id: z.string()
 });
 

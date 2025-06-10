@@ -19,6 +19,7 @@ definitions:
       bar:
         type: integer
       foo:
+        default: 0
         format: int64
         type: integer
       id:
