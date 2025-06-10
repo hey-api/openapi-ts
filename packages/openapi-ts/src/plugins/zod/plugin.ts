@@ -268,11 +268,17 @@ const numberParameter = ({
   value,
 }: {
   isBigInt: boolean;
-  value: number;
+  value: unknown;
 }) => {
   const expression = compiler.valueToExpression({ value });
 
-  if (isBigInt) {
+  if (
+    isBigInt &&
+    (typeof value === 'bigint' ||
+      typeof value === 'number' ||
+      typeof value === 'string' ||
+      typeof value === 'boolean')
+  ) {
     return compiler.callExpression({
       functionName: 'BigInt',
       parameters: [expression],
@@ -1076,7 +1082,9 @@ const schemaToZodSchema = ({
     }
 
     if (schema.default !== undefined) {
-      const callParameter = compiler.valueToExpression({
+      const isBigInt = schema.type === 'integer' && schema.format === 'int64';
+      const callParameter = numberParameter({
+        isBigInt,
         value: schema.default,
       });
       if (callParameter) {

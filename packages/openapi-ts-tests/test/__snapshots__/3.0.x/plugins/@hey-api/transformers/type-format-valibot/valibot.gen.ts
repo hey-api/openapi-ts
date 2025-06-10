@@ -4,7 +4,7 @@ import * as v from 'valibot';
 
 export const vFoo = v.object({
     bar: v.optional(v.pipe(v.number(), v.integer())),
-    foo: v.bigint(),
+    foo: v.optional(v.bigint(), BigInt(0)),
     id: v.string()
 });
 
