@@ -120,3 +120,18 @@ components:
             $ref: '#/components/schemas/Baz'
         qux:
           $ref: '#/components/schemas/QuxAllRead'
+    Corge:
+      type: object
+      properties:
+        foo:
+          type: object
+          properties:
+            baz:
+              type: boolean
+              writeOnly: true
+        bar:
+          type: object
+          properties:
+            baz:
+              type: boolean
+              readOnly: true

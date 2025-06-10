@@ -76,10 +76,14 @@ export const createClient = async (
     const config = configs[0] as Config | undefined;
     const dryRun = config ? config.dryRun : resolvedConfig?.dryRun;
     const logs = config?.logs ?? getLogs(resolvedConfig);
-    const shouldLog = !dryRun && logs.level !== 'silent' && logs.file;
 
-    if (shouldLog) {
-      const logPath = logCrashReport(error, logs.path ?? '');
+    let logPath: string | undefined;
+
+    if (logs.level !== 'silent' && logs.file && !dryRun) {
+      logPath = logCrashReport(error, logs.path ?? '');
+    }
+
+    if (logs.level !== 'silent') {
       printCrashReport({ error, logPath });
       if (await shouldReportCrash()) {
         await openGitHubIssueWithCrashReport(error);
