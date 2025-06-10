@@ -217,6 +217,25 @@ for (const version of versions) {
       {
         config: createConfig({
           output: 'default',
+          plugins: ['@pinia/colada', '@hey-api/client-fetch'],
+        }),
+        description: 'generate with plugin Pinia Colada',
+      },
+      /* {
+        config: createConfig({
+          output: 'asFileSdk',
+          plugins: [
+            {
+              groupByTag: true,
+              name: '@pinia/colada',
+            },
+          ],
+        }),
+        description: 'generate with plugin Pinia Colada using file-based SDK',
+      }, */
+      {
+        config: createConfig({
+          output: 'default',
           plugins: ['@hey-api/schemas'],
         }),
         description: 'generate schemas',
@@ -342,7 +361,7 @@ for (const version of versions) {
       },
     ];
 
-    it.each(scenarios)('$description', async ({ config }) => {
+    it.only.each(scenarios)('$description', async ({ config }) => {
       await createClient(config);
 
       const outputPath =
