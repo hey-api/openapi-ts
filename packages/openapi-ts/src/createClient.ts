@@ -101,13 +101,13 @@ export const compileInputPath = (
 
   if (!result.organization) {
     throw new Error(
-      '🚫 missing organization - from which Hey API platform organization do you want to generate your output?',
+      'missing organization - from which Hey API platform organization do you want to generate your output?',
     );
   }
 
   if (!result.project) {
     throw new Error(
-      '🚫 missing project - from which Hey API platform project do you want to generate your output?',
+      'missing project - from which Hey API platform project do you want to generate your output?',
     );
   }
 

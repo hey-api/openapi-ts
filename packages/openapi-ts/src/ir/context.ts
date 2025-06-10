@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import { HeyApiError } from '../error';
 import { TypeScriptFile } from '../generate/files';
 import type { Config, StringCase } from '../types/config';
 import type { Files } from '../types/utils';
@@ -27,7 +28,7 @@ interface ContextFile {
   path: string;
 }
 
-interface Events {
+export interface Events {
   /**
    * Called after parsing.
    */
@@ -59,8 +60,13 @@ interface Events {
   server: (args: { server: IR.ServerObject }) => void;
 }
 
+type ListenerWithMeta<T extends keyof Events> = {
+  callbackFn: Events[T];
+  pluginName: string;
+};
+
 type Listeners = {
-  [T in keyof Events]?: Array<Events[T]>;
+  [T in keyof Events]?: Array<ListenerWithMeta<T>>;
 };
 
 export class IRContext<Spec extends Record<string, any> = any> {
@@ -102,24 +108,28 @@ export class IRContext<Spec extends Record<string, any> = any> {
     event: T,
     ...args: Parameters<Events[T]>
   ): Promise<void> {
-    if (!this.listeners[event]) {
-      return;
-    }
+    const eventListeners = this.listeners[event];
 
-    await Promise.all(
-      this.listeners[event].map((callbackFn, index) => {
+    if (eventListeners) {
+      for (const listener of eventListeners) {
         try {
-          // @ts-expect-error
-          const response = callbackFn(...args);
-          return Promise.resolve(response);
-        } catch (error) {
-          console.error(
-            `🔥 Event broadcast: "${event}"\nindex: ${index}\narguments: ${JSON.stringify(args, null, 2)}`,
+          await listener.callbackFn(
+            // @ts-expect-error
+            ...args,
           );
-          throw error;
+        } catch (error) {
+          const originalError =
+            error instanceof Error ? error : new Error(String(error));
+          throw new HeyApiError({
+            args,
+            error: originalError,
+            event,
+            name: 'BroadcastError',
+            pluginName: listener.pluginName,
+          });
         }
-      }),
-    );
+      }
+    }
   }
 
   /**
@@ -192,10 +202,14 @@ export class IRContext<Spec extends Record<string, any> = any> {
   public subscribe<T extends keyof Events>(
     event: T,
     callbackFn: Events[T],
+    pluginName?: string,
   ): void {
     if (!this.listeners[event]) {
       this.listeners[event] = [];
     }
-    this.listeners[event].push(callbackFn);
+    this.listeners[event].push({
+      callbackFn,
+      pluginName: pluginName ?? '',
+    });
   }
 }

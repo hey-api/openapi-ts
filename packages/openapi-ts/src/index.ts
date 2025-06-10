@@ -1,12 +1,14 @@
-import fs from 'node:fs';
-import path from 'node:path';
-
 import colors from 'ansi-colors';
 // @ts-expect-error
 import colorSupport from 'color-support';
 
 import { createClient as pCreateClient } from './createClient';
-import { ensureDirSync } from './generate/utils';
+import {
+  logCrashReport,
+  openGitHubIssueWithCrashReport,
+  printCrashReport,
+  shouldReportCrash,
+} from './error';
 import { getLogs } from './getLogs';
 import { initConfigs } from './initConfigs';
 import type { IR } from './ir/types';
@@ -73,20 +75,21 @@ export const createClient = async (
   } catch (error) {
     const config = configs[0] as Config | undefined;
     const dryRun = config ? config.dryRun : resolvedConfig?.dryRun;
+    const logs = config?.logs ?? getLogs(resolvedConfig);
 
-    // TODO: add setting for log output
-    if (!dryRun) {
-      const logs = config?.logs ?? getLogs(resolvedConfig);
-      if (logs.level !== 'silent' && logs.file) {
-        const logName = `openapi-ts-error-${Date.now()}.log`;
-        const logsDir = path.resolve(process.cwd(), logs.path ?? '');
-        ensureDirSync(logsDir);
-        const logPath = path.resolve(logsDir, logName);
-        fs.writeFileSync(logPath, `${error.message}\n${error.stack}`);
-        console.error(`🔥 Unexpected error occurred. Log saved to ${logPath}`);
+    let logPath: string | undefined;
+
+    if (logs.level !== 'silent' && logs.file && !dryRun) {
+      logPath = logCrashReport(error, logs.path ?? '');
+    }
+
+    if (logs.level !== 'silent') {
+      printCrashReport({ error, logPath });
+      if (await shouldReportCrash()) {
+        await openGitHubIssueWithCrashReport(error);
       }
     }
-    console.error(`🔥 Unexpected error occurred. ${error.message}`);
+
     throw error;
   }
 };
