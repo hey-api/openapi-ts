@@ -80,6 +80,10 @@ const collectSchemaDependencies = (
       collectSchemaDependencies(item, dependencies);
     }
   }
+
+  if (schema.propertyNames && typeof schema.propertyNames === 'object') {
+    collectSchemaDependencies(schema.propertyNames, dependencies);
+  }
 };
 
 export const createGraph = ({

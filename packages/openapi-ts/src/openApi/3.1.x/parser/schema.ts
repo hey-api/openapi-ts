@@ -324,6 +324,14 @@ const parseObject = ({
     irSchema.additionalProperties = irAdditionalPropertiesSchema;
   }
 
+  if (schema.propertyNames) {
+    irSchema.propertyNames = schemaToIrSchema({
+      context,
+      schema: schema.propertyNames,
+      state,
+    });
+  }
+
   if (schema.required) {
     irSchema.required = schema.required;
   }

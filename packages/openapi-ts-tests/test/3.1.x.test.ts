@@ -510,6 +510,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'object-property-names.yaml',
+        output: 'object-property-names',
+      }),
+      description:
+        'sets correct index signature type on object with property names',
+    },
+    {
+      config: createConfig({
         input: 'operation-204.json',
         output: 'operation-204',
       }),
