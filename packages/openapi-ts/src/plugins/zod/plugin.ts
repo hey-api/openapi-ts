@@ -115,17 +115,6 @@ const arrayTypeToZodSchema = ({
             ],
           }),
         ],
-
-        // compiler.callExpression({
-        //   functionName: compiler.propertyAccessExpression({
-        //     expression: zIdentifier,
-        //     name: unionIdentifier,
-        //   }),
-        //   parameters: [
-        //     compiler.arrayLiteralExpression({
-        //       elements: itemExpressions,
-        //     }),
-        //   ],
       });
     }
   }
