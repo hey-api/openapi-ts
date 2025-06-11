@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': patch
 ---
 
-Fix: Zod can handle array union types now
+fix(zod): handle array union types
