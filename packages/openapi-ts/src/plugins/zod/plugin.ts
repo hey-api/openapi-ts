@@ -97,8 +97,19 @@ const arrayTypeToZodSchema = ({
         // );
       }
 
-      // TODO: parser - handle union
-      // return compiler.typeArrayNode(compiler.typeUnionNode({ types: itemExpressions }));
+      if (schema.logicalOperator === 'or') {
+        arrayExpression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: zIdentifier,
+            name: unionIdentifier,
+          }),
+          parameters: [
+            compiler.arrayLiteralExpression({
+              elements: itemExpressions,
+            }),
+          ],
+        });
+      }
 
       arrayExpression = compiler.callExpression({
         functionName,
