@@ -170,7 +170,14 @@ export const zArrayWithProperties = z.array(z.object({
 /**
  * This is a simple array with any of properties
  */
-export const zArrayWithAnyOfProperties = z.array(z.unknown());
+export const zArrayWithAnyOfProperties = z.union([
+    z.object({
+        foo: z.string().optional().default('test')
+    }),
+    z.object({
+        bar: z.string().optional()
+    })
+]);
 
 export const zAnyOfAnyAndNull = z.object({
     data: z.union([
@@ -183,7 +190,14 @@ export const zAnyOfAnyAndNull = z.object({
  * This is a simple array with any of properties
  */
 export const zAnyOfArrays = z.object({
-    results: z.array(z.unknown()).optional()
+    results: z.union([
+        z.object({
+            foo: z.string().optional()
+        }),
+        z.object({
+            bar: z.string().optional()
+        })
+    ]).optional()
 });
 
 /**
@@ -486,8 +500,14 @@ export const zCompositionWithAnyOfAnonymous = z.object({
  */
 export const zCompositionWithNestedAnyAndTypeNull = z.object({
     propA: z.union([
-        z.array(z.unknown()),
-        z.array(z.unknown())
+        z.union([
+            zModelWithDictionary,
+            z.null()
+        ]),
+        z.union([
+            zModelWithArray,
+            z.null()
+        ])
     ]).optional()
 });
 
@@ -503,7 +523,10 @@ export const zConstValue = z.literal('ConstValue');
  */
 export const zCompositionWithNestedAnyOfAndNull = z.object({
     propA: z.union([
-        z.array(z.unknown()),
+        z.union([
+            z3eNum1Период,
+            zConstValue
+        ]),
         z.null()
     ]).optional()
 });
@@ -722,7 +745,10 @@ export const zModelWithAdditionalPropertiesEqTrue = z.object({
 
 export const zNestedAnyOfArraysNullable = z.object({
     nullableArray: z.union([
-        z.array(z.unknown()),
+        z.union([
+            z.string(),
+            z.boolean()
+        ]),
         z.null()
     ]).optional()
 });
