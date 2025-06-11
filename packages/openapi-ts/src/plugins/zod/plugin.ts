@@ -97,17 +97,22 @@ const arrayTypeToZodSchema = ({
         // );
       }
 
-      // TODO: parser - handle union
-      // return compiler.typeArrayNode(compiler.typeUnionNode({ types: itemExpressions }));
-
       arrayExpression = compiler.callExpression({
-        functionName,
+        functionName: compiler.propertyAccessExpression({
+          expression: zIdentifier,
+          name: compiler.identifier({ text: 'array' }),
+        }),
         parameters: [
-          unknownTypeToZodSchema({
-            context,
-            schema: {
-              type: 'unknown',
-            },
+          compiler.callExpression({
+            functionName: compiler.propertyAccessExpression({
+              expression: zIdentifier,
+              name: unionIdentifier,
+            }),
+            parameters: [
+              compiler.arrayLiteralExpression({
+                elements: itemExpressions,
+              }),
+            ],
           }),
         ],
       });
