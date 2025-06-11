@@ -170,7 +170,14 @@ export const zArrayWithProperties = z.array(z.object({
 /**
  * This is a simple array with any of properties
  */
-export const zArrayWithAnyOfProperties = z.array(z.unknown());
+export const zArrayWithAnyOfProperties = z.union([
+    z.object({
+        foo: z.string().optional().default('test')
+    }),
+    z.object({
+        bar: z.string().optional()
+    })
+]);
 
 export const zAnyOfAnyAndNull = z.object({
     data: z.unknown().optional()
@@ -180,7 +187,14 @@ export const zAnyOfAnyAndNull = z.object({
  * This is a simple array with any of properties
  */
 export const zAnyOfArrays = z.object({
-    results: z.array(z.unknown()).optional()
+    results: z.union([
+        z.object({
+            foo: z.string().optional()
+        }),
+        z.object({
+            bar: z.string().optional()
+        })
+    ]).optional()
 });
 
 /**
@@ -508,7 +522,10 @@ export const zConstValue = z.enum([
  */
 export const zCompositionWithNestedAnyOfAndNull = z.object({
     propA: z.union([
-        z.array(z.unknown()),
+        z.union([
+            z3eNum1Период,
+            zConstValue
+        ]),
         z.null()
     ]).optional()
 });
@@ -731,7 +748,10 @@ export const zModelWithAdditionalPropertiesEqTrue = z.object({
 
 export const zNestedAnyOfArraysNullable = z.object({
     nullableArray: z.union([
-        z.array(z.unknown()),
+        z.union([
+            z.string(),
+            z.boolean()
+        ]),
         z.null()
     ]).optional()
 });
@@ -833,7 +853,11 @@ export const zModelWithConstantSizeArray = z.unknown();
 
 export const zModelWithAnyOfConstantSizeArray = z.unknown();
 
-export const zModelWithPrefixItemsConstantSizeArray = z.array(z.unknown());
+export const zModelWithPrefixItemsConstantSizeArray = z.union([
+    zModelWithInteger,
+    z.number(),
+    z.string()
+]);
 
 export const zModelWithAnyOfConstantSizeArrayNullable = z.unknown();
 
