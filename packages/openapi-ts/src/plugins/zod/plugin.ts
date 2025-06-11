@@ -100,13 +100,32 @@ const arrayTypeToZodSchema = ({
       arrayExpression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression: zIdentifier,
-          name: unionIdentifier,
+          name: compiler.identifier({ text: 'array' }),
         }),
         parameters: [
-          compiler.arrayLiteralExpression({
-            elements: itemExpressions,
+          compiler.callExpression({
+            functionName: compiler.propertyAccessExpression({
+              expression: zIdentifier,
+              name: unionIdentifier,
+            }),
+            parameters: [
+              compiler.arrayLiteralExpression({
+                elements: itemExpressions,
+              }),
+            ],
           }),
         ],
+
+        // compiler.callExpression({
+        //   functionName: compiler.propertyAccessExpression({
+        //     expression: zIdentifier,
+        //     name: unionIdentifier,
+        //   }),
+        //   parameters: [
+        //     compiler.arrayLiteralExpression({
+        //       elements: itemExpressions,
+        //     }),
+        //   ],
       });
     }
   }
