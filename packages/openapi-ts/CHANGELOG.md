@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.72.1
+
+### Patch Changes
+
+- [#2159](https://github.com/hey-api/openapi-ts/pull/2159) [`87b2d6c`](https://github.com/hey-api/openapi-ts/commit/87b2d6cf075a3d0466a2e510a2fc89b409d57e3e) Thanks [@Joshua-hypt](https://github.com/Joshua-hypt)! - fix(zod): handle array union types
+
 ## 0.72.0
 
 ### Minor Changes
