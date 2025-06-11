@@ -97,28 +97,14 @@ const arrayTypeToZodSchema = ({
         // );
       }
 
-      if (schema.logicalOperator === 'or') {
-        arrayExpression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
-            expression: zIdentifier,
-            name: unionIdentifier,
-          }),
-          parameters: [
-            compiler.arrayLiteralExpression({
-              elements: itemExpressions,
-            }),
-          ],
-        });
-      }
-
       arrayExpression = compiler.callExpression({
-        functionName,
+        functionName: compiler.propertyAccessExpression({
+          expression: zIdentifier,
+          name: unionIdentifier,
+        }),
         parameters: [
-          unknownTypeToZodSchema({
-            context,
-            schema: {
-              type: 'unknown',
-            },
+          compiler.arrayLiteralExpression({
+            elements: itemExpressions,
           }),
         ],
       });
