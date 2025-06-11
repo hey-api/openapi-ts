@@ -2,18 +2,46 @@
 
 import * as v from 'valibot';
 
-export const vBar = v.union([
+export const vContact = v.union([
     v.object({
-        bar: v.string()
+        email: v.string()
     }),
     v.object({
-        baz: v.string()
+        phone: v.string()
     })
 ]);
 
-export const vFoo = v.intersect([
-    vBar,
+export const vUser = v.intersect([
+    vContact,
     v.object({
-        foo: v.string()
+        username: v.string()
     })
 ]);
+
+export const vDogDetails = v.object({
+    breed: v.string(),
+    barkVolume: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(10))
+});
+
+export const vCatDetails = v.object({
+    furLength: v.picklist([
+        'short',
+        'medium',
+        'long'
+    ]),
+    purrs: v.boolean()
+});
+
+export const vPetStore = v.object({
+    animals: v.array(v.object({
+        name: v.string(),
+        type: v.optional(v.picklist([
+            'dog',
+            'cat'
+        ])),
+        details: v.union([
+            vDogDetails,
+            vCatDetails
+        ])
+    }))
+});
