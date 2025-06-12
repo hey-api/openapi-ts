@@ -609,9 +609,13 @@ const stringTypeToZodSchema = ({
 
 const tupleTypeToZodSchema = ({
   context,
+  plugin,
+  result,
   schema,
 }: {
   context: IR.Context;
+  plugin: Plugin.Instance<Config>;
+  result: Result;
   schema: SchemaWithType<'tuple'>;
 }) => {
   if (schema.const && Array.isArray(schema.const)) {
@@ -638,30 +642,31 @@ const tupleTypeToZodSchema = ({
     return expression;
   }
 
-  // TODO: parser - handle tuple items
-  // const itemTypes: Array<ts.TypeNode> = [];
+  const tupleElements: Array<ts.Expression> = [];
 
-  // for (const item of schema.items ?? []) {
-  //   itemTypes.push(
-  //     schemaToType({
-  //       context,
-  //       namespace,
-  //       plugin,
-  //       schema: item,
-  //     }),
-  //   );
-  // }
+  for (const item of schema.items ?? []) {
+    tupleElements.push(
+      schemaToZodSchema({
+        context,
+        plugin,
+        result,
+        schema: item,
+      }),
+    );
+  }
 
-  // return compiler.typeTupleNode({
-  //   types: itemTypes,
-  // });
-
-  return unknownTypeToZodSchema({
-    context,
-    schema: {
-      type: 'unknown',
-    },
+  const expression = compiler.callExpression({
+    functionName: compiler.propertyAccessExpression({
+      expression: zIdentifier,
+      name: compiler.identifier({ text: 'tuple' }),
+    }),
+    parameters: [
+      compiler.arrayLiteralExpression({
+        elements: tupleElements,
+      }),
+    ],
   });
+  return expression;
 };
 
 const undefinedTypeToZodSchema = ({
@@ -790,6 +795,8 @@ const schemaTypeToZodSchema = ({
       return {
         expression: tupleTypeToZodSchema({
           context,
+          plugin,
+          result,
           schema: schema as SchemaWithType<'tuple'>,
         }),
       };

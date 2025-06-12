@@ -938,7 +938,7 @@ export const createFilteredDependencies = ({
     schemas,
   });
 
-  if (!filters.orphans) {
+  if (!filters.orphans && operations.size) {
     const { operationDependencies } = collectOperationDependencies({
       graph,
       operations,

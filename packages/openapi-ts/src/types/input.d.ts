@@ -140,8 +140,8 @@ export interface Filters {
     include?: ReadonlyArray<string>;
   };
   /**
-   * Keep reusable components without any references in the output? By
-   * default, we exclude orphaned resources.
+   * Keep reusable components without any references from operations in the
+   * output? By default, we exclude orphaned resources.
    *
    * @default false
    */
