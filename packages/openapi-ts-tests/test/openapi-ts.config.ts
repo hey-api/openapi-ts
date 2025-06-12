@@ -39,6 +39,9 @@ export default defineConfig(() => {
         // },
       },
       // organization: 'hey-api',
+      // pagination: {
+      //   keywords: ['aa'],
+      // },
       // path: {
       //   components: {},
       //   info: {
@@ -143,7 +146,12 @@ export default defineConfig(() => {
       },
       {
         exportFromIndex: true,
-        // name: '@tanstack/react-query',
+        infiniteQueryKeyNameBuilder: '{{name}}IQK',
+        infiniteQueryOptionsNameBuilder: '{{name}}InfiniteQuery',
+        mutationOptionsNameBuilder: '{{name}}MutationOptions',
+        name: '@tanstack/react-query',
+        queryKeyNameBuilder: '{{name}}QK',
+        queryOptionsNameBuilder: '{{name}}Query',
       },
       {
         // comments: false,

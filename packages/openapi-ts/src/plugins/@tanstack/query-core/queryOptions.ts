@@ -21,15 +21,30 @@ const queryOptionsFn = 'queryOptions';
 const queryOptionsFunctionIdentifier = ({
   context,
   operation,
+  plugin,
 }: {
   context: IR.Context;
   operation: IR.OperationObject;
-}) =>
-  `${serviceFunctionIdentifier({
+  plugin: PluginInstance;
+}) => {
+  const name = serviceFunctionIdentifier({
     config: context.config,
     id: operation.id,
     operation,
-  })}Options`;
+  });
+
+  let customName = '';
+
+  if (plugin.queryOptionsNameBuilder) {
+    if (typeof plugin.queryOptionsNameBuilder === 'function') {
+      customName = plugin.queryOptionsNameBuilder(name);
+    } else {
+      customName = plugin.queryOptionsNameBuilder.replace('{{name}}', name);
+    }
+  }
+
+  return customName;
+};
 
 export const createQueryOptions = ({
   context,
@@ -83,8 +98,8 @@ export const createQueryOptions = ({
 
   const queryKeyName = queryKeyFunctionIdentifier({
     context,
-    isInfinite: false,
     operation,
+    plugin,
   });
   const identifierQueryKey = file.identifier({
     $ref: `#/queryKey/${queryKeyName}`,
@@ -194,7 +209,7 @@ export const createQueryOptions = ({
         }),
       ],
     }),
-    name: queryOptionsFunctionIdentifier({ context, operation }),
+    name: queryOptionsFunctionIdentifier({ context, operation, plugin }),
     // TODO: add type error
     // TODO: AxiosError<PutSubmissionMetaError>
   });

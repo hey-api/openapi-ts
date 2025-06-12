@@ -114,7 +114,7 @@ The TanStack Query plugin will generate the following artifacts, depending on th
 
 ## Queries
 
-Queries are generated from GET and POST endpoints. The generated functions follow the naming convention of SDK functions and append `Options`, e.g. `getPetByIdOptions()`.
+Queries are generated from GET and POST endpoints. The generated query functions follow the naming convention of SDK functions and by default append `Options`, e.g. `getPetByIdOptions()`.
 
 ```ts
 const { data, error } = useQuery({
@@ -126,9 +126,11 @@ const { data, error } = useQuery({
 });
 ```
 
+You can customize query function names using `queryOptionsNameBuilder`.
+
 ## Infinite Queries
 
-Infinite queries are generated from GET and POST endpoints if we detect a pagination parameter. The generated functions follow the naming convention of SDK functions and append `InfiniteOptions`, e.g. `getFooInfiniteOptions()`.
+Infinite queries are generated from GET and POST endpoints if we detect a [pagination](/openapi-ts/configuration#pagination) parameter. The generated infinite query functions follow the naming convention of SDK functions and by default append `InfiniteOptions`, e.g. `getFooInfiniteOptions()`.
 
 ```ts
 const { data, error } = useInfiniteQuery({
@@ -142,18 +144,11 @@ const { data, error } = useInfiniteQuery({
 });
 ```
 
-Infinite queries are recognized by having one of these keywords in the endpoint's parameters:
-
-- after
-- before
-- cursor
-- offset
-- page
-- start
+You can customize infinite query function names using `infiniteQueryOptionsNameBuilder`.
 
 ## Mutations
 
-Mutations are generated from DELETE, PATCH, POST, and PUT endpoints. The generated functions follow the naming convention of SDK functions and append `Mutation`, e.g. `addPetMutation()`.
+Mutations are generated from DELETE, PATCH, POST, and PUT endpoints. The generated mutation functions follow the naming convention of SDK functions and by default append `Mutation`, e.g. `addPetMutation()`.
 
 ```ts
 const addPet = useMutation({
@@ -170,6 +165,8 @@ addPet.mutate({
 });
 ```
 
+You can customize mutation function names using `mutationOptionsNameBuilder`.
+
 ## Query Keys
 
 Query keys are generated for both queries and infinite queries. If you have access to the result of query or infinite query options function, you can get the query key from the `queryKey` field.
@@ -182,7 +179,7 @@ const { queryKey } = getPetByIdOptions({
 });
 ```
 
-Alternatively, you can access the same query key by calling `QueryKey` or `InfiniteQueryKey` function.
+Alternatively, you can access the same query key by calling query key functions. The generated query key functions follow the naming convention of SDK functions and by default append `QueryKey` or `InfiniteQueryKey`, e.g. `getPetByIdQueryKey()` or `getPetByIdInfiniteQueryKey()`.
 
 ```ts
 const queryKey = getPetByIdQueryKey({
@@ -191,6 +188,8 @@ const queryKey = getPetByIdQueryKey({
   },
 });
 ```
+
+You can customize query key function names using `queryKeyNameBuilder` and `infiniteQueryKeyNameBuilder`.
 
 <!--@include: ../../examples.md-->
 <!--@include: ../../sponsors.md-->

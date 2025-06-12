@@ -216,6 +216,106 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'name-builder',
+          plugins: [
+            {
+              infiniteQueryKeyNameBuilder: '{{name}}A',
+              infiniteQueryOptionsNameBuilder: '{{name}}B',
+              mutationOptionsNameBuilder: '{{name}}C',
+              name: '@tanstack/angular-query-experimental',
+              queryKeyNameBuilder: '{{name}}D',
+              queryOptionsNameBuilder: '{{name}}E',
+            },
+            '@hey-api/client-fetch',
+            '@hey-api/sdk',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Angular Query Experimental plugin with custom names',
+      },
+      {
+        config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'name-builder',
+          plugins: [
+            {
+              infiniteQueryKeyNameBuilder: '{{name}}A',
+              infiniteQueryOptionsNameBuilder: '{{name}}B',
+              mutationOptionsNameBuilder: '{{name}}C',
+              name: '@tanstack/react-query',
+              queryKeyNameBuilder: '{{name}}D',
+              queryOptionsNameBuilder: '{{name}}E',
+            },
+            '@hey-api/client-fetch',
+            '@hey-api/sdk',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack React Query plugin with custom names',
+      },
+      {
+        config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'name-builder',
+          plugins: [
+            {
+              infiniteQueryKeyNameBuilder: '{{name}}A',
+              infiniteQueryOptionsNameBuilder: '{{name}}B',
+              mutationOptionsNameBuilder: '{{name}}C',
+              name: '@tanstack/solid-query',
+              queryKeyNameBuilder: '{{name}}D',
+              queryOptionsNameBuilder: '{{name}}E',
+            },
+            '@hey-api/client-fetch',
+            '@hey-api/sdk',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Solid Query plugin with custom names',
+      },
+      {
+        config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'name-builder',
+          plugins: [
+            {
+              infiniteQueryKeyNameBuilder: '{{name}}A',
+              infiniteQueryOptionsNameBuilder: '{{name}}B',
+              mutationOptionsNameBuilder: '{{name}}C',
+              name: '@tanstack/svelte-query',
+              queryKeyNameBuilder: '{{name}}D',
+              queryOptionsNameBuilder: '{{name}}E',
+            },
+            '@hey-api/client-fetch',
+            '@hey-api/sdk',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Svelte Query plugin with custom names',
+      },
+      {
+        config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'name-builder',
+          plugins: [
+            {
+              infiniteQueryKeyNameBuilder: '{{name}}A',
+              infiniteQueryOptionsNameBuilder: '{{name}}B',
+              mutationOptionsNameBuilder: '{{name}}C',
+              name: '@tanstack/vue-query',
+              queryKeyNameBuilder: '{{name}}D',
+              queryOptionsNameBuilder: '{{name}}E',
+            },
+            '@hey-api/client-fetch',
+            '@hey-api/sdk',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Vue Query plugin with custom names',
+      },
+      {
+        config: createConfig({
           output: 'default',
           plugins: ['@hey-api/schemas'],
         }),
