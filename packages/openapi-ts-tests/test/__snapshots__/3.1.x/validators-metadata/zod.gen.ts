@@ -9,19 +9,19 @@ export const zBar: z.AnyZodObject = z.object({
     foo: z.lazy(() => {
         return zFoo;
     }).optional()
-});
+}).describe('This is Bar schema.');
 
 /**
  * This is Foo schema.
  */
 export const zFoo: z.ZodTypeAny = z.union([
     z.object({
-        foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
+        foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).describe('This is foo property.').optional(),
         bar: zBar.optional(),
         baz: z.array(z.lazy(() => {
             return zFoo;
-        })).optional(),
-        qux: z.number().int().gt(0).optional().default(0)
+        })).describe('This is baz property.').optional(),
+        qux: z.number().int().gt(0).describe('This is qux property.').optional().default(0)
     }),
     z.null()
 ]).default(null);
@@ -31,7 +31,7 @@ export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
 /**
  * This is Foo parameter.
  */
-export const zFoo2 = z.string();
+export const zFoo2 = z.string().describe('This is Foo parameter.');
 
 export const zFoo3 = z.object({
     foo: zBar.optional()
@@ -44,7 +44,7 @@ export const zPatchFooData = z.object({
 /**
  * This is Foo parameter.
  */
-export const zPatchFooParameterFoo = z.string();
+export const zPatchFooParameterFoo = z.string().describe('This is Foo parameter.');
 
 export const zPatchFooParameterBar = zBar;
 
