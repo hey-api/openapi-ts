@@ -31,6 +31,9 @@ export default defineConfig(() => {
         },
         // orphans: false,
         // preserveOrder: true,
+        // schemas: {
+        //   include: ['Foo'],
+        // },
         // tags: {
         //   exclude: ['bar'],
         // },
@@ -51,7 +54,7 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'validators.yaml'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.yaml'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -150,7 +153,7 @@ export default defineConfig(() => {
       {
         // comments: false,
         // exportFromIndex: true,
-        metadata: true,
+        // metadata: true,
         name: 'zod',
       },
     ],
