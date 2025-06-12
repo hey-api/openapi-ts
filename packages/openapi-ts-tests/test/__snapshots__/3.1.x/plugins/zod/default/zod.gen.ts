@@ -815,7 +815,10 @@ export const zModelWithOneOfEnum = z.union([
         ])
     }),
     z.object({
-        content: z.unknown(),
+        content: z.tuple([
+            z.string().datetime(),
+            z.string()
+        ]),
         foo: z.enum([
             'Corge'
         ])
@@ -846,17 +849,73 @@ export const zModelWithNestedCompositionEnums = z.object({
     foo: zModelWithNestedArrayEnumsDataFoo.optional()
 });
 
-export const zModelWithConstantSizeArray = z.unknown();
+export const zModelWithConstantSizeArray = z.tuple([
+    z.number(),
+    z.number()
+]);
 
-export const zModelWithAnyOfConstantSizeArray = z.unknown();
+export const zModelWithAnyOfConstantSizeArray = z.tuple([
+    z.union([
+        z.number(),
+        z.string()
+    ]),
+    z.union([
+        z.number(),
+        z.string()
+    ]),
+    z.union([
+        z.number(),
+        z.string()
+    ])
+]);
 
-export const zModelWithPrefixItemsConstantSizeArray = z.unknown();
+export const zModelWithPrefixItemsConstantSizeArray = z.tuple([
+    zModelWithInteger,
+    z.union([
+        z.number(),
+        z.string()
+    ]),
+    z.string()
+]);
 
-export const zModelWithAnyOfConstantSizeArrayNullable = z.unknown();
+export const zModelWithAnyOfConstantSizeArrayNullable = z.tuple([
+    z.union([
+        z.number(),
+        z.null(),
+        z.string()
+    ]),
+    z.union([
+        z.number(),
+        z.null(),
+        z.string()
+    ]),
+    z.union([
+        z.number(),
+        z.null(),
+        z.string()
+    ])
+]);
 
-export const zModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = z.unknown();
+/**
+ * Model with restricted keyword name
+ */
+export const zImport = z.string();
 
-export const zModelWithAnyOfConstantSizeArrayAndIntersect = z.unknown();
+export const zModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = z.tuple([
+    z.union([
+        z.number(),
+        zImport
+    ]),
+    z.union([
+        z.number(),
+        zImport
+    ])
+]);
+
+export const zModelWithAnyOfConstantSizeArrayAndIntersect = z.tuple([
+    z.intersection(z.number(), z.string()),
+    z.intersection(z.number(), z.string())
+]);
 
 export const zModelWithNumericEnumUnion = z.object({
     value: z.unknown().optional()
@@ -904,11 +963,6 @@ export const zDeleteFooData = z.string();
  * Model used to test deduplication strategy
  */
 export const zDeleteFooData2 = z.string();
-
-/**
- * Model with restricted keyword name
- */
-export const zImport = z.string();
 
 export const zSchemaWithFormRestrictedKeys = z.object({
     description: z.string().optional(),
