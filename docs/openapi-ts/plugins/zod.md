@@ -33,13 +33,11 @@ Launch demo
 In your [configuration](/openapi-ts/get-started), add `zod` to your plugins and you'll be ready to generate Zod artifacts. :tada:
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     '@hey-api/client-fetch',
     'zod', // [!code ++]
   ],
@@ -51,13 +49,11 @@ export default {
 To automatically validate response data in your SDKs, set `sdk.validator` to `true`.
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     '@hey-api/client-fetch',
     'zod',
     {
@@ -118,6 +114,24 @@ const zFoo = z.number().int();
 const zBar = z.object({
   bar: z.array(z.number().int()).optional(),
 });
+```
+
+## Metadata
+
+It's often useful to associate a schema with some additional metadata for documentation, code generation, AI structured outputs, form validation, and other purposes. If this is your use case, you can set `metadata` to `true` to generate additional metadata about schemas.
+
+```js
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      metadata: true, // [!code ++]
+      name: 'zod',
+    },
+  ],
+};
 ```
 
 <!--@include: ../../examples.md-->

@@ -53,7 +53,7 @@ paths:
 components:
   parameters:
     Foo:
-      description: aaaaa
+      description: 'This is Foo parameter.'
       name: foo
       in: query
       required: false
@@ -72,17 +72,21 @@ components:
   schemas:
     Foo:
       default: null
+      description: 'This is Foo schema.'
       properties:
         foo:
+          description: 'This is foo property.'
           pattern: ^\d{3}-\d{2}-\d{4}$
           type: string
         bar:
           $ref: '#/components/schemas/Bar'
         baz:
+          description: 'This is baz property.'
           items:
             $ref: '#/components/schemas/Foo'
           type: array
         qux:
+          description: 'This is qux property.'
           default: 0
           exclusiveMinimum: 0
           type: integer
@@ -90,6 +94,7 @@ components:
         - object
         - 'null'
     Bar:
+      description: 'This is Bar schema.'
       properties:
         foo:
           $ref: '#/components/schemas/Foo'
