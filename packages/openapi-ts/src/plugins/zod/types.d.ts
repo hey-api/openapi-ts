@@ -16,6 +16,14 @@ export interface Config extends Plugin.Name<'zod'> {
    */
   exportFromIndex?: boolean;
   /**
+   * Enable Zod metadata support? It's often useful to associate a schema with
+   * some additional metadata for documentation, code generation, AI
+   * structured outputs, form validation, and other purposes.
+   *
+   * @default false
+   */
+  metadata?: boolean;
+  /**
    * Customise the Zod schema name. By default, `z{{name}}` is used,
    * where `name` is a definition name or an operation name.
    */

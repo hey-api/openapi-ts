@@ -719,6 +719,20 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'validators.yaml',
+        output: 'validators-metadata',
+        plugins: [
+          'valibot',
+          {
+            metadata: true,
+            name: 'zod',
+          },
+        ],
+      }),
+      description: 'generates validator schemas with metadata',
+    },
+    {
+      config: createConfig({
         input: 'validators-bigint-min-max.json',
         output: 'validators-bigint-min-max',
         plugins: ['valibot', 'zod'],

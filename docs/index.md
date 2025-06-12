@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: High-quality tools for interacting with APIs
-  tagline: Codegen for your TypeScript projects. Trusted over 1,250,000 times each month to generate reliable API clients and SDKs.
+  tagline: Codegen for your TypeScript projects. Trusted over 1,500,000 times each month to generate reliable API clients and SDKs.
   actions:
     - link: /openapi-ts/get-started
       text: Get Started

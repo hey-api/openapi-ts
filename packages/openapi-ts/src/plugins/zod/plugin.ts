@@ -24,8 +24,10 @@ export const zodId = 'zod';
 
 // frequently used identifiers
 const andIdentifier = compiler.identifier({ text: 'and' });
+const arrayIdentifier = compiler.identifier({ text: 'array' });
 const coerceIdentifier = compiler.identifier({ text: 'coerce' });
 const defaultIdentifier = compiler.identifier({ text: 'default' });
+const describeIdentifier = compiler.identifier({ text: 'describe' });
 const intersectionIdentifier = compiler.identifier({ text: 'intersection' });
 const lazyIdentifier = compiler.identifier({ text: 'lazy' });
 const lengthIdentifier = compiler.identifier({ text: 'length' });
@@ -54,7 +56,7 @@ const arrayTypeToZodSchema = ({
 }): ts.CallExpression => {
   const functionName = compiler.propertyAccessExpression({
     expression: zIdentifier,
-    name: compiler.identifier({ text: 'array' }),
+    name: arrayIdentifier,
   });
 
   let arrayExpression: ts.CallExpression | undefined;
@@ -100,7 +102,7 @@ const arrayTypeToZodSchema = ({
       arrayExpression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression: zIdentifier,
-          name: compiler.identifier({ text: 'array' }),
+          name: arrayIdentifier,
         }),
         parameters: [
           compiler.callExpression({
@@ -987,6 +989,16 @@ const schemaToZodSchema = ({
     });
     anyType = zodSchema.anyType;
     expression = zodSchema.expression;
+
+    if (plugin.metadata && schema.description) {
+      expression = compiler.callExpression({
+        functionName: compiler.propertyAccessExpression({
+          expression,
+          name: describeIdentifier,
+        }),
+        parameters: [compiler.stringLiteral({ text: schema.description })],
+      });
+    }
   } else if (schema.items) {
     schema = deduplicateSchema({ schema });
 

@@ -8,6 +8,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   _tags: ['validator'],
   comments: true,
   exportFromIndex: false,
+  metadata: false,
   name: 'zod',
   output: 'zod',
 };
