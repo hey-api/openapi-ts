@@ -39,6 +39,7 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
       context,
       plugin: plugin as never,
     });
+    context.subscribe = _subscribe;
   }
 
   await parseIR({ context });

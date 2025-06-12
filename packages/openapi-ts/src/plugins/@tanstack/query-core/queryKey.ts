@@ -298,20 +298,61 @@ export const createQueryKeyType = ({
   file.add(queryKeyType);
 };
 
-export const queryKeyFunctionIdentifier = ({
+export const infiniteQueryKeyFunctionIdentifier = ({
   context,
-  isInfinite,
   operation,
+  plugin,
 }: {
   context: IR.Context;
-  isInfinite?: boolean;
   operation: IR.OperationObject;
-}) =>
-  `${serviceFunctionIdentifier({
+  plugin: PluginInstance;
+}) => {
+  const name = serviceFunctionIdentifier({
     config: context.config,
     id: operation.id,
     operation,
-  })}${isInfinite ? 'Infinite' : ''}QueryKey`;
+  });
+
+  let customName = '';
+
+  if (plugin.infiniteQueryKeyNameBuilder) {
+    if (typeof plugin.infiniteQueryKeyNameBuilder === 'function') {
+      customName = plugin.infiniteQueryKeyNameBuilder(name);
+    } else {
+      customName = plugin.infiniteQueryKeyNameBuilder.replace('{{name}}', name);
+    }
+  }
+
+  return customName;
+};
+
+export const queryKeyFunctionIdentifier = ({
+  context,
+  operation,
+  plugin,
+}: {
+  context: IR.Context;
+  operation: IR.OperationObject;
+  plugin: PluginInstance;
+}) => {
+  const name = serviceFunctionIdentifier({
+    config: context.config,
+    id: operation.id,
+    operation,
+  });
+
+  let customName = '';
+
+  if (plugin.queryKeyNameBuilder) {
+    if (typeof plugin.queryKeyNameBuilder === 'function') {
+      customName = plugin.queryKeyNameBuilder(name);
+    } else {
+      customName = plugin.queryKeyNameBuilder.replace('{{name}}', name);
+    }
+  }
+
+  return customName;
+};
 
 export const queryKeyStatement = ({
   context,
@@ -328,11 +369,9 @@ export const queryKeyStatement = ({
 }) => {
   const file = context.file({ id: plugin.name })!;
   const typeData = useTypeData({ context, operation, plugin });
-  const name = queryKeyFunctionIdentifier({
-    context,
-    isInfinite,
-    operation,
-  });
+  const name = isInfinite
+    ? infiniteQueryKeyFunctionIdentifier({ context, operation, plugin })
+    : queryKeyFunctionIdentifier({ context, operation, plugin });
   const identifierQueryKey = file.identifier({
     $ref: `#/queryKey/${name}`,
     create: true,

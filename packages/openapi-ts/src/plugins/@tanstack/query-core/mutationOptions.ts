@@ -12,15 +12,30 @@ const mutationOptionsFn = 'mutationOptions';
 const mutationOptionsFunctionIdentifier = ({
   context,
   operation,
+  plugin,
 }: {
   context: IR.Context;
   operation: IR.OperationObject;
-}) =>
-  `${serviceFunctionIdentifier({
+  plugin: PluginInstance;
+}) => {
+  const name = serviceFunctionIdentifier({
     config: context.config,
     id: operation.id,
     operation,
-  })}Mutation`;
+  });
+
+  let customName = '';
+
+  if (plugin.mutationOptionsNameBuilder) {
+    if (typeof plugin.mutationOptionsNameBuilder === 'function') {
+      customName = plugin.mutationOptionsNameBuilder(name);
+    } else {
+      customName = plugin.mutationOptionsNameBuilder.replace('{{name}}', name);
+    }
+  }
+
+  return customName;
+};
 
 export const createMutationOptions = ({
   context,
@@ -157,7 +172,7 @@ export const createMutationOptions = ({
       : undefined,
     exportConst: true,
     expression,
-    name: mutationOptionsFunctionIdentifier({ context, operation }),
+    name: mutationOptionsFunctionIdentifier({ context, operation, plugin }),
   });
   file.add(statement);
 

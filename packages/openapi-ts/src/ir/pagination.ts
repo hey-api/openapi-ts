@@ -13,7 +13,7 @@ export const DEFAULT_PAGINATION_KEYWORDS = [
 export function getPaginationKeywordsRegExp({
   keywords = DEFAULT_PAGINATION_KEYWORDS,
 }: Config['input']['pagination'] = {}): RegExp {
-  if (keywords.length === 0) {
+  if (!keywords.length) {
     keywords = DEFAULT_PAGINATION_KEYWORDS;
   }
   const pattern = `^(${keywords.join('|')})$`;

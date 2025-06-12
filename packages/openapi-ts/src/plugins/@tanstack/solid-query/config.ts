@@ -9,11 +9,16 @@ export const defaultConfig: Plugin.Config<Config> = {
   _handlerLegacy: handlerLegacy,
   comments: true,
   exportFromIndex: false,
+  infiniteQueryKeyNameBuilder: '{{name}}InfiniteQueryKey',
   infiniteQueryOptions: true,
+  infiniteQueryOptionsNameBuilder: '{{name}}InfiniteOptions',
   mutationOptions: true,
+  mutationOptionsNameBuilder: '{{name}}Mutation',
   name: '@tanstack/solid-query',
   output: '@tanstack/solid-query',
+  queryKeyNameBuilder: '{{name}}QueryKey',
   queryOptions: true,
+  queryOptionsNameBuilder: '{{name}}Options',
 };
 
 /**
