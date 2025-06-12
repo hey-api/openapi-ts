@@ -63,6 +63,7 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
             name,
             style,
             value: value as Record<string, unknown>,
+            valueOnly: true,
           }),
         );
         continue;
