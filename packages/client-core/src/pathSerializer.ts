@@ -132,11 +132,13 @@ export const serializeObjectParam = ({
   name,
   style,
   value,
+  valueOnly,
 }: SerializeOptions<ObjectSeparatorStyle> & {
   value: Record<string, unknown> | Date;
+  valueOnly?: boolean;
 }) => {
   if (value instanceof Date) {
-    return `${name}=${value.toISOString()}`;
+    return valueOnly ? value.toISOString() : `${name}=${value.toISOString()}`;
   }
 
   if (style !== 'deepObject' && !explode) {
