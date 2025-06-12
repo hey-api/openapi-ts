@@ -1,7 +1,29 @@
 import type { Auth } from '@hey-api/client-core';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getParseAs, setAuthParams } from '../utils';
+import type { Client } from '../types';
+import { buildUrl, getParseAs, setAuthParams } from '../utils';
+
+describe('buildUrl', () => {
+  const scenarios: Array<{
+    options: Parameters<Client['buildUrl']>[0];
+    url: string;
+  }> = [
+    {
+      options: {
+        path: {
+          id: new Date('2025-01-01T00:00:00.000Z'),
+        },
+        url: '/foo/{id}',
+      },
+      url: '/foo/2025-01-01T00:00:00.000Z',
+    },
+  ];
+
+  it.each(scenarios)('builds $url', async ({ options, url }) => {
+    expect(buildUrl(options)).toEqual(url);
+  });
+});
 
 describe('getParseAs', () => {
   const scenarios: Array<{
