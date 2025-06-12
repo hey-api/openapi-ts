@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-custom",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Custom client for `@hey-api/openapi-ts` codegen. Used for testing.",
   "private": true,
   "homepage": "https://heyapi.dev/",

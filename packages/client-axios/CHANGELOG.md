@@ -1,5 +1,11 @@
 # @hey-api/client-axios
 
+## 0.9.1
+
+### Patch Changes
+
+- [#2165](https://github.com/hey-api/openapi-ts/pull/2165) [`f23f3ae`](https://github.com/hey-api/openapi-ts/commit/f23f3ae874385e758eb8d43bb4e274c9858a4e40) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): do not serialize path param name in url
+
 ## 0.9.0
 
 ### Minor Changes

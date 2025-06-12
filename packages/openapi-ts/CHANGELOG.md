@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.72.2
+
+### Patch Changes
+
+- [#2163](https://github.com/hey-api/openapi-ts/pull/2163) [`9769998`](https://github.com/hey-api/openapi-ts/commit/9769998550b1cb77f838827a9617b9dbbfa54537) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(zod): add `metadata` option to generate additional metadata for documentation, code generation, AI structured outputs, form validation, and other purposes
+
+- [#2167](https://github.com/hey-api/openapi-ts/pull/2167) [`a46259e`](https://github.com/hey-api/openapi-ts/commit/a46259eb4d2ed1c95908a5ad3d69b0495a8aacb4) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): add name builder options for all generated artifacts
+
+- [#2166](https://github.com/hey-api/openapi-ts/pull/2166) [`594f3a6`](https://github.com/hey-api/openapi-ts/commit/594f3a6c7a154294fd99f5f76f2b0a9589a1e7f3) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): filter orphans only when there are some operations
+
+- [#2166](https://github.com/hey-api/openapi-ts/pull/2166) [`594f3a6`](https://github.com/hey-api/openapi-ts/commit/594f3a6c7a154294fd99f5f76f2b0a9589a1e7f3) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(zod): support tuple types
+
+- [#2167](https://github.com/hey-api/openapi-ts/pull/2167) [`a46259e`](https://github.com/hey-api/openapi-ts/commit/a46259eb4d2ed1c95908a5ad3d69b0495a8aacb4) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): set correct subscription context for plugins
+
 ## 0.72.1
 
 ### Patch Changes
