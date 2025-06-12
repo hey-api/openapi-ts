@@ -493,6 +493,23 @@ export default {
 };
 ```
 
+## Pagination
+
+Paginated operations are detected by having a pagination keyword in its parameters or request body. By default, we consider the following to be pagination keywords: `after`, `before`, `cursor`, `offset`, `page`, and `start`. You can override these keywords by providing your own keywords array using `input.pagination.keywords`.
+
+```js
+export default {
+  input: {
+    pagination: {
+      keywords: ['custom', 'pagination', 'keywords'], // [!code ++]
+    },
+    path: 'https://get.heyapi.dev/hey-api/backend',
+  },
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
 ## Patch
 
 There are times when you need to modify your input before it's processed further. A common use case is fixing an invalid specification or adding a missing field. You can apply custom patches with `input.patch`.

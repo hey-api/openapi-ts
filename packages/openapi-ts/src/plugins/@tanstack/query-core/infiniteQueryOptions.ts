@@ -14,7 +14,7 @@ import {
 import {
   createQueryKeyFunction,
   createQueryKeyType,
-  queryKeyFunctionIdentifier,
+  infiniteQueryKeyFunctionIdentifier,
   queryKeyName,
   queryKeyStatement,
 } from './queryKey';
@@ -223,15 +223,33 @@ const createInfiniteParamsFunction = ({
 const infiniteQueryOptionsFunctionIdentifier = ({
   context,
   operation,
+  plugin,
 }: {
   context: IR.Context;
   operation: IR.OperationObject;
-}) =>
-  `${serviceFunctionIdentifier({
+  plugin: PluginInstance;
+}) => {
+  const name = serviceFunctionIdentifier({
     config: context.config,
     id: operation.id,
     operation,
-  })}InfiniteOptions`;
+  });
+
+  let customName = '';
+
+  if (plugin.infiniteQueryOptionsNameBuilder) {
+    if (typeof plugin.infiniteQueryOptionsNameBuilder === 'function') {
+      customName = plugin.infiniteQueryOptionsNameBuilder(name);
+    } else {
+      customName = plugin.infiniteQueryOptionsNameBuilder.replace(
+        '{{name}}',
+        name,
+      );
+    }
+  }
+
+  return customName;
+};
 
 export const createInfiniteQueryOptions = ({
   context,
@@ -322,10 +340,10 @@ export const createInfiniteQueryOptions = ({
   });
   file.add(node);
 
-  const infiniteQueryKeyName = queryKeyFunctionIdentifier({
+  const infiniteQueryKeyName = infiniteQueryKeyFunctionIdentifier({
     context,
-    isInfinite: true,
     operation,
+    plugin,
   });
   const identifierQueryKey = file.identifier({
     $ref: `#/queryKey/${infiniteQueryKeyName}`,
@@ -504,6 +522,7 @@ export const createInfiniteQueryOptions = ({
     name: infiniteQueryOptionsFunctionIdentifier({
       context,
       operation,
+      plugin,
     }),
   });
   file.add(statement);

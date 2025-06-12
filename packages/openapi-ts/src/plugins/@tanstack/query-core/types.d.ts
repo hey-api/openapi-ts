@@ -54,5 +54,40 @@ export namespace TanStackQuery {
      * @default false
      */
     exportFromIndex?: boolean;
+    /**
+     * Customize the generated infinite query key names. The name variable is
+     * obtained from the SDK function name.
+     *
+     * @default '{{name}}InfiniteQueryKey'
+     */
+    infiniteQueryKeyNameBuilder?: string | ((name: string) => string);
+    /**
+     * Customize the generated infinite query options names. The name variable
+     * is obtained from the SDK function name.
+     *
+     * @default '{{name}}InfiniteOptions'
+     */
+    infiniteQueryOptionsNameBuilder?: string | ((name: string) => string);
+    /**
+     * Customize the generated mutation options names. The name variable is
+     * obtained from the SDK function name.
+     *
+     * @default '{{name}}Mutation'
+     */
+    mutationOptionsNameBuilder?: string | ((name: string) => string);
+    /**
+     * Customize the generated query key names. The name variable is obtained
+     * from the SDK function name.
+     *
+     * @default '{{name}}QueryKey'
+     */
+    queryKeyNameBuilder?: string | ((name: string) => string);
+    /**
+     * Customize the generated query options names. The name variable is
+     * obtained from the SDK function name.
+     *
+     * @default '{{name}}Options'
+     */
+    queryOptionsNameBuilder?: string | ((name: string) => string);
   };
 }
