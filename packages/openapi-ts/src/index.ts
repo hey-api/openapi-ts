@@ -101,6 +101,7 @@ export const defineConfig = async (config: Configs): Promise<UserConfig> =>
   typeof config === 'function' ? await config() : config;
 
 export { defaultPlugins } from './initConfigs';
+export { defaultPaginationKeywords } from './ir/pagination';
 export type { IR } from './ir/types';
 export type { OpenApi, OpenApiSchemaObject } from './openApi/types';
 export { clientDefaultConfig } from './plugins/@hey-api/client-core/config';
