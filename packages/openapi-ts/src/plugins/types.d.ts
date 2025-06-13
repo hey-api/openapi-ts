@@ -41,10 +41,11 @@ type PluginTag = 'client' | 'transformer' | 'validator';
 
 export interface PluginContext {
   ensureDependency: (name: PluginNames | true) => void;
-  pluginByTag: (
-    tag: PluginTag,
-    errorMessage?: string,
-  ) => AnyPluginName | undefined;
+  pluginByTag: (props: {
+    defaultPlugin?: AnyPluginName;
+    errorMessage?: string;
+    tag: PluginTag;
+  }) => AnyPluginName | undefined;
 }
 
 interface BaseConfig {

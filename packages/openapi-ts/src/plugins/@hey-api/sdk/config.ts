@@ -10,10 +10,10 @@ export const defaultConfig: Plugin.Config<Config> = {
   _infer: (config, context) => {
     if (config.client) {
       if (typeof config.client === 'boolean') {
-        config.client = context.pluginByTag(
-          'client',
-          '🚫 client needs to be set to generate SDKs - which HTTP client do you want to use?',
-        ) as unknown as typeof config.client;
+        config.client = context.pluginByTag({
+          defaultPlugin: '@hey-api/client-fetch',
+          tag: 'client',
+        }) as unknown as typeof config.client;
       }
 
       context.ensureDependency(config.client);
@@ -21,9 +21,9 @@ export const defaultConfig: Plugin.Config<Config> = {
 
     if (config.transformer) {
       if (typeof config.transformer === 'boolean') {
-        config.transformer = context.pluginByTag(
-          'transformer',
-        ) as unknown as typeof config.transformer;
+        config.transformer = context.pluginByTag({
+          tag: 'transformer',
+        }) as unknown as typeof config.transformer;
       }
 
       context.ensureDependency(config.transformer);
@@ -31,9 +31,9 @@ export const defaultConfig: Plugin.Config<Config> = {
 
     if (config.validator) {
       if (typeof config.validator === 'boolean') {
-        config.validator = context.pluginByTag(
-          'validator',
-        ) as unknown as typeof config.validator;
+        config.validator = context.pluginByTag({
+          tag: 'validator',
+        }) as unknown as typeof config.validator;
       }
 
       context.ensureDependency(config.validator);

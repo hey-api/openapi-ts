@@ -99,7 +99,7 @@ export default defineConfig(() => {
         // bundle: true,
         // bundleSource_EXPERIMENTAL: true,
         // exportFromIndex: true,
-        name: '@hey-api/client-fetch',
+        // name: '@hey-api/client-fetch',
         // name: 'legacy/fetch',
         // strictBaseUrl: true,
       },
