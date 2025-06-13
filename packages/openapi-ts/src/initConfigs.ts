@@ -136,7 +136,7 @@ const getPluginsConfig = ({
               config._dependencies = [...config._dependencies, dependency];
             }
           },
-          pluginByTag: (tag, errorMessage) => {
+          pluginByTag: ({ defaultPlugin, errorMessage, tag }) => {
             for (const userPlugin of userPlugins) {
               const defaultConfig =
                 defaultPluginConfigs[userPlugin as PluginNames] ||
@@ -147,6 +147,19 @@ const getPluginsConfig = ({
                 userPlugin !== name
               ) {
                 return userPlugin;
+              }
+            }
+
+            if (defaultPlugin) {
+              const defaultConfig =
+                defaultPluginConfigs[defaultPlugin as PluginNames] ||
+                pluginConfigs[defaultPlugin as PluginNames];
+              if (
+                defaultConfig &&
+                defaultConfig._tags?.includes(tag) &&
+                defaultPlugin !== name
+              ) {
+                return defaultPlugin;
               }
             }
 
