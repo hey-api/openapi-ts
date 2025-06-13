@@ -332,7 +332,12 @@ const mergeConfigs = (
  */
 export const initConfigs = async (
   userConfig: UserConfig | undefined,
-): Promise<Config[]> => {
+): Promise<
+  ReadonlyArray<{
+    config: Config;
+    errors: ReadonlyArray<Error>;
+  }>
+> => {
   let configurationFile: string | undefined = undefined;
   if (userConfig?.configFile) {
     const parts = userConfig.configFile.split('.');
@@ -350,7 +355,12 @@ export const initConfigs = async (
       ? configFromFile.map((config) => mergeConfigs(config, userConfig))
       : [mergeConfigs(configFromFile, userConfig)];
 
-  return userConfigs.map((userConfig) => {
+  const results: Array<{
+    config: Config;
+    errors: Array<Error>;
+  }> = [];
+
+  for (const userConfig of userConfigs) {
     const {
       base,
       configFile = '',
@@ -362,6 +372,8 @@ export const initConfigs = async (
       useOptions = true,
     } = userConfig;
 
+    const errors: Array<Error> = [];
+
     const logs = getLogs(userConfig);
 
     if (logs.level === 'debug') {
@@ -372,13 +384,17 @@ export const initConfigs = async (
     const output = getOutput(userConfig);
 
     if (!input.path) {
-      throw new Error(
-        'missing input - which OpenAPI specification should we use to generate your output?',
+      errors.push(
+        new Error(
+          'missing input - which OpenAPI specification should we use to generate your output?',
+        ),
       );
     }
 
     if (!output.path) {
-      throw new Error('missing output - where should we generate your output?');
+      errors.push(
+        new Error('missing output - where should we generate your output?'),
+      );
     }
 
     if (!useOptions) {
@@ -389,8 +405,20 @@ export const initConfigs = async (
 
     output.path = path.resolve(process.cwd(), output.path);
 
+    let plugins: Pick<Config, 'plugins' | 'pluginOrder'>;
+
+    try {
+      plugins = getPlugins(userConfig);
+    } catch (error) {
+      errors.push(error);
+      plugins = {
+        pluginOrder: [],
+        plugins: {},
+      };
+    }
+
     const config = setConfig({
-      ...getPlugins(userConfig),
+      ...plugins,
       base,
       configFile,
       dryRun,
@@ -409,6 +437,11 @@ export const initConfigs = async (
       console.warn('config:', config);
     }
 
-    return config;
-  });
+    results.push({
+      config,
+      errors,
+    });
+  }
+
+  return results;
 };
