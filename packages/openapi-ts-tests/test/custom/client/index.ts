@@ -1,4 +1,11 @@
 export { createClient } from './client';
+export type { Auth } from './core/auth';
+export type { QuerySerializerOptions } from './core/bodySerializer';
+export {
+  formDataBodySerializer,
+  jsonBodySerializer,
+  urlSearchParamsBodySerializer,
+} from './core/bodySerializer';
 export type {
   Client,
   ClientOptions,
@@ -11,9 +18,3 @@ export type {
   TDataShape,
 } from './types';
 export { createConfig } from './utils';
-export type { Auth, QuerySerializerOptions } from '@hey-api/client-core';
-export {
-  formDataBodySerializer,
-  jsonBodySerializer,
-  urlSearchParamsBodySerializer,
-} from '@hey-api/client-core';

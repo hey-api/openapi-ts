@@ -1,6 +1,6 @@
-import type { Auth } from '@hey-api/client-core';
 import { describe, expect, it, vi } from 'vitest';
 
+import type { Auth } from '../../client-core/bundle/auth';
 import type { Client } from '../bundle/types';
 import { buildUrl, getParseAs, setAuthParams } from '../bundle/utils';
 

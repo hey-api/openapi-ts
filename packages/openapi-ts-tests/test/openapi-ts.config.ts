@@ -91,13 +91,11 @@ export default defineConfig(() => {
       // customClientPlugin({
       //   bundle: true,
       // }),
-      // myClientPlugin({
-      //   bundle: true,
-      // }),
+      myClientPlugin(),
       {
         // baseUrl: false,
         // exportFromIndex: true,
-        name: '@hey-api/client-nuxt',
+        // name: '@hey-api/client-nuxt',
         // name: 'legacy/fetch',
         // strictBaseUrl: true,
       },
@@ -147,7 +145,7 @@ export default defineConfig(() => {
         infiniteQueryKeyNameBuilder: '{{name}}IQK',
         infiniteQueryOptionsNameBuilder: '{{name}}InfiniteQuery',
         mutationOptionsNameBuilder: '{{name}}MutationOptions',
-        name: '@tanstack/react-query',
+        // name: '@tanstack/react-query',
         queryKeyNameBuilder: '{{name}}QK',
         queryOptionsNameBuilder: '{{name}}Query',
       },

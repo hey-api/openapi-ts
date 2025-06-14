@@ -1,7 +1,11 @@
-import type { Auth } from '@hey-api/client-core';
 import { describe, expect, it, vi } from 'vitest';
 
-import { axiosHeadersKeywords, mergeHeaders, setAuthParams } from '../utils';
+import type { Auth } from '../../client-core/bundle/auth';
+import {
+  axiosHeadersKeywords,
+  mergeHeaders,
+  setAuthParams,
+} from '../bundle/utils';
 
 describe('mergeHeaders', () => {
   it.each(axiosHeadersKeywords)(
