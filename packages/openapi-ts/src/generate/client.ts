@@ -107,6 +107,7 @@ export const generateClientBundle = ({
     return;
   }
 
+  // copy third-party client to output
   const clientModulePath = path.normalize(require.resolve(plugin.name));
   const clientModulePathComponents = clientModulePath.split(path.sep);
   const clientDistPath = clientModulePathComponents
