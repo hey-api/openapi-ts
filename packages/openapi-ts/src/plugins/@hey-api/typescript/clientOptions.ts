@@ -55,7 +55,9 @@ export const createClientOptions = ({
 
   if (!servers.length) {
     types.push(stringType);
-  } else if (!('strictBaseUrl' in client && client.strictBaseUrl)) {
+  } else if (
+    !('strictBaseUrl' in client.config && client.config.strictBaseUrl)
+  ) {
     types.push(
       compiler.typeIntersectionNode({
         types: [stringType, ts.factory.createTypeLiteralNode([])],

@@ -209,7 +209,7 @@ const operationToRouteHandler = ({
 
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: fastifyId,
     path: plugin.output,
   });

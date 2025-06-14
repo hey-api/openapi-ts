@@ -42,7 +42,7 @@ const createClientClassNodes = ({
 
   return [
     compiler.propertyDeclaration({
-      initializer: plugin.client
+      initializer: plugin.config.client
         ? compiler.identifier({ text: '_heyApiClient' })
         : undefined,
       modifier: 'protected',
@@ -55,12 +55,12 @@ const createClientClassNodes = ({
       multiLine: true,
       parameters: [
         {
-          isRequired: !plugin.client,
+          isRequired: !plugin.config.client,
           name: 'args',
           type: compiler.typeInterfaceNode({
             properties: [
               {
-                isRequired: !plugin.client,
+                isRequired: !plugin.config.client,
                 name: 'client',
                 type: 'Client',
               },
@@ -70,7 +70,7 @@ const createClientClassNodes = ({
         },
       ],
       statements: [
-        !plugin.client
+        !plugin.config.client
           ? clientAssignmentStatement
           : compiler.ifStatement({
               expression: compiler.propertyAccessExpression({
@@ -126,7 +126,7 @@ const generateClassSdk = ({
    */
   const generatedClasses = new Set<string>();
 
-  const clientClassNodes = plugin.instance
+  const clientClassNodes = plugin.config.instance
     ? createClientClassNodes({ plugin })
     : [];
 
@@ -179,7 +179,7 @@ const generateClassSdk = ({
         const functionNode = compiler.methodDeclaration({
           accessLevel: 'public',
           comment: createOperationComment({ operation }),
-          isStatic: !plugin.instance,
+          isStatic: !plugin.config.instance,
           name: entry.methodName,
           parameters: [
             {
@@ -224,8 +224,9 @@ const generateClassSdk = ({
             : [
                 {
                   default:
-                    ('throwOnError' in client ? client.throwOnError : false) ??
-                    false,
+                    ('throwOnError' in client.config
+                      ? client.config.throwOnError
+                      : false) ?? false,
                   extends: 'boolean',
                   name: 'ThrowOnError',
                 },
@@ -261,9 +262,9 @@ const generateClassSdk = ({
 
         currentClass.nodes.push(
           compiler.propertyDeclaration({
-            initializer: plugin.instance
+            initializer: plugin.config.instance
               ? compiler.newExpression({
-                  argumentsArray: plugin.instance
+                  argumentsArray: plugin.config.instance
                     ? [
                         compiler.objectExpression({
                           multiLine: false,
@@ -284,7 +285,7 @@ const generateClassSdk = ({
                   }),
                 })
               : compiler.identifier({ text: childClass.className }),
-            modifier: plugin.instance ? undefined : 'static',
+            modifier: plugin.config.instance ? undefined : 'static',
             name: stringCase({
               case: 'camelCase',
               value: childClass.className,
@@ -296,7 +297,7 @@ const generateClassSdk = ({
 
     const node = compiler.classDeclaration({
       exportClass: currentClass.root,
-      extendedClasses: plugin.instance ? ['_HeyApiClient'] : undefined,
+      extendedClasses: plugin.config.instance ? ['_HeyApiClient'] : undefined,
       name: currentClass.className,
       nodes: currentClass.nodes,
     });
@@ -389,8 +390,9 @@ const generateFlatSdk = ({
           : [
               {
                 default:
-                  ('throwOnError' in client ? client.throwOnError : false) ??
-                  false,
+                  ('throwOnError' in client.config
+                    ? client.config.throwOnError
+                    : false) ?? false,
                 extends: 'boolean',
                 name: 'ThrowOnError',
               },
@@ -409,7 +411,7 @@ const generateFlatSdk = ({
 
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: sdkId,
     path: plugin.output,
   });
@@ -441,7 +443,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     plugin,
   });
 
-  if (plugin.asClass) {
+  if (plugin.config.asClass) {
     generateClassSdk({ context, plugin });
   } else {
     generateFlatSdk({ context, plugin });

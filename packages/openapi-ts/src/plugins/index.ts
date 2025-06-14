@@ -71,7 +71,7 @@ import {
   defaultConfig as tanStackVueQuery,
 } from './@tanstack/vue-query';
 import { type Config as Fastify, defaultConfig as fastify } from './fastify';
-import type { DefaultPluginConfigs, Plugin } from './types';
+import type { Plugin, PluginNames } from './types';
 import { type Config as Valibot, defaultConfig as valibot } from './valibot';
 import { type Config as Zod, defaultConfig as zod } from './zod';
 
@@ -127,7 +127,13 @@ export type ClientPlugins =
   | Plugin.Config<Valibot>
   | Plugin.Config<Zod>;
 
-export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
+export const defaultPluginConfigs: {
+  [K in PluginNames]: Plugin.Config<{
+    exportFromIndex?: any;
+    name: any;
+    output?: any;
+  }>;
+} = {
   '@hey-api/client-axios': heyApiClientAxios,
   '@hey-api/client-fetch': heyApiClientFetch,
   '@hey-api/client-next': heyApiClientNext,

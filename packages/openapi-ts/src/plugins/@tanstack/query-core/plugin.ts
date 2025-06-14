@@ -11,7 +11,7 @@ import type { PluginHandler, PluginState } from './types';
 
 export const handler: PluginHandler = ({ context, plugin }) => {
   const file = context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: plugin.name,
     path: plugin.output,
   });
@@ -37,7 +37,7 @@ export const handler: PluginHandler = ({ context, plugin }) => {
     state.hasUsedQueryFn = false;
 
     const sdk = context.config.plugins['@hey-api/sdk'];
-    const classes = sdk?.asClass
+    const classes = sdk?.config.asClass
       ? operationClasses({ context, operation, plugin: sdk })
       : undefined;
     const entry = classes ? classes.values().next().value : undefined;

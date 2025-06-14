@@ -20,7 +20,7 @@ const stripSchema = ({
     | OpenApiV3_0_XTypes['SchemaObject']
     | OpenApiV3_1_XTypes['SchemaObject'];
 }) => {
-  if (plugin.type === 'form') {
+  if (plugin.config.type === 'form') {
     if (schema.description) {
       delete schema.description;
     }
@@ -341,11 +341,11 @@ const schemaName = ({
 }): string => {
   let customName = '';
 
-  if (plugin.nameBuilder) {
-    if (typeof plugin.nameBuilder === 'function') {
-      customName = plugin.nameBuilder(name, schema);
+  if (plugin.config.nameBuilder) {
+    if (typeof plugin.config.nameBuilder === 'function') {
+      customName = plugin.config.nameBuilder(name, schema);
     } else {
-      customName = plugin.nameBuilder.replace('{{name}}', name);
+      customName = plugin.config.nameBuilder.replace('{{name}}', name);
     }
   }
 
@@ -442,7 +442,7 @@ const schemasV3_1_X = ({
 
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: schemasId,
     path: plugin.output,
   });

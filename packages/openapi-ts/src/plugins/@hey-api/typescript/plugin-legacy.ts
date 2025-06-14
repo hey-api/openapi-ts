@@ -137,7 +137,8 @@ const processComposition = (props: TypesProps) => {
 
   props.model.enums.forEach((enumerator) => {
     if (
-      config.plugins['@hey-api/typescript']?.enums !== 'typescript+namespace'
+      config.plugins['@hey-api/typescript']?.config.enums !==
+      'typescript+namespace'
     ) {
       return processEnum({
         ...props,
@@ -184,8 +185,9 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
   ];
 
   if (
-    config.plugins['@hey-api/typescript']?.enums === 'typescript' ||
-    config.plugins['@hey-api/typescript']?.enums === 'typescript+namespace'
+    config.plugins['@hey-api/typescript']?.config.enums === 'typescript' ||
+    config.plugins['@hey-api/typescript']?.config.enums ===
+      'typescript+namespace'
   ) {
     generateEnum({
       client,
@@ -204,7 +206,9 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
     meta: model.meta,
     onCreated: (name) => {
       // create a separate JavaScript object export
-      if (config.plugins['@hey-api/typescript']?.enums === 'javascript') {
+      if (
+        config.plugins['@hey-api/typescript']?.config.enums === 'javascript'
+      ) {
         const expression = compiler.objectExpression({
           multiLine: true,
           obj: Object.entries(properties).map(([key, value]) => ({
@@ -302,7 +306,7 @@ const processServiceTypes = ({
 
   if (
     !config.plugins['@hey-api/sdk'] &&
-    !config.plugins['@hey-api/typescript']?.tree
+    !config.plugins['@hey-api/typescript']?.config.tree
   ) {
     return;
   }
@@ -590,7 +594,7 @@ const processServiceTypes = ({
     return pathKey;
   });
 
-  if (config.plugins['@hey-api/typescript']?.tree) {
+  if (config.plugins['@hey-api/typescript']?.config.tree) {
     generateType({
       client,
       meta: {
@@ -615,7 +619,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
 
   files.types = new TypeScriptFile({
     dir: config.output.path,
-    exportFromIndex: plugin.exportFromIndex,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: 'types',
     name: 'types.ts',
   });

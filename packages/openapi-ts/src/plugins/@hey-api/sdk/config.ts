@@ -1,3 +1,4 @@
+import { definePluginConfig } from '../../shared/utils/config';
 import type { Plugin } from '../../types';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
@@ -7,68 +8,67 @@ export const defaultConfig: Plugin.Config<Config> = {
   _dependencies: ['@hey-api/typescript'],
   _handler: handler,
   _handlerLegacy: handlerLegacy,
-  _infer: (config, context) => {
-    if (config.client) {
-      if (typeof config.client === 'boolean') {
-        config.client = context.pluginByTag({
+  _infer: (plugin, context) => {
+    if (plugin.config.client) {
+      if (typeof plugin.config.client === 'boolean') {
+        plugin.config.client = context.pluginByTag({
           defaultPlugin: '@hey-api/client-fetch',
           tag: 'client',
-        }) as unknown as typeof config.client;
+        }) as unknown as typeof plugin.config.client;
       }
 
-      context.ensureDependency(config.client);
+      context.ensureDependency(plugin.config.client);
     }
 
-    if (config.transformer) {
-      if (typeof config.transformer === 'boolean') {
-        config.transformer = context.pluginByTag({
+    if (plugin.config.transformer) {
+      if (typeof plugin.config.transformer === 'boolean') {
+        plugin.config.transformer = context.pluginByTag({
           tag: 'transformer',
-        }) as unknown as typeof config.transformer;
+        }) as unknown as typeof plugin.config.transformer;
       }
 
-      context.ensureDependency(config.transformer);
+      context.ensureDependency(plugin.config.transformer);
     }
 
-    if (config.validator) {
-      if (typeof config.validator === 'boolean') {
-        config.validator = context.pluginByTag({
+    if (plugin.config.validator) {
+      if (typeof plugin.config.validator === 'boolean') {
+        plugin.config.validator = context.pluginByTag({
           tag: 'validator',
-        }) as unknown as typeof config.validator;
+        }) as unknown as typeof plugin.config.validator;
       }
 
-      context.ensureDependency(config.validator);
+      context.ensureDependency(plugin.config.validator);
     }
 
-    if (config.instance) {
-      if (typeof config.instance !== 'string') {
-        config.instance = 'Sdk';
+    if (plugin.config.instance) {
+      if (typeof plugin.config.instance !== 'string') {
+        plugin.config.instance = 'Sdk';
       }
 
-      config.asClass = true;
+      plugin.config.asClass = true;
     }
 
     // TODO: add responseStyle field to all clients
-    if (config.client !== '@hey-api/client-fetch') {
-      config.responseStyle = 'fields';
+    if (plugin.config.client !== '@hey-api/client-fetch') {
+      plugin.config.responseStyle = 'fields';
     }
   },
-  asClass: false,
-  auth: true,
-  classStructure: 'auto',
-  client: true,
-  exportFromIndex: true,
-  instance: false,
+  config: {
+    asClass: false,
+    auth: true,
+    classStructure: 'auto',
+    client: true,
+    exportFromIndex: true,
+    instance: false,
+    operationId: true,
+    response: 'body',
+    responseStyle: 'fields',
+  },
   name: '@hey-api/sdk',
-  operationId: true,
   output: 'sdk',
-  response: 'body',
-  responseStyle: 'fields',
 };
 
 /**
  * Type helper for `@hey-api/sdk` plugin, returns {@link Plugin.Config} object
  */
-export const defineConfig: Plugin.DefineConfig<Config> = (config) => ({
-  ...defaultConfig,
-  ...config,
-});
+export const defineConfig = definePluginConfig(defaultConfig);

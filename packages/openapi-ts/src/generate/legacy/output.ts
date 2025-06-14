@@ -36,17 +36,19 @@ export const generateLegacyOutput = async ({
   // TODO: parser - move to config.input
   if (client) {
     if (
-      config.plugins['@hey-api/sdk']?.include &&
-      config.plugins['@hey-api/sdk'].asClass
+      config.plugins['@hey-api/sdk']?.config.include &&
+      config.plugins['@hey-api/sdk'].config.asClass
     ) {
-      const regexp = new RegExp(config.plugins['@hey-api/sdk'].include);
+      const regexp = new RegExp(config.plugins['@hey-api/sdk'].config.include);
       client.services = client.services.filter((service) =>
         regexp.test(service.name),
       );
     }
 
-    if (config.plugins['@hey-api/typescript']?.include) {
-      const regexp = new RegExp(config.plugins['@hey-api/typescript'].include);
+    if (config.plugins['@hey-api/typescript']?.config.include) {
+      const regexp = new RegExp(
+        config.plugins['@hey-api/typescript'].config.include,
+      );
       client.models = client.models.filter((model) => regexp.test(model.name));
     }
   }
@@ -62,8 +64,8 @@ export const generateLegacyOutput = async ({
   const clientPlugin = getClientPlugin(config);
   if (
     !isLegacyClient(config) &&
-    'bundle' in clientPlugin &&
-    clientPlugin.bundle
+    'bundle' in clientPlugin.config &&
+    clientPlugin.config.bundle
   ) {
     generateClientBundle({
       outputPath,

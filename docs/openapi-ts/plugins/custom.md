@@ -73,7 +73,9 @@ export const defaultConfig: Plugin.Config<Config> = {
   _dependencies: ['@hey-api/typescript'],
   _handler: handler,
   _handlerLegacy: () => {},
-  myOption: false, // implements default value from types
+  config: {
+    myOption: false, // implements default value from types
+  },
   name: 'my-plugin',
   output: 'my-plugin',
 };

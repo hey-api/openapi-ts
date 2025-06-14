@@ -5,7 +5,7 @@ import type { PluginHandler } from './types';
 
 export const clientPluginHandler: PluginHandler = ({ context, plugin }) => {
   context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: clientId,
     path: plugin.output,
   });

@@ -1,3 +1,4 @@
+import { definePluginConfig } from '../shared/utils/config';
 import type { Plugin } from '../types';
 import { handler } from './plugin';
 import type { Config } from './types';
@@ -6,8 +7,10 @@ export const defaultConfig: Plugin.Config<Config> = {
   _handler: handler,
   _handlerLegacy: () => {},
   _tags: ['validator'],
-  comments: true,
-  exportFromIndex: false,
+  config: {
+    comments: true,
+    exportFromIndex: false,
+  },
   name: 'valibot',
   output: 'valibot',
 };
@@ -15,7 +18,4 @@ export const defaultConfig: Plugin.Config<Config> = {
 /**
  * Type helper for Valibot plugin, returns {@link Plugin.Config} object
  */
-export const defineConfig: Plugin.DefineConfig<Config> = (config) => ({
-  ...defaultConfig,
-  ...config,
-});
+export const defineConfig = definePluginConfig(defaultConfig);

@@ -27,6 +27,7 @@ export const getClientPlugin = (
   }
 
   return {
+    config: {},
     // @ts-expect-error
     name: '',
   };

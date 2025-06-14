@@ -75,7 +75,7 @@ export const operationAuth = ({
   operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
 }): Array<Auth> => {
-  if (!operation.security || !plugin.auth) {
+  if (!operation.security || !plugin.config.auth) {
     return [];
   }
 
