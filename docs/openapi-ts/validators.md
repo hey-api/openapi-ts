@@ -34,7 +34,6 @@ export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    '@hey-api/client-fetch',
     {
       name: '@hey-api/sdk',
       validator: 'zod', // [!code ++]
@@ -48,7 +47,6 @@ export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    '@hey-api/client-fetch',
     {
       name: '@hey-api/sdk',
       validator: true, // [!code ++]

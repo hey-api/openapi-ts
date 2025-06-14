@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import type { Pet } from '@/client'
+import { createClient } from '@client/client'
 import { PetSchema } from '@/client/schemas.gen'
 import {
   addPetMutation,
   getPetByIdOptions,
   updatePetMutation
 } from '@/client/@tanstack/vue-query.gen'
-import { createClient } from '@hey-api/client-fetch'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { computed, ref, watch } from 'vue'
 

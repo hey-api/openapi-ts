@@ -15,7 +15,6 @@ import { defineConfig } from '@hey-api/openapi-ts';
 export default defineConfig({
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 });
 ```
 
@@ -24,7 +23,6 @@ export default defineConfig({
 module.exports = {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -33,7 +31,6 @@ module.exports = {
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -109,7 +106,6 @@ export default {
     validate_EXPERIMENTAL: true, // [!code ++]
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -126,7 +122,6 @@ export default {
     format: false, // [!code ++]
     path: 'src/client',
   },
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -137,7 +132,6 @@ export default {
     format: 'prettier', // [!code ++]
     path: 'src/client',
   },
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -148,7 +142,6 @@ export default {
     format: 'biome', // [!code ++]
     path: 'src/client',
   },
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -169,7 +162,6 @@ export default {
     lint: false, // [!code ++]
     path: 'src/client',
   },
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -180,7 +172,6 @@ export default {
     lint: 'eslint', // [!code ++]
     path: 'src/client',
   },
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -191,7 +182,6 @@ export default {
     lint: 'biome', // [!code ++]
     path: 'src/client',
   },
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -202,7 +192,6 @@ export default {
     lint: 'oxlint', // [!code ++]
     path: 'src/client',
   },
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -231,7 +220,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -246,7 +234,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -269,7 +256,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -284,7 +270,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -303,7 +288,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -324,7 +308,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -339,7 +322,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -362,7 +344,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -377,7 +358,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -400,7 +380,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -415,7 +394,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -438,7 +416,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -453,7 +430,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -472,7 +448,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -489,7 +464,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -506,7 +480,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -543,7 +516,6 @@ export default {
     path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -564,7 +536,6 @@ export default {
     watch: true, // [!code ++]
   },
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -572,7 +543,6 @@ export default {
 npx @hey-api/openapi-ts \
   -i https://get.heyapi.dev/hey-api/backend \
   -o src/client \
-  -c @hey-api/client-fetch \
   -w  # [!code ++]
 ```
 
@@ -589,7 +559,6 @@ export default {
     clean: false, // [!code ++]
     path: 'src/client',
   },
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
