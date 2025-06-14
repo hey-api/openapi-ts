@@ -1,9 +1,8 @@
+import type { Auth } from '../../client-core/bundle/auth';
 import type {
-  Auth,
   Client as CoreClient,
   Config as CoreConfig,
-} from '@hey-api/client-core';
-
+} from '../../client-core/bundle/types';
 import type { Middleware } from './utils';
 
 export type ResponseStyle = 'data' | 'fields';

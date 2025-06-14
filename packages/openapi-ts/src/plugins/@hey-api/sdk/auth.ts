@@ -1,24 +1,7 @@
 import type { IR } from '../../../ir/types';
 import type { Plugin } from '../../types';
+import type { Auth } from '../client-core/bundle/auth';
 import type { Config } from './types';
-
-// copy-pasted from @hey-api/client-core, minus export statement
-interface Auth {
-  /**
-   * Which part of the request do we use to send the auth?
-   *
-   * @default 'header'
-   */
-  in?: 'header' | 'query' | 'cookie';
-  /**
-   * Header or query parameter name.
-   *
-   * @default 'Authorization'
-   */
-  name?: string;
-  scheme?: 'basic' | 'bearer';
-  type: 'apiKey' | 'http';
-}
 
 // TODO: parser - handle more security types
 const securitySchemeObjectToAuthObject = ({

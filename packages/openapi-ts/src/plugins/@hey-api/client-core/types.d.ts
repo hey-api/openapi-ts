@@ -36,25 +36,12 @@ export namespace Client {
      */
     baseUrl?: string | number | boolean;
     /**
-     * Bundle the client module? Set this to true if don't want to declare it
-     * as a separate dependency. When true, the client module will be generated
-     * from the client package and bundled with the rest of the generated output.
-     * This is useful if you're repackaging the output, publishing it to other
-     * users, and you don't want them to install any dependencies.
+     * Bundle the client module? When `true`, the client module will be copied
+     * from the client plugin and bundled with the generated output.
      *
-     * @default false
+     * @default true
      */
     bundle?: boolean;
-    /**
-     * **This is an experimental feature.**
-     *
-     * When `bundle` is set to `true`, you can optionally set this option
-     * to `true` to bundle the client source code instead of the `dist` folder.
-     * This will copy the TypeScript files instead of CJS/ESM JavaScript files.
-     *
-     * @default false
-     */
-    bundleSource_EXPERIMENTAL?: boolean;
     /**
      * Should the exports from the generated files be re-exported in the index
      * barrel file?
