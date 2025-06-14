@@ -6,7 +6,7 @@ import {
 } from 'nuxt/app';
 import { reactive, ref, watch } from 'vue';
 
-import type { Client, Config } from './types';
+import type { Client, Config } from './types.js';
 import {
   buildUrl,
   createConfig,
@@ -16,7 +16,7 @@ import {
   mergeInterceptors,
   serializeBody,
   setAuthParams,
-} from './utils';
+} from './utils.js';
 
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);

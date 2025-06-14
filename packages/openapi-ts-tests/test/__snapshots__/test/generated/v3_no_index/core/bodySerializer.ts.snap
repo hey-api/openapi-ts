@@ -2,7 +2,7 @@ import type {
   ArrayStyle,
   ObjectStyle,
   SerializerOptions,
-} from './pathSerializer.js';
+} from './pathSerializer';
 
 export type QuerySerializer = (query: Record<string, unknown>) => string;
 

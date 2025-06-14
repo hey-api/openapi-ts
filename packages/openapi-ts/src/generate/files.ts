@@ -319,7 +319,11 @@ export class TypeScriptFile {
         shouldAppendJs &&
         (resolvedModule.startsWith('./') || resolvedModule.startsWith('../'))
       ) {
-        resolvedModule = `${resolvedModule}.js`;
+        if (resolvedModule === './client') {
+          resolvedModule = './client/index.js';
+        } else {
+          resolvedModule = `${resolvedModule}.js`;
+        }
       }
 
       const node = compiler.namedImportDeclarations({

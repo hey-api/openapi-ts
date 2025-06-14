@@ -18,11 +18,18 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
     removeDirSync(outputPath);
   }
 
+  const tsConfig = loadTsConfig(
+    findTsConfigPath(context.config.output.tsConfigPath),
+  );
+  const shouldAppendJs =
+    tsConfig?.options.moduleResolution === ts.ModuleResolutionKind.NodeNext;
+
   const client = getClientPlugin(context.config);
   if ('bundle' in client && client.bundle) {
     generateClientBundle({
       outputPath,
       plugin: client,
+      tsConfig,
     });
   }
 
@@ -50,12 +57,6 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
       path: 'index',
     });
 
-    const tsConfig = loadTsConfig(
-      findTsConfigPath(context.config.output.tsConfigPath),
-    );
-    const shouldAppendJs =
-      tsConfig?.options.moduleResolution === ts.ModuleResolutionKind.NodeNext;
-
     for (const file of Object.values(context.files)) {
       const fileName = file.nameWithoutExtension();
 
@@ -76,7 +77,11 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
           shouldAppendJs &&
           (resolvedModule.startsWith('./') || resolvedModule.startsWith('../'))
         ) {
-          resolvedModule = `${resolvedModule}.js`;
+          if (resolvedModule === './client') {
+            resolvedModule = './client/index.js';
+          } else {
+            resolvedModule = `${resolvedModule}.js`;
+          }
         }
         // TODO: parser - add export method for more granular control over
         // what's exported so we can support named exports

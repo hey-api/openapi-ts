@@ -57,6 +57,8 @@ export const generateLegacyOutput = async ({
     removeDirSync(outputPath);
   }
 
+  const tsConfig = loadTsConfig(findTsConfigPath(config.output.tsConfigPath));
+
   const clientPlugin = getClientPlugin(config);
   if (
     !isLegacyClient(config) &&
@@ -66,6 +68,7 @@ export const generateLegacyOutput = async ({
     generateClientBundle({
       outputPath,
       plugin: clientPlugin,
+      tsConfig,
     });
   }
 
@@ -101,8 +104,6 @@ export const generateLegacyOutput = async ({
 
   // TODO: exports do not support .js extensions
   generateIndexFile({ files });
-
-  const tsConfig = loadTsConfig(findTsConfigPath(config.output.tsConfigPath));
 
   Object.entries(files).forEach(([name, file]) => {
     if (config.dryRun) {

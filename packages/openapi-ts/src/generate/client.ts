@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import ts from 'typescript';
+
 import type { ImportExportItemObject } from '../compiler/utils';
 import type { Client } from '../plugins/@hey-api/client-core/types';
 import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
@@ -61,24 +63,58 @@ export const clientApi = {
   },
 } satisfies Record<string, ImportExportItemObject>;
 
+const replaceRelativeImports = (filePath: string) => {
+  let content = fs.readFileSync(filePath, 'utf8');
+
+  // Replace relative imports to append .js extension for ESM compatibility
+  // This handles patterns like: from './foo' -> from './foo.js'
+  // and: from '../bar' -> from '../bar.js'
+  content = content.replace(
+    /from\s+['"](\.\.?\/[^'"]*?)['"]/g,
+    (match, importPath) => {
+      // Don't add .js if it already has an extension
+      const lastSlashIndex = importPath.lastIndexOf('/');
+      const fileName =
+        lastSlashIndex >= 0 ? importPath.slice(lastSlashIndex + 1) : importPath;
+      if (fileName.includes('.')) {
+        return match;
+      }
+      return `from '${importPath}.js'`;
+    },
+  );
+
+  fs.writeFileSync(filePath, content, 'utf8');
+};
+
 /**
  * Creates a `client` folder containing the same modules as the client package.
  */
 export const generateClientBundle = ({
   outputPath,
   plugin,
+  tsConfig,
 }: {
   outputPath: string;
   plugin: Plugin.Config<Client.Config & { name: any }>;
+  tsConfig: ts.ParsedCommandLine | null;
 }): void => {
   // copy Hey API clients to output
   const isHeyApiClientPlugin = plugin.name.startsWith('@hey-api/client-');
   if (isHeyApiClientPlugin) {
+    const shouldAppendJs =
+      tsConfig?.options.moduleResolution === ts.ModuleResolutionKind.NodeNext;
+
     // copy client core
     const coreOutputPath = path.resolve(outputPath, 'core');
     ensureDirSync(coreOutputPath);
     const coreDistPath = path.resolve(__dirname, 'clients', 'core');
     fs.cpSync(coreDistPath, coreOutputPath, { recursive: true });
+    if (shouldAppendJs) {
+      const coreFiles = fs.readdirSync(coreOutputPath);
+      for (const file of coreFiles) {
+        replaceRelativeImports(path.resolve(coreOutputPath, file));
+      }
+    }
     // copy client bundle
     const clientOutputPath = path.resolve(outputPath, 'client');
     ensureDirSync(clientOutputPath);
@@ -89,6 +125,12 @@ export const generateClientBundle = ({
       clientDistFolderName,
     );
     fs.cpSync(clientDistPath, clientOutputPath, { recursive: true });
+    if (shouldAppendJs) {
+      const clientFiles = fs.readdirSync(clientOutputPath);
+      for (const file of clientFiles) {
+        replaceRelativeImports(path.resolve(clientOutputPath, file));
+      }
+    }
     return;
   }
 
