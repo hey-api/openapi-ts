@@ -1,7 +1,7 @@
 <div align="center">
   <img alt="Hey API logo" height="150" src="https://heyapi.dev/images/logo-300w.png" width="150">
   <h1 align="center"><b>Vite Plugin</b></h1>
-  <p align="center">🚀 Vite plugin for `@hey-api/openapi-ts` codegen.</p>
+  <p align="center">🚀 Vite plugin for <code>@hey-api/openapi-ts<code> codegen.</p>
 </div>
 
 ## Dashboard
