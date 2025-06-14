@@ -1,4 +1,4 @@
-# @hey-api/client-custom
+# @hey-api/custom-client
 
 ## 0.1.1
 
