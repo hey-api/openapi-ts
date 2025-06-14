@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { customClientPlugin } from '@hey-api/client-custom/plugin';
+import { customClientPlugin } from '@hey-api/custom-client/plugin';
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
 import { describe, expect, it } from 'vitest';
 

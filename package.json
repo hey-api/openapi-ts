@@ -22,7 +22,6 @@
   "scripts": {
     "build": "turbo run build --filter=\"!@example/openapi-ts-sample\"",
     "changeset": "changeset",
-    "client": "sh ./scripts/client.sh",
     "example": "sh ./scripts/example.sh",
     "format": "prettier --write .",
     "lint:fix": "prettier --check --write . && eslint . --fix",
@@ -46,7 +45,7 @@
     "@changesets/changelog-github": "0.5.0",
     "@changesets/cli": "2.27.8",
     "@config/vite-base": "workspace:*",
-    "@hey-api/client-custom": "workspace:*",
+    "@hey-api/custom-client": "workspace:*",
     "@types/node": "22.10.5",
     "@typescript-eslint/eslint-plugin": "8.29.1",
     "@vitest/coverage-v8": "3.1.1",

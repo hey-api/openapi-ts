@@ -30,7 +30,7 @@
     "@angular/platform-browser-dynamic": "19.2.0",
     "@angular/router": "19.2.0",
     "@config/vite-base": "workspace:*",
-    "@hey-api/client-custom": "workspace:*",
+    "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@tanstack/angular-query-experimental": "5.73.3",
     "@tanstack/react-query": "5.73.3",

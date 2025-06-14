@@ -20,9 +20,9 @@ importers:
       '@config/vite-base':
         specifier: workspace:*
         version: link:packages/config-vite-base
-      '@hey-api/client-custom':
+      '@hey-api/custom-client':
         specifier: workspace:*
-        version: link:packages/client-custom
+        version: link:packages/custom-client
       '@types/node':
         specifier: 22.10.5
         version: 22.10.5
@@ -716,15 +716,6 @@ importers:
         specifier: 2.2.0
         version: 2.2.0(typescript@5.8.3)
 
-  packages/client-custom:
-    devDependencies:
-      '@config/vite-base':
-        specifier: workspace:*
-        version: link:../config-vite-base
-      '@hey-api/openapi-ts':
-        specifier: workspace:*
-        version: link:../openapi-ts
-
   packages/config-vite-base:
     dependencies:
       vite:
@@ -737,6 +728,15 @@ importers:
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
+
+  packages/custom-client:
+    devDependencies:
+      '@config/vite-base':
+        specifier: workspace:*
+        version: link:../config-vite-base
+      '@hey-api/openapi-ts':
+        specifier: workspace:*
+        version: link:../openapi-ts
 
   packages/nuxt:
     dependencies:
@@ -886,9 +886,9 @@ importers:
       '@config/vite-base':
         specifier: workspace:*
         version: link:../config-vite-base
-      '@hey-api/client-custom':
+      '@hey-api/custom-client':
         specifier: workspace:*
-        version: link:../client-custom
+        version: link:../custom-client
       '@hey-api/openapi-ts':
         specifier: workspace:*
         version: link:../openapi-ts

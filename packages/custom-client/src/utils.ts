@@ -1,15 +1,14 @@
+import { getAuthToken } from './core/auth';
 import type {
   QuerySerializer,
   QuerySerializerOptions,
-} from '@hey-api/client-core';
+} from './core/bodySerializer';
+import { jsonBodySerializer } from './core/bodySerializer';
 import {
-  getAuthToken,
-  jsonBodySerializer,
   serializeArrayParam,
   serializeObjectParam,
   serializePrimitiveParam,
-} from '@hey-api/client-core';
-
+} from './core/pathSerializer';
 import type { Client, ClientOptions, Config, RequestOptions } from './types';
 
 interface PathSerializer {

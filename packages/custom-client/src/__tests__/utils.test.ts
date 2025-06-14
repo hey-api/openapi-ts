@@ -1,6 +1,6 @@
-import type { Auth } from '@hey-api/client-core';
 import { describe, expect, it, vi } from 'vitest';
 
+import type { Auth } from '../core/auth';
 import { getParseAs, setAuthParams } from '../utils';
 
 describe('getParseAs', () => {
