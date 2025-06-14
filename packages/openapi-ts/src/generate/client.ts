@@ -72,8 +72,8 @@ export const generateClientBundle = ({
   plugin: Plugin.Config<Client.Config & { name: any }>;
 }): void => {
   // copy Hey API clients to output
-  const isPluginHeyApiClient = plugin.name.startsWith('@hey-api/client-');
-  if (isPluginHeyApiClient) {
+  const isHeyApiClientPlugin = plugin.name.startsWith('@hey-api/client-');
+  if (isHeyApiClientPlugin) {
     // copy client core
     const coreOutputPath = path.resolve(outputPath, 'core');
     ensureDirSync(coreOutputPath);
@@ -92,16 +92,15 @@ export const generateClientBundle = ({
     return;
   }
 
-  // create folder for client modules
-  const dirPath = path.resolve(outputPath, 'client');
-  ensureDirSync(dirPath);
-
   let clientSrcPath = '';
   if (path.isAbsolute(plugin.name)) {
     clientSrcPath = getClientSrcPath(plugin.name);
   }
 
+  // copy custom local client to output
   if (clientSrcPath) {
+    const dirPath = path.resolve(outputPath, 'client');
+    ensureDirSync(dirPath);
     fs.cpSync(clientSrcPath, dirPath, {
       recursive: true,
     });
@@ -117,6 +116,8 @@ export const generateClientBundle = ({
   const indexJsFile =
     clientModulePathComponents[clientModulePathComponents.length - 1];
   const distFiles = [indexJsFile!, 'index.d.ts', 'index.d.cts'];
+  const dirPath = path.resolve(outputPath, 'client');
+  ensureDirSync(dirPath);
   for (const file of distFiles) {
     fs.copyFileSync(
       path.resolve(clientDistPath, file),
