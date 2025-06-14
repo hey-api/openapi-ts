@@ -44,7 +44,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     '@tanstack/react-query', // [!code ++]
   ],
 };
@@ -58,7 +57,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     '@tanstack/vue-query', // [!code ++]
   ],
 };
@@ -72,7 +70,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     '@tanstack/angular-query-experimental', // [!code ++]
   ],
 };
@@ -86,7 +83,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     '@tanstack/svelte-query', // [!code ++]
   ],
 };
@@ -100,7 +96,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     '@tanstack/solid-query', // [!code ++]
   ],
 };

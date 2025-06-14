@@ -32,13 +32,18 @@ export const createClient = async (
   const resolvedConfig =
     typeof userConfig === 'function' ? await userConfig() : userConfig;
 
-  let configs: Config[] = [];
+  const configs: Array<Config> = [];
 
   try {
     Performance.start('createClient');
 
     Performance.start('config');
-    configs = await initConfigs(resolvedConfig);
+    for (const result of await initConfigs(resolvedConfig)) {
+      configs.push(result.config);
+      if (result.errors.length) {
+        throw result.errors[0];
+      }
+    }
     Performance.end('config');
 
     Performance.start('handlebars');

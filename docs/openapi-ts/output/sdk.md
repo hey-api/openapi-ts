@@ -33,7 +33,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     {
       asClass: false, // default // [!code ++]
       name: '@hey-api/sdk',
@@ -50,7 +49,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     {
       asClass: true, // [!code ++]
       name: '@hey-api/sdk',
@@ -64,7 +62,6 @@ export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    '@hey-api/client-fetch',
     '@hey-api/typescript',
     '@hey-api/sdk', // [!code --]
   ],
@@ -80,8 +77,7 @@ Below are different outputs depending on your chosen style. No SDKs approach wil
 ::: code-group
 
 ```ts [flat]
-import type { Options } from '@hey-api/client-fetch';
-
+import type { Options } from './client';
 import { client as _heyApiClient } from './client.gen';
 import type { AddPetData, AddPetError, AddPetResponse } from './types.gen';
 
@@ -93,8 +89,7 @@ export const addPet = (options: Options<AddPetData>) =>
 ```
 
 ```ts [class]
-import type { Options } from '@hey-api/client-fetch';
-
+import type { Options } from './client';
 import { client as _heyApiClient } from './client.gen';
 import type { AddPetData, AddPetError, AddPetResponse } from './types.gen';
 
@@ -139,7 +134,7 @@ PetService.addPet({
 ```
 
 ```ts [none]
-import { client } from '@hey-api/client-fetch';
+import { client } from './client/client';
 
 client.post({
   body: {

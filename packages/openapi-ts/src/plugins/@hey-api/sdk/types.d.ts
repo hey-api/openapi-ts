@@ -46,10 +46,10 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    * Use an internal client instance to send HTTP requests? This is useful if
    * you don't want to manually pass the client to each SDK function.
    *
-   * Ensure you have declared the selected library as a dependency to avoid
-   * errors. You can customize the selected client output through its plugin.
-   * You can also set `client` to `true` to automatically choose the client
-   * from your defined plugins.
+   * You can customize the selected client output through its plugin. You can
+   * also set `client` to `true` to automatically choose the client from your
+   * defined plugins. If we can't detect a client plugin when using `true`, we
+   * will default to `@hey-api/client-fetch`.
    *
    * @default true
    */

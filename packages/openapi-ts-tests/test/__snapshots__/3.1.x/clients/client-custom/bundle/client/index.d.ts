@@ -15,6 +15,7 @@ interface Auth {
     scheme?: 'basic' | 'bearer';
     type: 'apiKey' | 'http';
 }
+
 interface SerializerOptions<T> {
     /**
      * @default true
@@ -41,29 +42,6 @@ declare const jsonBodySerializer: {
 declare const urlSearchParamsBodySerializer: {
     bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(body: T) => string;
 };
-
-type Slot = 'body' | 'headers' | 'path' | 'query';
-type Field = {
-    in: Exclude<Slot, 'body'>;
-    key: string;
-    map?: string;
-} | {
-    in: Extract<Slot, 'body'>;
-    key?: string;
-    map?: string;
-};
-interface Fields {
-    allowExtra?: Partial<Record<Slot, boolean>>;
-    args?: ReadonlyArray<Field>;
-}
-type FieldsConfig = ReadonlyArray<Field | Fields>;
-interface Params {
-    body: unknown;
-    headers: Record<string, unknown>;
-    path: Record<string, unknown>;
-    query: Record<string, unknown>;
-}
-declare const buildClientParams: (args: ReadonlyArray<unknown>, fields: FieldsConfig) => Params;
 
 interface Client$1<RequestFn = never, Config = unknown, MethodFn = never, BuildUrlFn = never> {
     /**
@@ -252,5 +230,28 @@ type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean
 } ? OmitKeys<RequestOptions<ThrowOnError>, 'headers' | 'url'> & TData & Pick<RequestOptions<ThrowOnError>, 'body'> : OmitKeys<RequestOptions<ThrowOnError>, 'url'> & TData;
 
 declare const createClient: (config?: Config) => Client;
+
+type Slot = 'body' | 'headers' | 'path' | 'query';
+type Field = {
+    in: Exclude<Slot, 'body'>;
+    key: string;
+    map?: string;
+} | {
+    in: Extract<Slot, 'body'>;
+    key?: string;
+    map?: string;
+};
+interface Fields {
+    allowExtra?: Partial<Record<Slot, boolean>>;
+    args?: ReadonlyArray<Field>;
+}
+type FieldsConfig = ReadonlyArray<Field | Fields>;
+interface Params {
+    body: unknown;
+    headers: Record<string, unknown>;
+    path: Record<string, unknown>;
+    query: Record<string, unknown>;
+}
+declare const buildClientParams: (args: ReadonlyArray<unknown>, fields: FieldsConfig) => Params;
 
 export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, buildClientParams, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

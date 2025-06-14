@@ -43,7 +43,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     'fastify', // [!code ++]
   ],
 };
