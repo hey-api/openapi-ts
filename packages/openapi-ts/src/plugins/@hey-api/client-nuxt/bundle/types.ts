@@ -1,10 +1,4 @@
 import type {
-  Auth,
-  Client as CoreClient,
-  Config as CoreConfig,
-  QuerySerializerOptions,
-} from '@hey-api/client-core';
-import type {
   AsyncDataOptions,
   useAsyncData,
   useFetch,
@@ -13,6 +7,13 @@ import type {
   useLazyFetch,
 } from 'nuxt/app';
 import type { Ref } from 'vue';
+
+import type { Auth } from '../../client-core/bundle/auth';
+import type { QuerySerializerOptions } from '../../client-core/bundle/bodySerializer';
+import type {
+  Client as CoreClient,
+  Config as CoreConfig,
+} from '../../client-core/bundle/types';
 
 export type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';

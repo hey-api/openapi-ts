@@ -116,10 +116,7 @@ export const generateClientBundle = ({
 
   const indexJsFile =
     clientModulePathComponents[clientModulePathComponents.length - 1];
-  const distFiles = [indexJsFile!, 'index.d.ts'];
-  if (plugin.name !== '@hey-api/client-nuxt') {
-    distFiles.push('index.d.cts');
-  }
+  const distFiles = [indexJsFile!, 'index.d.ts', 'index.d.cts'];
   for (const file of distFiles) {
     fs.copyFileSync(
       path.resolve(clientDistPath, file),

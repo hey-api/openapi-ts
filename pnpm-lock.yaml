@@ -23,9 +23,6 @@ importers:
       '@hey-api/client-custom':
         specifier: workspace:*
         version: link:packages/client-custom
-      '@hey-api/client-nuxt':
-        specifier: workspace:*
-        version: link:packages/client-nuxt
       '@types/node':
         specifier: 22.10.5
         version: 22.10.5
@@ -728,31 +725,6 @@ importers:
         specifier: workspace:*
         version: link:../openapi-ts
 
-  packages/client-nuxt:
-    dependencies:
-      nuxt:
-        specifier: '>= 3.0.0 < 4'
-        version: 3.14.1592(@parcel/watcher@2.5.1)(@types/node@22.10.5)(db0@0.3.1)(encoding@0.1.13)(eslint@9.17.0(jiti@2.4.2))(ioredis@5.6.0)(less@4.2.2)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.41.1)(sass@1.85.0)(terser@5.39.0)(typescript@5.8.3)(vite@6.2.7(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.8.0))
-      vue:
-        specifier: '>= 3.5.13 < 4'
-        version: 3.5.13(typescript@5.8.3)
-    devDependencies:
-      '@config/vite-base':
-        specifier: workspace:*
-        version: link:../config-vite-base
-      '@hey-api/openapi-ts':
-        specifier: workspace:*
-        version: link:../openapi-ts
-      '@nuxt/test-utils':
-        specifier: 3.17.2
-        version: 3.17.2(@types/node@22.10.5)(@vue/test-utils@2.4.6)(jiti@2.4.2)(jsdom@23.0.0)(less@4.2.2)(magicast@0.3.5)(sass@1.85.0)(terser@5.39.0)(typescript@5.8.3)(vitest@3.1.1(@types/node@22.10.5)(jiti@2.4.2)(jsdom@23.0.0)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.8.0))(yaml@2.8.0)
-      vite:
-        specifier: 6.2.7
-        version: 6.2.7(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.8.0)
-      vitest:
-        specifier: 3.1.1
-        version: 3.1.1(@types/node@22.10.5)(jiti@2.4.2)(jsdom@23.0.0)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.8.0)
-
   packages/config-vite-base:
     dependencies:
       vite:
@@ -768,9 +740,6 @@ importers:
 
   packages/nuxt:
     dependencies:
-      '@hey-api/client-nuxt':
-        specifier: workspace:*
-        version: link:../client-nuxt
       '@nuxt/kit':
         specifier: 3.15.4
         version: 3.15.4(magicast@0.3.5)
@@ -857,6 +826,9 @@ importers:
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
+      nuxt:
+        specifier: 3.14.1592
+        version: 3.14.1592(@parcel/watcher@2.5.1)(@types/node@22.10.5)(db0@0.3.1)(encoding@0.1.13)(eslint@9.17.0(jiti@2.4.2))(ioredis@5.6.0)(less@4.2.2)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.41.1)(sass@1.85.0)(terser@5.39.0)(typescript@5.8.3)(vite@6.2.7(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.8.0))
       prettier:
         specifier: 3.4.2
         version: 3.4.2
@@ -869,6 +841,9 @@ importers:
       typescript:
         specifier: 5.8.3
         version: 5.8.3
+      vue:
+        specifier: 3.5.13
+        version: 3.5.13(typescript@5.8.3)
       yaml:
         specifier: 2.8.0
         version: 2.8.0
@@ -914,9 +889,6 @@ importers:
       '@hey-api/client-custom':
         specifier: workspace:*
         version: link:../client-custom
-      '@hey-api/client-nuxt':
-        specifier: workspace:*
-        version: link:../client-nuxt
       '@hey-api/openapi-ts':
         specifier: workspace:*
         version: link:../openapi-ts
@@ -9766,10 +9738,6 @@ packages:
     resolution: {integrity: sha512-MjOadfU3Ys9KYoX0AdkBlFEF1Vx37uCCeN4ZHnmwm9FfpbsGWMZeBLMmmpY+6Ocqod7mkdZ0DT31OlbsFrLlkA==}
     engines: {node: ^10 || ^12 || >=14}
 
-  postcss@8.5.3:
-    resolution: {integrity: sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==}
-    engines: {node: ^10 || ^12 || >=14}
-
   postcss@8.5.4:
     resolution: {integrity: sha512-QSa9EBe+uwlGTFmHsPKokv3B/oEMQZxfqW0QqNCyhpa6mB1afzulwn8hihglqAb2pOw+BJgNlmXQ8la2VeHB7w==}
     engines: {node: ^10 || ^12 || >=14}
@@ -11974,11 +11942,6 @@ packages:
 
   yaml@2.6.1:
     resolution: {integrity: sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg==}
-    engines: {node: '>= 14'}
-    hasBin: true
-
-  yaml@2.7.0:
-    resolution: {integrity: sha512-+hSoy/QHluxmC9kCIJyL/uyFmLmc+e5CFR5Wa+bpIhIj85LVb9ZH2nVnqrHoSvKogwODv0ClqZkmiSSaIH5LTA==}
     engines: {node: '>= 14'}
     hasBin: true
 
@@ -14404,7 +14367,7 @@ snapshots:
 
   '@mapbox/node-pre-gyp@2.0.0(encoding@0.1.13)':
     dependencies:
-      consola: 3.4.0
+      consola: 3.4.2
       detect-libc: 2.0.3
       https-proxy-agent: 7.0.6(supports-color@9.4.0)
       node-fetch: 2.7.0(encoding@0.1.13)
@@ -14637,7 +14600,7 @@ snapshots:
 
   '@nuxt/devtools-wizard@1.7.0':
     dependencies:
-      consola: 3.4.0
+      consola: 3.4.2
       diff: 7.0.0
       execa: 7.2.0
       global-directory: 4.0.1
@@ -14657,7 +14620,7 @@ snapshots:
       '@vue/devtools-core': 7.6.8(vite@6.2.7(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.8.0))(vue@3.5.13(typescript@5.8.3))
       '@vue/devtools-kit': 7.6.8
       birpc: 0.2.19
-      consola: 3.4.0
+      consola: 3.4.2
       cronstrue: 2.56.0
       destr: 2.0.3
       error-stack-parser-es: 0.1.5
@@ -14704,7 +14667,7 @@ snapshots:
       '@vue/devtools-core': 7.6.8(vite@6.2.7(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.8.0))(vue@3.5.13(typescript@5.8.3))
       '@vue/devtools-kit': 7.6.8
       birpc: 0.2.19
-      consola: 3.4.0
+      consola: 3.4.2
       cronstrue: 2.56.0
       destr: 2.0.3
       error-stack-parser-es: 0.1.5
@@ -14746,7 +14709,7 @@ snapshots:
     dependencies:
       '@nuxt/schema': 3.14.1592(magicast@0.3.5)(rollup@3.29.5)
       c12: 2.0.1(magicast@0.3.5)
-      consola: 3.4.0
+      consola: 3.4.2
       defu: 6.1.4
       destr: 2.0.3
       globby: 14.1.0
@@ -14773,7 +14736,7 @@ snapshots:
     dependencies:
       '@nuxt/schema': 3.14.1592(magicast@0.3.5)(rollup@4.41.1)
       c12: 2.0.1(magicast@0.3.5)
-      consola: 3.4.0
+      consola: 3.4.2
       defu: 6.1.4
       destr: 2.0.3
       globby: 14.1.0
@@ -14872,7 +14835,7 @@ snapshots:
     dependencies:
       c12: 2.0.1(magicast@0.3.5)
       compatx: 0.1.8
-      consola: 3.4.0
+      consola: 3.4.2
       defu: 6.1.4
       hookable: 5.5.3
       pathe: 1.1.2
@@ -14892,7 +14855,7 @@ snapshots:
     dependencies:
       c12: 2.0.1(magicast@0.3.5)
       compatx: 0.1.8
-      consola: 3.4.0
+      consola: 3.4.2
       defu: 6.1.4
       hookable: 5.5.3
       pathe: 1.1.2
@@ -14919,7 +14882,7 @@ snapshots:
     dependencies:
       '@nuxt/kit': 3.15.4(magicast@0.3.5)
       citty: 0.1.6
-      consola: 3.4.0
+      consola: 3.4.2
       destr: 2.0.3
       dotenv: 16.4.7
       git-url-parse: 16.0.1
@@ -14989,7 +14952,7 @@ snapshots:
       '@vitejs/plugin-vue-jsx': 4.1.1(vite@5.4.19(@types/node@22.10.5)(less@4.2.2)(sass@1.85.0)(terser@5.39.0))(vue@3.5.13(typescript@5.8.3))
       autoprefixer: 10.4.20(postcss@8.5.4)
       clear: 0.1.0
-      consola: 3.4.0
+      consola: 3.4.2
       cssnano: 7.0.6(postcss@8.5.4)
       defu: 6.1.4
       esbuild: 0.24.2
@@ -15049,7 +15012,7 @@ snapshots:
       '@vitejs/plugin-vue-jsx': 4.1.1(vite@5.4.19(@types/node@22.10.5)(less@4.2.2)(sass@1.85.0)(terser@5.39.0))(vue@3.5.13(typescript@5.8.3))
       autoprefixer: 10.4.20(postcss@8.5.4)
       clear: 0.1.0
-      consola: 3.4.0
+      consola: 3.4.2
       cssnano: 7.0.6(postcss@8.5.4)
       defu: 6.1.4
       esbuild: 0.24.2
@@ -16519,7 +16482,7 @@ snapshots:
   '@types/eslint-scope@3.7.7':
     dependencies:
       '@types/eslint': 9.6.0
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
 
   '@types/eslint@9.6.0':
     dependencies:
@@ -17013,7 +16976,7 @@ snapshots:
       '@vue/shared': 3.5.13
       estree-walker: 2.0.2
       magic-string: 0.30.17
-      postcss: 8.5.3
+      postcss: 8.5.4
       source-map-js: 1.2.1
 
   '@vue/compiler-ssr@3.5.13':
@@ -17909,7 +17872,7 @@ snapshots:
 
   citty@0.1.6:
     dependencies:
-      consola: 3.4.0
+      consola: 3.4.2
 
   cjs-module-lexer@1.4.3: {}
 
@@ -19165,7 +19128,7 @@ snapshots:
 
   estree-walker@3.0.3:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
 
   esutils@2.0.3: {}
 
@@ -19645,7 +19608,7 @@ snapshots:
   giget@2.0.0:
     dependencies:
       citty: 0.1.6
-      consola: 3.4.0
+      consola: 3.4.2
       defu: 6.1.4
       node-fetch-native: 1.6.6
       nypm: 0.6.0
@@ -19985,7 +19948,7 @@ snapshots:
       mlly: 1.7.4
       mocked-exports: 0.1.1
       pathe: 2.0.3
-      unplugin: 2.2.0
+      unplugin: 2.3.2
     transitivePeerDependencies:
       - rollup
 
@@ -19995,7 +19958,7 @@ snapshots:
       mlly: 1.7.4
       mocked-exports: 0.1.1
       pathe: 2.0.3
-      unplugin: 2.2.0
+      unplugin: 2.3.2
     transitivePeerDependencies:
       - rollup
 
@@ -20608,7 +20571,7 @@ snapshots:
       '@parcel/watcher-wasm': 2.5.1
       citty: 0.1.6
       clipboardy: 4.0.0
-      consola: 3.4.0
+      consola: 3.4.2
       crossws: 0.3.4
       defu: 6.1.4
       get-port-please: 3.1.2
@@ -21124,7 +21087,7 @@ snapshots:
       citty: 0.1.6
       compatx: 0.1.8
       confbox: 0.2.1
-      consola: 3.4.0
+      consola: 3.4.2
       cookie-es: 2.0.0
       croner: 9.0.0
       crossws: 0.3.4
@@ -21174,7 +21137,7 @@ snapshots:
       uncrypto: 0.1.3
       unctx: 2.4.1
       unenv: 2.0.0-rc.14
-      unimport: 4.1.2
+      unimport: 4.2.0
       unplugin-utils: 0.2.4
       unstorage: 1.15.0(db0@0.3.1)(ioredis@5.6.0)
       untyped: 2.0.0
@@ -21366,7 +21329,7 @@ snapshots:
       c12: 2.0.1(magicast@0.3.5)
       chokidar: 4.0.3
       compatx: 0.1.8
-      consola: 3.4.0
+      consola: 3.4.2
       cookie-es: 1.2.2
       defu: 6.1.4
       destr: 2.0.3
@@ -21486,7 +21449,7 @@ snapshots:
       c12: 2.0.1(magicast@0.3.5)
       chokidar: 4.0.3
       compatx: 0.1.8
-      consola: 3.4.0
+      consola: 3.4.2
       cookie-es: 1.2.2
       defu: 6.1.4
       destr: 2.0.3
@@ -21594,7 +21557,7 @@ snapshots:
   nypm@0.3.12:
     dependencies:
       citty: 0.1.6
-      consola: 3.4.0
+      consola: 3.4.2
       execa: 8.0.1
       pathe: 1.1.2
       pkg-types: 1.3.1
@@ -21603,7 +21566,7 @@ snapshots:
   nypm@0.4.1:
     dependencies:
       citty: 0.1.6
-      consola: 3.4.0
+      consola: 3.4.2
       pathe: 1.1.2
       pkg-types: 1.3.1
       tinyexec: 0.3.2
@@ -21612,7 +21575,7 @@ snapshots:
   nypm@0.5.4:
     dependencies:
       citty: 0.1.6
-      consola: 3.4.0
+      consola: 3.4.2
       pathe: 2.0.3
       pkg-types: 1.3.1
       tinyexec: 0.3.2
@@ -21621,7 +21584,7 @@ snapshots:
   nypm@0.6.0:
     dependencies:
       citty: 0.1.6
-      consola: 3.4.0
+      consola: 3.4.2
       pathe: 2.0.3
       pkg-types: 2.1.0
       tinyexec: 0.3.2
@@ -22290,12 +22253,6 @@ snapshots:
   postcss@8.5.2:
     dependencies:
       nanoid: 3.3.9
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
-
-  postcss@8.5.3:
-    dependencies:
-      nanoid: 3.3.11
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -23904,7 +23861,7 @@ snapshots:
       '@rollup/pluginutils': 5.1.4(rollup@3.29.5)
       chalk: 5.4.1
       citty: 0.1.6
-      consola: 3.4.0
+      consola: 3.4.2
       defu: 6.1.4
       esbuild: 0.19.12
       globby: 13.2.2
@@ -23936,16 +23893,16 @@ snapshots:
 
   unctx@2.4.1:
     dependencies:
-      acorn: 8.14.0
+      acorn: 8.14.1
       estree-walker: 3.0.3
       magic-string: 0.30.17
-      unplugin: 2.2.0
+      unplugin: 2.3.2
 
   undici-types@6.20.0: {}
 
   unenv@1.10.0:
     dependencies:
-      consola: 3.4.0
+      consola: 3.4.2
       defu: 6.1.4
       mime: 3.0.0
       node-fetch-native: 1.6.6
@@ -23984,7 +23941,7 @@ snapshots:
   unimport@3.14.6(rollup@3.29.5):
     dependencies:
       '@rollup/pluginutils': 5.1.4(rollup@3.29.5)
-      acorn: 8.14.0
+      acorn: 8.14.1
       escape-string-regexp: 5.0.0
       estree-walker: 3.0.3
       fast-glob: 3.3.3
@@ -24003,7 +23960,7 @@ snapshots:
   unimport@3.14.6(rollup@4.41.1):
     dependencies:
       '@rollup/pluginutils': 5.1.4(rollup@4.41.1)
-      acorn: 8.14.0
+      acorn: 8.14.1
       escape-string-regexp: 5.0.0
       estree-walker: 3.0.3
       fast-glob: 3.3.3
@@ -24033,7 +23990,7 @@ snapshots:
       scule: 1.3.0
       strip-literal: 3.0.0
       tinyglobby: 0.2.12
-      unplugin: 2.2.0
+      unplugin: 2.3.2
       unplugin-utils: 0.2.4
 
   unimport@4.2.0:
@@ -24112,7 +24069,7 @@ snapshots:
       pathe: 1.1.2
       scule: 1.3.0
       unplugin: 2.0.0-beta.1
-      yaml: 2.7.0
+      yaml: 2.8.0
     optionalDependencies:
       vue-router: 4.5.0(vue@3.5.13(typescript@5.8.3))
     transitivePeerDependencies:
@@ -24134,7 +24091,7 @@ snapshots:
       pathe: 1.1.2
       scule: 1.3.0
       unplugin: 2.0.0-beta.1
-      yaml: 2.7.0
+      yaml: 2.8.0
     optionalDependencies:
       vue-router: 4.5.0(vue@3.5.13(typescript@5.8.3))
     transitivePeerDependencies:
@@ -24179,7 +24136,7 @@ snapshots:
   untun@0.1.3:
     dependencies:
       citty: 0.1.6
-      consola: 3.4.0
+      consola: 3.4.2
       pathe: 1.1.2
 
   untyped@1.5.2:
@@ -24927,8 +24884,6 @@ snapshots:
   yaml@1.10.2: {}
 
   yaml@2.6.1: {}
-
-  yaml@2.7.0: {}
 
   yaml@2.8.0: {}
 

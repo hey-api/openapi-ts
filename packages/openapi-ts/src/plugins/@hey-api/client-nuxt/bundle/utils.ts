@@ -1,14 +1,14 @@
-import type { QuerySerializerOptions } from '@hey-api/client-core';
-import {
-  getAuthToken,
-  jsonBodySerializer,
-  serializeArrayParam,
-  serializeObjectParam,
-  serializePrimitiveParam,
-} from '@hey-api/client-core';
 import type { ComputedRef, Ref } from 'vue';
 import { isRef, toValue, unref } from 'vue';
 
+import { getAuthToken } from '../../client-core/bundle/auth';
+import type { QuerySerializerOptions } from '../../client-core/bundle/bodySerializer';
+import { jsonBodySerializer } from '../../client-core/bundle/bodySerializer';
+import {
+  serializeArrayParam,
+  serializeObjectParam,
+  serializePrimitiveParam,
+} from '../../client-core/bundle/pathSerializer';
 import type {
   ArraySeparatorStyle,
   BuildUrlOptions,
