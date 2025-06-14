@@ -32,7 +32,7 @@ export type AddPetResponse = Pet;
 
 :::
 
-As you can see, everything is exported from `types.gen.ts`. You can import individual exports in your application and use them as necessary.
+Every generated interface inside `types.gen.ts` is exported. You can import individual exports in your application and use them as necessary.
 
 ## Configuration
 
@@ -46,7 +46,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     {
       name: '@hey-api/typescript',
       // ...custom options // [!code ++]
@@ -69,7 +68,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     {
       enums: false, // default // [!code ++]
       name: '@hey-api/typescript',
@@ -86,7 +84,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     {
       enums: 'javascript', // [!code ++]
       name: '@hey-api/typescript',
@@ -103,7 +100,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     {
       enums: 'typescript', // [!code ++]
       name: '@hey-api/typescript',
