@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { FieldsConfig } from '../params';
-import { buildClientParams } from '../params';
+import type { FieldsConfig } from '../bundle/params';
+import { buildClientParams } from '../bundle/params';
 
 describe('buildClientParams', () => {
   const scenarios: ReadonlyArray<{

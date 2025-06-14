@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { getAuthToken } from '../auth';
+import { getAuthToken } from '../bundle/auth';
 
 describe('getAuthToken', () => {
   it('returns bearer token', async () => {

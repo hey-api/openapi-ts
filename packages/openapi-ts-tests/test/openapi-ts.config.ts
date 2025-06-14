@@ -97,7 +97,7 @@ export default defineConfig(() => {
       {
         // baseUrl: false,
         // exportFromIndex: true,
-        // name: '@hey-api/client-fetch',
+        name: '@hey-api/client-axios',
         // name: 'legacy/fetch',
         // strictBaseUrl: true,
       },
