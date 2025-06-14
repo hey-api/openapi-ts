@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { Pet } from '@/client'
-import { createClient } from '@client/client'
+import { createClient } from '@/client/client'
 import { PetSchema } from '@/client/schemas.gen'
 import {
   addPetMutation,
@@ -9,6 +9,7 @@ import {
 } from '@/client/@tanstack/vue-query.gen'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { computed, ref, watch } from 'vue'
+import type { RequestOptions } from '@/client/client'
 
 const queryClient = useQueryClient()
 
@@ -25,7 +26,7 @@ const localClient = createClient({
   }
 })
 
-localClient.interceptors.request.use((request, options) => {
+localClient.interceptors.request.use((request: Request, options: RequestOptions) => {
   // Middleware is great for adding authorization tokens to requests made to
   // protected paths. Headers are set randomly here to allow surfacing the
   // default headers, too.

@@ -1,9 +1,9 @@
-import type { Auth, AuthToken } from './auth';
+import type { Auth, AuthToken } from './auth.js';
 import type {
   BodySerializer,
   QuerySerializer,
   QuerySerializerOptions,
-} from './bodySerializer';
+} from './bodySerializer.js';
 
 export interface Client<
   RequestFn = never,

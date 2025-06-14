@@ -1,7 +1,7 @@
 {
   "include": ["src/**/*", "test/**/*"],
   "compilerOptions": {
-    "lib": ["es2023"],
+    "lib": ["es2023", "dom", "dom.iterable"],
     "target": "es2022",
     "module": "ESNext",
     "moduleResolution": "Bundler",

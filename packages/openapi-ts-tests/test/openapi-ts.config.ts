@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import path from 'node:path';
 
-// @ts-ignor
+// @ts-ignore
 import { customClientPlugin } from '@hey-api/custom-client/plugin';
 import { defineConfig } from '@hey-api/openapi-ts';
 
@@ -86,9 +86,14 @@ export default defineConfig(() => {
       // indexFile: false,
       // lint: 'eslint',
       path: path.resolve(__dirname, 'generated', 'sample'),
+      tsConfigPath: path.resolve(
+        __dirname,
+        'tsconfig',
+        'tsconfig.nodenext.json',
+      ),
     },
     plugins: [
-      customClientPlugin(),
+      // customClientPlugin(),
       // myClientPlugin(),
       {
         // baseUrl: false,

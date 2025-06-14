@@ -6,11 +6,11 @@ import type {
   CreateAxiosDefaults,
 } from 'axios';
 
-import type { Auth } from '../core/auth';
+import type { Auth } from '../core/auth.js';
 import type {
   Client as CoreClient,
   Config as CoreConfig,
-} from '../core/types';
+} from '../core/types.js';
 
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<CreateAxiosDefaults, 'auth' | 'baseURL' | 'headers' | 'method'>,
