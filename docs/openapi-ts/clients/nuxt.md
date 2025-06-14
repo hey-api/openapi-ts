@@ -13,10 +13,6 @@ Nuxt client is currently in beta. The interface might change before it becomes s
 
 [Nuxt](https://nuxt.com) is an open source framework that makes web development intuitive and powerful.
 
-::: tip
-You might be interested in the [Nuxt module](https://www.npmjs.com/package/@hey-api/nuxt) instead. It offers all the features mentioned in this guide in a more familiar way.
-:::
-
 <!-- <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-example')(event)">
 Launch demo
 </button> -->
@@ -33,24 +29,24 @@ Launch demo
 
 ## Installation
 
-Start by adding `@hey-api/client-nuxt` to your dependencies.
+Start by adding `@hey-api/nuxt` to your dependencies.
 
 ::: code-group
 
 ```sh [npm]
-npm install @hey-api/client-nuxt
+npm install @hey-api/nuxt
 ```
 
 ```sh [pnpm]
-pnpm add @hey-api/client-nuxt
+pnpm add @hey-api/nuxt
 ```
 
 ```sh [yarn]
-yarn add @hey-api/client-nuxt
+yarn add @hey-api/nuxt
 ```
 
 ```sh [bun]
-bun add @hey-api/client-nuxt
+bun add @hey-api/nuxt
 ```
 
 :::
@@ -73,6 +69,12 @@ npx @hey-api/openapi-ts \
   -o src/client \
   -c @hey-api/client-nuxt # [!code ++]
 ```
+
+:::
+
+::: tip
+
+If you add `@hey-api/nuxt` to your Nuxt modules, this step is not needed.
 
 :::
 
@@ -135,7 +137,7 @@ With this approach, `client.gen.ts` will call `createClientConfig()` before init
 You can also create your own client instance. You can use it to manually send requests or point it to a different domain.
 
 ```js
-import { createClient } from '@hey-api/client-nuxt';
+import { createClient } from './client/client';
 
 const myClient = createClient({
   baseURL: 'https://example.com',
@@ -228,23 +230,6 @@ const url = client.buildUrl<FooData>({
   url: '/foo/{fooId}',
 });
 console.log(url); // prints '/foo/1?bar=baz'
-```
-
-## Bundling
-
-Sometimes, you may not want to declare client packages as a dependency. This scenario is common if you're using Hey API to generate output that is repackaged and published for other consumers under your own brand. For such cases, our clients support bundling through the `client.bundle` configuration option.
-
-```js
-export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
-  output: 'src/client',
-  plugins: [
-    {
-      bundle: true, // [!code ++]
-      name: '@hey-api/client-nuxt',
-    },
-  ],
-};
 ```
 
 <!--@include: ../../examples.md-->

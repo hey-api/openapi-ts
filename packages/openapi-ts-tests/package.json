@@ -31,7 +31,6 @@
     "@angular/router": "19.2.0",
     "@config/vite-base": "workspace:*",
     "@hey-api/client-custom": "workspace:*",
-    "@hey-api/client-nuxt": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@tanstack/angular-query-experimental": "5.73.3",
     "@tanstack/react-query": "5.73.3",

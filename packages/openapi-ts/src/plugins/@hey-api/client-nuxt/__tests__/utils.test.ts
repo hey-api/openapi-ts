@@ -1,7 +1,7 @@
-import type { Auth } from '@hey-api/client-core';
 import { describe, expect, it, vi } from 'vitest';
 
-import { mergeInterceptors, setAuthParams } from '../utils';
+import type { Auth } from '../../client-core/bundle/auth';
+import { mergeInterceptors, setAuthParams } from '../bundle/utils';
 
 describe('mergeInterceptors', () => {
   it('handles no arguments', () => {
