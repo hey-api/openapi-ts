@@ -118,7 +118,7 @@ export const registerHandlebarHelpers = (): void => {
   Handlebars.registerHelper(
     'ifServicesResponse',
     function (this: unknown, value: string, options: Handlebars.HelperOptions) {
-      return getConfig().plugins['@hey-api/sdk']?.response === value
+      return getConfig().plugins['@hey-api/sdk']?.config.response === value
         ? options.fn(this)
         : options.inverse(this);
     },

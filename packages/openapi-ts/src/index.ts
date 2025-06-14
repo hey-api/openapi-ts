@@ -109,9 +109,13 @@ export { defaultPlugins } from './initConfigs';
 export { defaultPaginationKeywords } from './ir/pagination';
 export type { IR } from './ir/types';
 export type { OpenApi, OpenApiSchemaObject } from './openApi/types';
-export { clientDefaultConfig } from './plugins/@hey-api/client-core/config';
+export {
+  clientDefaultConfig,
+  clientDefaultMeta,
+} from './plugins/@hey-api/client-core/config';
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
 export type { Client } from './plugins/@hey-api/client-core/types';
+export { definePluginConfig } from './plugins/shared/utils/config';
 export type { Plugin } from './plugins/types';
 export type { UserConfig } from './types/config';
 export type { LegacyIR } from './types/types';

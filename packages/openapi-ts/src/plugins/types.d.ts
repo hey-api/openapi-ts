@@ -48,7 +48,7 @@ export interface PluginContext {
   }) => AnyPluginName | undefined;
 }
 
-interface BaseConfig {
+export interface BaseConfig {
   /**
    * Should the exports from the plugin's file be re-exported in the index
    * barrel file?
@@ -69,10 +69,7 @@ interface Meta<Config extends BaseConfig> {
    * defining `validator` as `true` and the plugin figures out which plugin
    * should be used for validation.
    */
-  _infer?: (
-    config: Config & Omit<Meta<Config>, '_infer'>,
-    context: PluginContext,
-  ) => void;
+  _infer?: (config: Plugin.Config<Config>, context: PluginContext) => void;
   /**
    * Optional tags can be used to help with deciding plugin order and inferring
    * plugin configuration options.
@@ -80,25 +77,21 @@ interface Meta<Config extends BaseConfig> {
   _tags?: ReadonlyArray<PluginTag>;
 }
 
-export type DefaultPluginConfigs<T> = {
-  [K in PluginNames]: BaseConfig &
-    Meta<any> & {
-      _handler: Plugin.Handler<Required<Extract<T, { name: K }>>>;
-      _handlerLegacy: Plugin.LegacyHandler<Required<Extract<T, { name: K }>>>;
-    };
-};
-
 /**
  * Public Plugin API.
  */
 export namespace Plugin {
-  export type Config<Config extends BaseConfig> = Config &
+  export type Config<Config extends BaseConfig> = Pick<
+    Config,
+    'name' | 'output'
+  > &
     Meta<Config> & {
       _handler: Plugin.Handler<Config>;
       _handlerLegacy: Plugin.LegacyHandler<Config>;
-      exportFromIndex?: boolean;
+      config: Omit<Config, 'name' | 'output'>;
     };
 
+  /** @deprecated - use `definePluginConfig()` instead */
   export type DefineConfig<Config extends BaseConfig> = (
     config?: Plugin.UserConfig<Omit<Config, 'name'>>,
   ) => Omit<Plugin.Config<Config>, 'name'> & {
@@ -119,8 +112,10 @@ export namespace Plugin {
     plugin: Plugin.Instance<Config>;
   }) => ReturnType;
 
-  export type Instance<Config extends BaseConfig> = OmitUnderscoreKeys<Config> &
-    Pick<Required<BaseConfig>, 'exportFromIndex' | 'output'>;
+  export type Instance<Config extends BaseConfig> = OmitUnderscoreKeys<
+    Plugin.Config<Config>
+  > &
+    Pick<Required<BaseConfig>, 'name' | 'output'>;
 
   /**
    * Plugin implementation for legacy parser.

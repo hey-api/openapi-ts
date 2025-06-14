@@ -3,11 +3,10 @@ import path from 'node:path';
 import { loadConfig } from 'c12';
 
 import { getLogs } from './getLogs';
-import type { ClientPlugins, UserPlugins } from './plugins';
+import type { UserPlugins } from './plugins';
 import { defaultPluginConfigs } from './plugins';
 import type {
   AnyPluginName,
-  DefaultPluginConfigs,
   PluginContext,
   PluginNames,
 } from './plugins/types';
@@ -80,11 +79,9 @@ const getInput = (userConfig: UserConfig): Config['input'] => {
 };
 
 const getPluginsConfig = ({
-  pluginConfigs,
   userPlugins,
   userPluginsConfig,
 }: {
-  pluginConfigs: DefaultPluginConfigs<ClientPlugins>;
   userPlugins: ReadonlyArray<AnyPluginName>;
   userPluginsConfig: Config['plugins'];
 }): Pick<Config, 'plugins' | 'pluginOrder'> => {
@@ -97,91 +94,87 @@ const getPluginsConfig = ({
       throw new Error(`Circular reference detected at '${name}'`);
     }
 
-    if (!pluginOrder.has(name)) {
-      circularReferenceTracker.add(name);
-
-      const pluginConfig = pluginConfigs[name as PluginNames];
-      if (!pluginConfig) {
-        throw new Error(
-          `unknown plugin dependency "${name}" - do you need to register a custom plugin with this name?`,
-        );
-      }
-
-      const defaultOptions = defaultPluginConfigs[name as PluginNames];
-      const userOptions = userPluginsConfig[name as PluginNames];
-      if (userOptions && defaultOptions) {
-        const nativePluginOption = Object.keys(userOptions).find((key) =>
-          key.startsWith('_'),
-        );
-        if (nativePluginOption) {
-          throw new Error(
-            `cannot register plugin "${name}" - attempting to override a native plugin option "${nativePluginOption}"`,
-          );
-        }
-      }
-
-      const config = {
-        _dependencies: [],
-        ...defaultOptions,
-        ...userOptions,
-      };
-
-      if (config._infer) {
-        const context: PluginContext = {
-          ensureDependency: (dependency) => {
-            if (
-              typeof dependency === 'string' &&
-              !config._dependencies.includes(dependency)
-            ) {
-              config._dependencies = [...config._dependencies, dependency];
-            }
-          },
-          pluginByTag: ({ defaultPlugin, errorMessage, tag }) => {
-            for (const userPlugin of userPlugins) {
-              const defaultConfig =
-                defaultPluginConfigs[userPlugin as PluginNames] ||
-                pluginConfigs[userPlugin as PluginNames];
-              if (
-                defaultConfig &&
-                defaultConfig._tags?.includes(tag) &&
-                userPlugin !== name
-              ) {
-                return userPlugin;
-              }
-            }
-
-            if (defaultPlugin) {
-              const defaultConfig =
-                defaultPluginConfigs[defaultPlugin as PluginNames] ||
-                pluginConfigs[defaultPlugin as PluginNames];
-              if (
-                defaultConfig &&
-                defaultConfig._tags?.includes(tag) &&
-                defaultPlugin !== name
-              ) {
-                return defaultPlugin;
-              }
-            }
-
-            throw new Error(
-              errorMessage ||
-                `missing plugin - no plugin with tag "${tag}" found`,
-            );
-          },
-        };
-        config._infer(config, context);
-      }
-
-      for (const dependency of config._dependencies) {
-        dfs(dependency);
-      }
-
-      circularReferenceTracker.delete(name);
-      pluginOrder.add(name);
-
-      // @ts-expect-error
-      plugins[name] = config;
+    if (pluginOrder.has(name)) {
+      return;
     }
+
+    circularReferenceTracker.add(name);
+
+    const defaultPlugin = defaultPluginConfigs[name as PluginNames];
+    const userPlugin = userPluginsConfig[name as PluginNames];
+
+    if (!defaultPlugin && !userPlugin) {
+      throw new Error(
+        `unknown plugin dependency "${name}" - do you need to register a custom plugin with this name?`,
+      );
+    }
+
+    const plugin = {
+      _dependencies: [],
+      ...defaultPlugin,
+      ...userPlugin,
+      config: {
+        ...defaultPlugin?.config,
+        ...userPlugin?.config,
+      },
+    };
+
+    if (plugin._infer) {
+      const context: PluginContext = {
+        ensureDependency: (dependency) => {
+          if (
+            typeof dependency === 'string' &&
+            !plugin._dependencies.includes(dependency)
+          ) {
+            plugin._dependencies = [...plugin._dependencies, dependency];
+          }
+        },
+        pluginByTag: ({ defaultPlugin, errorMessage, tag }) => {
+          for (const userPlugin of userPlugins) {
+            const defaultConfig =
+              defaultPluginConfigs[userPlugin as PluginNames] ||
+              userPluginsConfig[userPlugin as PluginNames];
+            if (
+              defaultConfig &&
+              defaultConfig._tags?.includes(tag) &&
+              userPlugin !== name
+            ) {
+              return userPlugin;
+            }
+          }
+
+          if (defaultPlugin) {
+            const defaultConfig =
+              defaultPluginConfigs[defaultPlugin as PluginNames] ||
+              userPluginsConfig[defaultPlugin as PluginNames];
+            if (
+              defaultConfig &&
+              defaultConfig._tags?.includes(tag) &&
+              defaultPlugin !== name
+            ) {
+              return defaultPlugin;
+            }
+          }
+
+          throw new Error(
+            errorMessage ||
+              `missing plugin - no plugin with tag "${tag}" found`,
+          );
+        },
+      };
+      // @ts-expect-error
+      plugin._infer(plugin, context);
+    }
+
+    for (const dependency of plugin._dependencies) {
+      dfs(dependency);
+    }
+
+    circularReferenceTracker.delete(name);
+    pluginOrder.add(name);
+
+    // @ts-expect-error
+    plugins[name] = plugin;
   };
 
   for (const name of userPlugins) {
@@ -233,6 +226,7 @@ const getPlugins = (
   const userPluginsConfig: Config['plugins'] = {};
 
   let definedPlugins: UserConfig['plugins'] = defaultPlugins;
+
   if (userConfig.plugins) {
     userConfig.plugins = userConfig.plugins.filter(
       (plugin) =>
@@ -255,23 +249,28 @@ const getPlugins = (
         return plugin;
       }
 
-      if (plugin.name) {
+      const pluginName = plugin.name;
+
+      if (pluginName) {
         // @ts-expect-error
-        userPluginsConfig[plugin.name] = plugin;
+        if (plugin._handler) {
+          // @ts-expect-error
+          userPluginsConfig[pluginName] = plugin;
+        } else {
+          // @ts-expect-error
+          userPluginsConfig[pluginName] = {
+            config: { ...plugin },
+          };
+          // @ts-expect-error
+          delete userPluginsConfig[pluginName]!.config.name;
+        }
       }
 
-      return plugin.name;
+      return pluginName;
     })
     .filter(Boolean);
 
-  return getPluginsConfig({
-    pluginConfigs: {
-      ...userPluginsConfig,
-      ...defaultPluginConfigs,
-    },
-    userPlugins,
-    userPluginsConfig,
-  });
+  return getPluginsConfig({ userPlugins, userPluginsConfig });
 };
 
 const getWatch = (

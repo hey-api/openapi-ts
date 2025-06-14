@@ -35,11 +35,14 @@ const queryOptionsFunctionIdentifier = ({
 
   let customName = '';
 
-  if (plugin.queryOptionsNameBuilder) {
-    if (typeof plugin.queryOptionsNameBuilder === 'function') {
-      customName = plugin.queryOptionsNameBuilder(name);
+  if (plugin.config.queryOptionsNameBuilder) {
+    if (typeof plugin.config.queryOptionsNameBuilder === 'function') {
+      customName = plugin.config.queryOptionsNameBuilder(name);
     } else {
-      customName = plugin.queryOptionsNameBuilder.replace('{{name}}', name);
+      customName = plugin.config.queryOptionsNameBuilder.replace(
+        '{{name}}',
+        name,
+      );
     }
   }
 
@@ -60,7 +63,7 @@ export const createQueryOptions = ({
   state: PluginState;
 }) => {
   if (
-    !plugin.queryOptions ||
+    !plugin.config.queryOptions ||
     !(['get', 'post'] as (typeof operation.method)[]).includes(operation.method)
   ) {
     return state;
@@ -138,7 +141,7 @@ export const createQueryOptions = ({
 
   const statements: Array<ts.Statement> = [];
 
-  if (context.config.plugins['@hey-api/sdk']?.responseStyle === 'data') {
+  if (context.config.plugins['@hey-api/sdk']?.config.responseStyle === 'data') {
     statements.push(
       compiler.returnVariable({
         expression: awaitSdkExpression,
@@ -158,7 +161,7 @@ export const createQueryOptions = ({
   }
 
   const statement = compiler.constVariable({
-    comment: plugin.comments
+    comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
     exportConst: true,

@@ -29,7 +29,7 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
         module: './core/ApiError',
       }),
     );
-    if (config.plugins['@hey-api/sdk']?.response === 'response') {
+    if (config.plugins['@hey-api/sdk']?.config.response === 'response') {
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: { asType: true, name: 'ApiResult' },

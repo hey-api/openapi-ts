@@ -476,7 +476,9 @@ for (const version of versions) {
         _dependencies: ['@hey-api/typescript'],
         _handler: vi.fn(),
         _handlerLegacy: vi.fn(),
-        customOption: true,
+        config: {
+          customOption: true,
+        },
         name: 'my-plugin',
         output: 'my-plugin',
       };
@@ -502,6 +504,7 @@ for (const version of versions) {
         _dependencies: ['@hey-api/oops'],
         _handler: vi.fn(),
         _handlerLegacy: vi.fn(),
+        config: {},
         name: 'my-plugin',
         output: 'my-plugin',
       };
@@ -516,32 +519,6 @@ for (const version of versions) {
           plugins: [myPlugin, '@hey-api/client-fetch'],
         }),
       ).rejects.toThrowError(/unknown plugin/g);
-
-      expect(myPlugin._handler).not.toHaveBeenCalled();
-      expect(myPlugin._handlerLegacy).not.toHaveBeenCalled();
-    });
-
-    it('throws on native plugin override', async () => {
-      const myPlugin: Plugin.Config<{
-        name: any;
-        output: string;
-      }> = {
-        _handler: vi.fn(),
-        _handlerLegacy: vi.fn(),
-        name: '@hey-api/typescript',
-        output: 'my-plugin',
-      };
-
-      await expect(() =>
-        createClient({
-          input: path.join(__dirname, 'spec', '3.1.x', 'full.yaml'),
-          logs: {
-            level: 'silent',
-          },
-          output: path.join(outputDir, myPlugin.name, 'default'),
-          plugins: [myPlugin, '@hey-api/client-fetch'],
-        }),
-      ).rejects.toThrowError(/cannot register plugin/g);
 
       expect(myPlugin._handler).not.toHaveBeenCalled();
       expect(myPlugin._handlerLegacy).not.toHaveBeenCalled();

@@ -1,3 +1,4 @@
+import { definePluginConfig } from '../../shared/utils/config';
 import type { Plugin } from '../../types';
 import type { Config } from './types';
 
@@ -5,6 +6,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   _handler: () => {},
   _handlerLegacy: () => {},
   _tags: ['client'],
+  config: {},
   name: 'legacy/axios',
   output: 'client',
 };
@@ -12,7 +14,4 @@ export const defaultConfig: Plugin.Config<Config> = {
 /**
  * Type helper for `legacy/axios` plugin, returns {@link Plugin.Config} object
  */
-export const defineConfig: Plugin.DefineConfig<Config> = (config) => ({
-  ...defaultConfig,
-  ...config,
-});
+export const defineConfig = definePluginConfig(defaultConfig);

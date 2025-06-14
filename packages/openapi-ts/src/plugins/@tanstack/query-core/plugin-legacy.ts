@@ -719,14 +719,14 @@ export const handlerLegacy: Plugin.LegacyHandler<
       processedOperations.set(operationKey, true);
 
       const queryFn = [
-        config.plugins['@hey-api/sdk']?.asClass &&
+        config.plugins['@hey-api/sdk']?.config.asClass &&
           transformClassName({
             config,
             name: service.name,
           }),
         serviceFunctionIdentifier({
           config,
-          handleIllegal: !config.plugins['@hey-api/sdk']?.asClass,
+          handleIllegal: !config.plugins['@hey-api/sdk']?.config.asClass,
           id: operation.name,
           operation,
         }),
@@ -737,7 +737,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
 
       // queries
       if (
-        plugin.queryOptions &&
+        plugin.config.queryOptions &&
         (['GET', 'POST'] as ReadonlyArray<Method>).includes(operation.method)
       ) {
         if (!hasQueries) {
@@ -893,7 +893,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
 
       // infinite queries
       if (
-        plugin.infiniteQueryOptions &&
+        plugin.config.infiniteQueryOptions &&
         (['GET', 'POST'] as ReadonlyArray<Method>).includes(operation.method)
       ) {
         // the actual pagination field might be nested inside parameter, e.g. body
@@ -1187,7 +1187,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
 
       // mutations
       if (
-        plugin.mutationOptions &&
+        plugin.config.mutationOptions &&
         (['DELETE', 'PATCH', 'POST', 'PUT'] as ReadonlyArray<Method>).includes(
           operation.method,
         )

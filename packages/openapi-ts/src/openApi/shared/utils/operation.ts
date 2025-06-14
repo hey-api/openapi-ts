@@ -40,7 +40,7 @@ export const operationToId = ({
   if (
     id &&
     (!context.config.plugins['@hey-api/sdk'] ||
-      context.config.plugins['@hey-api/sdk'].operationId)
+      context.config.plugins['@hey-api/sdk'].config.operationId)
   ) {
     result = stringCase({
       case: 'camelCase',
