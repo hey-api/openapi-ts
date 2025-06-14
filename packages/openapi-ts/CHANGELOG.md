@@ -1,5 +1,25 @@
 # @hey-api/openapi-ts
 
+## 0.73.0
+
+### Minor Changes
+
+- [#2172](https://github.com/hey-api/openapi-ts/pull/2172) [`29605a0`](https://github.com/hey-api/openapi-ts/commit/29605a0e1b58e986458275833a98a396eede9089) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: bundle `@hey-api/client-*` plugins
+
+  ### Bundle `@hey-api/client-*` plugins
+
+  In previous releases, you had to install a separate client package to generate a fully working output, e.g. `npm install @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
+
+  ```sh
+  npm uninstall @hey-api/client-fetch
+  ```
+
+### Patch Changes
+
+- [#2172](https://github.com/hey-api/openapi-ts/pull/2172) [`9afbf66`](https://github.com/hey-api/openapi-ts/commit/9afbf666614ecb597f68ec809981f2acc28c66dc) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: respect logs setting if initialization fails
+
+- [#2170](https://github.com/hey-api/openapi-ts/pull/2170) [`c18dd1e`](https://github.com/hey-api/openapi-ts/commit/c18dd1e41b1c055306932ca6d3fa905c14ad1dd4) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export default pagination keywords
+
 ## 0.72.2
 
 ### Patch Changes
