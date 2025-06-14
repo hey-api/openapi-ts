@@ -42,6 +42,10 @@ export default defineConfig({
                 text: 'SDK',
               },
               {
+                link: '/openapi-ts/output/client',
+                text: 'Client',
+              },
+              {
                 link: '/openapi-ts/output/json-schema',
                 text: 'JSON Schema',
               },

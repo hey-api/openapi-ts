@@ -38,32 +38,29 @@ The fastest way to use `@hey-api/openapi-ts` is via npx
 ```sh
 npx @hey-api/openapi-ts \
   -i https://get.heyapi.dev/hey-api/backend \
-  -o src/client \
-  -c @hey-api/client-fetch
+  -o src/client
 ```
 
 Congratulations on creating your first client! 🎉 You can learn more about the generated files on the [Output](/openapi-ts/output) page.
-
-Before you can make API requests with the client you've just created, you need to install `@hey-api/client-fetch` and configure it. Let's start by declaring your dependencies.
 
 ## Installation
 
 ::: code-group
 
 ```sh [npm]
-npm install @hey-api/client-fetch && npm install @hey-api/openapi-ts -D
+npm install @hey-api/openapi-ts -D
 ```
 
 ```sh [pnpm]
-pnpm add @hey-api/client-fetch && pnpm add @hey-api/openapi-ts -D
+pnpm add @hey-api/openapi-ts -D
 ```
 
 ```sh [yarn]
-yarn add @hey-api/client-fetch && yarn add @hey-api/openapi-ts -D
+yarn add @hey-api/openapi-ts -D
 ```
 
 ```sh [bun]
-bun add @hey-api/client-fetch && bun add @hey-api/openapi-ts -D
+bun add @hey-api/openapi-ts -D
 ```
 
 :::
@@ -94,7 +91,6 @@ import { createClient } from '@hey-api/openapi-ts';
 createClient({
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 });
 ```
 

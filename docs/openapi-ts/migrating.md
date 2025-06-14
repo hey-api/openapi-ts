@@ -27,6 +27,16 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.73.0
+
+### Bundle `@hey-api/client-*` plugins
+
+In previous releases, you had to install a separate client package to generate a fully working output, e.g. `npm install @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
+
+```sh
+npm uninstall @hey-api/client-fetch
+```
+
 ## v0.72.0
 
 ### Added `sdk.classStructure` option

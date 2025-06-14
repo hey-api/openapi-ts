@@ -15,7 +15,6 @@
     "typecheck": "vue-tsc --build --force"
   },
   "dependencies": {
-    "@hey-api/client-fetch": "workspace:*",
     "@tanstack/vue-query": "5.73.3",
     "@tanstack/vue-query-devtools": "5.73.3",
     "pinia": "2.3.0",

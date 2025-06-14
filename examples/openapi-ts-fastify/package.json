@@ -9,7 +9,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@hey-api/client-fetch": "workspace:*",
     "fastify": "5.2.0",
     "fastify-openapi-glue": "4.8.0"
   },

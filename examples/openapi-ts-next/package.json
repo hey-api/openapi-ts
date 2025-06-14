@@ -10,7 +10,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@hey-api/client-next": "workspace:*",
     "next": "15.2.4",
     "react": "19.0.0",
     "react-dom": "19.0.0"

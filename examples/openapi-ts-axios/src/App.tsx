@@ -1,6 +1,5 @@
 import './App.css';
 
-import { createClient } from '@hey-api/client-axios';
 import * as Form from '@radix-ui/react-form';
 import { DownloadIcon, PlusIcon, ReloadIcon } from '@radix-ui/react-icons';
 import {
@@ -17,6 +16,7 @@ import {
 } from '@radix-ui/themes';
 import { useState } from 'react';
 
+import { createClient } from './client/client';
 import { PetSchema } from './client/schemas.gen';
 import { addPet, getPetById, updatePet } from './client/sdk.gen';
 import type { Pet } from './client/types.gen';

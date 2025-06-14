@@ -2,7 +2,7 @@
 import path from 'node:path';
 
 // @ts-ignore
-import { customClientPlugin } from '@hey-api/client-custom/plugin';
+import { customClientPlugin } from '@hey-api/custom-client/plugin';
 import { defineConfig } from '@hey-api/openapi-ts';
 
 // @ts-ignore
@@ -86,20 +86,19 @@ export default defineConfig(() => {
       // indexFile: false,
       // lint: 'eslint',
       path: path.resolve(__dirname, 'generated', 'sample'),
+      tsConfigPath: path.resolve(
+        __dirname,
+        'tsconfig',
+        'tsconfig.nodenext.json',
+      ),
     },
     plugins: [
-      // customClientPlugin({
-      //   bundle: true,
-      // }),
-      // myClientPlugin({
-      //   // bundle: true,
-      // }),
+      // customClientPlugin(),
+      // myClientPlugin(),
       {
         // baseUrl: false,
-        // bundle: true,
-        // bundleSource_EXPERIMENTAL: true,
         // exportFromIndex: true,
-        name: '@hey-api/client-fetch',
+        // name: '@hey-api/client-nuxt',
         // name: 'legacy/fetch',
         // strictBaseUrl: true,
       },
@@ -115,7 +114,7 @@ export default defineConfig(() => {
         // classStructure: 'off',
         // client: false,
         // include...
-        // instance: true,
+        instance: true,
         name: '@hey-api/sdk',
         // operationId: false,
         // responseStyle: 'data',
@@ -149,7 +148,7 @@ export default defineConfig(() => {
         infiniteQueryKeyNameBuilder: '{{name}}IQK',
         infiniteQueryOptionsNameBuilder: '{{name}}InfiniteQuery',
         mutationOptionsNameBuilder: '{{name}}MutationOptions',
-        name: '@tanstack/react-query',
+        // name: '@tanstack/react-query',
         queryKeyNameBuilder: '{{name}}QK',
         queryOptionsNameBuilder: '{{name}}Query',
       },

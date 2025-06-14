@@ -21,7 +21,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     {
       name: '@hey-api/schemas',
       type: 'json', // [!code ++]
@@ -38,7 +37,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     {
       name: '@hey-api/schemas',
       type: 'form', // [!code ++]
@@ -55,7 +53,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     '@hey-api/schemas', // [!code --]
   ],
 };

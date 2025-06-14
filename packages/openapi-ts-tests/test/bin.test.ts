@@ -164,23 +164,6 @@ describe('bin', () => {
     );
   });
 
-  it('throws error with wrong client', () => {
-    const result = sync('node', [
-      path.resolve(__dirname, '..', '..', 'openapi-ts', 'bin', 'index.cjs'),
-      '--input',
-      path.resolve(__dirname, 'spec', 'v3.json'),
-      '--output',
-      path.resolve(__dirname, 'generated', 'bin'),
-      '--client',
-      'invalid/client',
-      '--dry-run',
-      'true',
-    ]);
-    expect(result.stdout.toString()).toBe('');
-    expect(result.stderr.toString()).toContain('encountered an error');
-    expect(result.stderr.toString()).toContain('client needs to be set');
-  });
-
   it('displays help', () => {
     const result = sync('node', [
       path.resolve(__dirname, '..', '..', 'openapi-ts', 'bin', 'index.cjs'),

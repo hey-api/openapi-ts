@@ -38,7 +38,6 @@ export default {
   output: 'src/client',
   plugins: [
     // ...other plugins
-    '@hey-api/client-fetch',
     'zod', // [!code ++]
   ],
 };
@@ -54,7 +53,6 @@ export default {
   output: 'src/client',
   plugins: [
     // ...other plugins
-    '@hey-api/client-fetch',
     'zod',
     {
       name: '@hey-api/sdk', // [!code ++]

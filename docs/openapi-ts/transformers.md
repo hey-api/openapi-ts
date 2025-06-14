@@ -39,7 +39,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     '@hey-api/transformers', // [!code ++]
   ],
 };
@@ -57,7 +56,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     '@hey-api/transformers',
     {
       name: '@hey-api/sdk', // [!code ++]
@@ -79,7 +77,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     {
       dates: true, // [!code ++]
       name: '@hey-api/transformers',

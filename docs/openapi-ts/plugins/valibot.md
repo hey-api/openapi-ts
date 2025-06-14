@@ -40,7 +40,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     'valibot', // [!code ++]
   ],
 };
@@ -58,7 +57,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     'valibot',
     {
       name: '@hey-api/sdk', // [!code ++]

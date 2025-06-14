@@ -1,9 +1,5 @@
-import type {
-  Auth,
-  Client as CoreClient,
-  Config as CoreConfig,
-} from '@hey-api/client-core';
-
+import type { Auth } from './core/auth';
+import type { Client as CoreClient, Config as CoreConfig } from './core/types';
 import type { Middleware } from './utils';
 
 export interface Config<T extends ClientOptions = ClientOptions>

@@ -29,28 +29,6 @@ Launch demo
 
 ## Installation
 
-Start by adding `@hey-api/client-next` to your dependencies.
-
-::: code-group
-
-```sh [npm]
-npm install @hey-api/client-next
-```
-
-```sh [pnpm]
-pnpm add @hey-api/client-next
-```
-
-```sh [yarn]
-yarn add @hey-api/client-next
-```
-
-```sh [bun]
-bun add @hey-api/client-next
-```
-
-:::
-
 In your [configuration](/openapi-ts/get-started), add `@hey-api/client-next` to your plugins and you'll be ready to generate client artifacts. :tada:
 
 ::: code-group
@@ -131,7 +109,7 @@ The disadvantage of this approach is that your code may call the `client` instan
 You can also create your own client instance. You can use it to manually send requests or point it to a different domain.
 
 ```js
-import { createClient } from '@hey-api/client-next';
+import { createClient } from './client/client';
 
 const myClient = createClient({
   baseUrl: 'https://example.com',
@@ -290,23 +268,6 @@ const url = client.buildUrl<FooData>({
   url: '/foo/{fooId}',
 });
 console.log(url); // prints '/foo/1?bar=baz'
-```
-
-## Bundling
-
-Sometimes, you may not want to declare client packages as a dependency. This scenario is common if you're using Hey API to generate output that is repackaged and published for other consumers under your own brand. For such cases, our clients support bundling through the `client.bundle` configuration option.
-
-```js
-export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
-  output: 'src/client',
-  plugins: [
-    {
-      bundle: true, // [!code ++]
-      name: '@hey-api/client-next',
-    },
-  ],
-};
 ```
 
 <!--@include: ../../examples.md-->
