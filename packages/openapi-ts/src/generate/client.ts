@@ -61,16 +61,6 @@ export const clientApi = {
   },
 } satisfies Record<string, ImportExportItemObject>;
 
-const replaceCoreImports = (filePath: string) => {
-  let content = fs.readFileSync(filePath, 'utf8');
-  // Replace '../../client-core/bundle' with '../core'
-  content = content.replace(
-    /from ['"]\.\.\/\.\.\/client-core\/bundle/g,
-    "from '../core",
-  );
-  fs.writeFileSync(filePath, content, 'utf8');
-};
-
 /**
  * Creates a `client` folder containing the same modules as the client package.
  */
@@ -99,11 +89,6 @@ export const generateClientBundle = ({
       clientDistFolderName,
     );
     fs.cpSync(clientDistPath, clientOutputPath, { recursive: true });
-    // replace core imports in client bundle
-    const clientFiles = fs.readdirSync(clientOutputPath);
-    for (const file of clientFiles) {
-      replaceCoreImports(path.resolve(clientOutputPath, file));
-    }
     return;
   }
 

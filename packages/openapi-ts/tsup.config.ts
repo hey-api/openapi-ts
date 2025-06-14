@@ -3,6 +3,16 @@ import path from 'node:path';
 
 import { defineConfig } from 'tsup';
 
+const replaceCoreImports = (filePath: string) => {
+  let content = fs.readFileSync(filePath, 'utf8');
+  // Replace '../../client-core/bundle' with '../core'
+  content = content.replace(
+    /from ['"]\.\.\/\.\.\/client-core\/bundle/g,
+    "from '../core",
+  );
+  fs.writeFileSync(filePath, content, 'utf8');
+};
+
 export default defineConfig((options) => ({
   banner(ctx) {
     /**
@@ -23,7 +33,7 @@ export default defineConfig((options) => ({
   onSuccess: async () => {
     // Copy client files to dist folder for runtime access
     const pluginNames = [
-      // 'client-axios',
+      'client-axios',
       'client-core',
       'client-fetch',
       // 'client-next',
@@ -47,6 +57,12 @@ export default defineConfig((options) => ({
       if (fs.existsSync(srcPath)) {
         fs.mkdirSync(path.dirname(destPath), { recursive: true });
         fs.cpSync(srcPath, destPath, { recursive: true });
+
+        // replace core imports in client bundle
+        const clientFiles = fs.readdirSync(destPath);
+        for (const file of clientFiles) {
+          replaceCoreImports(path.resolve(destPath, file));
+        }
       }
     }
   },

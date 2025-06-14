@@ -1,15 +1,14 @@
+import { getAuthToken } from '../../client-core/bundle/auth';
 import type {
-  ArraySeparatorStyle,
   QuerySerializer,
   QuerySerializerOptions,
-} from '@hey-api/client-core';
+} from '../../client-core/bundle/bodySerializer';
+import type { ArraySeparatorStyle } from '../../client-core/bundle/pathSerializer';
 import {
-  getAuthToken,
   serializeArrayParam,
   serializeObjectParam,
   serializePrimitiveParam,
-} from '@hey-api/client-core';
-
+} from '../../client-core/bundle/pathSerializer';
 import type { Client, ClientOptions, Config, RequestOptions } from './types';
 
 interface PathSerializer {

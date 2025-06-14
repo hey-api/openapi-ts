@@ -1,15 +1,16 @@
 import type {
-  Auth,
-  Client as CoreClient,
-  Config as CoreConfig,
-} from '@hey-api/client-core';
-import type {
   AxiosError,
   AxiosInstance,
   AxiosResponse,
   AxiosStatic,
   CreateAxiosDefaults,
 } from 'axios';
+
+import type { Auth } from '../../client-core/bundle/auth';
+import type {
+  Client as CoreClient,
+  Config as CoreConfig,
+} from '../../client-core/bundle/types';
 
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<CreateAxiosDefaults, 'auth' | 'baseURL' | 'headers' | 'method'>,

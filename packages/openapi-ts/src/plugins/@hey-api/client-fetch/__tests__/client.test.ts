@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createClient } from '../client/client';
+import { createClient } from '../bundle/client';
 
 describe('buildUrl', () => {
   const client = createClient();

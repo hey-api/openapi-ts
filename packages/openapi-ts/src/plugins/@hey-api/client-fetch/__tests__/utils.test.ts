@@ -1,8 +1,8 @@
 import type { Auth } from '@hey-api/client-core';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { Client } from '../client/types';
-import { buildUrl, getParseAs, setAuthParams } from '../client/utils';
+import type { Client } from '../bundle/types';
+import { buildUrl, getParseAs, setAuthParams } from '../bundle/utils';
 
 describe('buildUrl', () => {
   const scenarios: Array<{
