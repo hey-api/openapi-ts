@@ -1,7 +1,7 @@
 <div align="center">
   <img alt="Hey API logo" height="150" src="https://heyapi.dev/images/logo-300w.png" width="150">
   <h1 align="center"><b>Nuxt Module</b></h1>
-  <p align="center">🚀 Nuxt module for `@hey-api/openapi-ts` codegen.</p>
+  <p align="center">🚀 Nuxt module for <code>@hey-api/openapi-ts</code> codegen.</p>
 </div>
 
 <!-- TODO: add working example once StackBlitz updates their Node version -->
