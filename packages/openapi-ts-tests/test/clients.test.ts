@@ -60,18 +60,6 @@ for (const client of clients) {
       },
       {
         config: createConfig({
-          output: 'bundle',
-          plugins: [
-            {
-              bundle: true,
-              name: client,
-            },
-          ],
-        }),
-        description: 'default output with bundled client',
-      },
-      {
-        config: createConfig({
           output: 'sdk-client-optional',
           plugins: [
             client,

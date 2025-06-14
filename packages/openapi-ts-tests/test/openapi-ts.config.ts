@@ -92,12 +92,10 @@ export default defineConfig(() => {
       //   bundle: true,
       // }),
       // myClientPlugin({
-      //   // bundle: true,
+      //   bundle: true,
       // }),
       {
         // baseUrl: false,
-        // bundle: true,
-        // bundleSource_EXPERIMENTAL: true,
         // exportFromIndex: true,
         // name: '@hey-api/client-fetch',
         // name: 'legacy/fetch',
@@ -115,7 +113,7 @@ export default defineConfig(() => {
         // classStructure: 'off',
         // client: false,
         // include...
-        // instance: true,
+        instance: true,
         name: '@hey-api/sdk',
         // operationId: false,
         // responseStyle: 'data',
