@@ -36,7 +36,7 @@ export default defineConfig((options) => ({
       'client-axios',
       'client-core',
       'client-fetch',
-      // 'client-next',
+      'client-next',
       // 'client-nuxt',
     ];
 
