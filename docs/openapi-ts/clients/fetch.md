@@ -70,7 +70,7 @@ When we installed the client above, it created a [`client.gen.ts`](/openapi-ts/o
 
 ### `setConfig()`
 
-This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Fetch API configuration option to `setConfig()`, and even your own Fetch implementation.
+This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Fetch API configuration option to `setConfig()`, and even your own [Fetch](#custom-fetch) implementation.
 
 ```js
 import { client } from 'client/client.gen';
@@ -282,6 +282,22 @@ const url = client.buildUrl<FooData>({
 });
 console.log(url); // prints '/foo/1?bar=baz'
 ```
+
+## Custom `fetch`
+
+You can implement your own `fetch` method. This is useful if you need to extend the default `fetch` method with extra functionality, or replace it altogether.
+
+```js
+import { client } from 'client/client.gen';
+
+client.setConfig({
+  fetch: () => {
+    /* custom `fetch` method */
+  },
+});
+```
+
+You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom method to be.
 
 <!--@include: ../../examples.md-->
 <!--@include: ../../sponsors.md-->
