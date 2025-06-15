@@ -40,12 +40,12 @@ export type AnyPluginName = PluginNames | (string & {});
 type PluginTag = 'client' | 'transformer' | 'validator';
 
 export interface PluginContext {
-  ensureDependency: (name: PluginNames | true) => void;
-  pluginByTag: (props: {
-    defaultPlugin?: AnyPluginName;
+  ensureDependency: (name: PluginNames) => void;
+  pluginByTag: <T extends AnyPluginName | boolean = AnyPluginName>(props: {
+    defaultPlugin?: Exclude<T, boolean>;
     errorMessage?: string;
     tag: PluginTag;
-  }) => AnyPluginName | undefined;
+  }) => Exclude<T, boolean> | undefined;
 }
 
 export interface BaseConfig {

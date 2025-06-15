@@ -14,30 +14,26 @@ export const defaultConfig: Plugin.Config<Config> = {
         plugin.config.client = context.pluginByTag({
           defaultPlugin: '@hey-api/client-fetch',
           tag: 'client',
-        }) as unknown as typeof plugin.config.client;
+        });
       }
 
-      context.ensureDependency(plugin.config.client);
+      context.ensureDependency(plugin.config.client!);
     }
 
     if (plugin.config.transformer) {
       if (typeof plugin.config.transformer === 'boolean') {
-        plugin.config.transformer = context.pluginByTag({
-          tag: 'transformer',
-        }) as unknown as typeof plugin.config.transformer;
+        plugin.config.transformer = context.pluginByTag({ tag: 'transformer' });
       }
 
-      context.ensureDependency(plugin.config.transformer);
+      context.ensureDependency(plugin.config.transformer!);
     }
 
     if (plugin.config.validator) {
       if (typeof plugin.config.validator === 'boolean') {
-        plugin.config.validator = context.pluginByTag({
-          tag: 'validator',
-        }) as unknown as typeof plugin.config.validator;
+        plugin.config.validator = context.pluginByTag({ tag: 'validator' });
       }
 
-      context.ensureDependency(plugin.config.validator);
+      context.ensureDependency(plugin.config.validator!);
     }
 
     if (plugin.config.instance) {
