@@ -37,7 +37,7 @@ export const isOperationOptionsRequired = ({
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const plugin = context.config.plugins['@hey-api/sdk'];
   return (
-    (plugin && !plugin.client && !plugin.instance) ||
+    (plugin && !plugin.config.client && !plugin.config.instance) ||
     isNuxtClient ||
     hasOperationDataRequired(operation)
   );

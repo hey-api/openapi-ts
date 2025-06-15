@@ -206,7 +206,7 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
 
   if (
     config.useOptions &&
-    config.plugins['@hey-api/sdk']?.response === 'response'
+    config.plugins['@hey-api/sdk']?.config.response === 'response'
   ) {
     returnType = compiler.typeNode('ApiResult', [returnType]);
   }
@@ -498,8 +498,8 @@ export const serviceFunctionIdentifier = ({
   id: string;
   operation: IR.OperationObject | Operation;
 }) => {
-  if (config.plugins['@hey-api/sdk']?.methodNameBuilder) {
-    return config.plugins['@hey-api/sdk'].methodNameBuilder(operation);
+  if (config.plugins['@hey-api/sdk']?.config.methodNameBuilder) {
+    return config.plugins['@hey-api/sdk'].config.methodNameBuilder(operation);
   }
 
   if (handleIllegal && id.match(reservedJavaScriptKeywordsRegExp)) {
@@ -665,14 +665,15 @@ const processService = ({
 
   const throwOnErrorTypeGeneric: FunctionTypeParameter = {
     default:
-      ('throwOnError' in clientPlugin ? clientPlugin.throwOnError : false) ??
-      false,
+      ('throwOnError' in clientPlugin.config
+        ? clientPlugin.config.throwOnError
+        : false) ?? false,
     extends: 'boolean',
     name: 'ThrowOnError',
   };
 
   if (
-    !config.plugins['@hey-api/sdk']?.asClass &&
+    !config.plugins['@hey-api/sdk']?.config.asClass &&
     !legacyNameFromConfig(config)
   ) {
     for (const operation of service.operations) {
@@ -812,7 +813,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
 
   files.sdk = new TypeScriptFile({
     dir: config.output.path,
-    exportFromIndex: plugin.exportFromIndex,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: 'sdk',
     name: `${sdkOutput}.ts`,
   });
@@ -859,7 +860,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
       });
     }
 
-    if (config.plugins['@hey-api/sdk']?.response === 'response') {
+    if (config.plugins['@hey-api/sdk']?.config.response === 'response') {
       files.sdk.import({
         asType: true,
         module: './core/ApiResult',

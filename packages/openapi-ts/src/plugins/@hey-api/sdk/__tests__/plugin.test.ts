@@ -47,23 +47,28 @@ describe('handlerLegacy', () => {
         '@hey-api/schemas': {
           _handler: () => {},
           _handlerLegacy: () => {},
+          config: {},
           name: '@hey-api/schemas',
         },
         '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          asClass: true,
+          config: {
+            asClass: true,
+          },
           name: '@hey-api/sdk',
         },
         '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
+          config: {},
           name: '@hey-api/typescript',
         },
         'legacy/fetch': {
           _handler: () => {},
           _handlerLegacy: () => {},
           _tags: ['client'],
+          config: {},
           name: 'legacy/fetch',
         },
       },
@@ -121,7 +126,9 @@ describe('handlerLegacy', () => {
       files,
       openApi,
       plugin: {
-        exportFromIndex: false,
+        config: {
+          exportFromIndex: false,
+        },
         name: '@hey-api/sdk',
         output: '',
       },
@@ -210,23 +217,28 @@ describe('methodNameBuilder', () => {
         '@hey-api/schemas': {
           _handler: () => {},
           _handlerLegacy: () => {},
+          config: {},
           name: '@hey-api/schemas',
         },
         '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          asClass: true,
+          config: {
+            asClass: true,
+          },
           name: '@hey-api/sdk',
         },
         '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
+          config: {},
           name: '@hey-api/typescript',
         },
         'legacy/fetch': {
           _handler: () => {},
           _handlerLegacy: () => {},
           _tags: ['client'],
+          config: {},
           name: 'legacy/fetch',
         },
       },
@@ -246,7 +258,9 @@ describe('methodNameBuilder', () => {
       files,
       openApi,
       plugin: {
-        exportFromIndex: false,
+        config: {
+          exportFromIndex: false,
+        },
         name: '@hey-api/sdk',
         output: '',
       },
@@ -295,24 +309,29 @@ describe('methodNameBuilder', () => {
         '@hey-api/schemas': {
           _handler: () => {},
           _handlerLegacy: () => {},
+          config: {},
           name: '@hey-api/schemas',
         },
         '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          asClass: true,
-          methodNameBuilder,
+          config: {
+            asClass: true,
+            methodNameBuilder,
+          },
           name: '@hey-api/sdk',
         },
         '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
+          config: {},
           name: '@hey-api/typescript',
         },
         'legacy/fetch': {
           _handler: () => {},
           _handlerLegacy: () => {},
           _tags: ['client'],
+          config: {},
           name: 'legacy/fetch',
         },
       },
@@ -332,7 +351,9 @@ describe('methodNameBuilder', () => {
       files,
       openApi,
       plugin: {
-        exportFromIndex: false,
+        config: {
+          exportFromIndex: false,
+        },
         name: '@hey-api/sdk',
         output: '',
       },
@@ -383,24 +404,29 @@ describe('methodNameBuilder', () => {
         '@hey-api/schemas': {
           _handler: () => {},
           _handlerLegacy: () => {},
+          config: {},
           name: '@hey-api/schemas',
         },
         '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          asClass: false,
-          methodNameBuilder,
+          config: {
+            asClass: false,
+            methodNameBuilder,
+          },
           name: '@hey-api/sdk',
         },
         '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
+          config: {},
           name: '@hey-api/typescript',
         },
         'legacy/fetch': {
           _handler: () => {},
           _handlerLegacy: () => {},
           _tags: ['client'],
+          config: {},
           name: 'legacy/fetch',
         },
       },
@@ -420,7 +446,9 @@ describe('methodNameBuilder', () => {
       files,
       openApi,
       plugin: {
-        exportFromIndex: false,
+        config: {
+          exportFromIndex: false,
+        },
         name: '@hey-api/sdk',
         output: '',
       },

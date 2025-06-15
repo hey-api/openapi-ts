@@ -1,3 +1,4 @@
+import { definePluginConfig } from '../../shared/utils/config';
 import type { Plugin } from '../../types';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
@@ -8,9 +9,11 @@ export const defaultConfig: Plugin.Config<Config> = {
   _handler: handler,
   _handlerLegacy: handlerLegacy,
   _tags: ['transformer'],
-  bigInt: true,
-  dates: true,
-  exportFromIndex: false,
+  config: {
+    bigInt: true,
+    dates: true,
+    exportFromIndex: false,
+  },
   name: '@hey-api/transformers',
   output: 'transformers',
 };
@@ -18,7 +21,4 @@ export const defaultConfig: Plugin.Config<Config> = {
 /**
  * Type helper for `@hey-api/transformers`, returns {@link Plugin.Config} object
  */
-export const defineConfig: Plugin.DefineConfig<Config> = (config) => ({
-  ...defaultConfig,
-  ...config,
-});
+export const defineConfig = definePluginConfig(defaultConfig);

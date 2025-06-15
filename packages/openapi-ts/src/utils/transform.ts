@@ -12,13 +12,13 @@ export const transformClassName = ({
   name: string;
 }) => {
   const plugin = config.plugins['@hey-api/sdk'];
-  if (plugin?.classNameBuilder) {
+  if (plugin?.config.classNameBuilder) {
     let customName = '';
 
-    if (typeof plugin.classNameBuilder === 'function') {
-      customName = plugin.classNameBuilder(name);
+    if (typeof plugin.config.classNameBuilder === 'function') {
+      customName = plugin.config.classNameBuilder(name);
     } else {
-      customName = plugin.classNameBuilder.replace('{{name}}', name);
+      customName = plugin.config.classNameBuilder.replace('{{name}}', name);
     }
 
     return customName;
@@ -29,7 +29,7 @@ export const transformClassName = ({
 
 export const transformTypeName = (name: string) => {
   const config = getConfig();
-  if (config.plugins['@hey-api/typescript']?.style === 'PascalCase') {
+  if (config.plugins['@hey-api/typescript']?.config.style === 'PascalCase') {
     return stringCase({
       case: 'PascalCase',
       value: name,

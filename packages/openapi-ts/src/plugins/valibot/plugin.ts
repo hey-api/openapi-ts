@@ -1141,7 +1141,9 @@ const schemaToValibotSchema = ({
   // emit nodes only if $ref points to a reusable component
   if (identifier && identifier.name && identifier.created) {
     const statement = compiler.constVariable({
-      comment: plugin.comments ? createSchemaComment({ schema }) : undefined,
+      comment: plugin.config.comments
+        ? createSchemaComment({ schema })
+        : undefined,
       exportConst: true,
       expression: pipesToExpression(pipes),
       name: identifier.name,
@@ -1162,7 +1164,7 @@ const schemaToValibotSchema = ({
 
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: valibotId,
     identifierCase: 'camelCase',
     path: plugin.output,

@@ -52,8 +52,8 @@ const scopeToRef = ({
   const name = refParts.pop()!;
   const nameBuilder =
     accessScope === 'read'
-      ? plugin.readableNameBuilder
-      : plugin.writableNameBuilder;
+      ? plugin.config.readableNameBuilder
+      : plugin.config.writableNameBuilder;
   const processedName = processNameBuilder({ name, nameBuilder });
   refParts.push(processedName);
   return refParts.join('/');
@@ -146,7 +146,7 @@ const addJavaScriptEnum = ({
 
   // JavaScript enums might want to ignore null values
   if (
-    plugin.enumsConstantsIgnoreNull &&
+    plugin.config.enumsConstantsIgnoreNull &&
     enumObject.typeofItems.includes('object')
   ) {
     enumObject.obj = enumObject.obj.filter((item) => item.value !== null);
@@ -208,7 +208,7 @@ const schemaToEnumObject = ({
 
     if (key) {
       key = stringCase({
-        case: plugin.enumsCase,
+        case: plugin.config.enumsCase,
         stripLeadingSeparators: false,
         value: key,
       });
@@ -217,8 +217,8 @@ const schemaToEnumObject = ({
       // TypeScript enum keys cannot be numbers
       if (
         numberRegExp.test(key) &&
-        (plugin.enums === 'typescript' ||
-          plugin.enums === 'typescript+namespace')
+        (plugin.config.enums === 'typescript' ||
+          plugin.config.enums === 'typescript+namespace')
       ) {
         key = `_${key}`;
       }
@@ -265,7 +265,7 @@ const addTypeEnum = ({
   if (
     !identifier.created &&
     !isRefOpenApiComponent($ref) &&
-    plugin.enums !== 'typescript+namespace'
+    plugin.config.enums !== 'typescript+namespace'
   ) {
     return;
   }
@@ -437,12 +437,13 @@ const enumTypeToIdentifier = ({
 }): ts.TypeNode | undefined => {
   const file = context.file({ id: typesId })!;
   const isRefComponent = $ref ? isRefOpenApiComponent($ref) : false;
-  const shouldExportEnum = isRefComponent || Boolean(plugin.exportInlineEnums);
+  const shouldExportEnum =
+    isRefComponent || Boolean(plugin.config.exportInlineEnums);
 
   if ($ref && shouldExportEnum) {
     // when enums are disabled (default), emit only reusable components
     // as types, otherwise the output would be broken if we skipped all enums
-    if (!plugin.enums) {
+    if (!plugin.config.enums) {
       const typeNode = addTypeEnum({
         $ref,
         context,
@@ -455,7 +456,7 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (plugin.enums === 'javascript') {
+    if (plugin.config.enums === 'javascript') {
       const typeNode = addTypeEnum({
         $ref,
         context,
@@ -478,7 +479,7 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (plugin.enums === 'typescript') {
+    if (plugin.config.enums === 'typescript') {
       const enumNode = addTypeScriptEnum({
         $ref,
         context,
@@ -491,7 +492,7 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (plugin.enums === 'typescript+namespace') {
+    if (plugin.config.enums === 'typescript+namespace') {
       const enumNode = addTypeScriptEnum({
         $ref,
         context,
@@ -538,7 +539,7 @@ const numberTypeToIdentifier = ({
 
   if (schema.type === 'integer' && schema.format === 'int64') {
     // TODO: parser - add ability to skip type transformers
-    if (context.config.plugins['@hey-api/transformers']?.bigInt) {
+    if (context.config.plugins['@hey-api/transformers']?.config.bigInt) {
       return compiler.typeReferenceNode({ typeName: 'bigint' });
     }
   }
@@ -694,7 +695,7 @@ const stringTypeToIdentifier = ({
 
     if (schema.format === 'date-time' || schema.format === 'date') {
       // TODO: parser - add ability to skip type transformers
-      if (context.config.plugins['@hey-api/transformers']?.dates) {
+      if (context.config.plugins['@hey-api/transformers']?.config.dates) {
         return compiler.typeReferenceNode({ typeName: 'Date' });
       }
     }
@@ -970,7 +971,7 @@ const operationToDataType = ({
     plugin,
     schema: data,
     state:
-      plugin.readOnlyWriteOnlyBehavior === 'off'
+      plugin.config.readOnlyWriteOnlyBehavior === 'off'
         ? {
             path: [operation.method, operation.path, 'data'],
           }
@@ -1026,7 +1027,7 @@ const operationToType = ({
         plugin,
         schema: errors,
         state:
-          plugin.readOnlyWriteOnlyBehavior === 'off'
+          plugin.config.readOnlyWriteOnlyBehavior === 'off'
             ? {
                 path: [operation.method, operation.path, 'errors'],
               }
@@ -1093,7 +1094,7 @@ const operationToType = ({
         plugin,
         schema: responses,
         state:
-          plugin.readOnlyWriteOnlyBehavior === 'off'
+          plugin.config.readOnlyWriteOnlyBehavior === 'off'
             ? {
                 path: [operation.method, operation.path, 'responses'],
               }
@@ -1209,8 +1210,8 @@ export const schemaToType = ({
         create: true,
         namespace:
           refSchema.type === 'enum' &&
-          (plugin.enums === 'typescript' ||
-            plugin.enums === 'typescript+namespace') &&
+          (plugin.config.enums === 'typescript' ||
+            plugin.config.enums === 'typescript+namespace') &&
           shouldCreateTypeScriptEnum({
             plugin,
             schema: refSchema as SchemaWithType<'enum'>,
@@ -1315,9 +1316,9 @@ export const schemaToType = ({
 
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: typesId,
-    identifierCase: plugin.identifierCase,
+    identifierCase: plugin.config.identifierCase,
     path: plugin.output,
   });
 
@@ -1330,7 +1331,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
   context.subscribe('schema', ({ $ref, schema }) => {
     if (
-      plugin.readOnlyWriteOnlyBehavior === 'off' ||
+      plugin.config.readOnlyWriteOnlyBehavior === 'off' ||
       !isSchemaSplit({ schema })
     ) {
       schemaToType({
@@ -1403,7 +1404,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       plugin,
       schema: requestBody.schema,
       state:
-        plugin.readOnlyWriteOnlyBehavior === 'off'
+        plugin.config.readOnlyWriteOnlyBehavior === 'off'
           ? {
               // TODO: correctly populate state.path
               path: [],

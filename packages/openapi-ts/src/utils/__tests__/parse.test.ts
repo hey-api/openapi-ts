@@ -31,14 +31,17 @@ describe('operationNameFn', () => {
       '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
+        config: {
+          operationId: true,
+          response: 'body',
+        },
         name: '@hey-api/sdk',
-        operationId: true,
-        response: 'body',
       },
       'legacy/fetch': {
         _handler: () => {},
         _handlerLegacy: () => {},
         _tags: ['client'],
+        config: {},
         name: 'legacy/fetch',
       },
     },
@@ -52,9 +55,11 @@ describe('operationNameFn', () => {
       '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
+        config: {
+          operationId: true,
+          response: 'body',
+        },
         name: '@hey-api/sdk',
-        operationId: true,
-        response: 'body',
       },
     },
   };
@@ -66,9 +71,11 @@ describe('operationNameFn', () => {
       '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
+        config: {
+          operationId: false,
+          response: 'body',
+        },
         name: '@hey-api/sdk',
-        operationId: false,
-        response: 'body',
       },
     },
   };
@@ -81,14 +88,17 @@ describe('operationNameFn', () => {
         _handler: () => {},
         _handlerLegacy: () => {},
         _tags: ['client'],
+        config: {},
         name: '@hey-api/client-fetch',
       },
       '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
+        config: {
+          operationId: true,
+          response: 'body',
+        },
         name: '@hey-api/sdk',
-        operationId: true,
-        response: 'body',
       },
     },
   };
@@ -101,14 +111,17 @@ describe('operationNameFn', () => {
         _handler: () => {},
         _handlerLegacy: () => {},
         _tags: ['client'],
+        config: {},
         name: '@hey-api/client-fetch',
       },
       '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
+        config: {
+          operationId: false,
+          response: 'body',
+        },
         name: '@hey-api/sdk',
-        operationId: false,
-        response: 'body',
       },
     },
   };

@@ -9,7 +9,7 @@ const resolveBaseUrlString: PluginHandler<string | undefined> = ({
   context,
   plugin,
 }) => {
-  const { baseUrl } = plugin;
+  const { baseUrl } = plugin.config;
 
   if (baseUrl === false) {
     return;
@@ -49,11 +49,11 @@ export const createClient: PluginHandler = ({ context, plugin }) => {
     name: 'ClientOptions',
   });
 
-  const createClientConfig = plugin.runtimeConfigPath
+  const createClientConfig = plugin.config.runtimeConfigPath
     ? file.import({
         module: file.relativePathToFile({
           context,
-          id: plugin.runtimeConfigPath,
+          id: plugin.config.runtimeConfigPath,
         }),
         name: 'createClientConfig',
       })
@@ -80,7 +80,7 @@ export const createClient: PluginHandler = ({ context, plugin }) => {
     }
   }
 
-  if ('throwOnError' in plugin && plugin.throwOnError) {
+  if ('throwOnError' in plugin.config && plugin.config.throwOnError) {
     defaultValues.push({
       key: 'throwOnError',
       value: true,

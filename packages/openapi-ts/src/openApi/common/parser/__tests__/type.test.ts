@@ -9,6 +9,7 @@ vi.mock('../../../../utils/config', () => {
       '@hey-api/typescript': {
         _handler: () => {},
         _handlerLegacy: () => {},
+        config: {},
         name: '@hey-api/typescript',
       },
     },
