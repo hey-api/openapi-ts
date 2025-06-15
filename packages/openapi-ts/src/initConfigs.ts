@@ -122,10 +122,7 @@ const getPluginsConfig = ({
     if (plugin._infer) {
       const context: PluginContext = {
         ensureDependency: (dependency) => {
-          if (
-            typeof dependency === 'string' &&
-            !plugin._dependencies.includes(dependency)
-          ) {
+          if (!plugin._dependencies.includes(dependency)) {
             plugin._dependencies = [...plugin._dependencies, dependency];
           }
         },
@@ -139,7 +136,7 @@ const getPluginsConfig = ({
               defaultConfig._tags?.includes(tag) &&
               userPlugin !== name
             ) {
-              return userPlugin;
+              return userPlugin as any;
             }
           }
 
