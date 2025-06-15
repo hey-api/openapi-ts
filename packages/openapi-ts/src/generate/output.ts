@@ -25,7 +25,7 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
     tsConfig?.options.moduleResolution === ts.ModuleResolutionKind.NodeNext;
 
   const client = getClientPlugin(context.config);
-  if ('bundle' in client && client.bundle) {
+  if ('bundle' in client.config && client.config.bundle) {
     generateClientBundle({
       outputPath,
       plugin: client,

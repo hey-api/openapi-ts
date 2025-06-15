@@ -26,11 +26,14 @@ const mutationOptionsFunctionIdentifier = ({
 
   let customName = '';
 
-  if (plugin.mutationOptionsNameBuilder) {
-    if (typeof plugin.mutationOptionsNameBuilder === 'function') {
-      customName = plugin.mutationOptionsNameBuilder(name);
+  if (plugin.config.mutationOptionsNameBuilder) {
+    if (typeof plugin.config.mutationOptionsNameBuilder === 'function') {
+      customName = plugin.config.mutationOptionsNameBuilder(name);
     } else {
-      customName = plugin.mutationOptionsNameBuilder.replace('{{name}}', name);
+      customName = plugin.config.mutationOptionsNameBuilder.replace(
+        '{{name}}',
+        name,
+      );
     }
   }
 
@@ -51,7 +54,7 @@ export const createMutationOptions = ({
   state: PluginState;
 }) => {
   if (
-    !plugin.mutationOptions ||
+    !plugin.config.mutationOptions ||
     !(
       ['delete', 'patch', 'post', 'put'] as (typeof operation.method)[]
     ).includes(operation.method)
@@ -111,7 +114,7 @@ export const createMutationOptions = ({
 
   const statements: Array<ts.Statement> = [];
 
-  if (context.config.plugins['@hey-api/sdk']?.responseStyle === 'data') {
+  if (context.config.plugins['@hey-api/sdk']?.config.responseStyle === 'data') {
     statements.push(
       compiler.returnVariable({
         expression: awaitSdkExpression,
@@ -167,7 +170,7 @@ export const createMutationOptions = ({
     ],
   });
   const statement = compiler.constVariable({
-    comment: plugin.comments
+    comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
     exportConst: true,

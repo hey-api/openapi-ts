@@ -997,7 +997,7 @@ const schemaToZodSchema = ({
     anyType = zodSchema.anyType;
     expression = zodSchema.expression;
 
-    if (plugin.metadata && schema.description) {
+    if (plugin.config.metadata && schema.description) {
       expression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression,
@@ -1126,7 +1126,9 @@ const schemaToZodSchema = ({
   // emit nodes only if $ref points to a reusable component
   if (identifier && identifier.name && identifier.created) {
     const statement = compiler.constVariable({
-      comment: plugin.comments ? createSchemaComment({ schema }) : undefined,
+      comment: plugin.config.comments
+        ? createSchemaComment({ schema })
+        : undefined,
       exportConst: true,
       expression: expression!,
       name: identifier.name,
@@ -1145,7 +1147,7 @@ const schemaToZodSchema = ({
 
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: zodId,
     identifierCase: 'camelCase',
     path: plugin.output,

@@ -41,7 +41,9 @@ describe('operationToId', () => {
           plugins: {
             // @ts-expect-error
             '@hey-api/sdk': {
-              operationId: true,
+              config: {
+                operationId: true,
+              },
             },
           },
         },

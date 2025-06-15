@@ -45,23 +45,28 @@ describe('generateLegacyTypes', () => {
         '@hey-api/schemas': {
           _handler: () => {},
           _handlerLegacy: () => {},
+          config: {},
           name: '@hey-api/schemas',
         },
         '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
+          config: {},
           name: '@hey-api/sdk',
         },
         '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          enums: 'javascript',
+          config: {
+            enums: 'javascript',
+          },
           name: '@hey-api/typescript',
         },
         'legacy/fetch': {
           _handler: () => {},
           _handlerLegacy: () => {},
           _tags: ['client'],
+          config: {},
           name: 'legacy/fetch',
         },
       },
@@ -114,7 +119,9 @@ describe('generateLegacyTypes', () => {
       files,
       openApi,
       plugin: {
-        exportFromIndex: false,
+        config: {
+          exportFromIndex: false,
+        },
         name: '@hey-api/typescript',
         output: '',
       },

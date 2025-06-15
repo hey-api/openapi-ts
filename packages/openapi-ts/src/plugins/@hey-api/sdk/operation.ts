@@ -59,13 +59,18 @@ const getOperationMethodName = ({
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: Pick<Plugin.Instance<Config>, 'asClass' | 'methodNameBuilder'>;
+  plugin: {
+    config: Pick<
+      Plugin.Instance<Config>['config'],
+      'asClass' | 'methodNameBuilder'
+    >;
+  };
 }) => {
-  if (plugin.methodNameBuilder) {
-    return plugin.methodNameBuilder(operation);
+  if (plugin.config.methodNameBuilder) {
+    return plugin.config.methodNameBuilder(operation);
   }
 
-  const handleIllegal = !plugin.asClass;
+  const handleIllegal = !plugin.config.asClass;
   if (handleIllegal && operation.id.match(reservedJavaScriptKeywordsRegExp)) {
     return `${operation.id}_`;
   }
@@ -83,10 +88,12 @@ export const operationClasses = ({
 }: {
   context: IR.Context;
   operation: IR.OperationObject;
-  plugin: Pick<
-    Plugin.Instance<Config>,
-    'asClass' | 'classStructure' | 'instance'
-  >;
+  plugin: {
+    config: Pick<
+      Plugin.Instance<Config>['config'],
+      'asClass' | 'classStructure' | 'instance'
+    >;
+  };
 }): Map<string, ClassNameEntry> => {
   const classNames = new Map<string, ClassNameEntry>();
 
@@ -94,7 +101,7 @@ export const operationClasses = ({
   let methodName: string | undefined;
   let classCandidates: Array<string> = [];
 
-  if (plugin.classStructure === 'auto' && operation.operationId) {
+  if (plugin.config.classStructure === 'auto' && operation.operationId) {
     classCandidates = operation.operationId.split(/[./]/).filter(Boolean);
     if (classCandidates.length > 1) {
       const methodCandidate = classCandidates.pop()!;
@@ -106,8 +113,8 @@ export const operationClasses = ({
     }
   }
 
-  const rootClasses = plugin.instance
-    ? [plugin.instance as string]
+  const rootClasses = plugin.config.instance
+    ? [plugin.config.instance as string]
     : (operation.tags ?? ['default']);
 
   for (const rootClass of rootClasses) {
@@ -375,7 +382,7 @@ export const operationStatements = ({
     }
   }
 
-  if (plugin.transformer === '@hey-api/transformers') {
+  if (plugin.config.transformer === '@hey-api/transformers') {
     const identifierTransformer = context
       .file({ id: transformersId })!
       .identifier({
@@ -411,10 +418,10 @@ export const operationStatements = ({
     });
   }
 
-  if (plugin.responseStyle === 'data') {
+  if (plugin.config.responseStyle === 'data') {
     requestOptions.push({
       key: 'responseStyle',
-      value: plugin.responseStyle,
+      value: plugin.config.responseStyle,
     });
   }
 
@@ -458,7 +465,7 @@ export const operationStatements = ({
   const responseType = identifierResponse.name || 'unknown';
   const errorType = identifierError.name || 'unknown';
 
-  const heyApiClient = plugin.client
+  const heyApiClient = plugin.config.client
     ? file.import({
         alias: '_heyApiClient',
         module: file.relativePathToFile({
@@ -477,7 +484,7 @@ export const operationStatements = ({
 
   let clientExpression: ts.Expression;
 
-  if (plugin.instance) {
+  if (plugin.config.instance) {
     clientExpression = compiler.binaryExpression({
       left: optionsClient,
       operator: '??',
@@ -508,8 +515,8 @@ export const operationStatements = ({
     types.push(responseType, errorType, 'ThrowOnError');
   }
 
-  if (plugin.responseStyle === 'data') {
-    types.push(compiler.stringLiteral({ text: plugin.responseStyle }));
+  if (plugin.config.responseStyle === 'data') {
+    types.push(compiler.stringLiteral({ text: plugin.config.responseStyle }));
   }
 
   return [

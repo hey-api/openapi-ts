@@ -237,11 +237,11 @@ const infiniteQueryOptionsFunctionIdentifier = ({
 
   let customName = '';
 
-  if (plugin.infiniteQueryOptionsNameBuilder) {
-    if (typeof plugin.infiniteQueryOptionsNameBuilder === 'function') {
-      customName = plugin.infiniteQueryOptionsNameBuilder(name);
+  if (plugin.config.infiniteQueryOptionsNameBuilder) {
+    if (typeof plugin.config.infiniteQueryOptionsNameBuilder === 'function') {
+      customName = plugin.config.infiniteQueryOptionsNameBuilder(name);
     } else {
-      customName = plugin.infiniteQueryOptionsNameBuilder.replace(
+      customName = plugin.config.infiniteQueryOptionsNameBuilder.replace(
         '{{name}}',
         name,
       );
@@ -265,7 +265,7 @@ export const createInfiniteQueryOptions = ({
   state: PluginState;
 }) => {
   if (
-    !plugin.infiniteQueryOptions ||
+    !plugin.config.infiniteQueryOptions ||
     !(['get', 'post'] as (typeof operation.method)[]).includes(operation.method)
   ) {
     return state;
@@ -431,7 +431,7 @@ export const createInfiniteQueryOptions = ({
     }),
   ];
 
-  if (context.config.plugins['@hey-api/sdk']?.responseStyle === 'data') {
+  if (context.config.plugins['@hey-api/sdk']?.config.responseStyle === 'data') {
     statements.push(
       compiler.returnVariable({
         expression: awaitSdkExpression,
@@ -451,7 +451,7 @@ export const createInfiniteQueryOptions = ({
   }
 
   const statement = compiler.constVariable({
-    comment: plugin.comments
+    comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
     exportConst: true,

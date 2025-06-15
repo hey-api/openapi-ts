@@ -139,7 +139,7 @@ export const createResponseValidator = ({
   operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
 }) => {
-  switch (plugin.validator) {
+  switch (plugin.config.validator) {
     case 'valibot':
       return valibotResponseValidator({ context, operation });
     case 'zod':

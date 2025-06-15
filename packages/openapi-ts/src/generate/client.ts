@@ -36,7 +36,7 @@ export const clientModulePath = ({
 }): string => {
   const client = getClientPlugin(config);
 
-  if ('bundle' in client && client.bundle) {
+  if ('bundle' in client.config && client.config.bundle) {
     return relativeModulePath({
       moduleOutput: 'client',
       sourceOutput,

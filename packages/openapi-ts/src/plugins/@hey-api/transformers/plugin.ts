@@ -378,14 +378,18 @@ const processSchemaType = ({
   }
 
   if (
-    plugin.dates &&
+    plugin.config.dates &&
     schema.type === 'string' &&
     (schema.format === 'date' || schema.format === 'date-time')
   ) {
     return dateExpressions({ dataExpression });
   }
 
-  if (plugin.bigInt && schema.type === 'integer' && schema.format === 'int64') {
+  if (
+    plugin.config.bigInt &&
+    schema.type === 'integer' &&
+    schema.format === 'int64'
+  ) {
     return bigIntExpressions({ dataExpression });
   }
 
@@ -460,7 +464,7 @@ const processSchemaType = ({
 // handles only response transformers for now
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: transformersId,
     path: plugin.output,
   });

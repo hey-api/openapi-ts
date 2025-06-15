@@ -22,7 +22,7 @@ const ensureValidSchemaOutput = (
 
   const result = { ...schema };
   Object.entries(result).forEach(([key, value]) => {
-    if (config.plugins['@hey-api/schemas']?.type === 'form') {
+    if (config.plugins['@hey-api/schemas']?.config.type === 'form') {
       if (
         [
           'description',
@@ -64,11 +64,11 @@ const toSchemaName = (
 
   const plugin = config.plugins['@hey-api/schemas'];
 
-  if (plugin?.nameBuilder) {
-    if (typeof plugin.nameBuilder === 'function') {
-      return plugin.nameBuilder(validName, schema);
+  if (plugin?.config.nameBuilder) {
+    if (typeof plugin.config.nameBuilder === 'function') {
+      return plugin.config.nameBuilder(validName, schema);
     } else {
-      return plugin.nameBuilder.replace('{{name}}', validName);
+      return plugin.config.nameBuilder.replace('{{name}}', validName);
     }
   }
 
@@ -84,7 +84,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
 
   files.schemas = new TypeScriptFile({
     dir: config.output.path,
-    exportFromIndex: plugin.exportFromIndex,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: 'schemas',
     name: 'schemas.ts',
   });

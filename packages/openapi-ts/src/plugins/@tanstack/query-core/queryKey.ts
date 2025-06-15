@@ -315,11 +315,14 @@ export const infiniteQueryKeyFunctionIdentifier = ({
 
   let customName = '';
 
-  if (plugin.infiniteQueryKeyNameBuilder) {
-    if (typeof plugin.infiniteQueryKeyNameBuilder === 'function') {
-      customName = plugin.infiniteQueryKeyNameBuilder(name);
+  if (plugin.config.infiniteQueryKeyNameBuilder) {
+    if (typeof plugin.config.infiniteQueryKeyNameBuilder === 'function') {
+      customName = plugin.config.infiniteQueryKeyNameBuilder(name);
     } else {
-      customName = plugin.infiniteQueryKeyNameBuilder.replace('{{name}}', name);
+      customName = plugin.config.infiniteQueryKeyNameBuilder.replace(
+        '{{name}}',
+        name,
+      );
     }
   }
 
@@ -343,11 +346,11 @@ export const queryKeyFunctionIdentifier = ({
 
   let customName = '';
 
-  if (plugin.queryKeyNameBuilder) {
-    if (typeof plugin.queryKeyNameBuilder === 'function') {
-      customName = plugin.queryKeyNameBuilder(name);
+  if (plugin.config.queryKeyNameBuilder) {
+    if (typeof plugin.config.queryKeyNameBuilder === 'function') {
+      customName = plugin.config.queryKeyNameBuilder(name);
     } else {
-      customName = plugin.queryKeyNameBuilder.replace('{{name}}', name);
+      customName = plugin.config.queryKeyNameBuilder.replace('{{name}}', name);
     }
   }
 
