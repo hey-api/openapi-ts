@@ -64,7 +64,7 @@ When we installed the client above, it created a [`client.gen.ts`](/openapi-ts/o
 
 ### `setConfig()`
 
-This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Axios configuration option to `setConfig()` (except for `auth`), and even your own Axios implementation.
+This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Axios configuration option to `setConfig()` (except for `auth`), and even your own [Axios](#custom-axios) implementation.
 
 ```js
 import { client } from 'client/client.gen';
@@ -205,6 +205,22 @@ const url = client.buildUrl<FooData>({
 });
 console.log(url); // prints '/foo/1?bar=baz'
 ```
+
+## Custom `axios`
+
+You can implement your own `axios` instance. This is useful if you need to extend the default `axios` instance with extra functionality, or replace it altogether.
+
+```js
+import { client } from 'client/client.gen';
+
+client.setConfig({
+  axios: () => {
+    /* custom `axios` instance */
+  },
+});
+```
+
+You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom instance to be.
 
 <!--@include: ../../examples.md-->
 <!--@include: ../../sponsors.md-->
