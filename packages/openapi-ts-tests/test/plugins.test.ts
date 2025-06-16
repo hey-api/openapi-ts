@@ -473,12 +473,12 @@ for (const version of versions) {
         name: any;
         output: string;
       }> = {
-        _dependencies: ['@hey-api/typescript'],
-        _handler: vi.fn(),
-        _handlerLegacy: vi.fn(),
         config: {
           customOption: true,
         },
+        dependencies: ['@hey-api/typescript'],
+        handler: vi.fn(),
+        handlerLegacy: vi.fn(),
         name: 'my-plugin',
         output: 'my-plugin',
       };
@@ -492,8 +492,8 @@ for (const version of versions) {
         plugins: [myPlugin, '@hey-api/client-fetch'],
       });
 
-      expect(myPlugin._handler).toHaveBeenCalled();
-      expect(myPlugin._handlerLegacy).not.toHaveBeenCalled();
+      expect(myPlugin.handler).toHaveBeenCalled();
+      expect(myPlugin.handlerLegacy).not.toHaveBeenCalled();
     });
 
     it('throws on invalid dependency', async () => {
@@ -501,10 +501,10 @@ for (const version of versions) {
         name: any;
         output: string;
       }> = {
-        _dependencies: ['@hey-api/oops'],
-        _handler: vi.fn(),
-        _handlerLegacy: vi.fn(),
         config: {},
+        dependencies: ['@hey-api/oops'],
+        handler: vi.fn(),
+        handlerLegacy: vi.fn(),
         name: 'my-plugin',
         output: 'my-plugin',
       };
@@ -520,8 +520,8 @@ for (const version of versions) {
         }),
       ).rejects.toThrowError(/unknown plugin/g);
 
-      expect(myPlugin._handler).not.toHaveBeenCalled();
-      expect(myPlugin._handlerLegacy).not.toHaveBeenCalled();
+      expect(myPlugin.handler).not.toHaveBeenCalled();
+      expect(myPlugin.handlerLegacy).not.toHaveBeenCalled();
     });
   });
 }

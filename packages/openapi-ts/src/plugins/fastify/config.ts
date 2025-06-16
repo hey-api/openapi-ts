@@ -4,12 +4,12 @@ import { handler } from './plugin';
 import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
-  _dependencies: ['@hey-api/typescript'],
-  _handler: handler,
-  _handlerLegacy: () => {},
   config: {
     exportFromIndex: false,
   },
+  dependencies: ['@hey-api/typescript'],
+  handler,
+  handlerLegacy: () => {},
   name: 'fastify',
   output: 'fastify',
 };

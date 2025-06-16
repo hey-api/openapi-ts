@@ -2,12 +2,25 @@ import path from 'node:path';
 
 import { HeyApiError } from '../error';
 import { TypeScriptFile } from '../generate/files';
+import { PluginInstance } from '../plugins/shared/utils/instance';
 import type { Config, StringCase } from '../types/config';
 import type { Files } from '../types/utils';
 import { resolveRef } from '../utils/ref';
 import type { IR } from './types';
 
-interface ContextFile {
+// Helper type to extract the original config type from Plugin.Config and ensure it satisfies BaseConfig
+type ExtractConfig<T> = T extends { config: infer C }
+  ? C & { name: string }
+  : never;
+
+// Helper type to map plugin names to their specific PluginInstance types
+type PluginInstanceMap = {
+  [K in keyof Config['plugins']]?: PluginInstance<
+    ExtractConfig<Config['plugins'][K]>
+  >;
+};
+
+export interface ContextFile {
   /**
    * Should the exports from this file be re-exported in the index barrel file?
    */
@@ -22,6 +35,7 @@ interface ContextFile {
   identifierCase?: StringCase;
   /**
    * Relative file path to the output path.
+   *
    * @example
    * 'bar/foo.ts'
    */
@@ -83,6 +97,12 @@ export class IRContext<Spec extends Record<string, any> = any> {
    * Intermediate representation model obtained from `spec`.
    */
   public ir: IR.Model;
+  /**
+   * A map of registered plugin instances, keyed by plugin name. Plugins are
+   * registered through the `registerPlugin` method and can be accessed by
+   * their configured name from the config.
+   */
+  public plugins: PluginInstanceMap = {};
   /**
    * Resolved specification from `input`.
    */
@@ -175,6 +195,36 @@ export class IRContext<Spec extends Record<string, any> = any> {
     return this.files[id];
   }
 
+  /**
+   * Registers a new plugin to the global context.
+   *
+   * @param name Plugin name.
+   * @returns Registered plugin instance.
+   */
+  private registerPlugin(name: keyof Config['plugins']): PluginInstance {
+    const plugin = this.config.plugins[name]!;
+    const instance = new PluginInstance({
+      config: plugin.config,
+      context: this as any,
+      dependencies: plugin.dependencies ?? [],
+      handler: plugin.handler,
+      name: plugin.name,
+      output: plugin.output!,
+    });
+    this.plugins[instance.name] = instance;
+    return instance;
+  }
+
+  /**
+   * Generator that iterates through plugin order and registers each plugin.
+   * Yields the registered plugin instance for each plugin name.
+   */
+  public *registerPlugins(): Generator<PluginInstance> {
+    for (const name of this.config.pluginOrder) {
+      yield this.registerPlugin(name);
+    }
+  }
+
   // TODO: parser - works the same as resolveRef, but for IR schemas.
   // for now, they map 1:1, but if they diverge (like with OpenAPI 2.0),
   // we will want to rewrite $refs at parse time, so they continue pointing
@@ -202,7 +252,7 @@ export class IRContext<Spec extends Record<string, any> = any> {
   public subscribe<T extends keyof Events>(
     event: T,
     callbackFn: Events[T],
-    pluginName?: string,
+    pluginName: string,
   ): void {
     if (!this.listeners[event]) {
       this.listeners[event] = [];

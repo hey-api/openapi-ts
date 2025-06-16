@@ -3,12 +3,12 @@ import type { Plugin } from '../../types';
 import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
-  _handler: () => {},
-  _handlerLegacy: () => {},
-  _tags: ['client'],
   config: {},
+  handler: () => {},
+  handlerLegacy: () => {},
   name: 'legacy/axios',
   output: 'client',
+  tags: ['client'],
 };
 
 /**

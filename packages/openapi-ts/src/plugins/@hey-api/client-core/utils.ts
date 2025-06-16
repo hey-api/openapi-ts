@@ -21,7 +21,7 @@ export const getClientPlugin = (
 ): Required<Plugins>[PluginClientNames] => {
   for (const name of config.pluginOrder) {
     const plugin = config.plugins[name];
-    if (plugin?._tags?.includes('client')) {
+    if (plugin?.tags?.includes('client')) {
       return plugin as Required<Plugins>[PluginClientNames];
     }
   }

@@ -4,16 +4,16 @@ import { clientId } from '../client-core/utils';
 import { typesId } from '../typescript/ref';
 import type { PluginHandler } from './types';
 
-export const createClientConfigType: PluginHandler = ({ context }) => {
-  const file = context.file({ id: clientId })!;
+export const createClientConfigType: PluginHandler = ({ plugin }) => {
+  const file = plugin.context.file({ id: clientId })!;
 
   const clientModule = clientModulePath({
-    config: context.config,
+    config: plugin.context.config,
     sourceOutput: file.nameWithoutExtension(),
   });
   const clientOptions = file.import({
     asType: true,
-    module: file.relativePathToFile({ context, id: typesId }),
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
     name: 'ClientOptions',
   });
   const configType = file.import({

@@ -1145,9 +1145,8 @@ const schemaToZodSchema = ({
   return expression!;
 };
 
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  const file = context.createFile({
-    exportFromIndex: plugin.config.exportFromIndex,
+export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+  const file = plugin.createFile({
     id: zodId,
     identifierCase: 'camelCase',
     path: plugin.output,
@@ -1158,21 +1157,21 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     name: 'z',
   });
 
-  context.subscribe('operation', ({ operation }) => {
+  plugin.subscribe('operation', ({ operation }) => {
     const result: Result = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
     };
 
     operationToZodSchema({
-      context,
+      context: plugin.context,
       operation,
       plugin,
       result,
     });
   });
 
-  context.subscribe('parameter', ({ $ref, parameter }) => {
+  plugin.subscribe('parameter', ({ $ref, parameter }) => {
     const result: Result = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
@@ -1180,14 +1179,14 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
     schemaToZodSchema({
       $ref,
-      context,
+      context: plugin.context,
       plugin,
       result,
       schema: parameter.schema,
     });
   });
 
-  context.subscribe('requestBody', ({ $ref, requestBody }) => {
+  plugin.subscribe('requestBody', ({ $ref, requestBody }) => {
     const result: Result = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
@@ -1195,14 +1194,14 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
     schemaToZodSchema({
       $ref,
-      context,
+      context: plugin.context,
       plugin,
       result,
       schema: requestBody.schema,
     });
   });
 
-  context.subscribe('schema', ({ $ref, schema }) => {
+  plugin.subscribe('schema', ({ $ref, schema }) => {
     const result: Result = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
@@ -1210,7 +1209,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
     schemaToZodSchema({
       $ref,
-      context,
+      context: plugin.context,
       plugin,
       result,
       schema,

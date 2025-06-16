@@ -110,30 +110,30 @@ const getPluginsConfig = ({
     }
 
     const plugin = {
-      _dependencies: [],
       ...defaultPlugin,
       ...userPlugin,
       config: {
         ...defaultPlugin?.config,
         ...userPlugin?.config,
       },
+      dependencies: new Set([
+        ...(defaultPlugin?.dependencies || []),
+        ...(userPlugin?.dependencies || []),
+      ]),
     };
 
-    if (plugin._infer) {
+    if (plugin.resolveConfig) {
       const context: PluginContext = {
-        ensureDependency: (dependency) => {
-          if (!plugin._dependencies.includes(dependency)) {
-            plugin._dependencies = [...plugin._dependencies, dependency];
-          }
-        },
-        pluginByTag: ({ defaultPlugin, errorMessage, tag }) => {
+        pluginByTag: (tag, props = {}) => {
+          const { defaultPlugin, errorMessage } = props;
+
           for (const userPlugin of userPlugins) {
             const defaultConfig =
               defaultPluginConfigs[userPlugin as PluginNames] ||
               userPluginsConfig[userPlugin as PluginNames];
             if (
               defaultConfig &&
-              defaultConfig._tags?.includes(tag) &&
+              defaultConfig.tags?.includes(tag) &&
               userPlugin !== name
             ) {
               return userPlugin as any;
@@ -146,7 +146,7 @@ const getPluginsConfig = ({
               userPluginsConfig[defaultPlugin as PluginNames];
             if (
               defaultConfig &&
-              defaultConfig._tags?.includes(tag) &&
+              defaultConfig.tags?.includes(tag) &&
               defaultPlugin !== name
             ) {
               return defaultPlugin;
@@ -160,10 +160,10 @@ const getPluginsConfig = ({
         },
       };
       // @ts-expect-error
-      plugin._infer(plugin, context);
+      plugin.resolveConfig(plugin, context);
     }
 
-    for (const dependency of plugin._dependencies) {
+    for (const dependency of plugin.dependencies) {
       dfs(dependency);
     }
 
@@ -213,7 +213,7 @@ const isPluginClient = (plugin: Required<UserConfig>['plugins'][number]) => {
     plugin.name.startsWith('@hey-api/client') ||
     plugin.name.startsWith('legacy/') ||
     // @ts-expect-error
-    (plugin._tags && plugin._tags.includes('client'))
+    (plugin.tags && plugin.tags.includes('client'))
   );
 };
 
@@ -250,7 +250,7 @@ const getPlugins = (
 
       if (pluginName) {
         // @ts-expect-error
-        if (plugin._handler) {
+        if (plugin.handler) {
           // @ts-expect-error
           userPluginsConfig[pluginName] = plugin;
         } else {
