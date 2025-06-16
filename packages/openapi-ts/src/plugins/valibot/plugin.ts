@@ -1162,9 +1162,8 @@ const schemaToValibotSchema = ({
   return pipes;
 };
 
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  const file = context.createFile({
-    exportFromIndex: plugin.config.exportFromIndex,
+export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+  const file = plugin.createFile({
     id: valibotId,
     identifierCase: 'camelCase',
     path: plugin.output,
@@ -1176,21 +1175,21 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     name: '*',
   });
 
-  context.subscribe('operation', ({ operation }) => {
+  plugin.subscribe('operation', ({ operation }) => {
     const result: Result = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
     };
 
     operationToValibotSchema({
-      context,
+      context: plugin.context,
       operation,
       plugin,
       result,
     });
   });
 
-  context.subscribe('parameter', ({ $ref, parameter }) => {
+  plugin.subscribe('parameter', ({ $ref, parameter }) => {
     const result: Result = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
@@ -1198,14 +1197,14 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
     schemaToValibotSchema({
       $ref,
-      context,
+      context: plugin.context,
       plugin,
       result,
       schema: parameter.schema,
     });
   });
 
-  context.subscribe('requestBody', ({ $ref, requestBody }) => {
+  plugin.subscribe('requestBody', ({ $ref, requestBody }) => {
     const result: Result = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
@@ -1213,14 +1212,14 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
     schemaToValibotSchema({
       $ref,
-      context,
+      context: plugin.context,
       plugin,
       result,
       schema: requestBody.schema,
     });
   });
 
-  context.subscribe('schema', ({ $ref, schema }) => {
+  plugin.subscribe('schema', ({ $ref, schema }) => {
     const result: Result = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
@@ -1228,7 +1227,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
     schemaToValibotSchema({
       $ref,
-      context,
+      context: plugin.context,
       plugin,
       result,
       schema,

@@ -1,12 +1,7 @@
-import type { IR } from '../ir/types';
 import type { OpenApi as LegacyOpenApi } from '../openApi';
-import type { OpenApi } from '../openApi/types';
 import type { Client as LegacyClient } from '../types/client';
 import type { Files } from '../types/utils';
-
-type OmitUnderscoreKeys<T> = {
-  [K in keyof T as K extends `_${string}` ? never : K]: T[K];
-};
+import type { PluginInstance } from './shared/utils/instance';
 
 export type PluginClientNames =
   | '@hey-api/client-axios'
@@ -40,12 +35,13 @@ export type AnyPluginName = PluginNames | (string & {});
 type PluginTag = 'client' | 'transformer' | 'validator';
 
 export interface PluginContext {
-  ensureDependency: (name: PluginNames) => void;
-  pluginByTag: <T extends AnyPluginName | boolean = AnyPluginName>(props: {
-    defaultPlugin?: Exclude<T, boolean>;
-    errorMessage?: string;
-    tag: PluginTag;
-  }) => Exclude<T, boolean> | undefined;
+  pluginByTag: <T extends AnyPluginName | boolean = AnyPluginName>(
+    tag: PluginTag,
+    props?: {
+      defaultPlugin?: Exclude<T, boolean>;
+      errorMessage?: string;
+    },
+  ) => Exclude<T, boolean> | undefined;
 }
 
 export interface BaseConfig {
@@ -63,18 +59,23 @@ interface Meta<Config extends BaseConfig> {
    * Dependency plugins will be always processed, regardless of whether user
    * explicitly defines them in their `plugins` config.
    */
-  _dependencies?: ReadonlyArray<AnyPluginName>;
+  dependencies?: ReadonlyArray<AnyPluginName>;
   /**
-   * Allows overriding config before it's sent to the parser. An example is
-   * defining `validator` as `true` and the plugin figures out which plugin
+   * Resolves static configuration values into their runtime equivalents. For
+   * example, when `validator` is set to `true`, it figures out which plugin
    * should be used for validation.
    */
-  _infer?: (config: Plugin.Config<Config>, context: PluginContext) => void;
+  resolveConfig?: (
+    config: Omit<Plugin.Config<Config>, 'dependencies'> & {
+      dependencies: Set<AnyPluginName>;
+    },
+    context: PluginContext,
+  ) => void;
   /**
-   * Optional tags can be used to help with deciding plugin order and inferring
+   * Optional tags can be used to help with deciding plugin order and resolving
    * plugin configuration options.
    */
-  _tags?: ReadonlyArray<PluginTag>;
+  tags?: ReadonlyArray<PluginTag>;
 }
 
 /**
@@ -86,9 +87,17 @@ export namespace Plugin {
     'name' | 'output'
   > &
     Meta<Config> & {
-      _handler: Plugin.Handler<Config>;
-      _handlerLegacy: Plugin.LegacyHandler<Config>;
       config: Omit<Config, 'name' | 'output'>;
+      handler: Plugin.Handler<
+        Omit<Config, 'name'> & {
+          name: any;
+        }
+      >;
+      handlerLegacy: Plugin.LegacyHandler<
+        Omit<Config, 'name'> & {
+          name: any;
+        }
+      >;
     };
 
   /** @deprecated - use `definePluginConfig()` instead */
@@ -108,14 +117,10 @@ export namespace Plugin {
    * Plugin implementation for experimental parser.
    */
   export type Handler<Config extends BaseConfig, ReturnType = void> = (args: {
-    context: IR.Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
     plugin: Plugin.Instance<Config>;
   }) => ReturnType;
 
-  export type Instance<Config extends BaseConfig> = OmitUnderscoreKeys<
-    Plugin.Config<Config>
-  > &
-    Pick<Required<BaseConfig>, 'name' | 'output'>;
+  export type Instance<Config extends BaseConfig> = PluginInstance<Config>;
 
   /**
    * Plugin implementation for legacy parser.

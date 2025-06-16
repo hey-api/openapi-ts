@@ -9,9 +9,8 @@ import { createMutationOptions } from './mutationOptions';
 import { createQueryOptions } from './queryOptions';
 import type { PluginHandler, PluginState } from './types';
 
-export const handler: PluginHandler = ({ context, plugin }) => {
-  const file = context.createFile({
-    exportFromIndex: plugin.config.exportFromIndex,
+export const handler: PluginHandler = ({ plugin }) => {
+  const file = plugin.createFile({
     id: plugin.name,
     path: plugin.output,
   });
@@ -26,19 +25,23 @@ export const handler: PluginHandler = ({ context, plugin }) => {
     typeInfiniteData: undefined!,
   };
 
-  context.subscribe('before', () => {
+  plugin.subscribe('before', () => {
     file.import({
       ...clientApi.Options,
-      module: file.relativePathToFile({ context, id: sdkId }),
+      module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
     });
   });
 
-  context.subscribe('operation', ({ operation }) => {
+  plugin.subscribe('operation', ({ operation }) => {
     state.hasUsedQueryFn = false;
 
-    const sdk = context.config.plugins['@hey-api/sdk'];
-    const classes = sdk?.config.asClass
-      ? operationClasses({ context, operation, plugin: sdk })
+    const sdkPlugin = plugin.getPlugin('@hey-api/sdk');
+    const classes = sdkPlugin?.config.asClass
+      ? operationClasses({
+          context: plugin.context,
+          operation,
+          plugin: sdkPlugin,
+        })
       : undefined;
     const entry = classes ? classes.values().next().value : undefined;
     const queryFn =
@@ -58,7 +61,7 @@ export const handler: PluginHandler = ({ context, plugin }) => {
             ].filter(Boolean)
           : [
               serviceFunctionIdentifier({
-                config: context.config,
+                config: plugin.context.config,
                 handleIllegal: true,
                 id: operation.id,
                 operation,
@@ -67,7 +70,7 @@ export const handler: PluginHandler = ({ context, plugin }) => {
       ).join('.');
 
     createQueryOptions({
-      context,
+      context: plugin.context,
       operation,
       plugin,
       queryFn,
@@ -75,7 +78,7 @@ export const handler: PluginHandler = ({ context, plugin }) => {
     });
 
     createInfiniteQueryOptions({
-      context,
+      context: plugin.context,
       operation,
       plugin,
       queryFn,
@@ -83,7 +86,7 @@ export const handler: PluginHandler = ({ context, plugin }) => {
     });
 
     createMutationOptions({
-      context,
+      context: plugin.context,
       operation,
       plugin,
       queryFn,
@@ -92,17 +95,20 @@ export const handler: PluginHandler = ({ context, plugin }) => {
 
     if (state.hasUsedQueryFn) {
       file.import({
-        module: file.relativePathToFile({ context, id: sdkId }),
+        module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
         name: queryFn.split('.')[0]!,
       });
     }
   });
 
-  context.subscribe('after', () => {
+  plugin.subscribe('after', () => {
     if (state.hasQueries || state.hasInfiniteQueries) {
       file.import({
         alias: '_heyApiClient',
-        module: file.relativePathToFile({ context, id: clientId }),
+        module: file.relativePathToFile({
+          context: plugin.context,
+          id: clientId,
+        }),
         name: 'client',
       });
     }

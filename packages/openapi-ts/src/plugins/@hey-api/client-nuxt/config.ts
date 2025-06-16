@@ -6,8 +6,8 @@ import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
   ...clientDefaultMeta,
-  _handler: clientPluginHandler,
   config: clientDefaultConfig,
+  handler: clientPluginHandler,
   name: '@hey-api/client-nuxt',
 };
 

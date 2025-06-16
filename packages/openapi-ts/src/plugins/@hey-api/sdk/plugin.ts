@@ -2,7 +2,6 @@ import ts from 'typescript';
 
 import { compiler } from '../../../compiler';
 import { clientApi, clientModulePath } from '../../../generate/client';
-import type { IR } from '../../../ir/types';
 import { stringCase } from '../../../utils/stringCase';
 import {
   createOperationComment,
@@ -110,16 +109,10 @@ interface SdkClassEntry {
   root: boolean;
 }
 
-const generateClassSdk = ({
-  context,
-  plugin,
-}: {
-  context: IR.Context;
-  plugin: Plugin.Instance<Config>;
-}) => {
-  const client = getClientPlugin(context.config);
+const generateClassSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
+  const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
-  const file = context.file({ id: sdkId })!;
+  const file = plugin.context.file({ id: sdkId })!;
   const sdkClasses = new Map<string, SdkClassEntry>();
   /**
    * Track unique added classes.
@@ -130,19 +123,23 @@ const generateClassSdk = ({
     ? createClientClassNodes({ plugin })
     : [];
 
-  context.subscribe('operation', ({ operation }) => {
+  plugin.subscribe('operation', ({ operation }) => {
     const isRequiredOptions = isOperationOptionsRequired({
-      context,
+      context: plugin.context,
       operation,
     });
     const identifierResponse = importIdentifier({
-      context,
+      context: plugin.context,
       file,
       operation,
       type: 'response',
     });
 
-    const classes = operationClasses({ context, operation, plugin });
+    const classes = operationClasses({
+      context: plugin.context,
+      operation,
+      plugin,
+    });
 
     for (const entry of classes.values()) {
       entry.path.forEach((currentClassName, index) => {
@@ -186,7 +183,7 @@ const generateClassSdk = ({
               isRequired: isRequiredOptions,
               name: 'options',
               type: operationOptionsType({
-                context,
+                context: plugin.context,
                 file,
                 operation,
                 throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
@@ -195,7 +192,7 @@ const generateClassSdk = ({
           ],
           returnType: undefined,
           statements: operationStatements({
-            context,
+            context: plugin.context,
             isRequiredOptions,
             operation,
             plugin,
@@ -305,7 +302,7 @@ const generateClassSdk = ({
     generatedClasses.add(currentClass.className);
   };
 
-  context.subscribe('after', () => {
+  plugin.subscribe('after', () => {
     if (clientClassNodes.length) {
       const node = compiler.classDeclaration({
         exportClass: false,
@@ -321,24 +318,18 @@ const generateClassSdk = ({
   });
 };
 
-const generateFlatSdk = ({
-  context,
-  plugin,
-}: {
-  context: IR.Context;
-  plugin: Plugin.Instance<Config>;
-}) => {
-  const client = getClientPlugin(context.config);
+const generateFlatSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
+  const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
-  const file = context.file({ id: sdkId })!;
+  const file = plugin.context.file({ id: sdkId })!;
 
-  context.subscribe('operation', ({ operation }) => {
+  plugin.subscribe('operation', ({ operation }) => {
     const isRequiredOptions = isOperationOptionsRequired({
-      context,
+      context: plugin.context,
       operation,
     });
     const identifierResponse = importIdentifier({
-      context,
+      context: plugin.context,
       file,
       operation,
       type: 'response',
@@ -352,7 +343,7 @@ const generateFlatSdk = ({
             isRequired: isRequiredOptions,
             name: 'options',
             type: operationOptionsType({
-              context,
+              context: plugin.context,
               file,
               operation,
               throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
@@ -361,7 +352,7 @@ const generateFlatSdk = ({
         ],
         returnType: undefined,
         statements: operationStatements({
-          context,
+          context: plugin.context,
           isRequiredOptions,
           operation,
           plugin,
@@ -399,7 +390,7 @@ const generateFlatSdk = ({
             ],
       }),
       name: serviceFunctionIdentifier({
-        config: context.config,
+        config: plugin.context.config,
         handleIllegal: true,
         id: operation.id,
         operation,
@@ -409,16 +400,15 @@ const generateFlatSdk = ({
   });
 };
 
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  const file = context.createFile({
-    exportFromIndex: plugin.config.exportFromIndex,
+export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+  const file = plugin.createFile({
     id: sdkId,
     path: plugin.output,
   });
 
   // import required packages and core files
   const clientModule = clientModulePath({
-    config: context.config,
+    config: plugin.context.config,
     sourceOutput: file.nameWithoutExtension(),
   });
   const clientOptions = file.import({
@@ -427,7 +417,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     module: clientModule,
   });
 
-  const client = getClientPlugin(context.config);
+  const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   if (isNuxtClient) {
     file.import({
@@ -439,13 +429,13 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
   createTypeOptions({
     clientOptions,
-    context,
+    context: plugin.context,
     plugin,
   });
 
   if (plugin.config.asClass) {
-    generateClassSdk({ context, plugin });
+    generateClassSdk({ plugin });
   } else {
-    generateFlatSdk({ context, plugin });
+    generateFlatSdk({ plugin });
   }
 };

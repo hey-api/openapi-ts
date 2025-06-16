@@ -6,7 +6,6 @@ import type { PluginHandler } from './types';
 import { clientId, getClientBaseUrlKey } from './utils';
 
 const resolveBaseUrlString: PluginHandler<string | undefined> = ({
-  context,
   plugin,
 }) => {
   const { baseUrl } = plugin.config;
@@ -19,7 +18,7 @@ const resolveBaseUrlString: PluginHandler<string | undefined> = ({
     return baseUrl;
   }
 
-  const { servers } = context.ir;
+  const { servers } = plugin.context.ir;
 
   if (!servers) {
     return;
@@ -28,11 +27,11 @@ const resolveBaseUrlString: PluginHandler<string | undefined> = ({
   return servers[typeof baseUrl === 'number' ? baseUrl : 0]?.url;
 };
 
-export const createClient: PluginHandler = ({ context, plugin }) => {
-  const file = context.file({ id: clientId })!;
+export const createClient: PluginHandler = ({ plugin }) => {
+  const file = plugin.context.file({ id: clientId })!;
 
   const clientModule = clientModulePath({
-    config: context.config,
+    config: plugin.context.config,
     sourceOutput: file.nameWithoutExtension(),
   });
   const createClient = file.import({
@@ -45,14 +44,14 @@ export const createClient: PluginHandler = ({ context, plugin }) => {
   });
   const clientOptions = file.import({
     asType: true,
-    module: file.relativePathToFile({ context, id: typesId }),
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
     name: 'ClientOptions',
   });
 
   const createClientConfig = plugin.config.runtimeConfigPath
     ? file.import({
         module: file.relativePathToFile({
-          context,
+          context: plugin.context,
           id: plugin.config.runtimeConfigPath,
         }),
         name: 'createClientConfig',
@@ -61,12 +60,12 @@ export const createClient: PluginHandler = ({ context, plugin }) => {
 
   const defaultValues: Array<unknown> = [];
 
-  const resolvedBaseUrl = resolveBaseUrlString({ context, plugin });
+  const resolvedBaseUrl = resolveBaseUrlString({ plugin });
   if (resolvedBaseUrl) {
     const url = parseUrl(resolvedBaseUrl);
     if (url.protocol && url.host && !resolvedBaseUrl.includes('{')) {
       defaultValues.push({
-        key: getClientBaseUrlKey(context.config),
+        key: getClientBaseUrlKey(plugin.context.config),
         value: resolvedBaseUrl,
       });
     } else if (resolvedBaseUrl !== '/' && resolvedBaseUrl.startsWith('/')) {
@@ -74,7 +73,7 @@ export const createClient: PluginHandler = ({ context, plugin }) => {
         ? resolvedBaseUrl.slice(0, -1)
         : resolvedBaseUrl;
       defaultValues.push({
-        key: getClientBaseUrlKey(context.config),
+        key: getClientBaseUrlKey(plugin.context.config),
         value: baseUrl,
       });
     }
