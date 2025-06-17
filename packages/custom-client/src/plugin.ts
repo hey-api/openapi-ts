@@ -16,12 +16,12 @@ export interface Config extends Client.Config {
 
 export const defaultConfig: Plugin.Config<Config> = {
   ...clientDefaultMeta,
-  _handler: clientPluginHandler,
-  _handlerLegacy: () => {},
   config: {
     ...clientDefaultConfig,
     bundle: false,
   },
+  handler: clientPluginHandler,
+  handlerLegacy: () => {},
   name: '@hey-api/custom-client',
 };
 

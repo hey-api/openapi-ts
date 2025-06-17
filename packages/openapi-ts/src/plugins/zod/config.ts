@@ -4,16 +4,16 @@ import { handler } from './plugin';
 import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
-  _handler: handler,
-  _handlerLegacy: () => {},
-  _tags: ['validator'],
   config: {
     comments: true,
     exportFromIndex: false,
     metadata: false,
   },
+  handler,
+  handlerLegacy: () => {},
   name: 'zod',
   output: 'zod',
+  tags: ['validator'],
 };
 
 /**

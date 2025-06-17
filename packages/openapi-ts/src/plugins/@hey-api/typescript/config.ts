@@ -5,8 +5,6 @@ import { handlerLegacy } from './plugin-legacy';
 import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
-  _handler: handler,
-  _handlerLegacy: handlerLegacy,
   config: {
     enums: false,
     enumsCase: 'SCREAMING_SNAKE_CASE',
@@ -20,6 +18,8 @@ export const defaultConfig: Plugin.Config<Config> = {
     tree: false,
     writableNameBuilder: '{{name}}Writable',
   },
+  handler,
+  handlerLegacy,
   name: '@hey-api/typescript',
   output: 'types',
 };
