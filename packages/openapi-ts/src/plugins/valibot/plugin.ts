@@ -542,7 +542,7 @@ const stringTypeToValibotSchema = ({
           compiler.callExpression({
             functionName: compiler.propertyAccessExpression({
               expression: identifiers.v,
-              name: identifiers.actions.isoDateTime,
+              name: identifiers.actions.isoTimestamp,
             }),
           }),
         );
