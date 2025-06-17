@@ -440,36 +440,35 @@ const schemasV3_1_X = ({
   }
 };
 
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  context.createFile({
-    exportFromIndex: plugin.config.exportFromIndex,
+export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+  plugin.createFile({
     id: schemasId,
     path: plugin.output,
   });
 
-  if ('swagger' in context.spec) {
+  if ('swagger' in plugin.context.spec) {
     schemasV2_0_X({
-      context: context as IR.Context<OpenApi.V2_0_X>,
+      context: plugin.context as IR.Context<OpenApi.V2_0_X>,
       plugin,
     });
     return;
   }
 
-  switch (context.spec.openapi) {
+  switch (plugin.context.spec.openapi) {
     case '3.0.0':
     case '3.0.1':
     case '3.0.2':
     case '3.0.3':
     case '3.0.4':
       schemasV3_0_X({
-        context: context as IR.Context<OpenApi.V3_0_X>,
+        context: plugin.context as IR.Context<OpenApi.V3_0_X>,
         plugin,
       });
       break;
     case '3.1.0':
     case '3.1.1':
       schemasV3_1_X({
-        context: context as IR.Context<OpenApi.V3_1_X>,
+        context: plugin.context as IR.Context<OpenApi.V3_1_X>,
         plugin,
       });
       break;

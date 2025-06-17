@@ -59,7 +59,7 @@ export interface Config {
 Reserved fields are prefixed with an underscore and are not exposed to the user.
 :::
 
-`config.ts` contains the runtime configuration for your plugin. It must implement the `Config` interface we created above and define `_handler()` and `_handlerLegacy()` functions from the `Plugin.Config` interface.
+`config.ts` contains the runtime configuration for your plugin. It must implement the `Config` interface we created above and define `handler()` and `handlerLegacy()` functions from the `Plugin.Config` interface.
 
 ::: code-group
 
@@ -70,12 +70,12 @@ import { handler } from './plugin';
 import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
-  _dependencies: ['@hey-api/typescript'],
-  _handler: handler,
-  _handlerLegacy: () => {},
   config: {
     myOption: false, // implements default value from types
   },
+  dependencies: ['@hey-api/typescript'],
+  handler,
+  handlerLegacy: () => {},
   name: 'my-plugin',
   output: 'my-plugin',
 };
@@ -101,7 +101,7 @@ Re-exporting your plugin from index file may result in broken output due to nami
 
 ## Handler
 
-Notice we defined `_handler` in our `config.ts` file. This method is responsible for generating the actual output. We recommend implementing it in `plugin.ts`.
+Notice we defined `handler` in our `config.ts` file. This method is responsible for generating the actual output. We recommend implementing it in `plugin.ts`.
 
 ::: code-group
 
@@ -118,19 +118,19 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     path: plugin.output,
   });
 
-  context.subscribe('before', () => {
+  plugin.subscribe('before', () => {
     // do something before parsing the input
   });
 
-  context.subscribe('operation', ({ operation }) => {
+  plugin.subscribe('operation', ({ operation }) => {
     // do something with the operation model
   });
 
-  context.subscribe('schema', ({ operation }) => {
+  plugin.subscribe('schema', ({ operation }) => {
     // do something with the schema model
   });
 
-  context.subscribe('after', () => {
+  plugin.subscribe('after', () => {
     // do something after parsing the input
   });
 
@@ -159,7 +159,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
 ### Legacy
 
-Notice we defined `_handlerLegacy` in our `config.ts` file. This method is responsible for generating the actual output when using the legacy parser. We do not recommend implementing this method unless you must use the legacy parser. You can use one of our [`plugin-legacy.ts`](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/%40hey-api/typescript/plugin-legacy.ts) files as an inspiration for potential implementation.
+Notice we defined `handlerLegacy` in our `config.ts` file. This method is responsible for generating the actual output when using the legacy parser. We do not recommend implementing this method unless you must use the legacy parser. You can use one of our [`plugin-legacy.ts`](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/%40hey-api/typescript/plugin-legacy.ts) files as an inspiration for potential implementation.
 
 ## Usage
 

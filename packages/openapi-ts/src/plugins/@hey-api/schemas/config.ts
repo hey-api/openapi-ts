@@ -5,13 +5,13 @@ import { handlerLegacy } from './plugin-legacy';
 import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
-  _handler: handler,
-  _handlerLegacy: handlerLegacy,
   config: {
     exportFromIndex: false,
     nameBuilder: (name) => `${name}Schema`,
     type: 'json',
   },
+  handler,
+  handlerLegacy,
   name: '@hey-api/schemas',
   output: 'schemas',
 };

@@ -6,6 +6,7 @@ import { client, openApi } from '../../../../generate/__tests__/mocks';
 import type { OpenApiV3Schema } from '../../../../openApi';
 import type { Files } from '../../../../types/utils';
 import { setConfig } from '../../../../utils/config';
+import { PluginInstance } from '../../../shared/utils/instance';
 import { handlerLegacy } from '../plugin-legacy';
 
 vi.mock('node:fs');
@@ -43,31 +44,31 @@ describe('generateLegacySchemas', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
           config: {},
+          handler: () => {},
+          handlerLegacy: () => {},
           name: '@hey-api/schemas',
         },
         '@hey-api/sdk': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
           config: {},
+          handler: () => {},
+          handlerLegacy: () => {},
           name: '@hey-api/sdk',
         },
         '@hey-api/typescript': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
           config: {
             enums: 'javascript',
           },
+          handler: () => {},
+          handlerLegacy: () => {},
           name: '@hey-api/typescript',
         },
         'legacy/fetch': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          _tags: ['client'],
           config: {},
+          handler: () => {},
+          handlerLegacy: () => {},
           name: 'legacy/fetch',
+          tags: ['client'],
         },
       },
       useOptions: true,
@@ -89,13 +90,16 @@ describe('generateLegacySchemas', () => {
       client,
       files,
       openApi,
-      plugin: {
+      plugin: new PluginInstance({
         config: {
           exportFromIndex: false,
         },
+        context: {} as any,
+        dependencies: [],
+        handler: () => {},
         name: '@hey-api/schemas',
         output: 'schemas',
-      },
+      }),
     });
 
     files.schemas!.write();
@@ -140,33 +144,33 @@ describe('generateLegacySchemas', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
           config: {
             nameBuilder: nameFn,
           },
+          handler: () => {},
+          handlerLegacy: () => {},
           name: '@hey-api/schemas',
         },
         '@hey-api/sdk': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
           config: {},
+          handler: () => {},
+          handlerLegacy: () => {},
           name: '@hey-api/sdk',
         },
         '@hey-api/typescript': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
           config: {
             enums: 'javascript',
           },
+          handler: () => {},
+          handlerLegacy: () => {},
           name: '@hey-api/typescript',
         },
         'legacy/fetch': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          _tags: ['client'],
           config: {},
+          handler: () => {},
+          handlerLegacy: () => {},
           name: 'legacy/fetch',
+          tags: ['client'],
         },
       },
       useOptions: true,
@@ -190,13 +194,16 @@ describe('generateLegacySchemas', () => {
       client,
       files,
       openApi,
-      plugin: {
+      plugin: new PluginInstance({
         config: {
           exportFromIndex: false,
         },
+        context: {} as any,
+        dependencies: [],
+        handler: () => {},
         name: '@hey-api/schemas',
         output: 'schemas',
-      },
+      }),
     });
 
     files.schemas!.write();
