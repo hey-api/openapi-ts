@@ -5,35 +5,47 @@ import { handlerLegacy } from './plugin-legacy';
 import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
-  _dependencies: ['@hey-api/typescript'],
-  _handler: handler,
-  _handlerLegacy: handlerLegacy,
-  _infer: (plugin, context) => {
+  config: {
+    asClass: false,
+    auth: true,
+    classStructure: 'auto',
+    client: true,
+    exportFromIndex: true,
+    instance: false,
+    operationId: true,
+    response: 'body',
+    responseStyle: 'fields',
+  },
+  dependencies: ['@hey-api/typescript'],
+  handler,
+  handlerLegacy,
+  name: '@hey-api/sdk',
+  output: 'sdk',
+  resolveConfig: (plugin, context) => {
     if (plugin.config.client) {
       if (typeof plugin.config.client === 'boolean') {
-        plugin.config.client = context.pluginByTag({
+        plugin.config.client = context.pluginByTag('client', {
           defaultPlugin: '@hey-api/client-fetch',
-          tag: 'client',
         });
       }
 
-      context.ensureDependency(plugin.config.client!);
+      plugin.dependencies.add(plugin.config.client!);
     }
 
     if (plugin.config.transformer) {
       if (typeof plugin.config.transformer === 'boolean') {
-        plugin.config.transformer = context.pluginByTag({ tag: 'transformer' });
+        plugin.config.transformer = context.pluginByTag('transformer');
       }
 
-      context.ensureDependency(plugin.config.transformer!);
+      plugin.dependencies.add(plugin.config.transformer!);
     }
 
     if (plugin.config.validator) {
       if (typeof plugin.config.validator === 'boolean') {
-        plugin.config.validator = context.pluginByTag({ tag: 'validator' });
+        plugin.config.validator = context.pluginByTag('validator');
       }
 
-      context.ensureDependency(plugin.config.validator!);
+      plugin.dependencies.add(plugin.config.validator!);
     }
 
     if (plugin.config.instance) {
@@ -49,19 +61,6 @@ export const defaultConfig: Plugin.Config<Config> = {
       plugin.config.responseStyle = 'fields';
     }
   },
-  config: {
-    asClass: false,
-    auth: true,
-    classStructure: 'auto',
-    client: true,
-    exportFromIndex: true,
-    instance: false,
-    operationId: true,
-    response: 'body',
-    responseStyle: 'fields',
-  },
-  name: '@hey-api/sdk',
-  output: 'sdk',
 };
 
 /**

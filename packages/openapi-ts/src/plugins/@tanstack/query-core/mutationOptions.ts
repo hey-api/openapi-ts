@@ -114,7 +114,7 @@ export const createMutationOptions = ({
 
   const statements: Array<ts.Statement> = [];
 
-  if (context.config.plugins['@hey-api/sdk']?.config.responseStyle === 'data') {
+  if (plugin.getPlugin('@hey-api/sdk')?.config.responseStyle === 'data') {
     statements.push(
       compiler.returnVariable({
         expression: awaitSdkExpression,

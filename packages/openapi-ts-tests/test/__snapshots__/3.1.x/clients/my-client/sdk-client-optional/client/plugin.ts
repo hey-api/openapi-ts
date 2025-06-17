@@ -16,8 +16,8 @@ export interface Config extends Client.Config {
 
 export const defaultConfig: Plugin.Config<Config> = {
   ...clientDefaultMeta,
-  _handler: clientPluginHandler,
   config: clientDefaultConfig,
+  handler: clientPluginHandler,
   name: __filename,
 };
 
