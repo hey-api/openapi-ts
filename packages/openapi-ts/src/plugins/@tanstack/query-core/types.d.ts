@@ -7,8 +7,8 @@ import type { Config as SvelteQueryConfig } from '../svelte-query';
 import type { Config as VueQueryConfig } from '../vue-query';
 
 export type PluginHandler = Plugin.Handler<
-  | ReactQueryConfig
   | AngularQueryConfig
+  | ReactQueryConfig
   | SolidQueryConfig
   | SvelteQueryConfig
   | VueQueryConfig

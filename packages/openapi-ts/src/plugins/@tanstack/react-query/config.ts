@@ -6,12 +6,10 @@ import { handlerLegacy } from '../query-core/plugin-legacy';
 import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
-  _dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
-  _handler: handler,
-  _handlerLegacy: handlerLegacy,
-  config: {
-    ...defaultTanStackQueryConfig,
-  },
+  config: defaultTanStackQueryConfig,
+  dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
+  handler,
+  handlerLegacy,
   name: '@tanstack/react-query',
   output: '@tanstack/react-query',
 };

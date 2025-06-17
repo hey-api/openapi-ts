@@ -96,7 +96,7 @@ export const generateLegacyOutput = async ({
       id: `legacy-unused-${plugin.name}`,
       name: `${outputParts[outputParts.length - 1]}.ts`,
     });
-    plugin._handlerLegacy({
+    plugin.handlerLegacy({
       client,
       files,
       openApi: spec,

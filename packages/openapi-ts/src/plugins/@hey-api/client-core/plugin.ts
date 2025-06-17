@@ -3,13 +3,12 @@ import { createClient } from './client';
 import { createClientConfigType } from './createClientConfig';
 import type { PluginHandler } from './types';
 
-export const clientPluginHandler: PluginHandler = ({ context, plugin }) => {
-  context.createFile({
-    exportFromIndex: plugin.config.exportFromIndex,
+export const clientPluginHandler: PluginHandler = ({ plugin }) => {
+  plugin.createFile({
     id: clientId,
     path: plugin.output,
   });
 
-  createClientConfigType({ context, plugin });
-  createClient({ context, plugin });
+  createClientConfigType({ plugin });
+  createClient({ plugin });
 };

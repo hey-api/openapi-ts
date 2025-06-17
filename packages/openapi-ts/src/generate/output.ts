@@ -3,7 +3,6 @@ import path from 'node:path';
 import ts from 'typescript';
 
 import { compiler } from '../compiler';
-import type { Events } from '../ir/context';
 import { parseIR } from '../ir/parser';
 import type { IR } from '../ir/types';
 import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
@@ -33,20 +32,8 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
     });
   }
 
-  for (const name of context.config.pluginOrder) {
-    const plugin = context.config.plugins[name]!;
-    const _subscribe = context.subscribe.bind(context);
-    context.subscribe = <T extends keyof Events>(
-      event: T,
-      callbackFn: Events[T],
-    ): void => {
-      _subscribe(event, callbackFn, name);
-    };
-    plugin._handler({
-      context,
-      plugin: plugin as never,
-    });
-    context.subscribe = _subscribe;
+  for (const plugin of context.registerPlugins()) {
+    plugin.run();
   }
 
   await parseIR({ context });

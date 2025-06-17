@@ -314,13 +314,12 @@ export const createInfiniteQueryOptions = ({
 
   const typeQueryKey = `${queryKeyName}<${typeData}>`;
   const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript');
   // TODO: parser - this is a bit clunky, need to compile type to string because
   // `compiler.returnFunctionCall()` accepts only strings, should be cleaned up
   const type = schemaToType({
     context,
-    plugin: context.config.plugins['@hey-api/typescript'] as Parameters<
-      typeof schemaToType
-    >[0]['plugin'],
+    plugin: pluginTypeScript as Parameters<typeof schemaToType>[0]['plugin'],
     schema: pagination.schema,
     state: undefined,
   });
@@ -431,7 +430,7 @@ export const createInfiniteQueryOptions = ({
     }),
   ];
 
-  if (context.config.plugins['@hey-api/sdk']?.config.responseStyle === 'data') {
+  if (plugin.getPlugin('@hey-api/sdk')?.config.responseStyle === 'data') {
     statements.push(
       compiler.returnVariable({
         expression: awaitSdkExpression,

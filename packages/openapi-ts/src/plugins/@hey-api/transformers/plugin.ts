@@ -462,14 +462,13 @@ const processSchemaType = ({
 };
 
 // handles only response transformers for now
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  const file = context.createFile({
-    exportFromIndex: plugin.config.exportFromIndex,
+export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+  const file = plugin.createFile({
     id: transformersId,
     path: plugin.output,
   });
 
-  context.subscribe('operation', ({ operation }) => {
+  plugin.subscribe('operation', ({ operation }) => {
     const { response } = operationResponsesMap(operation);
 
     if (!response) {
@@ -477,7 +476,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     }
 
     if (response.items && response.items.length > 1) {
-      if (context.config.logs.level === 'debug') {
+      if (plugin.context.config.logs.level === 'debug') {
         console.warn(
           `❗️ Transformers warning: route ${createOperationKey(operation)} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
         );
@@ -485,14 +484,16 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       return;
     }
 
-    const identifierResponse = context.file({ id: typesId })!.identifier({
-      $ref: operationIrRef({
-        config: context.config,
-        id: operation.id,
-        type: 'response',
-      }),
-      namespace: 'type',
-    });
+    const identifierResponse = plugin.context
+      .file({ id: typesId })!
+      .identifier({
+        $ref: operationIrRef({
+          config: plugin.context.config,
+          id: operation.id,
+          type: 'response',
+        }),
+        namespace: 'type',
+      });
     if (!identifierResponse.name) {
       return;
     }
@@ -508,14 +509,17 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
     // TODO: parser - consider handling simple string response which is also a date
     const nodes = schemaResponseTransformerNodes({
-      context,
+      context: plugin.context,
       plugin,
       schema: response,
     });
     if (nodes.length) {
       file.import({
         asType: true,
-        module: file.relativePathToFile({ context, id: typesId }),
+        module: file.relativePathToFile({
+          context: plugin.context,
+          id: typesId,
+        }),
         name: identifierResponse.name,
       });
       const responseTransformerNode = compiler.constVariable({

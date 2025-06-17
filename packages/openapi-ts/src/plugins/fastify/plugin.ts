@@ -207,23 +207,25 @@ const operationToRouteHandler = ({
   return routeHandler;
 };
 
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  const file = context.createFile({
-    exportFromIndex: plugin.config.exportFromIndex,
+export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+  const file = plugin.createFile({
     id: fastifyId,
     path: plugin.output,
   });
 
   const routeHandlers: Array<Property> = [];
 
-  context.subscribe('operation', ({ operation }) => {
-    const routeHandler = operationToRouteHandler({ context, operation });
+  plugin.subscribe('operation', ({ operation }) => {
+    const routeHandler = operationToRouteHandler({
+      context: plugin.context,
+      operation,
+    });
     if (routeHandler) {
       routeHandlers.push(routeHandler);
     }
   });
 
-  context.subscribe('after', () => {
+  plugin.subscribe('after', () => {
     const identifier = file.identifier({
       $ref: 'RouteHandlers',
       create: true,

@@ -524,11 +524,11 @@ const enumTypeToIdentifier = ({
 };
 
 const numberTypeToIdentifier = ({
-  context,
+  plugin,
   schema,
 }: {
-  context: IR.Context;
   namespace: Array<ts.Statement>;
+  plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'integer' | 'number'>;
 }): ts.TypeNode => {
   if (schema.const !== undefined) {
@@ -539,7 +539,7 @@ const numberTypeToIdentifier = ({
 
   if (schema.type === 'integer' && schema.format === 'int64') {
     // TODO: parser - add ability to skip type transformers
-    if (context.config.plugins['@hey-api/transformers']?.config.bigInt) {
+    if (plugin.getPlugin('@hey-api/transformers')?.config.bigInt) {
       return compiler.typeReferenceNode({ typeName: 'bigint' });
     }
   }
@@ -666,11 +666,11 @@ const objectTypeToIdentifier = ({
 };
 
 const stringTypeToIdentifier = ({
-  context,
+  plugin,
   schema,
 }: {
-  context: IR.Context;
   namespace: Array<ts.Statement>;
+  plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'string'>;
 }): ts.TypeNode => {
   if (schema.const !== undefined) {
@@ -695,7 +695,7 @@ const stringTypeToIdentifier = ({
 
     if (schema.format === 'date-time' || schema.format === 'date') {
       // TODO: parser - add ability to skip type transformers
-      if (context.config.plugins['@hey-api/transformers']?.config.dates) {
+      if (plugin.getPlugin('@hey-api/transformers')?.config.dates) {
         return compiler.typeReferenceNode({ typeName: 'Date' });
       }
     }
@@ -793,8 +793,8 @@ const schemaTypeToIdentifier = ({
     case 'integer':
     case 'number':
       return numberTypeToIdentifier({
-        context,
         namespace,
+        plugin,
         schema: schema as SchemaWithType<'integer' | 'number'>,
       });
     case 'never':
@@ -815,8 +815,8 @@ const schemaTypeToIdentifier = ({
       });
     case 'string':
       return stringTypeToIdentifier({
-        context,
         namespace,
+        plugin,
         schema: schema as SchemaWithType<'string'>,
       });
     case 'tuple':
@@ -1314,9 +1314,8 @@ export const schemaToType = ({
   return type;
 };
 
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  const file = context.createFile({
-    exportFromIndex: plugin.config.exportFromIndex,
+export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+  const file = plugin.createFile({
     id: typesId,
     identifierCase: plugin.config.identifierCase,
     path: plugin.output,
@@ -1329,14 +1328,14 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     namespace: 'type',
   });
 
-  context.subscribe('schema', ({ $ref, schema }) => {
+  plugin.subscribe('schema', ({ $ref, schema }) => {
     if (
       plugin.config.readOnlyWriteOnlyBehavior === 'off' ||
       !isSchemaSplit({ schema })
     ) {
       schemaToType({
         $ref,
-        context,
+        context: plugin.context,
         plugin,
         schema,
         state: {
@@ -1354,7 +1353,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
           accessScope: 'read',
           plugin,
         }),
-        context,
+        context: plugin.context,
         plugin,
         schema,
         state: {
@@ -1372,7 +1371,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
           accessScope: 'write',
           plugin,
         }),
-        context,
+        context: plugin.context,
         plugin,
         schema,
         state: {
@@ -1384,10 +1383,10 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     }
   });
 
-  context.subscribe('parameter', ({ $ref, parameter }) => {
+  plugin.subscribe('parameter', ({ $ref, parameter }) => {
     schemaToType({
       $ref,
-      context,
+      context: plugin.context,
       plugin,
       schema: parameter.schema,
       state: {
@@ -1397,10 +1396,10 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     });
   });
 
-  context.subscribe('requestBody', ({ $ref, requestBody }) => {
+  plugin.subscribe('requestBody', ({ $ref, requestBody }) => {
     schemaToType({
       $ref,
-      context,
+      context: plugin.context,
       plugin,
       schema: requestBody.schema,
       state:
@@ -1417,9 +1416,9 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     });
   });
 
-  context.subscribe('operation', ({ operation }) => {
+  plugin.subscribe('operation', ({ operation }) => {
     operationToType({
-      context,
+      context: plugin.context,
       operation,
       plugin,
     });
@@ -1427,13 +1426,13 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
   const servers: Array<IR.ServerObject> = [];
 
-  context.subscribe('server', ({ server }) => {
+  plugin.subscribe('server', ({ server }) => {
     servers.push(server);
   });
 
-  context.subscribe('after', () => {
+  plugin.subscribe('after', () => {
     createClientOptions({
-      context,
+      context: plugin.context,
       identifier: clientOptions,
       plugin,
       servers,
