@@ -158,8 +158,42 @@ const getPluginsConfig = ({
               `missing plugin - no plugin with tag "${tag}" found`,
           );
         },
+        valueToObject: ({ defaultValue, mappers, value }) => {
+          let result = { ...defaultValue };
+          switch (typeof value) {
+            case 'boolean':
+              if ('boolean' in mappers) {
+                const mapper = mappers.boolean as (
+                  value: boolean,
+                ) => Record<string, any>;
+                result = { ...result, ...mapper(value) };
+              }
+              break;
+            case 'number':
+              if ('number' in mappers) {
+                const mapper = mappers.number as (
+                  value: number,
+                ) => Record<string, any>;
+                result = { ...result, ...mapper(value) };
+              }
+              break;
+            case 'string':
+              if ('string' in mappers) {
+                const mapper = mappers.string as (
+                  value: string,
+                ) => Record<string, any>;
+                result = { ...result, ...mapper(value) };
+              }
+              break;
+            case 'object':
+              if (value !== null) {
+                result = { ...result, ...value };
+              }
+              break;
+          }
+          return result;
+        },
       };
-      // @ts-expect-error
       plugin.resolveConfig(plugin, context);
     }
 

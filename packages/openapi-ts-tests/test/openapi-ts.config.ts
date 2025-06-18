@@ -163,9 +163,15 @@ export default defineConfig(() => {
       },
       {
         // comments: false,
+        definitions: 'z{{name}}Definition',
         // exportFromIndex: true,
         // metadata: true,
         name: 'zod',
+        requests: {
+          case: 'PascalCase',
+          enabled: false,
+        },
+        responses: false,
       },
     ],
     // useOptions: false,
