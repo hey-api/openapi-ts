@@ -39,7 +39,7 @@ export interface Config extends Plugin.Name<'zod'> {
          *
          * @default 'z{{name}}'
          */
-        name?: string;
+        name?: string | ((name: string) => string);
       };
   /**
    * Should the exports from the generated files be re-exported in the index
@@ -93,7 +93,7 @@ export interface Config extends Plugin.Name<'zod'> {
          *
          * @default 'z{{name}}Data'
          */
-        name?: string;
+        name?: string | ((name: string) => string);
       };
   /**
    * Configuration for response-specific Zod schemas.
@@ -126,7 +126,7 @@ export interface Config extends Plugin.Name<'zod'> {
          *
          * @default 'z{{name}}Response'
          */
-        name?: string;
+        name?: string | ((name: string) => string);
       };
 }
 
@@ -160,7 +160,7 @@ export interface ResolvedConfig extends Plugin.Name<'zod'> {
      *
      * @default 'z{{name}}'
      */
-    name: string;
+    name: string | ((name: string) => string);
   };
   /**
    * Should the exports from the generated files be re-exported in the index
@@ -206,7 +206,7 @@ export interface ResolvedConfig extends Plugin.Name<'zod'> {
      *
      * @default 'z{{name}}Data'
      */
-    name: string;
+    name: string | ((name: string) => string);
   };
   /**
    * Configuration for response-specific Zod schemas.
@@ -231,6 +231,6 @@ export interface ResolvedConfig extends Plugin.Name<'zod'> {
      *
      * @default 'z{{name}}Response'
      */
-    name: string;
+    name: string | ((name: string) => string);
   };
 }

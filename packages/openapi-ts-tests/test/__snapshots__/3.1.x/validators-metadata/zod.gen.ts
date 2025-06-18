@@ -44,16 +44,18 @@ export const zPatchFooData = z.object({
 /**
  * This is Foo parameter.
  */
-export const zPatchFooParameterFoo = z.string().describe('This is Foo parameter.');
+export const zPatchFooParameterFooData = z.string().describe('This is Foo parameter.');
 
-export const zPatchFooParameterBar = zBar;
+export const zPatchFooParameterBarData = zBar;
 
-export const zPatchFooParameterBaz = z.object({
+export const zPatchFooParameterBazData = z.object({
     baz: z.string().optional()
 });
 
-export const zPatchFooParameterQux = z.string().date();
+export const zPatchFooParameterQuxData = z.string().date();
 
-export const zPatchFooParameterQuux = z.string().datetime();
+export const zPatchFooParameterQuuxData = z.string().datetime();
 
-export const zPostFooData = zFoo3;
+export const zFooData = z.unknown();
+
+export const zPostFooData = zFooData;

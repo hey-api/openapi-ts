@@ -125,7 +125,7 @@ export default defineConfig(() => {
         // throwOnError: true,
         // transformer: '@hey-api/transformers',
         transformer: true,
-        // validator: 'zod',
+        validator: 'zod',
       },
       {
         // bigInt: true,
@@ -163,15 +163,21 @@ export default defineConfig(() => {
       },
       {
         // comments: false,
-        definitions: 'z{{name}}Definition',
+        definitions: {
+          case: 'PascalCase',
+          name: 'z{{name}}Yeehaw',
+        },
         // exportFromIndex: true,
         // metadata: true,
         name: 'zod',
         requests: {
-          case: 'PascalCase',
-          enabled: false,
+          case: 'SCREAMING_SNAKE_CASE',
+          name: 'z{{name}}TestData',
         },
-        responses: false,
+        responses: {
+          case: 'snake_case',
+          name: 'z{{name}}TestResponse',
+        },
       },
     ],
     // useOptions: false,
