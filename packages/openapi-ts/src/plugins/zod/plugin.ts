@@ -8,7 +8,7 @@ import { numberRegExp } from '../../utils/regexp';
 import { operationIrRef } from '../shared/utils/ref';
 import { createSchemaComment } from '../shared/utils/schema';
 import type { Plugin } from '../types';
-import type { Config } from './types';
+import type { ResolvedConfig } from './types';
 
 interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
   extends Omit<IR.SchemaObject, 'type'> {
@@ -50,7 +50,7 @@ const arrayTypeToZodSchema = ({
   schema,
 }: {
   context: IR.Context;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<ResolvedConfig>;
   result: Result;
   schema: SchemaWithType<'array'>;
 }): ts.CallExpression => {
@@ -389,7 +389,7 @@ const objectTypeToZodSchema = ({
   schema,
 }: {
   context: IR.Context;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<ResolvedConfig>;
   result: Result;
   schema: SchemaWithType<'object'>;
 }): {
@@ -614,7 +614,7 @@ const tupleTypeToZodSchema = ({
   schema,
 }: {
   context: IR.Context;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<ResolvedConfig>;
   result: Result;
   schema: SchemaWithType<'tuple'>;
 }) => {
@@ -724,7 +724,7 @@ const schemaTypeToZodSchema = ({
   schema,
 }: {
   context: IR.Context;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<ResolvedConfig>;
   result: Result;
   schema: IR.SchemaObject;
 }): {
@@ -832,7 +832,7 @@ const operationToZodSchema = ({
 }: {
   context: IR.Context;
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<ResolvedConfig>;
   result: Result;
 }) => {
   if (operation.body) {
@@ -911,7 +911,7 @@ const schemaToZodSchema = ({
    * `.default()` which is handled in this function.
    */
   optional?: boolean;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<ResolvedConfig>;
   result: Result;
   schema: IR.SchemaObject;
 }): ts.Expression => {
@@ -1145,7 +1145,7 @@ const schemaToZodSchema = ({
   return expression!;
 };
 
-export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+export const handler: Plugin.Handler<ResolvedConfig> = ({ plugin }) => {
   const file = plugin.createFile({
     id: zodId,
     identifierCase: 'camelCase',
