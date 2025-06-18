@@ -1070,7 +1070,7 @@ export const zApiVVersionODataControllerCountResponse = zModelFromZendesk;
 /**
  * foo in method
  */
-export const zGetApiVbyApiVersionSimpleOperationParameterFooParam = z.string();
+export const zGetApiVbyApiVersionSimpleOperationParameterFooParamData = z.string();
 
 /**
  * Response is a simple number
@@ -1080,17 +1080,17 @@ export const zGetApiVbyApiVersionSimpleOperationResponse = z.number();
 /**
  * foo in method
  */
-export const zDeleteFooParameterFooParam = z.string();
+export const zDeleteFooParameterFooParamData = z.string();
 
 /**
  * bar in method
  */
-export const zDeleteFooParameterBarParam = z.string();
+export const zDeleteFooParameterBarParamData = z.string();
 
 /**
  * Parameter with illegal characters
  */
-export const zDeleteFooParameterXFooBar = zModelWithString;
+export const zDeleteFooParameterXFooBarData = zModelWithString;
 
 /**
  * Testing multiline comments in string: First line
@@ -1098,38 +1098,38 @@ export const zDeleteFooParameterXFooBar = zModelWithString;
  *
  * Fourth line
  */
-export const zCallWithDescriptionsParameterParameterWithBreaks = z.string();
+export const zCallWithDescriptionsParameterParameterWithBreaksData = z.string();
 
 /**
  * Testing backticks in string: `backticks` and ```multiple backticks``` should work
  */
-export const zCallWithDescriptionsParameterParameterWithBackticks = z.string();
+export const zCallWithDescriptionsParameterParameterWithBackticksData = z.string();
 
 /**
  * Testing slashes in string: \backwards\\\ and /forwards/// should work
  */
-export const zCallWithDescriptionsParameterParameterWithSlashes = z.string();
+export const zCallWithDescriptionsParameterParameterWithSlashesData = z.string();
 
 /**
  * Testing expression placeholders in string: ${expression} should work
  */
-export const zCallWithDescriptionsParameterParameterWithExpressionPlaceholders = z.string();
+export const zCallWithDescriptionsParameterParameterWithExpressionPlaceholdersData = z.string();
 
 /**
  * Testing quotes in string: 'single quote''' and "double quotes""" should work
  */
-export const zCallWithDescriptionsParameterParameterWithQuotes = z.string();
+export const zCallWithDescriptionsParameterParameterWithQuotesData = z.string();
 
 /**
  * Testing reserved characters in string: * inline * and ** inline ** should work
  */
-export const zCallWithDescriptionsParameterParameterWithReservedCharacters = z.string();
+export const zCallWithDescriptionsParameterParameterWithReservedCharactersData = z.string();
 
 /**
  * This parameter is deprecated
  * @deprecated
  */
-export const zDeprecatedCallParameterParameter = z.union([
+export const zDeprecatedCallParameterParameterData = z.union([
     zDeprecatedModel,
     z.null()
 ]);
@@ -1145,7 +1145,7 @@ export const zCallWithParametersData = z.union([
 /**
  * This is the parameter that goes into the cookie
  */
-export const zCallWithParametersParameterParameterCookie = z.union([
+export const zCallWithParametersParameterParameterCookieData = z.union([
     z.string(),
     z.null()
 ]);
@@ -1153,7 +1153,7 @@ export const zCallWithParametersParameterParameterCookie = z.union([
 /**
  * This is the parameter that goes into the header
  */
-export const zCallWithParametersParameterParameterHeader = z.union([
+export const zCallWithParametersParameterParameterHeaderData = z.union([
     z.string(),
     z.null()
 ]);
@@ -1161,7 +1161,7 @@ export const zCallWithParametersParameterParameterHeader = z.union([
 /**
  * This is the parameter that goes into the path
  */
-export const zCallWithParametersParameterParameterPath = z.union([
+export const zCallWithParametersParameterParameterPathData = z.union([
     z.string(),
     z.null()
 ]);
@@ -1169,19 +1169,19 @@ export const zCallWithParametersParameterParameterPath = z.union([
 /**
  * api-version should be required in standalone clients
  */
-export const zCallWithParametersParameterApiVersion = z.union([
+export const zCallWithParametersParameterApiVersionData = z.union([
     z.string(),
     z.null()
 ]);
 
-export const zCallWithParametersParameterFooRefEnum = zModelWithNestedArrayEnumsDataFoo;
+export const zCallWithParametersParameterFooRefEnumData = zModelWithNestedArrayEnumsDataFoo;
 
-export const zCallWithParametersParameterFooAllOfEnum = zModelWithNestedArrayEnumsDataFoo;
+export const zCallWithParametersParameterFooAllOfEnumData = zModelWithNestedArrayEnumsDataFoo;
 
 /**
  * This is the parameter that goes into the query params
  */
-export const zCallWithParametersParameterCursor = z.union([
+export const zCallWithParametersParameterCursorData = z.union([
     z.string(),
     z.null()
 ]);
@@ -1197,7 +1197,7 @@ export const zCallWithWeirdParameterNamesData = z.union([
 /**
  * This is the parameter that goes into the cookie
  */
-export const zCallWithWeirdParameterNamesParameterParameterCookie = z.union([
+export const zCallWithWeirdParameterNamesParameterParameterCookieData = z.union([
     z.string(),
     z.null()
 ]);
@@ -1205,7 +1205,7 @@ export const zCallWithWeirdParameterNamesParameterParameterCookie = z.union([
 /**
  * This is the parameter that goes into the request header
  */
-export const zCallWithWeirdParameterNamesParameterParameterHeader = z.union([
+export const zCallWithWeirdParameterNamesParameterParameterHeaderData = z.union([
     z.string(),
     z.null()
 ]);
@@ -1213,22 +1213,22 @@ export const zCallWithWeirdParameterNamesParameterParameterHeader = z.union([
 /**
  * This is the parameter that goes into the path
  */
-export const zCallWithWeirdParameterNamesParameterParameterPath1 = z.string();
+export const zCallWithWeirdParameterNamesParameterParameterPath1Data = z.string();
 
 /**
  * This is the parameter that goes into the path
  */
-export const zCallWithWeirdParameterNamesParameterParameterPath2 = z.string();
+export const zCallWithWeirdParameterNamesParameterParameterPath2Data = z.string();
 
 /**
  * This is the parameter that goes into the path
  */
-export const zCallWithWeirdParameterNamesParameterParameterPath3 = z.string();
+export const zCallWithWeirdParameterNamesParameterParameterPath3Data = z.string();
 
 /**
  * api-version should be required in standalone clients
  */
-export const zCallWithWeirdParameterNamesParameterApiVersion = z.union([
+export const zCallWithWeirdParameterNamesParameterApiVersionData = z.union([
     z.string(),
     z.null()
 ]);
@@ -1236,12 +1236,12 @@ export const zCallWithWeirdParameterNamesParameterApiVersion = z.union([
 /**
  * This is the parameter with a reserved keyword
  */
-export const zCallWithWeirdParameterNamesParameterDefault = z.string();
+export const zCallWithWeirdParameterNamesParameterDefaultData = z.string();
 
 /**
  * This is the parameter that goes into the request query params
  */
-export const zCallWithWeirdParameterNamesParameterParameterQuery = z.union([
+export const zCallWithWeirdParameterNamesParameterParameterQueryData = z.union([
     z.string(),
     z.null()
 ]);
@@ -1254,7 +1254,7 @@ export const zGetCallWithOptionalParamData = zModelWithOneOfEnum;
 /**
  * This is an optional parameter
  */
-export const zGetCallWithOptionalParamParameterPage = z.number();
+export const zGetCallWithOptionalParamParameterPageData = z.number();
 
 /**
  * This is an optional parameter
@@ -1269,7 +1269,7 @@ export const zPostCallWithOptionalParamData = z.object({
 /**
  * This is a required parameter
  */
-export const zPostCallWithOptionalParamParameterParameter = zPageable;
+export const zPostCallWithOptionalParamParameterParameterData = zPageable;
 
 export const zPostCallWithOptionalParamResponse = z.union([
     z.number(),
@@ -1284,7 +1284,7 @@ export const zPostApiVbyApiVersionRequestBodyData = zSimpleRequestBody;
 /**
  * This is a reusable parameter
  */
-export const zPostApiVbyApiVersionRequestBodyParameterParameter = z.string();
+export const zPostApiVbyApiVersionRequestBodyParameterParameterData = z.string();
 
 /**
  * A reusable request body
@@ -1294,12 +1294,12 @@ export const zPostApiVbyApiVersionFormDataData = zSimpleFormData;
 /**
  * This is a reusable parameter
  */
-export const zPostApiVbyApiVersionFormDataParameterParameter = z.string();
+export const zPostApiVbyApiVersionFormDataParameterParameterData = z.string();
 
 /**
  * This is a simple string with default value
  */
-export const zCallWithDefaultParametersParameterParameterString = z.union([
+export const zCallWithDefaultParametersParameterParameterStringData = z.union([
     z.string().default('Hello World!'),
     z.null()
 ]).default('Hello World!');
@@ -1307,7 +1307,7 @@ export const zCallWithDefaultParametersParameterParameterString = z.union([
 /**
  * This is a simple number with default value
  */
-export const zCallWithDefaultParametersParameterParameterNumber = z.union([
+export const zCallWithDefaultParametersParameterParameterNumberData = z.union([
     z.number().default(123),
     z.null()
 ]).default(123);
@@ -1315,7 +1315,7 @@ export const zCallWithDefaultParametersParameterParameterNumber = z.union([
 /**
  * This is a simple boolean with default value
  */
-export const zCallWithDefaultParametersParameterParameterBoolean = z.union([
+export const zCallWithDefaultParametersParameterParameterBooleanData = z.union([
     z.boolean().default(true),
     z.null()
 ]).default(true);
@@ -1323,7 +1323,7 @@ export const zCallWithDefaultParametersParameterParameterBoolean = z.union([
 /**
  * This is a simple enum with default value
  */
-export const zCallWithDefaultParametersParameterParameterEnum = z.enum([
+export const zCallWithDefaultParametersParameterParameterEnumData = z.enum([
     'Success',
     'Warning',
     'Error'
@@ -1332,7 +1332,7 @@ export const zCallWithDefaultParametersParameterParameterEnum = z.enum([
 /**
  * This is a simple model with default value
  */
-export const zCallWithDefaultParametersParameterParameterModel = z.union([
+export const zCallWithDefaultParametersParameterParameterModelData = z.union([
     zModelWithString,
     z.null()
 ]);
@@ -1340,22 +1340,22 @@ export const zCallWithDefaultParametersParameterParameterModel = z.union([
 /**
  * This is a simple string that is optional with default value
  */
-export const zCallWithDefaultOptionalParametersParameterParameterString = z.string().default('Hello World!');
+export const zCallWithDefaultOptionalParametersParameterParameterStringData = z.string().default('Hello World!');
 
 /**
  * This is a simple number that is optional with default value
  */
-export const zCallWithDefaultOptionalParametersParameterParameterNumber = z.number().default(123);
+export const zCallWithDefaultOptionalParametersParameterParameterNumberData = z.number().default(123);
 
 /**
  * This is a simple boolean that is optional with default value
  */
-export const zCallWithDefaultOptionalParametersParameterParameterBoolean = z.boolean().default(true);
+export const zCallWithDefaultOptionalParametersParameterParameterBooleanData = z.boolean().default(true);
 
 /**
  * This is a simple enum that is optional with default value
  */
-export const zCallWithDefaultOptionalParametersParameterParameterEnum = z.enum([
+export const zCallWithDefaultOptionalParametersParameterParameterEnumData = z.enum([
     'Success',
     'Warning',
     'Error'
@@ -1364,42 +1364,42 @@ export const zCallWithDefaultOptionalParametersParameterParameterEnum = z.enum([
 /**
  * This is a simple model that is optional with default value
  */
-export const zCallWithDefaultOptionalParametersParameterParameterModel = zModelWithString;
+export const zCallWithDefaultOptionalParametersParameterParameterModelData = zModelWithString;
 
 /**
  * This is a optional string with default
  */
-export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithDefault = z.string().default('Hello World!');
+export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithDefaultData = z.string().default('Hello World!');
 
 /**
  * This is a optional string with empty default
  */
-export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithEmptyDefault = z.string().default('');
+export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithEmptyDefaultData = z.string().default('');
 
 /**
  * This is a optional string with no default
  */
-export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithNoDefault = z.string();
+export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithNoDefaultData = z.string();
 
 /**
  * This is a string with default
  */
-export const zCallToTestOrderOfParamsParameterParameterStringWithDefault = z.string().default('Hello World!');
+export const zCallToTestOrderOfParamsParameterParameterStringWithDefaultData = z.string().default('Hello World!');
 
 /**
  * This is a string with empty default
  */
-export const zCallToTestOrderOfParamsParameterParameterStringWithEmptyDefault = z.string().default('');
+export const zCallToTestOrderOfParamsParameterParameterStringWithEmptyDefaultData = z.string().default('');
 
 /**
  * This is a string with no default
  */
-export const zCallToTestOrderOfParamsParameterParameterStringWithNoDefault = z.string();
+export const zCallToTestOrderOfParamsParameterParameterStringWithNoDefaultData = z.string();
 
 /**
  * This is a string that can be null with no default
  */
-export const zCallToTestOrderOfParamsParameterParameterStringNullableWithNoDefault = z.union([
+export const zCallToTestOrderOfParamsParameterParameterStringNullableWithNoDefaultData = z.union([
     z.string(),
     z.null()
 ]);
@@ -1407,7 +1407,7 @@ export const zCallToTestOrderOfParamsParameterParameterStringNullableWithNoDefau
 /**
  * This is a string that can be null with default
  */
-export const zCallToTestOrderOfParamsParameterParameterStringNullableWithDefault = z.union([
+export const zCallToTestOrderOfParamsParameterParameterStringNullableWithDefaultData = z.union([
     z.string(),
     z.null()
 ]).default(null);
@@ -1449,7 +1449,7 @@ export const zCallWithResponsesResponse = z.union([
 /**
  * This is an array parameter that is sent as csv format (comma-separated values)
  */
-export const zCollectionFormatParameterParameterArrayCsv = z.union([
+export const zCollectionFormatParameterParameterArrayCsvData = z.union([
     z.array(z.string()),
     z.null()
 ]);
@@ -1457,7 +1457,7 @@ export const zCollectionFormatParameterParameterArrayCsv = z.union([
 /**
  * This is an array parameter that is sent as ssv format (space-separated values)
  */
-export const zCollectionFormatParameterParameterArraySsv = z.union([
+export const zCollectionFormatParameterParameterArraySsvData = z.union([
     z.array(z.string()),
     z.null()
 ]);
@@ -1465,7 +1465,7 @@ export const zCollectionFormatParameterParameterArraySsv = z.union([
 /**
  * This is an array parameter that is sent as tsv format (tab-separated values)
  */
-export const zCollectionFormatParameterParameterArrayTsv = z.union([
+export const zCollectionFormatParameterParameterArrayTsvData = z.union([
     z.array(z.string()),
     z.null()
 ]);
@@ -1473,7 +1473,7 @@ export const zCollectionFormatParameterParameterArrayTsv = z.union([
 /**
  * This is an array parameter that is sent as pipes format (pipe-separated values)
  */
-export const zCollectionFormatParameterParameterArrayPipes = z.union([
+export const zCollectionFormatParameterParameterArrayPipesData = z.union([
     z.array(z.string()),
     z.null()
 ]);
@@ -1481,7 +1481,7 @@ export const zCollectionFormatParameterParameterArrayPipes = z.union([
 /**
  * This is an array parameter that is sent as multi format (multiple parameter instances)
  */
-export const zCollectionFormatParameterParameterArrayMulti = z.union([
+export const zCollectionFormatParameterParameterArrayMultiData = z.union([
     z.array(z.string()),
     z.null()
 ]);
@@ -1489,17 +1489,17 @@ export const zCollectionFormatParameterParameterArrayMulti = z.union([
 /**
  * This is a number parameter
  */
-export const zTypesParameterId = z.number().int();
+export const zTypesParameterIdData = z.number().int();
 
 /**
  * This is a number parameter
  */
-export const zTypesParameterParameterNumber = z.number().default(123);
+export const zTypesParameterParameterNumberData = z.number().default(123);
 
 /**
  * This is a string parameter
  */
-export const zTypesParameterParameterString = z.union([
+export const zTypesParameterParameterStringData = z.union([
     z.string().default('default'),
     z.null()
 ]).default('default');
@@ -1507,7 +1507,7 @@ export const zTypesParameterParameterString = z.union([
 /**
  * This is a boolean parameter
  */
-export const zTypesParameterParameterBoolean = z.union([
+export const zTypesParameterParameterBooleanData = z.union([
     z.boolean().default(true),
     z.null()
 ]).default(true);
@@ -1515,7 +1515,7 @@ export const zTypesParameterParameterBoolean = z.union([
 /**
  * This is an object parameter
  */
-export const zTypesParameterParameterObject = z.union([
+export const zTypesParameterParameterObjectData = z.union([
     z.object({}),
     z.null()
 ]).default(null);
@@ -1523,7 +1523,7 @@ export const zTypesParameterParameterObject = z.union([
 /**
  * This is an array parameter
  */
-export const zTypesParameterParameterArray = z.union([
+export const zTypesParameterParameterArrayData = z.union([
     z.array(z.string()),
     z.null()
 ]);
@@ -1531,7 +1531,7 @@ export const zTypesParameterParameterArray = z.union([
 /**
  * This is a dictionary parameter
  */
-export const zTypesParameterParameterDictionary = z.union([
+export const zTypesParameterParameterDictionaryData = z.union([
     z.object({}),
     z.null()
 ]);
@@ -1539,7 +1539,7 @@ export const zTypesParameterParameterDictionary = z.union([
 /**
  * This is an enum parameter
  */
-export const zTypesParameterParameterEnum = z.enum([
+export const zTypesParameterParameterEnumData = z.enum([
     'Success',
     'Warning',
     'Error'
@@ -1557,19 +1557,19 @@ export const zUploadFileData = z.string();
 /**
  * api-version should be required in standalone clients
  */
-export const zUploadFileParameterApiVersion = z.union([
+export const zUploadFileParameterApiVersionData = z.union([
     z.string(),
     z.null()
 ]);
 
 export const zUploadFileResponse = z.boolean();
 
-export const zFileResponseParameterId = z.string();
+export const zFileResponseParameterIdData = z.string();
 
 /**
  * api-version should be required in standalone clients
  */
-export const zFileResponseParameterApiVersion = z.string();
+export const zFileResponseParameterApiVersionData = z.string();
 
 /**
  * Success
@@ -1579,7 +1579,7 @@ export const zFileResponseResponse = z.string();
 /**
  * Parameter containing object
  */
-export const zComplexTypesParameterParameterObject = z.object({
+export const zComplexTypesParameterParameterObjectData = z.object({
     first: z.object({
         second: z.object({
             third: z.string().optional()
@@ -1590,7 +1590,7 @@ export const zComplexTypesParameterParameterObject = z.object({
 /**
  * Parameter containing reference
  */
-export const zComplexTypesParameterParameterReference = zModelWithString;
+export const zComplexTypesParameterParameterReferenceData = zModelWithString;
 
 /**
  * Successful response
@@ -1654,12 +1654,12 @@ export const zComplexParamsData = z.object({
     }).readonly().optional()
 });
 
-export const zComplexParamsParameterId = z.number().int();
+export const zComplexParamsParameterIdData = z.number().int();
 
 /**
  * api-version should be required in standalone clients
  */
-export const zComplexParamsParameterApiVersion = z.string();
+export const zComplexParamsParameterApiVersionData = z.string();
 
 /**
  * Success
@@ -1669,12 +1669,12 @@ export const zComplexParamsResponse = zModelWithString;
 /**
  * Status code to return
  */
-export const zTestErrorCodeParameterStatus = z.number().int();
+export const zTestErrorCodeParameterStatusData = z.number().int();
 
 /**
  * Dummy input param
  */
-export const zNonAsciiæøåÆøÅöôêÊ字符串ParameterNonAsciiParamæøåÆøÅöôêÊ = z.number().int();
+export const zNonAsciiæøåÆøÅöôêÊ字符串ParameterNonAsciiParamæøåÆøÅöôêÊData = z.number().int();
 
 /**
  * Successful response

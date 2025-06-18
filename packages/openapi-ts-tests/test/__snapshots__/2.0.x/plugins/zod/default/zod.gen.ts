@@ -394,107 +394,107 @@ export const zFailureFailure = z.object({
  *
  * Fourth line
  */
-export const zCallWithDescriptionsParameterParameterWithBreaks = z.string();
+export const zCallWithDescriptionsParameterParameterWithBreaksData = z.string();
 
 /**
  * Testing backticks in string: `backticks` and ```multiple backticks``` should work
  */
-export const zCallWithDescriptionsParameterParameterWithBackticks = z.string();
+export const zCallWithDescriptionsParameterParameterWithBackticksData = z.string();
 
 /**
  * Testing slashes in string: \backwards\\\ and /forwards/// should work
  */
-export const zCallWithDescriptionsParameterParameterWithSlashes = z.string();
+export const zCallWithDescriptionsParameterParameterWithSlashesData = z.string();
 
 /**
  * Testing expression placeholders in string: ${expression} should work
  */
-export const zCallWithDescriptionsParameterParameterWithExpressionPlaceholders = z.string();
+export const zCallWithDescriptionsParameterParameterWithExpressionPlaceholdersData = z.string();
 
 /**
  * Testing quotes in string: 'single quote''' and "double quotes""" should work
  */
-export const zCallWithDescriptionsParameterParameterWithQuotes = z.string();
+export const zCallWithDescriptionsParameterParameterWithQuotesData = z.string();
 
 /**
  * Testing reserved characters in string: * inline * and ** inline ** should work
  */
-export const zCallWithDescriptionsParameterParameterWithReservedCharacters = z.string();
+export const zCallWithDescriptionsParameterParameterWithReservedCharactersData = z.string();
 
 /**
  * This is the parameter that goes into the header
  */
-export const zCallWithParametersParameterParameterHeader = z.string();
+export const zCallWithParametersParameterParameterHeaderData = z.string();
 
 /**
  * This is the parameter that goes into the path
  */
-export const zCallWithParametersParameterParameterPath = z.string();
+export const zCallWithParametersParameterParameterPathData = z.string();
 
 /**
  * api-version should be required in standalone clients
  */
-export const zCallWithParametersParameterApiVersion = z.string();
+export const zCallWithParametersParameterApiVersionData = z.string();
 
 /**
  * This is the parameter that goes into the query params
  */
-export const zCallWithParametersParameterParameterQuery = z.string();
+export const zCallWithParametersParameterParameterQueryData = z.string();
 
 /**
  * This is the parameter that goes into the request header
  */
-export const zCallWithWeirdParameterNamesParameterParameterHeader = z.string();
+export const zCallWithWeirdParameterNamesParameterParameterHeaderData = z.string();
 
 /**
  * This is the parameter that goes into the path
  */
-export const zCallWithWeirdParameterNamesParameterParameterPath1 = z.string();
+export const zCallWithWeirdParameterNamesParameterParameterPath1Data = z.string();
 
 /**
  * This is the parameter that goes into the path
  */
-export const zCallWithWeirdParameterNamesParameterParameterPath2 = z.string();
+export const zCallWithWeirdParameterNamesParameterParameterPath2Data = z.string();
 
 /**
  * This is the parameter that goes into the path
  */
-export const zCallWithWeirdParameterNamesParameterParameterPath3 = z.string();
+export const zCallWithWeirdParameterNamesParameterParameterPath3Data = z.string();
 
 /**
  * api-version should be required in standalone clients
  */
-export const zCallWithWeirdParameterNamesParameterApiVersion = z.string();
+export const zCallWithWeirdParameterNamesParameterApiVersionData = z.string();
 
 /**
  * This is the parameter with a reserved keyword
  */
-export const zCallWithWeirdParameterNamesParameterDefault = z.string();
+export const zCallWithWeirdParameterNamesParameterDefaultData = z.string();
 
 /**
  * This is the parameter that goes into the request query params
  */
-export const zCallWithWeirdParameterNamesParameterParameterQuery = z.string();
+export const zCallWithWeirdParameterNamesParameterParameterQueryData = z.string();
 
 /**
  * This is a simple string with default value
  */
-export const zCallWithDefaultParametersParameterParameterString = z.string().default('Hello World!');
+export const zCallWithDefaultParametersParameterParameterStringData = z.string().default('Hello World!');
 
 /**
  * This is a simple number with default value
  */
-export const zCallWithDefaultParametersParameterParameterNumber = z.number().default(123);
+export const zCallWithDefaultParametersParameterParameterNumberData = z.number().default(123);
 
 /**
  * This is a simple boolean with default value
  */
-export const zCallWithDefaultParametersParameterParameterBoolean = z.boolean().default(true);
+export const zCallWithDefaultParametersParameterParameterBooleanData = z.boolean().default(true);
 
 /**
  * This is a simple enum with default value
  */
-export const zCallWithDefaultParametersParameterParameterEnum = z.enum([
+export const zCallWithDefaultParametersParameterParameterEnumData = z.enum([
     'Success',
     'Warning',
     'Error'
@@ -503,7 +503,7 @@ export const zCallWithDefaultParametersParameterParameterEnum = z.enum([
 /**
  * This is a model with one string property
  */
-export const zCallWithDefaultParametersParameterParameterModel = z.object({
+export const zCallWithDefaultParametersParameterParameterModelData = z.object({
     prop: z.string().optional()
 }).default({
     prop: 'Hello World!'
@@ -512,22 +512,22 @@ export const zCallWithDefaultParametersParameterParameterModel = z.object({
 /**
  * This is a simple string that is optional with default value
  */
-export const zCallWithDefaultOptionalParametersParameterParameterString = z.string().default('Hello World!');
+export const zCallWithDefaultOptionalParametersParameterParameterStringData = z.string().default('Hello World!');
 
 /**
  * This is a simple number that is optional with default value
  */
-export const zCallWithDefaultOptionalParametersParameterParameterNumber = z.number().default(123);
+export const zCallWithDefaultOptionalParametersParameterParameterNumberData = z.number().default(123);
 
 /**
  * This is a simple boolean that is optional with default value
  */
-export const zCallWithDefaultOptionalParametersParameterParameterBoolean = z.boolean().default(true);
+export const zCallWithDefaultOptionalParametersParameterParameterBooleanData = z.boolean().default(true);
 
 /**
  * This is a simple enum that is optional with default value
  */
-export const zCallWithDefaultOptionalParametersParameterParameterEnum = z.enum([
+export const zCallWithDefaultOptionalParametersParameterParameterEnumData = z.enum([
     'Success',
     'Warning',
     'Error'
@@ -536,37 +536,37 @@ export const zCallWithDefaultOptionalParametersParameterParameterEnum = z.enum([
 /**
  * This is a optional string with default
  */
-export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithDefault = z.string().default('Hello World!');
+export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithDefaultData = z.string().default('Hello World!');
 
 /**
  * This is a optional string with empty default
  */
-export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithEmptyDefault = z.string().default('');
+export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithEmptyDefaultData = z.string().default('');
 
 /**
  * This is a optional string with no default
  */
-export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithNoDefault = z.string();
+export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithNoDefaultData = z.string();
 
 /**
  * This is a string with default
  */
-export const zCallToTestOrderOfParamsParameterParameterStringWithDefault = z.string().default('Hello World!');
+export const zCallToTestOrderOfParamsParameterParameterStringWithDefaultData = z.string().default('Hello World!');
 
 /**
  * This is a string with empty default
  */
-export const zCallToTestOrderOfParamsParameterParameterStringWithEmptyDefault = z.string().default('');
+export const zCallToTestOrderOfParamsParameterParameterStringWithEmptyDefaultData = z.string().default('');
 
 /**
  * This is a string with no default
  */
-export const zCallToTestOrderOfParamsParameterParameterStringWithNoDefault = z.string();
+export const zCallToTestOrderOfParamsParameterParameterStringWithNoDefaultData = z.string();
 
 /**
  * This is a string that can be null with no default
  */
-export const zCallToTestOrderOfParamsParameterParameterStringNullableWithNoDefault = z.union([
+export const zCallToTestOrderOfParamsParameterParameterStringNullableWithNoDefaultData = z.union([
     z.string(),
     z.null()
 ]);
@@ -574,7 +574,7 @@ export const zCallToTestOrderOfParamsParameterParameterStringNullableWithNoDefau
 /**
  * This is a string that can be null with default
  */
-export const zCallToTestOrderOfParamsParameterParameterStringNullableWithDefault = z.union([
+export const zCallToTestOrderOfParamsParameterParameterStringNullableWithDefaultData = z.union([
     z.string(),
     z.null()
 ]).default(null);
@@ -607,62 +607,62 @@ export const zCallWithResponsesResponse = z.union([
 /**
  * This is an array parameter that is sent as csv format (comma-separated values)
  */
-export const zCollectionFormatParameterParameterArrayCsv = z.array(z.string());
+export const zCollectionFormatParameterParameterArrayCsvData = z.array(z.string());
 
 /**
  * This is an array parameter that is sent as ssv format (space-separated values)
  */
-export const zCollectionFormatParameterParameterArraySsv = z.array(z.string());
+export const zCollectionFormatParameterParameterArraySsvData = z.array(z.string());
 
 /**
  * This is an array parameter that is sent as tsv format (tab-separated values)
  */
-export const zCollectionFormatParameterParameterArrayTsv = z.array(z.string());
+export const zCollectionFormatParameterParameterArrayTsvData = z.array(z.string());
 
 /**
  * This is an array parameter that is sent as pipes format (pipe-separated values)
  */
-export const zCollectionFormatParameterParameterArrayPipes = z.array(z.string());
+export const zCollectionFormatParameterParameterArrayPipesData = z.array(z.string());
 
 /**
  * This is an array parameter that is sent as multi format (multiple parameter instances)
  */
-export const zCollectionFormatParameterParameterArrayMulti = z.array(z.string());
+export const zCollectionFormatParameterParameterArrayMultiData = z.array(z.string());
 
 /**
  * This is a number parameter
  */
-export const zTypesParameterId = z.number().int();
+export const zTypesParameterIdData = z.number().int();
 
 /**
  * This is a number parameter
  */
-export const zTypesParameterParameterNumber = z.number().default(123);
+export const zTypesParameterParameterNumberData = z.number().default(123);
 
 /**
  * This is a string parameter
  */
-export const zTypesParameterParameterString = z.string().default('default');
+export const zTypesParameterParameterStringData = z.string().default('default');
 
 /**
  * This is a boolean parameter
  */
-export const zTypesParameterParameterBoolean = z.boolean().default(true);
+export const zTypesParameterParameterBooleanData = z.boolean().default(true);
 
 /**
  * This is an array parameter
  */
-export const zTypesParameterParameterArray = z.array(z.string());
+export const zTypesParameterParameterArrayData = z.array(z.string());
 
 /**
  * This is a dictionary parameter
  */
-export const zTypesParameterParameterDictionary = z.object({});
+export const zTypesParameterParameterDictionaryData = z.object({});
 
 /**
  * This is an enum parameter
  */
-export const zTypesParameterParameterEnum = z.enum([
+export const zTypesParameterParameterEnumData = z.enum([
     'Success',
     'Warning',
     'Error'
@@ -678,7 +678,7 @@ export const zTypesResponse = z.union([
 /**
  * Parameter containing object
  */
-export const zComplexTypesParameterParameterObject = z.object({
+export const zComplexTypesParameterParameterObjectData = z.object({
     first: z.object({
         second: z.object({
             third: z.string().optional()
@@ -689,7 +689,7 @@ export const zComplexTypesParameterParameterObject = z.object({
 /**
  * This is a model with one string property
  */
-export const zComplexTypesParameterParameterReference = z.object({
+export const zComplexTypesParameterParameterReferenceData = z.object({
     prop: z.string().optional()
 });
 
@@ -701,12 +701,12 @@ export const zComplexTypesResponse = z.array(zModelWithString);
 /**
  * Status code to return
  */
-export const zTestErrorCodeParameterStatus = z.string();
+export const zTestErrorCodeParameterStatusData = z.string();
 
 /**
  * Dummy input param
  */
-export const zNonAsciiæøåÆøÅöôêÊ字符串ParameterNonAsciiParamæøåÆøÅöôêÊ = z.number().int();
+export const zNonAsciiæøåÆøÅöôêÊ字符串ParameterNonAsciiParamæøåÆøÅöôêÊData = z.number().int();
 
 /**
  * Successful response

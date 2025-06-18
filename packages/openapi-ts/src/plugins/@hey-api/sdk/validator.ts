@@ -86,12 +86,7 @@ const zodResponseValidator = ({
   const file = context.file({ id: sdkId })!;
 
   const identifierSchema = context.file({ id: zodId })!.identifier({
-    $ref: operationIrRef({
-      case: 'camelCase',
-      config: context.config,
-      id: operation.id,
-      type: 'response',
-    }),
+    $ref: `#/zod-response/${operation.id}`,
     namespace: 'value',
   });
 
