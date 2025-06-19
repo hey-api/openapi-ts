@@ -1089,7 +1089,10 @@ export const vApiVVersionODataControllerCountResponse = vModelFromZendesk;
 /**
  * foo in method
  */
-export const vGetApiVbyApiVersionSimpleOperationParameterFooParam = v.string();
+export const vGetApiVbyApiVersionSimpleOperationParameterFooParam = v.union([
+    v.string(),
+    v.pipe(v.string(), v.uuid())
+]);
 
 /**
  * Response is a simple number

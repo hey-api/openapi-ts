@@ -367,7 +367,7 @@ const arrayTypeToIdentifier = ({
     );
   }
 
-  schema = deduplicateSchema({ schema });
+  schema = deduplicateSchema({ detectFormat: false, schema });
 
   const itemTypes: Array<ts.TypeNode> = [];
 
@@ -859,6 +859,7 @@ const irParametersToIrSchema = ({
       const parameter = parameters[key]!;
 
       properties[parameter.name] = deduplicateSchema({
+        detectFormat: false,
         schema: parameter.schema,
       });
 
@@ -1233,7 +1234,7 @@ export const schemaToType = ({
       state,
     });
   } else if (schema.items) {
-    schema = deduplicateSchema({ schema });
+    schema = deduplicateSchema({ detectFormat: false, schema });
     if (schema.items) {
       const itemTypes: Array<ts.TypeNode> = [];
 
