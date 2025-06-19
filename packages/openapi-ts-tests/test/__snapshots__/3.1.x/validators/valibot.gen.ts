@@ -54,6 +54,6 @@ export const vPatchFooParameterBaz = v.object({
 
 export const vPatchFooParameterQux = v.pipe(v.string(), v.isoDate());
 
-export const vPatchFooParameterQuux = v.pipe(v.string(), v.isoDateTime());
+export const vPatchFooParameterQuux = v.pipe(v.string(), v.isoTimestamp());
 
 export const vPostFooData = vFoo3;
