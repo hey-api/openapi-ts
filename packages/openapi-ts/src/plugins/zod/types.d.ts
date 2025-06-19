@@ -3,6 +3,12 @@ import type { Plugin } from '../types';
 
 export interface Config extends Plugin.Name<'zod'> {
   /**
+   * The casing convention to use for generated names.
+   *
+   * @default 'camelCase'
+   */
+  case?: StringCase;
+  /**
    * Add comments from input to the generated Zod schemas?
    *
    * @default true
@@ -131,6 +137,12 @@ export interface Config extends Plugin.Name<'zod'> {
 }
 
 export interface ResolvedConfig extends Plugin.Name<'zod'> {
+  /**
+   * The casing convention to use for generated names.
+   *
+   * @default 'camelCase'
+   */
+  case: StringCase;
   /**
    * Add comments from input to the generated Zod schemas?
    *
