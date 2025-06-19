@@ -1,5 +1,39 @@
 # @hey-api/openapi-ts
 
+## 0.74.0
+
+### Minor Changes
+
+- [#2201](https://github.com/hey-api/openapi-ts/pull/2201) [`ab8cede`](https://github.com/hey-api/openapi-ts/commit/ab8cedefe0ca99492d064dfc191f5445bd8102fb) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(zod): generate a single schema for requests
+
+  ### Single Zod schema per request
+
+  Previously, we generated a separate schema for each endpoint parameter and request body. In v0.74.0, a single request schema is generated for the whole endpoint. It may contain a request body, parameters, and headers.
+
+  ```ts
+  const zData = z.object({
+    body: z
+      .object({
+        foo: z.string().optional(),
+        bar: z.union([z.number(), z.null()]).optional(),
+      })
+      .optional(),
+    headers: z.never().optional(),
+    path: z.object({
+      baz: z.string(),
+    }),
+    query: z.never().optional(),
+  });
+  ```
+
+  If you need to access individual fields, you can do so using the [`.shape`](https://zod.dev/api?id=shape) API. For example, we can get the request body schema with `zData.shape.body`.
+
+### Patch Changes
+
+- [#2192](https://github.com/hey-api/openapi-ts/pull/2192) [`7a740ed`](https://github.com/hey-api/openapi-ts/commit/7a740ed2007b81c0088f4d80dd3401c9af673767) Thanks [@Daschi1](https://github.com/Daschi1)! - fix(valibot): use `isoTimestamp` instead of `isoDateTime` for date-time format
+
+- [#2201](https://github.com/hey-api/openapi-ts/pull/2201) [`a889c3c`](https://github.com/hey-api/openapi-ts/commit/a889c3c899b54aec73a3ecffc071a412b44c112a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): do not mark schemas as duplicate if they have different format
+
 ## 0.73.0
 
 ### Minor Changes
