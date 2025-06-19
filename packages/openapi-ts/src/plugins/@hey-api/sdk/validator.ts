@@ -3,6 +3,7 @@ import type { IR } from '../../../ir/types';
 import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
 import { valibotId } from '../../valibot/constants';
+import { nameTransformer } from '../../valibot/plugin';
 import { zodId } from '../../zod/plugin';
 import { sdkId } from './constants';
 import type { Config } from './types';
@@ -14,21 +15,23 @@ const identifiers = {
 };
 
 const valibotResponseValidator = ({
-  context,
   operation,
+  plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
+  plugin: Plugin.Instance<Config>;
 }) => {
-  const file = context.file({ id: sdkId })!;
+  const file = plugin.context.file({ id: sdkId })!;
 
-  const identifierSchema = context.file({ id: valibotId })!.identifier({
+  const identifierSchema = plugin.context.file({ id: valibotId })!.identifier({
     $ref: operationIrRef({
       case: 'camelCase',
-      config: context.config,
+      config: plugin.context.config,
       id: operation.id,
       type: 'response',
     }),
+    // TODO: refactor to not have to define nameTransformer
+    nameTransformer,
     namespace: 'value',
   });
 
@@ -38,7 +41,7 @@ const valibotResponseValidator = ({
 
   file.import({
     module: file.relativePathToFile({
-      context,
+      context: plugin.context,
       id: valibotId,
     }),
     name: identifierSchema.name,
@@ -77,21 +80,20 @@ const valibotResponseValidator = ({
 };
 
 const zodResponseValidator = ({
-  context,
   operation,
+  plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
+  plugin: Plugin.Instance<Config>;
 }) => {
-  const file = context.file({ id: sdkId })!;
+  const file = plugin.context.file({ id: sdkId })!;
 
-  const identifierSchema = context.file({ id: zodId })!.identifier({
-    $ref: operationIrRef({
-      case: 'camelCase',
-      config: context.config,
-      id: operation.id,
-      type: 'response',
-    }),
+  const responses = plugin.getPlugin('zod')?.config.responses;
+  const identifierSchema = plugin.context.file({ id: zodId })!.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/zod-response/${operation.id}`,
+    // TODO: refactor to not have to define nameTransformer
+    nameTransformer: typeof responses === 'object' ? responses.name : undefined,
     namespace: 'value',
   });
 
@@ -101,7 +103,7 @@ const zodResponseValidator = ({
 
   file.import({
     module: file.relativePathToFile({
-      context,
+      context: plugin.context,
       id: zodId,
     }),
     name: identifierSchema.name,
@@ -131,19 +133,17 @@ const zodResponseValidator = ({
 };
 
 export const createResponseValidator = ({
-  context,
   operation,
   plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
 }) => {
   switch (plugin.config.validator) {
     case 'valibot':
-      return valibotResponseValidator({ context, operation });
+      return valibotResponseValidator({ operation, plugin });
     case 'zod':
-      return zodResponseValidator({ context, operation });
+      return zodResponseValidator({ operation, plugin });
     default:
       return;
   }

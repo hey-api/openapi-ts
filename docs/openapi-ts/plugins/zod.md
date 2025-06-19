@@ -26,7 +26,7 @@ Launch demo
 ## Features
 
 - seamless integration with `@hey-api/openapi-ts` ecosystem
-- Zod schemas for request payloads, parameters, and responses
+- Zod schemas for requests, responses, and reusable definitions
 
 ## Installation
 
@@ -66,6 +66,32 @@ export default {
 
 The Zod plugin will generate the following artifacts, depending on the input specification.
 
+## Requests
+
+A single request schema is generated for each endpoint. It may contain a request body, parameters, and headers.
+
+```ts
+const zData = z.object({
+  body: z
+    .object({
+      foo: z.string().optional(),
+      bar: z.union([z.number(), z.null()]).optional(),
+    })
+    .optional(),
+  headers: z.never().optional(),
+  path: z.object({
+    baz: z.string(),
+  }),
+  query: z.never().optional(),
+});
+```
+
+::: tip
+If you need to access individual fields, you can do so using the [`.shape`](https://zod.dev/api?id=shape) API. For example, we can get the request body schema with `zData.shape.body`.
+:::
+
+You can customize the naming and casing pattern for requests using the `requests.name` and `requests.case` options.
+
 ## Responses
 
 A single Zod schema is generated for all endpoint's responses. If the endpoint describes multiple responses, the generated schema is a union of all possible response shapes.
@@ -81,30 +107,11 @@ const zResponse = z.union([
 ]);
 ```
 
-## Request Bodies
+You can customize the naming and casing pattern for responses using the `responses.name` and `responses.case` options.
 
-If an endpoint describes a request body, we will generate a Zod schema representing its shape.
+## Definitions
 
-```ts
-const zData = z.object({
-  foo: z.string().optional(),
-  bar: z.union([z.number(), z.null()]).optional(),
-});
-```
-
-## Parameters
-
-A separate Zod schema is generated for every request parameter.
-
-```ts
-const zParameterFoo = z.number().int();
-
-const zParameterBar = z.string();
-```
-
-## Schemas
-
-A separate Zod schema is generated for every reusable schema.
+A Zod schema is generated for every reusable definition from your input.
 
 ```ts
 const zFoo = z.number().int();
@@ -114,9 +121,11 @@ const zBar = z.object({
 });
 ```
 
+You can customize the naming and casing pattern for definitions using the `definitions.name` and `definitions.case` options.
+
 ## Metadata
 
-It's often useful to associate a schema with some additional metadata for documentation, code generation, AI structured outputs, form validation, and other purposes. If this is your use case, you can set `metadata` to `true` to generate additional metadata about schemas.
+It's often useful to associate a schema with some additional [metadata](https://zod.dev/metadata) for documentation, code generation, AI structured outputs, form validation, and other purposes. If this is your use case, you can set `metadata` to `true` to generate additional metadata about schemas.
 
 ```js
 export default {

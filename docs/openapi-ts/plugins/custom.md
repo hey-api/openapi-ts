@@ -110,10 +110,10 @@ import type { Plugin } from '@hey-api/openapi-ts';
 
 import type { Config } from './types';
 
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
+export const handler: Plugin.Handler<Config> = ({ plugin }) => {
   // create an output file. it will not be
   // generated until it contains nodes
-  const file = context.createFile({
+  const file = plugin.createFile({
     id: plugin.name,
     path: plugin.output,
   });

@@ -38,22 +38,25 @@ export const zFoo3 = z.object({
 });
 
 export const zPatchFooData = z.object({
-    foo: z.string().optional()
+    body: z.object({
+        foo: z.string().optional()
+    }),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        foo: z.string().describe('This is Foo parameter.').optional(),
+        bar: zBar.optional(),
+        baz: z.object({
+            baz: z.string().optional()
+        }).optional(),
+        qux: z.string().date().optional(),
+        quux: z.string().datetime().optional()
+    }).optional()
 });
 
-/**
- * This is Foo parameter.
- */
-export const zPatchFooParameterFoo = z.string().describe('This is Foo parameter.');
-
-export const zPatchFooParameterBar = zBar;
-
-export const zPatchFooParameterBaz = z.object({
-    baz: z.string().optional()
+export const zPostFooData = z.object({
+    body: zFoo3,
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
 });
-
-export const zPatchFooParameterQux = z.string().date();
-
-export const zPatchFooParameterQuux = z.string().datetime();
-
-export const zPostFooData = zFoo3;
