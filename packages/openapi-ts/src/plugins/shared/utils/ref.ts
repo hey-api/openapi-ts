@@ -50,8 +50,8 @@ export const operationIrRef = ({
     affix,
   ];
   if (parameterId) {
-    parts.push(separator);
     parts.push(
+      separator,
       stringCase({
         case: _case,
         value: parameterId,

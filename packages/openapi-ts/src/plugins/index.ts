@@ -128,11 +128,7 @@ export type ClientPlugins =
   | Plugin.Config<Zod>;
 
 export const defaultPluginConfigs: {
-  [K in PluginNames]: Plugin.Config<{
-    exportFromIndex?: any;
-    name: any;
-    output?: any;
-  }>;
+  [K in PluginNames]: any;
 } = {
   '@hey-api/client-axios': heyApiClientAxios,
   '@hey-api/client-fetch': heyApiClientFetch,

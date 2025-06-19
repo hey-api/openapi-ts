@@ -171,11 +171,12 @@ export class TypeScriptFile {
       EnsureUniqueIdentifierData,
       '$ref' | 'count' | 'create' | 'nameTransformer'
     > & {
+      case?: StringCase;
       namespace: Namespace;
     },
   ): Identifier {
     return ensureUniqueIdentifier({
-      case: this._identifierCase,
+      case: args.case ?? this._identifierCase,
       identifiers: this.identifiers,
       ...args,
     });
@@ -407,6 +408,19 @@ const parseRef = (
   };
 };
 
+const transformName = (
+  name: string,
+  transformer: ((name: string) => string) | string,
+  identifierCase?: StringCase,
+): string => {
+  if (typeof transformer === 'function') {
+    return transformer(name);
+  }
+
+  const separator = identifierCase === 'preserve' ? '' : '-';
+  return transformer.replace('{{name}}', `${separator}${name}${separator}`);
+};
+
 interface EnsureUniqueIdentifierData {
   $ref: string;
   case: StringCase | undefined;
@@ -416,7 +430,7 @@ interface EnsureUniqueIdentifierData {
   /**
    * Transforms name obtained from `$ref` before it's passed to `stringCase()`.
    */
-  nameTransformer?: (name: string) => string;
+  nameTransformer?: ((name: string) => string) | string;
   namespace: Namespace;
 }
 
@@ -438,14 +452,16 @@ const ensureUniqueIdentifier = ({
     };
   }
 
-  let nameWithCasing = stringCase({
+  let nameWithCasingAndTransformer = stringCase({
     case: identifierCase,
-    value: name,
+    value: nameTransformer
+      ? transformName(name, nameTransformer, identifierCase)
+      : name,
   });
   if (count > 1) {
-    nameWithCasing = `${nameWithCasing}${count}`;
+    nameWithCasingAndTransformer = `${nameWithCasingAndTransformer}${count}`;
   }
-  const lowercaseName = nameWithCasing.toLocaleLowerCase();
+  const lowercaseName = nameWithCasingAndTransformer.toLocaleLowerCase();
   if (!identifiers[lowercaseName]) {
     identifiers[lowercaseName] = {};
   }
@@ -483,14 +499,6 @@ const ensureUniqueIdentifier = ({
       created: false,
       name: name as string,
     };
-  }
-
-  let nameWithCasingAndTransformer = stringCase({
-    case: identifierCase,
-    value: nameTransformer?.(name) ?? name,
-  });
-  if (count > 1) {
-    nameWithCasingAndTransformer = `${nameWithCasingAndTransformer}${count}`;
   }
 
   let nameValue = id[nameWithCasingAndTransformer];

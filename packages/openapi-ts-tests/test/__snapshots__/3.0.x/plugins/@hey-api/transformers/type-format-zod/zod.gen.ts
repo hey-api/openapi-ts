@@ -12,6 +12,13 @@ export const zBar = z.object({
     foo: z.number().int()
 });
 
+export const zPostFooData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
 /**
  * OK
  */

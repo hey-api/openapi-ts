@@ -34,6 +34,11 @@ export type AnyPluginName = PluginNames | (string & {});
 
 type PluginTag = 'client' | 'transformer' | 'validator';
 
+type ObjectType<T> =
+  Extract<T, Record<string, any>> extends never
+    ? Record<string, any>
+    : Extract<T, Record<string, any>>;
+
 export interface PluginContext {
   pluginByTag: <T extends AnyPluginName | boolean = AnyPluginName>(
     tag: PluginTag,
@@ -42,6 +47,25 @@ export interface PluginContext {
       errorMessage?: string;
     },
   ) => Exclude<T, boolean> | undefined;
+  valueToObject: <
+    T extends undefined | string | boolean | number | Record<string, any>,
+  >(args: {
+    defaultValue: ObjectType<T>;
+    mappers: {
+      boolean: T extends boolean
+        ? (value: boolean) => Partial<ObjectType<T>>
+        : never;
+      number: T extends number
+        ? (value: number) => Partial<ObjectType<T>>
+        : never;
+      string: T extends string
+        ? (value: string) => Partial<ObjectType<T>>
+        : never;
+    } extends infer U
+      ? { [K in keyof U as U[K] extends never ? never : K]: U[K] }
+      : never;
+    value: T;
+  }) => ObjectType<T>;
 }
 
 export interface BaseConfig {
@@ -54,7 +78,10 @@ export interface BaseConfig {
   output?: string;
 }
 
-interface Meta<Config extends BaseConfig> {
+interface Meta<
+  Config extends BaseConfig,
+  ResolvedConfig extends BaseConfig = Config,
+> {
   /**
    * Dependency plugins will be always processed, regardless of whether user
    * explicitly defines them in their `plugins` config.
@@ -66,7 +93,7 @@ interface Meta<Config extends BaseConfig> {
    * should be used for validation.
    */
   resolveConfig?: (
-    config: Omit<Plugin.Config<Config>, 'dependencies'> & {
+    plugin: Omit<Plugin.Config<Config, ResolvedConfig>, 'dependencies'> & {
       dependencies: Set<AnyPluginName>;
     },
     context: PluginContext,
@@ -82,28 +109,32 @@ interface Meta<Config extends BaseConfig> {
  * Public Plugin API.
  */
 export namespace Plugin {
-  export type Config<Config extends BaseConfig> = Pick<
-    Config,
-    'name' | 'output'
-  > &
-    Meta<Config> & {
+  export type Config<
+    Config extends BaseConfig,
+    ResolvedConfig extends BaseConfig = Config,
+  > = Pick<Config, 'name' | 'output'> &
+    Meta<Config, ResolvedConfig> & {
       config: Omit<Config, 'name' | 'output'>;
       handler: Plugin.Handler<
-        Omit<Config, 'name'> & {
+        Omit<ResolvedConfig, 'name'> & {
           name: any;
         }
       >;
       handlerLegacy: Plugin.LegacyHandler<
-        Omit<Config, 'name'> & {
+        Omit<ResolvedConfig, 'name'> & {
           name: any;
         }
       >;
     };
 
   /** @deprecated - use `definePluginConfig()` instead */
-  export type DefineConfig<Config extends BaseConfig> = (
-    config?: Plugin.UserConfig<Omit<Config, 'name'>>,
-  ) => Omit<Plugin.Config<Config>, 'name'> & {
+  export type DefineConfig<
+    Config extends BaseConfig,
+    ResolvedConfig extends BaseConfig = Config,
+  > = (config?: Plugin.UserConfig<Omit<Config, 'name'>>) => Omit<
+    Plugin.Config<Config, ResolvedConfig>,
+    'name'
+  > & {
     /**
      * Cast name to `any` so it doesn't throw type error in `plugins` array.
      * We could allow any `string` as plugin `name` in the object syntax, but

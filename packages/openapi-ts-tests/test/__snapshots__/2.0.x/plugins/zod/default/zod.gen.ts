@@ -388,211 +388,271 @@ export const zFailureFailure = z.object({
     reference_code: z.string().optional()
 });
 
-/**
- * Testing multiline comments in string: First line
- * Second line
- *
- * Fourth line
- */
-export const zCallWithDescriptionsParameterParameterWithBreaks = z.string();
-
-/**
- * Testing backticks in string: `backticks` and ```multiple backticks``` should work
- */
-export const zCallWithDescriptionsParameterParameterWithBackticks = z.string();
-
-/**
- * Testing slashes in string: \backwards\\\ and /forwards/// should work
- */
-export const zCallWithDescriptionsParameterParameterWithSlashes = z.string();
-
-/**
- * Testing expression placeholders in string: ${expression} should work
- */
-export const zCallWithDescriptionsParameterParameterWithExpressionPlaceholders = z.string();
-
-/**
- * Testing quotes in string: 'single quote''' and "double quotes""" should work
- */
-export const zCallWithDescriptionsParameterParameterWithQuotes = z.string();
-
-/**
- * Testing reserved characters in string: * inline * and ** inline ** should work
- */
-export const zCallWithDescriptionsParameterParameterWithReservedCharacters = z.string();
-
-/**
- * This is the parameter that goes into the header
- */
-export const zCallWithParametersParameterParameterHeader = z.string();
-
-/**
- * This is the parameter that goes into the path
- */
-export const zCallWithParametersParameterParameterPath = z.string();
-
-/**
- * api-version should be required in standalone clients
- */
-export const zCallWithParametersParameterApiVersion = z.string();
-
-/**
- * This is the parameter that goes into the query params
- */
-export const zCallWithParametersParameterParameterQuery = z.string();
-
-/**
- * This is the parameter that goes into the request header
- */
-export const zCallWithWeirdParameterNamesParameterParameterHeader = z.string();
-
-/**
- * This is the parameter that goes into the path
- */
-export const zCallWithWeirdParameterNamesParameterParameterPath1 = z.string();
-
-/**
- * This is the parameter that goes into the path
- */
-export const zCallWithWeirdParameterNamesParameterParameterPath2 = z.string();
-
-/**
- * This is the parameter that goes into the path
- */
-export const zCallWithWeirdParameterNamesParameterParameterPath3 = z.string();
-
-/**
- * api-version should be required in standalone clients
- */
-export const zCallWithWeirdParameterNamesParameterApiVersion = z.string();
-
-/**
- * This is the parameter with a reserved keyword
- */
-export const zCallWithWeirdParameterNamesParameterDefault = z.string();
-
-/**
- * This is the parameter that goes into the request query params
- */
-export const zCallWithWeirdParameterNamesParameterParameterQuery = z.string();
-
-/**
- * This is a simple string with default value
- */
-export const zCallWithDefaultParametersParameterParameterString = z.string().default('Hello World!');
-
-/**
- * This is a simple number with default value
- */
-export const zCallWithDefaultParametersParameterParameterNumber = z.number().default(123);
-
-/**
- * This is a simple boolean with default value
- */
-export const zCallWithDefaultParametersParameterParameterBoolean = z.boolean().default(true);
-
-/**
- * This is a simple enum with default value
- */
-export const zCallWithDefaultParametersParameterParameterEnum = z.enum([
-    'Success',
-    'Warning',
-    'Error'
-]);
-
-/**
- * This is a model with one string property
- */
-export const zCallWithDefaultParametersParameterParameterModel = z.object({
-    prop: z.string().optional()
-}).default({
-    prop: 'Hello World!'
+export const zServiceWithEmptyTagData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
 });
 
-/**
- * This is a simple string that is optional with default value
- */
-export const zCallWithDefaultOptionalParametersParameterParameterString = z.string().default('Hello World!');
+export const zPatchApiVbyApiVersionNoTagData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
-/**
- * This is a simple number that is optional with default value
- */
-export const zCallWithDefaultOptionalParametersParameterParameterNumber = z.number().default(123);
+export const zFooWowData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
-/**
- * This is a simple boolean that is optional with default value
- */
-export const zCallWithDefaultOptionalParametersParameterParameterBoolean = z.boolean().default(true);
+export const zDeleteCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
-/**
- * This is a simple enum that is optional with default value
- */
-export const zCallWithDefaultOptionalParametersParameterParameterEnum = z.enum([
-    'Success',
-    'Warning',
-    'Error'
-]);
+export const zGetCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
-/**
- * This is a optional string with default
- */
-export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithDefault = z.string().default('Hello World!');
+export const zHeadCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
-/**
- * This is a optional string with empty default
- */
-export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithEmptyDefault = z.string().default('');
+export const zOptionsCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
-/**
- * This is a optional string with no default
- */
-export const zCallToTestOrderOfParamsParameterParameterOptionalStringWithNoDefault = z.string();
+export const zPatchCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
-/**
- * This is a string with default
- */
-export const zCallToTestOrderOfParamsParameterParameterStringWithDefault = z.string().default('Hello World!');
+export const zPostCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
-/**
- * This is a string with empty default
- */
-export const zCallToTestOrderOfParamsParameterParameterStringWithEmptyDefault = z.string().default('');
+export const zPutCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
-/**
- * This is a string with no default
- */
-export const zCallToTestOrderOfParamsParameterParameterStringWithNoDefault = z.string();
+export const zCallWithDescriptionsData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        parameterWithBreaks: z.string().optional(),
+        parameterWithBackticks: z.string().optional(),
+        parameterWithSlashes: z.string().optional(),
+        parameterWithExpressionPlaceholders: z.string().optional(),
+        parameterWithQuotes: z.string().optional(),
+        parameterWithReservedCharacters: z.string().optional()
+    }).optional()
+});
 
-/**
- * This is a string that can be null with no default
- */
-export const zCallToTestOrderOfParamsParameterParameterStringNullableWithNoDefault = z.union([
-    z.string(),
-    z.null()
-]);
+export const zCallWithParametersData = z.object({
+    body: z.never().optional(),
+    headers: z.object({
+        parameterHeader: z.string()
+    }),
+    path: z.object({
+        parameterPath: z.string(),
+        'api-version': z.string()
+    }),
+    query: z.object({
+        parameterQuery: z.string()
+    })
+});
 
-/**
- * This is a string that can be null with default
- */
-export const zCallToTestOrderOfParamsParameterParameterStringNullableWithDefault = z.union([
-    z.string(),
-    z.null()
-]).default(null);
+export const zCallWithWeirdParameterNamesData = z.object({
+    body: z.never().optional(),
+    headers: z.object({
+        'parameter.header': z.string()
+    }),
+    path: z.object({
+        'parameter.path.1': z.string().optional(),
+        'parameter-path-2': z.string().optional(),
+        'PARAMETER-PATH-3': z.string().optional(),
+        'api-version': z.string()
+    }),
+    query: z.object({
+        default: z.string().optional(),
+        'parameter-query': z.string()
+    })
+});
+
+export const zCallWithDefaultParametersData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        parameterString: z.string().default('Hello World!'),
+        parameterNumber: z.number().default(123),
+        parameterBoolean: z.boolean().default(true),
+        parameterEnum: z.enum([
+            'Success',
+            'Warning',
+            'Error'
+        ]),
+        parameterModel: z.object({
+            prop: z.string().optional()
+        }).default({
+            prop: 'Hello World!'
+        })
+    })
+});
+
+export const zCallWithDefaultOptionalParametersData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        parameterString: z.string().optional().default('Hello World!'),
+        parameterNumber: z.number().optional().default(123),
+        parameterBoolean: z.boolean().optional().default(true),
+        parameterEnum: z.enum([
+            'Success',
+            'Warning',
+            'Error'
+        ]).optional()
+    }).optional()
+});
+
+export const zCallToTestOrderOfParamsData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        parameterOptionalStringWithDefault: z.string().optional().default('Hello World!'),
+        parameterOptionalStringWithEmptyDefault: z.string().optional().default(''),
+        parameterOptionalStringWithNoDefault: z.string().optional(),
+        parameterStringWithDefault: z.string().default('Hello World!'),
+        parameterStringWithEmptyDefault: z.string().default(''),
+        parameterStringWithNoDefault: z.string(),
+        parameterStringNullableWithNoDefault: z.union([
+            z.string(),
+            z.null()
+        ]).optional(),
+        parameterStringNullableWithDefault: z.union([
+            z.string(),
+            z.null()
+        ]).optional().default(null)
+    })
+});
+
+export const zDuplicateNameData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zDuplicateName2Data = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zDuplicateName3Data = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zDuplicateName4Data = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zCallWithNoContentResponseData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zCallWithResponseAndNoContentResponseData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
 export const zCallWithResponseAndNoContentResponseResponse = z.union([
     z.number(),
     z.unknown()
 ]);
 
+export const zDummyAData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zDummyBData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zCallWithResponseData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
 /**
  * Message for default response
  */
 export const zCallWithResponseResponse = zModelWithString;
 
+export const zCallWithDuplicateResponsesData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
 /**
  * Message for 201 response
  */
 export const zCallWithDuplicateResponsesResponse = zModelWithString;
+
+export const zCallWithResponsesData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
 export const zCallWithResponsesResponse = z.union([
     z.object({
@@ -604,69 +664,38 @@ export const zCallWithResponsesResponse = z.union([
     zModelThatExtendsExtends
 ]);
 
-/**
- * This is an array parameter that is sent as csv format (comma-separated values)
- */
-export const zCollectionFormatParameterParameterArrayCsv = z.array(z.string());
+export const zCollectionFormatData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        parameterArrayCSV: z.array(z.string()),
+        parameterArraySSV: z.array(z.string()),
+        parameterArrayTSV: z.array(z.string()),
+        parameterArrayPipes: z.array(z.string()),
+        parameterArrayMulti: z.array(z.string())
+    })
+});
 
-/**
- * This is an array parameter that is sent as ssv format (space-separated values)
- */
-export const zCollectionFormatParameterParameterArraySsv = z.array(z.string());
-
-/**
- * This is an array parameter that is sent as tsv format (tab-separated values)
- */
-export const zCollectionFormatParameterParameterArrayTsv = z.array(z.string());
-
-/**
- * This is an array parameter that is sent as pipes format (pipe-separated values)
- */
-export const zCollectionFormatParameterParameterArrayPipes = z.array(z.string());
-
-/**
- * This is an array parameter that is sent as multi format (multiple parameter instances)
- */
-export const zCollectionFormatParameterParameterArrayMulti = z.array(z.string());
-
-/**
- * This is a number parameter
- */
-export const zTypesParameterId = z.number().int();
-
-/**
- * This is a number parameter
- */
-export const zTypesParameterParameterNumber = z.number().default(123);
-
-/**
- * This is a string parameter
- */
-export const zTypesParameterParameterString = z.string().default('default');
-
-/**
- * This is a boolean parameter
- */
-export const zTypesParameterParameterBoolean = z.boolean().default(true);
-
-/**
- * This is an array parameter
- */
-export const zTypesParameterParameterArray = z.array(z.string());
-
-/**
- * This is a dictionary parameter
- */
-export const zTypesParameterParameterDictionary = z.object({});
-
-/**
- * This is an enum parameter
- */
-export const zTypesParameterParameterEnum = z.enum([
-    'Success',
-    'Warning',
-    'Error'
-]);
+export const zTypesData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.object({
+        id: z.number().int().optional()
+    }).optional(),
+    query: z.object({
+        parameterNumber: z.number().default(123),
+        parameterString: z.string().default('default'),
+        parameterBoolean: z.boolean().default(true),
+        parameterArray: z.array(z.string()),
+        parameterDictionary: z.object({}),
+        parameterEnum: z.enum([
+            'Success',
+            'Warning',
+            'Error'
+        ])
+    })
+});
 
 export const zTypesResponse = z.union([
     z.number(),
@@ -675,22 +704,22 @@ export const zTypesResponse = z.union([
     z.object({})
 ]);
 
-/**
- * Parameter containing object
- */
-export const zComplexTypesParameterParameterObject = z.object({
-    first: z.object({
-        second: z.object({
-            third: z.string().optional()
-        }).optional()
-    }).optional()
-});
-
-/**
- * This is a model with one string property
- */
-export const zComplexTypesParameterParameterReference = z.object({
-    prop: z.string().optional()
+export const zComplexTypesData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        parameterObject: z.object({
+            first: z.object({
+                second: z.object({
+                    third: z.string().optional()
+                }).optional()
+            }).optional()
+        }),
+        parameterReference: z.object({
+            prop: z.string().optional()
+        })
+    })
 });
 
 /**
@@ -698,25 +727,42 @@ export const zComplexTypesParameterParameterReference = z.object({
  */
 export const zComplexTypesResponse = z.array(zModelWithString);
 
-/**
- * Status code to return
- */
-export const zTestErrorCodeParameterStatus = z.string();
+export const zCallWithResultFromHeaderData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
-/**
- * Dummy input param
- */
-export const zNonAsciiæøåÆøÅöôêÊ字符串ParameterNonAsciiParamæøåÆøÅöôêÊ = z.number().int();
+export const zTestErrorCodeData = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        status: z.string()
+    })
+});
+
+export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
+    body: z.never().optional(),
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        'nonAsciiParamæøåÆØÅöôêÊ': z.number().int()
+    })
+});
 
 /**
  * Successful response
  */
 export const zNonAsciiæøåÆøÅöôêÊ字符串Response = zNonAsciiStringæøåÆøÅöôêÊ字符串;
 
-/**
- * Body should not be unknown
- */
-export const zPostApiVbyApiVersionBodyData = zParameterActivityParams;
+export const zPostApiVbyApiVersionBodyData = z.object({
+    body: zParameterActivityParams,
+    headers: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
 /**
  * OK
