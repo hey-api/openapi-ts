@@ -1110,7 +1110,10 @@ export const zGetApiVbyApiVersionSimpleOperationData = z.object({
     body: z.never().optional(),
     headers: z.never().optional(),
     path: z.object({
-        foo_param: z.string()
+        foo_param: z.union([
+            z.string(),
+            z.string().uuid()
+        ])
     }),
     query: z.never().optional()
 });
