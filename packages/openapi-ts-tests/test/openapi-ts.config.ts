@@ -57,7 +57,7 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'type-format.yaml'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.yaml'),
       // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
@@ -164,10 +164,7 @@ export default defineConfig(() => {
       {
         // case: 'snake_case',
         // comments: false,
-        definitions: {
-          // case: 'PascalCase',
-          // name: 'z{{name}}Yeehaw',
-        },
+        definitions: 'z{{name}}Definition',
         // exportFromIndex: true,
         // metadata: true,
         name: 'zod',
