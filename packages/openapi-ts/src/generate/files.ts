@@ -452,14 +452,16 @@ const ensureUniqueIdentifier = ({
     };
   }
 
-  let nameWithCasing = stringCase({
+  let nameWithCasingAndTransformer = stringCase({
     case: identifierCase,
-    value: name,
+    value: nameTransformer
+      ? transformName(name, nameTransformer, identifierCase)
+      : name,
   });
   if (count > 1) {
-    nameWithCasing = `${nameWithCasing}${count}`;
+    nameWithCasingAndTransformer = `${nameWithCasingAndTransformer}${count}`;
   }
-  const lowercaseName = nameWithCasing.toLocaleLowerCase();
+  const lowercaseName = nameWithCasingAndTransformer.toLocaleLowerCase();
   if (!identifiers[lowercaseName]) {
     identifiers[lowercaseName] = {};
   }
@@ -497,16 +499,6 @@ const ensureUniqueIdentifier = ({
       created: false,
       name: name as string,
     };
-  }
-
-  let nameWithCasingAndTransformer = stringCase({
-    case: identifierCase,
-    value: nameTransformer
-      ? transformName(name, nameTransformer, identifierCase)
-      : name,
-  });
-  if (count > 1) {
-    nameWithCasingAndTransformer = `${nameWithCasingAndTransformer}${count}`;
   }
 
   let nameValue = id[nameWithCasingAndTransformer];

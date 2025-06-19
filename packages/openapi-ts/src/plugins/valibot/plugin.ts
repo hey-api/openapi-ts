@@ -21,7 +21,7 @@ interface Result {
   hasCircularReference: boolean;
 }
 
-const nameTransformer = (name: string) => `v-${name}`;
+export const nameTransformer = (name: string) => `v-${name}`;
 
 const pipesToExpression = (pipes: Array<ts.Expression>) => {
   if (pipes.length === 1) {

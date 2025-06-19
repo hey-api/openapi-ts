@@ -406,11 +406,7 @@ export const operationStatements = ({
     }
   }
 
-  const responseValidator = createResponseValidator({
-    context,
-    operation,
-    plugin,
-  });
+  const responseValidator = createResponseValidator({ operation, plugin });
   if (responseValidator) {
     requestOptions.push({
       key: 'responseValidator',

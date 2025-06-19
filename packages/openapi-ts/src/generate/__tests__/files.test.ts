@@ -166,7 +166,7 @@ describe('ensureUniqueIdentifier', () => {
       created: true,
       name: 'prefixUser',
     });
-    expect(identifiers).toHaveProperty('user', {
+    expect(identifiers).toHaveProperty('prefixuser', {
       type: {
         '#/components/User': {
           $ref: '#/components/User',
@@ -209,6 +209,42 @@ describe('ensureUniqueIdentifier', () => {
         },
         user2: {
           $ref: '#/components/User',
+          name: 'user2',
+        },
+      },
+    });
+  });
+
+  it('resolves naming conflicts with name transformer by appending count', () => {
+    const identifiers: Identifiers = {
+      user: {
+        type: {
+          user: { $ref: '#/components/Other', name: 'user' },
+        },
+      },
+    };
+
+    const result = ensureUniqueIdentifier({
+      $ref: '#/components/Foo',
+      case: 'camelCase',
+      create: true,
+      identifiers,
+      nameTransformer: () => 'user',
+      namespace: 'type',
+    });
+
+    expect(result).toEqual({
+      created: true,
+      name: 'user2',
+    });
+    expect(identifiers).toHaveProperty('user2', {
+      type: {
+        '#/components/Foo': {
+          $ref: '#/components/Foo',
+          name: 'user2',
+        },
+        user2: {
+          $ref: '#/components/Foo',
           name: 'user2',
         },
       },

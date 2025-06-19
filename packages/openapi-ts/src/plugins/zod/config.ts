@@ -5,6 +5,7 @@ import type { Config, ResolvedConfig } from './types';
 
 export const defaultConfig: Plugin.Config<Config, ResolvedConfig> = {
   config: {
+    case: 'camelCase',
     comments: true,
     exportFromIndex: false,
     metadata: false,
@@ -16,7 +17,7 @@ export const defaultConfig: Plugin.Config<Config, ResolvedConfig> = {
   resolveConfig: (plugin, context) => {
     plugin.config.definitions = context.valueToObject({
       defaultValue: {
-        case: 'camelCase',
+        case: plugin.config.case ?? 'camelCase',
         enabled: true,
         name: 'z{{name}}',
       },
@@ -29,7 +30,7 @@ export const defaultConfig: Plugin.Config<Config, ResolvedConfig> = {
 
     plugin.config.requests = context.valueToObject({
       defaultValue: {
-        case: 'camelCase',
+        case: plugin.config.case ?? 'camelCase',
         enabled: true,
         name: 'z{{name}}Data',
       },
@@ -42,7 +43,7 @@ export const defaultConfig: Plugin.Config<Config, ResolvedConfig> = {
 
     plugin.config.responses = context.valueToObject({
       defaultValue: {
-        case: 'camelCase',
+        case: plugin.config.case ?? 'camelCase',
         enabled: true,
         name: 'z{{name}}Response',
       },

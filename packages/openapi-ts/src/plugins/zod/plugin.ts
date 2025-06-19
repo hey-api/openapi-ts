@@ -1,7 +1,9 @@
 import ts from 'typescript';
 
 import { compiler } from '../../compiler';
+import type { Identifier } from '../../generate/files';
 import { operationResponsesMap } from '../../ir/operation';
+import { hasParameterGroupObjectRequired } from '../../ir/parameter';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
 import type { StringCase } from '../../types/config';
@@ -18,8 +20,8 @@ interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
 interface State {
   circularReferenceTracker: Set<string>;
   hasCircularReference: boolean;
-  nameCase?: StringCase;
-  nameTransformer?: string | ((name: string) => string);
+  nameCase: StringCase;
+  nameTransformer: string | ((name: string) => string);
 }
 
 export const zodId = 'zod';
@@ -823,40 +825,120 @@ const operationToZodSchema = ({
   plugin: Plugin.Instance<ResolvedConfig>;
   state: State;
 }) => {
+  const file = plugin.context.file({ id: zodId })!;
+
   if (plugin.config.requests.enabled) {
-    if (operation.body) {
-      schemaToZodSchema({
-        // TODO: refactor for better cross-plugin compatibility
-        $ref: `#/zod-data/${operation.id}`,
-        plugin,
-        schema: operation.body.schema,
-        state: {
-          ...state,
-          nameCase: plugin.config.requests.case,
-          nameTransformer: plugin.config.requests.name,
-        },
-      });
+    const requiredProperties: Array<string> = [];
+    if (operation.body?.required) {
+      requiredProperties.push('body');
     }
 
+    const headersPropertyProperties: Record<string, IR.SchemaObject> = {};
+    const headersPropertyRequired: Array<string> = [];
+    const pathPropertyProperties: Record<string, IR.SchemaObject> = {};
+    const pathPropertyRequired: Array<string> = [];
+    const queryPropertyProperties: Record<string, IR.SchemaObject> = {};
+    const queryPropertyRequired: Array<string> = [];
+
     if (operation.parameters) {
-      for (const type in operation.parameters) {
-        const group = operation.parameters[type as keyof IR.ParametersObject]!;
-        for (const key in group) {
-          const parameter = group[key]!;
-          schemaToZodSchema({
-            // TODO: refactor for better cross-plugin compatibility
-            $ref: `#/zod-data/${operation.id}-parameter-${parameter.name}`,
-            plugin,
-            schema: parameter.schema,
-            state: {
-              ...state,
-              nameCase: plugin.config.requests.case,
-              nameTransformer: plugin.config.requests.name,
-            },
-          });
+      // TODO: add support for cookies
+
+      if (operation.parameters.header) {
+        if (hasParameterGroupObjectRequired(operation.parameters.path)) {
+          requiredProperties.push('headers');
+        }
+
+        for (const key in operation.parameters.header) {
+          const parameter = operation.parameters.header[key]!;
+          headersPropertyProperties[parameter.name] = parameter.schema;
+          if (parameter.required) {
+            headersPropertyRequired.push(parameter.name);
+          }
+        }
+      }
+
+      if (operation.parameters.path) {
+        if (hasParameterGroupObjectRequired(operation.parameters.path)) {
+          requiredProperties.push('path');
+        }
+
+        for (const key in operation.parameters.path) {
+          const parameter = operation.parameters.path[key]!;
+          pathPropertyProperties[parameter.name] = parameter.schema;
+          if (parameter.required) {
+            pathPropertyRequired.push(parameter.name);
+          }
+        }
+      }
+
+      if (operation.parameters.query) {
+        if (hasParameterGroupObjectRequired(operation.parameters.query)) {
+          requiredProperties.push('query');
+        }
+
+        for (const key in operation.parameters.query) {
+          const parameter = operation.parameters.query[key]!;
+          queryPropertyProperties[parameter.name] = parameter.schema;
+          if (parameter.required) {
+            queryPropertyRequired.push(parameter.name);
+          }
         }
       }
     }
+
+    const identifierData = file.identifier({
+      // TODO: refactor for better cross-plugin compatibility
+      $ref: `#/zod-data/${operation.id}`,
+      case: plugin.config.requests.case,
+      create: true,
+      nameTransformer: plugin.config.requests.name,
+      namespace: 'value',
+    });
+    schemaToZodSchema({
+      // TODO: refactor for better cross-plugin compatibility
+      $ref: `#/zod-data/${operation.id}`,
+      identifier: identifierData,
+      plugin,
+      schema: {
+        properties: {
+          body: operation.body
+            ? operation.body.schema
+            : {
+                type: 'never',
+              },
+          headers: Object.keys(headersPropertyProperties).length
+            ? {
+                properties: headersPropertyProperties,
+                required: headersPropertyRequired,
+                type: 'object',
+              }
+            : {
+                type: 'never',
+              },
+          path: Object.keys(pathPropertyProperties).length
+            ? {
+                properties: pathPropertyProperties,
+                required: pathPropertyRequired,
+                type: 'object',
+              }
+            : {
+                type: 'never',
+              },
+          query: Object.keys(queryPropertyProperties).length
+            ? {
+                properties: queryPropertyProperties,
+                required: queryPropertyRequired,
+                type: 'object',
+              }
+            : {
+                type: 'never',
+              },
+        },
+        required: requiredProperties,
+        type: 'object',
+      },
+      state,
+    });
   }
 
   if (plugin.config.responses.enabled) {
@@ -864,16 +946,21 @@ const operationToZodSchema = ({
       const { response } = operationResponsesMap(operation);
 
       if (response) {
+        const identifierResponse = file.identifier({
+          // TODO: refactor for better cross-plugin compatibility
+          $ref: `#/zod-response/${operation.id}`,
+          case: plugin.config.responses.case,
+          create: true,
+          nameTransformer: plugin.config.responses.name,
+          namespace: 'value',
+        });
         schemaToZodSchema({
           // TODO: refactor for better cross-plugin compatibility
           $ref: `#/zod-response/${operation.id}`,
+          identifier: identifierResponse,
           plugin,
           schema: response,
-          state: {
-            ...state,
-            nameCase: plugin.config.responses.case,
-            nameTransformer: plugin.config.responses.name,
-          },
+          state,
         });
       }
     }
@@ -882,6 +969,7 @@ const operationToZodSchema = ({
 
 const schemaToZodSchema = ({
   $ref,
+  identifier: _identifier,
   optional,
   plugin,
   schema,
@@ -891,6 +979,7 @@ const schemaToZodSchema = ({
    * When $ref is supplied, a node will be emitted to the file.
    */
   $ref?: string;
+  identifier?: Identifier;
   /**
    * Accept `optional` to handle optional object properties. We can't handle
    * this inside the object function because `.optional()` must come before
@@ -905,18 +994,20 @@ const schemaToZodSchema = ({
 
   let anyType: string | undefined;
   let expression: ts.Expression | undefined;
-  let identifier: ReturnType<typeof file.identifier> | undefined;
+  let identifier: ReturnType<typeof file.identifier> | undefined = _identifier;
 
   if ($ref) {
     state.circularReferenceTracker.add($ref);
 
-    identifier = file.identifier({
-      $ref,
-      case: state.nameCase,
-      create: true,
-      nameTransformer: state.nameTransformer,
-      namespace: 'value',
-    });
+    if (!identifier) {
+      identifier = file.identifier({
+        $ref,
+        case: state.nameCase,
+        create: true,
+        nameTransformer: state.nameTransformer,
+        namespace: 'value',
+      });
+    }
   }
 
   if (schema.$ref) {
@@ -1145,6 +1236,8 @@ export const handler: Plugin.Handler<ResolvedConfig> = ({ plugin }) => {
     const state: State = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
+      nameCase: plugin.config.definitions.case,
+      nameTransformer: plugin.config.definitions.name,
     };
 
     operationToZodSchema({
