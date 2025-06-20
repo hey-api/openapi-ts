@@ -10,6 +10,14 @@ export namespace OpenApi {
   export type V3_1_X = OpenApiV3_1_X;
 }
 
+export namespace OpenApiMetaObject {
+  export type V2_0_X = OpenApiV2_0_XTypes['InfoObject'];
+
+  export type V3_0_X = OpenApiV3_0_XTypes['InfoObject'];
+
+  export type V3_1_X = OpenApiV3_1_XTypes['InfoObject'];
+}
+
 export namespace OpenApiParameterObject {
   export type V3_0_X =
     | OpenApiV3_0_XTypes['ParameterObject']

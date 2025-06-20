@@ -42,6 +42,9 @@ export default defineConfig(() => {
       // pagination: {
       //   keywords: ['aa'],
       // },
+      // patch: {
+      //   version: () => '3.1.1',
+      // },
       // path: {
       //   components: {},
       //   info: {
