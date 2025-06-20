@@ -1,4 +1,5 @@
 import type {
+  OpenApiMetaObject,
   OpenApiParameterObject,
   OpenApiRequestBodyObject,
   OpenApiResponseObject,
@@ -246,12 +247,43 @@ export interface Filters {
 }
 
 export interface Patch {
+  /**
+   * Patch the OpenAPI meta object in place. Useful for modifying general metadata such as title, description, version, or custom fields before further processing.
+   *
+   * @param meta The OpenAPI meta object for the current version.
+   */
+  meta?: (
+    meta:
+      | OpenApiMetaObject.V2_0_X
+      | OpenApiMetaObject.V3_0_X
+      | OpenApiMetaObject.V3_1_X,
+  ) => void;
+  /**
+   * Patch OpenAPI parameters in place. The key is the parameter name, and the function receives the parameter object to modify directly.
+   *
+   * @example
+   * parameters: {
+   *   limit: (parameter) => {
+   *     parameter.schema.type = 'integer';
+   *   }
+   * }
+   */
   parameters?: Record<
     string,
     (
       parameter: OpenApiParameterObject.V3_0_X | OpenApiParameterObject.V3_1_X,
     ) => void
   >;
+  /**
+   * Patch OpenAPI request bodies in place. The key is the request body name, and the function receives the request body object to modify directly.
+   *
+   * @example
+   * requestBodies: {
+   *   CreateUserRequest: (requestBody) => {
+   *     requestBody.required = true;
+   *   }
+   * }
+   */
   requestBodies?: Record<
     string,
     (
@@ -260,6 +292,16 @@ export interface Patch {
         | OpenApiRequestBodyObject.V3_1_X,
     ) => void
   >;
+  /**
+   * Patch OpenAPI responses in place. The key is the response name, and the function receives the response object to modify directly.
+   *
+   * @example
+   * responses: {
+   *   NotFound: (response) => {
+   *     response.description = 'Resource not found.';
+   *   }
+   * }
+   */
   responses?: Record<
     string,
     (
@@ -303,6 +345,17 @@ export interface Patch {
         | OpenApiSchemaObject.V3_1_X,
     ) => void
   >;
+  /**
+   * Patch the OpenAPI version string. The function receives the current version and should return the new version string.
+   * Useful for normalizing or overriding the version value before further processing.
+   *
+   * @param version The current OpenAPI version string.
+   * @returns The new version string to use.
+   *
+   * @example
+   * version: (version) => version.replace(/^v/, '')
+   */
+  version?: (version: string) => string;
 }
 
 export interface Watch {
