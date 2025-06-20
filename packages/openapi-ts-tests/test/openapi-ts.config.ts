@@ -60,8 +60,8 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      // path: path.resolve(__dirname, 'spec', '3.1.x', 'validators.yaml'),
-      path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.yaml'),
+      // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -150,13 +150,25 @@ export default defineConfig(() => {
         // name: 'fastify',
       },
       {
+        case: 'SCREAMING_SNAKE_CASE',
+        comments: false,
         exportFromIndex: true,
-        infiniteQueryKeyNameBuilder: '{{name}}IQK',
-        infiniteQueryOptionsNameBuilder: '{{name}}InfiniteQuery',
-        mutationOptionsNameBuilder: '{{name}}MutationOptions',
-        // name: '@tanstack/react-query',
-        queryKeyNameBuilder: '{{name}}QK',
-        queryOptionsNameBuilder: '{{name}}Query',
+        infiniteQueryKeys: {
+          name: '{{name}}IQK',
+        },
+        infiniteQueryOptions: {
+          name: '{{name}}IQO',
+        },
+        mutationOptions: {
+          name: '{{name}}MO',
+        },
+        name: '@tanstack/react-query',
+        queryKeys: {
+          name: '{{name}}QK',
+        },
+        queryOptions: {
+          name: '{{name}}QO',
+        },
       },
       {
         // comments: false,

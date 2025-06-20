@@ -3,7 +3,6 @@ import { clientApi } from '../../../generate/client';
 import { hasOperationDataRequired } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { getClientBaseUrlKey } from '../../@hey-api/client-core/utils';
-import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import type { PluginInstance } from './types';
 import { useTypeData } from './useType';
 
@@ -22,7 +21,9 @@ export const createQueryKeyFunction = ({
   const file = plugin.context.file({ id: plugin.name })!;
 
   const identifierCreateQueryKey = file.identifier({
-    $ref: `#/ir/${createQueryKeyFn}`,
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-create-query-key/${createQueryKeyFn}`,
+    case: plugin.config.case,
     create: true,
     namespace: 'value',
   });
@@ -223,7 +224,9 @@ const createQueryKeyLiteral = ({
 }) => {
   const file = plugin.context.file({ id: plugin.name })!;
   const identifierCreateQueryKey = file.identifier({
-    $ref: `#/ir/${createQueryKeyFn}`,
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-create-query-key/${createQueryKeyFn}`,
+    case: plugin.config.case,
     namespace: 'value',
   });
   const createQueryKeyCallExpression = compiler.callExpression({
@@ -288,63 +291,6 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
   file.add(queryKeyType);
 };
 
-export const infiniteQueryKeyFunctionIdentifier = ({
-  operation,
-  plugin,
-}: {
-  operation: IR.OperationObject;
-  plugin: PluginInstance;
-}) => {
-  const name = serviceFunctionIdentifier({
-    config: plugin.context.config,
-    id: operation.id,
-    operation,
-  });
-
-  let customName = '';
-
-  if (plugin.config.infiniteQueryKeyNameBuilder) {
-    if (typeof plugin.config.infiniteQueryKeyNameBuilder === 'function') {
-      customName = plugin.config.infiniteQueryKeyNameBuilder(name);
-    } else {
-      customName = plugin.config.infiniteQueryKeyNameBuilder.replace(
-        '{{name}}',
-        name,
-      );
-    }
-  }
-
-  return customName;
-};
-
-export const queryKeyFunctionIdentifier = ({
-  context,
-  operation,
-  plugin,
-}: {
-  context: IR.Context;
-  operation: IR.OperationObject;
-  plugin: PluginInstance;
-}) => {
-  const name = serviceFunctionIdentifier({
-    config: context.config,
-    id: operation.id,
-    operation,
-  });
-
-  let customName = '';
-
-  if (plugin.config.queryKeyNameBuilder) {
-    if (typeof plugin.config.queryKeyNameBuilder === 'function') {
-      customName = plugin.config.queryKeyNameBuilder(name);
-    } else {
-      customName = plugin.config.queryKeyNameBuilder.replace('{{name}}', name);
-    }
-  }
-
-  return customName;
-};
-
 export const queryKeyStatement = ({
   isInfinite,
   operation,
@@ -358,18 +304,23 @@ export const queryKeyStatement = ({
 }) => {
   const file = plugin.context.file({ id: plugin.name })!;
   const typeData = useTypeData({ operation, plugin });
-  const name = isInfinite
-    ? infiniteQueryKeyFunctionIdentifier({ operation, plugin })
-    : queryKeyFunctionIdentifier({
-        context: plugin.context,
-        operation,
-        plugin,
+  const identifier = isInfinite
+    ? file.identifier({
+        // TODO: refactor for better cross-plugin compatibility
+        $ref: `#/tanstack-query-infinite-query-key/${operation.id}`,
+        case: plugin.config.infiniteQueryKeys.case,
+        create: true,
+        nameTransformer: plugin.config.infiniteQueryKeys.name,
+        namespace: 'value',
+      })
+    : file.identifier({
+        // TODO: refactor for better cross-plugin compatibility
+        $ref: `#/tanstack-query-query-key/${operation.id}`,
+        case: plugin.config.queryKeys.case,
+        create: true,
+        nameTransformer: plugin.config.queryKeys.name,
+        namespace: 'value',
       });
-  const identifierQueryKey = file.identifier({
-    $ref: `#/queryKey/${name}`,
-    create: true,
-    namespace: 'value',
-  });
   const statement = compiler.constVariable({
     exportConst: true,
     expression: compiler.arrowFunction({
@@ -387,7 +338,7 @@ export const queryKeyStatement = ({
         plugin,
       }),
     }),
-    name: identifierQueryKey.name || '',
+    name: identifier.name || '',
   });
   return statement;
 };
