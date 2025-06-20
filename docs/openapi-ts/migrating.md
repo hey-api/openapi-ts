@@ -27,6 +27,22 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.75.0
+
+### Added `plugin.forEach()` method
+
+This method replaces the `.subscribe()` method. Additionally, `.forEach()` is executed immediately, which means we don't need the `before` and `after` events – simply move your code before and after the `.forEach()` block.
+
+```ts
+plugin.subscribe('operation', (event) => { // [!code --]
+  // do something with event // [!code --]
+}); // [!code --]
+plugin.subscribe('schema', (event) => { // [!code --]
+plugin.forEach('operation', 'schema', (event) => { // [!code ++]
+  // do something with event
+});
+```
+
 ## v0.74.0
 
 ### Single Zod schema per request
