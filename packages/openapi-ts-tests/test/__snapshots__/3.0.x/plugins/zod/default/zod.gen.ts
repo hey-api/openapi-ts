@@ -220,12 +220,15 @@ export const zDictionaryWithArray = z.object({});
 /**
  * This is a string dictionary
  */
-export const zDictionaryWithDictionary = z.object({});
+export const zDictionaryWithDictionary = z.record(z.object({}));
 
 /**
  * This is a complex dictionary
  */
-export const zDictionaryWithProperties = z.object({});
+export const zDictionaryWithProperties = z.record(z.object({
+    foo: z.string().optional(),
+    bar: z.string().optional()
+}));
 
 /**
  * This is a model with one number property

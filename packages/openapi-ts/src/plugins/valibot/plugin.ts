@@ -16,7 +16,7 @@ interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
   type: Extract<Required<IR.SchemaObject>['type'], T>;
 }
 
-interface Result {
+interface State {
   circularReferenceTracker: Set<string>;
   hasCircularReference: boolean;
 }
@@ -39,15 +39,13 @@ const pipesToExpression = (pipes: Array<ts.Expression>) => {
 };
 
 const arrayTypeToValibotSchema = ({
-  context,
   plugin,
-  result,
   schema,
+  state,
 }: {
-  context: IR.Context;
   plugin: Plugin.Instance<Config>;
-  result: Result;
   schema: SchemaWithType<'array'>;
+  state: State;
 }): ts.CallExpression => {
   const functionName = compiler.propertyAccessExpression({
     expression: identifiers.v,
@@ -61,7 +59,6 @@ const arrayTypeToValibotSchema = ({
       functionName,
       parameters: [
         unknownTypeToValibotSchema({
-          context,
           schema: {
             type: 'unknown',
           },
@@ -74,10 +71,9 @@ const arrayTypeToValibotSchema = ({
     // at least one item is guaranteed
     const itemExpressions = schema.items!.map((item) => {
       const schemaPipes = schemaToValibotSchema({
-        context,
         plugin,
-        result,
         schema: item,
+        state,
       });
       return pipesToExpression(schemaPipes);
     });
@@ -102,7 +98,6 @@ const arrayTypeToValibotSchema = ({
         functionName,
         parameters: [
           unknownTypeToValibotSchema({
-            context,
             schema: {
               type: 'unknown',
             },
@@ -148,7 +143,6 @@ const arrayTypeToValibotSchema = ({
 const booleanTypeToValibotSchema = ({
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'boolean'>;
 }) => {
   if (typeof schema.const === 'boolean') {
@@ -172,10 +166,8 @@ const booleanTypeToValibotSchema = ({
 };
 
 const enumTypeToValibotSchema = ({
-  context,
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'enum'>;
 }): ts.CallExpression => {
   const enumMembers: Array<ts.LiteralExpression> = [];
@@ -197,7 +189,6 @@ const enumTypeToValibotSchema = ({
 
   if (!enumMembers.length) {
     return unknownTypeToValibotSchema({
-      context,
       schema: {
         type: 'unknown',
       },
@@ -234,7 +225,6 @@ const neverTypeToValibotSchema = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'never'>;
 }) => {
   const expression = compiler.callExpression({
@@ -250,7 +240,6 @@ const nullTypeToValibotSchema = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'null'>;
 }) => {
   const expression = compiler.callExpression({
@@ -290,7 +279,6 @@ const numberParameter = ({
 const numberTypeToValibotSchema = ({
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'integer' | 'number'>;
 }) => {
   const isBigInt = schema.type === 'integer' && schema.format === 'int64';
@@ -381,15 +369,13 @@ const numberTypeToValibotSchema = ({
 };
 
 const objectTypeToValibotSchema = ({
-  context,
   plugin,
-  result,
   schema,
+  state,
 }: {
-  context: IR.Context;
   plugin: Plugin.Instance<Config>;
-  result: Result;
   schema: SchemaWithType<'object'>;
+  state: State;
 }): {
   anyType: string;
   expression: ts.CallExpression;
@@ -397,22 +383,17 @@ const objectTypeToValibotSchema = ({
   // TODO: parser - handle constants
   const properties: Array<ts.PropertyAssignment> = [];
 
-  // let indexProperty: Property | undefined;
-  // const schemaProperties: Array<Property> = [];
-  // let indexPropertyItems: Array<IR.SchemaObject> = [];
   const required = schema.required ?? [];
-  // let hasOptionalProperties = false;
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
     const isRequired = required.includes(name);
 
     const schemaPipes = schemaToValibotSchema({
-      context,
       optional: !isRequired,
       plugin,
-      result,
       schema: property,
+      state,
     });
 
     numberRegExp.lastIndex = 0;
@@ -440,50 +421,40 @@ const objectTypeToValibotSchema = ({
         name: propertyName,
       }),
     );
-
-    // indexPropertyItems.push(property);
-    // if (!isRequired) {
-    //   hasOptionalProperties = true;
-    // }
   }
 
-  // if (
-  //   schema.additionalProperties &&
-  //   (schema.additionalProperties.type !== 'never' || !indexPropertyItems.length)
-  // ) {
-  //   if (schema.additionalProperties.type === 'never') {
-  //     indexPropertyItems = [schema.additionalProperties];
-  //   } else {
-  //     indexPropertyItems.unshift(schema.additionalProperties);
-  //   }
+  if (
+    schema.additionalProperties &&
+    schema.additionalProperties.type === 'object' &&
+    !Object.keys(properties).length
+  ) {
+    const pipes = schemaToValibotSchema({
+      plugin,
+      schema: schema.additionalProperties,
+      state,
+    });
+    const expression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: identifiers.v,
+        name: identifiers.schemas.record,
+      }),
+      parameters: [
+        compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: identifiers.v,
+            name: identifiers.schemas.string,
+          }),
+          parameters: [],
+        }),
+        pipesToExpression(pipes),
+      ],
+    });
+    return {
+      anyType: 'AnyZodObject',
+      expression,
+    };
+  }
 
-  //   if (hasOptionalProperties) {
-  //     indexPropertyItems.push({
-  //       type: 'undefined',
-  //     });
-  //   }
-
-  //   indexProperty = {
-  //     isRequired: true,
-  //     name: 'key',
-  //     type: schemaToValibotSchema({
-  //       context,
-  //       schema:
-  //         indexPropertyItems.length === 1
-  //           ? indexPropertyItems[0]
-  //           : {
-  //               items: indexPropertyItems,
-  //               logicalOperator: 'or',
-  //             },
-  //     }),
-  //   };
-  // }
-
-  // return compiler.typeInterfaceNode({
-  //   indexProperty,
-  //   properties: schemaProperties,
-  //   useLegacyResolution: false,
-  // });
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: identifiers.v,
@@ -501,7 +472,6 @@ const objectTypeToValibotSchema = ({
 const stringTypeToValibotSchema = ({
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'string'>;
 }) => {
   if (typeof schema.const === 'string') {
@@ -631,15 +601,13 @@ const stringTypeToValibotSchema = ({
 };
 
 const tupleTypeToValibotSchema = ({
-  context,
   plugin,
-  result,
   schema,
+  state,
 }: {
-  context: IR.Context;
   plugin: Plugin.Instance<Config>;
-  result: Result;
   schema: SchemaWithType<'tuple'>;
+  state: State;
 }) => {
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
@@ -668,10 +636,9 @@ const tupleTypeToValibotSchema = ({
   if (schema.items) {
     const tupleElements = schema.items.map((item) => {
       const schemaPipes = schemaToValibotSchema({
-        context,
         plugin,
-        result,
         schema: item,
+        state,
       });
       return pipesToExpression(schemaPipes);
     });
@@ -690,7 +657,6 @@ const tupleTypeToValibotSchema = ({
   }
 
   return unknownTypeToValibotSchema({
-    context,
     schema: {
       type: 'unknown',
     },
@@ -701,7 +667,6 @@ const undefinedTypeToValibotSchema = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'undefined'>;
 }) => {
   const expression = compiler.callExpression({
@@ -717,7 +682,6 @@ const unknownTypeToValibotSchema = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'unknown'>;
 }) => {
   const expression = compiler.callExpression({
@@ -733,7 +697,6 @@ const voidTypeToValibotSchema = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'void'>;
 }) => {
   const expression = compiler.callExpression({
@@ -746,15 +709,13 @@ const voidTypeToValibotSchema = ({
 };
 
 const schemaTypeToValibotSchema = ({
-  context,
   plugin,
-  result,
   schema,
+  state,
 }: {
-  context: IR.Context;
   plugin: Plugin.Instance<Config>;
-  result: Result;
   schema: IR.SchemaObject;
+  state: State;
 }): {
   anyType?: string;
   expression: ts.Expression;
@@ -763,23 +724,20 @@ const schemaTypeToValibotSchema = ({
     case 'array':
       return {
         expression: arrayTypeToValibotSchema({
-          context,
           plugin,
-          result,
           schema: schema as SchemaWithType<'array'>,
+          state,
         }),
       };
     case 'boolean':
       return {
         expression: booleanTypeToValibotSchema({
-          context,
           schema: schema as SchemaWithType<'boolean'>,
         }),
       };
     case 'enum':
       return {
         expression: enumTypeToValibotSchema({
-          context,
           schema: schema as SchemaWithType<'enum'>,
         }),
       };
@@ -787,65 +745,56 @@ const schemaTypeToValibotSchema = ({
     case 'number':
       return {
         expression: numberTypeToValibotSchema({
-          context,
           schema: schema as SchemaWithType<'integer' | 'number'>,
         }),
       };
     case 'never':
       return {
         expression: neverTypeToValibotSchema({
-          context,
           schema: schema as SchemaWithType<'never'>,
         }),
       };
     case 'null':
       return {
         expression: nullTypeToValibotSchema({
-          context,
           schema: schema as SchemaWithType<'null'>,
         }),
       };
     case 'object':
       return objectTypeToValibotSchema({
-        context,
         plugin,
-        result,
         schema: schema as SchemaWithType<'object'>,
+        state,
       });
     case 'string':
       return {
         expression: stringTypeToValibotSchema({
-          context,
           schema: schema as SchemaWithType<'string'>,
         }),
       };
     case 'tuple':
       return {
         expression: tupleTypeToValibotSchema({
-          context,
           plugin,
-          result,
           schema: schema as SchemaWithType<'tuple'>,
+          state,
         }),
       };
     case 'undefined':
       return {
         expression: undefinedTypeToValibotSchema({
-          context,
           schema: schema as SchemaWithType<'undefined'>,
         }),
       };
     case 'unknown':
       return {
         expression: unknownTypeToValibotSchema({
-          context,
           schema: schema as SchemaWithType<'unknown'>,
         }),
       };
     case 'void':
       return {
         expression: voidTypeToValibotSchema({
-          context,
           schema: schema as SchemaWithType<'void'>,
         }),
       };
@@ -853,28 +802,25 @@ const schemaTypeToValibotSchema = ({
 };
 
 const operationToValibotSchema = ({
-  context,
   operation,
   plugin,
-  result,
+  state,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
-  result: Result;
+  state: State;
 }) => {
   if (operation.body) {
     schemaToValibotSchema({
       $ref: operationIrRef({
         case: 'camelCase',
-        config: context.config,
+        config: plugin.context.config,
         id: operation.id,
         type: 'data',
       }),
-      context,
       plugin,
-      result,
       schema: operation.body.schema,
+      state,
     });
   }
 
@@ -886,15 +832,14 @@ const operationToValibotSchema = ({
         schemaToValibotSchema({
           $ref: operationIrRef({
             case: 'camelCase',
-            config: context.config,
+            config: plugin.context.config,
             id: operation.id,
             parameterId: parameter.name,
             type: 'parameter',
           }),
-          context,
           plugin,
-          result,
           schema: parameter.schema,
+          state,
         });
       }
     }
@@ -907,14 +852,13 @@ const operationToValibotSchema = ({
       schemaToValibotSchema({
         $ref: operationIrRef({
           case: 'camelCase',
-          config: context.config,
+          config: plugin.context.config,
           id: operation.id,
           type: 'response',
         }),
-        context,
         plugin,
-        result,
         schema: response,
+        state,
       });
     }
   }
@@ -922,17 +866,15 @@ const operationToValibotSchema = ({
 
 const schemaToValibotSchema = ({
   $ref,
-  context,
   optional,
   plugin,
-  result,
   schema,
+  state,
 }: {
   /**
    * When $ref is supplied, a node will be emitted to the file.
    */
   $ref?: string;
-  context: IR.Context;
   /**
    * Accept `optional` to handle optional object properties. We can't handle
    * this inside the object function because `.optional()` must come before
@@ -940,17 +882,17 @@ const schemaToValibotSchema = ({
    */
   optional?: boolean;
   plugin: Plugin.Instance<Config>;
-  result: Result;
   schema: IR.SchemaObject;
+  state: State;
 }): Array<ts.Expression> => {
-  const file = context.file({ id: valibotId })!;
+  const file = plugin.context.file({ id: valibotId })!;
 
   let anyType: string | undefined;
   let identifier: ReturnType<typeof file.identifier> | undefined;
   let pipes: Array<ts.Expression> = [];
 
   if ($ref) {
-    result.circularReferenceTracker.add($ref);
+    state.circularReferenceTracker.add($ref);
 
     identifier = file.identifier({
       $ref,
@@ -961,9 +903,7 @@ const schemaToValibotSchema = ({
   }
 
   if (schema.$ref) {
-    const isCircularReference = result.circularReferenceTracker.has(
-      schema.$ref,
-    );
+    const isCircularReference = state.circularReferenceTracker.has(schema.$ref);
 
     // if $ref hasn't been processed yet, inline it to avoid the
     // "Block-scoped variable used before its declaration." error
@@ -975,13 +915,12 @@ const schemaToValibotSchema = ({
     });
 
     if (!identifierRef.name) {
-      const ref = context.resolveIrRef<IR.SchemaObject>(schema.$ref);
+      const ref = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
       const schemaPipes = schemaToValibotSchema({
         $ref: schema.$ref,
-        context,
         plugin,
-        result,
         schema: ref,
+        state,
       });
       pipes.push(...schemaPipes);
 
@@ -1012,17 +951,16 @@ const schemaToValibotSchema = ({
           ],
         });
         pipes.push(lazyExpression);
-        result.hasCircularReference = true;
+        state.hasCircularReference = true;
       } else {
         pipes.push(refIdentifier);
       }
     }
   } else if (schema.type) {
     const valibotSchema = schemaTypeToValibotSchema({
-      context,
       plugin,
-      result,
       schema,
+      state,
     });
     anyType = valibotSchema.anyType;
     pipes.push(valibotSchema.expression);
@@ -1032,10 +970,9 @@ const schemaToValibotSchema = ({
     if (schema.items) {
       const itemTypes = schema.items.map((item) => {
         const schemaPipes = schemaToValibotSchema({
-          context,
           plugin,
-          result,
           schema: item,
+          state,
         });
         return pipesToExpression(schemaPipes);
       });
@@ -1069,29 +1006,27 @@ const schemaToValibotSchema = ({
       }
     } else {
       const schemaPipes = schemaToValibotSchema({
-        context,
         plugin,
-        result,
         schema,
+        state,
       });
       pipes.push(...schemaPipes);
     }
   } else {
     // catch-all fallback for failed schemas
     const valibotSchema = schemaTypeToValibotSchema({
-      context,
       plugin,
-      result,
       schema: {
         type: 'unknown',
       },
+      state,
     });
     anyType = valibotSchema.anyType;
     pipes.push(valibotSchema.expression);
   }
 
   if ($ref) {
-    result.circularReferenceTracker.delete($ref);
+    state.circularReferenceTracker.delete($ref);
   }
 
   if (pipes.length) {
@@ -1147,7 +1082,7 @@ const schemaToValibotSchema = ({
       exportConst: true,
       expression: pipesToExpression(pipes),
       name: identifier.name,
-      typeName: result.hasCircularReference
+      typeName: state.hasCircularReference
         ? (compiler.propertyAccessExpression({
             expression: identifiers.v,
             name: anyType || identifiers.types.GenericSchema.text,
@@ -1176,61 +1111,57 @@ export const handler: Plugin.Handler<Config> = ({ plugin }) => {
   });
 
   plugin.subscribe('operation', ({ operation }) => {
-    const result: Result = {
+    const state: State = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
     };
 
     operationToValibotSchema({
-      context: plugin.context,
       operation,
       plugin,
-      result,
+      state,
     });
   });
 
   plugin.subscribe('parameter', ({ $ref, parameter }) => {
-    const result: Result = {
+    const state: State = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
     };
 
     schemaToValibotSchema({
       $ref,
-      context: plugin.context,
       plugin,
-      result,
       schema: parameter.schema,
+      state,
     });
   });
 
   plugin.subscribe('requestBody', ({ $ref, requestBody }) => {
-    const result: Result = {
+    const state: State = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
     };
 
     schemaToValibotSchema({
       $ref,
-      context: plugin.context,
       plugin,
-      result,
       schema: requestBody.schema,
+      state,
     });
   });
 
   plugin.subscribe('schema', ({ $ref, schema }) => {
-    const result: Result = {
+    const state: State = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
     };
 
     schemaToValibotSchema({
       $ref,
-      context: plugin.context,
       plugin,
-      result,
       schema,
+      state,
     });
   });
 };
