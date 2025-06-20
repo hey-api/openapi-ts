@@ -25,13 +25,11 @@ const createInfiniteParamsFn = 'createInfiniteParams';
 const infiniteQueryOptionsFn = 'infiniteQueryOptions';
 
 const createInfiniteParamsFunction = ({
-  context,
   plugin,
 }: {
-  context: IR.Context;
   plugin: PluginInstance;
 }) => {
-  const file = context.file({ id: plugin.name })!;
+  const file = plugin.context.file({ id: plugin.name })!;
 
   const fn = compiler.constVariable({
     expression: compiler.arrowFunction({
@@ -221,16 +219,14 @@ const createInfiniteParamsFunction = ({
 };
 
 const infiniteQueryOptionsFunctionIdentifier = ({
-  context,
   operation,
   plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
   const name = serviceFunctionIdentifier({
-    config: context.config,
+    config: plugin.context.config,
     id: operation.id,
     operation,
   });
@@ -252,13 +248,11 @@ const infiniteQueryOptionsFunctionIdentifier = ({
 };
 
 export const createInfiniteQueryOptions = ({
-  context,
   operation,
   plugin,
   queryFn,
   state,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: PluginInstance;
   queryFn: string;
@@ -271,26 +265,32 @@ export const createInfiniteQueryOptions = ({
     return state;
   }
 
-  const pagination = operationPagination({ context, operation });
+  const pagination = operationPagination({
+    context: plugin.context,
+    operation,
+  });
 
   if (!pagination) {
     return state;
   }
 
-  const file = context.file({ id: plugin.name })!;
-  const isRequiredOptions = isOperationOptionsRequired({ context, operation });
+  const file = plugin.context.file({ id: plugin.name })!;
+  const isRequiredOptions = isOperationOptionsRequired({
+    context: plugin.context,
+    operation,
+  });
 
   if (!state.hasInfiniteQueries) {
     state.hasInfiniteQueries = true;
 
     if (!state.hasCreateQueryKeyParamsFunction) {
-      createQueryKeyType({ context, plugin });
-      createQueryKeyFunction({ context, plugin });
+      createQueryKeyType({ plugin });
+      createQueryKeyFunction({ plugin });
       state.hasCreateQueryKeyParamsFunction = true;
     }
 
     if (!state.hasCreateInfiniteParamsFunction) {
-      createInfiniteParamsFunction({ context, plugin });
+      createInfiniteParamsFunction({ plugin });
       state.hasCreateInfiniteParamsFunction = true;
     }
 
@@ -308,9 +308,9 @@ export const createInfiniteQueryOptions = ({
 
   state.hasUsedQueryFn = true;
 
-  const typeData = useTypeData({ context, operation, plugin });
-  const typeError = useTypeError({ context, operation, plugin });
-  const typeResponse = useTypeResponse({ context, operation, plugin });
+  const typeData = useTypeData({ operation, plugin });
+  const typeError = useTypeError({ operation, plugin });
+  const typeResponse = useTypeResponse({ operation, plugin });
 
   const typeQueryKey = `${queryKeyName}<${typeData}>`;
   const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
@@ -318,7 +318,6 @@ export const createInfiniteQueryOptions = ({
   // TODO: parser - this is a bit clunky, need to compile type to string because
   // `compiler.returnFunctionCall()` accepts only strings, should be cleaned up
   const type = schemaToType({
-    context,
     plugin: pluginTypeScript as Parameters<typeof schemaToType>[0]['plugin'],
     schema: pagination.schema,
     state: undefined,
@@ -331,7 +330,6 @@ export const createInfiniteQueryOptions = ({
     : `${typePageObjectParam}`;
 
   const node = queryKeyStatement({
-    context,
     isInfinite: true,
     operation,
     plugin,
@@ -340,7 +338,6 @@ export const createInfiniteQueryOptions = ({
   file.add(node);
 
   const infiniteQueryKeyName = infiniteQueryKeyFunctionIdentifier({
-    context,
     operation,
     plugin,
   });
@@ -519,7 +516,6 @@ export const createInfiniteQueryOptions = ({
       ],
     }),
     name: infiniteQueryOptionsFunctionIdentifier({
-      context,
       operation,
       plugin,
     }),

@@ -117,16 +117,14 @@ const shouldSkipSchema = ({
 
 const addJavaScriptEnum = ({
   $ref,
-  context,
   plugin,
   schema,
 }: {
   $ref: string;
-  context: IR.Context;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'enum'>;
 }) => {
-  const file = context.file({ id: typesId })!;
+  const file = plugin.context.file({ id: typesId })!;
   const identifier = file.identifier({
     $ref,
     create: true,
@@ -239,18 +237,16 @@ const schemaToEnumObject = ({
 
 const addTypeEnum = ({
   $ref,
-  context,
   plugin,
   schema,
   state,
 }: {
   $ref: string;
-  context: IR.Context;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'enum'>;
   state: State | undefined;
 }): ts.TypeAliasDeclaration | undefined => {
-  const file = context.file({ id: typesId })!;
+  const file = plugin.context.file({ id: typesId })!;
   const identifier = file.identifier({
     $ref,
     create: true,
@@ -271,7 +267,6 @@ const addTypeEnum = ({
   }
 
   const type = schemaToType({
-    context,
     plugin,
     schema: {
       ...schema,
@@ -307,13 +302,11 @@ const shouldCreateTypeScriptEnum = ({
 
 const addTypeScriptEnum = ({
   $ref,
-  context,
   plugin,
   schema,
   state,
 }: {
   $ref: string;
-  context: IR.Context;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'enum'>;
   state: State | undefined;
@@ -324,7 +317,6 @@ const addTypeScriptEnum = ({
   if (!shouldCreateTypeScriptEnum({ plugin, schema })) {
     const node = addTypeEnum({
       $ref,
-      context,
       plugin,
       schema,
       state,
@@ -332,7 +324,7 @@ const addTypeScriptEnum = ({
     return node;
   }
 
-  const file = context.file({ id: typesId })!;
+  const file = plugin.context.file({ id: typesId })!;
   const identifier = file.identifier({
     $ref,
     create: true,
@@ -347,13 +339,11 @@ const addTypeScriptEnum = ({
 };
 
 const arrayTypeToIdentifier = ({
-  context,
   namespace,
   plugin,
   schema,
   state,
 }: {
-  context: IR.Context;
   namespace: Array<ts.Statement>;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'array'>;
@@ -373,7 +363,6 @@ const arrayTypeToIdentifier = ({
 
   for (const item of schema.items!) {
     const type = schemaToType({
-      context,
       namespace,
       plugin,
       schema: item,
@@ -405,7 +394,6 @@ const arrayTypeToIdentifier = ({
 const booleanTypeToIdentifier = ({
   schema,
 }: {
-  context: IR.Context;
   namespace: Array<ts.Statement>;
   schema: SchemaWithType<'boolean'>;
 }): ts.TypeNode => {
@@ -422,20 +410,18 @@ const booleanTypeToIdentifier = ({
 
 const enumTypeToIdentifier = ({
   $ref,
-  context,
   namespace,
   plugin,
   schema,
   state,
 }: {
   $ref?: string;
-  context: IR.Context;
   namespace: Array<ts.Statement>;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'enum'>;
   state: State | undefined;
 }): ts.TypeNode | undefined => {
-  const file = context.file({ id: typesId })!;
+  const file = plugin.context.file({ id: typesId })!;
   const isRefComponent = $ref ? isRefOpenApiComponent($ref) : false;
   const shouldExportEnum =
     isRefComponent || Boolean(plugin.config.exportInlineEnums);
@@ -446,7 +432,6 @@ const enumTypeToIdentifier = ({
     if (!plugin.config.enums) {
       const typeNode = addTypeEnum({
         $ref,
-        context,
         plugin,
         schema,
         state,
@@ -459,7 +444,6 @@ const enumTypeToIdentifier = ({
     if (plugin.config.enums === 'javascript') {
       const typeNode = addTypeEnum({
         $ref,
-        context,
         plugin,
         schema,
         state,
@@ -470,7 +454,6 @@ const enumTypeToIdentifier = ({
 
       const objectNode = addJavaScriptEnum({
         $ref,
-        context,
         plugin,
         schema,
       });
@@ -482,7 +465,6 @@ const enumTypeToIdentifier = ({
     if (plugin.config.enums === 'typescript') {
       const enumNode = addTypeScriptEnum({
         $ref,
-        context,
         plugin,
         schema,
         state,
@@ -495,7 +477,6 @@ const enumTypeToIdentifier = ({
     if (plugin.config.enums === 'typescript+namespace') {
       const enumNode = addTypeScriptEnum({
         $ref,
-        context,
         plugin,
         schema,
         state,
@@ -512,7 +493,6 @@ const enumTypeToIdentifier = ({
   }
 
   const type = schemaToType({
-    context,
     plugin,
     schema: {
       ...schema,
@@ -550,13 +530,11 @@ const numberTypeToIdentifier = ({
 };
 
 const objectTypeToIdentifier = ({
-  context,
   namespace,
   plugin,
   schema,
   state,
 }: {
-  context: IR.Context;
   namespace: Array<ts.Statement>;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'object'>;
@@ -586,7 +564,6 @@ const objectTypeToIdentifier = ({
 
     const propertyType = schemaToType({
       $ref: state ? [...state.path, name].join('/') : `${irRef}${name}`,
-      context,
       namespace,
       plugin,
       schema: property,
@@ -602,7 +579,7 @@ const objectTypeToIdentifier = ({
       comment: createSchemaComment({ schema: property }),
       isReadOnly: property.accessScope === 'read',
       isRequired,
-      name: fieldName({ context, name }),
+      name: fieldName({ context: plugin.context, name }),
       type: propertyType,
     });
     indexPropertyItems.push(property);
@@ -632,7 +609,6 @@ const objectTypeToIdentifier = ({
       isRequired: !schema.propertyNames,
       name: 'key',
       type: schemaToType({
-        context,
         namespace,
         plugin,
         schema:
@@ -707,13 +683,11 @@ const stringTypeToIdentifier = ({
 };
 
 const tupleTypeToIdentifier = ({
-  context,
   namespace,
   plugin,
   schema,
   state,
 }: {
-  context: IR.Context;
   namespace: Array<ts.Statement>;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'tuple'>;
@@ -729,7 +703,6 @@ const tupleTypeToIdentifier = ({
   } else if (schema.items) {
     for (const item of schema.items) {
       const type = schemaToType({
-        context,
         namespace,
         plugin,
         schema: item,
@@ -753,14 +726,12 @@ const tupleTypeToIdentifier = ({
 
 const schemaTypeToIdentifier = ({
   $ref,
-  context,
   namespace,
   plugin,
   schema,
   state,
 }: {
   $ref?: string;
-  context: IR.Context;
   namespace: Array<ts.Statement>;
   plugin: Plugin.Instance<Config>;
   schema: IR.SchemaObject;
@@ -769,7 +740,6 @@ const schemaTypeToIdentifier = ({
   switch (schema.type as Required<IR.SchemaObject>['type']) {
     case 'array':
       return arrayTypeToIdentifier({
-        context,
         namespace,
         plugin,
         schema: schema as SchemaWithType<'array'>,
@@ -777,14 +747,12 @@ const schemaTypeToIdentifier = ({
       });
     case 'boolean':
       return booleanTypeToIdentifier({
-        context,
         namespace,
         schema: schema as SchemaWithType<'boolean'>,
       });
     case 'enum':
       return enumTypeToIdentifier({
         $ref,
-        context,
         namespace,
         plugin,
         schema: schema as SchemaWithType<'enum'>,
@@ -807,7 +775,6 @@ const schemaTypeToIdentifier = ({
       });
     case 'object':
       return objectTypeToIdentifier({
-        context,
         namespace,
         plugin,
         schema: schema as SchemaWithType<'object'>,
@@ -821,7 +788,6 @@ const schemaTypeToIdentifier = ({
       });
     case 'tuple':
       return tupleTypeToIdentifier({
-        context,
         namespace,
         plugin,
         schema: schema as SchemaWithType<'tuple'>,
@@ -879,15 +845,13 @@ const irParametersToIrSchema = ({
 };
 
 const operationToDataType = ({
-  context,
   operation,
   plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
 }) => {
-  const file = context.file({ id: typesId })!;
+  const file = plugin.context.file({ id: typesId })!;
   const data: IR.SchemaObject = {
     type: 'object',
   };
@@ -960,7 +924,7 @@ const operationToDataType = ({
 
   const identifier = file.identifier({
     $ref: operationIrRef({
-      config: context.config,
+      config: plugin.context.config,
       id: operation.id,
       type: 'data',
     }),
@@ -968,7 +932,6 @@ const operationToDataType = ({
     namespace: 'type',
   });
   const type = schemaToType({
-    context,
     plugin,
     schema: data,
     state:
@@ -993,21 +956,15 @@ const operationToDataType = ({
 };
 
 const operationToType = ({
-  context,
   operation,
   plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
 }) => {
-  operationToDataType({
-    context,
-    operation,
-    plugin,
-  });
+  operationToDataType({ operation, plugin });
 
-  const file = context.file({ id: typesId })!;
+  const file = plugin.context.file({ id: typesId })!;
 
   const { error, errors, response, responses } =
     operationResponsesMap(operation);
@@ -1015,7 +972,7 @@ const operationToType = ({
   if (errors) {
     const identifierErrors = file.identifier({
       $ref: operationIrRef({
-        config: context.config,
+        config: plugin.context.config,
         id: operation.id,
         type: 'errors',
       }),
@@ -1024,7 +981,6 @@ const operationToType = ({
     });
     if (identifierErrors.name) {
       const type = schemaToType({
-        context,
         plugin,
         schema: errors,
         state:
@@ -1050,7 +1006,7 @@ const operationToType = ({
       if (error) {
         const identifierError = file.identifier({
           $ref: operationIrRef({
-            config: context.config,
+            config: plugin.context.config,
             id: operation.id,
             type: 'error',
           }),
@@ -1082,7 +1038,7 @@ const operationToType = ({
   if (responses) {
     const identifierResponses = file.identifier({
       $ref: operationIrRef({
-        config: context.config,
+        config: plugin.context.config,
         id: operation.id,
         type: 'responses',
       }),
@@ -1091,7 +1047,6 @@ const operationToType = ({
     });
     if (identifierResponses.name) {
       const type = schemaToType({
-        context,
         plugin,
         schema: responses,
         state:
@@ -1117,7 +1072,7 @@ const operationToType = ({
       if (response) {
         const identifierResponse = file.identifier({
           $ref: operationIrRef({
-            config: context.config,
+            config: plugin.context.config,
             id: operation.id,
             type: 'response',
           }),
@@ -1175,25 +1130,23 @@ const hasSchemaScope = ({
 
 export const schemaToType = ({
   $ref,
-  context,
   namespace = [],
   plugin,
   schema,
   state,
 }: {
   $ref?: string;
-  context: IR.Context;
   namespace?: Array<ts.Statement>;
   plugin: Plugin.Instance<Config>;
   schema: IR.SchemaObject;
   state: State | undefined;
 }): ts.TypeNode | undefined => {
-  const file = context.file({ id: typesId })!;
+  const file = plugin.context.file({ id: typesId })!;
 
   let type: ts.TypeNode | undefined;
 
   if (schema.$ref) {
-    const refSchema = context.resolveIrRef<IR.SchemaObject>(schema.$ref);
+    const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
 
     if (
       !state?.accessScope ||
@@ -1227,7 +1180,6 @@ export const schemaToType = ({
   } else if (schema.type) {
     type = schemaTypeToIdentifier({
       $ref,
-      context,
       namespace,
       plugin,
       schema,
@@ -1241,7 +1193,6 @@ export const schemaToType = ({
       for (const item of schema.items) {
         // TODO: correctly populate state.path
         const type = schemaToType({
-          context,
           namespace,
           plugin,
           schema: item,
@@ -1259,7 +1210,6 @@ export const schemaToType = ({
     } else {
       // TODO: correctly populate state.path
       type = schemaToType({
-        context,
         namespace,
         plugin,
         schema,
@@ -1269,7 +1219,6 @@ export const schemaToType = ({
   } else {
     // catch-all fallback for failed schemas
     type = schemaTypeToIdentifier({
-      context,
       namespace,
       plugin,
       schema: {
@@ -1329,114 +1278,99 @@ export const handler: Plugin.Handler<Config> = ({ plugin }) => {
     namespace: 'type',
   });
 
-  plugin.subscribe('schema', ({ $ref, schema }) => {
-    if (
-      plugin.config.readOnlyWriteOnlyBehavior === 'off' ||
-      !isSchemaSplit({ schema })
-    ) {
-      schemaToType({
-        $ref,
-        context: plugin.context,
-        plugin,
-        schema,
-        state: {
-          // TODO: correctly populate state.path
-          path: [],
-        },
-      });
-      return;
-    }
+  const servers: Array<IR.ServerObject> = [];
 
-    if (hasSchemaScope({ accessScope: 'read', schema })) {
-      schemaToType({
-        $ref: scopeToRef({
-          $ref,
-          accessScope: 'read',
+  plugin.forEach(
+    'operation',
+    'parameter',
+    'requestBody',
+    'schema',
+    'server',
+    (event) => {
+      if (event.type === 'operation') {
+        operationToType({ operation: event.operation, plugin });
+      } else if (event.type === 'parameter') {
+        schemaToType({
+          $ref: event.$ref,
           plugin,
-        }),
-        context: plugin.context,
-        plugin,
-        schema,
-        state: {
-          accessScope: 'read',
-          // TODO: correctly populate state.path
-          path: [],
-        },
-      });
-    }
-
-    if (hasSchemaScope({ accessScope: 'write', schema })) {
-      schemaToType({
-        $ref: scopeToRef({
-          $ref,
-          accessScope: 'write',
+          schema: event.parameter.schema,
+          state: {
+            // TODO: correctly populate state.path
+            path: [],
+          },
+        });
+      } else if (event.type === 'requestBody') {
+        schemaToType({
+          $ref: event.$ref,
           plugin,
-        }),
-        context: plugin.context,
-        plugin,
-        schema,
-        state: {
-          accessScope: 'write',
-          // TODO: correctly populate state.path
-          path: [],
-        },
-      });
-    }
-  });
-
-  plugin.subscribe('parameter', ({ $ref, parameter }) => {
-    schemaToType({
-      $ref,
-      context: plugin.context,
-      plugin,
-      schema: parameter.schema,
-      state: {
-        // TODO: correctly populate state.path
-        path: [],
-      },
-    });
-  });
-
-  plugin.subscribe('requestBody', ({ $ref, requestBody }) => {
-    schemaToType({
-      $ref,
-      context: plugin.context,
-      plugin,
-      schema: requestBody.schema,
-      state:
-        plugin.config.readOnlyWriteOnlyBehavior === 'off'
-          ? {
+          schema: event.requestBody.schema,
+          state:
+            plugin.config.readOnlyWriteOnlyBehavior === 'off'
+              ? {
+                  // TODO: correctly populate state.path
+                  path: [],
+                }
+              : {
+                  accessScope: 'write',
+                  // TODO: correctly populate state.path
+                  path: [],
+                },
+        });
+      } else if (event.type === 'schema') {
+        if (
+          plugin.config.readOnlyWriteOnlyBehavior === 'off' ||
+          !isSchemaSplit({ schema: event.schema })
+        ) {
+          schemaToType({
+            $ref: event.$ref,
+            plugin,
+            schema: event.schema,
+            state: {
               // TODO: correctly populate state.path
               path: [],
-            }
-          : {
+            },
+          });
+          return;
+        }
+
+        if (hasSchemaScope({ accessScope: 'read', schema: event.schema })) {
+          schemaToType({
+            $ref: scopeToRef({
+              $ref: event.$ref,
+              accessScope: 'read',
+              plugin,
+            }),
+            plugin,
+            schema: event.schema,
+            state: {
+              accessScope: 'read',
+              // TODO: correctly populate state.path
+              path: [],
+            },
+          });
+        }
+
+        if (hasSchemaScope({ accessScope: 'write', schema: event.schema })) {
+          schemaToType({
+            $ref: scopeToRef({
+              $ref: event.$ref,
+              accessScope: 'write',
+              plugin,
+            }),
+            plugin,
+            schema: event.schema,
+            state: {
               accessScope: 'write',
               // TODO: correctly populate state.path
               path: [],
             },
-    });
-  });
+          });
+        }
+      } else if (event.type === 'server') {
+        servers.push(event.server);
+      }
+    },
+  );
 
-  plugin.subscribe('operation', ({ operation }) => {
-    operationToType({
-      context: plugin.context,
-      operation,
-      plugin,
-    });
-  });
-
-  const servers: Array<IR.ServerObject> = [];
-
-  plugin.subscribe('server', ({ server }) => {
-    servers.push(server);
-  });
-
-  plugin.subscribe('after', () => {
-    createClientOptions({
-      context: plugin.context,
-      identifier: clientOptions,
-      plugin,
-      servers,
-    });
-  });
+  createClientOptions({ identifier: clientOptions, plugin, servers });
 };

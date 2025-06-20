@@ -32,22 +32,21 @@ const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {
 };
 
 export const createClientOptions = ({
-  context,
   identifier,
+  plugin,
   servers,
 }: {
-  context: IR.Context;
   identifier: Identifier;
   plugin: Plugin.Instance<Config>;
   servers: ReadonlyArray<IR.ServerObject>;
 }) => {
-  const file = context.file({ id: typesId })!;
+  const file = plugin.context.file({ id: typesId })!;
 
   if (!identifier.name) {
     return;
   }
 
-  const client = getClientPlugin(context.config);
+  const client = getClientPlugin(plugin.context.config);
 
   const types: Array<ts.TypeNode> = servers.map((server) =>
     serverToBaseUrlType({ server }),
@@ -71,7 +70,7 @@ export const createClientOptions = ({
     type: compiler.typeInterfaceNode({
       properties: [
         {
-          name: getClientBaseUrlKey(context.config),
+          name: getClientBaseUrlKey(plugin.context.config),
           type: compiler.typeUnionNode({ types }),
         },
       ],

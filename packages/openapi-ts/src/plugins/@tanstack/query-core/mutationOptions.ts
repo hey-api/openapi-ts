@@ -10,16 +10,14 @@ import { useTypeData, useTypeError, useTypeResponse } from './useType';
 const mutationOptionsFn = 'mutationOptions';
 
 const mutationOptionsFunctionIdentifier = ({
-  context,
   operation,
   plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
   const name = serviceFunctionIdentifier({
-    config: context.config,
+    config: plugin.context.config,
     id: operation.id,
     operation,
   });
@@ -41,13 +39,11 @@ const mutationOptionsFunctionIdentifier = ({
 };
 
 export const createMutationOptions = ({
-  context,
   operation,
   plugin,
   queryFn,
   state,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: PluginInstance;
   queryFn: string;
@@ -69,7 +65,7 @@ export const createMutationOptions = ({
       ? 'MutationOptions'
       : 'UseMutationOptions';
 
-  const file = context.file({ id: plugin.name })!;
+  const file = plugin.context.file({ id: plugin.name })!;
 
   if (!state.hasMutations) {
     state.hasMutations = true;
@@ -83,9 +79,9 @@ export const createMutationOptions = ({
 
   state.hasUsedQueryFn = true;
 
-  const typeData = useTypeData({ context, operation, plugin });
-  const typeError = useTypeError({ context, operation, plugin });
-  const typeResponse = useTypeResponse({ context, operation, plugin });
+  const typeData = useTypeData({ operation, plugin });
+  const typeError = useTypeError({ operation, plugin });
+  const typeResponse = useTypeResponse({ operation, plugin });
   // TODO: better types syntax
   const mutationType = `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`;
 
@@ -175,7 +171,7 @@ export const createMutationOptions = ({
       : undefined,
     exportConst: true,
     expression,
-    name: mutationOptionsFunctionIdentifier({ context, operation, plugin }),
+    name: mutationOptionsFunctionIdentifier({ operation, plugin }),
   });
   file.add(statement);
 
