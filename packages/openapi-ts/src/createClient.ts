@@ -132,26 +132,8 @@ export const compileInputPath = (
   return result;
 };
 
-const logInputPath = ({
-  config,
-  inputPath,
-  watch,
-}: {
-  config: Config;
-  inputPath: ReturnType<typeof compileInputPath>;
-  watch?: boolean;
-}) => {
-  if (config.logs.level === 'silent') {
-    return;
-  }
-
-  if (watch) {
-    console.clear();
-  }
-
-  const baseString = watch
-    ? colors.magenta('Input changed, generating from')
-    : colors.cyan('Generating from');
+const logInputPath = (inputPath: ReturnType<typeof compileInputPath>) => {
+  const baseString = colors.cyan('Generating from');
 
   if (typeof inputPath.path === 'string') {
     const baseInput = isPlatformPath(inputPath.path)
@@ -192,6 +174,9 @@ export const createClient = async ({
 }: {
   config: Config;
   templates: Templates;
+  /**
+   * Always falsy on the first run, truthy on subsequent runs.
+   */
   watch?: WatchValues;
 }) => {
   const inputPath = compileInputPath(config.input);
@@ -199,11 +184,10 @@ export const createClient = async ({
 
   const watch: WatchValues = _watch || { headers: new Headers() };
 
-  logInputPath({
-    config,
-    inputPath,
-    watch: Boolean(_watch),
-  });
+  // on first run, print the message as soon as possible
+  if (config.logs.level !== 'silent' && !_watch) {
+    logInputPath(inputPath);
+  }
 
   Performance.start('spec');
   const { data, error, response } = await getSpec({
@@ -227,6 +211,13 @@ export const createClient = async ({
   let context: IR.Context | undefined;
 
   if (data) {
+    // on subsequent runs in watch mode, print the mssage only if we know we're
+    // generating the output
+    if (config.logs.level !== 'silent' && _watch) {
+      console.clear();
+      logInputPath(inputPath);
+    }
+
     Performance.start('input.patch');
     patchOpenApiSpec({ patchOptions: config.input.patch, spec: data });
     Performance.end('input.patch');

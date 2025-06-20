@@ -69,7 +69,6 @@ export default defineConfig(() => {
       // project: 'upload-openapi-spec',
       validate_EXPERIMENTAL: true,
       // version: '1.0.0',
-      // watch: 5_000,
       // watch: {
       //   enabled: true,
       //   interval: 500,
