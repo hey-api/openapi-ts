@@ -5,7 +5,6 @@ import { tsNodeToString } from '../../../compiler/utils';
 import { clientApi } from '../../../generate/client';
 import { operationPagination } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
-import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { schemaToType } from '../../@hey-api/typescript/plugin';
 import {
   createOperationComment,
@@ -14,7 +13,6 @@ import {
 import {
   createQueryKeyFunction,
   createQueryKeyType,
-  infiniteQueryKeyFunctionIdentifier,
   queryKeyName,
   queryKeyStatement,
 } from './queryKey';
@@ -30,6 +28,14 @@ const createInfiniteParamsFunction = ({
   plugin: PluginInstance;
 }) => {
   const file = plugin.context.file({ id: plugin.name })!;
+
+  const identifierCreateInfiniteParams = file.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-create-infinite-params/${createInfiniteParamsFn}`,
+    case: plugin.config.case,
+    create: true,
+    namespace: 'value',
+  });
 
   const fn = compiler.constVariable({
     expression: compiler.arrowFunction({
@@ -213,38 +219,9 @@ const createInfiniteParamsFunction = ({
         },
       ],
     }),
-    name: createInfiniteParamsFn,
+    name: identifierCreateInfiniteParams.name || '',
   });
   file.add(fn);
-};
-
-const infiniteQueryOptionsFunctionIdentifier = ({
-  operation,
-  plugin,
-}: {
-  operation: IR.OperationObject;
-  plugin: PluginInstance;
-}) => {
-  const name = serviceFunctionIdentifier({
-    config: plugin.context.config,
-    id: operation.id,
-    operation,
-  });
-
-  let customName = '';
-
-  if (plugin.config.infiniteQueryOptionsNameBuilder) {
-    if (typeof plugin.config.infiniteQueryOptionsNameBuilder === 'function') {
-      customName = plugin.config.infiniteQueryOptionsNameBuilder(name);
-    } else {
-      customName = plugin.config.infiniteQueryOptionsNameBuilder.replace(
-        '{{name}}',
-        name,
-      );
-    }
-  }
-
-  return customName;
 };
 
 export const createInfiniteQueryOptions = ({
@@ -337,12 +314,11 @@ export const createInfiniteQueryOptions = ({
   });
   file.add(node);
 
-  const infiniteQueryKeyName = infiniteQueryKeyFunctionIdentifier({
-    operation,
-    plugin,
-  });
-  const identifierQueryKey = file.identifier({
-    $ref: `#/queryKey/${infiniteQueryKeyName}`,
+  const identifierInfiniteQueryKey = file.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-infinite-query-key/${operation.id}`,
+    case: plugin.config.infiniteQueryKeys.case,
+    nameTransformer: plugin.config.infiniteQueryKeys.name,
     namespace: 'value',
   });
 
@@ -374,6 +350,13 @@ export const createInfiniteQueryOptions = ({
         }),
       ],
     }),
+  });
+
+  const identifierCreateInfiniteParams = file.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-create-infinite-params/${createInfiniteParamsFn}`,
+    case: plugin.config.case,
+    namespace: 'value',
   });
 
   const statements: Array<ts.Statement> = [
@@ -420,7 +403,7 @@ export const createInfiniteQueryOptions = ({
     }),
     compiler.constVariable({
       expression: compiler.callExpression({
-        functionName: createInfiniteParamsFn,
+        functionName: identifierCreateInfiniteParams.name || '',
         parameters: ['queryKey', 'page'],
       }),
       name: 'params',
@@ -445,6 +428,15 @@ export const createInfiniteQueryOptions = ({
       }),
     );
   }
+
+  const identifierInfiniteQueryOptions = file.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-infinite-query-options/${operation.id}`,
+    case: plugin.config.infiniteQueryOptions.case,
+    create: true,
+    nameTransformer: plugin.config.infiniteQueryOptions.name,
+    namespace: 'value',
+  });
 
   const statement = compiler.constVariable({
     comment: plugin.config.comments
@@ -496,7 +488,7 @@ export const createInfiniteQueryOptions = ({
                 {
                   key: 'queryKey',
                   value: compiler.callExpression({
-                    functionName: identifierQueryKey.name || '',
+                    functionName: identifierInfiniteQueryKey.name || '',
                     parameters: ['options'],
                   }),
                 },
@@ -515,10 +507,7 @@ export const createInfiniteQueryOptions = ({
         }),
       ],
     }),
-    name: infiniteQueryOptionsFunctionIdentifier({
-      operation,
-      plugin,
-    }),
+    name: identifierInfiniteQueryOptions.name || '',
   });
   file.add(statement);
 };

@@ -220,12 +220,22 @@ for (const version of versions) {
           output: 'name-builder',
           plugins: [
             {
-              infiniteQueryKeyNameBuilder: '{{name}}A',
-              infiniteQueryOptionsNameBuilder: '{{name}}B',
-              mutationOptionsNameBuilder: '{{name}}C',
+              infiniteQueryKeys: {
+                name: '{{name}}A',
+              },
+              infiniteQueryOptions: {
+                name: '{{name}}B',
+              },
+              mutationOptions: {
+                name: '{{name}}C',
+              },
               name: '@tanstack/angular-query-experimental',
-              queryKeyNameBuilder: '{{name}}D',
-              queryOptionsNameBuilder: '{{name}}E',
+              queryKeys: {
+                name: '{{name}}D',
+              },
+              queryOptions: {
+                name: '{{name}}E',
+              },
             },
             '@hey-api/client-fetch',
             '@hey-api/sdk',
@@ -240,12 +250,22 @@ for (const version of versions) {
           output: 'name-builder',
           plugins: [
             {
-              infiniteQueryKeyNameBuilder: '{{name}}A',
-              infiniteQueryOptionsNameBuilder: '{{name}}B',
-              mutationOptionsNameBuilder: '{{name}}C',
+              infiniteQueryKeys: {
+                name: '{{name}}A',
+              },
+              infiniteQueryOptions: {
+                name: '{{name}}B',
+              },
+              mutationOptions: {
+                name: '{{name}}C',
+              },
               name: '@tanstack/react-query',
-              queryKeyNameBuilder: '{{name}}D',
-              queryOptionsNameBuilder: '{{name}}E',
+              queryKeys: {
+                name: '{{name}}D',
+              },
+              queryOptions: {
+                name: '{{name}}E',
+              },
             },
             '@hey-api/client-fetch',
             '@hey-api/sdk',
@@ -260,12 +280,22 @@ for (const version of versions) {
           output: 'name-builder',
           plugins: [
             {
-              infiniteQueryKeyNameBuilder: '{{name}}A',
-              infiniteQueryOptionsNameBuilder: '{{name}}B',
-              mutationOptionsNameBuilder: '{{name}}C',
+              infiniteQueryKeys: {
+                name: '{{name}}A',
+              },
+              infiniteQueryOptions: {
+                name: '{{name}}B',
+              },
+              mutationOptions: {
+                name: '{{name}}C',
+              },
               name: '@tanstack/solid-query',
-              queryKeyNameBuilder: '{{name}}D',
-              queryOptionsNameBuilder: '{{name}}E',
+              queryKeys: {
+                name: '{{name}}D',
+              },
+              queryOptions: {
+                name: '{{name}}E',
+              },
             },
             '@hey-api/client-fetch',
             '@hey-api/sdk',
@@ -280,12 +310,22 @@ for (const version of versions) {
           output: 'name-builder',
           plugins: [
             {
-              infiniteQueryKeyNameBuilder: '{{name}}A',
-              infiniteQueryOptionsNameBuilder: '{{name}}B',
-              mutationOptionsNameBuilder: '{{name}}C',
+              infiniteQueryKeys: {
+                name: '{{name}}A',
+              },
+              infiniteQueryOptions: {
+                name: '{{name}}B',
+              },
+              mutationOptions: {
+                name: '{{name}}C',
+              },
               name: '@tanstack/svelte-query',
-              queryKeyNameBuilder: '{{name}}D',
-              queryOptionsNameBuilder: '{{name}}E',
+              queryKeys: {
+                name: '{{name}}D',
+              },
+              queryOptions: {
+                name: '{{name}}E',
+              },
             },
             '@hey-api/client-fetch',
             '@hey-api/sdk',
@@ -300,12 +340,22 @@ for (const version of versions) {
           output: 'name-builder',
           plugins: [
             {
-              infiniteQueryKeyNameBuilder: '{{name}}A',
-              infiniteQueryOptionsNameBuilder: '{{name}}B',
-              mutationOptionsNameBuilder: '{{name}}C',
+              infiniteQueryKeys: {
+                name: '{{name}}A',
+              },
+              infiniteQueryOptions: {
+                name: '{{name}}B',
+              },
+              mutationOptions: {
+                name: '{{name}}C',
+              },
               name: '@tanstack/vue-query',
-              queryKeyNameBuilder: '{{name}}D',
-              queryOptionsNameBuilder: '{{name}}E',
+              queryKeys: {
+                name: '{{name}}D',
+              },
+              queryOptions: {
+                name: '{{name}}E',
+              },
             },
             '@hey-api/client-fetch',
             '@hey-api/sdk',
