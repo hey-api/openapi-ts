@@ -104,3 +104,10 @@ components:
       pattern: foo\nbar
       readOnly: true
       type: string
+    Qux:
+      additionalProperties:
+        properties:
+          qux:
+            type: string
+        type: object
+      type: object
