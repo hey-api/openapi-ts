@@ -158,7 +158,7 @@ export default defineConfig(() => {
       {
         // comments: false,
         // exportFromIndex: true,
-        // name: 'valibot',
+        name: 'valibot',
       },
       {
         // case: 'snake_case',
