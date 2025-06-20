@@ -57,8 +57,8 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'validators.yaml'),
-      // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
+      // path: path.resolve(__dirname, 'spec', '3.1.x', 'validators.yaml'),
+      path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -93,9 +93,9 @@ export default defineConfig(() => {
       // ),
     },
     plugins: [
-      customClientPlugin({
-        baseUrl: false,
-      }),
+      // customClientPlugin({
+      //   baseUrl: false,
+      // }),
       // myClientPlugin(),
       {
         // baseUrl: false,
@@ -123,13 +123,13 @@ export default defineConfig(() => {
         // responseStyle: 'data',
         // throwOnError: true,
         // transformer: '@hey-api/transformers',
-        // transformer: true,
+        transformer: true,
         validator: 'zod',
       },
       {
         // bigInt: true,
-        dates: true,
-        // name: '@hey-api/transformers',
+        // dates: true,
+        name: '@hey-api/transformers',
       },
       {
         enums: 'typescript+namespace',

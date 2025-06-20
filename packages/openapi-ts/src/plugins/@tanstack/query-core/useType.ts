@@ -6,18 +6,16 @@ import { importIdentifier } from '../../@hey-api/typescript/ref';
 import type { PluginInstance } from './types';
 
 export const useTypeData = ({
-  context,
   operation,
   plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
-  const file = context.file({ id: plugin.name })!;
+  const file = plugin.context.file({ id: plugin.name })!;
 
   const typeData = operationOptionsType({
-    context,
+    context: plugin.context,
     file,
     operation,
   });
@@ -25,17 +23,15 @@ export const useTypeData = ({
 };
 
 export const useTypeError = ({
-  context,
   operation,
   plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
-  const file = context.file({ id: plugin.name })!;
+  const file = plugin.context.file({ id: plugin.name })!;
   const identifierError = importIdentifier({
-    context,
+    context: plugin.context,
     file,
     operation,
     type: 'error',
@@ -51,7 +47,7 @@ export const useTypeError = ({
       name: 'DefaultError',
     });
   }
-  const client = getClientPlugin(context.config);
+  const client = getClientPlugin(plugin.context.config);
   if (client.name === '@hey-api/client-axios') {
     const axiosError = file.import({
       asType: true,
@@ -67,17 +63,15 @@ export const useTypeError = ({
 };
 
 export const useTypeResponse = ({
-  context,
   operation,
   plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
-  const file = context.file({ id: plugin.name })!;
+  const file = plugin.context.file({ id: plugin.name })!;
   const identifierResponse = importIdentifier({
-    context,
+    context: plugin.context,
     file,
     operation,
     type: 'response',

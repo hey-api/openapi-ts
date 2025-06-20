@@ -25,14 +25,12 @@ export const handler: PluginHandler = ({ plugin }) => {
     typeInfiniteData: undefined!,
   };
 
-  plugin.subscribe('before', () => {
-    file.import({
-      ...clientApi.Options,
-      module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
-    });
+  file.import({
+    ...clientApi.Options,
+    module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
   });
 
-  plugin.subscribe('operation', ({ operation }) => {
+  plugin.forEach('operation', ({ operation }) => {
     state.hasUsedQueryFn = false;
 
     const sdkPlugin = plugin.getPlugin('@hey-api/sdk');
@@ -70,7 +68,6 @@ export const handler: PluginHandler = ({ plugin }) => {
       ).join('.');
 
     createQueryOptions({
-      context: plugin.context,
       operation,
       plugin,
       queryFn,
@@ -78,7 +75,6 @@ export const handler: PluginHandler = ({ plugin }) => {
     });
 
     createInfiniteQueryOptions({
-      context: plugin.context,
       operation,
       plugin,
       queryFn,
@@ -86,7 +82,6 @@ export const handler: PluginHandler = ({ plugin }) => {
     });
 
     createMutationOptions({
-      context: plugin.context,
       operation,
       plugin,
       queryFn,
@@ -101,16 +96,14 @@ export const handler: PluginHandler = ({ plugin }) => {
     }
   });
 
-  plugin.subscribe('after', () => {
-    if (state.hasQueries || state.hasInfiniteQueries) {
-      file.import({
-        alias: '_heyApiClient',
-        module: file.relativePathToFile({
-          context: plugin.context,
-          id: clientId,
-        }),
-        name: 'client',
-      });
-    }
-  });
+  if (state.hasQueries || state.hasInfiniteQueries) {
+    file.import({
+      alias: '_heyApiClient',
+      module: file.relativePathToFile({
+        context: plugin.context,
+        id: clientId,
+      }),
+      name: 'client',
+    });
+  }
 };

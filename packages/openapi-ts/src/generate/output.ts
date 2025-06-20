@@ -3,7 +3,6 @@ import path from 'node:path';
 import ts from 'typescript';
 
 import { compiler } from '../compiler';
-import { parseIR } from '../ir/parser';
 import type { IR } from '../ir/types';
 import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import { generateClientBundle } from './client';
@@ -33,10 +32,8 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
   }
 
   for (const plugin of context.registerPlugins()) {
-    plugin.run();
+    await plugin.run();
   }
-
-  await parseIR({ context });
 
   if (!context.config.dryRun) {
     const indexFile = context.createFile({

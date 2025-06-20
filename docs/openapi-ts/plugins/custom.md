@@ -118,20 +118,12 @@ export const handler: Plugin.Handler<Config> = ({ plugin }) => {
     path: plugin.output,
   });
 
-  plugin.subscribe('before', () => {
-    // do something before parsing the input
-  });
-
-  plugin.subscribe('operation', ({ operation }) => {
-    // do something with the operation model
-  });
-
-  plugin.subscribe('schema', ({ operation }) => {
-    // do something with the schema model
-  });
-
-  plugin.subscribe('after', () => {
-    // do something after parsing the input
+  plugin.forEach('operation', 'schema', (event) => {
+    if (event.type === 'operation') {
+      // do something with the operation model
+    } else if (event.type === 'schema') {
+      // do something with the schema model
+    }
   });
 
   // we're using the TypeScript Compiler API

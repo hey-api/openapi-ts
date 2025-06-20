@@ -3,7 +3,7 @@ import type {
   SecuritySchemeObject,
   ServerObject,
 } from '../openApi/3.1.x/types/spec';
-import type { ContextFile as CtxFile, Events, IRContext } from './context';
+import type { ContextFile as CtxFile, IRContext } from './context';
 import type { IRMediaType } from './mediaType';
 
 interface IRBodyObject {
@@ -217,7 +217,6 @@ export namespace IR {
   export type BodyObject = IRBodyObject;
   export type ComponentsObject = IRComponentsObject;
   export type Context<Spec extends Record<string, any> = any> = IRContext<Spec>;
-  export type ContextEvents = Events;
   export type ContextFile = CtxFile;
   export type Model = IRModel;
   export type OperationObject = IROperationObject;

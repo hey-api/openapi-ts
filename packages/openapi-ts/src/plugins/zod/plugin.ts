@@ -47,12 +47,10 @@ const unionIdentifier = compiler.identifier({ text: 'union' });
 const zIdentifier = compiler.identifier({ text: 'z' });
 
 const arrayTypeToZodSchema = ({
-  context,
   plugin,
   schema,
   state,
 }: {
-  context: IR.Context;
   plugin: Plugin.Instance<ResolvedConfig>;
   schema: SchemaWithType<'array'>;
   state: State;
@@ -69,7 +67,6 @@ const arrayTypeToZodSchema = ({
       functionName,
       parameters: [
         unknownTypeToZodSchema({
-          context,
           schema: {
             type: 'unknown',
           },
@@ -159,7 +156,6 @@ const arrayTypeToZodSchema = ({
 const booleanTypeToZodSchema = ({
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'boolean'>;
 }) => {
   if (typeof schema.const === 'boolean') {
@@ -183,10 +179,8 @@ const booleanTypeToZodSchema = ({
 };
 
 const enumTypeToZodSchema = ({
-  context,
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'enum'>;
 }): ts.CallExpression => {
   const enumMembers: Array<ts.LiteralExpression> = [];
@@ -208,7 +202,6 @@ const enumTypeToZodSchema = ({
 
   if (!enumMembers.length) {
     return unknownTypeToZodSchema({
-      context,
       schema: {
         type: 'unknown',
       },
@@ -244,7 +237,6 @@ const neverTypeToZodSchema = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'never'>;
 }) => {
   const expression = compiler.callExpression({
@@ -260,7 +252,6 @@ const nullTypeToZodSchema = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'null'>;
 }) => {
   const expression = compiler.callExpression({
@@ -300,7 +291,6 @@ const numberParameter = ({
 const numberTypeToZodSchema = ({
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'integer' | 'number'>;
 }) => {
   const isBigInt = schema.type === 'integer' && schema.format === 'int64';
@@ -478,7 +468,6 @@ const objectTypeToZodSchema = ({
 const stringTypeToZodSchema = ({
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'string'>;
 }) => {
   if (typeof schema.const === 'string') {
@@ -646,7 +635,6 @@ const undefinedTypeToZodSchema = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'undefined'>;
 }) => {
   const expression = compiler.callExpression({
@@ -662,7 +650,6 @@ const unknownTypeToZodSchema = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'unknown'>;
 }) => {
   const expression = compiler.callExpression({
@@ -678,7 +665,6 @@ const voidTypeToZodSchema = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'void'>;
 }) => {
   const expression = compiler.callExpression({
@@ -691,12 +677,10 @@ const voidTypeToZodSchema = ({
 };
 
 const schemaTypeToZodSchema = ({
-  context,
   plugin,
   schema,
   state,
 }: {
-  context: IR.Context;
   plugin: Plugin.Instance<ResolvedConfig>;
   schema: IR.SchemaObject;
   state: State;
@@ -708,7 +692,6 @@ const schemaTypeToZodSchema = ({
     case 'array':
       return {
         expression: arrayTypeToZodSchema({
-          context,
           plugin,
           schema: schema as SchemaWithType<'array'>,
           state,
@@ -717,14 +700,12 @@ const schemaTypeToZodSchema = ({
     case 'boolean':
       return {
         expression: booleanTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'boolean'>,
         }),
       };
     case 'enum':
       return {
         expression: enumTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'enum'>,
         }),
       };
@@ -732,21 +713,18 @@ const schemaTypeToZodSchema = ({
     case 'number':
       return {
         expression: numberTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'integer' | 'number'>,
         }),
       };
     case 'never':
       return {
         expression: neverTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'never'>,
         }),
       };
     case 'null':
       return {
         expression: nullTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'null'>,
         }),
       };
@@ -759,7 +737,6 @@ const schemaTypeToZodSchema = ({
     case 'string':
       return {
         expression: stringTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'string'>,
         }),
       };
@@ -774,21 +751,18 @@ const schemaTypeToZodSchema = ({
     case 'undefined':
       return {
         expression: undefinedTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'undefined'>,
         }),
       };
     case 'unknown':
       return {
         expression: unknownTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'unknown'>,
         }),
       };
     case 'void':
       return {
         expression: voidTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'void'>,
         }),
       };
@@ -1044,12 +1018,7 @@ const schemaToZodSchema = ({
       }
     }
   } else if (schema.type) {
-    const zodSchema = schemaTypeToZodSchema({
-      context: plugin.context,
-      plugin,
-      schema,
-      state,
-    });
+    const zodSchema = schemaTypeToZodSchema({ plugin, schema, state });
     anyType = zodSchema.anyType;
     expression = zodSchema.expression;
 
@@ -1125,7 +1094,6 @@ const schemaToZodSchema = ({
   } else {
     // catch-all fallback for failed schemas
     const zodSchema = schemaTypeToZodSchema({
-      context: plugin.context,
       plugin,
       schema: {
         type: 'unknown',
@@ -1211,7 +1179,7 @@ export const handler: Plugin.Handler<ResolvedConfig> = ({ plugin }) => {
     name: 'z',
   });
 
-  plugin.subscribe('operation', ({ operation }) => {
+  plugin.forEach('operation', 'parameter', 'requestBody', 'schema', (event) => {
     const state: State = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
@@ -1219,58 +1187,29 @@ export const handler: Plugin.Handler<ResolvedConfig> = ({ plugin }) => {
       nameTransformer: plugin.config.definitions.name,
     };
 
-    operationToZodSchema({
-      operation,
-      plugin,
-      state,
-    });
-  });
-
-  plugin.subscribe('parameter', ({ $ref, parameter }) => {
-    const state: State = {
-      circularReferenceTracker: new Set(),
-      hasCircularReference: false,
-      nameCase: plugin.config.definitions.case,
-      nameTransformer: plugin.config.definitions.name,
-    };
-
-    schemaToZodSchema({
-      $ref,
-      plugin,
-      schema: parameter.schema,
-      state,
-    });
-  });
-
-  plugin.subscribe('requestBody', ({ $ref, requestBody }) => {
-    const state: State = {
-      circularReferenceTracker: new Set(),
-      hasCircularReference: false,
-      nameCase: plugin.config.definitions.case,
-      nameTransformer: plugin.config.definitions.name,
-    };
-
-    schemaToZodSchema({
-      $ref,
-      plugin,
-      schema: requestBody.schema,
-      state,
-    });
-  });
-
-  plugin.subscribe('schema', ({ $ref, schema }) => {
-    const state: State = {
-      circularReferenceTracker: new Set(),
-      hasCircularReference: false,
-      nameCase: plugin.config.definitions.case,
-      nameTransformer: plugin.config.definitions.name,
-    };
-
-    schemaToZodSchema({
-      $ref,
-      plugin,
-      schema,
-      state,
-    });
+    if (event.type === 'operation') {
+      operationToZodSchema({ operation: event.operation, plugin, state });
+    } else if (event.type === 'parameter') {
+      schemaToZodSchema({
+        $ref: event.$ref,
+        plugin,
+        schema: event.parameter.schema,
+        state,
+      });
+    } else if (event.type === 'requestBody') {
+      schemaToZodSchema({
+        $ref: event.$ref,
+        plugin,
+        schema: event.requestBody.schema,
+        state,
+      });
+    } else if (event.type === 'schema') {
+      schemaToZodSchema({
+        $ref: event.$ref,
+        plugin,
+        schema: event.schema,
+        state,
+      });
+    }
   });
 };

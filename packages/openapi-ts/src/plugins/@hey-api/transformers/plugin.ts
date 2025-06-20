@@ -159,17 +159,14 @@ const isNodeReturnStatement = ({
 }) => node.kind === ts.SyntaxKind.ReturnStatement;
 
 const schemaResponseTransformerNodes = ({
-  context,
   plugin,
   schema,
 }: {
-  context: IR.Context;
   plugin: Plugin.Instance<Config>;
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   const identifierData = compiler.identifier({ text: dataVariableName });
   const nodes = processSchemaType({
-    context,
     dataExpression: identifierData,
     plugin,
     schema,
@@ -185,17 +182,15 @@ const schemaResponseTransformerNodes = ({
 };
 
 const processSchemaType = ({
-  context,
   dataExpression,
   plugin,
   schema,
 }: {
-  context: IR.Context;
   dataExpression?: ts.Expression | string;
   plugin: Plugin.Instance<Config>;
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
-  const file = context.file({ id: transformersId })!;
+  const file = plugin.context.file({ id: transformersId })!;
 
   if (schema.$ref) {
     let identifier = file.identifier({
@@ -206,9 +201,10 @@ const processSchemaType = ({
 
     if (identifier.created && identifier.name) {
       // create each schema response transformer only once
-      const refSchema = context.resolveIrRef<IR.SchemaObject>(schema.$ref);
+      const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
+        schema.$ref,
+      );
       const nodes = schemaResponseTransformerNodes({
-        context,
         plugin,
         schema: refSchema,
       });
@@ -278,7 +274,6 @@ const processSchemaType = ({
     const nodes = !schema.items
       ? []
       : processSchemaType({
-          context,
           dataExpression: 'item',
           plugin,
           schema: schema.items?.[0]
@@ -343,7 +338,6 @@ const processSchemaType = ({
         name,
       });
       const propertyNodes = processSchemaType({
-        context,
         dataExpression: propertyAccessExpression,
         plugin,
         schema: property,
@@ -396,7 +390,6 @@ const processSchemaType = ({
   if (schema.items) {
     if (schema.items.length === 1) {
       return processSchemaType({
-        context,
         dataExpression: 'item',
         plugin,
         schema: schema.items[0]!,
@@ -414,7 +407,6 @@ const processSchemaType = ({
     ) {
       for (const item of schema.items) {
         const nodes = processSchemaType({
-          context,
           dataExpression: dataExpression || 'item',
           plugin,
           schema: item,
@@ -468,7 +460,7 @@ export const handler: Plugin.Handler<Config> = ({ plugin }) => {
     path: plugin.output,
   });
 
-  plugin.subscribe('operation', ({ operation }) => {
+  plugin.forEach('operation', ({ operation }) => {
     const { response } = operationResponsesMap(operation);
 
     if (!response) {
@@ -508,11 +500,7 @@ export const handler: Plugin.Handler<Config> = ({ plugin }) => {
     }
 
     // TODO: parser - consider handling simple string response which is also a date
-    const nodes = schemaResponseTransformerNodes({
-      context: plugin.context,
-      plugin,
-      schema: response,
-    });
+    const nodes = schemaResponseTransformerNodes({ plugin, schema: response });
     if (nodes.length) {
       file.import({
         asType: true,
