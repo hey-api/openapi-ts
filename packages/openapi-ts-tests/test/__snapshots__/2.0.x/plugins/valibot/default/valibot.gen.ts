@@ -157,12 +157,15 @@ export const vDictionaryWithArray = v.object({});
 /**
  * This is a string dictionary
  */
-export const vDictionaryWithDictionary = v.object({});
+export const vDictionaryWithDictionary = v.record(v.string(), v.object({}));
 
 /**
  * This is a complex dictionary
  */
-export const vDictionaryWithProperties = v.object({});
+export const vDictionaryWithProperties = v.record(v.string(), v.object({
+    foo: v.optional(v.string()),
+    bar: v.optional(v.string())
+}));
 
 /**
  * This is a type-only model that defines Date as a string

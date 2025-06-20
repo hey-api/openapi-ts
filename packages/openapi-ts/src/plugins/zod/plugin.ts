@@ -41,6 +41,7 @@ const minIdentifier = compiler.identifier({ text: 'min' });
 const objectIdentifier = compiler.identifier({ text: 'object' });
 const optionalIdentifier = compiler.identifier({ text: 'optional' });
 const readonlyIdentifier = compiler.identifier({ text: 'readonly' });
+const recordIdentifier = compiler.identifier({ text: 'record' });
 const regexIdentifier = compiler.identifier({ text: 'regex' });
 const unionIdentifier = compiler.identifier({ text: 'union' });
 const zIdentifier = compiler.identifier({ text: 'z' });
@@ -398,11 +399,7 @@ const objectTypeToZodSchema = ({
   // TODO: parser - handle constants
   const properties: Array<ts.PropertyAssignment> = [];
 
-  // let indexProperty: Property | undefined;
-  // const schemaProperties: Array<Property> = [];
-  // let indexPropertyItems: Array<IR.SchemaObject> = [];
   const required = schema.required ?? [];
-  // let hasOptionalProperties = false;
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
@@ -440,49 +437,31 @@ const objectTypeToZodSchema = ({
         name: propertyName,
       }),
     );
-
-    // indexPropertyItems.push(property);
-    // if (!isRequired) {
-    //   hasOptionalProperties = true;
-    // }
   }
 
-  // if (
-  //   schema.additionalProperties &&
-  //   (schema.additionalProperties.type !== 'never' || !indexPropertyItems.length)
-  // ) {
-  //   if (schema.additionalProperties.type === 'never') {
-  //     indexPropertyItems = [schema.additionalProperties];
-  //   } else {
-  //     indexPropertyItems.unshift(schema.additionalProperties);
-  //   }
+  if (
+    schema.additionalProperties &&
+    schema.additionalProperties.type === 'object' &&
+    !Object.keys(properties).length
+  ) {
+    const zodSchema = schemaToZodSchema({
+      plugin,
+      schema: schema.additionalProperties,
+      state,
+    });
+    const expression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: zIdentifier,
+        name: recordIdentifier,
+      }),
+      parameters: [zodSchema],
+    });
+    return {
+      anyType: 'AnyZodObject',
+      expression,
+    };
+  }
 
-  //   if (hasOptionalProperties) {
-  //     indexPropertyItems.push({
-  //       type: 'undefined',
-  //     });
-  //   }
-
-  //   indexProperty = {
-  //     isRequired: true,
-  //     name: 'key',
-  //     type: schemaToZodSchema({
-  //       schema:
-  //         indexPropertyItems.length === 1
-  //           ? indexPropertyItems[0]
-  //           : {
-  //               items: indexPropertyItems,
-  //               logicalOperator: 'or',
-  //             },
-  //     }),
-  //   };
-  // }
-
-  // return compiler.typeInterfaceNode({
-  //   indexProperty,
-  //   properties: schemaProperties,
-  //   useLegacyResolution: false,
-  // });
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,

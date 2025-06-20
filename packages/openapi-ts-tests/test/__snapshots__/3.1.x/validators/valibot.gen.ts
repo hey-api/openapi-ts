@@ -28,6 +28,10 @@ export const vFoo: v.GenericSchema = v.optional(v.union([
 
 export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), 'baz');
 
+export const vQux = v.record(v.string(), v.object({
+    qux: v.optional(v.string())
+}));
+
 /**
  * This is Foo parameter.
  */

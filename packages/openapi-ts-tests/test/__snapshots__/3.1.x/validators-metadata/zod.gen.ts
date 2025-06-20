@@ -28,6 +28,10 @@ export const zFoo: z.ZodTypeAny = z.union([
 
 export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
 
+export const zQux = z.record(z.object({
+    qux: z.string().optional()
+}));
+
 /**
  * This is Foo parameter.
  */
