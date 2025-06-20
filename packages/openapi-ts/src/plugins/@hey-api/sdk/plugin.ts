@@ -123,7 +123,7 @@ const generateClassSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
     ? createClientClassNodes({ plugin })
     : [];
 
-  plugin.subscribe('operation', ({ operation }) => {
+  plugin.forEach('operation', ({ operation }) => {
     const isRequiredOptions = isOperationOptionsRequired({
       context: plugin.context,
       operation,
@@ -302,20 +302,18 @@ const generateClassSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
     generatedClasses.add(currentClass.className);
   };
 
-  plugin.subscribe('after', () => {
-    if (clientClassNodes.length) {
-      const node = compiler.classDeclaration({
-        exportClass: false,
-        name: '_HeyApiClient',
-        nodes: clientClassNodes,
-      });
-      file.add(node);
-    }
+  if (clientClassNodes.length) {
+    const node = compiler.classDeclaration({
+      exportClass: false,
+      name: '_HeyApiClient',
+      nodes: clientClassNodes,
+    });
+    file.add(node);
+  }
 
-    for (const sdkClass of sdkClasses.values()) {
-      generateClass(sdkClass);
-    }
-  });
+  for (const sdkClass of sdkClasses.values()) {
+    generateClass(sdkClass);
+  }
 };
 
 const generateFlatSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
@@ -323,7 +321,7 @@ const generateFlatSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = plugin.context.file({ id: sdkId })!;
 
-  plugin.subscribe('operation', ({ operation }) => {
+  plugin.forEach('operation', ({ operation }) => {
     const isRequiredOptions = isOperationOptionsRequired({
       context: plugin.context,
       operation,

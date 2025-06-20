@@ -15,13 +15,11 @@ const infiniteIdentifier = compiler.identifier({ text: 'infinite' });
 const optionsIdentifier = compiler.identifier({ text: 'options' });
 
 export const createQueryKeyFunction = ({
-  context,
   plugin,
 }: {
-  context: IR.Context;
   plugin: PluginInstance;
 }) => {
-  const file = context.file({ id: plugin.name })!;
+  const file = plugin.context.file({ id: plugin.name })!;
 
   const identifierCreateQueryKey = file.identifier({
     $ref: `#/ir/${createQueryKeyFn}`,
@@ -73,9 +71,9 @@ export const createQueryKeyFunction = ({
                   value: compiler.identifier({ text: 'id' }),
                 },
                 {
-                  key: getClientBaseUrlKey(context.config),
+                  key: getClientBaseUrlKey(plugin.context.config),
                   value: compiler.identifier({
-                    text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey(context.config)}`,
+                    text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey(plugin.context.config)}`,
                   }),
                 },
               ],
@@ -215,17 +213,15 @@ export const createQueryKeyFunction = ({
 };
 
 const createQueryKeyLiteral = ({
-  context,
   id,
   isInfinite,
   plugin,
 }: {
-  context: IR.Context;
   id: string;
   isInfinite?: boolean;
   plugin: PluginInstance;
 }) => {
-  const file = context.file({ id: plugin.name })!;
+  const file = plugin.context.file({ id: plugin.name })!;
   const identifierCreateQueryKey = file.identifier({
     $ref: `#/ir/${createQueryKeyFn}`,
     namespace: 'value',
@@ -241,14 +237,8 @@ const createQueryKeyLiteral = ({
   return createQueryKeyCallExpression;
 };
 
-export const createQueryKeyType = ({
-  context,
-  plugin,
-}: {
-  context: IR.Context;
-  plugin: PluginInstance;
-}) => {
-  const file = context.file({ id: plugin.name })!;
+export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
+  const file = plugin.context.file({ id: plugin.name })!;
 
   const properties: Property[] = [
     {
@@ -274,7 +264,7 @@ export const createQueryKeyType = ({
         compiler.typeIntersectionNode({
           types: [
             compiler.typeReferenceNode({
-              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(context.config)}' | 'body' | 'headers' | 'path' | 'query'>`,
+              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(plugin.context.config)}' | 'body' | 'headers' | 'path' | 'query'>`,
             }),
             compiler.typeInterfaceNode({
               properties,
@@ -299,16 +289,14 @@ export const createQueryKeyType = ({
 };
 
 export const infiniteQueryKeyFunctionIdentifier = ({
-  context,
   operation,
   plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
   const name = serviceFunctionIdentifier({
-    config: context.config,
+    config: plugin.context.config,
     id: operation.id,
     operation,
   });
@@ -358,23 +346,25 @@ export const queryKeyFunctionIdentifier = ({
 };
 
 export const queryKeyStatement = ({
-  context,
   isInfinite,
   operation,
   plugin,
   typeQueryKey,
 }: {
-  context: IR.Context;
   isInfinite: boolean;
   operation: IR.OperationObject;
   plugin: PluginInstance;
   typeQueryKey?: string;
 }) => {
-  const file = context.file({ id: plugin.name })!;
-  const typeData = useTypeData({ context, operation, plugin });
+  const file = plugin.context.file({ id: plugin.name })!;
+  const typeData = useTypeData({ operation, plugin });
   const name = isInfinite
-    ? infiniteQueryKeyFunctionIdentifier({ context, operation, plugin })
-    : queryKeyFunctionIdentifier({ context, operation, plugin });
+    ? infiniteQueryKeyFunctionIdentifier({ operation, plugin })
+    : queryKeyFunctionIdentifier({
+        context: plugin.context,
+        operation,
+        plugin,
+      });
   const identifierQueryKey = file.identifier({
     $ref: `#/queryKey/${name}`,
     create: true,
@@ -392,7 +382,6 @@ export const queryKeyStatement = ({
       ],
       returnType: isInfinite ? typeQueryKey : undefined,
       statements: createQueryKeyLiteral({
-        context,
         id: operation.id,
         isInfinite,
         plugin,

@@ -1,6 +1,5 @@
 import path from 'node:path';
 
-import { HeyApiError } from '../error';
 import { TypeScriptFile } from '../generate/files';
 import { PluginInstance } from '../plugins/shared/utils/instance';
 import type { Config, StringCase } from '../types/config';
@@ -42,47 +41,6 @@ export interface ContextFile {
   path: string;
 }
 
-export interface Events {
-  /**
-   * Called after parsing.
-   */
-  after: () => void;
-  /**
-   * Called before parsing.
-   */
-  before: () => void;
-  operation: (args: {
-    method: keyof IR.PathItemObject;
-    operation: IR.OperationObject;
-    path: string;
-  }) => void;
-  parameter: (args: {
-    $ref: string;
-    name: string;
-    parameter: IR.ParameterObject;
-  }) => void;
-  requestBody: (args: {
-    $ref: string;
-    name: string;
-    requestBody: IR.RequestBodyObject;
-  }) => void;
-  schema: (args: {
-    $ref: string;
-    name: string;
-    schema: IR.SchemaObject;
-  }) => void;
-  server: (args: { server: IR.ServerObject }) => void;
-}
-
-type ListenerWithMeta<T extends keyof Events> = {
-  callbackFn: Events[T];
-  pluginName: string;
-};
-
-type Listeners = {
-  [T in keyof Events]?: Array<ListenerWithMeta<T>>;
-};
-
 export class IRContext<Spec extends Record<string, any> = any> {
   /**
    * Configuration for parsing and generating the output. This
@@ -92,11 +50,11 @@ export class IRContext<Spec extends Record<string, any> = any> {
   /**
    * A map of files that will be generated from `spec`.
    */
-  public files: Files;
+  public files: Files = {};
   /**
    * Intermediate representation model obtained from `spec`.
    */
-  public ir: IR.Model;
+  public ir: IR.Model = {};
   /**
    * A map of registered plugin instances, keyed by plugin name. Plugins are
    * registered through the `registerPlugin` method and can be accessed by
@@ -108,48 +66,9 @@ export class IRContext<Spec extends Record<string, any> = any> {
    */
   public spec: Spec;
 
-  /**
-   * A map of event listeners.
-   */
-  private listeners: Listeners;
-
   constructor({ config, spec }: { config: Config; spec: Spec }) {
     this.config = config;
-    this.files = {};
-    this.ir = {};
-    this.listeners = {};
     this.spec = spec;
-  }
-
-  /**
-   * Notify all event listeners about `event`.
-   */
-  public async broadcast<T extends keyof Events>(
-    event: T,
-    ...args: Parameters<Events[T]>
-  ): Promise<void> {
-    const eventListeners = this.listeners[event];
-
-    if (eventListeners) {
-      for (const listener of eventListeners) {
-        try {
-          await listener.callbackFn(
-            // @ts-expect-error
-            ...args,
-          );
-        } catch (error) {
-          const originalError =
-            error instanceof Error ? error : new Error(String(error));
-          throw new HeyApiError({
-            args,
-            error: originalError,
-            event,
-            name: 'BroadcastError',
-            pluginName: listener.pluginName,
-          });
-        }
-      }
-    }
   }
 
   /**
@@ -216,13 +135,14 @@ export class IRContext<Spec extends Record<string, any> = any> {
   }
 
   /**
-   * Generator that iterates through plugin order and registers each plugin.
-   * Yields the registered plugin instance for each plugin name.
+   * Registers all plugins in the order specified by the configuration and returns
+   * an array of the registered PluginInstance objects. Each plugin is instantiated
+   * and added to the context's plugins map.
+   *
+   * @returns {ReadonlyArray<PluginInstance>} An array of registered plugin instances in order.
    */
-  public *registerPlugins(): Generator<PluginInstance> {
-    for (const name of this.config.pluginOrder) {
-      yield this.registerPlugin(name);
-    }
+  public registerPlugins(): ReadonlyArray<PluginInstance> {
+    return this.config.pluginOrder.map((name) => this.registerPlugin(name));
   }
 
   // TODO: parser - works the same as resolveRef, but for IR schemas.
@@ -243,23 +163,6 @@ export class IRContext<Spec extends Record<string, any> = any> {
     return resolveRef<T>({
       $ref,
       spec: this.spec,
-    });
-  }
-
-  /**
-   * Register a new `event` listener.
-   */
-  public subscribe<T extends keyof Events>(
-    event: T,
-    callbackFn: Events[T],
-    pluginName: string,
-  ): void {
-    if (!this.listeners[event]) {
-      this.listeners[event] = [];
-    }
-    this.listeners[event].push({
-      callbackFn,
-      pluginName: pluginName ?? '',
     });
   }
 }

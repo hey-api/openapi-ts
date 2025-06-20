@@ -215,7 +215,7 @@ export const handler: Plugin.Handler<Config> = ({ plugin }) => {
 
   const routeHandlers: Array<Property> = [];
 
-  plugin.subscribe('operation', ({ operation }) => {
+  plugin.forEach('operation', ({ operation }) => {
     const routeHandler = operationToRouteHandler({
       context: plugin.context,
       operation,
@@ -225,34 +225,32 @@ export const handler: Plugin.Handler<Config> = ({ plugin }) => {
     }
   });
 
-  plugin.subscribe('after', () => {
-    const identifier = file.identifier({
-      $ref: 'RouteHandlers',
-      create: true,
-      namespace: 'type',
-    });
-
-    if (!identifier.name) {
-      return;
-    }
-
-    if (routeHandlers.length) {
-      file.import({
-        asType: true,
-        module: 'fastify',
-        name: 'RouteHandler',
-      });
-    }
-
-    file.add(
-      compiler.typeAliasDeclaration({
-        exportType: true,
-        name: identifier.name,
-        type: compiler.typeInterfaceNode({
-          properties: routeHandlers,
-          useLegacyResolution: false,
-        }),
-      }),
-    );
+  const identifier = file.identifier({
+    $ref: 'RouteHandlers',
+    create: true,
+    namespace: 'type',
   });
+
+  if (!identifier.name) {
+    return;
+  }
+
+  if (routeHandlers.length) {
+    file.import({
+      asType: true,
+      module: 'fastify',
+      name: 'RouteHandler',
+    });
+  }
+
+  file.add(
+    compiler.typeAliasDeclaration({
+      exportType: true,
+      name: identifier.name,
+      type: compiler.typeInterfaceNode({
+        properties: routeHandlers,
+        useLegacyResolution: false,
+      }),
+    }),
+  );
 };

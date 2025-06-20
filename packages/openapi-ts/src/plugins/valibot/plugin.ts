@@ -1110,58 +1110,39 @@ export const handler: Plugin.Handler<Config> = ({ plugin }) => {
     name: '*',
   });
 
-  plugin.subscribe('operation', ({ operation }) => {
+  plugin.forEach('operation', 'parameter', 'requestBody', 'schema', (event) => {
     const state: State = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
     };
 
-    operationToValibotSchema({
-      operation,
-      plugin,
-      state,
-    });
-  });
-
-  plugin.subscribe('parameter', ({ $ref, parameter }) => {
-    const state: State = {
-      circularReferenceTracker: new Set(),
-      hasCircularReference: false,
-    };
-
-    schemaToValibotSchema({
-      $ref,
-      plugin,
-      schema: parameter.schema,
-      state,
-    });
-  });
-
-  plugin.subscribe('requestBody', ({ $ref, requestBody }) => {
-    const state: State = {
-      circularReferenceTracker: new Set(),
-      hasCircularReference: false,
-    };
-
-    schemaToValibotSchema({
-      $ref,
-      plugin,
-      schema: requestBody.schema,
-      state,
-    });
-  });
-
-  plugin.subscribe('schema', ({ $ref, schema }) => {
-    const state: State = {
-      circularReferenceTracker: new Set(),
-      hasCircularReference: false,
-    };
-
-    schemaToValibotSchema({
-      $ref,
-      plugin,
-      schema,
-      state,
-    });
+    if (event.type === 'operation') {
+      operationToValibotSchema({
+        operation: event.operation,
+        plugin,
+        state,
+      });
+    } else if (event.type === 'parameter') {
+      schemaToValibotSchema({
+        $ref: event.$ref,
+        plugin,
+        schema: event.parameter.schema,
+        state,
+      });
+    } else if (event.type === 'requestBody') {
+      schemaToValibotSchema({
+        $ref: event.$ref,
+        plugin,
+        schema: event.requestBody.schema,
+        state,
+      });
+    } else if (event.type === 'schema') {
+      schemaToValibotSchema({
+        $ref: event.$ref,
+        plugin,
+        schema: event.schema,
+        state,
+      });
+    }
   });
 };

@@ -19,16 +19,14 @@ import { useTypeData } from './useType';
 const queryOptionsFn = 'queryOptions';
 
 const queryOptionsFunctionIdentifier = ({
-  context,
   operation,
   plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
   const name = serviceFunctionIdentifier({
-    config: context.config,
+    config: plugin.context.config,
     id: operation.id,
     operation,
   });
@@ -50,13 +48,11 @@ const queryOptionsFunctionIdentifier = ({
 };
 
 export const createQueryOptions = ({
-  context,
   operation,
   plugin,
   queryFn,
   state,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: PluginInstance;
   queryFn: string;
@@ -69,15 +65,18 @@ export const createQueryOptions = ({
     return state;
   }
 
-  const file = context.file({ id: plugin.name })!;
-  const isRequiredOptions = isOperationOptionsRequired({ context, operation });
+  const file = plugin.context.file({ id: plugin.name })!;
+  const isRequiredOptions = isOperationOptionsRequired({
+    context: plugin.context,
+    operation,
+  });
 
   if (!state.hasQueries) {
     state.hasQueries = true;
 
     if (!state.hasCreateQueryKeyParamsFunction) {
-      createQueryKeyType({ context, plugin });
-      createQueryKeyFunction({ context, plugin });
+      createQueryKeyType({ plugin });
+      createQueryKeyFunction({ plugin });
       state.hasCreateQueryKeyParamsFunction = true;
     }
 
@@ -90,17 +89,16 @@ export const createQueryOptions = ({
   state.hasUsedQueryFn = true;
 
   const node = queryKeyStatement({
-    context,
     isInfinite: false,
     operation,
     plugin,
   });
   file.add(node);
 
-  const typeData = useTypeData({ context, operation, plugin });
+  const typeData = useTypeData({ operation, plugin });
 
   const queryKeyName = queryKeyFunctionIdentifier({
-    context,
+    context: plugin.context,
     operation,
     plugin,
   });
@@ -212,7 +210,7 @@ export const createQueryOptions = ({
         }),
       ],
     }),
-    name: queryOptionsFunctionIdentifier({ context, operation, plugin }),
+    name: queryOptionsFunctionIdentifier({ operation, plugin }),
     // TODO: add type error
     // TODO: AxiosError<PutSubmissionMetaError>
   });
