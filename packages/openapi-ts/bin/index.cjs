@@ -129,7 +129,13 @@ async function start() {
     }
 
     const context = await createClient(userConfig);
-    if (!context[0] || !context[0].config.watch) {
+    if (
+      !context[0] ||
+      !context[0].config ||
+      !context[0].config.input ||
+      !context[0].config.input.watch ||
+      !context[0].config.input.watch.enabled
+    ) {
       process.exit(0);
     }
   } catch {
