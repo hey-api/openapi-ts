@@ -383,6 +383,38 @@ describe('patchOpenApiSpec', () => {
         type: 'string',
       });
     });
+
+    it('applies meta patch function', () => {
+      const metaFn = vi.fn((meta) => {
+        meta.title = 'Changed Title';
+      });
+      const spec: OpenApi.V3_1_X = {
+        ...specMetadataV3,
+      };
+      patchOpenApiSpec({
+        patchOptions: {
+          meta: metaFn,
+        },
+        spec,
+      });
+      expect(metaFn).toHaveBeenCalledOnce();
+      expect(spec.info.title).toBe('Changed Title');
+    });
+
+    it('applies version patch function', () => {
+      const versionFn = vi.fn((version) => `patched-${version}`);
+      const spec: OpenApi.V3_1_X = {
+        ...specMetadataV3,
+      };
+      patchOpenApiSpec({
+        patchOptions: {
+          version: versionFn,
+        },
+        spec,
+      });
+      expect(versionFn).toHaveBeenCalledOnce();
+      expect(spec.openapi).toBe('patched-3.1.0');
+    });
   });
 
   describe('OpenAPI v2', () => {
@@ -541,6 +573,38 @@ describe('patchOpenApiSpec', () => {
       expect(fn).toHaveBeenCalledWith({
         type: 'string',
       });
+    });
+
+    it('applies meta patch function', () => {
+      const metaFn = vi.fn((meta) => {
+        meta.title = 'Changed Title';
+      });
+      const spec: OpenApi.V2_0_X = {
+        ...specMetadataV2,
+      };
+      patchOpenApiSpec({
+        patchOptions: {
+          meta: metaFn,
+        },
+        spec,
+      });
+      expect(metaFn).toHaveBeenCalledOnce();
+      expect(spec.info.title).toBe('Changed Title');
+    });
+
+    it('applies version patch function', () => {
+      const versionFn = vi.fn((version) => `patched-${version}`);
+      const spec: OpenApi.V2_0_X = {
+        ...specMetadataV2,
+      };
+      patchOpenApiSpec({
+        patchOptions: {
+          version: versionFn,
+        },
+        spec,
+      });
+      expect(versionFn).toHaveBeenCalledOnce();
+      expect(spec.swagger).toBe('patched-2.0');
     });
   });
 

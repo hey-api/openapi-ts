@@ -15,7 +15,15 @@ export const patchOpenApiSpec = ({
   const spec = _spec as OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X;
 
   if ('swagger' in spec) {
-    if (spec.definitions && patchOptions?.schemas) {
+    if (patchOptions.version && spec.swagger) {
+      spec.swagger = patchOptions.version(spec.swagger) as typeof spec.swagger;
+    }
+
+    if (patchOptions.meta && spec.info) {
+      patchOptions.meta(spec.info);
+    }
+
+    if (patchOptions.schemas && spec.definitions) {
       for (const key in patchOptions.schemas) {
         const patchFn = patchOptions.schemas[key]!;
         const schema = spec.definitions[key];
@@ -27,8 +35,26 @@ export const patchOpenApiSpec = ({
     return;
   }
 
+  if (patchOptions.version && spec.openapi) {
+    spec.openapi = patchOptions.version(spec.openapi) as typeof spec.openapi;
+  }
+
+  if (patchOptions.meta && spec.info) {
+    patchOptions.meta(spec.info);
+  }
+
   if (spec.components) {
-    if (spec.components.parameters && patchOptions.parameters) {
+    if (patchOptions.schemas && spec.components.schemas) {
+      for (const key in patchOptions.schemas) {
+        const patchFn = patchOptions.schemas[key]!;
+        const schema = spec.components.schemas[key];
+        if (schema && typeof schema === 'object') {
+          patchFn(schema);
+        }
+      }
+    }
+
+    if (patchOptions.parameters && spec.components.parameters) {
       for (const key in patchOptions.parameters) {
         const patchFn = patchOptions.parameters[key]!;
         const schema = spec.components.parameters[key];
@@ -38,7 +64,7 @@ export const patchOpenApiSpec = ({
       }
     }
 
-    if (spec.components.requestBodies && patchOptions.requestBodies) {
+    if (patchOptions.requestBodies && spec.components.requestBodies) {
       for (const key in patchOptions.requestBodies) {
         const patchFn = patchOptions.requestBodies[key]!;
         const schema = spec.components.requestBodies[key];
@@ -48,20 +74,10 @@ export const patchOpenApiSpec = ({
       }
     }
 
-    if (spec.components.responses && patchOptions.responses) {
+    if (patchOptions.responses && spec.components.responses) {
       for (const key in patchOptions.responses) {
         const patchFn = patchOptions.responses[key]!;
         const schema = spec.components.responses[key];
-        if (schema && typeof schema === 'object') {
-          patchFn(schema);
-        }
-      }
-    }
-
-    if (spec.components.schemas && patchOptions?.schemas) {
-      for (const key in patchOptions.schemas) {
-        const patchFn = patchOptions.schemas[key]!;
-        const schema = spec.components.schemas[key];
         if (schema && typeof schema === 'object') {
           patchFn(schema);
         }
