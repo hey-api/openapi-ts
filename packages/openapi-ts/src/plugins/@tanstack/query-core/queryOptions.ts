@@ -2,7 +2,6 @@ import type ts from 'typescript';
 
 import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
-import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import {
   createOperationComment,
   isOperationOptionsRequired,
@@ -10,42 +9,12 @@ import {
 import {
   createQueryKeyFunction,
   createQueryKeyType,
-  queryKeyFunctionIdentifier,
   queryKeyStatement,
 } from './queryKey';
 import type { PluginInstance, PluginState } from './types';
 import { useTypeData } from './useType';
 
 const queryOptionsFn = 'queryOptions';
-
-const queryOptionsFunctionIdentifier = ({
-  operation,
-  plugin,
-}: {
-  operation: IR.OperationObject;
-  plugin: PluginInstance;
-}) => {
-  const name = serviceFunctionIdentifier({
-    config: plugin.context.config,
-    id: operation.id,
-    operation,
-  });
-
-  let customName = '';
-
-  if (plugin.config.queryOptionsNameBuilder) {
-    if (typeof plugin.config.queryOptionsNameBuilder === 'function') {
-      customName = plugin.config.queryOptionsNameBuilder(name);
-    } else {
-      customName = plugin.config.queryOptionsNameBuilder.replace(
-        '{{name}}',
-        name,
-      );
-    }
-  }
-
-  return customName;
-};
 
 export const createQueryOptions = ({
   operation,
@@ -97,13 +66,11 @@ export const createQueryOptions = ({
 
   const typeData = useTypeData({ operation, plugin });
 
-  const queryKeyName = queryKeyFunctionIdentifier({
-    context: plugin.context,
-    operation,
-    plugin,
-  });
   const identifierQueryKey = file.identifier({
-    $ref: `#/queryKey/${queryKeyName}`,
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-query-key/${operation.id}`,
+    case: plugin.config.queryKeys.case,
+    nameTransformer: plugin.config.queryKeys.name,
     namespace: 'value',
   });
 
@@ -158,6 +125,15 @@ export const createQueryOptions = ({
     );
   }
 
+  const identifierQueryOptions = file.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-query-options/${operation.id}`,
+    case: plugin.config.queryOptions.case,
+    create: true,
+    nameTransformer: plugin.config.queryOptions.name,
+    namespace: 'value',
+  });
+
   const statement = compiler.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
@@ -210,7 +186,7 @@ export const createQueryOptions = ({
         }),
       ],
     }),
-    name: queryOptionsFunctionIdentifier({ operation, plugin }),
+    name: identifierQueryOptions.name || '',
     // TODO: add type error
     // TODO: AxiosError<PutSubmissionMetaError>
   });

@@ -29,6 +29,16 @@ This config option is deprecated and will be removed.
 
 ## v0.75.0
 
+### Updated TanStack Query options
+
+The TanStack Query plugin options have been expanded to support more naming and casing patterns. As a result, the following options have been renamed.
+
+- `queryOptionsNameBuilder` renamed to `queryOptions`
+- `infiniteQueryOptionsNameBuilder` renamed to `infiniteQueryOptions`
+- `mutationOptionsNameBuilder` renamed to `mutationOptions`
+- `queryKeyNameBuilder` renamed to `queryKeys`
+- `infiniteQueryKeyNameBuilder` renamed to `infiniteQueryKeys`
+
 ### Added `plugin.forEach()` method
 
 This method replaces the `.subscribe()` method. Additionally, `.forEach()` is executed immediately, which means we don't need the `before` and `after` events – simply move your code before and after the `.forEach()` block.

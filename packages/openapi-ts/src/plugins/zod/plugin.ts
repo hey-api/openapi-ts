@@ -1170,7 +1170,7 @@ const schemaToZodSchema = ({
 export const handler: Plugin.Handler<ResolvedConfig> = ({ plugin }) => {
   const file = plugin.createFile({
     id: zodId,
-    identifierCase: 'camelCase',
+    identifierCase: plugin.config.case,
     path: plugin.output,
   });
 
