@@ -33,7 +33,7 @@ export const findOneOfParentDiscriminator = (
       }
     }
   }
-  return undefined;
+  return;
 };
 
 export const mapPropertyValue = (

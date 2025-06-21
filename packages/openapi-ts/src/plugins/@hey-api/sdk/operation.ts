@@ -234,6 +234,8 @@ const getResponseType = (
   if (cleanContent.startsWith('text/')) {
     return 'text';
   }
+
+  return;
 };
 
 export const operationStatements = ({

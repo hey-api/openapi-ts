@@ -45,6 +45,8 @@ export const getMappedType = (
       return 'null';
     case 'void':
       return 'void';
+    default:
+      return;
   }
 };
 
