@@ -150,25 +150,25 @@ export default defineConfig(() => {
         // name: 'fastify',
       },
       {
-        case: 'SCREAMING_SNAKE_CASE',
-        comments: false,
+        // case: 'SCREAMING_SNAKE_CASE',
+        // comments: false,
         exportFromIndex: true,
-        infiniteQueryKeys: {
-          name: '{{name}}IQK',
-        },
-        infiniteQueryOptions: {
-          name: '{{name}}IQO',
-        },
-        mutationOptions: {
-          name: '{{name}}MO',
-        },
+        // infiniteQueryKeys: {
+        //   name: '{{name}}IQK',
+        // },
+        // infiniteQueryOptions: {
+        //   name: '{{name}}IQO',
+        // },
+        // mutationOptions: {
+        //   name: '{{name}}MO',
+        // },
         name: '@tanstack/react-query',
-        queryKeys: {
-          name: '{{name}}QK',
-        },
-        queryOptions: {
-          name: '{{name}}QO',
-        },
+        // queryKeys: {
+        //   name: '{{name}}QK',
+        // },
+        // queryOptions: {
+        //   name: '{{name}}QO',
+        // },
       },
       {
         // comments: false,
