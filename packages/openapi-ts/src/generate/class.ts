@@ -20,7 +20,7 @@ import { ensureDirSync } from './utils';
  * @param templates The loaded handlebar templates
  */
 export const generateLegacyClientClass = async (
-  openApi: OpenApi,
+  _openApi: OpenApi,
   outputPath: string,
   client: Client,
   templates: Templates,

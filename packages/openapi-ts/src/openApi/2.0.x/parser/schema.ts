@@ -23,6 +23,8 @@ export const getSchemaType = ({
   if (schema.properties) {
     return 'object';
   }
+
+  return;
 };
 
 const parseSchemaJsDoc = ({

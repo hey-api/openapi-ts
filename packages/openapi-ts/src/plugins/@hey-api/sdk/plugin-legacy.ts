@@ -148,7 +148,7 @@ const toOperationParamType = (
     p: OperationParameter | Model,
   ): string | undefined => {
     if (p.default === undefined) {
-      return undefined;
+      return;
     }
     return JSON.stringify(p.default, null, 4);
   };

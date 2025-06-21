@@ -173,6 +173,8 @@ export const toExpression = <T = unknown>({
     }
     return ots.string(value, unescape);
   }
+
+  return;
 };
 
 /**
@@ -665,7 +667,7 @@ export const createObjectType = <
                     value: value.value,
                   });
             if (!initializer) {
-              return undefined;
+              return;
             }
             // Create a identifier if the current key is one and it is not an object
             if (
@@ -698,7 +700,7 @@ export const createObjectType = <
             value,
           });
           if (!initializer) {
-            return undefined;
+            return;
           }
           // Create a identifier if the current key is one and it is not an object
           if (

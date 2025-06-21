@@ -6,6 +6,7 @@
   "scripts": {
     "test:coverage": "vitest run --config vitest.config.unit.ts --coverage",
     "test:e2e:disabled": "vitest run --config vitest.config.e2e.ts",
+    "test:types": "tsc -p tsconfig.test.json --noEmit",
     "test:update": "vitest watch --config vitest.config.unit.ts --update",
     "test:watch": "vitest watch --config vitest.config.unit.ts",
     "test": "vitest run --config vitest.config.unit.ts",

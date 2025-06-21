@@ -221,10 +221,8 @@ const enumTypeToValibotSchema = ({
   return resultExpression;
 };
 
-const neverTypeToValibotSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const neverTypeToValibotSchema = (_props: {
   schema: SchemaWithType<'never'>;
 }) => {
   const expression = compiler.callExpression({
@@ -236,10 +234,8 @@ const neverTypeToValibotSchema = ({
   return expression;
 };
 
-const nullTypeToValibotSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const nullTypeToValibotSchema = (_props: {
   schema: SchemaWithType<'null'>;
 }) => {
   const expression = compiler.callExpression({
@@ -663,10 +659,8 @@ const tupleTypeToValibotSchema = ({
   });
 };
 
-const undefinedTypeToValibotSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const undefinedTypeToValibotSchema = (_props: {
   schema: SchemaWithType<'undefined'>;
 }) => {
   const expression = compiler.callExpression({
@@ -678,10 +672,8 @@ const undefinedTypeToValibotSchema = ({
   return expression;
 };
 
-const unknownTypeToValibotSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const unknownTypeToValibotSchema = (_props: {
   schema: SchemaWithType<'unknown'>;
 }) => {
   const expression = compiler.callExpression({
@@ -693,10 +685,8 @@ const unknownTypeToValibotSchema = ({
   return expression;
 };
 
-const voidTypeToValibotSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const voidTypeToValibotSchema = (_props: {
   schema: SchemaWithType<'void'>;
 }) => {
   const expression = compiler.callExpression({

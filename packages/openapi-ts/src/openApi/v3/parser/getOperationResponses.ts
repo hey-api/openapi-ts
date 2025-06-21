@@ -12,8 +12,6 @@ import type { OpenApiResponses } from '../interfaces/OpenApiResponses';
 import { getOperationResponse } from './getOperationResponse';
 
 export const getOperationResponses = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  debug,
   openApi,
   responses,
   types,

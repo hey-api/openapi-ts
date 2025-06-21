@@ -24,6 +24,8 @@ export const findPackageJson = (): unknown | undefined => {
 
     dir = path.dirname(dir);
   }
+
+  return;
 };
 
 export const findTsConfigPath = (

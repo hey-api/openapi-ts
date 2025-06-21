@@ -149,7 +149,7 @@ interface Config<T extends ClientOptions = ClientOptions> extends Omit<RequestIn
      *
      * @default 'auto'
      */
-    parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'auto' | 'stream';
+    parseAs?: 'arrayBuffer' | 'auto' | 'blob' | 'formData' | 'json' | 'stream' | 'text';
     /**
      * Throw an error instead of returning it in the response?
      *

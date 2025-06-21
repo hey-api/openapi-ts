@@ -233,12 +233,8 @@ const enumTypeToZodSchema = ({
   return enumExpression;
 };
 
-const neverTypeToZodSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
-  schema: SchemaWithType<'never'>;
-}) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const neverTypeToZodSchema = (_props: { schema: SchemaWithType<'never'> }) => {
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
@@ -248,12 +244,8 @@ const neverTypeToZodSchema = ({
   return expression;
 };
 
-const nullTypeToZodSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
-  schema: SchemaWithType<'null'>;
-}) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const nullTypeToZodSchema = (_props: { schema: SchemaWithType<'null'> }) => {
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
@@ -631,10 +623,8 @@ const tupleTypeToZodSchema = ({
   return expression;
 };
 
-const undefinedTypeToZodSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const undefinedTypeToZodSchema = (_props: {
   schema: SchemaWithType<'undefined'>;
 }) => {
   const expression = compiler.callExpression({
@@ -646,10 +636,8 @@ const undefinedTypeToZodSchema = ({
   return expression;
 };
 
-const unknownTypeToZodSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const unknownTypeToZodSchema = (_props: {
   schema: SchemaWithType<'unknown'>;
 }) => {
   const expression = compiler.callExpression({
@@ -661,12 +649,8 @@ const unknownTypeToZodSchema = ({
   return expression;
 };
 
-const voidTypeToZodSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
-  schema: SchemaWithType<'void'>;
-}) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const voidTypeToZodSchema = (_props: { schema: SchemaWithType<'void'> }) => {
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
