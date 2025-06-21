@@ -1,5 +1,43 @@
 # @hey-api/openapi-ts
 
+## 0.75.0
+
+### Minor Changes
+
+- [#2215](https://github.com/hey-api/openapi-ts/pull/2215) [`82e56e9`](https://github.com/hey-api/openapi-ts/commit/82e56e926e90d8575302db7fa4843b3663ac3971) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): replace `plugin.subscribe()` with `plugin.forEach()`
+
+  ### Added `plugin.forEach()` method
+
+  This method replaces the `.subscribe()` method. Additionally, `.forEach()` is executed immediately, which means we don't need the `before` and `after` events – simply move your code before and after the `.forEach()` block.
+
+  ```ts
+  plugin.forEach('operation', 'schema', (event) => {
+    // do something with event
+  });
+  ```
+
+- [#2218](https://github.com/hey-api/openapi-ts/pull/2218) [`e5ff024`](https://github.com/hey-api/openapi-ts/commit/e5ff024d4ff2c715276fda88269e7c1668cb929e) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(tanstack-query): add name and case options
+
+  ### Updated TanStack Query options
+
+  The TanStack Query plugin options have been expanded to support more naming and casing patterns. As a result, the following options have been renamed.
+
+  - `queryOptionsNameBuilder` renamed to `queryOptions`
+  - `infiniteQueryOptionsNameBuilder` renamed to `infiniteQueryOptions`
+  - `mutationOptionsNameBuilder` renamed to `mutationOptions`
+  - `queryKeyNameBuilder` renamed to `queryKeys`
+  - `infiniteQueryKeyNameBuilder` renamed to `infiniteQueryKeys`
+
+### Patch Changes
+
+- [#2219](https://github.com/hey-api/openapi-ts/pull/2219) [`4df6fa0`](https://github.com/hey-api/openapi-ts/commit/4df6fa0540c4e0e0adce485cb813ea57bf97b908) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make output pass stricter tsconfig configurations"
+
+- [#2213](https://github.com/hey-api/openapi-ts/pull/2213) [`2ffb612`](https://github.com/hey-api/openapi-ts/commit/2ffb61253b302d746c4f08beae9daeec345343f6) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(validators): handle additional properties object when no other properties are defined
+
+- [#2216](https://github.com/hey-api/openapi-ts/pull/2216) [`1456f87`](https://github.com/hey-api/openapi-ts/commit/1456f878cbe7ad7d2894a3ba8dddcc8b79d04920) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): add `meta` and `version` options to input.patch
+
+- [#2210](https://github.com/hey-api/openapi-ts/pull/2210) [`5b1362a`](https://github.com/hey-api/openapi-ts/commit/5b1362ae8bebf9aef846140e1400270131cbe64f) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(cli): correctly detect watch mode
+
 ## 0.74.0
 
 ### Minor Changes
