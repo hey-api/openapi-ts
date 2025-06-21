@@ -36,6 +36,6 @@ export const getDefault = (
     case 'string':
       return definition.default;
     default:
-      return undefined;
+      return;
   }
 };

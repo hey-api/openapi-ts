@@ -128,4 +128,6 @@ export const parameterWithPagination = ({
       };
     }
   }
+
+  return;
 };

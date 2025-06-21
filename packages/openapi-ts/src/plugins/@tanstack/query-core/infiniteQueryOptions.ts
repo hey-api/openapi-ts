@@ -510,4 +510,5 @@ export const createInfiniteQueryOptions = ({
     name: identifierInfiniteQueryOptions.name || '',
   });
   file.add(statement);
+  return;
 };

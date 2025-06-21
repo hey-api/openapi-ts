@@ -65,6 +65,8 @@ const securitySchemeObjectToAuthObject = ({
 
     return;
   }
+
+  return;
 };
 
 export const operationAuth = ({

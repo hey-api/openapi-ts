@@ -192,6 +192,8 @@ export const getParseAs = (
   if (cleanContent.startsWith('text/')) {
     return 'text';
   }
+
+  return;
 };
 
 export const setAuthParams = async ({

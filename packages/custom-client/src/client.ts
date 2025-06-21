@@ -102,14 +102,21 @@ export const createClient = (config: Config = {}): Client => {
           ? getParseAs(response.headers.get('Content-Type'))
           : opts.parseAs) ?? 'json';
 
-      if (parseAs === 'stream') {
-        return {
-          data: response.body,
-          ...result,
-        };
+      let data: any;
+      switch (parseAs) {
+        case 'arrayBuffer':
+        case 'blob':
+        case 'formData':
+        case 'json':
+        case 'text':
+          data = await response[parseAs]();
+          break;
+        case 'stream':
+          return {
+            data: response.body,
+            ...result,
+          };
       }
-
-      let data = await response[parseAs]();
       if (parseAs === 'json') {
         if (opts.responseValidator) {
           await opts.responseValidator(data);

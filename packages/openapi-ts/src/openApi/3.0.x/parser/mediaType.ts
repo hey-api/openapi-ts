@@ -65,4 +65,6 @@ export const mediaTypeObject = ({
       type: mediaTypeToIrMediaType({ mediaType }),
     };
   }
+
+  return;
 };
