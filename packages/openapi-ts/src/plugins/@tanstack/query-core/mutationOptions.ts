@@ -2,41 +2,11 @@ import type ts from 'typescript';
 
 import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
-import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { createOperationComment } from '../../shared/utils/operation';
 import type { PluginInstance, PluginState } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
 
 const mutationOptionsFn = 'mutationOptions';
-
-const mutationOptionsFunctionIdentifier = ({
-  operation,
-  plugin,
-}: {
-  operation: IR.OperationObject;
-  plugin: PluginInstance;
-}) => {
-  const name = serviceFunctionIdentifier({
-    config: plugin.context.config,
-    id: operation.id,
-    operation,
-  });
-
-  let customName = '';
-
-  if (plugin.config.mutationOptionsNameBuilder) {
-    if (typeof plugin.config.mutationOptionsNameBuilder === 'function') {
-      customName = plugin.config.mutationOptionsNameBuilder(name);
-    } else {
-      customName = plugin.config.mutationOptionsNameBuilder.replace(
-        '{{name}}',
-        name,
-      );
-    }
-  }
-
-  return customName;
-};
 
 export const createMutationOptions = ({
   operation,
@@ -50,7 +20,7 @@ export const createMutationOptions = ({
   state: PluginState;
 }) => {
   if (
-    !plugin.config.mutationOptions ||
+    !plugin.config.mutationOptions.enabled ||
     !(
       ['delete', 'patch', 'post', 'put'] as (typeof operation.method)[]
     ).includes(operation.method)
@@ -129,6 +99,15 @@ export const createMutationOptions = ({
     );
   }
 
+  const identifier = file.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-mutation-options/${operation.id}`,
+    case: plugin.config.mutationOptions.case,
+    create: true,
+    nameTransformer: plugin.config.mutationOptions.name,
+    namespace: 'value',
+  });
+
   const expression = compiler.arrowFunction({
     parameters: [
       {
@@ -171,7 +150,7 @@ export const createMutationOptions = ({
       : undefined,
     exportConst: true,
     expression,
-    name: mutationOptionsFunctionIdentifier({ operation, plugin }),
+    name: identifier.name || '',
   });
   file.add(statement);
 
