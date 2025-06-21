@@ -284,6 +284,8 @@ const addTypeEnum = ({
     });
     return node;
   }
+
+  return;
 };
 
 const shouldCreateTypeScriptEnum = ({

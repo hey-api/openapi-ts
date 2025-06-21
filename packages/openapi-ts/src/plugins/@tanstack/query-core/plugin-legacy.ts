@@ -925,6 +925,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
                 paginationField = property;
                 return true;
               }
+              return;
             });
           }
 
@@ -936,6 +937,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
               paginationField = property;
               return true;
             }
+            return;
           });
         });
 
