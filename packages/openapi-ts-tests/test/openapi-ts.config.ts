@@ -60,7 +60,7 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'content-types.yaml'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.yaml'),
       // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
@@ -127,7 +127,7 @@ export default defineConfig(() => {
         // throwOnError: true,
         // transformer: '@hey-api/transformers',
         transformer: true,
-        validator: 'zod',
+        validator: 'valibot',
       },
       {
         // bigInt: true,
@@ -171,9 +171,20 @@ export default defineConfig(() => {
         // },
       },
       {
+        // case: 'SCREAMING_SNAKE_CASE',
         // comments: false,
+        definitions: 'z{{name}}Definition',
         // exportFromIndex: true,
+        metadata: true,
         name: 'valibot',
+        requests: {
+          // case: 'SCREAMING_SNAKE_CASE',
+          name: 'z{{name}}TestData',
+        },
+        responses: {
+          // case: 'snake_case',
+          name: 'z{{name}}TestResponse',
+        },
       },
       {
         // case: 'snake_case',
