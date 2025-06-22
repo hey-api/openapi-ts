@@ -58,6 +58,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
     for (const name in context.spec.components.securitySchemes) {
       const securityOrReference =
         context.spec.components.securitySchemes[name]!;
+      // TODO: safe pointer to path
       const securitySchemeObject =
         '$ref' in securityOrReference
           ? context.resolveRef<SecuritySchemeObject>(securityOrReference.$ref)
@@ -68,6 +69,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
     for (const name in context.spec.components.parameters) {
       const $ref = `#/components/parameters/${name}`;
       const parameterOrReference = context.spec.components.parameters[name]!;
+      // TODO: safe pointer to path
       const parameter =
         '$ref' in parameterOrReference
           ? context.resolveRef<ParameterObject>(parameterOrReference.$ref)
@@ -84,6 +86,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
       const $ref = `#/components/requestBodies/${name}`;
       const requestBodyOrReference =
         context.spec.components.requestBodies[name]!;
+      // TODO: safe pointer to path
       const requestBody =
         '$ref' in requestBodyOrReference
           ? context.resolveRef<RequestBodyObject>(requestBodyOrReference.$ref)
@@ -113,6 +116,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
   for (const path in context.spec.paths) {
     const pathItem = context.spec.paths[path as keyof PathsObject]!;
 
+    // TODO: safe pointer to path
     const finalPathItem = pathItem.$ref
       ? {
           ...context.resolveRef<PathItemObject>(pathItem.$ref),
