@@ -1,9 +1,11 @@
 import { definePluginConfig } from '../shared/utils/config';
 import type { Plugin } from '../types';
+import { api } from './api';
 import { handler } from './plugin';
-import type { Config, ResolvedConfig } from './types';
+import type { ZodPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config, ResolvedConfig> = {
+export const defaultConfig: Plugin.Config<ZodPlugin> = {
+  api,
   config: {
     case: 'camelCase',
     comments: true,
@@ -11,7 +13,6 @@ export const defaultConfig: Plugin.Config<Config, ResolvedConfig> = {
     metadata: false,
   },
   handler,
-  handlerLegacy: () => {},
   name: 'zod',
   output: 'zod',
   resolveConfig: (plugin, context) => {

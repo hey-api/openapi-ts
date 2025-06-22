@@ -6,7 +6,7 @@ import type { OpenApiV3_1_XTypes } from '../../../openApi/3.1.x';
 import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
 import type { OpenApi } from '../../../openApi/types';
 import type { Plugin } from '../../types';
-import type { Config } from './types';
+import type { HeyApiSchemasPlugin } from './types';
 
 const schemasId = 'schemas';
 
@@ -14,7 +14,7 @@ const stripSchema = ({
   plugin,
   schema,
 }: {
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSchemasPlugin>;
   schema:
     | OpenApiV2_0_XTypes['SchemaObject']
     | OpenApiV3_0_XTypes['SchemaObject']
@@ -49,7 +49,7 @@ const schemaToJsonSchemaDraft_04 = ({
   schema: _schema,
 }: {
   context: IR.Context;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSchemasPlugin>;
   schema: OpenApiV2_0_XTypes['SchemaObject'];
 }): OpenApiV2_0_XTypes['SchemaObject'] => {
   if (Array.isArray(_schema)) {
@@ -125,7 +125,7 @@ const schemaToJsonSchemaDraft_05 = ({
   schema: _schema,
 }: {
   context: IR.Context;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSchemasPlugin>;
   schema:
     | OpenApiV3_0_XTypes['SchemaObject']
     | OpenApiV3_0_XTypes['ReferenceObject'];
@@ -227,7 +227,7 @@ const schemaToJsonSchema2020_12 = ({
   schema: _schema,
 }: {
   context: IR.Context;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSchemasPlugin>;
   schema: OpenApiV3_1_XTypes['SchemaObject'];
 }): OpenApiV3_1_XTypes['SchemaObject'] => {
   if (Array.isArray(_schema)) {
@@ -332,7 +332,7 @@ const schemaName = ({
   schema,
 }: {
   name: string;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSchemasPlugin>;
   schema:
     | OpenApiV2_0_XTypes['SchemaObject']
     | OpenApiV3_0_XTypes['ReferenceObject']
@@ -361,7 +361,7 @@ const schemasV2_0_X = ({
   plugin,
 }: {
   context: IR.Context<OpenApi.V2_0_X>;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSchemasPlugin>;
 }) => {
   if (!context.spec.definitions) {
     return;
@@ -389,7 +389,7 @@ const schemasV3_0_X = ({
   plugin,
 }: {
   context: IR.Context<OpenApi.V3_0_X>;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSchemasPlugin>;
 }) => {
   if (!context.spec.components) {
     return;
@@ -417,7 +417,7 @@ const schemasV3_1_X = ({
   plugin,
 }: {
   context: IR.Context<OpenApi.V3_1_X>;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSchemasPlugin>;
 }) => {
   if (!context.spec.components) {
     return;
@@ -440,7 +440,7 @@ const schemasV3_1_X = ({
   }
 };
 
-export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+export const handler: Plugin.Handler<HeyApiSchemasPlugin> = ({ plugin }) => {
   plugin.createFile({
     id: schemasId,
     path: plugin.output,

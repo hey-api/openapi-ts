@@ -1,7 +1,7 @@
-import type { StringCase } from '../../types/config';
+import type { StringCase } from '../../types/case';
 import type { Plugin } from '../types';
 
-export interface Config extends Plugin.Name<'valibot'> {
+export type Config = Plugin.Name<'valibot'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -137,9 +137,9 @@ export interface Config extends Plugin.Name<'valibot'> {
          */
         name?: string | ((name: string) => string);
       };
-}
+};
 
-export interface ResolvedConfig extends Plugin.Name<'valibot'> {
+export type ResolvedConfig = Plugin.Name<'valibot'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -251,4 +251,6 @@ export interface ResolvedConfig extends Plugin.Name<'valibot'> {
      */
     name: string | ((name: string) => string);
   };
-}
+};
+
+export type ValibotPlugin = Plugin.Types<Config, ResolvedConfig>;

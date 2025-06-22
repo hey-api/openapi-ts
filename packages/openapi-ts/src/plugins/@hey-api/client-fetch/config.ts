@@ -2,15 +2,15 @@ import { definePluginConfig } from '../../shared/utils/config';
 import type { Plugin } from '../../types';
 import { clientDefaultConfig, clientDefaultMeta } from '../client-core/config';
 import { clientPluginHandler } from '../client-core/plugin';
-import type { Config } from './types';
+import type { HeyApiClientFetchPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config> = {
+export const defaultConfig: Plugin.Config<HeyApiClientFetchPlugin> = {
   ...clientDefaultMeta,
   config: {
     ...clientDefaultConfig,
     throwOnError: false,
   },
-  handler: clientPluginHandler,
+  handler: clientPluginHandler as Plugin.Handler<HeyApiClientFetchPlugin>,
   name: '@hey-api/client-fetch',
 };
 

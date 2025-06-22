@@ -519,10 +519,19 @@ for (const version of versions) {
   describe('custom plugin', () => {
     it('handles a custom plugin', async () => {
       const myPlugin: Plugin.Config<{
-        customOption: boolean;
-        name: any;
-        output: string;
+        api: undefined;
+        config: {
+          customOption: boolean;
+          name: any;
+          output: string;
+        };
+        resolvedConfig: {
+          customOption: boolean;
+          name: any;
+          output: string;
+        };
       }> = {
+        api: undefined,
         config: {
           customOption: true,
         },
@@ -548,9 +557,17 @@ for (const version of versions) {
 
     it('throws on invalid dependency', async () => {
       const myPlugin: Plugin.Config<{
-        name: any;
-        output: string;
+        api: undefined;
+        config: {
+          name: any;
+          output: string;
+        };
+        resolvedConfig: {
+          name: any;
+          output: string;
+        };
       }> = {
+        api: undefined,
         config: {},
         dependencies: ['@hey-api/oops'],
         handler: vi.fn(),

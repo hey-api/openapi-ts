@@ -30,18 +30,21 @@ describe('operationNameFn', () => {
     plugins: {
       '@hey-api/sdk': {
         config: {
+          name: '@hey-api/sdk',
           operationId: true,
           response: 'body',
         },
         handler: () => {},
-        handlerLegacy: () => {},
         name: '@hey-api/sdk',
+        output: '',
       },
       'legacy/fetch': {
-        config: {},
+        config: {
+          name: 'legacy/fetch',
+        },
         handler: () => {},
-        handlerLegacy: () => {},
         name: 'legacy/fetch',
+        output: '',
         tags: ['client'],
       },
     },
@@ -54,12 +57,13 @@ describe('operationNameFn', () => {
       ...optionsCommon.plugins,
       '@hey-api/sdk': {
         config: {
+          name: '@hey-api/sdk',
           operationId: true,
           response: 'body',
         },
         handler: () => {},
-        handlerLegacy: () => {},
         name: '@hey-api/sdk',
+        output: '',
       },
     },
   };
@@ -70,12 +74,13 @@ describe('operationNameFn', () => {
       ...optionsCommon.plugins,
       '@hey-api/sdk': {
         config: {
+          name: '@hey-api/sdk',
           operationId: false,
           response: 'body',
         },
         handler: () => {},
-        handlerLegacy: () => {},
         name: '@hey-api/sdk',
+        output: '',
       },
     },
   };
@@ -85,20 +90,23 @@ describe('operationNameFn', () => {
     pluginOrder: ['@hey-api/client-fetch', '@hey-api/sdk'],
     plugins: {
       '@hey-api/client-fetch': {
-        config: {},
+        config: {
+          name: '@hey-api/client-fetch',
+        },
         handler: () => {},
-        handlerLegacy: () => {},
         name: '@hey-api/client-fetch',
+        output: '',
         tags: ['client'],
       },
       '@hey-api/sdk': {
         config: {
+          name: '@hey-api/sdk',
           operationId: true,
           response: 'body',
         },
         handler: () => {},
-        handlerLegacy: () => {},
         name: '@hey-api/sdk',
+        output: '',
       },
     },
   };
@@ -108,20 +116,23 @@ describe('operationNameFn', () => {
     pluginOrder: ['@hey-api/client-fetch', '@hey-api/sdk'],
     plugins: {
       '@hey-api/client-fetch': {
-        config: {},
+        config: {
+          name: '@hey-api/client-fetch',
+        },
         handler: () => {},
-        handlerLegacy: () => {},
         name: '@hey-api/client-fetch',
+        output: '',
         tags: ['client'],
       },
       '@hey-api/sdk': {
         config: {
+          name: '@hey-api/sdk',
           operationId: false,
           response: 'body',
         },
         handler: () => {},
-        handlerLegacy: () => {},
         name: '@hey-api/sdk',
+        output: '',
       },
     },
   };

@@ -1,23 +1,14 @@
 import path from 'node:path';
 
 import { TypeScriptFile } from '../generate/files';
+import type { PluginConfigMap } from '../plugins/config';
 import { PluginInstance } from '../plugins/shared/utils/instance';
-import type { Config, StringCase } from '../types/config';
+import type { PluginNames } from '../plugins/types';
+import type { StringCase } from '../types/case';
+import type { Config } from '../types/config';
 import type { Files } from '../types/utils';
 import { resolveRef } from '../utils/ref';
 import type { IR } from './types';
-
-// Helper type to extract the original config type from Plugin.Config and ensure it satisfies BaseConfig
-type ExtractConfig<T> = T extends { config: infer C }
-  ? C & { name: string }
-  : never;
-
-// Helper type to map plugin names to their specific PluginInstance types
-type PluginInstanceMap = {
-  [K in keyof Config['plugins']]?: PluginInstance<
-    ExtractConfig<Config['plugins'][K]>
-  >;
-};
 
 export interface ContextFile {
   /**
@@ -60,7 +51,9 @@ export class IRContext<Spec extends Record<string, any> = any> {
    * registered through the `registerPlugin` method and can be accessed by
    * their configured name from the config.
    */
-  public plugins: PluginInstanceMap = {};
+  public plugins: Partial<
+    Record<PluginNames, PluginInstance<PluginConfigMap[keyof PluginConfigMap]>>
+  > = {};
   /**
    * Resolved specification from `input`.
    */
@@ -120,10 +113,13 @@ export class IRContext<Spec extends Record<string, any> = any> {
    * @param name Plugin name.
    * @returns Registered plugin instance.
    */
-  private registerPlugin(name: keyof Config['plugins']): PluginInstance {
+  private registerPlugin<T extends PluginNames>(
+    name: T,
+  ): PluginInstance<PluginConfigMap[T]> {
     const plugin = this.config.plugins[name]!;
     const instance = new PluginInstance({
-      config: plugin.config,
+      api: plugin.api,
+      config: plugin.config as any,
       context: this as any,
       dependencies: plugin.dependencies ?? [],
       handler: plugin.handler,

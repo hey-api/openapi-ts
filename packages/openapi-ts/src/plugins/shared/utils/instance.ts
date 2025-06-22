@@ -1,29 +1,31 @@
 import { HeyApiError } from '../../../error';
 import type { IR } from '../../../ir/types';
 import type { OpenApi } from '../../../openApi/types';
-import type { Config } from '../../../types/config';
-import type { BaseConfig, Plugin } from '../../types';
+import type { PluginConfigMap } from '../../config';
+import type { Plugin } from '../../types';
 import type { WalkEvent, WalkEventType } from '../types/instance';
 
-export class PluginInstance<PluginConfig extends BaseConfig = BaseConfig> {
-  public config: Plugin.Config<PluginConfig>['config'];
+export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
+  public api: T['api'];
+  public config: Omit<T['resolvedConfig'], 'name' | 'output'>;
   public context: IR.Context;
-  public dependencies: Required<Plugin.Config<PluginConfig>>['dependencies'] =
-    [];
-  private handler: Plugin.Config<PluginConfig>['handler'];
-  public name: Plugin.Config<PluginConfig>['name'];
-  public output: Required<PluginConfig>['output'];
+  public dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
+  private handler: Plugin.Config<T>['handler'];
+  public name: T['resolvedConfig']['name'];
+  public output: Required<T['config']>['output'];
 
   public constructor(
     props: Pick<
-      Required<Plugin.Config<PluginConfig>>,
+      Required<Plugin.Config<T>>,
       'config' | 'dependencies' | 'handler'
-    > &
-      Pick<Required<PluginConfig>, 'output'> & {
-        context: IR.Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
-        name: string;
-      },
+    > & {
+      api?: T['api'];
+      context: IR.Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
+      name: string;
+      output: string;
+    },
   ) {
+    this.api = props.api ?? {};
     this.config = props.config;
     this.context = props.context;
     this.dependencies = props.dependencies;
@@ -185,10 +187,10 @@ export class PluginInstance<PluginConfig extends BaseConfig = BaseConfig> {
    * @param name Plugin name as defined in the configuration.
    * @returns The plugin instance if found, undefined otherwise.
    */
-  public getPlugin<T extends keyof Config['plugins']>(
+  public getPlugin<T extends keyof PluginConfigMap>(
     name: T,
-  ): IR.Context['plugins'][T] {
-    return this.context.plugins[name];
+  ): T extends any ? PluginInstance<PluginConfigMap[T]> | undefined : never {
+    return this.context.plugins[name] as any;
   }
 
   /**

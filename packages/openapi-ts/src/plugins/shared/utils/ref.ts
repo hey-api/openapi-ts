@@ -1,4 +1,5 @@
-import type { Config, StringCase } from '../../../types/config';
+import type { StringCase } from '../../../types/case';
+import type { Config } from '../../../types/config';
 import { irRef } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
 

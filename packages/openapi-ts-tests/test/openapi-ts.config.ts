@@ -127,7 +127,10 @@ export default defineConfig(() => {
         // throwOnError: true,
         // transformer: '@hey-api/transformers',
         transformer: true,
-        validator: 'valibot',
+        validator: {
+          request: 'valibot',
+          response: 'zod',
+        },
       },
       {
         // bigInt: true,

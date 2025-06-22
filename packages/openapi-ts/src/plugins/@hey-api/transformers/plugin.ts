@@ -11,7 +11,7 @@ import { stringCase } from '../../../utils/stringCase';
 import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
 import { typesId } from '../typescript/ref';
-import type { Config } from './types';
+import type { HeyApiTransformersPlugin } from './types';
 
 interface OperationIRRef {
   /**
@@ -162,7 +162,7 @@ const schemaResponseTransformerNodes = ({
   plugin,
   schema,
 }: {
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTransformersPlugin>;
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   const identifierData = compiler.identifier({ text: dataVariableName });
@@ -187,7 +187,7 @@ const processSchemaType = ({
   schema,
 }: {
   dataExpression?: ts.Expression | string;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTransformersPlugin>;
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   const file = plugin.context.file({ id: transformersId })!;
@@ -454,7 +454,9 @@ const processSchemaType = ({
 };
 
 // handles only response transformers for now
-export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+export const handler: Plugin.Handler<HeyApiTransformersPlugin> = ({
+  plugin,
+}) => {
   const file = plugin.createFile({
     id: transformersId,
     path: plugin.output,

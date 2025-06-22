@@ -1,6 +1,6 @@
 import type { Plugin } from '../../types';
 
-export interface Config extends Plugin.Name<'@hey-api/transformers'> {
+export type Config = Plugin.Name<'@hey-api/transformers'> & {
   /**
    * Convert long integers into BigInt values?
    *
@@ -26,4 +26,6 @@ export interface Config extends Plugin.Name<'@hey-api/transformers'> {
    * @default 'transformers'
    */
   output?: string;
-}
+};
+
+export type HeyApiTransformersPlugin = Plugin.Types<Config>;

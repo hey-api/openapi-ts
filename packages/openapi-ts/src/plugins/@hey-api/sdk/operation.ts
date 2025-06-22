@@ -19,7 +19,7 @@ import {
 import { importIdentifier } from '../typescript/ref';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
-import type { Config } from './types';
+import type { HeyApiSdkPlugin } from './types';
 import { createResponseValidator } from './validator';
 
 interface ClassNameEntry {
@@ -61,7 +61,7 @@ const getOperationMethodName = ({
   operation: IR.OperationObject;
   plugin: {
     config: Pick<
-      Plugin.Instance<Config>['config'],
+      Plugin.Instance<HeyApiSdkPlugin>['config'],
       'asClass' | 'methodNameBuilder'
     >;
   };
@@ -90,7 +90,7 @@ export const operationClasses = ({
   operation: IR.OperationObject;
   plugin: {
     config: Pick<
-      Plugin.Instance<Config>['config'],
+      Plugin.Instance<HeyApiSdkPlugin>['config'],
       'asClass' | 'classStructure' | 'instance'
     >;
   };
@@ -247,7 +247,7 @@ export const operationStatements = ({
   context: IR.Context;
   isRequiredOptions: boolean;
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSdkPlugin>;
 }): Array<ts.Statement> => {
   const file = context.file({ id: sdkId })!;
   const sdkOutput = file.nameWithoutExtension();
