@@ -60,7 +60,7 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'content-types.yaml'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'bug.yaml'),
       // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
