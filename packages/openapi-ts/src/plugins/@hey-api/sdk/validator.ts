@@ -1,9 +1,7 @@
 import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
-import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
 import { valibotId } from '../../valibot/constants';
-import { nameTransformer } from '../../valibot/plugin';
 import { zodId } from '../../zod/plugin';
 import { sdkId } from './constants';
 import type { Config } from './types';
@@ -23,15 +21,12 @@ const valibotResponseValidator = ({
 }) => {
   const file = plugin.context.file({ id: sdkId })!;
 
+  const responses = plugin.getPlugin('valibot')?.config.responses;
   const identifierSchema = plugin.context.file({ id: valibotId })!.identifier({
-    $ref: operationIrRef({
-      case: 'camelCase',
-      config: plugin.context.config,
-      id: operation.id,
-      type: 'response',
-    }),
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/valibot-response/${operation.id}`,
     // TODO: refactor to not have to define nameTransformer
-    nameTransformer,
+    nameTransformer: typeof responses === 'object' ? responses.name : undefined,
     namespace: 'value',
   });
 

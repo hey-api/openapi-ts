@@ -1074,387 +1074,420 @@ export const vSimpleRequestBody = vModelWithString;
  */
 export const vSimpleFormData = vModelWithString;
 
-export const vImportData = v.union([
-    vModelWithReadOnlyAndWriteOnly,
-    vModelWithArrayReadOnlyAndWriteOnly
-]);
+export const vExportData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+export const vPatchApiVbyApiVersionNoTagData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+export const vImportData = v.object({
+    body: v.union([
+        vModelWithReadOnlyAndWriteOnly,
+        vModelWithArrayReadOnlyAndWriteOnly
+    ]),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
 
 export const vImportResponse = v.union([
     vModelFromZendesk,
     vModelWithReadOnlyAndWriteOnly
 ]);
 
+export const vFooWowData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+export const vApiVVersionODataControllerCountData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
 /**
  * Success
  */
 export const vApiVVersionODataControllerCountResponse = vModelFromZendesk;
 
-/**
- * foo in method
- */
-export const vGetApiVbyApiVersionSimpleOperationParameterFooParam = v.union([
-    v.string(),
-    v.pipe(v.string(), v.uuid())
-]);
+export const vGetApiVbyApiVersionSimpleOperationData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.object({
+        foo_param: v.union([
+            v.string(),
+            v.pipe(v.string(), v.uuid())
+        ])
+    }),
+    query: v.optional(v.never())
+});
 
 /**
  * Response is a simple number
  */
 export const vGetApiVbyApiVersionSimpleOperationResponse = v.number();
 
-/**
- * foo in method
- */
-export const vDeleteFooParameterFooParam = v.string();
-
-/**
- * bar in method
- */
-export const vDeleteFooParameterBarParam = v.string();
-
-/**
- * Parameter with illegal characters
- */
-export const vDeleteFooParameterXFooBar = vModelWithString;
-
-/**
- * Testing multiline comments in string: First line
- * Second line
- *
- * Fourth line
- */
-export const vCallWithDescriptionsParameterParameterWithBreaks = v.string();
-
-/**
- * Testing backticks in string: `backticks` and ```multiple backticks``` should work
- */
-export const vCallWithDescriptionsParameterParameterWithBackticks = v.string();
-
-/**
- * Testing slashes in string: \backwards\\\ and /forwards/// should work
- */
-export const vCallWithDescriptionsParameterParameterWithSlashes = v.string();
-
-/**
- * Testing expression placeholders in string: ${expression} should work
- */
-export const vCallWithDescriptionsParameterParameterWithExpressionPlaceholders = v.string();
-
-/**
- * Testing quotes in string: 'single quote''' and "double quotes""" should work
- */
-export const vCallWithDescriptionsParameterParameterWithQuotes = v.string();
-
-/**
- * Testing reserved characters in string: * inline * and ** inline ** should work
- */
-export const vCallWithDescriptionsParameterParameterWithReservedCharacters = v.string();
-
-/**
- * This parameter is deprecated
- * @deprecated
- */
-export const vDeprecatedCallParameterParameter = v.union([
-    vDeprecatedModel,
-    v.null()
-]);
-
-/**
- * This is the parameter that goes into the body
- */
-export const vCallWithParametersData = v.union([
-    v.object({}),
-    v.null()
-]);
-
-/**
- * This is the parameter that goes into the cookie
- */
-export const vCallWithParametersParameterParameterCookie = v.union([
-    v.string(),
-    v.null()
-]);
-
-/**
- * This is the parameter that goes into the header
- */
-export const vCallWithParametersParameterParameterHeader = v.union([
-    v.string(),
-    v.null()
-]);
-
-/**
- * This is the parameter that goes into the path
- */
-export const vCallWithParametersParameterParameterPath = v.union([
-    v.string(),
-    v.null()
-]);
-
-/**
- * api-version should be required in standalone clients
- */
-export const vCallWithParametersParameterApiVersion = v.union([
-    v.string(),
-    v.null()
-]);
-
-export const vCallWithParametersParameterFooRefEnum = vModelWithNestedArrayEnumsDataFoo;
-
-export const vCallWithParametersParameterFooAllOfEnum = vModelWithNestedArrayEnumsDataFoo;
-
-/**
- * This is the parameter that goes into the query params
- */
-export const vCallWithParametersParameterCursor = v.union([
-    v.string(),
-    v.null()
-]);
-
-/**
- * This is the parameter that goes into the body
- */
-export const vCallWithWeirdParameterNamesData = v.union([
-    vModelWithString,
-    v.null()
-]);
-
-/**
- * This is the parameter that goes into the cookie
- */
-export const vCallWithWeirdParameterNamesParameterParameterCookie = v.union([
-    v.string(),
-    v.null()
-]);
-
-/**
- * This is the parameter that goes into the request header
- */
-export const vCallWithWeirdParameterNamesParameterParameterHeader = v.union([
-    v.string(),
-    v.null()
-]);
-
-/**
- * This is the parameter that goes into the path
- */
-export const vCallWithWeirdParameterNamesParameterParameterPath1 = v.string();
-
-/**
- * This is the parameter that goes into the path
- */
-export const vCallWithWeirdParameterNamesParameterParameterPath2 = v.string();
-
-/**
- * This is the parameter that goes into the path
- */
-export const vCallWithWeirdParameterNamesParameterParameterPath3 = v.string();
-
-/**
- * api-version should be required in standalone clients
- */
-export const vCallWithWeirdParameterNamesParameterApiVersion = v.union([
-    v.string(),
-    v.null()
-]);
-
-/**
- * This is the parameter with a reserved keyword
- */
-export const vCallWithWeirdParameterNamesParameterDefault = v.string();
-
-/**
- * This is the parameter that goes into the request query params
- */
-export const vCallWithWeirdParameterNamesParameterParameterQuery = v.union([
-    v.string(),
-    v.null()
-]);
-
-/**
- * This is a required parameter
- */
-export const vGetCallWithOptionalParamData = vModelWithOneOfEnum;
-
-/**
- * This is an optional parameter
- */
-export const vGetCallWithOptionalParamParameterPage = v.number();
-
-/**
- * This is an optional parameter
- */
-export const vPostCallWithOptionalParamData = v.object({
-    offset: v.optional(v.union([
-        v.number(),
-        v.null()
-    ]))
+export const vDeleteCallWithoutParametersAndResponseData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
 });
 
-/**
- * This is a required parameter
- */
-export const vPostCallWithOptionalParamParameterParameter = vPageable;
+export const vGetCallWithoutParametersAndResponseData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+export const vHeadCallWithoutParametersAndResponseData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+export const vOptionsCallWithoutParametersAndResponseData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+export const vPatchCallWithoutParametersAndResponseData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+export const vPostCallWithoutParametersAndResponseData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+export const vPutCallWithoutParametersAndResponseData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+export const vDeleteFooData3 = v.object({
+    body: v.optional(v.never()),
+    headers: v.object({
+        'x-Foo-Bar': vModelWithString
+    }),
+    path: v.object({
+        foo_param: v.string(),
+        BarParam: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+export const vCallWithDescriptionsData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        parameterWithBreaks: v.optional(v.string()),
+        parameterWithBackticks: v.optional(v.string()),
+        parameterWithSlashes: v.optional(v.string()),
+        parameterWithExpressionPlaceholders: v.optional(v.string()),
+        parameterWithQuotes: v.optional(v.string()),
+        parameterWithReservedCharacters: v.optional(v.string())
+    }))
+});
+
+export const vDeprecatedCallData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.object({
+        parameter: v.union([
+            vDeprecatedModel,
+            v.null()
+        ])
+    })),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+export const vCallWithParametersData = v.object({
+    body: v.union([
+        v.object({}),
+        v.null()
+    ]),
+    headers: v.object({
+        parameterHeader: v.union([
+            v.string(),
+            v.null()
+        ])
+    }),
+    path: v.object({
+        parameterPath: v.union([
+            v.string(),
+            v.null()
+        ]),
+        'api-version': v.union([
+            v.string(),
+            v.null()
+        ])
+    }),
+    query: v.object({
+        foo_ref_enum: v.optional(vModelWithNestedArrayEnumsDataFoo),
+        foo_all_of_enum: vModelWithNestedArrayEnumsDataFoo,
+        cursor: v.union([
+            v.string(),
+            v.null()
+        ])
+    })
+});
+
+export const vCallWithWeirdParameterNamesData = v.object({
+    body: v.union([
+        vModelWithString,
+        v.null()
+    ]),
+    headers: v.object({
+        'parameter.header': v.union([
+            v.string(),
+            v.null()
+        ])
+    }),
+    path: v.object({
+        'parameter.path.1': v.optional(v.string()),
+        'parameter-path-2': v.optional(v.string()),
+        'PARAMETER-PATH-3': v.optional(v.string()),
+        'api-version': v.union([
+            v.string(),
+            v.null()
+        ])
+    }),
+    query: v.object({
+        default: v.optional(v.string()),
+        'parameter-query': v.union([
+            v.string(),
+            v.null()
+        ])
+    })
+});
+
+export const vGetCallWithOptionalParamData = v.object({
+    body: vModelWithOneOfEnum,
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        page: v.optional(v.number())
+    }))
+});
+
+export const vPostCallWithOptionalParamData = v.object({
+    body: v.optional(v.object({
+        offset: v.optional(v.union([
+            v.number(),
+            v.null()
+        ]))
+    })),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.object({
+        parameter: vPageable
+    })
+});
 
 export const vPostCallWithOptionalParamResponse = v.union([
     v.number(),
     v.void()
 ]);
 
-/**
- * A reusable request body
- */
-export const vPostApiVbyApiVersionRequestBodyData = vSimpleRequestBody;
+export const vPostApiVbyApiVersionRequestBodyData = v.object({
+    body: v.optional(vSimpleRequestBody),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        parameter: v.optional(v.string())
+    }))
+});
 
-/**
- * This is a reusable parameter
- */
-export const vPostApiVbyApiVersionRequestBodyParameterParameter = v.string();
+export const vPostApiVbyApiVersionFormDataData = v.object({
+    body: v.optional(vSimpleFormData),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        parameter: v.optional(v.string())
+    }))
+});
 
-/**
- * A reusable request body
- */
-export const vPostApiVbyApiVersionFormDataData = vSimpleFormData;
+export const vCallWithDefaultParametersData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        parameterString: v.optional(v.union([
+            v.optional(v.string(), 'Hello World!'),
+            v.null()
+        ]), 'Hello World!'),
+        parameterNumber: v.optional(v.union([
+            v.optional(v.number(), 123),
+            v.null()
+        ]), 123),
+        parameterBoolean: v.optional(v.union([
+            v.optional(v.boolean(), true),
+            v.null()
+        ]), true),
+        parameterEnum: v.optional(v.picklist([
+            'Success',
+            'Warning',
+            'Error'
+        ])),
+        parameterModel: v.optional(v.union([
+            vModelWithString,
+            v.null()
+        ]))
+    }))
+});
 
-/**
- * This is a reusable parameter
- */
-export const vPostApiVbyApiVersionFormDataParameterParameter = v.string();
+export const vCallWithDefaultOptionalParametersData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        parameterString: v.optional(v.string(), 'Hello World!'),
+        parameterNumber: v.optional(v.number(), 123),
+        parameterBoolean: v.optional(v.boolean(), true),
+        parameterEnum: v.optional(v.picklist([
+            'Success',
+            'Warning',
+            'Error'
+        ])),
+        parameterModel: v.optional(vModelWithString)
+    }))
+});
 
-/**
- * This is a simple string with default value
- */
-export const vCallWithDefaultParametersParameterParameterString = v.optional(v.union([
-    v.optional(v.string(), 'Hello World!'),
-    v.null()
-]), 'Hello World!');
+export const vCallToTestOrderOfParamsData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.object({
+        parameterOptionalStringWithDefault: v.optional(v.string(), 'Hello World!'),
+        parameterOptionalStringWithEmptyDefault: v.optional(v.string(), ''),
+        parameterOptionalStringWithNoDefault: v.optional(v.string()),
+        parameterStringWithDefault: v.optional(v.string(), 'Hello World!'),
+        parameterStringWithEmptyDefault: v.optional(v.string(), ''),
+        parameterStringWithNoDefault: v.string(),
+        parameterStringNullableWithNoDefault: v.optional(v.union([
+            v.string(),
+            v.null()
+        ])),
+        parameterStringNullableWithDefault: v.optional(v.union([
+            v.string(),
+            v.null()
+        ]), null)
+    })
+});
 
-/**
- * This is a simple number with default value
- */
-export const vCallWithDefaultParametersParameterParameterNumber = v.optional(v.union([
-    v.optional(v.number(), 123),
-    v.null()
-]), 123);
+export const vDuplicateNameData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
 
-/**
- * This is a simple boolean with default value
- */
-export const vCallWithDefaultParametersParameterParameterBoolean = v.optional(v.union([
-    v.optional(v.boolean(), true),
-    v.null()
-]), true);
+export const vDuplicateName2Data = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
 
-/**
- * This is a simple enum with default value
- */
-export const vCallWithDefaultParametersParameterParameterEnum = v.picklist([
-    'Success',
-    'Warning',
-    'Error'
-]);
+export const vDuplicateName3Data = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
 
-/**
- * This is a simple model with default value
- */
-export const vCallWithDefaultParametersParameterParameterModel = v.union([
-    vModelWithString,
-    v.null()
-]);
+export const vDuplicateName4Data = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
 
-/**
- * This is a simple string that is optional with default value
- */
-export const vCallWithDefaultOptionalParametersParameterParameterString = v.optional(v.string(), 'Hello World!');
-
-/**
- * This is a simple number that is optional with default value
- */
-export const vCallWithDefaultOptionalParametersParameterParameterNumber = v.optional(v.number(), 123);
-
-/**
- * This is a simple boolean that is optional with default value
- */
-export const vCallWithDefaultOptionalParametersParameterParameterBoolean = v.optional(v.boolean(), true);
-
-/**
- * This is a simple enum that is optional with default value
- */
-export const vCallWithDefaultOptionalParametersParameterParameterEnum = v.picklist([
-    'Success',
-    'Warning',
-    'Error'
-]);
-
-/**
- * This is a simple model that is optional with default value
- */
-export const vCallWithDefaultOptionalParametersParameterParameterModel = vModelWithString;
-
-/**
- * This is a optional string with default
- */
-export const vCallToTestOrderOfParamsParameterParameterOptionalStringWithDefault = v.optional(v.string(), 'Hello World!');
-
-/**
- * This is a optional string with empty default
- */
-export const vCallToTestOrderOfParamsParameterParameterOptionalStringWithEmptyDefault = v.optional(v.string(), '');
-
-/**
- * This is a optional string with no default
- */
-export const vCallToTestOrderOfParamsParameterParameterOptionalStringWithNoDefault = v.string();
-
-/**
- * This is a string with default
- */
-export const vCallToTestOrderOfParamsParameterParameterStringWithDefault = v.optional(v.string(), 'Hello World!');
-
-/**
- * This is a string with empty default
- */
-export const vCallToTestOrderOfParamsParameterParameterStringWithEmptyDefault = v.optional(v.string(), '');
-
-/**
- * This is a string with no default
- */
-export const vCallToTestOrderOfParamsParameterParameterStringWithNoDefault = v.string();
-
-/**
- * This is a string that can be null with no default
- */
-export const vCallToTestOrderOfParamsParameterParameterStringNullableWithNoDefault = v.union([
-    v.string(),
-    v.null()
-]);
-
-/**
- * This is a string that can be null with default
- */
-export const vCallToTestOrderOfParamsParameterParameterStringNullableWithDefault = v.optional(v.union([
-    v.string(),
-    v.null()
-]), null);
+export const vCallWithNoContentResponseData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
 
 /**
  * Success
  */
 export const vCallWithNoContentResponseResponse = v.void();
 
+export const vCallWithResponseAndNoContentResponseData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
 export const vCallWithResponseAndNoContentResponseResponse = v.union([
     v.number(),
     v.void()
 ]);
 
+export const vDummyAData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
 export const vDummyAResponse = v400;
+
+export const vDummyBData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
 
 /**
  * Success
  */
 export const vDummyBResponse = v.void();
 
+export const vCallWithResponseData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
 export const vCallWithResponseResponse = vImport;
+
+export const vCallWithDuplicateResponsesData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
 
 export const vCallWithDuplicateResponsesResponse = v.union([
     v.intersect([
@@ -1463,6 +1496,13 @@ export const vCallWithDuplicateResponsesResponse = v.union([
     ]),
     vModelWithString
 ]);
+
+export const vCallWithResponsesData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
 
 export const vCallWithResponsesResponse = v.union([
     v.object({
@@ -1474,105 +1514,70 @@ export const vCallWithResponsesResponse = v.union([
     vModelThatExtendsExtends
 ]);
 
-/**
- * This is an array parameter that is sent as csv format (comma-separated values)
- */
-export const vCollectionFormatParameterParameterArrayCsv = v.union([
-    v.array(v.string()),
-    v.null()
-]);
+export const vCollectionFormatData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.object({
+        parameterArrayCSV: v.union([
+            v.array(v.string()),
+            v.null()
+        ]),
+        parameterArraySSV: v.union([
+            v.array(v.string()),
+            v.null()
+        ]),
+        parameterArrayTSV: v.union([
+            v.array(v.string()),
+            v.null()
+        ]),
+        parameterArrayPipes: v.union([
+            v.array(v.string()),
+            v.null()
+        ]),
+        parameterArrayMulti: v.union([
+            v.array(v.string()),
+            v.null()
+        ])
+    })
+});
 
-/**
- * This is an array parameter that is sent as ssv format (space-separated values)
- */
-export const vCollectionFormatParameterParameterArraySsv = v.union([
-    v.array(v.string()),
-    v.null()
-]);
-
-/**
- * This is an array parameter that is sent as tsv format (tab-separated values)
- */
-export const vCollectionFormatParameterParameterArrayTsv = v.union([
-    v.array(v.string()),
-    v.null()
-]);
-
-/**
- * This is an array parameter that is sent as pipes format (pipe-separated values)
- */
-export const vCollectionFormatParameterParameterArrayPipes = v.union([
-    v.array(v.string()),
-    v.null()
-]);
-
-/**
- * This is an array parameter that is sent as multi format (multiple parameter instances)
- */
-export const vCollectionFormatParameterParameterArrayMulti = v.union([
-    v.array(v.string()),
-    v.null()
-]);
-
-/**
- * This is a number parameter
- */
-export const vTypesParameterId = v.pipe(v.number(), v.integer());
-
-/**
- * This is a number parameter
- */
-export const vTypesParameterParameterNumber = v.optional(v.number(), 123);
-
-/**
- * This is a string parameter
- */
-export const vTypesParameterParameterString = v.optional(v.union([
-    v.optional(v.string(), 'default'),
-    v.null()
-]), 'default');
-
-/**
- * This is a boolean parameter
- */
-export const vTypesParameterParameterBoolean = v.optional(v.union([
-    v.optional(v.boolean(), true),
-    v.null()
-]), true);
-
-/**
- * This is an object parameter
- */
-export const vTypesParameterParameterObject = v.optional(v.union([
-    v.object({}),
-    v.null()
-]), null);
-
-/**
- * This is an array parameter
- */
-export const vTypesParameterParameterArray = v.union([
-    v.array(v.string()),
-    v.null()
-]);
-
-/**
- * This is a dictionary parameter
- */
-export const vTypesParameterParameterDictionary = v.union([
-    v.object({}),
-    v.null()
-]);
-
-/**
- * This is an enum parameter
- */
-export const vTypesParameterParameterEnum = v.union([
-    v.literal('Success'),
-    v.literal('Warning'),
-    v.literal('Error'),
-    v.null()
-]);
+export const vTypesData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.object({
+        id: v.optional(v.pipe(v.number(), v.integer()))
+    })),
+    query: v.object({
+        parameterNumber: v.optional(v.number(), 123),
+        parameterString: v.optional(v.union([
+            v.optional(v.string(), 'default'),
+            v.null()
+        ]), 'default'),
+        parameterBoolean: v.optional(v.union([
+            v.optional(v.boolean(), true),
+            v.null()
+        ]), true),
+        parameterObject: v.optional(v.union([
+            v.object({}),
+            v.null()
+        ]), null),
+        parameterArray: v.union([
+            v.array(v.string()),
+            v.null()
+        ]),
+        parameterDictionary: v.union([
+            v.object({}),
+            v.null()
+        ]),
+        parameterEnum: v.union([
+            v.literal('Success'),
+            v.literal('Warning'),
+            v.literal('Error'),
+            v.null()
+        ])
+    })
+});
 
 export const vTypesResponse = v.union([
     v.number(),
@@ -1581,50 +1586,62 @@ export const vTypesResponse = v.union([
     v.object({})
 ]);
 
-export const vUploadFileData = v.string();
-
-/**
- * api-version should be required in standalone clients
- */
-export const vUploadFileParameterApiVersion = v.union([
-    v.string(),
-    v.null()
-]);
+export const vUploadFileData = v.object({
+    body: v.string(),
+    headers: v.optional(v.never()),
+    path: v.object({
+        'api-version': v.union([
+            v.string(),
+            v.null()
+        ])
+    }),
+    query: v.optional(v.never())
+});
 
 export const vUploadFileResponse = v.boolean();
 
-export const vFileResponseParameterId = v.string();
-
-/**
- * api-version should be required in standalone clients
- */
-export const vFileResponseParameterApiVersion = v.string();
+export const vFileResponseData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        'api-version': v.string()
+    }),
+    query: v.optional(v.never())
+});
 
 /**
  * Success
  */
 export const vFileResponseResponse = v.string();
 
-/**
- * Parameter containing object
- */
-export const vComplexTypesParameterParameterObject = v.object({
-    first: v.optional(v.object({
-        second: v.optional(v.object({
-            third: v.optional(v.string())
-        }))
-    }))
+export const vComplexTypesData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.object({
+        parameterObject: v.object({
+            first: v.optional(v.object({
+                second: v.optional(v.object({
+                    third: v.optional(v.string())
+                }))
+            }))
+        }),
+        parameterReference: vModelWithString
+    })
 });
-
-/**
- * Parameter containing reference
- */
-export const vComplexTypesParameterParameterReference = vModelWithString;
 
 /**
  * Successful response
  */
 export const vComplexTypesResponse = v.array(vModelWithString);
+
+export const vMultipartResponseData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
 
 /**
  * OK
@@ -1638,76 +1655,102 @@ export const vMultipartResponseResponse = v.object({
 });
 
 export const vMultipartRequestData = v.object({
-    content: v.optional(v.string()),
-    data: v.optional(v.union([
-        vModelWithString,
-        v.null()
-    ]))
+    body: v.optional(v.object({
+        content: v.optional(v.string()),
+        data: v.optional(v.union([
+            vModelWithString,
+            v.null()
+        ]))
+    })),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
 });
 
 export const vComplexParamsData = v.object({
-    key: v.pipe(v.union([
-        v.pipe(v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)), v.readonly()),
-        v.null()
-    ]), v.readonly()),
-    name: v.union([
-        v.pipe(v.string(), v.maxLength(255)),
-        v.null()
-    ]),
-    enabled: v.optional(v.boolean(), true),
-    type: v.picklist([
-        'Monkey',
-        'Horse',
-        'Bird'
-    ]),
-    listOfModels: v.optional(v.union([
-        v.array(vModelWithString),
-        v.null()
-    ])),
-    listOfStrings: v.optional(v.union([
-        v.array(v.string()),
-        v.null()
-    ])),
-    parameters: v.union([
-        vModelWithString,
-        vModelWithEnum,
-        vModelWithArray,
-        vModelWithDictionary
-    ]),
-    user: v.optional(v.pipe(v.object({
-        id: v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly())),
-        name: v.optional(v.pipe(v.union([
-            v.pipe(v.string(), v.readonly()),
+    body: v.optional(v.object({
+        key: v.pipe(v.union([
+            v.pipe(v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)), v.readonly()),
             v.null()
-        ]), v.readonly()))
-    }), v.readonly()))
+        ]), v.readonly()),
+        name: v.union([
+            v.pipe(v.string(), v.maxLength(255)),
+            v.null()
+        ]),
+        enabled: v.optional(v.boolean(), true),
+        type: v.picklist([
+            'Monkey',
+            'Horse',
+            'Bird'
+        ]),
+        listOfModels: v.optional(v.union([
+            v.array(vModelWithString),
+            v.null()
+        ])),
+        listOfStrings: v.optional(v.union([
+            v.array(v.string()),
+            v.null()
+        ])),
+        parameters: v.union([
+            vModelWithString,
+            vModelWithEnum,
+            vModelWithArray,
+            vModelWithDictionary
+        ]),
+        user: v.optional(v.pipe(v.object({
+            id: v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly())),
+            name: v.optional(v.pipe(v.union([
+                v.pipe(v.string(), v.readonly()),
+                v.null()
+            ]), v.readonly()))
+        }), v.readonly()))
+    })),
+    headers: v.optional(v.never()),
+    path: v.object({
+        id: v.pipe(v.number(), v.integer()),
+        'api-version': v.string()
+    }),
+    query: v.optional(v.never())
 });
-
-export const vComplexParamsParameterId = v.pipe(v.number(), v.integer());
-
-/**
- * api-version should be required in standalone clients
- */
-export const vComplexParamsParameterApiVersion = v.string();
 
 /**
  * Success
  */
 export const vComplexParamsResponse = vModelWithString;
 
-/**
- * Status code to return
- */
-export const vTestErrorCodeParameterStatus = v.pipe(v.number(), v.integer());
+export const vCallWithResultFromHeaderData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
 
-/**
- * Dummy input param
- */
-export const vNonAsciiæøåÆøÅöôêÊ字符串ParameterNonAsciiParamæøåÆøÅöôêÊ = v.pipe(v.number(), v.integer());
+export const vTestErrorCodeData = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.object({
+        status: v.pipe(v.number(), v.integer())
+    })
+});
+
+export const vNonAsciiæøåÆøÅöôêÊ字符串Data = v.object({
+    body: v.optional(v.never()),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.object({
+        'nonAsciiParamæøåÆØÅöôêÊ': v.pipe(v.number(), v.integer())
+    })
+});
 
 /**
  * Successful response
  */
 export const vNonAsciiæøåÆøÅöôêÊ字符串Response = v.array(vNonAsciiStringæøåÆøÅöôêÊ字符串);
 
-export const vPutWithFormUrlEncodedData = vArrayWithStrings;
+export const vPutWithFormUrlEncodedData = v.object({
+    body: vArrayWithStrings,
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
