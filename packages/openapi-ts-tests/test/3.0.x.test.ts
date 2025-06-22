@@ -161,6 +161,18 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'content-types.yaml',
+        output: 'content-types',
+        plugins: [
+          '@hey-api/client-axios',
+          '@hey-api/typescript',
+          '@hey-api/sdk',
+        ],
+      }),
+      description: 'handles content types',
+    },
+    {
+      config: createConfig({
         input: 'discriminator-all-of.yaml',
         output: 'discriminator-all-of',
       }),

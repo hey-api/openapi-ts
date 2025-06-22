@@ -9,7 +9,7 @@ import type {
   SchemaObject,
   SecuritySchemeObject,
 } from '../types/spec';
-import { contentToSchema, mediaTypeObject } from './mediaType';
+import { contentToSchema, mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
 import { schemaToIrSchema } from './schema';
 
@@ -128,10 +128,13 @@ const operationToIrOperation = ({
             required: undefined,
             type: requestBody.type === 'file' ? 'string' : requestBody.type,
           };
-    const content = mediaTypeObject({
+    const contents = mediaTypeObjects({
       mimeTypes: operation.consumes,
       response: { schema },
     });
+    // TODO: add support for multiple content types, for now prefer JSON
+    const content =
+      contents.find((content) => content.type === 'json') || contents[0];
 
     if (content) {
       const pagination = paginationField({
@@ -224,11 +227,14 @@ const operationToIrOperation = ({
       '$ref' in response
         ? context.resolveRef<ResponseObject>(response.$ref)
         : response;
-    const content = mediaTypeObject({
+    const contents = mediaTypeObjects({
       // assume JSON by default
       mimeTypes: operation.produces ? operation.produces : ['application/json'],
       response: responseObject,
     });
+    // TODO: add support for multiple content types, for now prefer JSON
+    const content =
+      contents.find((content) => content.type === 'json') || contents[0];
 
     if (content) {
       irOperation.responses[name] = {
