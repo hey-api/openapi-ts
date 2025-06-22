@@ -5,7 +5,7 @@ import type {
   ReferenceObject,
   SchemaObject,
 } from '../types/spec';
-import { mediaTypeObject } from './mediaType';
+import { mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
 import { schemaToIrSchema } from './schema';
 
@@ -100,9 +100,10 @@ const parameterToIrParameter = ({
   let schema = parameter.schema;
 
   if (!schema) {
-    const content = mediaTypeObject({
-      content: parameter.content,
-    });
+    const contents = mediaTypeObjects({ content: parameter.content });
+    // TODO: add support for multiple content types, for now prefer JSON
+    const content =
+      contents.find((content) => content.type === 'json') || contents[0];
     if (content) {
       schema = content.schema;
     }
