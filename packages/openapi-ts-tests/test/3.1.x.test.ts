@@ -734,7 +734,10 @@ describe(`OpenAPI ${version}`, () => {
         input: 'validators.yaml',
         output: 'validators-metadata',
         plugins: [
-          'valibot',
+          {
+            metadata: true,
+            name: 'valibot',
+          },
           {
             metadata: true,
             name: 'zod',

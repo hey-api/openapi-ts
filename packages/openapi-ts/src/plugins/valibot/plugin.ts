@@ -1,15 +1,17 @@
 import ts from 'typescript';
 
 import { compiler } from '../../compiler';
+import type { Identifier } from '../../generate/files';
 import { operationResponsesMap } from '../../ir/operation';
+import { hasParameterGroupObjectRequired } from '../../ir/parameter';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
+import type { StringCase } from '../../types/config';
 import { numberRegExp } from '../../utils/regexp';
-import { operationIrRef } from '../shared/utils/ref';
 import { createSchemaComment } from '../shared/utils/schema';
 import type { Plugin } from '../types';
 import { identifiers, valibotId } from './constants';
-import type { Config } from './types';
+import type { ResolvedConfig } from './types';
 
 interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
   extends Omit<IR.SchemaObject, 'type'> {
@@ -19,9 +21,9 @@ interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
 interface State {
   circularReferenceTracker: Set<string>;
   hasCircularReference: boolean;
+  nameCase: StringCase;
+  nameTransformer: string | ((name: string) => string);
 }
-
-export const nameTransformer = (name: string) => `v-${name}`;
 
 const pipesToExpression = (pipes: Array<ts.Expression>) => {
   if (pipes.length === 1) {
@@ -43,7 +45,7 @@ const arrayTypeToValibotSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<ResolvedConfig>;
   schema: SchemaWithType<'array'>;
   state: State;
 }): ts.CallExpression => {
@@ -369,7 +371,7 @@ const objectTypeToValibotSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<ResolvedConfig>;
   schema: SchemaWithType<'object'>;
   state: State;
 }): {
@@ -601,7 +603,7 @@ const tupleTypeToValibotSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<ResolvedConfig>;
   schema: SchemaWithType<'tuple'>;
   state: State;
 }) => {
@@ -703,7 +705,7 @@ const schemaTypeToValibotSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<ResolvedConfig>;
   schema: IR.SchemaObject;
   state: State;
 }): {
@@ -797,65 +799,154 @@ const operationToValibotSchema = ({
   state,
 }: {
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<ResolvedConfig>;
   state: State;
 }) => {
-  if (operation.body) {
+  const file = plugin.context.file({ id: valibotId })!;
+
+  if (plugin.config.requests.enabled) {
+    const requiredProperties: Array<string> = [];
+    if (operation.body?.required) {
+      requiredProperties.push('body');
+    }
+
+    const headersPropertyProperties: Record<string, IR.SchemaObject> = {};
+    const headersPropertyRequired: Array<string> = [];
+    const pathPropertyProperties: Record<string, IR.SchemaObject> = {};
+    const pathPropertyRequired: Array<string> = [];
+    const queryPropertyProperties: Record<string, IR.SchemaObject> = {};
+    const queryPropertyRequired: Array<string> = [];
+
+    if (operation.parameters) {
+      // TODO: add support for cookies
+
+      if (operation.parameters.header) {
+        if (hasParameterGroupObjectRequired(operation.parameters.path)) {
+          requiredProperties.push('headers');
+        }
+
+        for (const key in operation.parameters.header) {
+          const parameter = operation.parameters.header[key]!;
+          headersPropertyProperties[parameter.name] = parameter.schema;
+          if (parameter.required) {
+            headersPropertyRequired.push(parameter.name);
+          }
+        }
+      }
+
+      if (operation.parameters.path) {
+        if (hasParameterGroupObjectRequired(operation.parameters.path)) {
+          requiredProperties.push('path');
+        }
+
+        for (const key in operation.parameters.path) {
+          const parameter = operation.parameters.path[key]!;
+          pathPropertyProperties[parameter.name] = parameter.schema;
+          if (parameter.required) {
+            pathPropertyRequired.push(parameter.name);
+          }
+        }
+      }
+
+      if (operation.parameters.query) {
+        if (hasParameterGroupObjectRequired(operation.parameters.query)) {
+          requiredProperties.push('query');
+        }
+
+        for (const key in operation.parameters.query) {
+          const parameter = operation.parameters.query[key]!;
+          queryPropertyProperties[parameter.name] = parameter.schema;
+          if (parameter.required) {
+            queryPropertyRequired.push(parameter.name);
+          }
+        }
+      }
+    }
+
+    const identifierData = file.identifier({
+      // TODO: refactor for better cross-plugin compatibility
+      $ref: `#/valibot-data/${operation.id}`,
+      case: plugin.config.requests.case,
+      create: true,
+      nameTransformer: plugin.config.requests.name,
+      namespace: 'value',
+    });
     schemaToValibotSchema({
-      $ref: operationIrRef({
-        case: 'camelCase',
-        config: plugin.context.config,
-        id: operation.id,
-        type: 'data',
-      }),
+      // TODO: refactor for better cross-plugin compatibility
+      $ref: `#/valibot-data/${operation.id}`,
+      identifier: identifierData,
       plugin,
-      schema: operation.body.schema,
+      schema: {
+        properties: {
+          body: operation.body
+            ? operation.body.schema
+            : {
+                type: 'never',
+              },
+          headers: Object.keys(headersPropertyProperties).length
+            ? {
+                properties: headersPropertyProperties,
+                required: headersPropertyRequired,
+                type: 'object',
+              }
+            : {
+                type: 'never',
+              },
+          path: Object.keys(pathPropertyProperties).length
+            ? {
+                properties: pathPropertyProperties,
+                required: pathPropertyRequired,
+                type: 'object',
+              }
+            : {
+                type: 'never',
+              },
+          query: Object.keys(queryPropertyProperties).length
+            ? {
+                properties: queryPropertyProperties,
+                required: queryPropertyRequired,
+                type: 'object',
+              }
+            : {
+                type: 'never',
+              },
+        },
+        required: requiredProperties,
+        type: 'object',
+      },
       state,
     });
   }
 
-  if (operation.parameters) {
-    for (const type in operation.parameters) {
-      const group = operation.parameters[type as keyof IR.ParametersObject]!;
-      for (const key in group) {
-        const parameter = group[key]!;
+  if (plugin.config.responses.enabled) {
+    if (operation.responses) {
+      const { response } = operationResponsesMap(operation);
+
+      if (response) {
+        const identifierResponse = file.identifier({
+          // TODO: refactor for better cross-plugin compatibility
+          $ref: `#/valibot-response/${operation.id}`,
+          case: plugin.config.responses.case,
+          create: true,
+          nameTransformer: plugin.config.responses.name,
+          namespace: 'value',
+        });
         schemaToValibotSchema({
-          $ref: operationIrRef({
-            case: 'camelCase',
-            config: plugin.context.config,
-            id: operation.id,
-            parameterId: parameter.name,
-            type: 'parameter',
-          }),
+          // TODO: refactor for better cross-plugin compatibility
+          $ref: `#/valibot-response/${operation.id}`,
+          identifier: identifierResponse,
           plugin,
-          schema: parameter.schema,
+          schema: response,
           state,
         });
       }
-    }
-  }
-
-  if (operation.responses) {
-    const { response } = operationResponsesMap(operation);
-
-    if (response) {
-      schemaToValibotSchema({
-        $ref: operationIrRef({
-          case: 'camelCase',
-          config: plugin.context.config,
-          id: operation.id,
-          type: 'response',
-        }),
-        plugin,
-        schema: response,
-        state,
-      });
     }
   }
 };
 
 const schemaToValibotSchema = ({
   $ref,
+  identifier: _identifier,
   optional,
   plugin,
   schema,
@@ -865,31 +956,35 @@ const schemaToValibotSchema = ({
    * When $ref is supplied, a node will be emitted to the file.
    */
   $ref?: string;
+  identifier?: Identifier;
   /**
    * Accept `optional` to handle optional object properties. We can't handle
    * this inside the object function because `.optional()` must come before
    * `.default()` which is handled in this function.
    */
   optional?: boolean;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<ResolvedConfig>;
   schema: IR.SchemaObject;
   state: State;
 }): Array<ts.Expression> => {
   const file = plugin.context.file({ id: valibotId })!;
 
   let anyType: string | undefined;
-  let identifier: ReturnType<typeof file.identifier> | undefined;
+  let identifier: ReturnType<typeof file.identifier> | undefined = _identifier;
   let pipes: Array<ts.Expression> = [];
 
   if ($ref) {
     state.circularReferenceTracker.add($ref);
 
-    identifier = file.identifier({
-      $ref,
-      create: true,
-      nameTransformer,
-      namespace: 'value',
-    });
+    if (!identifier) {
+      identifier = file.identifier({
+        $ref,
+        case: state.nameCase,
+        create: true,
+        nameTransformer: state.nameTransformer,
+        namespace: 'value',
+      });
+    }
   }
 
   if (schema.$ref) {
@@ -900,7 +995,8 @@ const schemaToValibotSchema = ({
     // this could be (maybe?) fixed by reshuffling the generation order
     let identifierRef = file.identifier({
       $ref: schema.$ref,
-      nameTransformer,
+      case: state.nameCase,
+      nameTransformer: state.nameTransformer,
       namespace: 'value',
     });
 
@@ -916,7 +1012,8 @@ const schemaToValibotSchema = ({
 
       identifierRef = file.identifier({
         $ref: schema.$ref,
-        nameTransformer,
+        case: state.nameCase,
+        nameTransformer: state.nameTransformer,
         namespace: 'value',
       });
     }
@@ -947,13 +1044,29 @@ const schemaToValibotSchema = ({
       }
     }
   } else if (schema.type) {
-    const valibotSchema = schemaTypeToValibotSchema({
-      plugin,
-      schema,
-      state,
-    });
+    const valibotSchema = schemaTypeToValibotSchema({ plugin, schema, state });
     anyType = valibotSchema.anyType;
     pipes.push(valibotSchema.expression);
+
+    if (plugin.config.metadata && schema.description) {
+      const expression = compiler.callExpression({
+        functionName: compiler.propertyAccessExpression({
+          expression: identifiers.v,
+          name: identifiers.actions.metadata,
+        }),
+        parameters: [
+          compiler.objectExpression({
+            obj: [
+              {
+                key: 'description',
+                value: compiler.stringLiteral({ text: schema.description }),
+              },
+            ],
+          }),
+        ],
+      });
+      pipes.push(expression);
+    }
   } else if (schema.items) {
     schema = deduplicateSchema({ schema });
 
@@ -1087,10 +1200,10 @@ const schemaToValibotSchema = ({
   return pipes;
 };
 
-export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+export const handler: Plugin.Handler<ResolvedConfig> = ({ plugin }) => {
   const file = plugin.createFile({
     id: valibotId,
-    identifierCase: 'camelCase',
+    identifierCase: plugin.config.case,
     path: plugin.output,
   });
 
@@ -1104,6 +1217,8 @@ export const handler: Plugin.Handler<Config> = ({ plugin }) => {
     const state: State = {
       circularReferenceTracker: new Set(),
       hasCircularReference: false,
+      nameCase: plugin.config.definitions.case,
+      nameTransformer: plugin.config.definitions.name,
     };
 
     if (event.type === 'operation') {

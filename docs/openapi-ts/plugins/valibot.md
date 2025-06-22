@@ -26,20 +26,18 @@ Launch demo
 ## Features
 
 - seamless integration with `@hey-api/openapi-ts` ecosystem
-- Valibot schemas for request payloads, parameters, and responses
+- Valibot schemas for requests, responses, and reusable definitions
 
 ## Installation
 
 In your [configuration](/openapi-ts/get-started), add `valibot` to your plugins and you'll be ready to generate Valibot artifacts. :tada:
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     'valibot', // [!code ++]
   ],
 };
@@ -50,13 +48,11 @@ export default {
 To automatically validate response data in your SDKs, set `sdk.validator` to `true`.
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     'valibot',
     {
       name: '@hey-api/sdk', // [!code ++]
@@ -69,6 +65,32 @@ export default {
 ## Output
 
 The Valibot plugin will generate the following artifacts, depending on the input specification.
+
+## Requests
+
+A single request schema is generated for each endpoint. It may contain a request body, parameters, and headers.
+
+```ts
+const vData = v.object({
+  body: v.optional(
+    v.object({
+      foo: v.optional(v.string()),
+      bar: v.optional(v.union([v.number(), v.null()])),
+    }),
+  ),
+  headers: v.optional(v.never()),
+  path: v.object({
+    baz: v.string(),
+  }),
+  query: v.optional(v.never()),
+});
+```
+
+::: tip
+If you need to access individual fields, you can do so using the [`.entries`](https://valibot.dev/api/object/) API. For example, we can get the request body schema with `vData.entries.body`.
+:::
+
+You can customize the naming and casing pattern for requests using the `requests.name` and `requests.case` options.
 
 ## Responses
 
@@ -85,37 +107,38 @@ const vResponse = v.union([
 ]);
 ```
 
-## Request Bodies
+You can customize the naming and casing pattern for responses using the `responses.name` and `responses.case` options.
 
-If an endpoint describes a request body, we will generate a Valibot schema representing its shape.
+## Definitions
 
-```ts
-const vData = v.object({
-  foo: v.optional(v.string()),
-  bar: v.optional(v.union([v.number(), v.null()])),
-});
-```
-
-## Parameters
-
-A separate Valibot schema is generated for every request parameter.
-
-```ts
-const vParameterFoo = v.pipe(v.number(), v.integer());
-
-const vParameterBar = v.string();
-```
-
-## Schemas
-
-A separate Valibot schema is generated for every reusable schema.
+A Valibot schema is generated for every reusable definition from your input.
 
 ```ts
 const vFoo = v.pipe(v.number(), v.integer());
 
 const vBar = v.object({
-  bar: v.optional(v.union([v.array(v.unknown()), v.null()])),
+  bar: v.optional(v.array(v.pipe(v.number(), v.integer()))),
 });
+```
+
+You can customize the naming and casing pattern for definitions using the `definitions.name` and `definitions.case` options.
+
+## Metadata
+
+It's often useful to associate a schema with some additional [metadata](https://valibot.dev/api/metadata/) for documentation, code generation, AI structured outputs, form validation, and other purposes. If this is your use case, you can set `metadata` to `true` to generate additional metadata about schemas.
+
+```js
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      metadata: true, // [!code ++]
+      name: 'valibot',
+    },
+  ],
+};
 ```
 
 <!--@include: ../../examples.md-->

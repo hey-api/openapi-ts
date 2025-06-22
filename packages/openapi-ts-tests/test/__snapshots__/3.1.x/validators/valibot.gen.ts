@@ -42,22 +42,25 @@ export const vFoo3 = v.object({
 });
 
 export const vPatchFooData = v.object({
-    foo: v.optional(v.string())
+    body: v.object({
+        foo: v.optional(v.string())
+    }),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        foo: v.optional(v.string()),
+        bar: v.optional(vBar),
+        baz: v.optional(v.object({
+            baz: v.optional(v.string())
+        })),
+        qux: v.optional(v.pipe(v.string(), v.isoDate())),
+        quux: v.optional(v.pipe(v.string(), v.isoTimestamp()))
+    }))
 });
 
-/**
- * This is Foo parameter.
- */
-export const vPatchFooParameterFoo = v.string();
-
-export const vPatchFooParameterBar = vBar;
-
-export const vPatchFooParameterBaz = v.object({
-    baz: v.optional(v.string())
+export const vPostFooData = v.object({
+    body: vFoo3,
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
 });
-
-export const vPatchFooParameterQux = v.pipe(v.string(), v.isoDate());
-
-export const vPatchFooParameterQuux = v.pipe(v.string(), v.isoTimestamp());
-
-export const vPostFooData = vFoo3;

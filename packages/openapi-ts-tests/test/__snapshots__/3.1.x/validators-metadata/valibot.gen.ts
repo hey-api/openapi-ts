@@ -5,23 +5,31 @@ import * as v from 'valibot';
 /**
  * This is Bar schema.
  */
-export const vBar: v.GenericSchema = v.object({
+export const vBar: v.GenericSchema = v.pipe(v.object({
     foo: v.optional(v.lazy(() => {
         return vFoo;
     }))
-});
+}), v.metadata({
+    description: 'This is Bar schema.'
+}));
 
 /**
  * This is Foo schema.
  */
 export const vFoo: v.GenericSchema = v.optional(v.union([
     v.object({
-        foo: v.optional(v.pipe(v.string(), v.regex(/^\d{3}-\d{2}-\d{4}$/))),
-        bar: v.optional(vBar),
-        baz: v.optional(v.array(v.lazy(() => {
-            return vFoo;
+        foo: v.optional(v.pipe(v.pipe(v.string(), v.regex(/^\d{3}-\d{2}-\d{4}$/)), v.metadata({
+            description: 'This is foo property.'
         }))),
-        qux: v.optional(v.pipe(v.number(), v.integer(), v.gtValue(0)), 0)
+        bar: v.optional(vBar),
+        baz: v.optional(v.pipe(v.array(v.lazy(() => {
+            return vFoo;
+        })), v.metadata({
+            description: 'This is baz property.'
+        }))),
+        qux: v.optional(v.pipe(v.pipe(v.number(), v.integer(), v.gtValue(0)), v.metadata({
+            description: 'This is qux property.'
+        })), 0)
     }),
     v.null()
 ]), null);
@@ -35,29 +43,36 @@ export const vQux = v.record(v.string(), v.object({
 /**
  * This is Foo parameter.
  */
-export const vFoo2 = v.string();
+export const vFoo2 = v.pipe(v.string(), v.metadata({
+    description: 'This is Foo parameter.'
+}));
 
 export const vFoo3 = v.object({
     foo: v.optional(vBar)
 });
 
 export const vPatchFooData = v.object({
-    foo: v.optional(v.string())
+    body: v.object({
+        foo: v.optional(v.string())
+    }),
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        foo: v.optional(v.pipe(v.string(), v.metadata({
+            description: 'This is Foo parameter.'
+        }))),
+        bar: v.optional(vBar),
+        baz: v.optional(v.object({
+            baz: v.optional(v.string())
+        })),
+        qux: v.optional(v.pipe(v.string(), v.isoDate())),
+        quux: v.optional(v.pipe(v.string(), v.isoTimestamp()))
+    }))
 });
 
-/**
- * This is Foo parameter.
- */
-export const vPatchFooParameterFoo = v.string();
-
-export const vPatchFooParameterBar = vBar;
-
-export const vPatchFooParameterBaz = v.object({
-    baz: v.optional(v.string())
+export const vPostFooData = v.object({
+    body: vFoo3,
+    headers: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
 });
-
-export const vPatchFooParameterQux = v.pipe(v.string(), v.isoDate());
-
-export const vPatchFooParameterQuux = v.pipe(v.string(), v.isoTimestamp());
-
-export const vPostFooData = vFoo3;
