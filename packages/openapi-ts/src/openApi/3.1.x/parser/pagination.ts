@@ -3,7 +3,7 @@ import type { IR } from '../../../ir/types';
 import type { SchemaType } from '../../shared/types/schema';
 import type { ParameterObject, RequestBodyObject } from '../types/spec';
 import type { SchemaObject } from '../types/spec';
-import { mediaTypeObject } from './mediaType';
+import { mediaTypeObjects } from './mediaType';
 import { getSchemaTypes } from './schema';
 
 const isPaginationType = (
@@ -45,7 +45,10 @@ export const paginationField = ({
 
       if (!refSchema) {
         // parameter or body
-        const content = mediaTypeObject({ content: ref.content });
+        const contents = mediaTypeObjects({ content: ref.content });
+        // TODO: add support for multiple content types, for now prefer JSON
+        const content =
+          contents.find((content) => content.type === 'json') || contents[0];
         if (content?.schema) {
           refSchema = content.schema;
         }
