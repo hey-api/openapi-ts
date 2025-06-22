@@ -1,5 +1,39 @@
 # @hey-api/openapi-ts
 
+## 0.76.0
+
+### Minor Changes
+
+- [#2226](https://github.com/hey-api/openapi-ts/pull/2226) [`1c66d88`](https://github.com/hey-api/openapi-ts/commit/1c66d8866fa25dc9cf978ef94eab3bf8ca64d9f3) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(valibot): generate a single schema for requests
+
+  ### Single Valibot schema per request
+
+  Previously, we generated a separate schema for each endpoint parameter and request body. In v0.76.0, a single request schema is generated for the whole endpoint. It may contain a request body, parameters, and headers.
+
+  ```ts
+  const vData = v.object({
+    body: v.optional(
+      v.object({
+        foo: v.optional(v.string()),
+        bar: v.optional(v.union([v.number(), v.null()])),
+      }),
+    ),
+    headers: v.optional(v.never()),
+    path: v.object({
+      baz: v.string(),
+    }),
+    query: v.optional(v.never()),
+  });
+  ```
+
+  If you need to access individual fields, you can do so using the [`.entries`](https://valibot.dev/api/object/) API. For example, we can get the request body schema with `vData.entries.body`.
+
+### Patch Changes
+
+- [#2221](https://github.com/hey-api/openapi-ts/pull/2221) [`e335e1e`](https://github.com/hey-api/openapi-ts/commit/e335e1ea31256b3b284b7ef968d566c1315096b3) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): prefer JSON media type
+
+- [#2226](https://github.com/hey-api/openapi-ts/pull/2226) [`1c66d88`](https://github.com/hey-api/openapi-ts/commit/1c66d8866fa25dc9cf978ef94eab3bf8ca64d9f3) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(valibot): add `metadata` option to generate additional metadata for documentation, code generation, AI structured outputs, form validation, and other purposes
+
 ## 0.75.0
 
 ### Minor Changes
