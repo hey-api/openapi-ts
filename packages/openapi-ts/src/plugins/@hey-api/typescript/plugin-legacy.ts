@@ -24,7 +24,7 @@ import {
   operationErrorTypeName,
   operationResponseTypeName,
 } from '../sdk/plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiTypeScriptPlugin } from './types';
 
 export interface TypesProps {
   client: Client;
@@ -610,7 +610,7 @@ const processServiceTypes = ({
   }
 };
 
-export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
+export const handlerLegacy: Plugin.LegacyHandler<HeyApiTypeScriptPlugin> = ({
   client,
   files,
   plugin,

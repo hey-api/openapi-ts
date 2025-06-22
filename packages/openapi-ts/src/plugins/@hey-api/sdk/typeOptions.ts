@@ -5,7 +5,7 @@ import type { IR } from '../../../ir/types';
 import type { Plugin } from '../../types';
 import { getClientPlugin } from '../client-core/utils';
 import { nuxtTypeDefault, nuxtTypeResponse, sdkId } from './constants';
-import type { Config } from './types';
+import type { HeyApiSdkPlugin } from './types';
 
 export const createTypeOptions = ({
   clientOptions,
@@ -14,7 +14,7 @@ export const createTypeOptions = ({
 }: {
   clientOptions: FileImportResult;
   context: IR.Context;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSdkPlugin>;
 }) => {
   const file = context.file({ id: sdkId })!;
   const client = getClientPlugin(context.config);

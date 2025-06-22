@@ -9,10 +9,12 @@ vi.mock('../../../../utils/config', () => {
   const config: Partial<Config> = {
     plugins: {
       '@hey-api/typescript': {
-        config: {},
+        config: {
+          name: '@hey-api/typescript',
+        },
         handler: () => {},
-        handlerLegacy: () => {},
         name: '@hey-api/typescript',
+        output: '',
       },
     },
   };

@@ -95,7 +95,10 @@ export const generateClientBundle = ({
   tsConfig,
 }: {
   outputPath: string;
-  plugin: Plugin.Config<Client.Config & { name: any }>;
+  plugin: Plugin.Config<{
+    config: Client.Config & { name: string };
+    resolvedConfig: Client.Config & { name: string };
+  }>;
   tsConfig: ts.ParsedCommandLine | null;
 }): void => {
   // copy Hey API clients to output

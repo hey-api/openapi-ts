@@ -14,7 +14,7 @@ import { createSchemaComment } from '../../shared/utils/schema';
 import type { Plugin } from '../../types';
 import { createClientOptions } from './clientOptions';
 import { typesId } from './ref';
-import type { Config } from './types';
+import type { HeyApiTypeScriptPlugin } from './types';
 
 interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
   extends Omit<IR.SchemaObject, 'type'> {
@@ -42,7 +42,7 @@ const scopeToRef = ({
 }: {
   $ref: string;
   accessScope?: 'both' | 'read' | 'write';
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
 }) => {
   if (!accessScope || accessScope === 'both') {
     return $ref;
@@ -121,7 +121,7 @@ const addJavaScriptEnum = ({
   schema,
 }: {
   $ref: string;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: SchemaWithType<'enum'>;
 }) => {
   const file = plugin.context.file({ id: typesId })!;
@@ -168,7 +168,7 @@ const schemaToEnumObject = ({
   plugin,
   schema,
 }: {
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: IR.SchemaObject;
 }) => {
   const typeofItems: Array<
@@ -242,7 +242,7 @@ const addTypeEnum = ({
   state,
 }: {
   $ref: string;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: SchemaWithType<'enum'>;
   state: State | undefined;
 }): ts.TypeAliasDeclaration | undefined => {
@@ -292,7 +292,7 @@ const shouldCreateTypeScriptEnum = ({
   plugin,
   schema,
 }: {
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: SchemaWithType<'enum'>;
 }) => {
   const enumObject = schemaToEnumObject({ plugin, schema });
@@ -309,7 +309,7 @@ const addTypeScriptEnum = ({
   state,
 }: {
   $ref: string;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: SchemaWithType<'enum'>;
   state: State | undefined;
 }) => {
@@ -347,7 +347,7 @@ const arrayTypeToIdentifier = ({
   state,
 }: {
   namespace: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: SchemaWithType<'array'>;
   state: State | undefined;
 }): ts.TypeNode | undefined => {
@@ -419,7 +419,7 @@ const enumTypeToIdentifier = ({
 }: {
   $ref?: string;
   namespace: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: SchemaWithType<'enum'>;
   state: State | undefined;
 }): ts.TypeNode | undefined => {
@@ -510,7 +510,7 @@ const numberTypeToIdentifier = ({
   schema,
 }: {
   namespace: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: SchemaWithType<'integer' | 'number'>;
 }): ts.TypeNode => {
   if (schema.const !== undefined) {
@@ -538,7 +538,7 @@ const objectTypeToIdentifier = ({
   state,
 }: {
   namespace: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: SchemaWithType<'object'>;
   state: State | undefined;
 }): ts.TypeNode | undefined => {
@@ -648,7 +648,7 @@ const stringTypeToIdentifier = ({
   schema,
 }: {
   namespace: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: SchemaWithType<'string'>;
 }): ts.TypeNode => {
   if (schema.const !== undefined) {
@@ -691,7 +691,7 @@ const tupleTypeToIdentifier = ({
   state,
 }: {
   namespace: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: SchemaWithType<'tuple'>;
   state: State | undefined;
 }): ts.TypeNode | undefined => {
@@ -735,7 +735,7 @@ const schemaTypeToIdentifier = ({
 }: {
   $ref?: string;
   namespace: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: IR.SchemaObject;
   state: State | undefined;
 }): ts.TypeNode | undefined => {
@@ -851,7 +851,7 @@ const operationToDataType = ({
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
 }) => {
   const file = plugin.context.file({ id: typesId })!;
   const data: IR.SchemaObject = {
@@ -962,7 +962,7 @@ const operationToType = ({
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
 }) => {
   operationToDataType({ operation, plugin });
 
@@ -1139,7 +1139,7 @@ export const schemaToType = ({
 }: {
   $ref?: string;
   namespace?: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   schema: IR.SchemaObject;
   state: State | undefined;
 }): ts.TypeNode | undefined => {
@@ -1266,7 +1266,7 @@ export const schemaToType = ({
   return type;
 };
 
-export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+export const handler: Plugin.Handler<HeyApiTypeScriptPlugin> = ({ plugin }) => {
   const file = plugin.createFile({
     id: typesId,
     identifierCase: plugin.config.identifierCase,

@@ -1,7 +1,7 @@
-import type { StringCase } from '../../../types/config';
+import type { StringCase } from '../../../types/case';
 import type { Plugin } from '../../types';
 
-export interface Config extends Plugin.Name<'@hey-api/typescript'> {
+export type Config = Plugin.Name<'@hey-api/typescript'> & {
   /**
    * By default, enums are generated as TypeScript types. In addition to that,
    * you can choose to generate them as JavaScript objects, TypeScript enums,
@@ -107,4 +107,6 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    * @default false
    */
   tree?: boolean;
-}
+};
+
+export type HeyApiTypeScriptPlugin = Plugin.Types<Config>;

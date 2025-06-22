@@ -1,7 +1,7 @@
-import type { StringCase } from '../../../types/config';
+import type { StringCase } from '../../../types/case';
 import type { Plugin } from '../../types';
 
-export interface Config extends Plugin.Name<'@tanstack/react-query'> {
+export type Config = Plugin.Name<'@tanstack/react-query'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -206,9 +206,9 @@ export interface Config extends Plugin.Name<'@tanstack/react-query'> {
          */
         name?: string | ((name: string) => string);
       };
-}
+};
 
-export interface ResolvedConfig extends Plugin.Name<'@tanstack/react-query'> {
+export type ResolvedConfig = Plugin.Name<'@tanstack/react-query'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -363,4 +363,6 @@ export interface ResolvedConfig extends Plugin.Name<'@tanstack/react-query'> {
      */
     name: string | ((name: string) => string);
   };
-}
+};
+
+export type TanStackReactQueryPlugin = Plugin.Types<Config, ResolvedConfig>;

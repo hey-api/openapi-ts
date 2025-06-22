@@ -1,7 +1,7 @@
-import type { StringCase } from '../../types/config';
+import type { StringCase } from '../../types/case';
 import type { Plugin } from '../types';
 
-export interface Config extends Plugin.Name<'zod'> {
+export type Config = Plugin.Name<'zod'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -134,9 +134,9 @@ export interface Config extends Plugin.Name<'zod'> {
          */
         name?: string | ((name: string) => string);
       };
-}
+};
 
-export interface ResolvedConfig extends Plugin.Name<'zod'> {
+export type ResolvedConfig = Plugin.Name<'zod'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -245,4 +245,10 @@ export interface ResolvedConfig extends Plugin.Name<'zod'> {
      */
     name: string | ((name: string) => string);
   };
-}
+};
+
+type Api = {
+  foo(): string;
+};
+
+export type ZodPlugin = Plugin.Types<Config, ResolvedConfig, Api>;

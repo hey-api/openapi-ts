@@ -1,11 +1,10 @@
 import { definePluginConfig } from '../../shared/utils/config';
 import type { Plugin } from '../../types';
-import type { Config } from './types';
+import type { HeyApiClientLegacyNodePlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config> = {
+export const defaultConfig: Plugin.Config<HeyApiClientLegacyNodePlugin> = {
   config: {},
   handler: () => {},
-  handlerLegacy: () => {},
   name: 'legacy/node',
   output: 'client',
   tags: ['client'],

@@ -3,8 +3,7 @@ import path from 'node:path';
 import { loadConfig } from 'c12';
 
 import { getLogs } from './getLogs';
-import type { UserPlugins } from './plugins';
-import { defaultPluginConfigs } from './plugins';
+import { defaultPluginConfigs } from './plugins/config';
 import type {
   AnyPluginName,
   PluginContext,
@@ -19,7 +18,7 @@ import { isLegacyClient, setConfig } from './utils/config';
 export const defaultPlugins = [
   '@hey-api/typescript',
   '@hey-api/sdk',
-] as const satisfies ReadonlyArray<UserPlugins['name']>;
+] as const satisfies ReadonlyArray<PluginNames>;
 
 const defaultWatch: Config['input']['watch'] = {
   enabled: false,
@@ -194,6 +193,7 @@ const getPluginsConfig = ({
           return result;
         },
       };
+      // @ts-expect-error
       plugin.resolveConfig(plugin, context);
     }
 

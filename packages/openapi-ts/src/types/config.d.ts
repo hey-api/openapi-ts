@@ -1,17 +1,11 @@
-import type { ClientPlugins, UserPlugins } from '../plugins';
+import type { PluginConfigMap } from '../plugins/config';
+import type { Plugin, PluginNames } from '../plugins/types';
+import type { StringCase } from './case';
 import type { Input, Watch } from './input';
-import type { ArrayOfObjectsToObjectMap, ExtractArrayOfObjects } from './utils';
 
 export type Formatters = 'biome' | 'prettier';
 
 export type Linters = 'biome' | 'eslint' | 'oxlint';
-
-export type StringCase =
-  | 'camelCase'
-  | 'PascalCase'
-  | 'preserve'
-  | 'snake_case'
-  | 'SCREAMING_SNAKE_CASE';
 
 export interface UserConfig {
   /**
@@ -145,7 +139,14 @@ export interface UserConfig {
    *
    * @default ['@hey-api/typescript', '@hey-api/sdk']
    */
-  plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
+  plugins?: ReadonlyArray<
+    | PluginNames
+    | {
+        [K in PluginNames]: Plugin.UserConfig<PluginConfigMap[K]['config']> & {
+          name: K;
+        };
+      }[PluginNames]
+  >;
 
   // DEPRECATED OPTIONS BELOW
 
@@ -219,9 +220,8 @@ export type Config = Omit<
       };
     logs: Extract<Required<UserConfig['logs']>, object>;
     output: Extract<UserConfig['output'], object>;
-    pluginOrder: ReadonlyArray<ClientPlugins['name']>;
-    plugins: ArrayOfObjectsToObjectMap<
-      ExtractArrayOfObjects<ReadonlyArray<ClientPlugins>, { name: string }>,
-      'name'
-    >;
+    pluginOrder: ReadonlyArray<keyof PluginConfigMap>;
+    plugins: {
+      [K in PluginNames]?: Plugin.ConfigWithName<PluginConfigMap[K]>;
+    };
   };

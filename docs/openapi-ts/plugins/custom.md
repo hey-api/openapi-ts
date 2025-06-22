@@ -31,7 +31,7 @@ export type { Config } from './types';
 ::: code-group
 
 ```ts [types.d.ts]
-export interface Config {
+export type Config = {
   /**
    * Plugin name. Must be unique.
    */
@@ -48,7 +48,7 @@ export interface Config {
    * @default false
    */
   myOption?: boolean;
-}
+};
 ```
 
 :::
@@ -75,7 +75,6 @@ export const defaultConfig: Plugin.Config<Config> = {
   },
   dependencies: ['@hey-api/typescript'],
   handler,
-  handlerLegacy: () => {},
   name: 'my-plugin',
   output: 'my-plugin',
 };

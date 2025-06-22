@@ -12,7 +12,7 @@ import {
   operationResponseTypeName,
 } from '../sdk/plugin-legacy';
 import { generateType, type TypesProps } from '../typescript/plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiTransformersPlugin } from './types';
 
 interface ModelProps extends TypesProps {
   meta?: ModelMeta;
@@ -249,7 +249,7 @@ const generateResponseTransformer = ({
 };
 
 // handles only response transformers for now
-export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
+export const handlerLegacy: Plugin.LegacyHandler<HeyApiTransformersPlugin> = ({
   client,
   files,
 }) => {

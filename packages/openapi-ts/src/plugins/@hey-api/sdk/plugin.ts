@@ -18,12 +18,12 @@ import {
 } from './operation';
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import { createTypeOptions } from './typeOptions';
-import type { Config } from './types';
+import type { HeyApiSdkPlugin } from './types';
 
 const createClientClassNodes = ({
   plugin,
 }: {
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSdkPlugin>;
 }): ReadonlyArray<ts.ClassElement> => {
   const clientAssignmentStatement = compiler.expressionToStatement({
     expression: compiler.binaryExpression({
@@ -109,7 +109,11 @@ interface SdkClassEntry {
   root: boolean;
 }
 
-const generateClassSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
+const generateClassSdk = ({
+  plugin,
+}: {
+  plugin: Plugin.Instance<HeyApiSdkPlugin>;
+}) => {
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = plugin.context.file({ id: sdkId })!;
@@ -316,7 +320,11 @@ const generateClassSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
   }
 };
 
-const generateFlatSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
+const generateFlatSdk = ({
+  plugin,
+}: {
+  plugin: Plugin.Instance<HeyApiSdkPlugin>;
+}) => {
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = plugin.context.file({ id: sdkId })!;
@@ -398,7 +406,7 @@ const generateFlatSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
   });
 };
 
-export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+export const handler: Plugin.Handler<HeyApiSdkPlugin> = ({ plugin }) => {
   const file = plugin.createFile({
     id: sdkId,
     path: plugin.output,

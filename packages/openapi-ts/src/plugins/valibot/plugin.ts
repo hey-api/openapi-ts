@@ -6,12 +6,12 @@ import { operationResponsesMap } from '../../ir/operation';
 import { hasParameterGroupObjectRequired } from '../../ir/parameter';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
-import type { StringCase } from '../../types/config';
+import type { StringCase } from '../../types/case';
 import { numberRegExp } from '../../utils/regexp';
 import { createSchemaComment } from '../shared/utils/schema';
 import type { Plugin } from '../types';
 import { identifiers, valibotId } from './constants';
-import type { ResolvedConfig } from './types';
+import type { ValibotPlugin } from './types';
 
 interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
   extends Omit<IR.SchemaObject, 'type'> {
@@ -45,7 +45,7 @@ const arrayTypeToValibotSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ResolvedConfig>;
+  plugin: Plugin.Instance<ValibotPlugin>;
   schema: SchemaWithType<'array'>;
   state: State;
 }): ts.CallExpression => {
@@ -371,7 +371,7 @@ const objectTypeToValibotSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ResolvedConfig>;
+  plugin: Plugin.Instance<ValibotPlugin>;
   schema: SchemaWithType<'object'>;
   state: State;
 }): {
@@ -603,7 +603,7 @@ const tupleTypeToValibotSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ResolvedConfig>;
+  plugin: Plugin.Instance<ValibotPlugin>;
   schema: SchemaWithType<'tuple'>;
   state: State;
 }) => {
@@ -705,7 +705,7 @@ const schemaTypeToValibotSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ResolvedConfig>;
+  plugin: Plugin.Instance<ValibotPlugin>;
   schema: IR.SchemaObject;
   state: State;
 }): {
@@ -799,7 +799,7 @@ const operationToValibotSchema = ({
   state,
 }: {
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<ResolvedConfig>;
+  plugin: Plugin.Instance<ValibotPlugin>;
   state: State;
 }) => {
   const file = plugin.context.file({ id: valibotId })!;
@@ -963,7 +963,7 @@ const schemaToValibotSchema = ({
    * `.default()` which is handled in this function.
    */
   optional?: boolean;
-  plugin: Plugin.Instance<ResolvedConfig>;
+  plugin: Plugin.Instance<ValibotPlugin>;
   schema: IR.SchemaObject;
   state: State;
 }): Array<ts.Expression> => {
@@ -1200,7 +1200,7 @@ const schemaToValibotSchema = ({
   return pipes;
 };
 
-export const handler: Plugin.Handler<ResolvedConfig> = ({ plugin }) => {
+export const handler: Plugin.Handler<ValibotPlugin> = ({ plugin }) => {
   const file = plugin.createFile({
     id: valibotId,
     identifierCase: plugin.config.case,

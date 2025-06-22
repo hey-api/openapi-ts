@@ -31,7 +31,7 @@ import { setUniqueTypeName } from '../../../utils/type';
 import { unique } from '../../../utils/unique';
 import type { Plugin } from '../../types';
 import { getClientPlugin } from '../client-core/utils';
-import type { Config } from './types';
+import type { HeyApiSdkPlugin } from './types';
 
 type OnNode = (node: ts.Node) => void;
 type OnImport = (name: string) => void;
@@ -800,7 +800,7 @@ const processService = ({
   onNode(statement);
 };
 
-export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
+export const handlerLegacy: Plugin.LegacyHandler<HeyApiSdkPlugin> = ({
   client,
   files,
   plugin,

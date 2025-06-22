@@ -7,12 +7,12 @@ import {
   type Plugin,
 } from '@hey-api/openapi-ts';
 
-export interface Config extends Client.Config {
+export type Config = Client.Config & {
   /**
    * Plugin name. Must be unique.
    */
   name: '@hey-api/custom-client';
-}
+};
 
 export const defaultConfig: Plugin.Config<Config> = {
   ...clientDefaultMeta,
@@ -21,7 +21,6 @@ export const defaultConfig: Plugin.Config<Config> = {
     bundle: false,
   },
   handler: clientPluginHandler,
-  handlerLegacy: () => {},
   name: '@hey-api/custom-client',
 };
 

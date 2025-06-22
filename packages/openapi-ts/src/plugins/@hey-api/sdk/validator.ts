@@ -4,7 +4,7 @@ import type { Plugin } from '../../types';
 import { valibotId } from '../../valibot/constants';
 import { zodId } from '../../zod/plugin';
 import { sdkId } from './constants';
-import type { Config } from './types';
+import type { HeyApiSdkPlugin } from './types';
 
 const identifiers = {
   data: compiler.identifier({ text: 'data' }),
@@ -17,7 +17,7 @@ const valibotResponseValidator = ({
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSdkPlugin>;
 }) => {
   const file = plugin.context.file({ id: sdkId })!;
 
@@ -79,7 +79,7 @@ const zodResponseValidator = ({
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSdkPlugin>;
 }) => {
   const file = plugin.context.file({ id: sdkId })!;
 
@@ -132,9 +132,22 @@ export const createResponseValidator = ({
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiSdkPlugin>;
 }) => {
-  switch (plugin.config.validator) {
+  if (!plugin.config.validator.response) {
+    return;
+  }
+
+  const pluginValidator = plugin.getPlugin(plugin.config.validator.response);
+  if (!pluginValidator) {
+    return;
+  }
+
+  if (pluginValidator.name === 'zod') {
+    console.log(pluginValidator.api?.foo());
+  }
+
+  switch (plugin.config.validator.response) {
     case 'valibot':
       return valibotResponseValidator({ operation, plugin });
     case 'zod':

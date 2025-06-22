@@ -7,7 +7,7 @@ import { parseUrl } from '../../../utils/url';
 import type { Plugin } from '../../types';
 import { getClientBaseUrlKey, getClientPlugin } from '../client-core/utils';
 import { typesId } from './ref';
-import type { Config } from './types';
+import type { HeyApiTypeScriptPlugin } from './types';
 
 const stringType = compiler.keywordTypeNode({ keyword: 'string' });
 
@@ -37,7 +37,7 @@ export const createClientOptions = ({
   servers,
 }: {
   identifier: Identifier;
-  plugin: Plugin.Instance<Config>;
+  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
   servers: ReadonlyArray<IR.ServerObject>;
 }) => {
   const file = plugin.context.file({ id: typesId })!;

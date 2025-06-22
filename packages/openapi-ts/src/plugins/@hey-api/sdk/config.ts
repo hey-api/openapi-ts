@@ -2,9 +2,9 @@ import { definePluginConfig } from '../../shared/utils/config';
 import type { Plugin } from '../../types';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiSdkPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config> = {
+export const defaultConfig: Plugin.Config<HeyApiSdkPlugin> = {
   config: {
     asClass: false,
     auth: true,
@@ -15,6 +15,8 @@ export const defaultConfig: Plugin.Config<Config> = {
     operationId: true,
     response: 'body',
     responseStyle: 'fields',
+    transformer: false,
+    validator: false,
   },
   dependencies: ['@hey-api/typescript'],
   handler,
@@ -30,6 +32,8 @@ export const defaultConfig: Plugin.Config<Config> = {
       }
 
       plugin.dependencies.add(plugin.config.client!);
+    } else {
+      plugin.config.client = false;
     }
 
     if (plugin.config.transformer) {
@@ -38,14 +42,35 @@ export const defaultConfig: Plugin.Config<Config> = {
       }
 
       plugin.dependencies.add(plugin.config.transformer!);
+    } else {
+      plugin.config.transformer = false;
     }
 
-    if (plugin.config.validator) {
-      if (typeof plugin.config.validator === 'boolean') {
-        plugin.config.validator = context.pluginByTag('validator');
+    if (typeof plugin.config.validator !== 'object') {
+      plugin.config.validator = {
+        request: plugin.config.validator,
+        response: plugin.config.validator,
+      };
+    }
+
+    if (plugin.config.validator.request) {
+      if (typeof plugin.config.validator.request === 'boolean') {
+        plugin.config.validator.request = context.pluginByTag('validator');
       }
 
-      plugin.dependencies.add(plugin.config.validator!);
+      plugin.dependencies.add(plugin.config.validator.request!);
+    } else {
+      plugin.config.validator.request = false;
+    }
+
+    if (plugin.config.validator.response) {
+      if (typeof plugin.config.validator.response === 'boolean') {
+        plugin.config.validator.response = context.pluginByTag('validator');
+      }
+
+      plugin.dependencies.add(plugin.config.validator.response!);
+    } else {
+      plugin.config.validator.response = false;
     }
 
     if (plugin.config.instance) {
@@ -54,11 +79,8 @@ export const defaultConfig: Plugin.Config<Config> = {
       }
 
       plugin.config.asClass = true;
-    }
-
-    // TODO: add responseStyle field to all clients
-    if (plugin.config.client !== '@hey-api/client-fetch') {
-      plugin.config.responseStyle = 'fields';
+    } else {
+      plugin.config.instance = false;
     }
   },
 };
