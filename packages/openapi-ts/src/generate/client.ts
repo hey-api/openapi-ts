@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -86,6 +87,22 @@ const replaceRelativeImports = (filePath: string) => {
   fs.writeFileSync(filePath, content, 'utf8');
 };
 
+const cpFolder = (fromPath: string, toPath: string) => {
+  if (fs.existsSync(fromPath)) {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'openapi-ts-'));
+
+    const folderName = path.basename(fromPath);
+    const tmpPath = path.resolve(tmpDir, folderName);
+
+    fs.cpSync(fromPath, tmpDir, { recursive: true });
+
+    if (fs.existsSync(tmpPath)) {
+      fs.renameSync(tmpPath, toPath);
+    }
+  }
+  ensureDirSync(toPath);
+};
+
 /**
  * Creates a `client` folder containing the same modules as the client package.
  */
@@ -104,11 +121,12 @@ export const generateClientBundle = ({
     const shouldAppendJs =
       tsConfig?.options.moduleResolution === ts.ModuleResolutionKind.NodeNext;
 
+    ensureDirSync(outputPath);
+
     // copy client core
     const coreOutputPath = path.resolve(outputPath, 'core');
-    ensureDirSync(coreOutputPath);
     const coreDistPath = path.resolve(__dirname, 'clients', 'core');
-    fs.cpSync(coreDistPath, coreOutputPath, { recursive: true });
+    cpFolder(coreDistPath, coreOutputPath);
     if (shouldAppendJs) {
       const coreFiles = fs.readdirSync(coreOutputPath);
       for (const file of coreFiles) {
@@ -117,14 +135,13 @@ export const generateClientBundle = ({
     }
     // copy client bundle
     const clientOutputPath = path.resolve(outputPath, 'client');
-    ensureDirSync(clientOutputPath);
     const clientDistFolderName = plugin.name.slice('@hey-api/client-'.length);
     const clientDistPath = path.resolve(
       __dirname,
       'clients',
       clientDistFolderName,
     );
-    fs.cpSync(clientDistPath, clientOutputPath, { recursive: true });
+    cpFolder(clientDistPath, clientOutputPath);
     if (shouldAppendJs) {
       const clientFiles = fs.readdirSync(clientOutputPath);
       for (const file of clientFiles) {
