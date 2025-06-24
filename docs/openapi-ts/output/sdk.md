@@ -222,7 +222,7 @@ export default {
 
 :::
 
-Learn more about available validators on the [Validators](/openapi-ts/validators/) page.
+Learn more about available validators on the [Validators](/openapi-ts/validators) page.
 
 <!--@include: ../../examples.md-->
 <!--@include: ../../sponsors.md-->
