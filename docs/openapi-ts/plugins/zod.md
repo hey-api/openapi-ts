@@ -45,7 +45,7 @@ export default {
 
 ### SDKs
 
-To automatically validate response data in your SDKs, set `sdk.validator` to `true`.
+To add data validators to your SDKs, set `sdk.validator` to `true`.
 
 ```js
 export default {
@@ -61,6 +61,8 @@ export default {
   ],
 };
 ```
+
+Learn more about data validators in your SDKs on the [SDKs](/openapi-ts/output/sdk#validators) page.
 
 ## Output
 
@@ -78,7 +80,6 @@ const zData = z.object({
       bar: z.union([z.number(), z.null()]).optional(),
     })
     .optional(),
-  headers: z.never().optional(),
   path: z.object({
     baz: z.string(),
   }),

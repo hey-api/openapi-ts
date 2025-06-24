@@ -134,27 +134,6 @@ export namespace Plugin {
     name: any;
   };
 
-  /**
-   * Plugin implementation for experimental parser.
-   */
-  export type Handler<T extends Types, ReturnType = void> = (args: {
-    plugin: PluginInstance<T>;
-  }) => ReturnType;
-
-  export type Instance<T extends Types> = PluginInstance<T>;
-
-  /**
-   * Plugin implementation for legacy parser.
-   *
-   * @deprecated
-   */
-  export type LegacyHandler<T extends Types> = (args: {
-    client: LegacyClient;
-    files: Files;
-    openApi: LegacyOpenApi;
-    plugin: PluginInstance<T>;
-  }) => void;
-
   export interface Name<Name extends PluginNames> {
     name: Name;
   }
@@ -180,10 +159,20 @@ export type DefinePlugin<
   Api extends BaseApi = never,
 > = {
   Config: Plugin.Config<Plugin.Types<Config, ResolvedConfig, Api>>;
-  Handler: Plugin.Handler<Plugin.Types<Config, ResolvedConfig, Api>>;
-  Instance: Plugin.Instance<Plugin.Types<Config, ResolvedConfig, Api>>;
-  LegacyHandler: Plugin.LegacyHandler<
-    Plugin.Types<Config, ResolvedConfig, Api>
-  >;
+  Handler: (args: {
+    plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
+  }) => void;
+  Instance: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
+  /**
+   * Plugin implementation for legacy parser.
+   *
+   * @deprecated
+   */
+  LegacyHandler: (args: {
+    client: LegacyClient;
+    files: Files;
+    openApi: LegacyOpenApi;
+    plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
+  }) => void;
   Types: Plugin.Types<Config, ResolvedConfig, Api>;
 };
