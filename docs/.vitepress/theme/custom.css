@@ -131,8 +131,6 @@ h3#demo + button {
 .sponsors-list > ul {
   display: flex;
   flex-direction: column;
-  row-gap: 2rem;
-  column-gap: 3rem;
   padding: 0;
 }
 
@@ -183,15 +181,30 @@ h3#demo + button {
   line-height: 100%;
 }
 
-.sponsors-list .gold li {
+.sponsors-list > ul.gold {
+  row-gap: 2rem;
+  column-gap: 3rem;
+}
+
+.sponsors-list > ul.gold li {
   max-width: 240px;
 }
 
-.sponsors-list .silver li {
+.sponsors-list > ul.silver {
+  row-gap: 2rem;
+  column-gap: 3rem;
+}
+
+.sponsors-list > ul.silver li {
   max-width: 180px;
 }
 
-.sponsors-list .bronze li {
+.sponsors-list > ul.bronze {
+  row-gap: 2rem;
+  column-gap: 1rem;
+}
+
+.sponsors-list > ul.bronze li {
   max-width: 100px;
 }
 

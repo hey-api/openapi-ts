@@ -50,4 +50,14 @@
       </picture>
     </a>
   </li>
+  <li>
+    <a href="https://kutt.it/KkqSaw" style="height: 20px;" target="_blank">
+      <picture>
+        <source srcset="/images/cella-logo-wordmark-480w.webp" media="(max-width: 480px)" type="image/webp" />
+        <source srcset="/images/cella-logo-wordmark-768w.webp" media="(max-width: 768px)" type="image/webp" />
+        <source srcset="/images/cella-logo-wordmark-1200w.webp" media="(min-width: 769px)" type="image/webp" />
+        <img alt="Cella logo" loading="lazy" src="/images/cella-logo-wordmark-1200w.png" />
+      </picture>
+    </a>
+  </li>
 </ul>
