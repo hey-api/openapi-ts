@@ -1,5 +1,42 @@
 # @hey-api/openapi-ts
 
+## 0.77.0
+
+### Minor Changes
+
+- [#2227](https://github.com/hey-api/openapi-ts/pull/2227) [`4ea6f24`](https://github.com/hey-api/openapi-ts/commit/4ea6f24d02d8e8867313073d003f0b573f2054db) Thanks [@mrlubos](https://github.com/mrlubos)! - refactor(plugin): add `DefinePlugin` utility types
+
+  ### Updated Plugin API
+
+  Please refer to the [custom plugin](https://heyapi.dev/openapi-ts/plugins/custom) tutorial for the latest guide.
+
+- [#2227](https://github.com/hey-api/openapi-ts/pull/2227) [`4ea6f24`](https://github.com/hey-api/openapi-ts/commit/4ea6f24d02d8e8867313073d003f0b573f2054db) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): update `validator` option
+
+  ### Updated `sdk.validator` option
+
+  Clients can now validate both request and response data. As a result, passing a boolean or string to `validator` will control both of these options. To preserve the previous behavior, set `validator.request` to `false` and `validator.response` to your previous configuration.
+
+  ```js
+  export default {
+    input: 'https://get.heyapi.dev/hey-api/backend',
+    output: 'src/client',
+    plugins: [
+      // ...other plugins
+      {
+        name: '@hey-api/sdk',
+        validator: {
+          request: false,
+          response: true,
+        },
+      },
+    ],
+  };
+  ```
+
+### Patch Changes
+
+- [#2227](https://github.com/hey-api/openapi-ts/pull/2227) [`4ea6f24`](https://github.com/hey-api/openapi-ts/commit/4ea6f24d02d8e8867313073d003f0b573f2054db) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): add requestValidator option
+
 ## 0.76.0
 
 ### Minor Changes
