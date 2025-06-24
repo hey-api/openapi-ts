@@ -10,6 +10,7 @@ import type { StringCase } from '../../types/case';
 import { numberRegExp } from '../../utils/regexp';
 import { createSchemaComment } from '../shared/utils/schema';
 import type { Plugin } from '../types';
+import { zodId } from './constants';
 import type { ZodPlugin } from './types';
 
 interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
@@ -23,8 +24,6 @@ interface State {
   nameCase: StringCase;
   nameTransformer: string | ((name: string) => string);
 }
-
-export const zodId = 'zod';
 
 // frequently used identifiers
 const andIdentifier = compiler.identifier({ text: 'and' });

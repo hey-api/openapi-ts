@@ -128,8 +128,8 @@ export default defineConfig(() => {
         // transformer: '@hey-api/transformers',
         transformer: true,
         validator: {
-          request: 'valibot',
-          response: 'zod',
+          request: 'zod',
+          response: 'valibot',
         },
       },
       {
