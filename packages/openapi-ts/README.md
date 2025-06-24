@@ -109,6 +109,14 @@ Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
           </picture>
         </a>
       </td>
+      <td align="center">
+        <a href="https://kutt.it/KkqSaw" target="_blank">
+          <picture height="34px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/cella-logo-wordmark-dark-480w.webp">
+            <img alt="Cella logo" height="34px" src="https://heyapi.dev/images/cella-logo-wordmark-480w.jpeg">
+          </picture>
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
