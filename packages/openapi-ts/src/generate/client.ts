@@ -7,7 +7,7 @@ import ts from 'typescript';
 import type { ImportExportItemObject } from '../compiler/utils';
 import type { Client } from '../plugins/@hey-api/client-core/types';
 import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
-import type { Plugin } from '../plugins/types';
+import type { DefinePlugin } from '../plugins/types';
 import type { Config } from '../types/config';
 import { ensureDirSync, relativeModulePath } from './utils';
 
@@ -95,10 +95,7 @@ export const generateClientBundle = ({
   tsConfig,
 }: {
   outputPath: string;
-  plugin: Plugin.Config<{
-    config: Client.Config & { name: string };
-    resolvedConfig: Client.Config & { name: string };
-  }>;
+  plugin: DefinePlugin<Client.Config & { name: string }>['Config'];
   tsConfig: ts.ParsedCommandLine | null;
 }): void => {
   // copy Hey API clients to output

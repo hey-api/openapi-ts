@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import {
   createClient,
-  type Plugin,
+  type DefinePlugin,
   type UserConfig,
 } from '@hey-api/openapi-ts';
 import { describe, expect, it, vi } from 'vitest';
@@ -518,19 +518,11 @@ for (const version of versions) {
 
   describe('custom plugin', () => {
     it('handles a custom plugin', async () => {
-      const myPlugin: Plugin.Config<{
-        api: undefined;
-        config: {
-          customOption: boolean;
-          name: any;
-          output: string;
-        };
-        resolvedConfig: {
-          customOption: boolean;
-          name: any;
-          output: string;
-        };
-      }> = {
+      const myPlugin: DefinePlugin<{
+        customOption: boolean;
+        name: any;
+        output: string;
+      }>['Config'] = {
         api: undefined,
         config: {
           customOption: true,
@@ -556,17 +548,10 @@ for (const version of versions) {
     });
 
     it('throws on invalid dependency', async () => {
-      const myPlugin: Plugin.Config<{
-        api: undefined;
-        config: {
-          name: any;
-          output: string;
-        };
-        resolvedConfig: {
-          name: any;
-          output: string;
-        };
-      }> = {
+      const myPlugin: DefinePlugin<{
+        name: any;
+        output: string;
+      }>['Config'] = {
         api: undefined,
         config: {},
         dependencies: ['@hey-api/oops'],

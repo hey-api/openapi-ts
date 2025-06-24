@@ -146,5 +146,83 @@ client.post({
 
 :::
 
+## Validators
+
+There are two ways to configure validators. If you only want to add validators to your SDKs, set `sdk.validator` to a validator plugin name. This will implicitly add the selected plugin with default values.
+
+For a more granular approach, add a validator plugin and set `sdk.validator` to the plugin name or `true` to automatically select a plugin. Until you customize the validator plugin, both approaches will produce the same default output.
+
+::: code-group
+
+```js [sdk]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@hey-api/sdk',
+      validator: 'zod', // [!code ++]
+    },
+  ],
+};
+```
+
+```js [validator]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@hey-api/sdk',
+      validator: true, // or 'zod' // [!code ++]
+    },
+    {
+      name: 'zod', // [!code ++]
+      // other options
+    },
+  ],
+};
+```
+
+:::
+
+You can choose to validate only requests or responses.
+
+::: code-group
+
+```js [requests]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@hey-api/sdk',
+      validator: {
+        request: 'zod', // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+```js [responses]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@hey-api/sdk',
+      validator: {
+        response: 'zod', // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+:::
+
+Learn more about available validators on the [Validators](/openapi-ts/validators/) page.
+
 <!--@include: ../../examples.md-->
 <!--@include: ../../sponsors.md-->
