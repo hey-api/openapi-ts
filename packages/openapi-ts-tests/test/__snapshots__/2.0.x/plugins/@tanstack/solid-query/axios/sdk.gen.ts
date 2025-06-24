@@ -228,13 +228,13 @@ export const collectionFormat = <ThrowOnError extends boolean = false>(options: 
 
 export const types = <ThrowOnError extends boolean = false>(options: Options<TypesData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).get<TypesResponses, unknown, ThrowOnError>({
-        responseType: 'json',
         querySerializer: {
             array: {
                 explode: false,
                 style: 'form'
             }
         },
+        responseType: 'json',
         url: '/api/v{api-version}/types',
         ...options
     });

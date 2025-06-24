@@ -5,14 +5,13 @@ import { createOperationKey } from '../../../ir/operation';
 import type { ModelMeta, OperationResponse } from '../../../types/client';
 import { getConfig } from '../../../utils/config';
 import { isModelDate, unsetUniqueTypeName } from '../../../utils/type';
-import type { Plugin } from '../../types';
 import {
   modelResponseTransformerTypeName,
   operationResponseTransformerTypeName,
   operationResponseTypeName,
 } from '../sdk/plugin-legacy';
 import { generateType, type TypesProps } from '../typescript/plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiTransformersPlugin } from './types';
 
 interface ModelProps extends TypesProps {
   meta?: ModelMeta;
@@ -249,7 +248,7 @@ const generateResponseTransformer = ({
 };
 
 // handles only response transformers for now
-export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
+export const handlerLegacy: HeyApiTransformersPlugin['LegacyHandler'] = ({
   client,
   files,
 }) => {

@@ -560,7 +560,7 @@ export type LoginUserResponses = {
   /**
    * successful operation
    */
-  200: Blob | File;
+  200: string;
 };
 
 export type LoginUserResponse = LoginUserResponses[keyof LoginUserResponses];

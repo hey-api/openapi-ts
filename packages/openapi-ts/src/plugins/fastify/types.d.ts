@@ -1,6 +1,6 @@
-import type { Plugin } from '../types';
+import type { DefinePlugin, Plugin } from '../types';
 
-export interface Config extends Plugin.Name<'fastify'> {
+export type Config = Plugin.Name<'fastify'> & {
   /**
    * Should the exports from the generated files be re-exported in the index
    * barrel file?
@@ -14,4 +14,6 @@ export interface Config extends Plugin.Name<'fastify'> {
    * @default 'fastify'
    */
   output?: string;
-}
+};
+
+export type FastifyPlugin = DefinePlugin<Config>;

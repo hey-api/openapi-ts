@@ -45,7 +45,6 @@ export const vPatchFooData = v.object({
     body: v.object({
         foo: v.optional(v.string())
     }),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
         foo: v.optional(v.string()),
@@ -60,7 +59,6 @@ export const vPatchFooData = v.object({
 
 export const vPostFooData = v.object({
     body: vFoo3,
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });

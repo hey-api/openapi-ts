@@ -97,6 +97,12 @@ interface Config$1 {
      */
     querySerializer?: QuerySerializer | QuerySerializerOptions;
     /**
+     * A function validating request data. This is useful if you want to ensure
+     * the request conforms to the desired shape, so it can be safely sent to
+     * the server.
+     */
+    requestValidator?: (data: unknown) => Promise<unknown>;
+    /**
      * A function transforming response data before it's returned. This is useful
      * for post-processing data, e.g. converting ISO strings into Date objects.
      */

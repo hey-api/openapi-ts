@@ -47,6 +47,10 @@ export const createClient = (config: Config = {}): Client => {
       });
     }
 
+    if (opts.requestValidator) {
+      await opts.requestValidator(opts);
+    }
+
     if (opts.body && opts.bodySerializer) {
       opts.body = opts.bodySerializer(opts.body);
     }

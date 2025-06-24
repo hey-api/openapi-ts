@@ -116,7 +116,7 @@ export {
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
 export type { Client } from './plugins/@hey-api/client-core/types';
 export { definePluginConfig } from './plugins/shared/utils/config';
-export type { Plugin } from './plugins/types';
+export type { DefinePlugin, Plugin } from './plugins/types';
 export type { UserConfig } from './types/config';
 export type { LegacyIR } from './types/types';
 export { utils } from './utils/exports';

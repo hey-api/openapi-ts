@@ -1,15 +1,13 @@
 import { definePluginConfig } from '../shared/utils/config';
-import type { Plugin } from '../types';
 import { handler } from './plugin';
-import type { Config } from './types';
+import type { FastifyPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config> = {
+export const defaultConfig: FastifyPlugin['Config'] = {
   config: {
     exportFromIndex: false,
   },
   dependencies: ['@hey-api/typescript'],
   handler,
-  handlerLegacy: () => {},
   name: 'fastify',
   output: 'fastify',
 };

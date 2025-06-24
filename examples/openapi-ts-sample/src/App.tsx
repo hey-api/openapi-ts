@@ -9,16 +9,18 @@ import {
   Section,
 } from '@radix-ui/themes';
 
-// @ts-expect-error
-import { postFoo } from './client/sdk.gen';
+import { getPetById } from './client/sdk.gen';
 
 function App() {
   const onClick = async () => {
-    postFoo({
-      body: {
-        foo: [[1, 2]],
+    const response = await getPetById({
+      path: {
+        // @ts-expect-error
+        foo: 3,
+        petId: 3,
       },
     });
+    console.log(response);
   };
 
   return (

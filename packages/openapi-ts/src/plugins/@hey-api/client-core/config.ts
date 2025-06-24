@@ -6,7 +6,6 @@ export const clientDefaultConfig = {
 
 export const clientDefaultMeta = {
   dependencies: ['@hey-api/typescript'],
-  handlerLegacy: () => {},
   output: 'client',
   tags: ['client'],
 } as const;

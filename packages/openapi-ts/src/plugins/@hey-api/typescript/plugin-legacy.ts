@@ -18,13 +18,12 @@ import {
   type SetUniqueTypeNameResult,
   toType,
 } from '../../../utils/type';
-import type { Plugin } from '../../types';
 import {
   operationDataTypeName,
   operationErrorTypeName,
   operationResponseTypeName,
 } from '../sdk/plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiTypeScriptPlugin } from './types';
 
 export interface TypesProps {
   client: Client;
@@ -610,7 +609,7 @@ const processServiceTypes = ({
   }
 };
 
-export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
+export const handlerLegacy: HeyApiTypeScriptPlugin['LegacyHandler'] = ({
   client,
   files,
   plugin,

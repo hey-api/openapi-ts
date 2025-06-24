@@ -1,10 +1,9 @@
 import { definePluginConfig } from '../../shared/utils/config';
-import type { Plugin } from '../../types';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiTypeScriptPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config> = {
+export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   config: {
     enums: false,
     enumsCase: 'SCREAMING_SNAKE_CASE',

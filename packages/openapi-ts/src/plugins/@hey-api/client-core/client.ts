@@ -5,9 +5,9 @@ import { typesId } from '../typescript/ref';
 import type { PluginHandler } from './types';
 import { clientId, getClientBaseUrlKey } from './utils';
 
-const resolveBaseUrlString: PluginHandler<string | undefined> = ({
+const resolveBaseUrlString = ({
   plugin,
-}) => {
+}: Parameters<PluginHandler>[0]): string | undefined => {
   const { baseUrl } = plugin.config;
 
   if (baseUrl === false) {
@@ -27,7 +27,7 @@ const resolveBaseUrlString: PluginHandler<string | undefined> = ({
   return servers[typeof baseUrl === 'number' ? baseUrl : 0]?.url;
 };
 
-export const createClient: PluginHandler = ({ plugin }) => {
+export const createClient = ({ plugin }: Parameters<PluginHandler>[0]) => {
   const file = plugin.context.file({ id: clientId })!;
 
   const clientModule = clientModulePath({
@@ -60,7 +60,9 @@ export const createClient: PluginHandler = ({ plugin }) => {
 
   const defaultValues: Array<unknown> = [];
 
-  const resolvedBaseUrl = resolveBaseUrlString({ plugin });
+  const resolvedBaseUrl = resolveBaseUrlString({
+    plugin: plugin as any,
+  });
   if (resolvedBaseUrl) {
     const url = parseUrl(resolvedBaseUrl);
     if (url.protocol && url.host && !resolvedBaseUrl.includes('{')) {

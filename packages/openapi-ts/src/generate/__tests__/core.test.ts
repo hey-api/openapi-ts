@@ -57,30 +57,37 @@ describe('generateLegacyCore', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          config: {},
+          config: {
+            name: '@hey-api/schemas',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
-          config: {},
+          config: {
+            name: '@hey-api/sdk',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
           config: {
             enums: 'javascript',
+            name: '@hey-api/typescript',
           },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          config: {},
+          config: {
+            name: 'legacy/fetch',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: 'legacy/fetch',
+          output: '',
           tags: ['client'],
         },
       },
@@ -156,30 +163,37 @@ describe('generateLegacyCore', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          config: {},
+          config: {
+            name: '@hey-api/schemas',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
-          config: {},
+          config: {
+            name: '@hey-api/sdk',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
           config: {
             enums: 'javascript',
+            name: '@hey-api/typescript',
           },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          config: {},
+          config: {
+            name: 'legacy/fetch',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: 'legacy/fetch',
+          output: '',
           tags: ['client'],
         },
       },
@@ -238,30 +252,37 @@ describe('generateLegacyCore', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          config: {},
+          config: {
+            name: '@hey-api/schemas',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
-          config: {},
+          config: {
+            name: '@hey-api/sdk',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
           config: {
             enums: 'javascript',
+            name: '@hey-api/typescript',
           },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          config: {},
+          config: {
+            name: 'legacy/fetch',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: 'legacy/fetch',
+          output: '',
           tags: ['client'],
         },
       },

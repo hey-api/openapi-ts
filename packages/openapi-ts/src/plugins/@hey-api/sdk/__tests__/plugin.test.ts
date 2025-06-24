@@ -46,30 +46,37 @@ describe('handlerLegacy', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          config: {},
+          config: {
+            name: '@hey-api/schemas',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
           config: {
             asClass: true,
+            name: '@hey-api/sdk',
           },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
-          config: {},
+          config: {
+            name: '@hey-api/typescript',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          config: {},
+          config: {
+            name: 'legacy/fetch',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: 'legacy/fetch',
+          output: '',
           tags: ['client'],
         },
       },
@@ -219,30 +226,37 @@ describe('methodNameBuilder', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          config: {},
+          config: {
+            name: '@hey-api/schemas',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
           config: {
             asClass: true,
+            name: '@hey-api/sdk',
           },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
-          config: {},
+          config: {
+            name: '@hey-api/typescript',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          config: {},
+          config: {
+            name: 'legacy/fetch',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: 'legacy/fetch',
+          output: '',
           tags: ['client'],
         },
       },
@@ -314,31 +328,38 @@ describe('methodNameBuilder', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          config: {},
+          config: {
+            name: '@hey-api/schemas',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
           config: {
             asClass: true,
             methodNameBuilder,
+            name: '@hey-api/sdk',
           },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
-          config: {},
+          config: {
+            name: '@hey-api/typescript',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          config: {},
+          config: {
+            name: 'legacy/fetch',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: 'legacy/fetch',
+          output: '',
           tags: ['client'],
         },
       },
@@ -412,31 +433,38 @@ describe('methodNameBuilder', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          config: {},
+          config: {
+            name: '@hey-api/schemas',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
           config: {
             asClass: false,
             methodNameBuilder,
+            name: '@hey-api/sdk',
           },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
-          config: {},
+          config: {
+            name: '@hey-api/typescript',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          config: {},
+          config: {
+            name: 'legacy/fetch',
+          },
           handler: () => {},
-          handlerLegacy: () => {},
           name: 'legacy/fetch',
+          output: '',
           tags: ['client'],
         },
       },

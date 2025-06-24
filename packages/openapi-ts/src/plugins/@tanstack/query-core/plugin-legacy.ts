@@ -32,12 +32,11 @@ import {
   operationResponseTypeName,
   serviceFunctionIdentifier,
 } from '../../@hey-api/sdk/plugin-legacy';
-import type { Plugin } from '../../types';
-import type { Config as AngularQueryConfig } from '../angular-query-experimental';
-import type { Config as ReactQueryConfig } from '../react-query';
-import type { Config as SolidQueryConfig } from '../solid-query';
-import type { Config as SvelteQueryConfig } from '../svelte-query';
-import type { Config as VueQueryConfig } from '../vue-query';
+import type { TanStackAngularQueryPlugin } from '../angular-query-experimental';
+import type { TanStackReactQueryPlugin } from '../react-query';
+import type { TanStackSolidQueryPlugin } from '../solid-query';
+import type { TanStackSvelteQueryPlugin } from '../svelte-query';
+import type { TanStackVueQueryPlugin } from '../vue-query';
 
 const toInfiniteQueryOptionsName = (operation: Operation) =>
   `${serviceFunctionIdentifier({
@@ -668,13 +667,17 @@ const createQueryKeyLiteral = ({
   return queryKeyLiteral;
 };
 
-export const handlerLegacy: Plugin.LegacyHandler<
-  | ReactQueryConfig
-  | AngularQueryConfig
-  | SolidQueryConfig
-  | SvelteQueryConfig
-  | VueQueryConfig
-> = ({ client, files, plugin }) => {
+export const handlerLegacy = ({
+  client,
+  files,
+  plugin,
+}: Parameters<
+  | TanStackAngularQueryPlugin['LegacyHandler']
+  | TanStackReactQueryPlugin['LegacyHandler']
+  | TanStackSolidQueryPlugin['LegacyHandler']
+  | TanStackSvelteQueryPlugin['LegacyHandler']
+  | TanStackVueQueryPlugin['LegacyHandler']
+>[0]) => {
   const config = getConfig();
 
   if (isLegacyClient(config)) {

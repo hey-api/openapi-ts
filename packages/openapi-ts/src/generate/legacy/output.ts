@@ -69,6 +69,7 @@ export const generateLegacyOutput = async ({
   ) {
     generateClientBundle({
       outputPath,
+      // @ts-expect-error
       plugin: clientPlugin,
       tsConfig,
     });
@@ -96,7 +97,7 @@ export const generateLegacyOutput = async ({
       id: `legacy-unused-${plugin.name}`,
       name: `${outputParts[outputParts.length - 1]}.ts`,
     });
-    plugin.handlerLegacy({
+    plugin.handlerLegacy?.({
       client,
       files,
       openApi: spec,

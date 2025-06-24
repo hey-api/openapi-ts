@@ -1,10 +1,9 @@
 import { definePluginConfig } from '../../shared/utils/config';
-import type { Plugin } from '../../types';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiTransformersPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config> = {
+export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
   config: {
     bigInt: true,
     dates: true,

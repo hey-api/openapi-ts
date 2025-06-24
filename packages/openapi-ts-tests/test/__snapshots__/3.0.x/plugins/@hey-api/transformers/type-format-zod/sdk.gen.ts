@@ -2,8 +2,8 @@
 
 import type { Options as ClientOptions, TDataShape, Client } from './client';
 import type { PostFooData, PostFooResponses } from './types.gen';
+import { zPostFooData, zPostFooResponse } from './zod.gen';
 import { postFooResponseTransformer } from './transformers.gen';
-import { zPostFooResponse } from './zod.gen';
 import { client as _heyApiClient } from './client.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = ClientOptions<TData, ThrowOnError> & {
@@ -22,6 +22,9 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 
 export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).post<PostFooResponses, unknown, ThrowOnError>({
+        requestValidator: async (data) => {
+            return await zPostFooData.parseAsync(data);
+        },
         responseTransformer: postFooResponseTransformer,
         responseValidator: async (data) => {
             return await zPostFooResponse.parseAsync(data);
