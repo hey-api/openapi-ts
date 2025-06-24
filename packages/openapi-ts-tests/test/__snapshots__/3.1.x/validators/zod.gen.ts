@@ -45,7 +45,6 @@ export const zPatchFooData = z.object({
     body: z.object({
         foo: z.string().optional()
     }),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
         foo: z.string().optional(),
@@ -60,7 +59,6 @@ export const zPatchFooData = z.object({
 
 export const zPostFooData = z.object({
     body: zFoo3,
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });

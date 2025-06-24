@@ -3,8 +3,8 @@ import {
   clientDefaultConfig,
   clientDefaultMeta,
   clientPluginHandler,
+  type DefinePlugin,
   definePluginConfig,
-  type Plugin,
 } from '@hey-api/openapi-ts';
 
 export type Config = Client.Config & {
@@ -14,13 +14,15 @@ export type Config = Client.Config & {
   name: '@hey-api/custom-client';
 };
 
-export const defaultConfig: Plugin.Config<Config> = {
+export type CustomClientPlugin = DefinePlugin<Config>;
+
+export const defaultConfig: CustomClientPlugin['Config'] = {
   ...clientDefaultMeta,
   config: {
     ...clientDefaultConfig,
     bundle: false,
   },
-  handler: clientPluginHandler,
+  handler: clientPluginHandler as unknown as CustomClientPlugin['Handler'],
   name: '@hey-api/custom-client',
 };
 

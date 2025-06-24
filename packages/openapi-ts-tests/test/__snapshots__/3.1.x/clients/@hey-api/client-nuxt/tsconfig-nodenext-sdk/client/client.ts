@@ -43,19 +43,30 @@ export const createClient = (config: Config = {}): Client => {
       onResponse: mergeInterceptors(_config.onResponse, options.onResponse),
     };
 
-    const { responseTransformer, responseValidator, security } = opts;
-    if (security) {
+    const {
+      requestValidator,
+      responseTransformer,
+      responseValidator,
+      security,
+    } = opts;
+    if (requestValidator || security) {
       // auth must happen in interceptors otherwise we'd need to require
       // asyncContext enabled
       // https://nuxt.com/docs/guide/going-further/experimental-features#asynccontext
       opts.onRequest = [
         async ({ options }) => {
-          await setAuthParams({
-            auth: opts.auth,
-            headers: options.headers,
-            query: options.query,
-            security,
-          });
+          if (security) {
+            await setAuthParams({
+              auth: opts.auth,
+              headers: options.headers,
+              query: options.query,
+              security,
+            });
+          }
+
+          if (requestValidator) {
+            await requestValidator(options);
+          }
         },
         ...opts.onRequest,
       ];

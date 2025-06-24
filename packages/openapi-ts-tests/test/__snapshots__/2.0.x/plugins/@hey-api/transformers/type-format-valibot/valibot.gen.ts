@@ -14,7 +14,6 @@ export const vBar = v.object({
 
 export const vPostFooData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
