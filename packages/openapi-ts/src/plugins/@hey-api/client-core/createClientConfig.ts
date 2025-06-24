@@ -4,7 +4,9 @@ import { clientId } from '../client-core/utils';
 import { typesId } from '../typescript/ref';
 import type { PluginHandler } from './types';
 
-export const createClientConfigType: PluginHandler = ({ plugin }) => {
+export const createClientConfigType = ({
+  plugin,
+}: Parameters<PluginHandler>[0]) => {
   const file = plugin.context.file({ id: clientId })!;
 
   const clientModule = clientModulePath({

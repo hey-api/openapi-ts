@@ -1,7 +1,6 @@
 import type { IR } from '../../../ir/types';
-import type { Plugin } from '../../types';
 import type { Auth } from '../client-core/bundle/auth';
-import type { Config } from './types';
+import type { HeyApiSdkPlugin } from './types';
 
 // TODO: parser - handle more security types
 const securitySchemeObjectToAuthObject = ({
@@ -75,7 +74,7 @@ export const operationAuth = ({
 }: {
   context: IR.Context;
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
+  plugin: HeyApiSdkPlugin['Instance'];
 }): Array<Auth> => {
   if (!operation.security || !plugin.config.auth) {
     return [];

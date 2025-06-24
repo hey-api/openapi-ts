@@ -1,18 +1,17 @@
 import { definePluginConfig } from '../../shared/utils/config';
-import type { Plugin } from '../../types';
 import { handler } from '../query-core/plugin';
 import { handlerLegacy } from '../query-core/plugin-legacy';
-import type { Config, ResolvedConfig } from './types';
+import type { TanStackSolidQueryPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config, ResolvedConfig> = {
+export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
   config: {
     case: 'camelCase',
     comments: true,
     exportFromIndex: false,
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
-  handler,
-  handlerLegacy,
+  handler: handler as TanStackSolidQueryPlugin['Handler'],
+  handlerLegacy: handlerLegacy as TanStackSolidQueryPlugin['LegacyHandler'],
   name: '@tanstack/solid-query',
   output: '@tanstack/solid-query',
   resolveConfig: (plugin, context) => {

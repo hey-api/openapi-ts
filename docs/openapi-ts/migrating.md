@@ -27,6 +27,35 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.77.0
+
+### Updated `sdk.validator` option
+
+Clients can now validate both request and response data. As a result, passing a boolean or string to `validator` will control both of these options. To preserve the previous behavior, set `validator.request` to `false` and `validator.response` to your previous configuration.
+
+```js
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@hey-api/sdk',
+      validator: true, // [!code --]
+      validator: {
+        // [!code ++]
+        request: false, // [!code ++]
+        response: true, // [!code ++]
+      }, // [!code ++]
+    },
+  ],
+};
+```
+
+### Updated Plugin API
+
+Please refer to the [custom plugin](/openapi-ts/plugins/custom) tutorial for the latest guide.
+
 ## v0.76.0
 
 ### Single Valibot schema per request

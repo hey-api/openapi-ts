@@ -6,8 +6,7 @@ import { hasParameterGroupObjectRequired } from '../../ir/parameter';
 import type { IR } from '../../ir/types';
 import { typesId } from '../@hey-api/typescript/ref';
 import { operationIrRef } from '../shared/utils/ref';
-import type { Plugin } from '../types';
-import type { Config } from './types';
+import type { FastifyPlugin } from './types';
 
 const fastifyId = 'fastify';
 
@@ -207,7 +206,7 @@ const operationToRouteHandler = ({
   return routeHandler;
 };
 
-export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
   const file = plugin.createFile({
     id: fastifyId,
     path: plugin.output,

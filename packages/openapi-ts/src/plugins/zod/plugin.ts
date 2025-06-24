@@ -2,29 +2,26 @@ import ts from 'typescript';
 
 import { compiler } from '../../compiler';
 import type { Identifier } from '../../generate/files';
-import { operationResponsesMap } from '../../ir/operation';
-import { hasParameterGroupObjectRequired } from '../../ir/parameter';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
-import type { StringCase } from '../../types/config';
+import type { StringCase } from '../../types/case';
 import { numberRegExp } from '../../utils/regexp';
 import { createSchemaComment } from '../shared/utils/schema';
-import type { Plugin } from '../types';
-import type { ResolvedConfig } from './types';
+import { zodId } from './constants';
+import { operationToZodSchema } from './operation';
+import type { ZodPlugin } from './types';
 
 interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
   extends Omit<IR.SchemaObject, 'type'> {
   type: Extract<Required<IR.SchemaObject>['type'], T>;
 }
 
-interface State {
+export interface State {
   circularReferenceTracker: Set<string>;
   hasCircularReference: boolean;
   nameCase: StringCase;
   nameTransformer: string | ((name: string) => string);
 }
-
-export const zodId = 'zod';
 
 // frequently used identifiers
 const andIdentifier = compiler.identifier({ text: 'and' });
@@ -51,7 +48,7 @@ const arrayTypeToZodSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ResolvedConfig>;
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'array'>;
   state: State;
 }): ts.CallExpression => {
@@ -371,7 +368,7 @@ const objectTypeToZodSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ResolvedConfig>;
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'object'>;
   state: State;
 }): {
@@ -569,7 +566,7 @@ const tupleTypeToZodSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ResolvedConfig>;
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'tuple'>;
   state: State;
 }) => {
@@ -665,7 +662,7 @@ const schemaTypeToZodSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ResolvedConfig>;
+  plugin: ZodPlugin['Instance'];
   schema: IR.SchemaObject;
   state: State;
 }): {
@@ -753,158 +750,7 @@ const schemaTypeToZodSchema = ({
   }
 };
 
-const operationToZodSchema = ({
-  operation,
-  plugin,
-  state,
-}: {
-  operation: IR.OperationObject;
-  plugin: Plugin.Instance<ResolvedConfig>;
-  state: State;
-}) => {
-  const file = plugin.context.file({ id: zodId })!;
-
-  if (plugin.config.requests.enabled) {
-    const requiredProperties: Array<string> = [];
-    if (operation.body?.required) {
-      requiredProperties.push('body');
-    }
-
-    const headersPropertyProperties: Record<string, IR.SchemaObject> = {};
-    const headersPropertyRequired: Array<string> = [];
-    const pathPropertyProperties: Record<string, IR.SchemaObject> = {};
-    const pathPropertyRequired: Array<string> = [];
-    const queryPropertyProperties: Record<string, IR.SchemaObject> = {};
-    const queryPropertyRequired: Array<string> = [];
-
-    if (operation.parameters) {
-      // TODO: add support for cookies
-
-      if (operation.parameters.header) {
-        if (hasParameterGroupObjectRequired(operation.parameters.path)) {
-          requiredProperties.push('headers');
-        }
-
-        for (const key in operation.parameters.header) {
-          const parameter = operation.parameters.header[key]!;
-          headersPropertyProperties[parameter.name] = parameter.schema;
-          if (parameter.required) {
-            headersPropertyRequired.push(parameter.name);
-          }
-        }
-      }
-
-      if (operation.parameters.path) {
-        if (hasParameterGroupObjectRequired(operation.parameters.path)) {
-          requiredProperties.push('path');
-        }
-
-        for (const key in operation.parameters.path) {
-          const parameter = operation.parameters.path[key]!;
-          pathPropertyProperties[parameter.name] = parameter.schema;
-          if (parameter.required) {
-            pathPropertyRequired.push(parameter.name);
-          }
-        }
-      }
-
-      if (operation.parameters.query) {
-        if (hasParameterGroupObjectRequired(operation.parameters.query)) {
-          requiredProperties.push('query');
-        }
-
-        for (const key in operation.parameters.query) {
-          const parameter = operation.parameters.query[key]!;
-          queryPropertyProperties[parameter.name] = parameter.schema;
-          if (parameter.required) {
-            queryPropertyRequired.push(parameter.name);
-          }
-        }
-      }
-    }
-
-    const identifierData = file.identifier({
-      // TODO: refactor for better cross-plugin compatibility
-      $ref: `#/zod-data/${operation.id}`,
-      case: plugin.config.requests.case,
-      create: true,
-      nameTransformer: plugin.config.requests.name,
-      namespace: 'value',
-    });
-    schemaToZodSchema({
-      // TODO: refactor for better cross-plugin compatibility
-      $ref: `#/zod-data/${operation.id}`,
-      identifier: identifierData,
-      plugin,
-      schema: {
-        properties: {
-          body: operation.body
-            ? operation.body.schema
-            : {
-                type: 'never',
-              },
-          headers: Object.keys(headersPropertyProperties).length
-            ? {
-                properties: headersPropertyProperties,
-                required: headersPropertyRequired,
-                type: 'object',
-              }
-            : {
-                type: 'never',
-              },
-          path: Object.keys(pathPropertyProperties).length
-            ? {
-                properties: pathPropertyProperties,
-                required: pathPropertyRequired,
-                type: 'object',
-              }
-            : {
-                type: 'never',
-              },
-          query: Object.keys(queryPropertyProperties).length
-            ? {
-                properties: queryPropertyProperties,
-                required: queryPropertyRequired,
-                type: 'object',
-              }
-            : {
-                type: 'never',
-              },
-        },
-        required: requiredProperties,
-        type: 'object',
-      },
-      state,
-    });
-  }
-
-  if (plugin.config.responses.enabled) {
-    if (operation.responses) {
-      const { response } = operationResponsesMap(operation);
-
-      if (response) {
-        const identifierResponse = file.identifier({
-          // TODO: refactor for better cross-plugin compatibility
-          $ref: `#/zod-response/${operation.id}`,
-          case: plugin.config.responses.case,
-          create: true,
-          nameTransformer: plugin.config.responses.name,
-          namespace: 'value',
-        });
-        schemaToZodSchema({
-          // TODO: refactor for better cross-plugin compatibility
-          $ref: `#/zod-response/${operation.id}`,
-          identifier: identifierResponse,
-          plugin,
-          schema: response,
-          state,
-        });
-      }
-    }
-  }
-};
-
-const schemaToZodSchema = ({
+export const schemaToZodSchema = ({
   $ref,
   identifier: _identifier,
   optional,
@@ -923,7 +769,7 @@ const schemaToZodSchema = ({
    * `.default()` which is handled in this function.
    */
   optional?: boolean;
-  plugin: Plugin.Instance<ResolvedConfig>;
+  plugin: ZodPlugin['Instance'];
   schema: IR.SchemaObject;
   state: State;
 }): ts.Expression => {
@@ -1151,7 +997,7 @@ const schemaToZodSchema = ({
   return expression!;
 };
 
-export const handler: Plugin.Handler<ResolvedConfig> = ({ plugin }) => {
+export const handler: ZodPlugin['Handler'] = ({ plugin }) => {
   const file = plugin.createFile({
     id: zodId,
     identifierCase: plugin.config.case,

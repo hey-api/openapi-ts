@@ -7,7 +7,6 @@ import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
-import type { Plugin } from '../../types';
 import { getClientPlugin } from '../client-core/utils';
 import { importIdentifier } from '../typescript/ref';
 import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
@@ -18,12 +17,12 @@ import {
 } from './operation';
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import { createTypeOptions } from './typeOptions';
-import type { Config } from './types';
+import type { HeyApiSdkPlugin } from './types';
 
 const createClientClassNodes = ({
   plugin,
 }: {
-  plugin: Plugin.Instance<Config>;
+  plugin: HeyApiSdkPlugin['Instance'];
 }): ReadonlyArray<ts.ClassElement> => {
   const clientAssignmentStatement = compiler.expressionToStatement({
     expression: compiler.binaryExpression({
@@ -109,7 +108,11 @@ interface SdkClassEntry {
   root: boolean;
 }
 
-const generateClassSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
+const generateClassSdk = ({
+  plugin,
+}: {
+  plugin: HeyApiSdkPlugin['Instance'];
+}) => {
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = plugin.context.file({ id: sdkId })!;
@@ -316,7 +319,11 @@ const generateClassSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
   }
 };
 
-const generateFlatSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
+const generateFlatSdk = ({
+  plugin,
+}: {
+  plugin: HeyApiSdkPlugin['Instance'];
+}) => {
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = plugin.context.file({ id: sdkId })!;
@@ -398,7 +405,7 @@ const generateFlatSdk = ({ plugin }: { plugin: Plugin.Instance<Config> }) => {
   });
 };
 
-export const handler: Plugin.Handler<Config> = ({ plugin }) => {
+export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   const file = plugin.createFile({
     id: sdkId,
     path: plugin.output,

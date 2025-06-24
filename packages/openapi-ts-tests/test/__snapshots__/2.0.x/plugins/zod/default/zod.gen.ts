@@ -393,77 +393,66 @@ export const zFailureFailure = z.object({
 
 export const zServiceWithEmptyTagData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zPatchApiVbyApiVersionNoTagData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zFooWowData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zDeleteCallWithoutParametersAndResponseData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zGetCallWithoutParametersAndResponseData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zHeadCallWithoutParametersAndResponseData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zOptionsCallWithoutParametersAndResponseData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zPatchCallWithoutParametersAndResponseData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zPostCallWithoutParametersAndResponseData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zPutCallWithoutParametersAndResponseData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zCallWithDescriptionsData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
         parameterWithBreaks: z.string().optional(),
@@ -477,23 +466,20 @@ export const zCallWithDescriptionsData = z.object({
 
 export const zCallWithParametersData = z.object({
     body: z.never().optional(),
-    headers: z.object({
-        parameterHeader: z.string()
-    }),
     path: z.object({
         parameterPath: z.string(),
         'api-version': z.string()
     }),
     query: z.object({
         parameterQuery: z.string()
+    }),
+    headers: z.object({
+        parameterHeader: z.string()
     })
 });
 
 export const zCallWithWeirdParameterNamesData = z.object({
     body: z.never().optional(),
-    headers: z.object({
-        'parameter.header': z.string()
-    }),
     path: z.object({
         'parameter.path.1': z.string().optional(),
         'parameter-path-2': z.string().optional(),
@@ -503,12 +489,14 @@ export const zCallWithWeirdParameterNamesData = z.object({
     query: z.object({
         default: z.string().optional(),
         'parameter-query': z.string()
+    }),
+    headers: z.object({
+        'parameter.header': z.string()
     })
 });
 
 export const zCallWithDefaultParametersData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
         parameterString: z.string().default('Hello World!'),
@@ -529,7 +517,6 @@ export const zCallWithDefaultParametersData = z.object({
 
 export const zCallWithDefaultOptionalParametersData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
         parameterString: z.string().optional().default('Hello World!'),
@@ -545,7 +532,6 @@ export const zCallWithDefaultOptionalParametersData = z.object({
 
 export const zCallToTestOrderOfParamsData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
         parameterOptionalStringWithDefault: z.string().optional().default('Hello World!'),
@@ -567,42 +553,36 @@ export const zCallToTestOrderOfParamsData = z.object({
 
 export const zDuplicateNameData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zDuplicateName2Data = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zDuplicateName3Data = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zDuplicateName4Data = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zCallWithNoContentResponseData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zCallWithResponseAndNoContentResponseData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
@@ -614,21 +594,18 @@ export const zCallWithResponseAndNoContentResponseResponse = z.union([
 
 export const zDummyAData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zDummyBData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zCallWithResponseData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
@@ -640,7 +617,6 @@ export const zCallWithResponseResponse = zModelWithString;
 
 export const zCallWithDuplicateResponsesData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
@@ -652,7 +628,6 @@ export const zCallWithDuplicateResponsesResponse = zModelWithString;
 
 export const zCallWithResponsesData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
@@ -669,7 +644,6 @@ export const zCallWithResponsesResponse = z.union([
 
 export const zCollectionFormatData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
         parameterArrayCSV: z.array(z.string()),
@@ -682,7 +656,6 @@ export const zCollectionFormatData = z.object({
 
 export const zTypesData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.object({
         id: z.number().int().optional()
     }).optional(),
@@ -709,7 +682,6 @@ export const zTypesResponse = z.union([
 
 export const zComplexTypesData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
         parameterObject: z.object({
@@ -732,14 +704,12 @@ export const zComplexTypesResponse = z.array(zModelWithString);
 
 export const zCallWithResultFromHeaderData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });
 
 export const zTestErrorCodeData = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
         status: z.string()
@@ -748,7 +718,6 @@ export const zTestErrorCodeData = z.object({
 
 export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
     body: z.never().optional(),
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
         'nonAsciiParamæøåÆØÅöôêÊ': z.number().int()
@@ -762,7 +731,6 @@ export const zNonAsciiæøåÆøÅöôêÊ字符串Response = zNonAsciiStringæ�
 
 export const zPostApiVbyApiVersionBodyData = z.object({
     body: zParameterActivityParams,
-    headers: z.never().optional(),
     path: z.never().optional(),
     query: z.never().optional()
 });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { StringCase } from '../../types/config';
+import type { StringCase } from '../../types/case';
 import { stringCase } from '../stringCase';
 
 const cases: ReadonlyArray<StringCase> = [

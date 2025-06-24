@@ -3,8 +3,7 @@ import { TypeScriptFile } from '../../../generate/files';
 import type { OpenApiV2Schema, OpenApiV3Schema } from '../../../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
 import { getConfig } from '../../../utils/config';
-import type { Plugin } from '../../types';
-import type { Config } from './types';
+import type { HeyApiSchemasPlugin } from './types';
 
 const ensureValidSchemaOutput = (
   schema: unknown,
@@ -75,7 +74,7 @@ const toSchemaName = (
   return `${validName}Schema`;
 };
 
-export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
+export const handlerLegacy: HeyApiSchemasPlugin['LegacyHandler'] = ({
   files,
   openApi,
   plugin,

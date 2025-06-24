@@ -7,7 +7,7 @@ import { compiler } from '../compiler';
 import { type ImportExportItemObject, tsNodeToString } from '../compiler/utils';
 import type { IR } from '../ir/types';
 import { ensureValidIdentifier } from '../openApi/shared/utils/identifier';
-import type { StringCase } from '../types/config';
+import type { StringCase } from '../types/case';
 import { stringCase } from '../utils/stringCase';
 import { ensureDirSync } from './utils';
 

@@ -26,6 +26,7 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
   if ('bundle' in client.config && client.config.bundle) {
     generateClientBundle({
       outputPath,
+      // @ts-expect-error
       plugin: client,
       tsConfig,
     });

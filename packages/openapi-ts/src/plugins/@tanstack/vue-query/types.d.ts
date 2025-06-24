@@ -1,7 +1,7 @@
-import type { StringCase } from '../../../types/config';
-import type { Plugin } from '../../types';
+import type { StringCase } from '../../../types/case';
+import type { DefinePlugin, Plugin } from '../../types';
 
-export interface Config extends Plugin.Name<'@tanstack/vue-query'> {
+export type Config = Plugin.Name<'@tanstack/vue-query'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -91,9 +91,9 @@ export interface Config extends Plugin.Name<'@tanstack/vue-query'> {
         enabled?: boolean;
         name?: string | ((name: string) => string);
       };
-}
+};
 
-export interface ResolvedConfig extends Plugin.Name<'@tanstack/vue-query'> {
+export type ResolvedConfig = Plugin.Name<'@tanstack/vue-query'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -168,4 +168,6 @@ export interface ResolvedConfig extends Plugin.Name<'@tanstack/vue-query'> {
     enabled: boolean;
     name: string | ((name: string) => string);
   };
-}
+};
+
+export type TanStackVueQueryPlugin = DefinePlugin<Config, ResolvedConfig>;

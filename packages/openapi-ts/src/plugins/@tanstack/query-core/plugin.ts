@@ -9,7 +9,7 @@ import { createMutationOptions } from './mutationOptions';
 import { createQueryOptions } from './queryOptions';
 import type { PluginHandler, PluginState } from './types';
 
-export const handler: PluginHandler = ({ plugin }) => {
+export const handler = ({ plugin }: Parameters<PluginHandler>[0]) => {
   const file = plugin.createFile({
     id: plugin.name,
     identifierCase: plugin.config.case,

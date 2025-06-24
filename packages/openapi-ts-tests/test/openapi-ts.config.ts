@@ -103,7 +103,7 @@ export default defineConfig(() => {
       {
         // baseUrl: false,
         // exportFromIndex: true,
-        name: '@hey-api/client-axios',
+        // name: '@hey-api/client-axios',
         // name: 'legacy/angular',
         // strictBaseUrl: true,
         // throwOnError: true,
@@ -127,7 +127,10 @@ export default defineConfig(() => {
         // throwOnError: true,
         // transformer: '@hey-api/transformers',
         transformer: true,
-        validator: 'valibot',
+        validator: {
+          request: 'zod',
+          response: 'valibot',
+        },
       },
       {
         // bigInt: true,
