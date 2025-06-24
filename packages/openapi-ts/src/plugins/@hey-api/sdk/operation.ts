@@ -20,7 +20,7 @@ import { importIdentifier } from '../typescript/ref';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
 import type { HeyApiSdkPlugin } from './types';
-import { createResponseValidator } from './validator';
+import { createRequestValidator, createResponseValidator } from './validator';
 
 interface ClassNameEntry {
   /**
@@ -322,37 +322,9 @@ export const operationStatements = ({
     }
   }
 
-  if (client.name === '@hey-api/client-axios') {
-    // try to infer `responseType` option for Axios. We don't need this in
-    // Fetch API client because it automatically detects the correct response
-    // during runtime.
-    for (const statusCode in operation.responses) {
-      // this doesn't handle default status code for now
-      if (statusCodeToGroup({ statusCode }) === '2XX') {
-        const response = operation.responses[statusCode];
-        const responseType = getResponseType(response?.mediaType);
-        if (responseType) {
-          requestOptions.push({
-            key: 'responseType',
-            value: responseType,
-          });
-          break;
-        }
-      }
-    }
-  }
-
   // TODO: parser - set parseAs to skip inference if every response has the same
   // content type. currently impossible because successes do not contain
   // header information
-
-  const auth = operationAuth({ context, operation, plugin });
-  if (auth.length) {
-    requestOptions.push({
-      key: 'security',
-      value: compiler.arrayLiteralExpression({ elements: auth }),
-    });
-  }
 
   for (const name in operation.parameters?.query) {
     const parameter = operation.parameters.query[name]!;
@@ -384,6 +356,14 @@ export const operationStatements = ({
     }
   }
 
+  const requestValidator = createRequestValidator({ operation, plugin });
+  if (requestValidator) {
+    requestOptions.push({
+      key: 'requestValidator',
+      value: requestValidator,
+    });
+  }
+
   if (plugin.config.transformer === '@hey-api/transformers') {
     const identifierTransformer = context
       .file({ id: transformersId })!
@@ -408,6 +388,26 @@ export const operationStatements = ({
     }
   }
 
+  if (client.name === '@hey-api/client-axios') {
+    // try to infer `responseType` option for Axios. We don't need this in
+    // Fetch API client because it automatically detects the correct response
+    // during runtime.
+    for (const statusCode in operation.responses) {
+      // this doesn't handle default status code for now
+      if (statusCodeToGroup({ statusCode }) === '2XX') {
+        const response = operation.responses[statusCode];
+        const responseType = getResponseType(response?.mediaType);
+        if (responseType) {
+          requestOptions.push({
+            key: 'responseType',
+            value: responseType,
+          });
+          break;
+        }
+      }
+    }
+  }
+
   const responseValidator = createResponseValidator({ operation, plugin });
   if (responseValidator) {
     requestOptions.push({
@@ -420,6 +420,14 @@ export const operationStatements = ({
     requestOptions.push({
       key: 'responseStyle',
       value: plugin.config.responseStyle,
+    });
+  }
+
+  const auth = operationAuth({ context, operation, plugin });
+  if (auth.length) {
+    requestOptions.push({
+      key: 'security',
+      value: compiler.arrayLiteralExpression({ elements: auth }),
     });
   }
 
