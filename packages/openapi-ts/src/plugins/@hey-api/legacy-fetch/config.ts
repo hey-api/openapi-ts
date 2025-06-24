@@ -1,8 +1,7 @@
 import { definePluginConfig } from '../../shared/utils/config';
-import type { Plugin } from '../../types';
 import type { HeyApiClientLegacyFetchPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<HeyApiClientLegacyFetchPlugin> = {
+export const defaultConfig: HeyApiClientLegacyFetchPlugin['Config'] = {
   config: {},
   handler: () => {},
   name: 'legacy/fetch',

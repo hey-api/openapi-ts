@@ -4,7 +4,6 @@ import { compiler } from '../../../compiler';
 import type { Identifier } from '../../../generate/files';
 import type { IR } from '../../../ir/types';
 import { parseUrl } from '../../../utils/url';
-import type { Plugin } from '../../types';
 import { getClientBaseUrlKey, getClientPlugin } from '../client-core/utils';
 import { typesId } from './ref';
 import type { HeyApiTypeScriptPlugin } from './types';
@@ -37,7 +36,7 @@ export const createClientOptions = ({
   servers,
 }: {
   identifier: Identifier;
-  plugin: Plugin.Instance<HeyApiTypeScriptPlugin>;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   servers: ReadonlyArray<IR.ServerObject>;
 }) => {
   const file = plugin.context.file({ id: typesId })!;

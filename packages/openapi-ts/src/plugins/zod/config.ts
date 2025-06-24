@@ -1,10 +1,9 @@
 import { definePluginConfig } from '../shared/utils/config';
-import type { Plugin } from '../types';
 import { api } from './api';
 import { handler } from './plugin';
 import type { ZodPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<ZodPlugin> = {
+export const defaultConfig: ZodPlugin['Config'] = {
   api,
   config: {
     case: 'camelCase',

@@ -1,8 +1,7 @@
 import { definePluginConfig } from '../../shared/utils/config';
-import type { Plugin } from '../../types';
 import type { HeyApiClientLegacyAxiosPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<HeyApiClientLegacyAxiosPlugin> = {
+export const defaultConfig: HeyApiClientLegacyAxiosPlugin['Config'] = {
   config: {},
   handler: () => {},
   name: 'legacy/axios',

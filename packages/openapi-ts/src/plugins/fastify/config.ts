@@ -1,9 +1,8 @@
 import { definePluginConfig } from '../shared/utils/config';
-import type { Plugin } from '../types';
 import { handler } from './plugin';
 import type { FastifyPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<FastifyPlugin> = {
+export const defaultConfig: FastifyPlugin['Config'] = {
   config: {
     exportFromIndex: false,
   },

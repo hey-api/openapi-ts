@@ -10,7 +10,6 @@ import { sanitizeNamespaceIdentifier } from '../../../openApi';
 import { reservedJavaScriptKeywordsRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { transformClassName } from '../../../utils/transform';
-import type { Plugin } from '../../types';
 import { clientId, getClientPlugin } from '../client-core/utils';
 import {
   operationTransformerIrRef,
@@ -61,7 +60,7 @@ const getOperationMethodName = ({
   operation: IR.OperationObject;
   plugin: {
     config: Pick<
-      Plugin.Instance<HeyApiSdkPlugin>['config'],
+      HeyApiSdkPlugin['Instance']['config'],
       'asClass' | 'methodNameBuilder'
     >;
   };
@@ -90,7 +89,7 @@ export const operationClasses = ({
   operation: IR.OperationObject;
   plugin: {
     config: Pick<
-      Plugin.Instance<HeyApiSdkPlugin>['config'],
+      HeyApiSdkPlugin['Instance']['config'],
       'asClass' | 'classStructure' | 'instance'
     >;
   };
@@ -247,7 +246,7 @@ export const operationStatements = ({
   context: IR.Context;
   isRequiredOptions: boolean;
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<HeyApiSdkPlugin>;
+  plugin: HeyApiSdkPlugin['Instance'];
 }): Array<ts.Statement> => {
   const file = context.file({ id: sdkId })!;
   const sdkOutput = file.nameWithoutExtension();

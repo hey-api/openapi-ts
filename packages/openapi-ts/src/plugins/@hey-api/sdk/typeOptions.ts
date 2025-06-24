@@ -2,7 +2,6 @@ import { compiler } from '../../../compiler';
 import { clientModulePath } from '../../../generate/client';
 import type { FileImportResult } from '../../../generate/files';
 import type { IR } from '../../../ir/types';
-import type { Plugin } from '../../types';
 import { getClientPlugin } from '../client-core/utils';
 import { nuxtTypeDefault, nuxtTypeResponse, sdkId } from './constants';
 import type { HeyApiSdkPlugin } from './types';
@@ -14,7 +13,7 @@ export const createTypeOptions = ({
 }: {
   clientOptions: FileImportResult;
   context: IR.Context;
-  plugin: Plugin.Instance<HeyApiSdkPlugin>;
+  plugin: HeyApiSdkPlugin['Instance'];
 }) => {
   const file = context.file({ id: sdkId })!;
   const client = getClientPlugin(context.config);

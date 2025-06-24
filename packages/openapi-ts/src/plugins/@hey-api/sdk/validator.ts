@@ -1,5 +1,4 @@
 import type { IR } from '../../../ir/types';
-import type { Plugin } from '../../types';
 import { sdkId } from './constants';
 import type { HeyApiSdkPlugin } from './types';
 
@@ -8,7 +7,7 @@ export const createRequestValidator = ({
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<HeyApiSdkPlugin>;
+  plugin: HeyApiSdkPlugin['Instance'];
 }) => {
   if (!plugin.config.validator.request) {
     return;
@@ -32,7 +31,7 @@ export const createResponseValidator = ({
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<HeyApiSdkPlugin>;
+  plugin: HeyApiSdkPlugin['Instance'];
 }) => {
   if (!plugin.config.validator.response) {
     return;

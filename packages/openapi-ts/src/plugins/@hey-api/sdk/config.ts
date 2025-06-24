@@ -1,10 +1,9 @@
 import { definePluginConfig } from '../../shared/utils/config';
-import type { Plugin } from '../../types';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiSdkPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<HeyApiSdkPlugin> = {
+export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
     asClass: false,
     auth: true,

@@ -1,8 +1,7 @@
 import { definePluginConfig } from '../../shared/utils/config';
-import type { Plugin } from '../../types';
 import type { HeyApiClientLegacyXhrPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<HeyApiClientLegacyXhrPlugin> = {
+export const defaultConfig: HeyApiClientLegacyXhrPlugin['Config'] = {
   config: {},
   handler: () => {},
   name: 'legacy/xhr',

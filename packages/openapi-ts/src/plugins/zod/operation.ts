@@ -1,6 +1,5 @@
 import { operationResponsesMap } from '../../ir/operation';
 import type { IR } from '../../ir/types';
-import type { Plugin } from '../types';
 import { zodId } from './constants';
 import type { State } from './plugin';
 import { schemaToZodSchema } from './plugin';
@@ -12,7 +11,7 @@ export const operationToZodSchema = ({
   state,
 }: {
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<ZodPlugin>;
+  plugin: ZodPlugin['Instance'];
   state: State;
 }) => {
   const file = plugin.context.file({ id: zodId })!;

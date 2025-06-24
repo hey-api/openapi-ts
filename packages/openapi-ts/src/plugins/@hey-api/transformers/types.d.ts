@@ -1,4 +1,4 @@
-import type { Plugin } from '../../types';
+import type { DefinePlugin, Plugin } from '../../types';
 
 export type Config = Plugin.Name<'@hey-api/transformers'> & {
   /**
@@ -28,4 +28,4 @@ export type Config = Plugin.Name<'@hey-api/transformers'> & {
   output?: string;
 };
 
-export type HeyApiTransformersPlugin = Plugin.Types<Config>;
+export type HeyApiTransformersPlugin = DefinePlugin<Config>;

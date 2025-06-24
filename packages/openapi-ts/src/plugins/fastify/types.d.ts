@@ -1,4 +1,4 @@
-import type { Plugin } from '../types';
+import type { DefinePlugin, Plugin } from '../types';
 
 export type Config = Plugin.Name<'fastify'> & {
   /**
@@ -16,4 +16,4 @@ export type Config = Plugin.Name<'fastify'> & {
   output?: string;
 };
 
-export type FastifyPlugin = Plugin.Types<Config>;
+export type FastifyPlugin = DefinePlugin<Config>;

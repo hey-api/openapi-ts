@@ -32,7 +32,6 @@ import {
   operationResponseTypeName,
   serviceFunctionIdentifier,
 } from '../../@hey-api/sdk/plugin-legacy';
-import type { Plugin } from '../../types';
 import type { TanStackAngularQueryPlugin } from '../angular-query-experimental';
 import type { TanStackReactQueryPlugin } from '../react-query';
 import type { TanStackSolidQueryPlugin } from '../solid-query';
@@ -668,13 +667,17 @@ const createQueryKeyLiteral = ({
   return queryKeyLiteral;
 };
 
-export const handlerLegacy: Plugin.LegacyHandler<
-  | TanStackAngularQueryPlugin
-  | TanStackReactQueryPlugin
-  | TanStackSolidQueryPlugin
-  | TanStackSvelteQueryPlugin
-  | TanStackVueQueryPlugin
-> = ({ client, files, plugin }) => {
+export const handlerLegacy = ({
+  client,
+  files,
+  plugin,
+}: Parameters<
+  | TanStackAngularQueryPlugin['LegacyHandler']
+  | TanStackReactQueryPlugin['LegacyHandler']
+  | TanStackSolidQueryPlugin['LegacyHandler']
+  | TanStackSvelteQueryPlugin['LegacyHandler']
+  | TanStackVueQueryPlugin['LegacyHandler']
+>[0]) => {
   const config = getConfig();
 
   if (isLegacyClient(config)) {

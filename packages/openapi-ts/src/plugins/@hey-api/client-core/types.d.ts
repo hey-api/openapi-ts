@@ -1,16 +1,13 @@
-import type { Plugin } from '../../types';
 import type { HeyApiClientAxiosPlugin } from '../client-axios';
 import type { HeyApiClientFetchPlugin } from '../client-fetch';
 import type { HeyApiClientNextPlugin } from '../client-next';
 import type { HeyApiClientNuxtPlugin } from '../client-nuxt';
 
-export type PluginHandler<ReturnType = void> = Plugin.Handler<
-  | HeyApiClientAxiosPlugin
-  | HeyApiClientFetchPlugin
-  | HeyApiClientNextPlugin
-  | HeyApiClientNuxtPlugin,
-  ReturnType
->;
+export type PluginHandler =
+  | HeyApiClientAxiosPlugin['Handler']
+  | HeyApiClientFetchPlugin['Handler']
+  | HeyApiClientNextPlugin['Handler']
+  | HeyApiClientNuxtPlugin['Handler'];
 
 /**
  * Public Client API.

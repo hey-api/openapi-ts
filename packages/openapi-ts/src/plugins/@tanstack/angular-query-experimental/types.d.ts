@@ -1,5 +1,5 @@
 import type { StringCase } from '../../../types/case';
-import type { Plugin } from '../../types';
+import type { DefinePlugin, Plugin } from '../../types';
 
 export type Config = Plugin.Name<'@tanstack/angular-query-experimental'> & {
   /**
@@ -171,4 +171,4 @@ export type ResolvedConfig =
     };
   };
 
-export type TanStackAngularQueryPlugin = Plugin.Types<Config, ResolvedConfig>;
+export type TanStackAngularQueryPlugin = DefinePlugin<Config, ResolvedConfig>;

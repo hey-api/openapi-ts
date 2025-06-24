@@ -141,9 +141,7 @@ export namespace Plugin {
     plugin: PluginInstance<T>;
   }) => ReturnType;
 
-  export type Instance<T extends Types> = Omit<PluginInstance<T>, 'name'> & {
-    name: any;
-  };
+  export type Instance<T extends Types> = PluginInstance<T>;
 
   /**
    * Plugin implementation for legacy parser.
@@ -175,3 +173,17 @@ export namespace Plugin {
    */
   export type UserConfig<Config extends BaseConfig> = Omit<Config, 'output'>;
 }
+
+export type DefinePlugin<
+  Config extends BaseConfig = BaseConfig,
+  ResolvedConfig extends BaseConfig = Config,
+  Api extends BaseApi = never,
+> = {
+  Config: Plugin.Config<Plugin.Types<Config, ResolvedConfig, Api>>;
+  Handler: Plugin.Handler<Plugin.Types<Config, ResolvedConfig, Api>>;
+  Instance: Plugin.Instance<Plugin.Types<Config, ResolvedConfig, Api>>;
+  LegacyHandler: Plugin.LegacyHandler<
+    Plugin.Types<Config, ResolvedConfig, Api>
+  >;
+  Types: Plugin.Types<Config, ResolvedConfig, Api>;
+};

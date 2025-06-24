@@ -1,6 +1,5 @@
 import { operationResponsesMap } from '../../ir/operation';
 import type { IR } from '../../ir/types';
-import type { Plugin } from '../types';
 import { valibotId } from './constants';
 import { schemaToValibotSchema, type State } from './plugin';
 import type { ValibotPlugin } from './types';
@@ -11,7 +10,7 @@ export const operationToValibotSchema = ({
   state,
 }: {
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<ValibotPlugin>;
+  plugin: ValibotPlugin['Instance'];
   state: State;
 }) => {
   const file = plugin.context.file({ id: valibotId })!;

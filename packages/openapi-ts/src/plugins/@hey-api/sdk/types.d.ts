@@ -1,6 +1,7 @@
 import type { IR } from '../../../ir/types';
 import type { Operation } from '../../../types/client';
 import type {
+  DefinePlugin,
   Plugin,
   PluginClientNames,
   PluginValidatorNames,
@@ -331,4 +332,4 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/sdk'> & {
   response: 'body' | 'response';
 };
 
-export type HeyApiSdkPlugin = Plugin.Types<Config, ResolvedConfig>;
+export type HeyApiSdkPlugin = DefinePlugin<Config, ResolvedConfig>;

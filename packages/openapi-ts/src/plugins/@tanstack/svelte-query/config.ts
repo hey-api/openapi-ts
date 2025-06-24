@@ -1,18 +1,17 @@
 import { definePluginConfig } from '../../shared/utils/config';
-import type { Plugin } from '../../types';
 import { handler } from '../query-core/plugin';
 import { handlerLegacy } from '../query-core/plugin-legacy';
 import type { TanStackSvelteQueryPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<TanStackSvelteQueryPlugin> = {
+export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
   config: {
     case: 'camelCase',
     comments: true,
     exportFromIndex: false,
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
-  handler: handler as Plugin.Handler<TanStackSvelteQueryPlugin>,
-  handlerLegacy: handlerLegacy as Plugin.Handler<TanStackSvelteQueryPlugin>,
+  handler: handler as TanStackSvelteQueryPlugin['Handler'],
+  handlerLegacy: handlerLegacy as TanStackSvelteQueryPlugin['LegacyHandler'],
   name: '@tanstack/svelte-query',
   output: '@tanstack/svelte-query',
   resolveConfig: (plugin, context) => {

@@ -1,5 +1,4 @@
 import type { IR } from '../../../ir/types';
-import type { Plugin } from '../../types';
 import type { Auth } from '../client-core/bundle/auth';
 import type { HeyApiSdkPlugin } from './types';
 
@@ -75,7 +74,7 @@ export const operationAuth = ({
 }: {
   context: IR.Context;
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<HeyApiSdkPlugin>;
+  plugin: HeyApiSdkPlugin['Instance'];
 }): Array<Auth> => {
   if (!operation.security || !plugin.config.auth) {
     return [];

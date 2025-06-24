@@ -1,5 +1,5 @@
 import type { StringCase } from '../../../types/case';
-import type { Plugin } from '../../types';
+import type { DefinePlugin, Plugin } from '../../types';
 
 export type Config = Plugin.Name<'@tanstack/react-query'> & {
   /**
@@ -365,4 +365,4 @@ export type ResolvedConfig = Plugin.Name<'@tanstack/react-query'> & {
   };
 };
 
-export type TanStackReactQueryPlugin = Plugin.Types<Config, ResolvedConfig>;
+export type TanStackReactQueryPlugin = DefinePlugin<Config, ResolvedConfig>;
