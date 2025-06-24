@@ -45,6 +45,23 @@ const images = [
         width: 1200,
       },
     ],
+    source: 'cella-logo-wordmark.png',
+  },
+  {
+    sizes: [
+      {
+        formats: ['jpeg', 'webp'],
+        width: 480,
+      },
+      {
+        formats: ['webp'],
+        width: 768,
+      },
+      {
+        formats: ['png', 'webp'],
+        width: 1200,
+      },
+    ],
     source: 'kinde-logo-wordmark.png',
   },
   {
