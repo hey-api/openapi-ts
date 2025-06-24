@@ -12,7 +12,7 @@ type Config = Client.Config & {
    * Plugin name. Must be unique.
    */
   name: string;
-}
+};
 
 export type MyClientPlugin = Plugin.Types<Config>;
 

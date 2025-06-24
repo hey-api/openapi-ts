@@ -400,77 +400,66 @@ export const vFailureFailure = v.object({
 
 export const vServiceWithEmptyTagData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vPatchApiVbyApiVersionNoTagData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vFooWowData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vDeleteCallWithoutParametersAndResponseData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vGetCallWithoutParametersAndResponseData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vHeadCallWithoutParametersAndResponseData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vOptionsCallWithoutParametersAndResponseData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vPatchCallWithoutParametersAndResponseData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vPostCallWithoutParametersAndResponseData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vPutCallWithoutParametersAndResponseData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vCallWithDescriptionsData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
         parameterWithBreaks: v.optional(v.string()),
@@ -484,23 +473,20 @@ export const vCallWithDescriptionsData = v.object({
 
 export const vCallWithParametersData = v.object({
     body: v.optional(v.never()),
-    headers: v.object({
-        parameterHeader: v.string()
-    }),
     path: v.object({
         parameterPath: v.string(),
         'api-version': v.string()
     }),
     query: v.object({
         parameterQuery: v.string()
+    }),
+    headers: v.object({
+        parameterHeader: v.string()
     })
 });
 
 export const vCallWithWeirdParameterNamesData = v.object({
     body: v.optional(v.never()),
-    headers: v.object({
-        'parameter.header': v.string()
-    }),
     path: v.object({
         'parameter.path.1': v.optional(v.string()),
         'parameter-path-2': v.optional(v.string()),
@@ -510,12 +496,14 @@ export const vCallWithWeirdParameterNamesData = v.object({
     query: v.object({
         default: v.optional(v.string()),
         'parameter-query': v.string()
+    }),
+    headers: v.object({
+        'parameter.header': v.string()
     })
 });
 
 export const vCallWithDefaultParametersData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
         parameterString: v.optional(v.string(), 'Hello World!'),
@@ -536,7 +524,6 @@ export const vCallWithDefaultParametersData = v.object({
 
 export const vCallWithDefaultOptionalParametersData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
         parameterString: v.optional(v.string(), 'Hello World!'),
@@ -552,7 +539,6 @@ export const vCallWithDefaultOptionalParametersData = v.object({
 
 export const vCallToTestOrderOfParamsData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
         parameterOptionalStringWithDefault: v.optional(v.string(), 'Hello World!'),
@@ -574,42 +560,36 @@ export const vCallToTestOrderOfParamsData = v.object({
 
 export const vDuplicateNameData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vDuplicateName2Data = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vDuplicateName3Data = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vDuplicateName4Data = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vCallWithNoContentResponseData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vCallWithResponseAndNoContentResponseData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
@@ -621,21 +601,18 @@ export const vCallWithResponseAndNoContentResponseResponse = v.union([
 
 export const vDummyAData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vDummyBData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vCallWithResponseData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
@@ -647,7 +624,6 @@ export const vCallWithResponseResponse = vModelWithString;
 
 export const vCallWithDuplicateResponsesData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
@@ -659,7 +635,6 @@ export const vCallWithDuplicateResponsesResponse = vModelWithString;
 
 export const vCallWithResponsesData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
@@ -676,7 +651,6 @@ export const vCallWithResponsesResponse = v.union([
 
 export const vCollectionFormatData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
         parameterArrayCSV: v.array(v.string()),
@@ -689,7 +663,6 @@ export const vCollectionFormatData = v.object({
 
 export const vTypesData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.object({
         id: v.optional(v.pipe(v.number(), v.integer()))
     })),
@@ -716,7 +689,6 @@ export const vTypesResponse = v.union([
 
 export const vComplexTypesData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
         parameterObject: v.object({
@@ -739,14 +711,12 @@ export const vComplexTypesResponse = v.array(vModelWithString);
 
 export const vCallWithResultFromHeaderData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vTestErrorCodeData = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
         status: v.string()
@@ -755,7 +725,6 @@ export const vTestErrorCodeData = v.object({
 
 export const vNonAsciiæøåÆøÅöôêÊ字符串Data = v.object({
     body: v.optional(v.never()),
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
         'nonAsciiParamæøåÆØÅöôêÊ': v.pipe(v.number(), v.integer())
@@ -769,7 +738,6 @@ export const vNonAsciiæøåÆøÅöôêÊ字符串Response = vNonAsciiStringæ�
 
 export const vPostApiVbyApiVersionBodyData = v.object({
     body: vParameterActivityParams,
-    headers: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
