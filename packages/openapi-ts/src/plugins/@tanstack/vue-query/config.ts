@@ -1,18 +1,17 @@
 import { definePluginConfig } from '../../shared/utils/config';
-import type { Plugin } from '../../types';
 import { handler } from '../query-core/plugin';
 import { handlerLegacy } from '../query-core/plugin-legacy';
 import type { TanStackVueQueryPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<TanStackVueQueryPlugin> = {
+export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
   config: {
     case: 'camelCase',
     comments: true,
     exportFromIndex: false,
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
-  handler: handler as Plugin.Handler<TanStackVueQueryPlugin>,
-  handlerLegacy: handlerLegacy as Plugin.Handler<TanStackVueQueryPlugin>,
+  handler: handler as TanStackVueQueryPlugin['Handler'],
+  handlerLegacy: handlerLegacy as TanStackVueQueryPlugin['LegacyHandler'],
   name: '@tanstack/vue-query',
   output: '@tanstack/vue-query',
   resolveConfig: (plugin, context) => {

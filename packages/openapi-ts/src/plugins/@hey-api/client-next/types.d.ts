@@ -1,4 +1,4 @@
-import type { Plugin } from '../../types';
+import type { DefinePlugin, Plugin } from '../../types';
 import type { Client } from '../client-core/types';
 
 export type Config = Plugin.Name<'@hey-api/client-next'> &
@@ -11,4 +11,4 @@ export type Config = Plugin.Name<'@hey-api/client-next'> &
     throwOnError?: boolean;
   };
 
-export type HeyApiClientNextPlugin = Plugin.Types<Config>;
+export type HeyApiClientNextPlugin = DefinePlugin<Config>;

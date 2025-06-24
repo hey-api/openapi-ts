@@ -1,10 +1,9 @@
 import { definePluginConfig } from '../shared/utils/config';
-import type { Plugin } from '../types';
 import { api } from './api';
 import { handler } from './plugin';
 import type { ValibotPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<ValibotPlugin> = {
+export const defaultConfig: ValibotPlugin['Config'] = {
   api,
   config: {
     case: 'camelCase',

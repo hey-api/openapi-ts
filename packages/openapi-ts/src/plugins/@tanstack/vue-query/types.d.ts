@@ -1,5 +1,5 @@
 import type { StringCase } from '../../../types/case';
-import type { Plugin } from '../../types';
+import type { DefinePlugin, Plugin } from '../../types';
 
 export type Config = Plugin.Name<'@tanstack/vue-query'> & {
   /**
@@ -170,4 +170,4 @@ export type ResolvedConfig = Plugin.Name<'@tanstack/vue-query'> & {
   };
 };
 
-export type TanStackVueQueryPlugin = Plugin.Types<Config, ResolvedConfig>;
+export type TanStackVueQueryPlugin = DefinePlugin<Config, ResolvedConfig>;

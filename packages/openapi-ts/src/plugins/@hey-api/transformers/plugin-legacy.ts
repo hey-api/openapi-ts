@@ -5,7 +5,6 @@ import { createOperationKey } from '../../../ir/operation';
 import type { ModelMeta, OperationResponse } from '../../../types/client';
 import { getConfig } from '../../../utils/config';
 import { isModelDate, unsetUniqueTypeName } from '../../../utils/type';
-import type { Plugin } from '../../types';
 import {
   modelResponseTransformerTypeName,
   operationResponseTransformerTypeName,
@@ -249,7 +248,7 @@ const generateResponseTransformer = ({
 };
 
 // handles only response transformers for now
-export const handlerLegacy: Plugin.LegacyHandler<HeyApiTransformersPlugin> = ({
+export const handlerLegacy: HeyApiTransformersPlugin['LegacyHandler'] = ({
   client,
   files,
 }) => {

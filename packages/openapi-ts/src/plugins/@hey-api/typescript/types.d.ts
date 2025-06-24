@@ -1,5 +1,5 @@
 import type { StringCase } from '../../../types/case';
-import type { Plugin } from '../../types';
+import type { DefinePlugin, Plugin } from '../../types';
 
 export type Config = Plugin.Name<'@hey-api/typescript'> & {
   /**
@@ -109,4 +109,4 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
   tree?: boolean;
 };
 
-export type HeyApiTypeScriptPlugin = Plugin.Types<Config>;
+export type HeyApiTypeScriptPlugin = DefinePlugin<Config>;

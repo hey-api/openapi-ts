@@ -1,18 +1,17 @@
 import { definePluginConfig } from '../../shared/utils/config';
-import type { Plugin } from '../../types';
 import { handler } from '../query-core/plugin';
 import { handlerLegacy } from '../query-core/plugin-legacy';
 import type { TanStackReactQueryPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<TanStackReactQueryPlugin> = {
+export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
   config: {
     case: 'camelCase',
     comments: true,
     exportFromIndex: false,
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
-  handler: handler as Plugin.Handler<TanStackReactQueryPlugin>,
-  handlerLegacy: handlerLegacy as Plugin.Handler<TanStackReactQueryPlugin>,
+  handler: handler as TanStackReactQueryPlugin['Handler'],
+  handlerLegacy: handlerLegacy as TanStackReactQueryPlugin['LegacyHandler'],
   name: '@tanstack/react-query',
   output: '@tanstack/react-query',
   resolveConfig: (plugin, context) => {

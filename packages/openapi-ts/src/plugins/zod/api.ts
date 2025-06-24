@@ -3,7 +3,6 @@ import type ts from 'typescript';
 import { compiler } from '../../compiler';
 import type { TypeScriptFile } from '../../generate/files';
 import type { IR } from '../../ir/types';
-import type { PluginInstance } from '../shared/utils/instance';
 import { identifiers, zodId } from './constants';
 import type { ZodPlugin } from './types';
 
@@ -14,7 +13,7 @@ const createRequestValidator = ({
 }: {
   file: TypeScriptFile;
   operation: IR.OperationObject;
-  plugin: PluginInstance<ZodPlugin>;
+  plugin: ZodPlugin['Instance'];
 }): ts.ArrowFunction | undefined => {
   const { requests } = plugin.config;
   const schemaIdentifier = plugin.context.file({ id: zodId })!.identifier({
@@ -69,7 +68,7 @@ const createResponseValidator = ({
 }: {
   file: TypeScriptFile;
   operation: IR.OperationObject;
-  plugin: PluginInstance<ZodPlugin>;
+  plugin: ZodPlugin['Instance'];
 }): ts.ArrowFunction | undefined => {
   const { responses } = plugin.config;
   const schemaIdentifier = plugin.context.file({ id: zodId })!.identifier({
@@ -121,12 +120,12 @@ export type Api = {
   createRequestValidator: (args: {
     file: TypeScriptFile;
     operation: IR.OperationObject;
-    plugin: PluginInstance<ZodPlugin>;
+    plugin: ZodPlugin['Instance'];
   }) => ts.ArrowFunction | undefined;
   createResponseValidator: (args: {
     file: TypeScriptFile;
     operation: IR.OperationObject;
-    plugin: PluginInstance<ZodPlugin>;
+    plugin: ZodPlugin['Instance'];
   }) => ts.ArrowFunction | undefined;
 };
 

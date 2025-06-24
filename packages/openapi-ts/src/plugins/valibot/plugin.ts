@@ -7,7 +7,6 @@ import type { IR } from '../../ir/types';
 import type { StringCase } from '../../types/case';
 import { numberRegExp } from '../../utils/regexp';
 import { createSchemaComment } from '../shared/utils/schema';
-import type { Plugin } from '../types';
 import { identifiers, valibotId } from './constants';
 import { operationToValibotSchema } from './operation';
 import type { ValibotPlugin } from './types';
@@ -44,7 +43,7 @@ const arrayTypeToValibotSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ValibotPlugin>;
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'array'>;
   state: State;
 }): ts.CallExpression => {
@@ -370,7 +369,7 @@ const objectTypeToValibotSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ValibotPlugin>;
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'object'>;
   state: State;
 }): {
@@ -602,7 +601,7 @@ const tupleTypeToValibotSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ValibotPlugin>;
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'tuple'>;
   state: State;
 }) => {
@@ -704,7 +703,7 @@ const schemaTypeToValibotSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ValibotPlugin>;
+  plugin: ValibotPlugin['Instance'];
   schema: IR.SchemaObject;
   state: State;
 }): {
@@ -811,7 +810,7 @@ export const schemaToValibotSchema = ({
    * `.default()` which is handled in this function.
    */
   optional?: boolean;
-  plugin: Plugin.Instance<ValibotPlugin>;
+  plugin: ValibotPlugin['Instance'];
   schema: IR.SchemaObject;
   state: State;
 }): Array<ts.Expression> => {
@@ -1048,7 +1047,7 @@ export const schemaToValibotSchema = ({
   return pipes;
 };
 
-export const handler: Plugin.Handler<ValibotPlugin> = ({ plugin }) => {
+export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
   const file = plugin.createFile({
     id: valibotId,
     identifierCase: plugin.config.case,

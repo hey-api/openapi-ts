@@ -43,27 +43,27 @@ import type { ZodPlugin } from './zod';
 import { defaultConfig as zod } from './zod';
 
 export interface PluginConfigMap {
-  '@hey-api/client-axios': HeyApiClientAxiosPlugin;
-  '@hey-api/client-fetch': HeyApiClientFetchPlugin;
-  '@hey-api/client-next': HeyApiClientNextPlugin;
-  '@hey-api/client-nuxt': HeyApiClientNuxtPlugin;
-  '@hey-api/schemas': HeyApiSchemasPlugin;
-  '@hey-api/sdk': HeyApiSdkPlugin;
-  '@hey-api/transformers': HeyApiTransformersPlugin;
-  '@hey-api/typescript': HeyApiTypeScriptPlugin;
-  '@tanstack/angular-query-experimental': TanStackAngularQueryPlugin;
-  '@tanstack/react-query': TanStackReactQueryPlugin;
-  '@tanstack/solid-query': TanStackSolidQueryPlugin;
-  '@tanstack/svelte-query': TanStackSvelteQueryPlugin;
-  '@tanstack/vue-query': TanStackVueQueryPlugin;
-  fastify: FastifyPlugin;
-  'legacy/angular': HeyApiClientLegacyAngularPlugin;
-  'legacy/axios': HeyApiClientLegacyAxiosPlugin;
-  'legacy/fetch': HeyApiClientLegacyFetchPlugin;
-  'legacy/node': HeyApiClientLegacyNodePlugin;
-  'legacy/xhr': HeyApiClientLegacyXhrPlugin;
-  valibot: ValibotPlugin;
-  zod: ZodPlugin;
+  '@hey-api/client-axios': HeyApiClientAxiosPlugin['Types'];
+  '@hey-api/client-fetch': HeyApiClientFetchPlugin['Types'];
+  '@hey-api/client-next': HeyApiClientNextPlugin['Types'];
+  '@hey-api/client-nuxt': HeyApiClientNuxtPlugin['Types'];
+  '@hey-api/schemas': HeyApiSchemasPlugin['Types'];
+  '@hey-api/sdk': HeyApiSdkPlugin['Types'];
+  '@hey-api/transformers': HeyApiTransformersPlugin['Types'];
+  '@hey-api/typescript': HeyApiTypeScriptPlugin['Types'];
+  '@tanstack/angular-query-experimental': TanStackAngularQueryPlugin['Types'];
+  '@tanstack/react-query': TanStackReactQueryPlugin['Types'];
+  '@tanstack/solid-query': TanStackSolidQueryPlugin['Types'];
+  '@tanstack/svelte-query': TanStackSvelteQueryPlugin['Types'];
+  '@tanstack/vue-query': TanStackVueQueryPlugin['Types'];
+  fastify: FastifyPlugin['Types'];
+  'legacy/angular': HeyApiClientLegacyAngularPlugin['Types'];
+  'legacy/axios': HeyApiClientLegacyAxiosPlugin['Types'];
+  'legacy/fetch': HeyApiClientLegacyFetchPlugin['Types'];
+  'legacy/node': HeyApiClientLegacyNodePlugin['Types'];
+  'legacy/xhr': HeyApiClientLegacyXhrPlugin['Types'];
+  valibot: ValibotPlugin['Types'];
+  zod: ZodPlugin['Types'];
 }
 
 export const defaultPluginConfigs: {

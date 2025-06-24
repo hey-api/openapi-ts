@@ -29,7 +29,6 @@ import { stringCase } from '../../../utils/stringCase';
 import { transformClassName } from '../../../utils/transform';
 import { setUniqueTypeName } from '../../../utils/type';
 import { unique } from '../../../utils/unique';
-import type { Plugin } from '../../types';
 import { getClientPlugin } from '../client-core/utils';
 import type { HeyApiSdkPlugin } from './types';
 
@@ -800,7 +799,7 @@ const processService = ({
   onNode(statement);
 };
 
-export const handlerLegacy: Plugin.LegacyHandler<HeyApiSdkPlugin> = ({
+export const handlerLegacy: HeyApiSdkPlugin['LegacyHandler'] = ({
   client,
   files,
   plugin,

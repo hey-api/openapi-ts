@@ -7,7 +7,6 @@ import type { IR } from '../../ir/types';
 import type { StringCase } from '../../types/case';
 import { numberRegExp } from '../../utils/regexp';
 import { createSchemaComment } from '../shared/utils/schema';
-import type { Plugin } from '../types';
 import { zodId } from './constants';
 import { operationToZodSchema } from './operation';
 import type { ZodPlugin } from './types';
@@ -49,7 +48,7 @@ const arrayTypeToZodSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ZodPlugin>;
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'array'>;
   state: State;
 }): ts.CallExpression => {
@@ -369,7 +368,7 @@ const objectTypeToZodSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ZodPlugin>;
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'object'>;
   state: State;
 }): {
@@ -567,7 +566,7 @@ const tupleTypeToZodSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ZodPlugin>;
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'tuple'>;
   state: State;
 }) => {
@@ -663,7 +662,7 @@ const schemaTypeToZodSchema = ({
   schema,
   state,
 }: {
-  plugin: Plugin.Instance<ZodPlugin>;
+  plugin: ZodPlugin['Instance'];
   schema: IR.SchemaObject;
   state: State;
 }): {
@@ -770,7 +769,7 @@ export const schemaToZodSchema = ({
    * `.default()` which is handled in this function.
    */
   optional?: boolean;
-  plugin: Plugin.Instance<ZodPlugin>;
+  plugin: ZodPlugin['Instance'];
   schema: IR.SchemaObject;
   state: State;
 }): ts.Expression => {
@@ -998,7 +997,7 @@ export const schemaToZodSchema = ({
   return expression!;
 };
 
-export const handler: Plugin.Handler<ZodPlugin> = ({ plugin }) => {
+export const handler: ZodPlugin['Handler'] = ({ plugin }) => {
   const file = plugin.createFile({
     id: zodId,
     identifierCase: plugin.config.case,

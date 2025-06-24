@@ -1,4 +1,4 @@
-import type { Plugin } from '../../types';
+import type { DefinePlugin, Plugin } from '../../types';
 import type { Client } from '../client-core/types';
 
 export type Config = Plugin.Name<'@hey-api/client-axios'> &
@@ -11,4 +11,4 @@ export type Config = Plugin.Name<'@hey-api/client-axios'> &
     throwOnError?: boolean;
   };
 
-export type HeyApiClientAxiosPlugin = Plugin.Types<Config>;
+export type HeyApiClientAxiosPlugin = DefinePlugin<Config>;

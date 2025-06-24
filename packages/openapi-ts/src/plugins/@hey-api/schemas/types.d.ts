@@ -2,7 +2,7 @@ import type { OpenApiV2Schema, OpenApiV3Schema } from '../../../openApi';
 import type { OpenApiV2_0_XTypes } from '../../../openApi/2.0.x';
 import type { OpenApiV3_0_XTypes } from '../../../openApi/3.0.x';
 import type { OpenApiV3_1_XTypes } from '../../../openApi/3.1.x';
-import type { Plugin } from '../../types';
+import type { DefinePlugin, Plugin } from '../../types';
 
 export type Config = Plugin.Name<'@hey-api/schemas'> & {
   /**
@@ -47,4 +47,4 @@ export type Config = Plugin.Name<'@hey-api/schemas'> & {
   type?: 'form' | 'json';
 };
 
-export type HeyApiSchemasPlugin = Plugin.Types<Config>;
+export type HeyApiSchemasPlugin = DefinePlugin<Config>;

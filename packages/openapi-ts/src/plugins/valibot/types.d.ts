@@ -1,5 +1,5 @@
 import type { StringCase } from '../../types/case';
-import type { Plugin } from '../types';
+import type { DefinePlugin, Plugin } from '../types';
 import type { Api } from './api';
 
 export type Config = Plugin.Name<'valibot'> & {
@@ -254,4 +254,4 @@ export type ResolvedConfig = Plugin.Name<'valibot'> & {
   };
 };
 
-export type ValibotPlugin = Plugin.Types<Config, ResolvedConfig, Api>;
+export type ValibotPlugin = DefinePlugin<Config, ResolvedConfig, Api>;

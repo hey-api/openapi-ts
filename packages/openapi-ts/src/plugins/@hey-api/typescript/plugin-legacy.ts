@@ -18,7 +18,6 @@ import {
   type SetUniqueTypeNameResult,
   toType,
 } from '../../../utils/type';
-import type { Plugin } from '../../types';
 import {
   operationDataTypeName,
   operationErrorTypeName,
@@ -610,7 +609,7 @@ const processServiceTypes = ({
   }
 };
 
-export const handlerLegacy: Plugin.LegacyHandler<HeyApiTypeScriptPlugin> = ({
+export const handlerLegacy: HeyApiTypeScriptPlugin['LegacyHandler'] = ({
   client,
   files,
   plugin,
