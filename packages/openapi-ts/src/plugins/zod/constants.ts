@@ -1,4 +1,4 @@
-import { compiler } from "../../compiler";
+import { compiler } from '../../compiler';
 
 export const identifiers = {
   parseAsync: compiler.identifier({ text: 'parseAsync' }),

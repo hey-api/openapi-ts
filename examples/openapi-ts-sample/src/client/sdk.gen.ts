@@ -61,6 +61,41 @@ import type {
   UploadFileErrors,
   UploadFileResponses,
 } from './types.gen';
+import {
+  zAddPetData,
+  zAddPetResponse,
+  zCreateUserData,
+  zCreateUserResponse,
+  zCreateUsersWithListInputData,
+  zCreateUsersWithListInputResponse,
+  zDeleteOrderData,
+  zDeletePetData,
+  zDeleteUserData,
+  zFindPetsByStatusData,
+  zFindPetsByStatusResponse,
+  zFindPetsByTagsData,
+  zFindPetsByTagsResponse,
+  zGetInventoryData,
+  zGetInventoryResponse,
+  zGetOrderByIdData,
+  zGetOrderByIdResponse,
+  zGetPetByIdData,
+  zGetPetByIdResponse,
+  zGetUserByNameData,
+  zGetUserByNameResponse,
+  zLoginUserData,
+  zLoginUserResponse,
+  zLogoutUserData,
+  zPlaceOrderData,
+  zPlaceOrderResponse,
+  zUpdatePetData,
+  zUpdatePetResponse,
+  zUpdatePetWithFormData,
+  zUpdatePetWithFormResponse,
+  zUpdateUserData,
+  zUploadFileData,
+  zUploadFileResponse,
+} from './zod.gen';
 
 export type Options<
   TData extends TDataShape = TDataShape,
@@ -91,6 +126,8 @@ export const addPet = <ThrowOnError extends boolean = false>(
     AddPetErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zAddPetData.parseAsync(data),
+    responseValidator: async (data) => await zAddPetResponse.parseAsync(data),
     security: [
       {
         scheme: 'bearer',
@@ -117,6 +154,9 @@ export const updatePet = <ThrowOnError extends boolean = false>(
     UpdatePetErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zUpdatePetData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zUpdatePetResponse.parseAsync(data),
     security: [
       {
         scheme: 'bearer',
@@ -143,6 +183,10 @@ export const findPetsByStatus = <ThrowOnError extends boolean = false>(
     FindPetsByStatusErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) =>
+      await zFindPetsByStatusData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zFindPetsByStatusResponse.parseAsync(data),
     security: [
       {
         scheme: 'bearer',
@@ -165,6 +209,10 @@ export const findPetsByTags = <ThrowOnError extends boolean = false>(
     FindPetsByTagsErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) =>
+      await zFindPetsByTagsData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zFindPetsByTagsResponse.parseAsync(data),
     security: [
       {
         scheme: 'bearer',
@@ -187,6 +235,7 @@ export const deletePet = <ThrowOnError extends boolean = false>(
     DeletePetErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zDeletePetData.parseAsync(data),
     security: [
       {
         scheme: 'bearer',
@@ -209,6 +258,9 @@ export const getPetById = <ThrowOnError extends boolean = false>(
     GetPetByIdErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zGetPetByIdData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zGetPetByIdResponse.parseAsync(data),
     security: [
       {
         name: 'api_key',
@@ -235,6 +287,10 @@ export const updatePetWithForm = <ThrowOnError extends boolean = false>(
     UpdatePetWithFormErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) =>
+      await zUpdatePetWithFormData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zUpdatePetWithFormResponse.parseAsync(data),
     security: [
       {
         scheme: 'bearer',
@@ -258,6 +314,9 @@ export const uploadFile = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     bodySerializer: null,
+    requestValidator: async (data) => await zUploadFileData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zUploadFileResponse.parseAsync(data),
     security: [
       {
         scheme: 'bearer',
@@ -284,6 +343,9 @@ export const getInventory = <ThrowOnError extends boolean = false>(
     GetInventoryErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zGetInventoryData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zGetInventoryResponse.parseAsync(data),
     security: [
       {
         name: 'api_key',
@@ -306,6 +368,9 @@ export const placeOrder = <ThrowOnError extends boolean = false>(
     PlaceOrderErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zPlaceOrderData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zPlaceOrderResponse.parseAsync(data),
     url: '/store/order',
     ...options,
     headers: {
@@ -326,6 +391,7 @@ export const deleteOrder = <ThrowOnError extends boolean = false>(
     DeleteOrderErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zDeleteOrderData.parseAsync(data),
     url: '/store/order/{orderId}',
     ...options,
   });
@@ -342,6 +408,9 @@ export const getOrderById = <ThrowOnError extends boolean = false>(
     GetOrderByIdErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zGetOrderByIdData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zGetOrderByIdResponse.parseAsync(data),
     url: '/store/order/{orderId}',
     ...options,
   });
@@ -358,6 +427,9 @@ export const createUser = <ThrowOnError extends boolean = false>(
     CreateUserErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zCreateUserData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zCreateUserResponse.parseAsync(data),
     url: '/user',
     ...options,
     headers: {
@@ -378,6 +450,10 @@ export const createUsersWithListInput = <ThrowOnError extends boolean = false>(
     CreateUsersWithListInputErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) =>
+      await zCreateUsersWithListInputData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zCreateUsersWithListInputResponse.parseAsync(data),
     url: '/user/createWithList',
     ...options,
     headers: {
@@ -398,6 +474,9 @@ export const loginUser = <ThrowOnError extends boolean = false>(
     LoginUserErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zLoginUserData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zLoginUserResponse.parseAsync(data),
     url: '/user/login',
     ...options,
   });
@@ -414,6 +493,7 @@ export const logoutUser = <ThrowOnError extends boolean = false>(
     LogoutUserErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zLogoutUserData.parseAsync(data),
     url: '/user/logout',
     ...options,
   });
@@ -430,6 +510,7 @@ export const deleteUser = <ThrowOnError extends boolean = false>(
     DeleteUserErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zDeleteUserData.parseAsync(data),
     url: '/user/{username}',
     ...options,
   });
@@ -446,6 +527,9 @@ export const getUserByName = <ThrowOnError extends boolean = false>(
     GetUserByNameErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zGetUserByNameData.parseAsync(data),
+    responseValidator: async (data) =>
+      await zGetUserByNameResponse.parseAsync(data),
     url: '/user/{username}',
     ...options,
   });
@@ -462,6 +546,7 @@ export const updateUser = <ThrowOnError extends boolean = false>(
     UpdateUserErrors,
     ThrowOnError
   >({
+    requestValidator: async (data) => await zUpdateUserData.parseAsync(data),
     url: '/user/{username}',
     ...options,
     headers: {

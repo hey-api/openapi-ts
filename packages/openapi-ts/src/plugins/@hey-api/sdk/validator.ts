@@ -3,6 +3,30 @@ import type { Plugin } from '../../types';
 import { sdkId } from './constants';
 import type { HeyApiSdkPlugin } from './types';
 
+export const createRequestValidator = ({
+  operation,
+  plugin,
+}: {
+  operation: IR.OperationObject;
+  plugin: Plugin.Instance<HeyApiSdkPlugin>;
+}) => {
+  if (!plugin.config.validator.request) {
+    return;
+  }
+
+  const pluginValidator = plugin.getPlugin(plugin.config.validator.request);
+  if (!pluginValidator || !pluginValidator.api.createRequestValidator) {
+    return;
+  }
+
+  return pluginValidator.api.createRequestValidator({
+    file: plugin.context.file({ id: sdkId })!,
+    operation,
+    // @ts-expect-error
+    plugin: pluginValidator,
+  });
+};
+
 export const createResponseValidator = ({
   operation,
   plugin,
@@ -15,18 +39,14 @@ export const createResponseValidator = ({
   }
 
   const pluginValidator = plugin.getPlugin(plugin.config.validator.response);
-  if (!pluginValidator) {
+  if (!pluginValidator || !pluginValidator.api.createResponseValidator) {
     return;
   }
 
-  const file = plugin.context.file({ id: sdkId })!;
-
-  switch (pluginValidator.name) {
-    case 'valibot':
-      return pluginValidator.api.createResponseValidator({ file, operation, plugin: pluginValidator });
-    case 'zod':
-      return pluginValidator.api.createResponseValidator({ file, operation, plugin: pluginValidator });
-    default:
-      return;
-  }
+  return pluginValidator.api.createResponseValidator({
+    file: plugin.context.file({ id: sdkId })!,
+    operation,
+    // @ts-expect-error
+    plugin: pluginValidator,
+  });
 };

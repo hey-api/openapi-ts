@@ -1,13 +1,13 @@
-import type ts from "typescript";
+import type ts from 'typescript';
 
-import { compiler } from "../../compiler";
-import type { TypeScriptFile } from "../../generate/files";
-import type { IR } from "../../ir/types";
-import type { PluginInstance } from "../shared/utils/instance";
-import { identifiers, valibotId } from "./constants";
-import type { ValibotPlugin } from "./types";
+import { compiler } from '../../compiler';
+import type { TypeScriptFile } from '../../generate/files';
+import type { IR } from '../../ir/types';
+import type { PluginInstance } from '../shared/utils/instance';
+import { identifiers, valibotId } from './constants';
+import type { ValibotPlugin } from './types';
 
-const createResponseValidator = ({
+const createRequestValidator = ({
   file,
   operation,
   plugin,
@@ -16,16 +16,16 @@ const createResponseValidator = ({
   operation: IR.OperationObject;
   plugin: PluginInstance<ValibotPlugin>;
 }): ts.ArrowFunction | undefined => {
-  const responses = plugin.getPlugin('valibot')?.config.responses;
-  const identifierSchema = plugin.context.file({ id: valibotId })!.identifier({
+  const { requests } = plugin.config;
+  const schemaIdentifier = plugin.context.file({ id: valibotId })!.identifier({
     // TODO: refactor for better cross-plugin compatibility
     $ref: `#/valibot-response/${operation.id}`,
     // TODO: refactor to not have to define nameTransformer
-    nameTransformer: typeof responses === 'object' ? responses.name : undefined,
+    nameTransformer: typeof requests === 'object' ? requests.name : undefined,
     namespace: 'value',
   });
 
-  if (!identifierSchema.name) {
+  if (!schemaIdentifier.name) {
     return;
   }
 
@@ -34,7 +34,7 @@ const createResponseValidator = ({
       context: plugin.context,
       id: valibotId,
     }),
-    name: identifierSchema.name,
+    name: schemaIdentifier.name,
   });
 
   file.import({
@@ -61,7 +61,7 @@ const createResponseValidator = ({
               name: identifiers.async.parseAsync,
             }),
             parameters: [
-              compiler.identifier({ text: identifierSchema.name }),
+              compiler.identifier({ text: schemaIdentifier.name }),
               compiler.identifier({ text: dataParameterName }),
             ],
           }),
@@ -69,9 +69,78 @@ const createResponseValidator = ({
       }),
     ],
   });
-}
+};
+
+const createResponseValidator = ({
+  file,
+  operation,
+  plugin,
+}: {
+  file: TypeScriptFile;
+  operation: IR.OperationObject;
+  plugin: PluginInstance<ValibotPlugin>;
+}): ts.ArrowFunction | undefined => {
+  const { responses } = plugin.config;
+  const schemaIdentifier = plugin.context.file({ id: valibotId })!.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/valibot-response/${operation.id}`,
+    // TODO: refactor to not have to define nameTransformer
+    nameTransformer: typeof responses === 'object' ? responses.name : undefined,
+    namespace: 'value',
+  });
+
+  if (!schemaIdentifier.name) {
+    return;
+  }
+
+  file.import({
+    module: file.relativePathToFile({
+      context: plugin.context,
+      id: valibotId,
+    }),
+    name: schemaIdentifier.name,
+  });
+
+  file.import({
+    alias: identifiers.v.text,
+    module: 'valibot',
+    name: '*',
+  });
+
+  const dataParameterName = 'data';
+
+  return compiler.arrowFunction({
+    async: true,
+    parameters: [
+      {
+        name: dataParameterName,
+      },
+    ],
+    statements: [
+      compiler.returnStatement({
+        expression: compiler.awaitExpression({
+          expression: compiler.callExpression({
+            functionName: compiler.propertyAccessExpression({
+              expression: identifiers.v,
+              name: identifiers.async.parseAsync,
+            }),
+            parameters: [
+              compiler.identifier({ text: schemaIdentifier.name }),
+              compiler.identifier({ text: dataParameterName }),
+            ],
+          }),
+        }),
+      }),
+    ],
+  });
+};
 
 export type Api = {
+  createRequestValidator: (args: {
+    file: TypeScriptFile;
+    operation: IR.OperationObject;
+    plugin: PluginInstance<ValibotPlugin>;
+  }) => ts.ArrowFunction | undefined;
   createResponseValidator: (args: {
     file: TypeScriptFile;
     operation: IR.OperationObject;
@@ -80,5 +149,6 @@ export type Api = {
 };
 
 export const api: Api = {
+  createRequestValidator,
   createResponseValidator,
 };
