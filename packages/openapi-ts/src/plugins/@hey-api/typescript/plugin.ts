@@ -143,7 +143,7 @@ const addJavaScriptEnum = ({
 
   // JavaScript enums might want to ignore null values
   if (
-    plugin.config.enumsConstantsIgnoreNull &&
+    plugin.config.enums.constantsIgnoreNull &&
     enumObject.typeofItems.includes('object')
   ) {
     enumObject.obj = enumObject.obj.filter((item) => item.value !== null);
@@ -205,7 +205,7 @@ const schemaToEnumObject = ({
 
     if (key) {
       key = stringCase({
-        case: plugin.config.enumsCase,
+        case: plugin.config.enums.case,
         stripLeadingSeparators: false,
         value: key,
       });
@@ -214,8 +214,9 @@ const schemaToEnumObject = ({
       // TypeScript enum keys cannot be numbers
       if (
         numberRegExp.test(key) &&
-        (plugin.config.enums === 'typescript' ||
-          plugin.config.enums === 'typescript+namespace')
+        plugin.config.enums.enabled &&
+        (plugin.config.enums.type === 'typescript' ||
+          plugin.config.enums.type === 'typescript+namespace')
       ) {
         key = `_${key}`;
       }
@@ -260,7 +261,7 @@ const addTypeEnum = ({
   if (
     !identifier.created &&
     !isRefOpenApiComponent($ref) &&
-    plugin.config.enums !== 'typescript+namespace'
+    plugin.config.enums.type !== 'typescript+namespace'
   ) {
     return;
   }
@@ -425,12 +426,13 @@ const enumTypeToIdentifier = ({
   const file = plugin.context.file({ id: typesId })!;
   const isRefComponent = $ref ? isRefOpenApiComponent($ref) : false;
   const shouldExportEnum =
-    isRefComponent || Boolean(plugin.config.exportInlineEnums);
+    isRefComponent ||
+    (plugin.config.enums.enabled && Boolean(plugin.config.enums.exportInline));
 
   if ($ref && shouldExportEnum) {
     // when enums are disabled (default), emit only reusable components
     // as types, otherwise the output would be broken if we skipped all enums
-    if (!plugin.config.enums) {
+    if (!plugin.config.enums.enabled) {
       const typeNode = addTypeEnum({
         $ref,
         plugin,
@@ -442,52 +444,54 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (plugin.config.enums === 'javascript') {
-      const typeNode = addTypeEnum({
-        $ref,
-        plugin,
-        schema,
-        state,
-      });
-      if (typeNode) {
-        file.add(typeNode);
+    if (plugin.config.enums.enabled) {
+      if (plugin.config.enums.type === 'javascript') {
+        const typeNode = addTypeEnum({
+          $ref,
+          plugin,
+          schema,
+          state,
+        });
+        if (typeNode) {
+          file.add(typeNode);
+        }
+
+        const objectNode = addJavaScriptEnum({
+          $ref,
+          plugin,
+          schema,
+        });
+        if (objectNode) {
+          file.add(objectNode);
+        }
       }
 
-      const objectNode = addJavaScriptEnum({
-        $ref,
-        plugin,
-        schema,
-      });
-      if (objectNode) {
-        file.add(objectNode);
-      }
-    }
-
-    if (plugin.config.enums === 'typescript') {
-      const enumNode = addTypeScriptEnum({
-        $ref,
-        plugin,
-        schema,
-        state,
-      });
-      if (enumNode) {
-        file.add(enumNode);
-      }
-    }
-
-    if (plugin.config.enums === 'typescript+namespace') {
-      const enumNode = addTypeScriptEnum({
-        $ref,
-        plugin,
-        schema,
-        state,
-      });
-      if (enumNode) {
-        if (isRefComponent) {
+      if (plugin.config.enums.type === 'typescript') {
+        const enumNode = addTypeScriptEnum({
+          $ref,
+          plugin,
+          schema,
+          state,
+        });
+        if (enumNode) {
           file.add(enumNode);
-        } else {
-          // emit enum inside TypeScript namespace
-          namespace.push(enumNode);
+        }
+      }
+
+      if (plugin.config.enums.type === 'typescript+namespace') {
+        const enumNode = addTypeScriptEnum({
+          $ref,
+          plugin,
+          schema,
+          state,
+        });
+        if (enumNode) {
+          if (isRefComponent) {
+            file.add(enumNode);
+          } else {
+            // emit enum inside TypeScript namespace
+            namespace.push(enumNode);
+          }
         }
       }
     }
@@ -1165,8 +1169,9 @@ export const schemaToType = ({
         create: true,
         namespace:
           refSchema.type === 'enum' &&
-          (plugin.config.enums === 'typescript' ||
-            plugin.config.enums === 'typescript+namespace') &&
+          plugin.config.enums.enabled &&
+          (plugin.config.enums.type === 'typescript' ||
+            plugin.config.enums.type === 'typescript+namespace') &&
           shouldCreateTypeScriptEnum({
             plugin,
             schema: refSchema as SchemaWithType<'enum'>,
@@ -1268,7 +1273,7 @@ export const schemaToType = ({
 export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   const file = plugin.createFile({
     id: typesId,
-    identifierCase: plugin.config.identifierCase,
+    identifierCase: plugin.config.case,
     path: plugin.output,
   });
 

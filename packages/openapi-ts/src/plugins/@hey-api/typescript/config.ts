@@ -5,12 +5,8 @@ import type { HeyApiTypeScriptPlugin } from './types';
 
 export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   config: {
-    enums: false,
-    enumsCase: 'SCREAMING_SNAKE_CASE',
-    enumsConstantsIgnoreNull: false,
+    case: 'PascalCase',
     exportFromIndex: true,
-    exportInlineEnums: false,
-    identifierCase: 'PascalCase',
     readOnlyWriteOnlyBehavior: 'split',
     readableNameBuilder: '{{name}}Readable',
     style: 'preserve',
@@ -21,6 +17,21 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   handlerLegacy,
   name: '@hey-api/typescript',
   output: 'types',
+  resolveConfig: (plugin, context) => {
+    plugin.config.enums = context.valueToObject({
+      defaultValue: {
+        case: 'SCREAMING_SNAKE_CASE',
+        constantsIgnoreNull: false,
+        enabled: Boolean(plugin.config.enums),
+        type: 'javascript',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        string: (type) => ({ type }),
+      },
+      value: plugin.config.enums,
+    });
+  },
 };
 
 /**

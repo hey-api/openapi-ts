@@ -77,8 +77,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-SCREAMING_SNAKE_CASE',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'SCREAMING_SNAKE_CASE',
+            enums: {
+              case: 'SCREAMING_SNAKE_CASE',
+              type: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -92,8 +94,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-PascalCase',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'PascalCase',
+            enums: {
+              case: 'PascalCase',
+              type: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -107,8 +111,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-camelCase',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'camelCase',
+            enums: {
+              case: 'camelCase',
+              type: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -122,8 +128,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-snake_case',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'snake_case',
+            enums: {
+              case: 'snake_case',
+              type: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -137,8 +145,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-preserve',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'preserve',
+            enums: {
+              case: 'preserve',
+              type: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -152,8 +162,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-SCREAMING_SNAKE_CASE',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'SCREAMING_SNAKE_CASE',
+            enums: {
+              case: 'SCREAMING_SNAKE_CASE',
+              type: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -167,8 +179,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-PascalCase',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'PascalCase',
+            enums: {
+              case: 'PascalCase',
+              type: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -182,8 +196,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-camelCase',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'camelCase',
+            enums: {
+              case: 'camelCase',
+              type: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -197,8 +213,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-snake_case',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'snake_case',
+            enums: {
+              case: 'snake_case',
+              type: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -212,8 +230,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-preserve',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'preserve',
+            enums: {
+              case: 'preserve',
+              type: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],

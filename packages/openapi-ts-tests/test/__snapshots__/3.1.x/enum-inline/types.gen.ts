@@ -2,6 +2,11 @@
 
 export type Type = 'foo' | 'bar';
 
+export const Type = {
+    FOO: 'foo',
+    BAR: 'bar'
+} as const;
+
 export type Foo = {
     type?: 'foo' | 'bar';
 };
@@ -14,6 +19,11 @@ export type GetFooData = {
 };
 
 export type Foo2 = 'foo' | 'bar';
+
+export const Foo = {
+    FOO: 'foo',
+    BAR: 'bar'
+} as const;
 
 export type GetFooResponses = {
     /**
@@ -34,6 +44,10 @@ export type PostFooData = {
 };
 
 export type Foo3 = 'baz';
+
+export const Foo2 = {
+    BAZ: 'baz'
+} as const;
 
 export type PostFooResponses = {
     /**
