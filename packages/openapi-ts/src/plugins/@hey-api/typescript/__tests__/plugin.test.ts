@@ -39,6 +39,9 @@ describe('generateLegacyTypes', () => {
         pagination: {
           keywords: [],
         },
+        transforms: {
+          enums: 'off',
+        },
         validate_EXPERIMENTAL: false,
       },
       pluginOrder: [

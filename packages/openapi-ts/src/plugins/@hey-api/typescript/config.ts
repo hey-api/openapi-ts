@@ -23,7 +23,6 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
         case: 'SCREAMING_SNAKE_CASE',
         constantsIgnoreNull: false,
         enabled: Boolean(plugin.config.enums),
-        exportInline: false,
         type: 'javascript',
       },
       mappers: {

@@ -52,6 +52,9 @@ describe('generateLegacyCore', () => {
         pagination: {
           keywords: [],
         },
+        transforms: {
+          enums: 'off',
+        },
         validate_EXPERIMENTAL: false,
       },
       pluginOrder: [
@@ -163,6 +166,9 @@ describe('generateLegacyCore', () => {
         pagination: {
           keywords: [],
         },
+        transforms: {
+          enums: 'off',
+        },
         validate_EXPERIMENTAL: false,
       },
       pluginOrder: [
@@ -256,6 +262,9 @@ describe('generateLegacyCore', () => {
       parser: {
         pagination: {
           keywords: [],
+        },
+        transforms: {
+          enums: 'off',
         },
         validate_EXPERIMENTAL: false,
       },

@@ -35,6 +35,9 @@ describe('registerHandlebarHelpers', () => {
         pagination: {
           keywords: [],
         },
+        transforms: {
+          enums: 'off',
+        },
         validate_EXPERIMENTAL: false,
       },
       pluginOrder: [
@@ -119,6 +122,9 @@ describe('registerHandlebarTemplates', () => {
       parser: {
         pagination: {
           keywords: [],
+        },
+        transforms: {
+          enums: 'off',
         },
         validate_EXPERIMENTAL: false,
       },

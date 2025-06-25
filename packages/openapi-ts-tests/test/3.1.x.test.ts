@@ -224,14 +224,12 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-inline.yaml',
         output: 'enum-inline',
-        plugins: [
-          {
-            enums: {
-              exportInline: true,
-            },
-            name: '@hey-api/typescript',
+        parser: {
+          transforms: {
+            enums: 'root',
           },
-        ],
+        },
+        plugins: ['@hey-api/typescript'],
       }),
       description: 'exports inline enums',
     },
@@ -239,12 +237,14 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-inline.yaml',
         output: 'enum-inline-javascript',
+        parser: {
+          transforms: {
+            enums: 'root',
+          },
+        },
         plugins: [
           {
-            enums: {
-              exportInline: true,
-              type: 'javascript',
-            },
+            enums: 'javascript',
             name: '@hey-api/typescript',
           },
         ],
@@ -255,12 +255,14 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-inline.yaml',
         output: 'enum-inline-typescript',
+        parser: {
+          transforms: {
+            enums: 'root',
+          },
+        },
         plugins: [
           {
-            enums: {
-              exportInline: true,
-              type: 'typescript',
-            },
+            enums: 'typescript',
             name: '@hey-api/typescript',
           },
         ],
@@ -271,12 +273,14 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-inline.yaml',
         output: 'enum-inline-typescript-namespace',
+        parser: {
+          transforms: {
+            enums: 'root',
+          },
+        },
         plugins: [
           {
-            enums: {
-              exportInline: true,
-              type: 'typescript+namespace',
-            },
+            enums: 'typescript+namespace',
             name: '@hey-api/typescript',
           },
         ],

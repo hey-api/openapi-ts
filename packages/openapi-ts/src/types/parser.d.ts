@@ -9,8 +9,8 @@ import type {
 
 export type Parser = {
   /**
-   * Filters can be used to select a subset of your input before it's processed
-   * by plugins.
+   * Filters can be used to select a subset of your input before it's passed
+   * to plugins.
    */
   filters?: Filters;
   /**
@@ -26,10 +26,35 @@ export type Parser = {
     keywords?: ReadonlyArray<string>;
   };
   /**
-   * Custom input transformations to execute before parsing. This allows you
-   * to modify, fix, or enhance input definitions before code generation.
+   * Custom input transformations to execute before parsing. Use this
+   * to modify, fix, or enhance input before it's passed to plugins.
    */
   patch?: Patch;
+  /**
+   * Built-in transformations that modify or normalize the input before it's
+   * passed to plugins. These options enable predictable, documented behaviors
+   * and are distinct from custom patches. Use this to perform structural
+   * changes to input in a standardized way.
+   */
+  transforms?: {
+    /**
+     * There might be 2 types of enums in your input:
+     * - enums defined as reusable components (root enums)
+     * - non-reusable enums nested within other schemas (inline enums)
+     *
+     * You may want to make all enums root or inline. This is because only
+     * root enums (reusable components) are typically exported by plugins.
+     * Inline enums will never be importable since they're nested inside
+     * other schemas.
+     *
+     * For example, to export nested enum types with the `@hey-api/typescript`
+     * plugin, set `enums` to `root`. Likewise, if you don't want to export any
+     * enum types, set `enums` to `inline`.
+     *
+     * @default 'off'
+     */
+    enums?: 'inline' | 'off' | 'root';
+  };
   /**
    * **This is an experimental feature.**
    *
@@ -44,8 +69,8 @@ export type Parser = {
 
 export type ResolvedParser = {
   /**
-   * Filters can be used to select a subset of your input before it's processed
-   * by plugins.
+   * Filters can be used to select a subset of your input before it's passed
+   * to plugins.
    */
   filters?: Filters;
   /**
@@ -61,10 +86,35 @@ export type ResolvedParser = {
     keywords: ReadonlyArray<string>;
   };
   /**
-   * Custom input transformations to execute before parsing. This allows you
-   * to modify, fix, or enhance input definitions before code generation.
+   * Custom input transformations to execute before parsing. Use this
+   * to modify, fix, or enhance input before it's passed to plugins.
    */
   patch?: Patch;
+  /**
+   * Built-in transformations that modify or normalize the input before it's
+   * passed to plugins. These options enable predictable, documented behaviors
+   * and are distinct from custom patches. Use this to perform structural
+   * changes to input in a standardized way.
+   */
+  transforms: {
+    /**
+     * There might be 2 types of enums in your input:
+     * - enums defined as reusable components (root enums)
+     * - non-reusable enums nested within other schemas (inline enums)
+     *
+     * You may want to make all enums root or inline. This is because only
+     * root enums (reusable components) are typically exported by plugins.
+     * Inline enums will never be importable since they're nested inside
+     * other schemas.
+     *
+     * For example, to export nested enum types with the `@hey-api/typescript`
+     * plugin, set `enums` to `root`. Likewise, if you don't want to export any
+     * enum types, set `enums` to `inline`.
+     *
+     * @default 'off'
+     */
+    enums: 'inline' | 'off' | 'root';
+  };
   /**
    * **This is an experimental feature.**
    *

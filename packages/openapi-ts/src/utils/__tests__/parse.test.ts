@@ -29,6 +29,9 @@ describe('operationNameFn', () => {
       pagination: {
         keywords: [],
       },
+      transforms: {
+        enums: 'off',
+      },
       validate_EXPERIMENTAL: false,
     },
     pluginOrder: ['legacy/fetch', '@hey-api/sdk'],
