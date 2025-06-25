@@ -2,6 +2,8 @@ import colors from 'ansi-colors';
 // @ts-expect-error
 import colorSupport from 'color-support';
 
+import { initConfigs } from './config/init';
+import { getLogs } from './config/logs';
 import { createClient as pCreateClient } from './createClient';
 import {
   logCrashReport,
@@ -9,8 +11,6 @@ import {
   printCrashReport,
   shouldReportCrash,
 } from './error';
-import { getLogs } from './getLogs';
-import { initConfigs } from './initConfigs';
 import type { IR } from './ir/types';
 import type { Client } from './types/client';
 import type { Config, UserConfig } from './types/config';
@@ -105,8 +105,8 @@ export const createClient = async (
 export const defineConfig = async (config: Configs): Promise<UserConfig> =>
   typeof config === 'function' ? await config() : config;
 
-export { defaultPlugins } from './initConfigs';
-export { defaultPaginationKeywords } from './ir/pagination';
+export { defaultPaginationKeywords } from './config/parser';
+export { defaultPlugins } from './config/plugins';
 export type { IR } from './ir/types';
 export type {
   OpenApi,

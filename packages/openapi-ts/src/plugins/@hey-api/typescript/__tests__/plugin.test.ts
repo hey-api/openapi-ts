@@ -20,7 +20,6 @@ describe('generateLegacyTypes', () => {
       exportCore: true,
       input: {
         path: '',
-        validate_EXPERIMENTAL: false,
         watch: {
           enabled: false,
           interval: 1_000,
@@ -35,6 +34,12 @@ describe('generateLegacyTypes', () => {
       name: 'AppClient',
       output: {
         path: '',
+      },
+      parser: {
+        pagination: {
+          keywords: [],
+        },
+        validate_EXPERIMENTAL: false,
       },
       pluginOrder: [
         '@hey-api/typescript',

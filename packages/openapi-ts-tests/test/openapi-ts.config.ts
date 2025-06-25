@@ -21,35 +21,7 @@ export default defineConfig(() => {
       //     'x-foo': 'bar',
       //   },
       // },
-      filters: {
-        // deprecated: false,
-        operations: {
-          include: [
-            // 'PUT /foo',
-            // '/^[A-Z]+ /v1//',
-          ],
-        },
-        // orphans: false,
-        // preserveOrder: true,
-        // schemas: {
-        //   include: ['Foo'],
-        // },
-        // tags: {
-        //   exclude: ['bar'],
-        // },
-      },
       // organization: 'hey-api',
-      // pagination: {
-      //   keywords: ['aa'],
-      // },
-      patch: {
-        // operations: {
-        //   'GET /foo': (operation: any) => {
-        //     operation.responses['200'].description = 'foo';
-        //   },
-        // },
-        // version: () => '3.1.1',
-      },
       // path: {
       //   components: {},
       //   info: {
@@ -65,7 +37,7 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'enum-inline.yaml'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'read-write-only.yaml'),
       // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
       // path: path.resolve(__dirname, 'spec', 'v3.json'),
       // path: 'http://localhost:4000/',
@@ -76,7 +48,6 @@ export default defineConfig(() => {
       // path: 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
       // project: 'backend',
       // project: 'upload-openapi-spec',
-      validate_EXPERIMENTAL: true,
       // version: '1.0.0',
       // watch: {
       //   enabled: true,
@@ -100,6 +71,37 @@ export default defineConfig(() => {
       //   'tsconfig',
       //   'tsconfig.nodenext.json',
       // ),
+    },
+    parser: {
+      filters: {
+        // deprecated: false,
+        operations: {
+          include: [
+            // 'PUT /foo',
+            // '/^[A-Z]+ /v1//',
+          ],
+        },
+        // orphans: false,
+        // preserveOrder: true,
+        // schemas: {
+        //   include: ['Foo'],
+        // },
+        // tags: {
+        //   exclude: ['bar'],
+        // },
+      },
+      // pagination: {
+      //   keywords: ['aa'],
+      // },
+      patch: {
+        // operations: {
+        //   'GET /foo': (operation: any) => {
+        //     operation.responses['200'].description = 'foo';
+        //   },
+        // },
+        // version: () => '3.1.1',
+      },
+      validate_EXPERIMENTAL: true,
     },
     plugins: [
       // customClientPlugin({
@@ -144,10 +146,10 @@ export default defineConfig(() => {
         // throwOnError: true,
         // transformer: '@hey-api/transformers',
         // transformer: true,
-        // validator: {
-        //   request: 'zod',
-        //   response: 'valibot',
-        // },
+        validator: {
+          request: 'zod',
+          response: 'valibot',
+        },
       },
       {
         // bigInt: true,
@@ -184,7 +186,7 @@ export default defineConfig(() => {
         definitions: 'z{{name}}Definition',
         // exportFromIndex: true,
         metadata: true,
-        // name: 'valibot',
+        name: 'valibot',
         requests: {
           // case: 'SCREAMING_SNAKE_CASE',
           name: 'z{{name}}TestData',
@@ -200,7 +202,7 @@ export default defineConfig(() => {
         definitions: 'z{{name}}Definition',
         // exportFromIndex: true,
         // metadata: true,
-        // name: 'zod',
+        name: 'zod',
         requests: {
           // case: 'SCREAMING_SNAKE_CASE',
           // name: 'z{{name}}TestData',

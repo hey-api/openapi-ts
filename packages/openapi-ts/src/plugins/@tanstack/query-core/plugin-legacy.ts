@@ -904,7 +904,7 @@ export const handlerLegacy = ({
 
         const paginationParameter = operation.parameters.find((parameter) => {
           const paginationRegExp = getPaginationKeywordsRegExp(
-            config.input.pagination,
+            config.parser.pagination,
           );
           if (paginationRegExp.test(parameter.name)) {
             paginationField = parameter;
@@ -922,7 +922,7 @@ export const handlerLegacy = ({
             );
             return refModel?.properties.find((property) => {
               const paginationRegExp = getPaginationKeywordsRegExp(
-                config.input.pagination,
+                config.parser.pagination,
               );
               if (paginationRegExp.test(property.name)) {
                 paginationField = property;
@@ -934,7 +934,7 @@ export const handlerLegacy = ({
 
           return parameter.properties.find((property) => {
             const paginationRegExp = getPaginationKeywordsRegExp(
-              config.input.pagination,
+              config.parser.pagination,
             );
             if (paginationRegExp.test(property.name)) {
               paginationField = property;

@@ -8,7 +8,7 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
     case: 'PascalCase',
     exportFromIndex: true,
     readOnlyWriteOnlyBehavior: 'split',
-    readableName: '{{name}}Readable',
+    readableName: '{{name}}',
     style: 'preserve',
     tree: false,
     writableName: '{{name}}Writable',

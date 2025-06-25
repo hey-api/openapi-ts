@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { defaultPaginationKeywords } from '../../config/parser';
 import type { Config } from '../../types/config';
 import { operationPagination } from '../operation';
 import { getPaginationKeywordsRegExp } from '../pagination';
@@ -47,7 +48,9 @@ describe('paginationKeywordsRegExp', () => {
   it.each(defaultScenarios)(
     'is $value pagination param? $output',
     async ({ result, value }) => {
-      const paginationRegExp = getPaginationKeywordsRegExp();
+      const paginationRegExp = getPaginationKeywordsRegExp({
+        keywords: defaultPaginationKeywords,
+      });
       expect(paginationRegExp.test(value)).toEqual(result);
     },
   );
@@ -65,7 +68,7 @@ describe('paginationKeywordsRegExp', () => {
   it.each(customScenarios)(
     'with custom config, $value should match? $result',
     async ({ result, value }) => {
-      const pagination: Config['input']['pagination'] = {
+      const pagination: Config['parser']['pagination'] = {
         keywords: ['customPagination', 'pageSize', 'perPage'],
       };
       const paginationRegExp = getPaginationKeywordsRegExp(pagination);

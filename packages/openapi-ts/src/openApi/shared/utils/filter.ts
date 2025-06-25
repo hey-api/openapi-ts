@@ -15,7 +15,7 @@ type FiltersConfigToState<T> = {
 };
 
 export type Filters = FiltersConfigToState<
-  NonNullable<Config['input']['filters']>
+  NonNullable<Config['parser']['filters']>
 >;
 
 interface SetAndRegExps {
@@ -219,7 +219,7 @@ const collectFiltersSetFromRegExps = ({
 };
 
 export const createFilters = (
-  config: Config['input']['filters'],
+  config: Config['parser']['filters'],
   spec: OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X,
 ): Filters => {
   const excludeOperations = createFiltersSetAndRegExps(
@@ -309,7 +309,7 @@ export const createFilters = (
   return filters;
 };
 
-export const hasFilters = (config: Config['input']['filters']): boolean => {
+export const hasFilters = (config: Config['parser']['filters']): boolean => {
   if (!config) {
     return false;
   }
