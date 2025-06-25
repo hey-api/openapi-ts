@@ -39,6 +39,9 @@ describe('generateLegacySchemas', () => {
         pagination: {
           keywords: [],
         },
+        transforms: {
+          enums: 'off',
+        },
         validate_EXPERIMENTAL: false,
       },
       pluginOrder: [
@@ -150,6 +153,9 @@ describe('generateLegacySchemas', () => {
       parser: {
         pagination: {
           keywords: [],
+        },
+        transforms: {
+          enums: 'off',
         },
         validate_EXPERIMENTAL: false,
       },

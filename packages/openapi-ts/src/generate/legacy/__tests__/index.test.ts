@@ -36,6 +36,9 @@ describe('generateIndexFile', () => {
         pagination: {
           keywords: [],
         },
+        transforms: {
+          enums: 'off',
+        },
         validate_EXPERIMENTAL: false,
       },
       pluginOrder: [

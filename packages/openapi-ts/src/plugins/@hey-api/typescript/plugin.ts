@@ -431,7 +431,8 @@ const enumTypeToIdentifier = ({
   const isRefComponent = $ref ? isRefOpenApiComponent($ref) : false;
   const shouldExportEnum =
     isRefComponent ||
-    (plugin.config.enums.enabled && Boolean(plugin.config.enums.exportInline));
+    (plugin.config.enums.enabled &&
+      plugin.context.config.parser.transforms.enums === 'root');
 
   if ($ref && shouldExportEnum) {
     // when enums are disabled (default), emit only reusable components

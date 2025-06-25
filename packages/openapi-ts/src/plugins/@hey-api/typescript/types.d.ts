@@ -46,16 +46,6 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
          */
         enabled?: boolean;
         /**
-         * By default, enums not defined as reusable components in the input file (inline enums)
-         * are emitted as types, even if you generate runtime enums. You can set `exportInline` to `true` to treat inline enums
-         * as reusable components. When `true`, the exported enums will follow the
-         * style defined in `enums`.
-         *
-         * @deprecated
-         * @default false
-         */
-        exportInline?: boolean;
-        /**
          * Specifies the output style for generated enums.
          *
          * Can be:
@@ -174,16 +164,6 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
      */
     enabled: boolean;
     /**
-     * By default, enums not defined as reusable components in the input file (inline enums)
-     * are emitted as types, even if you generate runtime enums. You can set `exportInline` to `true` to treat inline enums
-     * as reusable components. When `true`, the exported enums will follow the
-     * style defined in `enums`.
-     *
-     * @deprecated
-     * @default false
-     */
-    exportInline: boolean;
-    /**
      * Specifies the output style for generated enums.
      *
      * Can be:
@@ -265,10 +245,3 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
 };
 
 export type HeyApiTypeScriptPlugin = DefinePlugin<Config, ResolvedConfig>;
-
-// enums -> enums.enabled or enums.type
-// enumsCase -> enums.case
-// enumsConstantsIgnoreNull -> enums.constantsIgnoreNull
-// exportInlineEnums -> enums.exportInline
-// readableNameBuilder -> readableName
-// writableNameBuilder -> writableName

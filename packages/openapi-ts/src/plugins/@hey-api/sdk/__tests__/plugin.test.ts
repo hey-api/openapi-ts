@@ -41,6 +41,9 @@ describe('handlerLegacy', () => {
         pagination: {
           keywords: [],
         },
+        transforms: {
+          enums: 'off',
+        },
         validate_EXPERIMENTAL: false,
       },
       pluginOrder: [
@@ -226,6 +229,9 @@ describe('methodNameBuilder', () => {
         pagination: {
           keywords: [],
         },
+        transforms: {
+          enums: 'off',
+        },
         validate_EXPERIMENTAL: false,
       },
       pluginOrder: [
@@ -332,6 +338,9 @@ describe('methodNameBuilder', () => {
       parser: {
         pagination: {
           keywords: [],
+        },
+        transforms: {
+          enums: 'off',
         },
         validate_EXPERIMENTAL: false,
       },
@@ -442,6 +451,9 @@ describe('methodNameBuilder', () => {
       parser: {
         pagination: {
           keywords: [],
+        },
+        transforms: {
+          enums: 'off',
         },
         validate_EXPERIMENTAL: false,
       },

@@ -90,9 +90,9 @@ export default defineConfig(() => {
         //   exclude: ['bar'],
         // },
       },
-      // pagination: {
-      //   keywords: ['aa'],
-      // },
+      pagination: {
+        // keywords: ['aa'],
+      },
       patch: {
         // operations: {
         //   'GET /foo': (operation: any) => {
@@ -100,6 +100,9 @@ export default defineConfig(() => {
         //   },
         // },
         // version: () => '3.1.1',
+      },
+      transforms: {
+        enums: 'root',
       },
       validate_EXPERIMENTAL: true,
     },
