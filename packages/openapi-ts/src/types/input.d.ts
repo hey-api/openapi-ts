@@ -1,5 +1,6 @@
 import type {
   OpenApiMetaObject,
+  OpenApiOperationObject,
   OpenApiParameterObject,
   OpenApiRequestBodyObject,
   OpenApiResponseObject,
@@ -259,6 +260,25 @@ export interface Patch {
       | OpenApiMetaObject.V3_1_X,
   ) => void;
   /**
+   * Patch OpenAPI operations in place. The key is the operation method and operation path, and the function receives the operation object to modify directly.
+   *
+   * @example
+   * operations: {
+   *   'GET /foo': (operation) => {
+   *     operation.responses['200'].description = 'foo';
+   *   }
+   * }
+   */
+  operations?: Record<
+    string,
+    (
+      operation:
+        | OpenApiOperationObject.V2_0_X
+        | OpenApiOperationObject.V3_0_X
+        | OpenApiOperationObject.V3_1_X,
+    ) => void
+  >;
+  /**
    * Patch OpenAPI parameters in place. The key is the parameter name, and the function receives the parameter object to modify directly.
    *
    * @example
@@ -355,7 +375,7 @@ export interface Patch {
    * @example
    * version: (version) => version.replace(/^v/, '')
    */
-  version?: (version: string) => string;
+  version?: string | ((version: string) => string);
 }
 
 export interface Watch {

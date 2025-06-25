@@ -108,7 +108,15 @@ export const defineConfig = async (config: Configs): Promise<UserConfig> =>
 export { defaultPlugins } from './initConfigs';
 export { defaultPaginationKeywords } from './ir/pagination';
 export type { IR } from './ir/types';
-export type { OpenApi, OpenApiSchemaObject } from './openApi/types';
+export type {
+  OpenApi,
+  OpenApiMetaObject,
+  OpenApiOperationObject,
+  OpenApiParameterObject,
+  OpenApiRequestBodyObject,
+  OpenApiResponseObject,
+  OpenApiSchemaObject,
+} from './openApi/types';
 export {
   clientDefaultConfig,
   clientDefaultMeta,

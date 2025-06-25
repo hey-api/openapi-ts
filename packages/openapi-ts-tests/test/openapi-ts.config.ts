@@ -42,9 +42,14 @@ export default defineConfig(() => {
       // pagination: {
       //   keywords: ['aa'],
       // },
-      // patch: {
-      //   version: () => '3.1.1',
-      // },
+      patch: {
+        // operations: {
+        //   'GET /foo': (operation: any) => {
+        //     operation.responses['200'].description = 'foo';
+        //   },
+        // },
+        // version: () => '3.1.1',
+      },
       // path: {
       //   components: {},
       //   info: {
@@ -60,9 +65,9 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      // path: path.resolve(__dirname, 'spec', '2.0.x', 'enum-names-values.json'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'enum-inline.yaml'),
       // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
-      path: path.resolve(__dirname, 'spec', 'v3.json'),
+      // path: path.resolve(__dirname, 'spec', 'v3.json'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -105,14 +110,25 @@ export default defineConfig(() => {
         // baseUrl: false,
         // exportFromIndex: true,
         // name: '@hey-api/client-axios',
-        name: 'legacy/angular',
+        // name: 'legacy/angular',
         // strictBaseUrl: true,
         // throwOnError: true,
       },
       {
-        exportFromIndex: true,
-        // name: '@hey-api/schemas',
-        // type: 'json',
+        // case: 'snake_case',
+        // enums: 'javascript',
+        enums: {
+          // case: 'PascalCase',
+          // constantsIgnoreNull: true,
+          // enabled: false,
+          exportInline: true,
+          // type: 'typescript+namespace',
+        },
+        name: '@hey-api/typescript',
+        // readOnlyWriteOnlyBehavior: 'off',
+        // readableName: 'Readable{{name}}',
+        // writableName: 'Writable{{name}}',
+        // tree: true,
       },
       {
         // asClass: true,
@@ -137,22 +153,6 @@ export default defineConfig(() => {
         // bigInt: true,
         // dates: true,
         // name: '@hey-api/transformers',
-      },
-      {
-        // case: 'snake_case',
-        // enums: 'javascript',
-        // enums: {
-        //   case: 'PascalCase',
-        //   constantsIgnoreNull: true,
-        //   enabled: false,
-        //   exportInline: true,
-        //   type: 'typescript+namespace',
-        // },
-        name: '@hey-api/typescript',
-        // readOnlyWriteOnlyBehavior: 'off',
-        // readableNameBuilder: 'Readable{{name}}',
-        // writableNameBuilder: 'Writable{{name}}',
-        // tree: true,
       },
       {
         // name: 'fastify',
@@ -209,6 +209,11 @@ export default defineConfig(() => {
           // case: 'snake_case',
           // name: 'z{{name}}TestResponse',
         },
+      },
+      {
+        exportFromIndex: true,
+        // name: '@hey-api/schemas',
+        // type: 'json',
       },
     ],
     // useOptions: false,

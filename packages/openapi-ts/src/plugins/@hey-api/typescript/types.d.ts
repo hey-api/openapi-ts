@@ -46,13 +46,12 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
          */
         enabled?: boolean;
         /**
-         * TODO: remove this option
-         *
          * By default, enums not defined as reusable components in the input file (inline enums)
          * are emitted as types, even if you generate runtime enums. You can set `exportInline` to `true` to treat inline enums
          * as reusable components. When `true`, the exported enums will follow the
          * style defined in `enums`.
          *
+         * @deprecated
          * @default false
          */
         exportInline?: boolean;
@@ -91,18 +90,19 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
   readOnlyWriteOnlyBehavior?: 'off' | 'split';
   /**
    * Customize the name of types used in responses or containing read-only
-   * fields.
+   * fields. We default to the original name to avoid breaking your output when
+   * a read-only field is added.
    *
-   * @default '{{name}}Readable'
+   * @default '{{name}}'
    */
-  readableNameBuilder?: string;
+  readableName?: string | ((name: string) => string);
   /**
-   * Customize the name of types used in payloads or containing write-only
+   * Customize the name of types used in requests or containing write-only
    * fields.
    *
    * @default '{{name}}Writable'
    */
-  writableNameBuilder?: string;
+  writableName?: string | ((name: string) => string);
 
   // DEPRECATED OPTIONS BELOW
 
@@ -134,14 +134,6 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
    * @default false
    */
   tree?: boolean;
-};
-
-export type EnumsConfig = {
-  case?: StringCase;
-  constantsIgnoreNull?: boolean;
-  enabled?: boolean;
-  exportInline?: boolean;
-  type?: EnumsType;
 };
 
 export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
@@ -182,16 +174,15 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
      */
     enabled: boolean;
     /**
-     * TODO: remove this option
-     *
      * By default, enums not defined as reusable components in the input file (inline enums)
      * are emitted as types, even if you generate runtime enums. You can set `exportInline` to `true` to treat inline enums
      * as reusable components. When `true`, the exported enums will follow the
      * style defined in `enums`.
      *
+     * @deprecated
      * @default false
      */
-    exportInline?: boolean;
+    exportInline: boolean;
     /**
      * Specifies the output style for generated enums.
      *
@@ -227,18 +218,19 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
   readOnlyWriteOnlyBehavior: 'off' | 'split';
   /**
    * Customize the name of types used in responses or containing read-only
-   * fields.
+   * fields. We default to the original name to avoid breaking your output when
+   * a read-only field is added.
    *
-   * @default '{{name}}Readable'
+   * @default '{{name}}'
    */
-  readableNameBuilder: string;
+  readableName: string | ((name: string) => string);
   /**
-   * Customize the name of types used in payloads or containing write-only
+   * Customize the name of types used in requests or containing write-only
    * fields.
    *
    * @default '{{name}}Writable'
    */
-  writableNameBuilder: string;
+  writableName: string | ((name: string) => string);
 
   // DEPRECATED OPTIONS BELOW
 
@@ -278,3 +270,5 @@ export type HeyApiTypeScriptPlugin = DefinePlugin<Config, ResolvedConfig>;
 // enumsCase -> enums.case
 // enumsConstantsIgnoreNull -> enums.constantsIgnoreNull
 // exportInlineEnums -> enums.exportInline
+// readableNameBuilder -> readableName
+// writableNameBuilder -> writableName

@@ -482,8 +482,8 @@ for (const version of versions) {
             {
               name: '@hey-api/typescript',
               readOnlyWriteOnlyBehavior: 'split',
-              readableNameBuilder: 'Readable{{name}}',
-              writableNameBuilder: 'Writable{{name}}',
+              readableName: 'Readable{{name}}',
+              writableName: 'Writable{{name}}',
             },
             '@hey-api/client-fetch',
           ],
