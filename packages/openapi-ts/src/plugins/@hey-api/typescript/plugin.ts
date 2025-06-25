@@ -51,8 +51,8 @@ const scopeToRef = ({
   const name = refParts.pop()!;
   const nameBuilder =
     accessScope === 'read'
-      ? plugin.config.readableNameBuilder
-      : plugin.config.writableNameBuilder;
+      ? plugin.config.readableName
+      : plugin.config.writableName;
   const processedName = processNameBuilder({ name, nameBuilder });
   refParts.push(processedName);
   return refParts.join('/');
@@ -63,13 +63,17 @@ const processNameBuilder = ({
   nameBuilder,
 }: {
   name: string;
-  nameBuilder: string | undefined;
+  nameBuilder: string | ((name: string) => string) | undefined;
 }) => {
   if (!nameBuilder) {
     return name;
   }
 
-  return nameBuilder.replace('{{name}}', name);
+  if (typeof nameBuilder === 'string') {
+    return nameBuilder.replace('{{name}}', name);
+  }
+
+  return nameBuilder(name);
 };
 
 const shouldSkipSchema = ({
