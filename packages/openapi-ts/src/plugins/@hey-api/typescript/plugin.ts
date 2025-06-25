@@ -429,12 +429,8 @@ const enumTypeToIdentifier = ({
 }): ts.TypeNode | undefined => {
   const file = plugin.context.file({ id: typesId })!;
   const isRefComponent = $ref ? isRefOpenApiComponent($ref) : false;
-  const shouldExportEnum =
-    isRefComponent ||
-    (plugin.config.enums.enabled &&
-      plugin.context.config.parser.transforms.enums === 'root');
 
-  if ($ref && shouldExportEnum) {
+  if ($ref && isRefComponent) {
     // when enums are disabled (default), emit only reusable components
     // as types, otherwise the output would be broken if we skipped all enums
     if (!plugin.config.enums.enabled) {

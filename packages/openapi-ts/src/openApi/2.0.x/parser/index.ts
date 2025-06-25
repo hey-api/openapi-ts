@@ -7,6 +7,7 @@ import {
 } from '../../shared/utils/filter';
 import type { Graph } from '../../shared/utils/graph';
 import { mergeParametersObjects } from '../../shared/utils/parameter';
+import { hasTransforms } from '../../shared/utils/transform';
 import { handleValidatorResult } from '../../shared/utils/validator';
 import type {
   OpenApiV2_0_X,
@@ -27,12 +28,18 @@ type PathKeys<T extends keyof PathsObject = keyof PathsObject> =
 
 export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
   const shouldFilterSpec = hasFilters(context.config.parser.filters);
+  const shouldTransformSpec = hasTransforms(context.config.parser.transforms);
 
   let graph: Graph | undefined;
 
-  if (shouldFilterSpec || context.config.parser.validate_EXPERIMENTAL) {
+  if (
+    shouldFilterSpec ||
+    shouldTransformSpec ||
+    context.config.parser.validate_EXPERIMENTAL
+  ) {
     const result = createGraph({
       spec: context.spec,
+      transforms: context.config.parser.transforms,
       validate: Boolean(context.config.parser.validate_EXPERIMENTAL),
     });
     graph = result.graph;

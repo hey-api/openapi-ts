@@ -86,3 +86,30 @@ export const removeNamespace = (
     namespace: key.slice(0, index)! as GraphType,
   };
 };
+
+/**
+ * Helper to set a value at a path in an object.
+ */
+export const setAtPath = (
+  obj: any,
+  path: Array<string | number>,
+  value: unknown,
+) => {
+  let curr = obj;
+  for (let i = 0; i < path.length - 1; i++) {
+    curr = curr[path[i]!];
+  }
+  curr[path[path.length - 1]!] = value;
+};
+
+export const getUniqueComponentName = (
+  components: Record<string, unknown>,
+  base: string,
+): string => {
+  let i = 1;
+  let name = base;
+  while (Object.prototype.hasOwnProperty.call(components, name)) {
+    name = `${base}${i++}`;
+  }
+  return name;
+};
