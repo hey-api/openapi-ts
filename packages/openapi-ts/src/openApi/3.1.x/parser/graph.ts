@@ -1,6 +1,13 @@
 import { createOperationKey } from '../../../ir/operation';
+import type { Config } from '../../../types/config';
+import { refToName, resolveRef } from '../../../utils/ref';
 import type { Graph } from '../../shared/utils/graph';
-import { addNamespace, stringToNamespace } from '../../shared/utils/graph';
+import {
+  addNamespace,
+  getUniqueComponentName,
+  setAtPath,
+  stringToNamespace,
+} from '../../shared/utils/graph';
 import { httpMethods } from '../../shared/utils/operation';
 import type {
   ValidatorIssue,
@@ -13,11 +20,58 @@ import type {
   SchemaObject,
 } from '../types/spec';
 
-const collectSchemaDependencies = (
-  schema: SchemaObject,
-  dependencies: Set<string>,
-) => {
-  if ('$ref' in schema && schema.$ref) {
+const collectSchemaDependencies = ({
+  dependencies,
+  path,
+  schema,
+  schemasToDelete,
+  spec,
+  transforms,
+}: {
+  dependencies: Set<string>;
+  path: Array<string | number>;
+  schema: SchemaObject;
+  schemasToDelete: Set<string>;
+  spec: OpenApiV3_1_X;
+  transforms: Config['parser']['transforms'];
+}) => {
+  if (transforms.enums !== 'off') {
+    if (transforms.enums === 'root') {
+      if (schema.enum) {
+        if (
+          path.length !== 3 ||
+          path[0] !== 'components' ||
+          path[1] !== 'schemas'
+        ) {
+          // Move the current schema to #/components/schemas and replace with $ref
+          if (!spec.components) spec.components = {};
+          if (!spec.components.schemas) spec.components.schemas = {};
+          const enumName = getUniqueComponentName(
+            spec.components.schemas,
+            String(path[path.length - 1]),
+          );
+          spec.components.schemas[enumName] = { ...schema };
+          setAtPath(spec, path, { $ref: `#/components/schemas/${enumName}` });
+          return;
+        }
+      }
+    } else if (transforms.enums === 'inline') {
+      if (schema.$ref) {
+        // Copy the referenced enum schema and remove $ref from the current schema
+        const refSchema = resolveRef<SchemaObject>({ $ref: schema.$ref, spec });
+        if (refSchema.enum) {
+          const cloned = JSON.parse(JSON.stringify(refSchema));
+          Object.assign(schema, cloned);
+          // Mark the referenced enum schema for deletion later
+          const name = refToName(schema.$ref);
+          schemasToDelete.add(name);
+          delete schema.$ref;
+        }
+      }
+    }
+  }
+
+  if (schema.$ref) {
     const parts = schema.$ref.split('/');
     const type = parts[parts.length - 2];
     const name = parts[parts.length - 1];
@@ -31,13 +85,27 @@ const collectSchemaDependencies = (
   }
 
   if (schema.items && typeof schema.items === 'object') {
-    collectSchemaDependencies(schema.items, dependencies);
+    collectSchemaDependencies({
+      dependencies,
+      path: [...path, 'items'],
+      schema: schema.items,
+      schemasToDelete,
+      spec,
+      transforms,
+    });
   }
 
   if (schema.properties) {
-    for (const property of Object.values(schema.properties)) {
+    for (const [propertyName, property] of Object.entries(schema.properties)) {
       if (typeof property === 'object') {
-        collectSchemaDependencies(property, dependencies);
+        collectSchemaDependencies({
+          dependencies,
+          path: [...path, 'properties', propertyName],
+          schema: property,
+          schemasToDelete,
+          spec,
+          transforms,
+        });
       }
     }
   }
@@ -46,51 +114,121 @@ const collectSchemaDependencies = (
     schema.additionalProperties &&
     typeof schema.additionalProperties === 'object'
   ) {
-    collectSchemaDependencies(schema.additionalProperties, dependencies);
+    collectSchemaDependencies({
+      dependencies,
+      path: [...path, 'additionalProperties'],
+      schema: schema.additionalProperties,
+      schemasToDelete,
+      spec,
+      transforms,
+    });
   }
 
-  if (schema.allOf) {
-    for (const item of schema.allOf) {
-      collectSchemaDependencies(item, dependencies);
+  if (Array.isArray(schema.allOf)) {
+    for (let i = 0; i < schema.allOf.length; i++) {
+      const item = schema.allOf[i];
+      if (item && typeof item === 'object') {
+        collectSchemaDependencies({
+          dependencies,
+          path: [...path, 'allOf', i],
+          schema: item,
+          schemasToDelete,
+          spec,
+          transforms,
+        });
+      }
     }
   }
 
-  if (schema.anyOf) {
-    for (const item of schema.anyOf) {
-      collectSchemaDependencies(item, dependencies);
+  if (Array.isArray(schema.anyOf)) {
+    for (let i = 0; i < schema.anyOf.length; i++) {
+      const item = schema.anyOf[i];
+      if (item && typeof item === 'object') {
+        collectSchemaDependencies({
+          dependencies,
+          path: [...path, 'anyOf', i],
+          schema: item,
+          schemasToDelete,
+          spec,
+          transforms,
+        });
+      }
     }
   }
 
-  if (schema.contains) {
-    collectSchemaDependencies(schema.contains, dependencies);
+  if (schema.contains && typeof schema.contains === 'object') {
+    collectSchemaDependencies({
+      dependencies,
+      path: [...path, 'contains'],
+      schema: schema.contains,
+      schemasToDelete,
+      spec,
+      transforms,
+    });
   }
 
-  if (schema.not) {
-    collectSchemaDependencies(schema.not, dependencies);
+  if (schema.not && typeof schema.not === 'object') {
+    collectSchemaDependencies({
+      dependencies,
+      path: [...path, 'not'],
+      schema: schema.not,
+      schemasToDelete,
+      spec,
+      transforms,
+    });
   }
 
-  if (schema.oneOf) {
-    for (const item of schema.oneOf) {
-      collectSchemaDependencies(item, dependencies);
+  if (Array.isArray(schema.oneOf)) {
+    for (let i = 0; i < schema.oneOf.length; i++) {
+      const item = schema.oneOf[i];
+      if (item && typeof item === 'object') {
+        collectSchemaDependencies({
+          dependencies,
+          path: [...path, 'oneOf', i],
+          schema: item,
+          schemasToDelete,
+          spec,
+          transforms,
+        });
+      }
     }
   }
 
-  if (schema.prefixItems) {
-    for (const item of schema.prefixItems) {
-      collectSchemaDependencies(item, dependencies);
+  if (Array.isArray(schema.prefixItems)) {
+    for (let i = 0; i < schema.prefixItems.length; i++) {
+      const item = schema.prefixItems[i];
+      if (item && typeof item === 'object') {
+        collectSchemaDependencies({
+          dependencies,
+          path: [...path, 'prefixItems', i],
+          schema: item,
+          schemasToDelete,
+          spec,
+          transforms,
+        });
+      }
     }
   }
 
   if (schema.propertyNames && typeof schema.propertyNames === 'object') {
-    collectSchemaDependencies(schema.propertyNames, dependencies);
+    collectSchemaDependencies({
+      dependencies,
+      path: [...path, 'propertyNames'],
+      schema: schema.propertyNames,
+      schemasToDelete,
+      spec,
+      transforms,
+    });
   }
 };
 
 export const createGraph = ({
   spec,
+  transforms,
   validate,
 }: {
   spec: OpenApiV3_1_X;
+  transforms: Config['parser']['transforms'];
   validate: boolean;
 }): ValidatorResult & {
   graph: Graph;
@@ -104,13 +242,21 @@ export const createGraph = ({
   };
   const issues: Array<ValidatorIssue> = [];
   const operationIds = new Map();
+  const schemasToDelete = new Set<string>();
 
   if (spec.components) {
     // TODO: add other components
     if (spec.components.schemas) {
       for (const [key, schema] of Object.entries(spec.components.schemas)) {
         const dependencies = new Set<string>();
-        collectSchemaDependencies(schema, dependencies);
+        collectSchemaDependencies({
+          dependencies,
+          path: ['components', 'schemas', key],
+          schema,
+          schemasToDelete,
+          spec,
+          transforms,
+        });
         graph.schemas.set(addNamespace('schema', key), {
           dependencies,
           deprecated:
@@ -125,16 +271,50 @@ export const createGraph = ({
       )) {
         const dependencies = new Set<string>();
         if ('$ref' in parameter) {
-          collectSchemaDependencies(parameter, dependencies);
+          collectSchemaDependencies({
+            dependencies,
+            path: ['components', 'parameters', key],
+            schema: parameter,
+            schemasToDelete,
+            spec,
+            transforms,
+          });
         } else {
           if (parameter.schema) {
-            collectSchemaDependencies(parameter.schema, dependencies);
+            if (parameter.schema) {
+              collectSchemaDependencies({
+                dependencies,
+                path: ['components', 'parameters', key],
+                schema: parameter.schema,
+                schemasToDelete,
+                spec,
+                transforms,
+              });
+            }
           }
 
           if (parameter.content) {
-            for (const media of Object.values(parameter.content)) {
-              if (media.schema) {
-                collectSchemaDependencies(media.schema, dependencies);
+            for (const [mediaType, media] of Object.entries(
+              parameter.content,
+            )) {
+              if (media && media.schema) {
+                if (media.schema) {
+                  collectSchemaDependencies({
+                    dependencies,
+                    path: [
+                      'components',
+                      'parameters',
+                      key,
+                      'content',
+                      mediaType,
+                      'schema',
+                    ],
+                    schema: media.schema,
+                    schemasToDelete,
+                    spec,
+                    transforms,
+                  });
+                }
               }
             }
           }
@@ -153,11 +333,36 @@ export const createGraph = ({
       )) {
         const dependencies = new Set<string>();
         if ('$ref' in requestBody) {
-          collectSchemaDependencies(requestBody, dependencies);
+          collectSchemaDependencies({
+            dependencies,
+            path: ['components', 'requestBodies', key],
+            schema: requestBody,
+            schemasToDelete,
+            spec,
+            transforms,
+          });
         } else {
-          for (const media of Object.values(requestBody.content)) {
-            if (media.schema) {
-              collectSchemaDependencies(media.schema, dependencies);
+          for (const [mediaType, media] of Object.entries(
+            requestBody.content,
+          )) {
+            if (media && media.schema) {
+              if (media.schema) {
+                collectSchemaDependencies({
+                  dependencies,
+                  path: [
+                    'components',
+                    'requestBodies',
+                    key,
+                    'content',
+                    mediaType,
+                    'schema',
+                  ],
+                  schema: media.schema,
+                  schemasToDelete,
+                  spec,
+                  transforms,
+                });
+              }
             }
           }
         }
@@ -172,12 +377,35 @@ export const createGraph = ({
       for (const [key, response] of Object.entries(spec.components.responses)) {
         const dependencies = new Set<string>();
         if ('$ref' in response) {
-          collectSchemaDependencies(response, dependencies);
+          collectSchemaDependencies({
+            dependencies,
+            path: ['components', 'responses', key],
+            schema: response,
+            schemasToDelete,
+            spec,
+            transforms,
+          });
         } else {
           if (response.content) {
-            for (const media of Object.values(response.content)) {
-              if (media.schema) {
-                collectSchemaDependencies(media.schema, dependencies);
+            for (const [mediaType, media] of Object.entries(response.content)) {
+              if (media && media.schema) {
+                if (media.schema) {
+                  collectSchemaDependencies({
+                    dependencies,
+                    path: [
+                      'components',
+                      'responses',
+                      key,
+                      'content',
+                      mediaType,
+                      'schema',
+                    ],
+                    schema: media.schema,
+                    schemasToDelete,
+                    spec,
+                    transforms,
+                  });
+                }
               }
             }
           }
@@ -224,28 +452,83 @@ export const createGraph = ({
 
         if (operation.requestBody) {
           if ('$ref' in operation.requestBody) {
-            collectSchemaDependencies(operation.requestBody, dependencies);
-          } else {
-            for (const media of Object.values(operation.requestBody.content)) {
-              if (media.schema) {
-                collectSchemaDependencies(media.schema, dependencies);
+            collectSchemaDependencies({
+              dependencies,
+              path: ['paths', path, method, 'requestBody'],
+              schema: operation.requestBody,
+              schemasToDelete,
+              spec,
+              transforms,
+            });
+          } else if (operation.requestBody.content) {
+            for (const [mediaType, media] of Object.entries(
+              operation.requestBody.content,
+            )) {
+              if (media && media.schema) {
+                if (media.schema) {
+                  collectSchemaDependencies({
+                    dependencies,
+                    path: [
+                      'paths',
+                      path,
+                      method,
+                      'requestBody',
+                      'content',
+                      mediaType,
+                      'schema',
+                    ],
+                    schema: media.schema,
+                    schemasToDelete,
+                    spec,
+                    transforms,
+                  });
+                }
               }
             }
           }
         }
 
         if (operation.responses) {
-          for (const response of Object.values(operation.responses)) {
+          for (const [responseKey, response] of Object.entries(
+            operation.responses,
+          )) {
             if (!response) {
               continue;
             }
 
             if ('$ref' in response) {
-              collectSchemaDependencies(response, dependencies);
+              collectSchemaDependencies({
+                dependencies,
+                path: ['paths', path, method, 'responses', responseKey],
+                schema: response,
+                schemasToDelete,
+                spec,
+                transforms,
+              });
             } else if (response.content) {
-              for (const media of Object.values(response.content)) {
-                if (media.schema) {
-                  collectSchemaDependencies(media.schema, dependencies);
+              for (const [mediaType, media] of Object.entries(
+                response.content,
+              )) {
+                if (media && media.schema) {
+                  if (media.schema) {
+                    collectSchemaDependencies({
+                      dependencies,
+                      path: [
+                        'paths',
+                        path,
+                        method,
+                        'responses',
+                        responseKey,
+                        'content',
+                        mediaType,
+                        'schema',
+                      ],
+                      schema: media.schema,
+                      schemasToDelete,
+                      spec,
+                      transforms,
+                    });
+                  }
                 }
               }
             }
@@ -253,11 +536,29 @@ export const createGraph = ({
         }
 
         if (operation.parameters) {
-          for (const parameter of operation.parameters) {
+          for (let i = 0; i < operation.parameters.length; i++) {
+            const parameter = operation.parameters[i];
+            if (!parameter) continue;
             if ('$ref' in parameter) {
-              collectSchemaDependencies(parameter, dependencies);
+              collectSchemaDependencies({
+                dependencies,
+                path: ['paths', path, method, 'parameters', i],
+                schema: parameter,
+                schemasToDelete,
+                spec,
+                transforms,
+              });
             } else if (parameter.schema) {
-              collectSchemaDependencies(parameter.schema, dependencies);
+              if (parameter.schema) {
+                collectSchemaDependencies({
+                  dependencies,
+                  path: ['paths', path, method, 'parameters', i, 'schema'],
+                  schema: parameter.schema,
+                  schemasToDelete,
+                  spec,
+                  transforms,
+                });
+              }
             }
           }
         }
@@ -309,6 +610,13 @@ export const createGraph = ({
           }
         }
       }
+    }
+  }
+
+  if (spec.components && spec.components.schemas) {
+    for (const key of schemasToDelete) {
+      delete spec.components.schemas[key];
+      graph.schemas.delete(addNamespace('schema', key));
     }
   }
 
