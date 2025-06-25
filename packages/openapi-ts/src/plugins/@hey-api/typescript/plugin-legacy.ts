@@ -135,9 +135,11 @@ const processComposition = (props: TypesProps) => {
   processType(props);
 
   props.model.enums.forEach((enumerator) => {
+    const pluginTypeScript = config.plugins['@hey-api/typescript'];
     if (
-      config.plugins['@hey-api/typescript']?.config.enums !==
-      'typescript+namespace'
+      pluginTypeScript?.config &&
+      typeof pluginTypeScript.config.enums === 'object' &&
+      pluginTypeScript.config.enums.type !== 'typescript+namespace'
     ) {
       return processEnum({
         ...props,
@@ -183,10 +185,13 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
     model.deprecated && '@deprecated',
   ];
 
+  const pluginTypeScript = config.plugins['@hey-api/typescript'];
   if (
-    config.plugins['@hey-api/typescript']?.config.enums === 'typescript' ||
-    config.plugins['@hey-api/typescript']?.config.enums ===
-      'typescript+namespace'
+    pluginTypeScript?.config &&
+    typeof pluginTypeScript.config.enums === 'object' &&
+    pluginTypeScript.config.enums.enabled &&
+    (pluginTypeScript.config.enums.type === 'typescript' ||
+      pluginTypeScript.config.enums.type === 'typescript+namespace')
   ) {
     generateEnum({
       client,
@@ -205,8 +210,12 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
     meta: model.meta,
     onCreated: (name) => {
       // create a separate JavaScript object export
+      const pluginTypeScript = config.plugins['@hey-api/typescript'];
       if (
-        config.plugins['@hey-api/typescript']?.config.enums === 'javascript'
+        pluginTypeScript?.config &&
+        typeof pluginTypeScript.config.enums === 'object' &&
+        pluginTypeScript.config.enums.enabled &&
+        pluginTypeScript.config.enums.type === 'javascript'
       ) {
         const expression = compiler.objectExpression({
           multiLine: true,
