@@ -11,7 +11,6 @@ describe('operationNameFn', () => {
     exportCore: false,
     input: {
       path: '',
-      validate_EXPERIMENTAL: false,
       watch: {
         enabled: false,
         interval: 1_000,
@@ -25,6 +24,12 @@ describe('operationNameFn', () => {
     },
     output: {
       path: '',
+    },
+    parser: {
+      pagination: {
+        keywords: [],
+      },
+      validate_EXPERIMENTAL: false,
     },
     pluginOrder: ['legacy/fetch', '@hey-api/sdk'],
     plugins: {

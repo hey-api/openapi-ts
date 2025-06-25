@@ -1,4 +1,4 @@
-import type { Patch } from '../../../types/input';
+import type { Patch } from '../../../types/parser';
 import type { OpenApi } from '../../types';
 
 export const patchOpenApiSpec = ({

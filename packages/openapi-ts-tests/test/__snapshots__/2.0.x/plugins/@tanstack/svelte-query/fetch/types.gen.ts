@@ -267,8 +267,8 @@ export type ModelWithNestedEnums = {
 /**
  * This is a model with one property containing a reference
  */
-export type ModelWithReferenceReadable = {
-    prop?: ModelWithPropertiesReadable;
+export type ModelWithReference = {
+    prop?: ModelWithProperties;
 };
 
 /**
@@ -306,7 +306,7 @@ export type ModelWithCircularReference = {
 /**
  * This is a model with one nested property
  */
-export type ModelWithPropertiesReadable = {
+export type ModelWithProperties = {
     required: string;
     readonly requiredAndReadOnly: string;
     string?: string;
@@ -393,7 +393,7 @@ export type Default = {
 /**
  * This is a model that contains a some patterns
  */
-export type ModelWithPatternReadable = {
+export type ModelWithPattern = {
     key: string;
     name: string;
     readonly enabled?: boolean;

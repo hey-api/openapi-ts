@@ -25,21 +25,21 @@ import { parseSchema } from './schema';
 import { parseServers } from './server';
 
 export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
-  const shouldFilterSpec = hasFilters(context.config.input.filters);
+  const shouldFilterSpec = hasFilters(context.config.parser.filters);
 
   let graph: Graph | undefined;
 
-  if (shouldFilterSpec || context.config.input.validate_EXPERIMENTAL) {
+  if (shouldFilterSpec || context.config.parser.validate_EXPERIMENTAL) {
     const result = createGraph({
       spec: context.spec,
-      validate: Boolean(context.config.input.validate_EXPERIMENTAL),
+      validate: Boolean(context.config.parser.validate_EXPERIMENTAL),
     });
     graph = result.graph;
     handleValidatorResult({ context, result });
   }
 
   if (shouldFilterSpec && graph) {
-    const filters = createFilters(context.config.input.filters, context.spec);
+    const filters = createFilters(context.config.parser.filters, context.spec);
     const sets = createFilteredDependencies({ filters, graph });
     filterSpec({
       ...sets,

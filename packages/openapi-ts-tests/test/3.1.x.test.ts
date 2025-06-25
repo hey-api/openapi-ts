@@ -488,13 +488,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: {
+        input: 'exclude-deprecated.yaml',
+        output: 'exclude-deprecated',
+        parser: {
           filters: {
             deprecated: false,
           },
-          path: 'exclude-deprecated.yaml',
         },
-        output: 'exclude-deprecated',
       }),
       description: 'excludes deprecated fields',
     },
