@@ -464,13 +464,12 @@ for (const version of versions) {
         config: createConfig({
           input: 'read-write-only.yaml',
           output: 'read-write-only-ignore',
-          plugins: [
-            {
-              name: '@hey-api/typescript',
-              readOnlyWriteOnlyBehavior: 'off',
+          parser: {
+            transforms: {
+              readWrite: false,
             },
-            '@hey-api/client-fetch',
-          ],
+          },
+          plugins: ['@hey-api/typescript', '@hey-api/client-fetch'],
         }),
         description: 'ignores read-only and write-only handling',
       },
@@ -478,15 +477,15 @@ for (const version of versions) {
         config: createConfig({
           input: 'read-write-only.yaml',
           output: 'read-write-only-custom-name',
-          plugins: [
-            {
-              name: '@hey-api/typescript',
-              readOnlyWriteOnlyBehavior: 'split',
-              readableName: 'Readable{{name}}',
-              writableName: 'Writable{{name}}',
+          parser: {
+            transforms: {
+              readWrite: {
+                requests: 'Writable{{name}}',
+                responses: 'Readable{{name}}',
+              },
             },
-            '@hey-api/client-fetch',
-          ],
+          },
+          plugins: ['@hey-api/typescript', '@hey-api/client-fetch'],
         }),
         description: 'custom read-only and write-only naming',
       },

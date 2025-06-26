@@ -103,6 +103,10 @@ export default defineConfig(() => {
       },
       transforms: {
         enums: 'root',
+        readWrite: {
+          requests: '{{name}}Writable',
+          responses: '{{name}}',
+        },
       },
       validate_EXPERIMENTAL: true,
     },

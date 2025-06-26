@@ -139,7 +139,7 @@ const processComposition = (props: TypesProps) => {
     if (
       pluginTypeScript?.config &&
       typeof pluginTypeScript.config.enums === 'object' &&
-      pluginTypeScript.config.enums.type !== 'typescript+namespace'
+      pluginTypeScript.config.enums.mode !== 'typescript+namespace'
     ) {
       return processEnum({
         ...props,
@@ -190,8 +190,8 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
     pluginTypeScript?.config &&
     typeof pluginTypeScript.config.enums === 'object' &&
     pluginTypeScript.config.enums.enabled &&
-    (pluginTypeScript.config.enums.type === 'typescript' ||
-      pluginTypeScript.config.enums.type === 'typescript+namespace')
+    (pluginTypeScript.config.enums.mode === 'typescript' ||
+      pluginTypeScript.config.enums.mode === 'typescript+namespace')
   ) {
     generateEnum({
       client,
@@ -215,7 +215,7 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
         pluginTypeScript?.config &&
         typeof pluginTypeScript.config.enums === 'object' &&
         pluginTypeScript.config.enums.enabled &&
-        pluginTypeScript.config.enums.type === 'javascript'
+        pluginTypeScript.config.enums.mode === 'javascript'
       ) {
         const expression = compiler.objectExpression({
           multiLine: true,

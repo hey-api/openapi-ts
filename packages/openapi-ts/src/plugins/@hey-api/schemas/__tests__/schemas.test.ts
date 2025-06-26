@@ -40,7 +40,18 @@ describe('generateLegacySchemas', () => {
           keywords: [],
         },
         transforms: {
-          enums: 'off',
+          enums: false,
+          readWrite: {
+            enabled: false,
+            requests: {
+              case: 'preserve',
+              name: '',
+            },
+            responses: {
+              case: 'preserve',
+              name: '',
+            },
+          },
         },
         validate_EXPERIMENTAL: false,
       },
@@ -155,7 +166,18 @@ describe('generateLegacySchemas', () => {
           keywords: [],
         },
         transforms: {
-          enums: 'off',
+          enums: false,
+          readWrite: {
+            enabled: false,
+            requests: {
+              case: 'preserve',
+              name: '',
+            },
+            responses: {
+              case: 'preserve',
+              name: '',
+            },
+          },
         },
         validate_EXPERIMENTAL: false,
       },

@@ -46,7 +46,7 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
          */
         enabled?: boolean;
         /**
-         * Specifies the output style for generated enums.
+         * Specifies the output mode for generated enums.
          *
          * Can be:
          * - `javascript`: Generates JavaScript objects
@@ -55,7 +55,7 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
          *
          * @default 'javascript'
          */
-        type?: EnumsType;
+        mode?: EnumsType;
       };
   /**
    * Should the exports from the generated files be re-exported in the index
@@ -70,29 +70,6 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
    * @default 'types'
    */
   output?: string;
-  /**
-   * Choose how to handle types containing read-only or write-only fields?
-   * This option exists for backward compatibility with outputs created before
-   * this feature existed.
-   *
-   * @default 'split'
-   */
-  readOnlyWriteOnlyBehavior?: 'off' | 'split';
-  /**
-   * Customize the name of types used in responses or containing read-only
-   * fields. We default to the original name to avoid breaking your output when
-   * a read-only field is added.
-   *
-   * @default '{{name}}'
-   */
-  readableName?: string | ((name: string) => string);
-  /**
-   * Customize the name of types used in requests or containing write-only
-   * fields.
-   *
-   * @default '{{name}}Writable'
-   */
-  writableName?: string | ((name: string) => string);
 
   // DEPRECATED OPTIONS BELOW
 
@@ -164,7 +141,7 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
      */
     enabled: boolean;
     /**
-     * Specifies the output style for generated enums.
+     * Specifies the output mode for generated enums.
      *
      * Can be:
      * - `javascript`: Generates JavaScript objects
@@ -173,7 +150,7 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
      *
      * @default 'javascript'
      */
-    type: EnumsType;
+    mode: EnumsType;
   };
   /**
    * Should the exports from the generated files be re-exported in the index
@@ -188,29 +165,6 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
    * @default 'types'
    */
   output: string;
-  /**
-   * Choose how to handle types containing read-only or write-only fields?
-   * This option exists for backward compatibility with outputs created before
-   * this feature existed.
-   *
-   * @default 'split'
-   */
-  readOnlyWriteOnlyBehavior: 'off' | 'split';
-  /**
-   * Customize the name of types used in responses or containing read-only
-   * fields. We default to the original name to avoid breaking your output when
-   * a read-only field is added.
-   *
-   * @default '{{name}}'
-   */
-  readableName: string | ((name: string) => string);
-  /**
-   * Customize the name of types used in requests or containing write-only
-   * fields.
-   *
-   * @default '{{name}}Writable'
-   */
-  writableName: string | ((name: string) => string);
 
   // DEPRECATED OPTIONS BELOW
 

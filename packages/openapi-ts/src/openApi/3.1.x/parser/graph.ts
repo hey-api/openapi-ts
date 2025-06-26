@@ -35,7 +35,7 @@ const collectSchemaDependencies = ({
   spec: OpenApiV3_1_X;
   transforms: Config['parser']['transforms'];
 }) => {
-  if (transforms.enums !== 'off') {
+  if (transforms.enums) {
     if (transforms.enums === 'root') {
       if (schema.enum) {
         if (

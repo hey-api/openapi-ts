@@ -51,8 +51,8 @@ const scopeToRef = ({
   const name = refParts.pop()!;
   const nameBuilder =
     accessScope === 'read'
-      ? plugin.config.readableName
-      : plugin.config.writableName;
+      ? plugin.context.config.parser.transforms.readWrite.responses.name
+      : plugin.context.config.parser.transforms.readWrite.requests.name;
   const processedName = processNameBuilder({ name, nameBuilder });
   refParts.push(processedName);
   return refParts.join('/');
@@ -219,8 +219,8 @@ const schemaToEnumObject = ({
       if (
         numberRegExp.test(key) &&
         plugin.config.enums.enabled &&
-        (plugin.config.enums.type === 'typescript' ||
-          plugin.config.enums.type === 'typescript+namespace')
+        (plugin.config.enums.mode === 'typescript' ||
+          plugin.config.enums.mode === 'typescript+namespace')
       ) {
         key = `_${key}`;
       }
@@ -265,7 +265,7 @@ const addTypeEnum = ({
   if (
     !identifier.created &&
     !isRefOpenApiComponent($ref) &&
-    plugin.config.enums.type !== 'typescript+namespace'
+    plugin.config.enums.mode !== 'typescript+namespace'
   ) {
     return;
   }
@@ -446,7 +446,7 @@ const enumTypeToIdentifier = ({
     }
 
     if (plugin.config.enums.enabled) {
-      if (plugin.config.enums.type === 'javascript') {
+      if (plugin.config.enums.mode === 'javascript') {
         const typeNode = addTypeEnum({
           $ref,
           plugin,
@@ -467,7 +467,7 @@ const enumTypeToIdentifier = ({
         }
       }
 
-      if (plugin.config.enums.type === 'typescript') {
+      if (plugin.config.enums.mode === 'typescript') {
         const enumNode = addTypeScriptEnum({
           $ref,
           plugin,
@@ -479,7 +479,7 @@ const enumTypeToIdentifier = ({
         }
       }
 
-      if (plugin.config.enums.type === 'typescript+namespace') {
+      if (plugin.config.enums.mode === 'typescript+namespace') {
         const enumNode = addTypeScriptEnum({
           $ref,
           plugin,
@@ -940,15 +940,14 @@ const operationToDataType = ({
   const type = schemaToType({
     plugin,
     schema: data,
-    state:
-      plugin.config.readOnlyWriteOnlyBehavior === 'off'
-        ? {
-            path: [operation.method, operation.path, 'data'],
-          }
-        : {
-            accessScope: 'write',
-            path: [operation.method, operation.path, 'data'],
-          },
+    state: !plugin.context.config.parser.transforms.readWrite.enabled
+      ? {
+          path: [operation.method, operation.path, 'data'],
+        }
+      : {
+          accessScope: 'write',
+          path: [operation.method, operation.path, 'data'],
+        },
   });
 
   if (type) {
@@ -989,15 +988,14 @@ const operationToType = ({
       const type = schemaToType({
         plugin,
         schema: errors,
-        state:
-          plugin.config.readOnlyWriteOnlyBehavior === 'off'
-            ? {
-                path: [operation.method, operation.path, 'errors'],
-              }
-            : {
-                accessScope: 'read',
-                path: [operation.method, operation.path, 'errors'],
-              },
+        state: !plugin.context.config.parser.transforms.readWrite.enabled
+          ? {
+              path: [operation.method, operation.path, 'errors'],
+            }
+          : {
+              accessScope: 'read',
+              path: [operation.method, operation.path, 'errors'],
+            },
       });
 
       if (type) {
@@ -1055,15 +1053,14 @@ const operationToType = ({
       const type = schemaToType({
         plugin,
         schema: responses,
-        state:
-          plugin.config.readOnlyWriteOnlyBehavior === 'off'
-            ? {
-                path: [operation.method, operation.path, 'responses'],
-              }
-            : {
-                accessScope: 'read',
-                path: [operation.method, operation.path, 'responses'],
-              },
+        state: !plugin.context.config.parser.transforms.readWrite.enabled
+          ? {
+              path: [operation.method, operation.path, 'responses'],
+            }
+          : {
+              accessScope: 'read',
+              path: [operation.method, operation.path, 'responses'],
+            },
       });
 
       if (type) {
@@ -1171,8 +1168,8 @@ export const schemaToType = ({
         namespace:
           refSchema.type === 'enum' &&
           plugin.config.enums.enabled &&
-          (plugin.config.enums.type === 'typescript' ||
-            plugin.config.enums.type === 'typescript+namespace') &&
+          (plugin.config.enums.mode === 'typescript' ||
+            plugin.config.enums.mode === 'typescript+namespace') &&
           shouldCreateTypeScriptEnum({
             plugin,
             schema: refSchema as SchemaWithType<'enum'>,
@@ -1311,21 +1308,20 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
           $ref: event.$ref,
           plugin,
           schema: event.requestBody.schema,
-          state:
-            plugin.config.readOnlyWriteOnlyBehavior === 'off'
-              ? {
-                  // TODO: correctly populate state.path
-                  path: [],
-                }
-              : {
-                  accessScope: 'write',
-                  // TODO: correctly populate state.path
-                  path: [],
-                },
+          state: !plugin.context.config.parser.transforms.readWrite.enabled
+            ? {
+                // TODO: correctly populate state.path
+                path: [],
+              }
+            : {
+                accessScope: 'write',
+                // TODO: correctly populate state.path
+                path: [],
+              },
         });
       } else if (event.type === 'schema') {
         if (
-          plugin.config.readOnlyWriteOnlyBehavior === 'off' ||
+          !plugin.context.config.parser.transforms.readWrite.enabled ||
           !isSchemaSplit({ schema: event.schema })
         ) {
           schemaToType({
