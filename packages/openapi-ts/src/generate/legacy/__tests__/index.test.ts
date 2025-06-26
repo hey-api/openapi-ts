@@ -37,7 +37,18 @@ describe('generateIndexFile', () => {
           keywords: [],
         },
         transforms: {
-          enums: 'off',
+          enums: false,
+          readWrite: {
+            enabled: false,
+            requests: {
+              case: 'preserve',
+              name: '',
+            },
+            responses: {
+              case: 'preserve',
+              name: '',
+            },
+          },
         },
         validate_EXPERIMENTAL: false,
       },

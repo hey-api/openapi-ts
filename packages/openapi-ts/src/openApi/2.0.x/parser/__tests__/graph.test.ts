@@ -52,7 +52,20 @@ describe('validate', () => {
     const spec = specFileToJson(file);
     const result = createGraph({
       spec,
-      transforms: { enums: 'off' },
+      transforms: {
+        enums: false,
+        readWrite: {
+          enabled: false,
+          requests: {
+            case: 'preserve',
+            name: '',
+          },
+          responses: {
+            case: 'preserve',
+            name: '',
+          },
+        },
+      },
       validate: true,
     });
     expect(result.valid).toBe(valid);

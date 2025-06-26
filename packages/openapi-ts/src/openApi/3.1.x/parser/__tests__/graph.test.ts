@@ -99,7 +99,18 @@ describe('validate', () => {
     const result = createGraph({
       spec,
       transforms: {
-        enums: 'off',
+        enums: false,
+        readWrite: {
+          enabled: false,
+          requests: {
+            case: 'preserve',
+            name: '',
+          },
+          responses: {
+            case: 'preserve',
+            name: '',
+          },
+        },
       },
       validate: true,
     });

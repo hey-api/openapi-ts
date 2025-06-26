@@ -1,4 +1,5 @@
 import type { Config, UserConfig } from '../types/config';
+import { valueToObject } from './utils';
 
 export const defaultPaginationKeywords = [
   'after',
@@ -16,7 +17,18 @@ export const getParser = (userConfig: UserConfig): Config['parser'] => {
       keywords: defaultPaginationKeywords,
     },
     transforms: {
-      enums: 'off',
+      enums: false,
+      readWrite: {
+        enabled: true,
+        requests: {
+          case: 'preserve',
+          name: '{{name}}Writable',
+        },
+        responses: {
+          case: 'preserve',
+          name: '{{name}}',
+        },
+      },
     },
     validate_EXPERIMENTAL: false,
   };
@@ -26,12 +38,34 @@ export const getParser = (userConfig: UserConfig): Config['parser'] => {
       parser.pagination.keywords = userConfig.parser.pagination.keywords;
     }
 
-    if (userConfig.parser.transforms) {
-      parser.transforms = {
-        ...parser.transforms,
-        ...userConfig.parser.transforms,
-      };
+    if (userConfig.parser.transforms?.enums) {
+      parser.transforms.enums = userConfig.parser.transforms.enums;
     }
+
+    parser.transforms.readWrite = valueToObject({
+      defaultValue: parser.transforms.readWrite,
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        object: (fields) => ({
+          ...fields,
+          requests: valueToObject({
+            defaultValue: parser.transforms.readWrite.requests,
+            mappers: {
+              string: (name) => ({ name }),
+            },
+            value: fields.requests,
+          }),
+          responses: valueToObject({
+            defaultValue: parser.transforms.readWrite.responses,
+            mappers: {
+              string: (name) => ({ name }),
+            },
+            value: fields.responses,
+          }),
+        }),
+      },
+      value: userConfig.parser.transforms?.readWrite,
+    }) as typeof parser.transforms.readWrite;
 
     if (userConfig.parser.validate_EXPERIMENTAL) {
       parser.validate_EXPERIMENTAL =

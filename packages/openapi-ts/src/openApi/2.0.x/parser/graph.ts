@@ -37,7 +37,7 @@ const collectSchemaDependencies = ({
   spec: OpenApiV2_0_X;
   transforms: Config['parser']['transforms'];
 }) => {
-  if (transforms.enums !== 'off') {
+  if (transforms.enums) {
     if (transforms.enums === 'root') {
       if (!('$ref' in schema) && !('in' in schema) && schema.enum) {
         if (path.length !== 2 || path[0] !== 'definitions') {

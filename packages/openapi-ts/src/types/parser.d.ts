@@ -6,6 +6,7 @@ import type {
   OpenApiResponseObject,
   OpenApiSchemaObject,
 } from '../openApi/types';
+import type { StringCase } from './case';
 
 export type Parser = {
   /**
@@ -51,9 +52,74 @@ export type Parser = {
      * plugin, set `enums` to `root`. Likewise, if you don't want to export any
      * enum types, set `enums` to `inline`.
      *
-     * @default 'off'
+     * @default false
      */
-    enums?: 'inline' | 'off' | 'root';
+    enums?: false | 'inline' | 'root';
+    /**
+     * Your input might contain read-only or write-only schemas. Simply using
+     * such schemas could mean asking the user to provide a read-only field in
+     * payloads, or expecting a write-only field in responses.
+     *
+     * To avoid such scenarios, we separate schemas for read and write
+     * operations. You can still disable this behavior if you prefer.
+     *
+     * @default true
+     */
+    readWrite?:
+      | boolean
+      | {
+          /**
+           * Whether to split read-only and write-only schemas.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Configuration for generated request-specific schemas.
+           *
+           * @default '{{name}}Writable'
+           */
+          requests?:
+            | string
+            | {
+                /**
+                 * The casing convention to use for generated names.
+                 *
+                 * @default 'preserve'
+                 */
+                case?: StringCase;
+                /**
+                 * Customize the generated name of schemas used in requests or
+                 * containing write-only fields.
+                 *
+                 * @default '{{name}}Writable'
+                 */
+                name?: string | ((name: string) => string);
+              };
+          /**
+           * Configuration for generated response-specific schemas.
+           *
+           * @default '{{name}}'
+           */
+          responses?:
+            | string
+            | {
+                /**
+                 * The casing convention to use for generated names.
+                 *
+                 * @default 'preserve'
+                 */
+                case?: StringCase;
+                /**
+                 * Customize the generated name of schemas used in responses or
+                 * containing read-only fields. We default to the original name
+                 * to avoid breaking output when a read-only field is added.
+                 *
+                 * @default '{{name}}'
+                 */
+                name?: string | ((name: string) => string);
+              };
+        };
   };
   /**
    * **This is an experimental feature.**
@@ -111,9 +177,62 @@ export type ResolvedParser = {
      * plugin, set `enums` to `root`. Likewise, if you don't want to export any
      * enum types, set `enums` to `inline`.
      *
-     * @default 'off'
+     * @default false
      */
-    enums: 'inline' | 'off' | 'root';
+    enums: false | 'inline' | 'root';
+    /**
+     * Your input might contain read-only or write-only schemas. Simply using
+     * such schemas could mean asking the user to provide a read-only field in
+     * payloads, or expecting a write-only field in responses.
+     *
+     * To avoid such scenarios, we separate schemas for read and write
+     * operations. You can still disable this behavior if you prefer.
+     */
+    readWrite: {
+      /**
+       * Whether to split read-only and write-only schemas.
+       *
+       * @default true
+       */
+      enabled: boolean;
+      /**
+       * Configuration for generated request-specific schemas.
+       */
+      requests: {
+        /**
+         * The casing convention to use for generated names.
+         *
+         * @default 'preserve'
+         */
+        case: StringCase;
+        /**
+         * Customize the generated name of schemas used in requests or
+         * containing write-only fields.
+         *
+         * @default '{{name}}Writable'
+         */
+        name: string | ((name: string) => string);
+      };
+      /**
+       * Configuration for generated response-specific schemas.
+       */
+      responses: {
+        /**
+         * The casing convention to use for generated names.
+         *
+         * @default 'preserve'
+         */
+        case: StringCase;
+        /**
+         * Customize the generated name of schemas used in responses or
+         * containing read-only fields. We default to the original name
+         * to avoid breaking output when a read-only field is added.
+         *
+         * @default '{{name}}'
+         */
+        name: string | ((name: string) => string);
+      };
+    };
   };
   /**
    * **This is an experimental feature.**

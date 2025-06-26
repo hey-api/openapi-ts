@@ -7,11 +7,8 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   config: {
     case: 'PascalCase',
     exportFromIndex: true,
-    readOnlyWriteOnlyBehavior: 'split',
-    readableName: '{{name}}',
     style: 'preserve',
     tree: false,
-    writableName: '{{name}}Writable',
   },
   handler,
   handlerLegacy,
@@ -23,11 +20,11 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
         case: 'SCREAMING_SNAKE_CASE',
         constantsIgnoreNull: false,
         enabled: Boolean(plugin.config.enums),
-        type: 'javascript',
+        mode: 'javascript',
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),
-        string: (type) => ({ type }),
+        string: (mode) => ({ mode }),
       },
       value: plugin.config.enums,
     });
