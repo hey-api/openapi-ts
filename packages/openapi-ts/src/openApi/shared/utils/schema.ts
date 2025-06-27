@@ -1,3 +1,5 @@
+export const deepClone = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
+
 /**
  * Accepts `accessScopes` from two schemas and returns a merged and
  * deduplicated value.

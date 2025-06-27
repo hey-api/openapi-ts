@@ -272,13 +272,6 @@ export type ModelWithReference = {
 };
 
 /**
- * This is a model with one property containing a reference
- */
-export type ModelWithReferenceWritable = {
-    prop?: ModelWithPropertiesWritable;
-};
-
-/**
  * This is a model with one property containing an array
  */
 export type ModelWithArray = {
@@ -318,20 +311,6 @@ export type ModelWithProperties = {
     try?: string;
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
-};
-
-/**
- * This is a model with one nested property
- */
-export type ModelWithPropertiesWritable = {
-    required: string;
-    string?: string;
-    number?: number;
-    boolean?: boolean;
-    reference?: ModelWithString;
-    'property with space'?: string;
-    default?: string;
-    try?: string;
 };
 
 /**
@@ -398,19 +377,6 @@ export type ModelWithPattern = {
     name: string;
     readonly enabled?: boolean;
     readonly modified?: string;
-    id?: string;
-    text?: string;
-    patternWithSingleQuotes?: string;
-    patternWithNewline?: string;
-    patternWithBacktick?: string;
-};
-
-/**
- * This is a model that contains a some patterns
- */
-export type ModelWithPatternWritable = {
-    key: string;
-    name: string;
     id?: string;
     text?: string;
     patternWithSingleQuotes?: string;

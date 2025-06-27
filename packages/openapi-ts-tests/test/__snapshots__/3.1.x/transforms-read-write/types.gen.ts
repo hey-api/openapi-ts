@@ -2,35 +2,23 @@
 
 export type FooReadWrite = BarRead;
 
-export type FooReadWriteWritable = BarReadWritable & {
-    foo?: string;
-};
-
 export type FooRead = BarRead & {
     readonly foo?: string;
 };
 
-export type FooReadWritable = BarReadWritable;
-
 export type FooWrite = BarWrite;
 
-export type FooWriteWritable = BarWriteWritable & {
-    foo?: string;
-};
-
-export type BarRead = Baz | {
+export type BarRead = Baz | QuxAllRead | {
     readonly bar?: string;
 };
 
-export type BarReadWritable = Baz;
-
-export type BarWrite = Baz;
-
-export type BarWriteWritable = Baz | {
-    bar?: string;
-};
+export type BarWrite = Baz | QuxAllRead;
 
 export type Baz = {
+    baz?: string;
+};
+
+export type QuxAllWrite = {
     baz?: string;
 };
 
@@ -43,20 +31,58 @@ export type Quux = {
     qux?: QuxAllRead;
 };
 
-export type QuuxWritable = {
-    baz?: Array<Baz>;
-};
-
 export type Corge = {
     bar?: {
         readonly baz?: boolean;
     };
 };
 
+export type FooReadWriteRef = {
+    foo?: FooReadWrite;
+    bar?: FooReadWriteRef;
+};
+
+export type FooReadWriteRef2 = FooReadWrite;
+
+export type FooReadWriteWritable = BarReadWritable & {
+    foo?: string;
+};
+
+export type FooReadWritable = BarReadWritable;
+
+export type FooWriteWritable = BarWriteWritable & {
+    foo?: string;
+};
+
+export type BarReadWritable = Baz | QuxAllWrite;
+
+export type BarWriteWritable = Baz | QuxAllWrite | {
+    bar?: string;
+};
+
 export type CorgeWritable = {
     foo?: {
         baz?: boolean;
     };
+};
+
+export type FooReadWriteRefWritable = {
+    foo?: FooReadWriteWritable;
+    bar?: FooReadWriteRefWritable;
+};
+
+export type FooReadWriteRef2Writable = FooReadWriteWritable;
+
+/**
+ * Query parameter
+ */
+export type Foo = string;
+
+/**
+ * PUT /foo-write payload
+ */
+export type Foo2 = {
+    foo?: BarReadWritable;
 };
 
 export type PostFooReadWriteData = {
@@ -106,6 +132,30 @@ export type PostFooWriteResponses = {
 };
 
 export type PostFooWriteResponse = PostFooWriteResponses[keyof PostFooWriteResponses];
+
+export type PutFooWriteData = {
+    /**
+     * PUT /foo-write payload
+     */
+    body: Foo2;
+    path?: never;
+    query?: {
+        /**
+         * Query parameter
+         */
+        foo?: string;
+    };
+    url: '/foo-write';
+};
+
+export type PutFooWriteResponses = {
+    /**
+     * OK
+     */
+    200: FooWrite;
+};
+
+export type PutFooWriteResponse = PutFooWriteResponses[keyof PutFooWriteResponses];
 
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});

@@ -8,6 +8,8 @@ import type {
 } from '../openApi/types';
 import type { StringCase } from './case';
 
+type EnumsMode = 'inline' | 'root';
+
 export type Parser = {
   /**
    * Filters can be used to select a subset of your input before it's passed
@@ -54,7 +56,36 @@ export type Parser = {
      *
      * @default false
      */
-    enums?: false | 'inline' | 'root';
+    enums?:
+      | boolean
+      | EnumsMode
+      | {
+          /**
+           * The casing convention to use for generated names.
+           *
+           * @default 'PascalCase'
+           */
+          case?: StringCase;
+          /**
+           * Whether to transform all enums.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Controls whether enums are promoted to reusable root components
+           * ('root') or kept inline within schemas ('inline').
+           *
+           * @default 'root'
+           */
+          mode?: EnumsMode;
+          /**
+           * Customize the generated name of enums.
+           *
+           * @default '{{name}}Enum'
+           */
+          name?: string | ((name: string) => string);
+        };
     /**
      * Your input might contain read-only or write-only schemas. Simply using
      * such schemas could mean asking the user to provide a read-only field in
@@ -176,10 +207,34 @@ export type ResolvedParser = {
      * For example, to export nested enum types with the `@hey-api/typescript`
      * plugin, set `enums` to `root`. Likewise, if you don't want to export any
      * enum types, set `enums` to `inline`.
-     *
-     * @default false
      */
-    enums: false | 'inline' | 'root';
+    enums: {
+      /**
+       * The casing convention to use for generated names.
+       *
+       * @default 'PascalCase'
+       */
+      case: StringCase;
+      /**
+       * Whether to transform all enums.
+       *
+       * @default true
+       */
+      enabled: boolean;
+      /**
+       * Controls whether enums are promoted to reusable root components
+       * ('root') or kept inline within schemas ('inline').
+       *
+       * @default 'root'
+       */
+      mode: EnumsMode;
+      /**
+       * Customize the generated name of enums.
+       *
+       * @default '{{name}}Enum'
+       */
+      name: string | ((name: string) => string);
+    };
     /**
      * Your input might contain read-only or write-only schemas. Simply using
      * such schemas could mean asking the user to provide a read-only field in

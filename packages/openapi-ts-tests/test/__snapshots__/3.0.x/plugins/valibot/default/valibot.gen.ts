@@ -357,8 +357,7 @@ export const vModelWithReference = v.object({
 
 export const vModelWithReadOnlyAndWriteOnly = v.object({
     foo: v.string(),
-    bar: v.pipe(v.string(), v.readonly()),
-    baz: v.string()
+    bar: v.pipe(v.string(), v.readonly())
 });
 
 /**
@@ -1062,6 +1061,314 @@ export const vOneOfAllOfIssue = v.union([
 ]);
 
 /**
+ * Model with number-only name
+ */
+export const v400Writable = v.string();
+
+/**
+ * Testing multiline comments in string: First line
+ * Second line
+ *
+ * Fourth line
+ */
+export const vCamelCaseCommentWithBreaksWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing multiline comments in string: First line
+ * Second line
+ *
+ * Fourth line
+ */
+export const vCommentWithBreaksWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+ */
+export const vCommentWithBackticksWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing backticks and quotes in string: `backticks`, 'quotes', "double quotes" and ```multiple backticks``` should work
+ */
+export const vCommentWithBackticksAndQuotesWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing slashes in string: \backwards\\\ and /forwards/// should work
+ */
+export const vCommentWithSlashesWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing expression placeholders in string: ${expression} should work
+ */
+export const vCommentWithExpressionPlaceholdersWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing quotes in string: 'single quote''' and "double quotes""" should work
+ */
+export const vCommentWithQuotesWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing reserved characters in string: * inline * and ** inline ** should work
+ */
+export const vCommentWithReservedCharactersWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * This is a simple number
+ */
+export const vSimpleIntegerWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * This is a simple boolean
+ */
+export const vSimpleBooleanWritable = v.boolean();
+
+/**
+ * This is a simple string
+ */
+export const vSimpleStringWritable = v.string();
+
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
+export const vNonAsciiStringæøåÆøÅöôêÊ字符串Writable = v.string();
+
+/**
+ * This is a simple file
+ */
+export const vSimpleFileWritable = v.string();
+
+/**
+ * This is a simple string
+ */
+export const vSimpleStringWithPatternWritable = v.union([
+    v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)),
+    v.null()
+]);
+
+/**
+ * This is a simple enum with strings
+ */
+export const vEnumWithStringsWritable = v.picklist([
+    'Success',
+    'Warning',
+    'Error',
+    "'Single Quote'",
+    '"Double Quotes"',
+    'Non-ascii: øæåôöØÆÅÔÖ字符串'
+]);
+
+export const vEnumWithReplacedCharactersWritable = v.picklist([
+    "'Single Quote'",
+    '"Double Quotes"',
+    'øæåôöØÆÅÔÖ字符串',
+    ''
+]);
+
+/**
+ * This is a simple enum with numbers
+ */
+export const vEnumWithNumbersWritable = v.unknown();
+
+/**
+ * Success=1,Warning=2,Error=3
+ */
+export const vEnumFromDescriptionWritable = v.number();
+
+/**
+ * This is a simple enum with numbers
+ */
+export const vEnumWithExtensionsWritable = v.unknown();
+
+export const vEnumWithXEnumNamesWritable = v.unknown();
+
+/**
+ * This is a simple array with numbers
+ */
+export const vArrayWithNumbersWritable = v.array(v.pipe(v.number(), v.integer()));
+
+/**
+ * This is a simple array with booleans
+ */
+export const vArrayWithBooleansWritable = v.array(v.boolean());
+
+/**
+ * This is a simple array with strings
+ */
+export const vArrayWithStringsWritable = v.optional(v.array(v.string()), ['test']);
+
+/**
+ * This is a string dictionary
+ */
+export const vDictionaryWithStringWritable = v.object({});
+
+/**
+ * This is a string dictionary
+ */
+export const vDictionaryWithDictionaryWritable = v.record(v.string(), v.object({}));
+
+/**
+ * `Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)
+ */
+export const vModelFromZendeskWritable = v.string();
+
+export const vModelWithReadOnlyAndWriteOnlyWritable = v.object({
+    foo: v.string(),
+    baz: v.string()
+});
+
+/**
+ * This is a model with one property containing an array
+ */
+export const vModelWithArrayReadOnlyAndWriteOnlyWritable = v.object({
+    prop: v.optional(v.array(vModelWithReadOnlyAndWriteOnlyWritable)),
+    propWithFile: v.optional(v.array(v.string())),
+    propWithNumber: v.optional(v.array(v.number()))
+});
+
+export const v3eNum1ПериодWritable = v.picklist([
+    'Bird',
+    'Dog'
+]);
+
+export const vConstValueWritable = v.picklist([
+    'ConstValue'
+]);
+
+/**
+ * This is a free-form object without additionalProperties.
+ */
+export const vFreeFormObjectWithoutAdditionalPropertiesWritable = v.object({});
+
+/**
+ * This is a free-form object with additionalProperties: true.
+ */
+export const vFreeFormObjectWithAdditionalPropertiesEqTrueWritable = v.object({});
+
+/**
+ * This is a free-form object with additionalProperties: {}.
+ */
+export const vFreeFormObjectWithAdditionalPropertiesEqEmptyObjectWritable = v.object({});
+
+/**
+ * Some % character
+ */
+export const vCharactersInDescriptionWritable = v.string();
+
+export const vModelWithNestedArrayEnumsDataFooWritable = v.picklist([
+    'foo',
+    'bar'
+]);
+
+export const vModelWithNestedArrayEnumsDataBarWritable = v.picklist([
+    'baz',
+    'qux'
+]);
+
+export const vModelWithConstantSizeArrayWritable = v.tuple([
+    v.number(),
+    v.number()
+]);
+
+export const vModelWithAnyOfConstantSizeArrayWritable = v.tuple([
+    v.union([
+        v.number(),
+        v.string()
+    ]),
+    v.union([
+        v.number(),
+        v.string()
+    ]),
+    v.union([
+        v.number(),
+        v.string()
+    ])
+]);
+
+export const vModelWithAnyOfConstantSizeArrayNullableWritable = v.tuple([
+    v.union([
+        v.number(),
+        v.null(),
+        v.string()
+    ]),
+    v.union([
+        v.number(),
+        v.null(),
+        v.string()
+    ]),
+    v.union([
+        v.number(),
+        v.null(),
+        v.string()
+    ])
+]);
+
+/**
+ * Model with restricted keyword name
+ */
+export const vImportWritable = v.string();
+
+export const vModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable = v.tuple([
+    v.union([
+        v.number(),
+        vImportWritable
+    ]),
+    v.union([
+        v.number(),
+        vImportWritable
+    ])
+]);
+
+export const vModelWithAnyOfConstantSizeArrayAndIntersectWritable = v.tuple([
+    v.intersect([
+        v.number(),
+        v.string()
+    ]),
+    v.intersect([
+        v.number(),
+        v.string()
+    ])
+]);
+
+/**
+ * Model used to test deduplication strategy (unused)
+ */
+export const vParameterSimpleParameterUnusedWritable = v.string();
+
+/**
+ * Model used to test deduplication strategy
+ */
+export const vPostServiceWithEmptyTagResponseWritable = v.string();
+
+/**
+ * Model used to test deduplication strategy
+ */
+export const vPostServiceWithEmptyTagResponse2Writable = v.string();
+
+/**
+ * Model used to test deduplication strategy
+ */
+export const vDeleteFooDataWritable = v.string();
+
+/**
+ * Model used to test deduplication strategy
+ */
+export const vDeleteFooData2Writable = v.string();
+
+export const vAdditionalPropertiesUnknownIssueWritable = v.object({});
+
+export const vAdditionalPropertiesUnknownIssue2Writable = v.object({});
+
+export const vOneOfAllOfIssueWritable = v.union([
+    v.intersect([
+        v.union([
+            vConstValueWritable,
+            vGenericSchemaDuplicateIssue1SystemBoolean
+        ]),
+        v3eNum1Период
+    ]),
+    vGenericSchemaDuplicateIssue1SystemString
+]);
+
+/**
  * Parameter with illegal characters
  */
 export const vXFooBar = vModelWithString;
@@ -1084,8 +1391,8 @@ export const vPatchApiVbyApiVersionNoTagData = v.object({
 
 export const vImportData = v.object({
     body: v.union([
-        vModelWithReadOnlyAndWriteOnly,
-        vModelWithArrayReadOnlyAndWriteOnly
+        vModelWithReadOnlyAndWriteOnlyWritable,
+        vModelWithArrayReadOnlyAndWriteOnlyWritable
     ]),
     path: v.optional(v.never()),
     query: v.optional(v.never())
@@ -1221,8 +1528,8 @@ export const vCallWithParametersData = v.object({
         ])
     }),
     query: v.object({
-        foo_ref_enum: v.optional(vModelWithNestedArrayEnumsDataFoo),
-        foo_all_of_enum: vModelWithNestedArrayEnumsDataFoo,
+        foo_ref_enum: v.optional(vModelWithNestedArrayEnumsDataFooWritable),
+        foo_all_of_enum: vModelWithNestedArrayEnumsDataFooWritable,
         cursor: v.union([
             v.string(),
             v.null()
@@ -1698,7 +2005,7 @@ export const vNonAsciiæøåÆøÅöôêÊ字符串Data = v.object({
 export const vNonAsciiæøåÆøÅöôêÊ字符串Response = v.array(vNonAsciiStringæøåÆøÅöôêÊ字符串);
 
 export const vPutWithFormUrlEncodedData = v.object({
-    body: vArrayWithStrings,
+    body: vArrayWithStringsWritable,
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });

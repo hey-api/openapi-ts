@@ -4,13 +4,9 @@ export type FooRead = BarRead & {
     readonly foo?: string;
 };
 
-export type FooReadWritable = BarReadWritable;
-
 export type BarRead = Baz & {
     readonly bar?: string;
 };
-
-export type BarReadWritable = Baz;
 
 export type Baz = {
     baz?: string;
@@ -25,10 +21,6 @@ export type Quux = {
     qux?: QuxAllRead;
 };
 
-export type QuuxWritable = {
-    baz?: Array<Baz>;
-};
-
 export type Corge = {
     foo?: string;
     bar?: {
@@ -36,12 +28,8 @@ export type Corge = {
     };
 };
 
-export type CorgeWritable = {
-    foo?: string;
-};
-
 export type PostFooReadData = {
-    body: FooReadWritable;
+    body: FooRead;
     path?: never;
     query?: never;
     url: '/foo-read';
