@@ -1,6 +1,6 @@
 import { createOperationKey } from '../../../ir/operation';
 import type { Config } from '../../../types/config';
-import { refToName, resolveRef } from '../../../utils/ref';
+import { refToName, refToPath, resolveRef } from '../../../utils/ref';
 import type { Graph } from '../../shared/utils/graph';
 import {
   addNamespace,
@@ -47,10 +47,10 @@ const collectSchemaDependencies = ({
           // Move the current schema to #/components/schemas and replace with $ref
           if (!spec.components) spec.components = {};
           if (!spec.components.schemas) spec.components.schemas = {};
-          const enumName = getUniqueComponentName(
-            spec.components.schemas,
-            String(path[path.length - 1]),
-          );
+          const enumName = getUniqueComponentName({
+            base: String(path[path.length - 1]),
+            components: spec.components.schemas,
+          });
           spec.components.schemas[enumName] = { ...schema };
           setAtPath(spec, path, { $ref: `#/components/schemas/${enumName}` });
           return;
@@ -73,9 +73,9 @@ const collectSchemaDependencies = ({
   }
 
   if ('$ref' in schema) {
-    const parts = schema.$ref.split('/');
-    const type = parts[parts.length - 2];
-    const name = parts[parts.length - 1];
+    const refPath = refToPath(schema.$ref);
+    const type = refPath[refPath.length - 2];
+    const name = refPath[refPath.length - 1];
     if (type && name) {
       const namespace = stringToNamespace(type);
       if (namespace === 'unknown') {
@@ -188,15 +188,27 @@ const collectSchemaDependencies = ({
 
 export const createGraph = ({
   spec,
-  transforms,
   validate,
 }: {
   spec: OpenApiV3_0_X;
-  transforms: Config['parser']['transforms'];
   validate: boolean;
 }): ValidatorResult & {
   graph: Graph;
 } => {
+  const transforms: Config['parser']['transforms'] = {
+    enums: false,
+    readWrite: {
+      enabled: false,
+      requests: {
+        case: 'preserve',
+        name: '',
+      },
+      responses: {
+        case: 'preserve',
+        name: '',
+      },
+    },
+  };
   const graph: Graph = {
     operations: new Map(),
     parameters: new Map(),

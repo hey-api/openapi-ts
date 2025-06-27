@@ -1,6 +1,6 @@
-openapi: 3.1.1
+openapi: 3.0.4
 info:
-  title: OpenAPI 3.1.1 read write only example
+  title: OpenAPI 3.0.4 transforms read write example
   version: 1
 paths:
   /foo-read-write:
@@ -77,8 +77,6 @@ components:
     BarRead:
       anyOf:
         - $ref: '#/components/schemas/Baz'
-        - $ref: '#/components/schemas/QuxAllWrite'
-        - $ref: '#/components/schemas/QuxAllRead'
         - type: object
           properties:
             bar:
@@ -87,8 +85,6 @@ components:
     BarWrite:
       anyOf:
         - $ref: '#/components/schemas/Baz'
-        - $ref: '#/components/schemas/QuxAllWrite'
-        - $ref: '#/components/schemas/QuxAllRead'
         - type: object
           properties:
             bar:
@@ -98,12 +94,6 @@ components:
       type: object
       properties:
         baz:
-          type: string
-    QuxAllWrite:
-      type: object
-      properties:
-        baz:
-          writeOnly: true
           type: string
     QuxAllRead:
       type: object

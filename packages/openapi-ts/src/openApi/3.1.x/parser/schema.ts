@@ -7,7 +7,6 @@ import type {
   SchemaWithRequired,
 } from '../../shared/types/schema';
 import { discriminatorValues } from '../../shared/utils/discriminator';
-import { mergeSchemaAccessScopes } from '../../shared/utils/schema';
 import type { SchemaObject } from '../types/spec';
 
 export const getSchemaTypes = ({
@@ -54,11 +53,9 @@ const parseSchemaJsDoc = ({
 const parseSchemaMeta = ({
   irSchema,
   schema,
-  state,
 }: {
   irSchema: IR.SchemaObject;
   schema: SchemaObject;
-  state: SchemaState;
 }) => {
   if (schema.const !== undefined) {
     irSchema.const = schema.const;
@@ -130,18 +127,8 @@ const parseSchemaMeta = ({
 
   if (schema.readOnly) {
     irSchema.accessScope = 'read';
-    irSchema.accessScopes = mergeSchemaAccessScopes(irSchema.accessScopes, [
-      'read',
-    ]);
   } else if (schema.writeOnly) {
     irSchema.accessScope = 'write';
-    irSchema.accessScopes = mergeSchemaAccessScopes(irSchema.accessScopes, [
-      'write',
-    ]);
-  } else if (state.isProperty) {
-    irSchema.accessScopes = mergeSchemaAccessScopes(irSchema.accessScopes, [
-      'both',
-    ]);
   }
 };
 
@@ -174,10 +161,6 @@ const parseArray = ({
       schema: item,
       state,
     });
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irItemSchema.accessScopes,
-    );
     schemaItems.push(irItemSchema);
   }
 
@@ -187,11 +170,6 @@ const parseArray = ({
       schema: schema.items,
       state,
     });
-
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irItemsSchema.accessScopes,
-    );
 
     if (
       !schemaItems.length &&
@@ -293,10 +271,6 @@ const parseObject = ({
           isProperty: true,
         },
       });
-      irSchema.accessScopes = mergeSchemaAccessScopes(
-        irSchema.accessScopes,
-        irPropertySchema.accessScopes,
-      );
       schemaProperties[name] = irPropertySchema;
     }
   }
@@ -389,11 +363,6 @@ const parseAllOf = ({
       state,
     });
 
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irCompositionSchema.accessScopes,
-    );
-
     if (schema.required) {
       if (irCompositionSchema.required) {
         irCompositionSchema.required = [
@@ -440,7 +409,7 @@ const parseAllOf = ({
       }
 
       if (!state.circularReferenceTracker.has(compositionSchema.$ref)) {
-        const irRefSchema = schemaToIrSchema({
+        schemaToIrSchema({
           context,
           schema: ref,
           state: {
@@ -448,10 +417,6 @@ const parseAllOf = ({
             $ref: compositionSchema.$ref,
           },
         });
-        irSchema.accessScopes = mergeSchemaAccessScopes(
-          irSchema.accessScopes,
-          irRefSchema.accessScopes,
-        );
       }
     }
   }
@@ -465,11 +430,6 @@ const parseAllOf = ({
       },
       state,
     });
-
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irObjectSchema.accessScopes,
-    );
 
     if (irObjectSchema.properties) {
       for (const requiredProperty of irObjectSchema.required ?? []) {
@@ -493,11 +453,6 @@ const parseAllOf = ({
                 },
                 state,
               });
-
-              irSchema.accessScopes = mergeSchemaAccessScopes(
-                irSchema.accessScopes,
-                irCompositionSchema.accessScopes,
-              );
 
               if (irCompositionSchema.properties?.[requiredProperty]) {
                 irObjectSchema.properties[requiredProperty] =
@@ -563,11 +518,6 @@ const parseAnyOf = ({
       state,
     });
 
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irCompositionSchema.accessScopes,
-    );
-
     // `$ref` should be defined with discriminators
     if (schema.discriminator && compositionSchema.$ref) {
       const values = discriminatorValues(
@@ -621,11 +571,6 @@ const parseAnyOf = ({
       },
       state,
     });
-
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irObjectSchema.accessScopes,
-    );
 
     if (irObjectSchema.properties) {
       irSchema = {
@@ -695,11 +640,6 @@ const parseEnum = ({
       state,
     });
 
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irTypeSchema.accessScopes,
-    );
-
     schemaItems.push(irTypeSchema);
   }
 
@@ -733,11 +673,6 @@ const parseOneOf = ({
       schema: compositionSchema,
       state,
     });
-
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irCompositionSchema.accessScopes,
-    );
 
     // `$ref` should be defined with discriminators
     if (schema.discriminator && compositionSchema.$ref) {
@@ -805,11 +740,6 @@ const parseOneOf = ({
       state,
     });
 
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irObjectSchema.accessScopes,
-    );
-
     if (irObjectSchema.properties) {
       irSchema = {
         items: [irSchema, irObjectSchema],
@@ -840,7 +770,7 @@ const parseRef = ({
 
   if (!state.circularReferenceTracker.has(schema.$ref)) {
     const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
-    const irResolvedRefSchema = schemaToIrSchema({
+    schemaToIrSchema({
       context,
       schema: refSchema,
       state: {
@@ -849,10 +779,6 @@ const parseRef = ({
         isProperty: false,
       },
     });
-    irRefSchema.accessScopes = mergeSchemaAccessScopes(
-      irRefSchema.accessScopes,
-      irResolvedRefSchema.accessScopes,
-    );
   }
 
   const schemaItems: Array<IR.SchemaObject> = [];
@@ -888,12 +814,7 @@ const parseOneType = ({
 }): IR.SchemaObject => {
   if (!irSchema) {
     irSchema = initIrSchema({ schema });
-
-    parseSchemaMeta({
-      irSchema,
-      schema,
-      state,
-    });
+    parseSchemaMeta({ irSchema, schema });
   }
 
   switch (schema.type) {
@@ -938,12 +859,7 @@ const parseOneType = ({
       });
     default:
       // gracefully handle invalid type
-      return parseUnknown({
-        context,
-        irSchema,
-        schema,
-        state,
-      });
+      return parseUnknown({ context, irSchema, schema });
   }
 };
 
@@ -966,11 +882,7 @@ const parseManyTypes = ({
 
   const typeIrSchema: IR.SchemaObject = {};
 
-  parseSchemaMeta({
-    irSchema: typeIrSchema,
-    schema,
-    state,
-  });
+  parseSchemaMeta({ irSchema: typeIrSchema, schema });
 
   if (schema.type.includes('null') && typeIrSchema.default === null) {
     // clear to avoid duplicate default inside the non-null schema.
@@ -993,11 +905,6 @@ const parseManyTypes = ({
         },
         state,
       });
-
-      irSchema.accessScopes = mergeSchemaAccessScopes(
-        irSchema.accessScopes,
-        irTypeSchema.accessScopes,
-      );
 
       schemaItems.push(irTypeSchema);
     }
@@ -1022,11 +929,7 @@ const parseType = ({
 }): IR.SchemaObject => {
   const irSchema = initIrSchema({ schema });
 
-  parseSchemaMeta({
-    irSchema,
-    schema,
-    state,
-  });
+  parseSchemaMeta({ irSchema, schema });
 
   const schemaTypes = getSchemaTypes({ schema });
 
@@ -1056,12 +959,10 @@ const parseType = ({
 const parseUnknown = ({
   irSchema,
   schema,
-  state,
 }: {
   context: IR.Context;
   irSchema?: IR.SchemaObject;
   schema: SchemaObject;
-  state: SchemaState;
 }): IR.SchemaObject => {
   if (!irSchema) {
     irSchema = initIrSchema({ schema });
@@ -1069,11 +970,7 @@ const parseUnknown = ({
 
   irSchema.type = 'unknown';
 
-  parseSchemaMeta({
-    irSchema,
-    schema,
-    state,
-  });
+  parseSchemaMeta({ irSchema, schema });
 
   return irSchema;
 };
@@ -1146,11 +1043,7 @@ export const schemaToIrSchema = ({
     });
   }
 
-  return parseUnknown({
-    context,
-    schema,
-    state,
-  });
+  return parseUnknown({ context, schema });
 };
 
 export const parseSchema = ({

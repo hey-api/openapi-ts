@@ -92,9 +92,9 @@ export const removeNamespace = (
  */
 export const setAtPath = (
   obj: any,
-  path: Array<string | number>,
+  path: ReadonlyArray<string | number>,
   value: unknown,
-) => {
+): void => {
   let curr = obj;
   for (let i = 0; i < path.length - 1; i++) {
     curr = curr[path[i]!];
@@ -102,14 +102,32 @@ export const setAtPath = (
   curr[path[path.length - 1]!] = value;
 };
 
-export const getUniqueComponentName = (
-  components: Record<string, unknown>,
-  base: string,
-): string => {
-  let i = 1;
+export const getUniqueComponentName = ({
+  base: _base,
+  components,
+  extraComponents,
+}: {
+  base: string;
+  /**
+   * Input components.
+   */
+  components: Record<string, unknown>;
+  /**
+   * Temporary input components, waiting to be inserted for example.
+   */
+  extraComponents?: Record<string, unknown>;
+}): string => {
+  let index = 2;
+  // Strip trailing number. For example, if base is "foo2", the clean base will be "foo"
+  const base = _base.replace(/\d+$/, '');
   let name = base;
-  while (Object.prototype.hasOwnProperty.call(components, name)) {
-    name = `${base}${i++}`;
+  while (
+    Object.prototype.hasOwnProperty.call(components, name) ||
+    (extraComponents &&
+      Object.prototype.hasOwnProperty.call(extraComponents, name))
+  ) {
+    name = `${base}${index}`;
+    index += 1;
   }
   return name;
 };

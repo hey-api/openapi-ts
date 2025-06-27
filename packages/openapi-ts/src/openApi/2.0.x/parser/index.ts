@@ -22,24 +22,19 @@ import { parseOperation } from './operation';
 import { parametersArrayToObject } from './parameter';
 import { parseSchema } from './schema';
 import { parseServers } from './server';
+import { transformSpec } from './transform';
 
 type PathKeys<T extends keyof PathsObject = keyof PathsObject> =
   keyof T extends infer K ? (K extends `/${string}` ? K : never) : never;
 
 export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
   const shouldFilterSpec = hasFilters(context.config.parser.filters);
-  const shouldTransformSpec = hasTransforms(context.config.parser.transforms);
 
   let graph: Graph | undefined;
 
-  if (
-    shouldFilterSpec ||
-    shouldTransformSpec ||
-    context.config.parser.validate_EXPERIMENTAL
-  ) {
+  if (shouldFilterSpec || context.config.parser.validate_EXPERIMENTAL) {
     const result = createGraph({
       spec: context.spec,
-      transforms: context.config.parser.transforms,
       validate: Boolean(context.config.parser.validate_EXPERIMENTAL),
     });
     graph = result.graph;
@@ -53,6 +48,14 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
       ...sets,
       preserveOrder: filters.preserveOrder,
       spec: context.spec,
+    });
+  }
+
+  const shouldTransformSpec = hasTransforms(context.config.parser.transforms);
+  if (shouldTransformSpec) {
+    transformSpec({
+      spec: context.spec,
+      transforms: context.config.parser.transforms,
     });
   }
 

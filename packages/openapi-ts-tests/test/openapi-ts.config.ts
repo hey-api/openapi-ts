@@ -37,7 +37,12 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'enum-inline.yaml'),
+      path: path.resolve(
+        __dirname,
+        'spec',
+        '3.1.x',
+        'transforms-read-write.yaml',
+      ),
       // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
       // path: path.resolve(__dirname, 'spec', 'v3.json'),
       // path: 'http://localhost:4000/',
@@ -102,10 +107,10 @@ export default defineConfig(() => {
         // version: () => '3.1.1',
       },
       transforms: {
-        enums: 'root',
+        // enums: 'inline',
         readWrite: {
           requests: '{{name}}Writable',
-          responses: '{{name}}',
+          responses: 'Corge2',
         },
       },
       validate_EXPERIMENTAL: true,
@@ -125,17 +130,13 @@ export default defineConfig(() => {
       },
       {
         // case: 'snake_case',
-        // enums: 'javascript',
         enums: {
           // case: 'PascalCase',
           // constantsIgnoreNull: true,
-          // enabled: false,
+          enabled: false,
           type: 'typescript+namespace',
         },
         name: '@hey-api/typescript',
-        // readOnlyWriteOnlyBehavior: 'off',
-        // readableName: 'Readable{{name}}',
-        // writableName: 'Writable{{name}}',
         // tree: true,
       },
       {

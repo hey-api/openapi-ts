@@ -24,21 +24,16 @@ import { parametersArrayToObject, parseParameter } from './parameter';
 import { parseRequestBody } from './requestBody';
 import { parseSchema } from './schema';
 import { parseServers } from './server';
+import { transformSpec } from './transform';
 
 export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
   const shouldFilterSpec = hasFilters(context.config.parser.filters);
-  const shouldTransformSpec = hasTransforms(context.config.parser.transforms);
 
   let graph: Graph | undefined;
 
-  if (
-    shouldFilterSpec ||
-    shouldTransformSpec ||
-    context.config.parser.validate_EXPERIMENTAL
-  ) {
+  if (shouldFilterSpec || context.config.parser.validate_EXPERIMENTAL) {
     const result = createGraph({
       spec: context.spec,
-      transforms: context.config.parser.transforms,
       validate: Boolean(context.config.parser.validate_EXPERIMENTAL),
     });
     graph = result.graph;
@@ -52,6 +47,14 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
       ...sets,
       preserveOrder: filters.preserveOrder,
       spec: context.spec,
+    });
+  }
+
+  const shouldTransformSpec = hasTransforms(context.config.parser.transforms);
+  if (shouldTransformSpec) {
+    transformSpec({
+      spec: context.spec,
+      transforms: context.config.parser.transforms,
     });
   }
 
