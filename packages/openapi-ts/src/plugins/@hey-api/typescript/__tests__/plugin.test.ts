@@ -40,7 +40,12 @@ describe('generateLegacyTypes', () => {
           keywords: [],
         },
         transforms: {
-          enums: false,
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
           readWrite: {
             enabled: false,
             requests: {

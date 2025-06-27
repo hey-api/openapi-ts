@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import { specFileToJson } from '../../../__tests__/utils';
 import type { ValidatorResult } from '../../../shared/utils/validator';
-import { createGraph } from '../graph';
+import { validateOpenApiSpec } from '../validate';
 
 const specsFolder = path.join(
   __dirname,
@@ -96,24 +96,7 @@ describe('validate', () => {
 
   it.each(scenarios)('$description', ({ file, issues, valid }) => {
     const spec = specFileToJson(file);
-    const result = createGraph({
-      spec,
-      transforms: {
-        enums: false,
-        readWrite: {
-          enabled: false,
-          requests: {
-            case: 'preserve',
-            name: '',
-          },
-          responses: {
-            case: 'preserve',
-            name: '',
-          },
-        },
-      },
-      validate: true,
-    });
+    const result = validateOpenApiSpec(spec);
     expect(result.valid).toBe(valid);
     expect(result.issues).toEqual(issues);
   });

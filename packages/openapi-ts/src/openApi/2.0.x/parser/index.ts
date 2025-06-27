@@ -1,13 +1,14 @@
 import type { IR } from '../../../ir/types';
+import { buildResourceMetadata } from '../../shared/graph/meta';
+import { transformOpenApiSpec } from '../../shared/transforms';
 import type { State } from '../../shared/types/state';
 import {
   createFilteredDependencies,
   createFilters,
   hasFilters,
 } from '../../shared/utils/filter';
-import type { Graph } from '../../shared/utils/graph';
+import { buildGraph } from '../../shared/utils/graph';
 import { mergeParametersObjects } from '../../shared/utils/parameter';
-import { hasTransforms } from '../../shared/utils/transform';
 import { handleValidatorResult } from '../../shared/utils/validator';
 import type {
   OpenApiV2_0_X,
@@ -17,44 +18,35 @@ import type {
   SecuritySchemeObject,
 } from '../types/spec';
 import { filterSpec } from './filter';
-import { createGraph } from './graph';
 import { parseOperation } from './operation';
 import { parametersArrayToObject } from './parameter';
 import { parseSchema } from './schema';
 import { parseServers } from './server';
+import { validateOpenApiSpec } from './validate';
 
 type PathKeys<T extends keyof PathsObject = keyof PathsObject> =
   keyof T extends infer K ? (K extends `/${string}` ? K : never) : never;
 
 export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
-  const shouldFilterSpec = hasFilters(context.config.parser.filters);
-  const shouldTransformSpec = hasTransforms(context.config.parser.transforms);
-
-  let graph: Graph | undefined;
-
-  if (
-    shouldFilterSpec ||
-    shouldTransformSpec ||
-    context.config.parser.validate_EXPERIMENTAL
-  ) {
-    const result = createGraph({
-      spec: context.spec,
-      transforms: context.config.parser.transforms,
-      validate: Boolean(context.config.parser.validate_EXPERIMENTAL),
-    });
-    graph = result.graph;
+  if (context.config.parser.validate_EXPERIMENTAL) {
+    const result = validateOpenApiSpec(context.spec);
     handleValidatorResult({ context, result });
   }
 
-  if (shouldFilterSpec && graph) {
+  const shouldFilterSpec = hasFilters(context.config.parser.filters);
+  if (shouldFilterSpec) {
     const filters = createFilters(context.config.parser.filters, context.spec);
-    const sets = createFilteredDependencies({ filters, graph });
+    const { graph } = buildGraph(context.spec);
+    const { resourceMetadata } = buildResourceMetadata(graph);
+    const sets = createFilteredDependencies({ filters, resourceMetadata });
     filterSpec({
       ...sets,
       preserveOrder: filters.preserveOrder,
       spec: context.spec,
     });
   }
+
+  transformOpenApiSpec({ context });
 
   const state: State = {
     ids: new Map(),

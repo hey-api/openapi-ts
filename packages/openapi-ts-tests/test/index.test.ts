@@ -72,6 +72,11 @@ describe('OpenAPI v3', () => {
     output: {
       path: '',
     },
+    parser: {
+      transforms: {
+        readWrite: false,
+      },
+    },
     plugins: [
       'legacy/fetch',
       '@hey-api/sdk',

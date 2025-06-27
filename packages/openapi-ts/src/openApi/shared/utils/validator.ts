@@ -93,10 +93,6 @@ export const handleValidatorResult = ({
   context: IR.Context;
   result: ValidatorResult;
 }) => {
-  if (!context.config.parser.validate_EXPERIMENTAL) {
-    return;
-  }
-
   for (const issue of result.issues) {
     if (shouldPrint({ context, issue })) {
       console.log(formatValidatorIssue(issue));

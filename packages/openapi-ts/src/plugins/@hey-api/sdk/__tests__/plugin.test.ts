@@ -42,7 +42,12 @@ describe('handlerLegacy', () => {
           keywords: [],
         },
         transforms: {
-          enums: false,
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
           readWrite: {
             enabled: false,
             requests: {
@@ -241,7 +246,12 @@ describe('methodNameBuilder', () => {
           keywords: [],
         },
         transforms: {
-          enums: false,
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
           readWrite: {
             enabled: false,
             requests: {
@@ -362,7 +372,12 @@ describe('methodNameBuilder', () => {
           keywords: [],
         },
         transforms: {
-          enums: false,
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
           readWrite: {
             enabled: false,
             requests: {
@@ -486,7 +501,12 @@ describe('methodNameBuilder', () => {
           keywords: [],
         },
         transforms: {
-          enums: false,
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
           readWrite: {
             enabled: false,
             requests: {

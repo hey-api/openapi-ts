@@ -462,8 +462,8 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          input: 'read-write-only.yaml',
-          output: 'read-write-only-ignore',
+          input: 'transforms-read-write.yaml',
+          output: 'transforms-read-write-ignore',
           parser: {
             transforms: {
               readWrite: false,
@@ -475,8 +475,8 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          input: 'read-write-only.yaml',
-          output: 'read-write-only-custom-name',
+          input: 'transforms-read-write.yaml',
+          output: 'transforms-read-write-custom-name',
           parser: {
             transforms: {
               readWrite: {
