@@ -1,6 +1,6 @@
 swagger: 2.0
 info:
-  title: OpenAPI 2.0 read write only example
+  title: OpenAPI 2.0 transforms read write example
   version: 1
 produces:
   - application/json

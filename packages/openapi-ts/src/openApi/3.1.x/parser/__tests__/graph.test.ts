@@ -96,7 +96,24 @@ describe('validate', () => {
 
   it.each(scenarios)('$description', ({ file, issues, valid }) => {
     const spec = specFileToJson(file);
-    const result = createGraph({ spec, validate: true });
+    const result = createGraph({
+      spec,
+      transforms: {
+        enums: false,
+        readWrite: {
+          enabled: false,
+          requests: {
+            case: 'preserve',
+            name: '',
+          },
+          responses: {
+            case: 'preserve',
+            name: '',
+          },
+        },
+      },
+      validate: true,
+    });
     expect(result.valid).toBe(valid);
     expect(result.issues).toEqual(issues);
   });

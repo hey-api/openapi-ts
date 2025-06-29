@@ -16,8 +16,10 @@ export type Config = Plugin.Name<'zod'> & {
    */
   comments?: boolean;
   /**
-   * Configuration for reusable schema definitions. Controls generation of
-   * shared Zod schemas that can be referenced across requests and responses.
+   * Configuration for reusable schema definitions.
+   *
+   * Controls generation of shared Zod schemas that can be referenced across
+   * requests and responses.
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -71,7 +73,9 @@ export type Config = Plugin.Name<'zod'> & {
   output?: string;
   /**
    * Configuration for request-specific Zod schemas.
-   * Controls generation of Zod schemas for request bodies, query parameters, path parameters, and headers.
+   *
+   * Controls generation of Zod schemas for request bodies, query parameters, path
+   * parameters, and headers.
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -104,7 +108,9 @@ export type Config = Plugin.Name<'zod'> & {
       };
   /**
    * Configuration for response-specific Zod schemas.
-   * Controls generation of Zod schemas for response bodies, error responses, and status codes.
+   *
+   * Controls generation of Zod schemas for response bodies, error responses,
+   * and status codes.
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -151,8 +157,10 @@ export type ResolvedConfig = Plugin.Name<'zod'> & {
    */
   comments: boolean;
   /**
-   * Configuration for reusable schema definitions. Controls generation of
-   * shared Zod schemas that can be referenced across requests and responses.
+   * Configuration for reusable schema definitions.
+   *
+   * Controls generation of shared Zod schemas that can be referenced across
+   * requests and responses.
    */
   definitions: {
     /**
@@ -198,7 +206,9 @@ export type ResolvedConfig = Plugin.Name<'zod'> & {
   output: string;
   /**
    * Configuration for request-specific Zod schemas.
-   * Controls generation of Zod schemas for request bodies, query parameters, path parameters, and headers.
+   *
+   * Controls generation of Zod schemas for request bodies, query parameters, path
+   * parameters, and headers.
    */
   requests: {
     /**
@@ -223,7 +233,9 @@ export type ResolvedConfig = Plugin.Name<'zod'> & {
   };
   /**
    * Configuration for response-specific Zod schemas.
-   * Controls generation of Zod schemas for response bodies, error responses, and status codes.
+   *
+   * Controls generation of Zod schemas for response bodies, error responses,
+   * and status codes.
    */
   responses: {
     /**

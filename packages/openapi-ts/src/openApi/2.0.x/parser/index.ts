@@ -7,6 +7,7 @@ import {
 } from '../../shared/utils/filter';
 import type { Graph } from '../../shared/utils/graph';
 import { mergeParametersObjects } from '../../shared/utils/parameter';
+import { hasTransforms } from '../../shared/utils/transform';
 import { handleValidatorResult } from '../../shared/utils/validator';
 import type {
   OpenApiV2_0_X,
@@ -21,31 +22,40 @@ import { parseOperation } from './operation';
 import { parametersArrayToObject } from './parameter';
 import { parseSchema } from './schema';
 import { parseServers } from './server';
+import { transformSpec } from './transform';
 
 type PathKeys<T extends keyof PathsObject = keyof PathsObject> =
   keyof T extends infer K ? (K extends `/${string}` ? K : never) : never;
 
 export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
-  const shouldFilterSpec = hasFilters(context.config.input.filters);
+  const shouldFilterSpec = hasFilters(context.config.parser.filters);
 
   let graph: Graph | undefined;
 
-  if (shouldFilterSpec || context.config.input.validate_EXPERIMENTAL) {
+  if (shouldFilterSpec || context.config.parser.validate_EXPERIMENTAL) {
     const result = createGraph({
       spec: context.spec,
-      validate: Boolean(context.config.input.validate_EXPERIMENTAL),
+      validate: Boolean(context.config.parser.validate_EXPERIMENTAL),
     });
     graph = result.graph;
     handleValidatorResult({ context, result });
   }
 
   if (shouldFilterSpec && graph) {
-    const filters = createFilters(context.config.input.filters, context.spec);
+    const filters = createFilters(context.config.parser.filters, context.spec);
     const sets = createFilteredDependencies({ filters, graph });
     filterSpec({
       ...sets,
       preserveOrder: filters.preserveOrder,
       spec: context.spec,
+    });
+  }
+
+  const shouldTransformSpec = hasTransforms(context.config.parser.transforms);
+  if (shouldTransformSpec) {
+    transformSpec({
+      spec: context.spec,
+      transforms: context.config.parser.transforms,
     });
   }
 

@@ -29,7 +29,7 @@ export const paginationField = ({
   schema: SchemaObject | ReferenceObject;
 }): boolean | string => {
   const paginationRegExp = getPaginationKeywordsRegExp(
-    context.config.input.pagination,
+    context.config.parser.pagination,
   );
   if (paginationRegExp.test(name)) {
     return true;
@@ -78,7 +78,7 @@ export const paginationField = ({
 
   for (const name in schema.properties) {
     const paginationRegExp = getPaginationKeywordsRegExp(
-      context.config.input.pagination,
+      context.config.parser.pagination,
     );
 
     if (paginationRegExp.test(name)) {

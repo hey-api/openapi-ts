@@ -21,30 +21,7 @@ export default defineConfig(() => {
       //     'x-foo': 'bar',
       //   },
       // },
-      filters: {
-        // deprecated: false,
-        operations: {
-          include: [
-            // 'PUT /foo',
-            // '/^[A-Z]+ /v1//',
-          ],
-        },
-        // orphans: false,
-        // preserveOrder: true,
-        // schemas: {
-        //   include: ['Foo'],
-        // },
-        // tags: {
-        //   exclude: ['bar'],
-        // },
-      },
       // organization: 'hey-api',
-      // pagination: {
-      //   keywords: ['aa'],
-      // },
-      // patch: {
-      //   version: () => '3.1.1',
-      // },
       // path: {
       //   components: {},
       //   info: {
@@ -60,8 +37,14 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.yaml'),
+      path: path.resolve(
+        __dirname,
+        'spec',
+        '3.1.x',
+        'transforms-read-write.yaml',
+      ),
       // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
+      // path: path.resolve(__dirname, 'spec', 'v3.json'),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -70,7 +53,6 @@ export default defineConfig(() => {
       // path: 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
       // project: 'backend',
       // project: 'upload-openapi-spec',
-      validate_EXPERIMENTAL: true,
       // version: '1.0.0',
       // watch: {
       //   enabled: true,
@@ -95,6 +77,44 @@ export default defineConfig(() => {
       //   'tsconfig.nodenext.json',
       // ),
     },
+    parser: {
+      filters: {
+        // deprecated: false,
+        operations: {
+          include: [
+            // 'PUT /foo',
+            // '/^[A-Z]+ /v1//',
+          ],
+        },
+        // orphans: false,
+        // preserveOrder: true,
+        // schemas: {
+        //   include: ['Foo'],
+        // },
+        // tags: {
+        //   exclude: ['bar'],
+        // },
+      },
+      pagination: {
+        // keywords: ['aa'],
+      },
+      patch: {
+        // operations: {
+        //   'GET /foo': (operation: any) => {
+        //     operation.responses['200'].description = 'foo';
+        //   },
+        // },
+        // version: () => '3.1.1',
+      },
+      transforms: {
+        // enums: 'inline',
+        readWrite: {
+          requests: '{{name}}Writable',
+          responses: 'Corge2',
+        },
+      },
+      validate_EXPERIMENTAL: true,
+    },
     plugins: [
       // customClientPlugin({
       //   baseUrl: false,
@@ -109,9 +129,15 @@ export default defineConfig(() => {
         // throwOnError: true,
       },
       {
-        exportFromIndex: true,
-        // name: '@hey-api/schemas',
-        // type: 'json',
+        // case: 'snake_case',
+        enums: {
+          // case: 'PascalCase',
+          // constantsIgnoreNull: true,
+          enabled: false,
+          type: 'typescript+namespace',
+        },
+        name: '@hey-api/typescript',
+        // tree: true,
       },
       {
         // asClass: true,
@@ -126,7 +152,7 @@ export default defineConfig(() => {
         // responseStyle: 'data',
         // throwOnError: true,
         // transformer: '@hey-api/transformers',
-        transformer: true,
+        // transformer: true,
         validator: {
           request: 'zod',
           response: 'valibot',
@@ -135,19 +161,7 @@ export default defineConfig(() => {
       {
         // bigInt: true,
         // dates: true,
-        name: '@hey-api/transformers',
-      },
-      {
-        enums: 'typescript+namespace',
-        enumsCase: 'PascalCase',
-        // enumsConstantsIgnoreNull: true,
-        // exportInlineEnums: true,
-        // identifierCase: 'snake_case',
-        name: '@hey-api/typescript',
-        // readOnlyWriteOnlyBehavior: 'off',
-        // readableNameBuilder: 'Readable{{name}}',
-        // writableNameBuilder: 'Writable{{name}}',
-        // tree: true,
+        // name: '@hey-api/transformers',
       },
       {
         // name: 'fastify',
@@ -165,7 +179,7 @@ export default defineConfig(() => {
         // mutationOptions: {
         //   name: '{{name}}MO',
         // },
-        name: '@tanstack/react-query',
+        // name: '@tanstack/react-query',
         // queryKeys: {
         //   name: '{{name}}QK',
         // },
@@ -204,6 +218,11 @@ export default defineConfig(() => {
           // case: 'snake_case',
           // name: 'z{{name}}TestResponse',
         },
+      },
+      {
+        exportFromIndex: true,
+        // name: '@hey-api/schemas',
+        // type: 'json',
       },
     ],
     // useOptions: false,

@@ -1,4 +1,5 @@
 import { createOperationKey } from '../../../ir/operation';
+import { refToPath } from '../../../utils/ref';
 import type { Graph } from '../../shared/utils/graph';
 import { addNamespace, stringToNamespace } from '../../shared/utils/graph';
 import { httpMethods } from '../../shared/utils/operation';
@@ -13,14 +14,19 @@ import type {
   SchemaObject,
 } from '../types/spec';
 
-const collectSchemaDependencies = (
-  schema: SchemaObject,
-  dependencies: Set<string>,
-) => {
-  if ('$ref' in schema && schema.$ref) {
-    const parts = schema.$ref.split('/');
-    const type = parts[parts.length - 2];
-    const name = parts[parts.length - 1];
+const collectSchemaDependencies = ({
+  schema,
+  ...args
+}: {
+  dependencies: Set<string>;
+  schema: SchemaObject;
+}) => {
+  const { dependencies } = args;
+
+  if (schema.$ref) {
+    const refPath = refToPath(schema.$ref);
+    const type = refPath[refPath.length - 2];
+    const name = refPath[refPath.length - 1];
     if (type && name) {
       const namespace = stringToNamespace(type);
       if (namespace === 'unknown') {
@@ -31,13 +37,19 @@ const collectSchemaDependencies = (
   }
 
   if (schema.items && typeof schema.items === 'object') {
-    collectSchemaDependencies(schema.items, dependencies);
+    collectSchemaDependencies({
+      ...args,
+      schema: schema.items,
+    });
   }
 
   if (schema.properties) {
     for (const property of Object.values(schema.properties)) {
       if (typeof property === 'object') {
-        collectSchemaDependencies(property, dependencies);
+        collectSchemaDependencies({
+          ...args,
+          schema: property,
+        });
       }
     }
   }
@@ -46,43 +58,67 @@ const collectSchemaDependencies = (
     schema.additionalProperties &&
     typeof schema.additionalProperties === 'object'
   ) {
-    collectSchemaDependencies(schema.additionalProperties, dependencies);
+    collectSchemaDependencies({
+      ...args,
+      schema: schema.additionalProperties,
+    });
   }
 
   if (schema.allOf) {
     for (const item of schema.allOf) {
-      collectSchemaDependencies(item, dependencies);
+      collectSchemaDependencies({
+        ...args,
+        schema: item,
+      });
     }
   }
 
   if (schema.anyOf) {
     for (const item of schema.anyOf) {
-      collectSchemaDependencies(item, dependencies);
+      collectSchemaDependencies({
+        ...args,
+        schema: item,
+      });
     }
   }
 
   if (schema.contains) {
-    collectSchemaDependencies(schema.contains, dependencies);
+    collectSchemaDependencies({
+      ...args,
+      schema: schema.contains,
+    });
   }
 
   if (schema.not) {
-    collectSchemaDependencies(schema.not, dependencies);
+    collectSchemaDependencies({
+      ...args,
+      schema: schema.not,
+    });
   }
 
   if (schema.oneOf) {
     for (const item of schema.oneOf) {
-      collectSchemaDependencies(item, dependencies);
+      collectSchemaDependencies({
+        ...args,
+        schema: item,
+      });
     }
   }
 
   if (schema.prefixItems) {
     for (const item of schema.prefixItems) {
-      collectSchemaDependencies(item, dependencies);
+      collectSchemaDependencies({
+        ...args,
+        schema: item,
+      });
     }
   }
 
-  if (schema.propertyNames && typeof schema.propertyNames === 'object') {
-    collectSchemaDependencies(schema.propertyNames, dependencies);
+  if (schema.propertyNames) {
+    collectSchemaDependencies({
+      ...args,
+      schema: schema.propertyNames,
+    });
   }
 };
 
@@ -110,7 +146,10 @@ export const createGraph = ({
     if (spec.components.schemas) {
       for (const [key, schema] of Object.entries(spec.components.schemas)) {
         const dependencies = new Set<string>();
-        collectSchemaDependencies(schema, dependencies);
+        collectSchemaDependencies({
+          dependencies,
+          schema,
+        });
         graph.schemas.set(addNamespace('schema', key), {
           dependencies,
           deprecated:
@@ -125,16 +164,25 @@ export const createGraph = ({
       )) {
         const dependencies = new Set<string>();
         if ('$ref' in parameter) {
-          collectSchemaDependencies(parameter, dependencies);
+          collectSchemaDependencies({
+            dependencies,
+            schema: parameter,
+          });
         } else {
           if (parameter.schema) {
-            collectSchemaDependencies(parameter.schema, dependencies);
+            collectSchemaDependencies({
+              dependencies,
+              schema: parameter.schema,
+            });
           }
 
           if (parameter.content) {
             for (const media of Object.values(parameter.content)) {
               if (media.schema) {
-                collectSchemaDependencies(media.schema, dependencies);
+                collectSchemaDependencies({
+                  dependencies,
+                  schema: media.schema,
+                });
               }
             }
           }
@@ -153,11 +201,17 @@ export const createGraph = ({
       )) {
         const dependencies = new Set<string>();
         if ('$ref' in requestBody) {
-          collectSchemaDependencies(requestBody, dependencies);
+          collectSchemaDependencies({
+            dependencies,
+            schema: requestBody,
+          });
         } else {
           for (const media of Object.values(requestBody.content)) {
             if (media.schema) {
-              collectSchemaDependencies(media.schema, dependencies);
+              collectSchemaDependencies({
+                dependencies,
+                schema: media.schema,
+              });
             }
           }
         }
@@ -172,12 +226,18 @@ export const createGraph = ({
       for (const [key, response] of Object.entries(spec.components.responses)) {
         const dependencies = new Set<string>();
         if ('$ref' in response) {
-          collectSchemaDependencies(response, dependencies);
+          collectSchemaDependencies({
+            dependencies,
+            schema: response,
+          });
         } else {
           if (response.content) {
             for (const media of Object.values(response.content)) {
               if (media.schema) {
-                collectSchemaDependencies(media.schema, dependencies);
+                collectSchemaDependencies({
+                  dependencies,
+                  schema: media.schema,
+                });
               }
             }
           }
@@ -224,11 +284,17 @@ export const createGraph = ({
 
         if (operation.requestBody) {
           if ('$ref' in operation.requestBody) {
-            collectSchemaDependencies(operation.requestBody, dependencies);
+            collectSchemaDependencies({
+              dependencies,
+              schema: operation.requestBody,
+            });
           } else {
             for (const media of Object.values(operation.requestBody.content)) {
               if (media.schema) {
-                collectSchemaDependencies(media.schema, dependencies);
+                collectSchemaDependencies({
+                  dependencies,
+                  schema: media.schema,
+                });
               }
             }
           }
@@ -241,11 +307,17 @@ export const createGraph = ({
             }
 
             if ('$ref' in response) {
-              collectSchemaDependencies(response, dependencies);
+              collectSchemaDependencies({
+                dependencies,
+                schema: response,
+              });
             } else if (response.content) {
               for (const media of Object.values(response.content)) {
                 if (media.schema) {
-                  collectSchemaDependencies(media.schema, dependencies);
+                  collectSchemaDependencies({
+                    dependencies,
+                    schema: media.schema,
+                  });
                 }
               }
             }
@@ -255,9 +327,15 @@ export const createGraph = ({
         if (operation.parameters) {
           for (const parameter of operation.parameters) {
             if ('$ref' in parameter) {
-              collectSchemaDependencies(parameter, dependencies);
+              collectSchemaDependencies({
+                dependencies,
+                schema: parameter,
+              });
             } else if (parameter.schema) {
-              collectSchemaDependencies(parameter.schema, dependencies);
+              collectSchemaDependencies({
+                dependencies,
+                schema: parameter.schema,
+              });
             }
           }
         }

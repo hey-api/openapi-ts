@@ -35,9 +35,7 @@ export const operationIrRef = ({
       break;
   }
   let separate = true;
-  if (
-    config.plugins['@hey-api/typescript']?.config.identifierCase === 'preserve'
-  ) {
+  if (config.plugins['@hey-api/typescript']?.config.case === 'preserve') {
     separate = false;
   }
   const separator = separate ? '-' : '';

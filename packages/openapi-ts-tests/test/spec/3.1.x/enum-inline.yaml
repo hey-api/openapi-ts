@@ -31,6 +31,14 @@ paths:
                     type: string
                     enum:
                       - baz
+    put:
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Baz'
 components:
   schemas:
     Foo:
@@ -41,3 +49,13 @@ components:
             - bar
           type: string
       type: object
+    Bar:
+      properties:
+        type:
+          $ref: '#/components/schemas/Baz'
+      type: object
+    Baz:
+      enum:
+        - qux
+        - quux
+      type: string

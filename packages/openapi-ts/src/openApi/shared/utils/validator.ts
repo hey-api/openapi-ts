@@ -93,7 +93,7 @@ export const handleValidatorResult = ({
   context: IR.Context;
   result: ValidatorResult;
 }) => {
-  if (!context.config.input.validate_EXPERIMENTAL) {
+  if (!context.config.parser.validate_EXPERIMENTAL) {
     return;
   }
 

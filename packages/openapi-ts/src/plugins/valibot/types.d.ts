@@ -16,9 +16,10 @@ export type Config = Plugin.Name<'valibot'> & {
    */
   comments?: boolean;
   /**
-   * Configuration for reusable schema definitions. Controls generation of
-   * shared Valibot schemas that can be referenced across requests and
-   * responses.
+   * Configuration for reusable schema definitions.
+   *
+   * Controls generation of shared Valibot schemas that can be referenced
+   * across requests and responses.
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -42,8 +43,8 @@ export type Config = Plugin.Name<'valibot'> & {
          */
         enabled?: boolean;
         /**
-         * Custom naming pattern for generated schema names. The name variable is
-         * obtained from the schema name.
+         * Custom naming pattern for generated schema names. The name variable
+         * is obtained from the schema name.
          *
          * @default 'v{{name}}'
          */
@@ -72,6 +73,7 @@ export type Config = Plugin.Name<'valibot'> & {
   output?: string;
   /**
    * Configuration for request-specific Valibot schemas.
+   *
    * Controls generation of Valibot schemas for request bodies, query
    * parameters, path parameters, and headers.
    *
@@ -97,8 +99,8 @@ export type Config = Plugin.Name<'valibot'> & {
          */
         enabled?: boolean;
         /**
-         * Custom naming pattern for generated schema names. The name variable is
-         * obtained from the operation name.
+         * Custom naming pattern for generated schema names. The name variable
+         * is obtained from the operation name.
          *
          * @default 'v{{name}}Data'
          */
@@ -106,6 +108,7 @@ export type Config = Plugin.Name<'valibot'> & {
       };
   /**
    * Configuration for response-specific Valibot schemas.
+   *
    * Controls generation of Valibot schemas for response bodies, error
    * responses, and status codes.
    *
@@ -131,8 +134,8 @@ export type Config = Plugin.Name<'valibot'> & {
          */
         enabled?: boolean;
         /**
-         * Custom naming pattern for generated schema names. The name variable is
-         * obtained from the operation name.
+         * Custom naming pattern for generated schema names. The name variable
+         * is obtained from the operation name.
          *
          * @default 'v{{name}}Response'
          */
@@ -154,9 +157,10 @@ export type ResolvedConfig = Plugin.Name<'valibot'> & {
    */
   comments: boolean;
   /**
-   * Configuration for reusable schema definitions. Controls generation of
-   * shared Valibot schemas that can be referenced across requests and
-   * responses.
+   * Configuration for reusable schema definitions.
+   *
+   * Controls generation of shared Valibot schemas that can be referenced
+   * across requests and responses.
    */
   definitions: {
     /**
@@ -202,6 +206,7 @@ export type ResolvedConfig = Plugin.Name<'valibot'> & {
   output: string;
   /**
    * Configuration for request-specific Valibot schemas.
+   *
    * Controls generation of Valibot schemas for request bodies, query
    * parameters, path parameters, and headers.
    */
@@ -228,6 +233,7 @@ export type ResolvedConfig = Plugin.Name<'valibot'> & {
   };
   /**
    * Configuration for response-specific Valibot schemas.
+   *
    * Controls generation of Valibot schemas for response bodies, error
    * responses, and status codes.
    */

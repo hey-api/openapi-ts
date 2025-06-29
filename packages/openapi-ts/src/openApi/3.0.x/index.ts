@@ -3,6 +3,7 @@ export type { OpenApiV3_0_X } from './types/spec';
 
 import type {
   InfoObject,
+  OperationObject,
   ParameterObject,
   ReferenceObject,
   RequestBodyObject,
@@ -12,6 +13,7 @@ import type {
 
 export interface OpenApiV3_0_XTypes {
   InfoObject: InfoObject;
+  OperationObject: OperationObject;
   ParameterObject: ParameterObject;
   ReferenceObject: ReferenceObject;
   RequestBodyObject: RequestBodyObject;
