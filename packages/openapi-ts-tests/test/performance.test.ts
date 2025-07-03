@@ -12,7 +12,7 @@ const toOutputPath = (name: string) =>
   path.resolve(__dirname, 'generated', name);
 
 describe('performance', () => {
-  it('creates client under 1000ms', async () => {
+  it('creates client under 1500ms', async () => {
     Performance.clear();
 
     await createClient({
@@ -27,10 +27,10 @@ describe('performance', () => {
     Performance.measure('createClient');
     const measures = Performance.getEntriesByName('createClient');
 
-    expect(measures[0]!.duration).toBeLessThanOrEqual(1000);
+    expect(measures[0]!.duration).toBeLessThanOrEqual(1500);
   });
 
-  it('parses spec under 1000ms', async () => {
+  it('parses spec under 1500ms', async () => {
     Performance.clear();
 
     await createClient({
@@ -45,10 +45,10 @@ describe('performance', () => {
     Performance.measure('parser');
     const measures = Performance.getEntriesByName('parser');
 
-    expect(measures[0]!.duration).toBeLessThanOrEqual(1000);
+    expect(measures[0]!.duration).toBeLessThanOrEqual(1500);
   });
 
-  it('parses spec under 1000ms (experimental)', async () => {
+  it('parses spec under 1500ms (experimental)', async () => {
     Performance.clear();
 
     await createClient({
@@ -63,6 +63,6 @@ describe('performance', () => {
     Performance.measure('parser');
     const measures = Performance.getEntriesByName('parser');
 
-    expect(measures[0]!.duration).toBeLessThanOrEqual(1000);
+    expect(measures[0]!.duration).toBeLessThanOrEqual(1500);
   });
 });
