@@ -91,7 +91,7 @@ const zData = z.object({
 If you need to access individual fields, you can do so using the [`.shape`](https://zod.dev/api?id=shape) API. For example, we can get the request body schema with `zData.shape.body`.
 :::
 
-You can customize the naming and casing pattern for requests using the `requests.name` and `requests.case` options.
+You can customize the naming and casing pattern for `requests` schemas using the `.name` and `.case` options.
 
 ## Responses
 
@@ -108,7 +108,7 @@ const zResponse = z.union([
 ]);
 ```
 
-You can customize the naming and casing pattern for responses using the `responses.name` and `responses.case` options.
+You can customize the naming and casing pattern for `responses` schemas using the `.name` and `.case` options.
 
 ## Definitions
 
@@ -122,7 +122,7 @@ const zBar = z.object({
 });
 ```
 
-You can customize the naming and casing pattern for definitions using the `definitions.name` and `definitions.case` options.
+You can customize the naming and casing pattern for `definitions` schemas using the `.name` and `.case` options.
 
 ## Metadata
 

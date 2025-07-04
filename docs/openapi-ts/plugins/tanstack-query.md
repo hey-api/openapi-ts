@@ -111,7 +111,7 @@ const { data, error } = useQuery({
 });
 ```
 
-You can customize the naming and casing pattern for query options functions using the `queryOptions.name` and `queryOptions.case` options.
+You can customize the naming and casing pattern for `queryOptions` functions using the `.name` and `.case` options.
 
 ## Query Keys
 
@@ -135,11 +135,11 @@ const queryKey = getPetByIdQueryKey({
 });
 ```
 
-You can customize the naming and casing pattern for query key functions using the `queryKeys.name` and `queryKeys.case` options.
+You can customize the naming and casing pattern for `queryKeys` functions using the `.name` and `.case` options.
 
 ## Infinite Queries
 
-Infinite queries are generated from GET and POST endpoints if we detect a [pagination](/openapi-ts/configuration#pagination) parameter. The generated infinite query functions follow the naming convention of SDK functions and by default append `InfiniteOptions`, e.g. `getFooInfiniteOptions()`.
+Infinite queries are generated from GET and POST endpoints if we detect a [pagination](/openapi-ts/configuration/parser#pagination) parameter. The generated infinite query functions follow the naming convention of SDK functions and by default append `InfiniteOptions`, e.g. `getFooInfiniteOptions()`.
 
 ```ts
 const { data, error } = useInfiniteQuery({
@@ -153,7 +153,7 @@ const { data, error } = useInfiniteQuery({
 });
 ```
 
-You can customize the naming and casing pattern for infinite query options functions using the `infiniteQueryOptions.name` and `infiniteQueryOptions.case` options.
+You can customize the naming and casing pattern for `infiniteQueryOptions` functions using the `.name` and `.case` options.
 
 ## Infinite Query Keys
 
@@ -177,7 +177,7 @@ const queryKey = getPetByIdInfiniteQueryKey({
 });
 ```
 
-You can customize the naming and casing pattern for infinite query key functions using the `infiniteQueryKeys.name` and `infiniteQueryKeys.case` options.
+You can customize the naming and casing pattern for `infiniteQueryKeys` functions using the `.name` and `.case` options.
 
 ## Mutations
 
@@ -198,7 +198,7 @@ addPet.mutate({
 });
 ```
 
-You can customize the naming and casing pattern for mutation options functions using the `mutationOptions.name` and `mutationOptions.case` options.
+You can customize the naming and casing pattern for `mutationOptions` functions using the `.name` and `.case` options.
 
 <!--@include: ../../examples.md-->
 <!--@include: ../../sponsors.md-->

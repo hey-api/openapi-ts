@@ -41,14 +41,13 @@ export type Parser = {
    */
   transforms?: {
     /**
-     * There might be 2 types of enums in your input:
+     * Your input might contain two types of enums:
      * - enums defined as reusable components (root enums)
      * - non-reusable enums nested within other schemas (inline enums)
      *
-     * You may want to make all enums root or inline. This is because only
-     * root enums (reusable components) are typically exported by plugins.
-     * Inline enums will never be importable since they're nested inside
-     * other schemas.
+     * You may want all enums to be reusable. This is because only root enums
+     * are typically exported by plugins. Inline enums will never be directly
+     * importable since they're nested inside other schemas.
      *
      * For example, to export nested enum types with the `@hey-api/typescript`
      * plugin, set `enums` to `root`. Likewise, if you don't want to export any
@@ -87,12 +86,13 @@ export type Parser = {
           name?: string | ((name: string) => string);
         };
     /**
-     * Your input might contain read-only or write-only schemas. Simply using
-     * such schemas could mean asking the user to provide a read-only field in
-     * payloads, or expecting a write-only field in responses.
+     * Your schemas might contain read-only or write-only fields. Using such
+     * schemas directly could mean asking the user to provide a read-only
+     * field in requests, or expecting a write-only field in responses.
      *
-     * To avoid such scenarios, we separate schemas for read and write
-     * operations. You can still disable this behavior if you prefer.
+     * We separate schemas for requests and responses if direct usage
+     * would result in such scenarios. You can still disable this
+     * behavior if you prefer.
      *
      * @default true
      */
@@ -195,14 +195,13 @@ export type ResolvedParser = {
    */
   transforms: {
     /**
-     * There might be 2 types of enums in your input:
+     * Your input might contain two types of enums:
      * - enums defined as reusable components (root enums)
      * - non-reusable enums nested within other schemas (inline enums)
      *
-     * You may want to make all enums root or inline. This is because only
-     * root enums (reusable components) are typically exported by plugins.
-     * Inline enums will never be importable since they're nested inside
-     * other schemas.
+     * You may want all enums to be reusable. This is because only root enums
+     * are typically exported by plugins. Inline enums will never be directly
+     * importable since they're nested inside other schemas.
      *
      * For example, to export nested enum types with the `@hey-api/typescript`
      * plugin, set `enums` to `root`. Likewise, if you don't want to export any
@@ -236,12 +235,13 @@ export type ResolvedParser = {
       name: string | ((name: string) => string);
     };
     /**
-     * Your input might contain read-only or write-only schemas. Simply using
-     * such schemas could mean asking the user to provide a read-only field in
-     * payloads, or expecting a write-only field in responses.
+     * Your schemas might contain read-only or write-only fields. Using such
+     * schemas directly could mean asking the user to provide a read-only
+     * field in requests, or expecting a write-only field in responses.
      *
-     * To avoid such scenarios, we separate schemas for read and write
-     * operations. You can still disable this behavior if you prefer.
+     * We separate schemas for requests and responses if direct usage
+     * would result in such scenarios. You can still disable this
+     * behavior if you prefer.
      */
     readWrite: {
       /**

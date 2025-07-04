@@ -101,18 +101,18 @@ export default defineConfig(() => {
         // },
         // version: () => '3.1.1',
       },
-      // transforms: {
-      //   enums: {
-      //     enabled: false,
-      //     mode: 'inline',
-      //     // name: '{{name}}',
-      //   },
-      //   readWrite: {
-      //     enabled: false,
-      //     // requests: '{{name}}',
-      //     responses: '{{name}}Readable',
-      //   },
-      // },
+      transforms: {
+        enums: {
+          enabled: false,
+          mode: 'inline',
+          // name: '{{name}}',
+        },
+        readWrite: {
+          // enabled: false,
+          requests: '{{name}}Writable',
+          responses: '{{name}}',
+        },
+      },
       validate_EXPERIMENTAL: true,
     },
     plugins: [

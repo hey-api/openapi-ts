@@ -22,6 +22,21 @@ export default defineConfig({
             text: 'Get Started',
           },
           {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/configuration/input',
+                text: 'Input',
+              },
+              {
+                link: '/openapi-ts/configuration/output',
+                text: 'Output',
+              },
+              {
+                link: '/openapi-ts/configuration/parser',
+                text: 'Parser',
+              },
+            ],
             link: '/openapi-ts/configuration',
             text: 'Configuration',
           },

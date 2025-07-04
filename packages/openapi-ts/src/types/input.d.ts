@@ -25,14 +25,14 @@ export type Input = {
    */
   commit_sha?: string;
   /**
-   * You pass any valid Fetch API options to the request for fetching your
+   * You can pass any valid Fetch API options to the request for fetching your
    * specification. This is useful if your file is behind auth for example.
    */
   fetch?: RequestInit;
   /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
    *
-   * Organization created in Hey API platform.
+   * Organization created in Hey API Platform.
    */
   organization?: string;
   /**
@@ -47,7 +47,7 @@ export type Input = {
   /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
    *
-   * Project created in Hey API platform.
+   * Project created in Hey API Platform.
    */
   project?: string;
   /**
