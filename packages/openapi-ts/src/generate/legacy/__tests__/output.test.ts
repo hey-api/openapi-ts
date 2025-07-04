@@ -31,7 +31,6 @@ describe('generateLegacyOutput', () => {
       exportCore: true,
       input: {
         path: '',
-        validate_EXPERIMENTAL: false,
         watch: {
           enabled: false,
           interval: 1_000,
@@ -46,6 +45,31 @@ describe('generateLegacyOutput', () => {
       output: {
         format: 'prettier',
         path: './dist',
+      },
+      parser: {
+        pagination: {
+          keywords: [],
+        },
+        transforms: {
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
+          readWrite: {
+            enabled: false,
+            requests: {
+              case: 'preserve',
+              name: '',
+            },
+            responses: {
+              case: 'preserve',
+              name: '',
+            },
+          },
+        },
+        validate_EXPERIMENTAL: false,
       },
       pluginOrder: [
         '@hey-api/typescript',

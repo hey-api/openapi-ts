@@ -1,0 +1,180 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 transforms read write example
+  version: 1
+paths:
+  /foo-read-write:
+    post:
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/FooReadWrite'
+        required: true
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FooReadWrite'
+          description: OK
+  /foo-read:
+    post:
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/FooRead'
+        required: true
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FooRead'
+          description: OK
+  /foo-write:
+    post:
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/FooWrite'
+        required: true
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FooWrite'
+          description: OK
+    put:
+      parameters:
+        - $ref: '#/components/parameters/Foo'
+      requestBody:
+        $ref: '#/components/requestBodies/Foo'
+      responses:
+        '200':
+          $ref: '#/components/responses/Foo'
+components:
+  parameters:
+    Foo:
+      name: foo
+      in: query
+      description: Query parameter
+      required: false
+      schema:
+        type: string
+  requestBodies:
+    Foo:
+      required: true
+      description: PUT /foo-write payload
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              foo:
+                $ref: '#/components/schemas/BarRead'
+  responses:
+    Foo:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/FooWrite'
+      description: OK
+  schemas:
+    FooReadWrite:
+      allOf:
+        - $ref: '#/components/schemas/BarRead'
+        - type: object
+          properties:
+            foo:
+              writeOnly: true
+              type: string
+    FooRead:
+      allOf:
+        - $ref: '#/components/schemas/BarRead'
+        - type: object
+          properties:
+            foo:
+              readOnly: true
+              type: string
+    FooWrite:
+      allOf:
+        - $ref: '#/components/schemas/BarWrite'
+        - type: object
+          properties:
+            foo:
+              writeOnly: true
+              type: string
+    BarRead:
+      anyOf:
+        - $ref: '#/components/schemas/Baz'
+        - $ref: '#/components/schemas/QuxAllWrite'
+        - $ref: '#/components/schemas/QuxAllRead'
+        - type: object
+          properties:
+            bar:
+              readOnly: true
+              type: string
+    BarWrite:
+      anyOf:
+        - $ref: '#/components/schemas/Baz'
+        - $ref: '#/components/schemas/QuxAllWrite'
+        - $ref: '#/components/schemas/QuxAllRead'
+        - type: object
+          properties:
+            bar:
+              writeOnly: true
+              type: string
+    Baz:
+      type: object
+      properties:
+        baz:
+          type: string
+    QuxAllWrite:
+      type: object
+      properties:
+        baz:
+          writeOnly: true
+          type: string
+    QuxAllRead:
+      type: object
+      properties:
+        baz:
+          readOnly: true
+          type: string
+    Quux:
+      type: object
+      properties:
+        baz:
+          type: array
+          items:
+            $ref: '#/components/schemas/Baz'
+        qux:
+          $ref: '#/components/schemas/QuxAllRead'
+    Corge:
+      type: object
+      properties:
+        foo:
+          type: object
+          properties:
+            baz:
+              type: boolean
+              writeOnly: true
+        bar:
+          type: object
+          properties:
+            baz:
+              type: boolean
+              readOnly: true
+    FooReadWriteRef:
+      type: object
+      properties:
+        foo:
+          $ref: '#/components/schemas/FooReadWrite'
+        bar:
+          $ref: '#/components/schemas/FooReadWriteRef'
+    FooReadWriteRef2:
+      $ref: '#/components/schemas/FooReadWrite'

@@ -1,5 +1,5 @@
 import { createOperationKey } from '../../../ir/operation';
-import { addNamespace, removeNamespace } from '../../shared/utils/graph';
+import { addNamespace, removeNamespace } from '../../shared/utils/filter';
 import { httpMethods } from '../../shared/utils/operation';
 import type { OpenApiV3_0_X, PathItemObject, PathsObject } from '../types/spec';
 

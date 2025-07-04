@@ -1,0 +1,15 @@
+export const childSchemaRelationships = [
+  ['additionalProperties', 'single'],
+  ['allOf', 'array'],
+  ['anyOf', 'array'],
+  ['contains', 'single'],
+  ['dependentSchemas', 'objectMap'],
+  ['else', 'single'],
+  ['if', 'single'],
+  ['items', 'singleOrArray'],
+  ['oneOf', 'array'],
+  ['patternProperties', 'objectMap'],
+  ['properties', 'objectMap'],
+  ['propertyNames', 'single'],
+  ['then', 'single'],
+] as const;

@@ -1,11 +1,9 @@
 import type { PluginConfigMap } from '../plugins/config';
 import type { Plugin, PluginNames } from '../plugins/types';
-import type { StringCase } from './case';
 import type { Input, Watch } from './input';
-
-export type Formatters = 'biome' | 'prettier';
-
-export type Linters = 'biome' | 'eslint' | 'oxlint';
+import type { Logs } from './logs';
+import type { Output } from './output';
+import type { Parser, ResolvedParser } from './parser';
 
 export interface UserConfig {
   /**
@@ -32,106 +30,20 @@ export interface UserConfig {
     | (Record<string, unknown> & { path?: never })
     | Input;
   /**
-   * The relative location of the logs folder
+   * The relative location of the logs folder.
    *
    * @default process.cwd()
    */
-  logs?:
-    | string
-    | {
-        /**
-         * Whether or not error logs should be written to a file or not
-         *
-         * @default true
-         * */
-        file?: boolean;
-        /**
-         * The logging level to control the verbosity of log output.
-         * Determines which messages are logged based on their severity.
-         *
-         * Available levels (in increasing order of severity):
-         * - `trace`: Detailed debug information, primarily for development.
-         * - `debug`: Diagnostic information useful during debugging.
-         * - `info`: General operational messages that indicate normal application behavior.
-         * - `warn`: Potentially problematic situations that require attention.
-         * - `error`: Errors that prevent some functionality but do not crash the application.
-         * - `fatal`: Critical errors that cause the application to terminate.
-         * - `silent`: Disables all logging.
-         *
-         * Messages with a severity equal to or higher than the specified level will be logged.
-         *
-         * @default 'info'
-         */
-        level?:
-          | 'debug'
-          | 'error'
-          | 'fatal'
-          | 'info'
-          | 'silent'
-          | 'trace'
-          | 'warn';
-
-        /**
-         * The relative location of the logs folder
-         *
-         * @default process.cwd()
-         */
-        path?: string;
-      };
+  logs?: string | Logs;
   /**
-   * The relative location of the output folder
+   * The relative location of the output folder.
    */
-  output:
-    | string
-    | {
-        /**
-         * Defines casing of the output fields. By default, we preserve `input`
-         * values as data transforms incur a performance penalty at runtime.
-         *
-         * @default undefined
-         */
-        case?: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
-        /**
-         * Clean the `output` folder on every run? If disabled, this folder may
-         * be used to store additional files. The default option is `true` to
-         * reduce the risk of keeping outdated files around when configuration,
-         * input, or package version changes.
-         *
-         * @default true
-         */
-        clean?: boolean;
-        /**
-         * Process output folder with formatter?
-         *
-         * @default false
-         */
-        format?: Formatters | false;
-        /**
-         * Should the exports from plugin files be re-exported in the index
-         * barrel file? By default, this is enabled and only default plugins
-         * are re-exported.
-         *
-         * @default true
-         */
-        indexFile?: boolean;
-        /**
-         * Process output folder with linter?
-         *
-         * @default false
-         */
-        lint?: Linters | false;
-        /**
-         * The relative location of the output folder
-         */
-        path: string;
-        /**
-         * Relative or absolute path to the tsconfig file we should use to
-         * generate the output. If a path to tsconfig file is not provided, we
-         * attempt to find one starting from the location of the
-         * `@hey-api/openapi-ts` configuration file and traversing up.
-         */
-        tsConfigPath?: 'off' | (string & {});
-      };
+  output: string | Output;
+  /**
+   * Customize how the input is parsed and transformed before it's passed to
+   * plugins.
+   */
+  parser?: Parser;
   /**
    * Plugins generate artifacts from `input`. By default, we generate SDK
    * functions and TypeScript interfaces. If you manually define `plugins`,
@@ -209,17 +121,23 @@ export type Config = Omit<
   | 'logs'
   | 'name'
   | 'output'
+  | 'parser'
   | 'plugins'
   | 'request'
   | 'watch'
 > &
   Pick<UserConfig, 'base' | 'name' | 'request'> & {
-    input: Omit<Input, 'path' | 'validate_EXPERIMENTAL' | 'watch'> &
-      Pick<Required<Input>, 'path' | 'validate_EXPERIMENTAL'> & {
+    input: Omit<Input, 'path' | 'watch'> &
+      Pick<Required<Input>, 'path'> & {
         watch: Extract<Required<Required<Input>['watch']>, object>;
       };
     logs: Extract<Required<UserConfig['logs']>, object>;
     output: Extract<UserConfig['output'], object>;
+    /**
+     * Customize how the input is parsed and transformed before it's passed to
+     * plugins.
+     */
+    parser: ResolvedParser;
     pluginOrder: ReadonlyArray<keyof PluginConfigMap>;
     plugins: {
       [K in PluginNames]?: Plugin.ConfigWithName<PluginConfigMap[K]>;

@@ -21,9 +21,7 @@ const isPlatformPath = (path: string) =>
   path.startsWith('https://get.heyapi.dev');
 // || path.startsWith('http://localhost:4000')
 
-export const compileInputPath = (
-  input: Omit<Config['input'], 'validate_EXPERIMENTAL' | 'watch'>,
-) => {
+export const compileInputPath = (input: Omit<Config['input'], 'watch'>) => {
   const result: Pick<
     Partial<Config['input']>,
     | 'api_key'
@@ -101,13 +99,13 @@ export const compileInputPath = (
 
   if (!result.organization) {
     throw new Error(
-      'missing organization - from which Hey API platform organization do you want to generate your output?',
+      'missing organization - from which Hey API Platform organization do you want to generate your output?',
     );
   }
 
   if (!result.project) {
     throw new Error(
-      'missing project - from which Hey API platform project do you want to generate your output?',
+      'missing project - from which Hey API Platform project do you want to generate your output?',
     );
   }
 
@@ -219,7 +217,7 @@ export const createClient = async ({
     }
 
     Performance.start('input.patch');
-    patchOpenApiSpec({ patchOptions: config.input.patch, spec: data });
+    patchOpenApiSpec({ patchOptions: config.parser.patch, spec: data });
     Performance.end('input.patch');
 
     Performance.start('parser');

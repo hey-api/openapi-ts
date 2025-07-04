@@ -1560,10 +1560,6 @@ export const ModelWithReadOnlyAndWriteOnlySchema = {
         bar: {
             readOnly: true,
             type: 'string'
-        },
-        baz: {
-            type: 'string',
-            writeOnly: true
         }
     }
 } as const;
@@ -1858,7 +1854,6 @@ export const io_k8s_apimachinery_pkg_apis_meta_v1_PreconditionsSchema = {
 
 export const AdditionalPropertiesUnknownIssueSchema = {
     type: 'object',
-    properties: {},
     additionalProperties: {
         anyOf: [
             {
@@ -1984,4 +1979,410 @@ export const Generic_Schema_Duplicate_Issue_1_System_String_Schema = {
         }
     },
     additionalProperties: false
+} as const;
+
+export const _400WritableSchema = {
+    description: 'Model with number-only name',
+    type: 'string'
+} as const;
+
+export const camelCaseCommentWithBreaksWritableSchema = {
+    description: `Testing multiline comments in string: First line
+Second line
+
+Fourth line`,
+    type: 'integer'
+} as const;
+
+export const CommentWithBreaksWritableSchema = {
+    description: `Testing multiline comments in string: First line
+Second line
+
+Fourth line`,
+    type: 'integer'
+} as const;
+
+export const CommentWithBackticksWritableSchema = {
+    description: 'Testing backticks in string: `backticks` and ```multiple backticks``` should work',
+    type: 'integer'
+} as const;
+
+export const CommentWithBackticksAndQuotesWritableSchema = {
+    description: `Testing backticks and quotes in string: \`backticks\`, 'quotes', "double quotes" and \`\`\`multiple backticks\`\`\` should work`,
+    type: 'integer'
+} as const;
+
+export const CommentWithSlashesWritableSchema = {
+    description: 'Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work',
+    type: 'integer'
+} as const;
+
+export const CommentWithExpressionPlaceholdersWritableSchema = {
+    description: 'Testing expression placeholders in string: ${expression} should work',
+    type: 'integer'
+} as const;
+
+export const CommentWithQuotesWritableSchema = {
+    description: `Testing quotes in string: 'single quote''' and "double quotes""" should work`,
+    type: 'integer'
+} as const;
+
+export const CommentWithReservedCharactersWritableSchema = {
+    description: 'Testing reserved characters in string: /* inline */ and /** inline **/ should work',
+    type: 'integer'
+} as const;
+
+export const SimpleIntegerWritableSchema = {
+    description: 'This is a simple number',
+    type: 'integer'
+} as const;
+
+export const SimpleBooleanWritableSchema = {
+    description: 'This is a simple boolean',
+    type: 'boolean'
+} as const;
+
+export const SimpleStringWritableSchema = {
+    description: 'This is a simple string',
+    type: 'string'
+} as const;
+
+export const NonAsciiStringæøåÆØÅöôêÊ字符串WritableSchema = {
+    description: 'A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)',
+    type: 'string'
+} as const;
+
+export const SimpleFileWritableSchema = {
+    description: 'This is a simple file',
+    format: 'binary',
+    type: 'string'
+} as const;
+
+export const SimpleStringWithPatternWritableSchema = {
+    description: 'This is a simple string',
+    type: 'string',
+    nullable: true,
+    maxLength: 64,
+    pattern: '^[a-zA-Z0-9_]*$'
+} as const;
+
+export const EnumWithStringsWritableSchema = {
+    description: 'This is a simple enum with strings',
+    enum: ['Success', 'Warning', 'Error', "'Single Quote'", '"Double Quotes"', 'Non-ascii: øæåôöØÆÅÔÖ字符串']
+} as const;
+
+export const EnumWithReplacedCharactersWritableSchema = {
+    enum: ["'Single Quote'", '"Double Quotes"', 'øæåôöØÆÅÔÖ字符串', 3.1, ''],
+    type: 'string'
+} as const;
+
+export const EnumWithNumbersWritableSchema = {
+    description: 'This is a simple enum with numbers',
+    enum: [1, 2, 3, 1.1, 1.2, 1.3, 100, 200, 300, -100, -200, -300, -1.1, -1.2, -1.3],
+    default: 200
+} as const;
+
+export const EnumFromDescriptionWritableSchema = {
+    description: 'Success=1,Warning=2,Error=3',
+    type: 'number'
+} as const;
+
+export const EnumWithExtensionsWritableSchema = {
+    description: 'This is a simple enum with numbers',
+    enum: [200, 400, 500],
+    'x-enum-varnames': ['CUSTOM_SUCCESS', 'CUSTOM_WARNING', 'CUSTOM_ERROR'],
+    'x-enum-descriptions': ['Used when the status of something is successful', 'Used when the status of something has a warning', 'Used when the status of something has an error']
+} as const;
+
+export const EnumWithXEnumNamesWritableSchema = {
+    enum: [0, 1, 2],
+    'x-enumNames': ['zero', 'one', 'two']
+} as const;
+
+export const ArrayWithNumbersWritableSchema = {
+    description: 'This is a simple array with numbers',
+    type: 'array',
+    items: {
+        type: 'integer'
+    }
+} as const;
+
+export const ArrayWithBooleansWritableSchema = {
+    description: 'This is a simple array with booleans',
+    type: 'array',
+    items: {
+        type: 'boolean'
+    }
+} as const;
+
+export const ArrayWithStringsWritableSchema = {
+    description: 'This is a simple array with strings',
+    type: 'array',
+    items: {
+        type: 'string'
+    },
+    default: ['test']
+} as const;
+
+export const DictionaryWithStringWritableSchema = {
+    description: 'This is a string dictionary',
+    type: 'object',
+    additionalProperties: {
+        type: 'string'
+    }
+} as const;
+
+export const DictionaryWithDictionaryWritableSchema = {
+    description: 'This is a string dictionary',
+    type: 'object',
+    additionalProperties: {
+        type: 'object',
+        additionalProperties: {
+            type: 'string'
+        }
+    }
+} as const;
+
+export const Model_From_ZendeskWritableSchema = {
+    description: `\`Comment\` or \`VoiceComment\`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)`,
+    type: 'string'
+} as const;
+
+export const ModelWithArrayReadOnlyAndWriteOnlyWritableSchema = {
+    description: 'This is a model with one property containing an array',
+    type: 'object',
+    properties: {
+        prop: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/ModelWithReadOnlyAndWriteOnlyWritable'
+            }
+        },
+        propWithFile: {
+            type: 'array',
+            items: {
+                format: 'binary',
+                type: 'string'
+            }
+        },
+        propWithNumber: {
+            type: 'array',
+            items: {
+                type: 'number'
+            }
+        }
+    }
+} as const;
+
+export const _3e_num_1ПериодWritableSchema = {
+    enum: ['Bird', 'Dog'],
+    type: 'string'
+} as const;
+
+export const ConstValueWritableSchema = {
+    enum: ['ConstValue'],
+    type: 'string'
+} as const;
+
+export const FreeFormObjectWithoutAdditionalPropertiesWritableSchema = {
+    description: 'This is a free-form object without additionalProperties.',
+    type: 'object'
+} as const;
+
+export const FreeFormObjectWithAdditionalPropertiesEqTrueWritableSchema = {
+    description: 'This is a free-form object with additionalProperties: true.',
+    type: 'object',
+    additionalProperties: true
+} as const;
+
+export const FreeFormObjectWithAdditionalPropertiesEqEmptyObjectWritableSchema = {
+    description: 'This is a free-form object with additionalProperties: {}.',
+    type: 'object',
+    additionalProperties: {}
+} as const;
+
+export const CharactersInDescriptionWritableSchema = {
+    type: 'string',
+    description: 'Some % character'
+} as const;
+
+export const ModelWithNestedArrayEnumsDataFooWritableSchema = {
+    enum: ['foo', 'bar'],
+    type: 'string'
+} as const;
+
+export const ModelWithNestedArrayEnumsDataBarWritableSchema = {
+    enum: ['baz', 'qux'],
+    type: 'string'
+} as const;
+
+export const ModelWithReadOnlyAndWriteOnlyWritableSchema = {
+    type: 'object',
+    required: ['foo', 'bar', 'baz'],
+    properties: {
+        foo: {
+            type: 'string'
+        },
+        baz: {
+            type: 'string',
+            writeOnly: true
+        }
+    }
+} as const;
+
+export const ModelWithConstantSizeArrayWritableSchema = {
+    type: 'array',
+    items: {
+        type: 'number'
+    },
+    minItems: 2,
+    maxItems: 2
+} as const;
+
+export const ModelWithAnyOfConstantSizeArrayWritableSchema = {
+    type: 'array',
+    items: {
+        oneOf: [
+            {
+                type: 'number'
+            },
+            {
+                type: 'string'
+            }
+        ]
+    },
+    minItems: 3,
+    maxItems: 3
+} as const;
+
+export const ModelWithAnyOfConstantSizeArrayNullableWritableSchema = {
+    type: 'array',
+    items: {
+        oneOf: [
+            {
+                type: 'number',
+                nullable: true
+            },
+            {
+                type: 'string'
+            }
+        ]
+    },
+    minItems: 3,
+    maxItems: 3
+} as const;
+
+export const ModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritableSchema = {
+    type: 'array',
+    items: {
+        oneOf: [
+            {
+                type: 'number'
+            },
+            {
+                '$ref': '#/components/schemas/importWritable'
+            }
+        ]
+    },
+    minItems: 2,
+    maxItems: 2
+} as const;
+
+export const ModelWithAnyOfConstantSizeArrayAndIntersectWritableSchema = {
+    type: 'array',
+    items: {
+        allOf: [
+            {
+                type: 'number'
+            },
+            {
+                type: 'string'
+            }
+        ]
+    },
+    minItems: 2,
+    maxItems: 2
+} as const;
+
+export const ParameterSimpleParameterUnusedWritableSchema = {
+    description: 'Model used to test deduplication strategy (unused)',
+    type: 'string'
+} as const;
+
+export const PostServiceWithEmptyTagResponseWritableSchema = {
+    description: 'Model used to test deduplication strategy',
+    type: 'string'
+} as const;
+
+export const PostServiceWithEmptyTagResponse2WritableSchema = {
+    description: 'Model used to test deduplication strategy',
+    type: 'string'
+} as const;
+
+export const DeleteFooDataWritableSchema = {
+    description: 'Model used to test deduplication strategy',
+    type: 'string'
+} as const;
+
+export const DeleteFooData2WritableSchema = {
+    description: 'Model used to test deduplication strategy',
+    type: 'string'
+} as const;
+
+export const importWritableSchema = {
+    description: 'Model with restricted keyword name',
+    type: 'string'
+} as const;
+
+export const AdditionalPropertiesUnknownIssueWritableSchema = {
+    type: 'object',
+    additionalProperties: {
+        anyOf: [
+            {
+                type: 'string'
+            },
+            {
+                type: 'number'
+            }
+        ]
+    }
+} as const;
+
+export const AdditionalPropertiesUnknownIssue2WritableSchema = {
+    type: 'object',
+    additionalProperties: {
+        anyOf: [
+            {
+                type: 'string'
+            },
+            {
+                type: 'number'
+            }
+        ]
+    }
+} as const;
+
+export const OneOfAllOfIssueWritableSchema = {
+    oneOf: [
+        {
+            allOf: [
+                {
+                    oneOf: [
+                        {
+                            '$ref': '#/components/schemas/ConstValueWritable'
+                        },
+                        {
+                            '$ref': '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.Boolean]'
+                        }
+                    ]
+                },
+                {
+                    '$ref': '#/components/schemas/3e-num_1Период'
+                }
+            ]
+        },
+        {
+            '$ref': '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.String]'
+        }
+    ]
 } as const;

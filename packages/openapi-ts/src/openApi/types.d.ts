@@ -18,6 +18,14 @@ export namespace OpenApiMetaObject {
   export type V3_1_X = OpenApiV3_1_XTypes['InfoObject'];
 }
 
+export namespace OpenApiOperationObject {
+  export type V2_0_X = OpenApiV2_0_XTypes['OperationObject'];
+
+  export type V3_0_X = OpenApiV3_0_XTypes['OperationObject'];
+
+  export type V3_1_X = OpenApiV3_1_XTypes['OperationObject'];
+}
+
 export namespace OpenApiParameterObject {
   export type V3_0_X =
     | OpenApiV3_0_XTypes['ParameterObject']
