@@ -7,25 +7,44 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
-## @next
+## v0.78.0
 
-These changes haven't been released yet. However, you can migrate your code today to save time on migration once they're released.
+### Added `parser` options
 
-### Deprecated `base`
+Previously, `@hey-api/typescript` would generate correct types, but the validator plugins would have to re-implement the same logic or generate schemas that didn't match the generated types.
 
-This config option is deprecated and will be removed in favor of [clients](./clients).
+Since neither option was ideal, this release adds a dedicated place for `parser` options. Parser is responsible for preparing the input so plugins can generate more accurate output with less effort.
 
-### Deprecated `name`
+You can learn more about configuring parser on the [Parser](/openapi-ts/configuration/parser) page.
 
-This config option is deprecated and will be removed in favor of [clients](./clients).
+### Moved `input` options
 
-### Deprecated `request`
+The following options were moved to the new `parser` group.
 
-This config option is deprecated and will be removed in favor of [clients](./clients).
+- `input.filters` moved to `parser.filters`
+- `input.pagination` moved to `parser.pagination`
+- `input.patch` moved to `parser.patch`
+- `input.validate_EXPERIMENTAL` moved to `parser.validate_EXPERIMENTAL`
 
-### Deprecated `useOptions`
+### Updated `typescript` options
 
-This config option is deprecated and will be removed.
+The following options were renamed.
+
+- `enumsCase` moved to `enums.case`
+- `enumsConstantsIgnoreNull` moved to `enums.constantsIgnoreNull`
+
+### Moved `typescript` options
+
+The following options were moved to the new `parser` group.
+
+- `exportInlineEnums` moved to `parser.transforms.enums`
+- `readOnlyWriteOnlyBehavior` moved to `parser.transforms.readWrite.enabled`
+- `readableNameBuilder` moved to `parser.transforms.readWrite.responses.name`
+- `writableNameBuilder` moved to `parser.transforms.readWrite.requests.name`
+
+### Updated `readWrite.responses` name
+
+Additionally, the naming pattern for response schemas has changed from `{name}Readable` to `{name}`. This is to prevent your code from breaking by default when using a schema that gets updated with a write-only field.
 
 ## v0.77.0
 
@@ -33,6 +52,7 @@ This config option is deprecated and will be removed.
 
 Clients can now validate both request and response data. As a result, passing a boolean or string to `validator` will control both of these options. To preserve the previous behavior, set `validator.request` to `false` and `validator.response` to your previous configuration.
 
+<!-- prettier-ignore-start -->
 ```js
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
@@ -42,8 +62,7 @@ export default {
     {
       name: '@hey-api/sdk',
       validator: true, // [!code --]
-      validator: {
-        // [!code ++]
+      validator: { // [!code ++]
         request: false, // [!code ++]
         response: true, // [!code ++]
       }, // [!code ++]
@@ -51,6 +70,7 @@ export default {
   ],
 };
 ```
+<!-- prettier-ignore-end -->
 
 ### Updated Plugin API
 

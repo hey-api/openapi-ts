@@ -1,22 +1,10 @@
 import type { Config } from '../types/config';
 import type { IR } from './types';
 
-export const defaultPaginationKeywords = [
-  'after',
-  'before',
-  'cursor',
-  'offset',
-  'page',
-  'start',
-] as const;
-
-export function getPaginationKeywordsRegExp({
-  keywords = defaultPaginationKeywords,
-}: Config['input']['pagination'] = {}): RegExp {
-  if (!keywords.length) {
-    keywords = defaultPaginationKeywords;
-  }
-  const pattern = `^(${keywords.join('|')})$`;
+export function getPaginationKeywordsRegExp(
+  pagination: Config['parser']['pagination'],
+): RegExp {
+  const pattern = `^(${pagination.keywords.join('|')})$`;
   return new RegExp(pattern);
 }
 

@@ -34,86 +34,6 @@ interface State {
   path: ReadonlyArray<string>;
 }
 
-const scopeToRef = ({
-  $ref,
-  accessScope,
-  plugin,
-}: {
-  $ref: string;
-  accessScope?: 'both' | 'read' | 'write';
-  plugin: HeyApiTypeScriptPlugin['Instance'];
-}) => {
-  if (!accessScope || accessScope === 'both') {
-    return $ref;
-  }
-
-  const refParts = $ref.split('/');
-  const name = refParts.pop()!;
-  const nameBuilder =
-    accessScope === 'read'
-      ? plugin.config.readableNameBuilder
-      : plugin.config.writableNameBuilder;
-  const processedName = processNameBuilder({ name, nameBuilder });
-  refParts.push(processedName);
-  return refParts.join('/');
-};
-
-const processNameBuilder = ({
-  name,
-  nameBuilder,
-}: {
-  name: string;
-  nameBuilder: string | undefined;
-}) => {
-  if (!nameBuilder) {
-    return name;
-  }
-
-  return nameBuilder.replace('{{name}}', name);
-};
-
-const shouldSkipSchema = ({
-  schema,
-  state,
-}: {
-  schema: IR.SchemaObject;
-  state: State | undefined;
-}) => {
-  const stateAccessScope = state?.accessScope;
-
-  if (!stateAccessScope) {
-    return false;
-  }
-
-  if (schema.accessScope && stateAccessScope !== schema.accessScope) {
-    return true;
-  }
-
-  if (
-    schema.$ref &&
-    schema.accessScopes &&
-    !schema.accessScopes.includes(stateAccessScope) &&
-    !schema.accessScopes.includes('both')
-  ) {
-    return true;
-  }
-
-  if (
-    (schema.type === 'array' || schema.type === 'tuple') &&
-    schema.items &&
-    schema.items.every(
-      (item) =>
-        item.accessScopes &&
-        !item.accessScopes.includes(stateAccessScope) &&
-        !item.accessScopes.includes('both'),
-    )
-  ) {
-    return true;
-  }
-
-  return false;
-};
-
 const addJavaScriptEnum = ({
   $ref,
   plugin,
@@ -143,7 +63,7 @@ const addJavaScriptEnum = ({
 
   // JavaScript enums might want to ignore null values
   if (
-    plugin.config.enumsConstantsIgnoreNull &&
+    plugin.config.enums.constantsIgnoreNull &&
     enumObject.typeofItems.includes('object')
   ) {
     enumObject.obj = enumObject.obj.filter((item) => item.value !== null);
@@ -205,7 +125,7 @@ const schemaToEnumObject = ({
 
     if (key) {
       key = stringCase({
-        case: plugin.config.enumsCase,
+        case: plugin.config.enums.case,
         stripLeadingSeparators: false,
         value: key,
       });
@@ -214,8 +134,9 @@ const schemaToEnumObject = ({
       // TypeScript enum keys cannot be numbers
       if (
         numberRegExp.test(key) &&
-        (plugin.config.enums === 'typescript' ||
-          plugin.config.enums === 'typescript+namespace')
+        plugin.config.enums.enabled &&
+        (plugin.config.enums.mode === 'typescript' ||
+          plugin.config.enums.mode === 'typescript+namespace')
       ) {
         key = `_${key}`;
       }
@@ -260,7 +181,7 @@ const addTypeEnum = ({
   if (
     !identifier.created &&
     !isRefOpenApiComponent($ref) &&
-    plugin.config.enums !== 'typescript+namespace'
+    plugin.config.enums.mode !== 'typescript+namespace'
   ) {
     return;
   }
@@ -424,13 +345,11 @@ const enumTypeToIdentifier = ({
 }): ts.TypeNode | undefined => {
   const file = plugin.context.file({ id: typesId })!;
   const isRefComponent = $ref ? isRefOpenApiComponent($ref) : false;
-  const shouldExportEnum =
-    isRefComponent || Boolean(plugin.config.exportInlineEnums);
 
-  if ($ref && shouldExportEnum) {
+  if ($ref && isRefComponent) {
     // when enums are disabled (default), emit only reusable components
     // as types, otherwise the output would be broken if we skipped all enums
-    if (!plugin.config.enums) {
+    if (!plugin.config.enums.enabled) {
       const typeNode = addTypeEnum({
         $ref,
         plugin,
@@ -442,52 +361,54 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (plugin.config.enums === 'javascript') {
-      const typeNode = addTypeEnum({
-        $ref,
-        plugin,
-        schema,
-        state,
-      });
-      if (typeNode) {
-        file.add(typeNode);
+    if (plugin.config.enums.enabled) {
+      if (plugin.config.enums.mode === 'javascript') {
+        const typeNode = addTypeEnum({
+          $ref,
+          plugin,
+          schema,
+          state,
+        });
+        if (typeNode) {
+          file.add(typeNode);
+        }
+
+        const objectNode = addJavaScriptEnum({
+          $ref,
+          plugin,
+          schema,
+        });
+        if (objectNode) {
+          file.add(objectNode);
+        }
       }
 
-      const objectNode = addJavaScriptEnum({
-        $ref,
-        plugin,
-        schema,
-      });
-      if (objectNode) {
-        file.add(objectNode);
-      }
-    }
-
-    if (plugin.config.enums === 'typescript') {
-      const enumNode = addTypeScriptEnum({
-        $ref,
-        plugin,
-        schema,
-        state,
-      });
-      if (enumNode) {
-        file.add(enumNode);
-      }
-    }
-
-    if (plugin.config.enums === 'typescript+namespace') {
-      const enumNode = addTypeScriptEnum({
-        $ref,
-        plugin,
-        schema,
-        state,
-      });
-      if (enumNode) {
-        if (isRefComponent) {
+      if (plugin.config.enums.mode === 'typescript') {
+        const enumNode = addTypeScriptEnum({
+          $ref,
+          plugin,
+          schema,
+          state,
+        });
+        if (enumNode) {
           file.add(enumNode);
-        } else {
-          // emit enum inside TypeScript namespace
-          namespace.push(enumNode);
+        }
+      }
+
+      if (plugin.config.enums.mode === 'typescript+namespace') {
+        const enumNode = addTypeScriptEnum({
+          $ref,
+          plugin,
+          schema,
+          state,
+        });
+        if (enumNode) {
+          if (isRefComponent) {
+            file.add(enumNode);
+          } else {
+            // emit enum inside TypeScript namespace
+            namespace.push(enumNode);
+          }
         }
       }
     }
@@ -548,20 +469,9 @@ const objectTypeToIdentifier = ({
   let indexPropertyItems: Array<IR.SchemaObject> = [];
   const required = schema.required ?? [];
   let hasOptionalProperties = false;
-  let hasSkippedProperties = false;
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
-
-    const skip = shouldSkipSchema({
-      schema: property,
-      state,
-    });
-
-    if (skip) {
-      hasSkippedProperties = true;
-      continue;
-    }
 
     const propertyType = schemaToType({
       $ref: state ? [...state.path, name].join('/') : `${irRef}${name}`,
@@ -628,10 +538,6 @@ const objectTypeToIdentifier = ({
         indexKey = refToName(schema.propertyNames.$ref);
       }
     }
-  }
-
-  if (hasSkippedProperties && !schemaProperties.length && !indexProperty) {
-    return;
   }
 
   return compiler.typeInterfaceNode({
@@ -935,15 +841,9 @@ const operationToDataType = ({
   const type = schemaToType({
     plugin,
     schema: data,
-    state:
-      plugin.config.readOnlyWriteOnlyBehavior === 'off'
-        ? {
-            path: [operation.method, operation.path, 'data'],
-          }
-        : {
-            accessScope: 'write',
-            path: [operation.method, operation.path, 'data'],
-          },
+    state: {
+      path: [operation.method, operation.path, 'data'],
+    },
   });
 
   if (type) {
@@ -984,15 +884,9 @@ const operationToType = ({
       const type = schemaToType({
         plugin,
         schema: errors,
-        state:
-          plugin.config.readOnlyWriteOnlyBehavior === 'off'
-            ? {
-                path: [operation.method, operation.path, 'errors'],
-              }
-            : {
-                accessScope: 'read',
-                path: [operation.method, operation.path, 'errors'],
-              },
+        state: {
+          path: [operation.method, operation.path, 'errors'],
+        },
       });
 
       if (type) {
@@ -1050,15 +944,9 @@ const operationToType = ({
       const type = schemaToType({
         plugin,
         schema: responses,
-        state:
-          plugin.config.readOnlyWriteOnlyBehavior === 'off'
-            ? {
-                path: [operation.method, operation.path, 'responses'],
-              }
-            : {
-                accessScope: 'read',
-                path: [operation.method, operation.path, 'responses'],
-              },
+        state: {
+          path: [operation.method, operation.path, 'responses'],
+        },
       });
 
       if (type) {
@@ -1103,32 +991,6 @@ const operationToType = ({
   }
 };
 
-/**
- * Is this schema split into a readable and writable variant? We won't split
- * schemas if they don't contain any read-only or write-only fields or if they
- * contain ONLY read-only or write-only fields. We split only when there's a
- * mix of different access scopes for the schema.
- */
-const isSchemaSplit = ({ schema }: { schema: IR.SchemaObject }): boolean => {
-  const scopes = schema.accessScopes;
-  return scopes !== undefined && scopes.length > 1;
-};
-
-const hasSchemaScope = ({
-  accessScope,
-  schema,
-}: {
-  accessScope: Required<State>['accessScope'];
-  schema: IR.SchemaObject;
-}): boolean => {
-  const scopes = schema.accessScopes;
-  return (
-    !scopes ||
-    (scopes !== undefined &&
-      (scopes.includes(accessScope) || scopes.includes('both')))
-  );
-};
-
 export const schemaToType = ({
   $ref,
   namespace = [],
@@ -1149,35 +1011,24 @@ export const schemaToType = ({
   if (schema.$ref) {
     const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
 
-    if (
-      !state?.accessScope ||
-      hasSchemaScope({ accessScope: state.accessScope, schema: refSchema })
-    ) {
-      const finalRef = scopeToRef({
-        $ref: schema.$ref,
-        accessScope: isSchemaSplit({ schema: refSchema })
-          ? state?.accessScope
-          : undefined,
-        plugin,
-      });
-      const identifier = file.identifier({
-        $ref: finalRef,
-        create: true,
-        namespace:
-          refSchema.type === 'enum' &&
-          (plugin.config.enums === 'typescript' ||
-            plugin.config.enums === 'typescript+namespace') &&
-          shouldCreateTypeScriptEnum({
-            plugin,
-            schema: refSchema as SchemaWithType<'enum'>,
-          })
-            ? 'enum'
-            : 'type',
-      });
-      type = compiler.typeReferenceNode({
-        typeName: identifier.name || '',
-      });
-    }
+    const identifier = file.identifier({
+      $ref: schema.$ref,
+      create: true,
+      namespace:
+        refSchema.type === 'enum' &&
+        plugin.config.enums.enabled &&
+        (plugin.config.enums.mode === 'typescript' ||
+          plugin.config.enums.mode === 'typescript+namespace') &&
+        shouldCreateTypeScriptEnum({
+          plugin,
+          schema: refSchema as SchemaWithType<'enum'>,
+        })
+          ? 'enum'
+          : 'type',
+    });
+    type = compiler.typeReferenceNode({
+      typeName: identifier.name || '',
+    });
   } else if (schema.type) {
     type = schemaTypeToIdentifier({
       $ref,
@@ -1268,7 +1119,7 @@ export const schemaToType = ({
 export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   const file = plugin.createFile({
     id: typesId,
-    identifierCase: plugin.config.identifierCase,
+    identifierCase: plugin.config.case,
     path: plugin.output,
   });
 
@@ -1305,68 +1156,21 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
           $ref: event.$ref,
           plugin,
           schema: event.requestBody.schema,
-          state:
-            plugin.config.readOnlyWriteOnlyBehavior === 'off'
-              ? {
-                  // TODO: correctly populate state.path
-                  path: [],
-                }
-              : {
-                  accessScope: 'write',
-                  // TODO: correctly populate state.path
-                  path: [],
-                },
+          state: {
+            // TODO: correctly populate state.path
+            path: [],
+          },
         });
       } else if (event.type === 'schema') {
-        if (
-          plugin.config.readOnlyWriteOnlyBehavior === 'off' ||
-          !isSchemaSplit({ schema: event.schema })
-        ) {
-          schemaToType({
-            $ref: event.$ref,
-            plugin,
-            schema: event.schema,
-            state: {
-              // TODO: correctly populate state.path
-              path: [],
-            },
-          });
-          return;
-        }
-
-        if (hasSchemaScope({ accessScope: 'read', schema: event.schema })) {
-          schemaToType({
-            $ref: scopeToRef({
-              $ref: event.$ref,
-              accessScope: 'read',
-              plugin,
-            }),
-            plugin,
-            schema: event.schema,
-            state: {
-              accessScope: 'read',
-              // TODO: correctly populate state.path
-              path: [],
-            },
-          });
-        }
-
-        if (hasSchemaScope({ accessScope: 'write', schema: event.schema })) {
-          schemaToType({
-            $ref: scopeToRef({
-              $ref: event.$ref,
-              accessScope: 'write',
-              plugin,
-            }),
-            plugin,
-            schema: event.schema,
-            state: {
-              accessScope: 'write',
-              // TODO: correctly populate state.path
-              path: [],
-            },
-          });
-        }
+        schemaToType({
+          $ref: event.$ref,
+          plugin,
+          schema: event.schema,
+          state: {
+            // TODO: correctly populate state.path
+            path: [],
+          },
+        });
       } else if (event.type === 'server') {
         servers.push(event.server);
       }

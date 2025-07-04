@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  title: OpenAPI 2.0 transforms read write example
+  version: 1
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /foo-read:
+    post:
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/FooRead'
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/FooRead'
+          description: OK
+definitions:
+  FooRead:
+    allOf:
+      - $ref: '#/definitions/BarRead'
+      - type: object
+        properties:
+          foo:
+            readOnly: true
+            type: string
+  BarRead:
+    allOf:
+      - $ref: '#/definitions/Baz'
+      - type: object
+        properties:
+          bar:
+            readOnly: true
+            type: string
+  Baz:
+    type: object
+    properties:
+      baz:
+        type: string
+  QuxAllRead:
+    type: object
+    properties:
+      baz:
+        readOnly: true
+        type: string
+  Quux:
+    type: object
+    properties:
+      baz:
+        type: array
+        items:
+          $ref: '#/definitions/Baz'
+      qux:
+        $ref: '#/definitions/QuxAllRead'
+  Corge:
+    type: object
+    properties:
+      foo:
+        type: string
+      bar:
+        type: object
+        properties:
+          baz:
+            type: boolean
+            readOnly: true

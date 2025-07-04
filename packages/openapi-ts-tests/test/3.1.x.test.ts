@@ -99,7 +99,7 @@ describe(`OpenAPI ${version}`, () => {
         output: 'case-preserve',
         plugins: [
           {
-            identifierCase: 'preserve',
+            case: 'preserve',
             name: '@hey-api/typescript',
           },
         ],
@@ -112,7 +112,7 @@ describe(`OpenAPI ${version}`, () => {
         output: 'case-PascalCase',
         plugins: [
           {
-            identifierCase: 'PascalCase',
+            case: 'PascalCase',
             name: '@hey-api/typescript',
           },
         ],
@@ -125,7 +125,7 @@ describe(`OpenAPI ${version}`, () => {
         output: 'case-camelCase',
         plugins: [
           {
-            identifierCase: 'camelCase',
+            case: 'camelCase',
             name: '@hey-api/typescript',
           },
         ],
@@ -138,7 +138,7 @@ describe(`OpenAPI ${version}`, () => {
         output: 'case-snake_case',
         plugins: [
           {
-            identifierCase: 'snake_case',
+            case: 'snake_case',
             name: '@hey-api/typescript',
           },
         ],
@@ -224,12 +224,12 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-inline.yaml',
         output: 'enum-inline',
-        plugins: [
-          {
-            exportInlineEnums: true,
-            name: '@hey-api/typescript',
+        parser: {
+          transforms: {
+            enums: 'root',
           },
-        ],
+        },
+        plugins: ['@hey-api/typescript'],
       }),
       description: 'exports inline enums',
     },
@@ -237,10 +237,14 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-inline.yaml',
         output: 'enum-inline-javascript',
+        parser: {
+          transforms: {
+            enums: 'root',
+          },
+        },
         plugins: [
           {
             enums: 'javascript',
-            exportInlineEnums: true,
             name: '@hey-api/typescript',
           },
         ],
@@ -251,10 +255,14 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-inline.yaml',
         output: 'enum-inline-typescript',
+        parser: {
+          transforms: {
+            enums: 'root',
+          },
+        },
         plugins: [
           {
             enums: 'typescript',
-            exportInlineEnums: true,
             name: '@hey-api/typescript',
           },
         ],
@@ -265,10 +273,14 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-inline.yaml',
         output: 'enum-inline-typescript-namespace',
+        parser: {
+          transforms: {
+            enums: 'root',
+          },
+        },
         plugins: [
           {
             enums: 'typescript+namespace',
-            exportInlineEnums: true,
             name: '@hey-api/typescript',
           },
         ],
@@ -288,8 +300,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-SCREAMING_SNAKE_CASE',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'SCREAMING_SNAKE_CASE',
+            enums: {
+              case: 'SCREAMING_SNAKE_CASE',
+              mode: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -303,8 +317,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-PascalCase',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'PascalCase',
+            enums: {
+              case: 'PascalCase',
+              mode: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -318,8 +334,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-camelCase',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'camelCase',
+            enums: {
+              case: 'camelCase',
+              mode: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -333,8 +351,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-snake_case',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'snake_case',
+            enums: {
+              case: 'snake_case',
+              mode: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -348,8 +368,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-preserve',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'preserve',
+            enums: {
+              case: 'preserve',
+              mode: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -363,9 +385,11 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-ignore-null',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'preserve',
-            enumsConstantsIgnoreNull: true,
+            enums: {
+              case: 'preserve',
+              constantsIgnoreNull: true,
+              mode: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -379,8 +403,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-SCREAMING_SNAKE_CASE',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'SCREAMING_SNAKE_CASE',
+            enums: {
+              case: 'SCREAMING_SNAKE_CASE',
+              mode: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -394,8 +420,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-PascalCase',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'PascalCase',
+            enums: {
+              case: 'PascalCase',
+              mode: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -409,8 +437,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-camelCase',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'camelCase',
+            enums: {
+              case: 'camelCase',
+              mode: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -424,8 +454,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-snake_case',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'snake_case',
+            enums: {
+              case: 'snake_case',
+              mode: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -439,8 +471,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-preserve',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'preserve',
+            enums: {
+              case: 'preserve',
+              mode: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -458,13 +492,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: {
+        input: 'exclude-deprecated.yaml',
+        output: 'exclude-deprecated',
+        parser: {
           filters: {
             deprecated: false,
           },
-          path: 'exclude-deprecated.yaml',
         },
-        output: 'exclude-deprecated',
       }),
       description: 'excludes deprecated fields',
     },
@@ -568,8 +602,8 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'read-write-only.yaml',
-        output: 'read-write-only',
+        input: 'transforms-read-write.yaml',
+        output: 'transforms-read-write',
         plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
       }),
       description: 'handles read-only and write-only types',

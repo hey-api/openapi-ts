@@ -36,13 +36,13 @@
 - clients for your runtime (Fetch API, Axios, Next.js, Nuxt, etc.)
 - plugin ecosystem to reduce third-party boilerplate
 - custom plugins and custom clients
-- [integration](https://heyapi.dev/openapi-ts/integrations) with Hey API platform
+- [integration](https://heyapi.dev/openapi-ts/integrations) with Hey API Platform
 
 ## Dashboard
 
-Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with our platform.
+Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with Hey API Platform.
 
-[Sign In](https://app.heyapi.dev) to Hey API platform.
+[Sign In](https://app.heyapi.dev) to Hey API Platform.
 
 ## Sponsors
 
@@ -171,7 +171,7 @@ Most people run `@hey-api/openapi-ts` via CLI. To do that, add a script to your 
 }
 ```
 
-The above script can be executed by running `npm run openapi-ts` or equivalent command in other package managers. Next, we need to create a [configuration](https://heyapi.dev/openapi-ts/configuration) file and move our options from Quick Start to it.
+The above script can be executed by running `npm run openapi-ts` or equivalent command in other package managers. Next, we will create a [configuration](https://heyapi.dev/openapi-ts/configuration) file and move our options from Quick Start to it.
 
 ### Node.js
 
@@ -225,19 +225,27 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 
 ### Input
 
-Input is the first thing you must define. It can be a path, URL, or a string content resolving to an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
+You must set the input so we can load your OpenAPI specification. It can be a path or URL, object containing a path or URL, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
 
 > If you use an HTTPS URL with a self-signed certificate in development, you will need to set [`NODE_TLS_REJECT_UNAUTHORIZED=0`](https://github.com/hey-api/openapi-ts/issues/276#issuecomment-2043143501) in your environment.
 
 ### Output
 
-Output is the next thing to define. It can be either a string pointing to the destination folder or a configuration object containing the destination folder path and optional settings (these are described below).
+You must set the output so we know where to generate your files. It can be a path to the destination folder or an object containing the destination folder path and optional settings.
 
 > You should treat the output folder as a dependency. Do not directly modify its contents as your changes might be erased when you run `@hey-api/openapi-ts` again.
 
+## Parser
+
+We parse your input before making it available to plugins. While configuring the parser is optional, it's the perfect place to modify or validate your input if needed.
+
+## Plugins
+
+Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces and SDK from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
+
 ### Client
 
-Clients are responsible for sending the actual HTTP requests. Using clients is not required, but you must add a client to `plugins` if you're generating SDKs (enabled by default).
+Clients are responsible for sending the actual HTTP requests. Using clients is not required, but you must add a client to `plugins` if you're generating SDKs (we default to Fetch).
 
 ### Native Clients
 
@@ -247,10 +255,6 @@ Clients are responsible for sending the actual HTTP requests. Using clients is n
 - [`@hey-api/client-nuxt`](https://heyapi.dev/openapi-ts/clients/nuxt)
 
 Don't see your client? [Build your own](https://heyapi.dev/openapi-ts/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
-
-## Plugins
-
-Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces and SDK from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
 
 ### Native Plugins
 
@@ -293,9 +297,9 @@ The following plugins are planned but not in development yet. You can help us pr
 
 Don't see your plugin? [Build your own](https://heyapi.dev/openapi-ts/plugins/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
-## Migration Guides
+## Migrating
 
-[OpenAPI Typescript Codegen](https://heyapi.dev/openapi-ts/migrating#openapi-typescript-codegen)
+You can learn more on the [Migrating](https://heyapi.dev/openapi-ts/migrating) page.
 
 ## License
 
