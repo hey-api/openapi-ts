@@ -77,7 +77,7 @@ Most people run `@hey-api/openapi-ts` via CLI. To do that, add a script to your 
 }
 ```
 
-The above script can be executed by running `npm run openapi-ts` or equivalent command in other package managers. Next, we need to create a [configuration](/openapi-ts/configuration) file and move our options from Quick Start to it.
+The above script can be executed by running `npm run openapi-ts` or equivalent command in other package managers. Next, we will create a [configuration](/openapi-ts/configuration) file and move our options from Quick Start to it.
 
 ### Node.js
 
@@ -98,7 +98,7 @@ createClient({
 
 ### Configuration
 
-It is a good practice to extract your configuration into a separate file. Learn how to do that and discover available options on the [Configuration](/openapi-ts/configuration) page.
+It's a good practice to extract your configuration into a separate file. Learn how to do that and discover available options on the [Configuration](/openapi-ts/configuration) page.
 
 <!--@include: ../examples.md-->
 <!--@include: ../sponsors.md-->

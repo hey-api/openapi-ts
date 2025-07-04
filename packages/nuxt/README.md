@@ -20,9 +20,9 @@
 
 ## Dashboard
 
-Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with our platform.
+Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with Hey API Platform.
 
-[Sign In](https://app.heyapi.dev) to Hey API platform.
+[Sign In](https://app.heyapi.dev) to Hey API Platform.
 
 ## Documentation
 
@@ -105,6 +105,10 @@ Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
   </tbody>
 </table>
 
-## Migration Guides
+## Migrating
 
-[OpenAPI Typescript Codegen](https://heyapi.dev/openapi-ts/migrating#openapi-typescript-codegen)
+You can learn more on the [Migrating](https://heyapi.dev/openapi-ts/migrating) page.
+
+## License
+
+Released under the [MIT License](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md).

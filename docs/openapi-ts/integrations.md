@@ -9,7 +9,7 @@ description: Automate your client generation with our OpenAPI specifications sto
 This feature is in development! :tada: Try it out and provide feedback on [GitHub](https://github.com/orgs/hey-api/discussions/1773).
 :::
 
-You can automate your client generation with our platform thanks to reproducible builds. Create dependency links between your clients and APIs, and watch the magic unfold. It's completely language and codegen agnostic.
+You can automate your client generation with Hey API Platform thanks to reproducible builds. Create dependency links between your clients and APIs, and watch the magic unfold. It's completely language and codegen agnostic.
 
 ## Features
 
