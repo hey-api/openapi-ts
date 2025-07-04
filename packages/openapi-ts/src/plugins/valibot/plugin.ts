@@ -46,16 +46,16 @@ const arrayTypeToValibotSchema = ({
   plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'array'>;
   state: State;
-}): ts.CallExpression => {
+}): ts.Expression => {
   const functionName = compiler.propertyAccessExpression({
     expression: identifiers.v,
     name: identifiers.schemas.array,
   });
 
-  let arrayExpression: ts.CallExpression | undefined;
+  const pipes: Array<ts.CallExpression> = [];
 
   if (!schema.items) {
-    arrayExpression = compiler.callExpression({
+    const expression = compiler.callExpression({
       functionName,
       parameters: [
         unknownTypeToValibotSchema({
@@ -65,6 +65,7 @@ const arrayTypeToValibotSchema = ({
         }),
       ],
     });
+    pipes.push(expression);
   } else {
     schema = deduplicateSchema({ schema });
 
@@ -79,10 +80,11 @@ const arrayTypeToValibotSchema = ({
     });
 
     if (itemExpressions.length === 1) {
-      arrayExpression = compiler.callExpression({
+      const expression = compiler.callExpression({
         functionName,
         parameters: itemExpressions,
       });
+      pipes.push(expression);
     } else {
       if (schema.logicalOperator === 'and') {
         // TODO: parser - handle intersection
@@ -94,7 +96,7 @@ const arrayTypeToValibotSchema = ({
       // TODO: parser - handle union
       // return compiler.typeArrayNode(compiler.typeUnionNode({ types: itemExpressions }));
 
-      arrayExpression = compiler.callExpression({
+      const expression = compiler.callExpression({
         functionName,
         parameters: [
           unknownTypeToValibotSchema({
@@ -104,40 +106,44 @@ const arrayTypeToValibotSchema = ({
           }),
         ],
       });
+      pipes.push(expression);
     }
   }
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    arrayExpression = compiler.callExpression({
+    const expression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
-        expression: arrayExpression,
+        expression: identifiers.v,
         name: identifiers.actions.length,
       }),
       parameters: [compiler.valueToExpression({ value: schema.minItems })],
     });
+    pipes.push(expression);
   } else {
     if (schema.minItems !== undefined) {
-      arrayExpression = compiler.callExpression({
+      const expression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
-          expression: arrayExpression,
-          name: compiler.identifier({ text: 'min' }),
+          expression: identifiers.v,
+          name: identifiers.actions.minLength,
         }),
         parameters: [compiler.valueToExpression({ value: schema.minItems })],
       });
+      pipes.push(expression);
     }
 
     if (schema.maxItems !== undefined) {
-      arrayExpression = compiler.callExpression({
+      const expression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
-          expression: arrayExpression,
-          name: compiler.identifier({ text: 'max' }),
+          expression: identifiers.v,
+          name: identifiers.actions.maxLength,
         }),
         parameters: [compiler.valueToExpression({ value: schema.maxItems })],
       });
+      pipes.push(expression);
     }
   }
 
-  return arrayExpression;
+  return pipesToExpression(pipes);
 };
 
 const booleanTypeToValibotSchema = ({
