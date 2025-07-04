@@ -37,7 +37,12 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '2.0.x', 'full.yaml'),
+      path: path.resolve(
+        __dirname,
+        'spec',
+        '3.1.x',
+        'array-items-one-of-length-1.yaml',
+      ),
       // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
       // path: path.resolve(__dirname, 'spec', 'v3.json'),
       // path: 'http://localhost:4000/',
@@ -136,7 +141,7 @@ export default defineConfig(() => {
           enabled: false,
           type: 'typescript+namespace',
         },
-        // name: '@hey-api/typescript',
+        name: '@hey-api/typescript',
         // tree: true,
       },
       {
@@ -147,7 +152,7 @@ export default defineConfig(() => {
         // client: false,
         // include...
         // instance: true,
-        // name: '@hey-api/sdk',
+        name: '@hey-api/sdk',
         // operationId: false,
         // responseStyle: 'data',
         // throwOnError: true,
@@ -193,7 +198,7 @@ export default defineConfig(() => {
         definitions: 'z{{name}}Definition',
         // exportFromIndex: true,
         metadata: true,
-        // name: 'valibot',
+        name: 'valibot',
         requests: {
           // case: 'SCREAMING_SNAKE_CASE',
           name: 'z{{name}}TestData',
@@ -209,7 +214,7 @@ export default defineConfig(() => {
         definitions: 'z{{name}}Definition',
         // exportFromIndex: true,
         // metadata: true,
-        // name: 'zod',
+        name: 'zod',
         requests: {
           // case: 'SCREAMING_SNAKE_CASE',
           // name: 'z{{name}}TestData',
