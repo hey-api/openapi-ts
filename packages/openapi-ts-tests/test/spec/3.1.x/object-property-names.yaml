@@ -15,3 +15,9 @@ components:
       propertyNames:
         $ref: '#/components/schemas/Foo'
       type: object
+    Baz:
+      additionalProperties:
+        type: integer
+      propertyNames:
+        $ref: '#/components/schemas/Foo'
+      type: object
