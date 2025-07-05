@@ -6,6 +6,10 @@ export type Bar = {
     [key in Foo]?: string;
 };
 
+export type Baz = {
+    [key in Foo]?: number;
+};
+
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
