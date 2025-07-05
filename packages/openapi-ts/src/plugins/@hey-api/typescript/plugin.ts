@@ -5,7 +5,7 @@ import { compiler } from '../../../compiler';
 import { operationResponsesMap } from '../../../ir/operation';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
-import { irRef, isRefOpenApiComponent, refToName } from '../../../utils/ref';
+import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
 import { numberRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { fieldName } from '../../shared/utils/case';
@@ -462,6 +462,8 @@ const objectTypeToIdentifier = ({
   schema: SchemaWithType<'object'>;
   state: State | undefined;
 }): ts.TypeNode | undefined => {
+  const file = plugin.context.file({ id: typesId })!;
+
   // TODO: parser - handle constants
   let indexKey: string | undefined;
   let indexProperty: Property | undefined;
@@ -533,9 +535,14 @@ const objectTypeToIdentifier = ({
       }),
     };
 
-    if (schema.propertyNames) {
-      if (schema.propertyNames.$ref) {
-        indexKey = refToName(schema.propertyNames.$ref);
+    if (schema.propertyNames?.$ref) {
+      const identifier = file.identifier({
+        $ref: schema.propertyNames.$ref,
+        create: true,
+        namespace: 'type',
+      });
+      if (identifier.name) {
+        indexKey = identifier.name;
       }
     }
   }

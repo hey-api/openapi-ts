@@ -37,12 +37,7 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(
-        __dirname,
-        'spec',
-        '3.1.x',
-        'array-items-one-of-length-1.yaml',
-      ),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.yaml'),
       // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
       // path: path.resolve(__dirname, 'spec', 'v3.json'),
       // path: 'http://localhost:4000/',
@@ -113,7 +108,7 @@ export default defineConfig(() => {
           // name: '{{name}}',
         },
         readWrite: {
-          // enabled: false,
+          enabled: false,
           requests: '{{name}}Writable',
           responses: '{{name}}',
         },
