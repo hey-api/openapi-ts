@@ -37,7 +37,7 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'full.yaml'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'validators.yaml'),
       // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
       // path: path.resolve(__dirname, 'spec', 'v3.json'),
       // path: 'http://localhost:4000/',
@@ -206,6 +206,9 @@ export default defineConfig(() => {
       {
         // case: 'snake_case',
         // comments: false,
+        // dates: {
+        //   // offset: false,
+        // },
         definitions: 'z{{name}}Definition',
         // exportFromIndex: true,
         // metadata: true,

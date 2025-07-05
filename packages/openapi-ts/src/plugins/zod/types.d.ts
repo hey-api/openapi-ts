@@ -16,6 +16,23 @@ export type Config = Plugin.Name<'zod'> & {
    */
   comments?: boolean;
   /**
+   * Configuration for date handling in generated Zod schemas.
+   *
+   * Controls how date values are processed and validated using Zod's
+   * date validation features.
+   */
+  dates?: {
+    /**
+     * Whether to include timezone offset information when handling dates.
+     *
+     * When enabled, date strings will preserve timezone information.
+     * When disabled, dates will be treated as local time.
+     *
+     * @default false
+     */
+    offset?: boolean;
+  };
+  /**
    * Configuration for reusable schema definitions.
    *
    * Controls generation of shared Zod schemas that can be referenced across
@@ -156,6 +173,23 @@ export type ResolvedConfig = Plugin.Name<'zod'> & {
    * @default true
    */
   comments: boolean;
+  /**
+   * Configuration for date handling in generated Zod schemas.
+   *
+   * Controls how date values are processed and validated using Zod's
+   * date validation features.
+   */
+  dates: {
+    /**
+     * Whether to include timezone offset information when handling dates.
+     *
+     * When enabled, date strings will preserve timezone information.
+     * When disabled, dates will be treated as local time.
+     *
+     * @default false
+     */
+    offset: boolean;
+  };
   /**
    * Configuration for reusable schema definitions.
    *
