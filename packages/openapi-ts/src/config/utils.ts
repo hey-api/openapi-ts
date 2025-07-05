@@ -3,26 +3,37 @@ type ObjectType<T> =
     ? Record<string, any>
     : Extract<T, Record<string, any>>;
 
+type MappersType<T> = {
+  boolean: T extends boolean
+    ? (value: boolean) => Partial<ObjectType<T>>
+    : never;
+  number: T extends number ? (value: number) => Partial<ObjectType<T>> : never;
+  object?: (value: Partial<ObjectType<T>>) => Partial<ObjectType<T>>;
+  string: T extends string ? (value: string) => Partial<ObjectType<T>> : never;
+} extends infer U
+  ? { [K in keyof U as U[K] extends never ? never : K]: U[K] }
+  : never;
+
+type IsObjectOnly<T> = T extends Record<string, any> | undefined
+  ? Extract<T, string | boolean | number> extends never
+    ? true
+    : false
+  : false;
+
 export type ValueToObject = <
   T extends undefined | string | boolean | number | Record<string, any>,
->(args: {
-  defaultValue: ObjectType<T>;
-  mappers: {
-    boolean: T extends boolean
-      ? (value: boolean) => Partial<ObjectType<T>>
-      : never;
-    number: T extends number
-      ? (value: number) => Partial<ObjectType<T>>
-      : never;
-    object?: (value: Partial<ObjectType<T>>) => Partial<ObjectType<T>>;
-    string: T extends string
-      ? (value: string) => Partial<ObjectType<T>>
-      : never;
-  } extends infer U
-    ? { [K in keyof U as U[K] extends never ? never : K]: U[K] }
-    : never;
-  value: T;
-}) => ObjectType<T>;
+>(
+  args: {
+    defaultValue: ObjectType<T>;
+    value: T;
+  } & (IsObjectOnly<T> extends true
+    ? {
+        mappers?: MappersType<T>;
+      }
+    : {
+        mappers: MappersType<T>;
+      }),
+) => ObjectType<T>;
 
 const mergeResult = <T>(
   result: ObjectType<T>,
@@ -45,7 +56,7 @@ export const valueToObject: ValueToObject = ({
 
   switch (typeof value) {
     case 'boolean':
-      if ('boolean' in mappers) {
+      if (mappers && 'boolean' in mappers) {
         const mapper = mappers.boolean as (
           value: boolean,
         ) => Record<string, any>;
@@ -53,20 +64,24 @@ export const valueToObject: ValueToObject = ({
       }
       break;
     case 'number':
-      if ('number' in mappers) {
+      if (mappers && 'number' in mappers) {
         const mapper = mappers.number as (value: number) => Record<string, any>;
         result = mergeResult(result, mapper(value));
       }
       break;
     case 'string':
-      if ('string' in mappers) {
+      if (mappers && 'string' in mappers) {
         const mapper = mappers.string as (value: string) => Record<string, any>;
         result = mergeResult(result, mapper(value));
       }
       break;
     case 'object':
       if (value !== null) {
-        if ('object' in mappers && typeof mappers.object === 'function') {
+        if (
+          mappers &&
+          'object' in mappers &&
+          typeof mappers.object === 'function'
+        ) {
           const mapper = mappers.object as (
             value: Record<string, any>,
           ) => Partial<ObjectType<any>>;

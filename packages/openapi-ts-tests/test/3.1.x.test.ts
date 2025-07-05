@@ -767,6 +767,25 @@ describe(`OpenAPI ${version}`, () => {
     {
       config: createConfig({
         input: 'validators.yaml',
+        output: 'validators-dates',
+        plugins: [
+          // Valibot doesn't allow configuring offset
+          // {
+          //   name: 'valibot',
+          // },
+          {
+            dates: {
+              offset: true,
+            },
+            name: 'zod',
+          },
+        ],
+      }),
+      description: 'generates validator schemas with any offset',
+    },
+    {
+      config: createConfig({
+        input: 'validators.yaml',
         output: 'validators-metadata',
         plugins: [
           {
