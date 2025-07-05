@@ -455,8 +455,10 @@ const objectTypeToZodSchema = ({
 };
 
 const stringTypeToZodSchema = ({
+  plugin,
   schema,
 }: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'string'>;
 }) => {
   if (typeof schema.const === 'string') {
@@ -485,6 +487,18 @@ const stringTypeToZodSchema = ({
             expression: stringExpression,
             name: compiler.identifier({ text: 'datetime' }),
           }),
+          parameters: plugin.config.dates.offset
+            ? [
+                compiler.objectExpression({
+                  obj: [
+                    {
+                      key: 'offset',
+                      value: true,
+                    },
+                  ],
+                }),
+              ]
+            : [],
         });
         break;
       case 'ipv4':
@@ -718,6 +732,7 @@ const schemaTypeToZodSchema = ({
     case 'string':
       return {
         expression: stringTypeToZodSchema({
+          plugin,
           schema: schema as SchemaWithType<'string'>,
         }),
       };
