@@ -15,6 +15,13 @@ export const defaultConfig: ZodPlugin['Config'] = {
   name: 'zod',
   output: 'zod',
   resolveConfig: (plugin, context) => {
+    plugin.config.dates = context.valueToObject({
+      defaultValue: {
+        offset: false,
+      },
+      value: plugin.config.dates,
+    });
+
     plugin.config.definitions = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
