@@ -129,7 +129,8 @@ export const createTypeInterfaceNode = ({
     if (!properties.length && indexKey) {
       const indexSignature = createMappedTypeNode({
         questionToken: ts.factory.createToken(ts.SyntaxKind.QuestionToken),
-        type: createKeywordTypeNode({ keyword: 'string' }),
+        type:
+          indexProperty.type ?? createKeywordTypeNode({ keyword: 'string' }),
         typeParameter: createTypeParameterDeclaration({
           constraint: createTypeReferenceNode({ typeName: indexKey }),
           name: createIdentifier({ text: String(indexProperty.name) }),
