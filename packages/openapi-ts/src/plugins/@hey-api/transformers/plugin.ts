@@ -10,6 +10,7 @@ import { irRef } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
 import { operationIrRef } from '../../shared/utils/ref';
 import { typesId } from '../typescript/ref';
+import { bigIntExpressions, dateExpressions } from './expressions-transformers';
 import type { HeyApiTransformersPlugin } from './types';
 
 interface OperationIRRef {
@@ -18,75 +19,6 @@ interface OperationIRRef {
    */
   id: string;
 }
-
-const bigIntExpressions = ({
-  dataExpression,
-}: {
-  dataExpression?: ts.Expression | string;
-}): Array<ts.Expression> => {
-  const bigIntCallExpression =
-    dataExpression !== undefined
-      ? compiler.callExpression({
-          functionName: 'BigInt',
-          parameters: [
-            compiler.callExpression({
-              functionName: compiler.propertyAccessExpression({
-                expression: dataExpression,
-                name: 'toString',
-              }),
-            }),
-          ],
-        })
-      : undefined;
-
-  if (bigIntCallExpression) {
-    if (typeof dataExpression === 'string') {
-      return [bigIntCallExpression];
-    }
-
-    if (dataExpression) {
-      return [
-        compiler.assignment({
-          left: dataExpression,
-          right: bigIntCallExpression,
-        }),
-      ];
-    }
-  }
-
-  return [];
-};
-
-const dateExpressions = ({
-  dataExpression,
-}: {
-  dataExpression?: ts.Expression | string;
-}): Array<ts.Expression> => {
-  const identifierDate = compiler.identifier({ text: 'Date' });
-
-  if (typeof dataExpression === 'string') {
-    return [
-      compiler.newExpression({
-        argumentsArray: [compiler.identifier({ text: dataExpression })],
-        expression: identifierDate,
-      }),
-    ];
-  }
-
-  if (dataExpression) {
-    return [
-      compiler.assignment({
-        left: dataExpression,
-        right: compiler.newExpression({
-          argumentsArray: [dataExpression],
-          expression: identifierDate,
-        }),
-      }),
-    ];
-  }
-
-  return [];
-};
 
 export const operationTransformerIrRef = ({
   id,
@@ -370,22 +302,6 @@ const processSchemaType = ({
     return nodes;
   }
 
-  if (
-    plugin.config.dates &&
-    schema.type === 'string' &&
-    (schema.format === 'date' || schema.format === 'date-time')
-  ) {
-    return dateExpressions({ dataExpression });
-  }
-
-  if (
-    plugin.config.bigInt &&
-    schema.type === 'integer' &&
-    schema.format === 'int64'
-  ) {
-    return bigIntExpressions({ dataExpression });
-  }
-
   if (schema.items) {
     if (schema.items.length === 1) {
       return processSchemaType({
@@ -449,6 +365,18 @@ const processSchemaType = ({
     }
   }
 
+  for (const transformer of plugin.config.transformers ?? []) {
+    const t = transformer({
+      config: plugin.config,
+      dataExpression,
+      file,
+      schema,
+    });
+    if (t) {
+      return t;
+    }
+  }
+
   return [];
 };
 
@@ -458,6 +386,20 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
     id: transformersId,
     path: plugin.output,
   });
+
+  if (plugin.config.dates) {
+    plugin.config.transformers = [
+      ...(plugin.config.transformers ?? []),
+      dateExpressions,
+    ];
+  }
+
+  if (plugin.config.bigInt) {
+    plugin.config.transformers = [
+      ...(plugin.config.transformers ?? []),
+      bigIntExpressions,
+    ];
+  }
 
   plugin.forEach('operation', ({ operation }) => {
     const { response } = operationResponsesMap(operation);

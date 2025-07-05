@@ -105,6 +105,7 @@ export const createClient = async (
 export const defineConfig = async (config: Configs): Promise<UserConfig> =>
   typeof config === 'function' ? await config() : config;
 
+export { compiler } from './compiler';
 export { defaultPaginationKeywords } from './config/parser';
 export { defaultPlugins } from './config/plugins';
 export type { IR } from './ir/types';
@@ -123,6 +124,7 @@ export {
 } from './plugins/@hey-api/client-core/config';
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
 export type { Client } from './plugins/@hey-api/client-core/types';
+export type { expressionTransformer } from './plugins/@hey-api/transformers';
 export { definePluginConfig } from './plugins/shared/utils/config';
 export type { DefinePlugin, Plugin } from './plugins/types';
 export type { UserConfig } from './types/config';
