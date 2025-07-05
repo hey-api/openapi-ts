@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.78.1
+
+### Patch Changes
+
+- [#2275](https://github.com/hey-api/openapi-ts/pull/2275) [`1581b5c`](https://github.com/hey-api/openapi-ts/commit/1581b5cd9b2ff160d10c19ff8c195063155c66ae) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(valibot): properly handle array minLength and maxLength
+
+- [#2279](https://github.com/hey-api/openapi-ts/pull/2279) [`f0549f6`](https://github.com/hey-api/openapi-ts/commit/f0549f62d50da8a92a330bcdc73b22ee6d211be3) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): handle additionalProperties in propertyNames
+
+- [#2277](https://github.com/hey-api/openapi-ts/pull/2277) [`25fc54c`](https://github.com/hey-api/openapi-ts/commit/25fc54cd9088240faa47ff7c9607e17c2e52780d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(clients): annotate serializer return types
+
+- [#2280](https://github.com/hey-api/openapi-ts/pull/2280) [`ae9c45a`](https://github.com/hey-api/openapi-ts/commit/ae9c45a79cac56362552033b49ebf2958e11324c) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(zod): add `dates.offset` option
+
 ## 0.78.0
 
 ### Minor Changes
