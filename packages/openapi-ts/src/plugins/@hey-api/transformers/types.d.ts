@@ -1,4 +1,5 @@
 import type { DefinePlugin, Plugin } from '../../types';
+import type { ExpressionTransformer } from './expressions';
 
 export type Config = Plugin.Name<'@hey-api/transformers'> & {
   /**
@@ -26,13 +27,10 @@ export type Config = Plugin.Name<'@hey-api/transformers'> & {
    * @default 'transformers'
    */
   output?: string;
-
   /**
-   * transformers to apply to the generated code
-   * @default []
+   * Custom transforms to apply to the generated code.
    */
-
-  transformers?: expressionTransformer[];
+  transformers?: ReadonlyArray<ExpressionTransformer>;
 };
 
 export type HeyApiTransformersPlugin = DefinePlugin<Config>;
