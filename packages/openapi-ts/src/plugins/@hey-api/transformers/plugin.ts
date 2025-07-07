@@ -10,7 +10,7 @@ import { irRef } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
 import { operationIrRef } from '../../shared/utils/ref';
 import { typesId } from '../typescript/ref';
-import { bigIntExpressions, dateExpressions } from './expressions-transformers';
+import { bigIntExpressions, dateExpressions } from './expressions';
 import type { HeyApiTransformersPlugin } from './types';
 
 interface OperationIRRef {
