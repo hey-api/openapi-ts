@@ -5,24 +5,24 @@ import type { TypeScriptFile } from '../../../generate/files';
 import type { IR } from '../../../ir/types';
 import type { Config } from './types';
 
-export type expressionTransformer = ({
+export type ExpressionTransformer = ({
   config,
   dataExpression,
   file,
   schema,
 }: {
-  config: Config;
+  config: Omit<Config, 'name'>;
   dataExpression?: ts.Expression | string;
   file: TypeScriptFile;
   schema: IR.SchemaObject;
 }) => Array<ts.Expression> | undefined;
 
-export const bigIntExpressions: expressionTransformer = ({
+export const bigIntExpressions: ExpressionTransformer = ({
   dataExpression,
   schema,
 }) => {
   if (schema.type !== 'integer' || schema.format !== 'int64') {
-    return undefined;
+    return;
   }
 
   const bigIntCallExpression =
@@ -55,10 +55,10 @@ export const bigIntExpressions: expressionTransformer = ({
     }
   }
 
-  return [];
+  return;
 };
 
-export const dateExpressions: expressionTransformer = ({
+export const dateExpressions: ExpressionTransformer = ({
   dataExpression,
   schema,
 }) => {
@@ -66,7 +66,7 @@ export const dateExpressions: expressionTransformer = ({
     schema.type !== 'string' ||
     !(schema.format === 'date' || schema.format === 'date-time')
   ) {
-    return undefined;
+    return;
   }
 
   const identifierDate = compiler.identifier({ text: 'Date' });
@@ -92,5 +92,5 @@ export const dateExpressions: expressionTransformer = ({
     ];
   }
 
-  return [];
+  return;
 };
