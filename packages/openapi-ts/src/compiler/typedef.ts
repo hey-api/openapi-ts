@@ -69,7 +69,7 @@ export const createTypeInterfaceNode = ({
    * }
    * ```
    */
-  indexKey?: string;
+  indexKey?: ts.TypeReferenceNode;
   /**
    * Adds an index signature if defined.
    *
@@ -132,7 +132,7 @@ export const createTypeInterfaceNode = ({
         type:
           indexProperty.type ?? createKeywordTypeNode({ keyword: 'string' }),
         typeParameter: createTypeParameterDeclaration({
-          constraint: createTypeReferenceNode({ typeName: indexKey }),
+          constraint: indexKey,
           name: createIdentifier({ text: String(indexProperty.name) }),
         }),
       });
@@ -179,7 +179,7 @@ export const createTypeUnionNode = ({
   types,
 }: {
   isNullable?: boolean;
-  types: (any | ts.TypeNode)[];
+  types: ReadonlyArray<any | ts.TypeNode>;
 }) => {
   const nodes = types.map((type) => createTypeNode(type));
   const node = ts.factory.createUnionTypeNode(nodes);
@@ -263,7 +263,11 @@ export const createTypeRecordNode = (
  * @returns ts.TypeReferenceNode | ts.UnionTypeNode
  */
 export const createTypeArrayNode = (
-  types: (any | ts.TypeNode)[] | ts.TypeNode | string,
+  types:
+    | ReadonlyArray<any | ts.TypeNode>
+    | ts.TypeNode
+    | ts.Identifier
+    | string,
   isNullable: boolean = false,
 ) => {
   const node = createTypeReferenceNode({

@@ -1,5 +1,5 @@
 import { compiler } from '../../../compiler';
-import { TypeScriptFile } from '../../../generate/files';
+import { GeneratedFile } from '../../../generate/file';
 import type { OpenApiV2Schema, OpenApiV3Schema } from '../../../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
 import { getConfig } from '../../../utils/config';
@@ -81,7 +81,7 @@ export const handlerLegacy: HeyApiSchemasPlugin['LegacyHandler'] = ({
 }) => {
   const config = getConfig();
 
-  files.schemas = new TypeScriptFile({
+  files.schemas = new GeneratedFile({
     dir: config.output.path,
     exportFromIndex: plugin.config.exportFromIndex,
     id: 'schemas',

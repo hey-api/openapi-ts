@@ -2,12 +2,12 @@ import { compiler } from '../../compiler';
 import { getClientPlugin } from '../../plugins/@hey-api/client-core/utils';
 import type { Files } from '../../types/utils';
 import { getConfig, legacyNameFromConfig } from '../../utils/config';
-import { TypeScriptFile } from '../files';
+import { GeneratedFile } from '../file';
 
 export const generateIndexFile = ({ files }: { files: Files }): void => {
   const config = getConfig();
 
-  files.index = new TypeScriptFile({
+  files.index = new GeneratedFile({
     dir: config.output.path,
     id: 'index',
     name: 'index.ts',

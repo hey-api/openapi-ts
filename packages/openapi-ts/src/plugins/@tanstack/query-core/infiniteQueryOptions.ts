@@ -237,7 +237,9 @@ export const createInfiniteQueryOptions = ({
 }) => {
   if (
     !plugin.config.infiniteQueryOptions ||
-    !(['get', 'post'] as (typeof operation.method)[]).includes(operation.method)
+    !(['get', 'post'] as ReadonlyArray<typeof operation.method>).includes(
+      operation.method,
+    )
   ) {
     return state;
   }
@@ -297,14 +299,11 @@ export const createInfiniteQueryOptions = ({
   const type = schemaToType({
     plugin: pluginTypeScript as Parameters<typeof schemaToType>[0]['plugin'],
     schema: pagination.schema,
-    state: undefined,
   });
-  const typePageParam = type
-    ? `${tsNodeToString({
-        node: type,
-        unescape: true,
-      })} | ${typePageObjectParam}`
-    : `${typePageObjectParam}`;
+  const typePageParam = `${tsNodeToString({
+    node: type,
+    unescape: true,
+  })} | ${typePageObjectParam}`;
 
   const node = queryKeyStatement({
     isInfinite: true,
@@ -499,7 +498,7 @@ export const createInfiniteQueryOptions = ({
           // TODO: better types syntax
           types: [
             typeResponse,
-            typeError.name,
+            typeError.name || 'unknown',
             `${typeof state.typeInfiniteData === 'string' ? state.typeInfiniteData : state.typeInfiniteData.name}<${typeResponse}>`,
             typeQueryKey,
             typePageParam,

@@ -6,7 +6,7 @@ import type {
   OpenApiResponseObject,
   OpenApiSchemaObject,
 } from '../openApi/types';
-import type { StringCase } from './case';
+import type { StringCase, StringName } from './case';
 
 type EnumsMode = 'inline' | 'root';
 
@@ -83,7 +83,7 @@ export type Parser = {
            *
            * @default '{{name}}Enum'
            */
-          name?: string | ((name: string) => string);
+          name?: StringName;
         };
     /**
      * Your schemas might contain read-only or write-only fields. Using such
@@ -108,10 +108,14 @@ export type Parser = {
           /**
            * Configuration for generated request-specific schemas.
            *
+           * Can be:
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
            * @default '{{name}}Writable'
            */
           requests?:
-            | string
+            | StringName
             | {
                 /**
                  * The casing convention to use for generated names.
@@ -125,15 +129,19 @@ export type Parser = {
                  *
                  * @default '{{name}}Writable'
                  */
-                name?: string | ((name: string) => string);
+                name?: StringName;
               };
           /**
            * Configuration for generated response-specific schemas.
            *
+           * Can be:
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
            * @default '{{name}}'
            */
           responses?:
-            | string
+            | StringName
             | {
                 /**
                  * The casing convention to use for generated names.
@@ -148,7 +156,7 @@ export type Parser = {
                  *
                  * @default '{{name}}'
                  */
-                name?: string | ((name: string) => string);
+                name?: StringName;
               };
         };
   };
@@ -232,7 +240,7 @@ export type ResolvedParser = {
        *
        * @default '{{name}}Enum'
        */
-      name: string | ((name: string) => string);
+      name: StringName;
     };
     /**
      * Your schemas might contain read-only or write-only fields. Using such
@@ -266,7 +274,7 @@ export type ResolvedParser = {
          *
          * @default '{{name}}Writable'
          */
-        name: string | ((name: string) => string);
+        name: StringName;
       };
       /**
        * Configuration for generated response-specific schemas.
@@ -285,7 +293,7 @@ export type ResolvedParser = {
          *
          * @default '{{name}}'
          */
-        name: string | ((name: string) => string);
+        name: StringName;
       };
     };
   };

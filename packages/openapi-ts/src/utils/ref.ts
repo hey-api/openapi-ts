@@ -1,14 +1,6 @@
 const jsonPointerSlash = /~1/g;
 const jsonPointerTilde = /~0/g;
 
-export const irRef = '#/ir/';
-
-export const isRefOpenApiComponent = ($ref: string): boolean => {
-  const path = jsonPointerToPath($ref);
-  // reusable components are nested within components/<namespace>/<name>
-  return path.length === 3 && path[0] === 'components';
-};
-
 /**
  * Returns the reusable component name from `$ref`.
  */

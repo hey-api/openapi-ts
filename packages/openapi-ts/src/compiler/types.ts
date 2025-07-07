@@ -48,7 +48,7 @@ export const createTypeNode = (
 
   return createTypeReferenceNode({
     typeArguments: args?.map((arg) => createTypeNode(arg)),
-    typeName: base,
+    typeName: ts.isIdentifier(base) ? base.text : base,
   });
 };
 
@@ -762,7 +762,7 @@ export const createEnumDeclaration = <
 }: {
   comments?: Record<string | number, Comments>;
   leadingComment?: Comments;
-  name: string;
+  name: string | ts.TypeReferenceNode;
   obj: T;
 }): ts.EnumDeclaration => {
   const members: Array<ts.EnumMember> = Array.isArray(obj)
@@ -801,7 +801,10 @@ export const createEnumDeclaration = <
 
   const node = ts.factory.createEnumDeclaration(
     [createModifier({ keyword: 'export' })],
-    createIdentifier({ text: name }),
+    typeof name === 'string'
+      ? createIdentifier({ text: name })
+      : // TODO: https://github.com/hey-api/openapi-ts/issues/2289
+        (name as unknown as ts.Identifier),
     members,
   );
 
@@ -898,9 +901,17 @@ export const createConditionalExpression = ({
   return expression;
 };
 
-export const createTypeOfExpression = ({ text }: { text: string }) => {
+export const createTypeOfExpression = ({
+  text,
+}: {
+  text: string | ts.TypeReferenceNode;
+}) => {
   const expression = ts.factory.createTypeOfExpression(
-    createIdentifier({ text }),
+    // TODO: this crashes when passing reference, fix
+    // TODO: https://github.com/hey-api/openapi-ts/issues/2289
+    typeof text === 'string'
+      ? createIdentifier({ text })
+      : (text as unknown as ts.Identifier),
   );
   return expression;
 };
@@ -921,13 +932,16 @@ export const createTypeAliasDeclaration = ({
 }: {
   comment?: Comments;
   exportType?: boolean;
-  name: string;
-  type: string | ts.TypeNode;
+  name: string | ts.TypeReferenceNode;
+  type: string | ts.TypeNode | ts.Identifier;
   typeParameters?: FunctionTypeParameter[];
 }): ts.TypeAliasDeclaration => {
   const node = ts.factory.createTypeAliasDeclaration(
     exportType ? [createModifier({ keyword: 'export' })] : undefined,
-    createIdentifier({ text: name }),
+    // TODO: https://github.com/hey-api/openapi-ts/issues/2289
+    // passing type reference node seems to work and allows for dynamic renaming
+    // @ts-expect-error
+    typeof name === 'string' ? createIdentifier({ text: name }) : name,
     toTypeParameters(typeParameters),
     createTypeNode(type),
   );

@@ -3,85 +3,71 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
-import { compiler } from '../compiler';
-import { type ImportExportItemObject, tsNodeToString } from '../compiler/utils';
-import type { IR } from '../ir/types';
-import { ensureValidIdentifier } from '../openApi/shared/utils/identifier';
-import type { StringCase } from '../types/case';
-import { stringCase } from '../utils/stringCase';
-import { ensureDirSync } from './utils';
+import { compiler } from '../../compiler';
+import {
+  type ImportExportItemObject,
+  tsNodeToString,
+} from '../../compiler/utils';
+import type { IR } from '../../ir/types';
+import { getUniqueComponentName } from '../../openApi/shared/transforms/utils';
+import { ensureValidIdentifier } from '../../openApi/shared/utils/identifier';
+import type { StringCase } from '../../types/case';
+import { stringCase } from '../../utils/stringCase';
+import { ensureDirSync } from '../utils';
+import type {
+  FileImportResult,
+  Identifier,
+  Identifiers,
+  Namespace,
+  NodeInfo,
+} from './types';
 
-export interface Identifier {
-  /**
-   * Did this function add a new property to the file's `identifiers` map?
-   */
-  created: boolean;
-  /**
-   * The resolved identifier name. False means the identifier has been blacklisted.
-   */
-  name: string | false;
-}
-
-type NamespaceEntry = Pick<Identifier, 'name'> & {
-  /**
-   * Ref to the type in OpenAPI specification.
-   */
-  $ref: string;
-};
-
-export type Identifiers = Record<
-  string,
-  {
-    /**
-     * TypeScript enum only namespace.
-     *
-     * @example
-     * ```ts
-     * export enum Foo = {
-     *   FOO = 'foo'
-     * }
-     * ```
-     */
-    enum?: Record<string, NamespaceEntry>;
-    /**
-     * Type namespace. Types, interfaces, and type aliases exist here.
-     *
-     * @example
-     * ```ts
-     * export type Foo = string;
-     * ```
-     */
-    type?: Record<string, NamespaceEntry>;
-    /**
-     * Value namespace. Variables, functions, classes, and constants exist here.
-     *
-     * @example
-     * ```js
-     * export const foo = '';
-     * ```
-     */
-    value?: Record<string, NamespaceEntry>;
-  }
->;
-
-type Namespace = keyof Identifiers[keyof Identifiers];
-
-export type FileImportResult = Pick<ImportExportItemObject, 'asType' | 'name'>;
-
-export class TypeScriptFile {
+export class GeneratedFile {
+  private _case: StringCase | undefined;
   /**
    * Should the exports from this file be re-exported in the index barrel file?
    */
   private _exportFromIndex: boolean;
   private _headers: Array<string> = [];
   private _id: string;
-  private _identifierCase: StringCase | undefined;
   private _imports = new Map<string, Map<string, ImportExportItemObject>>();
   private _items: Array<ts.Node | string> = [];
   private _name: string;
   private _path: string;
 
+  /** @deprecated use `names` and `nodes` */
   public identifiers: Identifiers = {};
+
+  /**
+   * Map of node IDs. This can be used to obtain actual node names. Keys are
+   * node IDs which can be any string, values are names. Values are kept in
+   * sync with `nodes`.
+   *
+   * @example
+   * ```json
+   * {
+   *   "#/my-id": "final_name",
+   *   "anyId": "name"
+   * }
+   * ```
+   */
+  private names: Record<string, string> = {};
+  /**
+   * Text value from node is kept in sync with `names`.
+   *
+   * @example
+   * ```js
+   * {
+   *   "#/my-id": {
+   *     "node": TypeReferenceNode
+   *   },
+   *   "anyId": {
+   *     "node": TypeReferenceNode
+   *   }
+   * }
+   * ```
+   */
+  private nodes: Record<string, NodeInfo> = {};
 
   /**
    * Path relative to the client output root.
@@ -91,13 +77,14 @@ export class TypeScriptFile {
   // public relativePath: string;
 
   public constructor({
+    case: _case,
     dir,
     exportFromIndex = false,
     header = true,
     id,
-    identifierCase,
     name,
   }: {
+    case?: StringCase;
     dir: string;
     /**
      * Should the exports from this file be re-exported in the index barrel file?
@@ -110,12 +97,11 @@ export class TypeScriptFile {
      * nested inside another folder.
      */
     id: string;
-    identifierCase?: StringCase;
     name: string;
   }) {
+    this._case = _case;
     this._exportFromIndex = exportFromIndex;
     this._id = id;
-    this._identifierCase = identifierCase;
     this._name = this._setName(name);
     this._path = path.resolve(dir, this._name);
 
@@ -162,10 +148,40 @@ export class TypeScriptFile {
     return this._exportFromIndex;
   }
 
+  /**
+   * Returns an actual node name. If node doesn't exist throws an error.
+   *
+   * @param id Node ID.
+   * @returns Actual node name.
+   */
+  public getName(id: string): string | undefined {
+    const name = this.names[id];
+    if (!name) {
+      return;
+    }
+    return name;
+  }
+
+  /**
+   * Returns a node. If node doesn't exist, creates a blank reference.
+   *
+   * @param id Node ID.
+   * @returns Information about the node.
+   */
+  public getNode(id: string): NodeInfo {
+    if (!this.nodes[id]) {
+      this.nodes[id] = {
+        node: compiler.typeReferenceNode({ typeName: '' }),
+      };
+    }
+    return this.nodes[id]!;
+  }
+
   public get id(): string {
     return this._id;
   }
 
+  /** @deprecated use `names` and `nodes` */
   public identifier(
     args: Pick<
       EnsureUniqueIdentifierData,
@@ -176,7 +192,7 @@ export class TypeScriptFile {
     },
   ): Identifier {
     return ensureUniqueIdentifier({
-      case: args.case ?? this._identifierCase,
+      case: args.case ?? this._case,
       identifiers: this.identifiers,
       ...args,
     });
@@ -187,12 +203,21 @@ export class TypeScriptFile {
    * import. Returns the imported name. If we import an aliased export, `name`
    * will be equal to the specified `alias`.
    */
-  public import({
+  public import<
+    Name extends string | undefined = string | undefined,
+    Alias extends string | undefined = undefined,
+  >({
     module,
     ...importedItem
-  }: ImportExportItemObject & {
+  }: ImportExportItemObject<Name, Alias> & {
     module: string;
-  }): FileImportResult {
+  }): FileImportResult<Name, Alias> {
+    if (!importedItem.name) {
+      return {
+        name: undefined as any,
+      };
+    }
+
     let moduleMap = this._imports.get(module);
 
     if (!moduleMap) {
@@ -204,14 +229,14 @@ export class TypeScriptFile {
     if (match) {
       return {
         ...match,
-        name: match.alias || match.name,
+        name: (match.alias || match.name) as any,
       };
     }
 
-    moduleMap.set(importedItem.name, importedItem);
+    moduleMap.set(importedItem.name, importedItem as any);
     return {
       ...importedItem,
-      name: importedItem.alias || importedItem.name,
+      name: (importedItem.alias || importedItem.name) as any,
     };
   }
 
@@ -287,8 +312,10 @@ export class TypeScriptFile {
 
   /**
    * Removes last node form the stack. Works as undo.
+   *
+   * @deprecated
    */
-  public removeNode() {
+  public removeNode_LEGACY() {
     this._items = this._items.slice(0, this._items.length - 1);
   }
 
@@ -344,6 +371,38 @@ export class TypeScriptFile {
       ),
     );
     return output.join(separator);
+  }
+
+  /**
+   * Inserts or updates a node.
+   *
+   * @param id Node ID.
+   * @param args Information about the node.
+   * @returns Updated node.
+   */
+  public updateNode(
+    id: string,
+    args: Pick<NodeInfo, 'exported'> & {
+      name: string;
+    },
+  ): NodeInfo {
+    // update name
+    const name = getUniqueComponentName({
+      base: ensureValidIdentifier(args.name),
+      components: Object.values(this.names),
+    });
+    this.names[id] = name;
+    const node = compiler.typeReferenceNode({ typeName: name });
+    // update node
+    if (!this.nodes[id]) {
+      this.nodes[id] = { node };
+    } else {
+      Object.assign(this.nodes[id].node, node);
+    }
+    if (args.exported !== undefined) {
+      this.nodes[id].exported = args.exported;
+    }
+    return this.nodes[id];
   }
 
   public write(separator = '\n', tsConfig: ts.ParsedCommandLine | null = null) {
@@ -411,13 +470,13 @@ const parseRef = (
 const transformName = (
   name: string,
   transformer: ((name: string) => string) | string,
-  identifierCase?: StringCase,
+  _case?: StringCase,
 ): string => {
   if (typeof transformer === 'function') {
     return transformer(name);
   }
 
-  const separator = identifierCase === 'preserve' ? '' : '-';
+  const separator = _case === 'preserve' ? '' : '-';
   return transformer.replace('{{name}}', `${separator}${name}${separator}`);
 };
 
@@ -436,7 +495,7 @@ interface EnsureUniqueIdentifierData {
 
 const ensureUniqueIdentifier = ({
   $ref,
-  case: identifierCase,
+  case: _case,
   count = 1,
   create = false,
   identifiers,
@@ -453,10 +512,8 @@ const ensureUniqueIdentifier = ({
   }
 
   let nameWithCasingAndTransformer = stringCase({
-    case: identifierCase,
-    value: nameTransformer
-      ? transformName(name, nameTransformer, identifierCase)
-      : name,
+    case: _case,
+    value: nameTransformer ? transformName(name, nameTransformer, _case) : name,
   });
   if (count > 1) {
     nameWithCasingAndTransformer = `${nameWithCasingAndTransformer}${count}`;
@@ -475,7 +532,7 @@ const ensureUniqueIdentifier = ({
   ) {
     return ensureUniqueIdentifier({
       $ref: ref,
-      case: identifierCase,
+      case: _case,
       count: count + 1,
       create,
       identifiers,
@@ -512,7 +569,7 @@ const ensureUniqueIdentifier = ({
 
     return ensureUniqueIdentifier({
       $ref: ref,
-      case: identifierCase,
+      case: _case,
       count: count + 1,
       create,
       identifiers,

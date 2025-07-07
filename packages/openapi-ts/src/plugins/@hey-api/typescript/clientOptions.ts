@@ -1,7 +1,7 @@
 import ts from 'typescript';
 
 import { compiler } from '../../../compiler';
-import type { Identifier } from '../../../generate/files';
+import type { NodeInfo } from '../../../generate/file/types';
 import type { IR } from '../../../ir/types';
 import { parseUrl } from '../../../utils/url';
 import { getClientBaseUrlKey, getClientPlugin } from '../client-core/utils';
@@ -31,19 +31,15 @@ const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {
 };
 
 export const createClientOptions = ({
-  identifier,
+  nodeInfo,
   plugin,
   servers,
 }: {
-  identifier: Identifier;
+  nodeInfo: NodeInfo;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   servers: ReadonlyArray<IR.ServerObject>;
 }) => {
   const file = plugin.context.file({ id: typesId })!;
-
-  if (!identifier.name) {
-    return;
-  }
 
   const client = getClientPlugin(plugin.context.config);
 
@@ -63,19 +59,19 @@ export const createClientOptions = ({
     );
   }
 
-  const typeClientOptions = compiler.typeAliasDeclaration({
-    exportType: true,
-    name: identifier.name,
-    type: compiler.typeInterfaceNode({
-      properties: [
-        {
-          name: getClientBaseUrlKey(plugin.context.config),
-          type: compiler.typeUnionNode({ types }),
-        },
-      ],
-      useLegacyResolution: false,
-    }),
+  const type = compiler.typeInterfaceNode({
+    properties: [
+      {
+        name: getClientBaseUrlKey(plugin.context.config),
+        type: compiler.typeUnionNode({ types }),
+      },
+    ],
+    useLegacyResolution: false,
   });
-
-  file.add(typeClientOptions);
+  const node = compiler.typeAliasDeclaration({
+    exportType: nodeInfo.exported,
+    name: nodeInfo.node,
+    type,
+  });
+  file.add(node);
 };

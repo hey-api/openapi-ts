@@ -37,7 +37,16 @@ export default defineConfig(() => {
       //   'invalid',
       //   'servers-entry.yaml',
       // ),
-      path: path.resolve(__dirname, 'spec', '3.1.x', 'validators.yaml'),
+      path: path.resolve(
+        __dirname,
+        'spec',
+        '3.1.x',
+        // 'enum-inline.yaml',
+        // 'full.yaml',
+        'foo.yaml',
+        // 'transformers-all-of.yaml',
+        // 'validators-circular-ref-2.yaml',
+      ),
       // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
       // path: path.resolve(__dirname, 'spec', 'v3.json'),
       // path: 'http://localhost:4000/',
@@ -103,8 +112,8 @@ export default defineConfig(() => {
       },
       transforms: {
         enums: {
-          enabled: false,
-          mode: 'inline',
+          // enabled: false,
+          mode: 'root',
           // name: '{{name}}',
         },
         readWrite: {
@@ -129,14 +138,24 @@ export default defineConfig(() => {
         // throwOnError: true,
       },
       {
-        // case: 'snake_case',
+        case: 'snake_case',
+        // definitions: '你_snake_{{name}}',
         enums: {
           // case: 'PascalCase',
           // constantsIgnoreNull: true,
-          enabled: false,
-          type: 'typescript+namespace',
+          // enabled: false,
+          // mode: 'typescript',
+        },
+        errors: {
+          error: '他們_error_{{name}}',
+          name: '你們_errors_{{name}}',
         },
         name: '@hey-api/typescript',
+        requests: '我們_data_{{name}}',
+        responses: {
+          name: '我_responses_{{name}}',
+          response: '他_response_{{name}}',
+        },
         // tree: true,
       },
       {
@@ -151,20 +170,20 @@ export default defineConfig(() => {
         // operationId: false,
         // responseStyle: 'data',
         // throwOnError: true,
-        // transformer: '@hey-api/transformers',
+        transformer: '@hey-api/transformers',
         // transformer: true,
-        validator: {
-          request: 'zod',
-          response: 'valibot',
-        },
+        // validator: {
+        //   request: 'zod',
+        //   response: 'valibot',
+        // },
       },
       {
         // bigInt: true,
         // dates: true,
-        // name: '@hey-api/transformers',
+        name: '@hey-api/transformers',
       },
       {
-        // name: 'fastify',
+        name: 'fastify',
       },
       {
         // case: 'SCREAMING_SNAKE_CASE',
@@ -179,7 +198,7 @@ export default defineConfig(() => {
         // mutationOptions: {
         //   name: '{{name}}MO',
         // },
-        // name: '@tanstack/react-query',
+        name: '@tanstack/react-query',
         // queryKeys: {
         //   name: '{{name}}QK',
         // },
@@ -193,7 +212,7 @@ export default defineConfig(() => {
         definitions: 'z{{name}}Definition',
         // exportFromIndex: true,
         metadata: true,
-        name: 'valibot',
+        // name: 'valibot',
         requests: {
           // case: 'SCREAMING_SNAKE_CASE',
           name: 'z{{name}}TestData',
@@ -212,7 +231,7 @@ export default defineConfig(() => {
         definitions: 'z{{name}}Definition',
         // exportFromIndex: true,
         // metadata: true,
-        name: 'zod',
+        // name: 'zod',
         requests: {
           // case: 'SCREAMING_SNAKE_CASE',
           // name: 'z{{name}}TestData',
@@ -224,7 +243,7 @@ export default defineConfig(() => {
       },
       {
         exportFromIndex: true,
-        name: '@hey-api/schemas',
+        // name: '@hey-api/schemas',
         // type: 'json',
       },
     ],

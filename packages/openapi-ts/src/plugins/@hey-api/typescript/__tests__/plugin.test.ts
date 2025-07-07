@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { openApi } from '../../../../generate/__tests__/mocks';
-import { TypeScriptFile } from '../../../../generate/files';
+import { GeneratedFile } from '../../../../generate/file';
 import type { Config } from '../../../../types/config';
 import { setConfig } from '../../../../utils/config';
 import { PluginInstance } from '../../../shared/utils/instance';
@@ -84,6 +84,9 @@ describe('generateLegacyTypes', () => {
           output: '',
         },
         '@hey-api/typescript': {
+          api: {
+            getId: () => '',
+          },
           config: {
             enums: 'javascript',
             name: '@hey-api/typescript',
@@ -139,7 +142,7 @@ describe('generateLegacyTypes', () => {
     };
 
     const files = {
-      types: new TypeScriptFile({
+      types: new GeneratedFile({
         dir: '/',
         id: 'types',
         name: 'types.ts',

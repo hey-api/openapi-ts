@@ -3,7 +3,7 @@ import type ts from 'typescript';
 import { compiler } from '../../../compiler';
 import type { ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
-import type { TypeScriptFile } from '../../../generate/files';
+import type { GeneratedFile } from '../../../generate/file';
 import { statusCodeToGroup } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { sanitizeNamespaceIdentifier } from '../../../openApi';
@@ -15,7 +15,7 @@ import {
   operationTransformerIrRef,
   transformersId,
 } from '../transformers/plugin';
-import { importIdentifier } from '../typescript/ref';
+import { typesId } from '../typescript/ref';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
 import type { HeyApiSdkPlugin } from './types';
@@ -140,45 +140,49 @@ export const operationClasses = ({
 };
 
 export const operationOptionsType = ({
-  context,
   file,
   operation,
+  plugin,
   throwOnError,
 }: {
-  context: IR.Context;
-  file: TypeScriptFile;
+  file: GeneratedFile;
   operation: IR.OperationObject;
+  plugin: HeyApiSdkPlugin['Instance'];
   throwOnError?: string;
 }) => {
-  const client = getClientPlugin(context.config);
+  const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  const identifierData = importIdentifier({
-    context,
-    file,
-    operation,
-    type: 'data',
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const fileTypeScript = plugin.context.file({ id: typesId })!;
+  const dataImport = file.import({
+    asType: true,
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+    name: fileTypeScript.getName(
+      pluginTypeScript.api.getId({ operation, type: 'data' }),
+    ),
   });
-  const identifierResponse = importIdentifier({
-    context,
-    file,
-    operation,
-    type: isNuxtClient ? 'response' : 'responses',
-  });
-
   const optionsName = clientApi.Options.name;
 
   if (isNuxtClient) {
-    return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}, ${identifierResponse.name || 'unknown'}, ${nuxtTypeDefault}>`;
+    const responseImport = file.import({
+      asType: true,
+      module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+      name: fileTypeScript.getName(
+        pluginTypeScript.api.getId({
+          operation,
+          type: isNuxtClient ? 'response' : 'responses',
+        }),
+      ),
+    });
+    return `${optionsName}<${nuxtTypeComposable}, ${dataImport.name || 'unknown'}, ${responseImport.name || 'unknown'}, ${nuxtTypeDefault}>`;
   }
 
   // TODO: refactor this to be more generic, works for now
   if (throwOnError) {
-    return `${optionsName}<${identifierData.name || 'unknown'}, ${throwOnError}>`;
+    return `${optionsName}<${dataImport.name || 'unknown'}, ${throwOnError}>`;
   }
-  return identifierData.name
-    ? `${optionsName}<${identifierData.name}>`
-    : optionsName;
+  return dataImport.name ? `${optionsName}<${dataImport.name}>` : optionsName;
 };
 
 /**
@@ -238,33 +242,41 @@ const getResponseType = (
 };
 
 export const operationStatements = ({
-  context,
   isRequiredOptions,
   operation,
   plugin,
 }: {
-  context: IR.Context;
   isRequiredOptions: boolean;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
 }): Array<ts.Statement> => {
-  const file = context.file({ id: sdkId })!;
+  const file = plugin.context.file({ id: sdkId })!;
   const sdkOutput = file.nameWithoutExtension();
 
-  const client = getClientPlugin(context.config);
+  const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  const identifierError = importIdentifier({
-    context,
-    file,
-    operation,
-    type: isNuxtClient ? 'error' : 'errors',
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const fileTypeScript = plugin.context.file({ id: typesId })!;
+  const errorImport = file.import({
+    asType: true,
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+    name: fileTypeScript.getName(
+      pluginTypeScript.api.getId({
+        operation,
+        type: isNuxtClient ? 'error' : 'errors',
+      }),
+    ),
   });
-  const identifierResponse = importIdentifier({
-    context,
-    file,
-    operation,
-    type: isNuxtClient ? 'response' : 'responses',
+  const responseImport = file.import({
+    asType: true,
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+    name: fileTypeScript.getName(
+      pluginTypeScript.api.getId({
+        operation,
+        type: isNuxtClient ? 'response' : 'responses',
+      }),
+    ),
   });
 
   // TODO: transform parameters
@@ -291,7 +303,7 @@ export const operationStatements = ({
         requestOptions.push({ spread: 'formDataBodySerializer' });
         file.import({
           module: clientModulePath({
-            config: context.config,
+            config: plugin.context.config,
             sourceOutput: sdkOutput,
           }),
           name: 'formDataBodySerializer',
@@ -312,7 +324,7 @@ export const operationStatements = ({
         requestOptions.push({ spread: 'urlSearchParamsBodySerializer' });
         file.import({
           module: clientModulePath({
-            config: context.config,
+            config: plugin.context.config,
             sourceOutput: sdkOutput,
           }),
           name: 'urlSearchParamsBodySerializer',
@@ -364,7 +376,7 @@ export const operationStatements = ({
   }
 
   if (plugin.config.transformer === '@hey-api/transformers') {
-    const identifierTransformer = context
+    const identifierTransformer = plugin.context
       .file({ id: transformersId })!
       .identifier({
         $ref: operationTransformerIrRef({ id: operation.id, type: 'response' }),
@@ -374,7 +386,7 @@ export const operationStatements = ({
     if (identifierTransformer.name) {
       file.import({
         module: file.relativePathToFile({
-          context,
+          context: plugin.context,
           id: transformersId,
         }),
         name: identifierTransformer.name,
@@ -422,7 +434,7 @@ export const operationStatements = ({
     });
   }
 
-  const auth = operationAuth({ context, operation, plugin });
+  const auth = operationAuth({ context: plugin.context, operation, plugin });
   if (auth.length) {
     requestOptions.push({
       key: 'security',
@@ -467,14 +479,14 @@ export const operationStatements = ({
     }
   }
 
-  const responseType = identifierResponse.name || 'unknown';
-  const errorType = identifierError.name || 'unknown';
+  const responseType = responseImport.name || 'unknown';
+  const errorType = errorImport.name || 'unknown';
 
   const heyApiClient = plugin.config.client
     ? file.import({
         alias: '_heyApiClient',
         module: file.relativePathToFile({
-          context,
+          context: plugin.context,
           id: clientId,
         }),
         name: 'client',

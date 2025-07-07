@@ -8,7 +8,7 @@ import {
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
 import { getClientPlugin } from '../client-core/utils';
-import { importIdentifier } from '../typescript/ref';
+import { typesId } from '../typescript/ref';
 import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
 import {
   operationClasses,
@@ -131,11 +131,16 @@ const generateClassSdk = ({
       context: plugin.context,
       operation,
     });
-    const identifierResponse = importIdentifier({
-      context: plugin.context,
-      file,
-      operation,
-      type: 'response',
+    const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+    const fileTypeScript = plugin.context.file({ id: typesId })!;
+    const responseImport = file.import({
+      asType: true,
+      module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+      name: isNuxtClient
+        ? fileTypeScript.getName(
+            pluginTypeScript.api.getId({ operation, type: 'response' }),
+          )
+        : undefined,
     });
 
     const classes = operationClasses({
@@ -186,16 +191,15 @@ const generateClassSdk = ({
               isRequired: isRequiredOptions,
               name: 'options',
               type: operationOptionsType({
-                context: plugin.context,
                 file,
                 operation,
+                plugin,
                 throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
               }),
             },
           ],
           returnType: undefined,
           statements: operationStatements({
-            context: plugin.context,
             isRequiredOptions,
             operation,
             plugin,
@@ -208,14 +212,14 @@ const generateClassSdk = ({
                   name: nuxtTypeComposable,
                 },
                 {
-                  default: identifierResponse.name
+                  default: responseImport.name
                     ? compiler.typeReferenceNode({
-                        typeName: identifierResponse.name,
+                        typeName: responseImport.name,
                       })
                     : compiler.typeNode('undefined'),
-                  extends: identifierResponse.name
+                  extends: responseImport.name
                     ? compiler.typeReferenceNode({
-                        typeName: identifierResponse.name,
+                        typeName: responseImport.name,
                       })
                     : undefined,
                   name: nuxtTypeDefault,
@@ -333,11 +337,16 @@ const generateFlatSdk = ({
       context: plugin.context,
       operation,
     });
-    const identifierResponse = importIdentifier({
-      context: plugin.context,
-      file,
-      operation,
-      type: 'response',
+    const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+    const fileTypeScript = plugin.context.file({ id: typesId })!;
+    const responseImport = file.import({
+      asType: true,
+      module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+      name: isNuxtClient
+        ? fileTypeScript.getName(
+            pluginTypeScript.api.getId({ operation, type: 'response' }),
+          )
+        : undefined,
     });
     const node = compiler.constVariable({
       comment: createOperationComment({ operation }),
@@ -348,16 +357,15 @@ const generateFlatSdk = ({
             isRequired: isRequiredOptions,
             name: 'options',
             type: operationOptionsType({
-              context: plugin.context,
               file,
               operation,
+              plugin,
               throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
             }),
           },
         ],
         returnType: undefined,
         statements: operationStatements({
-          context: plugin.context,
           isRequiredOptions,
           operation,
           plugin,
@@ -370,14 +378,14 @@ const generateFlatSdk = ({
                 name: nuxtTypeComposable,
               },
               {
-                default: identifierResponse.name
+                default: responseImport.name
                   ? compiler.typeReferenceNode({
-                      typeName: identifierResponse.name,
+                      typeName: responseImport.name,
                     })
                   : compiler.typeNode('undefined'),
-                extends: identifierResponse.name
+                extends: responseImport.name
                   ? compiler.typeReferenceNode({
-                      typeName: identifierResponse.name,
+                      typeName: responseImport.name,
                     })
                   : undefined,
                 name: nuxtTypeDefault,
@@ -432,11 +440,7 @@ export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
     });
   }
 
-  createTypeOptions({
-    clientOptions,
-    context: plugin.context,
-    plugin,
-  });
+  createTypeOptions({ clientOptions, plugin });
 
   if (plugin.config.asClass) {
     generateClassSdk({ plugin });

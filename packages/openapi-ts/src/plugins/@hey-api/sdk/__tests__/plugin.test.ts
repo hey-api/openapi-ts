@@ -4,7 +4,7 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { openApi } from '../../../../generate/__tests__/mocks';
-import { TypeScriptFile } from '../../../../generate/files';
+import { GeneratedFile } from '../../../../generate/file';
 import type { Operation } from '../../../../types/client';
 import type { Config } from '../../../../types/config';
 import type { Files } from '../../../../types/utils';
@@ -87,6 +87,9 @@ describe('handlerLegacy', () => {
           output: '',
         },
         '@hey-api/typescript': {
+          api: {
+            getId: () => '',
+          },
           config: {
             name: '@hey-api/typescript',
           },
@@ -147,7 +150,7 @@ describe('handlerLegacy', () => {
 
     const files: Files = {};
 
-    files.types = new TypeScriptFile({
+    files.types = new GeneratedFile({
       dir: '/',
       id: 'types',
       name: 'types.ts',
@@ -291,6 +294,9 @@ describe('methodNameBuilder', () => {
           output: '',
         },
         '@hey-api/typescript': {
+          api: {
+            getId: () => '',
+          },
           config: {
             name: '@hey-api/typescript',
           },
@@ -313,7 +319,7 @@ describe('methodNameBuilder', () => {
 
     const files: Files = {};
 
-    files.types = new TypeScriptFile({
+    files.types = new GeneratedFile({
       dir: '/',
       id: 'types',
       name: 'types.ts',
@@ -418,6 +424,9 @@ describe('methodNameBuilder', () => {
           output: '',
         },
         '@hey-api/typescript': {
+          api: {
+            getId: () => '',
+          },
           config: {
             name: '@hey-api/typescript',
           },
@@ -440,7 +449,7 @@ describe('methodNameBuilder', () => {
 
     const files: Files = {};
 
-    files.types = new TypeScriptFile({
+    files.types = new GeneratedFile({
       dir: '/',
       id: 'types',
       name: 'types.ts',
@@ -547,6 +556,9 @@ describe('methodNameBuilder', () => {
           output: '',
         },
         '@hey-api/typescript': {
+          api: {
+            getId: () => '',
+          },
           config: {
             name: '@hey-api/typescript',
           },
@@ -569,7 +581,7 @@ describe('methodNameBuilder', () => {
 
     const files: Files = {};
 
-    files.types = new TypeScriptFile({
+    files.types = new GeneratedFile({
       dir: '/',
       id: 'types',
       name: 'types.ts',

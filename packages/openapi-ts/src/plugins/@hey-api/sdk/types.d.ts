@@ -1,4 +1,5 @@
 import type { IR } from '../../../ir/types';
+import type { StringName } from '../../../types/case';
 import type { Operation } from '../../../types/client';
 import type {
   DefinePlugin,
@@ -34,7 +35,7 @@ export type Config = Plugin.Name<'@hey-api/sdk'> & {
    *
    * This option has no effect if `sdk.asClass` is `false`.
    */
-  classNameBuilder?: string | ((name: string) => string);
+  classNameBuilder?: StringName;
   /**
    * How should we structure your SDK? By default, we try to infer the ideal
    * structure using `operationId` keywords. If you prefer a flatter structure,
@@ -207,7 +208,7 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/sdk'> & {
    *
    * This option has no effect if `sdk.asClass` is `false`.
    */
-  classNameBuilder: string | ((name: string) => string);
+  classNameBuilder: StringName;
   /**
    * How should we structure your SDK? By default, we try to infer the ideal
    * structure using `operationId` keywords. If you prefer a flatter structure,
