@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.78.2
+
+### Patch Changes
+
+- [#2281](https://github.com/hey-api/openapi-ts/pull/2281) [`565830b`](https://github.com/hey-api/openapi-ts/commit/565830b97c34efe632db69b423c2d10b80693b76) Thanks [@j-ibarra](https://github.com/j-ibarra)! - fix(transformers): add `transformers` option allowing passing custom transform functions
+
 ## 0.78.1
 
 ### Patch Changes
