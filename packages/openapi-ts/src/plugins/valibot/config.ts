@@ -23,7 +23,8 @@ export const defaultConfig: ValibotPlugin['Config'] = {
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),
-        string: (name) => ({ enabled: true, name }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
       },
       value: plugin.config.definitions,
     });
@@ -36,7 +37,8 @@ export const defaultConfig: ValibotPlugin['Config'] = {
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),
-        string: (name) => ({ enabled: true, name }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
       },
       value: plugin.config.requests,
     });
@@ -49,7 +51,8 @@ export const defaultConfig: ValibotPlugin['Config'] = {
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),
-        string: (name) => ({ enabled: true, name }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
       },
       value: plugin.config.responses,
     });

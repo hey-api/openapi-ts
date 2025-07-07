@@ -1,10 +1,10 @@
 import ts from 'typescript';
 
 import { compiler } from '../../compiler';
-import type { Identifier } from '../../generate/files';
+import type { Identifier } from '../../generate/file/types';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
-import type { StringCase } from '../../types/case';
+import type { StringCase, StringName } from '../../types/case';
 import { numberRegExp } from '../../utils/regexp';
 import { createSchemaComment } from '../shared/utils/schema';
 import { zodId } from './constants';
@@ -20,7 +20,7 @@ export interface State {
   circularReferenceTracker: Set<string>;
   hasCircularReference: boolean;
   nameCase: StringCase;
-  nameTransformer: string | ((name: string) => string);
+  nameTransformer: StringName;
 }
 
 // frequently used identifiers
@@ -1014,8 +1014,8 @@ export const schemaToZodSchema = ({
 
 export const handler: ZodPlugin['Handler'] = ({ plugin }) => {
   const file = plugin.createFile({
+    case: plugin.config.case,
     id: zodId,
-    identifierCase: plugin.config.case,
     path: plugin.output,
   });
 

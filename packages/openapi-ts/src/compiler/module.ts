@@ -123,7 +123,7 @@ export const createConstVariable = ({
   destructure?: boolean;
   exportConst?: boolean;
   expression: ts.Expression;
-  name: string;
+  name: string | ts.TypeReferenceNode;
   // TODO: support a more intuitive definition of generics for example
   typeName?: string | ts.IndexedAccessTypeNode | ts.TypeNode;
 }): ts.VariableStatement => {
@@ -136,7 +136,11 @@ export const createConstVariable = ({
             : assertion,
       })
     : expression;
-  const nameIdentifier = createIdentifier({ text: name });
+  const nameIdentifier =
+    typeof name === 'string'
+      ? createIdentifier({ text: name })
+      : // TODO: https://github.com/hey-api/openapi-ts/issues/2289
+        (name as unknown as ts.Identifier);
   const declaration = ts.factory.createVariableDeclaration(
     destructure
       ? ts.factory.createObjectBindingPattern([

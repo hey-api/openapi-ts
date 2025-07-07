@@ -97,6 +97,9 @@ describe('generateLegacyCore', () => {
           output: '',
         },
         '@hey-api/typescript': {
+          api: {
+            getId: () => '',
+          },
           config: {
             enums: 'javascript',
             name: '@hey-api/typescript',
@@ -227,6 +230,9 @@ describe('generateLegacyCore', () => {
           output: '',
         },
         '@hey-api/typescript': {
+          api: {
+            getId: () => '',
+          },
           config: {
             enums: 'javascript',
             name: '@hey-api/typescript',
@@ -340,6 +346,9 @@ describe('generateLegacyCore', () => {
           output: '',
         },
         '@hey-api/typescript': {
+          api: {
+            getId: () => '',
+          },
           config: {
             enums: 'javascript',
             name: '@hey-api/typescript',

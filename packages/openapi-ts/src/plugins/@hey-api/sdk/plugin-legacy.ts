@@ -7,7 +7,7 @@ import type {
   ObjectValue,
 } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
-import { TypeScriptFile } from '../../../generate/files';
+import { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
 import { isOperationParameterRequired } from '../../../openApi';
 import type {
@@ -810,7 +810,7 @@ export const handlerLegacy: HeyApiSdkPlugin['LegacyHandler'] = ({
 
   const sdkOutput = 'sdk';
 
-  files.sdk = new TypeScriptFile({
+  files.sdk = new GeneratedFile({
     dir: config.output.path,
     exportFromIndex: plugin.config.exportFromIndex,
     id: 'sdk',

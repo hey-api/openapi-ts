@@ -5,10 +5,13 @@ import { unescapeName } from '../utils/escape';
 import type { AccessLevel } from './types';
 import { createStringLiteral, syntaxKindKeyword } from './types';
 
-export interface ImportExportItemObject {
-  alias?: string;
+export interface ImportExportItemObject<
+  Name extends string | undefined = string | undefined,
+  Alias extends string | undefined = undefined,
+> {
+  alias?: Alias;
   asType?: boolean;
-  name: string;
+  name: Name;
 }
 
 const printer = ts.createPrinter({
@@ -125,7 +128,7 @@ export const ots = {
   boolean: (value: boolean) =>
     value ? ts.factory.createTrue() : ts.factory.createFalse(),
   export: ({ alias, asType = false, name }: ImportExportItemObject) => {
-    const nameNode = createIdentifier({ text: name });
+    const nameNode = createIdentifier({ text: name! });
     if (alias) {
       const aliasNode = createIdentifier({ text: alias });
       return ts.factory.createExportSpecifier(asType, nameNode, aliasNode);
@@ -133,7 +136,7 @@ export const ots = {
     return ts.factory.createExportSpecifier(asType, undefined, nameNode);
   },
   import: ({ alias, asType = false, name }: ImportExportItemObject) => {
-    const nameNode = createIdentifier({ text: name });
+    const nameNode = createIdentifier({ text: name! });
     if (alias) {
       const aliasNode = createIdentifier({ text: alias });
       return ts.factory.createImportSpecifier(asType, nameNode, aliasNode);

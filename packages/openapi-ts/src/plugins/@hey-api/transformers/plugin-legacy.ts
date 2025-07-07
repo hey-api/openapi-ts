@@ -258,7 +258,7 @@ export const handlerLegacy: HeyApiTransformersPlugin['LegacyHandler'] = ({
     files.types?.add(node);
   };
   const onRemoveNode: TypesProps['onRemoveNode'] = () => {
-    files.types?.removeNode();
+    files.types?.removeNode_LEGACY();
   };
 
   for (const service of client.services) {

@@ -14,7 +14,7 @@ const hasName = (obj: Obj, value: string): boolean => {
 };
 
 export const getUniqueComponentName = ({
-  base: _base,
+  base,
   components,
   extraComponents,
 }: {
@@ -29,8 +29,10 @@ export const getUniqueComponentName = ({
   extraComponents?: Obj;
 }): string => {
   let index = 2;
-  // Strip trailing number. For example, if base is "foo2", the clean base will be "foo"
-  const base = _base.replace(/\d+$/, '');
+  // Strip trailing digits only if the last character before the digits is a Unicode letter.
+  // For example: "foo2" becomes "foo", but "foo_2" stays "foo_2"
+  // const match = _base.match(/(.+\p{L})(\d+)$/u);
+  // const base = match && false ? _base.replace(/\d+$/, '') : _base;
   let name = base;
   while (
     hasName(components, name) ||

@@ -84,6 +84,9 @@ describe('generateLegacySchemas', () => {
           output: '',
         },
         '@hey-api/typescript': {
+          api: {
+            getId: () => '',
+          },
           config: {
             enums: 'javascript',
             name: '@hey-api/typescript',
@@ -216,6 +219,9 @@ describe('generateLegacySchemas', () => {
           output: '',
         },
         '@hey-api/typescript': {
+          api: {
+            getId: () => '',
+          },
           config: {
             enums: 'javascript',
             name: '@hey-api/typescript',

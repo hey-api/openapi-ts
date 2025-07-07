@@ -1,26 +1,23 @@
 import { compiler } from '../../../compiler';
 import { clientModulePath } from '../../../generate/client';
-import type { FileImportResult } from '../../../generate/files';
-import type { IR } from '../../../ir/types';
+import type { FileImportResult } from '../../../generate/file/types';
 import { getClientPlugin } from '../client-core/utils';
 import { nuxtTypeDefault, nuxtTypeResponse, sdkId } from './constants';
 import type { HeyApiSdkPlugin } from './types';
 
 export const createTypeOptions = ({
   clientOptions,
-  context,
   plugin,
 }: {
-  clientOptions: FileImportResult;
-  context: IR.Context;
+  clientOptions: FileImportResult<string, string>;
   plugin: HeyApiSdkPlugin['Instance'];
 }) => {
-  const file = context.file({ id: sdkId })!;
-  const client = getClientPlugin(context.config);
+  const file = plugin.context.file({ id: sdkId })!;
+  const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   const clientModule = clientModulePath({
-    config: context.config,
+    config: plugin.context.config,
     sourceOutput: file.nameWithoutExtension(),
   });
   const tDataShape = file.import({

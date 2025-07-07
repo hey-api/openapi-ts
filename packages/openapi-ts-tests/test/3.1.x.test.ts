@@ -272,24 +272,6 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-inline.yaml',
-        output: 'enum-inline-typescript-namespace',
-        parser: {
-          transforms: {
-            enums: 'root',
-          },
-        },
-        plugins: [
-          {
-            enums: 'typescript+namespace',
-            name: '@hey-api/typescript',
-          },
-        ],
-      }),
-      description: 'exports inline enums (TypeScript namespace)',
-    },
-    {
-      config: createConfig({
         input: 'enum-names-values.yaml',
         output: 'enum-names-values',
       }),

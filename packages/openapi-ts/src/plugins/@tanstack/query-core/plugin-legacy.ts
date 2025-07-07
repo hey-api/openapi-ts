@@ -1176,7 +1176,7 @@ export const handlerLegacy = ({
                   // TODO: better types syntax
                   types: [
                     typeResponse,
-                    typeError.name,
+                    typeError.name!,
                     `${typeof typeInfiniteData === 'string' ? typeInfiniteData : typeInfiniteData.name}<${typeResponse}>`,
                     typeQueryKey,
                     typePageParam,

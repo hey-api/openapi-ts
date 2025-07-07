@@ -1,4 +1,4 @@
-import type { StringCase } from '../../../types/case';
+import type { StringCase, StringName } from '../../../types/case';
 import { stringCase } from '../../../utils/stringCase';
 
 export const buildName = ({
@@ -7,13 +7,13 @@ export const buildName = ({
 }: {
   config: {
     case: StringCase;
-    name: string | ((name: string) => string);
+    name?: StringName;
   };
   name: string;
 }): string => {
   if (typeof config.name === 'function') {
     name = config.name(name);
-  } else {
+  } else if (config.name) {
     name = config.name.replace('{{name}}', name);
   }
 
