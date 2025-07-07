@@ -26,6 +26,13 @@ export type Config = Plugin.Name<'@hey-api/transformers'> & {
    * @default 'transformers'
    */
   output?: string;
+
+  /**
+   * transformers to apply to the generated code
+   * @default []
+   */
+
+  transformers?: expressionTransformer[];
 };
 
 export type HeyApiTransformersPlugin = DefinePlugin<Config>;
