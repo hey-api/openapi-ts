@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.78.3
+
+### Patch Changes
+
+- [#2290](https://github.com/hey-api/openapi-ts/pull/2290) [`4a77615`](https://github.com/hey-api/openapi-ts/commit/4a776157d0168f4f5f267581874861c2e84ef544) Thanks [@btmnk](https://github.com/btmnk)! - fix(client): improve types to pass `@total-typescript/ts-reset` rules
+
 ## 0.78.2
 
 ### Patch Changes
