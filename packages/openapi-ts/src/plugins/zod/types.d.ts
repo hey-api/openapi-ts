@@ -2,7 +2,7 @@ import type { StringCase, StringName } from '../../types/case';
 import type { DefinePlugin, Plugin } from '../types';
 import type { Api } from './api';
 
-export type Config = Plugin.Name<'zod'> & {
+export type UserConfig = Plugin.Name<'zod'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -160,7 +160,7 @@ export type Config = Plugin.Name<'zod'> & {
       };
 };
 
-export type ResolvedConfig = Plugin.Name<'zod'> & {
+export type Config = Plugin.Name<'zod'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -294,4 +294,4 @@ export type ResolvedConfig = Plugin.Name<'zod'> & {
   };
 };
 
-export type ZodPlugin = DefinePlugin<Config, ResolvedConfig, Api>;
+export type ZodPlugin = DefinePlugin<UserConfig, Config, Api>;

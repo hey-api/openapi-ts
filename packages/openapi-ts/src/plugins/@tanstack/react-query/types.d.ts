@@ -1,7 +1,7 @@
 import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
 
-export type Config = Plugin.Name<'@tanstack/react-query'> & {
+export type UserConfig = Plugin.Name<'@tanstack/react-query'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -218,7 +218,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
       };
 };
 
-export type ResolvedConfig = Plugin.Name<'@tanstack/react-query'> & {
+export type Config = Plugin.Name<'@tanstack/react-query'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -375,4 +375,4 @@ export type ResolvedConfig = Plugin.Name<'@tanstack/react-query'> & {
   };
 };
 
-export type TanStackReactQueryPlugin = DefinePlugin<Config, ResolvedConfig>;
+export type TanStackReactQueryPlugin = DefinePlugin<UserConfig, Config>;

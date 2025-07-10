@@ -96,7 +96,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'case.json',
+        input: 'case.yaml',
         output: 'case-preserve',
         plugins: [
           {
@@ -109,7 +109,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'case.json',
+        input: 'case.yaml',
         output: 'case-PascalCase',
         plugins: [
           {
@@ -122,7 +122,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'case.json',
+        input: 'case.yaml',
         output: 'case-camelCase',
         plugins: [
           {
@@ -135,7 +135,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'case.json',
+        input: 'case.yaml',
         output: 'case-snake_case',
         plugins: [
           {

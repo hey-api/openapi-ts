@@ -1,7 +1,7 @@
 import type { DefinePlugin, Plugin } from '../../types';
 import type { Client } from '../client-core/types';
 
-export type Config = Plugin.Name<'@hey-api/client-axios'> &
+export type UserConfig = Plugin.Name<'@hey-api/client-axios'> &
   Client.Config & {
     /**
      * Throw an error instead of returning it in the response?
@@ -11,4 +11,4 @@ export type Config = Plugin.Name<'@hey-api/client-axios'> &
     throwOnError?: boolean;
   };
 
-export type HeyApiClientAxiosPlugin = DefinePlugin<Config>;
+export type HeyApiClientAxiosPlugin = DefinePlugin<UserConfig>;

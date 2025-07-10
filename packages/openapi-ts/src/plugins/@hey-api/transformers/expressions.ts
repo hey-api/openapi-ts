@@ -1,9 +1,9 @@
 import type ts from 'typescript';
 
 import { compiler } from '../../../compiler';
-import type { TypeScriptFile } from '../../../generate/files';
+import type { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
-import type { Config } from './types';
+import type { UserConfig } from './types';
 
 export type ExpressionTransformer = ({
   config,
@@ -11,9 +11,9 @@ export type ExpressionTransformer = ({
   file,
   schema,
 }: {
-  config: Omit<Config, 'name'>;
+  config: Omit<UserConfig, 'name'>;
   dataExpression?: ts.Expression | string;
-  file: TypeScriptFile;
+  file: GeneratedFile;
   schema: IR.SchemaObject;
 }) => Array<ts.Expression> | undefined;
 

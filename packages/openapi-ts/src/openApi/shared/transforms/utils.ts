@@ -29,10 +29,6 @@ export const getUniqueComponentName = ({
   extraComponents?: Obj;
 }): string => {
   let index = 2;
-  // Strip trailing digits only if the last character before the digits is a Unicode letter.
-  // For example: "foo2" becomes "foo", but "foo_2" stays "foo_2"
-  // const match = _base.match(/(.+\p{L})(\d+)$/u);
-  // const base = match && false ? _base.replace(/\d+$/, '') : _base;
   let name = base;
   while (
     hasName(components, name) ||

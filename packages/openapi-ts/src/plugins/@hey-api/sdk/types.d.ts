@@ -8,7 +8,7 @@ import type {
   PluginValidatorNames,
 } from '../../types';
 
-export type Config = Plugin.Name<'@hey-api/sdk'> & {
+export type UserConfig = Plugin.Name<'@hey-api/sdk'> & {
   /**
    * Group operation methods into classes? When enabled, you can select which
    * classes to export with `sdk.include` and/or transform their names with
@@ -181,7 +181,7 @@ export type Config = Plugin.Name<'@hey-api/sdk'> & {
   response?: 'body' | 'response';
 };
 
-export type ResolvedConfig = Plugin.Name<'@hey-api/sdk'> & {
+export type Config = Plugin.Name<'@hey-api/sdk'> & {
   /**
    * Group operation methods into classes? When enabled, you can select which
    * classes to export with `sdk.include` and/or transform their names with
@@ -333,4 +333,4 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/sdk'> & {
   response: 'body' | 'response';
 };
 
-export type HeyApiSdkPlugin = DefinePlugin<Config, ResolvedConfig>;
+export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config>;

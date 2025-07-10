@@ -1,7 +1,7 @@
 import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
 
-export type Config = Plugin.Name<'@tanstack/angular-query-experimental'> & {
+export type UserConfig = Plugin.Name<'@tanstack/angular-query-experimental'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -213,8 +213,31 @@ export type Config = Plugin.Name<'@tanstack/angular-query-experimental'> & {
       };
 };
 
-export type ResolvedConfig =
-  Plugin.Name<'@tanstack/angular-query-experimental'> & {
+export type Config = Plugin.Name<'@tanstack/angular-query-experimental'> & {
+  /**
+   * The casing convention to use for generated names.
+   *
+   * @default 'camelCase'
+   */
+  case: StringCase;
+  /**
+   * Add comments from SDK functions to the generated TanStack Query code?
+   *
+   * @default true
+   */
+  comments: boolean;
+  /**
+   * Should the exports from the generated files be re-exported in the index barrel file?
+   *
+   * @default false
+   */
+  exportFromIndex: boolean;
+  /**
+   * Resolved configuration for generated infinite query key helpers.
+   *
+   * @see https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions
+   */
+  infiniteQueryKeys: {
     /**
      * The casing convention to use for generated names.
      *
@@ -222,158 +245,134 @@ export type ResolvedConfig =
      */
     case: StringCase;
     /**
-     * Add comments from SDK functions to the generated TanStack Query code?
+     * Whether to generate infinite query key helpers.
      *
      * @default true
      */
-    comments: boolean;
+    enabled: boolean;
     /**
-     * Should the exports from the generated files be re-exported in the index barrel file?
+     * Custom naming pattern for generated infinite query key names. The name variable is
+     * obtained from the SDK function name.
      *
-     * @default false
-     */
-    exportFromIndex: boolean;
-    /**
-     * Resolved configuration for generated infinite query key helpers.
-     *
+     * @default '{{name}}InfiniteQueryKey'
      * @see https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions
      */
-    infiniteQueryKeys: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: StringCase;
-      /**
-       * Whether to generate infinite query key helpers.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated infinite query key names. The name variable is
-       * obtained from the SDK function name.
-       *
-       * @default '{{name}}InfiniteQueryKey'
-       * @see https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions
-       */
-      name: StringName;
-    };
+    name: StringName;
+  };
+  /**
+   * Resolved configuration for generated infinite query options helpers.
+   *
+   * @see https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions
+   */
+  infiniteQueryOptions: {
     /**
-     * Resolved configuration for generated infinite query options helpers.
+     * The casing convention to use for generated names.
      *
+     * @default 'camelCase'
+     */
+    case: StringCase;
+    /**
+     * Whether to generate infinite query options helpers.
+     *
+     * @default true
+     */
+    enabled: boolean;
+    /**
+     * Custom naming pattern for generated infinite query options names. The name variable is
+     * obtained from the SDK function name.
+     *
+     * @default '{{name}}InfiniteOptions'
      * @see https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions
      */
-    infiniteQueryOptions: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: StringCase;
-      /**
-       * Whether to generate infinite query options helpers.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated infinite query options names. The name variable is
-       * obtained from the SDK function name.
-       *
-       * @default '{{name}}InfiniteOptions'
-       * @see https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions
-       */
-      name: StringName;
-    };
+    name: StringName;
+  };
+  /**
+   * Resolved configuration for generated mutation options helpers.
+   *
+   * @see https://tanstack.com/query/v5/docs/framework/angular/reference/useMutation
+   */
+  mutationOptions: {
     /**
-     * Resolved configuration for generated mutation options helpers.
+     * The casing convention to use for generated names.
      *
+     * @default 'camelCase'
+     */
+    case: StringCase;
+    /**
+     * Whether to generate mutation options helpers.
+     *
+     * @default true
+     */
+    enabled: boolean;
+    /**
+     * Custom naming pattern for generated mutation options names. The name variable is
+     * obtained from the SDK function name.
+     *
+     * @default '{{name}}Mutation'
      * @see https://tanstack.com/query/v5/docs/framework/angular/reference/useMutation
      */
-    mutationOptions: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: StringCase;
-      /**
-       * Whether to generate mutation options helpers.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated mutation options names. The name variable is
-       * obtained from the SDK function name.
-       *
-       * @default '{{name}}Mutation'
-       * @see https://tanstack.com/query/v5/docs/framework/angular/reference/useMutation
-       */
-      name: StringName;
-    };
+    name: StringName;
+  };
+  /**
+   * Name of the generated file.
+   *
+   * @default '@tanstack/angular-query-experimental'
+   */
+  output: string;
+  /**
+   * Resolved configuration for generated query keys.
+   *
+   * @see https://tanstack.com/query/v5/docs/framework/angular/reference/queryKey
+   */
+  queryKeys: {
     /**
-     * Name of the generated file.
+     * The casing convention to use for generated names.
      *
-     * @default '@tanstack/angular-query-experimental'
+     * @default 'camelCase'
      */
-    output: string;
+    case: StringCase;
     /**
-     * Resolved configuration for generated query keys.
+     * Whether to generate query keys.
      *
+     * @default true
+     */
+    enabled: boolean;
+    /**
+     * Custom naming pattern for generated query key names. The name variable is
+     * obtained from the SDK function name.
+     *
+     * @default '{{name}}QueryKey'
      * @see https://tanstack.com/query/v5/docs/framework/angular/reference/queryKey
      */
-    queryKeys: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: StringCase;
-      /**
-       * Whether to generate query keys.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated query key names. The name variable is
-       * obtained from the SDK function name.
-       *
-       * @default '{{name}}QueryKey'
-       * @see https://tanstack.com/query/v5/docs/framework/angular/reference/queryKey
-       */
-      name: StringName;
-    };
+    name: StringName;
+  };
+  /**
+   * Resolved configuration for generated query options helpers.
+   *
+   * @see https://tanstack.com/query/v5/docs/framework/angular/reference/queryOptions
+   */
+  queryOptions: {
     /**
-     * Resolved configuration for generated query options helpers.
+     * The casing convention to use for generated names.
      *
+     * @default 'camelCase'
+     */
+    case: StringCase;
+    /**
+     * Whether to generate query options helpers.
+     *
+     * @default true
+     */
+    enabled: boolean;
+    /**
+     * Custom naming pattern for generated query options names. The name variable is
+     * obtained from the SDK function name.
+     *
+     * @default '{{name}}Options'
      * @see https://tanstack.com/query/v5/docs/framework/angular/reference/queryOptions
      */
-    queryOptions: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: StringCase;
-      /**
-       * Whether to generate query options helpers.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated query options names. The name variable is
-       * obtained from the SDK function name.
-       *
-       * @default '{{name}}Options'
-       * @see https://tanstack.com/query/v5/docs/framework/angular/reference/queryOptions
-       */
-      name: StringName;
-    };
+    name: StringName;
   };
+};
 
-export type TanStackAngularQueryPlugin = DefinePlugin<Config, ResolvedConfig>;
+export type TanStackAngularQueryPlugin = DefinePlugin<UserConfig, Config>;

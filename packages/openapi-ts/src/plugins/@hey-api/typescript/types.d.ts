@@ -4,7 +4,7 @@ import type { Api } from './api';
 
 export type EnumsType = 'javascript' | 'typescript';
 
-export type Config = Plugin.Name<'@hey-api/typescript'> & {
+export type UserConfig = Plugin.Name<'@hey-api/typescript'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -231,7 +231,7 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
   tree?: boolean;
 };
 
-export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
+export type Config = Plugin.Name<'@hey-api/typescript'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -425,4 +425,4 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
   tree: boolean;
 };
 
-export type HeyApiTypeScriptPlugin = DefinePlugin<Config, ResolvedConfig, Api>;
+export type HeyApiTypeScriptPlugin = DefinePlugin<UserConfig, Config, Api>;

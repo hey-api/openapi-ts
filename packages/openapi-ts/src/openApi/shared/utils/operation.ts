@@ -47,14 +47,14 @@ export const operationToId = ({
       value: sanitizeNamespaceIdentifier(id),
     });
   } else {
-    const urlWithoutPlaceholders = path
+    const pathWithoutPlaceholders = path
       .replace(/{(.*?)}/g, 'by-$1')
       // replace slashes with hyphens for camelcase method at the end
       .replace(/[/:+]/g, '-');
 
     result = stringCase({
       case: 'camelCase',
-      value: `${method}-${urlWithoutPlaceholders}`,
+      value: `${method}-${pathWithoutPlaceholders}`,
     });
   }
 
