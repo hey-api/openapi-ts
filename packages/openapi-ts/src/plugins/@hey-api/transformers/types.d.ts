@@ -1,7 +1,7 @@
 import type { DefinePlugin, Plugin } from '../../types';
 import type { ExpressionTransformer } from './expressions';
 
-export type Config = Plugin.Name<'@hey-api/transformers'> & {
+export type UserConfig = Plugin.Name<'@hey-api/transformers'> & {
   /**
    * Convert long integers into BigInt values?
    *
@@ -33,4 +33,4 @@ export type Config = Plugin.Name<'@hey-api/transformers'> & {
   transformers?: ReadonlyArray<ExpressionTransformer>;
 };
 
-export type HeyApiTransformersPlugin = DefinePlugin<Config>;
+export type HeyApiTransformersPlugin = DefinePlugin<UserConfig>;

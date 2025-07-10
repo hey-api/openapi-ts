@@ -1,7 +1,7 @@
 import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
 
-export type Config = Plugin.Name<'@tanstack/solid-query'> & {
+export type UserConfig = Plugin.Name<'@tanstack/solid-query'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -213,7 +213,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> & {
       };
 };
 
-export type ResolvedConfig = Plugin.Name<'@tanstack/solid-query'> & {
+export type Config = Plugin.Name<'@tanstack/solid-query'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -375,4 +375,4 @@ export type ResolvedConfig = Plugin.Name<'@tanstack/solid-query'> & {
   };
 };
 
-export type TanStackSolidQueryPlugin = DefinePlugin<Config, ResolvedConfig>;
+export type TanStackSolidQueryPlugin = DefinePlugin<UserConfig, Config>;

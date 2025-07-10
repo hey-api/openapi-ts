@@ -4,7 +4,7 @@ import type { OpenApiV3_0_XTypes } from '../../../openApi/3.0.x';
 import type { OpenApiV3_1_XTypes } from '../../../openApi/3.1.x';
 import type { DefinePlugin, Plugin } from '../../types';
 
-export type Config = Plugin.Name<'@hey-api/schemas'> & {
+export type UserConfig = Plugin.Name<'@hey-api/schemas'> & {
   /**
    * Should the exports from the generated files be re-exported in the index
    * barrel file?
@@ -47,4 +47,4 @@ export type Config = Plugin.Name<'@hey-api/schemas'> & {
   type?: 'form' | 'json';
 };
 
-export type HeyApiSchemasPlugin = DefinePlugin<Config>;
+export type HeyApiSchemasPlugin = DefinePlugin<UserConfig>;

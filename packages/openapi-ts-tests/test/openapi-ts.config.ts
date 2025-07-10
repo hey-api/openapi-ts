@@ -41,9 +41,9 @@ export default defineConfig(() => {
         __dirname,
         'spec',
         '3.1.x',
+        // 'case.yaml',
         // 'enum-inline.yaml',
-        // 'full.yaml',
-        'foo.yaml',
+        'full.yaml',
         // 'transformers-all-of.yaml',
         // 'validators-circular-ref-2.yaml',
       ),
@@ -138,7 +138,7 @@ export default defineConfig(() => {
         // throwOnError: true,
       },
       {
-        case: 'snake_case',
+        // case: 'snake_case',
         // definitions: '你_snake_{{name}}',
         enums: {
           // case: 'PascalCase',
@@ -146,16 +146,16 @@ export default defineConfig(() => {
           // enabled: false,
           // mode: 'typescript',
         },
-        errors: {
-          error: '他們_error_{{name}}',
-          name: '你們_errors_{{name}}',
-        },
+        // errors: {
+        //   error: '他們_error_{{name}}',
+        //   name: '你們_errors_{{name}}',
+        // },
         name: '@hey-api/typescript',
-        requests: '我們_data_{{name}}',
-        responses: {
-          name: '我_responses_{{name}}',
-          response: '他_response_{{name}}',
-        },
+        // requests: '我們_data_{{name}}',
+        // responses: {
+        //   name: '我_responses_{{name}}',
+        //   response: '他_response_{{name}}',
+        // },
         // tree: true,
       },
       {

@@ -258,16 +258,6 @@ export const operationStatements = ({
 
   const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
   const fileTypeScript = plugin.context.file({ id: typesId })!;
-  const errorImport = file.import({
-    asType: true,
-    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-    name: fileTypeScript.getName(
-      pluginTypeScript.api.getId({
-        operation,
-        type: isNuxtClient ? 'error' : 'errors',
-      }),
-    ),
-  });
   const responseImport = file.import({
     asType: true,
     module: file.relativePathToFile({ context: plugin.context, id: typesId }),
@@ -275,6 +265,16 @@ export const operationStatements = ({
       pluginTypeScript.api.getId({
         operation,
         type: isNuxtClient ? 'response' : 'responses',
+      }),
+    ),
+  });
+  const errorImport = file.import({
+    asType: true,
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+    name: fileTypeScript.getName(
+      pluginTypeScript.api.getId({
+        operation,
+        type: isNuxtClient ? 'error' : 'errors',
       }),
     ),
   });

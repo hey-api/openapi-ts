@@ -1,7 +1,7 @@
 import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
 
-export type Config = Plugin.Name<'@tanstack/svelte-query'> & {
+export type UserConfig = Plugin.Name<'@tanstack/svelte-query'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -213,7 +213,7 @@ export type Config = Plugin.Name<'@tanstack/svelte-query'> & {
       };
 };
 
-export type ResolvedConfig = Plugin.Name<'@tanstack/svelte-query'> & {
+export type Config = Plugin.Name<'@tanstack/svelte-query'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -375,4 +375,4 @@ export type ResolvedConfig = Plugin.Name<'@tanstack/svelte-query'> & {
   };
 };
 
-export type TanStackSvelteQueryPlugin = DefinePlugin<Config, ResolvedConfig>;
+export type TanStackSvelteQueryPlugin = DefinePlugin<UserConfig, Config>;
