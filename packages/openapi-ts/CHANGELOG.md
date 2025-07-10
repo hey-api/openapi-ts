@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.78.3
+
+### Patch Changes
+
+- [#2290](https://github.com/hey-api/openapi-ts/pull/2290) [`4a77615`](https://github.com/hey-api/openapi-ts/commit/4a776157d0168f4f5f267581874861c2e84ef544) Thanks [@btmnk](https://github.com/btmnk)! - fix(client): improve types to pass `@total-typescript/ts-reset` rules
+
+## 0.78.2
+
+### Patch Changes
+
+- [#2281](https://github.com/hey-api/openapi-ts/pull/2281) [`565830b`](https://github.com/hey-api/openapi-ts/commit/565830b97c34efe632db69b423c2d10b80693b76) Thanks [@j-ibarra](https://github.com/j-ibarra)! - fix(transformers): add `transformers` option allowing passing custom transform functions
+
 ## 0.78.1
 
 ### Patch Changes
