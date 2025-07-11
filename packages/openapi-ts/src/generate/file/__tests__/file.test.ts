@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Identifiers } from '../files';
-import { _test } from '../files';
+import { _test } from '../index';
+import type { Identifiers } from '../types';
 
 const { ensureUniqueIdentifier, parseRef, splitNameAndExtension } = _test;
 

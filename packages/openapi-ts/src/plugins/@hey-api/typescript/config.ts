@@ -1,9 +1,11 @@
 import { definePluginConfig } from '../../shared/utils/config';
+import { api } from './api';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiTypeScriptPlugin } from './types';
 
 export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
+  api,
   config: {
     case: 'PascalCase',
     exportFromIndex: true,
@@ -15,6 +17,18 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   name: '@hey-api/typescript',
   output: 'types',
   resolveConfig: (plugin, context) => {
+    plugin.config.definitions = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'PascalCase',
+        name: '{{name}}',
+      },
+      mappers: {
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.definitions,
+    });
+
     plugin.config.enums = context.valueToObject({
       defaultValue: {
         case: 'SCREAMING_SNAKE_CASE',
@@ -27,6 +41,44 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
         string: (mode) => ({ mode }),
       },
       value: plugin.config.enums,
+    });
+
+    plugin.config.errors = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'PascalCase',
+        error: '{{name}}Error',
+        name: '{{name}}Errors',
+      },
+      mappers: {
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.errors,
+    });
+
+    plugin.config.requests = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'PascalCase',
+        name: '{{name}}Data',
+      },
+      mappers: {
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.requests,
+    });
+
+    plugin.config.responses = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'PascalCase',
+        name: '{{name}}Responses',
+        response: '{{name}}Response',
+      },
+      mappers: {
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.responses,
     });
   },
 };

@@ -11,8 +11,8 @@ import type { PluginHandler, PluginState } from './types';
 
 export const handler = ({ plugin }: Parameters<PluginHandler>[0]) => {
   const file = plugin.createFile({
+    case: plugin.config.case,
     id: plugin.name,
-    identifierCase: plugin.config.case,
     path: plugin.output,
   });
 

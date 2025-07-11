@@ -6,9 +6,7 @@ import {
   operationResponsesMap,
 } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
-import { irRef } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
-import { operationIrRef } from '../../shared/utils/ref';
 import { typesId } from '../typescript/ref';
 import { bigIntExpressions, dateExpressions } from './expressions';
 import type { HeyApiTransformersPlugin } from './types';
@@ -38,6 +36,7 @@ export const operationTransformerIrRef = ({
       affix = 'ResponseTransformer';
       break;
   }
+  const irRef = '#/ir/';
   return `${irRef}${stringCase({
     // TODO: parser - do not pascalcase for functions, only for types
     case: 'camelCase',
@@ -417,17 +416,13 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       return;
     }
 
-    const identifierResponse = plugin.context
-      .file({ id: typesId })!
-      .identifier({
-        $ref: operationIrRef({
-          config: plugin.context.config,
-          id: operation.id,
-          type: 'response',
-        }),
-        namespace: 'type',
-      });
-    if (!identifierResponse.name) {
+    const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+    const fileTypeScript = plugin.context.file({ id: typesId })!;
+    const responseName = fileTypeScript.getName(
+      pluginTypeScript.api.getId({ operation, type: 'response' }),
+    );
+
+    if (!responseName) {
       return;
     }
 
@@ -449,7 +444,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
           context: plugin.context,
           id: typesId,
         }),
-        name: identifierResponse.name,
+        name: responseName,
       });
       const responseTransformerNode = compiler.constVariable({
         exportConst: true,
@@ -466,7 +461,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
           returnType: compiler.typeReferenceNode({
             typeArguments: [
               compiler.typeReferenceNode({
-                typeName: identifierResponse.name,
+                typeName: responseName,
               }),
             ],
             typeName: 'Promise',

@@ -1,8 +1,8 @@
-import type { StringCase } from '../../types/case';
+import type { StringCase, StringName } from '../../types/case';
 import type { DefinePlugin, Plugin } from '../types';
 import type { Api } from './api';
 
-export type Config = Plugin.Name<'zod'> & {
+export type UserConfig = Plugin.Name<'zod'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -40,12 +40,12 @@ export type Config = Plugin.Name<'zod'> & {
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
-   * - `string`: Shorthand for `{ enabled: true; name: string }`
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
    * - `object`: Full configuration object
    */
   definitions?:
     | boolean
-    | string
+    | StringName
     | {
         /**
          * The casing convention to use for generated names.
@@ -60,12 +60,12 @@ export type Config = Plugin.Name<'zod'> & {
          */
         enabled?: boolean;
         /**
-         * Custom naming pattern for generated schema names. The name variable is
-         * obtained from the schema name.
+         * Custom naming pattern for generated schema names. The name variable
+         * is obtained from the schema name.
          *
          * @default 'z{{name}}'
          */
-        name?: string | ((name: string) => string);
+        name?: StringName;
       };
   /**
    * Should the exports from the generated files be re-exported in the index
@@ -96,12 +96,12 @@ export type Config = Plugin.Name<'zod'> & {
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
-   * - `string`: Shorthand for `{ enabled: true; name: string }`
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
    * - `object`: Full configuration object
    */
   requests?:
     | boolean
-    | string
+    | StringName
     | {
         /**
          * The casing convention to use for generated names.
@@ -116,12 +116,12 @@ export type Config = Plugin.Name<'zod'> & {
          */
         enabled?: boolean;
         /**
-         * Custom naming pattern for generated schema names. The name variable is
-         * obtained from the operation name.
+         * Custom naming pattern for generated schema names. The name variable
+         * is obtained from the operation name.
          *
          * @default 'z{{name}}Data'
          */
-        name?: string | ((name: string) => string);
+        name?: StringName;
       };
   /**
    * Configuration for response-specific Zod schemas.
@@ -131,12 +131,12 @@ export type Config = Plugin.Name<'zod'> & {
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
-   * - `string`: Shorthand for `{ enabled: true; name: string }`
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
    * - `object`: Full configuration object
    */
   responses?:
     | boolean
-    | string
+    | StringName
     | {
         /**
          * The casing convention to use for generated names.
@@ -151,16 +151,16 @@ export type Config = Plugin.Name<'zod'> & {
          */
         enabled?: boolean;
         /**
-         * Custom naming pattern for generated schema names. The name variable is
-         * obtained from the operation name.
+         * Custom naming pattern for generated schema names. The name variable
+         * is obtained from the operation name.
          *
          * @default 'z{{name}}Response'
          */
-        name?: string | ((name: string) => string);
+        name?: StringName;
       };
 };
 
-export type ResolvedConfig = Plugin.Name<'zod'> & {
+export type Config = Plugin.Name<'zod'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -215,7 +215,7 @@ export type ResolvedConfig = Plugin.Name<'zod'> & {
      *
      * @default 'z{{name}}'
      */
-    name: string | ((name: string) => string);
+    name: StringName;
   };
   /**
    * Should the exports from the generated files be re-exported in the index
@@ -263,7 +263,7 @@ export type ResolvedConfig = Plugin.Name<'zod'> & {
      *
      * @default 'z{{name}}Data'
      */
-    name: string | ((name: string) => string);
+    name: StringName;
   };
   /**
    * Configuration for response-specific Zod schemas.
@@ -290,8 +290,8 @@ export type ResolvedConfig = Plugin.Name<'zod'> & {
      *
      * @default 'z{{name}}Response'
      */
-    name: string | ((name: string) => string);
+    name: StringName;
   };
 };
 
-export type ZodPlugin = DefinePlugin<Config, ResolvedConfig, Api>;
+export type ZodPlugin = DefinePlugin<UserConfig, Config, Api>;

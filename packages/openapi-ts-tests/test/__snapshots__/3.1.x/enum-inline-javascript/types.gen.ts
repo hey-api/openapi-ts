@@ -8,25 +8,25 @@ export type Bar = {
     type?: Baz;
 };
 
-export type Baz = 'qux' | 'quux';
-
 export const Baz = {
     QUX: 'qux',
     QUUX: 'quux'
 } as const;
 
-export type FooEnum = 'foo' | 'bar';
+export type Baz = typeof Baz[keyof typeof Baz];
 
 export const FooEnum = {
     FOO: 'foo',
     BAR: 'bar'
 } as const;
 
-export type FooEnum2 = 'baz';
+export type FooEnum = typeof FooEnum[keyof typeof FooEnum];
 
 export const FooEnum2 = {
     BAZ: 'baz'
 } as const;
+
+export type FooEnum2 = typeof FooEnum2[keyof typeof FooEnum2];
 
 export type GetFooData = {
     body?: never;

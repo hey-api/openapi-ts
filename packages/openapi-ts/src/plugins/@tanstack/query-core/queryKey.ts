@@ -243,7 +243,7 @@ const createQueryKeyLiteral = ({
 export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
   const file = plugin.context.file({ id: plugin.name })!;
 
-  const properties: Property[] = [
+  const properties: Array<Property> = [
     {
       name: '_id',
       type: compiler.keywordTypeNode({

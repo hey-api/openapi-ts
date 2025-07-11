@@ -139,4 +139,8 @@ export type GetFooResponse = Baz;
 
 :::
 
+## Config API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/transformers/types.d.ts) interface.
+
 <!--@include: ../sponsors.md-->

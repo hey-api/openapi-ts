@@ -4,12 +4,12 @@ export type Foo = {
     type?: TypeEnum;
 };
 
-export type TypeEnum = 'foo' | 'bar';
-
 export const TypeEnum = {
     FOO: 'foo',
     BAR: 'bar'
 } as const;
+
+export type TypeEnum = typeof TypeEnum[keyof typeof TypeEnum];
 
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});

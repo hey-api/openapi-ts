@@ -200,5 +200,9 @@ addPet.mutate({
 
 You can customize the naming and casing pattern for `mutationOptions` functions using the `.name` and `.case` options.
 
+## Config API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@tanstack/react-query/types.d.ts) interface.
+
 <!--@include: ../../examples.md-->
 <!--@include: ../../sponsors.md-->

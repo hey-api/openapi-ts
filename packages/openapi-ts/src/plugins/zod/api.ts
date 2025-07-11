@@ -1,7 +1,7 @@
 import type ts from 'typescript';
 
 import { compiler } from '../../compiler';
-import type { TypeScriptFile } from '../../generate/files';
+import type { GeneratedFile } from '../../generate/file';
 import type { IR } from '../../ir/types';
 import { identifiers, zodId } from './constants';
 import type { ZodPlugin } from './types';
@@ -11,7 +11,7 @@ const createRequestValidator = ({
   operation,
   plugin,
 }: {
-  file: TypeScriptFile;
+  file: GeneratedFile;
   operation: IR.OperationObject;
   plugin: ZodPlugin['Instance'];
 }): ts.ArrowFunction | undefined => {
@@ -66,7 +66,7 @@ const createResponseValidator = ({
   operation,
   plugin,
 }: {
-  file: TypeScriptFile;
+  file: GeneratedFile;
   operation: IR.OperationObject;
   plugin: ZodPlugin['Instance'];
 }): ts.ArrowFunction | undefined => {
@@ -118,12 +118,12 @@ const createResponseValidator = ({
 
 export type Api = {
   createRequestValidator: (args: {
-    file: TypeScriptFile;
+    file: GeneratedFile;
     operation: IR.OperationObject;
     plugin: ZodPlugin['Instance'];
   }) => ts.ArrowFunction | undefined;
   createResponseValidator: (args: {
-    file: TypeScriptFile;
+    file: GeneratedFile;
     operation: IR.OperationObject;
     plugin: ZodPlugin['Instance'];
   }) => ts.ArrowFunction | undefined;

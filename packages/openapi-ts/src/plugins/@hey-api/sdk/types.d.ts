@@ -1,4 +1,5 @@
 import type { IR } from '../../../ir/types';
+import type { StringName } from '../../../types/case';
 import type { Operation } from '../../../types/client';
 import type {
   DefinePlugin,
@@ -7,7 +8,7 @@ import type {
   PluginValidatorNames,
 } from '../../types';
 
-export type Config = Plugin.Name<'@hey-api/sdk'> & {
+export type UserConfig = Plugin.Name<'@hey-api/sdk'> & {
   /**
    * Group operation methods into classes? When enabled, you can select which
    * classes to export with `sdk.include` and/or transform their names with
@@ -34,7 +35,7 @@ export type Config = Plugin.Name<'@hey-api/sdk'> & {
    *
    * This option has no effect if `sdk.asClass` is `false`.
    */
-  classNameBuilder?: string | ((name: string) => string);
+  classNameBuilder?: StringName;
   /**
    * How should we structure your SDK? By default, we try to infer the ideal
    * structure using `operationId` keywords. If you prefer a flatter structure,
@@ -180,7 +181,7 @@ export type Config = Plugin.Name<'@hey-api/sdk'> & {
   response?: 'body' | 'response';
 };
 
-export type ResolvedConfig = Plugin.Name<'@hey-api/sdk'> & {
+export type Config = Plugin.Name<'@hey-api/sdk'> & {
   /**
    * Group operation methods into classes? When enabled, you can select which
    * classes to export with `sdk.include` and/or transform their names with
@@ -207,7 +208,7 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/sdk'> & {
    *
    * This option has no effect if `sdk.asClass` is `false`.
    */
-  classNameBuilder: string | ((name: string) => string);
+  classNameBuilder: StringName;
   /**
    * How should we structure your SDK? By default, we try to infer the ideal
    * structure using `operationId` keywords. If you prefer a flatter structure,
@@ -332,4 +333,4 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/sdk'> & {
   response: 'body' | 'response';
 };
 
-export type HeyApiSdkPlugin = DefinePlugin<Config, ResolvedConfig>;
+export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config>;

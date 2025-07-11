@@ -1,3 +1,3 @@
-import type { TypeScriptFile } from '../generate/files';
+import type { GeneratedFile } from '../generate/file';
 
-export type Files = Record<string, TypeScriptFile>;
+export type Files = Record<string, GeneratedFile>;

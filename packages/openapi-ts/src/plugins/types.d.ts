@@ -95,7 +95,7 @@ export namespace Plugin {
     config: Omit<T['config'], 'output'>;
   };
 
-  /** @deprecated - use `definePluginConfig()` instead */
+  /** @deprecated use `definePluginConfig()` instead */
   export type DefineConfig<
     Config extends BaseConfig,
     ResolvedConfig extends BaseConfig = Config,

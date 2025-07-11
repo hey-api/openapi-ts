@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { TypeScriptFile } from '../generate/files';
+import { GeneratedFile } from '../generate/file';
 import type { PluginConfigMap } from '../plugins/config';
 import { PluginInstance } from '../plugins/shared/utils/instance';
 import type { PluginNames } from '../plugins/types';
@@ -12,6 +12,10 @@ import type { IR } from './types';
 
 export interface ContextFile {
   /**
+   * Define casing for identifiers in this file.
+   */
+  case?: StringCase;
+  /**
    * Should the exports from this file be re-exported in the index barrel file?
    */
   exportFromIndex?: boolean;
@@ -19,10 +23,6 @@ export interface ContextFile {
    * Unique file identifier.
    */
   id: string;
-  /**
-   * Define casing for identifiers in this file.
-   */
-  identifierCase?: StringCase;
   /**
    * Relative file path to the output path.
    *
@@ -68,18 +68,18 @@ export class IRContext<Spec extends Record<string, any> = any> {
    * Create and return a new TypeScript file. Also set the current file context
    * to the newly created file.
    */
-  public createFile(file: ContextFile): TypeScriptFile {
+  public createFile(file: ContextFile): GeneratedFile {
     // TODO: parser - handle attempt to create duplicate
     const outputParts = file.path.split('/');
     const outputDir = path.resolve(
       this.config.output.path,
       ...outputParts.slice(0, outputParts.length - 1),
     );
-    const createdFile = new TypeScriptFile({
+    const createdFile = new GeneratedFile({
+      case: file.case,
       dir: outputDir,
       exportFromIndex: file.exportFromIndex,
       id: file.id,
-      identifierCase: file.identifierCase,
       name: `${outputParts[outputParts.length - 1]}.ts`,
     });
     this.files[file.id] = createdFile;
@@ -103,7 +103,7 @@ export class IRContext<Spec extends Record<string, any> = any> {
   /**
    * Returns a specific file by ID from `files`.
    */
-  public file({ id }: Pick<ContextFile, 'id'>): TypeScriptFile | undefined {
+  public file({ id }: Pick<ContextFile, 'id'>): GeneratedFile | undefined {
     return this.files[id];
   }
 

@@ -4,7 +4,7 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { setConfig } from '../../../utils/config';
-import { TypeScriptFile } from '../../files';
+import { GeneratedFile } from '../../file';
 import { generateIndexFile } from '../indexFile';
 
 vi.mock('node:fs');
@@ -81,6 +81,9 @@ describe('generateIndexFile', () => {
           output: '',
         },
         '@hey-api/typescript': {
+          api: {
+            getId: () => '',
+          },
           config: {
             enums: 'javascript',
             name: '@hey-api/typescript',
@@ -103,17 +106,17 @@ describe('generateIndexFile', () => {
     });
 
     const files: Parameters<typeof generateIndexFile>[0]['files'] = {
-      schemas: new TypeScriptFile({
+      schemas: new GeneratedFile({
         dir: '/',
         id: 'schemas',
         name: 'schemas.ts',
       }),
-      sdk: new TypeScriptFile({
+      sdk: new GeneratedFile({
         dir: '/',
         id: 'sdk',
         name: 'sdk.ts',
       }),
-      types: new TypeScriptFile({
+      types: new GeneratedFile({
         dir: '/',
         id: 'types',
         name: 'types.ts',

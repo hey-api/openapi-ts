@@ -33,7 +33,7 @@ export type { MyPlugin } from './types';
 ```ts [types.d.ts]
 import type { DefinePlugin } from '@hey-api/openapi-ts';
 
-export type Config = {
+export type UserConfig = {
   /**
    * Plugin name. Must be unique.
    */
@@ -52,7 +52,7 @@ export type Config = {
   myOption?: boolean;
 };
 
-export type MyPlugin = DefinePlugin<Config>;
+export type MyPlugin = DefinePlugin<UserConfig>;
 ```
 
 :::

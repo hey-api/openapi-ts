@@ -75,5 +75,9 @@ const serviceHandlers: RouteHandlers = {
 fastify.register(glue, { serviceHandlers });
 ```
 
+## Config API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/fastify/types.d.ts) interface.
+
 <!--@include: ../../examples.md-->
 <!--@include: ../../sponsors.md-->

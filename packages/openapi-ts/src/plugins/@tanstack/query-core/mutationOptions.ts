@@ -22,7 +22,9 @@ export const createMutationOptions = ({
   if (
     !plugin.config.mutationOptions.enabled ||
     !(
-      ['delete', 'patch', 'post', 'put'] as (typeof operation.method)[]
+      ['delete', 'patch', 'post', 'put'] as ReadonlyArray<
+        typeof operation.method
+      >
     ).includes(operation.method)
   ) {
     return state;
