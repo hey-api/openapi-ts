@@ -46,7 +46,7 @@ export type AddPetData = {
 };
 ```
 
-You can customize the naming and casing pattern for `requests` schemas using the `.name` and `.case` options.
+You can customize the naming and casing pattern for `requests` types using the `.name` and `.case` options.
 
 ## Responses
 
@@ -63,7 +63,7 @@ export type AddPetResponses = {
 export type AddPetResponse = AddPetResponses[keyof AddPetResponses];
 ```
 
-You can customize the naming and casing pattern for `responses` schemas using the `.name` and `.case` options.
+You can customize the naming and casing pattern for `responses` types using the `.name` and `.case` options.
 
 ## Definitions
 
@@ -76,7 +76,7 @@ export type Pet = {
 };
 ```
 
-You can customize the naming and casing pattern for `definitions` schemas using the `.name` and `.case` options.
+You can customize the naming and casing pattern for `definitions` types using the `.name` and `.case` options.
 
 ## Enums
 
