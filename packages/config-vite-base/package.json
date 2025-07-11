@@ -17,5 +17,12 @@
   "devDependencies": {
     "typescript": "^5.8.3"
   },
-  "private": true
+  "private": true,
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  }
 }

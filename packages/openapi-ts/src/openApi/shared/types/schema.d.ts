@@ -6,6 +6,10 @@ export interface SchemaState {
   $ref?: string;
   circularReferenceTracker: Set<string>;
   /**
+   * True if current schema is being parsed inside an allOf composition.
+   */
+  inAllOf?: boolean;
+  /**
    * True if current schema is an object property. This is used to mark schemas
    * as "both" access scopes, i.e. they can be used in both payloads and
    * responses. Without this field, we'd be overusing the "both" value which
