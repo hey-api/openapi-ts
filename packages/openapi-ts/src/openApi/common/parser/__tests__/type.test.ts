@@ -7,6 +7,9 @@ vi.mock('../../../../utils/config', () => {
   const config: Partial<Config> = {
     plugins: {
       '@hey-api/typescript': {
+        api: {
+          getId: () => '',
+        },
         config: {
           name: '@hey-api/typescript',
         },

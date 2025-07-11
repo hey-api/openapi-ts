@@ -1,10 +1,10 @@
 import ts from 'typescript';
 
 import { compiler } from '../../compiler';
-import type { Identifier } from '../../generate/files';
+import type { Identifier } from '../../generate/file/types';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
-import type { StringCase } from '../../types/case';
+import type { StringCase, StringName } from '../../types/case';
 import { numberRegExp } from '../../utils/regexp';
 import { createSchemaComment } from '../shared/utils/schema';
 import { identifiers, valibotId } from './constants';
@@ -20,7 +20,7 @@ export interface State {
   circularReferenceTracker: Set<string>;
   hasCircularReference: boolean;
   nameCase: StringCase;
-  nameTransformer: string | ((name: string) => string);
+  nameTransformer: StringName;
 }
 
 const pipesToExpression = (pipes: Array<ts.Expression>) => {
@@ -1055,8 +1055,8 @@ export const schemaToValibotSchema = ({
 
 export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
   const file = plugin.createFile({
+    case: plugin.config.case,
     id: valibotId,
-    identifierCase: plugin.config.case,
     path: plugin.output,
   });
 

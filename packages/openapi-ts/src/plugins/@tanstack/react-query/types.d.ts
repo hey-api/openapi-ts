@@ -1,7 +1,7 @@
-import type { StringCase } from '../../../types/case';
+import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
 
-export type Config = Plugin.Name<'@tanstack/react-query'> & {
+export type UserConfig = Plugin.Name<'@tanstack/react-query'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -32,12 +32,14 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
-   * - `string`: Shorthand for `{ enabled: true; name: string }`
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
    * - `object`: Full configuration object
+   *
+   * @default true
    */
   infiniteQueryKeys?:
     | boolean
-    | string
+    | StringName
     | {
         /**
          * The casing convention to use for generated names.
@@ -58,7 +60,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
          * @default '{{name}}InfiniteQueryKey'
          * @see https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions
          */
-        name?: string | ((name: string) => string);
+        name?: StringName;
       };
   /**
    * Configuration for generated infinite query options helpers.
@@ -67,12 +69,14 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
-   * - `string`: Shorthand for `{ enabled: true; name: string }`
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
    * - `object`: Full configuration object
+   *
+   * @default true
    */
   infiniteQueryOptions?:
     | boolean
-    | string
+    | StringName
     | {
         /**
          * The casing convention to use for generated names.
@@ -93,7 +97,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
          * @default '{{name}}InfiniteOptions'
          * @see https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions
          */
-        name?: string | ((name: string) => string);
+        name?: StringName;
       };
   /**
    * Configuration for generated mutation options helpers.
@@ -102,12 +106,14 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
-   * - `string`: Shorthand for `{ enabled: true; name: string }`
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
    * - `object`: Full configuration object
+   *
+   * @default true
    */
   mutationOptions?:
     | boolean
-    | string
+    | StringName
     | {
         /**
          * The casing convention to use for generated names.
@@ -128,7 +134,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
          * @default '{{name}}Mutation'
          * @see https://tanstack.com/query/v5/docs/framework/react/reference/useMutation
          */
-        name?: string | ((name: string) => string);
+        name?: StringName;
       };
   /**
    * Name of the generated file.
@@ -143,12 +149,14 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
-   * - `string`: Shorthand for `{ enabled: true; name: string }`
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
    * - `object`: Full configuration object
+   *
+   * @default true
    */
   queryKeys?:
     | boolean
-    | string
+    | StringName
     | {
         /**
          * The casing convention to use for generated names.
@@ -169,7 +177,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
          * @default '{{name}}QueryKey'
          * @see https://tanstack.com/query/v5/docs/framework/react/reference/queryKey
          */
-        name?: string | ((name: string) => string);
+        name?: StringName;
       };
   /**
    * Configuration for generated query options helpers.
@@ -178,12 +186,14 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
-   * - `string`: Shorthand for `{ enabled: true; name: string }`
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
    * - `object`: Full configuration object
+   *
+   * @default true
    */
   queryOptions?:
     | boolean
-    | string
+    | StringName
     | {
         /**
          * The casing convention to use for generated names.
@@ -204,11 +214,11 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
          * @default '{{name}}Options'
          * @see https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions
          */
-        name?: string | ((name: string) => string);
+        name?: StringName;
       };
 };
 
-export type ResolvedConfig = Plugin.Name<'@tanstack/react-query'> & {
+export type Config = Plugin.Name<'@tanstack/react-query'> & {
   /**
    * The casing convention to use for generated names.
    *
@@ -251,7 +261,7 @@ export type ResolvedConfig = Plugin.Name<'@tanstack/react-query'> & {
      * @default '{{name}}InfiniteQueryKey'
      * @see https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions
      */
-    name: string | ((name: string) => string);
+    name: StringName;
   };
   /**
    * Resolved configuration for generated infinite query options helpers.
@@ -277,7 +287,7 @@ export type ResolvedConfig = Plugin.Name<'@tanstack/react-query'> & {
      * @default '{{name}}InfiniteOptions'
      * @see https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions
      */
-    name: string | ((name: string) => string);
+    name: StringName;
   };
   /**
    * Resolved configuration for generated mutation options helpers.
@@ -303,7 +313,7 @@ export type ResolvedConfig = Plugin.Name<'@tanstack/react-query'> & {
      * @default '{{name}}Mutation'
      * @see https://tanstack.com/query/v5/docs/framework/react/reference/useMutation
      */
-    name: string | ((name: string) => string);
+    name: StringName;
   };
   /**
    * Name of the generated file.
@@ -335,7 +345,7 @@ export type ResolvedConfig = Plugin.Name<'@tanstack/react-query'> & {
      * @default '{{name}}QueryKey'
      * @see https://tanstack.com/query/v5/docs/framework/react/reference/queryKey
      */
-    name: string | ((name: string) => string);
+    name: StringName;
   };
   /**
    * Resolved configuration for generated query options helpers.
@@ -361,8 +371,8 @@ export type ResolvedConfig = Plugin.Name<'@tanstack/react-query'> & {
      * @default '{{name}}Options'
      * @see https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions
      */
-    name: string | ((name: string) => string);
+    name: StringName;
   };
 };
 
-export type TanStackReactQueryPlugin = DefinePlugin<Config, ResolvedConfig>;
+export type TanStackReactQueryPlugin = DefinePlugin<UserConfig, Config>;

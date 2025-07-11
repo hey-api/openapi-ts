@@ -23,7 +23,8 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),
-        string: (name) => ({ enabled: true, name }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
       },
       value: plugin.config.infiniteQueryKeys,
     });
@@ -36,7 +37,8 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),
-        string: (name) => ({ enabled: true, name }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
       },
       value: plugin.config.infiniteQueryOptions,
     });
@@ -49,7 +51,8 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),
-        string: (name) => ({ enabled: true, name }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
       },
       value: plugin.config.mutationOptions,
     });
@@ -62,7 +65,8 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),
-        string: (name) => ({ enabled: true, name }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
       },
       value: plugin.config.queryKeys,
     });
@@ -75,7 +79,8 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),
-        string: (name) => ({ enabled: true, name }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
       },
       value: plugin.config.queryOptions,
     });

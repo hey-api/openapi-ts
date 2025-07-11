@@ -95,6 +95,9 @@ describe('generateLegacyOutput', () => {
           output: '',
         },
         '@hey-api/typescript': {
+          api: {
+            getId: () => '',
+          },
           config: {
             enums: 'javascript',
             name: '@hey-api/typescript',

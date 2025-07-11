@@ -297,23 +297,6 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        plugins: [
-          'legacy/fetch',
-          {
-            enums: 'typescript+namespace',
-            name: '@hey-api/typescript',
-          },
-          {
-            asClass: true,
-            name: '@hey-api/sdk',
-          },
-        ],
-      }),
-      description: 'generate TypeScript enums with namespace',
-      name: 'v3_enums_typescript_namespace',
-    },
-    {
-      config: createConfig({
         exportCore: false,
         parser: {
           transforms: {

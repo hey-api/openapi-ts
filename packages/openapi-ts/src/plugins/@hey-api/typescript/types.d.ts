@@ -1,15 +1,45 @@
-import type { StringCase } from '../../../types/case';
+import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
+import type { Api } from './api';
 
-export type EnumsType = 'javascript' | 'typescript' | 'typescript+namespace';
+export type EnumsType = 'javascript' | 'typescript';
 
-export type Config = Plugin.Name<'@hey-api/typescript'> & {
+export type UserConfig = Plugin.Name<'@hey-api/typescript'> & {
   /**
    * The casing convention to use for generated names.
    *
    * @default 'PascalCase'
    */
   case?: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
+  /**
+   * Configuration for reusable schema definitions.
+   *
+   * Controls generation of shared types that can be referenced across
+   * requests and responses.
+   *
+   * Can be:
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
+   * - `object`: Full configuration object
+   *
+   * @default '{{name}}'
+   */
+  definitions?:
+    | StringName
+    | {
+        /**
+         * The casing convention to use for generated definition names.
+         *
+         * @default 'PascalCase'
+         */
+        case?: StringCase;
+        /**
+         * Custom naming pattern for generated definition names. The name variable
+         * is obtained from the schema name.
+         *
+         * @default '{{name}}'
+         */
+        name?: StringName;
+      };
   /**
    * By default, enums are emitted as types to preserve runtime-free output.
    *
@@ -51,11 +81,45 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
          * Can be:
          * - `javascript`: Generates JavaScript objects
          * - `typescript`: Generates TypeScript enums
-         * - `typescript+namespace`: Generates TypeScript enums within a namespace
          *
          * @default 'javascript'
          */
         mode?: EnumsType;
+      };
+  /**
+   * Configuration for error-specific types.
+   *
+   * Controls generation of types for error response bodies and status codes.
+   *
+   * Can be:
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
+   * - `object`: Full configuration object
+   *
+   * @default '{{name}}Errors'
+   */
+  errors?:
+    | StringName
+    | {
+        /**
+         * The casing convention to use for generated error type names.
+         *
+         * @default 'PascalCase'
+         */
+        case?: StringCase;
+        /**
+         * Custom naming pattern for generated error type names. The name
+         * variable is obtained from the operation name.
+         *
+         * @default '{{name}}Error'
+         */
+        error?: StringName;
+        /**
+         * Custom naming pattern for generated error type names. The name
+         * variable is obtained from the operation name.
+         *
+         * @default '{{name}}Errors'
+         */
+        name?: StringName;
       };
   /**
    * Should the exports from the generated files be re-exported in the index
@@ -70,6 +134,70 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
    * @default 'types'
    */
   output?: string;
+  /**
+   * Configuration for request-specific types.
+   *
+   * Controls generation of types for request bodies, query parameters, path
+   * parameters, and headers.
+   *
+   * Can be:
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
+   * - `object`: Full configuration object
+   *
+   * @default '{{name}}Data'
+   */
+  requests?:
+    | StringName
+    | {
+        /**
+         * The casing convention to use for generated request type names.
+         *
+         * @default 'PascalCase'
+         */
+        case?: StringCase;
+        /**
+         * Custom naming pattern for generated request type names. The name
+         * variable is obtained from the operation name.
+         *
+         * @default '{{name}}Data'
+         */
+        name?: StringName;
+      };
+  /**
+   * Configuration for response-specific types.
+   *
+   * Controls generation of types for response bodies and status codes.
+   *
+   * Can be:
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
+   * - `object`: Full configuration object
+   *
+   * @default '{{name}}Responses'
+   */
+  responses?:
+    | StringName
+    | {
+        /**
+         * The casing convention to use for generated response type names.
+         *
+         * @default 'PascalCase'
+         */
+        case?: StringCase;
+        /**
+         * Custom naming pattern for generated response type names. The name
+         * variable is obtained from the operation name.
+         *
+         * @default '{{name}}Responses'
+         */
+        name?: StringName;
+        /**
+         * Custom naming pattern for generated response type names. The name
+         * variable is obtained from the operation name.
+         *
+         * @default '{{name}}Response'
+         */
+        response?: StringName;
+      };
 
   // DEPRECATED OPTIONS BELOW
 
@@ -103,13 +231,34 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
   tree?: boolean;
 };
 
-export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
+export type Config = Plugin.Name<'@hey-api/typescript'> & {
   /**
    * The casing convention to use for generated names.
    *
    * @default 'PascalCase'
    */
   case: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
+  /**
+   * Configuration for reusable schema definitions.
+   *
+   * Controls generation of shared types that can be referenced across
+   * requests and responses.
+   */
+  definitions: {
+    /**
+     * The casing convention to use for generated definition names.
+     *
+     * @default 'PascalCase'
+     */
+    case: StringCase;
+    /**
+     * Custom naming pattern for generated definition names. The name variable
+     * is obtained from the schema name.
+     *
+     * @default '{{name}}'
+     */
+    name: StringName;
+  };
   /**
    * By default, enums are emitted as types to preserve runtime-free output.
    *
@@ -146,11 +295,41 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
      * Can be:
      * - `javascript`: Generates JavaScript objects
      * - `typescript`: Generates TypeScript enums
-     * - `typescript+namespace`: Generates TypeScript enums within a namespace
      *
      * @default 'javascript'
      */
     mode: EnumsType;
+  };
+  /**
+   * Configuration for error-specific types.
+   *
+   * Controls generation of types for error response bodies and status codes.
+   *
+   * Can be:
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
+   * - `object`: Full configuration object
+   */
+  errors: {
+    /**
+     * The casing convention to use for generated error type names.
+     *
+     * @default 'PascalCase'
+     */
+    case: StringCase;
+    /**
+     * Custom naming pattern for generated error type names. The name
+     * variable is obtained from the operation name.
+     *
+     * @default '{{name}}Error'
+     */
+    error: StringName;
+    /**
+     * Custom naming pattern for generated error type names. The name
+     * variable is obtained from the operation name.
+     *
+     * @default '{{name}}Errors'
+     */
+    name: StringName;
   };
   /**
    * Should the exports from the generated files be re-exported in the index
@@ -165,6 +344,54 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
    * @default 'types'
    */
   output: string;
+  /**
+   * Configuration for request-specific types.
+   *
+   * Controls generation of types for request bodies, query parameters, path
+   * parameters, and headers.
+   */
+  requests: {
+    /**
+     * The casing convention to use for generated request type names.
+     *
+     * @default 'PascalCase'
+     */
+    case: StringCase;
+    /**
+     * Custom naming pattern for generated request type names. The name
+     * variable is obtained from the operation name.
+     *
+     * @default '{{name}}Data'
+     */
+    name: StringName;
+  };
+  /**
+   * Configuration for response-specific types.
+   *
+   * Controls generation of types for response bodies and status codes.
+   */
+  responses: {
+    /**
+     * The casing convention to use for generated response type names.
+     *
+     * @default 'PascalCase'
+     */
+    case: StringCase;
+    /**
+     * Custom naming pattern for generated response type names. The name
+     * variable is obtained from the operation name.
+     *
+     * @default '{{name}}Responses'
+     */
+    name: StringName;
+    /**
+     * Custom naming pattern for generated response type names. The name
+     * variable is obtained from the operation name.
+     *
+     * @default '{{name}}Response'
+     */
+    response: StringName;
+  };
 
   // DEPRECATED OPTIONS BELOW
 
@@ -198,4 +425,4 @@ export type ResolvedConfig = Plugin.Name<'@hey-api/typescript'> & {
   tree: boolean;
 };
 
-export type HeyApiTypeScriptPlugin = DefinePlugin<Config, ResolvedConfig>;
+export type HeyApiTypeScriptPlugin = DefinePlugin<UserConfig, Config, Api>;

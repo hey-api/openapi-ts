@@ -1,7 +1,7 @@
 import type { DefinePlugin, Plugin } from '../../types';
 import type { Client } from '../client-core/types';
 
-export type Config = Plugin.Name<'@hey-api/client-fetch'> &
+export type UserConfig = Plugin.Name<'@hey-api/client-fetch'> &
   Client.Config & {
     /**
      * Throw an error instead of returning it in the response?
@@ -11,4 +11,4 @@ export type Config = Plugin.Name<'@hey-api/client-fetch'> &
     throwOnError?: boolean;
   };
 
-export type HeyApiClientFetchPlugin = DefinePlugin<Config>;
+export type HeyApiClientFetchPlugin = DefinePlugin<UserConfig>;

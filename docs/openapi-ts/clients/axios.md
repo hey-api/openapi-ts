@@ -222,5 +222,9 @@ client.setConfig({
 
 You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom instance to be.
 
+## Config API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/client-axios/types.d.ts) interface.
+
 <!--@include: ../../examples.md-->
 <!--@include: ../../sponsors.md-->

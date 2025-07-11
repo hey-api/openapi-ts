@@ -42,10 +42,14 @@ export const createClient = ({ plugin }: Parameters<PluginHandler>[0]) => {
     module: clientModule,
     name: 'createConfig',
   });
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const fileTypeScript = plugin.context.file({ id: typesId })!;
   const clientOptions = file.import({
     asType: true,
     module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-    name: 'ClientOptions',
+    name: fileTypeScript.getName(
+      pluginTypeScript.api.getId({ type: 'ClientOptions' }),
+    ),
   });
 
   const createClientConfig = plugin.config.runtimeConfigPath
@@ -94,7 +98,9 @@ export const createClient = ({ plugin }: Parameters<PluginHandler>[0]) => {
       parameters: defaultValues.length
         ? [compiler.objectExpression({ obj: defaultValues })]
         : undefined,
-      types: [compiler.typeReferenceNode({ typeName: clientOptions.name })],
+      types: clientOptions.name
+        ? [compiler.typeReferenceNode({ typeName: clientOptions.name })]
+        : undefined,
     }),
   ];
 

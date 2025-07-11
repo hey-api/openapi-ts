@@ -71,6 +71,7 @@ export const getParser = (userConfig: UserConfig): Config['parser'] => {
               requests: valueToObject({
                 defaultValue: parser.transforms.readWrite.requests,
                 mappers: {
+                  function: (name) => ({ name }),
                   string: (name) => ({ name }),
                 },
                 value: fields.requests,
@@ -78,6 +79,7 @@ export const getParser = (userConfig: UserConfig): Config['parser'] => {
               responses: valueToObject({
                 defaultValue: parser.transforms.readWrite.responses,
                 mappers: {
+                  function: (name) => ({ name }),
                   string: (name) => ({ name }),
                 },
                 value: fields.responses,

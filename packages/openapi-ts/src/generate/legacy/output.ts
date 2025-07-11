@@ -9,7 +9,7 @@ import type { Templates } from '../../utils/handlebars';
 import { generateLegacyClientClass } from '../class';
 import { generateClientBundle } from '../client';
 import { generateLegacyCore } from '../core';
-import { TypeScriptFile } from '../files';
+import { GeneratedFile } from '../file';
 import { findTsConfigPath, loadTsConfig } from '../tsConfig';
 import { removeDirSync } from '../utils';
 import { generateIndexFile } from './indexFile';
@@ -92,7 +92,7 @@ export const generateLegacyOutput = async ({
       config.output.path,
       ...outputParts.slice(0, outputParts.length - 1),
     );
-    files[plugin.name] = new TypeScriptFile({
+    files[plugin.name] = new GeneratedFile({
       dir: outputDir,
       id: `legacy-unused-${plugin.name}`,
       name: `${outputParts[outputParts.length - 1]}.ts`,

@@ -96,7 +96,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'case.json',
+        input: 'case.yaml',
         output: 'case-preserve',
         plugins: [
           {
@@ -109,7 +109,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'case.json',
+        input: 'case.yaml',
         output: 'case-PascalCase',
         plugins: [
           {
@@ -122,7 +122,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'case.json',
+        input: 'case.yaml',
         output: 'case-camelCase',
         plugins: [
           {
@@ -135,7 +135,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'case.json',
+        input: 'case.yaml',
         output: 'case-snake_case',
         plugins: [
           {
@@ -269,24 +269,6 @@ describe(`OpenAPI ${version}`, () => {
         ],
       }),
       description: 'exports inline enums (TypeScript)',
-    },
-    {
-      config: createConfig({
-        input: 'enum-inline.yaml',
-        output: 'enum-inline-typescript-namespace',
-        parser: {
-          transforms: {
-            enums: 'root',
-          },
-        },
-        plugins: [
-          {
-            enums: 'typescript+namespace',
-            name: '@hey-api/typescript',
-          },
-        ],
-      }),
-      description: 'exports inline enums (TypeScript namespace)',
     },
     {
       config: createConfig({

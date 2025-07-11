@@ -14,7 +14,7 @@ const hasName = (obj: Obj, value: string): boolean => {
 };
 
 export const getUniqueComponentName = ({
-  base: _base,
+  base,
   components,
   extraComponents,
 }: {
@@ -29,8 +29,6 @@ export const getUniqueComponentName = ({
   extraComponents?: Obj;
 }): string => {
   let index = 2;
-  // Strip trailing number. For example, if base is "foo2", the clean base will be "foo"
-  const base = _base.replace(/\d+$/, '');
   let name = base;
   while (
     hasName(components, name) ||
