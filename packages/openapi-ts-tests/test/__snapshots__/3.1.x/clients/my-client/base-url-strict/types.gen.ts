@@ -2245,5 +2245,5 @@ export type PutWithFormUrlEncodedData = {
 };
 
 export type ClientOptions = {
-    baseUrl: 'http://localhost:3000/base';
+    baseUrl: 'http://localhost:3000/base' | (string & {});
 };

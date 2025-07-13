@@ -33,12 +33,12 @@ describe('OpenAPI v2', () => {
           'legacy/fetch',
           '@hey-api/schemas',
           {
+            $name: '@hey-api/sdk',
             asClass: true,
-            name: '@hey-api/sdk',
           },
           {
+            $name: '@hey-api/typescript',
             enums: 'javascript',
-            name: '@hey-api/typescript',
           },
         ],
         useOptions: true,
@@ -81,8 +81,8 @@ describe('OpenAPI v3', () => {
       'legacy/fetch',
       '@hey-api/sdk',
       {
+        $name: '@hey-api/typescript',
         enums: 'javascript',
-        name: '@hey-api/typescript',
       },
     ],
     useOptions: true,
@@ -99,12 +99,12 @@ describe('OpenAPI v3', () => {
         plugins: [
           'legacy/fetch',
           {
+            $name: '@hey-api/typescript',
             enums: 'javascript',
-            name: '@hey-api/typescript',
           },
           {
+            $name: '@hey-api/sdk',
             asClass: true,
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -117,8 +117,8 @@ describe('OpenAPI v3', () => {
           'legacy/angular',
           '@hey-api/typescript',
           {
+            $name: '@hey-api/sdk',
             asClass: true,
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -137,12 +137,12 @@ describe('OpenAPI v3', () => {
         plugins: [
           'legacy/node',
           {
+            $name: '@hey-api/typescript',
             enums: 'javascript',
-            name: '@hey-api/typescript',
           },
           {
+            $name: '@hey-api/sdk',
             asClass: true,
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -154,12 +154,12 @@ describe('OpenAPI v3', () => {
         plugins: [
           'legacy/axios',
           {
+            $name: '@hey-api/typescript',
             enums: 'javascript',
-            name: '@hey-api/typescript',
           },
           {
+            $name: '@hey-api/sdk',
             asClass: true,
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -171,12 +171,12 @@ describe('OpenAPI v3', () => {
         plugins: [
           'legacy/xhr',
           {
+            $name: '@hey-api/typescript',
             enums: 'javascript',
-            name: '@hey-api/typescript',
           },
           {
+            $name: '@hey-api/sdk',
             asClass: true,
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -191,8 +191,8 @@ describe('OpenAPI v3', () => {
           '@hey-api/typescript',
           '@hey-api/sdk',
           {
+            $name: '@hey-api/transformers',
             dates: true,
-            name: '@hey-api/transformers',
           },
         ],
       }),
@@ -208,8 +208,8 @@ describe('OpenAPI v3', () => {
         plugins: [
           'legacy/fetch',
           {
+            $name: '@hey-api/transformers',
             dates: true,
-            name: '@hey-api/transformers',
           },
           '@hey-api/typescript',
         ],
@@ -222,17 +222,17 @@ describe('OpenAPI v3', () => {
         plugins: [
           'legacy/fetch',
           {
+            $name: '@hey-api/typescript',
             include: '^ModelWithString',
-            name: '@hey-api/typescript',
           },
           {
+            $name: '@hey-api/sdk',
             asClass: true,
             include: '^Defaults',
-            name: '@hey-api/sdk',
           },
           {
+            $name: '@hey-api/transformers',
             dates: true,
-            name: '@hey-api/transformers',
           },
         ],
         useOptions: false,
@@ -261,17 +261,17 @@ describe('OpenAPI v3', () => {
         plugins: [
           'legacy/fetch',
           {
+            $name: '@hey-api/typescript',
             include: '^ModelWithString',
-            name: '@hey-api/typescript',
           },
           {
+            $name: '@hey-api/sdk',
             asClass: true,
             include: '^Defaults',
-            name: '@hey-api/sdk',
           },
           {
+            $name: '@hey-api/transformers',
             dates: true,
-            name: '@hey-api/transformers',
           },
         ],
       }),
@@ -283,12 +283,12 @@ describe('OpenAPI v3', () => {
         plugins: [
           'legacy/fetch',
           {
+            $name: '@hey-api/typescript',
             enums: 'typescript',
-            name: '@hey-api/typescript',
           },
           {
+            $name: '@hey-api/sdk',
             asClass: true,
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -305,7 +305,7 @@ describe('OpenAPI v3', () => {
         },
         plugins: [
           {
-            name: '@hey-api/typescript',
+            $name: '@hey-api/typescript',
             style: 'PascalCase',
           },
         ],
@@ -318,7 +318,7 @@ describe('OpenAPI v3', () => {
         exportCore: false,
         plugins: [
           {
-            name: '@hey-api/schemas',
+            $name: '@hey-api/schemas',
             type: 'form',
           },
         ],
@@ -331,7 +331,7 @@ describe('OpenAPI v3', () => {
         exportCore: false,
         plugins: [
           {
-            name: '@hey-api/schemas',
+            $name: '@hey-api/schemas',
             type: 'json',
           },
         ],
@@ -344,7 +344,7 @@ describe('OpenAPI v3', () => {
         exportCore: false,
         plugins: [
           {
-            name: '@hey-api/schemas',
+            $name: '@hey-api/schemas',
             nameBuilder: (name) => `$${name}`,
             type: 'json',
           },
@@ -359,14 +359,14 @@ describe('OpenAPI v3', () => {
         plugins: [
           'legacy/fetch',
           {
+            $name: '@hey-api/typescript',
             enums: 'javascript',
-            name: '@hey-api/typescript',
           },
           {
+            $name: '@hey-api/sdk',
             asClass: true,
             classNameBuilder: 'myAwesome{{name}}Api',
             include: '^(Simple|Parameters)',
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -379,12 +379,12 @@ describe('OpenAPI v3', () => {
         plugins: [
           'legacy/fetch',
           {
+            $name: '@hey-api/typescript',
             enums: 'javascript',
-            name: '@hey-api/typescript',
           },
           {
+            $name: '@hey-api/sdk',
             filter: '^\\w+ /api/v{api-version}/simple$',
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -402,8 +402,8 @@ describe('OpenAPI v3', () => {
         plugins: [
           'legacy/fetch',
           {
+            $name: '@hey-api/typescript',
             enums: 'javascript',
-            name: '@hey-api/typescript',
           },
           '@hey-api/sdk',
         ],
@@ -434,7 +434,7 @@ describe('OpenAPI v3', () => {
         },
         plugins: [
           {
-            name: '@hey-api/typescript',
+            $name: '@hey-api/typescript',
             tree: false,
           },
         ],
@@ -481,14 +481,14 @@ describe('OpenAPI v3', () => {
                 return {
                   // @ts-expect-error
                   ...plugin,
-                  name: '@hey-api/sdk',
+                  $name: '@hey-api/sdk',
                   transformer: true,
                 };
               }
-            } else if (plugin.name === '@hey-api/sdk') {
+            } else if (plugin.$name === '@hey-api/sdk') {
               return {
                 ...plugin,
-                name: '@hey-api/sdk',
+                $name: '@hey-api/sdk',
                 transformer: true,
               };
             }
@@ -496,8 +496,8 @@ describe('OpenAPI v3', () => {
             return plugin;
           }),
           {
+            $name: '@hey-api/transformers',
             dates: true,
-            name: '@hey-api/transformers',
           },
         ],
       });
@@ -547,8 +547,8 @@ describe('index', () => {
           '@hey-api/sdk',
           '@hey-api/typescript',
           {
+            $name: '@hey-api/transformers',
             dates: true,
-            name: '@hey-api/transformers',
           },
         ],
       }),

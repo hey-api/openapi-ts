@@ -55,7 +55,10 @@ export interface UserConfig {
     | PluginNames
     | {
         [K in PluginNames]: Plugin.UserConfig<PluginConfigMap[K]['config']> & {
-          name: K;
+          /**
+           * Plugin name.
+           */
+          $name: K;
         };
       }[PluginNames]
   >;

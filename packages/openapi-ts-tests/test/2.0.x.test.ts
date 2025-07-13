@@ -77,11 +77,11 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-SCREAMING_SNAKE_CASE',
         plugins: [
           {
+            $name: '@hey-api/typescript',
             enums: {
               case: 'SCREAMING_SNAKE_CASE',
               mode: 'javascript',
             },
-            name: '@hey-api/typescript',
           },
         ],
       }),
@@ -94,11 +94,11 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-PascalCase',
         plugins: [
           {
+            $name: '@hey-api/typescript',
             enums: {
               case: 'PascalCase',
               mode: 'javascript',
             },
-            name: '@hey-api/typescript',
           },
         ],
       }),
@@ -111,11 +111,11 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-camelCase',
         plugins: [
           {
+            $name: '@hey-api/typescript',
             enums: {
               case: 'camelCase',
               mode: 'javascript',
             },
-            name: '@hey-api/typescript',
           },
         ],
       }),
@@ -128,11 +128,11 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-snake_case',
         plugins: [
           {
+            $name: '@hey-api/typescript',
             enums: {
               case: 'snake_case',
               mode: 'javascript',
             },
-            name: '@hey-api/typescript',
           },
         ],
       }),
@@ -145,11 +145,11 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-javascript-preserve',
         plugins: [
           {
+            $name: '@hey-api/typescript',
             enums: {
               case: 'preserve',
               mode: 'javascript',
             },
-            name: '@hey-api/typescript',
           },
         ],
       }),
@@ -162,11 +162,11 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-SCREAMING_SNAKE_CASE',
         plugins: [
           {
+            $name: '@hey-api/typescript',
             enums: {
               case: 'SCREAMING_SNAKE_CASE',
               mode: 'typescript',
             },
-            name: '@hey-api/typescript',
           },
         ],
       }),
@@ -179,11 +179,11 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-PascalCase',
         plugins: [
           {
+            $name: '@hey-api/typescript',
             enums: {
               case: 'PascalCase',
               mode: 'typescript',
             },
-            name: '@hey-api/typescript',
           },
         ],
       }),
@@ -196,11 +196,11 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-camelCase',
         plugins: [
           {
+            $name: '@hey-api/typescript',
             enums: {
               case: 'camelCase',
               mode: 'typescript',
             },
-            name: '@hey-api/typescript',
           },
         ],
       }),
@@ -213,11 +213,11 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-snake_case',
         plugins: [
           {
+            $name: '@hey-api/typescript',
             enums: {
               case: 'snake_case',
               mode: 'typescript',
             },
-            name: '@hey-api/typescript',
           },
         ],
       }),
@@ -230,11 +230,11 @@ describe(`OpenAPI ${version}`, () => {
         output: 'enum-names-values-typescript-preserve',
         plugins: [
           {
+            $name: '@hey-api/typescript',
             enums: {
               case: 'preserve',
               mode: 'typescript',
             },
-            name: '@hey-api/typescript',
           },
         ],
       }),
@@ -284,8 +284,8 @@ describe(`OpenAPI ${version}`, () => {
         plugins: [
           '@hey-api/client-fetch',
           {
+            $name: '@hey-api/sdk',
             auth: true,
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -298,8 +298,8 @@ describe(`OpenAPI ${version}`, () => {
         plugins: [
           '@hey-api/client-fetch',
           {
+            $name: '@hey-api/sdk',
             auth: true,
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -312,8 +312,8 @@ describe(`OpenAPI ${version}`, () => {
         plugins: [
           '@hey-api/client-fetch',
           {
+            $name: '@hey-api/sdk',
             auth: true,
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -326,8 +326,8 @@ describe(`OpenAPI ${version}`, () => {
         plugins: [
           '@hey-api/client-fetch',
           {
+            $name: '@hey-api/sdk',
             auth: false,
-            name: '@hey-api/sdk',
           },
         ],
       }),

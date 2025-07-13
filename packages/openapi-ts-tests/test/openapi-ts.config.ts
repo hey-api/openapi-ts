@@ -132,12 +132,13 @@ export default defineConfig(() => {
       {
         // baseUrl: false,
         // exportFromIndex: true,
-        // name: '@hey-api/client-axios',
-        // name: 'legacy/angular',
+        // $name: '@hey-api/client-axios',
+        // $name: 'legacy/angular',
         // strictBaseUrl: true,
         // throwOnError: true,
       },
       {
+        $name: '@hey-api/typescript',
         // case: 'snake_case',
         // definitions: '你_snake_{{name}}',
         enums: {
@@ -150,7 +151,6 @@ export default defineConfig(() => {
         //   error: '他們_error_{{name}}',
         //   name: '你們_errors_{{name}}',
         // },
-        name: '@hey-api/typescript',
         // requests: '我們_data_{{name}}',
         // responses: {
         //   name: '我_responses_{{name}}',
@@ -159,6 +159,7 @@ export default defineConfig(() => {
         // tree: true,
       },
       {
+        $name: '@hey-api/sdk',
         // asClass: true,
         // auth: false,
         // classNameBuilder: '{{name}}',
@@ -166,11 +167,10 @@ export default defineConfig(() => {
         // client: false,
         // include...
         // instance: true,
-        name: '@hey-api/sdk',
         // operationId: false,
         // responseStyle: 'data',
         // throwOnError: true,
-        transformer: '@hey-api/transformers',
+        // transformer: '@hey-api/transformers',
         // transformer: true,
         // validator: {
         //   request: 'zod',
@@ -178,14 +178,15 @@ export default defineConfig(() => {
         // },
       },
       {
+        // $name: '@hey-api/transformers',
         // bigInt: true,
         // dates: true,
-        name: '@hey-api/transformers',
       },
       {
-        name: 'fastify',
+        // $name: 'fastify',
       },
       {
+        $name: '@tanstack/react-query',
         // case: 'SCREAMING_SNAKE_CASE',
         // comments: false,
         exportFromIndex: true,
@@ -198,7 +199,6 @@ export default defineConfig(() => {
         // mutationOptions: {
         //   name: '{{name}}MO',
         // },
-        name: '@tanstack/react-query',
         // queryKeys: {
         //   name: '{{name}}QK',
         // },
@@ -207,12 +207,12 @@ export default defineConfig(() => {
         // },
       },
       {
+        // $name: 'valibot',
         // case: 'SCREAMING_SNAKE_CASE',
         // comments: false,
         definitions: 'z{{name}}Definition',
         // exportFromIndex: true,
         metadata: true,
-        // name: 'valibot',
         requests: {
           // case: 'SCREAMING_SNAKE_CASE',
           name: 'z{{name}}TestData',
@@ -223,6 +223,7 @@ export default defineConfig(() => {
         },
       },
       {
+        // $name: 'zod',
         // case: 'snake_case',
         // comments: false,
         // dates: {
@@ -231,7 +232,6 @@ export default defineConfig(() => {
         definitions: 'z{{name}}Definition',
         // exportFromIndex: true,
         // metadata: true,
-        // name: 'zod',
         requests: {
           // case: 'SCREAMING_SNAKE_CASE',
           // name: 'z{{name}}TestData',
@@ -242,8 +242,8 @@ export default defineConfig(() => {
         },
       },
       {
+        // $name: '@hey-api/schemas',
         exportFromIndex: true,
-        // name: '@hey-api/schemas',
         // type: 'json',
       },
     ],

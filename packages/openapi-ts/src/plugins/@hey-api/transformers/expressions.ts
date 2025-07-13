@@ -11,7 +11,7 @@ export type ExpressionTransformer = ({
   file,
   schema,
 }: {
-  config: Omit<UserConfig, 'name'>;
+  config: Omit<UserConfig, '$name'>;
   dataExpression?: ts.Expression | string;
   file: GeneratedFile;
   schema: IR.SchemaObject;

@@ -20,6 +20,12 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 
 export const getFoo = <ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).get<GetFooResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http'
+            }
+        ],
         url: '/foo',
         ...options
     });

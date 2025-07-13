@@ -11,7 +11,7 @@ type Config = Client.Config & {
   /**
    * Plugin name. Must be unique.
    */
-  name: string;
+  $name: string;
 };
 
 export type MyClientPlugin = DefinePlugin<Config>;

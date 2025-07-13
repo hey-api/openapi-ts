@@ -67,7 +67,7 @@ describe('generateLegacyClientClass', () => {
       plugins: {
         '@hey-api/schemas': {
           config: {
-            name: '@hey-api/schemas',
+            $name: '@hey-api/schemas',
           },
           handler: () => {},
           name: '@hey-api/schemas',
@@ -75,7 +75,7 @@ describe('generateLegacyClientClass', () => {
         },
         '@hey-api/sdk': {
           config: {
-            name: '@hey-api/sdk',
+            $name: '@hey-api/sdk',
           },
           handler: () => {},
           name: '@hey-api/sdk',
@@ -86,8 +86,8 @@ describe('generateLegacyClientClass', () => {
             getId: () => '',
           },
           config: {
+            $name: '@hey-api/typescript',
             enums: 'javascript',
-            name: '@hey-api/typescript',
           },
           handler: () => {},
           name: '@hey-api/typescript',
@@ -95,7 +95,7 @@ describe('generateLegacyClientClass', () => {
         },
         'legacy/fetch': {
           config: {
-            name: 'legacy/fetch',
+            $name: 'legacy/fetch',
           },
           handler: () => {},
           name: 'legacy/fetch',

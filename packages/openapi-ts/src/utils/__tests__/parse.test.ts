@@ -54,7 +54,7 @@ describe('operationNameFn', () => {
     plugins: {
       '@hey-api/sdk': {
         config: {
-          name: '@hey-api/sdk',
+          $name: '@hey-api/sdk',
           operationId: true,
           response: 'body',
         },
@@ -64,7 +64,7 @@ describe('operationNameFn', () => {
       },
       'legacy/fetch': {
         config: {
-          name: 'legacy/fetch',
+          $name: 'legacy/fetch',
         },
         handler: () => {},
         name: 'legacy/fetch',
@@ -81,7 +81,7 @@ describe('operationNameFn', () => {
       ...optionsCommon.plugins,
       '@hey-api/sdk': {
         config: {
-          name: '@hey-api/sdk',
+          $name: '@hey-api/sdk',
           operationId: true,
           response: 'body',
         },
@@ -98,7 +98,7 @@ describe('operationNameFn', () => {
       ...optionsCommon.plugins,
       '@hey-api/sdk': {
         config: {
-          name: '@hey-api/sdk',
+          $name: '@hey-api/sdk',
           operationId: false,
           response: 'body',
         },
@@ -115,7 +115,7 @@ describe('operationNameFn', () => {
     plugins: {
       '@hey-api/client-fetch': {
         config: {
-          name: '@hey-api/client-fetch',
+          $name: '@hey-api/client-fetch',
         },
         handler: () => {},
         name: '@hey-api/client-fetch',
@@ -124,7 +124,7 @@ describe('operationNameFn', () => {
       },
       '@hey-api/sdk': {
         config: {
-          name: '@hey-api/sdk',
+          $name: '@hey-api/sdk',
           operationId: true,
           response: 'body',
         },
@@ -141,7 +141,7 @@ describe('operationNameFn', () => {
     plugins: {
       '@hey-api/client-fetch': {
         config: {
-          name: '@hey-api/client-fetch',
+          $name: '@hey-api/client-fetch',
         },
         handler: () => {},
         name: '@hey-api/client-fetch',
@@ -150,7 +150,7 @@ describe('operationNameFn', () => {
       },
       '@hey-api/sdk': {
         config: {
-          name: '@hey-api/sdk',
+          $name: '@hey-api/sdk',
           operationId: false,
           response: 'body',
         },
