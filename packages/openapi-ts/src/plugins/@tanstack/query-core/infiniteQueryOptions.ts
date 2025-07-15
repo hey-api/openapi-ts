@@ -316,7 +316,6 @@ export const createInfiniteQueryOptions = ({
 
   const functionName = serviceFunctionIdentifier({
     config: plugin.context.config,
-    handleIllegal: true,
     id: operation.id,
     operation,
   });

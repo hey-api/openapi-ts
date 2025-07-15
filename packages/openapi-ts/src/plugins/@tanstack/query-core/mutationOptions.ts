@@ -105,7 +105,6 @@ export const createMutationOptions = ({
   // Get the function name from SDK plugin instead of using operation.id directly
   const functionName = serviceFunctionIdentifier({
     config: plugin.context.config,
-    handleIllegal: true,
     id: operation.id,
     operation,
   });
