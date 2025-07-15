@@ -3,6 +3,7 @@ import { clientApi } from '../../../generate/client';
 import { hasOperationDataRequired } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { getClientBaseUrlKey } from '../../@hey-api/client-core/utils';
+import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import type { PluginInstance } from './types';
 import { useTypeData } from './useType';
 
@@ -306,10 +307,17 @@ export const queryKeyStatement = ({
 }) => {
   const file = plugin.context.file({ id: plugin.name })!;
   const typeData = useTypeData({ operation, plugin });
+
+  const functionIdentifier = serviceFunctionIdentifier({
+    config: plugin.context.config,
+    id: operation.id,
+    operation,
+  });
+
   const identifier = isInfinite
     ? file.identifier({
         // TODO: refactor for better cross-plugin compatibility
-        $ref: `#/tanstack-query-infinite-query-key/${operation.id}`,
+        $ref: `#/tanstack-query-infinite-query-key/${functionIdentifier}`,
         case: plugin.config.infiniteQueryKeys.case,
         create: true,
         nameTransformer: plugin.config.infiniteQueryKeys.name,
@@ -317,7 +325,7 @@ export const queryKeyStatement = ({
       })
     : file.identifier({
         // TODO: refactor for better cross-plugin compatibility
-        $ref: `#/tanstack-query-query-key/${operation.id}`,
+        $ref: `#/tanstack-query-query-key/${functionIdentifier}`,
         case: plugin.config.queryKeys.case,
         create: true,
         nameTransformer: plugin.config.queryKeys.name,
@@ -335,7 +343,7 @@ export const queryKeyStatement = ({
       ],
       returnType: isInfinite ? typeQueryKey : undefined,
       statements: createQueryKeyLiteral({
-        id: operation.id,
+        id: functionIdentifier,
         isInfinite,
         plugin,
       }),

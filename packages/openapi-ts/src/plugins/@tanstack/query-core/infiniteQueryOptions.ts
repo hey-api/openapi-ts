@@ -5,6 +5,7 @@ import { tsNodeToString } from '../../../compiler/utils';
 import { clientApi } from '../../../generate/client';
 import { operationPagination } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
+import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import {
   createOperationComment,
   isOperationOptionsRequired,
@@ -312,9 +313,15 @@ export const createInfiniteQueryOptions = ({
   });
   file.add(node);
 
+  const functionIdentifier = serviceFunctionIdentifier({
+    config: plugin.context.config,
+    id: operation.id,
+    operation,
+  });
+
   const identifierInfiniteQueryKey = file.identifier({
     // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-infinite-query-key/${operation.id}`,
+    $ref: `#/tanstack-query-infinite-query-key/${functionIdentifier}`,
     case: plugin.config.infiniteQueryKeys.case,
     nameTransformer: plugin.config.infiniteQueryKeys.name,
     namespace: 'value',
@@ -429,7 +436,7 @@ export const createInfiniteQueryOptions = ({
 
   const identifierInfiniteQueryOptions = file.identifier({
     // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-infinite-query-options/${operation.id}`,
+    $ref: `#/tanstack-query-infinite-query-options/${functionIdentifier}`,
     case: plugin.config.infiniteQueryOptions.case,
     create: true,
     nameTransformer: plugin.config.infiniteQueryOptions.name,

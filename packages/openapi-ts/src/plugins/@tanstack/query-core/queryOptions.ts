@@ -2,6 +2,7 @@ import type ts from 'typescript';
 
 import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
+import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import {
   createOperationComment,
   isOperationOptionsRequired,
@@ -68,9 +69,15 @@ export const createQueryOptions = ({
 
   const typeData = useTypeData({ operation, plugin });
 
+  const functionIdentifier = serviceFunctionIdentifier({
+    config: plugin.context.config,
+    id: operation.id,
+    operation,
+  });
+
   const identifierQueryKey = file.identifier({
     // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-query-key/${operation.id}`,
+    $ref: `#/tanstack-query-query-key/${functionIdentifier}`,
     case: plugin.config.queryKeys.case,
     nameTransformer: plugin.config.queryKeys.name,
     namespace: 'value',
@@ -129,7 +136,7 @@ export const createQueryOptions = ({
 
   const identifierQueryOptions = file.identifier({
     // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-query-options/${operation.id}`,
+    $ref: `#/tanstack-query-query-options/${functionIdentifier}`,
     case: plugin.config.queryOptions.case,
     create: true,
     nameTransformer: plugin.config.queryOptions.name,
