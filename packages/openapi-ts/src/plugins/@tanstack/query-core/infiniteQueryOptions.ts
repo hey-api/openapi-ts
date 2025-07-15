@@ -314,7 +314,7 @@ export const createInfiniteQueryOptions = ({
   });
   file.add(node);
 
-  const functionName = serviceFunctionIdentifier({
+  const functionIdentifier = serviceFunctionIdentifier({
     config: plugin.context.config,
     id: operation.id,
     operation,
@@ -322,7 +322,7 @@ export const createInfiniteQueryOptions = ({
 
   const identifierInfiniteQueryKey = file.identifier({
     // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-infinite-query-key/${functionName}`,
+    $ref: `#/tanstack-query-infinite-query-key/${functionIdentifier}`,
     case: plugin.config.infiniteQueryKeys.case,
     nameTransformer: plugin.config.infiniteQueryKeys.name,
     namespace: 'value',
@@ -437,7 +437,7 @@ export const createInfiniteQueryOptions = ({
 
   const identifierInfiniteQueryOptions = file.identifier({
     // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-infinite-query-options/${functionName}`,
+    $ref: `#/tanstack-query-infinite-query-options/${functionIdentifier}`,
     case: plugin.config.infiniteQueryOptions.case,
     create: true,
     nameTransformer: plugin.config.infiniteQueryOptions.name,

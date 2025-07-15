@@ -102,8 +102,7 @@ export const createMutationOptions = ({
     );
   }
 
-  // Get the function name from SDK plugin instead of using operation.id directly
-  const functionName = serviceFunctionIdentifier({
+  const functionIdentifier = serviceFunctionIdentifier({
     config: plugin.context.config,
     id: operation.id,
     operation,
@@ -111,7 +110,7 @@ export const createMutationOptions = ({
 
   const identifier = file.identifier({
     // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-mutation-options/${functionName}`,
+    $ref: `#/tanstack-query-mutation-options/${functionIdentifier}`,
     case: plugin.config.mutationOptions.case,
     create: true,
     nameTransformer: plugin.config.mutationOptions.name,
