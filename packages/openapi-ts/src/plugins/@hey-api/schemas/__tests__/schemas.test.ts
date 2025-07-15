@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 
+import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
 import { client, openApi } from '../../../../generate/__tests__/mocks';
@@ -86,6 +87,7 @@ describe('generateLegacySchemas', () => {
         '@hey-api/typescript': {
           api: {
             getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {
             enums: 'javascript',
@@ -221,6 +223,7 @@ describe('generateLegacySchemas', () => {
         '@hey-api/typescript': {
           api: {
             getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {
             enums: 'javascript',

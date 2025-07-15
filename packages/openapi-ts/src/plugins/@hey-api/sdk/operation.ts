@@ -1,15 +1,17 @@
 import type ts from 'typescript';
 
 import { compiler } from '../../../compiler';
-import type { ObjectValue } from '../../../compiler/types';
+import type { FunctionParameter, ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
 import type { GeneratedFile } from '../../../generate/file';
 import { statusCodeToGroup } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { sanitizeNamespaceIdentifier } from '../../../openApi';
+import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
 import { reservedJavaScriptKeywordsRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { transformClassName } from '../../../utils/transform';
+import type { Field, Fields } from '../client-core/bundle/params';
 import { clientId, getClientPlugin } from '../client-core/utils';
 import {
   operationTransformerIrRef,
@@ -185,6 +187,139 @@ export const operationOptionsType = ({
   return dataImport.name ? `${optionsName}<${dataImport.name}>` : optionsName;
 };
 
+type OperationParameters = {
+  argNames: Array<string>;
+  fields: Array<Field | Fields>;
+  parameters: Array<FunctionParameter>;
+};
+
+export const operationParameters = ({
+  file,
+  isRequiredOptions,
+  operation,
+  plugin,
+}: {
+  file: GeneratedFile;
+  isRequiredOptions: boolean;
+  operation: IR.OperationObject;
+  plugin: HeyApiSdkPlugin['Instance'];
+}): OperationParameters => {
+  const result: OperationParameters = {
+    argNames: [],
+    fields: [],
+    parameters: [],
+  };
+
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const client = getClientPlugin(plugin.context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
+
+  if (plugin.config.params_EXPERIMENTAL === 'experiment') {
+    const fileTypeScript = plugin.context.file({ id: typesId })!;
+
+    if (operation.parameters?.path) {
+      for (const key in operation.parameters.path) {
+        const parameter = operation.parameters.path[key]!;
+        const name = ensureValidIdentifier(parameter.name);
+        // TODO: detect duplicates
+        result.argNames.push(name);
+        result.fields.push({
+          in: 'path',
+          key: name,
+        });
+        result.parameters.push({
+          isRequired: parameter.required,
+          name,
+          type: pluginTypeScript.api.schemaToType({
+            onRef: (id) => {
+              file.import({
+                asType: true,
+                module: file.relativePathToFile({
+                  context: plugin.context,
+                  id: typesId,
+                }),
+                name: fileTypeScript.getName(id),
+              });
+            },
+            plugin: pluginTypeScript,
+            schema: parameter.schema,
+          }),
+        });
+      }
+    }
+
+    if (operation.parameters?.query) {
+      for (const key in operation.parameters.query) {
+        const parameter = operation.parameters.query[key]!;
+        const name = ensureValidIdentifier(parameter.name);
+        // TODO: detect duplicates
+        result.argNames.push(name);
+        result.fields.push({
+          in: 'path',
+          key: name,
+        });
+        result.parameters.push({
+          isRequired: parameter.required,
+          name,
+          type: pluginTypeScript.api.schemaToType({
+            onRef: (id) => {
+              file.import({
+                asType: true,
+                module: file.relativePathToFile({
+                  context: plugin.context,
+                  id: typesId,
+                }),
+                name: fileTypeScript.getName(id),
+              });
+            },
+            plugin: pluginTypeScript,
+            schema: parameter.schema,
+          }),
+        });
+      }
+    }
+
+    if (operation.body) {
+      const name = 'body';
+      // TODO: detect duplicates
+      result.argNames.push(name);
+      result.fields.push({ in: 'body' });
+      result.parameters.push({
+        isRequired: operation.body.required,
+        name,
+        type: pluginTypeScript.api.schemaToType({
+          onRef: (id) => {
+            file.import({
+              asType: true,
+              module: file.relativePathToFile({
+                context: plugin.context,
+                id: typesId,
+              }),
+              name: fileTypeScript.getName(id),
+            });
+          },
+          plugin: pluginTypeScript,
+          schema: operation.body.schema,
+        }),
+      });
+    }
+  }
+
+  result.parameters.push({
+    isRequired: isRequiredOptions,
+    name: 'options',
+    // TODO: ensure no path, body, query
+    type: operationOptionsType({
+      file,
+      operation,
+      plugin,
+      throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
+    }),
+  });
+
+  return result;
+};
+
 /**
  * Infers `responseType` value from provided response content type. This is
  * an adapted version of `getParseAs()` from the Fetch API client.
@@ -243,10 +378,12 @@ const getResponseType = (
 
 export const operationStatements = ({
   isRequiredOptions,
+  opParameters,
   operation,
   plugin,
 }: {
   isRequiredOptions: boolean;
+  opParameters: OperationParameters;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
 }): Array<ts.Statement> => {
@@ -299,16 +436,17 @@ export const operationStatements = ({
 
   if (operation.body) {
     switch (operation.body.type) {
-      case 'form-data':
-        requestOptions.push({ spread: 'formDataBodySerializer' });
-        file.import({
+      case 'form-data': {
+        const imported = file.import({
           module: clientModulePath({
             config: plugin.context.config,
             sourceOutput: sdkOutput,
           }),
           name: 'formDataBodySerializer',
         });
+        requestOptions.push({ spread: imported.name });
         break;
+      }
       case 'json':
         // jsonBodySerializer is the default, no need to specify
         break;
@@ -320,16 +458,17 @@ export const operationStatements = ({
           value: null,
         });
         break;
-      case 'url-search-params':
-        requestOptions.push({ spread: 'urlSearchParamsBodySerializer' });
-        file.import({
+      case 'url-search-params': {
+        const imported = file.import({
           module: clientModulePath({
             config: plugin.context.config,
             sourceOutput: sdkOutput,
           }),
           name: 'urlSearchParamsBodySerializer',
         });
+        requestOptions.push({ spread: imported.name });
         break;
+      }
     }
   }
 
@@ -450,31 +589,92 @@ export const operationStatements = ({
   // options must go last to allow overriding parameters above
   requestOptions.push({ spread: 'options' });
 
+  const statements: Array<ts.Statement> = [];
+  const hasParams = opParameters.argNames.length;
+
+  if (hasParams) {
+    const args: Array<unknown> = [];
+    const config: Array<unknown> = [];
+    for (const argName of opParameters.argNames) {
+      args.push(compiler.identifier({ text: argName }));
+    }
+    for (const field of opParameters.fields) {
+      const obj: Array<Record<string, unknown>> = [];
+      if ('in' in field) {
+        obj.push({
+          key: 'in',
+          value: field.in,
+        });
+        if (field.key) {
+          obj.push({
+            key: 'key',
+            value: field.key,
+          });
+        }
+        if (field.map) {
+          obj.push({
+            key: 'map',
+            value: field.map,
+          });
+        }
+      }
+      config.push(compiler.objectExpression({ obj }));
+    }
+    const imported = file.import({
+      module: clientModulePath({
+        config: plugin.context.config,
+        sourceOutput: sdkOutput,
+      }),
+      name: 'buildClientParams',
+    });
+    statements.push(
+      compiler.constVariable({
+        expression: compiler.callExpression({
+          functionName: imported.name,
+          parameters: [
+            compiler.arrayLiteralExpression({ elements: args }),
+            compiler.arrayLiteralExpression({ elements: config }),
+          ],
+        }),
+        name: 'params',
+      }),
+    );
+    requestOptions.push({ spread: 'params' });
+  }
+
   if (operation.body) {
     const parameterContentType = operation.parameters?.header?.['content-type'];
     const hasRequiredContentType = Boolean(parameterContentType?.required);
     // spreading required Content-Type on generated header would throw a TypeScript error
     if (!hasRequiredContentType) {
-      const spread = compiler.propertyAccessExpression({
-        expression: compiler.identifier({ text: 'options' }),
-        isOptional: !isRequiredOptions,
-        name: 'headers',
-      });
+      const headersValue: Array<unknown> = [
+        {
+          key: parameterContentType?.name ?? 'Content-Type',
+          // form-data does not need Content-Type header, browser will set it automatically
+          value:
+            operation.body.type === 'form-data'
+              ? null
+              : operation.body.mediaType,
+        },
+        {
+          spread: compiler.propertyAccessExpression({
+            expression: compiler.identifier({ text: 'options' }),
+            isOptional: !isRequiredOptions,
+            name: 'headers',
+          }),
+        },
+      ];
+      if (hasParams) {
+        headersValue.push({
+          spread: compiler.propertyAccessExpression({
+            expression: compiler.identifier({ text: 'params' }),
+            name: 'headers',
+          }),
+        });
+      }
       requestOptions.push({
         key: 'headers',
-        value: [
-          {
-            key: parameterContentType?.name ?? 'Content-Type',
-            // form-data does not need Content-Type header, browser will set it automatically
-            value:
-              operation.body.type === 'form-data'
-                ? null
-                : operation.body.mediaType,
-          },
-          {
-            spread,
-          },
-        ],
+        value: headersValue,
       });
     }
   }
@@ -536,7 +736,7 @@ export const operationStatements = ({
     types.push(compiler.stringLiteral({ text: plugin.config.responseStyle }));
   }
 
-  return [
+  statements.push(
     compiler.returnFunctionCall({
       args: [
         compiler.objectExpression({
@@ -550,5 +750,7 @@ export const operationStatements = ({
       }),
       types,
     }),
-  ];
+  );
+
+  return statements;
 };

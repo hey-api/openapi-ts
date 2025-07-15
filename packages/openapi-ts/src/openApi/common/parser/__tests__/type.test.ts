@@ -1,3 +1,4 @@
+import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Config } from '../../../../types/config';
@@ -9,6 +10,7 @@ vi.mock('../../../../utils/config', () => {
       '@hey-api/typescript': {
         api: {
           getId: () => '',
+          schemaToType: () => ({}) as ts.TypeNode,
         },
         config: {
           name: '@hey-api/typescript',
