@@ -95,6 +95,8 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> & {
    * @default 'sdk'
    */
   output?: string;
+  /** @deprecated - this is an experimental feature, do not use */
+  params_EXPERIMENTAL?: 'default' | 'experiment';
   /**
    * **This feature works only with the Fetch client**
    *
@@ -268,6 +270,8 @@ export type Config = Plugin.Name<'@hey-api/sdk'> & {
    * @default 'sdk'
    */
   output: string;
+  /** @deprecated - this is an experimental feature, do not use */
+  params_EXPERIMENTAL: 'default' | 'experiment';
   /**
    * **This feature works only with the Fetch client**
    *

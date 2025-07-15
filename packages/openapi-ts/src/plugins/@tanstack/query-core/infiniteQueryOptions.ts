@@ -5,7 +5,6 @@ import { tsNodeToString } from '../../../compiler/utils';
 import { clientApi } from '../../../generate/client';
 import { operationPagination } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
-import { schemaToType } from '../../@hey-api/typescript/plugin';
 import {
   createOperationComment,
   isOperationOptionsRequired,
@@ -293,11 +292,11 @@ export const createInfiniteQueryOptions = ({
 
   const typeQueryKey = `${queryKeyName}<${typeData}>`;
   const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
-  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript');
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
   // TODO: parser - this is a bit clunky, need to compile type to string because
   // `compiler.returnFunctionCall()` accepts only strings, should be cleaned up
-  const type = schemaToType({
-    plugin: pluginTypeScript as Parameters<typeof schemaToType>[0]['plugin'],
+  const type = pluginTypeScript.api.schemaToType({
+    plugin: pluginTypeScript,
     schema: pagination.schema,
   });
   const typePageParam = `${tsNodeToString({

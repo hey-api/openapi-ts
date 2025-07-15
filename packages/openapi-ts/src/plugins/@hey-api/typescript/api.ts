@@ -1,4 +1,7 @@
+import type ts from 'typescript';
+
 import type { IR } from '../../../ir/types';
+import { schemaToType } from './plugin';
 
 type GetIdArgs =
   | {
@@ -30,8 +33,17 @@ const getId = (args: GetIdArgs): string => {
 
 export type Api = {
   getId: (args: GetIdArgs) => string;
+  schemaToType: (
+    args: Omit<Parameters<typeof schemaToType>[0], 'onRef'> &
+      Pick<Partial<Parameters<typeof schemaToType>[0]>, 'onRef'>,
+  ) => ts.TypeNode;
 };
 
 export const api: Api = {
   getId,
+  schemaToType: (args) =>
+    schemaToType({
+      onRef: undefined,
+      ...args,
+    }),
 };
