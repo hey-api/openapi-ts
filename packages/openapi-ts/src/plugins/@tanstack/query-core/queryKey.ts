@@ -309,7 +309,7 @@ export const queryKeyStatement = ({
   // Get the function name from SDK plugin instead of using operation.id directly
   const functionName = serviceFunctionIdentifier({
     config: plugin.context.config,
-    handleIllegal: !plugin.getPlugin('@hey-api/sdk')?.config.asClass,
+    handleIllegal: true,
     id: operation.id,
     operation,
   });
