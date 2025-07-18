@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
 import { setConfig } from '../../../utils/config';
@@ -83,6 +84,7 @@ describe('generateIndexFile', () => {
         '@hey-api/typescript': {
           api: {
             getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {
             enums: 'javascript',

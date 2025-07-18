@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 
+import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Client } from '../../../types/client';
@@ -97,6 +98,7 @@ describe('generateLegacyOutput', () => {
         '@hey-api/typescript': {
           api: {
             getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {
             enums: 'javascript',

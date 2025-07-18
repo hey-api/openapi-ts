@@ -1,4 +1,5 @@
 import Handlebars from 'handlebars';
+import type ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
 import { setConfig } from '../config';
@@ -82,6 +83,7 @@ describe('registerHandlebarHelpers', () => {
         '@hey-api/typescript': {
           api: {
             getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {
             enums: 'javascript',
@@ -189,6 +191,7 @@ describe('registerHandlebarTemplates', () => {
         '@hey-api/typescript': {
           api: {
             getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {
             enums: 'javascript',

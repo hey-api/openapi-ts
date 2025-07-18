@@ -12,7 +12,7 @@ import { typesId } from '../typescript/ref';
 import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
 import {
   operationClasses,
-  operationOptionsType,
+  operationParameters,
   operationStatements,
 } from './operation';
 import { serviceFunctionIdentifier } from './plugin-legacy';
@@ -181,29 +181,26 @@ const generateClassSdk = ({
           return;
         }
 
+        const opParameters = operationParameters({
+          file,
+          isRequiredOptions,
+          operation,
+          plugin,
+        });
+        const statements = operationStatements({
+          isRequiredOptions,
+          opParameters,
+          operation,
+          plugin,
+        });
         const functionNode = compiler.methodDeclaration({
           accessLevel: 'public',
           comment: createOperationComment({ operation }),
           isStatic: !plugin.config.instance,
           name: entry.methodName,
-          parameters: [
-            {
-              isRequired: isRequiredOptions,
-              name: 'options',
-              type: operationOptionsType({
-                file,
-                operation,
-                plugin,
-                throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
-              }),
-            },
-          ],
+          parameters: opParameters.parameters,
           returnType: undefined,
-          statements: operationStatements({
-            isRequiredOptions,
-            operation,
-            plugin,
-          }),
+          statements,
           types: isNuxtClient
             ? [
                 {
@@ -348,28 +345,25 @@ const generateFlatSdk = ({
           )
         : undefined,
     });
+    const opParameters = operationParameters({
+      file,
+      isRequiredOptions,
+      operation,
+      plugin,
+    });
+    const statements = operationStatements({
+      isRequiredOptions,
+      opParameters,
+      operation,
+      plugin,
+    });
     const node = compiler.constVariable({
       comment: createOperationComment({ operation }),
       exportConst: true,
       expression: compiler.arrowFunction({
-        parameters: [
-          {
-            isRequired: isRequiredOptions,
-            name: 'options',
-            type: operationOptionsType({
-              file,
-              operation,
-              plugin,
-              throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
-            }),
-          },
-        ],
+        parameters: opParameters.parameters,
         returnType: undefined,
-        statements: operationStatements({
-          isRequiredOptions,
-          operation,
-          plugin,
-        }),
+        statements,
         types: isNuxtClient
           ? [
               {

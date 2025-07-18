@@ -246,6 +246,30 @@ describe('buildClientParams', () => {
     {
       args: [
         {
+          bar: 2,
+          baz: 3,
+          foo: 1,
+          qux: 4,
+        },
+      ],
+      config: [
+        {
+          in: 'body',
+        },
+      ],
+      description: 'positional complex body',
+      params: {
+        body: {
+          bar: 2,
+          baz: 3,
+          foo: 1,
+          qux: 4,
+        },
+      },
+    },
+    {
+      args: [
+        {
           $body_qux: 4,
           $headers_baz: 3,
           $path_foo: 1,
