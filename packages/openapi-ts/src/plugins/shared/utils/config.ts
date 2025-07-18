@@ -3,7 +3,7 @@ import type { Plugin } from '../../types';
 export const definePluginConfig =
   <T extends Plugin.Types>(defaultConfig: Plugin.Config<T>) =>
   (
-    userConfig?: Omit<Plugin.UserConfig<T['config']>, 'name'>,
+    userConfig?: Omit<Plugin.UserConfig<T['config']>, '$name'>,
   ): Omit<Plugin.Config<T>, 'name'> & {
     /**
      * Cast name to `any` so it doesn't throw type error in `plugins` array.
@@ -11,9 +11,10 @@ export const definePluginConfig =
      * that TypeScript trick would cause all string methods to appear as
      * suggested auto completions, which is undesirable.
      */
-    name: any;
+    $name: any;
   } => ({
     ...defaultConfig,
+    $name: '',
     config: {
       ...defaultConfig.config,
       ...userConfig,

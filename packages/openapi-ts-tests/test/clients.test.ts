@@ -64,8 +64,8 @@ for (const client of clients) {
           plugins: [
             client,
             {
+              $name: '@hey-api/sdk',
               client: true,
-              name: '@hey-api/sdk',
             },
           ],
         }),
@@ -77,8 +77,8 @@ for (const client of clients) {
           plugins: [
             client,
             {
+              $name: '@hey-api/sdk',
               client: false,
-              name: '@hey-api/sdk',
             },
           ],
         }),
@@ -89,8 +89,8 @@ for (const client of clients) {
           output: 'base-url-false',
           plugins: [
             {
+              $name: client,
               baseUrl: false,
-              name: client,
             },
             '@hey-api/typescript',
           ],
@@ -102,8 +102,8 @@ for (const client of clients) {
           output: 'base-url-number',
           plugins: [
             {
+              $name: client,
               baseUrl: 0,
-              name: client,
             },
             '@hey-api/typescript',
           ],
@@ -115,8 +115,8 @@ for (const client of clients) {
           output: 'base-url-string',
           plugins: [
             {
+              $name: client,
               baseUrl: 'https://foo.com',
-              name: client,
             },
             '@hey-api/typescript',
           ],
@@ -128,7 +128,7 @@ for (const client of clients) {
           output: 'base-url-strict',
           plugins: [
             {
-              name: client,
+              $name: client,
               strictBaseUrl: true,
             },
             '@hey-api/typescript',
@@ -239,8 +239,8 @@ describe('custom-client', () => {
         plugins: [
           customClientPlugin(),
           {
+            $name: '@hey-api/sdk',
             client: true,
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -252,8 +252,8 @@ describe('custom-client', () => {
         plugins: [
           customClientPlugin(),
           {
+            $name: '@hey-api/sdk',
             client: false,
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -385,8 +385,8 @@ describe('my-client', () => {
         plugins: [
           myClientPlugin(),
           {
+            $name: '@hey-api/sdk',
             client: true,
-            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -398,8 +398,8 @@ describe('my-client', () => {
         plugins: [
           myClientPlugin(),
           {
+            $name: '@hey-api/sdk',
             client: false,
-            name: '@hey-api/sdk',
           },
         ],
       }),

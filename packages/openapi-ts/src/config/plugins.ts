@@ -128,8 +128,8 @@ const isPluginClient = (plugin: Required<UserConfig>['plugins'][number]) => {
   }
 
   return (
-    plugin.name.startsWith('@hey-api/client') ||
-    plugin.name.startsWith('legacy/') ||
+    plugin.$name.startsWith('@hey-api/client') ||
+    plugin.$name.startsWith('legacy/') ||
     // @ts-expect-error
     (plugin.tags && plugin.tags.includes('client'))
   );
@@ -146,7 +146,7 @@ export const getPlugins = (
     userConfig.plugins = userConfig.plugins.filter(
       (plugin) =>
         (typeof plugin === 'string' && plugin) ||
-        (typeof plugin !== 'string' && plugin.name),
+        (typeof plugin !== 'string' && plugin.$name),
     );
     if (
       userConfig.plugins.length === 1 &&
@@ -164,7 +164,7 @@ export const getPlugins = (
         return plugin;
       }
 
-      const pluginName = plugin.name;
+      const pluginName = plugin.$name;
 
       if (pluginName) {
         // @ts-expect-error
@@ -177,7 +177,7 @@ export const getPlugins = (
             config: { ...plugin },
           };
           // @ts-expect-error
-          delete userPluginsConfig[pluginName]!.config.name;
+          delete userPluginsConfig[pluginName]!.config.$name;
         }
       }
 

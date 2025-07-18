@@ -41,7 +41,7 @@ for (const version of versions) {
         outputDir,
         typeof userConfig.plugins[0] === 'string'
           ? userConfig.plugins[0]
-          : userConfig.plugins[0]!.name,
+          : userConfig.plugins[0]!.$name,
         typeof userConfig.output === 'string' ? userConfig.output : '',
       ),
       plugins: userConfig.plugins ?? ['@hey-api/client-fetch'],
@@ -137,9 +137,9 @@ for (const version of versions) {
             '@tanstack/angular-query-experimental',
             '@hey-api/client-fetch',
             {
+              $name: '@hey-api/sdk',
               asClass: true,
               classNameBuilder: '{{name}}Service',
-              name: '@hey-api/sdk',
             },
           ],
         }),
@@ -154,9 +154,9 @@ for (const version of versions) {
             '@tanstack/react-query',
             '@hey-api/client-fetch',
             {
+              $name: '@hey-api/sdk',
               asClass: true,
               classNameBuilder: '{{name}}Service',
-              name: '@hey-api/sdk',
             },
           ],
         }),
@@ -171,9 +171,9 @@ for (const version of versions) {
             '@tanstack/solid-query',
             '@hey-api/client-fetch',
             {
+              $name: '@hey-api/sdk',
               asClass: true,
               classNameBuilder: '{{name}}Service',
-              name: '@hey-api/sdk',
             },
           ],
         }),
@@ -188,9 +188,9 @@ for (const version of versions) {
             '@tanstack/svelte-query',
             '@hey-api/client-fetch',
             {
+              $name: '@hey-api/sdk',
               asClass: true,
               classNameBuilder: '{{name}}Service',
-              name: '@hey-api/sdk',
             },
           ],
         }),
@@ -205,9 +205,9 @@ for (const version of versions) {
             '@tanstack/vue-query',
             '@hey-api/client-fetch',
             {
+              $name: '@hey-api/sdk',
               asClass: true,
               classNameBuilder: '{{name}}Service',
-              name: '@hey-api/sdk',
             },
           ],
         }),
@@ -220,6 +220,7 @@ for (const version of versions) {
           output: 'name-builder',
           plugins: [
             {
+              $name: '@tanstack/angular-query-experimental',
               infiniteQueryKeys: {
                 name: '{{name}}A',
               },
@@ -229,7 +230,6 @@ for (const version of versions) {
               mutationOptions: {
                 name: '{{name}}C',
               },
-              name: '@tanstack/angular-query-experimental',
               queryKeys: {
                 name: '{{name}}D',
               },
@@ -250,6 +250,7 @@ for (const version of versions) {
           output: 'name-builder',
           plugins: [
             {
+              $name: '@tanstack/react-query',
               infiniteQueryKeys: {
                 name: '{{name}}A',
               },
@@ -259,7 +260,6 @@ for (const version of versions) {
               mutationOptions: {
                 name: '{{name}}C',
               },
-              name: '@tanstack/react-query',
               queryKeys: {
                 name: '{{name}}D',
               },
@@ -280,6 +280,7 @@ for (const version of versions) {
           output: 'name-builder',
           plugins: [
             {
+              $name: '@tanstack/solid-query',
               infiniteQueryKeys: {
                 name: '{{name}}A',
               },
@@ -289,7 +290,6 @@ for (const version of versions) {
               mutationOptions: {
                 name: '{{name}}C',
               },
-              name: '@tanstack/solid-query',
               queryKeys: {
                 name: '{{name}}D',
               },
@@ -310,6 +310,7 @@ for (const version of versions) {
           output: 'name-builder',
           plugins: [
             {
+              $name: '@tanstack/svelte-query',
               infiniteQueryKeys: {
                 name: '{{name}}A',
               },
@@ -319,7 +320,6 @@ for (const version of versions) {
               mutationOptions: {
                 name: '{{name}}C',
               },
-              name: '@tanstack/svelte-query',
               queryKeys: {
                 name: '{{name}}D',
               },
@@ -340,6 +340,7 @@ for (const version of versions) {
           output: 'name-builder',
           plugins: [
             {
+              $name: '@tanstack/vue-query',
               infiniteQueryKeys: {
                 name: '{{name}}A',
               },
@@ -349,7 +350,6 @@ for (const version of versions) {
               mutationOptions: {
                 name: '{{name}}C',
               },
-              name: '@tanstack/vue-query',
               queryKeys: {
                 name: '{{name}}D',
               },
@@ -384,7 +384,7 @@ for (const version of versions) {
           plugins: [
             '@hey-api/sdk',
             {
-              name: '@hey-api/client-fetch',
+              $name: '@hey-api/client-fetch',
               throwOnError: true,
             },
           ],
@@ -397,8 +397,8 @@ for (const version of versions) {
           output: 'instance',
           plugins: [
             {
+              $name: '@hey-api/sdk',
               instance: true,
-              name: '@hey-api/sdk',
             },
             '@hey-api/client-fetch',
           ],
@@ -435,7 +435,7 @@ for (const version of versions) {
             '@hey-api/client-fetch',
             'valibot',
             {
-              name: '@hey-api/sdk',
+              $name: '@hey-api/sdk',
               transformer: true,
               validator: true,
             },
@@ -452,7 +452,7 @@ for (const version of versions) {
             '@hey-api/client-fetch',
             'zod',
             {
-              name: '@hey-api/sdk',
+              $name: '@hey-api/sdk',
               transformer: true,
               validator: true,
             },
@@ -518,8 +518,8 @@ for (const version of versions) {
   describe('custom plugin', () => {
     it('handles a custom plugin', async () => {
       const myPlugin: DefinePlugin<{
+        $name: any;
         customOption: boolean;
-        name: any;
         output: string;
       }>['Config'] = {
         api: undefined,
@@ -548,7 +548,7 @@ for (const version of versions) {
 
     it('throws on invalid dependency', async () => {
       const myPlugin: DefinePlugin<{
-        name: any;
+        $name: any;
         output: string;
       }>['Config'] = {
         api: undefined,

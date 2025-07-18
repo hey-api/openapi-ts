@@ -71,7 +71,7 @@ describe('handlerLegacy', () => {
       plugins: {
         '@hey-api/schemas': {
           config: {
-            name: '@hey-api/schemas',
+            $name: '@hey-api/schemas',
           },
           handler: () => {},
           name: '@hey-api/schemas',
@@ -79,8 +79,8 @@ describe('handlerLegacy', () => {
         },
         '@hey-api/sdk': {
           config: {
+            $name: '@hey-api/sdk',
             asClass: true,
-            name: '@hey-api/sdk',
           },
           handler: () => {},
           name: '@hey-api/sdk',
@@ -91,7 +91,7 @@ describe('handlerLegacy', () => {
             getId: () => '',
           },
           config: {
-            name: '@hey-api/typescript',
+            $name: '@hey-api/typescript',
           },
           handler: () => {},
           name: '@hey-api/typescript',
@@ -99,7 +99,7 @@ describe('handlerLegacy', () => {
         },
         'legacy/fetch': {
           config: {
-            name: 'legacy/fetch',
+            $name: 'legacy/fetch',
           },
           handler: () => {},
           name: 'legacy/fetch',
@@ -278,7 +278,7 @@ describe('methodNameBuilder', () => {
       plugins: {
         '@hey-api/schemas': {
           config: {
-            name: '@hey-api/schemas',
+            $name: '@hey-api/schemas',
           },
           handler: () => {},
           name: '@hey-api/schemas',
@@ -286,8 +286,8 @@ describe('methodNameBuilder', () => {
         },
         '@hey-api/sdk': {
           config: {
+            $name: '@hey-api/sdk',
             asClass: true,
-            name: '@hey-api/sdk',
           },
           handler: () => {},
           name: '@hey-api/sdk',
@@ -298,7 +298,7 @@ describe('methodNameBuilder', () => {
             getId: () => '',
           },
           config: {
-            name: '@hey-api/typescript',
+            $name: '@hey-api/typescript',
           },
           handler: () => {},
           name: '@hey-api/typescript',
@@ -306,7 +306,7 @@ describe('methodNameBuilder', () => {
         },
         'legacy/fetch': {
           config: {
-            name: 'legacy/fetch',
+            $name: 'legacy/fetch',
           },
           handler: () => {},
           name: 'legacy/fetch',
@@ -407,7 +407,7 @@ describe('methodNameBuilder', () => {
       plugins: {
         '@hey-api/schemas': {
           config: {
-            name: '@hey-api/schemas',
+            $name: '@hey-api/schemas',
           },
           handler: () => {},
           name: '@hey-api/schemas',
@@ -415,9 +415,9 @@ describe('methodNameBuilder', () => {
         },
         '@hey-api/sdk': {
           config: {
+            $name: '@hey-api/sdk',
             asClass: true,
             methodNameBuilder,
-            name: '@hey-api/sdk',
           },
           handler: () => {},
           name: '@hey-api/sdk',
@@ -428,7 +428,7 @@ describe('methodNameBuilder', () => {
             getId: () => '',
           },
           config: {
-            name: '@hey-api/typescript',
+            $name: '@hey-api/typescript',
           },
           handler: () => {},
           name: '@hey-api/typescript',
@@ -436,7 +436,7 @@ describe('methodNameBuilder', () => {
         },
         'legacy/fetch': {
           config: {
-            name: 'legacy/fetch',
+            $name: 'legacy/fetch',
           },
           handler: () => {},
           name: 'legacy/fetch',
@@ -539,7 +539,7 @@ describe('methodNameBuilder', () => {
       plugins: {
         '@hey-api/schemas': {
           config: {
-            name: '@hey-api/schemas',
+            $name: '@hey-api/schemas',
           },
           handler: () => {},
           name: '@hey-api/schemas',
@@ -547,9 +547,9 @@ describe('methodNameBuilder', () => {
         },
         '@hey-api/sdk': {
           config: {
+            $name: '@hey-api/sdk',
             asClass: false,
             methodNameBuilder,
-            name: '@hey-api/sdk',
           },
           handler: () => {},
           name: '@hey-api/sdk',
@@ -560,7 +560,7 @@ describe('methodNameBuilder', () => {
             getId: () => '',
           },
           config: {
-            name: '@hey-api/typescript',
+            $name: '@hey-api/typescript',
           },
           handler: () => {},
           name: '@hey-api/typescript',
@@ -568,7 +568,7 @@ describe('methodNameBuilder', () => {
         },
         'legacy/fetch': {
           config: {
-            name: 'legacy/fetch',
+            $name: 'legacy/fetch',
           },
           handler: () => {},
           name: 'legacy/fetch',

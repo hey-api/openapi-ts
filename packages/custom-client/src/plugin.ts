@@ -11,7 +11,7 @@ export type Config = Client.Config & {
   /**
    * Plugin name. Must be unique.
    */
-  name: '@hey-api/custom-client';
+  $name: '@hey-api/custom-client';
 };
 
 export type CustomClientPlugin = DefinePlugin<Config>;

@@ -13,7 +13,7 @@ vi.mock('../../../../utils/config', () => {
           getId: () => '',
         },
         config: {
-          name: '@hey-api/typescript',
+          $name: '@hey-api/typescript',
         },
         handler: () => {},
         name: '@hey-api/typescript',

@@ -7,11 +7,11 @@ import type { WalkEvent, WalkEventType } from '../types/instance';
 
 export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   public api: T['api'];
-  public config: Omit<T['resolvedConfig'], 'name' | 'output'>;
+  public config: Omit<T['resolvedConfig'], '$name' | 'output'>;
   public context: IR.Context;
   public dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
   private handler: Plugin.Config<T>['handler'];
-  public name: T['resolvedConfig']['name'];
+  public name: T['resolvedConfig']['$name'];
   public output: Required<T['config']>['output'];
 
   public constructor(

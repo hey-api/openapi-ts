@@ -50,11 +50,14 @@ type BaseApi = Record<string, unknown>;
 
 type BaseConfig = {
   /**
+   * Plugin name.
+   */
+  $name: AnyPluginName;
+  /**
    * Should the exports from the plugin's file be re-exported in the index
    * barrel file?
    */
   exportFromIndex?: boolean;
-  name: AnyPluginName;
   output?: string;
 };
 
@@ -63,7 +66,7 @@ type BaseConfig = {
  */
 export namespace Plugin {
   export type Config<T extends Types> = Pick<T, 'api'> & {
-    config: Omit<T['config'], 'name' | 'output'>;
+    config: Omit<T['config'], '$name' | 'output'>;
     /**
      * Dependency plugins will be always processed, regardless of whether user
      * explicitly defines them in their `plugins` config.
@@ -71,7 +74,10 @@ export namespace Plugin {
     dependencies?: ReadonlyArray<AnyPluginName>;
     handler: Handler<T>;
     handlerLegacy?: LegacyHandler<T>;
-    name: T['config']['name'];
+    /**
+     * Plugin name.
+     */
+    name: T['config']['$name'];
     output: NonNullable<T['config']['output']>;
     /**
      * Resolves static configuration values into their runtime equivalents. For
@@ -99,9 +105,9 @@ export namespace Plugin {
   export type DefineConfig<
     Config extends BaseConfig,
     ResolvedConfig extends BaseConfig = Config,
-  > = (config?: UserConfig<Omit<Config, 'name'>>) => Omit<
+  > = (config?: UserConfig<Omit<Config, '$name'>>) => Omit<
     Plugin.Config<Config, ResolvedConfig>,
-    'name'
+    '$name'
   > & {
     /**
      * Cast name to `any` so it doesn't throw type error in `plugins` array.
@@ -109,11 +115,14 @@ export namespace Plugin {
      * that TypeScript trick would cause all string methods to appear as
      * suggested auto completions, which is undesirable.
      */
-    name: any;
+    $name: any;
   };
 
   export interface Name<Name extends PluginNames> {
-    name: Name;
+    /**
+     * Plugin name.
+     */
+    $name: Name;
   }
 
   export type Types<
