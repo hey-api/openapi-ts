@@ -103,12 +103,16 @@ export interface Config {
   responseValidator?: (data: unknown) => Promise<unknown>;
 }
 
-type IsExactlyNeverOrNeverUndefined<T> =
-  [T] extends [never] ? true
+type IsExactlyNeverOrNeverUndefined<T> = [T] extends [never]
+  ? true
   : [T] extends [never | undefined]
-    ? ([undefined] extends [T] ? false : true)
+    ? [undefined] extends [T]
+      ? false
+      : true
     : false;
 
 export type OmitNever<T extends Record<string, unknown>> = {
-  [K in keyof T as IsExactlyNeverOrNeverUndefined<T[K]> extends true ? never : K]: T[K];
+  [K in keyof T as IsExactlyNeverOrNeverUndefined<T[K]> extends true
+    ? never
+    : K]: T[K];
 };
