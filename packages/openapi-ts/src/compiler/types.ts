@@ -489,7 +489,7 @@ export const createAnonymousFunction = ({
   multiLine?: boolean;
   parameters?: FunctionParameter[];
   returnType?: string | ts.TypeNode;
-  statements?: ts.Statement[];
+  statements?: ReadonlyArray<ts.Statement>;
   types?: FunctionTypeParameter[];
 }) => {
   const expression = ts.factory.createFunctionExpression(
@@ -1049,7 +1049,7 @@ export const createBlock = ({
   statements,
 }: {
   multiLine?: boolean;
-  statements: Array<ts.Statement>;
+  statements: ReadonlyArray<ts.Statement>;
 }) => ts.factory.createBlock(statements, multiLine);
 
 export const createPropertyAssignment = ({

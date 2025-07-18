@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import type ts from 'typescript';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { Config } from '../../types/config';
@@ -99,6 +100,7 @@ describe('generateLegacyCore', () => {
         '@hey-api/typescript': {
           api: {
             getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {
             enums: 'javascript',
@@ -232,6 +234,7 @@ describe('generateLegacyCore', () => {
         '@hey-api/typescript': {
           api: {
             getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {
             enums: 'javascript',
@@ -348,6 +351,7 @@ describe('generateLegacyCore', () => {
         '@hey-api/typescript': {
           api: {
             getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {
             enums: 'javascript',

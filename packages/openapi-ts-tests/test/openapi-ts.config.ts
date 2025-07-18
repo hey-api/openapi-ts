@@ -44,6 +44,7 @@ export default defineConfig(() => {
         // 'case.yaml',
         // 'enum-inline.yaml',
         'full.yaml',
+        // 'object-property-names.yaml',
         // 'transformers-all-of.yaml',
         // 'validators-circular-ref-2.yaml',
       ),
@@ -71,6 +72,7 @@ export default defineConfig(() => {
     // name: 'foo',
     output: {
       // case: 'snake_case',
+      clean: false,
       // format: 'prettier',
       // indexFile: false,
       // lint: 'eslint',
@@ -132,10 +134,10 @@ export default defineConfig(() => {
       {
         // baseUrl: false,
         // exportFromIndex: true,
-        // name: '@hey-api/client-axios',
+        name: '@hey-api/client-fetch',
         // name: 'legacy/angular',
         // strictBaseUrl: true,
-        // throwOnError: true,
+        throwOnError: true,
       },
       {
         // case: 'snake_case',
@@ -168,9 +170,9 @@ export default defineConfig(() => {
         // instance: true,
         name: '@hey-api/sdk',
         // operationId: false,
+        params: 'experiment',
         // responseStyle: 'data',
-        // throwOnError: true,
-        transformer: '@hey-api/transformers',
+        // transformer: '@hey-api/transformers',
         // transformer: true,
         // validator: {
         //   request: 'zod',
@@ -180,10 +182,10 @@ export default defineConfig(() => {
       {
         // bigInt: true,
         // dates: true,
-        name: '@hey-api/transformers',
+        // name: '@hey-api/transformers',
       },
       {
-        name: 'fastify',
+        // name: 'fastify',
       },
       {
         // case: 'SCREAMING_SNAKE_CASE',
@@ -198,7 +200,7 @@ export default defineConfig(() => {
         // mutationOptions: {
         //   name: '{{name}}MO',
         // },
-        name: '@tanstack/react-query',
+        // name: '@tanstack/react-query',
         // queryKeys: {
         //   name: '{{name}}QK',
         // },

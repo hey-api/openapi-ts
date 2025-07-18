@@ -15,6 +15,8 @@ import { createClientOptions } from './clientOptions';
 import { typesId } from './ref';
 import type { HeyApiTypeScriptPlugin } from './types';
 
+export type OnRef = (id: string) => void;
+
 interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
   extends Omit<IR.SchemaObject, 'type'> {
   type: Extract<Required<IR.SchemaObject>['type'], T>;
@@ -92,9 +94,11 @@ const schemaToEnumObject = ({
 };
 
 const arrayTypeToIdentifier = ({
+  onRef,
   plugin,
   schema,
 }: {
+  onRef: OnRef | undefined;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'array'>;
 }): ts.TypeNode => {
@@ -112,6 +116,7 @@ const arrayTypeToIdentifier = ({
 
   for (const item of schema.items!) {
     const type = schemaToType({
+      onRef,
       plugin,
       schema: item,
     });
@@ -148,13 +153,16 @@ const booleanTypeToIdentifier = ({
 };
 
 const enumTypeToIdentifier = ({
+  onRef,
   plugin,
   schema,
 }: {
+  onRef: OnRef | undefined;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'enum'>;
 }): ts.TypeNode => {
   const type = schemaToType({
+    onRef,
     plugin,
     schema: {
       ...schema,
@@ -190,14 +198,14 @@ const numberTypeToIdentifier = ({
 };
 
 const objectTypeToIdentifier = ({
+  onRef,
   plugin,
   schema,
 }: {
+  onRef: OnRef | undefined;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'object'>;
 }): ts.TypeNode => {
-  const file = plugin.context.file({ id: typesId })!;
-
   // TODO: parser - handle constants
   let indexKey: ts.TypeReferenceNode | undefined;
   let indexProperty: Property | undefined;
@@ -208,10 +216,7 @@ const objectTypeToIdentifier = ({
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
-    const propertyType = schemaToType({
-      plugin,
-      schema: property,
-    });
+    const propertyType = schemaToType({ onRef, plugin, schema: property });
     const isRequired = required.includes(name);
     schemaProperties.push({
       comment: createSchemaComment({ schema: property }),
@@ -247,6 +252,7 @@ const objectTypeToIdentifier = ({
       isRequired: !schema.propertyNames,
       name: 'key',
       type: schemaToType({
+        onRef,
         plugin,
         schema:
           indexPropertyItems.length === 1
@@ -259,9 +265,13 @@ const objectTypeToIdentifier = ({
     };
 
     if (schema.propertyNames?.$ref) {
-      indexKey = file.getNode(
-        plugin.api.getId({ type: 'ref', value: schema.propertyNames.$ref }),
-      ).node;
+      indexKey = schemaToType({
+        onRef,
+        plugin,
+        schema: {
+          $ref: schema.propertyNames.$ref,
+        },
+      }) as ts.TypeReferenceNode;
     }
   }
 
@@ -314,9 +324,11 @@ const stringTypeToIdentifier = ({
 };
 
 const tupleTypeToIdentifier = ({
+  onRef,
   plugin,
   schema,
 }: {
+  onRef: OnRef | undefined;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'tuple'>;
 }): ts.TypeNode => {
@@ -330,6 +342,7 @@ const tupleTypeToIdentifier = ({
   } else if (schema.items) {
     for (const item of schema.items) {
       const type = schemaToType({
+        onRef,
         plugin,
         schema: item,
       });
@@ -343,15 +356,18 @@ const tupleTypeToIdentifier = ({
 };
 
 const schemaTypeToIdentifier = ({
+  onRef,
   plugin,
   schema,
 }: {
+  onRef: OnRef | undefined;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: IR.SchemaObject;
 }): ts.TypeNode => {
   switch (schema.type as Required<IR.SchemaObject>['type']) {
     case 'array':
       return arrayTypeToIdentifier({
+        onRef,
         plugin,
         schema: schema as SchemaWithType<'array'>,
       });
@@ -361,6 +377,7 @@ const schemaTypeToIdentifier = ({
       });
     case 'enum':
       return enumTypeToIdentifier({
+        onRef,
         plugin,
         schema: schema as SchemaWithType<'enum'>,
       });
@@ -380,6 +397,7 @@ const schemaTypeToIdentifier = ({
       });
     case 'object':
       return objectTypeToIdentifier({
+        onRef,
         plugin,
         schema: schema as SchemaWithType<'object'>,
       });
@@ -390,6 +408,7 @@ const schemaTypeToIdentifier = ({
       });
     case 'tuple':
       return tupleTypeToIdentifier({
+        onRef,
         plugin,
         schema: schema as SchemaWithType<'tuple'>,
       });
@@ -534,6 +553,7 @@ const operationToDataType = ({
     },
   );
   const type = schemaToType({
+    onRef: undefined,
     plugin,
     schema: data,
   });
@@ -572,6 +592,7 @@ const operationToType = ({
       },
     );
     const type = schemaToType({
+      onRef: undefined,
       plugin,
       schema: errors,
     });
@@ -626,6 +647,7 @@ const operationToType = ({
       },
     );
     const type = schemaToType({
+      onRef: undefined,
       plugin,
       schema: responses,
     });
@@ -669,21 +691,30 @@ const operationToType = ({
 };
 
 export const schemaToType = ({
+  onRef,
   plugin,
   schema,
 }: {
+  /**
+   * Callback that can be used to perform side-effects when we encounter a
+   * reference. For example, we might want to import the referenced type.
+   */
+  onRef: OnRef | undefined;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: IR.SchemaObject;
 }): ts.TypeNode => {
   const file = plugin.context.file({ id: typesId })!;
 
   if (schema.$ref) {
+    if (onRef) {
+      onRef(plugin.api.getId({ type: 'ref', value: schema.$ref }));
+    }
     return file.getNode(plugin.api.getId({ type: 'ref', value: schema.$ref }))
       .node;
   }
 
   if (schema.type) {
-    return schemaTypeToIdentifier({ plugin, schema });
+    return schemaTypeToIdentifier({ onRef, plugin, schema });
   }
 
   if (schema.items) {
@@ -692,10 +723,7 @@ export const schemaToType = ({
       const itemTypes: Array<ts.TypeNode> = [];
 
       for (const item of schema.items) {
-        const type = schemaToType({
-          plugin,
-          schema: item,
-        });
+        const type = schemaToType({ onRef, plugin, schema: item });
         itemTypes.push(type);
       }
 
@@ -704,14 +732,12 @@ export const schemaToType = ({
         : compiler.typeUnionNode({ types: itemTypes });
     }
 
-    return schemaToType({
-      plugin,
-      schema,
-    });
+    return schemaToType({ onRef, plugin, schema });
   }
 
   // catch-all fallback for failed schemas
   return schemaTypeToIdentifier({
+    onRef,
     plugin,
     schema: {
       type: 'unknown',
@@ -814,7 +840,7 @@ const handleComponent = ({
   schema: IR.SchemaObject;
 }) => {
   const file = plugin.context.file({ id: typesId })!;
-  const type = schemaToType({ plugin, schema });
+  const type = schemaToType({ onRef: undefined, plugin, schema });
   const name = buildName({
     config: plugin.config.definitions,
     name: refToName(id),
