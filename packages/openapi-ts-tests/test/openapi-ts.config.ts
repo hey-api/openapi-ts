@@ -43,10 +43,10 @@ export default defineConfig(() => {
         '3.1.x',
         // 'case.yaml',
         // 'enum-inline.yaml',
-        'full.yaml',
+        // 'full.yaml',
         // 'object-property-names.yaml',
         // 'transformers-all-of.yaml',
-        // 'validators-circular-ref-2.yaml',
+        'validators.yaml',
       ),
       // path: path.resolve(__dirname, 'spec', 'v3-transforms.json'),
       // path: path.resolve(__dirname, 'spec', 'v3.json'),
@@ -174,10 +174,10 @@ export default defineConfig(() => {
         // responseStyle: 'data',
         // transformer: '@hey-api/transformers',
         // transformer: true,
-        // validator: {
-        //   request: 'zod',
-        //   response: 'valibot',
-        // },
+        validator: {
+          request: 'zod',
+          response: 'zod',
+        },
       },
       {
         // bigInt: true,
@@ -227,20 +227,36 @@ export default defineConfig(() => {
       {
         // case: 'snake_case',
         // comments: false,
-        // dates: {
-        //   // offset: false,
-        // },
-        definitions: 'z{{name}}Definition',
-        // exportFromIndex: true,
-        // metadata: true,
-        // name: 'zod',
-        requests: {
-          // case: 'SCREAMING_SNAKE_CASE',
-          // name: 'z{{name}}TestData',
+        dates: {
+          offset: true,
         },
-        responses: {
-          // case: 'snake_case',
-          // name: 'z{{name}}TestResponse',
+        definitions: {
+          name: 'z{{name}}Definition',
+          //   types: {
+          //     infer: 'D{{name}}ZodType',
+          //   },
+        },
+        // exportFromIndex: true,
+        metadata: true,
+        name: 'zod',
+        // requests: {
+        //   // case: 'SCREAMING_SNAKE_CASE',
+        //   // name: 'z{{name}}TestData',
+        //   types: {
+        //     infer: 'E{{name}}DataZodType',
+        //   },
+        // },
+        // responses: {
+        //   // case: 'snake_case',
+        //   // name: 'z{{name}}TestResponse',
+        //   types: {
+        //     infer: 'F{{name}}ResponseZodType',
+        //   },
+        // },
+        types: {
+          infer: {
+            case: 'snake_case',
+          },
         },
       },
       {

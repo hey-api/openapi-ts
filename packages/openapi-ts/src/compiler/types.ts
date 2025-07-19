@@ -904,14 +904,10 @@ export const createConditionalExpression = ({
 export const createTypeOfExpression = ({
   text,
 }: {
-  text: string | ts.TypeReferenceNode;
+  text: string | ts.Identifier;
 }) => {
   const expression = ts.factory.createTypeOfExpression(
-    // TODO: this crashes when passing reference, fix
-    // TODO: https://github.com/hey-api/openapi-ts/issues/2289
-    typeof text === 'string'
-      ? createIdentifier({ text })
-      : (text as unknown as ts.Identifier),
+    typeof text === 'string' ? createIdentifier({ text }) : text,
   );
   return expression;
 };

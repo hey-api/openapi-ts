@@ -14,7 +14,8 @@ export const buildName = ({
   if (typeof config.name === 'function') {
     name = config.name(name);
   } else if (config.name) {
-    name = config.name.replace('{{name}}', name);
+    const separator = config.case === 'preserve' ? '' : '-';
+    name = config.name.replace('{{name}}', `${separator}${name}${separator}`);
   }
 
   return stringCase({ case: config.case, value: name });
