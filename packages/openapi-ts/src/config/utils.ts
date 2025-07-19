@@ -3,6 +3,16 @@ type ObjectType<T> =
     ? Record<string, any>
     : Extract<T, Record<string, any>>;
 
+type NotArray<T> = T extends any[] ? never : T;
+type NotFunction<T> = T extends (...args: any[]) => any ? never : T;
+type PlainObject<T> = T extends object
+  ? NotFunction<T> extends never
+    ? never
+    : NotArray<T> extends never
+      ? never
+      : T
+  : never;
+
 type MappersType<T> = {
   boolean: T extends boolean
     ? (value: boolean) => Partial<ObjectType<T>>
@@ -11,7 +21,12 @@ type MappersType<T> = {
     ? (value: (...args: any[]) => any) => Partial<ObjectType<T>>
     : never;
   number: T extends number ? (value: number) => Partial<ObjectType<T>> : never;
-  object?: (value: Partial<ObjectType<T>>) => Partial<ObjectType<T>>;
+  object?: PlainObject<T> extends never
+    ? never
+    : (
+        value: Partial<PlainObject<T>>,
+        defaultValue: PlainObject<T>,
+      ) => Partial<ObjectType<T>>;
   string: T extends string ? (value: string) => Partial<ObjectType<T>> : never;
 } extends infer U
   ? { [K in keyof U as U[K] extends never ? never : K]: U[K] }
@@ -45,7 +60,13 @@ export type ValueToObject = <
     : {
         mappers: MappersType<T>;
       }),
-) => ObjectType<T>;
+) => PlainObject<T>;
+
+const isPlainObject = (value: unknown): value is Record<string, any> =>
+  typeof value === 'object' &&
+  value !== null &&
+  !Array.isArray(value) &&
+  typeof value !== 'function';
 
 const mergeResult = <T>(
   result: ObjectType<T>,
@@ -96,7 +117,7 @@ export const valueToObject: ValueToObject = ({
       }
       break;
     case 'object':
-      if (value !== null) {
+      if (isPlainObject(value)) {
         if (
           mappers &&
           'object' in mappers &&
@@ -104,8 +125,9 @@ export const valueToObject: ValueToObject = ({
         ) {
           const mapper = mappers.object as (
             value: Record<string, any>,
+            defaultValue: ObjectType<any>,
           ) => Partial<ObjectType<any>>;
-          result = mergeResult(result, mapper(value));
+          result = mergeResult(result, mapper(value, defaultValue));
         } else {
           result = mergeResult(result, value);
         }
@@ -113,5 +135,5 @@ export const valueToObject: ValueToObject = ({
       break;
   }
 
-  return result;
+  return result as any;
 };

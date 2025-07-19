@@ -15,25 +15,16 @@ const createRequestValidator = ({
   operation: IR.OperationObject;
   plugin: ZodPlugin['Instance'];
 }): ts.ArrowFunction | undefined => {
-  const { requests } = plugin.config;
-  const schemaIdentifier = plugin.context.file({ id: zodId })!.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/zod-data/${operation.id}`,
-    // TODO: refactor to not have to define nameTransformer
-    nameTransformer: typeof requests === 'object' ? requests.name : undefined,
-    namespace: 'value',
-  });
-
-  if (!schemaIdentifier.name) {
-    return;
-  }
+  const zodFile = plugin.context.file({ id: zodId })!;
+  const name = zodFile.getName(plugin.api.getId({ operation, type: 'data' }));
+  if (!name) return;
 
   file.import({
     module: file.relativePathToFile({
       context: plugin.context,
       id: zodId,
     }),
-    name: schemaIdentifier.name,
+    name,
   });
 
   const dataParameterName = 'data';
@@ -50,7 +41,7 @@ const createRequestValidator = ({
         expression: compiler.awaitExpression({
           expression: compiler.callExpression({
             functionName: compiler.propertyAccessExpression({
-              expression: compiler.identifier({ text: schemaIdentifier.name }),
+              expression: compiler.identifier({ text: name }),
               name: identifiers.parseAsync,
             }),
             parameters: [compiler.identifier({ text: dataParameterName })],
@@ -70,25 +61,18 @@ const createResponseValidator = ({
   operation: IR.OperationObject;
   plugin: ZodPlugin['Instance'];
 }): ts.ArrowFunction | undefined => {
-  const { responses } = plugin.config;
-  const schemaIdentifier = plugin.context.file({ id: zodId })!.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/zod-response/${operation.id}`,
-    // TODO: refactor to not have to define nameTransformer
-    nameTransformer: typeof responses === 'object' ? responses.name : undefined,
-    namespace: 'value',
-  });
-
-  if (!schemaIdentifier.name) {
-    return;
-  }
+  const zodFile = plugin.context.file({ id: zodId })!;
+  const name = zodFile.getName(
+    plugin.api.getId({ operation, type: 'responses' }),
+  );
+  if (!name) return;
 
   file.import({
     module: file.relativePathToFile({
       context: plugin.context,
       id: zodId,
     }),
-    name: schemaIdentifier.name,
+    name,
   });
 
   const dataParameterName = 'data';
@@ -105,7 +89,7 @@ const createResponseValidator = ({
         expression: compiler.awaitExpression({
           expression: compiler.callExpression({
             functionName: compiler.propertyAccessExpression({
-              expression: compiler.identifier({ text: schemaIdentifier.name }),
+              expression: compiler.identifier({ text: name }),
               name: identifiers.parseAsync,
             }),
             parameters: [compiler.identifier({ text: dataParameterName })],
@@ -114,6 +98,30 @@ const createResponseValidator = ({
       }),
     ],
   });
+};
+
+type GetIdArgs =
+  | {
+      operation: IR.OperationObject;
+      type: 'data' | 'responses' | 'type-infer-data' | 'type-infer-responses';
+    }
+  | {
+      type: 'ref' | 'type-infer-ref';
+      value: string;
+    };
+
+const getId = (args: GetIdArgs): string => {
+  switch (args.type) {
+    case 'data':
+    case 'responses':
+    case 'type-infer-data':
+    case 'type-infer-responses':
+      return `${args.operation.id}-${args.type}`;
+    case 'ref':
+    case 'type-infer-ref':
+    default:
+      return `${args.type}-${args.value}`;
+  }
 };
 
 export type Api = {
@@ -127,9 +135,11 @@ export type Api = {
     operation: IR.OperationObject;
     plugin: ZodPlugin['Instance'];
   }) => ts.ArrowFunction | undefined;
+  getId: (args: GetIdArgs) => string;
 };
 
 export const api: Api = {
   createRequestValidator,
   createResponseValidator,
+  getId,
 };
