@@ -4,9 +4,7 @@ export type Foo = {
     foo: string;
 };
 
-export type Bar = Foo & {
-    [key: string]: never;
-};
+export type Bar = Foo & {};
 
 export type Baz = Foo & {
     bar: string;
