@@ -42,6 +42,8 @@ export type UserConfig = Plugin.Name<'zod'> & {
    * - `boolean`: Shorthand for `{ enabled: boolean }`
    * - `string` or `function`: Shorthand for `{ name: string | function }`
    * - `object`: Full configuration object
+   *
+   * @default true
    */
   definitions?:
     | boolean
@@ -66,6 +68,47 @@ export type UserConfig = Plugin.Name<'zod'> & {
          * @default 'z{{name}}'
          */
         name?: StringName;
+        /**
+         * Configuration for TypeScript type generation from Zod schemas.
+         *
+         * Controls generation of TypeScript types based on the generated Zod schemas.
+         */
+        types?: {
+          /**
+           * Configuration for `z.infer` types.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default false
+           */
+          infer?:
+            | boolean
+            | StringName
+            | {
+                /**
+                 * The casing convention to use for generated type names.
+                 *
+                 * @default 'PascalCase'
+                 */
+                case?: StringCase;
+                /**
+                 * Whether to generate TypeScript types from Zod schemas.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Custom naming pattern for generated type names. The name variable is
+                 * obtained from the Zod schema name.
+                 *
+                 * @default '{{name}}ZodType'
+                 */
+                name?: StringName;
+              };
+        };
       };
   /**
    * Should the exports from the generated files be re-exported in the index
@@ -98,6 +141,8 @@ export type UserConfig = Plugin.Name<'zod'> & {
    * - `boolean`: Shorthand for `{ enabled: boolean }`
    * - `string` or `function`: Shorthand for `{ name: string | function }`
    * - `object`: Full configuration object
+   *
+   * @default true
    */
   requests?:
     | boolean
@@ -122,6 +167,47 @@ export type UserConfig = Plugin.Name<'zod'> & {
          * @default 'z{{name}}Data'
          */
         name?: StringName;
+        /**
+         * Configuration for TypeScript type generation from Zod schemas.
+         *
+         * Controls generation of TypeScript types based on the generated Zod schemas.
+         */
+        types?: {
+          /**
+           * Configuration for `z.infer` types.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default false
+           */
+          infer?:
+            | boolean
+            | StringName
+            | {
+                /**
+                 * The casing convention to use for generated type names.
+                 *
+                 * @default 'PascalCase'
+                 */
+                case?: StringCase;
+                /**
+                 * Whether to generate TypeScript types from Zod schemas.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Custom naming pattern for generated type names. The name variable is
+                 * obtained from the Zod schema name.
+                 *
+                 * @default '{{name}}DataZodType'
+                 */
+                name?: StringName;
+              };
+        };
       };
   /**
    * Configuration for response-specific Zod schemas.
@@ -133,6 +219,8 @@ export type UserConfig = Plugin.Name<'zod'> & {
    * - `boolean`: Shorthand for `{ enabled: boolean }`
    * - `string` or `function`: Shorthand for `{ name: string | function }`
    * - `object`: Full configuration object
+   *
+   * @default true
    */
   responses?:
     | boolean
@@ -157,7 +245,82 @@ export type UserConfig = Plugin.Name<'zod'> & {
          * @default 'z{{name}}Response'
          */
         name?: StringName;
+        /**
+         * Configuration for TypeScript type generation from Zod schemas.
+         *
+         * Controls generation of TypeScript types based on the generated Zod schemas.
+         */
+        types?: {
+          /**
+           * Configuration for `z.infer` types.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default false
+           */
+          infer?:
+            | boolean
+            | StringName
+            | {
+                /**
+                 * The casing convention to use for generated type names.
+                 *
+                 * @default 'PascalCase'
+                 */
+                case?: StringCase;
+                /**
+                 * Whether to generate TypeScript types from Zod schemas.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Custom naming pattern for generated type names. The name variable is
+                 * obtained from the Zod schema name.
+                 *
+                 * @default '{{name}}ResponseZodType'
+                 */
+                name?: StringName;
+              };
+        };
       };
+  /**
+   * Configuration for TypeScript type generation from Zod schemas.
+   *
+   * Controls generation of TypeScript types based on the generated Zod schemas.
+   */
+  types?: {
+    /**
+     * Configuration for `z.infer` types.
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default false
+     */
+    infer?:
+      | boolean
+      | StringName
+      | {
+          /**
+           * The casing convention to use for generated type names.
+           *
+           * @default 'PascalCase'
+           */
+          case?: StringCase;
+          /**
+           * Whether to generate TypeScript types from Zod schemas.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+        };
+  };
 };
 
 export type Config = Plugin.Name<'zod'> & {
@@ -216,6 +379,37 @@ export type Config = Plugin.Name<'zod'> & {
      * @default 'z{{name}}'
      */
     name: StringName;
+    /**
+     * Configuration for TypeScript type generation from Zod schemas.
+     *
+     * Controls generation of TypeScript types based on the generated Zod schemas.
+     */
+    types: {
+      /**
+       * Configuration for `z.infer` types.
+       */
+      infer: {
+        /**
+         * The casing convention to use for generated type names.
+         *
+         * @default 'PascalCase'
+         */
+        case: StringCase;
+        /**
+         * Whether to generate TypeScript types from Zod schemas.
+         *
+         * @default true
+         */
+        enabled: boolean;
+        /**
+         * Custom naming pattern for generated type names. The name variable is
+         * obtained from the Zod schema name.
+         *
+         * @default '{{name}}ZodType'
+         */
+        name: StringName;
+      };
+    };
   };
   /**
    * Should the exports from the generated files be re-exported in the index
@@ -264,6 +458,37 @@ export type Config = Plugin.Name<'zod'> & {
      * @default 'z{{name}}Data'
      */
     name: StringName;
+    /**
+     * Configuration for TypeScript type generation from Zod schemas.
+     *
+     * Controls generation of TypeScript types based on the generated Zod schemas.
+     */
+    types: {
+      /**
+       * Configuration for `z.infer` types.
+       */
+      infer: {
+        /**
+         * The casing convention to use for generated type names.
+         *
+         * @default 'PascalCase'
+         */
+        case: StringCase;
+        /**
+         * Whether to generate TypeScript types from Zod schemas.
+         *
+         * @default true
+         */
+        enabled: boolean;
+        /**
+         * Custom naming pattern for generated type names. The name variable is
+         * obtained from the Zod schema name.
+         *
+         * @default '{{name}}DataZodType'
+         */
+        name: StringName;
+      };
+    };
   };
   /**
    * Configuration for response-specific Zod schemas.
@@ -291,6 +516,61 @@ export type Config = Plugin.Name<'zod'> & {
      * @default 'z{{name}}Response'
      */
     name: StringName;
+    /**
+     * Configuration for TypeScript type generation from Zod schemas.
+     *
+     * Controls generation of TypeScript types based on the generated Zod schemas.
+     */
+    types: {
+      /**
+       * Configuration for `z.infer` types.
+       */
+      infer: {
+        /**
+         * The casing convention to use for generated type names.
+         *
+         * @default 'PascalCase'
+         */
+        case: StringCase;
+        /**
+         * Whether to generate TypeScript types from Zod schemas.
+         *
+         * @default true
+         */
+        enabled: boolean;
+        /**
+         * Custom naming pattern for generated type names. The name variable is
+         * obtained from the Zod schema name.
+         *
+         * @default '{{name}}ResponseZodType'
+         */
+        name: StringName;
+      };
+    };
+  };
+  /**
+   * Configuration for TypeScript type generation from Zod schemas.
+   *
+   * Controls generation of TypeScript types based on the generated Zod schemas.
+   */
+  types: {
+    /**
+     * Configuration for `z.infer` types.
+     */
+    infer: {
+      /**
+       * The casing convention to use for generated type names.
+       *
+       * @default 'PascalCase'
+       */
+      case: StringCase;
+      /**
+       * Whether to generate TypeScript types from Zod schemas.
+       *
+       * @default true
+       */
+      enabled: boolean;
+    };
   };
 };
 

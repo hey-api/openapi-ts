@@ -1,6 +1,8 @@
 import { operationResponsesMap } from '../../ir/operation';
 import type { IR } from '../../ir/types';
+import { buildName } from '../../openApi/shared/utils/name';
 import { zodId } from './constants';
+import { exportZodSchema } from './export';
 import type { State } from './plugin';
 import { schemaToZodSchema } from './plugin';
 import type { ZodPlugin } from './types';
@@ -8,12 +10,15 @@ import type { ZodPlugin } from './types';
 export const operationToZodSchema = ({
   operation,
   plugin,
-  state,
 }: {
   operation: IR.OperationObject;
   plugin: ZodPlugin['Instance'];
-  state: State;
 }) => {
+  const state: State = {
+    circularReferenceTracker: [],
+    hasCircularReference: false,
+  };
+
   const file = plugin.context.file({ id: zodId })!;
 
   if (plugin.config.requests.enabled) {
@@ -114,22 +119,38 @@ export const operationToZodSchema = ({
 
     schemaData.required = [...requiredProperties];
 
-    const identifierData = file.identifier({
-      // TODO: refactor for better cross-plugin compatibility
-      $ref: `#/zod-data/${operation.id}`,
-      case: plugin.config.requests.case,
-      create: true,
-      nameTransformer: plugin.config.requests.name,
-      namespace: 'value',
-    });
-    schemaToZodSchema({
-      // TODO: refactor for better cross-plugin compatibility
-      $ref: `#/zod-data/${operation.id}`,
-      identifier: identifierData,
+    const zodSchema = schemaToZodSchema({
       plugin,
       schema: schemaData,
       state,
     });
+    const schemaId = plugin.api.getId({ operation, type: 'data' });
+    const typeInferId = plugin.config.requests.types.infer.enabled
+      ? plugin.api.getId({ operation, type: 'type-infer-data' })
+      : undefined;
+    exportZodSchema({
+      plugin,
+      schema: schemaData,
+      schemaId,
+      typeInferId,
+      zodSchema,
+    });
+    file.updateNodeReferences(
+      schemaId,
+      buildName({
+        config: plugin.config.requests,
+        name: operation.id,
+      }),
+    );
+    if (typeInferId) {
+      file.updateNodeReferences(
+        typeInferId,
+        buildName({
+          config: plugin.config.requests.types.infer,
+          name: operation.id,
+        }),
+      );
+    }
   }
 
   if (plugin.config.responses.enabled) {
@@ -137,22 +158,38 @@ export const operationToZodSchema = ({
       const { response } = operationResponsesMap(operation);
 
       if (response) {
-        const identifierResponse = file.identifier({
-          // TODO: refactor for better cross-plugin compatibility
-          $ref: `#/zod-response/${operation.id}`,
-          case: plugin.config.responses.case,
-          create: true,
-          nameTransformer: plugin.config.responses.name,
-          namespace: 'value',
-        });
-        schemaToZodSchema({
-          // TODO: refactor for better cross-plugin compatibility
-          $ref: `#/zod-response/${operation.id}`,
-          identifier: identifierResponse,
+        const zodSchema = schemaToZodSchema({
           plugin,
           schema: response,
           state,
         });
+        const schemaId = plugin.api.getId({ operation, type: 'responses' });
+        const typeInferId = plugin.config.responses.types.infer.enabled
+          ? plugin.api.getId({ operation, type: 'type-infer-responses' })
+          : undefined;
+        exportZodSchema({
+          plugin,
+          schema: response,
+          schemaId,
+          typeInferId,
+          zodSchema,
+        });
+        file.updateNodeReferences(
+          schemaId,
+          buildName({
+            config: plugin.config.responses,
+            name: operation.id,
+          }),
+        );
+        if (typeInferId) {
+          file.updateNodeReferences(
+            typeInferId,
+            buildName({
+              config: plugin.config.responses.types.infer,
+              name: operation.id,
+            }),
+          );
+        }
       }
     }
   }

@@ -19,3 +19,12 @@ export const definePluginConfig =
       ...userConfig,
     },
   });
+
+/**
+ * Reusable mappers for `enabled` and `name` fields.
+ */
+export const mappers = {
+  boolean: (enabled: boolean) => ({ enabled }),
+  function: (name: (...args: any[]) => any) => ({ name }),
+  string: (name: string) => ({ name }),
+} as const;

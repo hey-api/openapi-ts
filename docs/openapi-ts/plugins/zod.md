@@ -72,7 +72,23 @@ The Zod plugin will generate the following artifacts, depending on the input spe
 
 A single request schema is generated for each endpoint. It may contain a request body, parameters, and headers.
 
-```ts
+::: code-group
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      requests: true, // [!code ++]
+    },
+  ],
+};
+```
+
+```ts [output]
 const zData = z.object({
   body: z
     .object({
@@ -87,6 +103,8 @@ const zData = z.object({
 });
 ```
 
+:::
+
 ::: tip
 If you need to access individual fields, you can do so using the [`.shape`](https://zod.dev/api?id=shape) API. For example, we can get the request body schema with `zData.shape.body`.
 :::
@@ -97,7 +115,23 @@ You can customize the naming and casing pattern for `requests` schemas using the
 
 A single Zod schema is generated for all endpoint's responses. If the endpoint describes multiple responses, the generated schema is a union of all possible response shapes.
 
-```ts
+::: code-group
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      responses: true, // [!code ++]
+    },
+  ],
+};
+```
+
+```ts [output]
 const zResponse = z.union([
   z.object({
     foo: z.string().optional(),
@@ -108,13 +142,31 @@ const zResponse = z.union([
 ]);
 ```
 
+:::
+
 You can customize the naming and casing pattern for `responses` schemas using the `.name` and `.case` options.
 
 ## Definitions
 
 A Zod schema is generated for every reusable definition from your input.
 
-```ts
+::: code-group
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      definitions: true, // [!code ++]
+    },
+  ],
+};
+```
+
+```ts [output]
 const zFoo = z.number().int();
 
 const zBar = z.object({
@@ -122,25 +174,70 @@ const zBar = z.object({
 });
 ```
 
+:::
+
 You can customize the naming and casing pattern for `definitions` schemas using the `.name` and `.case` options.
 
 ## Metadata
 
 It's often useful to associate a schema with some additional [metadata](https://zod.dev/metadata) for documentation, code generation, AI structured outputs, form validation, and other purposes. If this is your use case, you can set `metadata` to `true` to generate additional metadata about schemas.
 
-```js
+::: code-group
+
+```js [config]
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     // ...other plugins
     {
-      metadata: true, // [!code ++]
       name: 'zod',
+      metadata: true, // [!code ++]
     },
   ],
 };
 ```
+
+```ts [output]
+export const zFoo = z.string().describe('Additional metadata');
+```
+
+:::
+
+## Types
+
+In addition to Zod schemas, you can generate schema-specific types. These can be generated for all schemas or for specific resources.
+
+::: code-group
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      types: {
+        infer: false, // by default, no `z.infer` types [!code ++]
+      },
+      responses: {
+        types: {
+          infer: true, // `z.infer` types only for response schemas [!code ++]
+        },
+      },
+    },
+  ],
+};
+```
+
+```ts [output]
+export type ResponseZodType = z.infer<typeof zResponse>;
+```
+
+:::
+
+You can customize the naming and casing pattern for schema-specific `types` using the `.name` and `.case` options.
 
 ## Config API
 
