@@ -6,8 +6,6 @@ import colors from 'ansi-colors';
 import { findPackageJson } from './generate/tsConfig';
 import { ensureDirSync } from './generate/utils';
 
-export const isInteractive = process.stdin.isTTY && process.stdout.isTTY;
-
 export class ConfigError extends Error {}
 
 export class HeyApiError extends Error {
@@ -154,8 +152,10 @@ export const printCrashReport = ({
 
 export const shouldReportCrash = async ({
   error,
+  isInteractive,
 }: {
   error: unknown;
+  isInteractive: boolean | undefined;
 }): Promise<boolean> => {
   if (!isInteractive || error instanceof ConfigError) {
     return false;

@@ -23,6 +23,7 @@ describe('registerHandlebarHelpers', () => {
           timeout: 60_000,
         },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
@@ -131,6 +132,7 @@ describe('registerHandlebarTemplates', () => {
           timeout: 60_000,
         },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
