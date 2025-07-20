@@ -95,5 +95,5 @@ export default {
 Re-exporting additional files from index file may result in broken output due to naming conflicts.
 :::
 
-<!--@include: ../examples.md-->
-<!--@include: ../sponsors.md-->
+<!--@include: ../partials/examples.md-->
+<!--@include: ../partials/sponsors.md-->

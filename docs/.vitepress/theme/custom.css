@@ -277,6 +277,11 @@ a.migration:focus {
   padding: 0.2rem 0;
 }
 
+.contributors-list ul {
+  margin-bottom: 1.3rem;
+  margin-top: 1.3rem;
+}
+
 @media (min-width: 640px) {
   .VPFeatures.VPHomeFeatures > .container > .items {
     gap: 1rem;
@@ -286,6 +291,10 @@ a.migration:focus {
   .home-list > ul,
   .sponsors-list > ul {
     flex-direction: row;
+  }
+
+  .contributors-list ul {
+    columns: 2;
   }
 }
 
@@ -308,4 +317,8 @@ a.migration:focus {
   max-width: 390px;
   padding: 0;
   width: 100%;
+}
+
+.VPNavBar.has-sidebar > .wrapper > .container > .title {
+  background-color: var(--vp-sidebar-bg-color);
 }

@@ -170,5 +170,5 @@ export default {
 Setting `output.clean` to `false` may result in broken output. Ensure you typecheck your code.
 :::
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

@@ -13,4 +13,4 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 [Pinia Colada](https://pinia-colada.esm.dev) is the data fetching layer for Pinia.
 
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/sponsors.md-->
