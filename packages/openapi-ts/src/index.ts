@@ -83,6 +83,9 @@ export const createClient = async (
   } catch (error) {
     const config = configs[0] as Config | undefined;
     const dryRun = config ? config.dryRun : resolvedConfig?.dryRun;
+    const isInteractive = config
+      ? config.interactive
+      : resolvedConfig?.interactive;
     const logs = config?.logs ?? getLogs(resolvedConfig);
 
     let logPath: string | undefined;
@@ -93,7 +96,7 @@ export const createClient = async (
 
     if (logs.level !== 'silent') {
       printCrashReport({ error, logPath });
-      if (await shouldReportCrash({ error })) {
+      if (await shouldReportCrash({ error, isInteractive })) {
         await openGitHubIssueWithCrashReport(error);
       }
     }
