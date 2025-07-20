@@ -39,6 +39,8 @@ export const createQueryKeyFunction = ({
       }),
     });
 
+    const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
+
     const fn = compiler.constVariable({
       expression: compiler.arrowFunction({
         multiLine: true,
@@ -72,9 +74,9 @@ export const createQueryKeyFunction = ({
                   value: compiler.identifier({ text: 'id' }),
                 },
                 {
-                  key: getClientBaseUrlKey(plugin.context.config),
+                  key: baseUrlKey,
                   value: compiler.identifier({
-                    text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey(plugin.context.config)}`,
+                    text: `options?.${baseUrlKey} || (options?.client ?? _heyApiClient).getConfig().${baseUrlKey}`,
                   }),
                 },
               ],
