@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.79.1
+
+### Patch Changes
+
+- [#2336](https://github.com/hey-api/openapi-ts/pull/2336) [`6302793`](https://github.com/hey-api/openapi-ts/commit/63027931f85bad817a8111c263579fd018cb39cb) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: respect NO_INTERACTIVE and NO_INTERACTION environment variables
+
+- [#2331](https://github.com/hey-api/openapi-ts/pull/2331) [`a309fc7`](https://github.com/hey-api/openapi-ts/commit/a309fc799d4c0899b781e40a721dd1aa834e42f3) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): update Axios headers types
+
+- [#2334](https://github.com/hey-api/openapi-ts/pull/2334) [`298be27`](https://github.com/hey-api/openapi-ts/commit/298be2715106c840067f54648ee8e94314dfc742) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve handlebars types for jsr compliance
+
+- [#2333](https://github.com/hey-api/openapi-ts/pull/2333) [`566c8e9`](https://github.com/hey-api/openapi-ts/commit/566c8e99aeaa6142aa65b8af370f2ff7e0f4d219) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): set query key base url from options if defined
+
 ## 0.79.0
 
 ### Minor Changes
