@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import { loadConfig } from 'c12';
 
+import { ConfigError } from '../error';
 import type { Config, UserConfig } from '../types/config';
 import { isLegacyClient, setConfig } from '../utils/config';
 import { getInput } from './input';
@@ -70,7 +71,7 @@ export const initConfigs = async (
 
     if (!input.path) {
       errors.push(
-        new Error(
+        new ConfigError(
           'missing input - which OpenAPI specification should we use to generate your output?',
         ),
       );
@@ -78,7 +79,9 @@ export const initConfigs = async (
 
     if (!output.path) {
       errors.push(
-        new Error('missing output - where should we generate your output?'),
+        new ConfigError(
+          'missing output - where should we generate your output?',
+        ),
       );
     }
 

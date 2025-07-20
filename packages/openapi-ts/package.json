@@ -101,6 +101,7 @@
   },
   "devDependencies": {
     "@config/vite-base": "workspace:*",
+    "@types/bun": "1.2.19",
     "@types/cross-spawn": "6.0.6",
     "@types/express": "4.17.21",
     "axios": "1.8.2",
