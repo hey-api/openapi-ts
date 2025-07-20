@@ -28,5 +28,5 @@ Hey API natively supports the following validators.
 
 Don't see your validator? Let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
-<!--@include: ../examples.md-->
-<!--@include: ../sponsors.md-->
+<!--@include: ../partials/examples.md-->
+<!--@include: ../partials/sponsors.md-->

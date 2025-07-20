@@ -179,5 +179,5 @@ export const foo = 'Hello, world!';
 
 Congratulations! You've successfully created your own plugin! :tada:
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

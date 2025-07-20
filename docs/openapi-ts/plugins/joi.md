@@ -13,4 +13,4 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 [Joi](https://joi.dev) is the most powerful schema description language and data validator for JavaScript.
 
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/sponsors.md-->

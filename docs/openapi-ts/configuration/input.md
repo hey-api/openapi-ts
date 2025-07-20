@@ -113,5 +113,5 @@ npx @hey-api/openapi-ts \
 
 :::
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

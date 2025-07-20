@@ -193,4 +193,4 @@ We'd love your feedback! You can contact us on social media (search Hey API), [e
 
 The platform is currently in beta with our focus being on delivering a great experience. We plan to announce pricing once we have gathered enough data around usage patterns. However, we can guarantee there will always be a free plan available. Our mission to bring the finest tooling for working with APIs remains unchanged.
 
-<!--@include: ../sponsors.md-->
+<!--@include: ../partials/sponsors.md-->
