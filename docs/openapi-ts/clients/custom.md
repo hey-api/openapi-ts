@@ -15,5 +15,5 @@ You may need to write your own client if the available clients do not suit your 
 Custom clients documentation will be finalized after further testing. Simplified [instructions](https://github.com/hey-api/openapi-ts/issues/1213#issuecomment-2765206344) can be found in the GitHub thread.
 :::
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

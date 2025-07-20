@@ -23,5 +23,5 @@ The contents of this file are consumed by SDKs, but you can also import `client`
 
 Client plugins provide their bundles inside `client` and `core` folders. The contents of these folders don't depend on the provided input. Everything inside these folders serves as a scaffolding so the generated code can make HTTP requests.
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

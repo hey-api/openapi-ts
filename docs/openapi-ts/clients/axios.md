@@ -226,5 +226,5 @@ You can use any of the approaches mentioned in [Configuration](#configuration), 
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/client-axios/types.d.ts) interface.
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

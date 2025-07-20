@@ -11,7 +11,7 @@
       </picture>
     </a>
     <p>
-      Generate best-in-class SDKs.
+      Best-in-class SDKs and MCP for your API.
     </p>
     <a href="https://kutt.it/pkEZyc" target="_blank">
       stainless.com
