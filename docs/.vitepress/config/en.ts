@@ -11,7 +11,7 @@ export default defineConfig({
     nav: [
       {
         link: 'https://github.com/sponsors/hey-api',
-        text: 'Sponsor Hey API 💰',
+        text: 'Sponsor Hey API',
       },
     ],
     sidebar: [
@@ -41,7 +41,7 @@ export default defineConfig({
             text: 'Configuration',
           },
         ],
-        text: '@hey-api/openapi-ts',
+        text: 'Introduction',
       },
       {
         items: [
@@ -232,6 +232,19 @@ export default defineConfig({
       {
         items: [
           {
+            link: '/openapi-ts/community/spotlight',
+            text: 'Spotlight',
+          },
+          {
+            link: '/openapi-ts/community/contributing',
+            text: 'Contributing',
+          },
+        ],
+        text: 'Community',
+      },
+      {
+        items: [
+          {
             link: '/openapi-ts/integrations',
             text: 'GitHub',
           },
@@ -245,23 +258,15 @@ export default defineConfig({
             text: 'Migrating',
           },
           {
-            link: '/license',
+            link: '/openapi-ts/license',
             text: 'License',
-          },
-          {
-            link: '/about',
-            text: 'Philosophy',
-          },
-          {
-            link: '/contributing',
-            text: 'Contributing',
           },
           {
             link: 'https://github.com/orgs/hey-api/discussions/1495',
             text: 'Roadmap',
           },
         ],
-        text: '@hey-api',
+        text: '@hey-api/openapi-ts',
       },
     ],
   },

@@ -8,22 +8,23 @@
 
 <p align="center">
   <a href="https://opensource.org/license/mit" rel="nofollow"><img src="https://img.shields.io/github/license/hey-api/openapi-ts" alt="MIT License"></a>
-  <a href="https://github.com/hey-api/openapi-ts/actions?query=branch%3Amain"><img src="https://img.shields.io/github/last-commit/hey-api/openapi-ts" alt="Last commit" /></a>
+  <a href="https://npmjs.com/package/@hey-api/openapi-ts" rel="nofollow"><img src="https://img.shields.io/npm/dm/%40hey-api%2Fopenapi-ts?label=npm" alt="npm downloads"></a>
+  <a href="https://github.com/hey-api/openapi-ts" rel="nofollow"><img src="https://img.shields.io/github/stars/hey-api/openapi-ts?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
   <a href="https://github.com/hey-api/openapi-ts/actions?query=branch%3Amain"><img src="https://github.com/hey-api/openapi-ts/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
-  <a href="https://github.com/hey-api/openapi-ts/issues" rel="nofollow"><img src="https://img.shields.io/github/issues/hey-api/openapi-ts" alt="Number of open issues"></a>
-  <a href="https://app.codecov.io/gh/hey-api/openapi-ts/tree/main"><img src="https://codecov.io/gh/hey-api/openapi-ts/branch/main/graph/badge.svg" alt="Test coverage" /></a>
 </p>
 
 <p align="center">
   <a href="https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts">Demo</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://heyapi.dev">Documentation</a>
+  <a href="https://heyapi.dev">Docs</a>
   <span>&nbsp;•&nbsp;</span>
   <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
   <span>&nbsp;•&nbsp;</span>
   <a href="https://github.com/orgs/hey-api/discussions/1495">Roadmap</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://npmjs.com/package/@hey-api/openapi-ts">npm</a>
+  <a href="https://heyapi.dev/openapi-ts/community/contributing">Contribute</a>
+  <span>&nbsp;•&nbsp;</span>
+  <a href="https://heyapi.dev/openapi-ts/community/spotlight#core-team">Join Core Team</a>
 </p>
 
 <br/>
@@ -44,9 +45,15 @@ Hey API is an ecosystem of products helping you build better APIs. Superpower yo
 
 [Sign In](https://app.heyapi.dev) to Hey API Platform.
 
+## Contributing
+
+Want to see your code in products used by millions?
+
+Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
+
 ## Sponsors
 
-Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
+Help Hey API stay around for the long haul by becoming a [sponsor](https://github.com/sponsors/hey-api).
 
 <h3 align="center">Gold</h3>
 
@@ -63,7 +70,7 @@ Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
             </picture>
           </a>
           <br/>
-          Generate best-in-class SDKs.
+          Best-in-class SDKs and MCP for your API.
           <br/>
           <a href="https://kutt.it/pkEZyc" style="text-decoration:none;" target="_blank">
             stainless.com
@@ -135,31 +142,45 @@ Congratulations on creating your first client! 🎉 You can learn more about the
 
 ## Installation
 
+You can download `@hey-api/openapi-ts` from npm using your favorite package manager.
+
 #### npm
 
 ```sh
-npm install @hey-api/openapi-ts -D
+npm install @hey-api/openapi-ts -D -E
 ```
 
 #### pnpm
 
 ```sh
-pnpm add @hey-api/openapi-ts -D
+pnpm add @hey-api/openapi-ts -D -E
 ```
 
 #### yarn
 
 ```sh
-yarn add @hey-api/openapi-ts -D
+yarn add @hey-api/openapi-ts -D -E
 ```
 
 #### bun
 
 ```sh
-bun add @hey-api/openapi-ts -D
+bun add @hey-api/openapi-ts -D -E
 ```
 
-We recommend pinning an exact version so you can safely upgrade when you're ready. This package is in [initial development](https://semver.org/spec/v0.1.0.html#spec-item-5) and its API might change before v1.
+### Versioning
+
+This package does NOT follow the [semantic versioning](https://semver.org/) strategy. Please pin an exact version so you can safely upgrade when you're ready.
+
+Due to the nature of the package, we use the following versioning strategy.
+
+- `1.x.x`: significant breaking changes, reserved for v1 release
+- `x.1.x`: breaking changes
+- `x.x.1`: new features, bug fixes, and non-breaking changes
+
+We publish [migration notes](https://heyapi.dev/openapi-ts/migrating) for every breaking release. You might not be impacted by a breaking release if you don't use the affected plugin(s).
+
+## Usage
 
 ### CLI
 
@@ -175,7 +196,7 @@ The above script can be executed by running `npm run openapi-ts` or equivalent c
 
 ### Node.js
 
-You can also generate clients programmatically by importing `@hey-api/openapi-ts` in a TypeScript file.
+You can also generate output programmatically by importing `@hey-api/openapi-ts` in a TypeScript file.
 
 ```ts
 import { createClient } from '@hey-api/openapi-ts';

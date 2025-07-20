@@ -24,13 +24,19 @@ Hey API is an ecosystem of products helping you build better APIs. Superpower yo
 
 [Sign In](https://app.heyapi.dev) to Hey API Platform.
 
+## Contributing
+
+Want to see your code in products used by millions?
+
+Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
+
 ## Documentation
 
 Please visit our [website](https://heyapi.dev) for documentation, guides, migrating, and more.
 
 ## Sponsors
 
-Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
+Help Hey API stay around for the long haul by becoming a [sponsor](https://github.com/sponsors/hey-api).
 
 <h3 align="center">Gold</h3>
 
@@ -47,7 +53,7 @@ Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
             </picture>
           </a>
           <br/>
-          Generate best-in-class SDKs.
+          Best-in-class SDKs and MCP for your API.
           <br/>
           <a href="https://kutt.it/pkEZyc" style="text-decoration:none;" target="_blank">
             stainless.com

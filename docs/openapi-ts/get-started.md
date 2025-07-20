@@ -9,11 +9,7 @@ import { embedProject } from '../embed'
 
 # Get Started
 
-::: warning
-This package is in initial development. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
-:::
-
-[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an OpenAPI to TypeScript codegen trusted over 2,000,000 times each month to generate reliable API clients and SDKs. The code is [MIT-licensed](/license) and free to use. Discover available features below or view our [roadmap](https://github.com/orgs/hey-api/discussions/1495) to learn what's coming next.
+[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an OpenAPI to TypeScript codegen trusted over 2,000,000 times each month to generate reliable API clients and SDKs. The code is [MIT-licensed](/openapi-ts/license) and free to use. Discover available features below or view our [roadmap](https://github.com/orgs/hey-api/discussions/1495) to learn what's coming next.
 
 ### Demo
 
@@ -45,27 +41,41 @@ Congratulations on creating your first client! 🎉 You can learn more about the
 
 ## Installation
 
+You can download `@hey-api/openapi-ts` from npm using your favorite package manager.
+
 ::: code-group
 
 ```sh [npm]
-npm install @hey-api/openapi-ts -D
+npm install @hey-api/openapi-ts -D -E
 ```
 
 ```sh [pnpm]
-pnpm add @hey-api/openapi-ts -D
+pnpm add @hey-api/openapi-ts -D -E
 ```
 
 ```sh [yarn]
-yarn add @hey-api/openapi-ts -D
+yarn add @hey-api/openapi-ts -D -E
 ```
 
 ```sh [bun]
-bun add @hey-api/openapi-ts -D
+bun add @hey-api/openapi-ts -D -E
 ```
 
 :::
 
-We recommend pinning an exact version so you can safely upgrade when you're ready. This package is in [initial development](https://semver.org/spec/v0.1.0.html#spec-item-5) and its API might change before v1.
+### Versioning
+
+This package does NOT follow the [semantic versioning](https://semver.org/) strategy. Please pin an exact version so you can safely upgrade when you're ready.
+
+Due to the nature of the package, we use the following versioning strategy.
+
+- `1.x.x`: significant breaking changes, reserved for v1 release
+- `x.1.x`: breaking changes
+- `x.x.1`: new features, bug fixes, and non-breaking changes
+
+We publish [migration notes](/openapi-ts/migrating) for every breaking release. You might not be impacted by a breaking release if you don't use the affected plugin(s).
+
+## Usage
 
 ### CLI
 
@@ -81,7 +91,7 @@ The above script can be executed by running `npm run openapi-ts` or equivalent c
 
 ### Node.js
 
-You can also generate clients programmatically by importing `@hey-api/openapi-ts` in a TypeScript file.
+You can also generate output programmatically by importing `@hey-api/openapi-ts` in a JavaScript/TypeScript file.
 
 ::: code-group
 
@@ -100,5 +110,5 @@ createClient({
 
 It's a good practice to extract your configuration into a separate file. Learn how to do that and discover available options on the [Configuration](/openapi-ts/configuration) page.
 
-<!--@include: ../examples.md-->
-<!--@include: ../sponsors.md-->
+<!--@include: ../partials/examples.md-->
+<!--@include: ../partials/sponsors.md-->

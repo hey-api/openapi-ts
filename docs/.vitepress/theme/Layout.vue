@@ -29,7 +29,7 @@ const { Layout } = DefaultTheme;
         </a>
       </div> -->
     </template>
-    <template #home-features-before>
+    <!-- <template #home-features-before>
       <a
         aria-label="Send an email to Lubos"
         class="migration"
@@ -38,7 +38,7 @@ const { Layout } = DefaultTheme;
         <p>Migrate your existing TypeScript SDKs</p>
         <p>Contact us</p>
       </a>
-    </template>
+    </template> -->
   </Layout>
 </template>
 

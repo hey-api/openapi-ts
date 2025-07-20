@@ -132,5 +132,5 @@ To eject, you must provide the same function that was passed to `use()`.
 Angular client does not currently support request interceptors.
 :::
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->
