@@ -310,6 +310,10 @@ a.migration:focus {
     gap: 1rem;
     padding: 0.5rem 0;
   }
+
+  .VPNavBar.has-sidebar > .wrapper > .container > .title {
+    background-color: var(--vp-sidebar-bg-color);
+  }
 }
 
 .VPFeatures.VPHomeFeatures > .container > .items > .item {
@@ -317,8 +321,4 @@ a.migration:focus {
   max-width: 390px;
   padding: 0;
   width: 100%;
-}
-
-.VPNavBar.has-sidebar > .wrapper > .container > .title {
-  background-color: var(--vp-sidebar-bg-color);
 }
