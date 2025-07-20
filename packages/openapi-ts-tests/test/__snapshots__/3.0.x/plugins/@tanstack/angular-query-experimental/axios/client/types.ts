@@ -1,6 +1,7 @@
 import type {
   AxiosError,
   AxiosInstance,
+  AxiosRequestHeaders,
   AxiosResponse,
   AxiosStatic,
   CreateAxiosDefaults,
@@ -33,7 +34,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
    */
   headers?:
-    | CreateAxiosDefaults['headers']
+    | AxiosRequestHeaders
     | Record<
         string,
         | string
