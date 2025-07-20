@@ -30,6 +30,7 @@ describe('handlerLegacy', () => {
           timeout: 60_000,
         },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
@@ -238,6 +239,7 @@ describe('methodNameBuilder', () => {
           timeout: 60_000,
         },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
@@ -368,6 +370,7 @@ describe('methodNameBuilder', () => {
           timeout: 60_000,
         },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
@@ -501,6 +504,7 @@ describe('methodNameBuilder', () => {
           timeout: 60_000,
         },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
