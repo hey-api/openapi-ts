@@ -293,6 +293,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
   });
 
   const infiniteIdentifier = compiler.identifier({ text: 'infinite' });
+  const baseUrlKey = getClientBaseUrlKey(getConfig());
 
   const fn = compiler.constVariable({
     expression: compiler.arrowFunction({
@@ -325,9 +326,9 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 value: compiler.identifier({ text: 'id' }),
               },
               {
-                key: getClientBaseUrlKey(getConfig()),
+                key: baseUrlKey,
                 value: compiler.identifier({
-                  text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey(getConfig())}`,
+                  text: `options?.${baseUrlKey} || (options?.client ?? _heyApiClient).getConfig().${baseUrlKey}`,
                 }),
               },
             ],
