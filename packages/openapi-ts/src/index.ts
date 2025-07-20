@@ -2,6 +2,7 @@ import colors from 'ansi-colors';
 // @ts-expect-error
 import colorSupport from 'color-support';
 
+import { checkNodeVersion } from './config/engine';
 import { initConfigs } from './config/init';
 import { getLogs } from './config/logs';
 import { createClient as pCreateClient } from './createClient';
@@ -35,6 +36,8 @@ export const createClient = async (
   const configs: Array<Config> = [];
 
   try {
+    checkNodeVersion();
+
     Performance.start('createClient');
 
     Performance.start('config');
@@ -90,7 +93,7 @@ export const createClient = async (
 
     if (logs.level !== 'silent') {
       printCrashReport({ error, logPath });
-      if (await shouldReportCrash()) {
+      if (await shouldReportCrash({ error })) {
         await openGitHubIssueWithCrashReport(error);
       }
     }
