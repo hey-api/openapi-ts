@@ -8,6 +8,8 @@ import { ensureDirSync } from './generate/utils';
 
 export const isInteractive = process.stdin.isTTY && process.stdout.isTTY;
 
+export class ConfigError extends Error {}
+
 export class HeyApiError extends Error {
   args: ReadonlyArray<unknown>;
   event: string;
@@ -38,7 +40,14 @@ export class HeyApiError extends Error {
   }
 }
 
-export const logCrashReport = (error: unknown, logsDir: string): string => {
+export const logCrashReport = (
+  error: unknown,
+  logsDir: string,
+): string | undefined => {
+  if (error instanceof ConfigError) {
+    return;
+  }
+
   const logName = `openapi-ts-error-${Date.now()}.log`;
   const fullDir = path.resolve(process.cwd(), logsDir);
   ensureDirSync(fullDir);
@@ -138,18 +147,23 @@ export const printCrashReport = ({
       `\n\n${colors.red('❗️ Error:')} ${colors.white(typeof error === 'string' ? error : error instanceof Error ? error.message : 'Unknown error')}` +
       (logPath
         ? `\n\n${colors.cyan('📄 Crash log saved to:')} ${colors.gray(logPath)}`
-        : ''),
+        : '') +
+      '\n',
   );
 };
 
-export const shouldReportCrash = async (): Promise<boolean> => {
-  if (!isInteractive) {
+export const shouldReportCrash = async ({
+  error,
+}: {
+  error: unknown;
+}): Promise<boolean> => {
+  if (!isInteractive || error instanceof ConfigError) {
     return false;
   }
 
   return new Promise((resolve) => {
     process.stdout.write(
-      `${colors.yellow('\n\n📢 Open a GitHub issue with crash details?')} ${colors.yellow('(y/N):')}`,
+      `${colors.yellow('\n📢 Open a GitHub issue with crash details?')} ${colors.yellow('(y/N):')}`,
     );
     process.stdin.setEncoding('utf8');
     process.stdin.once('data', (data: string) => {
