@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.79.0
+
+### Minor Changes
+
+- [#2284](https://github.com/hey-api/openapi-ts/pull/2284) [`236550f`](https://github.com/hey-api/openapi-ts/commit/236550fa56645dffe855f051fc144b8d8342f5fc) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): removed `typescript+namespace` enums mode
+
+  ### Removed `typescript+namespace` enums mode
+
+  Due to a simpler TypeScript plugin implementation, the `typescript+namespace` enums mode is no longer necessary. This mode was used in the past to group inline enums under the same namespace. With the latest changes, this behavior is no longer supported. You can either choose to ignore inline enums (default), or use the `enums` transform (added in v0.78.0) to convert them into reusable components which will get exported as usual.
+
 ## 0.78.3
 
 ### Patch Changes
