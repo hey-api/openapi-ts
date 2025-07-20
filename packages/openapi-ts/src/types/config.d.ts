@@ -30,6 +30,13 @@ export interface UserConfig {
     | (Record<string, unknown> & { path?: never })
     | Input;
   /**
+   * Show an interactive error reporting tool when the program crashes? You
+   * generally want to keep this disabled (default).
+   *
+   * @default false
+   */
+  interactive?: boolean;
+  /**
    * The relative location of the logs folder.
    *
    * @default process.cwd()
