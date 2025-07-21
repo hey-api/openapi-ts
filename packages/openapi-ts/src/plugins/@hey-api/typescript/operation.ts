@@ -7,7 +7,7 @@ import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { schemaToType } from './plugin';
 import { typesId } from './ref';
-import type { HeyApiTypeScriptPlugin } from './types';
+import type { HeyApiTypeScriptPlugin, PluginState } from './types';
 
 const irParametersToIrSchema = ({
   parameters,
@@ -48,9 +48,11 @@ const irParametersToIrSchema = ({
 const operationToDataType = ({
   operation,
   plugin,
+  state,
 }: {
   operation: IR.OperationObject;
   plugin: HeyApiTypeScriptPlugin['Instance'];
+  state: PluginState;
 }) => {
   const file = plugin.context.file({ id: typesId })!;
   const data: IR.SchemaObject = {
@@ -138,6 +140,7 @@ const operationToDataType = ({
     onRef: undefined,
     plugin,
     schema: data,
+    state,
   });
   const node = compiler.typeAliasDeclaration({
     exportType: nodeInfo.exported,
@@ -150,11 +153,13 @@ const operationToDataType = ({
 export const operationToType = ({
   operation,
   plugin,
+  state,
 }: {
   operation: IR.OperationObject;
   plugin: HeyApiTypeScriptPlugin['Instance'];
+  state: PluginState;
 }) => {
-  operationToDataType({ operation, plugin });
+  operationToDataType({ operation, plugin, state });
 
   const file = plugin.context.file({ id: typesId })!;
 
@@ -177,6 +182,7 @@ export const operationToType = ({
       onRef: undefined,
       plugin,
       schema: errors,
+      state,
     });
     const node = compiler.typeAliasDeclaration({
       exportType: nodeInfo.exported,
@@ -232,6 +238,7 @@ export const operationToType = ({
       onRef: undefined,
       plugin,
       schema: responses,
+      state,
     });
     const node = compiler.typeAliasDeclaration({
       exportType: nodeInfo.exported,
