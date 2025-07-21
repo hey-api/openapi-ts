@@ -13,4 +13,4 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 [Superstruct](https://docs.superstructjs.org) makes it easy to define interfaces and then validate JavaScript data against them.
 
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/sponsors.md-->

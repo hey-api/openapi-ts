@@ -93,6 +93,14 @@ async function start() {
       'useOptions',
     ]);
 
+    const isInteractive =
+      process.stdin.isTTY &&
+      process.stdout.isTTY &&
+      !process.env.CI &&
+      !process.env.NO_INTERACTIVE &&
+      !process.env.NO_INTERACTION;
+    userConfig.interactive = isInteractive;
+
     if (params.plugins === true) {
       userConfig.plugins = [];
     } else if (params.plugins) {
@@ -129,7 +137,13 @@ async function start() {
     }
 
     const context = await createClient(userConfig);
-    if (!context[0] || !context[0].config.watch) {
+    if (
+      !context[0] ||
+      !context[0].config ||
+      !context[0].config.input ||
+      !context[0].config.input.watch ||
+      !context[0].config.input.watch.enabled
+    ) {
       process.exit(0);
     }
   } catch {

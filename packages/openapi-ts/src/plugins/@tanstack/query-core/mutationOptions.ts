@@ -1,41 +1,30 @@
+import type ts from 'typescript';
+
 import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
-import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
+import { createOperationComment } from '../../shared/utils/operation';
 import type { PluginInstance, PluginState } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
 
 const mutationOptionsFn = 'mutationOptions';
 
-const mutationOptionsFunctionIdentifier = ({
-  context,
-  operation,
-}: {
-  context: IR.Context;
-  operation: IR.OperationObject;
-}) =>
-  `${serviceFunctionIdentifier({
-    config: context.config,
-    id: operation.id,
-    operation,
-  })}Mutation`;
-
 export const createMutationOptions = ({
-  context,
   operation,
   plugin,
   queryFn,
   state,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: PluginInstance;
   queryFn: string;
   state: PluginState;
 }) => {
   if (
-    !plugin.mutationOptions ||
+    !plugin.config.mutationOptions.enabled ||
     !(
-      ['delete', 'patch', 'post', 'put'] as (typeof operation.method)[]
+      ['delete', 'patch', 'post', 'put'] as ReadonlyArray<
+        typeof operation.method
+      >
     ).includes(operation.method)
   ) {
     return state;
@@ -48,7 +37,7 @@ export const createMutationOptions = ({
       ? 'MutationOptions'
       : 'UseMutationOptions';
 
-  const file = context.file({ id: plugin.name })!;
+  const file = plugin.context.file({ id: plugin.name })!;
 
   if (!state.hasMutations) {
     state.hasMutations = true;
@@ -62,11 +51,64 @@ export const createMutationOptions = ({
 
   state.hasUsedQueryFn = true;
 
-  const typeData = useTypeData({ context, operation, plugin });
-  const typeError = useTypeError({ context, operation, plugin });
-  const typeResponse = useTypeResponse({ context, operation, plugin });
+  const typeData = useTypeData({ operation, plugin });
+  const typeError = useTypeError({ operation, plugin });
+  const typeResponse = useTypeResponse({ operation, plugin });
   // TODO: better types syntax
   const mutationType = `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`;
+
+  const awaitSdkExpression = compiler.awaitExpression({
+    expression: compiler.callExpression({
+      functionName: queryFn,
+      parameters: [
+        compiler.objectExpression({
+          multiLine: true,
+          obj: [
+            {
+              spread: 'options',
+            },
+            {
+              spread: 'localOptions',
+            },
+            {
+              key: 'throwOnError',
+              value: true,
+            },
+          ],
+        }),
+      ],
+    }),
+  });
+
+  const statements: Array<ts.Statement> = [];
+
+  if (plugin.getPlugin('@hey-api/sdk')?.config.responseStyle === 'data') {
+    statements.push(
+      compiler.returnVariable({
+        expression: awaitSdkExpression,
+      }),
+    );
+  } else {
+    statements.push(
+      compiler.constVariable({
+        destructure: true,
+        expression: awaitSdkExpression,
+        name: 'data',
+      }),
+      compiler.returnVariable({
+        expression: 'data',
+      }),
+    );
+  }
+
+  const identifier = file.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-mutation-options/${operation.id}`,
+    case: plugin.config.mutationOptions.case,
+    create: true,
+    nameTransformer: plugin.config.mutationOptions.name,
+    namespace: 'value',
+  });
 
   const expression = compiler.arrowFunction({
     parameters: [
@@ -91,37 +133,7 @@ export const createMutationOptions = ({
                     name: 'localOptions',
                   },
                 ],
-                statements: [
-                  compiler.constVariable({
-                    destructure: true,
-                    expression: compiler.awaitExpression({
-                      expression: compiler.callExpression({
-                        functionName: queryFn,
-                        parameters: [
-                          compiler.objectExpression({
-                            multiLine: true,
-                            obj: [
-                              {
-                                spread: 'options',
-                              },
-                              {
-                                spread: 'localOptions',
-                              },
-                              {
-                                key: 'throwOnError',
-                                value: true,
-                              },
-                            ],
-                          }),
-                        ],
-                      }),
-                    }),
-                    name: 'data',
-                  }),
-                  compiler.returnVariable({
-                    expression: 'data',
-                  }),
-                ],
+                statements,
               }),
             },
           ],
@@ -135,11 +147,12 @@ export const createMutationOptions = ({
     ],
   });
   const statement = compiler.constVariable({
-    // TODO: describe options, same as the actual function call
-    comment: [],
+    comment: plugin.config.comments
+      ? createOperationComment({ operation })
+      : undefined,
     exportConst: true,
     expression,
-    name: mutationOptionsFunctionIdentifier({ context, operation }),
+    name: identifier.name || '',
   });
   file.add(statement);
 

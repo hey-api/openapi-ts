@@ -1,57 +1,43 @@
 import ts from 'typescript';
 
 import { compiler } from '../../compiler';
-import { operationResponsesMap } from '../../ir/operation';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
+import { buildName } from '../../openApi/shared/utils/name';
+import { refToName } from '../../utils/ref';
 import { numberRegExp } from '../../utils/regexp';
-import { operationIrRef } from '../shared/utils/ref';
-import type { Plugin } from '../types';
-import type { Config } from './types';
+import { identifiers, zodId } from './constants';
+import { exportZodSchema } from './export';
+import { operationToZodSchema } from './operation';
+import type { ZodPlugin } from './types';
 
 interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
   extends Omit<IR.SchemaObject, 'type'> {
   type: Extract<Required<IR.SchemaObject>['type'], T>;
 }
 
-interface Result {
-  circularReferenceTracker: Set<string>;
+export type State = {
+  circularReferenceTracker: Array<string>;
   hasCircularReference: boolean;
-}
+};
 
-export const zodId = 'zod';
-
-// frequently used identifiers
-const andIdentifier = compiler.identifier({ text: 'and' });
-const coerceIdentifier = compiler.identifier({ text: 'coerce' });
-const defaultIdentifier = compiler.identifier({ text: 'default' });
-const intersectionIdentifier = compiler.identifier({ text: 'intersection' });
-const lazyIdentifier = compiler.identifier({ text: 'lazy' });
-const lengthIdentifier = compiler.identifier({ text: 'length' });
-const literalIdentifier = compiler.identifier({ text: 'literal' });
-const maxIdentifier = compiler.identifier({ text: 'max' });
-const minIdentifier = compiler.identifier({ text: 'min' });
-const objectIdentifier = compiler.identifier({ text: 'object' });
-const optionalIdentifier = compiler.identifier({ text: 'optional' });
-const readonlyIdentifier = compiler.identifier({ text: 'readonly' });
-const regexIdentifier = compiler.identifier({ text: 'regex' });
-const unionIdentifier = compiler.identifier({ text: 'union' });
-const zIdentifier = compiler.identifier({ text: 'z' });
-
-const nameTransformer = (name: string) => `z-${name}`;
+export type ZodSchema = {
+  expression: ts.Expression;
+  typeName?: string;
+};
 
 const arrayTypeToZodSchema = ({
-  context,
-  result,
+  plugin,
   schema,
+  state,
 }: {
-  context: IR.Context;
-  result: Result;
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'array'>;
+  state: State;
 }): ts.CallExpression => {
   const functionName = compiler.propertyAccessExpression({
-    expression: zIdentifier,
-    name: compiler.identifier({ text: 'array' }),
+    expression: identifiers.z,
+    name: identifiers.array,
   });
 
   let arrayExpression: ts.CallExpression | undefined;
@@ -61,7 +47,6 @@ const arrayTypeToZodSchema = ({
       functionName,
       parameters: [
         unknownTypeToZodSchema({
-          context,
           schema: {
             type: 'unknown',
           },
@@ -72,12 +57,13 @@ const arrayTypeToZodSchema = ({
     schema = deduplicateSchema({ schema });
 
     // at least one item is guaranteed
-    const itemExpressions = schema.items!.map((item) =>
-      schemaToZodSchema({
-        context,
-        result,
-        schema: item,
-      }),
+    const itemExpressions = schema.items!.map(
+      (item) =>
+        schemaToZodSchema({
+          plugin,
+          schema: item,
+          state,
+        }).expression,
     );
 
     if (itemExpressions.length === 1) {
@@ -93,17 +79,22 @@ const arrayTypeToZodSchema = ({
         // );
       }
 
-      // TODO: parser - handle union
-      // return compiler.typeArrayNode(compiler.typeUnionNode({ types: itemExpressions }));
-
       arrayExpression = compiler.callExpression({
-        functionName,
+        functionName: compiler.propertyAccessExpression({
+          expression: identifiers.z,
+          name: identifiers.array,
+        }),
         parameters: [
-          unknownTypeToZodSchema({
-            context,
-            schema: {
-              type: 'unknown',
-            },
+          compiler.callExpression({
+            functionName: compiler.propertyAccessExpression({
+              expression: identifiers.z,
+              name: identifiers.union,
+            }),
+            parameters: [
+              compiler.arrayLiteralExpression({
+                elements: itemExpressions,
+              }),
+            ],
           }),
         ],
       });
@@ -114,7 +105,7 @@ const arrayTypeToZodSchema = ({
     arrayExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: arrayExpression,
-        name: lengthIdentifier,
+        name: identifiers.length,
       }),
       parameters: [compiler.valueToExpression({ value: schema.minItems })],
     });
@@ -123,7 +114,7 @@ const arrayTypeToZodSchema = ({
       arrayExpression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression: arrayExpression,
-          name: minIdentifier,
+          name: identifiers.min,
         }),
         parameters: [compiler.valueToExpression({ value: schema.minItems })],
       });
@@ -133,7 +124,7 @@ const arrayTypeToZodSchema = ({
       arrayExpression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression: arrayExpression,
-          name: maxIdentifier,
+          name: identifiers.max,
         }),
         parameters: [compiler.valueToExpression({ value: schema.maxItems })],
       });
@@ -146,14 +137,13 @@ const arrayTypeToZodSchema = ({
 const booleanTypeToZodSchema = ({
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'boolean'>;
 }) => {
   if (typeof schema.const === 'boolean') {
     const expression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
-        expression: zIdentifier,
-        name: literalIdentifier,
+        expression: identifiers.z,
+        name: identifiers.literal,
       }),
       parameters: [compiler.ots.boolean(schema.const)],
     });
@@ -162,18 +152,16 @@ const booleanTypeToZodSchema = ({
 
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
-      expression: zIdentifier,
-      name: compiler.identifier({ text: 'boolean' }),
+      expression: identifiers.z,
+      name: identifiers.boolean,
     }),
   });
   return expression;
 };
 
 const enumTypeToZodSchema = ({
-  context,
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'enum'>;
 }): ts.CallExpression => {
   const enumMembers: Array<ts.LiteralExpression> = [];
@@ -195,7 +183,6 @@ const enumTypeToZodSchema = ({
 
   if (!enumMembers.length) {
     return unknownTypeToZodSchema({
-      context,
       schema: {
         type: 'unknown',
       },
@@ -204,8 +191,8 @@ const enumTypeToZodSchema = ({
 
   let enumExpression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
-      expression: zIdentifier,
-      name: compiler.identifier({ text: 'enum' }),
+      expression: identifiers.z,
+      name: identifiers.enum,
     }),
     parameters: [
       compiler.arrayLiteralExpression({
@@ -219,7 +206,7 @@ const enumTypeToZodSchema = ({
     enumExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: enumExpression,
-        name: compiler.identifier({ text: 'nullable' }),
+        name: identifiers.nullable,
       }),
     });
   }
@@ -227,33 +214,23 @@ const enumTypeToZodSchema = ({
   return enumExpression;
 };
 
-const neverTypeToZodSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
-  context: IR.Context;
-  schema: SchemaWithType<'never'>;
-}) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const neverTypeToZodSchema = (_props: { schema: SchemaWithType<'never'> }) => {
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
-      expression: zIdentifier,
-      name: compiler.identifier({ text: 'never' }),
+      expression: identifiers.z,
+      name: identifiers.never,
     }),
   });
   return expression;
 };
 
-const nullTypeToZodSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
-  context: IR.Context;
-  schema: SchemaWithType<'null'>;
-}) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const nullTypeToZodSchema = (_props: { schema: SchemaWithType<'null'> }) => {
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
-      expression: zIdentifier,
-      name: compiler.identifier({ text: 'null' }),
+      expression: identifiers.z,
+      name: identifiers.null,
     }),
   });
   return expression;
@@ -264,11 +241,17 @@ const numberParameter = ({
   value,
 }: {
   isBigInt: boolean;
-  value: number;
+  value: unknown;
 }) => {
   const expression = compiler.valueToExpression({ value });
 
-  if (isBigInt) {
+  if (
+    isBigInt &&
+    (typeof value === 'bigint' ||
+      typeof value === 'number' ||
+      typeof value === 'string' ||
+      typeof value === 'boolean')
+  ) {
     return compiler.callExpression({
       functionName: 'BigInt',
       parameters: [expression],
@@ -281,7 +264,6 @@ const numberParameter = ({
 const numberTypeToZodSchema = ({
   schema,
 }: {
-  context: IR.Context;
   schema: SchemaWithType<'integer' | 'number'>;
 }) => {
   const isBigInt = schema.type === 'integer' && schema.format === 'int64';
@@ -290,8 +272,8 @@ const numberTypeToZodSchema = ({
     // TODO: parser - handle bigint constants
     const expression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
-        expression: zIdentifier,
-        name: literalIdentifier,
+        expression: identifiers.z,
+        name: identifiers.literal,
       }),
       parameters: [compiler.ots.number(schema.const)],
     });
@@ -302,14 +284,14 @@ const numberTypeToZodSchema = ({
     functionName: isBigInt
       ? compiler.propertyAccessExpression({
           expression: compiler.propertyAccessExpression({
-            expression: zIdentifier,
-            name: coerceIdentifier,
+            expression: identifiers.z,
+            name: identifiers.coerce,
           }),
-          name: compiler.identifier({ text: 'bigint' }),
+          name: identifiers.bigint,
         })
       : compiler.propertyAccessExpression({
-          expression: zIdentifier,
-          name: compiler.identifier({ text: 'number' }),
+          expression: identifiers.z,
+          name: identifiers.number,
         }),
   });
 
@@ -317,7 +299,7 @@ const numberTypeToZodSchema = ({
     numberExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: numberExpression,
-        name: compiler.identifier({ text: 'int' }),
+        name: identifiers.int,
       }),
     });
   }
@@ -326,7 +308,7 @@ const numberTypeToZodSchema = ({
     numberExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: numberExpression,
-        name: compiler.identifier({ text: 'gt' }),
+        name: identifiers.gt,
       }),
       parameters: [
         numberParameter({ isBigInt, value: schema.exclusiveMinimum }),
@@ -336,7 +318,7 @@ const numberTypeToZodSchema = ({
     numberExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: numberExpression,
-        name: compiler.identifier({ text: 'gte' }),
+        name: identifiers.gte,
       }),
       parameters: [numberParameter({ isBigInt, value: schema.minimum })],
     });
@@ -346,7 +328,7 @@ const numberTypeToZodSchema = ({
     numberExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: numberExpression,
-        name: compiler.identifier({ text: 'lt' }),
+        name: identifiers.lt,
       }),
       parameters: [
         numberParameter({ isBigInt, value: schema.exclusiveMaximum }),
@@ -356,7 +338,7 @@ const numberTypeToZodSchema = ({
     numberExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: numberExpression,
-        name: compiler.identifier({ text: 'lte' }),
+        name: identifiers.lte,
       }),
       parameters: [numberParameter({ isBigInt, value: schema.maximum })],
     });
@@ -366,13 +348,13 @@ const numberTypeToZodSchema = ({
 };
 
 const objectTypeToZodSchema = ({
-  context,
-  result,
+  plugin,
   schema,
+  state,
 }: {
-  context: IR.Context;
-  result: Result;
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'object'>;
+  state: State;
 }): {
   anyType: string;
   expression: ts.CallExpression;
@@ -380,22 +362,18 @@ const objectTypeToZodSchema = ({
   // TODO: parser - handle constants
   const properties: Array<ts.PropertyAssignment> = [];
 
-  // let indexProperty: Property | undefined;
-  // const schemaProperties: Array<Property> = [];
-  // let indexPropertyItems: Array<IR.SchemaObject> = [];
   const required = schema.required ?? [];
-  // let hasOptionalProperties = false;
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
     const isRequired = required.includes(name);
 
     const propertyExpression = schemaToZodSchema({
-      context,
       optional: !isRequired,
-      result,
+      plugin,
       schema: property,
-    });
+      state,
+    }).expression;
 
     numberRegExp.lastIndex = 0;
     let propertyName;
@@ -422,54 +400,35 @@ const objectTypeToZodSchema = ({
         name: propertyName,
       }),
     );
-
-    // indexPropertyItems.push(property);
-    // if (!isRequired) {
-    //   hasOptionalProperties = true;
-    // }
   }
 
-  // if (
-  //   schema.additionalProperties &&
-  //   (schema.additionalProperties.type !== 'never' || !indexPropertyItems.length)
-  // ) {
-  //   if (schema.additionalProperties.type === 'never') {
-  //     indexPropertyItems = [schema.additionalProperties];
-  //   } else {
-  //     indexPropertyItems.unshift(schema.additionalProperties);
-  //   }
+  if (
+    schema.additionalProperties &&
+    schema.additionalProperties.type === 'object' &&
+    !Object.keys(properties).length
+  ) {
+    const zodSchema = schemaToZodSchema({
+      plugin,
+      schema: schema.additionalProperties,
+      state,
+    }).expression;
+    const expression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: identifiers.z,
+        name: identifiers.record,
+      }),
+      parameters: [zodSchema],
+    });
+    return {
+      anyType: 'AnyZodObject',
+      expression,
+    };
+  }
 
-  //   if (hasOptionalProperties) {
-  //     indexPropertyItems.push({
-  //       type: 'undefined',
-  //     });
-  //   }
-
-  //   indexProperty = {
-  //     isRequired: true,
-  //     name: 'key',
-  //     type: schemaToZodSchema({
-  //       context,
-  //       schema:
-  //         indexPropertyItems.length === 1
-  //           ? indexPropertyItems[0]
-  //           : {
-  //               items: indexPropertyItems,
-  //               logicalOperator: 'or',
-  //             },
-  //     }),
-  //   };
-  // }
-
-  // return compiler.typeInterfaceNode({
-  //   indexProperty,
-  //   properties: schemaProperties,
-  //   useLegacyResolution: false,
-  // });
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
-      expression: zIdentifier,
-      name: objectIdentifier,
+      expression: identifiers.z,
+      name: identifiers.object,
     }),
     parameters: [ts.factory.createObjectLiteralExpression(properties, true)],
   });
@@ -480,16 +439,17 @@ const objectTypeToZodSchema = ({
 };
 
 const stringTypeToZodSchema = ({
+  plugin,
   schema,
 }: {
-  context: IR.Context;
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'string'>;
 }) => {
   if (typeof schema.const === 'string') {
     const expression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
-        expression: zIdentifier,
-        name: literalIdentifier,
+        expression: identifiers.z,
+        name: identifiers.literal,
       }),
       parameters: [compiler.ots.string(schema.const)],
     });
@@ -498,8 +458,8 @@ const stringTypeToZodSchema = ({
 
   let stringExpression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
-      expression: zIdentifier,
-      name: compiler.identifier({ text: 'string' }),
+      expression: identifiers.z,
+      name: identifiers.string,
     }),
   });
 
@@ -509,8 +469,20 @@ const stringTypeToZodSchema = ({
         stringExpression = compiler.callExpression({
           functionName: compiler.propertyAccessExpression({
             expression: stringExpression,
-            name: compiler.identifier({ text: 'datetime' }),
+            name: identifiers.datetime,
           }),
+          parameters: plugin.config.dates.offset
+            ? [
+                compiler.objectExpression({
+                  obj: [
+                    {
+                      key: 'offset',
+                      value: true,
+                    },
+                  ],
+                }),
+              ]
+            : [],
         });
         break;
       case 'ipv4':
@@ -518,7 +490,7 @@ const stringTypeToZodSchema = ({
         stringExpression = compiler.callExpression({
           functionName: compiler.propertyAccessExpression({
             expression: stringExpression,
-            name: compiler.identifier({ text: 'ip' }),
+            name: identifiers.ip,
           }),
         });
         break;
@@ -526,7 +498,7 @@ const stringTypeToZodSchema = ({
         stringExpression = compiler.callExpression({
           functionName: compiler.propertyAccessExpression({
             expression: stringExpression,
-            name: compiler.identifier({ text: 'url' }),
+            name: identifiers.url,
           }),
         });
         break;
@@ -548,7 +520,7 @@ const stringTypeToZodSchema = ({
     stringExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: stringExpression,
-        name: lengthIdentifier,
+        name: identifiers.length,
       }),
       parameters: [compiler.valueToExpression({ value: schema.minLength })],
     });
@@ -557,7 +529,7 @@ const stringTypeToZodSchema = ({
       stringExpression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression: stringExpression,
-          name: minIdentifier,
+          name: identifiers.min,
         }),
         parameters: [compiler.valueToExpression({ value: schema.minLength })],
       });
@@ -567,7 +539,7 @@ const stringTypeToZodSchema = ({
       stringExpression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression: stringExpression,
-          name: maxIdentifier,
+          name: identifiers.max,
         }),
         parameters: [compiler.valueToExpression({ value: schema.maxLength })],
       });
@@ -578,7 +550,7 @@ const stringTypeToZodSchema = ({
     stringExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: stringExpression,
-        name: regexIdentifier,
+        name: identifiers.regex,
       }),
       parameters: [compiler.regularExpressionLiteral({ text: schema.pattern })],
     });
@@ -588,26 +560,28 @@ const stringTypeToZodSchema = ({
 };
 
 const tupleTypeToZodSchema = ({
-  context,
+  plugin,
   schema,
+  state,
 }: {
-  context: IR.Context;
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'tuple'>;
+  state: State;
 }) => {
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
       compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
-          expression: zIdentifier,
-          name: literalIdentifier,
+          expression: identifiers.z,
+          name: identifiers.literal,
         }),
         parameters: [compiler.valueToExpression({ value })],
       }),
     );
     const expression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
-        expression: zIdentifier,
-        name: compiler.identifier({ text: 'tuple' }),
+        expression: identifiers.z,
+        name: identifiers.tuple,
       }),
       parameters: [
         compiler.arrayLiteralExpression({
@@ -618,88 +592,77 @@ const tupleTypeToZodSchema = ({
     return expression;
   }
 
-  // TODO: parser - handle tuple items
-  // const itemTypes: Array<ts.TypeNode> = [];
+  const tupleElements: Array<ts.Expression> = [];
 
-  // for (const item of schema.items ?? []) {
-  //   itemTypes.push(
-  //     schemaToType({
-  //       context,
-  //       namespace,
-  //       plugin,
-  //       schema: item,
-  //     }),
-  //   );
-  // }
+  for (const item of schema.items ?? []) {
+    tupleElements.push(
+      schemaToZodSchema({
+        plugin,
+        schema: item,
+        state,
+      }).expression,
+    );
+  }
 
-  // return compiler.typeTupleNode({
-  //   types: itemTypes,
-  // });
-
-  return unknownTypeToZodSchema({
-    context,
-    schema: {
-      type: 'unknown',
-    },
+  const expression = compiler.callExpression({
+    functionName: compiler.propertyAccessExpression({
+      expression: identifiers.z,
+      name: identifiers.tuple,
+    }),
+    parameters: [
+      compiler.arrayLiteralExpression({
+        elements: tupleElements,
+      }),
+    ],
   });
+  return expression;
 };
 
-const undefinedTypeToZodSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
-  context: IR.Context;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const undefinedTypeToZodSchema = (_props: {
   schema: SchemaWithType<'undefined'>;
 }) => {
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
-      expression: zIdentifier,
-      name: compiler.identifier({ text: 'undefined' }),
+      expression: identifiers.z,
+      name: identifiers.undefined,
     }),
   });
   return expression;
 };
 
-const unknownTypeToZodSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
-  context: IR.Context;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const unknownTypeToZodSchema = (_props: {
   schema: SchemaWithType<'unknown'>;
 }) => {
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
-      expression: zIdentifier,
-      name: compiler.identifier({ text: 'unknown' }),
+      expression: identifiers.z,
+      name: identifiers.unknown,
     }),
   });
   return expression;
 };
 
-const voidTypeToZodSchema = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  schema,
-}: {
-  context: IR.Context;
-  schema: SchemaWithType<'void'>;
-}) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const voidTypeToZodSchema = (_props: { schema: SchemaWithType<'void'> }) => {
   const expression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
-      expression: zIdentifier,
-      name: compiler.identifier({ text: 'void' }),
+      expression: identifiers.z,
+      name: identifiers.void,
     }),
   });
   return expression;
 };
 
 const schemaTypeToZodSchema = ({
-  context,
-  result,
+  plugin,
   schema,
+  state,
 }: {
-  context: IR.Context;
-  result: Result;
+  plugin: ZodPlugin['Instance'];
   schema: IR.SchemaObject;
+  state: State;
 }): {
   anyType?: string;
   expression: ts.Expression;
@@ -708,22 +671,20 @@ const schemaTypeToZodSchema = ({
     case 'array':
       return {
         expression: arrayTypeToZodSchema({
-          context,
-          result,
+          plugin,
           schema: schema as SchemaWithType<'array'>,
+          state,
         }),
       };
     case 'boolean':
       return {
         expression: booleanTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'boolean'>,
         }),
       };
     case 'enum':
       return {
         expression: enumTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'enum'>,
         }),
       };
@@ -731,206 +692,153 @@ const schemaTypeToZodSchema = ({
     case 'number':
       return {
         expression: numberTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'integer' | 'number'>,
         }),
       };
     case 'never':
       return {
         expression: neverTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'never'>,
         }),
       };
     case 'null':
       return {
         expression: nullTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'null'>,
         }),
       };
     case 'object':
       return objectTypeToZodSchema({
-        context,
-        result,
+        plugin,
         schema: schema as SchemaWithType<'object'>,
+        state,
       });
     case 'string':
       return {
         expression: stringTypeToZodSchema({
-          context,
+          plugin,
           schema: schema as SchemaWithType<'string'>,
         }),
       };
     case 'tuple':
       return {
         expression: tupleTypeToZodSchema({
-          context,
+          plugin,
           schema: schema as SchemaWithType<'tuple'>,
+          state,
         }),
       };
     case 'undefined':
       return {
         expression: undefinedTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'undefined'>,
         }),
       };
     case 'unknown':
       return {
         expression: unknownTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'unknown'>,
         }),
       };
     case 'void':
       return {
         expression: voidTypeToZodSchema({
-          context,
           schema: schema as SchemaWithType<'void'>,
         }),
       };
   }
 };
 
-const operationToZodSchema = ({
-  context,
-  operation,
-  result,
-}: {
-  context: IR.Context;
-  operation: IR.OperationObject;
-  result: Result;
-}) => {
-  if (operation.responses) {
-    const { response } = operationResponsesMap(operation);
-
-    if (response) {
-      schemaToZodSchema({
-        $ref: operationIrRef({
-          case: 'camelCase',
-          config: context.config,
-          id: operation.id,
-          type: 'response',
-        }),
-        context,
-        result,
-        schema: response,
-      });
-    }
-  }
-};
-
-const schemaToZodSchema = ({
-  $ref,
-  context,
+export const schemaToZodSchema = ({
   optional,
-  result,
+  plugin,
   schema,
+  state,
 }: {
-  /**
-   * When $ref is supplied, a node will be emitted to the file.
-   */
-  $ref?: string;
-  context: IR.Context;
   /**
    * Accept `optional` to handle optional object properties. We can't handle
    * this inside the object function because `.optional()` must come before
    * `.default()` which is handled in this function.
    */
   optional?: boolean;
-  result: Result;
+  plugin: ZodPlugin['Instance'];
   schema: IR.SchemaObject;
-}): ts.Expression => {
-  const file = context.file({ id: zodId })!;
+  state: State;
+}): ZodSchema => {
+  const file = plugin.context.file({ id: zodId })!;
 
-  let anyType: string | undefined;
-  let expression: ts.Expression | undefined;
-  let identifier: ReturnType<typeof file.identifier> | undefined;
-
-  if ($ref) {
-    result.circularReferenceTracker.add($ref);
-
-    identifier = file.identifier({
-      $ref,
-      create: true,
-      nameTransformer,
-      namespace: 'value',
-    });
-  }
+  let zodSchema: Partial<ZodSchema> = {};
 
   if (schema.$ref) {
-    const isCircularReference = result.circularReferenceTracker.has(
+    const isCircularReference = state.circularReferenceTracker.includes(
       schema.$ref,
     );
+    state.circularReferenceTracker.push(schema.$ref);
 
-    // if $ref hasn't been processed yet, inline it to avoid the
-    // "Block-scoped variable used before its declaration." error
-    // this could be (maybe?) fixed by reshuffling the generation order
-    let identifierRef = file.identifier({
-      $ref: schema.$ref,
-      nameTransformer,
-      namespace: 'value',
-    });
+    const id = plugin.api.getId({ type: 'ref', value: schema.$ref });
 
-    if (!identifierRef.name) {
-      const ref = context.resolveIrRef<IR.SchemaObject>(schema.$ref);
-      expression = schemaToZodSchema({
-        $ref: schema.$ref,
-        context,
-        result,
-        schema: ref,
+    if (isCircularReference) {
+      const expression = file.addNodeReference(id, {
+        factory: (text) => compiler.identifier({ text }),
       });
-
-      identifierRef = file.identifier({
-        $ref: schema.$ref,
-        nameTransformer,
-        namespace: 'value',
-      });
-    }
-
-    // if `identifierRef.name` is falsy, we already set expression above
-    if (identifierRef.name) {
-      const refIdentifier = compiler.identifier({ text: identifierRef.name });
-      if (isCircularReference) {
-        expression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
-            expression: zIdentifier,
-            name: lazyIdentifier,
+      zodSchema.expression = compiler.callExpression({
+        functionName: compiler.propertyAccessExpression({
+          expression: identifiers.z,
+          name: identifiers.lazy,
+        }),
+        parameters: [
+          compiler.arrowFunction({
+            statements: [compiler.returnStatement({ expression })],
           }),
-          parameters: [
-            compiler.arrowFunction({
-              statements: [
-                compiler.returnStatement({
-                  expression: refIdentifier,
-                }),
-              ],
-            }),
-          ],
-        });
-        result.hasCircularReference = true;
-      } else {
-        expression = refIdentifier;
-      }
+        ],
+      });
+      state.hasCircularReference = true;
+    } else if (!file.getName(id)) {
+      // if $ref hasn't been processed yet, inline it to avoid the
+      // "Block-scoped variable used before its declaration." error
+      // this could be (maybe?) fixed by reshuffling the generation order
+      const ref = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
+      handleComponent({
+        id: schema.$ref,
+        plugin,
+        schema: ref,
+        state,
+      });
     }
+
+    if (!isCircularReference) {
+      const expression = file.addNodeReference(id, {
+        factory: (text) => compiler.identifier({ text }),
+      });
+      zodSchema.expression = expression;
+    }
+
+    state.circularReferenceTracker.pop();
   } else if (schema.type) {
-    const zodSchema = schemaTypeToZodSchema({
-      context,
-      result,
-      schema,
-    });
-    anyType = zodSchema.anyType;
-    expression = zodSchema.expression;
+    const zSchema = schemaTypeToZodSchema({ plugin, schema, state });
+    zodSchema.expression = zSchema.expression;
+    zodSchema.typeName = zSchema.anyType;
+
+    if (plugin.config.metadata && schema.description) {
+      zodSchema.expression = compiler.callExpression({
+        functionName: compiler.propertyAccessExpression({
+          expression: zodSchema.expression,
+          name: identifiers.describe,
+        }),
+        parameters: [compiler.stringLiteral({ text: schema.description })],
+      });
+    }
   } else if (schema.items) {
     schema = deduplicateSchema({ schema });
 
     if (schema.items) {
-      const itemTypes = schema.items.map((item) =>
-        schemaToZodSchema({
-          context,
-          result,
-          schema: item,
-        }),
+      const itemTypes = schema.items.map(
+        (item) =>
+          schemaToZodSchema({
+            plugin,
+            schema: item,
+            state,
+          }).expression,
       );
 
       if (schema.logicalOperator === 'and') {
@@ -942,30 +850,30 @@ const schemaToZodSchema = ({
           firstSchema.logicalOperator === 'or' ||
           (firstSchema.type && firstSchema.type !== 'object')
         ) {
-          expression = compiler.callExpression({
+          zodSchema.expression = compiler.callExpression({
             functionName: compiler.propertyAccessExpression({
-              expression: zIdentifier,
-              name: intersectionIdentifier,
+              expression: identifiers.z,
+              name: identifiers.intersection,
             }),
             parameters: itemTypes,
           });
         } else {
-          expression = itemTypes[0];
+          zodSchema.expression = itemTypes[0];
           itemTypes.slice(1).forEach((item) => {
-            expression = compiler.callExpression({
+            zodSchema.expression = compiler.callExpression({
               functionName: compiler.propertyAccessExpression({
-                expression: expression!,
-                name: andIdentifier,
+                expression: zodSchema.expression!,
+                name: identifiers.and,
               }),
               parameters: [item],
             });
           });
         }
       } else {
-        expression = compiler.callExpression({
+        zodSchema.expression = compiler.callExpression({
           functionName: compiler.propertyAccessExpression({
-            expression: zIdentifier,
-            name: unionIdentifier,
+            expression: identifiers.z,
+            name: identifiers.union,
           }),
           parameters: [
             compiler.arrayLiteralExpression({
@@ -975,57 +883,51 @@ const schemaToZodSchema = ({
         });
       }
     } else {
-      expression = schemaToZodSchema({
-        context,
-        result,
-        schema,
-      });
+      zodSchema = schemaToZodSchema({ plugin, schema, state });
     }
   } else {
     // catch-all fallback for failed schemas
-    const zodSchema = schemaTypeToZodSchema({
-      context,
-      result,
+    const zSchema = schemaTypeToZodSchema({
+      plugin,
       schema: {
         type: 'unknown',
       },
+      state,
     });
-    anyType = zodSchema.anyType;
-    expression = zodSchema.expression;
+    zodSchema.expression = zSchema.expression;
+    zodSchema.typeName = zSchema.anyType;
   }
 
-  if ($ref) {
-    result.circularReferenceTracker.delete($ref);
-  }
-
-  if (expression) {
+  if (zodSchema.expression) {
     if (schema.accessScope === 'read') {
-      expression = compiler.callExpression({
+      zodSchema.expression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
-          expression,
-          name: readonlyIdentifier,
+          expression: zodSchema.expression,
+          name: identifiers.readonly,
         }),
       });
     }
 
     if (optional) {
-      expression = compiler.callExpression({
+      zodSchema.expression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
-          expression,
-          name: optionalIdentifier,
+          expression: zodSchema.expression,
+          name: identifiers.optional,
         }),
       });
     }
 
     if (schema.default !== undefined) {
-      const callParameter = compiler.valueToExpression({
+      const isBigInt = schema.type === 'integer' && schema.format === 'int64';
+      const callParameter = numberParameter({
+        isBigInt,
         value: schema.default,
       });
       if (callParameter) {
-        expression = compiler.callExpression({
+        zodSchema.expression = compiler.callExpression({
           functionName: compiler.propertyAccessExpression({
-            expression,
-            name: defaultIdentifier,
+            expression: zodSchema.expression,
+            name: identifiers.default,
           }),
           parameters: [callParameter],
         });
@@ -1033,30 +935,74 @@ const schemaToZodSchema = ({
     }
   }
 
-  // emit nodes only if $ref points to a reusable component
-  if (identifier && identifier.name && identifier.created) {
-    const statement = compiler.constVariable({
-      exportConst: true,
-      expression: expression!,
-      name: identifier.name,
-      typeName: result.hasCircularReference
-        ? (compiler.propertyAccessExpression({
-            expression: zIdentifier,
-            name: anyType || 'ZodTypeAny',
-          }) as unknown as ts.TypeNode)
-        : undefined,
-    });
-    file.add(statement);
+  if (state.hasCircularReference) {
+    if (!zodSchema.typeName) {
+      zodSchema.typeName = 'ZodTypeAny';
+    }
+  } else {
+    zodSchema.typeName = undefined;
   }
 
-  return expression!;
+  return zodSchema as ZodSchema;
 };
 
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  const file = context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+const handleComponent = ({
+  id,
+  plugin,
+  schema,
+  state,
+}: {
+  id: string;
+  plugin: ZodPlugin['Instance'];
+  schema: IR.SchemaObject;
+  state?: State;
+}): void => {
+  if (!state) {
+    state = {
+      circularReferenceTracker: [id],
+      hasCircularReference: false,
+    };
+  }
+
+  const file = plugin.context.file({ id: zodId })!;
+  const schemaId = plugin.api.getId({ type: 'ref', value: id });
+
+  if (file.getName(schemaId)) return;
+
+  const zodSchema = schemaToZodSchema({ plugin, schema, state });
+  const typeInferId = plugin.config.definitions.types.infer.enabled
+    ? plugin.api.getId({ type: 'type-infer-ref', value: id })
+    : undefined;
+  exportZodSchema({
+    plugin,
+    schema,
+    schemaId,
+    typeInferId,
+    zodSchema,
+  });
+  const baseName = refToName(id);
+  file.updateNodeReferences(
+    schemaId,
+    buildName({
+      config: plugin.config.definitions,
+      name: baseName,
+    }),
+  );
+  if (typeInferId) {
+    file.updateNodeReferences(
+      typeInferId,
+      buildName({
+        config: plugin.config.definitions.types.infer,
+        name: baseName,
+      }),
+    );
+  }
+};
+
+export const handler: ZodPlugin['Handler'] = ({ plugin }) => {
+  const file = plugin.createFile({
+    case: plugin.config.case,
     id: zodId,
-    identifierCase: 'camelCase',
     path: plugin.output,
   });
 
@@ -1065,30 +1011,27 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     name: 'z',
   });
 
-  context.subscribe('operation', ({ operation }) => {
-    const result: Result = {
-      circularReferenceTracker: new Set(),
-      hasCircularReference: false,
-    };
-
-    operationToZodSchema({
-      context,
-      operation,
-      result,
-    });
-  });
-
-  context.subscribe('schema', ({ $ref, schema }) => {
-    const result: Result = {
-      circularReferenceTracker: new Set(),
-      hasCircularReference: false,
-    };
-
-    schemaToZodSchema({
-      $ref,
-      context,
-      result,
-      schema,
-    });
+  plugin.forEach('operation', 'parameter', 'requestBody', 'schema', (event) => {
+    if (event.type === 'operation') {
+      operationToZodSchema({ operation: event.operation, plugin });
+    } else if (event.type === 'parameter') {
+      handleComponent({
+        id: event.$ref,
+        plugin,
+        schema: event.parameter.schema,
+      });
+    } else if (event.type === 'requestBody') {
+      handleComponent({
+        id: event.$ref,
+        plugin,
+        schema: event.requestBody.schema,
+      });
+    } else if (event.type === 'schema') {
+      handleComponent({
+        id: event.$ref,
+        plugin,
+        schema: event.schema,
+      });
+    }
   });
 };

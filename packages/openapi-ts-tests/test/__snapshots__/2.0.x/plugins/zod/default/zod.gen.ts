@@ -2,38 +2,86 @@
 
 import { z } from 'zod';
 
+/**
+ * Testing multiline comments in string: First line
+ * Second line
+ *
+ * Fourth line
+ */
 export const zCommentWithBreaks = z.number().int();
 
+/**
+ * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+ */
 export const zCommentWithBackticks = z.number().int();
 
+/**
+ * Testing backticks and quotes in string: `backticks`, 'quotes', "double quotes" and ```multiple backticks``` should work
+ */
 export const zCommentWithBackticksAndQuotes = z.number().int();
 
+/**
+ * Testing slashes in string: \backwards\\\ and /forwards/// should work
+ */
 export const zCommentWithSlashes = z.number().int();
 
+/**
+ * Testing expression placeholders in string: ${expression} should work
+ */
 export const zCommentWithExpressionPlaceholders = z.number().int();
 
+/**
+ * Testing quotes in string: 'single quote''' and "double quotes""" should work
+ */
 export const zCommentWithQuotes = z.number().int();
 
+/**
+ * Testing reserved characters in string: * inline * and ** inline ** should work
+ */
 export const zCommentWithReservedCharacters = z.number().int();
 
+/**
+ * This is a simple number
+ */
 export const zSimpleInteger = z.number().int();
 
+/**
+ * This is a simple boolean
+ */
 export const zSimpleBoolean = z.boolean();
 
+/**
+ * This is a simple string
+ */
 export const zSimpleString = z.string();
 
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
 export const zNonAsciiStringæøåÆøÅöôêÊ字符串 = z.string();
 
+/**
+ * This is a simple file
+ */
 export const zSimpleFile = z.string();
 
+/**
+ * This is a model with one string property
+ */
 export const zModelWithString = z.object({
     prop: z.string().optional()
 });
 
 export const zSimpleReference = zModelWithString;
 
+/**
+ * This is a simple string
+ */
 export const zSimpleStringWithPattern = z.string().max(64).regex(/^[a-zA-Z0-9_]*$/);
 
+/**
+ * This is a simple enum with strings
+ */
 export const zEnumWithStrings = z.enum([
     'Success',
     'Warning',
@@ -43,51 +91,111 @@ export const zEnumWithStrings = z.enum([
     'Non-ascii: øæåôöØÆÅÔÖ字符串'
 ]);
 
+/**
+ * This is a simple enum with numbers
+ */
 export const zEnumWithNumbers = z.unknown();
 
+/**
+ * Success=1,Warning=2,Error=3
+ */
 export const zEnumFromDescription = z.number();
 
+/**
+ * This is a simple enum with numbers
+ */
 export const zEnumWithExtensions = z.unknown();
 
+/**
+ * This is a simple array with numbers
+ */
 export const zArrayWithNumbers = z.array(z.number().int());
 
+/**
+ * This is a simple array with booleans
+ */
 export const zArrayWithBooleans = z.array(z.boolean());
 
+/**
+ * This is a simple array with strings
+ */
 export const zArrayWithStrings = z.array(z.string());
 
+/**
+ * This is a simple array with references
+ */
 export const zArrayWithReferences = z.array(zModelWithString);
 
+/**
+ * This is a simple array containing an array
+ */
 export const zArrayWithArray = z.array(z.array(zModelWithString));
 
+/**
+ * This is a simple array with properties
+ */
 export const zArrayWithProperties = z.array(z.object({
     foo: z.string().optional(),
     bar: z.string().optional()
 }));
 
+/**
+ * This is a string dictionary
+ */
 export const zDictionaryWithString = z.object({});
 
+/**
+ * This is a string reference
+ */
 export const zDictionaryWithReference = z.object({});
 
+/**
+ * This is a complex dictionary
+ */
 export const zDictionaryWithArray = z.object({});
 
-export const zDictionaryWithDictionary = z.object({});
+/**
+ * This is a string dictionary
+ */
+export const zDictionaryWithDictionary = z.record(z.object({}));
 
-export const zDictionaryWithProperties = z.object({});
+/**
+ * This is a complex dictionary
+ */
+export const zDictionaryWithProperties = z.record(z.object({
+    foo: z.string().optional(),
+    bar: z.string().optional()
+}));
 
+/**
+ * This is a type-only model that defines Date as a string
+ */
 export const zDate = z.string();
 
+/**
+ * This is a model with one number property
+ */
 export const zModelWithInteger = z.object({
     prop: z.number().int().optional()
 });
 
+/**
+ * This is a model with one boolean property
+ */
 export const zModelWithBoolean = z.object({
     prop: z.boolean().optional()
 });
 
+/**
+ * This is a model with one string property
+ */
 export const zModelWithStringError = z.object({
     prop: z.string().optional()
 });
 
+/**
+ * This is a model with one string property
+ */
 export const zModelWithNullableString = z.object({
     nullableProp: z.union([
         z.string(),
@@ -99,6 +207,9 @@ export const zModelWithNullableString = z.object({
     ])
 });
 
+/**
+ * This is a model with one enum
+ */
 export const zModelWithEnum = z.object({
     test: z.enum([
         'Success',
@@ -117,10 +228,16 @@ export const zModelWithEnum = z.object({
     bool: z.unknown().optional()
 });
 
+/**
+ * This is a model with one enum
+ */
 export const zModelWithEnumFromDescription = z.object({
     test: z.number().int().optional()
 });
 
+/**
+ * This is a model with nested enums
+ */
 export const zModelWithNestedEnums = z.object({
     dictionaryWithEnum: z.object({}).optional(),
     dictionaryWithEnumFromDescription: z.object({}).optional(),
@@ -132,6 +249,9 @@ export const zModelWithNestedEnums = z.object({
     arrayWithDescription: z.array(z.number().int()).optional()
 });
 
+/**
+ * This is a model with one nested property
+ */
 export const zModelWithProperties = z.object({
     required: z.string(),
     requiredAndReadOnly: z.string().readonly(),
@@ -146,26 +266,41 @@ export const zModelWithProperties = z.object({
     '@namespace.integer': z.number().int().readonly().optional()
 });
 
+/**
+ * This is a model with one property containing a reference
+ */
 export const zModelWithReference = z.object({
     prop: zModelWithProperties.optional()
 });
 
+/**
+ * This is a model with one property containing an array
+ */
 export const zModelWithArray = z.object({
     prop: z.array(zModelWithString).optional(),
     propWithFile: z.array(z.string()).optional(),
     propWithNumber: z.array(z.number()).optional()
 });
 
+/**
+ * This is a model with one property containing a dictionary
+ */
 export const zModelWithDictionary = z.object({
     prop: z.object({}).optional()
 });
 
+/**
+ * This is a model with one property containing a circular reference
+ */
 export const zModelWithCircularReference: z.AnyZodObject = z.object({
     prop: z.lazy(() => {
         return zModelWithCircularReference;
     }).optional()
 });
 
+/**
+ * This is a model with one nested property
+ */
 export const zModelWithNestedProperties = z.object({
     first: z.object({
         second: z.object({
@@ -174,27 +309,42 @@ export const zModelWithNestedProperties = z.object({
     }).readonly()
 });
 
+/**
+ * This is a model with duplicated properties
+ */
 export const zModelWithDuplicateProperties = z.object({
     prop: zModelWithString.optional()
 });
 
+/**
+ * This is a model with ordered properties
+ */
 export const zModelWithOrderedProperties = z.object({
     zebra: z.string().optional(),
     apple: z.string().optional(),
     hawaii: z.string().optional()
 });
 
+/**
+ * This is a model with duplicated imports
+ */
 export const zModelWithDuplicateImports = z.object({
     propA: zModelWithString.optional(),
     propB: zModelWithString.optional(),
     propC: zModelWithString.optional()
 });
 
+/**
+ * This is a model that extends another model
+ */
 export const zModelThatExtends = zModelWithString.and(z.object({
     propExtendsA: z.string().optional(),
     propExtendsB: zModelWithString.optional()
 }));
 
+/**
+ * This is a model that extends another model
+ */
 export const zModelThatExtendsExtends = zModelWithString.and(zModelThatExtends).and(z.object({
     propExtendsC: z.string().optional(),
     propExtendsD: zModelWithString.optional()
@@ -204,6 +354,9 @@ export const zDefault = z.object({
     name: z.string().optional()
 });
 
+/**
+ * This is a model that contains a some patterns
+ */
 export const zModelWithPattern = z.object({
     key: z.string().max(64).regex(/^[a-zA-Z0-9_]*$/),
     name: z.string().max(255),
@@ -238,14 +391,246 @@ export const zFailureFailure = z.object({
     reference_code: z.string().optional()
 });
 
+export const zServiceWithEmptyTagData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zPatchApiVbyApiVersionNoTagData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zFooWowData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zDeleteCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zGetCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zHeadCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zOptionsCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zPatchCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zPostCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zPutCallWithoutParametersAndResponseData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zCallWithDescriptionsData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        parameterWithBreaks: z.string().optional(),
+        parameterWithBackticks: z.string().optional(),
+        parameterWithSlashes: z.string().optional(),
+        parameterWithExpressionPlaceholders: z.string().optional(),
+        parameterWithQuotes: z.string().optional(),
+        parameterWithReservedCharacters: z.string().optional()
+    }).optional()
+});
+
+export const zCallWithParametersData = z.object({
+    body: z.never().optional(),
+    path: z.object({
+        parameterPath: z.string(),
+        'api-version': z.string()
+    }),
+    query: z.object({
+        parameterQuery: z.string()
+    }),
+    headers: z.object({
+        parameterHeader: z.string()
+    })
+});
+
+export const zCallWithWeirdParameterNamesData = z.object({
+    body: z.never().optional(),
+    path: z.object({
+        'parameter.path.1': z.string().optional(),
+        'parameter-path-2': z.string().optional(),
+        'PARAMETER-PATH-3': z.string().optional(),
+        'api-version': z.string()
+    }),
+    query: z.object({
+        default: z.string().optional(),
+        'parameter-query': z.string()
+    }),
+    headers: z.object({
+        'parameter.header': z.string()
+    })
+});
+
+export const zCallWithDefaultParametersData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        parameterString: z.string().default('Hello World!'),
+        parameterNumber: z.number().default(123),
+        parameterBoolean: z.boolean().default(true),
+        parameterEnum: z.enum([
+            'Success',
+            'Warning',
+            'Error'
+        ]),
+        parameterModel: z.object({
+            prop: z.string().optional()
+        }).default({
+            prop: 'Hello World!'
+        })
+    })
+});
+
+export const zCallWithDefaultOptionalParametersData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        parameterString: z.string().optional().default('Hello World!'),
+        parameterNumber: z.number().optional().default(123),
+        parameterBoolean: z.boolean().optional().default(true),
+        parameterEnum: z.enum([
+            'Success',
+            'Warning',
+            'Error'
+        ]).optional()
+    }).optional()
+});
+
+export const zCallToTestOrderOfParamsData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        parameterOptionalStringWithDefault: z.string().optional().default('Hello World!'),
+        parameterOptionalStringWithEmptyDefault: z.string().optional().default(''),
+        parameterOptionalStringWithNoDefault: z.string().optional(),
+        parameterStringWithDefault: z.string().default('Hello World!'),
+        parameterStringWithEmptyDefault: z.string().default(''),
+        parameterStringWithNoDefault: z.string(),
+        parameterStringNullableWithNoDefault: z.union([
+            z.string(),
+            z.null()
+        ]).optional(),
+        parameterStringNullableWithDefault: z.union([
+            z.string(),
+            z.null()
+        ]).optional().default(null)
+    })
+});
+
+export const zDuplicateNameData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zDuplicateName2Data = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zDuplicateName3Data = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zDuplicateName4Data = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zCallWithNoContentResponseData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zCallWithResponseAndNoContentResponseData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
 export const zCallWithResponseAndNoContentResponseResponse = z.union([
     z.number(),
     z.unknown()
 ]);
 
+export const zDummyAData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zDummyBData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zCallWithResponseData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+/**
+ * Message for default response
+ */
 export const zCallWithResponseResponse = zModelWithString;
 
+export const zCallWithDuplicateResponsesData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+/**
+ * Message for 201 response
+ */
 export const zCallWithDuplicateResponsesResponse = zModelWithString;
+
+export const zCallWithResponsesData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
 
 export const zCallWithResponsesResponse = z.union([
     z.object({
@@ -257,6 +642,37 @@ export const zCallWithResponsesResponse = z.union([
     zModelThatExtendsExtends
 ]);
 
+export const zCollectionFormatData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        parameterArrayCSV: z.array(z.string()),
+        parameterArraySSV: z.array(z.string()),
+        parameterArrayTSV: z.array(z.string()),
+        parameterArrayPipes: z.array(z.string()),
+        parameterArrayMulti: z.array(z.string())
+    })
+});
+
+export const zTypesData = z.object({
+    body: z.never().optional(),
+    path: z.object({
+        id: z.number().int().optional()
+    }).optional(),
+    query: z.object({
+        parameterNumber: z.number().default(123),
+        parameterString: z.string().default('default'),
+        parameterBoolean: z.boolean().default(true),
+        parameterArray: z.array(z.string()),
+        parameterDictionary: z.object({}),
+        parameterEnum: z.enum([
+            'Success',
+            'Warning',
+            'Error'
+        ])
+    })
+});
+
 export const zTypesResponse = z.union([
     z.number(),
     z.string(),
@@ -264,8 +680,62 @@ export const zTypesResponse = z.union([
     z.object({})
 ]);
 
+export const zComplexTypesData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        parameterObject: z.object({
+            first: z.object({
+                second: z.object({
+                    third: z.string().optional()
+                }).optional()
+            }).optional()
+        }),
+        parameterReference: z.object({
+            prop: z.string().optional()
+        })
+    })
+});
+
+/**
+ * Successful response
+ */
 export const zComplexTypesResponse = z.array(zModelWithString);
 
+export const zCallWithResultFromHeaderData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+export const zTestErrorCodeData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        status: z.string()
+    })
+});
+
+export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.object({
+        'nonAsciiParamæøåÆØÅöôêÊ': z.number().int()
+    })
+});
+
+/**
+ * Successful response
+ */
 export const zNonAsciiæøåÆøÅöôêÊ字符串Response = zNonAsciiStringæøåÆøÅöôêÊ字符串;
 
+export const zPostApiVbyApiVersionBodyData = z.object({
+    body: zParameterActivityParams,
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
+/**
+ * OK
+ */
 export const zPostApiVbyApiVersionBodyResponse = zResponsePostActivityResponse;

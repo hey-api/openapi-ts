@@ -1,0 +1,66 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 pagination ref example
+  version: 1
+paths:
+  /foo:
+    get:
+      parameters:
+        - in: query
+          name: foo
+          required: true
+          schema:
+            $ref: '#/components/schemas/Bar'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: number
+    post:
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Foo'
+        required: true
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    Foo:
+      properties:
+        page:
+          anyOf:
+            - type: integer
+              minimum: 1.0
+            - type: 'null'
+          default: 1
+      type: object
+    Bar:
+      properties:
+        page:
+          type:
+            - integer
+            - 'null'
+          format: int32
+          minimum: 0
+        size:
+          type:
+            - integer
+            - 'null'
+          format: int32
+          minimum: 1
+        sort:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
+      required:
+        - page
+        - size
+        - sort
+      type: object

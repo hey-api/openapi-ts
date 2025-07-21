@@ -131,8 +131,6 @@ h3#demo + button {
 .sponsors-list > ul {
   display: flex;
   flex-direction: column;
-  row-gap: 2rem;
-  column-gap: 3rem;
   padding: 0;
 }
 
@@ -151,11 +149,63 @@ h3#demo + button {
 
 .sponsors-list li {
   align-items: center;
+  border: 1px solid transparent;
+  border-radius: 10px;
   display: flex;
-  height: 100px;
+  flex-direction: column;
+  row-gap: 0.5rem;
   justify-content: center;
   max-width: 240px;
+  padding: 1rem;
+  transition: border-color ease-out 300ms;
   width: 100%;
+}
+
+.sponsors-list li a:first-of-type {
+  height: 66px;
+}
+
+.sponsors-list li a:first-of-type picture,
+.sponsors-list li a:first-of-type img {
+  height: 100%;
+}
+
+.sponsors-list li p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 120%;
+}
+
+.sponsors-list li a:last-of-type {
+  font-size: 0.86rem;
+  line-height: 100%;
+}
+
+.sponsors-list > ul.gold {
+  row-gap: 2rem;
+  column-gap: 3rem;
+}
+
+.sponsors-list > ul.gold li {
+  max-width: 240px;
+}
+
+.sponsors-list > ul.silver {
+  row-gap: 2rem;
+  column-gap: 3rem;
+}
+
+.sponsors-list > ul.silver li {
+  max-width: 180px;
+}
+
+.sponsors-list > ul.bronze {
+  row-gap: 2rem;
+  column-gap: 1rem;
+}
+
+.sponsors-list > ul.bronze li {
+  max-width: 100px;
 }
 
 .sponsors-list li + li {
@@ -164,19 +214,14 @@ h3#demo + button {
 
 .sponsors-list li > a {
   align-items: center;
-  border: 1px solid transparent;
-  border-radius: 10px;
   display: flex;
-  height: 100%;
   justify-content: center;
-  padding: 1rem;
   text-decoration: none;
-  transition: border-color ease-out 300ms;
   width: 100%;
 }
 
 html.dark .authors-list li > a,
-html.dark .sponsors-list li > a {
+html.dark .sponsors-list li {
   background-color: var(--vp-button-brand-bg);
 }
 
@@ -187,8 +232,8 @@ html.dark .sponsors-list li > a {
 
 .authors-list li > a:hover,
 .authors-list li > a:focus,
-.sponsors-list li > a:hover,
-.sponsors-list li > a:focus {
+.sponsors-list li:has(> a:hover),
+.sponsors-list li:has(> a:focus) {
   border-color: var(--vp-c-brand-1);
 }
 
@@ -203,11 +248,38 @@ html.dark .sponsors-list li > a {
   max-width: initial;
 }
 
+.migration {
+  background-color: var(--vp-c-brand-3);
+  border-radius: 10px;
+  border: 1px solid transparent;
+  color: var(--vp-button-brand-text);
+  column-gap: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0 auto 1rem;
+  max-width: 392px;
+  padding: 1rem;
+  row-gap: 1rem;
+  transition: border-color ease-out 250ms;
+  width: auto;
+}
+
+a.migration:hover,
+a.migration:focus {
+  border-color: var(--vp-c-brand-1);
+}
+
 .VPFeatures.VPHomeFeatures > .container > .items {
   gap: 1rem;
   justify-content: center;
   margin: 0;
   padding: 0.2rem 0;
+}
+
+.contributors-list ul {
+  margin-bottom: 1.3rem;
+  margin-top: 1.3rem;
 }
 
 @media (min-width: 640px) {
@@ -220,12 +292,27 @@ html.dark .sponsors-list li > a {
   .sponsors-list > ul {
     flex-direction: row;
   }
+
+  .contributors-list ul {
+    columns: 2;
+  }
+}
+
+@media (min-width: 892px) {
+  .migration {
+    flex-direction: row;
+    max-width: 798px;
+  }
 }
 
 @media (min-width: 960px) {
   .VPFeatures.VPHomeFeatures > .container > .items {
     gap: 1rem;
     padding: 0.5rem 0;
+  }
+
+  .VPNavBar.has-sidebar > .wrapper > .container > .title {
+    background-color: var(--vp-sidebar-bg-color);
   }
 }
 

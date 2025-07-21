@@ -1,11 +1,13 @@
 import fs from 'node:fs';
 
+import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
 import { client, openApi } from '../../../../generate/__tests__/mocks';
 import type { OpenApiV3Schema } from '../../../../openApi';
 import type { Files } from '../../../../types/utils';
 import { setConfig } from '../../../../utils/config';
+import { PluginInstance } from '../../../shared/utils/instance';
 import { handlerLegacy } from '../plugin-legacy';
 
 vi.mock('node:fs');
@@ -19,7 +21,13 @@ describe('generateLegacySchemas', () => {
       exportCore: true,
       input: {
         path: '',
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
@@ -29,6 +37,31 @@ describe('generateLegacySchemas', () => {
       output: {
         path: '',
       },
+      parser: {
+        pagination: {
+          keywords: [],
+        },
+        transforms: {
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
+          readWrite: {
+            enabled: false,
+            requests: {
+              case: 'preserve',
+              name: '',
+            },
+            responses: {
+              case: 'preserve',
+              name: '',
+            },
+          },
+        },
+        validate_EXPERIMENTAL: false,
+      },
       pluginOrder: [
         '@hey-api/typescript',
         '@hey-api/schemas',
@@ -37,34 +70,45 @@ describe('generateLegacySchemas', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          config: {
+            name: '@hey-api/schemas',
+          },
+          handler: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          config: {
+            name: '@hey-api/sdk',
+          },
+          handler: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          enums: 'javascript',
+          api: {
+            getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
+          },
+          config: {
+            enums: 'javascript',
+            name: '@hey-api/typescript',
+          },
+          handler: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          _tags: ['client'],
+          config: {
+            name: 'legacy/fetch',
+          },
+          handler: () => {},
           name: 'legacy/fetch',
+          output: '',
+          tags: ['client'],
         },
       },
       useOptions: true,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     if ('openapi' in openApi) {
@@ -83,11 +127,16 @@ describe('generateLegacySchemas', () => {
       client,
       files,
       openApi,
-      plugin: {
-        exportFromIndex: false,
+      plugin: new PluginInstance({
+        config: {
+          exportFromIndex: false,
+        },
+        context: {} as any,
+        dependencies: [],
+        handler: () => {},
         name: '@hey-api/schemas',
         output: 'schemas',
-      },
+      }),
     });
 
     files.schemas!.write();
@@ -108,7 +157,13 @@ describe('generateLegacySchemas', () => {
       exportCore: true,
       input: {
         path: '',
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
@@ -118,6 +173,31 @@ describe('generateLegacySchemas', () => {
       output: {
         path: '',
       },
+      parser: {
+        pagination: {
+          keywords: [],
+        },
+        transforms: {
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
+          readWrite: {
+            enabled: false,
+            requests: {
+              case: 'preserve',
+              name: '',
+            },
+            responses: {
+              case: 'preserve',
+              name: '',
+            },
+          },
+        },
+        validate_EXPERIMENTAL: false,
+      },
       pluginOrder: [
         '@hey-api/typescript',
         '@hey-api/schemas',
@@ -126,35 +206,46 @@ describe('generateLegacySchemas', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          config: {
+            name: '@hey-api/schemas',
+            nameBuilder: nameFn,
+          },
+          handler: () => {},
           name: '@hey-api/schemas',
-          nameBuilder: nameFn,
+          output: '',
         },
         '@hey-api/sdk': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          config: {
+            name: '@hey-api/sdk',
+          },
+          handler: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          enums: 'javascript',
+          api: {
+            getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
+          },
+          config: {
+            enums: 'javascript',
+            name: '@hey-api/typescript',
+          },
+          handler: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          _tags: ['client'],
+          config: {
+            name: 'legacy/fetch',
+          },
+          handler: () => {},
           name: 'legacy/fetch',
+          output: '',
+          tags: ['client'],
         },
       },
       useOptions: true,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     const schema: OpenApiV3Schema = {
@@ -175,11 +266,16 @@ describe('generateLegacySchemas', () => {
       client,
       files,
       openApi,
-      plugin: {
-        exportFromIndex: false,
+      plugin: new PluginInstance({
+        config: {
+          exportFromIndex: false,
+        },
+        context: {} as any,
+        dependencies: [],
+        handler: () => {},
         name: '@hey-api/schemas',
         output: 'schemas',
-      },
+      }),
     });
 
     files.schemas!.write();

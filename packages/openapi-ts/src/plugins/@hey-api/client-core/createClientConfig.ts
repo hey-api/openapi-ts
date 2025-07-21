@@ -4,17 +4,23 @@ import { clientId } from '../client-core/utils';
 import { typesId } from '../typescript/ref';
 import type { PluginHandler } from './types';
 
-export const createClientConfigType: PluginHandler = ({ context }) => {
-  const file = context.file({ id: clientId })!;
+export const createClientConfigType = ({
+  plugin,
+}: Parameters<PluginHandler>[0]) => {
+  const file = plugin.context.file({ id: clientId })!;
 
   const clientModule = clientModulePath({
-    config: context.config,
+    config: plugin.context.config,
     sourceOutput: file.nameWithoutExtension(),
   });
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const fileTypeScript = plugin.context.file({ id: typesId })!;
   const clientOptions = file.import({
     asType: true,
-    module: file.relativePathToFile({ context, id: typesId }),
-    name: 'ClientOptions',
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+    name: fileTypeScript.getName(
+      pluginTypeScript.api.getId({ type: 'ClientOptions' }),
+    ),
   });
   const configType = file.import({
     asType: true,
@@ -76,7 +82,9 @@ export const createClientConfigType: PluginHandler = ({ context }) => {
     }),
     typeParameters: [
       {
-        default: compiler.typeReferenceNode({ typeName: clientOptions.name }),
+        default: clientOptions.name
+          ? compiler.typeReferenceNode({ typeName: clientOptions.name })
+          : undefined,
         extends: defaultClientOptionsType,
         name: 'T',
       },

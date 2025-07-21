@@ -11,7 +11,13 @@ describe('operationNameFn', () => {
     exportCore: false,
     input: {
       path: '',
+      watch: {
+        enabled: false,
+        interval: 1_000,
+        timeout: 60_000,
+      },
     },
+    interactive: false,
     logs: {
       file: true,
       level: 'info',
@@ -20,28 +26,54 @@ describe('operationNameFn', () => {
     output: {
       path: '',
     },
+    parser: {
+      pagination: {
+        keywords: [],
+      },
+      transforms: {
+        enums: {
+          case: 'preserve',
+          enabled: false,
+          mode: 'root',
+          name: '',
+        },
+        readWrite: {
+          enabled: false,
+          requests: {
+            case: 'preserve',
+            name: '',
+          },
+          responses: {
+            case: 'preserve',
+            name: '',
+          },
+        },
+      },
+      validate_EXPERIMENTAL: false,
+    },
     pluginOrder: ['legacy/fetch', '@hey-api/sdk'],
     plugins: {
       '@hey-api/sdk': {
-        _handler: () => {},
-        _handlerLegacy: () => {},
+        config: {
+          name: '@hey-api/sdk',
+          operationId: true,
+          response: 'body',
+        },
+        handler: () => {},
         name: '@hey-api/sdk',
-        operationId: true,
-        response: 'body',
+        output: '',
       },
       'legacy/fetch': {
-        _handler: () => {},
-        _handlerLegacy: () => {},
-        _tags: ['client'],
+        config: {
+          name: 'legacy/fetch',
+        },
+        handler: () => {},
         name: 'legacy/fetch',
+        output: '',
+        tags: ['client'],
       },
     },
     useOptions: false,
-    watch: {
-      enabled: false,
-      interval: 1_000,
-      timeout: 60_000,
-    },
   };
 
   const options1: Parameters<typeof setConfig>[0] = {
@@ -49,11 +81,14 @@ describe('operationNameFn', () => {
     plugins: {
       ...optionsCommon.plugins,
       '@hey-api/sdk': {
-        _handler: () => {},
-        _handlerLegacy: () => {},
+        config: {
+          name: '@hey-api/sdk',
+          operationId: true,
+          response: 'body',
+        },
+        handler: () => {},
         name: '@hey-api/sdk',
-        operationId: true,
-        response: 'body',
+        output: '',
       },
     },
   };
@@ -63,11 +98,14 @@ describe('operationNameFn', () => {
     plugins: {
       ...optionsCommon.plugins,
       '@hey-api/sdk': {
-        _handler: () => {},
-        _handlerLegacy: () => {},
+        config: {
+          name: '@hey-api/sdk',
+          operationId: false,
+          response: 'body',
+        },
+        handler: () => {},
         name: '@hey-api/sdk',
-        operationId: false,
-        response: 'body',
+        output: '',
       },
     },
   };
@@ -77,17 +115,23 @@ describe('operationNameFn', () => {
     pluginOrder: ['@hey-api/client-fetch', '@hey-api/sdk'],
     plugins: {
       '@hey-api/client-fetch': {
-        _handler: () => {},
-        _handlerLegacy: () => {},
-        _tags: ['client'],
+        config: {
+          name: '@hey-api/client-fetch',
+        },
+        handler: () => {},
         name: '@hey-api/client-fetch',
+        output: '',
+        tags: ['client'],
       },
       '@hey-api/sdk': {
-        _handler: () => {},
-        _handlerLegacy: () => {},
+        config: {
+          name: '@hey-api/sdk',
+          operationId: true,
+          response: 'body',
+        },
+        handler: () => {},
         name: '@hey-api/sdk',
-        operationId: true,
-        response: 'body',
+        output: '',
       },
     },
   };
@@ -97,17 +141,23 @@ describe('operationNameFn', () => {
     pluginOrder: ['@hey-api/client-fetch', '@hey-api/sdk'],
     plugins: {
       '@hey-api/client-fetch': {
-        _handler: () => {},
-        _handlerLegacy: () => {},
-        _tags: ['client'],
+        config: {
+          name: '@hey-api/client-fetch',
+        },
+        handler: () => {},
         name: '@hey-api/client-fetch',
+        output: '',
+        tags: ['client'],
       },
       '@hey-api/sdk': {
-        _handler: () => {},
-        _handlerLegacy: () => {},
+        config: {
+          name: '@hey-api/sdk',
+          operationId: false,
+          response: 'body',
+        },
+        handler: () => {},
         name: '@hey-api/sdk',
-        operationId: false,
-        response: 'body',
+        output: '',
       },
     },
   };

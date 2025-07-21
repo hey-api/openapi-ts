@@ -6,6 +6,7 @@
   "scripts": {
     "test:coverage": "vitest run --config vitest.config.unit.ts --coverage",
     "test:e2e:disabled": "vitest run --config vitest.config.e2e.ts",
+    "test:types": "tsc -p tsconfig.test.json --noEmit",
     "test:update": "vitest watch --config vitest.config.unit.ts --update",
     "test:watch": "vitest watch --config vitest.config.unit.ts",
     "test": "vitest run --config vitest.config.unit.ts",
@@ -30,12 +31,7 @@
     "@angular/platform-browser-dynamic": "19.2.0",
     "@angular/router": "19.2.0",
     "@config/vite-base": "workspace:*",
-    "@hey-api/client-axios": "workspace:*",
-    "@hey-api/client-core": "workspace:*",
-    "@hey-api/client-custom": "workspace:*",
-    "@hey-api/client-fetch": "workspace:*",
-    "@hey-api/client-next": "workspace:*",
-    "@hey-api/client-nuxt": "workspace:*",
+    "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@tanstack/angular-query-experimental": "5.73.3",
     "@tanstack/react-query": "5.73.3",
@@ -58,6 +54,7 @@
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
     "typescript": "5.8.3",
+    "valibot": "1.1.0",
     "vue": "3.5.13",
     "zod": "3.23.8"
   }

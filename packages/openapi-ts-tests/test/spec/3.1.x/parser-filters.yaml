@@ -1,0 +1,100 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 parser filters example
+  version: 1
+paths:
+  /v1/foo:
+    post:
+      deprecated: true
+      tags:
+        - foo
+        - bar
+      parameters:
+        - $ref: '#/components/parameters/Foo'
+      requestBody:
+        $ref: '#/components/requestBodies/Foo'
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Foo'
+          description: OK
+    put:
+      tags:
+        - bar
+      requestBody:
+        $ref: '#/components/requestBodies/Bar'
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Baz'
+          description: OK
+  /v2/bar:
+    post:
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Bar'
+        required: true
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Bar'
+          description: OK
+components:
+  parameters:
+    Foo:
+      name: foo
+      in: query
+      description: Query parameter
+      required: false
+      schema:
+        type: string
+  requestBodies:
+    Foo:
+      required: true
+      description: POST /foo payload
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              foo:
+                $ref: '#/components/schemas/Bar'
+    Bar:
+      required: true
+      description: PUT /foo payload
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              foo:
+                $ref: '#/components/schemas/Foo'
+  schemas:
+    Foo:
+      type: object
+      properties:
+        foo:
+          $ref: '#/components/schemas/Bar'
+    Bar:
+      type: object
+      properties:
+        bar:
+          $ref: '#/components/schemas/Baz'
+    Baz:
+      type: object
+      properties:
+        baz:
+          type: string
+    Orphan:
+      type: object
+      properties:
+        orphan:
+          type: string

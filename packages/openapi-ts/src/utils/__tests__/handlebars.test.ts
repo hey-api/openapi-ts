@@ -1,4 +1,5 @@
 import Handlebars from 'handlebars';
+import type ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
 import { setConfig } from '../config';
@@ -16,7 +17,13 @@ describe('registerHandlebarHelpers', () => {
       exportCore: true,
       input: {
         path: '',
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
@@ -26,6 +33,31 @@ describe('registerHandlebarHelpers', () => {
         format: 'prettier',
         path: '',
       },
+      parser: {
+        pagination: {
+          keywords: [],
+        },
+        transforms: {
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
+          readWrite: {
+            enabled: false,
+            requests: {
+              case: 'preserve',
+              name: '',
+            },
+            responses: {
+              case: 'preserve',
+              name: '',
+            },
+          },
+        },
+        validate_EXPERIMENTAL: false,
+      },
       pluginOrder: [
         '@hey-api/typescript',
         '@hey-api/schemas',
@@ -34,34 +66,45 @@ describe('registerHandlebarHelpers', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          config: {
+            name: '@hey-api/schemas',
+          },
+          handler: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          config: {
+            name: '@hey-api/sdk',
+          },
+          handler: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          enums: 'javascript',
+          api: {
+            getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
+          },
+          config: {
+            enums: 'javascript',
+            name: '@hey-api/typescript',
+          },
+          handler: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          _tags: ['client'],
+          config: {
+            name: 'legacy/fetch',
+          },
+          handler: () => {},
           name: 'legacy/fetch',
+          output: '',
+          tags: ['client'],
         },
       },
       useOptions: false,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
     registerHandlebarHelpers();
     const helpers = Object.keys(Handlebars.helpers);
@@ -83,7 +126,13 @@ describe('registerHandlebarTemplates', () => {
       exportCore: true,
       input: {
         path: '',
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
@@ -93,6 +142,31 @@ describe('registerHandlebarTemplates', () => {
         format: 'prettier',
         path: '',
       },
+      parser: {
+        pagination: {
+          keywords: [],
+        },
+        transforms: {
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
+          readWrite: {
+            enabled: false,
+            requests: {
+              case: 'preserve',
+              name: '',
+            },
+            responses: {
+              case: 'preserve',
+              name: '',
+            },
+          },
+        },
+        validate_EXPERIMENTAL: false,
+      },
       pluginOrder: [
         '@hey-api/typescript',
         '@hey-api/schemas',
@@ -101,34 +175,45 @@ describe('registerHandlebarTemplates', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          config: {
+            name: '@hey-api/schemas',
+          },
+          handler: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          config: {
+            name: '@hey-api/sdk',
+          },
+          handler: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          enums: 'javascript',
+          api: {
+            getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
+          },
+          config: {
+            enums: 'javascript',
+            name: '@hey-api/typescript',
+          },
+          handler: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          _tags: ['client'],
+          config: {
+            name: 'legacy/fetch',
+          },
+          handler: () => {},
           name: 'legacy/fetch',
+          output: '',
+          tags: ['client'],
         },
       },
       useOptions: false,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
     const templates = registerHandlebarTemplates();
     expect(templates.core.settings).toBeDefined();

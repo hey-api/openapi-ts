@@ -1,28 +1,29 @@
 import {
   type Client,
   clientDefaultConfig,
+  clientDefaultMeta,
   clientPluginHandler,
-  type Plugin,
+  type DefinePlugin,
+  definePluginConfig,
 } from '@hey-api/openapi-ts';
 
-export interface Config extends Client.Config {
+type Config = Client.Config & {
   /**
    * Plugin name. Must be unique.
    */
   name: string;
-}
+};
 
-export const defaultConfig: Plugin.Config<Config> = {
-  ...clientDefaultConfig,
-  _handler: clientPluginHandler,
-  _handlerLegacy: () => {},
+export type MyClientPlugin = DefinePlugin<Config>;
+
+export const defaultConfig: MyClientPlugin['Config'] = {
+  ...clientDefaultMeta,
+  config: clientDefaultConfig,
+  handler: clientPluginHandler as MyClientPlugin['Handler'],
   name: __filename,
 };
 
 /**
  * Type helper for `my-client` plugin, returns {@link Plugin.Config} object
  */
-export const myClientPlugin: Plugin.DefineConfig<Config> = (config) => ({
-  ...defaultConfig,
-  ...config,
-});
+export const myClientPlugin = definePluginConfig(defaultConfig);

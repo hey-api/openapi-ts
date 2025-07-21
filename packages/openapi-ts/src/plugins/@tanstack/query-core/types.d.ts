@@ -1,26 +1,23 @@
 import type { ImportExportItem } from '../../../compiler/module';
-import type { Plugin } from '../../types';
-import type { Config as AngularQueryConfig } from '../angular-query-experimental';
-import type { Config as ReactQueryConfig } from '../react-query';
-import type { Config as SolidQueryConfig } from '../solid-query';
-import type { Config as SvelteQueryConfig } from '../svelte-query';
-import type { Config as VueQueryConfig } from '../vue-query';
+import type { TanStackAngularQueryPlugin } from '../angular-query-experimental/types';
+import type { TanStackReactQueryPlugin } from '../react-query/types';
+import type { TanStackSolidQueryPlugin } from '../solid-query/types';
+import type { TanStackSvelteQueryPlugin } from '../svelte-query/types';
+import type { TanStackVueQueryPlugin } from '../vue-query/types';
 
-export type PluginHandler = Plugin.Handler<
-  | ReactQueryConfig
-  | AngularQueryConfig
-  | SolidQueryConfig
-  | SvelteQueryConfig
-  | VueQueryConfig
->;
+export type PluginHandler =
+  | TanStackAngularQueryPlugin['Handler']
+  | TanStackReactQueryPlugin['Handler']
+  | TanStackSolidQueryPlugin['Handler']
+  | TanStackSvelteQueryPlugin['Handler']
+  | TanStackVueQueryPlugin['Handler'];
 
-export type PluginInstance = Plugin.Instance<
-  | AngularQueryConfig
-  | ReactQueryConfig
-  | SolidQueryConfig
-  | SvelteQueryConfig
-  | VueQueryConfig
->;
+export type PluginInstance =
+  | TanStackAngularQueryPlugin['Instance']
+  | TanStackReactQueryPlugin['Instance']
+  | TanStackSolidQueryPlugin['Instance']
+  | TanStackSvelteQueryPlugin['Instance']
+  | TanStackVueQueryPlugin['Instance'];
 
 export interface PluginState {
   hasCreateInfiniteParamsFunction: boolean;
@@ -30,19 +27,4 @@ export interface PluginState {
   hasQueries: boolean;
   hasUsedQueryFn: boolean;
   typeInfiniteData: ImportExportItem;
-}
-
-/**
- * Public TanStack Query API.
- */
-export namespace TanStackQuery {
-  export type Config = {
-    /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
-     *
-     * @default false
-     */
-    exportFromIndex?: boolean;
-  };
 }

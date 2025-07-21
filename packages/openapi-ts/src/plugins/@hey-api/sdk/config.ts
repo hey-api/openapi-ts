@@ -1,59 +1,91 @@
-import type { Plugin } from '../../types';
+import { definePluginConfig } from '../../shared/utils/config';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiSdkPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config> = {
-  _dependencies: ['@hey-api/typescript'],
-  _handler: handler,
-  _handlerLegacy: handlerLegacy,
-  _infer: (config, context) => {
-    if (config.client) {
-      if (typeof config.client === 'boolean') {
-        config.client = context.pluginByTag(
-          'client',
-          '🚫 client needs to be set to generate SDKs - which HTTP client do you want to use?',
-        ) as unknown as typeof config.client;
+export const defaultConfig: HeyApiSdkPlugin['Config'] = {
+  config: {
+    asClass: false,
+    auth: true,
+    classStructure: 'auto',
+    client: true,
+    exportFromIndex: true,
+    instance: false,
+    operationId: true,
+    params_EXPERIMENTAL: 'default',
+    response: 'body',
+    responseStyle: 'fields',
+    transformer: false,
+    validator: false,
+  },
+  dependencies: ['@hey-api/typescript'],
+  handler,
+  handlerLegacy,
+  name: '@hey-api/sdk',
+  output: 'sdk',
+  resolveConfig: (plugin, context) => {
+    if (plugin.config.client) {
+      if (typeof plugin.config.client === 'boolean') {
+        plugin.config.client = context.pluginByTag('client', {
+          defaultPlugin: '@hey-api/client-fetch',
+        });
       }
 
-      context.ensureDependency(config.client);
+      plugin.dependencies.add(plugin.config.client!);
+    } else {
+      plugin.config.client = false;
     }
 
-    if (config.transformer) {
-      if (typeof config.transformer === 'boolean') {
-        config.transformer = context.pluginByTag(
-          'transformer',
-        ) as unknown as typeof config.transformer;
+    if (plugin.config.transformer) {
+      if (typeof plugin.config.transformer === 'boolean') {
+        plugin.config.transformer = context.pluginByTag('transformer');
       }
 
-      context.ensureDependency(config.transformer);
+      plugin.dependencies.add(plugin.config.transformer!);
+    } else {
+      plugin.config.transformer = false;
     }
 
-    if (config.validator) {
-      if (typeof config.validator === 'boolean') {
-        config.validator = context.pluginByTag(
-          'validator',
-        ) as unknown as typeof config.validator;
+    if (typeof plugin.config.validator !== 'object') {
+      plugin.config.validator = {
+        request: plugin.config.validator,
+        response: plugin.config.validator,
+      };
+    }
+
+    if (plugin.config.validator.request) {
+      if (typeof plugin.config.validator.request === 'boolean') {
+        plugin.config.validator.request = context.pluginByTag('validator');
       }
 
-      context.ensureDependency(config.validator);
+      plugin.dependencies.add(plugin.config.validator.request!);
+    } else {
+      plugin.config.validator.request = false;
+    }
+
+    if (plugin.config.validator.response) {
+      if (typeof plugin.config.validator.response === 'boolean') {
+        plugin.config.validator.response = context.pluginByTag('validator');
+      }
+
+      plugin.dependencies.add(plugin.config.validator.response!);
+    } else {
+      plugin.config.validator.response = false;
+    }
+
+    if (plugin.config.instance) {
+      if (typeof plugin.config.instance !== 'string') {
+        plugin.config.instance = 'Sdk';
+      }
+
+      plugin.config.asClass = true;
+    } else {
+      plugin.config.instance = false;
     }
   },
-  asClass: false,
-  auth: true,
-  client: true,
-  exportFromIndex: true,
-  name: '@hey-api/sdk',
-  operationId: true,
-  output: 'sdk',
-  response: 'body',
-  serviceNameBuilder: '{{name}}Service',
 };
 
 /**
  * Type helper for `@hey-api/sdk` plugin, returns {@link Plugin.Config} object
  */
-export const defineConfig: Plugin.DefineConfig<Config> = (config) => ({
-  ...defaultConfig,
-  ...config,
-});
+export const defineConfig = definePluginConfig(defaultConfig);

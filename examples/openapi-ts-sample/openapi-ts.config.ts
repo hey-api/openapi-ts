@@ -14,7 +14,10 @@ export default defineConfig({
       runtimeConfigPath: './src/hey-api.ts',
     },
     '@hey-api/schemas',
-    '@hey-api/sdk',
+    {
+      name: '@hey-api/sdk',
+      validator: 'zod',
+    },
     {
       enums: 'javascript',
       name: '@hey-api/typescript',

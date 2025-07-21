@@ -5,7 +5,7 @@ import {
   sendRequest,
 } from '@hey-api/json-schema-ref-parser';
 
-import { mergeHeaders } from './mergeHeaders';
+import { mergeHeaders } from './plugins/@hey-api/client-fetch/bundle';
 import type { Config } from './types/config';
 import type { WatchValues } from './types/types';
 

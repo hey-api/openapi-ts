@@ -5,10 +5,10 @@ import type { ImportExportItem } from '../../../compiler/module';
 import type { ImportExportItemObject } from '../../../compiler/utils';
 import { clientApi, clientModulePath } from '../../../generate/client';
 import { relativeModulePath } from '../../../generate/utils';
+import { createOperationKey } from '../../../ir/operation';
 import { getPaginationKeywordsRegExp } from '../../../ir/pagination';
 import type { IR } from '../../../ir/types';
 import { isOperationParameterRequired } from '../../../openApi';
-import { getOperationKey } from '../../../openApi/common/parser/operation';
 import type {
   Client,
   Method,
@@ -19,7 +19,7 @@ import type {
 import type { Config } from '../../../types/config';
 import type { Files } from '../../../types/utils';
 import { getConfig, isLegacyClient } from '../../../utils/config';
-import { transformServiceName } from '../../../utils/transform';
+import { transformClassName } from '../../../utils/transform';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
@@ -32,12 +32,11 @@ import {
   operationResponseTypeName,
   serviceFunctionIdentifier,
 } from '../../@hey-api/sdk/plugin-legacy';
-import type { Plugin } from '../../types';
-import type { Config as AngularQueryConfig } from '../angular-query-experimental';
-import type { Config as ReactQueryConfig } from '../react-query';
-import type { Config as SolidQueryConfig } from '../solid-query';
-import type { Config as SvelteQueryConfig } from '../svelte-query';
-import type { Config as VueQueryConfig } from '../vue-query';
+import type { TanStackAngularQueryPlugin } from '../angular-query-experimental';
+import type { TanStackReactQueryPlugin } from '../react-query';
+import type { TanStackSolidQueryPlugin } from '../solid-query';
+import type { TanStackSvelteQueryPlugin } from '../svelte-query';
+import type { TanStackVueQueryPlugin } from '../vue-query';
 
 const toInfiniteQueryOptionsName = (operation: Operation) =>
   `${serviceFunctionIdentifier({
@@ -294,6 +293,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
   });
 
   const infiniteIdentifier = compiler.identifier({ text: 'infinite' });
+  const baseUrlKey = getClientBaseUrlKey(getConfig());
 
   const fn = compiler.constVariable({
     expression: compiler.arrowFunction({
@@ -326,9 +326,9 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 value: compiler.identifier({ text: 'id' }),
               },
               {
-                key: getClientBaseUrlKey(getConfig()),
+                key: baseUrlKey,
                 value: compiler.identifier({
-                  text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey(getConfig())}`,
+                  text: `options?.${baseUrlKey} || (options?.client ?? _heyApiClient).getConfig().${baseUrlKey}`,
                 }),
               },
             ],
@@ -668,17 +668,21 @@ const createQueryKeyLiteral = ({
   return queryKeyLiteral;
 };
 
-export const handlerLegacy: Plugin.LegacyHandler<
-  | ReactQueryConfig
-  | AngularQueryConfig
-  | SolidQueryConfig
-  | SvelteQueryConfig
-  | VueQueryConfig
-> = ({ client, files, plugin }) => {
+export const handlerLegacy = ({
+  client,
+  files,
+  plugin,
+}: Parameters<
+  | TanStackAngularQueryPlugin['LegacyHandler']
+  | TanStackReactQueryPlugin['LegacyHandler']
+  | TanStackSolidQueryPlugin['LegacyHandler']
+  | TanStackSvelteQueryPlugin['LegacyHandler']
+  | TanStackVueQueryPlugin['LegacyHandler']
+>[0]) => {
   const config = getConfig();
 
   if (isLegacyClient(config)) {
-    throw new Error('🚫 TanStack Query plugin does not support legacy clients');
+    throw new Error('TanStack Query plugin does not support legacy clients');
   }
 
   const file = files[plugin.name]!;
@@ -712,21 +716,21 @@ export const handlerLegacy: Plugin.LegacyHandler<
   for (const service of client.services) {
     for (const operation of service.operations) {
       // track processed operations to avoid creating duplicates
-      const operationKey = getOperationKey(operation);
+      const operationKey = createOperationKey(operation);
       if (processedOperations.has(operationKey)) {
         continue;
       }
       processedOperations.set(operationKey, true);
 
       const queryFn = [
-        config.plugins['@hey-api/sdk']?.asClass &&
-          transformServiceName({
+        config.plugins['@hey-api/sdk']?.config.asClass &&
+          transformClassName({
             config,
             name: service.name,
           }),
         serviceFunctionIdentifier({
           config,
-          handleIllegal: !config.plugins['@hey-api/sdk']?.asClass,
+          handleIllegal: !config.plugins['@hey-api/sdk']?.config.asClass,
           id: operation.name,
           operation,
         }),
@@ -737,7 +741,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
 
       // queries
       if (
-        plugin.queryOptions &&
+        plugin.config.queryOptions &&
         (['GET', 'POST'] as ReadonlyArray<Method>).includes(operation.method)
       ) {
         if (!hasQueries) {
@@ -893,7 +897,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
 
       // infinite queries
       if (
-        plugin.infiniteQueryOptions &&
+        plugin.config.infiniteQueryOptions &&
         (['GET', 'POST'] as ReadonlyArray<Method>).includes(operation.method)
       ) {
         // the actual pagination field might be nested inside parameter, e.g. body
@@ -901,7 +905,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
 
         const paginationParameter = operation.parameters.find((parameter) => {
           const paginationRegExp = getPaginationKeywordsRegExp(
-            config.input.pagination,
+            config.parser.pagination,
           );
           if (paginationRegExp.test(parameter.name)) {
             paginationField = parameter;
@@ -919,23 +923,25 @@ export const handlerLegacy: Plugin.LegacyHandler<
             );
             return refModel?.properties.find((property) => {
               const paginationRegExp = getPaginationKeywordsRegExp(
-                config.input.pagination,
+                config.parser.pagination,
               );
               if (paginationRegExp.test(property.name)) {
                 paginationField = property;
                 return true;
               }
+              return;
             });
           }
 
           return parameter.properties.find((property) => {
             const paginationRegExp = getPaginationKeywordsRegExp(
-              config.input.pagination,
+              config.parser.pagination,
             );
             if (paginationRegExp.test(property.name)) {
               paginationField = property;
               return true;
             }
+            return;
           });
         });
 
@@ -1171,7 +1177,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
                   // TODO: better types syntax
                   types: [
                     typeResponse,
-                    typeError.name,
+                    typeError.name!,
                     `${typeof typeInfiniteData === 'string' ? typeInfiniteData : typeInfiniteData.name}<${typeResponse}>`,
                     typeQueryKey,
                     typePageParam,
@@ -1187,7 +1193,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
 
       // mutations
       if (
-        plugin.mutationOptions &&
+        plugin.config.mutationOptions &&
         (['DELETE', 'PATCH', 'POST', 'PUT'] as ReadonlyArray<Method>).includes(
           operation.method,
         )

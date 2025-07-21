@@ -1,5 +1,40 @@
 # @example/openapi-ts-next
 
+## 0.1.13
+
+### Patch Changes
+
+- Updated dependencies [[`f23f3ae`](https://github.com/hey-api/openapi-ts/commit/f23f3ae874385e758eb8d43bb4e274c9858a4e40)]:
+  - @hey-api/client-next@0.5.1
+
+## 0.1.12
+
+### Patch Changes
+
+- Updated dependencies [[`10d2e03`](https://github.com/hey-api/openapi-ts/commit/10d2e03b8295e4e887fab8d023aa823699efbae8)]:
+  - @hey-api/client-next@0.5.0
+
+## 0.1.11
+
+### Patch Changes
+
+- Updated dependencies [[`8152aaf`](https://github.com/hey-api/openapi-ts/commit/8152aaf4892c48b79fd3dc486eb3c0ea333dc3e6)]:
+  - @hey-api/client-next@0.4.0
+
+## 0.1.10
+
+### Patch Changes
+
+- Updated dependencies [[`1f99066`](https://github.com/hey-api/openapi-ts/commit/1f99066efbb2d0e6b9e3710c701293c2cc09d65e)]:
+  - @hey-api/client-next@0.3.2
+
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [[`565e0b8`](https://github.com/hey-api/openapi-ts/commit/565e0b89fbab4556ecdc63dfe08250942681140e)]:
+  - @hey-api/client-next@0.3.1
+
 ## 0.1.8
 
 ### Patch Changes

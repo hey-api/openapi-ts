@@ -24,6 +24,10 @@
     "Numbers": {
       "enum": [100, 200, 300, -100, -200, -300],
       "type": "number"
+    },
+    "Arrays": {
+      "enum": [["foo"], ["bar"], ["baz"]],
+      "type": "array"
     }
   }
 }

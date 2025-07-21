@@ -1,15 +1,11 @@
 import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
-import type { SchemaObject as OpenApiV2_0_XSchemaObject } from '../../../openApi/2.0.x/types/spec';
-import type {
-  ReferenceObject as OpenApiV3_0_XReferenceObject,
-  SchemaObject as OpenApiV3_0_XSchemaObject,
-} from '../../../openApi/3.0.x/types/spec';
-import type { SchemaObject as OpenApiV3_1_XSchemaObject } from '../../../openApi/3.1.x/types/spec';
+import type { OpenApiV2_0_XTypes } from '../../../openApi/2.0.x';
+import type { OpenApiV3_0_XTypes } from '../../../openApi/3.0.x';
+import type { OpenApiV3_1_XTypes } from '../../../openApi/3.1.x';
 import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
 import type { OpenApi } from '../../../openApi/types';
-import type { Plugin } from '../../types';
-import type { Config } from './types';
+import type { HeyApiSchemasPlugin } from './types';
 
 const schemasId = 'schemas';
 
@@ -17,13 +13,13 @@ const stripSchema = ({
   plugin,
   schema,
 }: {
-  plugin: Plugin.Instance<Config>;
+  plugin: HeyApiSchemasPlugin['Instance'];
   schema:
-    | OpenApiV2_0_XSchemaObject
-    | OpenApiV3_0_XSchemaObject
-    | OpenApiV3_1_XSchemaObject;
+    | OpenApiV2_0_XTypes['SchemaObject']
+    | OpenApiV3_0_XTypes['SchemaObject']
+    | OpenApiV3_1_XTypes['SchemaObject'];
 }) => {
-  if (plugin.type === 'form') {
+  if (plugin.config.type === 'form') {
     if (schema.description) {
       delete schema.description;
     }
@@ -52,9 +48,9 @@ const schemaToJsonSchemaDraft_04 = ({
   schema: _schema,
 }: {
   context: IR.Context;
-  plugin: Plugin.Instance<Config>;
-  schema: OpenApiV2_0_XSchemaObject;
-}): OpenApiV2_0_XSchemaObject => {
+  plugin: HeyApiSchemasPlugin['Instance'];
+  schema: OpenApiV2_0_XTypes['SchemaObject'];
+}): OpenApiV2_0_XTypes['SchemaObject'] => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchemaDraft_04({
@@ -62,7 +58,7 @@ const schemaToJsonSchemaDraft_04 = ({
         plugin,
         schema: item,
       }),
-    ) as unknown as OpenApiV2_0_XSchemaObject;
+    ) as unknown as OpenApiV2_0_XTypes['SchemaObject'];
   }
 
   const schema = structuredClone(_schema);
@@ -101,7 +97,7 @@ const schemaToJsonSchemaDraft_04 = ({
     schema.items = schemaToJsonSchemaDraft_04({
       context,
       plugin,
-      schema: schema.items as OpenApiV2_0_XSchemaObject,
+      schema: schema.items as OpenApiV2_0_XTypes['SchemaObject'],
     });
   }
 
@@ -128,9 +124,13 @@ const schemaToJsonSchemaDraft_05 = ({
   schema: _schema,
 }: {
   context: IR.Context;
-  plugin: Plugin.Instance<Config>;
-  schema: OpenApiV3_0_XSchemaObject | OpenApiV3_0_XReferenceObject;
-}): OpenApiV3_0_XSchemaObject | OpenApiV3_0_XReferenceObject => {
+  plugin: HeyApiSchemasPlugin['Instance'];
+  schema:
+    | OpenApiV3_0_XTypes['SchemaObject']
+    | OpenApiV3_0_XTypes['ReferenceObject'];
+}):
+  | OpenApiV3_0_XTypes['SchemaObject']
+  | OpenApiV3_0_XTypes['ReferenceObject'] => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchemaDraft_05({
@@ -138,7 +138,9 @@ const schemaToJsonSchemaDraft_05 = ({
         plugin,
         schema: item,
       }),
-    ) as OpenApiV3_0_XSchemaObject | OpenApiV3_0_XReferenceObject;
+    ) as
+      | OpenApiV3_0_XTypes['SchemaObject']
+      | OpenApiV3_0_XTypes['ReferenceObject'];
   }
 
   const schema = structuredClone(_schema);
@@ -224,9 +226,9 @@ const schemaToJsonSchema2020_12 = ({
   schema: _schema,
 }: {
   context: IR.Context;
-  plugin: Plugin.Instance<Config>;
-  schema: OpenApiV3_1_XSchemaObject;
-}): OpenApiV3_1_XSchemaObject => {
+  plugin: HeyApiSchemasPlugin['Instance'];
+  schema: OpenApiV3_1_XTypes['SchemaObject'];
+}): OpenApiV3_1_XTypes['SchemaObject'] => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchema2020_12({
@@ -234,7 +236,7 @@ const schemaToJsonSchema2020_12 = ({
         plugin,
         schema: item,
       }),
-    ) as OpenApiV3_1_XSchemaObject;
+    ) as OpenApiV3_1_XTypes['SchemaObject'];
   }
 
   const schema = structuredClone(_schema);
@@ -329,14 +331,27 @@ const schemaName = ({
   schema,
 }: {
   name: string;
-  plugin: Plugin.Instance<Config>;
+  plugin: HeyApiSchemasPlugin['Instance'];
   schema:
-    | OpenApiV2_0_XSchemaObject
-    | OpenApiV3_0_XReferenceObject
-    | OpenApiV3_0_XSchemaObject
-    | OpenApiV3_1_XSchemaObject;
+    | OpenApiV2_0_XTypes['SchemaObject']
+    | OpenApiV3_0_XTypes['ReferenceObject']
+    | OpenApiV3_0_XTypes['SchemaObject']
+    | OpenApiV3_1_XTypes['SchemaObject'];
 }): string => {
-  const customName = plugin.nameBuilder?.(name, schema) ?? `${name}Schema`;
+  let customName = '';
+
+  if (plugin.config.nameBuilder) {
+    if (typeof plugin.config.nameBuilder === 'function') {
+      customName = plugin.config.nameBuilder(name, schema);
+    } else {
+      customName = plugin.config.nameBuilder.replace('{{name}}', name);
+    }
+  }
+
+  if (!customName) {
+    customName = `${name}Schema`;
+  }
+
   return ensureValidIdentifier(customName);
 };
 
@@ -345,7 +360,7 @@ const schemasV2_0_X = ({
   plugin,
 }: {
   context: IR.Context<OpenApi.V2_0_X>;
-  plugin: Plugin.Instance<Config>;
+  plugin: HeyApiSchemasPlugin['Instance'];
 }) => {
   if (!context.spec.definitions) {
     return;
@@ -373,7 +388,7 @@ const schemasV3_0_X = ({
   plugin,
 }: {
   context: IR.Context<OpenApi.V3_0_X>;
-  plugin: Plugin.Instance<Config>;
+  plugin: HeyApiSchemasPlugin['Instance'];
 }) => {
   if (!context.spec.components) {
     return;
@@ -401,7 +416,7 @@ const schemasV3_1_X = ({
   plugin,
 }: {
   context: IR.Context<OpenApi.V3_1_X>;
-  plugin: Plugin.Instance<Config>;
+  plugin: HeyApiSchemasPlugin['Instance'];
 }) => {
   if (!context.spec.components) {
     return;
@@ -424,40 +439,39 @@ const schemasV3_1_X = ({
   }
 };
 
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+export const handler: HeyApiSchemasPlugin['Handler'] = ({ plugin }) => {
+  plugin.createFile({
     id: schemasId,
     path: plugin.output,
   });
 
-  if ('swagger' in context.spec) {
+  if ('swagger' in plugin.context.spec) {
     schemasV2_0_X({
-      context: context as IR.Context<OpenApi.V2_0_X>,
+      context: plugin.context as IR.Context<OpenApi.V2_0_X>,
       plugin,
     });
     return;
   }
 
-  switch (context.spec.openapi) {
+  switch (plugin.context.spec.openapi) {
     case '3.0.0':
     case '3.0.1':
     case '3.0.2':
     case '3.0.3':
     case '3.0.4':
       schemasV3_0_X({
-        context: context as IR.Context<OpenApi.V3_0_X>,
+        context: plugin.context as IR.Context<OpenApi.V3_0_X>,
         plugin,
       });
       break;
     case '3.1.0':
     case '3.1.1':
       schemasV3_1_X({
-        context: context as IR.Context<OpenApi.V3_1_X>,
+        context: plugin.context as IR.Context<OpenApi.V3_1_X>,
         plugin,
       });
       break;
     default:
-      break;
+      throw new Error('Unsupported OpenAPI specification');
   }
 };

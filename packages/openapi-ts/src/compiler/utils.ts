@@ -2,12 +2,16 @@ import ts from 'typescript';
 
 import { getConfig } from '../utils/config';
 import { unescapeName } from '../utils/escape';
-import { createStringLiteral } from './types';
+import type { AccessLevel } from './types';
+import { createStringLiteral, syntaxKindKeyword } from './types';
 
-export interface ImportExportItemObject {
-  alias?: string;
+export interface ImportExportItemObject<
+  Name extends string | undefined = string | undefined,
+  Alias extends string | undefined = undefined,
+> {
+  alias?: Alias;
   asType?: boolean;
-  name: string;
+  name: Name;
 }
 
 const printer = ts.createPrinter({
@@ -83,6 +87,36 @@ export const createIdentifier = ({ text }: { text: string }) => {
   return identifier;
 };
 
+export const createThis = () => ts.factory.createThis();
+
+type Modifier = AccessLevel | 'async' | 'export' | 'readonly' | 'static';
+
+export const createModifier = ({ keyword }: { keyword: Modifier }) => {
+  const kind = syntaxKindKeyword({ keyword });
+  return ts.factory.createModifier(kind);
+};
+
+export const createPropertyDeclaration = ({
+  initializer,
+  modifier,
+  name,
+  type,
+}: {
+  initializer?: ts.Expression;
+  modifier?: Modifier;
+  name: string | ts.PropertyName;
+  type?: ts.TypeNode;
+}) => {
+  const node = ts.factory.createPropertyDeclaration(
+    modifier ? [createModifier({ keyword: modifier })] : undefined,
+    name,
+    undefined,
+    type,
+    initializer,
+  );
+  return node;
+};
+
 /**
  * ots for @hey-api/openapi-ts are helpers to reduce repetition of basic TypeScript
  * factory functions.
@@ -94,7 +128,7 @@ export const ots = {
   boolean: (value: boolean) =>
     value ? ts.factory.createTrue() : ts.factory.createFalse(),
   export: ({ alias, asType = false, name }: ImportExportItemObject) => {
-    const nameNode = createIdentifier({ text: name });
+    const nameNode = createIdentifier({ text: name! });
     if (alias) {
       const aliasNode = createIdentifier({ text: alias });
       return ts.factory.createExportSpecifier(asType, nameNode, aliasNode);
@@ -102,7 +136,7 @@ export const ots = {
     return ts.factory.createExportSpecifier(asType, undefined, nameNode);
   },
   import: ({ alias, asType = false, name }: ImportExportItemObject) => {
-    const nameNode = createIdentifier({ text: name });
+    const nameNode = createIdentifier({ text: name! });
     if (alias) {
       const aliasNode = createIdentifier({ text: alias });
       return ts.factory.createImportSpecifier(asType, nameNode, aliasNode);

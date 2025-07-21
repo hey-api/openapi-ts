@@ -7,7 +7,7 @@ export const inferType = (
   if (definition.enum && !definitionTypes.includes('boolean')) {
     return 'enum';
   }
-  return undefined;
+  return;
 };
 
 export const isDefinitionTypeNullable = (

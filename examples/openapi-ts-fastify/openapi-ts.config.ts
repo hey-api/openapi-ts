@@ -8,5 +8,5 @@ export default defineConfig({
     lint: 'eslint',
     path: './src/client',
   },
-  plugins: ['@hey-api/client-fetch', 'fastify', '@hey-api/sdk'],
+  plugins: ['fastify', '@hey-api/sdk'],
 });

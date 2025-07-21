@@ -13,34 +13,40 @@ Nuxt client is currently in beta. The interface might change before it becomes s
 
 [Nuxt](https://nuxt.com) is an open source framework that makes web development intuitive and powerful.
 
-::: tip
-You might be interested in the [Nuxt module](https://www.npmjs.com/package/@hey-api/nuxt) instead. It offers all the features mentioned in this guide in a more familiar way.
-:::
-
 <!-- <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-example')(event)">
 Launch demo
 </button> -->
 
+## Features
+
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- type-safe response data and errors
+- response data validation and transformation
+- access to the original request and response
+- granular request and response customization options
+- minimal learning curve thanks to extending the underlying technology
+- support bundling inside the generated output
+
 ## Installation
 
-Start by adding `@hey-api/client-nuxt` to your dependencies.
+Start by adding `@hey-api/nuxt` to your dependencies.
 
 ::: code-group
 
 ```sh [npm]
-npm install @hey-api/client-nuxt
+npm install @hey-api/nuxt
 ```
 
 ```sh [pnpm]
-pnpm add @hey-api/client-nuxt
+pnpm add @hey-api/nuxt
 ```
 
 ```sh [yarn]
-yarn add @hey-api/client-nuxt
+yarn add @hey-api/nuxt
 ```
 
 ```sh [bun]
-bun add @hey-api/client-nuxt
+bun add @hey-api/nuxt
 ```
 
 :::
@@ -66,6 +72,12 @@ npx @hey-api/openapi-ts \
 
 :::
 
+::: tip
+
+If you add `@hey-api/nuxt` to your Nuxt modules, this step is not needed.
+
+:::
+
 ## Configuration
 
 The Nuxt client is built as a thin wrapper on top of Nuxt, extending its functionality to work with Hey API. If you're already familiar with Nuxt, configuring your client will feel like working directly with Nuxt.
@@ -74,7 +86,7 @@ When we installed the client above, it created a [`client.gen.ts`](/openapi-ts/o
 
 ### `setConfig()`
 
-This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Nuxt configuration option to `setConfig()`, and even your own `$fetch` implementation.
+This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Nuxt configuration option to `setConfig()`, and even your own [`$fetch`](#custom-fetch) implementation.
 
 ```js
 import { client } from 'client/client.gen';
@@ -125,7 +137,7 @@ With this approach, `client.gen.ts` will call `createClientConfig()` before init
 You can also create your own client instance. You can use it to manually send requests or point it to a different domain.
 
 ```js
-import { createClient } from '@hey-api/client-nuxt';
+import { createClient } from './client/client';
 
 const myClient = createClient({
   baseURL: 'https://example.com',
@@ -220,22 +232,25 @@ const url = client.buildUrl<FooData>({
 console.log(url); // prints '/foo/1?bar=baz'
 ```
 
-## Bundling
+## Custom `$fetch`
 
-Sometimes, you may not want to declare client packages as a dependency. This scenario is common if you're using Hey API to generate output that is repackaged and published for other consumers under your own brand. For such cases, our clients support bundling through the `client.bundle` configuration option.
+You can implement your own `$fetch` method. This is useful if you need to extend the default `$fetch` method with extra functionality, or replace it altogether.
 
 ```js
-export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
-  output: 'src/client',
-  plugins: [
-    {
-      bundle: true, // [!code ++]
-      name: '@hey-api/client-nuxt',
-    },
-  ],
-};
+import { client } from 'client/client.gen';
+
+client.setConfig({
+  $fetch: () => {
+    /* custom `$fetch` method */
+  },
+});
 ```
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom method to be.
+
+## Config API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/client-nuxt/types.d.ts) interface.
+
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

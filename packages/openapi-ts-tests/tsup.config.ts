@@ -11,6 +11,8 @@ export default defineConfig((options) => ({
         js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);",
       };
     }
+
+    return;
   },
   clean: true,
   dts: true,

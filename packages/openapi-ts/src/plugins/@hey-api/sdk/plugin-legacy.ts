@@ -7,7 +7,7 @@ import type {
   ObjectValue,
 } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
-import { TypeScriptFile } from '../../../generate/files';
+import { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
 import { isOperationParameterRequired } from '../../../openApi';
 import type {
@@ -26,12 +26,11 @@ import {
 import { escapeComment, escapeName } from '../../../utils/escape';
 import { reservedJavaScriptKeywordsRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
-import { transformServiceName } from '../../../utils/transform';
+import { transformClassName } from '../../../utils/transform';
 import { setUniqueTypeName } from '../../../utils/type';
 import { unique } from '../../../utils/unique';
-import type { Plugin } from '../../types';
 import { getClientPlugin } from '../client-core/utils';
-import type { Config } from './types';
+import type { HeyApiSdkPlugin } from './types';
 
 type OnNode = (node: ts.Node) => void;
 type OnImport = (name: string) => void;
@@ -148,7 +147,7 @@ const toOperationParamType = (
     p: OperationParameter | Model,
   ): string | undefined => {
     if (p.default === undefined) {
-      return undefined;
+      return;
     }
     return JSON.stringify(p.default, null, 4);
   };
@@ -206,7 +205,7 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
 
   if (
     config.useOptions &&
-    config.plugins['@hey-api/sdk']?.response === 'response'
+    config.plugins['@hey-api/sdk']?.config.response === 'response'
   ) {
     returnType = compiler.typeNode('ApiResult', [returnType]);
   }
@@ -498,8 +497,8 @@ export const serviceFunctionIdentifier = ({
   id: string;
   operation: IR.OperationObject | Operation;
 }) => {
-  if (config.plugins['@hey-api/sdk']?.methodNameBuilder) {
-    return config.plugins['@hey-api/sdk'].methodNameBuilder(operation);
+  if (config.plugins['@hey-api/sdk']?.config.methodNameBuilder) {
+    return config.plugins['@hey-api/sdk'].config.methodNameBuilder(operation);
   }
 
   if (handleIllegal && id.match(reservedJavaScriptKeywordsRegExp)) {
@@ -665,14 +664,15 @@ const processService = ({
 
   const throwOnErrorTypeGeneric: FunctionTypeParameter = {
     default:
-      ('throwOnError' in clientPlugin ? clientPlugin.throwOnError : false) ??
-      false,
+      ('throwOnError' in clientPlugin.config
+        ? clientPlugin.config.throwOnError
+        : false) ?? false,
     extends: 'boolean',
     name: 'ThrowOnError',
   };
 
   if (
-    !config.plugins['@hey-api/sdk']?.asClass &&
+    !config.plugins['@hey-api/sdk']?.config.asClass &&
     !legacyNameFromConfig(config)
   ) {
     for (const operation of service.operations) {
@@ -773,23 +773,36 @@ const processService = ({
     ];
   }
 
+  const _members: Array<ts.ClassElement> = [];
+  members.forEach((member, index) => {
+    // add newline between each class member
+    if (index) {
+      // @ts-expect-error
+      _members.push(compiler.identifier({ text: '\n' }));
+    }
+
+    _members.push(member);
+  });
+
   const statement = compiler.classDeclaration({
     decorator:
       clientPlugin.name === 'legacy/angular'
         ? { args: [{ providedIn: 'root' }], name: 'Injectable' }
         : undefined,
-    members,
-    name: transformServiceName({
+    exportClass: true,
+    name: transformClassName({
       config,
       name: service.name,
     }),
+    nodes: _members,
   });
   onNode(statement);
 };
 
-export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
+export const handlerLegacy: HeyApiSdkPlugin['LegacyHandler'] = ({
   client,
   files,
+  plugin,
 }) => {
   const config = getConfig();
 
@@ -797,8 +810,9 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
 
   const sdkOutput = 'sdk';
 
-  files.sdk = new TypeScriptFile({
+  files.sdk = new GeneratedFile({
     dir: config.output.path,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: 'sdk',
     name: `${sdkOutput}.ts`,
   });
@@ -845,7 +859,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
       });
     }
 
-    if (config.plugins['@hey-api/sdk']?.response === 'response') {
+    if (config.plugins['@hey-api/sdk']?.config.response === 'response') {
       files.sdk.import({
         asType: true,
         module: './core/ApiResult',

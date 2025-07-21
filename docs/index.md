@@ -2,8 +2,8 @@
 layout: home
 
 hero:
-  name: High-quality tools for interacting with APIs
-  tagline: Codegen for your TypeScript projects. Trusted over 1,250,000 times each month to generate reliable API clients and SDKs.
+  name: One OpenAPI spec.<br/>Infinite outputs.
+  tagline: Codegen for JavaScript/TypeScript projects. Trusted over 2,000,000 times each month to generate reliable API clients and SDKs.
   actions:
     - link: /openapi-ts/get-started
       text: Get Started
@@ -51,13 +51,15 @@ features:
     linkText: Learn about integrations
 ---
 
-<br />
+<br/>
 
 <div class="home-list sponsors-list">
 
 ### Sponsors
 
-<!--@include: ./sponsors-list.md-->
+<br/>
+
+<!--@include: ./partials/sponsors-list.md-->
 
 </div>
 

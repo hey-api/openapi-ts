@@ -37,70 +37,55 @@ In your [configuration](/openapi-ts/get-started), add TanStack Query to your plu
 ::: code-group
 
 ```js [react]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     '@tanstack/react-query', // [!code ++]
   ],
 };
 ```
 
 ```js [vue]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     '@tanstack/vue-query', // [!code ++]
   ],
 };
 ```
 
 ```js [angular]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     '@tanstack/angular-query-experimental', // [!code ++]
   ],
 };
 ```
 
 ```js [svelte]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     '@tanstack/svelte-query', // [!code ++]
   ],
 };
 ```
 
 ```js [solid]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     '@tanstack/solid-query', // [!code ++]
   ],
 };
@@ -110,11 +95,11 @@ export default {
 
 ## Output
 
-The TanStack Query plugin will optionally generate the following artifacts, depending on the input specification.
+The TanStack Query plugin will generate the following artifacts, depending on the input specification.
 
 ## Queries
 
-Queries are generated from GET and POST endpoints. The generated functions follow the naming convention of SDK functions and append `Options`, e.g. `getPetByIdOptions()`.
+Queries are generated from GET and POST endpoints. The generated query functions follow the naming convention of SDK functions and by default append `Options`, e.g. `getPetByIdOptions()`.
 
 ```ts
 const { data, error } = useQuery({
@@ -126,9 +111,35 @@ const { data, error } = useQuery({
 });
 ```
 
+You can customize the naming and casing pattern for `queryOptions` functions using the `.name` and `.case` options.
+
+## Query Keys
+
+If you have access to the result of query options function, you can get the query key from the `queryKey` field.
+
+```ts
+const { queryKey } = getPetByIdOptions({
+  path: {
+    petId: 1,
+  },
+});
+```
+
+Alternatively, you can access the same query key by calling query key functions. The generated query key functions follow the naming convention of SDK functions and by default append `QueryKey`, e.g. `getPetByIdQueryKey()`.
+
+```ts
+const queryKey = getPetByIdQueryKey({
+  path: {
+    petId: 1,
+  },
+});
+```
+
+You can customize the naming and casing pattern for `queryKeys` functions using the `.name` and `.case` options.
+
 ## Infinite Queries
 
-Infinite queries are generated from GET and POST endpoints if we detect a pagination parameter. The generated functions follow the naming convention of SDK functions and append `InfiniteOptions`, e.g. `getFooInfiniteOptions()`.
+Infinite queries are generated from GET and POST endpoints if we detect a [pagination](/openapi-ts/configuration/parser#pagination) parameter. The generated infinite query functions follow the naming convention of SDK functions and by default append `InfiniteOptions`, e.g. `getFooInfiniteOptions()`.
 
 ```ts
 const { data, error } = useInfiniteQuery({
@@ -142,18 +153,35 @@ const { data, error } = useInfiniteQuery({
 });
 ```
 
-Infinite queries are recognized by having one of these keywords in the endpoint's parameters:
+You can customize the naming and casing pattern for `infiniteQueryOptions` functions using the `.name` and `.case` options.
 
-- after
-- before
-- cursor
-- offset
-- page
-- start
+## Infinite Query Keys
+
+If you have access to the result of infinite query options function, you can get the query key from the `queryKey` field.
+
+```ts
+const { queryKey } = getPetByIdInfiniteOptions({
+  path: {
+    petId: 1,
+  },
+});
+```
+
+Alternatively, you can access the same query key by calling query key functions. The generated query key functions follow the naming convention of SDK functions and by default append `InfiniteQueryKey`, e.g. `getPetByIdInfiniteQueryKey()`.
+
+```ts
+const queryKey = getPetByIdInfiniteQueryKey({
+  path: {
+    petId: 1,
+  },
+});
+```
+
+You can customize the naming and casing pattern for `infiniteQueryKeys` functions using the `.name` and `.case` options.
 
 ## Mutations
 
-Mutations are generated from DELETE, PATCH, POST, and PUT endpoints. The generated functions follow the naming convention of SDK functions and append `Mutation`, e.g. `addPetMutation()`.
+Mutations are generated from DELETE, PATCH, POST, and PUT endpoints. The generated mutation functions follow the naming convention of SDK functions and by default append `Mutation`, e.g. `addPetMutation()`.
 
 ```ts
 const addPet = useMutation({
@@ -170,27 +198,11 @@ addPet.mutate({
 });
 ```
 
-## Query Keys
+You can customize the naming and casing pattern for `mutationOptions` functions using the `.name` and `.case` options.
 
-Query keys are generated for both queries and infinite queries. If you have access to the result of query or infinite query options function, you can get the query key from the `queryKey` field.
+## Config API
 
-```ts
-const { queryKey } = getPetByIdOptions({
-  path: {
-    petId: 1,
-  },
-});
-```
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@tanstack/react-query/types.d.ts) interface.
 
-Alternatively, you can access the same query key by calling `QueryKey` or `InfiniteQueryKey` function.
-
-```ts
-const queryKey = getPetByIdQueryKey({
-  path: {
-    petId: 1,
-  },
-});
-```
-
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

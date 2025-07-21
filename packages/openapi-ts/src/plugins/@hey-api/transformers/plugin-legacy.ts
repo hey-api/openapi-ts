@@ -1,18 +1,17 @@
 import type ts from 'typescript';
 
 import { compiler } from '../../../compiler';
-import { getOperationKey } from '../../../openApi/common/parser/operation';
+import { createOperationKey } from '../../../ir/operation';
 import type { ModelMeta, OperationResponse } from '../../../types/client';
 import { getConfig } from '../../../utils/config';
 import { isModelDate, unsetUniqueTypeName } from '../../../utils/type';
-import type { Plugin } from '../../types';
 import {
   modelResponseTransformerTypeName,
   operationResponseTransformerTypeName,
   operationResponseTypeName,
 } from '../sdk/plugin-legacy';
 import { generateType, type TypesProps } from '../typescript/plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiTransformersPlugin } from './types';
 
 interface ModelProps extends TypesProps {
   meta?: ModelMeta;
@@ -249,7 +248,7 @@ const generateResponseTransformer = ({
 };
 
 // handles only response transformers for now
-export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
+export const handlerLegacy: HeyApiTransformersPlugin['LegacyHandler'] = ({
   client,
   files,
 }) => {
@@ -259,7 +258,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
     files.types?.add(node);
   };
   const onRemoveNode: TypesProps['onRemoveNode'] = () => {
-    files.types?.removeNode();
+    files.types?.removeNode_LEGACY();
   };
 
   for (const service of client.services) {
@@ -283,7 +282,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
       if (nonVoidResponses.length > 1) {
         if (config.logs.level === 'debug') {
           console.warn(
-            `❗️ Transformers warning: route ${getOperationKey(operation)} has ${nonVoidResponses.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
+            `❗️ Transformers warning: route ${createOperationKey(operation)} has ${nonVoidResponses.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
           );
         }
         continue;

@@ -42,8 +42,6 @@ export default defineNuxtModule<ModuleOptions>({
   async setup(options) {
     const nuxt = useNuxt();
 
-    nuxt.options.build.transpile.push('@hey-api/client-nuxt');
-
     const config = defu(options.config, {
       output: {
         path: path.join(nuxt.options.buildDir, 'client'),
@@ -115,4 +113,4 @@ export default defineNuxtModule<ModuleOptions>({
       }
     }
   },
-});
+}) as any;

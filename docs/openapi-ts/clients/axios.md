@@ -23,29 +23,17 @@ Axios client is currently in beta. The interface might change before it becomes 
 Launch demo
 </button>
 
+## Features
+
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- type-safe response data and errors
+- response data validation and transformation
+- access to the original request and response
+- granular request and response customization options
+- minimal learning curve thanks to extending the underlying technology
+- support bundling inside the generated output
+
 ## Installation
-
-Start by adding `@hey-api/client-axios` to your dependencies.
-
-::: code-group
-
-```sh [npm]
-npm install @hey-api/client-axios
-```
-
-```sh [pnpm]
-pnpm add @hey-api/client-axios
-```
-
-```sh [yarn]
-yarn add @hey-api/client-axios
-```
-
-```sh [bun]
-bun add @hey-api/client-axios
-```
-
-:::
 
 In your [configuration](/openapi-ts/get-started), add `@hey-api/client-axios` to your plugins and you'll be ready to generate client artifacts. :tada:
 
@@ -76,7 +64,7 @@ When we installed the client above, it created a [`client.gen.ts`](/openapi-ts/o
 
 ### `setConfig()`
 
-This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Axios configuration option to `setConfig()` (except for `auth`), and even your own Axios implementation.
+This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Axios configuration option to `setConfig()` (except for `auth`), and even your own [Axios](#custom-axios) implementation.
 
 ```js
 import { client } from 'client/client.gen';
@@ -127,7 +115,7 @@ With this approach, `client.gen.ts` will call `createClientConfig()` before init
 You can also create your own client instance. You can use it to manually send requests or point it to a different domain.
 
 ```js
-import { createClient } from '@hey-api/client-axios';
+import { createClient } from './client/client';
 
 const myClient = createClient({
   baseURL: 'https://example.com',
@@ -218,22 +206,25 @@ const url = client.buildUrl<FooData>({
 console.log(url); // prints '/foo/1?bar=baz'
 ```
 
-## Bundling
+## Custom `axios`
 
-Sometimes, you may not want to declare client packages as a dependency. This scenario is common if you're using Hey API to generate output that is repackaged and published for other consumers under your own brand. For such cases, our clients support bundling through the `client.bundle` configuration option.
+You can implement your own `axios` instance. This is useful if you need to extend the default `axios` instance with extra functionality, or replace it altogether.
 
 ```js
-export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
-  output: 'src/client',
-  plugins: [
-    {
-      bundle: true, // [!code ++]
-      name: '@hey-api/client-axios',
-    },
-  ],
-};
+import { client } from 'client/client.gen';
+
+client.setConfig({
+  axios: () => {
+    /* custom `axios` instance */
+  },
+});
 ```
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom instance to be.
+
+## Config API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/client-axios/types.d.ts) interface.
+
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->
