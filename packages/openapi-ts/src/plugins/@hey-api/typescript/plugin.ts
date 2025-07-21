@@ -4,6 +4,7 @@ import type { Property } from '../../../compiler';
 import { compiler } from '../../../compiler';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
+import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { refToName } from '../../../utils/ref';
 import { numberRegExp } from '../../../utils/regexp';
@@ -13,7 +14,7 @@ import { createSchemaComment } from '../../shared/utils/schema';
 import { createClientOptions } from './clientOptions';
 import { operationToType } from './operation';
 import { typesId } from './ref';
-import type { HeyApiTypeScriptPlugin } from './types';
+import type { HeyApiTypeScriptPlugin, PluginState } from './types';
 
 export type OnRef = (id: string) => void;
 
@@ -97,10 +98,12 @@ const arrayTypeToIdentifier = ({
   onRef,
   plugin,
   schema,
+  state,
 }: {
   onRef: OnRef | undefined;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'array'>;
+  state: PluginState;
 }): ts.TypeNode => {
   if (!schema.items) {
     return compiler.typeArrayNode(
@@ -119,6 +122,7 @@ const arrayTypeToIdentifier = ({
       onRef,
       plugin,
       schema: item,
+      state,
     });
     itemTypes.push(type);
   }
@@ -156,10 +160,12 @@ const enumTypeToIdentifier = ({
   onRef,
   plugin,
   schema,
+  state,
 }: {
   onRef: OnRef | undefined;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'enum'>;
+  state: PluginState;
 }): ts.TypeNode => {
   const type = schemaToType({
     onRef,
@@ -168,6 +174,7 @@ const enumTypeToIdentifier = ({
       ...schema,
       type: undefined,
     },
+    state,
   });
   return type;
 };
@@ -201,10 +208,12 @@ const objectTypeToIdentifier = ({
   onRef,
   plugin,
   schema,
+  state,
 }: {
   onRef: OnRef | undefined;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'object'>;
+  state: PluginState;
 }): ts.TypeNode => {
   // TODO: parser - handle constants
   let indexKey: ts.TypeReferenceNode | undefined;
@@ -216,7 +225,12 @@ const objectTypeToIdentifier = ({
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
-    const propertyType = schemaToType({ onRef, plugin, schema: property });
+    const propertyType = schemaToType({
+      onRef,
+      plugin,
+      schema: property,
+      state,
+    });
     const isRequired = required.includes(name);
     schemaProperties.push({
       comment: createSchemaComment({ schema: property }),
@@ -261,6 +275,7 @@ const objectTypeToIdentifier = ({
                 items: indexPropertyItems,
                 logicalOperator: 'or',
               },
+        state,
       }),
     };
 
@@ -271,6 +286,7 @@ const objectTypeToIdentifier = ({
         schema: {
           $ref: schema.propertyNames.$ref,
         },
+        state,
       }) as ts.TypeReferenceNode;
     }
   }
@@ -286,9 +302,11 @@ const objectTypeToIdentifier = ({
 const stringTypeToIdentifier = ({
   plugin,
   schema,
+  state,
 }: {
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'string'>;
+  state: PluginState;
 }): ts.TypeNode => {
   if (schema.const !== undefined) {
     return compiler.literalTypeNode({
@@ -316,6 +334,22 @@ const stringTypeToIdentifier = ({
         return compiler.typeReferenceNode({ typeName: 'Date' });
       }
     }
+
+    if (schema.format === 'typeid' && typeof schema.example === 'string') {
+      const parts = String(schema.example).split('_');
+      parts.pop(); // remove the ID part
+      const type = parts.join('_');
+      state.usedTypeIDs.add(type);
+      const typeName = ensureValidIdentifier(
+        stringCase({
+          case: plugin.config.case,
+          value: type + '_id',
+        }),
+      );
+      return compiler.typeReferenceNode({
+        typeName,
+      });
+    }
   }
 
   return compiler.keywordTypeNode({
@@ -327,10 +361,12 @@ const tupleTypeToIdentifier = ({
   onRef,
   plugin,
   schema,
+  state,
 }: {
   onRef: OnRef | undefined;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'tuple'>;
+  state: PluginState;
 }): ts.TypeNode => {
   let itemTypes: Array<ts.Expression | ts.TypeNode> = [];
 
@@ -345,6 +381,7 @@ const tupleTypeToIdentifier = ({
         onRef,
         plugin,
         schema: item,
+        state,
       });
       itemTypes.push(type);
     }
@@ -359,10 +396,12 @@ const schemaTypeToIdentifier = ({
   onRef,
   plugin,
   schema,
+  state,
 }: {
   onRef: OnRef | undefined;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: IR.SchemaObject;
+  state: PluginState;
 }): ts.TypeNode => {
   switch (schema.type as Required<IR.SchemaObject>['type']) {
     case 'array':
@@ -370,6 +409,7 @@ const schemaTypeToIdentifier = ({
         onRef,
         plugin,
         schema: schema as SchemaWithType<'array'>,
+        state,
       });
     case 'boolean':
       return booleanTypeToIdentifier({
@@ -380,6 +420,7 @@ const schemaTypeToIdentifier = ({
         onRef,
         plugin,
         schema: schema as SchemaWithType<'enum'>,
+        state,
       });
     case 'integer':
     case 'number':
@@ -400,17 +441,20 @@ const schemaTypeToIdentifier = ({
         onRef,
         plugin,
         schema: schema as SchemaWithType<'object'>,
+        state,
       });
     case 'string':
       return stringTypeToIdentifier({
         plugin,
         schema: schema as SchemaWithType<'string'>,
+        state,
       });
     case 'tuple':
       return tupleTypeToIdentifier({
         onRef,
         plugin,
         schema: schema as SchemaWithType<'tuple'>,
+        state,
       });
     case 'undefined':
       return compiler.keywordTypeNode({
@@ -431,6 +475,7 @@ export const schemaToType = ({
   onRef,
   plugin,
   schema,
+  state,
 }: {
   /**
    * Callback that can be used to perform side-effects when we encounter a
@@ -439,6 +484,7 @@ export const schemaToType = ({
   onRef: OnRef | undefined;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: IR.SchemaObject;
+  state: PluginState;
 }): ts.TypeNode => {
   const file = plugin.context.file({ id: typesId })!;
 
@@ -451,7 +497,7 @@ export const schemaToType = ({
   }
 
   if (schema.type) {
-    return schemaTypeToIdentifier({ onRef, plugin, schema });
+    return schemaTypeToIdentifier({ onRef, plugin, schema, state });
   }
 
   if (schema.items) {
@@ -460,7 +506,7 @@ export const schemaToType = ({
       const itemTypes: Array<ts.TypeNode> = [];
 
       for (const item of schema.items) {
-        const type = schemaToType({ onRef, plugin, schema: item });
+        const type = schemaToType({ onRef, plugin, schema: item, state });
         itemTypes.push(type);
       }
 
@@ -469,7 +515,7 @@ export const schemaToType = ({
         : compiler.typeUnionNode({ types: itemTypes });
     }
 
-    return schemaToType({ onRef, plugin, schema });
+    return schemaToType({ onRef, plugin, schema, state });
   }
 
   // catch-all fallback for failed schemas
@@ -479,6 +525,7 @@ export const schemaToType = ({
     schema: {
       type: 'unknown',
     },
+    state,
   });
 };
 
@@ -571,13 +618,15 @@ const handleComponent = ({
   id,
   plugin,
   schema,
+  state,
 }: {
   id: string;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: IR.SchemaObject;
+  state: PluginState;
 }) => {
   const file = plugin.context.file({ id: typesId })!;
-  const type = schemaToType({ onRef: undefined, plugin, schema });
+  const type = schemaToType({ onRef: undefined, plugin, schema, state });
   const name = buildName({
     config: plugin.config.definitions,
     name: refToName(id),
@@ -595,6 +644,10 @@ const handleComponent = ({
 };
 
 export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
+  const state: PluginState = {
+    usedTypeIDs: new Set(),
+  };
+
   const file = plugin.createFile({
     case: plugin.config.case,
     id: typesId,
@@ -626,30 +679,81 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
     'server',
     (event) => {
       if (event.type === 'operation') {
-        operationToType({ operation: event.operation, plugin });
+        operationToType({ operation: event.operation, plugin, state });
       } else if (event.type === 'parameter') {
         handleComponent({
           id: event.$ref,
           plugin,
           schema: event.parameter.schema,
+          state,
         });
       } else if (event.type === 'requestBody') {
         handleComponent({
           id: event.$ref,
           plugin,
           schema: event.requestBody.schema,
+          state,
         });
       } else if (event.type === 'schema') {
         handleComponent({
           id: event.$ref,
           plugin,
           schema: event.schema,
+          state,
         });
       } else if (event.type === 'server') {
         servers.push(event.server);
       }
     },
   );
+
+  if (state.usedTypeIDs.size) {
+    const typeParameter = compiler.typeParameterDeclaration({
+      constraint: compiler.keywordTypeNode({
+        keyword: 'string',
+      }),
+      name: 'T',
+    });
+    const node = compiler.typeAliasDeclaration({
+      exportType: true,
+      name: 'TypeID',
+      type: compiler.templateLiteralType({
+        value: [
+          compiler.typeReferenceNode({
+            typeName: 'T',
+          }),
+          '_',
+          compiler.keywordTypeNode({
+            keyword: 'string',
+          }),
+        ],
+      }),
+      typeParameters: [typeParameter],
+    });
+    file.add(node);
+
+    for (const name of state.usedTypeIDs.values()) {
+      const typeName = ensureValidIdentifier(
+        stringCase({
+          case: plugin.config.case,
+          value: name + '_id',
+        }),
+      );
+      const node = compiler.typeAliasDeclaration({
+        exportType: true,
+        name: typeName,
+        type: compiler.typeReferenceNode({
+          typeArguments: [
+            compiler.literalTypeNode({
+              literal: compiler.stringLiteral({ text: name }),
+            }),
+          ],
+          typeName: 'TypeID',
+        }),
+      });
+      file.add(node);
+    }
+  }
 
   createClientOptions({ nodeInfo: clientOptionsNodeInfo, plugin, servers });
 };
