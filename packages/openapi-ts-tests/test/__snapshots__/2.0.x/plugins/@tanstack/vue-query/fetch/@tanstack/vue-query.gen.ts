@@ -15,7 +15,7 @@ export type QueryKey<TOptions extends Options> = [
 const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): [
     QueryKey<TOptions>[0]
 ] => {
-    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: (options?.client ?? _heyApiClient).getConfig().baseUrl } as QueryKey<TOptions>[0];
+    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? _heyApiClient).getConfig().baseUrl } as QueryKey<TOptions>[0];
     if (infinite) {
         params._infinite = infinite;
     }
@@ -678,6 +678,10 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
 
 export const postApiVbyApiVersionBodyQueryKey = (options: Options<PostApiVbyApiVersionBodyData>) => createQueryKey('postApiVbyApiVersionBody', options);
 
+/**
+ * Body should not be unknown
+ * Body should not be unknown
+ */
 export const postApiVbyApiVersionBodyOptions = (options: Options<PostApiVbyApiVersionBodyData>) => {
     return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
@@ -693,6 +697,10 @@ export const postApiVbyApiVersionBodyOptions = (options: Options<PostApiVbyApiVe
     });
 };
 
+/**
+ * Body should not be unknown
+ * Body should not be unknown
+ */
 export const postApiVbyApiVersionBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionBodyData>>): UseMutationOptions<PostApiVbyApiVersionBodyResponse, PostApiVbyApiVersionBodyError, Options<PostApiVbyApiVersionBodyData>> => {
     const mutationOptions: UseMutationOptions<PostApiVbyApiVersionBodyResponse, PostApiVbyApiVersionBodyError, Options<PostApiVbyApiVersionBodyData>> = {
         mutationFn: async (localOptions) => {

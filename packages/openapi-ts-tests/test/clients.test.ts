@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { customClientPlugin } from '@hey-api/client-custom/plugin';
+import { customClientPlugin } from '@hey-api/custom-client/plugin';
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
 import { describe, expect, it } from 'vitest';
 
@@ -37,7 +37,7 @@ for (const client of clients) {
         Pick<Partial<UserConfig>, 'input'>,
     ): UserConfig => ({
       ...userConfig,
-      input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+      input: path.join(__dirname, 'spec', '3.1.x', 'full.yaml'),
       logs: {
         level: 'silent',
       },
@@ -57,18 +57,6 @@ for (const client of clients) {
           plugins: [client],
         }),
         description: 'default output',
-      },
-      {
-        config: createConfig({
-          output: 'bundle',
-          plugins: [
-            {
-              bundle: true,
-              name: client,
-            },
-          ],
-        }),
-        description: 'default output with bundled client',
       },
       {
         config: createConfig({
@@ -216,7 +204,7 @@ describe('custom-client', () => {
     userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
   ): UserConfig => ({
     ...userConfig,
-    input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+    input: path.join(__dirname, 'spec', '3.1.x', 'full.yaml'),
     logs: {
       level: 'silent',
     },
@@ -362,7 +350,7 @@ describe('my-client', () => {
     userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
   ): UserConfig => ({
     ...userConfig,
-    input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+    input: path.join(__dirname, 'spec', '3.1.x', 'full.yaml'),
     logs: {
       level: 'silent',
     },

@@ -15,6 +15,7 @@ interface Auth {
     scheme?: 'basic' | 'bearer';
     type: 'apiKey' | 'http';
 }
+
 interface SerializerOptions<T> {
     /**
      * @default true
@@ -96,6 +97,12 @@ interface Config$1 {
      */
     querySerializer?: QuerySerializer | QuerySerializerOptions;
     /**
+     * A function validating request data. This is useful if you want to ensure
+     * the request conforms to the desired shape, so it can be safely sent to
+     * the server.
+     */
+    requestValidator?: (data: unknown) => Promise<unknown>;
+    /**
      * A function transforming response data before it's returned. This is useful
      * for post-processing data, e.g. converting ISO strings into Date objects.
      */
@@ -112,12 +119,14 @@ type ErrInterceptor<Err, Res, Req, Options> = (error: Err, response: Res, reques
 type ReqInterceptor<Req, Options> = (request: Req, options: Options) => Req | Promise<Req>;
 type ResInterceptor<Res, Req, Options> = (response: Res, request: Req, options: Options) => Res | Promise<Res>;
 declare class Interceptors<Interceptor> {
-    _fns: Interceptor[];
+    _fns: (Interceptor | null)[];
     constructor();
     clear(): void;
-    exists(fn: Interceptor): boolean;
-    eject(fn: Interceptor): void;
-    use(fn: Interceptor): void;
+    getInterceptorIndex(id: number | Interceptor): number;
+    exists(id: number | Interceptor): boolean;
+    eject(id: number | Interceptor): void;
+    update(id: number | Interceptor, fn: Interceptor): number | false | Interceptor;
+    use(fn: Interceptor): number;
 }
 interface Middleware<Req, Res, Err, Options> {
     error: Pick<Interceptors<ErrInterceptor<Err, Res, Req, Options>>, 'eject' | 'use'>;
@@ -146,7 +155,7 @@ interface Config<T extends ClientOptions = ClientOptions> extends Omit<RequestIn
      *
      * @default 'auto'
      */
-    parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'auto' | 'stream';
+    parseAs?: 'arrayBuffer' | 'auto' | 'blob' | 'formData' | 'json' | 'stream' | 'text';
     /**
      * Throw an error instead of returning it in the response?
      *
@@ -228,4 +237,27 @@ type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean
 
 declare const createClient: (config?: Config) => Client;
 
-export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+type Slot = 'body' | 'headers' | 'path' | 'query';
+type Field = {
+    in: Exclude<Slot, 'body'>;
+    key: string;
+    map?: string;
+} | {
+    in: Extract<Slot, 'body'>;
+    key?: string;
+    map?: string;
+};
+interface Fields {
+    allowExtra?: Partial<Record<Slot, boolean>>;
+    args?: ReadonlyArray<Field>;
+}
+type FieldsConfig = ReadonlyArray<Field | Fields>;
+interface Params {
+    body: unknown;
+    headers: Record<string, unknown>;
+    path: Record<string, unknown>;
+    query: Record<string, unknown>;
+}
+declare const buildClientParams: (args: ReadonlyArray<unknown>, fields: FieldsConfig) => Params;
+
+export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, buildClientParams, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

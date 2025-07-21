@@ -7,69 +7,89 @@ description: Learn about files generated with @hey-api/openapi-ts.
 
 TypeScript interfaces are located in the `types.gen.ts` file. This is the only file that does not impact your bundle size and runtime performance. It will get discarded during build time, unless you configured to emit runtime [enums](#enums).
 
-This file contains three different categories of interfaces created from your input:
+## Installation
 
-- reusable components
-- operation request, response, and error data
-- enums
-
-Depending on your input and configuration, some of these categories might be missing or differ in your output (and that's okay!).
-
-::: code-group
-
-```ts [types.gen.ts]
-export type Pet = {
-  id?: number;
-  name: string;
-};
-
-export type AddPetData = {
-  body: Pet;
-};
-
-export type AddPetResponse = Pet;
-```
-
-:::
-
-As you can see, everything is exported from `types.gen.ts`. You can import individual exports in your application and use them as necessary.
-
-## Configuration
-
-You can modify the contents of `types.gen.ts` by configuring the `@hey-api/typescript` plugin. Note that you must specify the default plugins to preserve the default output.
+In your [configuration](/openapi-ts/get-started), add `@hey-api/typescript` to your plugins and you'll be ready to generate TypeScript artifacts. :tada:
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
-    {
-      name: '@hey-api/typescript',
-      // ...custom options // [!code ++]
-    },
+    // ...other plugins
+    '@hey-api/typescript', // [!code ++]
   ],
 };
 ```
 
+:::tip
+The `@hey-api/typescript` plugin might be implicitly added to your `plugins` if another plugin depends on it.
+:::
+
+## Output
+
+The TypeScript plugin will generate the following artifacts, depending on the input specification.
+
+## Requests
+
+A single request type is generated for each endpoint. It may contain a request body, parameters, and headers.
+
+```ts
+export type AddPetData = {
+  body: {
+    id?: number;
+    name: string;
+  };
+  path?: never;
+  query?: never;
+  url: '/pets';
+};
+```
+
+You can customize the naming and casing pattern for `requests` types using the `.name` and `.case` options.
+
+## Responses
+
+A single type is generated for all endpoint's responses.
+
+```ts
+export type AddPetResponses = {
+  200: {
+    id?: number;
+    name: string;
+  };
+};
+
+export type AddPetResponse = AddPetResponses[keyof AddPetResponses];
+```
+
+You can customize the naming and casing pattern for `responses` types using the `.name` and `.case` options.
+
+## Definitions
+
+A type is generated for every reusable definition from your input.
+
+```ts
+export type Pet = {
+  id?: number;
+  name: string;
+};
+```
+
+You can customize the naming and casing pattern for `definitions` types using the `.name` and `.case` options.
+
 ## Enums
 
-By default, `@hey-api/openapi-ts` will only emit enums as types. You may want to generate runtime artifacts. A good use case is iterating through possible field values without manually typing arrays. To emit runtime enums, set `enums` to a valid option.
+By default, `@hey-api/typescript` will emit enums only as types. You may want to generate runtime artifacts. A good use case is iterating through possible field values without manually typing arrays. To emit runtime enums, set `enums` to a valid option.
 
 ::: code-group
 
 ```js [disabled]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     {
       enums: false, // default // [!code ++]
       name: '@hey-api/typescript',
@@ -79,14 +99,11 @@ export default {
 ```
 
 ```js [javascript]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     {
       enums: 'javascript', // [!code ++]
       name: '@hey-api/typescript',
@@ -96,14 +113,11 @@ export default {
 ```
 
 ```js [typescript]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     {
       enums: 'typescript', // [!code ++]
       name: '@hey-api/typescript',
@@ -116,5 +130,9 @@ export default {
 
 We recommend exporting enums as plain JavaScript objects. [TypeScript enums](https://www.typescriptlang.org/docs/handbook/enums.html) are not a type-level extension of JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh).
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+## Config API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/typescript/types.d.ts) interface.
+
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

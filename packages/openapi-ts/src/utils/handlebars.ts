@@ -90,7 +90,7 @@ import xhrRequest from '../legacy/handlebars/compiled/core/xhr/request.js';
 import xhrSendRequest from '../legacy/handlebars/compiled/core/xhr/sendRequest.js';
 import { getConfig } from './config';
 import { stringCase } from './stringCase';
-import { transformServiceName } from './transform';
+import { transformClassName } from './transform';
 
 export const registerHandlebarHelpers = (): void => {
   Handlebars.registerHelper(
@@ -118,7 +118,7 @@ export const registerHandlebarHelpers = (): void => {
   Handlebars.registerHelper(
     'ifServicesResponse',
     function (this: unknown, value: string, options: Handlebars.HelperOptions) {
-      return getConfig().plugins['@hey-api/sdk']?.response === value
+      return getConfig().plugins['@hey-api/sdk']?.config.response === value
         ? options.fn(this)
         : options.inverse(this);
     },
@@ -147,7 +147,7 @@ export const registerHandlebarHelpers = (): void => {
   Handlebars.registerHelper(
     'transformServiceName',
     function (this: unknown, name: string) {
-      return transformServiceName({
+      return transformClassName({
         config: getConfig(),
         name,
       });

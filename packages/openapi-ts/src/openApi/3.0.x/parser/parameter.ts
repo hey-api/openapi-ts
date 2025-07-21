@@ -5,7 +5,7 @@ import type {
   ReferenceObject,
   SchemaObject,
 } from '../types/spec';
-import { mediaTypeObject } from './mediaType';
+import { mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
 import { schemaToIrSchema } from './schema';
 
@@ -71,17 +71,19 @@ export const parametersArrayToObject = ({
   for (const parameterOrReference of parameters) {
     const parameter =
       '$ref' in parameterOrReference
-        ? context.resolveRef<ParameterObject>(parameterOrReference.$ref)
+        ? context.dereference<ParameterObject>(parameterOrReference)
         : parameterOrReference;
 
     if (!parametersObject[parameter.in]) {
       parametersObject[parameter.in] = {};
     }
 
-    parametersObject[parameter.in]![parameter.name] = parameterToIrParameter({
-      context,
-      parameter,
-    });
+    // lowercase keys for case insensitive access
+    parametersObject[parameter.in]![parameter.name.toLocaleLowerCase()] =
+      parameterToIrParameter({
+        context,
+        parameter,
+      });
   }
 
   return parametersObject;
@@ -98,9 +100,10 @@ const parameterToIrParameter = ({
   let schema = parameter.schema;
 
   if (!schema) {
-    const content = mediaTypeObject({
-      content: parameter.content,
-    });
+    const contents = mediaTypeObjects({ content: parameter.content });
+    // TODO: add support for multiple content types, for now prefer JSON
+    const content =
+      contents.find((content) => content.type === 'json') || contents[0];
     if (content) {
       schema = content.schema;
     }

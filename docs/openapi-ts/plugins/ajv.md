@@ -13,4 +13,4 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 [Ajv](https://ajv.js.org) is the fastest JSON validator for Node.js and browser.
 
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/sponsors.md-->

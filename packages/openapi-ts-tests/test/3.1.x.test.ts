@@ -68,11 +68,19 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'array-items-one-of-length-1.json',
+        input: 'array-items-one-of-length-1.yaml',
         output: 'array-items-one-of-length-1',
+        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
       }),
       description:
         'generates correct array when items are oneOf array with single item',
+    },
+    {
+      config: createConfig({
+        input: 'array-nested-one-of.yaml',
+        output: 'array-nested-one-of',
+      }),
+      description: 'generates union of arrays when items use nested oneOf',
     },
     {
       config: createConfig({
@@ -88,11 +96,11 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'case.json',
+        input: 'case.yaml',
         output: 'case-preserve',
         plugins: [
           {
-            identifierCase: 'preserve',
+            case: 'preserve',
             name: '@hey-api/typescript',
           },
         ],
@@ -101,11 +109,11 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'case.json',
+        input: 'case.yaml',
         output: 'case-PascalCase',
         plugins: [
           {
-            identifierCase: 'PascalCase',
+            case: 'PascalCase',
             name: '@hey-api/typescript',
           },
         ],
@@ -114,11 +122,11 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'case.json',
+        input: 'case.yaml',
         output: 'case-camelCase',
         plugins: [
           {
-            identifierCase: 'camelCase',
+            case: 'camelCase',
             name: '@hey-api/typescript',
           },
         ],
@@ -127,11 +135,11 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'case.json',
+        input: 'case.yaml',
         output: 'case-snake_case',
         plugins: [
           {
-            identifierCase: 'snake_case',
+            case: 'snake_case',
             name: '@hey-api/typescript',
           },
         ],
@@ -158,6 +166,18 @@ describe(`OpenAPI ${version}`, () => {
         output: 'content-binary',
       }),
       description: 'handles binary content',
+    },
+    {
+      config: createConfig({
+        input: 'content-types.yaml',
+        output: 'content-types',
+        plugins: [
+          '@hey-api/client-axios',
+          '@hey-api/typescript',
+          '@hey-api/sdk',
+        ],
+      }),
+      description: 'handles content types',
     },
     {
       config: createConfig({
@@ -203,25 +223,29 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-inline.json',
+        input: 'enum-inline.yaml',
         output: 'enum-inline',
-        plugins: [
-          {
-            exportInlineEnums: true,
-            name: '@hey-api/typescript',
+        parser: {
+          transforms: {
+            enums: 'root',
           },
-        ],
+        },
+        plugins: ['@hey-api/typescript'],
       }),
       description: 'exports inline enums',
     },
     {
       config: createConfig({
-        input: 'enum-inline.json',
+        input: 'enum-inline.yaml',
         output: 'enum-inline-javascript',
+        parser: {
+          transforms: {
+            enums: 'root',
+          },
+        },
         plugins: [
           {
             enums: 'javascript',
-            exportInlineEnums: true,
             name: '@hey-api/typescript',
           },
         ],
@@ -230,12 +254,16 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-inline.json',
+        input: 'enum-inline.yaml',
         output: 'enum-inline-typescript',
+        parser: {
+          transforms: {
+            enums: 'root',
+          },
+        },
         plugins: [
           {
             enums: 'typescript',
-            exportInlineEnums: true,
             name: '@hey-api/typescript',
           },
         ],
@@ -244,33 +272,21 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-inline.json',
-        output: 'enum-inline-typescript-namespace',
-        plugins: [
-          {
-            enums: 'typescript+namespace',
-            exportInlineEnums: true,
-            name: '@hey-api/typescript',
-          },
-        ],
-      }),
-      description: 'exports inline enums (TypeScript namespace)',
-    },
-    {
-      config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values',
       }),
       description: 'handles various enum names and values',
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-javascript-SCREAMING_SNAKE_CASE',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'SCREAMING_SNAKE_CASE',
+            enums: {
+              case: 'SCREAMING_SNAKE_CASE',
+              mode: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -280,12 +296,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-javascript-PascalCase',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'PascalCase',
+            enums: {
+              case: 'PascalCase',
+              mode: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -295,12 +313,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-javascript-camelCase',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'camelCase',
+            enums: {
+              case: 'camelCase',
+              mode: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -310,12 +330,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-javascript-snake_case',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'snake_case',
+            enums: {
+              case: 'snake_case',
+              mode: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -325,12 +347,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-javascript-preserve',
         plugins: [
           {
-            enums: 'javascript',
-            enumsCase: 'preserve',
+            enums: {
+              case: 'preserve',
+              mode: 'javascript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -340,12 +364,32 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
+        output: 'enum-names-values-javascript-ignore-null',
+        plugins: [
+          {
+            enums: {
+              case: 'preserve',
+              constantsIgnoreNull: true,
+              mode: 'javascript',
+            },
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description:
+        'handles various enum names and values (JavaScript, preserve, ignore null)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-typescript-SCREAMING_SNAKE_CASE',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'SCREAMING_SNAKE_CASE',
+            enums: {
+              case: 'SCREAMING_SNAKE_CASE',
+              mode: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -355,12 +399,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-typescript-PascalCase',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'PascalCase',
+            enums: {
+              case: 'PascalCase',
+              mode: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -370,12 +416,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-typescript-camelCase',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'camelCase',
+            enums: {
+              case: 'camelCase',
+              mode: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -385,12 +433,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-typescript-snake_case',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'snake_case',
+            enums: {
+              case: 'snake_case',
+              mode: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -400,12 +450,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'enum-names-values.json',
+        input: 'enum-names-values.yaml',
         output: 'enum-names-values-typescript-preserve',
         plugins: [
           {
-            enums: 'typescript',
-            enumsCase: 'preserve',
+            enums: {
+              case: 'preserve',
+              mode: 'typescript',
+            },
             name: '@hey-api/typescript',
           },
         ],
@@ -417,19 +469,33 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
-        plugins: ['@hey-api/typescript', 'zod'],
+        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
       }),
       description: 'handles null enums',
     },
     {
       config: createConfig({
-        input: {
-          exclude: ['@deprecated'],
-          path: 'exclude-deprecated.yaml',
-        },
+        input: 'exclude-deprecated.yaml',
         output: 'exclude-deprecated',
+        parser: {
+          filters: {
+            deprecated: false,
+          },
+        },
       }),
       description: 'excludes deprecated fields',
+    },
+    {
+      config: createConfig({
+        input: 'headers.yaml',
+        output: 'headers',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/typescript',
+          '@hey-api/sdk',
+        ],
+      }),
+      description: 'handles various headers',
     },
     {
       config: createConfig({
@@ -473,6 +539,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'object-property-names.yaml',
+        output: 'object-property-names',
+      }),
+      description:
+        'sets correct index signature type on object with property names',
+    },
+    {
+      config: createConfig({
         input: 'operation-204.json',
         output: 'operation-204',
       }),
@@ -480,11 +554,11 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'pagination-ref-any-of.yaml',
-        output: 'pagination-ref-any-of',
+        input: 'pagination-ref.yaml',
+        output: 'pagination-ref',
         plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
       }),
-      description: 'detects pagination for composite types with null',
+      description: 'detects pagination fields',
     },
     {
       config: createConfig({
@@ -511,8 +585,8 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'read-write-only.yaml',
-        output: 'read-write-only',
+        input: 'transforms-read-write.yaml',
+        output: 'transforms-read-write',
         plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
       }),
       description: 'handles read-only and write-only types',
@@ -551,7 +625,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'schema-const.yaml',
         output: 'schema-const',
-        plugins: ['@hey-api/typescript', 'zod'],
+        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
       }),
       description: 'handles various constants',
     },
@@ -666,43 +740,97 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'validators.json',
+        input: 'validators.yaml',
         output: 'validators',
-        plugins: ['zod'],
+        plugins: ['valibot', 'zod'],
       }),
-      description: 'generates Zod schemas',
+      description: 'generates validator schemas',
     },
     {
       config: createConfig({
-        input: 'zod-bigint-min-max.json',
-        output: 'zod-bigint-min-max',
-        plugins: ['zod'],
+        input: 'validators.yaml',
+        output: 'validators-dates',
+        plugins: [
+          // Valibot doesn't allow configuring offset
+          // {
+          //   name: 'valibot',
+          // },
+          {
+            dates: {
+              offset: true,
+            },
+            name: 'zod',
+          },
+        ],
       }),
-      description: 'Zod schemas with BigInt and min/max constraints',
+      description: 'generates validator schemas with any offset',
     },
     {
       config: createConfig({
-        input: 'zod-circular-ref.json',
-        output: 'zod-circular-ref',
-        plugins: ['zod'],
+        input: 'validators.yaml',
+        output: 'validators-metadata',
+        plugins: [
+          {
+            metadata: true,
+            name: 'valibot',
+          },
+          {
+            metadata: true,
+            name: 'zod',
+          },
+        ],
       }),
-      description: 'Zod schemas with circular reference',
+      description: 'generates validator schemas with metadata',
     },
     {
       config: createConfig({
-        input: 'zod-circular-ref-2.yaml',
-        output: 'zod-circular-ref-2',
-        plugins: ['zod'],
+        input: 'validators.yaml',
+        output: 'validators-types',
+        plugins: [
+          {
+            name: 'valibot',
+          },
+          {
+            name: 'zod',
+            types: {
+              infer: true,
+            },
+          },
+        ],
       }),
-      description: 'Zod schemas with circular reference 2',
+      description: 'generates validator schemas with types',
     },
     {
       config: createConfig({
-        input: 'zod-union-merge.json',
-        output: 'zod-union-merge',
-        plugins: ['zod'],
+        input: 'validators-bigint-min-max.json',
+        output: 'validators-bigint-min-max',
+        plugins: ['valibot', 'zod'],
       }),
-      description: "Zod schemas with merged unions (can't use .merge())",
+      description: 'validator schemas with BigInt and min/max constraints',
+    },
+    {
+      config: createConfig({
+        input: 'validators-circular-ref.json',
+        output: 'validators-circular-ref',
+        plugins: ['valibot', 'zod'],
+      }),
+      description: 'validator schemas with circular reference',
+    },
+    {
+      config: createConfig({
+        input: 'validators-circular-ref-2.yaml',
+        output: 'validators-circular-ref-2',
+        plugins: ['valibot', 'zod'],
+      }),
+      description: 'validator schemas with circular reference 2',
+    },
+    {
+      config: createConfig({
+        input: 'validators-union-merge.json',
+        output: 'validators-union-merge',
+        plugins: ['valibot', 'zod'],
+      }),
+      description: "validator schemas with merged unions (can't use .merge())",
     },
   ];
 

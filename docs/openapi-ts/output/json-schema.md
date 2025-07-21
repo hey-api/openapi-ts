@@ -21,7 +21,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     {
       name: '@hey-api/schemas',
       type: 'json', // [!code ++]
@@ -38,7 +37,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     {
       name: '@hey-api/schemas',
       type: 'form', // [!code ++]
@@ -55,7 +53,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     '@hey-api/schemas', // [!code --]
   ],
 };
@@ -99,5 +96,9 @@ if (userInput.length > maxInputLength) {
 }
 ```
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+## Config API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/schemas/types.d.ts) interface.
+
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

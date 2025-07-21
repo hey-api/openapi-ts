@@ -6,12 +6,13 @@ import {
   addLeadingComments,
   type Comments,
   createIdentifier,
+  createModifier,
   isTsNode,
   isType,
   ots,
 } from './utils';
 
-export type AccessLevel = 'public' | 'protected' | 'private';
+export type AccessLevel = 'private' | 'protected' | 'public';
 
 export type FunctionParameter =
   | {
@@ -24,6 +25,7 @@ export type FunctionParameter =
     }
   | {
       destructure: ReadonlyArray<FunctionParameter>;
+      type?: any | ts.TypeNode;
     };
 
 export interface FunctionTypeParameter {
@@ -46,7 +48,7 @@ export const createTypeNode = (
 
   return createTypeReferenceNode({
     typeArguments: args?.map((arg) => createTypeNode(arg)),
-    typeName: base,
+    typeName: ts.isIdentifier(base) ? base.text : base,
   });
 };
 
@@ -72,7 +74,7 @@ export const createPropertyAccessExpression = ({
 }: {
   expression: string | ts.Expression;
   isOptional?: boolean;
-  name: string | ts.MemberName;
+  name: string | number | ts.MemberName;
 }):
   | ts.PropertyAccessChain
   | ts.PropertyAccessExpression
@@ -82,7 +84,7 @@ export const createPropertyAccessExpression = ({
       ? createIdentifier({ text: expression })
       : expression;
 
-  if (isOptional) {
+  if (isOptional && typeof name !== 'number') {
     return createPropertyAccessChain({
       expression: nodeExpression,
       name,
@@ -100,12 +102,17 @@ export const createPropertyAccessExpression = ({
       const nodeName = createIdentifier({ text: name });
       return ts.factory.createElementAccessExpression(nodeExpression, nodeName);
     }
+
+    const nodeName = createIdentifier({ text: name });
+    return ts.factory.createPropertyAccessExpression(nodeExpression, nodeName);
   }
 
-  const nodeName =
-    typeof name === 'string' ? createIdentifier({ text: name }) : name;
+  if (typeof name === 'number') {
+    const nodeName = ts.factory.createNumericLiteral(name);
+    return ts.factory.createElementAccessExpression(nodeExpression, nodeName);
+  }
 
-  return ts.factory.createPropertyAccessExpression(nodeExpression, nodeName);
+  return ts.factory.createPropertyAccessExpression(nodeExpression, name);
 };
 
 export const createNull = (): ts.NullLiteral => ts.factory.createNull();
@@ -166,29 +173,8 @@ export const toExpression = <T = unknown>({
     }
     return ots.string(value, unescape);
   }
-};
 
-/**
- * Convert AccessLevel to proper TypeScript compiler API modifier.
- * @param access - the access level.
- * @returns ts.ModifierLike[]
- */
-export const toAccessLevelModifiers = (
-  access?: AccessLevel,
-): ts.ModifierLike[] => {
-  const keyword =
-    access === 'public'
-      ? ts.SyntaxKind.PublicKeyword
-      : access === 'protected'
-        ? ts.SyntaxKind.ProtectedKeyword
-        : access === 'private'
-          ? ts.SyntaxKind.PrivateKeyword
-          : undefined;
-  const modifiers: ts.ModifierLike[] = [];
-  if (keyword) {
-    modifiers.push(ts.factory.createModifier(keyword));
-  }
-  return modifiers;
+  return;
 };
 
 /**
@@ -220,16 +206,19 @@ export const toParameterDeclarations = (
             })
             .filter(Boolean) as ts.BindingElement[],
         ),
+        type:
+          parameter.type !== undefined
+            ? createTypeNode(parameter.type)
+            : undefined,
       });
     }
 
-    let modifiers = toAccessLevelModifiers(parameter.accessLevel);
+    const modifiers = parameter.accessLevel
+      ? [createModifier({ keyword: parameter.accessLevel })]
+      : [];
 
     if (parameter.isReadOnly) {
-      modifiers = [
-        ...modifiers,
-        ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword),
-      ];
+      modifiers.push(createModifier({ keyword: 'readonly' }));
     }
 
     return createParameterDeclaration({
@@ -247,10 +236,91 @@ export const toParameterDeclarations = (
     });
   });
 
+export type SyntaxKindKeyword =
+  | 'any'
+  | 'async'
+  | 'boolean'
+  | 'export'
+  | 'never'
+  | 'number'
+  | 'private'
+  | 'protected'
+  | 'public'
+  | 'readonly'
+  | 'static'
+  | 'string'
+  | 'undefined'
+  | 'unknown'
+  | 'void';
+
+export const syntaxKindKeyword = <T extends SyntaxKindKeyword>({
+  keyword,
+}: {
+  keyword: T;
+}): T extends 'protected'
+  ? ts.SyntaxKind.ProtectedKeyword
+  : T extends 'public'
+    ? ts.SyntaxKind.PublicKeyword
+    : T extends 'private'
+      ? ts.SyntaxKind.PrivateKeyword
+      : T extends 'export'
+        ? ts.SyntaxKind.ExportKeyword
+        : T extends 'async'
+          ? ts.SyntaxKind.ExportKeyword
+          : T extends 'readonly'
+            ? ts.SyntaxKind.ExportKeyword
+            : T extends 'static'
+              ? ts.SyntaxKind.ExportKeyword
+              :
+                  | ts.SyntaxKind.AnyKeyword
+                  | ts.SyntaxKind.BooleanKeyword
+                  | ts.SyntaxKind.NeverKeyword
+                  | ts.SyntaxKind.NumberKeyword
+                  | ts.SyntaxKind.StringKeyword
+                  | ts.SyntaxKind.UndefinedKeyword
+                  | ts.SyntaxKind.UnknownKeyword
+                  | ts.SyntaxKind.VoidKeyword => {
+  switch (keyword) {
+    case 'any':
+      return ts.SyntaxKind.AnyKeyword as any;
+    case 'async':
+      return ts.SyntaxKind.AsyncKeyword as any;
+    case 'boolean':
+      return ts.SyntaxKind.BooleanKeyword as any;
+    case 'export':
+      return ts.SyntaxKind.ExportKeyword as any;
+    case 'never':
+      return ts.SyntaxKind.NeverKeyword as any;
+    case 'number':
+      return ts.SyntaxKind.NumberKeyword as any;
+    case 'private':
+      return ts.SyntaxKind.PrivateKeyword as any;
+    case 'protected':
+      return ts.SyntaxKind.ProtectedKeyword as any;
+    case 'public':
+      return ts.SyntaxKind.PublicKeyword as any;
+    case 'readonly':
+      return ts.SyntaxKind.ReadonlyKeyword as any;
+    case 'static':
+      return ts.SyntaxKind.StaticKeyword as any;
+    case 'string':
+      return ts.SyntaxKind.StringKeyword as any;
+    case 'undefined':
+      return ts.SyntaxKind.UndefinedKeyword as any;
+    case 'unknown':
+      return ts.SyntaxKind.UnknownKeyword as any;
+    case 'void':
+      return ts.SyntaxKind.VoidKeyword as any;
+    default:
+      throw new Error(`unsupported syntax kind keyword "${keyword}"`);
+  }
+};
+
 export const createKeywordTypeNode = ({
   keyword,
 }: {
-  keyword:
+  keyword: Extract<
+    SyntaxKindKeyword,
     | 'any'
     | 'boolean'
     | 'never'
@@ -258,32 +328,10 @@ export const createKeywordTypeNode = ({
     | 'string'
     | 'undefined'
     | 'unknown'
-    | 'void';
+    | 'void'
+  >;
 }) => {
-  let kind: ts.KeywordTypeSyntaxKind = ts.SyntaxKind.AnyKeyword;
-  switch (keyword) {
-    case 'boolean':
-      kind = ts.SyntaxKind.BooleanKeyword;
-      break;
-    case 'never':
-      kind = ts.SyntaxKind.NeverKeyword;
-      break;
-    case 'number':
-      kind = ts.SyntaxKind.NumberKeyword;
-      break;
-    case 'string':
-      kind = ts.SyntaxKind.StringKeyword;
-      break;
-    case 'undefined':
-      kind = ts.SyntaxKind.UndefinedKeyword;
-      break;
-    case 'unknown':
-      kind = ts.SyntaxKind.UnknownKeyword;
-      break;
-    case 'void':
-      kind = ts.SyntaxKind.VoidKeyword;
-      break;
-  }
+  const kind = syntaxKindKeyword({ keyword });
   return ts.factory.createKeywordTypeNode(kind);
 };
 
@@ -406,7 +454,7 @@ export const createArrowFunction = ({
   types?: FunctionTypeParameter[];
 }) => {
   const expression = ts.factory.createArrowFunction(
-    async ? [ts.factory.createModifier(ts.SyntaxKind.AsyncKeyword)] : undefined,
+    async ? [createModifier({ keyword: 'async' })] : undefined,
     types ? toTypeParameters(types) : undefined,
     toParameterDeclarations(parameters),
     returnType ? createTypeNode(returnType) : undefined,
@@ -441,11 +489,11 @@ export const createAnonymousFunction = ({
   multiLine?: boolean;
   parameters?: FunctionParameter[];
   returnType?: string | ts.TypeNode;
-  statements?: ts.Statement[];
+  statements?: ReadonlyArray<ts.Statement>;
   types?: FunctionTypeParameter[];
 }) => {
   const expression = ts.factory.createFunctionExpression(
-    async ? [ts.factory.createModifier(ts.SyntaxKind.AsyncKeyword)] : undefined,
+    async ? [createModifier({ keyword: 'async' })] : undefined,
     undefined,
     undefined,
     types ? toTypeParameters(types) : undefined,
@@ -601,7 +649,8 @@ export const createObjectType = <
           } else {
             let initializer: ts.Expression | undefined = isTsNode(value.value)
               ? value.value
-              : Array.isArray(value.value)
+              : Array.isArray(value.value) &&
+                  (!value.value.length || typeof value.value[0] === 'object')
                 ? createObjectType({
                     multiLine,
                     obj: value.value,
@@ -618,7 +667,7 @@ export const createObjectType = <
                     value: value.value,
                   });
             if (!initializer) {
-              return undefined;
+              return;
             }
             // Create a identifier if the current key is one and it is not an object
             if (
@@ -651,7 +700,7 @@ export const createObjectType = <
             value,
           });
           if (!initializer) {
-            return undefined;
+            return;
           }
           // Create a identifier if the current key is one and it is not an object
           if (
@@ -713,7 +762,7 @@ export const createEnumDeclaration = <
 }: {
   comments?: Record<string | number, Comments>;
   leadingComment?: Comments;
-  name: string;
+  name: string | ts.TypeReferenceNode;
   obj: T;
 }): ts.EnumDeclaration => {
   const members: Array<ts.EnumMember> = Array.isArray(obj)
@@ -751,8 +800,11 @@ export const createEnumDeclaration = <
       });
 
   const node = ts.factory.createEnumDeclaration(
-    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-    createIdentifier({ text: name }),
+    [createModifier({ keyword: 'export' })],
+    typeof name === 'string'
+      ? createIdentifier({ text: name })
+      : // TODO: https://github.com/hey-api/openapi-ts/issues/2289
+        (name as unknown as ts.Identifier),
     members,
   );
 
@@ -773,7 +825,7 @@ const createEnumMember = ({
 }) => {
   let key = name;
   if (typeof key === 'string') {
-    if (key.startsWith("'") && key.endsWith("'")) {
+    if (key.includes("'")) {
       key = createStringLiteral({
         isSingleQuote: false,
         text: key,
@@ -799,7 +851,7 @@ export const createNamespaceDeclaration = ({
   statements: Array<ts.Statement>;
 }) =>
   ts.factory.createModuleDeclaration(
-    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    [createModifier({ keyword: 'export' })],
     createIdentifier({ text: name }),
     ts.factory.createModuleBlock(statements),
     ts.NodeFlags.Namespace,
@@ -849,9 +901,13 @@ export const createConditionalExpression = ({
   return expression;
 };
 
-export const createTypeOfExpression = ({ text }: { text: string }) => {
+export const createTypeOfExpression = ({
+  text,
+}: {
+  text: string | ts.Identifier;
+}) => {
   const expression = ts.factory.createTypeOfExpression(
-    createIdentifier({ text }),
+    typeof text === 'string' ? createIdentifier({ text }) : text,
   );
   return expression;
 };
@@ -872,15 +928,16 @@ export const createTypeAliasDeclaration = ({
 }: {
   comment?: Comments;
   exportType?: boolean;
-  name: string;
-  type: string | ts.TypeNode;
+  name: string | ts.TypeReferenceNode;
+  type: string | ts.TypeNode | ts.Identifier;
   typeParameters?: FunctionTypeParameter[];
 }): ts.TypeAliasDeclaration => {
   const node = ts.factory.createTypeAliasDeclaration(
-    exportType
-      ? [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)]
-      : undefined,
-    createIdentifier({ text: name }),
+    exportType ? [createModifier({ keyword: 'export' })] : undefined,
+    // TODO: https://github.com/hey-api/openapi-ts/issues/2289
+    // passing type reference node seems to work and allows for dynamic renaming
+    // @ts-expect-error
+    typeof name === 'string' ? createIdentifier({ text: name }) : name,
     toTypeParameters(typeParameters),
     createTypeNode(type),
   );
@@ -921,7 +978,7 @@ export const createParameterDeclaration = ({
   type,
 }: {
   initializer?: ts.Expression;
-  modifiers?: ts.ModifierLike[];
+  modifiers?: ReadonlyArray<ts.ModifierLike>;
   name: string | ts.BindingName;
   required?: boolean;
   type?: ts.TypeNode;
@@ -988,7 +1045,7 @@ export const createBlock = ({
   statements,
 }: {
   multiLine?: boolean;
-  statements: Array<ts.Statement>;
+  statements: ReadonlyArray<ts.Statement>;
 }) => ts.factory.createBlock(statements, multiLine);
 
 export const createPropertyAssignment = ({
@@ -1005,7 +1062,13 @@ export const createRegularExpressionLiteral = ({
 }: {
   flags?: ReadonlyArray<'g' | 'i' | 'm' | 's' | 'u' | 'y'>;
   text: string;
-}) => ts.factory.createRegularExpressionLiteral(`/${text}/${flags.join('')}`);
+}) => {
+  const textWithSlashes =
+    text.startsWith('/') && text.endsWith('/') ? text : `/${text}/`;
+  return ts.factory.createRegularExpressionLiteral(
+    `${textWithSlashes}${flags.join('')}`,
+  );
+};
 
 export const createAsExpression = ({
   expression,

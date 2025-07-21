@@ -26,6 +26,18 @@ export enum Numbers {
     '_-300' = -300
 }
 
+export type Arrays = [
+    'foo'
+] | [
+    'bar'
+] | [
+    'baz'
+];
+
+export type MyFooRef = {
+    foo?: Array<MyFoo2>;
+};
+
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };

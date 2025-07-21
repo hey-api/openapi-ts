@@ -11,7 +11,7 @@ export default defineConfig({
     nav: [
       {
         link: 'https://github.com/sponsors/hey-api',
-        text: 'Sponsor Hey API 💰',
+        text: 'Sponsor Hey API',
       },
     ],
     sidebar: [
@@ -22,11 +22,26 @@ export default defineConfig({
             text: 'Get Started',
           },
           {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/configuration/input',
+                text: 'Input',
+              },
+              {
+                link: '/openapi-ts/configuration/output',
+                text: 'Output',
+              },
+              {
+                link: '/openapi-ts/configuration/parser',
+                text: 'Parser',
+              },
+            ],
             link: '/openapi-ts/configuration',
             text: 'Configuration',
           },
         ],
-        text: '@hey-api/openapi-ts',
+        text: 'Introduction',
       },
       {
         items: [
@@ -40,6 +55,10 @@ export default defineConfig({
               {
                 link: '/openapi-ts/output/sdk',
                 text: 'SDK',
+              },
+              {
+                link: '/openapi-ts/output/client',
+                text: 'Client',
               },
               {
                 link: '/openapi-ts/output/json-schema',
@@ -95,6 +114,10 @@ export default defineConfig({
             collapsed: true,
             items: [
               {
+                link: '/openapi-ts/plugins/valibot',
+                text: 'Valibot',
+              },
+              {
                 link: '/openapi-ts/plugins/zod',
                 text: 'Zod',
               },
@@ -117,10 +140,6 @@ export default defineConfig({
               {
                 link: '/openapi-ts/plugins/typebox',
                 text: 'TypeBox <span data-soon>soon</span>',
-              },
-              {
-                link: '/openapi-ts/plugins/valibot',
-                text: 'Valibot <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/yup',
@@ -213,6 +232,19 @@ export default defineConfig({
       {
         items: [
           {
+            link: '/openapi-ts/community/spotlight',
+            text: 'Spotlight',
+          },
+          {
+            link: '/openapi-ts/community/contributing',
+            text: 'Contributing',
+          },
+        ],
+        text: 'Community',
+      },
+      {
+        items: [
+          {
             link: '/openapi-ts/integrations',
             text: 'GitHub',
           },
@@ -226,23 +258,15 @@ export default defineConfig({
             text: 'Migrating',
           },
           {
-            link: '/license',
+            link: '/openapi-ts/license',
             text: 'License',
-          },
-          {
-            link: '/about',
-            text: 'Philosophy',
-          },
-          {
-            link: '/contributing',
-            text: 'Contributing',
           },
           {
             link: 'https://github.com/orgs/hey-api/discussions/1495',
             text: 'Roadmap',
           },
         ],
-        text: '@hey-api',
+        text: '@hey-api/openapi-ts',
       },
     ],
   },

@@ -33,9 +33,12 @@ export const createReturnFunctionCall = ({
   /**
    * List of function types.
    */
-  types?: string[];
+  types?: ReadonlyArray<string | ts.StringLiteral>;
 }) => {
   const typeArguments = types.map((type) =>
+    // this works with string literals too despite throwing a type error.
+    // should be probably fixed at some point...
+    // @ts-expect-error
     createTypeReferenceNode({ typeName: type }),
   );
   const argumentsArray = args

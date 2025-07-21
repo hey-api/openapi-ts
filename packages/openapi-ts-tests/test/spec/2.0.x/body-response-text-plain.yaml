@@ -1,7 +1,7 @@
-swagger: '2.0'
+swagger: 2.0
 info:
   title: OpenAPI 2.0 body response text plain example
-  version: '1'
+  version: 1
 paths:
   /foo:
     post:

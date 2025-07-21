@@ -16,7 +16,7 @@ export type QueryKey<TOptions extends Options> = [
 const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): [
     QueryKey<TOptions>[0]
 ] => {
-    const params: QueryKey<TOptions>[0] = { _id: id, baseURL: (options?.client ?? _heyApiClient).getConfig().baseURL } as QueryKey<TOptions>[0];
+    const params: QueryKey<TOptions>[0] = { _id: id, baseURL: options?.baseURL || (options?.client ?? _heyApiClient).getConfig().baseURL } as QueryKey<TOptions>[0];
     if (infinite) {
         params._infinite = infinite;
     }
@@ -284,6 +284,9 @@ export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithD
 
 export const deprecatedCallQueryKey = (options: Options<DeprecatedCallData>) => createQueryKey('deprecatedCall', options);
 
+/**
+ * @deprecated
+ */
 export const deprecatedCallOptions = (options: Options<DeprecatedCallData>) => {
     return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
@@ -299,6 +302,9 @@ export const deprecatedCallOptions = (options: Options<DeprecatedCallData>) => {
     });
 };
 
+/**
+ * @deprecated
+ */
 export const deprecatedCallMutation = (options?: Partial<Options<DeprecatedCallData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<DeprecatedCallData>> => {
     const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<DeprecatedCallData>> = {
         mutationFn: async (localOptions) => {
@@ -331,7 +337,9 @@ export const callWithParametersOptions = (options: Options<CallWithParametersDat
 };
 
 const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>>(queryKey: QueryKey<Options>, page: K) => {
-    const params = queryKey[0];
+    const params = {
+        ...queryKey[0]
+    };
     if (page.body) {
         params.body = {
             ...queryKey[0].body as any,
@@ -1114,6 +1122,9 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
     return mutationOptions;
 };
 
+/**
+ * Login User
+ */
 export const putWithFormUrlEncodedMutation = (options?: Partial<Options<PutWithFormUrlEncodedData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PutWithFormUrlEncodedData>> => {
     const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PutWithFormUrlEncodedData>> = {
         mutationFn: async (localOptions) => {

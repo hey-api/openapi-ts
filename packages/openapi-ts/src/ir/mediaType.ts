@@ -52,4 +52,6 @@ export const mediaTypeToIrMediaType = ({
   if (octetStreamMimeRegExp.test(mediaType)) {
     return 'octet-stream';
   }
+
+  return;
 };

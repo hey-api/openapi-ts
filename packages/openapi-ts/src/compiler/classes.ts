@@ -7,13 +7,17 @@ import {
   createTypeNode,
   type FunctionParameter,
   type FunctionTypeParameter,
-  toAccessLevelModifiers,
   toExpression,
   toParameterDeclarations,
   toTypeParameters,
 } from './types';
 import type { Comments } from './utils';
-import { addLeadingComments, createIdentifier, isType } from './utils';
+import {
+  addLeadingComments,
+  createIdentifier,
+  createModifier,
+  isType,
+} from './utils';
 
 /**
  * Create a class constructor declaration.
@@ -37,8 +41,11 @@ export const createConstructorDeclaration = ({
   parameters?: FunctionParameter[];
   statements?: ts.Statement[];
 }) => {
+  const modifiers = accessLevel
+    ? [createModifier({ keyword: accessLevel })]
+    : undefined;
   const node = ts.factory.createConstructorDeclaration(
-    toAccessLevelModifiers(accessLevel),
+    modifiers,
     toParameterDeclarations(parameters),
     createBlock({ multiLine, statements }),
   );
@@ -84,13 +91,12 @@ export const createMethodDeclaration = ({
   statements?: ts.Statement[];
   types?: FunctionTypeParameter[];
 }) => {
-  let modifiers = toAccessLevelModifiers(accessLevel);
+  const modifiers = accessLevel
+    ? [createModifier({ keyword: accessLevel })]
+    : [];
 
   if (isStatic) {
-    modifiers = [
-      ...modifiers,
-      ts.factory.createModifier(ts.SyntaxKind.StaticKeyword),
-    ];
+    modifiers.push(createModifier({ keyword: 'static' }));
   }
 
   const node = ts.factory.createMethodDeclaration(
@@ -119,26 +125,43 @@ type ClassDecorator = {
 
 /**
  * Create a class declaration.
- * @param decorator - the class decorator
- * @param members - elements in the class.
- * @param name - name of the class.
- * @returns ts.ClassDeclaration
  */
 export const createClassDeclaration = ({
   decorator,
-  members = [],
+  exportClass,
+  extendedClasses,
   name,
+  nodes,
 }: {
+  /**
+   * Class decorator.
+   */
   decorator?: ClassDecorator;
-  members?: ts.ClassElement[];
+  /**
+   * @default false
+   */
+  exportClass?: boolean;
+  /**
+   * List of extended classes.
+   */
+  extendedClasses?: ReadonlyArray<string>;
+  /**
+   * Class name.
+   */
   name: string;
-}) => {
-  let modifiers: ts.ModifierLike[] = [
-    ts.factory.createModifier(ts.SyntaxKind.ExportKeyword),
-  ];
+  /**
+   * Class elements.
+   */
+  nodes: ReadonlyArray<ts.ClassElement>;
+}): ts.ClassDeclaration => {
+  const modifiers: Array<ts.ModifierLike> = [];
+
+  if (exportClass) {
+    modifiers.push(createModifier({ keyword: 'export' }));
+  }
 
   if (decorator) {
-    modifiers = [
+    modifiers.unshift(
       ts.factory.createDecorator(
         createCallExpression({
           functionName: decorator.name,
@@ -147,22 +170,29 @@ export const createClassDeclaration = ({
             .filter(isType<ts.Expression>),
         }),
       ),
-      ...modifiers,
-    ];
+    );
   }
 
-  // Add newline between each class member.
-  let m: ts.ClassElement[] = [];
-  members.forEach((member) => {
-    // @ts-expect-error
-    m = [...m, member, createIdentifier({ text: '\n' })];
-  });
+  const heritageClauses: Array<ts.HeritageClause> = [];
+
+  if (extendedClasses) {
+    for (const extendedClass of extendedClasses) {
+      heritageClauses.push(
+        ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, [
+          ts.factory.createExpressionWithTypeArguments(
+            createIdentifier({ text: extendedClass }),
+            undefined,
+          ),
+        ]),
+      );
+    }
+  }
 
   return ts.factory.createClassDeclaration(
     modifiers,
     createIdentifier({ text: name }),
-    [],
-    [],
-    m,
+    undefined,
+    heritageClauses,
+    nodes,
   );
 };

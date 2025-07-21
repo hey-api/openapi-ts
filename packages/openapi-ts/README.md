@@ -8,22 +8,23 @@
 
 <p align="center">
   <a href="https://opensource.org/license/mit" rel="nofollow"><img src="https://img.shields.io/github/license/hey-api/openapi-ts" alt="MIT License"></a>
-  <a href="https://github.com/hey-api/openapi-ts/actions?query=branch%3Amain"><img src="https://img.shields.io/github/last-commit/hey-api/openapi-ts" alt="Last commit" /></a>
+  <a href="https://npmjs.com/package/@hey-api/openapi-ts" rel="nofollow"><img src="https://img.shields.io/npm/dm/%40hey-api%2Fopenapi-ts?label=npm" alt="npm downloads"></a>
+  <a href="https://github.com/hey-api/openapi-ts" rel="nofollow"><img src="https://img.shields.io/github/stars/hey-api/openapi-ts?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
   <a href="https://github.com/hey-api/openapi-ts/actions?query=branch%3Amain"><img src="https://github.com/hey-api/openapi-ts/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
-  <a href="https://github.com/hey-api/openapi-ts/issues" rel="nofollow"><img src="https://img.shields.io/github/issues/hey-api/openapi-ts" alt="Number of open issues"></a>
-  <a href="https://app.codecov.io/gh/hey-api/openapi-ts/tree/main"><img src="https://codecov.io/gh/hey-api/openapi-ts/branch/main/graph/badge.svg" alt="Test coverage" /></a>
 </p>
 
 <p align="center">
   <a href="https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts">Demo</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://heyapi.dev">Documentation</a>
+  <a href="https://heyapi.dev">Docs</a>
   <span>&nbsp;•&nbsp;</span>
   <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
   <span>&nbsp;•&nbsp;</span>
   <a href="https://github.com/orgs/hey-api/discussions/1495">Roadmap</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://npmjs.com/package/@hey-api/openapi-ts">npm</a>
+  <a href="https://heyapi.dev/openapi-ts/community/contributing">Contribute</a>
+  <span>&nbsp;•&nbsp;</span>
+  <a href="https://heyapi.dev/openapi-ts/community/spotlight#core-team">Join Core Team</a>
 </p>
 
 <br/>
@@ -36,23 +37,96 @@
 - clients for your runtime (Fetch API, Axios, Next.js, Nuxt, etc.)
 - plugin ecosystem to reduce third-party boilerplate
 - custom plugins and custom clients
-- [integration](https://heyapi.dev/openapi-ts/integrations) with Hey API platform
+- [integration](https://heyapi.dev/openapi-ts/integrations) with Hey API Platform
 
 ## Dashboard
 
-Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with our platform.
+Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with Hey API Platform.
 
-[Sign In](https://app.heyapi.dev) to Hey API platform.
+[Sign In](https://app.heyapi.dev) to Hey API Platform.
+
+## Contributing
+
+Want to see your code in products used by millions?
+
+Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
 
 ## Sponsors
 
-Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
+Help Hey API stay around for the long haul by becoming a [sponsor](https://github.com/sponsors/hey-api).
 
-<p>
-  <a href="https://kutt.it/pkEZyc" target="_blank">
-    <img alt="Stainless logo" height="50" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg" />
-  </a>
-</p>
+<h3 align="center">Gold</h3>
+
+<table align="center" style="justify-content: center;align-items: center;display: flex;">
+  <tbody>
+    <tr>
+      <td align="center">
+        <p></p>
+        <p>
+          <a href="https://kutt.it/pkEZyc" target="_blank">
+            <picture height="50px">
+              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
+              <img alt="Stainless logo" height="50px" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
+            </picture>
+          </a>
+          <br/>
+          Best-in-class SDKs and MCP for your API.
+          <br/>
+          <a href="https://kutt.it/pkEZyc" style="text-decoration:none;" target="_blank">
+            stainless.com
+          </a>
+        </p>
+        <p></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 align="center">Silver</h3>
+
+<table align="center" style="justify-content: center;align-items: center;display: flex;">
+  <tbody>
+    <tr>
+      <td align="center">
+        <a href="https://kutt.it/skQUVd" target="_blank">
+          <picture height="40px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/scalar-logo-wordmark-480w.jpeg">
+            <img alt="Scalar logo" height="40px" src="https://heyapi.dev/images/scalar-logo-wordmark-480w.jpeg">
+          </picture>
+        </a>
+        <br/>
+        <a href="https://kutt.it/skQUVd" style="text-decoration:none;" target="_blank">
+          scalar.com
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 align="center">Bronze</h3>
+
+<table align="center" style="justify-content: center;align-items: center;display: flex;">
+  <tbody>
+    <tr>
+      <td align="center">
+        <a href="https://kutt.it/YpaKsX" target="_blank">
+          <picture height="34px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/kinde-logo-wordmark-dark-480w.webp">
+            <img alt="Kinde logo" height="34px" src="https://heyapi.dev/images/kinde-logo-wordmark-480w.jpeg">
+          </picture>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://kutt.it/KkqSaw" target="_blank">
+          <picture height="34px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/cella-logo-wordmark-480w.webp">
+            <img alt="Cella logo" height="34px" src="https://heyapi.dev/images/cella-logo-wordmark-480w.jpeg">
+          </picture>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ## Quick Start
 
@@ -61,41 +135,52 @@ The fastest way to use `@hey-api/openapi-ts` is via npx
 ```sh
 npx @hey-api/openapi-ts \
   -i https://get.heyapi.dev/hey-api/backend \
-  -o src/client \
-  -c @hey-api/client-fetch
+  -o src/client
 ```
 
 Congratulations on creating your first client! 🎉 You can learn more about the generated files on the [Output](https://heyapi.dev/openapi-ts/output) page.
 
-Before you can make API requests with the client you've just created, you need to install `@hey-api/client-fetch` and configure it.
-
 ## Installation
+
+You can download `@hey-api/openapi-ts` from npm using your favorite package manager.
 
 #### npm
 
 ```sh
-npm install @hey-api/client-fetch && npm install @hey-api/openapi-ts -D
+npm install @hey-api/openapi-ts -D -E
 ```
 
 #### pnpm
 
 ```sh
-pnpm add @hey-api/client-fetch && pnpm add @hey-api/openapi-ts -D
+pnpm add @hey-api/openapi-ts -D -E
 ```
 
 #### yarn
 
 ```sh
-yarn add @hey-api/client-fetch && yarn add @hey-api/openapi-ts -D
+yarn add @hey-api/openapi-ts -D -E
 ```
 
 #### bun
 
 ```sh
-bun add @hey-api/client-fetch && bun add @hey-api/openapi-ts -D
+bun add @hey-api/openapi-ts -D -E
 ```
 
-We recommend pinning an exact version so you can safely upgrade when you're ready. This package is in [initial development](https://semver.org/spec/v0.1.0.html#spec-item-5) and its API might change before v1.
+### Versioning
+
+This package does NOT follow the [semantic versioning](https://semver.org/) strategy. Please pin an exact version so you can safely upgrade when you're ready.
+
+Due to the nature of the package, we use the following versioning strategy.
+
+- `1.x.x`: significant breaking changes, reserved for v1 release
+- `x.1.x`: breaking changes
+- `x.x.1`: new features, bug fixes, and non-breaking changes
+
+We publish [migration notes](https://heyapi.dev/openapi-ts/migrating) for every breaking release. You might not be impacted by a breaking release if you don't use the affected plugin(s).
+
+## Usage
 
 ### CLI
 
@@ -107,11 +192,11 @@ Most people run `@hey-api/openapi-ts` via CLI. To do that, add a script to your 
 }
 ```
 
-The above script can be executed by running `npm run openapi-ts` or equivalent command in other package managers. Next, we need to create a [configuration](https://heyapi.dev/openapi-ts/configuration) file and move our options from Quick Start to it.
+The above script can be executed by running `npm run openapi-ts` or equivalent command in other package managers. Next, we will create a [configuration](https://heyapi.dev/openapi-ts/configuration) file and move our options from Quick Start to it.
 
 ### Node.js
 
-You can also generate clients programmatically by importing `@hey-api/openapi-ts` in a TypeScript file.
+You can also generate output programmatically by importing `@hey-api/openapi-ts` in a TypeScript file.
 
 ```ts
 import { createClient } from '@hey-api/openapi-ts';
@@ -119,7 +204,6 @@ import { createClient } from '@hey-api/openapi-ts';
 createClient({
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 });
 ```
 
@@ -135,7 +219,6 @@ import { defineConfig } from '@hey-api/openapi-ts';
 export default defineConfig({
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 });
 ```
 
@@ -146,7 +229,6 @@ export default defineConfig({
 module.exports = {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -157,7 +239,6 @@ module.exports = {
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
-  plugins: ['@hey-api/client-fetch'],
 };
 ```
 
@@ -165,19 +246,27 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 
 ### Input
 
-Input is the first thing you must define. It can be a path, URL, or a string content resolving to an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
+You must set the input so we can load your OpenAPI specification. It can be a path or URL, object containing a path or URL, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
 
 > If you use an HTTPS URL with a self-signed certificate in development, you will need to set [`NODE_TLS_REJECT_UNAUTHORIZED=0`](https://github.com/hey-api/openapi-ts/issues/276#issuecomment-2043143501) in your environment.
 
 ### Output
 
-Output is the next thing to define. It can be either a string pointing to the destination folder or a configuration object containing the destination folder path and optional settings (these are described below).
+You must set the output so we know where to generate your files. It can be a path to the destination folder or an object containing the destination folder path and optional settings.
 
 > You should treat the output folder as a dependency. Do not directly modify its contents as your changes might be erased when you run `@hey-api/openapi-ts` again.
 
+## Parser
+
+We parse your input before making it available to plugins. While configuring the parser is optional, it's the perfect place to modify or validate your input if needed.
+
+## Plugins
+
+Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces and SDK from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
+
 ### Client
 
-Clients are responsible for sending the actual HTTP requests. Using clients is not required, but you must add a client to `plugins` if you're generating SDKs (enabled by default).
+Clients are responsible for sending the actual HTTP requests. Using clients is not required, but you must add a client to `plugins` if you're generating SDKs (we default to Fetch).
 
 ### Native Clients
 
@@ -187,10 +276,6 @@ Clients are responsible for sending the actual HTTP requests. Using clients is n
 - [`@hey-api/client-nuxt`](https://heyapi.dev/openapi-ts/clients/nuxt)
 
 Don't see your client? [Build your own](https://heyapi.dev/openapi-ts/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
-
-## Plugins
-
-Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces and SDK from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
 
 ### Native Plugins
 
@@ -206,6 +291,7 @@ These plugins help reduce boilerplate associated with third-party dependencies. 
 - [`@tanstack/svelte-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/vue-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`fastify`](https://heyapi.dev/openapi-ts/plugins/fastify)
+- [`valibot`](https://heyapi.dev/openapi-ts/plugins/valibot)
 - [`zod`](https://heyapi.dev/openapi-ts/plugins/zod)
 
 ### Planned Plugins
@@ -227,15 +313,14 @@ The following plugins are planned but not in development yet. You can help us pr
 - [Supertest](https://heyapi.dev/openapi-ts/plugins/supertest)
 - [SWR](https://heyapi.dev/openapi-ts/plugins/swr)
 - [TypeBox](https://heyapi.dev/openapi-ts/plugins/typebox)
-- [Valibot](https://heyapi.dev/openapi-ts/plugins/valibot)
 - [Yup](https://heyapi.dev/openapi-ts/plugins/yup)
 - [Zustand](https://heyapi.dev/openapi-ts/plugins/zustand)
 
 Don't see your plugin? [Build your own](https://heyapi.dev/openapi-ts/plugins/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
-## Migration Guides
+## Migrating
 
-[OpenAPI Typescript Codegen](https://heyapi.dev/openapi-ts/migrating#openapi-typescript-codegen)
+You can learn more on the [Migrating](https://heyapi.dev/openapi-ts/migrating) page.
 
 ## License
 

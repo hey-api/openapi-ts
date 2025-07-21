@@ -10,7 +10,7 @@ import { type ParentModelWithDatesResponse, type ModelWithDatesResponse, type Mo
 @Injectable({
     providedIn: 'root'
 })
-export class DefaultService {
+export class Default {
     constructor(public readonly http: HttpClient) { }
     
     /**
@@ -83,5 +83,4 @@ export class DefaultService {
             url: '/api/multiple-responses'
         });
     }
-    
 }

@@ -5,6 +5,7 @@ import {
   addLeadingComments,
   type Comments,
   createIdentifier,
+  createModifier,
   type ImportExportItemObject,
   ots,
 } from './utils';
@@ -122,7 +123,7 @@ export const createConstVariable = ({
   destructure?: boolean;
   exportConst?: boolean;
   expression: ts.Expression;
-  name: string;
+  name: string | ts.TypeReferenceNode;
   // TODO: support a more intuitive definition of generics for example
   typeName?: string | ts.IndexedAccessTypeNode | ts.TypeNode;
 }): ts.VariableStatement => {
@@ -135,7 +136,11 @@ export const createConstVariable = ({
             : assertion,
       })
     : expression;
-  const nameIdentifier = createIdentifier({ text: name });
+  const nameIdentifier =
+    typeof name === 'string'
+      ? createIdentifier({ text: name })
+      : // TODO: https://github.com/hey-api/openapi-ts/issues/2289
+        (name as unknown as ts.Identifier);
   const declaration = ts.factory.createVariableDeclaration(
     destructure
       ? ts.factory.createObjectBindingPattern([
@@ -156,9 +161,7 @@ export const createConstVariable = ({
     initializer,
   );
   const statement = ts.factory.createVariableStatement(
-    exportConst
-      ? [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)]
-      : undefined,
+    exportConst ? [createModifier({ keyword: 'export' })] : undefined,
     ts.factory.createVariableDeclarationList([declaration], ts.NodeFlags.Const),
   );
 
@@ -187,15 +190,27 @@ export const createNamedImportDeclarations = ({
   const hasNonTypeImport = importedTypes.some(
     (item) => typeof item !== 'object' || !item.asType,
   );
-  const elements = importedTypes.map((name) => {
+  let namespaceImport: ImportExportItemObject | undefined;
+  const elements: Array<ts.ImportSpecifier> = [];
+  importedTypes.forEach((name) => {
     const item = typeof name === 'string' ? { name } : name;
-    return ots.import({
-      alias: item.alias,
-      asType: hasNonTypeImport && item.asType,
-      name: item.name,
-    });
+    if (item.name === '*' && item.alias) {
+      namespaceImport = item;
+    } else {
+      elements.push(
+        ots.import({
+          alias: item.alias,
+          asType: hasNonTypeImport && item.asType,
+          name: item.name,
+        }),
+      );
+    }
   });
-  const namedBindings = ts.factory.createNamedImports(elements);
+  const namedBindings = namespaceImport
+    ? ts.factory.createNamespaceImport(
+        createIdentifier({ text: namespaceImport.alias! }),
+      )
+    : ts.factory.createNamedImports(elements);
   const importClause = ts.factory.createImportClause(
     !hasNonTypeImport,
     undefined,

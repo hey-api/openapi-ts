@@ -43,7 +43,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     'fastify', // [!code ++]
   ],
 };
@@ -76,5 +75,9 @@ const serviceHandlers: RouteHandlers = {
 fastify.register(glue, { serviceHandlers });
 ```
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+## Config API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/fastify/types.d.ts) interface.
+
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

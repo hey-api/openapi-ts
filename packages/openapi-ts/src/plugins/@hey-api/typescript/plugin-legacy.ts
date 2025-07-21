@@ -1,7 +1,7 @@
 import type ts from 'typescript';
 
 import { type Comments, compiler } from '../../../compiler';
-import { TypeScriptFile } from '../../../generate/files';
+import { GeneratedFile } from '../../../generate/file';
 import { isOperationParameterRequired } from '../../../openApi';
 import type {
   Client,
@@ -18,13 +18,12 @@ import {
   type SetUniqueTypeNameResult,
   toType,
 } from '../../../utils/type';
-import type { Plugin } from '../../types';
 import {
   operationDataTypeName,
   operationErrorTypeName,
   operationResponseTypeName,
 } from '../sdk/plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiTypeScriptPlugin } from './types';
 
 export interface TypesProps {
   client: Client;
@@ -129,30 +128,19 @@ export const generateType = ({
 };
 
 const processComposition = (props: TypesProps) => {
-  const config = getConfig();
-
   const enumDeclarations = [] as ts.EnumDeclaration[];
 
   processType(props);
 
-  props.model.enums.forEach((enumerator) => {
-    if (
-      config.plugins['@hey-api/typescript']?.enums !== 'typescript+namespace'
-    ) {
-      return processEnum({
-        ...props,
-        model: enumerator,
-      });
-    }
-
-    return processScopedEnum({
+  props.model.enums.forEach((enumerator) =>
+    processScopedEnum({
       ...props,
       model: enumerator,
       onNode: (node) => {
         enumDeclarations.push(node as ts.EnumDeclaration);
       },
-    });
-  });
+    }),
+  );
 
   if (enumDeclarations.length) {
     props.onNode(
@@ -183,9 +171,12 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
     model.deprecated && '@deprecated',
   ];
 
+  const pluginTypeScript = config.plugins['@hey-api/typescript'];
   if (
-    config.plugins['@hey-api/typescript']?.enums === 'typescript' ||
-    config.plugins['@hey-api/typescript']?.enums === 'typescript+namespace'
+    pluginTypeScript?.config &&
+    typeof pluginTypeScript.config.enums === 'object' &&
+    pluginTypeScript.config.enums.enabled &&
+    pluginTypeScript.config.enums.mode === 'typescript'
   ) {
     generateEnum({
       client,
@@ -204,7 +195,13 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
     meta: model.meta,
     onCreated: (name) => {
       // create a separate JavaScript object export
-      if (config.plugins['@hey-api/typescript']?.enums === 'javascript') {
+      const pluginTypeScript = config.plugins['@hey-api/typescript'];
+      if (
+        pluginTypeScript?.config &&
+        typeof pluginTypeScript.config.enums === 'object' &&
+        pluginTypeScript.config.enums.enabled &&
+        pluginTypeScript.config.enums.mode === 'javascript'
+      ) {
         const expression = compiler.objectExpression({
           multiLine: true,
           obj: Object.entries(properties).map(([key, value]) => ({
@@ -302,7 +299,7 @@ const processServiceTypes = ({
 
   if (
     !config.plugins['@hey-api/sdk'] &&
-    !config.plugins['@hey-api/typescript']?.tree
+    !config.plugins['@hey-api/typescript']?.config.tree
   ) {
     return;
   }
@@ -590,7 +587,7 @@ const processServiceTypes = ({
     return pathKey;
   });
 
-  if (config.plugins['@hey-api/typescript']?.tree) {
+  if (config.plugins['@hey-api/typescript']?.config.tree) {
     generateType({
       client,
       meta: {
@@ -606,14 +603,16 @@ const processServiceTypes = ({
   }
 };
 
-export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
+export const handlerLegacy: HeyApiTypeScriptPlugin['LegacyHandler'] = ({
   client,
   files,
+  plugin,
 }) => {
   const config = getConfig();
 
-  files.types = new TypeScriptFile({
+  files.types = new GeneratedFile({
     dir: config.output.path,
+    exportFromIndex: plugin.config.exportFromIndex,
     id: 'types',
     name: 'types.ts',
   });

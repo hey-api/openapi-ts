@@ -282,6 +282,29 @@ export type ModelWithEnum = {
     bool?: boolean;
 };
 
+export namespace ModelWithEnum {
+    /**
+     * This is a simple enum with strings
+     */
+    export enum test {
+        SUCCESS = 'Success',
+        WARNING = 'Warning',
+        ERROR = 'Error',
+        ØÆÅ字符串 = 'ØÆÅ字符串'
+    }
+    /**
+     * These are the HTTP error code enums
+     */
+    export enum statusCode {
+        _100 = '100',
+        _200_FOO = '200 FOO',
+        _300_FOO_BAR = '300 FOO_BAR',
+        _400_FOO_BAR = '400 foo-bar',
+        _500_FOO_BAR = '500 foo.bar',
+        _600_FOO_BAR = '600 foo&bar'
+    }
+}
+
 /**
  * This is a model with one enum
  */

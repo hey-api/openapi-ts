@@ -1,6 +1,7 @@
-import type { Plugin } from '../../types';
+import type { DefinePlugin, Plugin } from '../../types';
+import type { ExpressionTransformer } from './expressions';
 
-export interface Config extends Plugin.Name<'@hey-api/transformers'> {
+export type UserConfig = Plugin.Name<'@hey-api/transformers'> & {
   /**
    * Convert long integers into BigInt values?
    *
@@ -26,4 +27,10 @@ export interface Config extends Plugin.Name<'@hey-api/transformers'> {
    * @default 'transformers'
    */
   output?: string;
-}
+  /**
+   * Custom transforms to apply to the generated code.
+   */
+  transformers?: ReadonlyArray<ExpressionTransformer>;
+};
+
+export type HeyApiTransformersPlugin = DefinePlugin<UserConfig>;

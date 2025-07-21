@@ -1,0 +1,23 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 object property names example
+  version: 1
+components:
+  schemas:
+    Foo:
+      enum:
+        - foo
+        - bar
+      type: string
+    Bar:
+      additionalProperties:
+        type: string
+      propertyNames:
+        $ref: '#/components/schemas/Foo'
+      type: object
+    Baz:
+      additionalProperties:
+        type: integer
+      propertyNames:
+        $ref: '#/components/schemas/Foo'
+      type: object

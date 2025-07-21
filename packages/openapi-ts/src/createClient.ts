@@ -1,9 +1,13 @@
 import path from 'node:path';
 
-import { generateLegacyOutput, generateOutput } from './generate/output';
+import colors from 'ansi-colors';
+
+import { generateLegacyOutput } from './generate/legacy/output';
+import { generateOutput } from './generate/output';
 import { getSpec } from './getSpec';
 import type { IR } from './ir/types';
 import { parseLegacy, parseOpenApiSpec } from './openApi';
+import { patchOpenApiSpec } from './openApi/shared/utils/patch';
 import { processOutput } from './processOutput';
 import type { Client } from './types/client';
 import type { Config } from './types/config';
@@ -17,7 +21,7 @@ const isPlatformPath = (path: string) =>
   path.startsWith('https://get.heyapi.dev');
 // || path.startsWith('http://localhost:4000')
 
-export const compileInputPath = (input: Config['input']) => {
+export const compileInputPath = (input: Omit<Config['input'], 'watch'>) => {
   const result: Pick<
     Partial<Config['input']>,
     | 'api_key'
@@ -95,13 +99,13 @@ export const compileInputPath = (input: Config['input']) => {
 
   if (!result.organization) {
     throw new Error(
-      '🚫 missing organization - from which Hey API platform organization do you want to generate your output?',
+      'missing organization - from which Hey API Platform organization do you want to generate your output?',
     );
   }
 
   if (!result.project) {
     throw new Error(
-      '🚫 missing project - from which Hey API platform project do you want to generate your output?',
+      'missing project - from which Hey API Platform project do you want to generate your output?',
     );
   }
 
@@ -126,44 +130,34 @@ export const compileInputPath = (input: Config['input']) => {
   return result;
 };
 
-const logInputPath = ({
-  config,
-  inputPath,
-  watch,
-}: {
-  config: Config;
-  inputPath: ReturnType<typeof compileInputPath>;
-  watch?: boolean;
-}) => {
-  if (config.logs.level === 'silent') {
-    return;
-  }
-
-  if (watch) {
-    console.clear();
-  }
-
-  const baseString = watch
-    ? 'Input changed, generating from'
-    : 'Generating from';
+const logInputPath = (inputPath: ReturnType<typeof compileInputPath>) => {
+  const baseString = colors.cyan('Generating from');
 
   if (typeof inputPath.path === 'string') {
     const baseInput = isPlatformPath(inputPath.path)
-      ? `${inputPath.organization}/${inputPath.project}`
+      ? `${inputPath.organization ?? ''}/${inputPath.project ?? ''}`
       : inputPath.path;
     console.log(`⏳ ${baseString} ${baseInput}`);
     if (isPlatformPath(inputPath.path)) {
       if (inputPath.branch) {
-        console.log(`branch: ${inputPath.branch}`);
+        console.log(
+          `${colors.gray('branch:')} ${colors.green(inputPath.branch)}`,
+        );
       }
       if (inputPath.commit_sha) {
-        console.log(`commit: ${inputPath.commit_sha}`);
+        console.log(
+          `${colors.gray('commit:')} ${colors.green(inputPath.commit_sha)}`,
+        );
       }
       if (inputPath.tags?.length) {
-        console.log(`tags: ${inputPath.tags.join(', ')}`);
+        console.log(
+          `${colors.gray('tags:')} ${colors.green(inputPath.tags.join(', '))}`,
+        );
       }
       if (inputPath.version) {
-        console.log(`version: ${inputPath.version}`);
+        console.log(
+          `${colors.gray('version:')} ${colors.green(inputPath.version)}`,
+        );
       }
     }
   } else {
@@ -178,18 +172,20 @@ export const createClient = async ({
 }: {
   config: Config;
   templates: Templates;
+  /**
+   * Always falsy on the first run, truthy on subsequent runs.
+   */
   watch?: WatchValues;
 }) => {
   const inputPath = compileInputPath(config.input);
-  const timeout = config.watch.timeout;
+  const { timeout } = config.input.watch;
 
   const watch: WatchValues = _watch || { headers: new Headers() };
 
-  logInputPath({
-    config,
-    inputPath,
-    watch: Boolean(_watch),
-  });
+  // on first run, print the message as soon as possible
+  if (config.logs.level !== 'silent' && !_watch) {
+    logInputPath(inputPath);
+  }
 
   Performance.start('spec');
   const { data, error, response } = await getSpec({
@@ -213,6 +209,17 @@ export const createClient = async ({
   let context: IR.Context | undefined;
 
   if (data) {
+    // on subsequent runs in watch mode, print the mssage only if we know we're
+    // generating the output
+    if (config.logs.level !== 'silent' && _watch) {
+      console.clear();
+      logInputPath(inputPath);
+    }
+
+    Performance.start('input.patch');
+    patchOpenApiSpec({ patchOptions: config.parser.patch, spec: data });
+    Performance.end('input.patch');
+
     Performance.start('parser');
     if (
       config.experimentalParser &&
@@ -245,16 +252,18 @@ export const createClient = async ({
         const outputPath = process.env.INIT_CWD
           ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
           : config.output.path;
-        console.log(`🚀 Done! Your output is in ${outputPath}`);
+        console.log(
+          `${colors.green('🚀 Done!')} Your output is in ${colors.cyanBright(outputPath)}`,
+        );
       }
     }
     Performance.end('postprocess');
   }
 
-  if (config.watch.enabled && typeof inputPath.path === 'string') {
+  if (config.input.watch.enabled && typeof inputPath.path === 'string') {
     setTimeout(() => {
       createClient({ config, templates, watch });
-    }, config.watch.interval);
+    }, config.input.watch.interval);
   }
 
   return context || client;

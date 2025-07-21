@@ -18,5 +18,5 @@ Hey API natively supports the following mocking frameworks.
 
 Don't see your framework? Let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
-<!--@include: ../examples.md-->
-<!--@include: ../sponsors.md-->
+<!--@include: ../partials/examples.md-->
+<!--@include: ../partials/sponsors.md-->

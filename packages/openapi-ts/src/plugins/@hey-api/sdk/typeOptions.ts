@@ -1,27 +1,23 @@
 import { compiler } from '../../../compiler';
 import { clientModulePath } from '../../../generate/client';
-import type { FileImportResult } from '../../../generate/files';
-import type { IR } from '../../../ir/types';
-import type { Plugin } from '../../types';
+import type { FileImportResult } from '../../../generate/file/types';
 import { getClientPlugin } from '../client-core/utils';
 import { nuxtTypeDefault, nuxtTypeResponse, sdkId } from './constants';
-import type { Config } from './types';
+import type { HeyApiSdkPlugin } from './types';
 
 export const createTypeOptions = ({
   clientOptions,
-  context,
   plugin,
 }: {
-  clientOptions: FileImportResult;
-  context: IR.Context;
-  plugin: Plugin.Instance<Config>;
+  clientOptions: FileImportResult<string, string>;
+  plugin: HeyApiSdkPlugin['Instance'];
 }) => {
-  const file = context.file({ id: sdkId })!;
-  const client = getClientPlugin(context.config);
+  const file = plugin.context.file({ id: sdkId })!;
+  const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   const clientModule = clientModulePath({
-    config: context.config,
+    config: plugin.context.config,
     sourceOutput: file.nameWithoutExtension(),
   });
   const tDataShape = file.import({
@@ -62,7 +58,7 @@ export const createTypeOptions = ({
                 'individual options. This might be also useful if you want to implement a',
                 'custom client.',
               ],
-              isRequired: !plugin.client,
+              isRequired: !plugin.config.client,
               name: 'client',
               type: compiler.typeReferenceNode({ typeName: clientType.name }),
             },

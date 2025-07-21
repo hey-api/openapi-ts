@@ -681,26 +681,27 @@ export type ModelWithEnum = {
     bool?: boolean;
 };
 
-/**
- * This is a simple enum with strings
- */
-export enum foo_bar_enum {
-    SUCCESS = 'Success',
-    WARNING = 'Warning',
-    ERROR = 'Error',
-    ØÆÅ字符串 = 'ØÆÅ字符串'
-}
-
-/**
- * These are the HTTP error code enums
- */
-export enum statusCode {
-    _100 = '100',
-    _200_FOO = '200 FOO',
-    _300_FOO_BAR = '300 FOO_BAR',
-    _400_FOO_BAR = '400 foo-bar',
-    _500_FOO_BAR = '500 foo.bar',
-    _600_FOO_BAR = '600 foo&bar'
+export namespace ModelWithEnum {
+    /**
+     * This is a simple enum with strings
+     */
+    export enum foo_bar_enum {
+        SUCCESS = 'Success',
+        WARNING = 'Warning',
+        ERROR = 'Error',
+        ØÆÅ字符串 = 'ØÆÅ字符串'
+    }
+    /**
+     * These are the HTTP error code enums
+     */
+    export enum statusCode {
+        _100 = '100',
+        _200_FOO = '200 FOO',
+        _300_FOO_BAR = '300 FOO_BAR',
+        _400_FOO_BAR = '400 foo-bar',
+        _500_FOO_BAR = '500 foo.bar',
+        _600_FOO_BAR = '600 foo&bar'
+    }
 }
 
 /**
@@ -720,8 +721,10 @@ export type ModelWithEnumWithHyphen = {
     'foo-bar-baz-qux'?: '3.0';
 };
 
-export enum foo_bar_baz_qux {
-    _3_0 = '3.0'
+export namespace ModelWithEnumWithHyphen {
+    export enum foo_bar_baz_qux {
+        _3_0 = '3.0'
+    }
 }
 
 /**
@@ -776,6 +779,18 @@ export type ModelWithNestedEnums = {
     'foo_bar-enum'?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
 };
 
+export namespace ModelWithNestedEnums {
+    /**
+     * This is a simple enum with strings
+     */
+    export enum foo_bar_enum {
+        SUCCESS = 'Success',
+        WARNING = 'Warning',
+        ERROR = 'Error',
+        ØÆÅ字符串 = 'ØÆÅ字符串'
+    }
+}
+
 /**
  * This is a model with one nested property
  */
@@ -817,6 +832,18 @@ export type ModelWithNullableString = {
     'foo_bar-enum'?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
 };
 
+export namespace ModelWithNullableString {
+    /**
+     * This is a simple enum with strings
+     */
+    export enum foo_bar_enum {
+        SUCCESS = 'Success',
+        WARNING = 'Warning',
+        ERROR = 'Error',
+        ØÆÅ字符串 = 'ØÆÅ字符串'
+    }
+}
+
 export type ModelWithNumericEnumUnion = {
     /**
      * Период
@@ -824,17 +851,19 @@ export type ModelWithNumericEnumUnion = {
     value?: -10 | -1 | 0 | 1 | 3 | 6 | 12;
 };
 
-/**
- * Период
- */
-export enum value {
-    '_-10' = -10,
-    '_-1' = -1,
-    '_0' = 0,
-    '_1' = 1,
-    '_3' = 3,
-    '_6' = 6,
-    '_12' = 12
+export namespace ModelWithNumericEnumUnion {
+    /**
+     * Период
+     */
+    export enum value {
+        '_-10' = -10,
+        '_-1' = -1,
+        '_0' = 0,
+        '_1' = 1,
+        '_3' = 3,
+        '_6' = 6,
+        '_12' = 12
+    }
 }
 
 export type ModelWithOneOfAndProperties = (ParameterSimpleParameter | NonAsciiStringæøåÆØÅöôêÊ字符串) & {
@@ -859,8 +888,10 @@ export type ModelWithOneOfEnum = {
     foo: 'Corge';
 };
 
-export enum foo {
-    BAR = 'Bar'
+export namespace ModelWithOneOfEnum {
+    export enum foo {
+        BAR = 'Bar'
+    }
 }
 
 /**

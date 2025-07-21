@@ -72,6 +72,11 @@ describe('OpenAPI v3', () => {
     output: {
       path: '',
     },
+    parser: {
+      transforms: {
+        readWrite: false,
+      },
+    },
     plugins: [
       'legacy/fetch',
       '@hey-api/sdk',
@@ -241,13 +246,12 @@ describe('OpenAPI v3', () => {
           indexFile: false,
           path: '',
         },
-        plugins: [
-          '@hey-api/client-fetch',
-          {
-            name: '@hey-api/typescript',
-            readOnlyWriteOnlyBehavior: 'off',
+        parser: {
+          transforms: {
+            readWrite: false,
           },
-        ],
+        },
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
       }),
       description: 'generate output without index file',
       name: 'v3_no_index',
@@ -293,28 +297,15 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        plugins: [
-          'legacy/fetch',
-          {
-            enums: 'typescript+namespace',
-            name: '@hey-api/typescript',
-          },
-          {
-            asClass: true,
-            name: '@hey-api/sdk',
-          },
-        ],
-      }),
-      description: 'generate TypeScript enums with namespace',
-      name: 'v3_enums_typescript_namespace',
-    },
-    {
-      config: createConfig({
         exportCore: false,
+        parser: {
+          transforms: {
+            readWrite: false,
+          },
+        },
         plugins: [
           {
             name: '@hey-api/typescript',
-            readOnlyWriteOnlyBehavior: 'off',
             style: 'PascalCase',
           },
         ],
@@ -373,9 +364,9 @@ describe('OpenAPI v3', () => {
           },
           {
             asClass: true,
+            classNameBuilder: 'myAwesome{{name}}Api',
             include: '^(Simple|Parameters)',
             name: '@hey-api/sdk',
-            serviceNameBuilder: 'myAwesome{{name}}Api',
           },
         ],
       }),
@@ -403,12 +394,16 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
+        parser: {
+          transforms: {
+            readWrite: false,
+          },
+        },
         plugins: [
           'legacy/fetch',
           {
             enums: 'javascript',
             name: '@hey-api/typescript',
-            readOnlyWriteOnlyBehavior: 'off',
           },
           '@hey-api/sdk',
         ],
@@ -419,12 +414,12 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        plugins: [
-          {
-            name: '@hey-api/typescript',
-            readOnlyWriteOnlyBehavior: 'off',
+        parser: {
+          transforms: {
+            readWrite: false,
           },
-        ],
+        },
+        plugins: ['@hey-api/typescript'],
       }),
       description: 'generate only types with default settings',
       name: 'v3_types',
@@ -432,10 +427,14 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
+        parser: {
+          transforms: {
+            readWrite: false,
+          },
+        },
         plugins: [
           {
             name: '@hey-api/typescript',
-            readOnlyWriteOnlyBehavior: 'off',
             tree: false,
           },
         ],

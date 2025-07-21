@@ -1,0 +1,6 @@
+openapi: 3.0.4
+info:
+  title: Invalid OpenAPI 3.0.4 servers array example
+  version: 1
+servers:
+  foo: bar

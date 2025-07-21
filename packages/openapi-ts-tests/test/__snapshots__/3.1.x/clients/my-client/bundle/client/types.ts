@@ -1,9 +1,5 @@
-import type {
-  Auth,
-  Client as CoreClient,
-  Config as CoreConfig,
-} from '@hey-api/client-core';
-
+import type { Auth } from './core/auth';
+import type { Client as CoreClient, Config as CoreConfig } from './core/types';
 import type { Middleware } from './utils';
 
 export interface Config<T extends ClientOptions = ClientOptions>
@@ -28,7 +24,14 @@ export interface Config<T extends ClientOptions = ClientOptions>
    *
    * @default 'auto'
    */
-  parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'auto' | 'stream';
+  parseAs?:
+    | 'arrayBuffer'
+    | 'auto'
+    | 'blob'
+    | 'formData'
+    | 'json'
+    | 'stream'
+    | 'text';
   /**
    * Throw an error instead of returning it in the response?
    *

@@ -5,7 +5,7 @@ import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
 import { type ParentModelWithDatesResponse, type ModelWithDatesResponse, type ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse, ParentModelWithDatesResponseTransformer, ModelWithDatesResponseTransformer, ModelWithDatesArrayResponseTransformer } from './types.gen';
 
-export class DefaultService {
+export class Default {
     /**
      * @returns ParentModelWithDates Success
      * @returns unknown Success
@@ -76,5 +76,4 @@ export class DefaultService {
             url: '/api/multiple-responses'
         });
     }
-    
 }

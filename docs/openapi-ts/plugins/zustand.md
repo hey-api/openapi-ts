@@ -13,4 +13,4 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 [Zustand](https://zustand-demo.pmnd.rs) is a small, fast, and scalable bearbones state management solution.
 
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/sponsors.md-->

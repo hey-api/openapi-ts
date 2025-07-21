@@ -3,7 +3,6 @@ import { clientApi } from '../../../generate/client';
 import { hasOperationDataRequired } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { getClientBaseUrlKey } from '../../@hey-api/client-core/utils';
-import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import type { PluginInstance } from './types';
 import { useTypeData } from './useType';
 
@@ -15,16 +14,16 @@ const infiniteIdentifier = compiler.identifier({ text: 'infinite' });
 const optionsIdentifier = compiler.identifier({ text: 'options' });
 
 export const createQueryKeyFunction = ({
-  context,
   plugin,
 }: {
-  context: IR.Context;
   plugin: PluginInstance;
 }) => {
-  const file = context.file({ id: plugin.name })!;
+  const file = plugin.context.file({ id: plugin.name })!;
 
   const identifierCreateQueryKey = file.identifier({
-    $ref: `#/ir/${createQueryKeyFn}`,
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-create-query-key/${createQueryKeyFn}`,
+    case: plugin.config.case,
     create: true,
     namespace: 'value',
   });
@@ -39,6 +38,8 @@ export const createQueryKeyFunction = ({
         typeName: queryKeyName,
       }),
     });
+
+    const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
 
     const fn = compiler.constVariable({
       expression: compiler.arrowFunction({
@@ -73,9 +74,9 @@ export const createQueryKeyFunction = ({
                   value: compiler.identifier({ text: 'id' }),
                 },
                 {
-                  key: getClientBaseUrlKey(context.config),
+                  key: baseUrlKey,
                   value: compiler.identifier({
-                    text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey(context.config)}`,
+                    text: `options?.${baseUrlKey} || (options?.client ?? _heyApiClient).getConfig().${baseUrlKey}`,
                   }),
                 },
               ],
@@ -215,19 +216,19 @@ export const createQueryKeyFunction = ({
 };
 
 const createQueryKeyLiteral = ({
-  context,
   id,
   isInfinite,
   plugin,
 }: {
-  context: IR.Context;
   id: string;
   isInfinite?: boolean;
   plugin: PluginInstance;
 }) => {
-  const file = context.file({ id: plugin.name })!;
+  const file = plugin.context.file({ id: plugin.name })!;
   const identifierCreateQueryKey = file.identifier({
-    $ref: `#/ir/${createQueryKeyFn}`,
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-create-query-key/${createQueryKeyFn}`,
+    case: plugin.config.case,
     namespace: 'value',
   });
   const createQueryKeyCallExpression = compiler.callExpression({
@@ -241,16 +242,10 @@ const createQueryKeyLiteral = ({
   return createQueryKeyCallExpression;
 };
 
-export const createQueryKeyType = ({
-  context,
-  plugin,
-}: {
-  context: IR.Context;
-  plugin: PluginInstance;
-}) => {
-  const file = context.file({ id: plugin.name })!;
+export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
+  const file = plugin.context.file({ id: plugin.name })!;
 
-  const properties: Property[] = [
+  const properties: Array<Property> = [
     {
       name: '_id',
       type: compiler.keywordTypeNode({
@@ -274,7 +269,7 @@ export const createQueryKeyType = ({
         compiler.typeIntersectionNode({
           types: [
             compiler.typeReferenceNode({
-              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(context.config)}' | 'body' | 'headers' | 'path' | 'query'>`,
+              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(plugin.context.config)}' | 'body' | 'headers' | 'path' | 'query'>`,
             }),
             compiler.typeInterfaceNode({
               properties,
@@ -298,46 +293,36 @@ export const createQueryKeyType = ({
   file.add(queryKeyType);
 };
 
-export const queryKeyFunctionIdentifier = ({
-  context,
-  isInfinite,
-  operation,
-}: {
-  context: IR.Context;
-  isInfinite?: boolean;
-  operation: IR.OperationObject;
-}) =>
-  `${serviceFunctionIdentifier({
-    config: context.config,
-    id: operation.id,
-    operation,
-  })}${isInfinite ? 'Infinite' : ''}QueryKey`;
-
 export const queryKeyStatement = ({
-  context,
   isInfinite,
   operation,
   plugin,
   typeQueryKey,
 }: {
-  context: IR.Context;
   isInfinite: boolean;
   operation: IR.OperationObject;
   plugin: PluginInstance;
   typeQueryKey?: string;
 }) => {
-  const file = context.file({ id: plugin.name })!;
-  const typeData = useTypeData({ context, operation, plugin });
-  const name = queryKeyFunctionIdentifier({
-    context,
-    isInfinite,
-    operation,
-  });
-  const identifierQueryKey = file.identifier({
-    $ref: `#/queryKey/${name}`,
-    create: true,
-    namespace: 'value',
-  });
+  const file = plugin.context.file({ id: plugin.name })!;
+  const typeData = useTypeData({ operation, plugin });
+  const identifier = isInfinite
+    ? file.identifier({
+        // TODO: refactor for better cross-plugin compatibility
+        $ref: `#/tanstack-query-infinite-query-key/${operation.id}`,
+        case: plugin.config.infiniteQueryKeys.case,
+        create: true,
+        nameTransformer: plugin.config.infiniteQueryKeys.name,
+        namespace: 'value',
+      })
+    : file.identifier({
+        // TODO: refactor for better cross-plugin compatibility
+        $ref: `#/tanstack-query-query-key/${operation.id}`,
+        case: plugin.config.queryKeys.case,
+        create: true,
+        nameTransformer: plugin.config.queryKeys.name,
+        namespace: 'value',
+      });
   const statement = compiler.constVariable({
     exportConst: true,
     expression: compiler.arrowFunction({
@@ -350,13 +335,12 @@ export const queryKeyStatement = ({
       ],
       returnType: isInfinite ? typeQueryKey : undefined,
       statements: createQueryKeyLiteral({
-        context,
         id: operation.id,
         isInfinite,
         plugin,
       }),
     }),
-    name: identifierQueryKey.name || '',
+    name: identifier.name || '',
   });
   return statement;
 };

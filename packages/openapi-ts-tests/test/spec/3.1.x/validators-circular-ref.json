@@ -1,0 +1,37 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1.0 validators circular reference example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "properties": {
+          "foo": {
+            "$ref": "#/components/schemas/Bar"
+          }
+        },
+        "type": "object"
+      },
+      "Bar": {
+        "properties": {
+          "bar": {
+            "items": {
+              "$ref": "#/components/schemas/Bar"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "Baz": {
+        "$ref": "#/components/schemas/Qux"
+      },
+      "Qux": {
+        "description": "description caused circular reference error",
+        "$ref": "#/components/schemas/Baz"
+      }
+    }
+  }
+}

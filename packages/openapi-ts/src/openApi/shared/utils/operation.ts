@@ -1,43 +1,19 @@
+import { createOperationKey } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { stringCase } from '../../../utils/stringCase';
 import { sanitizeNamespaceIdentifier } from '../../common/parser/sanitize';
 import type { State } from '../types/state';
 
-/**
- * Verifies that operation ID is unique. For now, we only warn when this isn't
- * true as people like to not follow this part of the specification. In the
- * future, we should add a strict check and throw on duplicate identifiers.
- */
-export const ensureUniqueOperationId = ({
-  context,
-  id,
-  method,
-  operationIds,
-  path,
-}: {
-  context: IR.Context;
-  id: string | undefined;
-  method: IR.OperationObject['method'];
-  operationIds: Map<string, string>;
-  path: keyof IR.PathsObject;
-}) => {
-  if (!id) {
-    return;
-  }
-
-  const operationKey = `${method.toUpperCase()} ${path}`;
-
-  if (operationIds.has(id)) {
-    if (context.config.logs.level !== 'silent') {
-      // TODO: parser - support throw on duplicate
-      console.warn(
-        `❗️ Duplicate operationId: ${id} in ${operationKey}. Please ensure your operation IDs are unique. This behavior is not supported and will likely lead to unexpected results.`,
-      );
-    }
-  } else {
-    operationIds.set(id, operationKey);
-  }
-};
+export const httpMethods = [
+  'delete',
+  'get',
+  'head',
+  'options',
+  'patch',
+  'post',
+  'put',
+  'trace',
+] as const;
 
 /**
  * Returns an operation ID to use across the application. By default, we try
@@ -63,27 +39,27 @@ export const operationToId = ({
 
   const { output } = context.config;
   const targetCase =
-    (output !== void 0 && 'case' in output ? output.case : void 0) ??
+    (output !== undefined && 'case' in output ? output.case : undefined) ??
     'camelCase';
 
   if (
     id &&
     (!context.config.plugins['@hey-api/sdk'] ||
-      context.config.plugins['@hey-api/sdk'].operationId)
+      context.config.plugins['@hey-api/sdk'].config.operationId)
   ) {
     result = stringCase({
       case: targetCase,
       value: sanitizeNamespaceIdentifier(id),
     });
   } else {
-    const urlWithoutPlaceholders = path
+    const pathWithoutPlaceholders = path
       .replace(/{(.*?)}/g, 'by-$1')
       // replace slashes with hyphens for camelcase method at the end
       .replace(/[/:+]/g, '-');
 
     result = stringCase({
       case: targetCase,
-      value: `${method}-${urlWithoutPlaceholders}`,
+      value: `${method}-${pathWithoutPlaceholders}`,
     });
   }
 
@@ -102,8 +78,7 @@ export const operationToId = ({
     });
   }
 
-  const operationKey = `${method.toUpperCase()} ${path}`;
-  state.ids.set(result, operationKey);
+  state.ids.set(result, createOperationKey({ method, path }));
 
   return result;
 };

@@ -1,8 +1,11 @@
 export const clientDefaultConfig = {
-  _dependencies: ['@hey-api/typescript'],
-  _tags: ['client'],
   baseUrl: true,
-  bundle: false,
+  bundle: true,
   exportFromIndex: false,
+} as const;
+
+export const clientDefaultMeta = {
+  dependencies: ['@hey-api/typescript'],
   output: 'client',
+  tags: ['client'],
 } as const;

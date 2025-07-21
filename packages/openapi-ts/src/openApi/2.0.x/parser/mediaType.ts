@@ -52,19 +52,22 @@ export const contentToSchema = ({
   return schema;
 };
 
-export const mediaTypeObject = ({
+export const mediaTypeObjects = ({
   mimeTypes,
   response,
 }: {
   mimeTypes: ReadonlyArray<string> | undefined;
   response: Pick<ResponseObject, 'schema'>;
-}): Content | undefined => {
-  // return the first supported MIME type
+}): ReadonlyArray<Content> => {
+  const objects: Array<Content> = [];
+
   for (const mediaType of mimeTypes ?? []) {
-    return {
+    objects.push({
       mediaType,
       schema: response.schema,
       type: mediaTypeToIrMediaType({ mediaType }),
-    };
+    });
   }
+
+  return objects;
 };

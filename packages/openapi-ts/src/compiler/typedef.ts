@@ -3,15 +3,18 @@ import ts from 'typescript';
 import { validTypescriptIdentifierRegExp } from '../utils/regexp';
 import {
   createKeywordTypeNode,
+  createMappedTypeNode,
   createParameterDeclaration,
   createStringLiteral,
   createTypeNode,
+  createTypeParameterDeclaration,
   createTypeReferenceNode,
 } from './types';
 import {
   addLeadingComments,
   type Comments,
   createIdentifier,
+  createModifier,
   tsNodeToString,
 } from './utils';
 
@@ -50,13 +53,26 @@ const maybeNullable = ({
  * @returns ts.TypeLiteralNode | ts.TypeUnionNode
  */
 export const createTypeInterfaceNode = ({
+  indexKey,
   indexProperty,
   isNullable,
   properties,
   useLegacyResolution,
 }: {
   /**
+   * Adds an index key type.
+   *
+   * @example
+   * ```ts
+   * type IndexKey = {
+   *   [key in Foo]: string
+   * }
+   * ```
+   */
+  indexKey?: ts.TypeReferenceNode;
+  /**
    * Adds an index signature if defined.
+   *
    * @example
    * ```ts
    * type IndexProperty = {
@@ -71,59 +87,85 @@ export const createTypeInterfaceNode = ({
 }) => {
   const propertyTypes: Array<ts.TypeNode> = [];
 
-  const members: Array<ts.TypeElement> = properties.map((property) => {
-    const modifiers: readonly ts.Modifier[] | undefined = property.isReadOnly
-      ? [ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword)]
-      : undefined;
+  const members: Array<ts.TypeElement | ts.MappedTypeNode> = properties.map(
+    (property) => {
+      const modifiers: readonly ts.Modifier[] | undefined = property.isReadOnly
+        ? [createModifier({ keyword: 'readonly' })]
+        : undefined;
 
-    const questionToken: ts.QuestionToken | undefined =
-      property.isRequired !== false
-        ? undefined
-        : ts.factory.createToken(ts.SyntaxKind.QuestionToken);
+      const questionToken: ts.QuestionToken | undefined =
+        property.isRequired !== false
+          ? undefined
+          : ts.factory.createToken(ts.SyntaxKind.QuestionToken);
 
-    const type: ts.TypeNode | undefined = createTypeNode(property.type);
-    propertyTypes.push(type);
+      const type: ts.TypeNode | undefined = createTypeNode(property.type);
+      propertyTypes.push(type);
 
-    const signature = ts.factory.createPropertySignature(
-      modifiers,
-      useLegacyResolution ||
-        (typeof property.name === 'string' &&
-          property.name.match(validTypescriptIdentifierRegExp)) ||
-        (typeof property.name !== 'string' && ts.isPropertyName(property.name))
-        ? property.name
-        : createStringLiteral({ text: property.name }),
-      questionToken,
-      type,
-    );
+      const signature = ts.factory.createPropertySignature(
+        modifiers,
+        useLegacyResolution ||
+          (typeof property.name === 'string' &&
+            property.name.match(validTypescriptIdentifierRegExp)) ||
+          (typeof property.name !== 'string' &&
+            ts.isPropertyName(property.name))
+          ? property.name
+          : createStringLiteral({ text: property.name }),
+        questionToken,
+        type,
+      );
 
-    addLeadingComments({
-      comments: property.comment,
-      node: signature,
-    });
+      addLeadingComments({
+        comments: property.comment,
+        node: signature,
+      });
 
-    return signature;
-  });
+      return signature;
+    },
+  );
+
+  let isIndexMapped = false;
 
   if (indexProperty) {
-    const modifiers: readonly ts.Modifier[] | undefined =
-      indexProperty.isReadOnly
-        ? [ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword)]
-        : undefined;
-    const indexSignature = ts.factory.createIndexSignature(
-      modifiers,
-      [
-        createParameterDeclaration({
+    if (!properties.length && indexKey) {
+      const indexSignature = createMappedTypeNode({
+        questionToken: ts.factory.createToken(ts.SyntaxKind.QuestionToken),
+        type:
+          indexProperty.type ?? createKeywordTypeNode({ keyword: 'string' }),
+        typeParameter: createTypeParameterDeclaration({
+          constraint: indexKey,
           name: createIdentifier({ text: String(indexProperty.name) }),
-          type: createKeywordTypeNode({ keyword: 'string' }),
         }),
-      ],
-      createTypeNode(indexProperty.type),
-    );
-    members.push(indexSignature);
+      });
+      members.push(indexSignature);
+      isIndexMapped = true;
+    } else {
+      const modifiers: ReadonlyArray<ts.Modifier> | undefined =
+        indexProperty.isReadOnly
+          ? [createModifier({ keyword: 'readonly' })]
+          : undefined;
+      const indexSignature = ts.factory.createIndexSignature(
+        modifiers,
+        [
+          createParameterDeclaration({
+            name: createIdentifier({ text: String(indexProperty.name) }),
+            type: createKeywordTypeNode({ keyword: 'string' }),
+          }),
+        ],
+        createTypeNode(indexProperty.type),
+      );
+      members.push(indexSignature);
+    }
   }
 
-  const node = ts.factory.createTypeLiteralNode(members);
-  return maybeNullable({ isNullable, node });
+  const node = isIndexMapped
+    ? members[0]!
+    : // @ts-expect-error
+      ts.factory.createTypeLiteralNode(members);
+  return maybeNullable({
+    isNullable,
+    // @ts-expect-error
+    node,
+  });
 };
 
 /**
@@ -137,7 +179,7 @@ export const createTypeUnionNode = ({
   types,
 }: {
   isNullable?: boolean;
-  types: (any | ts.TypeNode)[];
+  types: ReadonlyArray<any | ts.TypeNode>;
 }) => {
   const nodes = types.map((type) => createTypeNode(type));
   const node = ts.factory.createUnionTypeNode(nodes);
@@ -221,7 +263,11 @@ export const createTypeRecordNode = (
  * @returns ts.TypeReferenceNode | ts.UnionTypeNode
  */
 export const createTypeArrayNode = (
-  types: (any | ts.TypeNode)[] | ts.TypeNode | string,
+  types:
+    | ReadonlyArray<any | ts.TypeNode>
+    | ts.TypeNode
+    | ts.Identifier
+    | string,
   isNullable: boolean = false,
 ) => {
   const node = createTypeReferenceNode({

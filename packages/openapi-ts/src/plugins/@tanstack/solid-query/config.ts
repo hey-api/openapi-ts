@@ -1,24 +1,93 @@
-import type { Plugin } from '../../types';
+import { definePluginConfig } from '../../shared/utils/config';
 import { handler } from '../query-core/plugin';
 import { handlerLegacy } from '../query-core/plugin-legacy';
-import type { Config } from './types';
+import type { TanStackSolidQueryPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config> = {
-  _dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
-  _handler: handler,
-  _handlerLegacy: handlerLegacy,
-  exportFromIndex: false,
-  infiniteQueryOptions: true,
-  mutationOptions: true,
+export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
+  config: {
+    case: 'camelCase',
+    comments: true,
+    exportFromIndex: false,
+  },
+  dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
+  handler: handler as TanStackSolidQueryPlugin['Handler'],
+  handlerLegacy: handlerLegacy as TanStackSolidQueryPlugin['LegacyHandler'],
   name: '@tanstack/solid-query',
   output: '@tanstack/solid-query',
-  queryOptions: true,
+  resolveConfig: (plugin, context) => {
+    plugin.config.infiniteQueryKeys = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: '{{name}}InfiniteQueryKey',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.infiniteQueryKeys,
+    });
+
+    plugin.config.infiniteQueryOptions = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: '{{name}}InfiniteOptions',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.infiniteQueryOptions,
+    });
+
+    plugin.config.mutationOptions = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: '{{name}}Mutation',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.mutationOptions,
+    });
+
+    plugin.config.queryKeys = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: '{{name}}QueryKey',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.queryKeys,
+    });
+
+    plugin.config.queryOptions = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: '{{name}}Options',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.queryOptions,
+    });
+  },
 };
 
 /**
  * Type helper for `@tanstack/solid-query` plugin, returns {@link Plugin.Config} object
  */
-export const defineConfig: Plugin.DefineConfig<Config> = (config) => ({
-  ...defaultConfig,
-  ...config,
-});
+export const defineConfig = definePluginConfig(defaultConfig);

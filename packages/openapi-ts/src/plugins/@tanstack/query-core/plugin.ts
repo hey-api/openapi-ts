@@ -1,17 +1,17 @@
 import { clientApi } from '../../../generate/client';
-import { getServiceName } from '../../../utils/postprocess';
-import { transformServiceName } from '../../../utils/transform';
+import { stringCase } from '../../../utils/stringCase';
 import { clientId } from '../../@hey-api/client-core/utils';
 import { sdkId } from '../../@hey-api/sdk/constants';
+import { operationClasses } from '../../@hey-api/sdk/operation';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { createInfiniteQueryOptions } from './infiniteQueryOptions';
 import { createMutationOptions } from './mutationOptions';
 import { createQueryOptions } from './queryOptions';
 import type { PluginHandler, PluginState } from './types';
 
-export const handler: PluginHandler = ({ context, plugin }) => {
-  const file = context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+export const handler = ({ plugin }: Parameters<PluginHandler>[0]) => {
+  const file = plugin.createFile({
+    case: plugin.config.case,
     id: plugin.name,
     path: plugin.output,
   });
@@ -26,34 +26,49 @@ export const handler: PluginHandler = ({ context, plugin }) => {
     typeInfiniteData: undefined!,
   };
 
-  context.subscribe('before', () => {
-    file.import({
-      ...clientApi.Options,
-      module: file.relativePathToFile({ context, id: sdkId }),
-    });
+  file.import({
+    ...clientApi.Options,
+    module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
   });
 
-  context.subscribe('operation', ({ operation }) => {
+  plugin.forEach('operation', ({ operation }) => {
     state.hasUsedQueryFn = false;
 
-    const queryFn = [
-      context.config.plugins['@hey-api/sdk']?.asClass &&
-        transformServiceName({
-          config: context.config,
-          name: getServiceName(operation.tags?.[0] || 'default'),
-        }),
-      serviceFunctionIdentifier({
-        config: context.config,
-        handleIllegal: !context.config.plugins['@hey-api/sdk']?.asClass,
-        id: operation.id,
-        operation,
-      }),
-    ]
-      .filter(Boolean)
-      .join('.');
+    const sdkPlugin = plugin.getPlugin('@hey-api/sdk');
+    const classes = sdkPlugin?.config.asClass
+      ? operationClasses({
+          context: plugin.context,
+          operation,
+          plugin: sdkPlugin,
+        })
+      : undefined;
+    const entry = classes ? classes.values().next().value : undefined;
+    const queryFn =
+      // TODO: this should use class graph to determine correct path string
+      // as it's really easy to break once we change the class casing
+      (
+        entry
+          ? [
+              entry.path[0],
+              ...entry.path.slice(1).map((className) =>
+                stringCase({
+                  case: 'camelCase',
+                  value: className,
+                }),
+              ),
+              entry.methodName,
+            ].filter(Boolean)
+          : [
+              serviceFunctionIdentifier({
+                config: plugin.context.config,
+                handleIllegal: true,
+                id: operation.id,
+                operation,
+              }),
+            ]
+      ).join('.');
 
     createQueryOptions({
-      context,
       operation,
       plugin,
       queryFn,
@@ -61,7 +76,6 @@ export const handler: PluginHandler = ({ context, plugin }) => {
     });
 
     createInfiniteQueryOptions({
-      context,
       operation,
       plugin,
       queryFn,
@@ -69,7 +83,6 @@ export const handler: PluginHandler = ({ context, plugin }) => {
     });
 
     createMutationOptions({
-      context,
       operation,
       plugin,
       queryFn,
@@ -78,19 +91,20 @@ export const handler: PluginHandler = ({ context, plugin }) => {
 
     if (state.hasUsedQueryFn) {
       file.import({
-        module: file.relativePathToFile({ context, id: sdkId }),
+        module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
         name: queryFn.split('.')[0]!,
       });
     }
   });
 
-  context.subscribe('after', () => {
-    if (state.hasQueries || state.hasInfiniteQueries) {
-      file.import({
-        alias: '_heyApiClient',
-        module: file.relativePathToFile({ context, id: clientId }),
-        name: 'client',
-      });
-    }
-  });
+  if (state.hasQueries || state.hasInfiniteQueries) {
+    file.import({
+      alias: '_heyApiClient',
+      module: file.relativePathToFile({
+        context: plugin.context,
+        id: clientId,
+      }),
+      name: 'client',
+    });
+  }
 };

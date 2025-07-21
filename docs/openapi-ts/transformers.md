@@ -39,7 +39,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     '@hey-api/transformers', // [!code ++]
   ],
 };
@@ -57,7 +56,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     '@hey-api/transformers',
     {
       name: '@hey-api/sdk', // [!code ++]
@@ -79,7 +77,6 @@ export default {
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
-    '@hey-api/client-fetch',
     {
       dates: true, // [!code ++]
       name: '@hey-api/transformers',
@@ -142,4 +139,8 @@ export type GetFooResponse = Baz;
 
 :::
 
-<!--@include: ../sponsors.md-->
+## Config API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/transformers/types.d.ts) interface.
+
+<!--@include: ../partials/sponsors.md-->

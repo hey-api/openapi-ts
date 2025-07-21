@@ -1,7 +1,15 @@
 import type { IR } from '../../../ir/types';
+import { buildResourceMetadata } from '../../shared/graph/meta';
+import { transformOpenApiSpec } from '../../shared/transforms';
 import type { State } from '../../shared/types/state';
-import { canProcessRef, createFilters } from '../../shared/utils/filter';
+import {
+  createFilteredDependencies,
+  createFilters,
+  hasFilters,
+} from '../../shared/utils/filter';
+import { buildGraph } from '../../shared/utils/graph';
 import { mergeParametersObjects } from '../../shared/utils/parameter';
+import { handleValidatorResult } from '../../shared/utils/validator';
 import type {
   OpenApiV2_0_X,
   OperationObject,
@@ -9,31 +17,41 @@ import type {
   PathsObject,
   SecuritySchemeObject,
 } from '../types/spec';
+import { filterSpec } from './filter';
 import { parseOperation } from './operation';
 import { parametersArrayToObject } from './parameter';
 import { parseSchema } from './schema';
 import { parseServers } from './server';
+import { validateOpenApiSpec } from './validate';
 
 type PathKeys<T extends keyof PathsObject = keyof PathsObject> =
   keyof T extends infer K ? (K extends `/${string}` ? K : never) : never;
 
 export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
+  if (context.config.parser.validate_EXPERIMENTAL) {
+    const result = validateOpenApiSpec(context.spec);
+    handleValidatorResult({ context, result });
+  }
+
+  const shouldFilterSpec = hasFilters(context.config.parser.filters);
+  if (shouldFilterSpec) {
+    const filters = createFilters(context.config.parser.filters, context.spec);
+    const { graph } = buildGraph(context.spec);
+    const { resourceMetadata } = buildResourceMetadata(graph);
+    const sets = createFilteredDependencies({ filters, resourceMetadata });
+    filterSpec({
+      ...sets,
+      preserveOrder: filters.preserveOrder,
+      spec: context.spec,
+    });
+  }
+
+  transformOpenApiSpec({ context });
+
   const state: State = {
     ids: new Map(),
-    operationIds: new Map(),
   };
   const securitySchemesMap = new Map<string, SecuritySchemeObject>();
-
-  const excludeFilters = createFilters(context.config.input.exclude);
-  const includeFilters = createFilters(context.config.input.include);
-
-  const shouldProcessRef = ($ref: string, schema: Record<string, any>) =>
-    canProcessRef({
-      $ref,
-      excludeFilters,
-      includeFilters,
-      schema,
-    });
 
   for (const name in context.spec.securityDefinitions) {
     const securitySchemeObject = context.spec.securityDefinitions[name]!;
@@ -44,10 +62,6 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
     for (const name in context.spec.definitions) {
       const $ref = `#/definitions/${name}`;
       const schema = context.spec.definitions[name]!;
-
-      if (!shouldProcessRef($ref, schema)) {
-        continue;
-      }
 
       parseSchema({
         $ref,
@@ -95,11 +109,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
         state,
       };
 
-    const $refDelete = `#/paths${path}/delete`;
-    if (
-      finalPathItem.delete &&
-      shouldProcessRef($refDelete, finalPathItem.delete)
-    ) {
+    if (finalPathItem.delete) {
       const parameters = mergeParametersObjects({
         source: parametersArrayToObject({
           context,
@@ -119,8 +129,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
       });
     }
 
-    const $refGet = `#/paths${path}/get`;
-    if (finalPathItem.get && shouldProcessRef($refGet, finalPathItem.get)) {
+    if (finalPathItem.get) {
       const parameters = mergeParametersObjects({
         source: parametersArrayToObject({
           context,
@@ -140,8 +149,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
       });
     }
 
-    const $refHead = `#/paths${path}/head`;
-    if (finalPathItem.head && shouldProcessRef($refHead, finalPathItem.head)) {
+    if (finalPathItem.head) {
       const parameters = mergeParametersObjects({
         source: parametersArrayToObject({
           context,
@@ -161,11 +169,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
       });
     }
 
-    const $refOptions = `#/paths${path}/options`;
-    if (
-      finalPathItem.options &&
-      shouldProcessRef($refOptions, finalPathItem.options)
-    ) {
+    if (finalPathItem.options) {
       const parameters = mergeParametersObjects({
         source: parametersArrayToObject({
           context,
@@ -185,11 +189,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
       });
     }
 
-    const $refPatch = `#/paths${path}/patch`;
-    if (
-      finalPathItem.patch &&
-      shouldProcessRef($refPatch, finalPathItem.patch)
-    ) {
+    if (finalPathItem.patch) {
       const parameters = mergeParametersObjects({
         source: parametersArrayToObject({
           context,
@@ -209,8 +209,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
       });
     }
 
-    const $refPost = `#/paths${path}/post`;
-    if (finalPathItem.post && shouldProcessRef($refPost, finalPathItem.post)) {
+    if (finalPathItem.post) {
       const parameters = mergeParametersObjects({
         source: parametersArrayToObject({
           context,
@@ -230,8 +229,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
       });
     }
 
-    const $refPut = `#/paths${path}/put`;
-    if (finalPathItem.put && shouldProcessRef($refPut, finalPathItem.put)) {
+    if (finalPathItem.put) {
       const parameters = mergeParametersObjects({
         source: parametersArrayToObject({
           context,

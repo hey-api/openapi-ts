@@ -5,7 +5,7 @@ import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
 import type { CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData } from './types.gen';
 
-export class DefaultsService {
+export class Defaults {
     /**
      * @param parameterString This is a simple string with default value
      * @param parameterNumber This is a simple number with default value
@@ -81,5 +81,4 @@ export class DefaultsService {
             }
         });
     }
-    
 }

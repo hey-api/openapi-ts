@@ -3,8 +3,6 @@ import type { PluginClientNames } from '../../types';
 
 export const clientId = 'client';
 
-type Plugins = Required<Config>['plugins'];
-
 export const getClientBaseUrlKey = (config: Config) => {
   const client = getClientPlugin(config);
   if (
@@ -18,15 +16,21 @@ export const getClientBaseUrlKey = (config: Config) => {
 
 export const getClientPlugin = (
   config: Config,
-): Required<Plugins>[PluginClientNames] => {
+): Config['plugins'][PluginClientNames] & { name: PluginClientNames } => {
   for (const name of config.pluginOrder) {
     const plugin = config.plugins[name];
-    if (plugin?._tags?.includes('client')) {
-      return plugin as Required<Plugins>[PluginClientNames];
+    if (plugin?.tags?.includes('client')) {
+      return plugin as Config['plugins'][PluginClientNames] & {
+        name: PluginClientNames;
+      };
     }
   }
 
   return {
+    config: {
+      // @ts-expect-error
+      name: '',
+    },
     // @ts-expect-error
     name: '',
   };

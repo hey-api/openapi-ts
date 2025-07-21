@@ -1,24 +1,23 @@
-import type { Plugin } from '../../types';
+import { definePluginConfig } from '../../shared/utils/config';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiTransformersPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config> = {
-  _dependencies: ['@hey-api/typescript'],
-  _handler: handler,
-  _handlerLegacy: handlerLegacy,
-  _tags: ['transformer'],
-  bigInt: true,
-  dates: true,
-  exportFromIndex: false,
+export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
+  config: {
+    bigInt: true,
+    dates: true,
+    exportFromIndex: false,
+  },
+  dependencies: ['@hey-api/typescript'],
+  handler,
+  handlerLegacy,
   name: '@hey-api/transformers',
   output: 'transformers',
+  tags: ['transformer'],
 };
 
 /**
  * Type helper for `@hey-api/transformers`, returns {@link Plugin.Config} object
  */
-export const defineConfig: Plugin.DefineConfig<Config> = (config) => ({
-  ...defaultConfig,
-  ...config,
-});
+export const defineConfig = definePluginConfig(defaultConfig);

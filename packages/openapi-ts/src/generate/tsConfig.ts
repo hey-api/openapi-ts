@@ -7,6 +7,27 @@ import ts from 'typescript';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+export const findPackageJson = (): unknown | undefined => {
+  let dir = __dirname;
+  while (dir !== path.dirname(dir)) {
+    const files = fs.readdirSync(dir);
+    const candidates = files.filter((file) => file === 'package.json');
+
+    if (candidates[0]) {
+      const packageJsonPath = path.join(dir, candidates[0]);
+      return JSON.parse(
+        fs.readFileSync(packageJsonPath, {
+          encoding: 'utf8',
+        }),
+      );
+    }
+
+    dir = path.dirname(dir);
+  }
+
+  return;
+};
+
 export const findTsConfigPath = (
   tsConfigPath?: 'off' | (string & {}),
 ): string | null => {
