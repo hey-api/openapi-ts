@@ -3,7 +3,7 @@ title: Valibot
 description: Valibot plugin for Hey API. Compatible with all our features.
 ---
 
-<!-- <script setup>
+<!-- <script setup lang="ts">
 import { embedProject } from '../../embed'
 </script> -->
 

@@ -3,7 +3,7 @@ title: Fetch API client
 description: Fetch API client for Hey API. Compatible with all our features.
 ---
 
-<script setup>
+<script setup lang="ts">
 import { embedProject } from '../../embed'
 </script>
 

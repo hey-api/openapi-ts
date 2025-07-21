@@ -3,7 +3,7 @@ title: Axios client
 description: Axios client for Hey API. Compatible with all our features.
 ---
 
-<script setup>
+<script setup lang="ts">
 import { embedProject } from '../../embed'
 </script>
 
