@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.79.2
+
+### Patch Changes
+
+- [#2034](https://github.com/hey-api/openapi-ts/pull/2034) [`257dd07`](https://github.com/hey-api/openapi-ts/commit/257dd0711f81221c49d26dc57c079f1ae956ca6e) Thanks [@Le0Developer](https://github.com/Le0Developer)! - fix(typescript): add support for TypeID types
+
+- [#2041](https://github.com/hey-api/openapi-ts/pull/2041) [`2755be9`](https://github.com/hey-api/openapi-ts/commit/2755be939376227969d2b216f556666cef67f01a) Thanks [@alexvuka1](https://github.com/alexvuka1)! - fix(parser): respect `output.case` when generating operation id
+
 ## 0.79.1
 
 ### Patch Changes
