@@ -3,7 +3,7 @@ title: Get Started
 description: Get started with @hey-api/openapi-ts.
 ---
 
-<script setup>
+<script setup lang="ts">
 import { embedProject } from '../embed'
 </script>
 

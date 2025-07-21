@@ -3,7 +3,7 @@ title: Legacy clients
 description: Legacy clients for Hey API.
 ---
 
-<script setup>
+<script setup lang="ts">
 import { embedProject } from '../../embed'
 </script>
 

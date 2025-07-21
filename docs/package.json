@@ -11,7 +11,8 @@
     "preview": "vitepress preview"
   },
   "dependencies": {
-    "@stackblitz/sdk": "1.11.0"
+    "@stackblitz/sdk": "1.11.0",
+    "vue3-select-component": "0.11.8"
   },
   "devDependencies": {
     "sharp": "0.33.5",
