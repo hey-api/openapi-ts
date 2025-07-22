@@ -1,5 +1,6 @@
 - [Alessandro](https://github.com/ale18V)
 - [Alex Sarychev](https://github.com/Freddis)
+- [Alex Vukadinov](https://github.com/alexvuka1)
 - [Alex Yang](https://github.com/himself65)
 - [Alexander Horner](https://github.com/alexanderhorner)
 - [Alexander Skvortcov](https://github.com/askvortcov)
