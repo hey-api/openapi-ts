@@ -4,7 +4,7 @@ import { compiler } from '../../compiler';
 import type { IR } from '../../ir/types';
 import { createSchemaComment } from '../shared/utils/schema';
 import { identifiers, zodId } from './constants';
-import type { ZodSchema } from './plugin';
+import type { ZodSchema } from './shared/types';
 import type { ZodPlugin } from './types';
 
 export const exportZodSchema = ({

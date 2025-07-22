@@ -1,11 +1,11 @@
-import { operationResponsesMap } from '../../ir/operation';
-import type { IR } from '../../ir/types';
-import { buildName } from '../../openApi/shared/utils/name';
-import { zodId } from './constants';
-import { exportZodSchema } from './export';
+import { operationResponsesMap } from '../../../ir/operation';
+import type { IR } from '../../../ir/types';
+import { buildName } from '../../../openApi/shared/utils/name';
+import { zodId } from '../constants';
+import { exportZodSchema } from '../export';
+import type { ZodPlugin } from '../types';
 import type { State } from './plugin';
 import { schemaToZodSchema } from './plugin';
-import type { ZodPlugin } from './types';
 
 export const operationToZodSchema = ({
   operation,

@@ -63,13 +63,16 @@ export function parseLegacy({
  */
 export const parseOpenApiSpec = ({
   config,
+  dependencies,
   spec,
 }: {
   config: Config;
+  dependencies: Record<string, string>;
   spec: unknown;
 }): IR.Context | undefined => {
   const context = new IRContext({
     config,
+    dependencies,
     spec: spec as OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X,
   });
 
