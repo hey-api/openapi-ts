@@ -329,8 +329,8 @@ importers:
         specifier: 4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.8.3))
       zod:
-        specifier: 3.25.0
-        version: 3.25.0
+        specifier: 3.25.3
+        version: 3.25.3
     devDependencies:
       vite:
         specifier: 6.2.7
@@ -357,8 +357,8 @@ importers:
         specifier: 1.1.0
         version: 1.1.0(typescript@5.8.3)
       zod:
-        specifier: 3.25.0
-        version: 3.25.0
+        specifier: 3.25.3
+        version: 3.25.3
     devDependencies:
       '@config/vite-base':
         specifier: workspace:*
@@ -980,8 +980,8 @@ importers:
         specifier: 3.5.13
         version: 3.5.13(typescript@5.8.3)
       zod:
-        specifier: 3.25.0
-        version: 3.25.0
+        specifier: 3.25.3
+        version: 3.25.3
 
   packages/vite-plugin:
     devDependencies:
@@ -12051,8 +12051,8 @@ packages:
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
-  zod@3.25.0:
-    resolution: {integrity: sha512-ficnZKUW0mlNivqeJkosTEkGbJ6NKCtSaOHGx5aXbtfeWMdRyzXLbAIn19my4C/KB7WPY/p9vlGPt+qpOp6c4Q==}
+  zod@3.25.3:
+    resolution: {integrity: sha512-VGZqnyYNrl8JpEJRZaFPqeVNIuqgXNu4cXZ5cOb6zEUO1OxKbRnWB4UdDIXMmiERWncs0yDQukssHov8JUxykQ==}
 
   zone.js@0.15.0:
     resolution: {integrity: sha512-9oxn0IIjbCZkJ67L+LkhYWRyAy7axphb3VgE2MBDlOqnmHMPWGYMxJxBYFueFq/JGY2GMwS0rU+UCLunEmy5UA==}
@@ -25016,7 +25016,7 @@ snapshots:
 
   zod@3.23.8: {}
 
-  zod@3.25.0: {}
+  zod@3.25.3: {}
 
   zone.js@0.15.0: {}
 

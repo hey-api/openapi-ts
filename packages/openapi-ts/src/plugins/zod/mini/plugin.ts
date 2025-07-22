@@ -11,7 +11,7 @@ import { exportZodSchema } from '../export';
 import { getZodModule } from '../shared/module';
 import type { ZodSchema } from '../shared/types';
 import type { ZodPlugin } from '../types';
-import { operationToZodSchema } from './operation';
+import { operationToZodSchema } from '../v3/operation';
 
 interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
   extends Omit<IR.SchemaObject, 'type'> {
@@ -996,7 +996,7 @@ const handleComponent = ({
   }
 };
 
-export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
+export const handlerMini: ZodPlugin['Handler'] = ({ plugin }) => {
   const file = plugin.createFile({
     case: plugin.config.case,
     id: zodId,
