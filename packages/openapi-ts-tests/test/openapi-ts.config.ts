@@ -174,10 +174,11 @@ export default defineConfig(() => {
         // responseStyle: 'data',
         // transformer: '@hey-api/transformers',
         // transformer: true,
-        validator: {
-          request: 'zod',
-          response: 'zod',
-        },
+        validator: 'zod',
+        // validator: {
+        //   request: 'zod',
+        //   response: 'zod',
+        // },
       },
       {
         // bigInt: true,
@@ -227,6 +228,7 @@ export default defineConfig(() => {
       {
         // case: 'snake_case',
         // comments: false,
+        // compatibilityVersion: 4,
         dates: {
           offset: true,
         },

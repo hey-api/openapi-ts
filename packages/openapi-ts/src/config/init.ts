@@ -9,6 +9,7 @@ import { getInput } from './input';
 import { getLogs } from './logs';
 import { mergeConfigs } from './merge';
 import { getOutput } from './output';
+import { getProjectDependencies } from './packages';
 import { getParser } from './parser';
 import { getPlugins } from './plugins';
 
@@ -17,22 +18,28 @@ import { getPlugins } from './plugins';
  */
 export const initConfigs = async (
   userConfig: UserConfig | undefined,
-): Promise<
-  ReadonlyArray<{
+): Promise<{
+  dependencies: Record<string, string>;
+  results: ReadonlyArray<{
     config: Config;
     errors: ReadonlyArray<Error>;
-  }>
-> => {
+  }>;
+}> => {
   let configurationFile: string | undefined = undefined;
   if (userConfig?.configFile) {
     const parts = userConfig.configFile.split('.');
     configurationFile = parts.slice(0, parts.length - 1).join('.');
   }
 
-  const { config: configFromFile } = await loadConfig<UserConfig>({
-    configFile: configurationFile,
-    name: 'openapi-ts',
-  });
+  const { config: configFromFile, configFile: loadedConfigFile } =
+    await loadConfig<UserConfig>({
+      configFile: configurationFile,
+      name: 'openapi-ts',
+    });
+
+  const dependencies = getProjectDependencies(
+    Object.keys(configFromFile).length ? loadedConfigFile : undefined,
+  );
 
   const userConfigs: ReadonlyArray<UserConfig> = Array.isArray(userConfig)
     ? userConfig
@@ -97,7 +104,7 @@ export const initConfigs = async (
     let plugins: Pick<Config, 'plugins' | 'pluginOrder'>;
 
     try {
-      plugins = getPlugins(userConfig);
+      plugins = getPlugins({ dependencies, userConfig });
     } catch (error) {
       errors.push(error);
       plugins = {
@@ -134,5 +141,5 @@ export const initConfigs = async (
     });
   }
 
-  return results;
+  return { dependencies, results };
 };

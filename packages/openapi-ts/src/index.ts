@@ -41,7 +41,8 @@ export const createClient = async (
     Performance.start('createClient');
 
     Performance.start('config');
-    for (const result of await initConfigs(resolvedConfig)) {
+    const configResults = await initConfigs(resolvedConfig);
+    for (const result of configResults.results) {
       configs.push(result.config);
       if (result.errors.length) {
         throw result.errors[0];
@@ -54,7 +55,13 @@ export const createClient = async (
     Performance.end('handlebars');
 
     const clients = await Promise.all(
-      configs.map((config) => pCreateClient({ config, templates })),
+      configs.map((config) =>
+        pCreateClient({
+          config,
+          dependencies: configResults.dependencies,
+          templates,
+        }),
+      ),
     );
     const result = clients.filter((client) => Boolean(client)) as ReadonlyArray<
       Client | IR.Context

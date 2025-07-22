@@ -6,6 +6,7 @@
   "scripts": {
     "test:coverage": "vitest run --config vitest.config.unit.ts --coverage",
     "test:e2e:disabled": "vitest run --config vitest.config.e2e.ts",
+    "test:sample": "openapi-ts -i ./test/spec/3.1.x/validators.yaml -o ./test/generated/sample",
     "test:types": "tsc -p tsconfig.test.json --noEmit",
     "test:update": "vitest watch --config vitest.config.unit.ts --update",
     "test:watch": "vitest watch --config vitest.config.unit.ts",
@@ -56,6 +57,6 @@
     "typescript": "5.8.3",
     "valibot": "1.1.0",
     "vue": "3.5.13",
-    "zod": "3.23.8"
+    "zod": "3.25.0"
   }
 }

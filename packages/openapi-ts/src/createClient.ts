@@ -167,10 +167,12 @@ const logInputPath = (inputPath: ReturnType<typeof compileInputPath>) => {
 
 export const createClient = async ({
   config,
+  dependencies,
   templates,
   watch: _watch,
 }: {
   config: Config;
+  dependencies: Record<string, string>;
   templates: Templates;
   /**
    * Always falsy on the first run, truthy on subsequent runs.
@@ -226,7 +228,7 @@ export const createClient = async ({
       !isLegacyClient(config) &&
       !legacyNameFromConfig(config)
     ) {
-      context = parseOpenApiSpec({ config, spec: data });
+      context = parseOpenApiSpec({ config, dependencies, spec: data });
     }
 
     // fallback to legacy parser
@@ -262,7 +264,7 @@ export const createClient = async ({
 
   if (config.input.watch.enabled && typeof inputPath.path === 'string') {
     setTimeout(() => {
-      createClient({ config, templates, watch });
+      createClient({ config, dependencies, templates, watch });
     }, config.input.watch.interval);
   }
 
