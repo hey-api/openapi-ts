@@ -502,6 +502,14 @@ const stringTypeToZodSchema = ({
           }),
         });
         break;
+      case 'byte':
+        stringExpression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: stringExpression,
+            name: compiler.identifier({ text: 'base64' }),
+          }),
+        });
+        break;
       case 'date':
       case 'email':
       case 'time':
