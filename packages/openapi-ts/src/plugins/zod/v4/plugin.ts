@@ -9,19 +9,9 @@ import { numberRegExp } from '../../../utils/regexp';
 import { identifiers, zodId } from '../constants';
 import { exportZodSchema } from '../export';
 import { getZodModule } from '../shared/module';
-import type { ZodSchema } from '../shared/types';
+import { operationToZodSchema } from '../shared/operation';
+import type { SchemaWithType, State, ZodSchema } from '../shared/types';
 import type { ZodPlugin } from '../types';
-import { operationToZodSchema } from '../v3/operation';
-
-interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
-  extends Omit<IR.SchemaObject, 'type'> {
-  type: Extract<Required<IR.SchemaObject>['type'], T>;
-}
-
-export type State = {
-  circularReferenceTracker: Array<string>;
-  hasCircularReference: boolean;
-};
 
 const arrayTypeToZodSchema = ({
   plugin,
@@ -295,7 +285,7 @@ const numberTypeToZodSchema = ({
   if (!isBigInt && schema.type === 'integer') {
     numberExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
-        expression: numberExpression,
+        expression: identifiers.z,
         name: identifiers.int,
       }),
     });
@@ -353,7 +343,6 @@ const objectTypeToZodSchema = ({
   schema: SchemaWithType<'object'>;
   state: State;
 }): {
-  anyType: string;
   expression: ts.CallExpression;
 } => {
   // TODO: parser - handle constants
@@ -414,10 +403,18 @@ const objectTypeToZodSchema = ({
         expression: identifiers.z,
         name: identifiers.record,
       }),
-      parameters: [zodSchema],
+      parameters: [
+        compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: identifiers.z,
+            name: identifiers.string,
+          }),
+          parameters: [],
+        }),
+        zodSchema,
+      ],
     });
     return {
-      anyType: 'AnyZodObject',
       expression,
     };
   }
@@ -430,7 +427,6 @@ const objectTypeToZodSchema = ({
     parameters: [ts.factory.createObjectLiteralExpression(properties, true)],
   });
   return {
-    anyType: 'AnyZodObject',
     expression,
   };
 };
@@ -462,10 +458,24 @@ const stringTypeToZodSchema = ({
 
   if (schema.format) {
     switch (schema.format) {
+      case 'date':
+        stringExpression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: compiler.propertyAccessExpression({
+              expression: identifiers.z,
+              name: identifiers.iso,
+            }),
+            name: identifiers.date,
+          }),
+        });
+        break;
       case 'date-time':
         stringExpression = compiler.callExpression({
           functionName: compiler.propertyAccessExpression({
-            expression: stringExpression,
+            expression: compiler.propertyAccessExpression({
+              expression: identifiers.z,
+              name: identifiers.iso,
+            }),
             name: identifiers.datetime,
           }),
           parameters: plugin.config.dates.offset
@@ -482,31 +492,54 @@ const stringTypeToZodSchema = ({
             : [],
         });
         break;
+      case 'email':
+        stringExpression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: identifiers.z,
+            name: identifiers.email,
+          }),
+        });
+        break;
       case 'ipv4':
+        stringExpression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: identifiers.z,
+            name: identifiers.ipv4,
+          }),
+        });
+        break;
       case 'ipv6':
         stringExpression = compiler.callExpression({
           functionName: compiler.propertyAccessExpression({
-            expression: stringExpression,
-            name: identifiers.ip,
+            expression: identifiers.z,
+            name: identifiers.ipv6,
+          }),
+        });
+        break;
+      case 'time':
+        stringExpression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: compiler.propertyAccessExpression({
+              expression: identifiers.z,
+              name: identifiers.iso,
+            }),
+            name: identifiers.time,
           }),
         });
         break;
       case 'uri':
         stringExpression = compiler.callExpression({
           functionName: compiler.propertyAccessExpression({
-            expression: stringExpression,
+            expression: identifiers.z,
             name: identifiers.url,
           }),
         });
         break;
-      case 'date':
-      case 'email':
-      case 'time':
       case 'uuid':
         stringExpression = compiler.callExpression({
           functionName: compiler.propertyAccessExpression({
-            expression: stringExpression,
-            name: compiler.identifier({ text: schema.format }),
+            expression: identifiers.z,
+            name: identifiers.uuid,
           }),
         });
         break;
@@ -661,7 +694,6 @@ const schemaTypeToZodSchema = ({
   schema: IR.SchemaObject;
   state: State;
 }): {
-  anyType?: string;
   expression: ts.Expression;
 } => {
   switch (schema.type as Required<IR.SchemaObject>['type']) {
@@ -746,7 +778,7 @@ const schemaTypeToZodSchema = ({
   }
 };
 
-export const schemaToZodSchema = ({
+const schemaToZodSchema = ({
   optional,
   plugin,
   schema,
@@ -789,7 +821,6 @@ export const schemaToZodSchema = ({
           }),
         ],
       });
-      state.hasCircularReference = true;
     } else if (!file.getName(id)) {
       // if $ref hasn't been processed yet, inline it to avoid the
       // "Block-scoped variable used before its declaration." error
@@ -814,7 +845,6 @@ export const schemaToZodSchema = ({
   } else if (schema.type) {
     const zSchema = schemaTypeToZodSchema({ plugin, schema, state });
     zodSchema.expression = zSchema.expression;
-    zodSchema.typeName = zSchema.anyType;
 
     if (plugin.config.metadata && schema.description) {
       zodSchema.expression = compiler.callExpression({
@@ -892,7 +922,6 @@ export const schemaToZodSchema = ({
       state,
     });
     zodSchema.expression = zSchema.expression;
-    zodSchema.typeName = zSchema.anyType;
   }
 
   if (zodSchema.expression) {
@@ -930,14 +959,6 @@ export const schemaToZodSchema = ({
         });
       }
     }
-  }
-
-  if (state.hasCircularReference) {
-    if (!zodSchema.typeName) {
-      zodSchema.typeName = 'ZodTypeAny';
-    }
-  } else {
-    zodSchema.typeName = undefined;
   }
 
   return zodSchema as ZodSchema;
@@ -1010,7 +1031,17 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
 
   plugin.forEach('operation', 'parameter', 'requestBody', 'schema', (event) => {
     if (event.type === 'operation') {
-      operationToZodSchema({ operation: event.operation, plugin });
+      operationToZodSchema({
+        getZodSchema: (schema) => {
+          const state: State = {
+            circularReferenceTracker: [],
+            hasCircularReference: false,
+          };
+          return schemaToZodSchema({ plugin, schema, state });
+        },
+        operation: event.operation,
+        plugin,
+      });
     } else if (event.type === 'parameter') {
       handleComponent({
         id: event.$ref,

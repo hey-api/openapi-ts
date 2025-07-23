@@ -4,21 +4,17 @@ import { buildName } from '../../../openApi/shared/utils/name';
 import { zodId } from '../constants';
 import { exportZodSchema } from '../export';
 import type { ZodPlugin } from '../types';
-import type { State } from './plugin';
-import { schemaToZodSchema } from './plugin';
+import type { ZodSchema } from './types';
 
 export const operationToZodSchema = ({
+  getZodSchema,
   operation,
   plugin,
 }: {
+  getZodSchema: (schema: IR.SchemaObject) => ZodSchema;
   operation: IR.OperationObject;
   plugin: ZodPlugin['Instance'];
 }) => {
-  const state: State = {
-    circularReferenceTracker: [],
-    hasCircularReference: false,
-  };
-
   const file = plugin.context.file({ id: zodId })!;
 
   if (plugin.config.requests.enabled) {
@@ -119,11 +115,7 @@ export const operationToZodSchema = ({
 
     schemaData.required = [...requiredProperties];
 
-    const zodSchema = schemaToZodSchema({
-      plugin,
-      schema: schemaData,
-      state,
-    });
+    const zodSchema = getZodSchema(schemaData);
     const schemaId = plugin.api.getId({ operation, type: 'data' });
     const typeInferId = plugin.config.requests.types.infer.enabled
       ? plugin.api.getId({ operation, type: 'type-infer-data' })
@@ -158,11 +150,7 @@ export const operationToZodSchema = ({
       const { response } = operationResponsesMap(operation);
 
       if (response) {
-        const zodSchema = schemaToZodSchema({
-          plugin,
-          schema: response,
-          state,
-        });
+        const zodSchema = getZodSchema(response);
         const schemaId = plugin.api.getId({ operation, type: 'responses' });
         const typeInferId = plugin.config.responses.types.infer.enabled
           ? plugin.api.getId({ operation, type: 'type-infer-responses' })

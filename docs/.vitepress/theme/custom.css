@@ -310,11 +310,6 @@ a.migration:focus {
   margin-top: 1.3rem;
 }
 
-.heading-with-version {
-  display: flex;
-  column-gap: 1rem;
-}
-
 .vue-select .control {
   cursor: pointer;
   transition: border-color 0.25s;
@@ -328,6 +323,10 @@ a.migration:focus {
   padding: 0;
 }
 
+.vue-select .control .value-container.has-value:has(.single-value) {
+  padding-inline-end: 0;
+}
+
 .vue-select .control .indicators-container button.dropdown-icon {
   height: 100%;
   padding: var(--vs-padding);
@@ -336,9 +335,14 @@ a.migration:focus {
   );
 }
 
+.vue-select .menu {
+  width: fit-content !important;
+}
+
 .vue-select .menu .menu-option {
   border-left: 2px solid transparent;
   border-right: 2px solid transparent;
+  white-space: nowrap;
   transition:
     background-color 0.25s,
     border-color 0.25s,
