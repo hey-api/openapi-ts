@@ -1,0 +1,89 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Integer Formats Test",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "NumberNoFormat": {
+        "type": "number"
+      },
+      "NumberInt8": {
+        "type": "number",
+        "format": "int8"
+      },
+      "NumberInt16": {
+        "type": "number",
+        "format": "int16"
+      },
+      "NumberInt32": {
+        "type": "number",
+        "format": "int32"
+      },
+      "NumberInt64": {
+        "type": "number",
+        "format": "int64"
+      },
+      "NumberUint8": {
+        "type": "number",
+        "format": "uint8"
+      },
+      "NumberUint16": {
+        "type": "number",
+        "format": "uint16"
+      },
+      "NumberUint32": {
+        "type": "number",
+        "format": "uint32"
+      },
+      "NumberUint64": {
+        "type": "number",
+        "format": "uint64"
+      },
+      "IntegerNoFormat": {
+        "type": "integer"
+      },
+      "IntegerInt8": {
+        "type": "integer",
+        "format": "int8"
+      },
+      "IntegerInt16": {
+        "type": "integer",
+        "format": "int16"
+      },
+      "IntegerInt32": {
+        "type": "integer",
+        "format": "int32"
+      },
+      "IntegerInt64": {
+        "type": "integer",
+        "format": "int64"
+      },
+      "IntegerUint8": {
+        "type": "integer",
+        "format": "uint8"
+      },
+      "IntegerUint16": {
+        "type": "integer",
+        "format": "uint16"
+      },
+      "IntegerUint32": {
+        "type": "integer",
+        "format": "uint32"
+      },
+      "IntegerUint64": {
+        "type": "integer",
+        "format": "uint64"
+      },
+      "StringInt64": {
+        "type": "string",
+        "format": "int64"
+      },
+      "StringUint64": {
+        "type": "string",
+        "format": "uint64"
+      }
+    }
+  }
+}
