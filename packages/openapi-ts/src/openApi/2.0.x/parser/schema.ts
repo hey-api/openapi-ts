@@ -34,6 +34,10 @@ const parseSchemaJsDoc = ({
   irSchema: IR.SchemaObject;
   schema: SchemaObject;
 }) => {
+  if (schema.example) {
+    irSchema.example = schema.example;
+  }
+
   if (schema.description) {
     irSchema.description = schema.description;
   }
