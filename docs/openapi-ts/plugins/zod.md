@@ -5,13 +5,10 @@ description: Zod plugin for Hey API. Compatible with all our features.
 
 <script setup lang="ts">
 // import { embedProject } from '../../embed'
-import ZodVersionSwitcher from './zod/ZodVersionSwitcher.vue';
+import ZodHeading from './zod/ZodHeading.vue';
 </script>
 
-<div class="heading-with-version">
-  <h1>Zod</h1>
-  <ZodVersionSwitcher />
-</div>
+<ZodHeading />
 
 ### About
 

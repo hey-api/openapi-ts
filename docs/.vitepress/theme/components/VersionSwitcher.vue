@@ -5,6 +5,7 @@ import VueSelect from 'vue3-select-component';
 
 type Option = {
   label: string;
+  short?: string;
   value: string;
 };
 
@@ -49,5 +50,9 @@ function switchVersion(option: Option) {
     :isClearable="false"
     :options="props.values"
     @option-selected="switchVersion"
-  />
+  >
+    <template #value="{ option }">
+      {{ option.short || option.label }}
+    </template>
+  </VueSelect>
 </template>

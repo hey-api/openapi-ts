@@ -9,19 +9,9 @@ import { numberRegExp } from '../../../utils/regexp';
 import { identifiers, zodId } from '../constants';
 import { exportZodSchema } from '../export';
 import { getZodModule } from '../shared/module';
-import type { ZodSchema } from '../shared/types';
+import { operationToZodSchema } from '../shared/operation';
+import type { SchemaWithType, State, ZodSchema } from '../shared/types';
 import type { ZodPlugin } from '../types';
-import { operationToZodSchema } from './operation';
-
-interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
-  extends Omit<IR.SchemaObject, 'type'> {
-  type: Extract<Required<IR.SchemaObject>['type'], T>;
-}
-
-export type State = {
-  circularReferenceTracker: Array<string>;
-  hasCircularReference: boolean;
-};
 
 const arrayTypeToZodSchema = ({
   plugin,
@@ -462,6 +452,14 @@ const stringTypeToZodSchema = ({
 
   if (schema.format) {
     switch (schema.format) {
+      case 'date':
+        stringExpression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: stringExpression,
+            name: identifiers.date,
+          }),
+        });
+        break;
       case 'date-time':
         stringExpression = compiler.callExpression({
           functionName: compiler.propertyAccessExpression({
@@ -482,12 +480,28 @@ const stringTypeToZodSchema = ({
             : [],
         });
         break;
+      case 'email':
+        stringExpression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: stringExpression,
+            name: identifiers.email,
+          }),
+        });
+        break;
       case 'ipv4':
       case 'ipv6':
         stringExpression = compiler.callExpression({
           functionName: compiler.propertyAccessExpression({
             expression: stringExpression,
             name: identifiers.ip,
+          }),
+        });
+        break;
+      case 'time':
+        stringExpression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: stringExpression,
+            name: identifiers.time,
           }),
         });
         break;
@@ -499,14 +513,11 @@ const stringTypeToZodSchema = ({
           }),
         });
         break;
-      case 'date':
-      case 'email':
-      case 'time':
       case 'uuid':
         stringExpression = compiler.callExpression({
           functionName: compiler.propertyAccessExpression({
             expression: stringExpression,
-            name: compiler.identifier({ text: schema.format }),
+            name: identifiers.uuid,
           }),
         });
         break;
@@ -746,7 +757,7 @@ const schemaTypeToZodSchema = ({
   }
 };
 
-export const schemaToZodSchema = ({
+const schemaToZodSchema = ({
   optional,
   plugin,
   schema,
@@ -1010,7 +1021,17 @@ export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
 
   plugin.forEach('operation', 'parameter', 'requestBody', 'schema', (event) => {
     if (event.type === 'operation') {
-      operationToZodSchema({ operation: event.operation, plugin });
+      operationToZodSchema({
+        getZodSchema: (schema) => {
+          const state: State = {
+            circularReferenceTracker: [],
+            hasCircularReference: false,
+          };
+          return schemaToZodSchema({ plugin, schema, state });
+        },
+        operation: event.operation,
+        plugin,
+      });
     } else if (event.type === 'parameter') {
       handleComponent({
         id: event.$ref,
