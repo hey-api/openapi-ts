@@ -1,5 +1,43 @@
 # @hey-api/openapi-ts
 
+## 0.80.0
+
+### Minor Changes
+
+- [#2341](https://github.com/hey-api/openapi-ts/pull/2341) [`9954bcf`](https://github.com/hey-api/openapi-ts/commit/9954bcf139efca45f0c0cd0c25e5236dbf5c7121) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(zod): add support for Zod 4 and Zod Mini
+
+  ### Added Zod 4 and Zod Mini
+
+  This release adds support for Zod 4 and Zod Mini. By default, the `zod` plugin will generate output for Zod 4. If you want to preserve the previous output for Zod 3 or use Zod Mini, set `compatibilityVersion` to `3` or `mini`.
+
+  ```js
+  export default {
+    input: 'https://get.heyapi.dev/hey-api/backend',
+    output: 'src/client',
+    plugins: [
+      // ...other plugins
+      {
+        name: 'zod',
+        compatibilityVersion: 3,
+      },
+    ],
+  };
+  ```
+
+  ```js
+  export default {
+    input: 'https://get.heyapi.dev/hey-api/backend',
+    output: 'src/client',
+    plugins: [
+      // ...other plugins
+      {
+        name: 'zod',
+        compatibilityVersion: 'mini',
+      },
+    ],
+  };
+  ```
+
 ## 0.79.2
 
 ### Patch Changes
