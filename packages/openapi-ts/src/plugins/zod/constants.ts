@@ -1,10 +1,12 @@
 import { compiler } from '../../compiler';
 
 export const identifiers = {
+  _default: compiler.identifier({ text: '_default' }),
   and: compiler.identifier({ text: 'and' }),
   array: compiler.identifier({ text: 'array' }),
   bigint: compiler.identifier({ text: 'bigint' }),
   boolean: compiler.identifier({ text: 'boolean' }),
+  check: compiler.identifier({ text: 'check' }),
   coerce: compiler.identifier({ text: 'coerce' }),
   date: compiler.identifier({ text: 'date' }),
   datetime: compiler.identifier({ text: 'datetime' }),
@@ -12,6 +14,7 @@ export const identifiers = {
   describe: compiler.identifier({ text: 'describe' }),
   email: compiler.identifier({ text: 'email' }),
   enum: compiler.identifier({ text: 'enum' }),
+  globalRegistry: compiler.identifier({ text: 'globalRegistry' }),
   gt: compiler.identifier({ text: 'gt' }),
   gte: compiler.identifier({ text: 'gte' }),
   infer: compiler.identifier({ text: 'infer' }),
@@ -27,7 +30,9 @@ export const identifiers = {
   lt: compiler.identifier({ text: 'lt' }),
   lte: compiler.identifier({ text: 'lte' }),
   max: compiler.identifier({ text: 'max' }),
+  maxLength: compiler.identifier({ text: 'maxLength' }),
   min: compiler.identifier({ text: 'min' }),
+  minLength: compiler.identifier({ text: 'minLength' }),
   never: compiler.identifier({ text: 'never' }),
   null: compiler.identifier({ text: 'null' }),
   nullable: compiler.identifier({ text: 'nullable' }),
@@ -38,6 +43,7 @@ export const identifiers = {
   readonly: compiler.identifier({ text: 'readonly' }),
   record: compiler.identifier({ text: 'record' }),
   regex: compiler.identifier({ text: 'regex' }),
+  register: compiler.identifier({ text: 'register' }),
   string: compiler.identifier({ text: 'string' }),
   time: compiler.identifier({ text: 'time' }),
   tuple: compiler.identifier({ text: 'tuple' }),

@@ -228,7 +228,7 @@ export default defineConfig(() => {
       {
         // case: 'snake_case',
         // comments: false,
-        compatibilityVersion: 4,
+        compatibilityVersion: 'mini',
         dates: {
           offset: true,
         },
