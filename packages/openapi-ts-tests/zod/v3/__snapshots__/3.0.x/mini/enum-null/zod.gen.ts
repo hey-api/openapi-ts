@@ -2,10 +2,10 @@
 
 import * as z from 'zod/v4-mini';
 
-export const zFoo = z.enum([
+export const zFoo = z.nullable(z.enum([
     'foo',
     'bar'
-]).nullable();
+]));
 
 export const zBar = z.enum([
     'foo',

@@ -69,7 +69,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'array-items-one-of-length-1.yaml',
         output: 'array-items-one-of-length-1',
-        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
+        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description:
         'generates correct array when items are oneOf array with single item',
@@ -468,7 +468,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
-        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
+        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description: 'handles null enums',
     },
@@ -624,7 +624,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'schema-const.yaml',
         output: 'schema-const',
-        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
+        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description: 'handles various constants',
     },
@@ -741,28 +741,9 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'validators.yaml',
         output: 'validators',
-        plugins: ['valibot', 'zod'],
+        plugins: ['valibot'],
       }),
       description: 'generates validator schemas',
-    },
-    {
-      config: createConfig({
-        input: 'validators.yaml',
-        output: 'validators-dates',
-        plugins: [
-          // Valibot doesn't allow configuring offset
-          // {
-          //   name: 'valibot',
-          // },
-          {
-            dates: {
-              offset: true,
-            },
-            name: 'zod',
-          },
-        ],
-      }),
-      description: 'generates validator schemas with any offset',
     },
     {
       config: createConfig({
@@ -773,10 +754,6 @@ describe(`OpenAPI ${version}`, () => {
             metadata: true,
             name: 'valibot',
           },
-          {
-            metadata: true,
-            name: 'zod',
-          },
         ],
       }),
       description: 'generates validator schemas with metadata',
@@ -785,17 +762,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'validators.yaml',
         output: 'validators-types',
-        plugins: [
-          {
-            name: 'valibot',
-          },
-          {
-            name: 'zod',
-            types: {
-              infer: true,
-            },
-          },
-        ],
+        plugins: ['valibot'],
       }),
       description: 'generates validator schemas with types',
     },
@@ -803,7 +770,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'validators-bigint-min-max.json',
         output: 'validators-bigint-min-max',
-        plugins: ['valibot', 'zod'],
+        plugins: ['valibot'],
       }),
       description: 'validator schemas with BigInt and min/max constraints',
     },
@@ -811,7 +778,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'validators-circular-ref.json',
         output: 'validators-circular-ref',
-        plugins: ['valibot', 'zod'],
+        plugins: ['valibot'],
       }),
       description: 'validator schemas with circular reference',
     },
@@ -819,7 +786,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'validators-circular-ref-2.yaml',
         output: 'validators-circular-ref-2',
-        plugins: ['valibot', 'zod'],
+        plugins: ['valibot'],
       }),
       description: 'validator schemas with circular reference 2',
     },
@@ -827,7 +794,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'validators-union-merge.json',
         output: 'validators-union-merge',
-        plugins: ['valibot', 'zod'],
+        plugins: ['valibot'],
       }),
       description: "validator schemas with merged unions (can't use .merge())",
     },

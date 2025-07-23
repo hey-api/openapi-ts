@@ -69,7 +69,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'array-items-one-of-length-1.yaml',
         output: 'array-items-one-of-length-1',
-        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
+        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description:
         'generates correct array when items are oneOf array with single item',
@@ -454,7 +454,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
-        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
+        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description: 'handles null enums',
     },
@@ -623,7 +623,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'validators.json',
         output: 'validators',
-        plugins: ['valibot', 'zod'],
+        plugins: ['valibot'],
       }),
       description: 'generates validator schemas',
     },
