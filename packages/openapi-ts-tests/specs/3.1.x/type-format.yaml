@@ -25,6 +25,8 @@ components:
           type: integer
         id:
           type: string
+          format: typeid
+          example: 'user_123'
       required:
         - id
         - foo

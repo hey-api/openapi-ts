@@ -295,9 +295,13 @@ export const createInfiniteQueryOptions = ({
   const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
   // TODO: parser - this is a bit clunky, need to compile type to string because
   // `compiler.returnFunctionCall()` accepts only strings, should be cleaned up
+  const typescriptState = {
+    usedTypeIDs: new Set<string>(),
+  };
   const type = pluginTypeScript.api.schemaToType({
     plugin: pluginTypeScript,
     schema: pagination.schema,
+    state: typescriptState,
   });
   const typePageParam = `${tsNodeToString({
     node: type,

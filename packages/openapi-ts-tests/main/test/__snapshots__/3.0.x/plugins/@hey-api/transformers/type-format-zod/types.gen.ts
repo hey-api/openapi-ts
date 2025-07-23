@@ -3,7 +3,7 @@
 export type Foo = {
     bar?: number;
     foo: bigint;
-    id: string;
+    id: UserId;
 };
 
 export type Bar = {
@@ -26,6 +26,10 @@ export type PostFooResponses = {
 };
 
 export type PostFooResponse = PostFooResponses[keyof PostFooResponses];
+
+export type TypeID<T extends string> = `${T}_${string}`;
+
+export type UserId = TypeID<'user'>;
 
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
