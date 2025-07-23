@@ -2,24 +2,11 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { specFileToJson } from '../../../__tests__/utils';
+import { getSpecsPath, specFileToJson } from '../../../__tests__/utils';
 import type { ValidatorResult } from '../../../shared/utils/validator';
 import { validateOpenApiSpec } from '../validate';
 
-const specsFolder = path.join(
-  __dirname,
-  '..',
-  '..',
-  '..',
-  '..',
-  '..',
-  '..',
-  'openapi-ts-tests',
-  'test',
-  'spec',
-  '3.0.x',
-  'invalid',
-);
+const specsFolder = path.join(getSpecsPath(), '3.0.x', 'invalid');
 
 describe('validate', () => {
   const scenarios: Array<
