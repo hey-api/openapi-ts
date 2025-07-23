@@ -1,5 +1,5 @@
 import type { Config, UserConfig } from '../types/config';
-import { valueToObject } from './utils';
+import { valueToObject } from './utils/config';
 
 export const defaultPaginationKeywords = [
   'after',

@@ -13,6 +13,13 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   private handler: Plugin.Config<T>['handler'];
   public name: T['resolvedConfig']['name'];
   public output: Required<T['config']>['output'];
+  /**
+   * The package metadata and utilities for the current context, constructed
+   * from the provided dependencies. Used for managing package-related
+   * information such as name, version, and dependency resolution during
+   * code generation.
+   */
+  public package: IR.Context['package'];
 
   public constructor(
     props: Pick<
@@ -32,6 +39,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.handler = props.handler;
     this.name = props.name;
     this.output = props.output;
+    this.package = props.context.package;
   }
 
   public createFile(file: IR.ContextFile) {

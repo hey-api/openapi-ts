@@ -3,7 +3,10 @@ title: Nuxt client
 description: Nuxt client for Hey API. Compatible with all our features.
 ---
 
-# Nuxt
+<Heading>
+  <h1>Nuxt</h1>
+  <VersionLabel value="v3" />
+</Heading>
 
 ::: warning
 Nuxt client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).

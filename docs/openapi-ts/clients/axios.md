@@ -3,11 +3,14 @@ title: Axios client
 description: Axios client for Hey API. Compatible with all our features.
 ---
 
-<script setup>
+<script setup lang="ts">
 import { embedProject } from '../../embed'
 </script>
 
-# Axios
+<Heading>
+  <h1>Axios</h1>
+  <VersionLabel value="v1" />
+</Heading>
 
 ::: warning
 Axios client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
