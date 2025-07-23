@@ -1,75 +1,37 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import { createClient, type UserConfig } from '@hey-api/openapi-ts';
+import { createClient } from '@hey-api/openapi-ts';
 import { describe, expect, it } from 'vitest';
 
-import { getFilePaths, getSpecsPath } from '../../../utils';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { getFilePaths } from '../../../utils';
+import {
+  createZodConfig,
+  getSnapshotsPath,
+  getTempSnapshotsPath,
+  zodVersions,
+} from './utils';
 
 const version = '3.1.x';
 
-const zodVersions = [
-  {
-    compatibilityVersion: 3,
-    folder: 'v3',
-  },
-  {
-    compatibilityVersion: 4,
-    folder: 'v4',
-  },
-  {
-    compatibilityVersion: 'mini',
-    folder: 'mini',
-  },
-] as const;
-
 for (const zodVersion of zodVersions) {
   const outputDir = path.join(
-    __dirname,
-    '..',
-    '.gen',
-    'snapshots',
+    getTempSnapshotsPath(),
+    version,
+    zodVersion.folder,
+  );
+  const snapshotsDir = path.join(
+    getSnapshotsPath(),
     version,
     zodVersion.folder,
   );
 
   describe(`OpenAPI ${version}`, () => {
-    const createConfig = (userConfig: UserConfig): UserConfig => {
-      const inputPath = path.join(
-        getSpecsPath(),
-        version,
-        typeof userConfig.input === 'string'
-          ? userConfig.input
-          : (userConfig.input.path as string),
-      );
-      return {
-        plugins: [
-          {
-            compatibilityVersion: zodVersion.compatibilityVersion,
-            name: 'zod',
-          },
-        ],
-        ...userConfig,
-        input:
-          typeof userConfig.input === 'string'
-            ? inputPath
-            : {
-                ...userConfig.input,
-                path: inputPath,
-              },
-        logs: {
-          level: 'silent',
-        },
-        output: path.join(
-          outputDir,
-          typeof userConfig.output === 'string' ? userConfig.output : '',
-        ),
-      };
-    };
+    const createConfig = createZodConfig({
+      openApiVersion: version,
+      outputDir,
+      zodVersion,
+    });
 
     const scenarios = [
       {
@@ -189,14 +151,7 @@ for (const zodVersion of zodVersions) {
         filePaths.map(async (filePath) => {
           const fileContent = fs.readFileSync(filePath, 'utf-8');
           await expect(fileContent).toMatchFileSnapshot(
-            path.join(
-              __dirname,
-              '..',
-              '__snapshots__',
-              version,
-              zodVersion.folder,
-              filePath.slice(outputDir.length + 1),
-            ),
+            path.join(snapshotsDir, filePath.slice(outputDir.length + 1)),
           );
         }),
       );
