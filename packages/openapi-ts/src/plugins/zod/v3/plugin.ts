@@ -1016,7 +1016,7 @@ export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
 
   file.import({
     module: getZodModule({ plugin }),
-    name: 'z',
+    name: identifiers.z.text,
   });
 
   plugin.forEach('operation', 'parameter', 'requestBody', 'schema', (event) => {

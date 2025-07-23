@@ -850,9 +850,22 @@ const schemaToZodSchema = ({
       zodSchema.expression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression: zodSchema.expression,
-          name: identifiers.describe,
+          name: identifiers.register,
         }),
-        parameters: [compiler.stringLiteral({ text: schema.description })],
+        parameters: [
+          compiler.propertyAccessExpression({
+            expression: identifiers.z,
+            name: identifiers.globalRegistry,
+          }),
+          compiler.objectExpression({
+            obj: [
+              {
+                key: 'description',
+                value: compiler.stringLiteral({ text: schema.description }),
+              },
+            ],
+          }),
+        ],
       });
     }
   } else if (schema.items) {
@@ -937,9 +950,10 @@ const schemaToZodSchema = ({
     if (optional) {
       zodSchema.expression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
-          expression: zodSchema.expression,
+          expression: identifiers.z,
           name: identifiers.optional,
         }),
+        parameters: [zodSchema.expression],
       });
     }
 
@@ -1026,7 +1040,7 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
 
   file.import({
     module: getZodModule({ plugin }),
-    name: 'z',
+    name: identifiers.z.text,
   });
 
   plugin.forEach('operation', 'parameter', 'requestBody', 'schema', (event) => {
