@@ -37,7 +37,10 @@ export default {
   output: 'src/client',
   plugins: [
     // ...other plugins
-    'zod', // [!code ++]
+    {
+      compatibilityVersion: 'mini', // [!code ++]
+      name: 'zod', // [!code ++]
+    },
   ],
 };
 ```
@@ -91,14 +94,14 @@ export default {
 const zData = z.object({
   body: z
     .object({
-      foo: z.string().optional(),
-      bar: z.union([z.number(), z.null()]).optional(),
+      foo: z.optional(z.string()),
+      bar: z.optional(z.union([z.number(), z.null()])),
     })
     .optional(),
   path: z.object({
     baz: z.string(),
   }),
-  query: z.never().optional(),
+  query: z.optional(z.never()),
 });
 ```
 
@@ -133,10 +136,10 @@ export default {
 ```ts [output]
 const zResponse = z.union([
   z.object({
-    foo: z.string().optional(),
+    foo: z.optional(z.string()),
   }),
   z.object({
-    bar: z.number().optional(),
+    bar: z.optional(z.number()),
   }),
 ]);
 ```
@@ -166,10 +169,10 @@ export default {
 ```
 
 ```ts [output]
-const zFoo = z.number().int();
+const zFoo = z.int();
 
 const zBar = z.object({
-  bar: z.array(z.number().int()).optional(),
+  bar: z.optional(z.array(z.int())),
 });
 ```
 
@@ -198,7 +201,9 @@ export default {
 ```
 
 ```ts [output]
-export const zFoo = z.string().describe('Additional metadata');
+export const zFoo = z.string().register(z.globalRegistry, {
+  description: 'Additional metadata',
+});
 ```
 
 :::
