@@ -17,7 +17,7 @@ export const zUser = zContact.and(z.object({
 
 export const zDogDetails = z.object({
     breed: z.string(),
-    barkVolume: z.number().int().gte(1).lte(10)
+    barkVolume: z.int().gte(1).lte(10)
 });
 
 export const zCatDetails = z.object({
@@ -32,10 +32,10 @@ export const zCatDetails = z.object({
 export const zPetStore = z.object({
     animals: z.array(z.object({
         name: z.string(),
-        type: z.enum([
+        type: z.optional(z.enum([
             'dog',
             'cat'
-        ]).optional(),
+        ])),
         details: z.union([
             zDogDetails,
             zCatDetails

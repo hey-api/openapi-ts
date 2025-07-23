@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 
-export const zBar: z.AnyZodObject = z.object({
+export const zBar = z.object({
     bar: z.union([
         z.array(z.lazy(() => {
             return zBar;
@@ -11,6 +11,6 @@ export const zBar: z.AnyZodObject = z.object({
     ])
 });
 
-export const zFoo: z.AnyZodObject = z.object({
+export const zFoo = z.object({
     foo: zBar
 });

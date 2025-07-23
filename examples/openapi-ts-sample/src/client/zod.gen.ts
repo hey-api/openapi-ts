@@ -3,48 +3,48 @@
 import { z } from 'zod';
 
 export const zOrder = z.object({
-  complete: z.boolean().optional(),
-  id: z.coerce.bigint().optional(),
-  petId: z.coerce.bigint().optional(),
-  quantity: z.number().int().optional(),
-  shipDate: z.string().datetime().optional(),
-  status: z.enum(['placed', 'approved', 'delivered']).optional(),
+  complete: z.optional(z.boolean()),
+  id: z.optional(z.coerce.bigint()),
+  petId: z.optional(z.coerce.bigint()),
+  quantity: z.optional(z.int()),
+  shipDate: z.optional(z.iso.datetime()),
+  status: z.optional(z.enum(['placed', 'approved', 'delivered'])),
 });
 
 export const zCategory = z.object({
-  id: z.coerce.bigint().optional(),
-  name: z.string().optional(),
+  id: z.optional(z.coerce.bigint()),
+  name: z.optional(z.string()),
 });
 
 export const zUser = z.object({
-  email: z.string().optional(),
-  firstName: z.string().optional(),
-  id: z.coerce.bigint().optional(),
-  lastName: z.string().optional(),
-  password: z.string().optional(),
-  phone: z.string().optional(),
-  userStatus: z.number().int().optional(),
-  username: z.string().optional(),
+  email: z.optional(z.string()),
+  firstName: z.optional(z.string()),
+  id: z.optional(z.coerce.bigint()),
+  lastName: z.optional(z.string()),
+  password: z.optional(z.string()),
+  phone: z.optional(z.string()),
+  userStatus: z.optional(z.int()),
+  username: z.optional(z.string()),
 });
 
 export const zTag = z.object({
-  id: z.coerce.bigint().optional(),
-  name: z.string().optional(),
+  id: z.optional(z.coerce.bigint()),
+  name: z.optional(z.string()),
 });
 
 export const zPet = z.object({
-  category: zCategory.optional(),
-  id: z.coerce.bigint().optional(),
+  category: z.optional(zCategory),
+  id: z.optional(z.coerce.bigint()),
   name: z.string(),
   photoUrls: z.array(z.string()),
-  status: z.enum(['available', 'pending', 'sold']).optional(),
-  tags: z.array(zTag).optional(),
+  status: z.optional(z.enum(['available', 'pending', 'sold'])),
+  tags: z.optional(z.array(zTag)),
 });
 
 export const zApiResponse = z.object({
-  code: z.number().int().optional(),
-  message: z.string().optional(),
-  type: z.string().optional(),
+  code: z.optional(z.int()),
+  message: z.optional(z.string()),
+  type: z.optional(z.string()),
 });
 
 export const zPet2 = zPet;
@@ -56,8 +56,8 @@ export const zUserArray = z.array(zUser);
 
 export const zAddPetData = z.object({
   body: zPet,
-  path: z.never().optional(),
-  query: z.never().optional(),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
 });
 
 /**
@@ -67,8 +67,8 @@ export const zAddPetResponse = zPet;
 
 export const zUpdatePetData = z.object({
   body: zPet,
-  path: z.never().optional(),
-  query: z.never().optional(),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
 });
 
 /**
@@ -77,13 +77,13 @@ export const zUpdatePetData = z.object({
 export const zUpdatePetResponse = zPet;
 
 export const zFindPetsByStatusData = z.object({
-  body: z.never().optional(),
-  path: z.never().optional(),
-  query: z
-    .object({
-      status: z.enum(['available', 'pending', 'sold']).optional(),
-    })
-    .optional(),
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.optional(
+    z.object({
+      status: z.optional(z.enum(['available', 'pending', 'sold'])),
+    }),
+  ),
 });
 
 /**
@@ -92,13 +92,13 @@ export const zFindPetsByStatusData = z.object({
 export const zFindPetsByStatusResponse = z.array(zPet);
 
 export const zFindPetsByTagsData = z.object({
-  body: z.never().optional(),
-  path: z.never().optional(),
-  query: z
-    .object({
-      tags: z.array(z.string()).optional(),
-    })
-    .optional(),
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.optional(
+    z.object({
+      tags: z.optional(z.array(z.string())),
+    }),
+  ),
 });
 
 /**
@@ -107,24 +107,24 @@ export const zFindPetsByTagsData = z.object({
 export const zFindPetsByTagsResponse = z.array(zPet);
 
 export const zDeletePetData = z.object({
-  body: z.never().optional(),
-  headers: z
-    .object({
-      api_key: z.string().optional(),
-    })
-    .optional(),
+  body: z.optional(z.never()),
+  headers: z.optional(
+    z.object({
+      api_key: z.optional(z.string()),
+    }),
+  ),
   path: z.object({
     petId: z.coerce.bigint(),
   }),
-  query: z.never().optional(),
+  query: z.optional(z.never()),
 });
 
 export const zGetPetByIdData = z.object({
-  body: z.never().optional(),
+  body: z.optional(z.never()),
   path: z.object({
     petId: z.coerce.bigint(),
   }),
-  query: z.never().optional(),
+  query: z.optional(z.never()),
 });
 
 /**
@@ -133,16 +133,16 @@ export const zGetPetByIdData = z.object({
 export const zGetPetByIdResponse = zPet;
 
 export const zUpdatePetWithFormData = z.object({
-  body: z.never().optional(),
+  body: z.optional(z.never()),
   path: z.object({
     petId: z.coerce.bigint(),
   }),
-  query: z
-    .object({
-      name: z.string().optional(),
-      status: z.string().optional(),
-    })
-    .optional(),
+  query: z.optional(
+    z.object({
+      name: z.optional(z.string()),
+      status: z.optional(z.string()),
+    }),
+  ),
 });
 
 /**
@@ -151,15 +151,15 @@ export const zUpdatePetWithFormData = z.object({
 export const zUpdatePetWithFormResponse = zPet;
 
 export const zUploadFileData = z.object({
-  body: z.string().optional(),
+  body: z.optional(z.string()),
   path: z.object({
     petId: z.coerce.bigint(),
   }),
-  query: z
-    .object({
-      additionalMetadata: z.string().optional(),
-    })
-    .optional(),
+  query: z.optional(
+    z.object({
+      additionalMetadata: z.optional(z.string()),
+    }),
+  ),
 });
 
 /**
@@ -168,9 +168,9 @@ export const zUploadFileData = z.object({
 export const zUploadFileResponse = zApiResponse;
 
 export const zGetInventoryData = z.object({
-  body: z.never().optional(),
-  path: z.never().optional(),
-  query: z.never().optional(),
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
 });
 
 /**
@@ -179,9 +179,9 @@ export const zGetInventoryData = z.object({
 export const zGetInventoryResponse = z.object({});
 
 export const zPlaceOrderData = z.object({
-  body: zOrder.optional(),
-  path: z.never().optional(),
-  query: z.never().optional(),
+  body: z.optional(zOrder),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
 });
 
 /**
@@ -190,19 +190,19 @@ export const zPlaceOrderData = z.object({
 export const zPlaceOrderResponse = zOrder;
 
 export const zDeleteOrderData = z.object({
-  body: z.never().optional(),
+  body: z.optional(z.never()),
   path: z.object({
     orderId: z.coerce.bigint(),
   }),
-  query: z.never().optional(),
+  query: z.optional(z.never()),
 });
 
 export const zGetOrderByIdData = z.object({
-  body: z.never().optional(),
+  body: z.optional(z.never()),
   path: z.object({
     orderId: z.coerce.bigint(),
   }),
-  query: z.never().optional(),
+  query: z.optional(z.never()),
 });
 
 /**
@@ -211,9 +211,9 @@ export const zGetOrderByIdData = z.object({
 export const zGetOrderByIdResponse = zOrder;
 
 export const zCreateUserData = z.object({
-  body: zUser.optional(),
-  path: z.never().optional(),
-  query: z.never().optional(),
+  body: z.optional(zUser),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
 });
 
 /**
@@ -222,9 +222,9 @@ export const zCreateUserData = z.object({
 export const zCreateUserResponse = zUser;
 
 export const zCreateUsersWithListInputData = z.object({
-  body: z.array(zUser).optional(),
-  path: z.never().optional(),
-  query: z.never().optional(),
+  body: z.optional(z.array(zUser)),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
 });
 
 /**
@@ -233,14 +233,14 @@ export const zCreateUsersWithListInputData = z.object({
 export const zCreateUsersWithListInputResponse = zUser;
 
 export const zLoginUserData = z.object({
-  body: z.never().optional(),
-  path: z.never().optional(),
-  query: z
-    .object({
-      password: z.string().optional(),
-      username: z.string().optional(),
-    })
-    .optional(),
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.optional(
+    z.object({
+      password: z.optional(z.string()),
+      username: z.optional(z.string()),
+    }),
+  ),
 });
 
 /**
@@ -249,25 +249,25 @@ export const zLoginUserData = z.object({
 export const zLoginUserResponse = z.string();
 
 export const zLogoutUserData = z.object({
-  body: z.never().optional(),
-  path: z.never().optional(),
-  query: z.never().optional(),
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
 });
 
 export const zDeleteUserData = z.object({
-  body: z.never().optional(),
+  body: z.optional(z.never()),
   path: z.object({
     username: z.string(),
   }),
-  query: z.never().optional(),
+  query: z.optional(z.never()),
 });
 
 export const zGetUserByNameData = z.object({
-  body: z.never().optional(),
+  body: z.optional(z.never()),
   path: z.object({
     username: z.string(),
   }),
-  query: z.never().optional(),
+  query: z.optional(z.never()),
 });
 
 /**
@@ -276,9 +276,9 @@ export const zGetUserByNameData = z.object({
 export const zGetUserByNameResponse = zUser;
 
 export const zUpdateUserData = z.object({
-  body: zUser.optional(),
+  body: z.optional(zUser),
   path: z.object({
     username: z.string(),
   }),
-  query: z.never().optional(),
+  query: z.optional(z.never()),
 });
