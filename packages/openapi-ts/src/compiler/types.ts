@@ -868,6 +868,23 @@ export const createIndexedAccessTypeNode = ({
   return node;
 };
 
+export const createGetAccessorDeclaration = ({
+  name,
+  returnType,
+  statements,
+}: {
+  name: string | ts.PropertyName;
+  returnType?: string | ts.Identifier;
+  statements: ReadonlyArray<ts.Statement>;
+}) =>
+  ts.factory.createGetAccessorDeclaration(
+    undefined, // modifiers
+    name,
+    [], // parameters
+    returnType ? createTypeReferenceNode({ typeName: returnType }) : undefined,
+    createBlock({ statements }),
+  );
+
 export const createStringLiteral = ({
   isSingleQuote,
   text,
@@ -956,19 +973,10 @@ export const createTypeReferenceNode = ({
 }: {
   typeArguments?: ts.TypeNode[];
   typeName: string | ts.EntityName;
-}) => {
-  const node = ts.factory.createTypeReferenceNode(typeName, typeArguments);
-  return node;
-};
+}) => ts.factory.createTypeReferenceNode(typeName, typeArguments);
 
-export const createTypeParenthesizedNode = ({
-  type,
-}: {
-  type: ts.TypeNode;
-}) => {
-  const node = ts.factory.createParenthesizedType(type);
-  return node;
-};
+export const createTypeParenthesizedNode = ({ type }: { type: ts.TypeNode }) =>
+  ts.factory.createParenthesizedType(type);
 
 export const createParameterDeclaration = ({
   initializer,

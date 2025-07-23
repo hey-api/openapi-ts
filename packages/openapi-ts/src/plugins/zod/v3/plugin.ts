@@ -782,6 +782,7 @@ const schemaToZodSchema = ({
       schema.$ref,
     );
     state.circularReferenceTracker.push(schema.$ref);
+    state.currentReferenceTracker.push(schema.$ref);
 
     const id = plugin.api.getId({ type: 'ref', value: schema.$ref });
 
@@ -822,6 +823,7 @@ const schemaToZodSchema = ({
     }
 
     state.circularReferenceTracker.pop();
+    state.currentReferenceTracker.pop();
   } else if (schema.type) {
     const zSchema = schemaTypeToZodSchema({ plugin, schema, state });
     zodSchema.expression = zSchema.expression;
@@ -968,6 +970,7 @@ const handleComponent = ({
   if (!state) {
     state = {
       circularReferenceTracker: [id],
+      currentReferenceTracker: [id],
       hasCircularReference: false,
     };
   }
@@ -1025,6 +1028,7 @@ export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
         getZodSchema: (schema) => {
           const state: State = {
             circularReferenceTracker: [],
+            currentReferenceTracker: [],
             hasCircularReference: false,
           };
           return schemaToZodSchema({ plugin, schema, state });

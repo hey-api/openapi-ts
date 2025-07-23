@@ -40,12 +40,8 @@ export default defineConfig(() => {
       path: path.resolve(
         getSpecsPath(),
         '3.1.x',
-        // 'case.yaml',
-        // 'enum-inline.yaml',
-        'full.yaml',
-        // 'object-property-names.yaml',
-        // 'transformers-all-of.yaml',
-        // 'validators.yaml',
+        // 'full.yaml',
+        'validators-circular-ref.json',
       ),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
@@ -225,12 +221,12 @@ export default defineConfig(() => {
       {
         // case: 'snake_case',
         // comments: false,
-        compatibilityVersion: 'mini',
-        dates: {
-          offset: true,
-        },
+        compatibilityVersion: 4,
+        // dates: {
+        //   offset: true,
+        // },
         definitions: {
-          name: 'z{{name}}Definition',
+          // name: 'z{{name}}Definition',
           //   types: {
           //     infer: 'D{{name}}ZodType',
           //   },
@@ -252,11 +248,11 @@ export default defineConfig(() => {
         //     infer: 'F{{name}}ResponseZodType',
         //   },
         // },
-        types: {
-          infer: {
-            case: 'snake_case',
-          },
-        },
+        // types: {
+        //   infer: {
+        //     case: 'snake_case',
+        //   },
+        // },
       },
       {
         exportFromIndex: true,

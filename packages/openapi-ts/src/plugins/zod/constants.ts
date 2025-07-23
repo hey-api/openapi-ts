@@ -1,6 +1,8 @@
 import { compiler } from '../../compiler';
 
 export const identifiers = {
+  ZodMiniOptional: compiler.identifier({ text: 'ZodMiniOptional' }),
+  ZodOptional: compiler.identifier({ text: 'ZodOptional' }),
   _default: compiler.identifier({ text: '_default' }),
   and: compiler.identifier({ text: 'and' }),
   array: compiler.identifier({ text: 'array' }),

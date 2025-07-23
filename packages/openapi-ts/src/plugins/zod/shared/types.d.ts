@@ -9,10 +9,17 @@ export interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
 
 export type State = {
   circularReferenceTracker: Array<string>;
+  /**
+   * Works the same as `circularReferenceTracker`, but it resets whenever we
+   * walk inside another schema. This can be used to detect if a schema
+   * directly references itself.
+   */
+  currentReferenceTracker: Array<string>;
   hasCircularReference: boolean;
 };
 
 export type ZodSchema = {
   expression: ts.Expression;
-  typeName?: string;
+  hasCircularReference?: boolean;
+  typeName?: string | ts.Identifier;
 };

@@ -293,9 +293,11 @@ export const zModelWithDictionary = z.object({
  * This is a model with one property containing a circular reference
  */
 export const zModelWithCircularReference = z.object({
-    prop: z.optional(z.lazy(() => {
-        return zModelWithCircularReference;
-    }))
+    get prop(): z.ZodMiniOptional {
+        return z.optional(z.lazy((): any => {
+            return zModelWithCircularReference;
+        }));
+    }
 });
 
 /**

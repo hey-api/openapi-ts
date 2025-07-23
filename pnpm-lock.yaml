@@ -998,6 +998,21 @@ importers:
         specifier: 3.25.3
         version: 3.25.3
 
+  packages/openapi-ts-tests/zod/v4:
+    devDependencies:
+      '@config/vite-base':
+        specifier: workspace:*
+        version: link:../../../config-vite-base
+      '@hey-api/openapi-ts':
+        specifier: workspace:*
+        version: link:../../../openapi-ts
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
+      zod:
+        specifier: 4.0.5
+        version: 4.0.5
+
   packages/vite-plugin:
     devDependencies:
       '@hey-api/openapi-ts':

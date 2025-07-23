@@ -6,9 +6,9 @@ import { z } from 'zod/v4';
  * This is Bar schema.
  */
 export const zBar = z.object({
-    foo: z.optional(z.lazy(() => {
-        return zFoo;
-    }))
+    get foo(): z.ZodOptional {
+        return z.optional(zFoo);
+    }
 });
 
 /**
@@ -18,9 +18,11 @@ export const zFoo = z.union([
     z.object({
         foo: z.optional(z.string().regex(/^\d{3}-\d{2}-\d{4}$/)),
         bar: z.optional(zBar),
-        baz: z.optional(z.array(z.lazy(() => {
-            return zFoo;
-        }))),
+        get baz(): z.ZodOptional {
+            return z.optional(z.array(z.lazy((): any => {
+                return zFoo;
+            })));
+        },
         qux: z.optional(z.int().gt(0)).default(0)
     }),
     z.null()

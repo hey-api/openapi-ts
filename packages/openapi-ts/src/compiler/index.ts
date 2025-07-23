@@ -31,6 +31,7 @@ export const compiler = {
   expressionToStatement: convert.expressionToStatement,
   forOfStatement: types.createForOfStatement,
   functionTypeNode: types.createFunctionTypeNode,
+  getAccessorDeclaration: types.createGetAccessorDeclaration,
   identifier: utils.createIdentifier,
   ifStatement: transform.createIfStatement,
   indexedAccessTypeNode: types.createIndexedAccessTypeNode,

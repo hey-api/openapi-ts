@@ -420,13 +420,6 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          output: 'default',
-          plugins: ['zod'],
-        }),
-        description: 'generate Zod schemas with Zod plugin',
-      },
-      {
-        config: createConfig({
           input: 'type-format.yaml',
           output: 'type-format-valibot',
           plugins: [

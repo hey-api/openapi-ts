@@ -6,9 +6,9 @@ import { z } from 'zod/v4';
  * This is Bar schema.
  */
 export const zBar = z.object({
-    foo: z.optional(z.lazy(() => {
-        return zFoo;
-    }))
+    get foo(): z.ZodOptional {
+        return z.optional(zFoo);
+    }
 }).register(z.globalRegistry, {
     description: 'This is Bar schema.'
 });
@@ -22,11 +22,13 @@ export const zFoo = z.union([
             description: 'This is foo property.'
         })),
         bar: z.optional(zBar),
-        baz: z.optional(z.array(z.lazy(() => {
-            return zFoo;
-        })).register(z.globalRegistry, {
-            description: 'This is baz property.'
-        })),
+        get baz(): z.ZodOptional {
+            return z.optional(z.array(z.lazy((): any => {
+                return zFoo;
+            })).register(z.globalRegistry, {
+                description: 'This is baz property.'
+            }));
+        },
         qux: z.optional(z.int().gt(0).register(z.globalRegistry, {
             description: 'This is qux property.'
         })).default(0)
