@@ -3,7 +3,10 @@ title: Fastify
 description: Fastify plugin for Hey API. Compatible with all our features.
 ---
 
-# Fastify
+<Heading>
+  <h1>Fastify</h1>
+  <VersionLabel value="v5" />
+</Heading>
 
 ::: warning
 Fastify plugin is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).

@@ -19,16 +19,8 @@ const versions = [
 </script>
 
 <template>
-  <div class="container">
-    <h1>Zod</h1>
+  <Heading>
+    <slot />
     <VersionSwitcher :values="versions" default="v4" />
-  </div>
+  </Heading>
 </template>
-
-<style scoped>
-.container {
-  align-items: center;
-  column-gap: 1rem;
-  display: flex;
-}
-</style>

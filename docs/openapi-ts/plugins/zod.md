@@ -8,7 +8,9 @@ description: Zod plugin for Hey API. Compatible with all our features.
 import ZodHeading from './zod/ZodHeading.vue';
 </script>
 
-<ZodHeading />
+<ZodHeading>
+  <h1>Zod</h1>
+</ZodHeading>
 
 ### About
 
