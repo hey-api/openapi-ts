@@ -7,6 +7,44 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
+## v0.80.0
+
+### Added Zod 4 and Zod Mini
+
+This release adds support for Zod 4 and Zod Mini. By default, the `zod` plugin will generate output for Zod 4. If you want to preserve the previous output for Zod 3 or use Zod Mini, set `compatibilityVersion` to `3` or `mini`.
+
+::: code-group
+
+```js [Zod 3]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 3, // [!code ++]
+    },
+  ],
+};
+```
+
+```js [Zod Mini]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini', // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
 ## v0.79.0
 
 ### Removed `typescript+namespace` enums mode
