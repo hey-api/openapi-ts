@@ -3,17 +3,17 @@
 import { z } from 'zod';
 
 export const zFoo = z.object({
-    foo: z.literal('foo').optional(),
-    bar: z.literal(3.2).optional(),
-    baz: z.literal(-1).optional(),
-    qux: z.literal(true).optional(),
-    quux: z.tuple([
+    foo: z.optional(z.literal('foo')),
+    bar: z.optional(z.literal(3.2)),
+    baz: z.optional(z.literal(-1)),
+    qux: z.optional(z.literal(true)),
+    quux: z.optional(z.tuple([
         z.literal(1),
         z.literal(2),
         z.literal(3),
         z.literal('foo'),
         z.literal(true)
-    ]).optional(),
-    corge: z.object({}).optional(),
-    garply: z.coerce.bigint().optional()
+    ])),
+    corge: z.optional(z.object({})),
+    garply: z.optional(z.coerce.bigint())
 });
