@@ -16,6 +16,17 @@ export type UserConfig = Plugin.Name<'zod'> & {
    */
   comments?: boolean;
   /**
+   * The compatibility version to target for generated output.
+   *
+   * Can be:
+   * - `4`: [Zod 4](https://zod.dev/packages/zod) (default).
+   * - `3`: [Zod 3](https://v3.zod.dev/).
+   * - `'mini'`: [Zod Mini](https://zod.dev/packages/mini).
+   *
+   * @default 4
+   */
+  compatibilityVersion?: 3 | 4 | 'mini';
+  /**
    * Configuration for date handling in generated Zod schemas.
    *
    * Controls how date values are processed and validated using Zod's
@@ -336,6 +347,17 @@ export type Config = Plugin.Name<'zod'> & {
    * @default true
    */
   comments: boolean;
+  /**
+   * The compatibility version to target for generated output.
+   *
+   * Can be:
+   * - `4`: [Zod 4](https://zod.dev/packages/zod) (default).
+   * - `3`: [Zod 3](https://v3.zod.dev/).
+   * - `'mini'`: [Zod Mini](https://zod.dev/packages/mini).
+   *
+   * @default 4
+   */
+  compatibilityVersion: 3 | 4 | 'mini';
   /**
    * Configuration for date handling in generated Zod schemas.
    *

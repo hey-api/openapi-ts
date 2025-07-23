@@ -3,11 +3,14 @@ title: TanStack Query
 description: TanStack Query plugin for Hey API. Compatible with all our features.
 ---
 
-<script setup>
+<script setup lang="ts">
 import { embedProject } from '../../embed'
 </script>
 
-# TanStack Query
+<Heading>
+  <h1>TanStack Query</h1>
+  <VersionLabel value="v5" />
+</Heading>
 
 ::: warning
 TanStack Query plugin is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).

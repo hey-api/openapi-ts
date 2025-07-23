@@ -5,7 +5,8 @@ import type {
   PluginNames,
 } from '../plugins/types';
 import type { Config, UserConfig } from '../types/config';
-import { valueToObject } from './utils';
+import { valueToObject } from './utils/config';
+import { packageFactory } from './utils/package';
 
 /**
  * Default plugins used to generate artifacts if plugins aren't specified.
@@ -16,9 +17,11 @@ export const defaultPlugins = [
 ] as const satisfies ReadonlyArray<PluginNames>;
 
 const getPluginsConfig = ({
+  dependencies,
   userPlugins,
   userPluginsConfig,
 }: {
+  dependencies: Record<string, string>;
   userPlugins: ReadonlyArray<AnyPluginName>;
   userPluginsConfig: Config['plugins'];
 }): Pick<Config, 'plugins' | 'pluginOrder'> => {
@@ -61,6 +64,7 @@ const getPluginsConfig = ({
 
     if (plugin.resolveConfig) {
       const context: PluginContext = {
+        package: packageFactory(dependencies),
         pluginByTag: (tag, props = {}) => {
           const { defaultPlugin, errorMessage } = props;
 
@@ -135,9 +139,13 @@ const isPluginClient = (plugin: Required<UserConfig>['plugins'][number]) => {
   );
 };
 
-export const getPlugins = (
-  userConfig: UserConfig,
-): Pick<Config, 'plugins' | 'pluginOrder'> => {
+export const getPlugins = ({
+  dependencies,
+  userConfig,
+}: {
+  dependencies: Record<string, string>;
+  userConfig: UserConfig;
+}): Pick<Config, 'plugins' | 'pluginOrder'> => {
   const userPluginsConfig: Config['plugins'] = {};
 
   let definedPlugins: UserConfig['plugins'] = defaultPlugins;
@@ -185,5 +193,5 @@ export const getPlugins = (
     })
     .filter(Boolean);
 
-  return getPluginsConfig({ userPlugins, userPluginsConfig });
+  return getPluginsConfig({ dependencies, userPlugins, userPluginsConfig });
 };

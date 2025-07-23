@@ -1,5 +1,7 @@
 import path from 'node:path';
 
+import type { Package } from '../config/utils/package';
+import { packageFactory } from '../config/utils/package';
 import { GeneratedFile } from '../generate/file';
 import type { PluginConfigMap } from '../plugins/config';
 import { PluginInstance } from '../plugins/shared/utils/instance';
@@ -47,6 +49,13 @@ export class IRContext<Spec extends Record<string, any> = any> {
    */
   public ir: IR.Model = {};
   /**
+   * The package metadata and utilities for the current context, constructed
+   * from the provided dependencies. Used for managing package-related
+   * information such as name, version, and dependency resolution during
+   * code generation.
+   */
+  public package: Package;
+  /**
    * A map of registered plugin instances, keyed by plugin name. Plugins are
    * registered through the `registerPlugin` method and can be accessed by
    * their configured name from the config.
@@ -59,8 +68,17 @@ export class IRContext<Spec extends Record<string, any> = any> {
    */
   public spec: Spec;
 
-  constructor({ config, spec }: { config: Config; spec: Spec }) {
+  constructor({
+    config,
+    dependencies,
+    spec,
+  }: {
+    config: Config;
+    dependencies: Record<string, string>;
+    spec: Spec;
+  }) {
     this.config = config;
+    this.package = packageFactory(dependencies);
     this.spec = spec;
   }
 

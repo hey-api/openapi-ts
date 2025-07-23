@@ -1,4 +1,5 @@
-import type { ValueToObject } from '../config/utils';
+import type { ValueToObject } from '../config/utils/config';
+import type { Package } from '../config/utils/package';
 import type { OpenApi as LegacyOpenApi } from '../openApi';
 import type { Client as LegacyClient } from '../types/client';
 import type { Files } from '../types/utils';
@@ -35,7 +36,8 @@ export type AnyPluginName = PluginNames | (string & {});
 
 type PluginTag = 'client' | 'transformer' | 'validator';
 
-export interface PluginContext {
+export type PluginContext = {
+  package: Package;
   pluginByTag: <T extends AnyPluginName | boolean = AnyPluginName>(
     tag: PluginTag,
     props?: {
@@ -44,7 +46,7 @@ export interface PluginContext {
     },
   ) => Exclude<T, boolean> | undefined;
   valueToObject: ValueToObject;
-}
+};
 
 type BaseApi = Record<string, unknown>;
 

@@ -3,7 +3,7 @@ title: Spotlight
 description: Meet the people behind @hey-api/openapi-ts.
 ---
 
-<script setup>
+<script setup lang="ts">
 import { VPTeamMembers } from 'vitepress/theme'
 import { coreTeam } from '../../data/coreTeam.js'
 import { hallOfFame } from '../../data/hallOfFame.js'

@@ -31,6 +31,27 @@ html.dark {
   --vp-home-hero-image-filter: blur(144px);
 }
 
+html.mac {
+  --vs-background-color: var(--vp-input-switch-bg-color);
+  --vs-border: 1px solid var(--vp-input-border-color);
+  --vs-menu-border: 1px solid var(--vp-input-border-color);
+  --vs-menu-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  --vs-option-background-color: var(--vp-sidebar-bg-color);
+  --vs-option-disabled-background-color: var(--vp-sidebar-bg-color);
+  --vs-option-focused-background-color: var(--vp-sidebar-bg-color);
+  --vs-option-focused-text-color: var(--vp-c-brand-1);
+  --vs-option-hover-background-color: var(--vp-sidebar-bg-color);
+  --vs-option-hover-text-color: var(--vp-c-brand-1);
+  --vs-option-selected-background-color: var(--vp-sidebar-bg-color);
+  --vs-option-selected-text-color: var(--vp-c-brand-1);
+  --vs-option-text-color: var(--vp-c-text-2);
+  --vs-padding-x: 8px;
+  --vs-padding-y: 4px;
+  --vs-padding: var(--vs-padding-y) var(--vs-padding-x);
+  --vs-text-color: var(--vp-c-text-1);
+  --vs-width: auto;
+}
+
 [data-soon] {
   background-color: var(--vp-button-brand-bg);
   border-radius: 1em;
@@ -46,6 +67,24 @@ iframe {
   background-color: var(--vp-sidebar-bg-color);
   border: none;
   margin: 0;
+}
+
+.VPFeatures.VPHomeFeatures > .container {
+  max-width: initial;
+}
+
+.VPFeatures.VPHomeFeatures > .container > .items {
+  gap: 1rem;
+  justify-content: center;
+  margin: 0;
+  padding: 0.2rem 0;
+}
+
+.VPFeatures.VPHomeFeatures > .container > .items > .item {
+  flex-shrink: 0;
+  max-width: 390px;
+  padding: 0;
+  width: 100%;
 }
 
 .authors-list {
@@ -244,10 +283,6 @@ html.dark .sponsors-list li {
   text-transform: lowercase;
 }
 
-.VPFeatures.VPHomeFeatures > .container {
-  max-width: initial;
-}
-
 .migration {
   background-color: var(--vp-c-brand-3);
   border-radius: 10px;
@@ -270,16 +305,58 @@ a.migration:focus {
   border-color: var(--vp-c-brand-1);
 }
 
-.VPFeatures.VPHomeFeatures > .container > .items {
-  gap: 1rem;
-  justify-content: center;
-  margin: 0;
-  padding: 0.2rem 0;
-}
-
 .contributors-list ul {
   margin-bottom: 1.3rem;
   margin-top: 1.3rem;
+}
+
+.vue-select .control {
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.vue-select .control:hover {
+  border-color: var(--vp-c-brand-1);
+}
+
+.vue-select .control .indicators-container {
+  padding: 0;
+}
+
+.vue-select .control .value-container.has-value:has(.single-value) {
+  padding-inline-end: 0;
+}
+
+.vue-select .control .indicators-container button.dropdown-icon {
+  height: 100%;
+  padding: var(--vs-padding);
+  width: calc(
+    var(--vs-indicator-icon-size) + var(--vs-padding-x) + var(--vs-padding-x)
+  );
+}
+
+.vue-select .menu {
+  width: fit-content !important;
+}
+
+.vue-select .menu .menu-option {
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+  white-space: nowrap;
+  transition:
+    background-color 0.25s,
+    border-color 0.25s,
+    color 0.25s,
+    opacity 0.25s;
+}
+
+.vue-select .menu:hover .menu-option.focused:not(:hover) {
+  border-left: 2px solid transparent;
+}
+
+.vue-select .menu .menu-option:hover,
+.vue-select .menu:not(:hover) .menu-option.focused {
+  border-left: 2px solid var(--vp-c-brand-1);
 }
 
 @media (min-width: 640px) {
@@ -314,11 +391,4 @@ a.migration:focus {
   .VPNavBar.has-sidebar > .wrapper > .container > .title {
     background-color: var(--vp-sidebar-bg-color);
   }
-}
-
-.VPFeatures.VPHomeFeatures > .container > .items > .item {
-  flex-shrink: 0;
-  max-width: 390px;
-  padding: 0;
-  width: 100%;
 }

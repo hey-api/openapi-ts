@@ -3,15 +3,14 @@ title: Valibot
 description: Valibot plugin for Hey API. Compatible with all our features.
 ---
 
-<!-- <script setup>
+<!-- <script setup lang="ts">
 import { embedProject } from '../../embed'
 </script> -->
 
-# Valibot
-
-::: warning
-Valibot plugin is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues/1474).
-:::
+<Heading>
+  <h1>Valibot</h1>
+  <VersionLabel value="v1" />
+</Heading>
 
 ### About
 
