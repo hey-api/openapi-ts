@@ -798,6 +798,15 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: "validator schemas with merged unions (can't use .merge())",
     },
+    {
+      config: createConfig({
+        input: 'integer-formats.json',
+        output: 'integer-formats',
+        plugins: ['valibot'],
+      }),
+      description:
+        'generates validator schemas for all integer format combinations (number/integer/string types with int8, int16, int32, int64, uint8, uint16, uint32, uint64 formats)',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
