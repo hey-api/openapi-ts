@@ -246,9 +246,9 @@ export default async function (
     logger.debug(`Found ${Object.keys(clientPlugins).length} client plugins`);
 
     // Create the temp folder
-    if (!existsSync(tempFolder)) {
+    if (!existsSync(absoluteTempFolder)) {
       logger.debug(`Creating temp folder: ${tempFolder}`);
-      await makeDir(tempFolder);
+      await makeDir(absoluteTempFolder);
     } else {
       logger.debug(`Temp folder already exists: ${tempFolder}`);
     }
