@@ -37,7 +37,30 @@ vi.mock('@hey-api/openapi-ts/internal', async (importOriginal) => {
             config: {
               input: config?.input ?? 'default-input',
               output: config?.output ?? 'default-output',
-              parser: { validate_EXPERIMENTAL: true },
+              parser: {
+                pagination: {
+                  keywords: [
+                    'after',
+                    'before',
+                    'cursor',
+                    'offset',
+                    'page',
+                    'start',
+                  ],
+                },
+                transforms: {
+                  enums: {
+                    case: 'PascalCase',
+                    enabled: false,
+                    mode: 'root',
+                    name: (n: string) => n,
+                  },
+                  readWrite: {
+                    enabled: false,
+                  },
+                },
+                validate_EXPERIMENTAL: true,
+              },
               plugins: config?.plugins ?? [],
             },
             errors: [],
