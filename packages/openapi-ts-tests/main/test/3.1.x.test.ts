@@ -800,7 +800,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'integer-formats.json',
+        input: 'integer-formats.yaml',
         output: 'integer-formats',
         plugins: ['valibot'],
       }),
