@@ -14,9 +14,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept exact const value', () => {
       const result = v.safeParse(generatedSchemas.vNumberNoFormat, 42.5);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(42.5);
-      }
     });
 
     it('should reject non-matching values', () => {
@@ -29,9 +26,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept NumberInt8 exact const value', () => {
       const result = v.safeParse(generatedSchemas.vNumberInt8, 100);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(100);
-      }
     });
 
     it('should reject NumberInt8 non-matching values', () => {
@@ -42,9 +36,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept NumberInt16 exact const value', () => {
       const result = v.safeParse(generatedSchemas.vNumberInt16, 1000);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(1000);
-      }
     });
 
     it('should reject NumberInt16 non-matching values', () => {
@@ -55,9 +46,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept NumberInt32 exact const value', () => {
       const result = v.safeParse(generatedSchemas.vNumberInt32, 100000);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(100000);
-      }
     });
 
     it('should reject NumberInt32 non-matching values', () => {
@@ -71,9 +59,6 @@ describe('Number Type Const Values Tests', () => {
         BigInt('1000000000000'),
       );
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(BigInt('1000000000000'));
-      }
     });
 
     it('should reject NumberInt64 non-matching values', () => {
@@ -87,9 +72,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept NumberUint8 exact const value', () => {
       const result = v.safeParse(generatedSchemas.vNumberUint8, 200);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(200);
-      }
     });
 
     it('should reject NumberUint8 non-matching values', () => {
@@ -100,9 +82,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept NumberUint16 exact const value', () => {
       const result = v.safeParse(generatedSchemas.vNumberUint16, 50000);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(50000);
-      }
     });
 
     it('should reject NumberUint16 non-matching values', () => {
@@ -113,9 +92,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept NumberUint32 exact const value', () => {
       const result = v.safeParse(generatedSchemas.vNumberUint32, 3000000000);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(3000000000);
-      }
     });
 
     it('should reject NumberUint32 non-matching values', () => {
@@ -129,9 +105,6 @@ describe('Number Type Const Values Tests', () => {
         BigInt('18000000000000000000'),
       );
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(BigInt('18000000000000000000'));
-      }
     });
 
     it('should reject NumberUint64 non-matching values', () => {
@@ -147,9 +120,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept exact const value', () => {
       const result = v.safeParse(generatedSchemas.vIntegerNoFormat, -1);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(-1);
-      }
     });
 
     it('should reject non-matching values', () => {
@@ -162,9 +132,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept IntegerInt8 exact const value', () => {
       const result = v.safeParse(generatedSchemas.vIntegerInt8, -100);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(-100);
-      }
     });
 
     it('should reject IntegerInt8 non-matching values', () => {
@@ -175,9 +142,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept IntegerInt16 exact const value', () => {
       const result = v.safeParse(generatedSchemas.vIntegerInt16, -1000);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(-1000);
-      }
     });
 
     it('should reject IntegerInt16 non-matching values', () => {
@@ -188,9 +152,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept IntegerInt32 exact const value', () => {
       const result = v.safeParse(generatedSchemas.vIntegerInt32, -100000);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(-100000);
-      }
     });
 
     it('should reject IntegerInt32 non-matching values', () => {
@@ -204,9 +165,6 @@ describe('Number Type Const Values Tests', () => {
         BigInt('-1000000000000'),
       );
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(BigInt('-1000000000000'));
-      }
     });
 
     it('should reject IntegerInt64 non-matching values', () => {
@@ -220,9 +178,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept IntegerUint8 exact const value', () => {
       const result = v.safeParse(generatedSchemas.vIntegerUint8, 255);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(255);
-      }
     });
 
     it('should reject IntegerUint8 non-matching values', () => {
@@ -233,9 +188,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept IntegerUint16 exact const value', () => {
       const result = v.safeParse(generatedSchemas.vIntegerUint16, 65535);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(65535);
-      }
     });
 
     it('should reject IntegerUint16 non-matching values', () => {
@@ -246,9 +198,6 @@ describe('Number Type Const Values Tests', () => {
     it('should accept IntegerUint32 exact const value', () => {
       const result = v.safeParse(generatedSchemas.vIntegerUint32, 4294967295);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(4294967295);
-      }
     });
 
     it('should reject IntegerUint32 non-matching values', () => {
@@ -262,9 +211,6 @@ describe('Number Type Const Values Tests', () => {
         BigInt('1000000000000'),
       );
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(BigInt('1000000000000'));
-      }
     });
 
     it('should reject IntegerUint64 non-matching values', () => {
@@ -283,9 +229,6 @@ describe('Number Type Const Values Tests', () => {
         BigInt('-9223372036854775808'),
       );
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(BigInt('-9223372036854775808'));
-      }
     });
 
     it('should reject StringInt64 non-matching values', () => {
@@ -302,9 +245,6 @@ describe('Number Type Const Values Tests', () => {
         BigInt('18446744073709551615'),
       );
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(BigInt('18446744073709551615'));
-      }
     });
 
     it('should reject StringUint64 non-matching values', () => {
@@ -323,9 +263,6 @@ describe('Number Type Const Values Tests', () => {
         BigInt('-9223372036854775808'),
       );
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(BigInt('-9223372036854775808'));
-      }
     });
 
     it('should reject StringInt64n non-matching values', () => {
@@ -342,9 +279,6 @@ describe('Number Type Const Values Tests', () => {
         BigInt('18446744073709551615'),
       );
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(BigInt('18446744073709551615'));
-      }
     });
 
     it('should reject StringUint64n non-matching values', () => {

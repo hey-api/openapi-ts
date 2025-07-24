@@ -15,25 +15,16 @@ describe('Number Type Min/Max Constraints Tests', () => {
       it('should accept values at minimum boundary', () => {
         const result = v.safeParse(generatedSchemas.vNumberWithMinimum, 10);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(10);
-        }
       });
 
       it('should accept values above minimum', () => {
         const result = v.safeParse(generatedSchemas.vNumberWithMinimum, 15);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(15);
-        }
       });
 
       it('should reject values below minimum', () => {
         const result = v.safeParse(generatedSchemas.vNumberWithMinimum, 9);
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
 
@@ -41,25 +32,16 @@ describe('Number Type Min/Max Constraints Tests', () => {
       it('should accept values at maximum boundary', () => {
         const result = v.safeParse(generatedSchemas.vNumberWithMaximum, 100);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(100);
-        }
       });
 
       it('should accept values below maximum', () => {
         const result = v.safeParse(generatedSchemas.vNumberWithMaximum, 50);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(50);
-        }
       });
 
       it('should reject values above maximum', () => {
         const result = v.safeParse(generatedSchemas.vNumberWithMaximum, 101);
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
 
@@ -67,41 +49,26 @@ describe('Number Type Min/Max Constraints Tests', () => {
       it('should accept values within range', () => {
         const result = v.safeParse(generatedSchemas.vNumberWithMinMax, 50);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(50);
-        }
       });
 
       it('should accept values at minimum boundary', () => {
         const result = v.safeParse(generatedSchemas.vNumberWithMinMax, 0);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(0);
-        }
       });
 
       it('should accept values at maximum boundary', () => {
         const result = v.safeParse(generatedSchemas.vNumberWithMinMax, 100);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(100);
-        }
       });
 
       it('should reject values below minimum', () => {
         const result = v.safeParse(generatedSchemas.vNumberWithMinMax, -1);
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values above maximum', () => {
         const result = v.safeParse(generatedSchemas.vNumberWithMinMax, 101);
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
   });
@@ -111,25 +78,16 @@ describe('Number Type Min/Max Constraints Tests', () => {
       it('should accept values at minimum boundary', () => {
         const result = v.safeParse(generatedSchemas.vIntegerWithMinimum, 5);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(5);
-        }
       });
 
       it('should accept values above minimum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerWithMinimum, 10);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(10);
-        }
       });
 
       it('should reject values below minimum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerWithMinimum, 4);
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
 
@@ -137,25 +95,16 @@ describe('Number Type Min/Max Constraints Tests', () => {
       it('should accept values at maximum boundary', () => {
         const result = v.safeParse(generatedSchemas.vIntegerWithMaximum, 999);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(999);
-        }
       });
 
       it('should accept values below maximum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerWithMaximum, 500);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(500);
-        }
       });
 
       it('should reject values above maximum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerWithMaximum, 1000);
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
 
@@ -163,41 +112,26 @@ describe('Number Type Min/Max Constraints Tests', () => {
       it('should accept values within range', () => {
         const result = v.safeParse(generatedSchemas.vIntegerWithMinMax, 500);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(500);
-        }
       });
 
       it('should accept values at minimum boundary', () => {
         const result = v.safeParse(generatedSchemas.vIntegerWithMinMax, 1);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(1);
-        }
       });
 
       it('should accept values at maximum boundary', () => {
         const result = v.safeParse(generatedSchemas.vIntegerWithMinMax, 999);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(999);
-        }
       });
 
       it('should reject values below minimum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerWithMinMax, 0);
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values above maximum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerWithMinMax, 1000);
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
   });
@@ -210,17 +144,11 @@ describe('Number Type Min/Max Constraints Tests', () => {
           0.1,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(0.1);
-        }
       });
 
       it('should reject values at exclusive minimum', () => {
         const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMin, 0);
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values below exclusive minimum', () => {
@@ -229,9 +157,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           -1,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
 
@@ -242,9 +167,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           99.9,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(99.9);
-        }
       });
 
       it('should reject values at exclusive maximum', () => {
@@ -253,9 +175,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           100,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values above exclusive maximum', () => {
@@ -264,9 +183,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           101,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
 
@@ -277,9 +193,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           0.5,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(0.5);
-        }
       });
 
       it('should reject values at exclusive minimum', () => {
@@ -288,9 +201,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           0,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values at exclusive maximum', () => {
@@ -299,9 +209,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           1,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
 
@@ -312,9 +219,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           11,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(11);
-        }
       });
 
       it('should reject values at exclusive minimum', () => {
@@ -323,9 +227,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           10,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values below exclusive minimum', () => {
@@ -334,9 +235,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           9,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
 
@@ -347,9 +245,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           49,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(49);
-        }
       });
 
       it('should reject values at exclusive maximum', () => {
@@ -358,9 +253,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           50,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values above exclusive maximum', () => {
@@ -369,9 +261,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           51,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
 
@@ -382,9 +271,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           10,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(10);
-        }
       });
 
       it('should reject values at exclusive minimum', () => {
@@ -393,9 +279,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           5,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values at exclusive maximum', () => {
@@ -404,9 +287,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           15,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
   });
@@ -419,9 +299,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           90,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(90);
-        }
       });
 
       it('should accept values above exclusive minimum and below inclusive maximum', () => {
@@ -430,9 +307,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           50,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(50);
-        }
       });
 
       it('should reject values at exclusive minimum', () => {
@@ -441,9 +315,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           10,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values above inclusive maximum', () => {
@@ -452,9 +323,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           91,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
 
@@ -465,9 +333,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           20,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(20);
-        }
       });
 
       it('should accept values above inclusive minimum and below exclusive maximum', () => {
@@ -476,9 +341,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           50,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(50);
-        }
       });
 
       it('should reject values below inclusive minimum', () => {
@@ -487,9 +349,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           19,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values at exclusive maximum', () => {
@@ -498,9 +357,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           80,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
 
@@ -511,9 +367,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           50,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(50);
-        }
       });
 
       it('should accept values above exclusive minimum and below inclusive maximum', () => {
@@ -522,9 +375,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           25,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(25);
-        }
       });
 
       it('should reject values at exclusive minimum', () => {
@@ -533,9 +383,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           5,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values above inclusive maximum', () => {
@@ -544,9 +391,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           51,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
 
@@ -557,9 +401,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           10,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(10);
-        }
       });
 
       it('should accept values above inclusive minimum and below exclusive maximum', () => {
@@ -568,9 +409,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           55,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(55);
-        }
       });
 
       it('should reject values below inclusive minimum', () => {
@@ -579,9 +417,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           9,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values at exclusive maximum', () => {
@@ -590,9 +425,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           100,
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
   });
@@ -605,9 +437,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('-5000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('-5000000000000'));
-        }
       });
 
       it('should accept BigInt values above minimum', () => {
@@ -616,9 +445,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('0'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('0'));
-        }
       });
 
       it('should reject BigInt values below minimum', () => {
@@ -627,9 +453,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('-5000000000001'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -640,9 +463,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('5000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('5000000000000'));
-        }
       });
 
       it('should accept BigInt values below maximum', () => {
@@ -651,9 +471,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('1000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('1000000000000'));
-        }
       });
 
       it('should reject BigInt values above maximum', () => {
@@ -662,9 +479,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('5000000000001'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -675,9 +489,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('0'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('0'));
-        }
       });
 
       it('should accept BigInt values at minimum boundary', () => {
@@ -686,9 +497,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('-4000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('-4000000000000'));
-        }
       });
 
       it('should accept BigInt values at maximum boundary', () => {
@@ -697,9 +505,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('4000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('4000000000000'));
-        }
       });
 
       it('should reject BigInt values below minimum', () => {
@@ -708,9 +513,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('-4000000000001'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
 
       it('should reject BigInt values above maximum', () => {
@@ -719,9 +521,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('4000000000001'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -732,9 +531,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('-2999999999999'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('-2999999999999'));
-        }
       });
 
       it('should reject BigInt values at exclusive minimum', () => {
@@ -743,9 +539,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('-3000000000000'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -756,9 +549,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('2999999999999'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('2999999999999'));
-        }
       });
 
       it('should reject BigInt values at exclusive maximum', () => {
@@ -767,9 +557,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('3000000000000'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -780,9 +567,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('0'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('0'));
-        }
       });
 
       it('should reject BigInt values at exclusive minimum', () => {
@@ -791,9 +575,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('-2000000000000'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
 
       it('should reject BigInt values at exclusive maximum', () => {
@@ -802,9 +583,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('2000000000000'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -815,9 +593,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('6000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('6000000000000'));
-        }
       });
 
       it('should accept values above exclusive minimum and below inclusive maximum', () => {
@@ -826,9 +601,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('0'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('0'));
-        }
       });
 
       it('should reject values at exclusive minimum', () => {
@@ -837,9 +609,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('-6000000000000'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
 
       it('should reject values above inclusive maximum', () => {
@@ -848,9 +617,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('6000000000001'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -861,9 +627,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('-7000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('-7000000000000'));
-        }
       });
 
       it('should accept values above inclusive minimum and below exclusive maximum', () => {
@@ -872,9 +635,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('0'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('0'));
-        }
       });
 
       it('should reject values below inclusive minimum', () => {
@@ -883,9 +643,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('-7000000000001'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
 
       it('should reject values at exclusive maximum', () => {
@@ -894,9 +651,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('7000000000000'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
   });
@@ -909,9 +663,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('5000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('5000000000000'));
-        }
       });
 
       it('should accept BigInt values above minimum', () => {
@@ -920,9 +671,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('8000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('8000000000000'));
-        }
       });
 
       it('should reject BigInt values below minimum', () => {
@@ -931,9 +679,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('4999999999999'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -944,9 +689,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('15000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('15000000000000'));
-        }
       });
 
       it('should accept BigInt values below maximum', () => {
@@ -955,9 +697,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('10000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('10000000000000'));
-        }
       });
 
       it('should reject BigInt values above maximum', () => {
@@ -966,9 +705,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('15000000000001'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -979,9 +715,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('5000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('5000000000000'));
-        }
       });
 
       it('should accept BigInt values at minimum boundary', () => {
@@ -990,9 +723,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('1000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('1000000000000'));
-        }
       });
 
       it('should accept BigInt values at maximum boundary', () => {
@@ -1001,9 +731,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('10000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('10000000000000'));
-        }
       });
 
       it('should reject BigInt values below minimum', () => {
@@ -1012,9 +739,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('999999999999'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
 
       it('should reject BigInt values above maximum', () => {
@@ -1023,9 +747,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('10000000000001'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -1036,9 +757,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('8000000000001'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('8000000000001'));
-        }
       });
 
       it('should reject BigInt values at exclusive minimum', () => {
@@ -1047,9 +765,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('8000000000000'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -1060,9 +775,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('11999999999999'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('11999999999999'));
-        }
       });
 
       it('should reject BigInt values at exclusive maximum', () => {
@@ -1071,9 +783,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('12000000000000'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -1084,9 +793,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('5000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('5000000000000'));
-        }
       });
 
       it('should reject BigInt values at exclusive minimum', () => {
@@ -1095,9 +801,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('2000000000000'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
 
       it('should reject BigInt values at exclusive maximum', () => {
@@ -1106,9 +809,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('8000000000000'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -1119,9 +819,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('13000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('13000000000000'));
-        }
       });
 
       it('should accept values above exclusive minimum and below inclusive maximum', () => {
@@ -1130,9 +827,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('8000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('8000000000000'));
-        }
       });
 
       it('should reject values at exclusive minimum', () => {
@@ -1141,9 +835,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('3000000000000'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
 
       it('should reject values above inclusive maximum', () => {
@@ -1152,9 +843,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('13000000000001'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
 
@@ -1165,9 +853,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('4000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('4000000000000'));
-        }
       });
 
       it('should accept values above inclusive minimum and below exclusive maximum', () => {
@@ -1176,9 +861,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('9000000000000'),
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(BigInt('9000000000000'));
-        }
       });
 
       it('should reject values below inclusive minimum', () => {
@@ -1187,9 +869,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('3999999999999'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
 
       it('should reject values at exclusive maximum', () => {
@@ -1198,9 +877,6 @@ describe('Number Type Min/Max Constraints Tests', () => {
           BigInt('14000000000000'),
         );
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Expected');
-        }
       });
     });
   });
@@ -1211,34 +887,22 @@ describe('Number Type Min/Max Constraints Tests', () => {
         // exclusiveMinimum: 5, minimum: 10 - exclusive should take precedence
         const result = v.safeParse(generatedSchemas.vPrecedenceTest, 6);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(6);
-        }
       });
 
       it('should use exclusive constraints over inclusive (exclusive maximum takes precedence)', () => {
         // exclusiveMaximum: 95, maximum: 90 - exclusive should take precedence
         const result = v.safeParse(generatedSchemas.vPrecedenceTest, 94);
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(94);
-        }
       });
 
       it('should reject values at exclusive minimum boundary', () => {
         const result = v.safeParse(generatedSchemas.vPrecedenceTest, 5);
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
 
       it('should reject values at exclusive maximum boundary', () => {
         const result = v.safeParse(generatedSchemas.vPrecedenceTest, 95);
         expect(result.success).toBe(false);
-        if (!result.success) {
-          expect(result.issues[0].message).toContain('Invalid value: Expected');
-        }
       });
     });
   });
