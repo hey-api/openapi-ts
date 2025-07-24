@@ -8,6 +8,12 @@ import type { StringCase, StringName } from '../../types/case';
 import { numberRegExp } from '../../utils/regexp';
 import { createSchemaComment } from '../shared/utils/schema';
 import { identifiers, valibotId } from './constants';
+import {
+  INTEGER_FORMATS,
+  isIntegerFormat,
+  needsBigIntForFormat,
+  numberParameter,
+} from './number-helpers';
 import { operationToValibotSchema } from './operation';
 import type { ValibotPlugin } from './types';
 
@@ -253,67 +259,142 @@ const nullTypeToValibotSchema = (_props: {
   return expression;
 };
 
-const numberParameter = ({
-  isBigInt,
-  value,
-}: {
-  isBigInt: boolean;
-  value: unknown;
-}) => {
-  const expression = compiler.valueToExpression({ value });
-
-  if (
-    isBigInt &&
-    (typeof value === 'bigint' ||
-      typeof value === 'number' ||
-      typeof value === 'string' ||
-      typeof value === 'boolean')
-  ) {
-    return compiler.callExpression({
-      functionName: 'BigInt',
-      parameters: [expression],
-    });
-  }
-
-  return expression;
-};
-
 const numberTypeToValibotSchema = ({
   schema,
 }: {
   schema: SchemaWithType<'integer' | 'number'>;
 }) => {
-  const isBigInt = schema.type === 'integer' && schema.format === 'int64';
+  const format = schema.format;
+  const isInteger = schema.type === 'integer';
+  const isBigInt = needsBigIntForFormat(format);
+  const formatInfo = isIntegerFormat(format) ? INTEGER_FORMATS[format] : null;
 
-  if (typeof schema.const === 'number') {
-    // TODO: parser - handle bigint constants
-    const expression = compiler.callExpression({
+  // Return early if const is defined since we can create a literal type directly without additional validation
+  if (schema.const !== undefined && schema.const !== null) {
+    const constValue = schema.const;
+    let literalValue;
+
+    // Case 1: Number with no format -> generate literal with the number
+    if (typeof constValue === 'number' && !format) {
+      literalValue = compiler.ots.number(constValue);
+    }
+    // Case 2: Number with format -> check if format needs BigInt, generate appropriate literal
+    else if (typeof constValue === 'number' && format) {
+      if (isBigInt) {
+        // Format requires BigInt, convert number to BigInt
+        literalValue = compiler.callExpression({
+          functionName: 'BigInt',
+          parameters: [compiler.ots.string(constValue.toString())],
+        });
+      } else {
+        // Regular format, use number as-is
+        literalValue = compiler.ots.number(constValue);
+      }
+    }
+    // Case 3: Format that allows string -> generate BigInt literal (for int64/uint64 formats)
+    else if (typeof constValue === 'string' && isBigInt) {
+      // Remove 'n' suffix if present in string
+      const cleanString = constValue.endsWith('n')
+        ? constValue.slice(0, -1)
+        : constValue;
+      literalValue = compiler.callExpression({
+        functionName: 'BigInt',
+        parameters: [compiler.ots.string(cleanString)],
+      });
+    }
+    // Case 4: Const is typeof bigint (literal) -> transform from literal to BigInt()
+    else if (typeof constValue === 'bigint') {
+      // Convert BigInt to string and remove 'n' suffix that toString() adds
+      const bigintString = constValue.toString();
+      const cleanString = bigintString.endsWith('n')
+        ? bigintString.slice(0, -1)
+        : bigintString;
+      literalValue = compiler.callExpression({
+        functionName: 'BigInt',
+        parameters: [compiler.ots.string(cleanString)],
+      });
+    }
+    // Default case: use value as-is for other types
+    else {
+      literalValue = compiler.valueToExpression({ value: constValue });
+    }
+
+    return compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.schemas.literal,
       }),
-      parameters: [compiler.ots.number(schema.const)],
+      parameters: [literalValue],
     });
-    return expression;
   }
 
   const pipes: Array<ts.CallExpression> = [];
 
-  // Zod uses coerce for bigint here, might be needed for Valibot too
-  const expression = compiler.callExpression({
-    functionName: isBigInt
-      ? compiler.propertyAccessExpression({
-          expression: identifiers.v,
-          name: identifiers.schemas.bigInt,
-        })
-      : compiler.propertyAccessExpression({
-          expression: identifiers.v,
-          name: identifiers.schemas.number,
+  // For bigint formats (int64, uint64), create union of number, string, and bigint with transform
+  if (isBigInt) {
+    const unionExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: identifiers.v,
+        name: identifiers.schemas.union,
+      }),
+      parameters: [
+        compiler.arrayLiteralExpression({
+          elements: [
+            compiler.callExpression({
+              functionName: compiler.propertyAccessExpression({
+                expression: identifiers.v,
+                name: identifiers.schemas.number,
+              }),
+            }),
+            compiler.callExpression({
+              functionName: compiler.propertyAccessExpression({
+                expression: identifiers.v,
+                name: identifiers.schemas.string,
+              }),
+            }),
+            compiler.callExpression({
+              functionName: compiler.propertyAccessExpression({
+                expression: identifiers.v,
+                name: identifiers.schemas.bigInt,
+              }),
+            }),
+          ],
+          multiLine: false,
         }),
-  });
-  pipes.push(expression);
+      ],
+    });
+    pipes.push(unionExpression);
 
-  if (!isBigInt && schema.type === 'integer') {
+    // Add transform to convert to BigInt
+    const transformExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: identifiers.v,
+        name: identifiers.actions.transform,
+      }),
+      parameters: [
+        compiler.arrowFunction({
+          parameters: [{ name: 'x' }],
+          statements: compiler.callExpression({
+            functionName: 'BigInt',
+            parameters: [compiler.identifier({ text: 'x' })],
+          }),
+        }),
+      ],
+    });
+    pipes.push(transformExpression);
+  } else {
+    // For regular number formats, use number schema
+    const expression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: identifiers.v,
+        name: identifiers.schemas.number,
+      }),
+    });
+    pipes.push(expression);
+  }
+
+  // Add integer validation for integer types (except when using bigint union)
+  if (!isBigInt && isInteger) {
     const expression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: identifiers.v,
@@ -321,6 +402,50 @@ const numberTypeToValibotSchema = ({
       }),
     });
     pipes.push(expression);
+  }
+
+  // Add format-specific range validations
+  if (formatInfo) {
+    const minValue = formatInfo.min;
+    const maxValue = formatInfo.max;
+    const minErrorMessage = formatInfo.minError;
+    const maxErrorMessage = formatInfo.maxError;
+
+    // Add minimum value validation
+    const minExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: identifiers.v,
+        name: identifiers.actions.minValue,
+      }),
+      parameters: [
+        isBigInt
+          ? compiler.callExpression({
+              functionName: 'BigInt',
+              parameters: [compiler.ots.string(minValue.toString())],
+            })
+          : compiler.ots.number(minValue as number),
+        compiler.ots.string(minErrorMessage),
+      ],
+    });
+    pipes.push(minExpression);
+
+    // Add maximum value validation
+    const maxExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: identifiers.v,
+        name: identifiers.actions.maxValue,
+      }),
+      parameters: [
+        isBigInt
+          ? compiler.callExpression({
+              functionName: 'BigInt',
+              parameters: [compiler.ots.string(maxValue.toString())],
+            })
+          : compiler.ots.number(maxValue as number),
+        compiler.ots.string(maxErrorMessage),
+      ],
+    });
+    pipes.push(maxExpression);
   }
 
   if (schema.exclusiveMinimum !== undefined) {
@@ -763,6 +888,14 @@ const schemaTypeToValibotSchema = ({
         state,
       });
     case 'string':
+      // For string schemas with int64/uint64 formats, use number handler to generate union with transform
+      if (schema.format === 'int64' || schema.format === 'uint64') {
+        return {
+          expression: numberTypeToValibotSchema({
+            schema: schema as SchemaWithType<'integer' | 'number'>,
+          }),
+        };
+      }
       return {
         expression: stringTypeToValibotSchema({
           schema: schema as SchemaWithType<'string'>,

@@ -664,7 +664,7 @@ export const vCollectionFormatData = v.object({
 export const vTypesData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.object({
-        id: v.optional(v.pipe(v.number(), v.integer()))
+        id: v.optional(v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2^31'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2^31-1')))
     })),
     query: v.object({
         parameterNumber: v.optional(v.number(), 123),
