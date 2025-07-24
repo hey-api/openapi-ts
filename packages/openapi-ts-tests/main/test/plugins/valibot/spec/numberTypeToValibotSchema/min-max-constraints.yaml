@@ -1,0 +1,141 @@
+openapi: '3.1.0'
+info:
+  title: Number Type Min/Max Constraints Test API
+  version: '1.0.0'
+paths: {}
+components:
+  schemas:
+    NumberWithMinimum:
+      type: number
+      minimum: 10
+    NumberWithMaximum:
+      type: number
+      maximum: 100
+    NumberWithMinMax:
+      type: number
+      minimum: 0
+      maximum: 100
+    IntegerWithMinimum:
+      type: integer
+      minimum: 5
+    IntegerWithMaximum:
+      type: integer
+      maximum: 999
+    IntegerWithMinMax:
+      type: integer
+      minimum: 1
+      maximum: 999
+    NumberWithExclusiveMin:
+      type: number
+      exclusiveMinimum: 0
+    NumberWithExclusiveMax:
+      type: number
+      exclusiveMaximum: 100
+    NumberWithExclusiveMinMax:
+      type: number
+      exclusiveMinimum: 0
+      exclusiveMaximum: 1
+    IntegerWithExclusiveMin:
+      type: integer
+      exclusiveMinimum: 10
+    IntegerWithExclusiveMax:
+      type: integer
+      exclusiveMaximum: 50
+    IntegerWithExclusiveMinMax:
+      type: integer
+      exclusiveMinimum: 5
+      exclusiveMaximum: 15
+    NumberWithExclusiveMinInclusiveMax:
+      type: number
+      exclusiveMinimum: 10
+      maximum: 90
+    NumberWithInclusiveMinExclusiveMax:
+      type: number
+      minimum: 20
+      exclusiveMaximum: 80
+    IntegerWithExclusiveMinInclusiveMax:
+      type: integer
+      exclusiveMinimum: 5
+      maximum: 50
+    IntegerWithInclusiveMinExclusiveMax:
+      type: integer
+      minimum: 10
+      exclusiveMaximum: 100
+    Int64WithMinimum:
+      type: integer
+      format: int64
+      minimum: -5000000000000
+    Int64WithMaximum:
+      type: integer
+      format: int64
+      maximum: 5000000000000
+    Int64WithMinMax:
+      type: integer
+      format: int64
+      minimum: -4000000000000
+      maximum: 4000000000000
+    Int64WithExclusiveMin:
+      type: integer
+      format: int64
+      exclusiveMinimum: -3000000000000
+    Int64WithExclusiveMax:
+      type: integer
+      format: int64
+      exclusiveMaximum: 3000000000000
+    Int64WithExclusiveMinMax:
+      type: integer
+      format: int64
+      exclusiveMinimum: -2000000000000
+      exclusiveMaximum: 2000000000000
+    Int64WithExclusiveMinInclusiveMax:
+      type: integer
+      format: int64
+      exclusiveMinimum: -6000000000000
+      maximum: 6000000000000
+    Int64WithInclusiveMinExclusiveMax:
+      type: integer
+      format: int64
+      minimum: -7000000000000
+      exclusiveMaximum: 7000000000000
+    UInt64WithMinimum:
+      type: integer
+      format: uint64
+      minimum: 5000000000000
+    UInt64WithMaximum:
+      type: integer
+      format: uint64
+      maximum: 15000000000000
+    UInt64WithMinMax:
+      type: integer
+      format: uint64
+      minimum: 1000000000000
+      maximum: 10000000000000
+    UInt64WithExclusiveMin:
+      type: integer
+      format: uint64
+      exclusiveMinimum: 8000000000000
+    UInt64WithExclusiveMax:
+      type: integer
+      format: uint64
+      exclusiveMaximum: 12000000000000
+    UInt64WithExclusiveMinMax:
+      type: integer
+      format: uint64
+      exclusiveMinimum: 2000000000000
+      exclusiveMaximum: 8000000000000
+    UInt64WithExclusiveMinInclusiveMax:
+      type: integer
+      format: uint64
+      exclusiveMinimum: 3000000000000
+      maximum: 13000000000000
+    UInt64WithInclusiveMinExclusiveMax:
+      type: integer
+      format: uint64
+      minimum: 4000000000000
+      exclusiveMaximum: 14000000000000
+    PrecedenceTest:
+      type: number
+      minimum: 10
+      maximum: 90
+      exclusiveMinimum: 5
+      exclusiveMaximum: 95

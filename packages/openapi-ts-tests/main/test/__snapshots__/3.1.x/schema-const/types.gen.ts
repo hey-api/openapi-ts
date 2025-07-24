@@ -16,6 +16,24 @@ export type Foo = {
         [key: string]: unknown;
     };
     garply?: 10n;
+    numberInt8?: 100;
+    numberInt16?: 1000;
+    numberInt32?: 100000;
+    numberInt64?: 1000000000000;
+    numberUint8?: 200;
+    numberUint16?: 50000;
+    numberUint32?: 3000000000;
+    numberUint64?: 18000000000000000000;
+    integerInt8?: -100;
+    integerInt16?: -1000;
+    integerInt32?: -100000;
+    integerInt64?: -1000000000000;
+    integerUint8?: 255;
+    integerUint16?: 65535;
+    integerUint32?: 4294967295;
+    integerUint64?: 18446744073709551615n;
+    stringInt64?: '-9223372036854775808';
+    stringUint64?: '18446744073709551615';
 };
 
 export type ClientOptions = {
