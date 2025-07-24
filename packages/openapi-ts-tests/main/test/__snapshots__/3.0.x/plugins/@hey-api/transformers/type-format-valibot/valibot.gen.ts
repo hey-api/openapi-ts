@@ -4,7 +4,11 @@ import * as v from 'valibot';
 
 export const vFoo = v.object({
     bar: v.optional(v.pipe(v.number(), v.integer())),
-    foo: v.optional(v.bigint(), BigInt(0)),
+    foo: v.optional(v.pipe(v.union([
+        v.number(),
+        v.string(),
+        v.bigint()
+    ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')), BigInt(0)),
     id: v.string()
 });
 
