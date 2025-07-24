@@ -30,13 +30,19 @@ vi.mock('@hey-api/openapi-ts/internal', async (importOriginal) => {
   return {
     ...actual,
     initConfigs: vi.fn((config: Parameters<typeof initConfigs>[0]) =>
-      Promise.resolve([
-        {
-          input: config?.input ?? 'default-input',
-          output: config?.output ?? 'default-output',
-          plugins: config?.plugins ?? [],
-        },
-      ]),
+      Promise.resolve({
+        dependencies: [],
+        results: [
+          {
+            config: {
+              input: config?.input ?? 'default-input',
+              output: config?.output ?? 'default-output',
+              plugins: config?.plugins ?? [],
+            },
+            errors: [],
+          },
+        ],
+      }),
     ),
   };
 });
@@ -215,7 +221,7 @@ describe('openapi-client generator', () => {
   });
 
   describe('updatePackageJson', () => {
-    it('should update package.json with correct dependencies', async () => {
+    it('should not add the fetch client to the package.json', async () => {
       const { options, tree } = await getGeneratorOptions({
         name: `test-api-${randomUUID()}`,
         tempDirectory,
@@ -252,7 +258,49 @@ describe('openapi-client generator', () => {
       });
 
       const packageJson = readJson(tree, `${projectRoot}/package.json`);
-      expect(packageJson.dependencies['@hey-api/client-fetch']).toBeDefined();
+      expect(
+        packageJson.dependencies['@hey-api/client-fetch'],
+      ).not.toBeDefined();
+    });
+
+    it('should add the random client to the package.json', async () => {
+      const { options, tree } = await getGeneratorOptions({
+        name: `test-api-${randomUUID()}`,
+        tempDirectory,
+      });
+      const normalizedOptions = normalizeOptions(options);
+      const { projectName, projectRoot, projectScope } = normalizedOptions;
+
+      // Create initial package.json
+      tree.write(
+        `${projectRoot}/package.json`,
+        JSON.stringify({
+          dependencies: {},
+          devDependencies: {},
+          name: `${projectScope}/${projectName}`,
+        }),
+      );
+
+      // Create tsconfig.base.json
+      tree.write(
+        'tsconfig.base.json',
+        JSON.stringify({
+          compilerOptions: {
+            paths: {},
+          },
+        }),
+      );
+
+      await updatePackageJson({
+        clientType: 'MyRandomClient',
+        isPrivate: true,
+        plugins: [],
+        projectRoot,
+        tree,
+      });
+
+      const packageJson = readJson(tree, `${projectRoot}/package.json`);
+      expect(packageJson.dependencies['MyRandomClient']).toBeDefined();
     });
 
     it('should update tsconfig with correct dependencies', async () => {

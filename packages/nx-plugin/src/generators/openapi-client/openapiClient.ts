@@ -897,8 +897,19 @@ export async function updatePackageJson({
 }) {
   const { default: latestVersion } = await import('latest-version');
 
+  const nonPackageClients = [
+    '@hey-api/client-fetch',
+    '@hey-api/client-axios',
+    '@hey-api/client-nuxt',
+    '@hey-api/client-next',
+  ];
   // add the client as a dependency
-  const clientDetails = getPackageDetails(clientType);
+  const clientDetails = nonPackageClients.includes(clientType)
+    ? {
+        packageName: clientType,
+        packageVersion: undefined,
+      }
+    : getPackageDetails(clientType);
   // add the openapi-ts as a dependency
   const openApiTsDetails = getPackageDetails('@hey-api/openapi-ts');
 
@@ -923,13 +934,16 @@ export async function updatePackageJson({
   ]);
 
   // Update package.json to add dependencies and scripts
-  const deps = results.reduce(
-    (acc, result) => {
-      acc[result.packageName] = result.packageVersion;
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
+  const deps = results
+    // filter out the packages that have no version
+    .filter((v) => v.packageVersion !== undefined)
+    .reduce(
+      (acc, result) => {
+        acc[result.packageName] = result.packageVersion;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
 
   if ((await clientDetails).packageName === '@hey-api/client-axios') {
     const axiosVersion = await latestVersion('axios');

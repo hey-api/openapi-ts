@@ -136,7 +136,21 @@ export async function bundleAndDereferenceSpecFile({
       plugins: [client, ...plugins] as ClientConfig['plugins'],
     });
     // getting the first config
-    const config = configs[0];
+    const dependencies = configs.dependencies;
+    const firstResult = configs.results[0];
+    if (!firstResult) {
+      logger.error('Failed to load config.');
+      throw new Error('Failed to load config.');
+    }
+    // check if the config is valid
+    const { config, errors } = firstResult;
+    const firstError = errors[0];
+    if (firstError && !config) {
+      logger.error(`Failed to load config: ${firstError.message}`);
+      throw new Error(`Failed to load config: ${firstError.message}`, {
+        cause: firstError,
+      });
+    }
     if (!config) {
       logger.error('Failed to load config.');
       throw new Error('Failed to load config.');
@@ -144,6 +158,7 @@ export async function bundleAndDereferenceSpecFile({
     logger.debug(`Parsing spec...`);
     const context = parseOpenApiSpec({
       config,
+      dependencies,
       spec,
     });
     if (!context) {
