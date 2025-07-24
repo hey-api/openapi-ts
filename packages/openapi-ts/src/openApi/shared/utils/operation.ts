@@ -39,8 +39,9 @@ export const operationToId = ({
 
   const { output } = context.config;
   const targetCase =
-    (output !== undefined && 'case' in output ? output.case : undefined) ??
-    'camelCase';
+    (output !== undefined && typeof output === 'object' && 'case' in output
+      ? output.case
+      : undefined) ?? 'camelCase';
 
   if (
     id &&
