@@ -31,4 +31,79 @@ components:
           const: 10n
           format: int64
           type: integer
+        # Integer format const examples - number type
+        numberInt8:
+          const: 100
+          format: int8
+          type: number
+        numberInt16:
+          const: 1000
+          format: int16
+          type: number
+        numberInt32:
+          const: 100000
+          format: int32
+          type: number
+        numberInt64:
+          const: 1000000000000
+          format: int64
+          type: number
+        numberUint8:
+          const: 200
+          format: uint8
+          type: number
+        numberUint16:
+          const: 50000
+          format: uint16
+          type: number
+        numberUint32:
+          const: 3000000000
+          format: uint32
+          type: number
+        numberUint64:
+          const: 18000000000000000000
+          format: uint64
+          type: number
+        # Integer format const examples - integer type
+        integerInt8:
+          const: -100
+          format: int8
+          type: integer
+        integerInt16:
+          const: -1000
+          format: int16
+          type: integer
+        integerInt32:
+          const: -100000
+          format: int32
+          type: integer
+        integerInt64:
+          const: -1000000000000
+          format: int64
+          type: integer
+        integerUint8:
+          const: 255
+          format: uint8
+          type: integer
+        integerUint16:
+          const: 65535
+          format: uint16
+          type: integer
+        integerUint32:
+          const: 4294967295
+          format: uint32
+          type: integer
+        integerUint64:
+          const: 18446744073709551615n
+          format: uint64
+          type: integer
+        # Integer format const examples - string type (only for 64-bit formats)
+        stringInt64:
+          const: '-9223372036854775808'
+          format: int64
+          type: string
+        stringUint64:
+          const: '18446744073709551615'
+          format: uint64
+          type: string
       type: object
