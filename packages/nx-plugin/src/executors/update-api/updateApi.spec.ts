@@ -27,6 +27,7 @@ vi.mock('@hey-api/openapi-ts/internal', async (importOriginal) => {
             config: {
               input: config?.input ?? 'default-input',
               output: config?.output ?? 'default-output',
+              parser: { validate_EXPERIMENTAL: true },
               plugins: config?.plugins ?? [],
             },
             errors: [],
