@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.80.1
+
+### Patch Changes
+
+- [#2344](https://github.com/hey-api/openapi-ts/pull/2344) [`fb7b724`](https://github.com/hey-api/openapi-ts/commit/fb7b7243663ca40bf79bd76bd7af7a9376474505) Thanks [@Daschi1](https://github.com/Daschi1)! - fix(valibot): expand support for `format: int64`
+
 ## 0.80.0
 
 ### Minor Changes
