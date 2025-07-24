@@ -166,7 +166,7 @@ export async function setupValibotTest(): Promise<any> {
     '..',
     'spec',
     functionName,
-    `${testName}.json`,
+    `${testName}.yaml`,
   );
   const outputPath = path.join(
     baseDir,
