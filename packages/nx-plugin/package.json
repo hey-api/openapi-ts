@@ -48,21 +48,22 @@
   "executors": "./executors.json",
   "generators": "./generators.json",
   "dependencies": {
-    "@hey-api/json-schema-ref-parser": "1.0.6",
+    "@hey-api/json-schema-ref-parser": "^1.0.6",
     "@hey-api/openapi-ts": "workspace:*",
-    "@nx/devkit": "21.0.3",
+    "@nx/devkit": "^21.3.5",
     "api-smart-diff": "^1.0.6",
-    "latest-version": "9.0.0",
-    "nx": "21.0.3",
+    "latest-version": "^9.0.0",
+    "nx": "^21.3.5",
+    "prettier": "^3.6.2",
     "swagger2openapi": "^7.0.8",
-    "tslib": "2.8.1",
-    "xcurl": "2.1.2"
+    "tslib": "^2.8.1",
+    "xcurl": "^2.1.2"
   },
   "devDependencies": {
     "@config/vite-base": "workspace:*",
     "@types/swagger2openapi": "^7.0.4",
-    "typescript": "5.8.3",
-    "vitest": "3.1.1"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   },
   "files": [
     "executors.json",

@@ -20,13 +20,19 @@ vi.mock('@hey-api/openapi-ts/internal', async (importOriginal) => {
   return {
     ...actual,
     initConfigs: vi.fn((config: Parameters<typeof initConfigs>[0]) =>
-      Promise.resolve([
-        {
-          input: config?.input ?? 'default-input',
-          output: config?.output ?? 'default-output',
-          plugins: config?.plugins ?? [],
-        },
-      ]),
+      Promise.resolve({
+        dependencies: [],
+        results: [
+          {
+            config: {
+              input: config?.input ?? 'default-input',
+              output: config?.output ?? 'default-output',
+              plugins: config?.plugins ?? [],
+            },
+            errors: [],
+          },
+        ],
+      }),
     ),
   };
 });
