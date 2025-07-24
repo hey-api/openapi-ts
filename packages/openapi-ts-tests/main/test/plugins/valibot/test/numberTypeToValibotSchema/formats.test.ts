@@ -146,9 +146,7 @@ describe('Number Type Formats Tests', () => {
           1000000000000,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(typeof result.output).toBe('bigint');
-        }
+        expect(typeof result.output).toBe('bigint');
       });
 
       it('should validate string values within int64 range', () => {
@@ -157,9 +155,7 @@ describe('Number Type Formats Tests', () => {
           '1000000000000',
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(typeof result.output).toBe('bigint');
-        }
+        expect(typeof result.output).toBe('bigint');
       });
 
       it('should reject values above int64 maximum', () => {
@@ -250,9 +246,7 @@ describe('Number Type Formats Tests', () => {
           1000000000000,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(typeof result.output).toBe('bigint');
-        }
+        expect(typeof result.output).toBe('bigint');
       });
 
       it('should reject negative values', () => {
@@ -365,9 +359,7 @@ describe('Number Type Formats Tests', () => {
           1000000000000,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(typeof result.output).toBe('bigint');
-        }
+        expect(typeof result.output).toBe('bigint');
       });
 
       it('should validate string values within int64 range', () => {
@@ -376,9 +368,7 @@ describe('Number Type Formats Tests', () => {
           '1000000000000',
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(typeof result.output).toBe('bigint');
-        }
+        expect(typeof result.output).toBe('bigint');
       });
 
       it('should reject values above int64 maximum', () => {
@@ -469,9 +459,7 @@ describe('Number Type Formats Tests', () => {
           1000000000000,
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(typeof result.output).toBe('bigint');
-        }
+        expect(typeof result.output).toBe('bigint');
       });
 
       it('should reject negative values', () => {
@@ -503,9 +491,7 @@ describe('Number Type Formats Tests', () => {
           '1000000000000',
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(typeof result.output).toBe('bigint');
-        }
+        expect(typeof result.output).toBe('bigint');
       });
 
       it('should reject values below int64 minimum', () => {
@@ -538,9 +524,7 @@ describe('Number Type Formats Tests', () => {
           '1000000000000',
         );
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(typeof result.output).toBe('bigint');
-        }
+        expect(typeof result.output).toBe('bigint');
       });
 
       it('should reject negative values', () => {
