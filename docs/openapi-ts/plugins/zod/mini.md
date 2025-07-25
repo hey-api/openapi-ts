@@ -108,7 +108,7 @@ const zData = z.object({
 :::
 
 ::: tip
-If you need to access individual fields, you can do so using the [`.shape`](https://zod.dev/api?id=shape) API. For example, we can get the request body schema with `zData.shape.body`.
+If you need to access individual fields, you can do so using the [`.def.shape`](https://zod.dev/api?id=shape) API. For example, we can get the request body schema with `zData.def.shape.body`.
 :::
 
 You can customize the naming and casing pattern for `requests` schemas using the `.name` and `.case` options.
