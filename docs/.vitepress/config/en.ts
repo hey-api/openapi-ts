@@ -5,6 +5,10 @@ export default defineConfig({
     '🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.',
   lang: 'en-US',
   themeConfig: {
+    editLink: {
+      pattern: 'https://github.com/hey-api/openapi-ts/edit/main/docs/:path',
+      text: 'Edit',
+    },
     footer: {
       message: 'Released under the MIT License.',
     },
@@ -14,6 +18,10 @@ export default defineConfig({
         text: 'Sponsor Hey API',
       },
     ],
+    outline: {
+      label: 'Table of Contents',
+      level: 2,
+    },
     sidebar: [
       {
         items: [
@@ -236,6 +244,21 @@ export default defineConfig({
             text: 'Spotlight',
           },
           {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/community/contributing/building',
+                text: 'Building',
+              },
+              {
+                link: '/openapi-ts/community/contributing/developing',
+                text: 'Developing',
+              },
+              {
+                link: '/openapi-ts/community/contributing/testing',
+                text: 'Testing',
+              },
+            ],
             link: '/openapi-ts/community/contributing',
             text: 'Contributing',
           },

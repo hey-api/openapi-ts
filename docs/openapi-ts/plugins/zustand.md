@@ -5,9 +5,7 @@ description: Zustand plugin for Hey API. Compatible with all our features.
 
 # Zustand <span data-soon>soon</span>
 
-::: warning
-This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1480).
-:::
+<FeatureStatus issueNumber=1480 name="Zustand" />
 
 ### About
 

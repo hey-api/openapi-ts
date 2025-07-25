@@ -12,10 +12,6 @@ import { embedProject } from '../../embed'
   <VersionLabel value="v1" />
 </Heading>
 
-::: warning
-Axios client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
-:::
-
 ### About
 
 [Axios](https://axios-http.com) is a simple promise based HTTP client for the browser and Node.js. Axios provides a simple to use library in a small package with a very extensible interface.

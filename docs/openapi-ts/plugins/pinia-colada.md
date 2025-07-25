@@ -5,9 +5,7 @@ description: Pinia Colada plugin for Hey API. Compatible with all our features.
 
 # Pinia Colada <span data-soon>soon</span>
 
-::: warning
-This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1242).
-:::
+<FeatureStatus issueNumber=1242 name="Pinia Colada" />
 
 ### About
 
