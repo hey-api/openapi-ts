@@ -1,13 +1,13 @@
 import type ts from 'typescript';
 
-import { compiler } from '../../../compiler';
-import type { FunctionParameter, ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
 import type { GeneratedFile } from '../../../generate/file';
 import { statusCodeToGroup } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { sanitizeNamespaceIdentifier } from '../../../openApi';
 import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
+import { tsc } from '../../../tsc';
+import type { FunctionParameter, ObjectValue } from '../../../tsc/types';
 import { reservedJavaScriptKeywordsRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { transformClassName } from '../../../utils/transform';
@@ -584,7 +584,7 @@ export const operationStatements = ({
   if (auth.length) {
     requestOptions.push({
       key: 'security',
-      value: compiler.arrayLiteralExpression({ elements: auth }),
+      value: tsc.arrayLiteralExpression({ elements: auth }),
     });
   }
 
@@ -603,7 +603,7 @@ export const operationStatements = ({
     const args: Array<unknown> = [];
     const config: Array<unknown> = [];
     for (const argName of opParameters.argNames) {
-      args.push(compiler.identifier({ text: argName }));
+      args.push(tsc.identifier({ text: argName }));
     }
     for (const field of opParameters.fields) {
       const obj: Array<Record<string, unknown>> = [];
@@ -625,7 +625,7 @@ export const operationStatements = ({
           });
         }
       }
-      config.push(compiler.objectExpression({ obj }));
+      config.push(tsc.objectExpression({ obj }));
     }
     const imported = file.import({
       module: clientModulePath({
@@ -635,12 +635,12 @@ export const operationStatements = ({
       name: 'buildClientParams',
     });
     statements.push(
-      compiler.constVariable({
-        expression: compiler.callExpression({
+      tsc.constVariable({
+        expression: tsc.callExpression({
           functionName: imported.name,
           parameters: [
-            compiler.arrayLiteralExpression({ elements: args }),
-            compiler.arrayLiteralExpression({ elements: config }),
+            tsc.arrayLiteralExpression({ elements: args }),
+            tsc.arrayLiteralExpression({ elements: config }),
           ],
         }),
         name: 'params',
@@ -664,8 +664,8 @@ export const operationStatements = ({
               : operation.body.mediaType,
         },
         {
-          spread: compiler.propertyAccessExpression({
-            expression: compiler.identifier({ text: 'options' }),
+          spread: tsc.propertyAccessExpression({
+            expression: tsc.identifier({ text: 'options' }),
             isOptional: !isRequiredOptions,
             name: 'headers',
           }),
@@ -673,8 +673,8 @@ export const operationStatements = ({
       ];
       if (hasParams) {
         headersValue.push({
-          spread: compiler.propertyAccessExpression({
-            expression: compiler.identifier({ text: 'params' }),
+          spread: tsc.propertyAccessExpression({
+            expression: tsc.identifier({ text: 'params' }),
             name: 'headers',
           }),
         });
@@ -700,8 +700,8 @@ export const operationStatements = ({
       })
     : undefined;
 
-  const optionsClient = compiler.propertyAccessExpression({
-    expression: compiler.identifier({ text: 'options' }),
+  const optionsClient = tsc.propertyAccessExpression({
+    expression: tsc.identifier({ text: 'options' }),
     isOptional: !isRequiredOptions,
     name: 'client',
   });
@@ -709,19 +709,19 @@ export const operationStatements = ({
   let clientExpression: ts.Expression;
 
   if (plugin.config.instance) {
-    clientExpression = compiler.binaryExpression({
+    clientExpression = tsc.binaryExpression({
       left: optionsClient,
       operator: '??',
-      right: compiler.propertyAccessExpression({
-        expression: compiler.this(),
+      right: tsc.propertyAccessExpression({
+        expression: tsc.this(),
         name: '_client',
       }),
     });
   } else if (heyApiClient?.name) {
-    clientExpression = compiler.binaryExpression({
+    clientExpression = tsc.binaryExpression({
       left: optionsClient,
       operator: '??',
-      right: compiler.identifier({ text: heyApiClient.name }),
+      right: tsc.identifier({ text: heyApiClient.name }),
     });
   } else {
     clientExpression = optionsClient;
@@ -740,20 +740,20 @@ export const operationStatements = ({
   }
 
   if (plugin.config.responseStyle === 'data') {
-    types.push(compiler.stringLiteral({ text: plugin.config.responseStyle }));
+    types.push(tsc.stringLiteral({ text: plugin.config.responseStyle }));
   }
 
   statements.push(
-    compiler.returnFunctionCall({
+    tsc.returnFunctionCall({
       args: [
-        compiler.objectExpression({
+        tsc.objectExpression({
           identifiers: ['responseTransformer'],
           obj: requestOptions,
         }),
       ],
-      name: compiler.propertyAccessExpression({
+      name: tsc.propertyAccessExpression({
         expression: clientExpression,
-        name: compiler.identifier({ text: operation.method }),
+        name: tsc.identifier({ text: operation.method }),
       }),
       types,
     }),

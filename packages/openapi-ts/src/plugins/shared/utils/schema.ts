@@ -1,5 +1,5 @@
-import type { Comments } from '../../../compiler';
 import type { IR } from '../../../ir/types';
+import type { Comments } from '../../../tsc';
 import { escapeComment } from '../../../utils/escape';
 
 export const createSchemaComment = ({

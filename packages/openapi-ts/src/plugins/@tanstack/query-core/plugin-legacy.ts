@@ -1,14 +1,14 @@
 import ts from 'typescript';
 
-import { compiler, type Property } from '../../../compiler';
-import type { ImportExportItem } from '../../../compiler/module';
-import type { ImportExportItemObject } from '../../../compiler/utils';
 import { clientApi, clientModulePath } from '../../../generate/client';
 import { relativeModulePath } from '../../../generate/utils';
 import { createOperationKey } from '../../../ir/operation';
 import { getPaginationKeywordsRegExp } from '../../../ir/pagination';
 import type { IR } from '../../../ir/types';
 import { isOperationParameterRequired } from '../../../openApi';
+import { type Property, tsc } from '../../../tsc';
+import type { ImportExportItem } from '../../../tsc/module';
+import type { ImportExportItemObject } from '../../../tsc/utils';
 import type {
   Client,
   Method,
@@ -108,44 +108,42 @@ const createInfiniteParamsFunction = ({
 }: {
   file: Files[keyof Files];
 }) => {
-  const fn = compiler.constVariable({
-    expression: compiler.arrowFunction({
+  const fn = tsc.constVariable({
+    expression: tsc.arrowFunction({
       multiLine: true,
       parameters: [
         {
           name: 'queryKey',
-          type: compiler.typeNode(
-            `QueryKey<${clientApi.OptionsLegacyParser.name}>`,
-          ),
+          type: tsc.typeNode(`QueryKey<${clientApi.OptionsLegacyParser.name}>`),
         },
         {
           name: 'page',
-          type: compiler.typeNode('K'),
+          type: tsc.typeNode('K'),
         },
       ],
       statements: [
-        compiler.constVariable({
-          expression: compiler.identifier({
+        tsc.constVariable({
+          expression: tsc.identifier({
             text: 'queryKey[0]',
           }),
           name: 'params',
         }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({
+        tsc.ifStatement({
+          expression: tsc.propertyAccessExpression({
+            expression: tsc.identifier({
               text: 'page',
             }),
-            name: compiler.identifier({ text: 'body' }),
+            name: tsc.identifier({ text: 'body' }),
           }),
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: 'body',
                   }),
-                  right: compiler.objectExpression({
+                  right: tsc.objectExpression({
                     multiLine: true,
                     obj: [
                       {
@@ -163,22 +161,22 @@ const createInfiniteParamsFunction = ({
             ],
           }),
         }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({
+        tsc.ifStatement({
+          expression: tsc.propertyAccessExpression({
+            expression: tsc.identifier({
               text: 'page',
             }),
-            name: compiler.identifier({ text: 'headers' }),
+            name: tsc.identifier({ text: 'headers' }),
           }),
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: 'headers',
                   }),
-                  right: compiler.objectExpression({
+                  right: tsc.objectExpression({
                     multiLine: true,
                     obj: [
                       {
@@ -194,22 +192,22 @@ const createInfiniteParamsFunction = ({
             ],
           }),
         }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({
+        tsc.ifStatement({
+          expression: tsc.propertyAccessExpression({
+            expression: tsc.identifier({
               text: 'page',
             }),
-            name: compiler.identifier({ text: 'path' }),
+            name: tsc.identifier({ text: 'path' }),
           }),
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: 'path',
                   }),
-                  right: compiler.objectExpression({
+                  right: tsc.objectExpression({
                     multiLine: true,
                     obj: [
                       {
@@ -225,22 +223,22 @@ const createInfiniteParamsFunction = ({
             ],
           }),
         }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({
+        tsc.ifStatement({
+          expression: tsc.propertyAccessExpression({
+            expression: tsc.identifier({
               text: 'page',
             }),
-            name: compiler.identifier({ text: 'query' }),
+            name: tsc.identifier({ text: 'query' }),
           }),
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: 'query',
                   }),
-                  right: compiler.objectExpression({
+                  right: tsc.objectExpression({
                     multiLine: true,
                     obj: [
                       {
@@ -256,22 +254,20 @@ const createInfiniteParamsFunction = ({
             ],
           }),
         }),
-        compiler.returnVariable({
+        tsc.returnVariable({
           expression: ts.factory.createAsExpression(
             ts.factory.createAsExpression(
-              compiler.identifier({ text: 'params' }),
+              tsc.identifier({ text: 'params' }),
               ts.factory.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword),
             ),
-            ts.factory.createTypeQueryNode(
-              compiler.identifier({ text: 'page' }),
-            ),
+            ts.factory.createTypeQueryNode(tsc.identifier({ text: 'page' })),
           ),
         }),
       ],
       types: [
         {
-          extends: compiler.typeReferenceNode({
-            typeName: compiler.identifier({
+          extends: tsc.typeReferenceNode({
+            typeName: tsc.identifier({
               text: `Pick<QueryKey<${clientApi.OptionsLegacyParser.name}>[0], 'body' | 'headers' | 'path' | 'query'>`,
             }),
           }),
@@ -285,49 +281,47 @@ const createInfiniteParamsFunction = ({
 };
 
 const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
-  const returnType = compiler.indexedAccessTypeNode({
-    indexType: compiler.typeNode(0),
-    objectType: compiler.typeNode(queryKeyName, [
-      compiler.typeNode(TOptionsType),
-    ]),
+  const returnType = tsc.indexedAccessTypeNode({
+    indexType: tsc.typeNode(0),
+    objectType: tsc.typeNode(queryKeyName, [tsc.typeNode(TOptionsType)]),
   });
 
-  const infiniteIdentifier = compiler.identifier({ text: 'infinite' });
+  const infiniteIdentifier = tsc.identifier({ text: 'infinite' });
   const baseUrlKey = getClientBaseUrlKey(getConfig());
 
-  const fn = compiler.constVariable({
-    expression: compiler.arrowFunction({
+  const fn = tsc.constVariable({
+    expression: tsc.arrowFunction({
       multiLine: true,
       parameters: [
         {
           name: 'id',
-          type: compiler.typeNode('string'),
+          type: tsc.typeNode('string'),
         },
         {
           isRequired: false,
           name: 'options',
-          type: compiler.typeNode(TOptionsType),
+          type: tsc.typeNode(TOptionsType),
         },
         {
           isRequired: false,
           name: 'infinite',
-          type: compiler.typeNode('boolean'),
+          type: tsc.typeNode('boolean'),
         },
       ],
       returnType,
       statements: [
-        compiler.constVariable({
+        tsc.constVariable({
           assertion: returnType,
-          expression: compiler.objectExpression({
+          expression: tsc.objectExpression({
             multiLine: false,
             obj: [
               {
                 key: '_id',
-                value: compiler.identifier({ text: 'id' }),
+                value: tsc.identifier({ text: 'id' }),
               },
               {
                 key: baseUrlKey,
-                value: compiler.identifier({
+                value: tsc.identifier({
                   text: `options?.${baseUrlKey} || (options?.client ?? _heyApiClient).getConfig().${baseUrlKey}`,
                 }),
               },
@@ -336,13 +330,13 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
           name: 'params',
           typeName: returnType,
         }),
-        compiler.ifStatement({
+        tsc.ifStatement({
           expression: infiniteIdentifier,
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: '_infinite',
                   }),
@@ -352,21 +346,21 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             ],
           }),
         }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({ text: 'options' }),
+        tsc.ifStatement({
+          expression: tsc.propertyAccessExpression({
+            expression: tsc.identifier({ text: 'options' }),
             isOptional: true,
-            name: compiler.identifier({ text: 'body' }),
+            name: tsc.identifier({ text: 'body' }),
           }),
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: 'body',
                   }),
-                  right: compiler.propertyAccessExpression({
+                  right: tsc.propertyAccessExpression({
                     expression: 'options',
                     name: 'body',
                   }),
@@ -375,21 +369,21 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             ],
           }),
         }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({ text: 'options' }),
+        tsc.ifStatement({
+          expression: tsc.propertyAccessExpression({
+            expression: tsc.identifier({ text: 'options' }),
             isOptional: true,
-            name: compiler.identifier({ text: 'headers' }),
+            name: tsc.identifier({ text: 'headers' }),
           }),
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: 'headers',
                   }),
-                  right: compiler.propertyAccessExpression({
+                  right: tsc.propertyAccessExpression({
                     expression: 'options',
                     name: 'headers',
                   }),
@@ -398,21 +392,21 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             ],
           }),
         }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({ text: 'options' }),
+        tsc.ifStatement({
+          expression: tsc.propertyAccessExpression({
+            expression: tsc.identifier({ text: 'options' }),
             isOptional: true,
-            name: compiler.identifier({ text: 'path' }),
+            name: tsc.identifier({ text: 'path' }),
           }),
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: 'path',
                   }),
-                  right: compiler.propertyAccessExpression({
+                  right: tsc.propertyAccessExpression({
                     expression: 'options',
                     name: 'path',
                   }),
@@ -421,21 +415,21 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             ],
           }),
         }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({ text: 'options' }),
+        tsc.ifStatement({
+          expression: tsc.propertyAccessExpression({
+            expression: tsc.identifier({ text: 'options' }),
             isOptional: true,
-            name: compiler.identifier({ text: 'query' }),
+            name: tsc.identifier({ text: 'query' }),
           }),
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: 'query',
                   }),
-                  right: compiler.propertyAccessExpression({
+                  right: tsc.propertyAccessExpression({
                     expression: 'options',
                     name: 'query',
                   }),
@@ -444,14 +438,14 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             ],
           }),
         }),
-        compiler.returnVariable({
+        tsc.returnVariable({
           expression: 'params',
         }),
       ],
       types: [
         {
-          extends: compiler.typeReferenceNode({
-            typeName: compiler.identifier({
+          extends: tsc.typeReferenceNode({
+            typeName: tsc.identifier({
               text: clientApi.OptionsLegacyParser.name,
             }),
           }),
@@ -468,29 +462,29 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
   const properties: Property[] = [
     {
       name: '_id',
-      type: compiler.keywordTypeNode({
+      type: tsc.keywordTypeNode({
         keyword: 'string',
       }),
     },
     {
       isRequired: false,
       name: '_infinite',
-      type: compiler.keywordTypeNode({
+      type: tsc.keywordTypeNode({
         keyword: 'boolean',
       }),
     },
   ];
 
-  const queryKeyType = compiler.typeAliasDeclaration({
+  const queryKeyType = tsc.typeAliasDeclaration({
     name: queryKeyName,
-    type: compiler.typeTupleNode({
+    type: tsc.typeTupleNode({
       types: [
-        compiler.typeIntersectionNode({
+        tsc.typeIntersectionNode({
           types: [
-            compiler.typeReferenceNode({
+            tsc.typeReferenceNode({
               typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(getConfig())}' | 'body' | 'headers' | 'path' | 'query'>`,
             }),
-            compiler.typeInterfaceNode({
+            tsc.typeInterfaceNode({
               properties,
               useLegacyResolution: true,
             }),
@@ -500,8 +494,8 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
     }),
     typeParameters: [
       {
-        extends: compiler.typeReferenceNode({
-          typeName: compiler.identifier({
+        extends: tsc.typeReferenceNode({
+          typeName: tsc.identifier({
             text: clientApi.OptionsLegacyParser.name,
           }),
         }),
@@ -652,14 +646,14 @@ const createQueryKeyLiteral = ({
   id: string;
   isInfinite?: boolean;
 }) => {
-  const queryKeyLiteral = compiler.arrayLiteralExpression({
+  const queryKeyLiteral = tsc.arrayLiteralExpression({
     elements: [
-      compiler.callExpression({
+      tsc.callExpression({
         functionName: createQueryKeyFn,
         parameters: [
-          compiler.ots.string(id),
+          tsc.ots.string(id),
           'options',
-          isInfinite ? compiler.ots.boolean(true) : undefined,
+          isInfinite ? tsc.ots.boolean(true) : undefined,
         ],
       }),
     ],
@@ -770,9 +764,9 @@ export const handlerLegacy = ({
 
         const isRequired = isOperationParameterRequired(operation.parameters);
 
-        const queryKeyStatement = compiler.constVariable({
+        const queryKeyStatement = tsc.constVariable({
           exportConst: true,
-          expression: compiler.arrowFunction({
+          expression: tsc.arrowFunction({
             parameters: [
               {
                 isRequired,
@@ -792,11 +786,11 @@ export const handlerLegacy = ({
         });
         file.add(queryKeyStatement);
 
-        const statement = compiler.constVariable({
+        const statement = tsc.constVariable({
           // TODO: describe options, same as the actual function call
           comment: [],
           exportConst: true,
-          expression: compiler.arrowFunction({
+          expression: tsc.arrowFunction({
             parameters: [
               {
                 isRequired,
@@ -805,13 +799,13 @@ export const handlerLegacy = ({
               },
             ],
             statements: [
-              compiler.returnFunctionCall({
+              tsc.returnFunctionCall({
                 args: [
-                  compiler.objectExpression({
+                  tsc.objectExpression({
                     obj: [
                       {
                         key: 'queryFn',
-                        value: compiler.arrowFunction({
+                        value: tsc.arrowFunction({
                           async: true,
                           multiLine: true,
                           parameters: [
@@ -827,13 +821,13 @@ export const handlerLegacy = ({
                             },
                           ],
                           statements: [
-                            compiler.constVariable({
+                            tsc.constVariable({
                               destructure: true,
-                              expression: compiler.awaitExpression({
-                                expression: compiler.callExpression({
+                              expression: tsc.awaitExpression({
+                                expression: tsc.callExpression({
                                   functionName: queryFn,
                                   parameters: [
-                                    compiler.objectExpression({
+                                    tsc.objectExpression({
                                       multiLine: true,
                                       obj: [
                                         {
@@ -845,7 +839,7 @@ export const handlerLegacy = ({
                                         {
                                           key: 'signal',
                                           shorthand: true,
-                                          value: compiler.identifier({
+                                          value: tsc.identifier({
                                             text: 'signal',
                                           }),
                                         },
@@ -860,7 +854,7 @@ export const handlerLegacy = ({
                               }),
                               name: 'data',
                             }),
-                            compiler.returnVariable({
+                            tsc.returnVariable({
                               expression: 'data',
                             }),
                           ],
@@ -868,7 +862,7 @@ export const handlerLegacy = ({
                       },
                       {
                         key: 'queryKey',
-                        value: compiler.callExpression({
+                        value: tsc.callExpression({
                           functionName: toQueryKeyName({
                             config,
                             id: operation.name,
@@ -1000,9 +994,9 @@ export const handlerLegacy = ({
           const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
           const typePageParam = `${paginationField.base} | ${typePageObjectParam}`;
 
-          const queryKeyStatement = compiler.constVariable({
+          const queryKeyStatement = tsc.constVariable({
             exportConst: true,
-            expression: compiler.arrowFunction({
+            expression: tsc.arrowFunction({
               parameters: [
                 {
                   isRequired,
@@ -1025,11 +1019,11 @@ export const handlerLegacy = ({
           });
           file.add(queryKeyStatement);
 
-          const statement = compiler.constVariable({
+          const statement = tsc.constVariable({
             // TODO: describe options, same as the actual function call
             comment: [],
             exportConst: true,
-            expression: compiler.arrowFunction({
+            expression: tsc.arrowFunction({
               parameters: [
                 {
                   isRequired,
@@ -1038,9 +1032,9 @@ export const handlerLegacy = ({
                 },
               ],
               statements: [
-                compiler.returnFunctionCall({
+                tsc.returnFunctionCall({
                   args: [
-                    compiler.objectExpression({
+                    tsc.objectExpression({
                       comments: [
                         {
                           jsdoc: false,
@@ -1050,7 +1044,7 @@ export const handlerLegacy = ({
                       obj: [
                         {
                           key: 'queryFn',
-                          value: compiler.arrowFunction({
+                          value: tsc.arrowFunction({
                             async: true,
                             multiLine: true,
                             parameters: [
@@ -1069,34 +1063,34 @@ export const handlerLegacy = ({
                               },
                             ],
                             statements: [
-                              compiler.constVariable({
+                              tsc.constVariable({
                                 comment: [
                                   {
                                     jsdoc: false,
                                     lines: ['@ts-ignore'],
                                   },
                                 ],
-                                expression: compiler.conditionalExpression({
-                                  condition: compiler.binaryExpression({
-                                    left: compiler.typeOfExpression({
+                                expression: tsc.conditionalExpression({
+                                  condition: tsc.binaryExpression({
+                                    left: tsc.typeOfExpression({
                                       text: 'pageParam',
                                     }),
                                     operator: '===',
-                                    right: compiler.ots.string('object'),
+                                    right: tsc.ots.string('object'),
                                   }),
-                                  whenFalse: compiler.objectExpression({
+                                  whenFalse: tsc.objectExpression({
                                     multiLine: true,
                                     obj: [
                                       {
                                         key: getPaginationIn(
                                           paginationParameter,
                                         ),
-                                        value: compiler.objectExpression({
+                                        value: tsc.objectExpression({
                                           multiLine: true,
                                           obj: [
                                             {
                                               key: paginationField.name,
-                                              value: compiler.identifier({
+                                              value: tsc.identifier({
                                                 text: 'pageParam',
                                               }),
                                             },
@@ -1105,27 +1099,27 @@ export const handlerLegacy = ({
                                       },
                                     ],
                                   }),
-                                  whenTrue: compiler.identifier({
+                                  whenTrue: tsc.identifier({
                                     text: 'pageParam',
                                   }),
                                 }),
                                 name: 'page',
                                 typeName: typePageObjectParam,
                               }),
-                              compiler.constVariable({
-                                expression: compiler.callExpression({
+                              tsc.constVariable({
+                                expression: tsc.callExpression({
                                   functionName: 'createInfiniteParams',
                                   parameters: ['queryKey', 'page'],
                                 }),
                                 name: 'params',
                               }),
-                              compiler.constVariable({
+                              tsc.constVariable({
                                 destructure: true,
-                                expression: compiler.awaitExpression({
-                                  expression: compiler.callExpression({
+                                expression: tsc.awaitExpression({
+                                  expression: tsc.callExpression({
                                     functionName: queryFn,
                                     parameters: [
-                                      compiler.objectExpression({
+                                      tsc.objectExpression({
                                         multiLine: true,
                                         obj: [
                                           {
@@ -1137,7 +1131,7 @@ export const handlerLegacy = ({
                                           {
                                             key: 'signal',
                                             shorthand: true,
-                                            value: compiler.identifier({
+                                            value: tsc.identifier({
                                               text: 'signal',
                                             }),
                                           },
@@ -1152,7 +1146,7 @@ export const handlerLegacy = ({
                                 }),
                                 name: 'data',
                               }),
-                              compiler.returnVariable({
+                              tsc.returnVariable({
                                 expression: 'data',
                               }),
                             ],
@@ -1160,7 +1154,7 @@ export const handlerLegacy = ({
                         },
                         {
                           key: 'queryKey',
-                          value: compiler.callExpression({
+                          value: tsc.callExpression({
                             functionName: toQueryKeyName({
                               config,
                               id: operation.name,
@@ -1230,7 +1224,7 @@ export const handlerLegacy = ({
           typesModulePath,
         });
 
-        const expression = compiler.arrowFunction({
+        const expression = tsc.arrowFunction({
           parameters: [
             {
               isRequired: false,
@@ -1239,12 +1233,12 @@ export const handlerLegacy = ({
             },
           ],
           statements: [
-            compiler.constVariable({
-              expression: compiler.objectExpression({
+            tsc.constVariable({
+              expression: tsc.objectExpression({
                 obj: [
                   {
                     key: 'mutationFn',
-                    value: compiler.arrowFunction({
+                    value: tsc.arrowFunction({
                       async: true,
                       multiLine: true,
                       parameters: [
@@ -1253,13 +1247,13 @@ export const handlerLegacy = ({
                         },
                       ],
                       statements: [
-                        compiler.constVariable({
+                        tsc.constVariable({
                           destructure: true,
-                          expression: compiler.awaitExpression({
-                            expression: compiler.callExpression({
+                          expression: tsc.awaitExpression({
+                            expression: tsc.callExpression({
                               functionName: queryFn,
                               parameters: [
-                                compiler.objectExpression({
+                                tsc.objectExpression({
                                   multiLine: true,
                                   obj: [
                                     {
@@ -1279,7 +1273,7 @@ export const handlerLegacy = ({
                           }),
                           name: 'data',
                         }),
-                        compiler.returnVariable({
+                        tsc.returnVariable({
                           expression: 'data',
                         }),
                       ],
@@ -1291,12 +1285,12 @@ export const handlerLegacy = ({
               // TODO: better types syntax
               typeName: `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`,
             }),
-            compiler.returnVariable({
+            tsc.returnVariable({
               expression: mutationOptionsFn,
             }),
           ],
         });
-        const statement = compiler.constVariable({
+        const statement = tsc.constVariable({
           // TODO: describe options, same as the actual function call
           comment: [],
           exportConst: true,

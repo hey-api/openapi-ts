@@ -1,6 +1,6 @@
-import { compiler } from '../../../compiler';
 import { clientModulePath } from '../../../generate/client';
 import type { FileImportResult } from '../../../generate/file/types';
+import { tsc } from '../../../tsc';
 import { getClientPlugin } from '../client-core/utils';
 import { nuxtTypeDefault, nuxtTypeResponse, sdkId } from './constants';
 import type { HeyApiSdkPlugin } from './types';
@@ -31,26 +31,26 @@ export const createTypeOptions = ({
     name: 'Client',
   });
 
-  const typeOptions = compiler.typeAliasDeclaration({
+  const typeOptions = tsc.typeAliasDeclaration({
     exportType: true,
     name: 'Options',
-    type: compiler.typeIntersectionNode({
+    type: tsc.typeIntersectionNode({
       types: [
-        compiler.typeReferenceNode({
+        tsc.typeReferenceNode({
           typeArguments: isNuxtClient
             ? [
-                compiler.typeReferenceNode({ typeName: 'TComposable' }),
-                compiler.typeReferenceNode({ typeName: 'TData' }),
-                compiler.typeReferenceNode({ typeName: nuxtTypeResponse }),
-                compiler.typeReferenceNode({ typeName: nuxtTypeDefault }),
+                tsc.typeReferenceNode({ typeName: 'TComposable' }),
+                tsc.typeReferenceNode({ typeName: 'TData' }),
+                tsc.typeReferenceNode({ typeName: nuxtTypeResponse }),
+                tsc.typeReferenceNode({ typeName: nuxtTypeDefault }),
               ]
             : [
-                compiler.typeReferenceNode({ typeName: 'TData' }),
-                compiler.typeReferenceNode({ typeName: 'ThrowOnError' }),
+                tsc.typeReferenceNode({ typeName: 'TData' }),
+                tsc.typeReferenceNode({ typeName: 'ThrowOnError' }),
               ],
           typeName: clientOptions.name,
         }),
-        compiler.typeInterfaceNode({
+        tsc.typeInterfaceNode({
           properties: [
             {
               comment: [
@@ -60,7 +60,7 @@ export const createTypeOptions = ({
               ],
               isRequired: !plugin.config.client,
               name: 'client',
-              type: compiler.typeReferenceNode({ typeName: clientType.name }),
+              type: tsc.typeReferenceNode({ typeName: clientType.name }),
             },
             {
               comment: [
@@ -69,10 +69,10 @@ export const createTypeOptions = ({
               ],
               isRequired: false,
               name: 'meta',
-              type: compiler.typeReferenceNode({
+              type: tsc.typeReferenceNode({
                 typeArguments: [
-                  compiler.keywordTypeNode({ keyword: 'string' }),
-                  compiler.keywordTypeNode({ keyword: 'unknown' }),
+                  tsc.keywordTypeNode({ keyword: 'string' }),
+                  tsc.keywordTypeNode({ keyword: 'unknown' }),
                 ],
                 typeName: 'Record',
               }),
@@ -84,41 +84,41 @@ export const createTypeOptions = ({
     }),
     typeParameters: isNuxtClient
       ? [
-          compiler.typeParameterDeclaration({
-            constraint: compiler.typeReferenceNode({ typeName: 'Composable' }),
+          tsc.typeParameterDeclaration({
+            constraint: tsc.typeReferenceNode({ typeName: 'Composable' }),
             name: 'TComposable',
           }),
-          compiler.typeParameterDeclaration({
-            constraint: compiler.typeReferenceNode({
+          tsc.typeParameterDeclaration({
+            constraint: tsc.typeReferenceNode({
               typeName: tDataShape.name,
             }),
-            defaultType: compiler.typeReferenceNode({
+            defaultType: tsc.typeReferenceNode({
               typeName: tDataShape.name,
             }),
             name: 'TData',
           }),
-          compiler.typeParameterDeclaration({
-            defaultType: compiler.keywordTypeNode({ keyword: 'unknown' }),
+          tsc.typeParameterDeclaration({
+            defaultType: tsc.keywordTypeNode({ keyword: 'unknown' }),
             name: nuxtTypeResponse,
           }),
-          compiler.typeParameterDeclaration({
-            defaultType: compiler.keywordTypeNode({ keyword: 'undefined' }),
+          tsc.typeParameterDeclaration({
+            defaultType: tsc.keywordTypeNode({ keyword: 'undefined' }),
             name: nuxtTypeDefault,
           }),
         ]
       : [
-          compiler.typeParameterDeclaration({
-            constraint: compiler.typeReferenceNode({
+          tsc.typeParameterDeclaration({
+            constraint: tsc.typeReferenceNode({
               typeName: tDataShape.name,
             }),
-            defaultType: compiler.typeReferenceNode({
+            defaultType: tsc.typeReferenceNode({
               typeName: tDataShape.name,
             }),
             name: 'TData',
           }),
-          compiler.typeParameterDeclaration({
-            constraint: compiler.keywordTypeNode({ keyword: 'boolean' }),
-            defaultType: compiler.keywordTypeNode({ keyword: 'boolean' }),
+          tsc.typeParameterDeclaration({
+            constraint: tsc.keywordTypeNode({ keyword: 'boolean' }),
+            defaultType: tsc.keywordTypeNode({ keyword: 'boolean' }),
             name: 'ThrowOnError',
           }),
         ],
