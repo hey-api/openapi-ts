@@ -5,9 +5,7 @@ description: SWR plugin for Hey API. Compatible with all our features.
 
 # SWR <span data-soon>soon</span>
 
-::: warning
-This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1479).
-:::
+<FeatureStatus issueNumber=1479 name="SWR" />
 
 ### About
 

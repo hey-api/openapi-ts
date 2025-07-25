@@ -64,7 +64,8 @@ export default defineConfig({
       provider: 'local',
     },
     socialLinks: [
-      { icon: 'npm', link: 'https://npmjs.com/package/@hey-api/openapi-ts' },
+      { icon: 'linkedin', link: 'https://linkedin.com/company/heyapi' },
+      { icon: 'x', link: 'https://x.com/mrlubos' },
       { icon: 'github', link: 'https://github.com/hey-api/openapi-ts' },
     ],
   },

@@ -5,9 +5,7 @@ description: Ajv plugin for Hey API. Compatible with all our features.
 
 # Ajv <span data-soon>soon</span>
 
-::: warning
-This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1476).
-:::
+<FeatureStatus issueNumber=1476 name="Ajv" />
 
 ### About
 

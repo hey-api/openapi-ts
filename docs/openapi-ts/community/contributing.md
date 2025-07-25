@@ -1,21 +1,42 @@
 ---
 title: Contributing
-description: Learn how to contribute to @hey-api/openapi-ts.
+description: Learn how to contribute to Hey API.
 ---
 
-# Contributing
+# Contributor Manual
 
-Thank you for considering contributing to Hey API. In order to increase the likelihood of your changes being merged, first open an issue if one does not already exist. Once an issue exists, let us know you'd like to work on it. We will confirm whether we're looking to resolve the issue and provide you with guidance if required. This is to ensure our codebase remains in good state and all features contribute to Hey API's objectives.
+## Foreword
 
-## Prerequisites
+Hey API is building an OpenAPI to TypeScript code generator ecosystem. It’s trusted by thousands of companies – from YC startups to Fortune 500 enterprises – and powers products used by millions worldwide.
 
-You should have a working knowledge of [git](https://git-scm.com), [node](https://nodejs.org/en), and [pnpm](https://pnpm.io).
+We welcome contributors of all backgrounds and experience levels. Whether you’re fixing a typo or building a new feature, your input matters. If you need guidance, help with technical writing, or want to bring a feature idea to life, we’re here to support you.
 
-## Guidelines
+::: tip
 
-Your [pull request](https://help.github.com/articles/using-pull-requests) must:
+New to open source? Take a look at the [Open Source](https://opensource.guide/) or [First Contributions](https://github.com/firstcontributions/first-contributions) guides for helpful information on contributing to open source projects.
 
-- address a single issue or add a single item of functionality
-- contain a clean history of small, incremental, logically separate commits, with no merge commits
-- use clear commit messages
-- be possible to merge automatically
+:::
+
+## First Steps
+
+There are many ways to contribute to Hey API. Most of them don't involve writing any code!
+
+- **Read the documentation**. Start with the [Get Started](/openapi-ts/get-started) guide. If you find anything broken or confusing, you can suggest improvements by clicking "Edit" at the bottom of any page.
+
+- **Browse open issues**. Help others by providing workarounds, asking for clarification, triaging, or suggesting labels on [open issues](https://github.com/hey-api/openapi-ts/issues). If you see something you would like to work on, consider opening a pull request.
+
+- **Participate in discussions**. Ask or [answer questions](https://github.com/orgs/hey-api/discussions), provide feedback, or suggest new ideas. Every idea is welcome, no matter how big or small.
+
+- **Engage on social media**. Help others discover Hey API by engaging with our posts on [LinkedIn](https://linkedin.com/company/heyapi), [Bluesky](https://bsky.app/profile/heyapi.dev), or [X](https://x.com/mrlubos). Share your experiences with Hey API on Reddit, Slack, or in your own communities and group chats.
+
+- **Create a new issue**. If you can't find a solution, [open an issue](https://github.com/hey-api/openapi-ts/issues). The issue template will guide you through the process.
+
+- **Open a pull request**. If you find an issue you would like to fix, open a pull request. If you need help, tag [`@mrlubos`](https://github.com/mrlubos) on GitHub, provide enough relevant information, and we will do our best to assist you.
+
+These are some of the best ways not only to contribute to Hey API, but also to learn, connect with others, and share ideas.
+
+## Pull Requests
+
+Ready to write some code? We have dedicated guides to help you [build](/openapi-ts/community/contributing/building), [develop](/openapi-ts/community/contributing/developing), and [test](/openapi-ts/community/contributing/testing) your feature before it's released.
+
+We are excited to see what you’ll contribute!
