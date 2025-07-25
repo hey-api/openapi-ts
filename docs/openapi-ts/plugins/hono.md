@@ -5,9 +5,7 @@ description: Hono plugin for Hey API. Compatible with all our features.
 
 # Hono <span data-soon>soon</span>
 
-::: warning
-This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1483).
-:::
+<FeatureStatus issueNumber=1483 name="Hono" />
 
 ### About
 

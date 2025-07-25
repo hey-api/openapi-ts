@@ -5,9 +5,7 @@ description: TypeBox plugin for Hey API. Compatible with all our features.
 
 # TypeBox <span data-soon>soon</span>
 
-::: warning
-This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1475).
-:::
+<FeatureStatus issueNumber=1475 name="TypeBox" />
 
 ### About
 
