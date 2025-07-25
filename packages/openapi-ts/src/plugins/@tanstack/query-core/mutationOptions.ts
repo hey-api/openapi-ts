@@ -1,7 +1,7 @@
 import type ts from 'typescript';
 
-import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
+import { tsc } from '../../../tsc';
 import { createOperationComment } from '../../shared/utils/operation';
 import type { PluginInstance, PluginState } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
@@ -57,11 +57,11 @@ export const createMutationOptions = ({
   // TODO: better types syntax
   const mutationType = `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`;
 
-  const awaitSdkExpression = compiler.awaitExpression({
-    expression: compiler.callExpression({
+  const awaitSdkExpression = tsc.awaitExpression({
+    expression: tsc.callExpression({
       functionName: queryFn,
       parameters: [
-        compiler.objectExpression({
+        tsc.objectExpression({
           multiLine: true,
           obj: [
             {
@@ -84,18 +84,18 @@ export const createMutationOptions = ({
 
   if (plugin.getPlugin('@hey-api/sdk')?.config.responseStyle === 'data') {
     statements.push(
-      compiler.returnVariable({
+      tsc.returnVariable({
         expression: awaitSdkExpression,
       }),
     );
   } else {
     statements.push(
-      compiler.constVariable({
+      tsc.constVariable({
         destructure: true,
         expression: awaitSdkExpression,
         name: 'data',
       }),
-      compiler.returnVariable({
+      tsc.returnVariable({
         expression: 'data',
       }),
     );
@@ -110,7 +110,7 @@ export const createMutationOptions = ({
     namespace: 'value',
   });
 
-  const expression = compiler.arrowFunction({
+  const expression = tsc.arrowFunction({
     parameters: [
       {
         isRequired: false,
@@ -120,12 +120,12 @@ export const createMutationOptions = ({
     ],
     returnType: mutationType,
     statements: [
-      compiler.constVariable({
-        expression: compiler.objectExpression({
+      tsc.constVariable({
+        expression: tsc.objectExpression({
           obj: [
             {
               key: 'mutationFn',
-              value: compiler.arrowFunction({
+              value: tsc.arrowFunction({
                 async: true,
                 multiLine: true,
                 parameters: [
@@ -141,12 +141,12 @@ export const createMutationOptions = ({
         name: mutationOptionsFn,
         typeName: mutationType,
       }),
-      compiler.returnVariable({
+      tsc.returnVariable({
         expression: mutationOptionsFn,
       }),
     ],
   });
-  const statement = compiler.constVariable({
+  const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,

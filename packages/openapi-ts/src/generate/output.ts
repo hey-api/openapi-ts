@@ -2,9 +2,9 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
-import { compiler } from '../compiler';
 import type { IR } from '../ir/types';
 import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
+import { tsc } from '../tsc';
 import { generateClientBundle } from './client';
 import { findTsConfigPath, loadTsConfig } from './tsConfig';
 import { removeDirSync } from './utils';
@@ -70,9 +70,7 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
         }
         // TODO: parser - add export method for more granular control over
         // what's exported so we can support named exports
-        indexFile.add(
-          compiler.exportAllDeclaration({ module: resolvedModule }),
-        );
+        indexFile.add(tsc.exportAllDeclaration({ module: resolvedModule }));
       }
 
       file.write('\n\n', tsConfig);

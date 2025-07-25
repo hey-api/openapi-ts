@@ -1,15 +1,12 @@
 import type ts from 'typescript';
 
-import type { Comments, FunctionParameter } from '../../../compiler';
-import { compiler } from '../../../compiler';
-import type {
-  FunctionTypeParameter,
-  ObjectValue,
-} from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
 import { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
 import { isOperationParameterRequired } from '../../../openApi';
+import type { Comments, FunctionParameter } from '../../../tsc';
+import { tsc } from '../../../tsc';
+import type { FunctionTypeParameter, ObjectValue } from '../../../tsc/types';
 import type {
   Client,
   Model,
@@ -178,7 +175,7 @@ const toOperationParamType = (
 const toOperationReturnType = (client: Client, operation: Operation) => {
   const config = getConfig();
 
-  let returnType = compiler.typeNode('void');
+  let returnType = tsc.typeNode('void');
 
   const successResponses = operation.responses.filter((response) =>
     response.responseTypes.includes('success'),
@@ -198,7 +195,7 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
       },
       nameTransformer: operationResponseTypeName,
     });
-    returnType = compiler.typeUnionNode({
+    returnType = tsc.typeUnionNode({
       types: [importedType],
     });
   }
@@ -207,14 +204,14 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
     config.useOptions &&
     config.plugins['@hey-api/sdk']?.config.response === 'response'
   ) {
-    returnType = compiler.typeNode('ApiResult', [returnType]);
+    returnType = tsc.typeNode('ApiResult', [returnType]);
   }
 
   const clientPlugin = getClientPlugin(config);
   if (clientPlugin.name === 'legacy/angular') {
-    returnType = compiler.typeNode('Observable', [returnType]);
+    returnType = tsc.typeNode('Observable', [returnType]);
   } else {
-    returnType = compiler.typeNode('CancelablePromise', [returnType]);
+    returnType = tsc.typeNode('CancelablePromise', [returnType]);
   }
 
   return returnType;
@@ -383,7 +380,7 @@ const toRequestOptions = ({
       ];
     }
 
-    return compiler.objectExpression({
+    return tsc.objectExpression({
       identifiers: ['responseTransformer'],
       obj,
     });
@@ -471,7 +468,7 @@ const toRequestOptions = ({
     obj.errors = errors;
   }
 
-  return compiler.objectExpression({
+  return tsc.objectExpression({
     identifiers: [
       'body',
       'cookies',
@@ -555,7 +552,7 @@ const toOperationStatements = ({
         }).name
       : 'void';
     return [
-      compiler.returnFunctionCall({
+      tsc.returnFunctionCall({
         args: [options],
         name: `(options?.client ?? client).${operation.method.toLocaleLowerCase()}`,
         types:
@@ -572,7 +569,7 @@ const toOperationStatements = ({
 
   if (legacyNameFromConfig(config)) {
     return [
-      compiler.returnFunctionCall({
+      tsc.returnFunctionCall({
         args: [options],
         name: 'this.httpRequest.request',
       }),
@@ -582,7 +579,7 @@ const toOperationStatements = ({
   const clientPlugin = getClientPlugin(config);
   if (clientPlugin.name === 'legacy/angular') {
     return [
-      compiler.returnFunctionCall({
+      tsc.returnFunctionCall({
         args: ['OpenAPI', 'this.http', options],
         name: '__request',
       }),
@@ -590,7 +587,7 @@ const toOperationStatements = ({
   }
 
   return [
-    compiler.returnFunctionCall({
+    tsc.returnFunctionCall({
       args: ['OpenAPI', options],
       name: '__request',
     }),
@@ -691,9 +688,9 @@ const processService = ({
       };
       const expression =
         clientPlugin.name === 'legacy/angular'
-          ? compiler.anonymousFunction(compileFunctionParams)
-          : compiler.arrowFunction(compileFunctionParams);
-      const statement = compiler.constVariable({
+          ? tsc.anonymousFunction(compileFunctionParams)
+          : tsc.arrowFunction(compileFunctionParams);
+      const statement = tsc.constVariable({
         comment: toOperationComment(operation),
         exportConst: true,
         expression,
@@ -710,7 +707,7 @@ const processService = ({
   }
 
   let members: ts.ClassElement[] = service.operations.map((operation) => {
-    const node = compiler.methodDeclaration({
+    const node = tsc.methodDeclaration({
       accessLevel: 'public',
       comment: toOperationComment(operation),
       isStatic:
@@ -743,7 +740,7 @@ const processService = ({
   // Push constructor to front if needed
   if (legacyNameFromConfig(config)) {
     members = [
-      compiler.constructorDeclaration({
+      tsc.constructorDeclaration({
         multiLine: false,
         parameters: [
           {
@@ -758,7 +755,7 @@ const processService = ({
     ];
   } else if (clientPlugin.name === 'legacy/angular') {
     members = [
-      compiler.constructorDeclaration({
+      tsc.constructorDeclaration({
         multiLine: false,
         parameters: [
           {
@@ -778,13 +775,13 @@ const processService = ({
     // add newline between each class member
     if (index) {
       // @ts-expect-error
-      _members.push(compiler.identifier({ text: '\n' }));
+      _members.push(tsc.identifier({ text: '\n' }));
     }
 
     _members.push(member);
   });
 
-  const statement = compiler.classDeclaration({
+  const statement = tsc.classDeclaration({
     decorator:
       clientPlugin.name === 'legacy/angular'
         ? { args: [{ providedIn: 'root' }], name: 'Injectable' }
@@ -890,16 +887,16 @@ export const handlerLegacy: HeyApiSdkPlugin['LegacyHandler'] = ({
   // define client first
   if (!isLegacy) {
     const clientPlugin = getClientPlugin(config);
-    const statement = compiler.constVariable({
+    const statement = tsc.constVariable({
       exportConst: true,
-      expression: compiler.callExpression({
+      expression: tsc.callExpression({
         functionName: 'createClient',
         parameters: [
-          compiler.callExpression({
+          tsc.callExpression({
             functionName: 'createConfig',
             parameters: [
               'throwOnError' in clientPlugin && clientPlugin.throwOnError
-                ? compiler.objectExpression({
+                ? tsc.objectExpression({
                     obj: [
                       {
                         key: 'throwOnError',

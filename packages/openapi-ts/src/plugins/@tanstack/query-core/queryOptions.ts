@@ -1,7 +1,7 @@
 import type ts from 'typescript';
 
-import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
+import { tsc } from '../../../tsc';
 import {
   createOperationComment,
   isOperationOptionsRequired,
@@ -76,11 +76,11 @@ export const createQueryOptions = ({
     namespace: 'value',
   });
 
-  const awaitSdkExpression = compiler.awaitExpression({
-    expression: compiler.callExpression({
+  const awaitSdkExpression = tsc.awaitExpression({
+    expression: tsc.callExpression({
       functionName: queryFn,
       parameters: [
-        compiler.objectExpression({
+        tsc.objectExpression({
           multiLine: true,
           obj: [
             {
@@ -92,7 +92,7 @@ export const createQueryOptions = ({
             {
               key: 'signal',
               shorthand: true,
-              value: compiler.identifier({
+              value: tsc.identifier({
                 text: 'signal',
               }),
             },
@@ -110,18 +110,18 @@ export const createQueryOptions = ({
 
   if (plugin.getPlugin('@hey-api/sdk')?.config.responseStyle === 'data') {
     statements.push(
-      compiler.returnVariable({
+      tsc.returnVariable({
         expression: awaitSdkExpression,
       }),
     );
   } else {
     statements.push(
-      compiler.constVariable({
+      tsc.constVariable({
         destructure: true,
         expression: awaitSdkExpression,
         name: 'data',
       }),
-      compiler.returnVariable({
+      tsc.returnVariable({
         expression: 'data',
       }),
     );
@@ -136,12 +136,12 @@ export const createQueryOptions = ({
     namespace: 'value',
   });
 
-  const statement = compiler.constVariable({
+  const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
     exportConst: true,
-    expression: compiler.arrowFunction({
+    expression: tsc.arrowFunction({
       parameters: [
         {
           isRequired: isRequiredOptions,
@@ -150,13 +150,13 @@ export const createQueryOptions = ({
         },
       ],
       statements: [
-        compiler.returnFunctionCall({
+        tsc.returnFunctionCall({
           args: [
-            compiler.objectExpression({
+            tsc.objectExpression({
               obj: [
                 {
                   key: 'queryFn',
-                  value: compiler.arrowFunction({
+                  value: tsc.arrowFunction({
                     async: true,
                     multiLine: true,
                     parameters: [
@@ -176,7 +176,7 @@ export const createQueryOptions = ({
                 },
                 {
                   key: 'queryKey',
-                  value: compiler.callExpression({
+                  value: tsc.callExpression({
                     functionName: identifierQueryKey.name || '',
                     parameters: ['options'],
                   }),

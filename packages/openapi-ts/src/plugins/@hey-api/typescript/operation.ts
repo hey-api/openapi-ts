@@ -1,10 +1,10 @@
 import ts from 'typescript';
 
-import { compiler } from '../../../compiler';
 import { operationResponsesMap } from '../../../ir/operation';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
+import { tsc } from '../../../tsc';
 import { schemaToType } from './plugin';
 import { typesId } from './ref';
 import type { HeyApiTypeScriptPlugin, PluginState } from './types';
@@ -142,7 +142,7 @@ const operationToDataType = ({
     schema: data,
     state,
   });
-  const node = compiler.typeAliasDeclaration({
+  const node = tsc.typeAliasDeclaration({
     exportType: nodeInfo.exported,
     name: nodeInfo.node,
     type,
@@ -184,7 +184,7 @@ export const operationToType = ({
       schema: errors,
       state,
     });
-    const node = compiler.typeAliasDeclaration({
+    const node = tsc.typeAliasDeclaration({
       exportType: nodeInfo.exported,
       name: nodeInfo.node,
       type,
@@ -206,14 +206,14 @@ export const operationToType = ({
           name,
         },
       );
-      const type = compiler.indexedAccessTypeNode({
+      const type = tsc.indexedAccessTypeNode({
         indexType: ts.factory.createTypeOperatorNode(
           ts.SyntaxKind.KeyOfKeyword,
           nodeInfo.node,
         ),
         objectType: nodeInfo.node,
       });
-      const node = compiler.typeAliasDeclaration({
+      const node = tsc.typeAliasDeclaration({
         exportType: errorNodeInfo.exported,
         name: errorNodeInfo.node,
         type,
@@ -240,7 +240,7 @@ export const operationToType = ({
       schema: responses,
       state,
     });
-    const node = compiler.typeAliasDeclaration({
+    const node = tsc.typeAliasDeclaration({
       exportType: nodeInfo.exported,
       name: nodeInfo.node,
       type,
@@ -262,14 +262,14 @@ export const operationToType = ({
           name,
         },
       );
-      const type = compiler.indexedAccessTypeNode({
+      const type = tsc.indexedAccessTypeNode({
         indexType: ts.factory.createTypeOperatorNode(
           ts.SyntaxKind.KeyOfKeyword,
           nodeInfo.node,
         ),
         objectType: nodeInfo.node,
       });
-      const node = compiler.typeAliasDeclaration({
+      const node = tsc.typeAliasDeclaration({
         exportType: responseNodeInfo.exported,
         name: responseNodeInfo.node,
         type,

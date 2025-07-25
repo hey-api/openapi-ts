@@ -21,3 +21,7 @@ Your [pull request](https://help.github.com/articles/using-pull-requests) must:
 - contain a clean history of small, incremental, logically separate commits, with no merge commits
 - use clear commit messages
 - be possible to merge automatically
+
+## Start `@hey-api/openapi-ts`
+
+Run `pnpm --filter @hey-api/openapi-ts dev`.

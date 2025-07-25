@@ -1,7 +1,7 @@
 import type ts from 'typescript';
 
-import { compiler } from '../../../compiler';
 import { createOperationKey } from '../../../ir/operation';
+import { tsc } from '../../../tsc';
 import type { ModelMeta, OperationResponse } from '../../../types/client';
 import { getConfig } from '../../../utils/config';
 import { isModelDate, unsetUniqueTypeName } from '../../../utils/type';
@@ -92,7 +92,7 @@ const processArray = (props: ModelProps) => {
     }
 
     return [
-      compiler.transformArrayMutation({
+      tsc.transformArrayMutation({
         path: props.path,
         transformerName: nameModelResponseTransformer,
       }),
@@ -107,12 +107,12 @@ const processArray = (props: ModelProps) => {
       model.link.properties.find((property) => isModelDate(property)))
   ) {
     return [
-      compiler.transformArrayMap({
+      tsc.transformArrayMap({
         path: props.path,
-        transformExpression: compiler.conditionalExpression({
-          condition: compiler.identifier({ text: 'item' }),
-          whenFalse: compiler.identifier({ text: 'item' }),
-          whenTrue: compiler.transformNewDate({
+        transformExpression: tsc.conditionalExpression({
+          condition: tsc.identifier({ text: 'item' }),
+          whenFalse: tsc.identifier({ text: 'item' }),
+          whenTrue: tsc.transformNewDate({
             parameterName: 'item',
           }),
         }),
@@ -133,7 +133,7 @@ const processProperty = (props: ModelProps) => {
     model.export !== 'array' &&
     isModelDate(model)
   ) {
-    return [compiler.transformDateMutation({ path })];
+    return [tsc.transformDateMutation({ path })];
   }
 
   // otherwise we recurse in case it's an object/array, and if it's not that will just bail with []
@@ -172,14 +172,14 @@ const processModel = (props: ModelProps): ts.Statement[] => {
 
       return model.in === 'response'
         ? [
-            compiler.expressionToStatement({
-              expression: compiler.callExpression({
+            tsc.expressionToStatement({
+              expression: tsc.callExpression({
                 functionName: nameModelResponseTransformer,
                 parameters: [dataVariableName],
               }),
             }),
           ]
-        : compiler.transformFunctionMutation({
+        : tsc.transformFunctionMutation({
             path: props.path,
             transformerName: nameModelResponseTransformer,
           });
@@ -218,7 +218,7 @@ const generateResponseTransformer = ({
     return result;
   }
 
-  const expression = compiler.arrowFunction({
+  const expression = tsc.arrowFunction({
     async,
     multiLine: true,
     parameters: [
@@ -228,12 +228,12 @@ const generateResponseTransformer = ({
     ],
     statements: [
       ...statements,
-      compiler.returnVariable({
+      tsc.returnVariable({
         expression: dataVariableName,
       }),
     ],
   });
-  const statement = compiler.constVariable({
+  const statement = tsc.constVariable({
     exportConst: true,
     expression,
     name,
@@ -318,9 +318,9 @@ export const handlerLegacy: HeyApiTransformersPlugin['LegacyHandler'] = ({
                   }
 
                   return [
-                    compiler.ifStatement({
-                      expression: compiler.safeAccessExpression(['data']),
-                      thenStatement: compiler.block({ statements }),
+                    tsc.ifStatement({
+                      expression: tsc.safeAccessExpression(['data']),
+                      thenStatement: tsc.block({ statements }),
                     }),
                   ];
                 })

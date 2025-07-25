@@ -1,25 +1,25 @@
 import ts from 'typescript';
 
-import { compiler } from '../../../compiler';
 import type { NodeInfo } from '../../../generate/file/types';
 import type { IR } from '../../../ir/types';
+import { tsc } from '../../../tsc';
 import { parseUrl } from '../../../utils/url';
 import { getClientBaseUrlKey, getClientPlugin } from '../client-core/utils';
 import { typesId } from './ref';
 import type { HeyApiTypeScriptPlugin } from './types';
 
-const stringType = compiler.keywordTypeNode({ keyword: 'string' });
+const stringType = tsc.keywordTypeNode({ keyword: 'string' });
 
 const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {
   const url = parseUrl(server.url);
 
   if (url.protocol && url.host) {
-    return compiler.literalTypeNode({
-      literal: compiler.stringLiteral({ text: server.url }),
+    return tsc.literalTypeNode({
+      literal: tsc.stringLiteral({ text: server.url }),
     });
   }
 
-  return compiler.templateLiteralType({
+  return tsc.templateLiteralType({
     value: [
       url.protocol || stringType,
       '://',
@@ -53,22 +53,22 @@ export const createClientOptions = ({
     !('strictBaseUrl' in client.config && client.config.strictBaseUrl)
   ) {
     types.push(
-      compiler.typeIntersectionNode({
+      tsc.typeIntersectionNode({
         types: [stringType, ts.factory.createTypeLiteralNode([])],
       }),
     );
   }
 
-  const type = compiler.typeInterfaceNode({
+  const type = tsc.typeInterfaceNode({
     properties: [
       {
         name: getClientBaseUrlKey(plugin.context.config),
-        type: compiler.typeUnionNode({ types }),
+        type: tsc.typeUnionNode({ types }),
       },
     ],
     useLegacyResolution: false,
   });
-  const node = compiler.typeAliasDeclaration({
+  const node = tsc.typeAliasDeclaration({
     exportType: nodeInfo.exported,
     name: nodeInfo.node,
     type,

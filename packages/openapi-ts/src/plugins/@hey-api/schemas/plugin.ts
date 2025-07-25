@@ -1,10 +1,10 @@
-import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
 import type { OpenApiV2_0_XTypes } from '../../../openApi/2.0.x';
 import type { OpenApiV3_0_XTypes } from '../../../openApi/3.0.x';
 import type { OpenApiV3_1_XTypes } from '../../../openApi/3.1.x';
 import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
 import type { OpenApi } from '../../../openApi/types';
+import { tsc } from '../../../tsc';
 import type { HeyApiSchemasPlugin } from './types';
 
 const schemasId = 'schemas';
@@ -373,10 +373,10 @@ const schemasV2_0_X = ({
       plugin,
       schema,
     });
-    const statement = compiler.constVariable({
+    const statement = tsc.constVariable({
       assertion: 'const',
       exportConst: true,
-      expression: compiler.objectExpression({ obj }),
+      expression: tsc.objectExpression({ obj }),
       name: schemaName({ name, plugin, schema }),
     });
     context.file({ id: schemasId })!.add(statement);
@@ -401,10 +401,10 @@ const schemasV3_0_X = ({
       plugin,
       schema,
     });
-    const statement = compiler.constVariable({
+    const statement = tsc.constVariable({
       assertion: 'const',
       exportConst: true,
-      expression: compiler.objectExpression({ obj }),
+      expression: tsc.objectExpression({ obj }),
       name: schemaName({ name, plugin, schema }),
     });
     context.file({ id: schemasId })!.add(statement);
@@ -429,10 +429,10 @@ const schemasV3_1_X = ({
       plugin,
       schema,
     });
-    const statement = compiler.constVariable({
+    const statement = tsc.constVariable({
       assertion: 'const',
       exportConst: true,
-      expression: compiler.objectExpression({ obj }),
+      expression: tsc.objectExpression({ obj }),
       name: schemaName({ name, plugin, schema }),
     });
     context.file({ id: schemasId })!.add(statement);

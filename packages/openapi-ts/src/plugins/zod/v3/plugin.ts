@@ -1,9 +1,9 @@
 import ts from 'typescript';
 
-import { compiler } from '../../../compiler';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
+import { tsc } from '../../../tsc';
 import { refToName } from '../../../utils/ref';
 import { numberRegExp } from '../../../utils/regexp';
 import { identifiers, zodId } from '../constants';
@@ -22,7 +22,7 @@ const arrayTypeToZodSchema = ({
   schema: SchemaWithType<'array'>;
   state: State;
 }): ts.CallExpression => {
-  const functionName = compiler.propertyAccessExpression({
+  const functionName = tsc.propertyAccessExpression({
     expression: identifiers.z,
     name: identifiers.array,
   });
@@ -30,7 +30,7 @@ const arrayTypeToZodSchema = ({
   let arrayExpression: ts.CallExpression | undefined;
 
   if (!schema.items) {
-    arrayExpression = compiler.callExpression({
+    arrayExpression = tsc.callExpression({
       functionName,
       parameters: [
         unknownTypeToZodSchema({
@@ -54,31 +54,31 @@ const arrayTypeToZodSchema = ({
     );
 
     if (itemExpressions.length === 1) {
-      arrayExpression = compiler.callExpression({
+      arrayExpression = tsc.callExpression({
         functionName,
         parameters: itemExpressions,
       });
     } else {
       if (schema.logicalOperator === 'and') {
         // TODO: parser - handle intersection
-        // return compiler.typeArrayNode(
-        //   compiler.typeIntersectionNode({ types: itemExpressions }),
+        // return tsc.typeArrayNode(
+        //   tsc.typeIntersectionNode({ types: itemExpressions }),
         // );
       }
 
-      arrayExpression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      arrayExpression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: identifiers.z,
           name: identifiers.array,
         }),
         parameters: [
-          compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
+          tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
               expression: identifiers.z,
               name: identifiers.union,
             }),
             parameters: [
-              compiler.arrayLiteralExpression({
+              tsc.arrayLiteralExpression({
                 elements: itemExpressions,
               }),
             ],
@@ -89,31 +89,31 @@ const arrayTypeToZodSchema = ({
   }
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    arrayExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    arrayExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: arrayExpression,
         name: identifiers.length,
       }),
-      parameters: [compiler.valueToExpression({ value: schema.minItems })],
+      parameters: [tsc.valueToExpression({ value: schema.minItems })],
     });
   } else {
     if (schema.minItems !== undefined) {
-      arrayExpression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      arrayExpression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: arrayExpression,
           name: identifiers.min,
         }),
-        parameters: [compiler.valueToExpression({ value: schema.minItems })],
+        parameters: [tsc.valueToExpression({ value: schema.minItems })],
       });
     }
 
     if (schema.maxItems !== undefined) {
-      arrayExpression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      arrayExpression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: arrayExpression,
           name: identifiers.max,
         }),
-        parameters: [compiler.valueToExpression({ value: schema.maxItems })],
+        parameters: [tsc.valueToExpression({ value: schema.maxItems })],
       });
     }
   }
@@ -127,18 +127,18 @@ const booleanTypeToZodSchema = ({
   schema: SchemaWithType<'boolean'>;
 }) => {
   if (typeof schema.const === 'boolean') {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.z,
         name: identifiers.literal,
       }),
-      parameters: [compiler.ots.boolean(schema.const)],
+      parameters: [tsc.ots.boolean(schema.const)],
     });
     return expression;
   }
 
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.z,
       name: identifiers.boolean,
     }),
@@ -159,7 +159,7 @@ const enumTypeToZodSchema = ({
     // Zod supports only string enums
     if (item.type === 'string' && typeof item.const === 'string') {
       enumMembers.push(
-        compiler.stringLiteral({
+        tsc.stringLiteral({
           text: item.const,
         }),
       );
@@ -176,13 +176,13 @@ const enumTypeToZodSchema = ({
     });
   }
 
-  let enumExpression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  let enumExpression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.z,
       name: identifiers.enum,
     }),
     parameters: [
-      compiler.arrayLiteralExpression({
+      tsc.arrayLiteralExpression({
         elements: enumMembers,
         multiLine: false,
       }),
@@ -190,8 +190,8 @@ const enumTypeToZodSchema = ({
   });
 
   if (isNullable) {
-    enumExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    enumExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: enumExpression,
         name: identifiers.nullable,
       }),
@@ -203,8 +203,8 @@ const enumTypeToZodSchema = ({
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const neverTypeToZodSchema = (_props: { schema: SchemaWithType<'never'> }) => {
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.z,
       name: identifiers.never,
     }),
@@ -214,8 +214,8 @@ const neverTypeToZodSchema = (_props: { schema: SchemaWithType<'never'> }) => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const nullTypeToZodSchema = (_props: { schema: SchemaWithType<'null'> }) => {
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.z,
       name: identifiers.null,
     }),
@@ -230,7 +230,7 @@ const numberParameter = ({
   isBigInt: boolean;
   value: unknown;
 }) => {
-  const expression = compiler.valueToExpression({ value });
+  const expression = tsc.valueToExpression({ value });
 
   if (
     isBigInt &&
@@ -239,7 +239,7 @@ const numberParameter = ({
       typeof value === 'string' ||
       typeof value === 'boolean')
   ) {
-    return compiler.callExpression({
+    return tsc.callExpression({
       functionName: 'BigInt',
       parameters: [expression],
     });
@@ -257,34 +257,34 @@ const numberTypeToZodSchema = ({
 
   if (typeof schema.const === 'number') {
     // TODO: parser - handle bigint constants
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.z,
         name: identifiers.literal,
       }),
-      parameters: [compiler.ots.number(schema.const)],
+      parameters: [tsc.ots.number(schema.const)],
     });
     return expression;
   }
 
-  let numberExpression = compiler.callExpression({
+  let numberExpression = tsc.callExpression({
     functionName: isBigInt
-      ? compiler.propertyAccessExpression({
-          expression: compiler.propertyAccessExpression({
+      ? tsc.propertyAccessExpression({
+          expression: tsc.propertyAccessExpression({
             expression: identifiers.z,
             name: identifiers.coerce,
           }),
           name: identifiers.bigint,
         })
-      : compiler.propertyAccessExpression({
+      : tsc.propertyAccessExpression({
           expression: identifiers.z,
           name: identifiers.number,
         }),
   });
 
   if (!isBigInt && schema.type === 'integer') {
-    numberExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    numberExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: numberExpression,
         name: identifiers.int,
       }),
@@ -292,8 +292,8 @@ const numberTypeToZodSchema = ({
   }
 
   if (schema.exclusiveMinimum !== undefined) {
-    numberExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    numberExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: numberExpression,
         name: identifiers.gt,
       }),
@@ -302,8 +302,8 @@ const numberTypeToZodSchema = ({
       ],
     });
   } else if (schema.minimum !== undefined) {
-    numberExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    numberExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: numberExpression,
         name: identifiers.gte,
       }),
@@ -312,8 +312,8 @@ const numberTypeToZodSchema = ({
   }
 
   if (schema.exclusiveMaximum !== undefined) {
-    numberExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    numberExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: numberExpression,
         name: identifiers.lt,
       }),
@@ -322,8 +322,8 @@ const numberTypeToZodSchema = ({
       ],
     });
   } else if (schema.maximum !== undefined) {
-    numberExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    numberExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: numberExpression,
         name: identifiers.lte,
       }),
@@ -382,7 +382,7 @@ const objectTypeToZodSchema = ({
       propertyName = `'${name}'`;
     }
     properties.push(
-      compiler.propertyAssignment({
+      tsc.propertyAssignment({
         initializer: propertyExpression,
         name: propertyName,
       }),
@@ -399,8 +399,8 @@ const objectTypeToZodSchema = ({
       schema: schema.additionalProperties,
       state,
     }).expression;
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.z,
         name: identifiers.record,
       }),
@@ -412,8 +412,8 @@ const objectTypeToZodSchema = ({
     };
   }
 
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.z,
       name: identifiers.object,
     }),
@@ -433,18 +433,18 @@ const stringTypeToZodSchema = ({
   schema: SchemaWithType<'string'>;
 }) => {
   if (typeof schema.const === 'string') {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.z,
         name: identifiers.literal,
       }),
-      parameters: [compiler.ots.string(schema.const)],
+      parameters: [tsc.ots.string(schema.const)],
     });
     return expression;
   }
 
-  let stringExpression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  let stringExpression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.z,
       name: identifiers.string,
     }),
@@ -453,22 +453,22 @@ const stringTypeToZodSchema = ({
   if (schema.format) {
     switch (schema.format) {
       case 'date':
-        stringExpression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        stringExpression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: stringExpression,
             name: identifiers.date,
           }),
         });
         break;
       case 'date-time':
-        stringExpression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        stringExpression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: stringExpression,
             name: identifiers.datetime,
           }),
           parameters: plugin.config.dates.offset
             ? [
-                compiler.objectExpression({
+                tsc.objectExpression({
                   obj: [
                     {
                       key: 'offset',
@@ -481,8 +481,8 @@ const stringTypeToZodSchema = ({
         });
         break;
       case 'email':
-        stringExpression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        stringExpression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: stringExpression,
             name: identifiers.email,
           }),
@@ -490,32 +490,32 @@ const stringTypeToZodSchema = ({
         break;
       case 'ipv4':
       case 'ipv6':
-        stringExpression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        stringExpression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: stringExpression,
             name: identifiers.ip,
           }),
         });
         break;
       case 'time':
-        stringExpression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        stringExpression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: stringExpression,
             name: identifiers.time,
           }),
         });
         break;
       case 'uri':
-        stringExpression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        stringExpression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: stringExpression,
             name: identifiers.url,
           }),
         });
         break;
       case 'uuid':
-        stringExpression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        stringExpression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: stringExpression,
             name: identifiers.uuid,
           }),
@@ -525,42 +525,42 @@ const stringTypeToZodSchema = ({
   }
 
   if (schema.minLength === schema.maxLength && schema.minLength !== undefined) {
-    stringExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    stringExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: stringExpression,
         name: identifiers.length,
       }),
-      parameters: [compiler.valueToExpression({ value: schema.minLength })],
+      parameters: [tsc.valueToExpression({ value: schema.minLength })],
     });
   } else {
     if (schema.minLength !== undefined) {
-      stringExpression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      stringExpression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: stringExpression,
           name: identifiers.min,
         }),
-        parameters: [compiler.valueToExpression({ value: schema.minLength })],
+        parameters: [tsc.valueToExpression({ value: schema.minLength })],
       });
     }
 
     if (schema.maxLength !== undefined) {
-      stringExpression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      stringExpression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: stringExpression,
           name: identifiers.max,
         }),
-        parameters: [compiler.valueToExpression({ value: schema.maxLength })],
+        parameters: [tsc.valueToExpression({ value: schema.maxLength })],
       });
     }
   }
 
   if (schema.pattern) {
-    stringExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    stringExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: stringExpression,
         name: identifiers.regex,
       }),
-      parameters: [compiler.regularExpressionLiteral({ text: schema.pattern })],
+      parameters: [tsc.regularExpressionLiteral({ text: schema.pattern })],
     });
   }
 
@@ -578,21 +578,21 @@ const tupleTypeToZodSchema = ({
 }) => {
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
-      compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: identifiers.z,
           name: identifiers.literal,
         }),
-        parameters: [compiler.valueToExpression({ value })],
+        parameters: [tsc.valueToExpression({ value })],
       }),
     );
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.z,
         name: identifiers.tuple,
       }),
       parameters: [
-        compiler.arrayLiteralExpression({
+        tsc.arrayLiteralExpression({
           elements: tupleElements,
         }),
       ],
@@ -612,13 +612,13 @@ const tupleTypeToZodSchema = ({
     );
   }
 
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.z,
       name: identifiers.tuple,
     }),
     parameters: [
-      compiler.arrayLiteralExpression({
+      tsc.arrayLiteralExpression({
         elements: tupleElements,
       }),
     ],
@@ -630,8 +630,8 @@ const tupleTypeToZodSchema = ({
 const undefinedTypeToZodSchema = (_props: {
   schema: SchemaWithType<'undefined'>;
 }) => {
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.z,
       name: identifiers.undefined,
     }),
@@ -643,8 +643,8 @@ const undefinedTypeToZodSchema = (_props: {
 const unknownTypeToZodSchema = (_props: {
   schema: SchemaWithType<'unknown'>;
 }) => {
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.z,
       name: identifiers.unknown,
     }),
@@ -654,8 +654,8 @@ const unknownTypeToZodSchema = (_props: {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const voidTypeToZodSchema = (_props: { schema: SchemaWithType<'void'> }) => {
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.z,
       name: identifiers.void,
     }),
@@ -788,16 +788,16 @@ const schemaToZodSchema = ({
 
     if (isCircularReference) {
       const expression = file.addNodeReference(id, {
-        factory: (text) => compiler.identifier({ text }),
+        factory: (text) => tsc.identifier({ text }),
       });
-      zodSchema.expression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      zodSchema.expression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: identifiers.z,
           name: identifiers.lazy,
         }),
         parameters: [
-          compiler.arrowFunction({
-            statements: [compiler.returnStatement({ expression })],
+          tsc.arrowFunction({
+            statements: [tsc.returnStatement({ expression })],
           }),
         ],
       });
@@ -817,7 +817,7 @@ const schemaToZodSchema = ({
 
     if (!isCircularReference) {
       const expression = file.addNodeReference(id, {
-        factory: (text) => compiler.identifier({ text }),
+        factory: (text) => tsc.identifier({ text }),
       });
       zodSchema.expression = expression;
     }
@@ -830,12 +830,12 @@ const schemaToZodSchema = ({
     zodSchema.typeName = zSchema.anyType;
 
     if (plugin.config.metadata && schema.description) {
-      zodSchema.expression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      zodSchema.expression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: zodSchema.expression,
           name: identifiers.describe,
         }),
-        parameters: [compiler.stringLiteral({ text: schema.description })],
+        parameters: [tsc.stringLiteral({ text: schema.description })],
       });
     }
   } else if (schema.items) {
@@ -860,8 +860,8 @@ const schemaToZodSchema = ({
           firstSchema.logicalOperator === 'or' ||
           (firstSchema.type && firstSchema.type !== 'object')
         ) {
-          zodSchema.expression = compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
+          zodSchema.expression = tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
               expression: identifiers.z,
               name: identifiers.intersection,
             }),
@@ -870,8 +870,8 @@ const schemaToZodSchema = ({
         } else {
           zodSchema.expression = itemTypes[0];
           itemTypes.slice(1).forEach((item) => {
-            zodSchema.expression = compiler.callExpression({
-              functionName: compiler.propertyAccessExpression({
+            zodSchema.expression = tsc.callExpression({
+              functionName: tsc.propertyAccessExpression({
                 expression: zodSchema.expression!,
                 name: identifiers.and,
               }),
@@ -880,13 +880,13 @@ const schemaToZodSchema = ({
           });
         }
       } else {
-        zodSchema.expression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        zodSchema.expression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: identifiers.z,
             name: identifiers.union,
           }),
           parameters: [
-            compiler.arrayLiteralExpression({
+            tsc.arrayLiteralExpression({
               elements: itemTypes,
             }),
           ],
@@ -910,8 +910,8 @@ const schemaToZodSchema = ({
 
   if (zodSchema.expression) {
     if (schema.accessScope === 'read') {
-      zodSchema.expression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      zodSchema.expression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: zodSchema.expression,
           name: identifiers.readonly,
         }),
@@ -919,8 +919,8 @@ const schemaToZodSchema = ({
     }
 
     if (optional) {
-      zodSchema.expression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      zodSchema.expression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: zodSchema.expression,
           name: identifiers.optional,
         }),
@@ -934,8 +934,8 @@ const schemaToZodSchema = ({
         value: schema.default,
       });
       if (callParameter) {
-        zodSchema.expression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        zodSchema.expression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: zodSchema.expression,
             name: identifiers.default,
           }),
