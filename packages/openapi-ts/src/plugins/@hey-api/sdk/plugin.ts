@@ -1,7 +1,7 @@
 import ts from 'typescript';
 
-import { compiler } from '../../../compiler';
 import { clientApi, clientModulePath } from '../../../generate/client';
+import { tsc } from '../../../tsc';
 import { stringCase } from '../../../utils/stringCase';
 import {
   createOperationComment,
@@ -24,38 +24,38 @@ const createClientClassNodes = ({
 }: {
   plugin: HeyApiSdkPlugin['Instance'];
 }): ReadonlyArray<ts.ClassElement> => {
-  const clientAssignmentStatement = compiler.expressionToStatement({
-    expression: compiler.binaryExpression({
-      left: compiler.propertyAccessExpression({
-        expression: compiler.this(),
+  const clientAssignmentStatement = tsc.expressionToStatement({
+    expression: tsc.binaryExpression({
+      left: tsc.propertyAccessExpression({
+        expression: tsc.this(),
         name: '_client',
       }),
       operator: '=',
-      right: compiler.propertyAccessExpression({
-        expression: compiler.identifier({ text: 'args' }),
+      right: tsc.propertyAccessExpression({
+        expression: tsc.identifier({ text: 'args' }),
         name: 'client',
       }),
     }),
   });
 
   return [
-    compiler.propertyDeclaration({
+    tsc.propertyDeclaration({
       initializer: plugin.config.client
-        ? compiler.identifier({ text: '_heyApiClient' })
+        ? tsc.identifier({ text: '_heyApiClient' })
         : undefined,
       modifier: 'protected',
       name: '_client',
       type: ts.factory.createTypeReferenceNode('Client'),
     }),
     // @ts-expect-error
-    compiler.identifier({ text: '\n' }),
-    compiler.constructorDeclaration({
+    tsc.identifier({ text: '\n' }),
+    tsc.constructorDeclaration({
       multiLine: true,
       parameters: [
         {
           isRequired: !plugin.config.client,
           name: 'args',
-          type: compiler.typeInterfaceNode({
+          type: tsc.typeInterfaceNode({
             properties: [
               {
                 isRequired: !plugin.config.client,
@@ -70,13 +70,13 @@ const createClientClassNodes = ({
       statements: [
         !plugin.config.client
           ? clientAssignmentStatement
-          : compiler.ifStatement({
-              expression: compiler.propertyAccessExpression({
-                expression: compiler.identifier({ text: 'args' }),
+          : tsc.ifStatement({
+              expression: tsc.propertyAccessExpression({
+                expression: tsc.identifier({ text: 'args' }),
                 isOptional: true,
                 name: 'client',
               }),
-              thenStatement: compiler.block({
+              thenStatement: tsc.block({
                 statements: [clientAssignmentStatement],
               }),
             }),
@@ -193,7 +193,7 @@ const generateClassSdk = ({
           operation,
           plugin,
         });
-        const functionNode = compiler.methodDeclaration({
+        const functionNode = tsc.methodDeclaration({
           accessLevel: 'public',
           comment: createOperationComment({ operation }),
           isStatic: !plugin.config.instance,
@@ -204,18 +204,18 @@ const generateClassSdk = ({
           types: isNuxtClient
             ? [
                 {
-                  // default: compiler.ots.string('$fetch'),
-                  extends: compiler.typeNode('Composable'),
+                  // default: tsc.ots.string('$fetch'),
+                  extends: tsc.typeNode('Composable'),
                   name: nuxtTypeComposable,
                 },
                 {
                   default: responseImport.name
-                    ? compiler.typeReferenceNode({
+                    ? tsc.typeReferenceNode({
                         typeName: responseImport.name,
                       })
-                    : compiler.typeNode('undefined'),
+                    : tsc.typeNode('undefined'),
                   extends: responseImport.name
-                    ? compiler.typeReferenceNode({
+                    ? tsc.typeReferenceNode({
                         typeName: responseImport.name,
                       })
                     : undefined,
@@ -239,7 +239,7 @@ const generateClassSdk = ({
         } else {
           currentClass.nodes.push(
             // @ts-expect-error
-            compiler.identifier({ text: '\n' }),
+            tsc.identifier({ text: '\n' }),
             functionNode,
           );
         }
@@ -262,18 +262,18 @@ const generateClassSdk = ({
         generateClass(childClass);
 
         currentClass.nodes.push(
-          compiler.propertyDeclaration({
+          tsc.propertyDeclaration({
             initializer: plugin.config.instance
-              ? compiler.newExpression({
+              ? tsc.newExpression({
                   argumentsArray: plugin.config.instance
                     ? [
-                        compiler.objectExpression({
+                        tsc.objectExpression({
                           multiLine: false,
                           obj: [
                             {
                               key: 'client',
-                              value: compiler.propertyAccessExpression({
-                                expression: compiler.this(),
+                              value: tsc.propertyAccessExpression({
+                                expression: tsc.this(),
                                 name: '_client',
                               }),
                             },
@@ -281,11 +281,11 @@ const generateClassSdk = ({
                         }),
                       ]
                     : [],
-                  expression: compiler.identifier({
+                  expression: tsc.identifier({
                     text: childClass.className,
                   }),
                 })
-              : compiler.identifier({ text: childClass.className }),
+              : tsc.identifier({ text: childClass.className }),
             modifier: plugin.config.instance ? undefined : 'static',
             name: stringCase({
               case: 'camelCase',
@@ -296,7 +296,7 @@ const generateClassSdk = ({
       }
     }
 
-    const node = compiler.classDeclaration({
+    const node = tsc.classDeclaration({
       exportClass: currentClass.root,
       extendedClasses: plugin.config.instance ? ['_HeyApiClient'] : undefined,
       name: currentClass.className,
@@ -307,7 +307,7 @@ const generateClassSdk = ({
   };
 
   if (clientClassNodes.length) {
-    const node = compiler.classDeclaration({
+    const node = tsc.classDeclaration({
       exportClass: false,
       name: '_HeyApiClient',
       nodes: clientClassNodes,
@@ -357,28 +357,28 @@ const generateFlatSdk = ({
       operation,
       plugin,
     });
-    const node = compiler.constVariable({
+    const node = tsc.constVariable({
       comment: createOperationComment({ operation }),
       exportConst: true,
-      expression: compiler.arrowFunction({
+      expression: tsc.arrowFunction({
         parameters: opParameters.parameters,
         returnType: undefined,
         statements,
         types: isNuxtClient
           ? [
               {
-                // default: compiler.ots.string('$fetch'),
-                extends: compiler.typeNode('Composable'),
+                // default: tsc.ots.string('$fetch'),
+                extends: tsc.typeNode('Composable'),
                 name: nuxtTypeComposable,
               },
               {
                 default: responseImport.name
-                  ? compiler.typeReferenceNode({
+                  ? tsc.typeReferenceNode({
                       typeName: responseImport.name,
                     })
-                  : compiler.typeNode('undefined'),
+                  : tsc.typeNode('undefined'),
                 extends: responseImport.name
-                  ? compiler.typeReferenceNode({
+                  ? tsc.typeReferenceNode({
                       typeName: responseImport.name,
                     })
                   : undefined,

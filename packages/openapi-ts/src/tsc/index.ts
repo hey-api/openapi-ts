@@ -11,7 +11,7 @@ export type { Property } from './typedef';
 export type { FunctionParameter } from './types';
 export type { Comments } from './utils';
 
-export const compiler = {
+export const tsc = {
   anonymousFunction: types.createAnonymousFunction,
   arrayLiteralExpression: types.createArrayLiteralExpression,
   arrowFunction: types.createArrowFunction,
@@ -81,3 +81,6 @@ export const compiler = {
   typeUnionNode: typedef.createTypeUnionNode,
   valueToExpression: types.toExpression,
 };
+
+/** @deprecated use tsc */
+export const compiler = tsc;

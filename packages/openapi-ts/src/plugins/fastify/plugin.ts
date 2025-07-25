@@ -1,9 +1,9 @@
 import type ts from 'typescript';
 
-import { compiler, type Property } from '../../compiler';
 import { operationResponsesMap } from '../../ir/operation';
 import { hasParameterGroupObjectRequired } from '../../ir/parameter';
 import type { IR } from '../../ir/types';
+import { type Property, tsc } from '../../tsc';
 import { typesId } from '../@hey-api/typescript/ref';
 import type { FastifyPlugin } from './types';
 
@@ -118,7 +118,7 @@ const operationToRouteHandler = ({
           }),
           name: errorName,
         });
-        errorsTypeReference = compiler.typeReferenceNode({
+        errorsTypeReference = tsc.typeReferenceNode({
           typeName: errorName,
         });
       } else if (keys.length > 1) {
@@ -130,13 +130,13 @@ const operationToRouteHandler = ({
           }),
           name: errorName,
         });
-        const errorsType = compiler.typeReferenceNode({
+        const errorsType = tsc.typeReferenceNode({
           typeName: errorName,
         });
-        const defaultType = compiler.literalTypeNode({
-          literal: compiler.stringLiteral({ text: 'default' }),
+        const defaultType = tsc.literalTypeNode({
+          literal: tsc.stringLiteral({ text: 'default' }),
         });
-        errorsTypeReference = compiler.typeReferenceNode({
+        errorsTypeReference = tsc.typeReferenceNode({
           typeArguments: [errorsType, defaultType],
           typeName: 'Omit',
         });
@@ -161,7 +161,7 @@ const operationToRouteHandler = ({
           }),
           name: responseName,
         });
-        responsesTypeReference = compiler.typeReferenceNode({
+        responsesTypeReference = tsc.typeReferenceNode({
           typeName: responseName,
         });
       } else if (keys.length > 1) {
@@ -173,13 +173,13 @@ const operationToRouteHandler = ({
           }),
           name: responseName,
         });
-        const responsesType = compiler.typeReferenceNode({
+        const responsesType = tsc.typeReferenceNode({
           typeName: responseName,
         });
-        const defaultType = compiler.literalTypeNode({
-          literal: compiler.stringLiteral({ text: 'default' }),
+        const defaultType = tsc.literalTypeNode({
+          literal: tsc.stringLiteral({ text: 'default' }),
         });
-        responsesTypeReference = compiler.typeReferenceNode({
+        responsesTypeReference = tsc.typeReferenceNode({
           typeArguments: [responsesType, defaultType],
           typeName: 'Omit',
         });
@@ -193,7 +193,7 @@ const operationToRouteHandler = ({
   if (replyTypes.length) {
     properties.push({
       name: 'Reply',
-      type: compiler.typeIntersectionNode({
+      type: tsc.typeIntersectionNode({
         types: replyTypes,
       }),
     });
@@ -205,8 +205,8 @@ const operationToRouteHandler = ({
 
   const routeHandler: Property = {
     name: operation.id,
-    type: compiler.typeNode('RouteHandler', [
-      compiler.typeInterfaceNode({
+    type: tsc.typeNode('RouteHandler', [
+      tsc.typeInterfaceNode({
         properties,
         useLegacyResolution: false,
       }),
@@ -249,10 +249,10 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
   }
 
   file.add(
-    compiler.typeAliasDeclaration({
+    tsc.typeAliasDeclaration({
       exportType: true,
       name: identifier.name,
-      type: compiler.typeInterfaceNode({
+      type: tsc.typeInterfaceNode({
         properties: routeHandlers,
         useLegacyResolution: false,
       }),

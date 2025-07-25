@@ -1,6 +1,6 @@
-import type { Comments } from '../../../compiler';
 import { hasOperationDataRequired } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
+import type { Comments } from '../../../tsc';
 import { escapeComment } from '../../../utils/escape';
 import { getClientPlugin } from '../../@hey-api/client-core/utils';
 

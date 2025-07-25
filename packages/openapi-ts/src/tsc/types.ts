@@ -178,7 +178,8 @@ export const toExpression = <T = unknown>({
 };
 
 /**
- * Convert parameters to the declaration array expected by compiler API.
+ * Convert parameters to the declaration array expected by TypeScript
+ * Compiler API.
  * @param parameters - the parameters to convert to declarations
  * @returns ts.ParameterDeclaration[]
  */

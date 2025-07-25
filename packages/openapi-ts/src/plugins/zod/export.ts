@@ -1,7 +1,7 @@
 import type ts from 'typescript';
 
-import { compiler } from '../../compiler';
 import type { IR } from '../../ir/types';
+import { tsc } from '../../tsc';
 import { createSchemaComment } from '../shared/utils/schema';
 import { identifiers, zodId } from './constants';
 import type { ZodSchema } from './shared/types';
@@ -22,9 +22,9 @@ export const exportZodSchema = ({
 }) => {
   const file = plugin.context.file({ id: zodId })!;
   const node = file.addNodeReference(schemaId, {
-    factory: (typeName) => compiler.typeReferenceNode({ typeName }),
+    factory: (typeName) => tsc.typeReferenceNode({ typeName }),
   });
-  const statement = compiler.constVariable({
+  const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createSchemaComment({ schema })
       : undefined,
@@ -32,7 +32,7 @@ export const exportZodSchema = ({
     expression: zodSchema.expression,
     name: node,
     typeName: zodSchema.typeName
-      ? (compiler.propertyAccessExpression({
+      ? (tsc.propertyAccessExpression({
           expression: identifiers.z,
           name: zodSchema.typeName,
         }) as unknown as ts.TypeNode)
@@ -42,21 +42,21 @@ export const exportZodSchema = ({
 
   if (typeInferId) {
     const inferNode = file.addNodeReference(typeInferId, {
-      factory: (typeName) => compiler.typeReferenceNode({ typeName }),
+      factory: (typeName) => tsc.typeReferenceNode({ typeName }),
     });
     const nodeIdentifier = file.addNodeReference(schemaId, {
-      factory: (text) => compiler.identifier({ text }),
+      factory: (text) => tsc.identifier({ text }),
     });
-    const inferType = compiler.typeAliasDeclaration({
+    const inferType = tsc.typeAliasDeclaration({
       exportType: true,
       name: inferNode,
-      type: compiler.typeReferenceNode({
+      type: tsc.typeReferenceNode({
         typeArguments: [
-          compiler.typeOfExpression({
+          tsc.typeOfExpression({
             text: nodeIdentifier,
           }) as unknown as ts.TypeNode,
         ],
-        typeName: compiler.propertyAccessExpression({
+        typeName: tsc.propertyAccessExpression({
           expression: identifiers.z,
           name: identifiers.infer,
         }) as unknown as string,

@@ -1,11 +1,11 @@
 import ts from 'typescript';
 
-import type { Property } from '../../../compiler';
-import { compiler } from '../../../compiler';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
 import { buildName } from '../../../openApi/shared/utils/name';
+import type { Property } from '../../../tsc';
+import { tsc } from '../../../tsc';
 import { refToName } from '../../../utils/ref';
 import { numberRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
@@ -106,8 +106,8 @@ const arrayTypeToIdentifier = ({
   state: PluginState;
 }): ts.TypeNode => {
   if (!schema.items) {
-    return compiler.typeArrayNode(
-      compiler.keywordTypeNode({
+    return tsc.typeArrayNode(
+      tsc.keywordTypeNode({
         keyword: 'unknown',
       }),
     );
@@ -128,16 +128,14 @@ const arrayTypeToIdentifier = ({
   }
 
   if (itemTypes.length === 1) {
-    return compiler.typeArrayNode(itemTypes[0]!);
+    return tsc.typeArrayNode(itemTypes[0]!);
   }
 
   if (schema.logicalOperator === 'and') {
-    return compiler.typeArrayNode(
-      compiler.typeIntersectionNode({ types: itemTypes }),
-    );
+    return tsc.typeArrayNode(tsc.typeIntersectionNode({ types: itemTypes }));
   }
 
-  return compiler.typeArrayNode(compiler.typeUnionNode({ types: itemTypes }));
+  return tsc.typeArrayNode(tsc.typeUnionNode({ types: itemTypes }));
 };
 
 const booleanTypeToIdentifier = ({
@@ -146,12 +144,12 @@ const booleanTypeToIdentifier = ({
   schema: SchemaWithType<'boolean'>;
 }): ts.TypeNode => {
   if (schema.const !== undefined) {
-    return compiler.literalTypeNode({
-      literal: compiler.ots.boolean(schema.const as boolean),
+    return tsc.literalTypeNode({
+      literal: tsc.ots.boolean(schema.const as boolean),
     });
   }
 
-  return compiler.keywordTypeNode({
+  return tsc.keywordTypeNode({
     keyword: 'boolean',
   });
 };
@@ -187,19 +185,19 @@ const numberTypeToIdentifier = ({
   schema: SchemaWithType<'integer' | 'number'>;
 }): ts.TypeNode => {
   if (schema.const !== undefined) {
-    return compiler.literalTypeNode({
-      literal: compiler.ots.number(schema.const as number),
+    return tsc.literalTypeNode({
+      literal: tsc.ots.number(schema.const as number),
     });
   }
 
   if (schema.type === 'integer' && schema.format === 'int64') {
     // TODO: parser - add ability to skip type transformers
     if (plugin.getPlugin('@hey-api/transformers')?.config.bigInt) {
-      return compiler.typeReferenceNode({ typeName: 'bigint' });
+      return tsc.typeReferenceNode({ typeName: 'bigint' });
     }
   }
 
-  return compiler.keywordTypeNode({
+  return tsc.keywordTypeNode({
     keyword: 'number',
   });
 };
@@ -291,7 +289,7 @@ const objectTypeToIdentifier = ({
     }
   }
 
-  return compiler.typeInterfaceNode({
+  return tsc.typeInterfaceNode({
     indexKey,
     indexProperty,
     properties: schemaProperties,
@@ -309,19 +307,19 @@ const stringTypeToIdentifier = ({
   state: PluginState;
 }): ts.TypeNode => {
   if (schema.const !== undefined) {
-    return compiler.literalTypeNode({
-      literal: compiler.stringLiteral({ text: schema.const as string }),
+    return tsc.literalTypeNode({
+      literal: tsc.stringLiteral({ text: schema.const as string }),
     });
   }
 
   if (schema.format) {
     if (schema.format === 'binary') {
-      return compiler.typeUnionNode({
+      return tsc.typeUnionNode({
         types: [
-          compiler.typeReferenceNode({
+          tsc.typeReferenceNode({
             typeName: 'Blob',
           }),
-          compiler.typeReferenceNode({
+          tsc.typeReferenceNode({
             typeName: 'File',
           }),
         ],
@@ -331,7 +329,7 @@ const stringTypeToIdentifier = ({
     if (schema.format === 'date-time' || schema.format === 'date') {
       // TODO: parser - add ability to skip type transformers
       if (plugin.getPlugin('@hey-api/transformers')?.config.dates) {
-        return compiler.typeReferenceNode({ typeName: 'Date' });
+        return tsc.typeReferenceNode({ typeName: 'Date' });
       }
     }
 
@@ -346,13 +344,13 @@ const stringTypeToIdentifier = ({
           value: type + '_id',
         }),
       );
-      return compiler.typeReferenceNode({
+      return tsc.typeReferenceNode({
         typeName,
       });
     }
   }
 
-  return compiler.keywordTypeNode({
+  return tsc.keywordTypeNode({
     keyword: 'string',
   });
 };
@@ -372,8 +370,8 @@ const tupleTypeToIdentifier = ({
 
   if (schema.const && Array.isArray(schema.const)) {
     itemTypes = schema.const.map((value) => {
-      const expression = compiler.valueToExpression({ value });
-      return expression ?? compiler.identifier({ text: 'unknown' });
+      const expression = tsc.valueToExpression({ value });
+      return expression ?? tsc.identifier({ text: 'unknown' });
     });
   } else if (schema.items) {
     for (const item of schema.items) {
@@ -387,7 +385,7 @@ const tupleTypeToIdentifier = ({
     }
   }
 
-  return compiler.typeTupleNode({
+  return tsc.typeTupleNode({
     types: itemTypes,
   });
 };
@@ -429,12 +427,12 @@ const schemaTypeToIdentifier = ({
         schema: schema as SchemaWithType<'integer' | 'number'>,
       });
     case 'never':
-      return compiler.keywordTypeNode({
+      return tsc.keywordTypeNode({
         keyword: 'never',
       });
     case 'null':
-      return compiler.literalTypeNode({
-        literal: compiler.null(),
+      return tsc.literalTypeNode({
+        literal: tsc.null(),
       });
     case 'object':
       return objectTypeToIdentifier({
@@ -457,15 +455,15 @@ const schemaTypeToIdentifier = ({
         state,
       });
     case 'undefined':
-      return compiler.keywordTypeNode({
+      return tsc.keywordTypeNode({
         keyword: 'undefined',
       });
     case 'unknown':
-      return compiler.keywordTypeNode({
+      return tsc.keywordTypeNode({
         keyword: 'unknown',
       });
     case 'void':
-      return compiler.keywordTypeNode({
+      return tsc.keywordTypeNode({
         keyword: 'void',
       });
   }
@@ -511,8 +509,8 @@ export const schemaToType = ({
       }
 
       return schema.logicalOperator === 'and'
-        ? compiler.typeIntersectionNode({ types: itemTypes })
-        : compiler.typeUnionNode({ types: itemTypes });
+        ? tsc.typeIntersectionNode({ types: itemTypes })
+        : tsc.typeUnionNode({ types: itemTypes });
     }
 
     return schemaToType({ onRef, plugin, schema, state });
@@ -557,11 +555,11 @@ const exportType = ({
         enumObject.obj = enumObject.obj.filter((item) => item.value !== null);
       }
 
-      const objectNode = compiler.constVariable({
+      const objectNode = tsc.constVariable({
         assertion: 'const',
         comment: createSchemaComment({ schema }),
         exportConst: nodeInfo.exported,
-        expression: compiler.objectExpression({
+        expression: tsc.objectExpression({
           multiLine: true,
           obj: enumObject.obj,
         }),
@@ -570,18 +568,18 @@ const exportType = ({
       file.add(objectNode);
 
       // TODO: https://github.com/hey-api/openapi-ts/issues/2289
-      const typeofType = compiler.typeOfExpression({
+      const typeofType = tsc.typeOfExpression({
         text: nodeInfo.node.typeName as unknown as string,
       }) as unknown as ts.TypeNode;
       const keyofType = ts.factory.createTypeOperatorNode(
         ts.SyntaxKind.KeyOfKeyword,
         typeofType,
       );
-      const node = compiler.typeAliasDeclaration({
+      const node = tsc.typeAliasDeclaration({
         comment: createSchemaComment({ schema }),
         exportType: nodeInfo.exported,
         name: nodeInfo.node,
-        type: compiler.indexedAccessTypeNode({
+        type: tsc.indexedAccessTypeNode({
           indexType: keyofType,
           objectType: typeofType,
         }),
@@ -594,7 +592,7 @@ const exportType = ({
         (type) => type !== 'number' && type !== 'string',
       );
       if (shouldCreateTypeScriptEnum) {
-        const enumNode = compiler.enumDeclaration({
+        const enumNode = tsc.enumDeclaration({
           leadingComment: createSchemaComment({ schema }),
           name: nodeInfo.node,
           obj: enumObject.obj,
@@ -605,7 +603,7 @@ const exportType = ({
     }
   }
 
-  const node = compiler.typeAliasDeclaration({
+  const node = tsc.typeAliasDeclaration({
     comment: createSchemaComment({ schema }),
     exportType: nodeInfo.exported,
     name: nodeInfo.node,
@@ -708,22 +706,22 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   );
 
   if (state.usedTypeIDs.size) {
-    const typeParameter = compiler.typeParameterDeclaration({
-      constraint: compiler.keywordTypeNode({
+    const typeParameter = tsc.typeParameterDeclaration({
+      constraint: tsc.keywordTypeNode({
         keyword: 'string',
       }),
       name: 'T',
     });
-    const node = compiler.typeAliasDeclaration({
+    const node = tsc.typeAliasDeclaration({
       exportType: true,
       name: 'TypeID',
-      type: compiler.templateLiteralType({
+      type: tsc.templateLiteralType({
         value: [
-          compiler.typeReferenceNode({
+          tsc.typeReferenceNode({
             typeName: 'T',
           }),
           '_',
-          compiler.keywordTypeNode({
+          tsc.keywordTypeNode({
             keyword: 'string',
           }),
         ],
@@ -739,13 +737,13 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
           value: name + '_id',
         }),
       );
-      const node = compiler.typeAliasDeclaration({
+      const node = tsc.typeAliasDeclaration({
         exportType: true,
         name: typeName,
-        type: compiler.typeReferenceNode({
+        type: tsc.typeReferenceNode({
           typeArguments: [
-            compiler.literalTypeNode({
-              literal: compiler.stringLiteral({ text: name }),
+            tsc.literalTypeNode({
+              literal: tsc.stringLiteral({ text: name }),
             }),
           ],
           typeName: 'TypeID',

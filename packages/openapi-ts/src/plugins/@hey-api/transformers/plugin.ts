@@ -1,11 +1,11 @@
 import ts from 'typescript';
 
-import { compiler } from '../../../compiler';
 import {
   createOperationKey,
   operationResponsesMap,
 } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
+import { tsc } from '../../../tsc';
 import { stringCase } from '../../../utils/stringCase';
 import { typesId } from '../typescript/ref';
 import { bigIntExpressions, dateExpressions } from './expressions';
@@ -79,7 +79,7 @@ const ensureStatements = (
   nodes.map((node) =>
     ts.isStatement(node)
       ? node
-      : compiler.expressionToStatement({ expression: node }),
+      : tsc.expressionToStatement({ expression: node }),
   );
 
 const isNodeReturnStatement = ({
@@ -95,7 +95,7 @@ const schemaResponseTransformerNodes = ({
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
-  const identifierData = compiler.identifier({ text: dataVariableName });
+  const identifierData = tsc.identifier({ text: dataVariableName });
   const nodes = processSchemaType({
     dataExpression: identifierData,
     plugin,
@@ -106,7 +106,7 @@ const schemaResponseTransformerNodes = ({
     nodes.length &&
     !isNodeReturnStatement({ node: nodes[nodes.length - 1]! })
   ) {
-    nodes.push(compiler.returnStatement({ expression: identifierData }));
+    nodes.push(tsc.returnStatement({ expression: identifierData }));
   }
   return nodes;
 };
@@ -139,15 +139,15 @@ const processSchemaType = ({
         schema: refSchema,
       });
       if (nodes.length) {
-        const node = compiler.constVariable({
-          expression: compiler.arrowFunction({
+        const node = tsc.constVariable({
+          expression: tsc.arrowFunction({
             async: false,
             multiLine: true,
             parameters: [
               {
                 name: dataVariableName,
                 // TODO: parser - add types, generate types without transforms
-                type: compiler.keywordTypeNode({ keyword: 'any' }),
+                type: tsc.keywordTypeNode({ keyword: 'any' }),
               },
             ],
             statements: ensureStatements(nodes),
@@ -166,7 +166,7 @@ const processSchemaType = ({
     }
 
     if (identifier.name) {
-      const callExpression = compiler.callExpression({
+      const callExpression = tsc.callExpression({
         functionName: identifier.name,
         parameters: [dataExpression],
       });
@@ -175,7 +175,7 @@ const processSchemaType = ({
         // In a map callback, the item needs to be returned, not just the transformation result
         if (typeof dataExpression === 'string' && dataExpression === 'item') {
           return [
-            compiler.returnStatement({
+            tsc.returnStatement({
               expression: callExpression,
             }),
           ];
@@ -184,7 +184,7 @@ const processSchemaType = ({
         return [
           typeof dataExpression === 'string'
             ? callExpression
-            : compiler.assignment({
+            : tsc.assignment({
                 left: dataExpression,
                 right: callExpression,
               }),
@@ -226,22 +226,22 @@ const processSchemaType = ({
 
     if (!hasReturnStatement) {
       mapCallbackStatements.push(
-        compiler.returnStatement({
-          expression: compiler.identifier({ text: 'item' }),
+        tsc.returnStatement({
+          expression: tsc.identifier({ text: 'item' }),
         }),
       );
     }
 
     return [
-      compiler.assignment({
+      tsc.assignment({
         left: dataExpression,
-        right: compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        right: tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: dataExpression,
             name: 'map',
           }),
           parameters: [
-            compiler.arrowFunction({
+            tsc.arrowFunction({
               multiLine: true,
               parameters: [
                 {
@@ -263,7 +263,7 @@ const processSchemaType = ({
 
     for (const name in schema.properties) {
       const property = schema.properties[name]!;
-      const propertyAccessExpression = compiler.propertyAccessExpression({
+      const propertyAccessExpression = tsc.propertyAccessExpression({
         expression: dataExpression || dataVariableName,
         name,
       });
@@ -288,9 +288,9 @@ const processSchemaType = ({
           // todo: Probably, it would make more sense to go with if(x !== undefined && x !== null) instead of if(x)
           // this place influences all underlying transformers, while it's not exactly transformer itself
           // Keep in mind that !!0 === false, so it already makes output for Bigint undesirable
-          compiler.ifStatement({
+          tsc.ifStatement({
             expression: propertyAccessExpression,
-            thenStatement: compiler.block({
+            thenStatement: tsc.block({
               statements: ensureStatements(propertyNodes),
             }),
           }),
@@ -329,16 +329,16 @@ const processSchemaType = ({
           if (dataExpression) {
             arrayNodes = arrayNodes.concat(nodes);
           } else {
-            const identifierItem = compiler.identifier({ text: 'item' });
+            const identifierItem = tsc.identifier({ text: 'item' });
             // processed means the item was transformed
             arrayNodes.push(
-              compiler.ifStatement({
+              tsc.ifStatement({
                 expression: identifierItem,
-                thenStatement: compiler.block({
+                thenStatement: tsc.block({
                   statements: ensureStatements(nodes),
                 }),
               }),
-              compiler.returnStatement({ expression: identifierItem }),
+              tsc.returnStatement({ expression: identifierItem }),
             );
           }
         }
@@ -446,21 +446,21 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
         }),
         name: responseName,
       });
-      const responseTransformerNode = compiler.constVariable({
+      const responseTransformerNode = tsc.constVariable({
         exportConst: true,
-        expression: compiler.arrowFunction({
+        expression: tsc.arrowFunction({
           async: true,
           multiLine: true,
           parameters: [
             {
               name: dataVariableName,
               // TODO: parser - add types, generate types without transforms
-              type: compiler.keywordTypeNode({ keyword: 'any' }),
+              type: tsc.keywordTypeNode({ keyword: 'any' }),
             },
           ],
-          returnType: compiler.typeReferenceNode({
+          returnType: tsc.typeReferenceNode({
             typeArguments: [
-              compiler.typeReferenceNode({
+              tsc.typeReferenceNode({
                 typeName: responseName,
               }),
             ],

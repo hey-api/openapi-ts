@@ -1,8 +1,8 @@
 import type ts from 'typescript';
 
-import { type Comments, compiler } from '../../../compiler';
 import { GeneratedFile } from '../../../generate/file';
 import { isOperationParameterRequired } from '../../../openApi';
+import { type Comments, tsc } from '../../../tsc';
 import type {
   Client,
   Method,
@@ -61,7 +61,7 @@ const generateEnum = ({
   obj,
   onNode,
   ...setUniqueTypeNameArgs
-}: Omit<Parameters<typeof compiler.enumDeclaration>[0], 'name'> &
+}: Omit<Parameters<typeof tsc.enumDeclaration>[0], 'name'> &
   Pick<Parameters<typeof setUniqueTypeName>[0], 'client' | 'nameTransformer'> &
   Pick<Model, 'meta'> &
   Pick<TypesProps, 'onNode'>) => {
@@ -76,7 +76,7 @@ const generateEnum = ({
     ...setUniqueTypeNameArgs,
   });
   if (created) {
-    const node = compiler.enumDeclaration({
+    const node = tsc.enumDeclaration({
       comments,
       leadingComment,
       name,
@@ -93,7 +93,7 @@ export const generateType = ({
   onNode,
   type,
   ...setUniqueTypeNameArgs
-}: Omit<Parameters<typeof compiler.typeAliasDeclaration>[0], 'name'> &
+}: Omit<Parameters<typeof tsc.typeAliasDeclaration>[0], 'name'> &
   Pick<Parameters<typeof setUniqueTypeName>[0], 'client' | 'nameTransformer'> &
   Pick<Model, 'meta'> &
   Pick<TypesProps, 'onNode'> & {
@@ -114,7 +114,7 @@ export const generateType = ({
   });
   const { created, name } = result;
   if (created) {
-    const node = compiler.typeAliasDeclaration({
+    const node = tsc.typeAliasDeclaration({
       comment,
       exportType: true,
       name,
@@ -144,7 +144,7 @@ const processComposition = (props: TypesProps) => {
 
   if (enumDeclarations.length) {
     props.onNode(
-      compiler.namespaceDeclaration({
+      tsc.namespaceDeclaration({
         name: props.model.name,
         statements: enumDeclarations,
       }),
@@ -202,7 +202,7 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
         pluginTypeScript.config.enums.enabled &&
         pluginTypeScript.config.enums.mode === 'javascript'
       ) {
-        const expression = compiler.objectExpression({
+        const expression = tsc.objectExpression({
           multiLine: true,
           obj: Object.entries(properties).map(([key, value]) => ({
             comments: comments[key],
@@ -211,7 +211,7 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
           })),
           unescape: true,
         });
-        const node = compiler.constVariable({
+        const node = tsc.constVariable({
           assertion: 'const',
           comment,
           exportConst: true,
@@ -238,7 +238,7 @@ const processScopedEnum = ({ model, onNode }: TypesProps) => {
     }
   });
   onNode(
-    compiler.enumDeclaration({
+    tsc.enumDeclaration({
       comments,
       leadingComment: [
         model.description && escapeComment(model.description),

@@ -1,7 +1,7 @@
-import { compiler } from '../../../compiler';
 import { GeneratedFile } from '../../../generate/file';
 import type { OpenApiV2Schema, OpenApiV3Schema } from '../../../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
+import { tsc } from '../../../tsc';
 import { getConfig } from '../../../utils/config';
 import type { HeyApiSchemasPlugin } from './types';
 
@@ -93,8 +93,8 @@ export const handlerLegacy: HeyApiSchemasPlugin['LegacyHandler'] = ({
     schema: OpenApiV2Schema | OpenApiV3Schema,
   ) => {
     const obj = ensureValidSchemaOutput(schema);
-    const expression = compiler.objectExpression({ obj });
-    const statement = compiler.constVariable({
+    const expression = tsc.objectExpression({ obj });
+    const statement = tsc.constVariable({
       assertion: 'const',
       exportConst: true,
       expression,

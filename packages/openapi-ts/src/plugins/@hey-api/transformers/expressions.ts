@@ -1,8 +1,8 @@
 import type ts from 'typescript';
 
-import { compiler } from '../../../compiler';
 import type { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
+import { tsc } from '../../../tsc';
 import type { UserConfig } from './types';
 
 export type ExpressionTransformer = ({
@@ -27,11 +27,11 @@ export const bigIntExpressions: ExpressionTransformer = ({
 
   const bigIntCallExpression =
     dataExpression !== undefined
-      ? compiler.callExpression({
+      ? tsc.callExpression({
           functionName: 'BigInt',
           parameters: [
-            compiler.callExpression({
-              functionName: compiler.propertyAccessExpression({
+            tsc.callExpression({
+              functionName: tsc.propertyAccessExpression({
                 expression: dataExpression,
                 name: 'toString',
               }),
@@ -47,7 +47,7 @@ export const bigIntExpressions: ExpressionTransformer = ({
 
     if (dataExpression) {
       return [
-        compiler.assignment({
+        tsc.assignment({
           left: dataExpression,
           right: bigIntCallExpression,
         }),
@@ -69,12 +69,12 @@ export const dateExpressions: ExpressionTransformer = ({
     return;
   }
 
-  const identifierDate = compiler.identifier({ text: 'Date' });
+  const identifierDate = tsc.identifier({ text: 'Date' });
 
   if (typeof dataExpression === 'string') {
     return [
-      compiler.newExpression({
-        argumentsArray: [compiler.identifier({ text: dataExpression })],
+      tsc.newExpression({
+        argumentsArray: [tsc.identifier({ text: dataExpression })],
         expression: identifierDate,
       }),
     ];
@@ -82,9 +82,9 @@ export const dateExpressions: ExpressionTransformer = ({
 
   if (dataExpression) {
     return [
-      compiler.assignment({
+      tsc.assignment({
         left: dataExpression,
-        right: compiler.newExpression({
+        right: tsc.newExpression({
           argumentsArray: [dataExpression],
           expression: identifierDate,
         }),
