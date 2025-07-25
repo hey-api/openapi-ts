@@ -1,4 +1,4 @@
-import { compiler } from '../../compiler';
+import { tsc } from '../../tsc';
 
 // Integer format ranges and properties
 export const INTEGER_FORMATS = {
@@ -76,7 +76,7 @@ export const numberParameter = ({
   isBigInt: boolean;
   value: unknown;
 }) => {
-  const expression = compiler.valueToExpression({ value });
+  const expression = tsc.valueToExpression({ value });
 
   if (
     isBigInt &&
@@ -85,7 +85,7 @@ export const numberParameter = ({
       typeof value === 'string' ||
       typeof value === 'boolean')
   ) {
-    return compiler.callExpression({
+    return tsc.callExpression({
       functionName: 'BigInt',
       parameters: [expression],
     });

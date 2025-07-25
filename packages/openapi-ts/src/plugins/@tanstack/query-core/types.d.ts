@@ -1,4 +1,4 @@
-import type { ImportExportItem } from '../../../compiler/module';
+import type { ImportExportItem } from '../../../tsc/module';
 import type { TanStackAngularQueryPlugin } from '../angular-query-experimental/types';
 import type { TanStackReactQueryPlugin } from '../react-query/types';
 import type { TanStackSolidQueryPlugin } from '../solid-query/types';

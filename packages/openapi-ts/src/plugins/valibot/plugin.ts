@@ -1,9 +1,9 @@
 import ts from 'typescript';
 
-import { compiler } from '../../compiler';
 import type { Identifier } from '../../generate/file/types';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
+import { tsc } from '../../tsc';
 import type { StringCase, StringName } from '../../types/case';
 import { numberRegExp } from '../../utils/regexp';
 import { createSchemaComment } from '../shared/utils/schema';
@@ -34,8 +34,8 @@ const pipesToExpression = (pipes: Array<ts.Expression>) => {
     return pipes[0]!;
   }
 
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.v,
       name: identifiers.methods.pipe,
     }),
@@ -53,7 +53,7 @@ const arrayTypeToValibotSchema = ({
   schema: SchemaWithType<'array'>;
   state: State;
 }): ts.Expression => {
-  const functionName = compiler.propertyAccessExpression({
+  const functionName = tsc.propertyAccessExpression({
     expression: identifiers.v,
     name: identifiers.schemas.array,
   });
@@ -61,7 +61,7 @@ const arrayTypeToValibotSchema = ({
   const pipes: Array<ts.CallExpression> = [];
 
   if (!schema.items) {
-    const expression = compiler.callExpression({
+    const expression = tsc.callExpression({
       functionName,
       parameters: [
         unknownTypeToValibotSchema({
@@ -86,7 +86,7 @@ const arrayTypeToValibotSchema = ({
     });
 
     if (itemExpressions.length === 1) {
-      const expression = compiler.callExpression({
+      const expression = tsc.callExpression({
         functionName,
         parameters: itemExpressions,
       });
@@ -94,15 +94,15 @@ const arrayTypeToValibotSchema = ({
     } else {
       if (schema.logicalOperator === 'and') {
         // TODO: parser - handle intersection
-        // return compiler.typeArrayNode(
-        //   compiler.typeIntersectionNode({ types: itemExpressions }),
+        // return tsc.typeArrayNode(
+        //   tsc.typeIntersectionNode({ types: itemExpressions }),
         // );
       }
 
       // TODO: parser - handle union
-      // return compiler.typeArrayNode(compiler.typeUnionNode({ types: itemExpressions }));
+      // return tsc.typeArrayNode(tsc.typeUnionNode({ types: itemExpressions }));
 
-      const expression = compiler.callExpression({
+      const expression = tsc.callExpression({
         functionName,
         parameters: [
           unknownTypeToValibotSchema({
@@ -117,33 +117,33 @@ const arrayTypeToValibotSchema = ({
   }
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.actions.length,
       }),
-      parameters: [compiler.valueToExpression({ value: schema.minItems })],
+      parameters: [tsc.valueToExpression({ value: schema.minItems })],
     });
     pipes.push(expression);
   } else {
     if (schema.minItems !== undefined) {
-      const expression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      const expression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: identifiers.v,
           name: identifiers.actions.minLength,
         }),
-        parameters: [compiler.valueToExpression({ value: schema.minItems })],
+        parameters: [tsc.valueToExpression({ value: schema.minItems })],
       });
       pipes.push(expression);
     }
 
     if (schema.maxItems !== undefined) {
-      const expression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      const expression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: identifiers.v,
           name: identifiers.actions.maxLength,
         }),
-        parameters: [compiler.valueToExpression({ value: schema.maxItems })],
+        parameters: [tsc.valueToExpression({ value: schema.maxItems })],
       });
       pipes.push(expression);
     }
@@ -158,18 +158,18 @@ const booleanTypeToValibotSchema = ({
   schema: SchemaWithType<'boolean'>;
 }) => {
   if (typeof schema.const === 'boolean') {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.schemas.literal,
       }),
-      parameters: [compiler.ots.boolean(schema.const)],
+      parameters: [tsc.ots.boolean(schema.const)],
     });
     return expression;
   }
 
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.v,
       name: identifiers.schemas.boolean,
     }),
@@ -190,7 +190,7 @@ const enumTypeToValibotSchema = ({
     // Zod supports only string enums
     if (item.type === 'string' && typeof item.const === 'string') {
       enumMembers.push(
-        compiler.stringLiteral({
+        tsc.stringLiteral({
           text: item.const,
         }),
       );
@@ -207,13 +207,13 @@ const enumTypeToValibotSchema = ({
     });
   }
 
-  let resultExpression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  let resultExpression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.v,
       name: identifiers.schemas.picklist,
     }),
     parameters: [
-      compiler.arrayLiteralExpression({
+      tsc.arrayLiteralExpression({
         elements: enumMembers,
         multiLine: false,
       }),
@@ -221,8 +221,8 @@ const enumTypeToValibotSchema = ({
   });
 
   if (isNullable) {
-    resultExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    resultExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.schemas.nullable,
       }),
@@ -237,8 +237,8 @@ const enumTypeToValibotSchema = ({
 const neverTypeToValibotSchema = (_props: {
   schema: SchemaWithType<'never'>;
 }) => {
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.v,
       name: identifiers.schemas.never,
     }),
@@ -250,8 +250,8 @@ const neverTypeToValibotSchema = (_props: {
 const nullTypeToValibotSchema = (_props: {
   schema: SchemaWithType<'null'>;
 }) => {
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.v,
       name: identifiers.schemas.null,
     }),
@@ -276,19 +276,19 @@ const numberTypeToValibotSchema = ({
 
     // Case 1: Number with no format -> generate literal with the number
     if (typeof constValue === 'number' && !format) {
-      literalValue = compiler.ots.number(constValue);
+      literalValue = tsc.ots.number(constValue);
     }
     // Case 2: Number with format -> check if format needs BigInt, generate appropriate literal
     else if (typeof constValue === 'number' && format) {
       if (isBigInt) {
         // Format requires BigInt, convert number to BigInt
-        literalValue = compiler.callExpression({
+        literalValue = tsc.callExpression({
           functionName: 'BigInt',
-          parameters: [compiler.ots.string(constValue.toString())],
+          parameters: [tsc.ots.string(constValue.toString())],
         });
       } else {
         // Regular format, use number as-is
-        literalValue = compiler.ots.number(constValue);
+        literalValue = tsc.ots.number(constValue);
       }
     }
     // Case 3: Format that allows string -> generate BigInt literal (for int64/uint64 formats)
@@ -297,9 +297,9 @@ const numberTypeToValibotSchema = ({
       const cleanString = constValue.endsWith('n')
         ? constValue.slice(0, -1)
         : constValue;
-      literalValue = compiler.callExpression({
+      literalValue = tsc.callExpression({
         functionName: 'BigInt',
-        parameters: [compiler.ots.string(cleanString)],
+        parameters: [tsc.ots.string(cleanString)],
       });
     }
     // Case 4: Const is typeof bigint (literal) -> transform from literal to BigInt()
@@ -309,18 +309,18 @@ const numberTypeToValibotSchema = ({
       const cleanString = bigintString.endsWith('n')
         ? bigintString.slice(0, -1)
         : bigintString;
-      literalValue = compiler.callExpression({
+      literalValue = tsc.callExpression({
         functionName: 'BigInt',
-        parameters: [compiler.ots.string(cleanString)],
+        parameters: [tsc.ots.string(cleanString)],
       });
     }
     // Default case: use value as-is for other types
     else {
-      literalValue = compiler.valueToExpression({ value: constValue });
+      literalValue = tsc.valueToExpression({ value: constValue });
     }
 
-    return compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    return tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.schemas.literal,
       }),
@@ -332,28 +332,28 @@ const numberTypeToValibotSchema = ({
 
   // For bigint formats (int64, uint64), create union of number, string, and bigint with transform
   if (isBigInt) {
-    const unionExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const unionExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.schemas.union,
       }),
       parameters: [
-        compiler.arrayLiteralExpression({
+        tsc.arrayLiteralExpression({
           elements: [
-            compiler.callExpression({
-              functionName: compiler.propertyAccessExpression({
+            tsc.callExpression({
+              functionName: tsc.propertyAccessExpression({
                 expression: identifiers.v,
                 name: identifiers.schemas.number,
               }),
             }),
-            compiler.callExpression({
-              functionName: compiler.propertyAccessExpression({
+            tsc.callExpression({
+              functionName: tsc.propertyAccessExpression({
                 expression: identifiers.v,
                 name: identifiers.schemas.string,
               }),
             }),
-            compiler.callExpression({
-              functionName: compiler.propertyAccessExpression({
+            tsc.callExpression({
+              functionName: tsc.propertyAccessExpression({
                 expression: identifiers.v,
                 name: identifiers.schemas.bigInt,
               }),
@@ -366,17 +366,17 @@ const numberTypeToValibotSchema = ({
     pipes.push(unionExpression);
 
     // Add transform to convert to BigInt
-    const transformExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const transformExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.actions.transform,
       }),
       parameters: [
-        compiler.arrowFunction({
+        tsc.arrowFunction({
           parameters: [{ name: 'x' }],
-          statements: compiler.callExpression({
+          statements: tsc.callExpression({
             functionName: 'BigInt',
-            parameters: [compiler.identifier({ text: 'x' })],
+            parameters: [tsc.identifier({ text: 'x' })],
           }),
         }),
       ],
@@ -384,8 +384,8 @@ const numberTypeToValibotSchema = ({
     pipes.push(transformExpression);
   } else {
     // For regular number formats, use number schema
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.schemas.number,
       }),
@@ -395,8 +395,8 @@ const numberTypeToValibotSchema = ({
 
   // Add integer validation for integer types (except when using bigint union)
   if (!isBigInt && isInteger) {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.actions.integer,
       }),
@@ -412,45 +412,45 @@ const numberTypeToValibotSchema = ({
     const maxErrorMessage = formatInfo.maxError;
 
     // Add minimum value validation
-    const minExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const minExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.actions.minValue,
       }),
       parameters: [
         isBigInt
-          ? compiler.callExpression({
+          ? tsc.callExpression({
               functionName: 'BigInt',
-              parameters: [compiler.ots.string(minValue.toString())],
+              parameters: [tsc.ots.string(minValue.toString())],
             })
-          : compiler.ots.number(minValue as number),
-        compiler.ots.string(minErrorMessage),
+          : tsc.ots.number(minValue as number),
+        tsc.ots.string(minErrorMessage),
       ],
     });
     pipes.push(minExpression);
 
     // Add maximum value validation
-    const maxExpression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const maxExpression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.actions.maxValue,
       }),
       parameters: [
         isBigInt
-          ? compiler.callExpression({
+          ? tsc.callExpression({
               functionName: 'BigInt',
-              parameters: [compiler.ots.string(maxValue.toString())],
+              parameters: [tsc.ots.string(maxValue.toString())],
             })
-          : compiler.ots.number(maxValue as number),
-        compiler.ots.string(maxErrorMessage),
+          : tsc.ots.number(maxValue as number),
+        tsc.ots.string(maxErrorMessage),
       ],
     });
     pipes.push(maxExpression);
   }
 
   if (schema.exclusiveMinimum !== undefined) {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.actions.gtValue,
       }),
@@ -460,8 +460,8 @@ const numberTypeToValibotSchema = ({
     });
     pipes.push(expression);
   } else if (schema.minimum !== undefined) {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.actions.minValue,
       }),
@@ -471,8 +471,8 @@ const numberTypeToValibotSchema = ({
   }
 
   if (schema.exclusiveMaximum !== undefined) {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.actions.ltValue,
       }),
@@ -482,8 +482,8 @@ const numberTypeToValibotSchema = ({
     });
     pipes.push(expression);
   } else if (schema.maximum !== undefined) {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.actions.maxValue,
       }),
@@ -543,7 +543,7 @@ const objectTypeToValibotSchema = ({
       propertyName = `'${name}'`;
     }
     properties.push(
-      compiler.propertyAssignment({
+      tsc.propertyAssignment({
         initializer: pipesToExpression(schemaPipes),
         name: propertyName,
       }),
@@ -560,14 +560,14 @@ const objectTypeToValibotSchema = ({
       schema: schema.additionalProperties,
       state,
     });
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.schemas.record,
       }),
       parameters: [
-        compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: identifiers.v,
             name: identifiers.schemas.string,
           }),
@@ -582,8 +582,8 @@ const objectTypeToValibotSchema = ({
     };
   }
 
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.v,
       name: identifiers.schemas.object,
     }),
@@ -602,20 +602,20 @@ const stringTypeToValibotSchema = ({
   schema: SchemaWithType<'string'>;
 }) => {
   if (typeof schema.const === 'string') {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.schemas.literal,
       }),
-      parameters: [compiler.ots.string(schema.const)],
+      parameters: [tsc.ots.string(schema.const)],
     });
     return expression;
   }
 
   const pipes: Array<ts.CallExpression> = [];
 
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.v,
       name: identifiers.schemas.string,
     }),
@@ -626,8 +626,8 @@ const stringTypeToValibotSchema = ({
     switch (schema.format) {
       case 'date':
         pipes.push(
-          compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
+          tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
               expression: identifiers.v,
               name: identifiers.actions.isoDate,
             }),
@@ -636,8 +636,8 @@ const stringTypeToValibotSchema = ({
         break;
       case 'date-time':
         pipes.push(
-          compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
+          tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
               expression: identifiers.v,
               name: identifiers.actions.isoTimestamp,
             }),
@@ -647,8 +647,8 @@ const stringTypeToValibotSchema = ({
       case 'ipv4':
       case 'ipv6':
         pipes.push(
-          compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
+          tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
               expression: identifiers.v,
               name: identifiers.actions.ip,
             }),
@@ -657,8 +657,8 @@ const stringTypeToValibotSchema = ({
         break;
       case 'uri':
         pipes.push(
-          compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
+          tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
               expression: identifiers.v,
               name: identifiers.actions.url,
             }),
@@ -669,10 +669,10 @@ const stringTypeToValibotSchema = ({
       case 'time':
       case 'uuid':
         pipes.push(
-          compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
+          tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
               expression: identifiers.v,
-              name: compiler.identifier({ text: schema.format }),
+              name: tsc.identifier({ text: schema.format }),
             }),
           }),
         );
@@ -681,45 +681,45 @@ const stringTypeToValibotSchema = ({
   }
 
   if (schema.minLength === schema.maxLength && schema.minLength !== undefined) {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.actions.length,
       }),
-      parameters: [compiler.valueToExpression({ value: schema.minLength })],
+      parameters: [tsc.valueToExpression({ value: schema.minLength })],
     });
     pipes.push(expression);
   } else {
     if (schema.minLength !== undefined) {
-      const expression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      const expression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: identifiers.v,
           name: identifiers.actions.minLength,
         }),
-        parameters: [compiler.valueToExpression({ value: schema.minLength })],
+        parameters: [tsc.valueToExpression({ value: schema.minLength })],
       });
       pipes.push(expression);
     }
 
     if (schema.maxLength !== undefined) {
-      const expression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      const expression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: identifiers.v,
           name: identifiers.actions.maxLength,
         }),
-        parameters: [compiler.valueToExpression({ value: schema.maxLength })],
+        parameters: [tsc.valueToExpression({ value: schema.maxLength })],
       });
       pipes.push(expression);
     }
   }
 
   if (schema.pattern) {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.actions.regex,
       }),
-      parameters: [compiler.regularExpressionLiteral({ text: schema.pattern })],
+      parameters: [tsc.regularExpressionLiteral({ text: schema.pattern })],
     });
     pipes.push(expression);
   }
@@ -738,21 +738,21 @@ const tupleTypeToValibotSchema = ({
 }) => {
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
-      compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: identifiers.v,
           name: identifiers.schemas.literal,
         }),
-        parameters: [compiler.valueToExpression({ value })],
+        parameters: [tsc.valueToExpression({ value })],
       }),
     );
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.schemas.tuple,
       }),
       parameters: [
-        compiler.arrayLiteralExpression({
+        tsc.arrayLiteralExpression({
           elements: tupleElements,
         }),
       ],
@@ -769,13 +769,13 @@ const tupleTypeToValibotSchema = ({
       });
       return pipesToExpression(schemaPipes);
     });
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
+    const expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
         expression: identifiers.v,
         name: identifiers.schemas.tuple,
       }),
       parameters: [
-        compiler.arrayLiteralExpression({
+        tsc.arrayLiteralExpression({
           elements: tupleElements,
         }),
       ],
@@ -794,8 +794,8 @@ const tupleTypeToValibotSchema = ({
 const undefinedTypeToValibotSchema = (_props: {
   schema: SchemaWithType<'undefined'>;
 }) => {
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.v,
       name: identifiers.schemas.undefined,
     }),
@@ -807,8 +807,8 @@ const undefinedTypeToValibotSchema = (_props: {
 const unknownTypeToValibotSchema = (_props: {
   schema: SchemaWithType<'unknown'>;
 }) => {
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.v,
       name: identifiers.schemas.unknown,
     }),
@@ -820,8 +820,8 @@ const unknownTypeToValibotSchema = (_props: {
 const voidTypeToValibotSchema = (_props: {
   schema: SchemaWithType<'void'>;
 }) => {
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
+  const expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
       expression: identifiers.v,
       name: identifiers.schemas.void,
     }),
@@ -1006,17 +1006,17 @@ export const schemaToValibotSchema = ({
 
     // if `identifierRef.name` is falsy, we already set expression above
     if (identifierRef.name) {
-      const refIdentifier = compiler.identifier({ text: identifierRef.name });
+      const refIdentifier = tsc.identifier({ text: identifierRef.name });
       if (isCircularReference) {
-        const lazyExpression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        const lazyExpression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: identifiers.v,
             name: identifiers.schemas.lazy,
           }),
           parameters: [
-            compiler.arrowFunction({
+            tsc.arrowFunction({
               statements: [
-                compiler.returnStatement({
+                tsc.returnStatement({
                   expression: refIdentifier,
                 }),
               ],
@@ -1035,17 +1035,17 @@ export const schemaToValibotSchema = ({
     pipes.push(valibotSchema.expression);
 
     if (plugin.config.metadata && schema.description) {
-      const expression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      const expression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: identifiers.v,
           name: identifiers.actions.metadata,
         }),
         parameters: [
-          compiler.objectExpression({
+          tsc.objectExpression({
             obj: [
               {
                 key: 'description',
-                value: compiler.stringLiteral({ text: schema.description }),
+                value: tsc.stringLiteral({ text: schema.description }),
               },
             ],
           }),
@@ -1067,26 +1067,26 @@ export const schemaToValibotSchema = ({
       });
 
       if (schema.logicalOperator === 'and') {
-        const intersectExpression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        const intersectExpression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: identifiers.v,
             name: identifiers.schemas.intersect,
           }),
           parameters: [
-            compiler.arrayLiteralExpression({
+            tsc.arrayLiteralExpression({
               elements: itemTypes,
             }),
           ],
         });
         pipes.push(intersectExpression);
       } else {
-        const unionExpression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        const unionExpression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: identifiers.v,
             name: identifiers.schemas.union,
           }),
           parameters: [
-            compiler.arrayLiteralExpression({
+            tsc.arrayLiteralExpression({
               elements: itemTypes,
             }),
           ],
@@ -1120,8 +1120,8 @@ export const schemaToValibotSchema = ({
 
   if (pipes.length) {
     if (schema.accessScope === 'read') {
-      const readonlyExpression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
+      const readonlyExpression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
           expression: identifiers.v,
           name: identifiers.actions.readonly,
         }),
@@ -1138,8 +1138,8 @@ export const schemaToValibotSchema = ({
       callParameter = numberParameter({ isBigInt, value: schema.default });
       if (callParameter) {
         pipes = [
-          compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
+          tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
               expression: identifiers.v,
               name: identifiers.schemas.optional,
             }),
@@ -1151,8 +1151,8 @@ export const schemaToValibotSchema = ({
 
     if (optional && !callParameter) {
       pipes = [
-        compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: identifiers.v,
             name: identifiers.schemas.optional,
           }),
@@ -1164,7 +1164,7 @@ export const schemaToValibotSchema = ({
 
   // emit nodes only if $ref points to a reusable component
   if (identifier && identifier.name && identifier.created) {
-    const statement = compiler.constVariable({
+    const statement = tsc.constVariable({
       comment: plugin.config.comments
         ? createSchemaComment({ schema })
         : undefined,
@@ -1172,7 +1172,7 @@ export const schemaToValibotSchema = ({
       expression: pipesToExpression(pipes),
       name: identifier.name,
       typeName: state.hasCircularReference
-        ? (compiler.propertyAccessExpression({
+        ? (tsc.propertyAccessExpression({
             expression: identifiers.v,
             name: anyType || identifiers.types.GenericSchema.text,
           }) as unknown as ts.TypeNode)

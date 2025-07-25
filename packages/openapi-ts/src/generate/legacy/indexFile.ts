@@ -1,5 +1,5 @@
-import { compiler } from '../../compiler';
 import { getClientPlugin } from '../../plugins/@hey-api/client-core/utils';
+import { tsc } from '../../tsc';
 import type { Files } from '../../types/utils';
 import { getConfig, legacyNameFromConfig } from '../../utils/config';
 import { GeneratedFile } from '../file';
@@ -15,7 +15,7 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
 
   if (legacyNameFromConfig(config)) {
     files.index.add(
-      compiler.exportNamedDeclaration({
+      tsc.exportNamedDeclaration({
         exports: legacyNameFromConfig(config)!,
         module: `./${legacyNameFromConfig(config)}`,
       }),
@@ -24,14 +24,14 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
 
   if (config.exportCore) {
     files.index.add(
-      compiler.exportNamedDeclaration({
+      tsc.exportNamedDeclaration({
         exports: 'ApiError',
         module: './core/ApiError',
       }),
     );
     if (config.plugins['@hey-api/sdk']?.config.response === 'response') {
       files.index.add(
-        compiler.exportNamedDeclaration({
+        tsc.exportNamedDeclaration({
           exports: { asType: true, name: 'ApiResult' },
           module: './core/ApiResult',
         }),
@@ -39,7 +39,7 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
     }
     if (legacyNameFromConfig(config)) {
       files.index.add(
-        compiler.exportNamedDeclaration({
+        tsc.exportNamedDeclaration({
           exports: 'BaseHttpRequest',
           module: './core/BaseHttpRequest',
         }),
@@ -48,14 +48,14 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
     const clientPlugin = getClientPlugin(config);
     if (clientPlugin.name !== 'legacy/angular') {
       files.index.add(
-        compiler.exportNamedDeclaration({
+        tsc.exportNamedDeclaration({
           exports: ['CancelablePromise', 'CancelError'],
           module: './core/CancelablePromise',
         }),
       );
     }
     files.index.add(
-      compiler.exportNamedDeclaration({
+      tsc.exportNamedDeclaration({
         exports: ['OpenAPI', { asType: true, name: 'OpenAPIConfig' }],
         module: './core/OpenAPI',
       }),
@@ -73,7 +73,7 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
 
       if (file.exportFromIndex) {
         files.index!.add(
-          compiler.exportAllDeclaration({
+          tsc.exportAllDeclaration({
             module: `./${file.nameWithoutExtension()}`,
           }),
         );

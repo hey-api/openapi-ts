@@ -3,14 +3,11 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
-import { compiler } from '../../compiler';
-import {
-  type ImportExportItemObject,
-  tsNodeToString,
-} from '../../compiler/utils';
 import type { IR } from '../../ir/types';
 import { getUniqueComponentName } from '../../openApi/shared/transforms/utils';
 import { ensureValidIdentifier } from '../../openApi/shared/utils/identifier';
+import { tsc } from '../../tsc';
+import { type ImportExportItemObject, tsNodeToString } from '../../tsc/utils';
 import type { StringCase } from '../../types/case';
 import { stringCase } from '../../utils/stringCase';
 import { ensureDirSync } from '../utils';
@@ -199,7 +196,7 @@ export class GeneratedFile {
   public getNode(id: string): NodeInfo {
     if (!this.nodes[id]) {
       this.nodes[id] = {
-        node: compiler.typeReferenceNode({ typeName: '' }),
+        node: tsc.typeReferenceNode({ typeName: '' }),
       };
     }
     return this.nodes[id]!;
@@ -382,7 +379,7 @@ export class GeneratedFile {
         }
       }
 
-      const node = compiler.namedImportDeclarations({
+      const node = tsc.namedImportDeclarations({
         imports,
         module: resolvedModule,
       });
@@ -421,7 +418,7 @@ export class GeneratedFile {
       components: Object.values(this.names),
     });
     this.names[id] = name;
-    const node = compiler.typeReferenceNode({ typeName: name });
+    const node = tsc.typeReferenceNode({ typeName: name });
     // update node
     if (!this.nodes[id]) {
       this.nodes[id] = { node };

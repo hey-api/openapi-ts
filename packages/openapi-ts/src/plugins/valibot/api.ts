@@ -1,8 +1,8 @@
 import type ts from 'typescript';
 
-import { compiler } from '../../compiler';
 import type { GeneratedFile } from '../../generate/file';
 import type { IR } from '../../ir/types';
+import { tsc } from '../../tsc';
 import { identifiers, valibotId } from './constants';
 import type { ValibotPlugin } from './types';
 
@@ -44,7 +44,7 @@ const createRequestValidator = ({
 
   const dataParameterName = 'data';
 
-  return compiler.arrowFunction({
+  return tsc.arrowFunction({
     async: true,
     parameters: [
       {
@@ -52,16 +52,16 @@ const createRequestValidator = ({
       },
     ],
     statements: [
-      compiler.returnStatement({
-        expression: compiler.awaitExpression({
-          expression: compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
+      tsc.returnStatement({
+        expression: tsc.awaitExpression({
+          expression: tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
               expression: identifiers.v,
               name: identifiers.async.parseAsync,
             }),
             parameters: [
-              compiler.identifier({ text: schemaIdentifier.name }),
-              compiler.identifier({ text: dataParameterName }),
+              tsc.identifier({ text: schemaIdentifier.name }),
+              tsc.identifier({ text: dataParameterName }),
             ],
           }),
         }),
@@ -108,7 +108,7 @@ const createResponseValidator = ({
 
   const dataParameterName = 'data';
 
-  return compiler.arrowFunction({
+  return tsc.arrowFunction({
     async: true,
     parameters: [
       {
@@ -116,16 +116,16 @@ const createResponseValidator = ({
       },
     ],
     statements: [
-      compiler.returnStatement({
-        expression: compiler.awaitExpression({
-          expression: compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
+      tsc.returnStatement({
+        expression: tsc.awaitExpression({
+          expression: tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
               expression: identifiers.v,
               name: identifiers.async.parseAsync,
             }),
             parameters: [
-              compiler.identifier({ text: schemaIdentifier.name }),
-              compiler.identifier({ text: dataParameterName }),
+              tsc.identifier({ text: schemaIdentifier.name }),
+              tsc.identifier({ text: dataParameterName }),
             ],
           }),
         }),

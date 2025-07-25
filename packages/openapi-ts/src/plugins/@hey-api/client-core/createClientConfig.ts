@@ -1,5 +1,5 @@
-import { compiler } from '../../../compiler';
 import { clientModulePath } from '../../../generate/client';
+import { tsc } from '../../../tsc';
 import { clientId } from '../client-core/utils';
 import { typesId } from '../typescript/ref';
 import type { PluginHandler } from './types';
@@ -34,12 +34,12 @@ export const createClientConfigType = ({
     name: 'ClientOptions',
   });
 
-  const defaultClientOptionsType = compiler.typeReferenceNode({
+  const defaultClientOptionsType = tsc.typeReferenceNode({
     typeName: defaultClientOptions.name,
   });
-  const tType = compiler.typeReferenceNode({ typeName: 'T' });
+  const tType = tsc.typeReferenceNode({ typeName: 'T' });
 
-  const typeCreateClientConfig = compiler.typeAliasDeclaration({
+  const typeCreateClientConfig = tsc.typeAliasDeclaration({
     comment: [
       'The `createClientConfig()` function will be called on client initialization',
       "and the returned object will become the client's initial configuration.",
@@ -50,14 +50,14 @@ export const createClientConfigType = ({
     ],
     exportType: true,
     name: 'CreateClientConfig',
-    type: compiler.functionTypeNode({
+    type: tsc.functionTypeNode({
       parameters: [
-        compiler.parameterDeclaration({
+        tsc.parameterDeclaration({
           name: 'override',
           required: false,
-          type: compiler.typeReferenceNode({
+          type: tsc.typeReferenceNode({
             typeArguments: [
-              compiler.typeIntersectionNode({
+              tsc.typeIntersectionNode({
                 types: [defaultClientOptionsType, tType],
               }),
             ],
@@ -65,11 +65,11 @@ export const createClientConfigType = ({
           }),
         }),
       ],
-      returnType: compiler.typeReferenceNode({
+      returnType: tsc.typeReferenceNode({
         typeArguments: [
-          compiler.typeIntersectionNode({
+          tsc.typeIntersectionNode({
             types: [
-              compiler.typeReferenceNode({
+              tsc.typeReferenceNode({
                 typeArguments: [defaultClientOptionsType],
                 typeName: 'Required',
               }),
@@ -83,7 +83,7 @@ export const createClientConfigType = ({
     typeParameters: [
       {
         default: clientOptions.name
-          ? compiler.typeReferenceNode({ typeName: clientOptions.name })
+          ? tsc.typeReferenceNode({ typeName: clientOptions.name })
           : undefined,
         extends: defaultClientOptionsType,
         name: 'T',

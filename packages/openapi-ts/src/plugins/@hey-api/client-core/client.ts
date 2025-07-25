@@ -1,5 +1,5 @@
-import { compiler } from '../../../compiler';
 import { clientModulePath } from '../../../generate/client';
+import { tsc } from '../../../tsc';
 import { parseUrl } from '../../../utils/url';
 import { typesId } from '../typescript/ref';
 import type { PluginHandler } from './types';
@@ -93,24 +93,24 @@ export const createClient = ({ plugin }: Parameters<PluginHandler>[0]) => {
   }
 
   const createConfigParameters = [
-    compiler.callExpression({
+    tsc.callExpression({
       functionName: createConfig.name,
       parameters: defaultValues.length
-        ? [compiler.objectExpression({ obj: defaultValues })]
+        ? [tsc.objectExpression({ obj: defaultValues })]
         : undefined,
       types: clientOptions.name
-        ? [compiler.typeReferenceNode({ typeName: clientOptions.name })]
+        ? [tsc.typeReferenceNode({ typeName: clientOptions.name })]
         : undefined,
     }),
   ];
 
-  const statement = compiler.constVariable({
+  const statement = tsc.constVariable({
     exportConst: true,
-    expression: compiler.callExpression({
+    expression: tsc.callExpression({
       functionName: createClient.name,
       parameters: createClientConfig
         ? [
-            compiler.callExpression({
+            tsc.callExpression({
               functionName: createClientConfig.name,
               parameters: createConfigParameters,
             }),

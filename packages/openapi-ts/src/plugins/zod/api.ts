@@ -1,8 +1,8 @@
 import type ts from 'typescript';
 
-import { compiler } from '../../compiler';
 import type { GeneratedFile } from '../../generate/file';
 import type { IR } from '../../ir/types';
+import { tsc } from '../../tsc';
 import { identifiers, zodId } from './constants';
 import type { ZodPlugin } from './types';
 
@@ -29,7 +29,7 @@ const createRequestValidator = ({
 
   const dataParameterName = 'data';
 
-  return compiler.arrowFunction({
+  return tsc.arrowFunction({
     async: true,
     parameters: [
       {
@@ -37,14 +37,14 @@ const createRequestValidator = ({
       },
     ],
     statements: [
-      compiler.returnStatement({
-        expression: compiler.awaitExpression({
-          expression: compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
-              expression: compiler.identifier({ text: name }),
+      tsc.returnStatement({
+        expression: tsc.awaitExpression({
+          expression: tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
+              expression: tsc.identifier({ text: name }),
               name: identifiers.parseAsync,
             }),
-            parameters: [compiler.identifier({ text: dataParameterName })],
+            parameters: [tsc.identifier({ text: dataParameterName })],
           }),
         }),
       }),
@@ -77,7 +77,7 @@ const createResponseValidator = ({
 
   const dataParameterName = 'data';
 
-  return compiler.arrowFunction({
+  return tsc.arrowFunction({
     async: true,
     parameters: [
       {
@@ -85,14 +85,14 @@ const createResponseValidator = ({
       },
     ],
     statements: [
-      compiler.returnStatement({
-        expression: compiler.awaitExpression({
-          expression: compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
-              expression: compiler.identifier({ text: name }),
+      tsc.returnStatement({
+        expression: tsc.awaitExpression({
+          expression: tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
+              expression: tsc.identifier({ text: name }),
               name: identifiers.parseAsync,
             }),
-            parameters: [compiler.identifier({ text: dataParameterName })],
+            parameters: [tsc.identifier({ text: dataParameterName })],
           }),
         }),
       }),
