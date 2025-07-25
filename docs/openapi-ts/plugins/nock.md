@@ -5,9 +5,7 @@ description: Nock plugin for Hey API. Compatible with all our features.
 
 # Nock <span data-soon>soon</span>
 
-::: warning
-This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1487).
-:::
+<FeatureStatus issueNumber=1487 name="Nock" />
 
 ### About
 

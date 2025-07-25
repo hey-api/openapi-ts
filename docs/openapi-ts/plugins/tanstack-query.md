@@ -12,10 +12,6 @@ import { embedProject } from '../../embed'
   <VersionLabel value="v5" />
 </Heading>
 
-::: warning
-TanStack Query plugin is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
-:::
-
 ### About
 
 [TanStack Query](https://tanstack.com/query) is a powerful asynchronous state management solution for TypeScript/JavaScript, React, Solid, Vue, Svelte, and Angular.

@@ -5,9 +5,7 @@ description: Koa plugin for Hey API. Compatible with all our features.
 
 # Koa <span data-soon>soon</span>
 
-::: warning
-This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1482).
-:::
+<FeatureStatus issueNumber=1482 name="Koa" />
 
 ### About
 
