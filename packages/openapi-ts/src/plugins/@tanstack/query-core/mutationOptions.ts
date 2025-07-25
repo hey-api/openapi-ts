@@ -2,6 +2,7 @@ import type ts from 'typescript';
 
 import { compiler } from '../../../compiler';
 import type { IR } from '../../../ir/types';
+import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { createOperationComment } from '../../shared/utils/operation';
 import type { PluginInstance, PluginState } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
@@ -101,9 +102,15 @@ export const createMutationOptions = ({
     );
   }
 
+  const functionIdentifier = serviceFunctionIdentifier({
+    config: plugin.context.config,
+    id: operation.id,
+    operation,
+  });
+
   const identifier = file.identifier({
     // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-mutation-options/${operation.id}`,
+    $ref: `#/tanstack-query-mutation-options/${functionIdentifier}`,
     case: plugin.config.mutationOptions.case,
     create: true,
     nameTransformer: plugin.config.mutationOptions.name,
