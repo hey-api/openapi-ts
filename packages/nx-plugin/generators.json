@@ -1,0 +1,11 @@
+{
+  "name": "openapi-generator",
+  "version": "0.0.1",
+  "generators": {
+    "openapi-client": {
+      "factory": "./dist/openapiClient.cjs",
+      "schema": "./dist/generators/openapi-client/openapiClient.schema.json",
+      "description": "Generate an OpenAPI client library from an OpenAPI spec file."
+    }
+  }
+}
