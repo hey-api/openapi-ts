@@ -19,7 +19,7 @@ const printer = ts.createPrinter({
   removeComments: false,
 });
 
-export const createSourceFile = (sourceText: string) =>
+export const createSourceFile = (sourceText: string): ts.SourceFile =>
   ts.createSourceFile(
     '',
     sourceText,
@@ -72,22 +72,10 @@ export function tsNodeToString({
   }
 }
 
-/**
- * Convert a string to a TypeScript Node
- * @param value the string to convert.
- * @returns ts.Node
- */
-export function stringToTsNodes(value: string): ts.Node {
-  const file = createSourceFile(value);
-  return file.statements[0]!;
-}
+export const createIdentifier = ({ text }: { text: string }): ts.Identifier =>
+  ts.factory.createIdentifier(text);
 
-export const createIdentifier = ({ text }: { text: string }) => {
-  const identifier = ts.factory.createIdentifier(text);
-  return identifier;
-};
-
-export const createThis = () => ts.factory.createThis();
+export const createThis = (): ts.ThisExpression => ts.factory.createThis();
 
 type Modifier = AccessLevel | 'async' | 'export' | 'readonly' | 'static';
 

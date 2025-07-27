@@ -275,6 +275,12 @@ Clients are responsible for sending the actual HTTP requests. Using clients is n
 - [`@hey-api/client-next`](https://heyapi.dev/openapi-ts/clients/next-js)
 - [`@hey-api/client-nuxt`](https://heyapi.dev/openapi-ts/clients/nuxt)
 
+### Planned Clients
+
+The following clients are planned but not in development yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/openapi-ts/labels/RSVP%20%F0%9F%91%8D%F0%9F%91%8E).
+
+- [`@hey-api/client-effect`](https://heyapi.dev/openapi-ts/clients/effect)
+
 Don't see your client? [Build your own](https://heyapi.dev/openapi-ts/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
 ### Native Plugins
@@ -298,6 +304,7 @@ These plugins help reduce boilerplate associated with third-party dependencies. 
 
 The following plugins are planned but not in development yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/openapi-ts/labels/RSVP%20%F0%9F%91%8D%F0%9F%91%8E).
 
+- [Adonis](https://heyapi.dev/openapi-ts/plugins/adonis)
 - [Ajv](https://heyapi.dev/openapi-ts/plugins/ajv)
 - [Arktype](https://heyapi.dev/openapi-ts/plugins/arktype)
 - [Express](https://heyapi.dev/openapi-ts/plugins/express)
