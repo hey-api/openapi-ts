@@ -58,7 +58,6 @@ export const tsc = {
   returnVariable: _return.createReturnVariable,
   safeAccessExpression: transform.createSafeAccessExpression,
   stringLiteral: types.createStringLiteral,
-  stringToTsNodes: utils.stringToTsNodes,
   templateLiteralType: types.createTemplateLiteralType,
   this: utils.createThis,
   transformArrayMap: transform.createArrayMapTransform,
