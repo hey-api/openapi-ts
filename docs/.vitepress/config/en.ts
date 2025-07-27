@@ -107,6 +107,10 @@ export default defineConfig({
                 text: 'Nuxt',
               },
               {
+                link: '/openapi-ts/clients/effect',
+                text: 'Effect <span data-soon>soon</span>',
+              },
+              {
                 link: '/openapi-ts/clients/custom',
                 text: 'Custom Client',
               },
@@ -213,6 +217,10 @@ export default defineConfig({
               {
                 link: '/openapi-ts/plugins/fastify',
                 text: 'Fastify',
+              },
+              {
+                link: '/openapi-ts/plugins/adonis',
+                text: 'Adonis <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/express',
