@@ -33,6 +33,7 @@ These plugins help reduce boilerplate associated with third-party dependencies. 
 
 The following plugins are planned but not in development yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/openapi-ts/labels/RSVP%20%F0%9F%91%8D%F0%9F%91%8E).
 
+- [Adonis](/openapi-ts/plugins/adonis) <span data-soon>Soon</span>
 - [Ajv](/openapi-ts/plugins/ajv) <span data-soon>Soon</span>
 - [Arktype](/openapi-ts/plugins/arktype) <span data-soon>Soon</span>
 - [Express](/openapi-ts/plugins/express) <span data-soon>Soon</span>
