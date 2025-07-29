@@ -538,7 +538,9 @@ export async function generateNxProject({
     throw new Error(`Spec file ${specFile} is not a file or valid URI.`);
   }
 
-  const generateOutputs: Output[] = ['{options.outputPath}'];
+  const generateOutputs: Output[] = [
+    `{projectRoot}/src/${CONSTANTS.GENERATED_DIR_NAME}`,
+  ];
   const generateOutputPath = `./src/${CONSTANTS.GENERATED_DIR_NAME}`;
 
   // if the spec file is remote then we don't need to depend on a project
@@ -618,7 +620,6 @@ export async function generateNxProject({
             specFile: `./${CONSTANTS.SPEC_DIR_NAME}/${CONSTANTS.SPEC_FILE_NAME}`,
           }),
           cwd: `{projectRoot}`,
-          outputPath: generateOutputPath,
         },
         outputs: generateOutputs,
       },
