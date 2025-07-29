@@ -119,7 +119,7 @@ describe('utils', () => {
       });
 
       expect(command).toBe(
-        'npx @hey-api/openapi-ts -i ./api/spec.yaml -o ./src/generated -c @hey-api/client-fetch -p @hey-api/typescript,@hey-api/sdk',
+        'npx @hey-api/openapi-ts -i ./api/spec.yaml -o ./src/generated -c @hey-api/client-fetch -p @hey-api/typescript -p @hey-api/sdk',
       );
     });
 
@@ -132,7 +132,7 @@ describe('utils', () => {
       });
 
       expect(command).toBe(
-        'npx @hey-api/openapi-ts -i ./api/spec.yaml -o ./src/generated -c @hey-api/client-fetch -p @tanstack/react-query,zod',
+        'npx @hey-api/openapi-ts -i ./api/spec.yaml -o ./src/generated -c @hey-api/client-fetch -p @tanstack/react-query -p zod',
       );
     });
   });
