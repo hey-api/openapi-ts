@@ -107,6 +107,10 @@ export default defineConfig({
                 text: 'Nuxt',
               },
               {
+                link: '/openapi-ts/clients/angular',
+                text: 'Angular <span data-soon>soon</span>',
+              },
+              {
                 link: '/openapi-ts/clients/effect',
                 text: 'Effect <span data-soon>soon</span>',
               },
