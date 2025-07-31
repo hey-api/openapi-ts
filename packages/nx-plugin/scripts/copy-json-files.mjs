@@ -22,6 +22,32 @@ function ensureDirectoryExists(dirPath) {
 }
 
 /**
+ *
+ * @param {string} src
+ * @param {string} dest
+ */
+function copyRecursive(src, dest) {
+  const stat = statSync(src);
+
+  if (stat.isDirectory()) {
+    // Create the destination directory if it doesn't exist
+    mkdirSync(dest, { recursive: true });
+
+    // Read contents of the source directory
+    const entries = readdirSync(src);
+
+    for (const entry of entries) {
+      const srcPath = join(src, entry);
+      const destPath = join(dest, entry);
+      copyRecursive(srcPath, destPath);
+    }
+  } else {
+    // It's a file, copy it
+    copyFileSync(src, dest);
+  }
+}
+
+/**
  * Recursively copies JSON files from a source directory to a target directory.
  * @param {string} sourceDir
  * @param {string} targetDir
@@ -55,3 +81,21 @@ const targetDir = resolve(__dirname, '../dist');
 console.log('Copying JSON files from src to dist...');
 copyJsonFiles(sourceDir, targetDir);
 console.log('JSON files copying completed.');
+
+// copy the template folders and all contents from the src/generators/openapi-client to dist
+const generatorFoldersToCopy = ['files', 'options', 'plugins', 'tests'];
+
+function copyGeneratorFolders() {
+  const sourceDir = resolve(__dirname, '../src/generators/openapi-client');
+  const targetDir = resolve(__dirname, '../dist');
+
+  for (const folder of generatorFoldersToCopy) {
+    const sourceFolder = join(sourceDir, folder);
+    const destinationFolder = join(targetDir, folder);
+
+    // copy the folder and all contents
+    copyRecursive(sourceFolder, destinationFolder);
+  }
+}
+
+copyGeneratorFolders();
