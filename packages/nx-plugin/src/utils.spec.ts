@@ -13,6 +13,7 @@ import {
   generateClientCommand,
   getBaseTsConfigPath,
   getPackageName,
+  getRelativePath,
   getSpecFileVersion,
   getVersionOfPackage,
   isAFile,
@@ -716,6 +717,87 @@ paths:
 
       expect(() => getSpecFileVersion(spec)).toThrow(
         'Spec file does not contain an openapi or swagger version',
+      );
+    });
+  });
+
+  describe('getRelativePath', () => {
+    it('should return relative path with trailing slash for different directories', () => {
+      expect(getRelativePath('/path/to/from', '/path/to/to')).toBe('../to/');
+      expect(getRelativePath('/path/from', '/path/to/different')).toBe(
+        '../to/different/',
+      );
+    });
+
+    it('should return relative path with trailing slash for nested directories', () => {
+      expect(getRelativePath('/path/to/from', '/path/to/from/nested')).toBe(
+        'nested/',
+      );
+      expect(
+        getRelativePath('/path/to/from', '/path/to/from/deep/nested'),
+      ).toBe('deep/nested/');
+    });
+
+    it('should return relative path with trailing slash for parent directories', () => {
+      expect(getRelativePath('/path/to/from/nested', '/path/to/from')).toBe(
+        '../',
+      );
+      expect(
+        getRelativePath('/path/to/from/deep/nested', '/path/to/from'),
+      ).toBe('../../');
+    });
+
+    it('should return "./" when from and to directories are the same', () => {
+      expect(getRelativePath('/path/to/same', '/path/to/same')).toBe('./');
+    });
+
+    it('should handle paths with existing trailing slashes', () => {
+      expect(getRelativePath('/path/to/from/', '/path/to/to/')).toBe('../to/');
+      expect(getRelativePath('/path/to/from\\', '/path/to/to\\')).toBe(
+        '../to\\/',
+      );
+    });
+
+    it('should handle root directory paths', () => {
+      expect(getRelativePath('/', '/path/to/something')).toBe(
+        'path/to/something/',
+      );
+      expect(getRelativePath('/path/to/something', '/')).toBe('../../../');
+    });
+
+    it('should handle paths with special characters', () => {
+      expect(
+        getRelativePath('/path/with spaces/from', '/path/with spaces/to'),
+      ).toBe('../to/');
+      expect(
+        getRelativePath('/path/with-dashes/from', '/path/with-dashes/to'),
+      ).toBe('../to/');
+    });
+
+    it('should handle paths with dots', () => {
+      expect(getRelativePath('/path/to/from', '/path/to/from/../to')).toBe(
+        '../to/',
+      );
+      expect(getRelativePath('/path/to/from', '/path/to/from/./nested')).toBe(
+        'nested/',
+      );
+    });
+
+    it('should handle paths with special characters', () => {
+      expect(
+        getRelativePath('/path/with spaces/from', '/path/with spaces/to'),
+      ).toBe('../to/');
+      expect(
+        getRelativePath('/path/with-dashes/from', '/path/with-dashes/to'),
+      ).toBe('../to/');
+    });
+
+    it('should handle paths with dots', () => {
+      expect(getRelativePath('/path/to/from', '/path/to/from/../to')).toBe(
+        '../to/',
+      );
+      expect(getRelativePath('/path/to/from', '/path/to/from/./nested')).toBe(
+        'nested/',
       );
     });
   });

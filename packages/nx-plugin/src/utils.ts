@@ -1,6 +1,13 @@
 import { existsSync, lstatSync } from 'node:fs';
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
-import { basename, dirname, join, relative } from 'node:path';
+import {
+  basename,
+  dirname,
+  join,
+  normalize,
+  relative,
+  resolve,
+} from 'node:path';
 
 import type { JSONSchema } from '@hey-api/json-schema-ref-parser';
 import { createClient } from '@hey-api/openapi-ts';
@@ -461,4 +468,25 @@ export async function formatStringFromFilePath(
     filepath: filePath,
   });
   return formatted;
+}
+
+/**
+ * Returns the relative path from `fromDir` to `toDir`
+ * with trailing slash
+ */
+export function getRelativePath(fromDir: string, toDir: string): string {
+  // normalize the paths
+  const normalizedFromDir = normalize(fromDir);
+  const normalizedToDir = normalize(toDir);
+
+  // if the paths are the same, return the current directory
+  if (normalizedFromDir === normalizedToDir) {
+    return './';
+  }
+
+  const absoluteFromDir = resolve(normalizedFromDir);
+  const absoluteToDir = resolve(normalizedToDir);
+
+  const relativePath = relative(absoluteFromDir, absoluteToDir);
+  return relativePath.endsWith('/') ? relativePath : relativePath + '/';
 }

@@ -5,7 +5,7 @@ This plugin provides a generator and executor for generating and updating OpenAP
 ## Installation
 
 ```bash
-npm install -D @hey-api/plugin-nx
+npm install -D @hey-api/nx-plugin
 ```
 
 ## Usage
