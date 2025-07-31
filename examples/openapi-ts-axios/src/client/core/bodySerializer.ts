@@ -17,6 +17,8 @@ export interface QuerySerializerOptions {
 const serializeFormDataPair = (data: FormData, key: string, value: unknown) => {
   if (typeof value === 'string' || value instanceof Blob) {
     data.append(key, value);
+  } if (value instanceof Date) {
+    data.append(key, value.toISOString());
   } else {
     data.append(key, JSON.stringify(value));
   }
