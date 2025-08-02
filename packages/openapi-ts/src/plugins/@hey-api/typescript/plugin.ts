@@ -401,6 +401,17 @@ const schemaTypeToIdentifier = ({
   schema: IR.SchemaObject;
   state: PluginState;
 }): ts.TypeNode => {
+  const transformersPlugin = plugin.getPlugin('@hey-api/transformers');
+  if (transformersPlugin?.config.typeTransformers) {
+    for (const typeTransformer of transformersPlugin.config.typeTransformers) {
+      const file = plugin.context.file({ id: typesId })!;
+      const typeNode = typeTransformer({ file, schema });
+      if (typeNode) {
+        return typeNode;
+      }
+    }
+  }
+
   switch (schema.type as Required<IR.SchemaObject>['type']) {
     case 'array':
       return arrayTypeToIdentifier({
