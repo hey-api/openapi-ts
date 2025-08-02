@@ -17,12 +17,12 @@ export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<CreateAxiosDefaults, 'auth' | 'baseURL' | 'headers' | 'method'>,
     CoreConfig {
   /**
-   * Axios implementation. You can use this option to provide a custom
-   * Axios instance.
+   * Axios implementation. You can use this option to provide either an
+   * `AxiosStatic` or an `AxiosInstance`.
    *
    * @default axios
    */
-  axios?: AxiosStatic;
+  axios?: AxiosStatic | AxiosInstance;
   /**
    * Base URL for all requests made by this client.
    */

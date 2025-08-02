@@ -210,12 +210,29 @@ console.log(url); // prints '/foo/1?bar=baz'
 You can implement your own `axios` instance. This is useful if you need to extend the default `axios` instance with extra functionality, or replace it altogether.
 
 ```js
+import axios from 'axios';
 import { client } from 'client/client.gen';
 
+// Customize the default axios instance
+axios.defaults.baseURL = 'https://example.com';
+
 client.setConfig({
-  axios: () => {
-    /* custom `axios` instance */
-  },
+  axios: axios,
+});
+```
+
+or you can pass an `AxiosInstance` created with `axios.create()`:
+
+```js
+import axios from 'axios';
+import { client } from 'client/client.gen';
+
+const customAxiosInstance = axios.create({
+  baseURL: 'https://example.com',
+});
+
+client.setConfig({
+  axios: customAxiosInstance,
 });
 ```
 
