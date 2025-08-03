@@ -1,4 +1,4 @@
-import type { AxiosError, RawAxiosRequestHeaders } from 'axios';
+import type { AxiosError, AxiosInstance, RawAxiosRequestHeaders } from 'axios';
 import axios from 'axios';
 
 import type { Client, Config } from './types';
@@ -13,9 +13,15 @@ import {
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { auth, ...configWithoutAuth } = _config;
-  const instance = axios.create(configWithoutAuth);
+  let instance: AxiosInstance;
+
+  if (_config.axios && !('Axios' in _config.axios)) {
+    instance = _config.axios;
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { auth, ...configWithoutAuth } = _config;
+    instance = axios.create(configWithoutAuth);
+  }
 
   const getConfig = (): Config => ({ ..._config });
 
