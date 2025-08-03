@@ -137,6 +137,7 @@ export {
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
 export type { Client } from './plugins/@hey-api/client-core/types';
 export type { ExpressionTransformer } from './plugins/@hey-api/transformers/expressions';
+export type { TypeTransformer } from './plugins/@hey-api/transformers/types';
 export { definePluginConfig } from './plugins/shared/utils/config';
 export type { DefinePlugin, Plugin } from './plugins/types';
 export { compiler, tsc } from './tsc';
