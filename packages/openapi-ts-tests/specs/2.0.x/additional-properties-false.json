@@ -1,0 +1,47 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenAPI 2.0 additional properties false example",
+    "version": "1"
+  },
+  "definitions": {
+    "Foo": {
+      "required": ["foo"],
+      "type": "object",
+      "properties": {
+        "foo": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Bar": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Foo"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false
+        }
+      ]
+    },
+    "Baz": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Foo"
+        },
+        {
+          "required": ["bar"],
+          "type": "object",
+          "properties": {
+            "bar": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
