@@ -18,6 +18,7 @@
 - [George Smith](https://github.com/georgesmith46)
 - [Gergan Penkov](https://github.com/gergan)
 - [Hiram Chirino](https://github.com/chirino)
+- [Idan Ben Ami](https://github.com/idbenami)
 - [Jacob Cohen](https://github.com/jacobinu)
 - [Jason Lee](https://github.com/LeeChSien)
 - [Jianqi Pan](https://github.com/Jannchie)
