@@ -249,9 +249,18 @@ const parseObject = ({
       };
     }
   } else if (typeof schema.additionalProperties === 'boolean') {
-    irSchema.additionalProperties = {
-      type: schema.additionalProperties ? 'unknown' : 'never',
-    };
+    // Avoid [key: string]: never for empty objects with additionalProperties: false inside allOf
+    // This would override inherited properties from other schemas in the composition
+    const isEmptyObjectInAllOf =
+      state.inAllOf &&
+      schema.additionalProperties === false &&
+      (!schema.properties || Object.keys(schema.properties).length === 0);
+
+    if (!isEmptyObjectInAllOf) {
+      irSchema.additionalProperties = {
+        type: schema.additionalProperties ? 'unknown' : 'never',
+      };
+    }
   } else {
     const irAdditionalPropertiesSchema = schemaToIrSchema({
       context,
@@ -313,10 +322,19 @@ const parseAllOf = ({
   const compositionSchemas = schema.allOf;
 
   for (const compositionSchema of compositionSchemas) {
+    // Don't propagate inAllOf flag to $ref schemas to avoid issues with reusable components
+    const isRef = '$ref' in compositionSchema;
+    const schemaState = isRef
+      ? state
+      : {
+          ...state,
+          inAllOf: true,
+        };
+
     const irCompositionSchema = schemaToIrSchema({
       context,
       schema: compositionSchema,
-      state,
+      state: schemaState,
     });
 
     irSchema.accessScopes = mergeSchemaAccessScopes(
