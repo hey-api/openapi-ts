@@ -82,6 +82,17 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
           scalar.com
         </a>
       </td>
+      <td align="center">
+        <a href="https://kutt.it/Dr9GuW" target="_blank">
+          <picture height="40px">
+            <img alt="FastAPI logo" height="40px" src="https://heyapi.dev/images/fastapi-logo-wordmark.svg">
+          </picture>
+        </a>
+        <br/>
+        <a href="https://kutt.it/Dr9GuW" style="text-decoration:none;" target="_blank">
+          fastapi.tiangolo.com
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
