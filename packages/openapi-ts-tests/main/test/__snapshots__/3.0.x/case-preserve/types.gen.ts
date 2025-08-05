@@ -51,7 +51,7 @@ export type fooBar = number;
  */
 export type FooBar = string;
 
-export type getFooData = {
+export type GetFooData = {
     body: Foo;
     path?: never;
     query: {
@@ -71,7 +71,7 @@ export type getFooData = {
     url: '/foo';
 };
 
-export type getFooResponses = {
+export type GetFooResponses = {
     /**
      * OK
      */
@@ -82,7 +82,7 @@ export type getFooResponses = {
     201: _201;
 };
 
-export type getFooResponse = getFooResponses[keyof getFooResponses];
+export type GetFooResponse = GetFooResponses[keyof GetFooResponses];
 
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});

@@ -1,7 +1,6 @@
 import type {
   AxiosError,
   AxiosInstance,
-  AxiosRequestHeaders,
   AxiosResponse,
   AxiosStatic,
   CreateAxiosDefaults,
@@ -17,12 +16,12 @@ export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<CreateAxiosDefaults, 'auth' | 'baseURL' | 'headers' | 'method'>,
     CoreConfig {
   /**
-   * Axios implementation. You can use this option to provide either an
-   * `AxiosStatic` or an `AxiosInstance`.
+   * Axios implementation. You can use this option to provide a custom
+   * Axios instance.
    *
    * @default axios
    */
-  axios?: AxiosStatic | AxiosInstance;
+  axios?: AxiosStatic;
   /**
    * Base URL for all requests made by this client.
    */
@@ -34,7 +33,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
    */
   headers?:
-    | AxiosRequestHeaders
+    | CreateAxiosDefaults['headers']
     | Record<
         string,
         | string

@@ -143,16 +143,14 @@ export const createClient = (config: Config = {}): Client => {
           };
     }
 
-    const textError = await response.text();
-    let jsonError: unknown;
+    let error = await response.text();
 
     try {
-      jsonError = JSON.parse(textError);
+      error = JSON.parse(error);
     } catch {
       // noop
     }
 
-    const error = jsonError ?? textError;
     let finalError = error;
 
     for (const fn of interceptors.error._fns) {

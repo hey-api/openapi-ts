@@ -5,78 +5,60 @@ import { z } from 'zod';
 /**
  * This is Bar schema.
  */
-export const zBar = z.object({
-    get foo(): z.ZodOptional {
-        return z.optional(zFoo);
-    }
+export const zBar: z.AnyZodObject = z.object({
+    foo: z.lazy(() => {
+        return zFoo;
+    }).optional()
 });
-
-export type BarZodType = z.infer<typeof zBar>;
 
 /**
  * This is Foo schema.
  */
-export const zFoo = z.union([
+export const zFoo: z.ZodTypeAny = z.union([
     z.object({
-        foo: z.optional(z.string().regex(/^\d{3}-\d{2}-\d{4}$/)),
-        bar: z.optional(zBar),
-        get baz(): z.ZodOptional {
-            return z.optional(z.array(z.lazy((): any => {
-                return zFoo;
-            })));
-        },
-        qux: z.optional(z.int().gt(0)).default(0)
+        foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
+        bar: zBar.optional(),
+        baz: z.array(z.lazy(() => {
+            return zFoo;
+        })).optional(),
+        qux: z.number().int().gt(0).optional().default(0)
     }),
     z.null()
 ]).default(null);
 
-export type FooZodType = z.infer<typeof zFoo>;
-
 export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
 
-export type BazZodType = z.infer<typeof zBaz>;
-
-export const zQux = z.record(z.string(), z.object({
-    qux: z.optional(z.string())
+export const zQux = z.record(z.object({
+    qux: z.string().optional()
 }));
-
-export type QuxZodType = z.infer<typeof zQux>;
 
 /**
  * This is Foo parameter.
  */
 export const zFoo2 = z.string();
 
-export type FooZodType2 = z.infer<typeof zFoo2>;
-
 export const zFoo3 = z.object({
-    foo: z.optional(zBar)
+    foo: zBar.optional()
 });
-
-export type FooZodType3 = z.infer<typeof zFoo3>;
 
 export const zPatchFooData = z.object({
     body: z.object({
-        foo: z.optional(z.string())
+        foo: z.string().optional()
     }),
-    path: z.optional(z.never()),
-    query: z.optional(z.object({
-        foo: z.optional(z.string()),
-        bar: z.optional(zBar),
-        baz: z.optional(z.object({
-            baz: z.optional(z.string())
-        })),
-        qux: z.optional(z.iso.date()),
-        quux: z.optional(z.iso.datetime())
-    }))
+    path: z.never().optional(),
+    query: z.object({
+        foo: z.string().optional(),
+        bar: zBar.optional(),
+        baz: z.object({
+            baz: z.string().optional()
+        }).optional(),
+        qux: z.string().date().optional(),
+        quux: z.string().datetime().optional()
+    }).optional()
 });
-
-export type PatchFooDataZodType = z.infer<typeof zPatchFooData>;
 
 export const zPostFooData = z.object({
     body: zFoo3,
-    path: z.optional(z.never()),
-    query: z.optional(z.never())
+    path: z.never().optional(),
+    query: z.never().optional()
 });
-
-export type PostFooDataZodType = z.infer<typeof zPostFooData>;

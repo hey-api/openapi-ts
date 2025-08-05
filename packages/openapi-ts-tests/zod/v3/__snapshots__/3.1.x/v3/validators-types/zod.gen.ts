@@ -11,8 +11,6 @@ export const zBar: z.AnyZodObject = z.object({
     }).optional()
 });
 
-export type BarZodType = z.infer<typeof zBar>;
-
 /**
  * This is Foo schema.
  */
@@ -28,30 +26,20 @@ export const zFoo: z.ZodTypeAny = z.union([
     z.null()
 ]).default(null);
 
-export type FooZodType = z.infer<typeof zFoo>;
-
 export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
-
-export type BazZodType = z.infer<typeof zBaz>;
 
 export const zQux = z.record(z.object({
     qux: z.string().optional()
 }));
-
-export type QuxZodType = z.infer<typeof zQux>;
 
 /**
  * This is Foo parameter.
  */
 export const zFoo2 = z.string();
 
-export type FooZodType2 = z.infer<typeof zFoo2>;
-
 export const zFoo3 = z.object({
     foo: zBar.optional()
 });
-
-export type FooZodType3 = z.infer<typeof zFoo3>;
 
 export const zPatchFooData = z.object({
     body: z.object({
@@ -69,12 +57,8 @@ export const zPatchFooData = z.object({
     }).optional()
 });
 
-export type PatchFooDataZodType = z.infer<typeof zPatchFooData>;
-
 export const zPostFooData = z.object({
     body: zFoo3,
     path: z.never().optional(),
     query: z.never().optional()
 });
-
-export type PostFooDataZodType = z.infer<typeof zPostFooData>;
