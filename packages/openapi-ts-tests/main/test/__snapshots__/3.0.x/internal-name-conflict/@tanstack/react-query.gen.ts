@@ -15,7 +15,7 @@ export type QueryKey<TOptions extends Options> = [
 const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): [
     QueryKey<TOptions>[0]
 ] => {
-    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? _heyApiClient).getConfig().baseUrl } as QueryKey<TOptions>[0];
+    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: (options?.client ?? _heyApiClient).getConfig().baseUrl } as QueryKey<TOptions>[0];
     if (infinite) {
         params._infinite = infinite;
     }

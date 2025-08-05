@@ -2,23 +2,21 @@
 
 import { z } from 'zod';
 
-export const zBar = z.object({
-    get bar(): z.ZodOptional {
-        return z.optional(z.array(z.lazy((): any => {
-            return zBar;
-        })));
-    }
+export const zBar: z.AnyZodObject = z.object({
+    bar: z.array(z.lazy(() => {
+        return zBar;
+    })).optional()
 });
 
-export const zFoo = z.object({
-    foo: z.optional(zBar)
+export const zFoo: z.AnyZodObject = z.object({
+    foo: zBar.optional()
 });
 
 /**
  * description caused circular reference error
  */
-export const zQux = z.lazy((): any => {
+export const zQux: z.ZodTypeAny = z.lazy(() => {
     return zQux;
 });
 
-export const zBaz = zQux;
+export const zBaz: z.ZodTypeAny = zQux;

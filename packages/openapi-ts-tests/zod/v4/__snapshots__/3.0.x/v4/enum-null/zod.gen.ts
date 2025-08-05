@@ -2,10 +2,10 @@
 
 import { z } from 'zod';
 
-export const zFoo = z.nullable(z.enum([
+export const zFoo = z.enum([
     'foo',
     'bar'
-]));
+]).nullable();
 
 export const zBar = z.enum([
     'foo',
