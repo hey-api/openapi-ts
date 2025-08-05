@@ -3,19 +3,19 @@
 import { z } from 'zod';
 
 export const zFoo = z.object({
-    bar: z.optional(z.int()),
+    bar: z.number().int().optional(),
     foo: z.coerce.bigint().default(BigInt(0)),
     id: z.string()
 });
 
 export const zBar = z.object({
-    foo: z.int()
+    foo: z.number().int()
 });
 
 export const zPostFooData = z.object({
-    body: z.optional(z.never()),
-    path: z.optional(z.never()),
-    query: z.optional(z.never())
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
 });
 
 /**
