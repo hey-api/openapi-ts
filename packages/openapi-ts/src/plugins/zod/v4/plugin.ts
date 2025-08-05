@@ -1,5 +1,6 @@
 import ts from 'typescript';
 
+import { TypeScriptRenderer } from '../../../generate/renderer';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
@@ -1100,11 +1101,17 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
     id: zodId,
     path: plugin.output,
   });
+  const f = plugin.gen.createFile(plugin.output, {
+    extension: '.ts',
+    path: '{{path}}.gen',
+    renderer: new TypeScriptRenderer(),
+  });
 
   file.import({
     module: getZodModule({ plugin }),
     name: identifiers.z.text,
   });
+  f.addImport({ from: getZodModule({ plugin }), names: [identifiers.z.text] });
 
   plugin.forEach(
     'operation',
@@ -1113,51 +1120,62 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
     'schema',
     'webhook',
     (event) => {
-      if (event.type === 'operation') {
-        operationToZodSchema({
-          getZodSchema: (schema) => {
-            const state: State = {
-              circularReferenceTracker: [],
-              currentReferenceTracker: [],
-              hasCircularReference: false,
-            };
-            return schemaToZodSchema({ plugin, schema, state });
-          },
-          operation: event.operation,
-          plugin,
-        });
-      } else if (event.type === 'parameter') {
-        handleComponent({
-          id: event.$ref,
-          plugin,
-          schema: event.parameter.schema,
-        });
-      } else if (event.type === 'requestBody') {
-        handleComponent({
-          id: event.$ref,
-          plugin,
-          schema: event.requestBody.schema,
-        });
-      } else if (event.type === 'schema') {
-        handleComponent({
-          id: event.$ref,
-          plugin,
-          schema: event.schema,
-        });
-      } else if (event.type === 'webhook') {
-        webhookToZodSchema({
-          getZodSchema: (schema) => {
-            const state: State = {
-              circularReferenceTracker: [],
-              currentReferenceTracker: [],
-              hasCircularReference: false,
-            };
-            return schemaToZodSchema({ plugin, schema, state });
-          },
-          operation: event.operation,
-          plugin,
-        });
+      switch (event.type) {
+        case 'operation':
+          operationToZodSchema({
+            getZodSchema: (schema) => {
+              const state: State = {
+                circularReferenceTracker: [],
+                currentReferenceTracker: [],
+                hasCircularReference: false,
+              };
+              return schemaToZodSchema({ plugin, schema, state });
+            },
+            operation: event.operation,
+            plugin,
+          });
+          break;
+        case 'parameter':
+          handleComponent({
+            id: event.$ref,
+            plugin,
+            schema: event.parameter.schema,
+          });
+          break;
+        case 'requestBody':
+          handleComponent({
+            id: event.$ref,
+            plugin,
+            schema: event.requestBody.schema,
+          });
+          break;
+        case 'schema':
+          handleComponent({
+            id: event.$ref,
+            plugin,
+            schema: event.schema,
+          });
+          break;
+        case 'webhook':
+          webhookToZodSchema({
+            getZodSchema: (schema) => {
+              const state: State = {
+                circularReferenceTracker: [],
+                currentReferenceTracker: [],
+                hasCircularReference: false,
+              };
+              return schemaToZodSchema({ plugin, schema, state });
+            },
+            operation: event.operation,
+            plugin,
+          });
+          break;
       }
     },
   );
+
+  if (plugin.config.exportFromIndex && f.hasContent()) {
+    const index = plugin.gen.ensureFile('index');
+    index.addExport({ from: f, namespaceImport: true });
+  }
 };

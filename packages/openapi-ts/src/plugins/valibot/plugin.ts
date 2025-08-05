@@ -1,6 +1,7 @@
 import ts from 'typescript';
 
 import type { Identifier } from '../../generate/file/types';
+import { TypeScriptRenderer } from '../../generate/renderer';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
 import { tsc } from '../../tsc';
@@ -954,7 +955,9 @@ export const schemaToValibotSchema = ({
   schema: IR.SchemaObject;
   state: State;
 }): Array<ts.Expression> => {
+  // TODO: replace
   const file = plugin.context.file({ id: valibotId })!;
+  const f = plugin.gen.ensureFile(plugin.output);
 
   let anyType: string | undefined;
   let identifier: ReturnType<typeof file.identifier> | undefined = _identifier;
@@ -971,6 +974,8 @@ export const schemaToValibotSchema = ({
         nameTransformer: state.nameTransformer,
         namespace: 'value',
       });
+      // TODO: claim unique name
+      f.addSymbol({ name: '' });
     }
   }
 
@@ -1180,6 +1185,11 @@ export const schemaToValibotSchema = ({
         : undefined,
     });
     file.add(statement);
+    // TODO: update claimed name
+    f.addSymbol({
+      name: identifier.name,
+      value: statement,
+    });
 
     return [];
   }
@@ -1193,12 +1203,18 @@ export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
     id: valibotId,
     path: plugin.output,
   });
+  const f = plugin.gen.createFile(plugin.output, {
+    extension: '.ts',
+    path: '{{path}}.gen',
+    renderer: new TypeScriptRenderer(),
+  });
 
   file.import({
     alias: identifiers.v.text,
     module: 'valibot',
     name: '*',
   });
+  f.addImport({ from: 'valibot', namespaceImport: identifiers.v.text });
 
   plugin.forEach(
     'operation',
@@ -1250,4 +1266,9 @@ export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
       }
     },
   );
+
+  if (plugin.config.exportFromIndex && f.hasContent()) {
+    const index = plugin.gen.ensureFile('index');
+    index.addExport({ from: f, namespaceImport: true });
+  }
 };

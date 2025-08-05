@@ -140,34 +140,6 @@ export class GeneratedFile {
     return result;
   }
 
-  /**
-   * Prevents a specific identifier from being created. This is useful for
-   * transformers where we know a certain transformer won't be needed, and
-   * we want to avoid attempting to create since we know it won't happen.
-   */
-  public blockIdentifier({
-    $ref,
-    namespace,
-  }: Pick<EnsureUniqueIdentifierData, '$ref'> & {
-    namespace: Namespace;
-  }): Identifier {
-    const { name, ref } = parseRef($ref);
-    const refValue =
-      this.identifiers[name.toLocaleLowerCase()]?.[namespace]?.[ref];
-    if (!refValue) {
-      throw new Error(
-        `Identifier for $ref ${$ref} in namespace ${namespace} not found`,
-      );
-    }
-
-    refValue.name = false;
-
-    return {
-      created: false,
-      name: refValue.name,
-    };
-  }
-
   public get exportFromIndex(): boolean {
     return this._exportFromIndex;
   }
@@ -469,7 +441,7 @@ export class GeneratedFile {
   }
 }
 
-const parseRef = (
+export const parseRef = (
   $ref: string,
 ): {
   /**
@@ -528,7 +500,7 @@ const transformName = (
   return transformer.replace('{{name}}', `${separator}${name}${separator}`);
 };
 
-interface EnsureUniqueIdentifierData {
+export interface EnsureUniqueIdentifierData {
   $ref: string;
   case: StringCase | undefined;
   count?: number;

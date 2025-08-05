@@ -17,14 +17,16 @@ import {
  */
 export const createExportAllDeclaration = ({
   module,
+  shouldAppendJs,
 }: {
   module: string;
+  shouldAppendJs?: boolean;
 }): ts.ExportDeclaration => {
   const statement = ts.factory.createExportDeclaration(
     undefined,
     false,
     undefined,
-    ots.string(module),
+    ots.string(shouldAppendJs ? `${module}.js` : module),
   );
   return statement;
 };

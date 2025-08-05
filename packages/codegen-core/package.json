@@ -1,0 +1,71 @@
+{
+  "name": "@hey-api/codegen-core",
+  "version": "0.0.0",
+  "description": "🧱 TypeScript framework for generating structured, multi-file source code from abstract syntax trees.",
+  "homepage": "https://heyapi.dev/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "email": "lubos@heyapi.dev",
+    "name": "Hey API",
+    "url": "https://heyapi.dev"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
+  "keywords": [
+    "codegen",
+    "generator",
+    "javascript",
+    "node",
+    "typescript"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md"
+  ],
+  "scripts": {
+    "build": "tsup && pnpm check-exports",
+    "check-exports": "attw --pack . --profile node16",
+    "dev": "tsup --watch",
+    "prepublishOnly": "pnpm build",
+    "test:coverage": "vitest run --coverage",
+    "test:update": "vitest watch --update",
+    "test:watch": "vitest watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": "^18.18.0 || ^20.9.0 || >=22.10.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.5.3"
+  },
+  "devDependencies": {
+    "@config/vite-base": "workspace:*",
+    "eslint": "9.17.0",
+    "prettier": "3.4.2",
+    "typescript": "5.8.3"
+  }
+}
