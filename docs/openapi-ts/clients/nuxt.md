@@ -251,7 +251,7 @@ client.setConfig({
 
 You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom method to be.
 
-## Config API
+## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/client-nuxt/types.d.ts) interface.
 
