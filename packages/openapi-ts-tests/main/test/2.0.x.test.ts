@@ -46,6 +46,13 @@ describe(`OpenAPI ${version}`, () => {
   const scenarios = [
     {
       config: createConfig({
+        input: 'additional-properties-false.json',
+        output: 'additional-properties-false',
+      }),
+      description: 'forbids arbitrary properties on objects',
+    },
+    {
+      config: createConfig({
         input: 'additional-properties-true.json',
         output: 'additional-properties-true',
       }),

@@ -431,8 +431,7 @@ const objectTypeToZodSchema = ({
 
   if (
     schema.additionalProperties &&
-    schema.additionalProperties.type === 'object' &&
-    !Object.keys(properties).length
+    (!schema.properties || !Object.keys(schema.properties).length)
   ) {
     const zodSchema = schemaToZodSchema({
       plugin,
@@ -458,6 +457,15 @@ const objectTypeToZodSchema = ({
     if (zodSchema.hasCircularReference) {
       result.hasCircularReference = true;
     }
+
+    // Return with typeName for circular references
+    if (result.hasCircularReference) {
+      return {
+        ...result,
+        typeName: 'ZodType',
+      } as ZodSchema;
+    }
+
     return result as Omit<ZodSchema, 'typeName'>;
   }
 
@@ -468,6 +476,14 @@ const objectTypeToZodSchema = ({
     }),
     parameters: [ts.factory.createObjectLiteralExpression(properties, true)],
   });
+
+  // Return with typeName for circular references (AnyZodObject doesn't exist in Zod v4, use ZodType)
+  if (result.hasCircularReference) {
+    return {
+      ...result,
+      typeName: 'ZodType',
+    } as ZodSchema;
+  }
 
   return result as Omit<ZodSchema, 'typeName'>;
 };

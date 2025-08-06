@@ -142,22 +142,22 @@ export const zArrayWithProperties = z.array(z.object({
 /**
  * This is a string dictionary
  */
-export const zDictionaryWithString = z.object({});
+export const zDictionaryWithString = z.record(z.string(), z.string());
 
 /**
  * This is a string reference
  */
-export const zDictionaryWithReference = z.object({});
+export const zDictionaryWithReference = z.record(z.string(), zModelWithString);
 
 /**
  * This is a complex dictionary
  */
-export const zDictionaryWithArray = z.object({});
+export const zDictionaryWithArray = z.record(z.string(), z.array(zModelWithString));
 
 /**
  * This is a string dictionary
  */
-export const zDictionaryWithDictionary = z.record(z.string(), z.object({}));
+export const zDictionaryWithDictionary = z.record(z.string(), z.record(z.string(), z.string()));
 
 /**
  * This is a complex dictionary
@@ -239,8 +239,12 @@ export const zModelWithEnumFromDescription = z.object({
  * This is a model with nested enums
  */
 export const zModelWithNestedEnums = z.object({
-    dictionaryWithEnum: z.optional(z.object({})),
-    dictionaryWithEnumFromDescription: z.optional(z.object({})),
+    dictionaryWithEnum: z.optional(z.record(z.string(), z.enum([
+        'Success',
+        'Warning',
+        'Error'
+    ]))),
+    dictionaryWithEnumFromDescription: z.optional(z.record(z.string(), z.int())),
     arrayWithEnum: z.optional(z.array(z.enum([
         'Success',
         'Warning',
@@ -286,7 +290,7 @@ export const zModelWithArray = z.object({
  * This is a model with one property containing a dictionary
  */
 export const zModelWithDictionary = z.object({
-    prop: z.optional(z.object({}))
+    prop: z.optional(z.record(z.string(), z.string()))
 });
 
 /**
@@ -666,7 +670,7 @@ export const zTypesData = z.object({
         parameterString: z._default(z.string(), 'default'),
         parameterBoolean: z._default(z.boolean(), true),
         parameterArray: z.array(z.string()),
-        parameterDictionary: z.object({}),
+        parameterDictionary: z.record(z.string(), z.unknown()),
         parameterEnum: z.enum([
             'Success',
             'Warning',
@@ -679,7 +683,7 @@ export const zTypesResponse = z.union([
     z.number(),
     z.string(),
     z.boolean(),
-    z.object({})
+    z.record(z.string(), z.unknown())
 ]);
 
 export const zComplexTypesData = z.object({

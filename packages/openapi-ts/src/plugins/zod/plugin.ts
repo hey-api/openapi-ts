@@ -6,12 +6,13 @@ import { handlerV4 } from './v4/plugin';
 export const handler: ZodPlugin['Handler'] = (args) => {
   const { plugin } = args;
   switch (plugin.config.compatibilityVersion) {
+    case 3:
+      return handlerV3(args);
     case 4:
-    default:
       return handlerV4(args);
     case 'mini':
       return handlerMini(args);
-    case 3:
-      return handlerV3(args);
+    default:
+      return handlerV4(args);
   }
 };
