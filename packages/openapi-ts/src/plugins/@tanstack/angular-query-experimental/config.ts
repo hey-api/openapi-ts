@@ -20,6 +20,7 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
         name: '{{name}}InfiniteQueryKey',
+        tags: false,
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),
@@ -62,6 +63,7 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
         name: '{{name}}QueryKey',
+        tags: false,
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),

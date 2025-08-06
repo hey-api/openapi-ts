@@ -1,3 +1,5 @@
+import type { Expression } from 'typescript';
+
 import { clientApi } from '../../../generate/client';
 import { hasOperationDataRequired } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
@@ -255,14 +257,15 @@ const createQueryKeyLiteral = ({
     namespace: 'value',
   });
 
-  const tagsExpression =
-    operation.tags && operation.tags.length > 0
-      ? tsc.arrayLiteralExpression({
-          elements: operation.tags.map((tag) =>
-            tsc.stringLiteral({ text: tag }),
-          ),
-        })
-      : undefined;
+  const config = isInfinite
+    ? plugin.config.infiniteQueryKeys
+    : plugin.config.queryKeys;
+  let tagsExpression: Expression | undefined;
+  if (config.tags && operation.tags && operation.tags.length > 0) {
+    tagsExpression = tsc.arrayLiteralExpression({
+      elements: operation.tags.map((tag) => tsc.stringLiteral({ text: tag })),
+    });
+  }
 
   const createQueryKeyCallExpression = tsc.callExpression({
     functionName: identifierCreateQueryKey.name || '',
@@ -270,7 +273,7 @@ const createQueryKeyLiteral = ({
       tsc.ots.string(id),
       'options',
       tsc.ots.boolean(!!isInfinite),
-      tagsExpression,
+      tagsExpression ? tagsExpression : undefined,
     ],
   });
   return createQueryKeyCallExpression;
