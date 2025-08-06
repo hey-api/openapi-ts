@@ -469,8 +469,7 @@ const objectTypeToZodSchema = ({
 
   if (
     schema.additionalProperties &&
-    schema.additionalProperties.type === 'object' &&
-    !Object.keys(properties).length
+    (!schema.properties || !Object.keys(schema.properties).length)
   ) {
     const zodSchema = schemaToZodSchema({
       plugin,
