@@ -1,6 +1,6 @@
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import ts from 'typescript';
 
@@ -11,8 +11,11 @@ import type { ImportExportItemObject } from '../tsc/utils';
 import type { Config } from '../types/config';
 import { ensureDirSync, relativeModulePath } from './utils';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Use require.resolve to find the package root, then construct the path
+// This approach works with Yarn PnP and doesn't rely on specific file exports
+const packageRoot = path.dirname(
+  createRequire(import.meta.url).resolve('@hey-api/openapi-ts/package.json'),
+);
 
 const getClientSrcPath = (name: string) => {
   const pluginFilePathComponents = name.split(path.sep);
@@ -63,6 +66,29 @@ export const clientApi = {
   },
 } satisfies Record<string, ImportExportItemObject>;
 
+/**
+ * Recursively copies files and directories.
+ * This is a PnP-compatible alternative to fs.cpSync that works with Yarn PnP's
+ * virtualized filesystem.
+ */
+const copyRecursivePnP = (src: string, dest: string) => {
+  const stat = fs.statSync(src);
+
+  if (stat.isDirectory()) {
+    if (!fs.existsSync(dest)) {
+      fs.mkdirSync(dest, { recursive: true });
+    }
+
+    const files = fs.readdirSync(src);
+    for (const file of files) {
+      copyRecursivePnP(path.join(src, file), path.join(dest, file));
+    }
+  } else {
+    const content = fs.readFileSync(src);
+    fs.writeFileSync(dest, content);
+  }
+};
+
 const replaceRelativeImports = (filePath: string) => {
   let content = fs.readFileSync(filePath, 'utf8');
 
@@ -107,8 +133,8 @@ export const generateClientBundle = ({
     // copy client core
     const coreOutputPath = path.resolve(outputPath, 'core');
     ensureDirSync(coreOutputPath);
-    const coreDistPath = path.resolve(__dirname, 'clients', 'core');
-    fs.cpSync(coreDistPath, coreOutputPath, { recursive: true });
+    const coreDistPath = path.resolve(packageRoot, 'dist', 'clients', 'core');
+    copyRecursivePnP(coreDistPath, coreOutputPath);
     if (shouldAppendJs) {
       const coreFiles = fs.readdirSync(coreOutputPath);
       for (const file of coreFiles) {
@@ -120,11 +146,12 @@ export const generateClientBundle = ({
     ensureDirSync(clientOutputPath);
     const clientDistFolderName = plugin.name.slice('@hey-api/client-'.length);
     const clientDistPath = path.resolve(
-      __dirname,
+      packageRoot,
+      'dist',
       'clients',
       clientDistFolderName,
     );
-    fs.cpSync(clientDistPath, clientOutputPath, { recursive: true });
+    copyRecursivePnP(clientDistPath, clientOutputPath);
     if (shouldAppendJs) {
       const clientFiles = fs.readdirSync(clientOutputPath);
       for (const file of clientFiles) {
@@ -143,9 +170,7 @@ export const generateClientBundle = ({
   if (clientSrcPath) {
     const dirPath = path.resolve(outputPath, 'client');
     ensureDirSync(dirPath);
-    fs.cpSync(clientSrcPath, dirPath, {
-      recursive: true,
-    });
+    copyRecursivePnP(clientSrcPath, dirPath);
     return;
   }
 
