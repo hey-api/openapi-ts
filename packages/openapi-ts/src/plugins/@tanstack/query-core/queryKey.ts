@@ -272,7 +272,7 @@ const createQueryKeyLiteral = ({
     parameters: [
       tsc.ots.string(id),
       'options',
-      tsc.ots.boolean(!!isInfinite),
+      isInfinite || tagsExpression ? tsc.ots.boolean(Boolean(isInfinite)) : undefined,
       tagsExpression ? tagsExpression : undefined,
     ],
   });
