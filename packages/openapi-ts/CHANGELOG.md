@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.80.5
+
+### Patch Changes
+
+- [#2401](https://github.com/hey-api/openapi-ts/pull/2401) [`42566ef`](https://github.com/hey-api/openapi-ts/commit/42566ef86fe5af1f4768eaf08f0cafaa84c69044) Thanks [@mrclrchtr](https://github.com/mrclrchtr)! - fix: resolve Yarn PnP compatibility issues with client bundle generation
+
 ## 0.80.4
 
 ### Patch Changes
