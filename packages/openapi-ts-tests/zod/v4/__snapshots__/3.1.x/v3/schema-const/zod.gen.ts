@@ -14,7 +14,7 @@ export const zFoo = z.object({
         z.literal('foo'),
         z.literal(true)
     ]).optional(),
-    corge: z.object({}).optional(),
+    corge: z.record(z.unknown()).optional(),
     garply: z.coerce.bigint().optional(),
     numberInt8: z.literal(100).optional(),
     numberInt16: z.literal(1000).optional(),
