@@ -14,13 +14,11 @@ You can modify the contents of `schemas.gen.ts` by configuring the `@hey-api/sch
 ::: code-group
 
 ```js [json]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     {
       name: '@hey-api/schemas',
       type: 'json', // [!code ++]
@@ -30,13 +28,11 @@ export default {
 ```
 
 ```js [form]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     {
       name: '@hey-api/schemas',
       type: 'form', // [!code ++]
@@ -46,13 +42,11 @@ export default {
 ```
 
 ```js [disabled]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     '@hey-api/schemas', // [!code --]
   ],
 };
@@ -96,7 +90,7 @@ if (userInput.length > maxInputLength) {
 }
 ```
 
-## Config API
+## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/schemas/types.d.ts) interface.
 

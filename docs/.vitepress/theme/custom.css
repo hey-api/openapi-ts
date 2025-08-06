@@ -404,3 +404,8 @@ a.migration:focus {
     background-color: var(--vp-sidebar-bg-color);
   }
 }
+
+footer.VPDocFooter > .edit-info > .last-updated {
+  /* don't render last updated date */
+  display: none;
+}
