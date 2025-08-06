@@ -9,6 +9,7 @@ import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import type { DefinePlugin } from '../plugins/types';
 import type { ImportExportItemObject } from '../tsc/utils';
 import type { Config } from '../types/config';
+import { _test } from './file';
 import { ensureDirSync, relativeModulePath } from './utils';
 
 // Use require.resolve to find the package root, then construct the path
@@ -89,7 +90,7 @@ const copyRecursivePnP = (src: string, dest: string) => {
   }
 };
 
-const replaceRelativeImports = (filePath: string) => {
+const appendRelativeImportsSuffix = (filePath: string, suffix = '.js') => {
   let content = fs.readFileSync(filePath, 'utf8');
 
   // Replace relative imports to append .js extension for ESM compatibility
@@ -105,11 +106,36 @@ const replaceRelativeImports = (filePath: string) => {
       if (fileName.includes('.')) {
         return match;
       }
-      return `from '${importPath}.js'`;
+      return `from '${importPath}${suffix}'`;
     },
   );
 
   fs.writeFileSync(filePath, content, 'utf8');
+};
+
+const replaceRelativeImports = (filePath: string) =>
+  appendRelativeImportsSuffix(filePath);
+
+const infixDotGenToFiles = (outputPath: string) => {
+  const coreFiles = fs.readdirSync(outputPath);
+  for (const file of coreFiles) {
+    const filePath = path.resolve(outputPath, file);
+    if (file !== 'index.ts') {
+      const { extension, name } = _test.splitNameAndExtension(filePath);
+      const newFilePath = path.resolve(
+        outputPath,
+        [name, 'gen', extension].filter(Boolean).join('.'),
+      );
+      fs.renameSync(filePath, newFilePath);
+
+      appendRelativeImportsSuffix(
+        path.resolve(outputPath, newFilePath),
+        '.gen',
+      );
+    } else {
+      appendRelativeImportsSuffix(path.resolve(outputPath, filePath), '.gen');
+    }
+  }
 };
 
 /**
@@ -135,6 +161,9 @@ export const generateClientBundle = ({
     ensureDirSync(coreOutputPath);
     const coreDistPath = path.resolve(packageRoot, 'dist', 'clients', 'core');
     copyRecursivePnP(coreDistPath, coreOutputPath);
+
+    infixDotGenToFiles(coreOutputPath);
+
     if (shouldAppendJs) {
       const coreFiles = fs.readdirSync(coreOutputPath);
       for (const file of coreFiles) {
@@ -152,6 +181,9 @@ export const generateClientBundle = ({
       clientDistFolderName,
     );
     copyRecursivePnP(clientDistPath, clientOutputPath);
+
+    infixDotGenToFiles(clientOutputPath);
+
     if (shouldAppendJs) {
       const clientFiles = fs.readdirSync(clientOutputPath);
       for (const file of clientFiles) {
