@@ -98,6 +98,27 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> & {
          */
         enabled?: boolean;
         /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated infinite query options.
+         *
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```typescript
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         */
+        meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
+        /**
          * Custom naming pattern for generated infinite query options names. The name variable is
          * obtained from the SDK function name.
          *
@@ -134,6 +155,27 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> & {
          * @default true
          */
         enabled?: boolean;
+        /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated mutation options.
+         *
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```typescript
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         */
+        meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
         /**
          * Custom naming pattern for generated mutation options names. The name variable is
          * obtained from the SDK function name.
@@ -222,6 +264,28 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> & {
          */
         enabled?: boolean;
         /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated query options.
+         *
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```typescript
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         */
+        meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
+
+        /**
          * Custom naming pattern for generated query options names. The name variable is
          * obtained from the SDK function name.
          *
@@ -303,6 +367,27 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
      */
     enabled: boolean;
     /**
+     * Custom function to generate metadata for the operation.
+     * Can return any valid meta object that will be included in the generated infinite query options.
+     *
+     * @param operation - The operation object containing all available metadata
+     * @returns A meta object with any properties you want to include
+     *
+     * @example
+     * ```typescript
+     * meta: (operation) => ({
+     *   customField: operation.id,
+     *   isDeprecated: operation.deprecated,
+     *   tags: operation.tags,
+     *   customObject: {
+     *     method: operation.method,
+     *     path: operation.path
+     *   }
+     * })
+     * ```
+     */
+    meta?: (operation: any) => Record<string, any>;
+    /**
      * Custom naming pattern for generated infinite query options names. The name variable is obtained from the SDK function name.
      *
      * @default '{{name}}InfiniteOptions'
@@ -328,6 +413,27 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
      * @default true
      */
     enabled: boolean;
+    /**
+     * Custom function to generate metadata for the operation.
+     * Can return any valid meta object that will be included in the generated mutation options.
+     *
+     * @param operation - The operation object containing all available metadata
+     * @returns A meta object with any properties you want to include
+     *
+     * @example
+     * ```typescript
+     * meta: (operation) => ({
+     *   customField: operation.id,
+     *   isDeprecated: operation.deprecated,
+     *   tags: operation.tags,
+     *   customObject: {
+     *     method: operation.method,
+     *     path: operation.path
+     *   }
+     * })
+     * ```
+     */
+    meta?: (operation: any) => Record<string, any>;
     /**
      * Custom naming pattern for generated mutation options names. The name variable is obtained from the SDK function name.
      *
@@ -393,6 +499,27 @@ export type Config = Plugin.Name<'@tanstack/react-query'> & {
      * @default true
      */
     enabled: boolean;
+    /**
+     * Custom function to generate metadata for the operation.
+     * Can return any valid meta object that will be included in the generated query options.
+     *
+     * @param operation - The operation object containing all available metadata
+     * @returns A meta object with any properties you want to include
+     *
+     * @example
+     * ```typescript
+     * meta: (operation) => ({
+     *   customField: operation.id,
+     *   isDeprecated: operation.deprecated,
+     *   tags: operation.tags,
+     *   customObject: {
+     *     method: operation.method,
+     *     path: operation.path
+     *   }
+     * })
+     * ```
+     */
+    meta?: (operation: any) => Record<string, any>;
     /**
      * Custom naming pattern for generated query options names. The name variable is obtained from the SDK function name.
      *
