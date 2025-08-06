@@ -9,7 +9,7 @@ import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import type { DefinePlugin } from '../plugins/types';
 import type { ImportExportItemObject } from '../tsc/utils';
 import type { Config } from '../types/config';
-import { _test } from './file';
+import { splitNameAndExtension } from './file';
 import { ensureDirSync, relativeModulePath } from './utils';
 
 // Use require.resolve to find the package root, then construct the path
@@ -121,7 +121,7 @@ const infixDotGenToFiles = (outputPath: string) => {
   for (const file of coreFiles) {
     const filePath = path.resolve(outputPath, file);
     if (file !== 'index.ts') {
-      const { extension, name } = _test.splitNameAndExtension(filePath);
+      const { extension, name } = splitNameAndExtension(filePath);
       const newFilePath = path.resolve(
         outputPath,
         [name, 'gen', extension].filter(Boolean).join('.'),
