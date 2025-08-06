@@ -1,6 +1,6 @@
 ---
-title: Valibot
-description: Valibot plugin for Hey API. Compatible with all our features.
+title: Valibot v1 Plugin
+description: Generate Valibot v1 schemas from OpenAPI with the Valibot plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
 <!-- <script setup lang="ts">
@@ -24,6 +24,7 @@ Launch demo
 
 ## Features
 
+- Valibot v1 support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - Valibot schemas for requests, responses, and reusable definitions
 
