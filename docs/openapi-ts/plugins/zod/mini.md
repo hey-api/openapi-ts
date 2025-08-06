@@ -1,6 +1,6 @@
 ---
-title: Zod
-description: Zod plugin for Hey API. Compatible with all our features.
+title: Zod Mini Plugin
+description: Generate Zod Mini schemas from OpenAPI with the Zod plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
 <script setup lang="ts">
@@ -24,6 +24,7 @@ Launch demo
 
 ## Features
 
+- Zod Mini support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - Zod schemas for requests, responses, and reusable definitions
 
