@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.80.4
+
+### Patch Changes
+
+- [#2391](https://github.com/hey-api/openapi-ts/pull/2391) [`ac3456f`](https://github.com/hey-api/openapi-ts/commit/ac3456f4c793f7f8b8f535766382476d6d410219) Thanks [@ahmedrowaihi](https://github.com/ahmedrowaihi)! - fix(tanstack-query): add `queryKeys.tags` and `infiniteQueryKeys.tags` options
+
 ## 0.80.3
 
 ### Patch Changes
