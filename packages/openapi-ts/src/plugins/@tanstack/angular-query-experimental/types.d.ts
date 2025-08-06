@@ -56,6 +56,13 @@ export type UserConfig = Plugin.Name<'@tanstack/angular-query-experimental'> & {
          * @see https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions
          */
         name?: StringName;
+        /**
+         * Whether to include operation tags in infinite query keys.
+         * This will make query keys larger but provides better cache invalidation capabilities.
+         *
+         * @default false
+         */
+        tags?: boolean;
       };
   /**
    * Configuration for generated infinite query options helpers.
@@ -173,6 +180,13 @@ export type UserConfig = Plugin.Name<'@tanstack/angular-query-experimental'> & {
          * @see https://tanstack.com/query/v5/docs/framework/angular/reference/queryKey
          */
         name?: StringName;
+        /**
+         * Whether to include operation tags in query keys.
+         * This will make query keys larger but provides better cache invalidation capabilities.
+         *
+         * @default false
+         */
+        tags?: boolean;
       };
   /**
    * Configuration for generated query options helpers.
@@ -258,6 +272,13 @@ export type Config = Plugin.Name<'@tanstack/angular-query-experimental'> & {
      * @see https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions
      */
     name: StringName;
+    /**
+     * Whether to include operation tags in infinite query keys.
+     * This will make query keys larger but provides better cache invalidation capabilities.
+     *
+     * @default false
+     */
+    tags: boolean;
   };
   /**
    * Resolved configuration for generated infinite query options helpers.
@@ -345,6 +366,13 @@ export type Config = Plugin.Name<'@tanstack/angular-query-experimental'> & {
      * @see https://tanstack.com/query/v5/docs/framework/angular/reference/queryKey
      */
     name: StringName;
+    /**
+     * Whether to include operation tags in query keys.
+     * This will make query keys larger but provides better cache invalidation capabilities.
+     *
+     * @default false
+     */
+    tags: boolean;
   };
   /**
    * Resolved configuration for generated query options helpers.

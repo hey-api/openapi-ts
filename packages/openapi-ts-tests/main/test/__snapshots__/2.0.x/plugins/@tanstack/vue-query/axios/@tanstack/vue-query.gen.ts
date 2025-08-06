@@ -10,15 +10,19 @@ export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
         _infinite?: boolean;
+        tags?: ReadonlyArray<string>;
     }
 ];
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): [
+const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean, tags?: ReadonlyArray<string>): [
     QueryKey<TOptions>[0]
 ] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseURL: options?.baseURL || (options?.client ?? _heyApiClient).getConfig().baseURL } as QueryKey<TOptions>[0];
     if (infinite) {
         params._infinite = infinite;
+    }
+    if (tags) {
+        params.tags = tags;
     }
     if (options?.body) {
         params.body = options.body;
