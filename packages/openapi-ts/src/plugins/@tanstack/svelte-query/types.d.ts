@@ -93,6 +93,28 @@ export type UserConfig = Plugin.Name<'@tanstack/svelte-query'> & {
          */
         enabled?: boolean;
         /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated infinite query options.
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```typescript
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         *
+         * @default false
+         */
+        meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
+        /**
          * Custom naming pattern for generated infinite query options names. The name variable is
          * obtained from the SDK function name.
          *
@@ -104,7 +126,7 @@ export type UserConfig = Plugin.Name<'@tanstack/svelte-query'> & {
   /**
    * Configuration for generated mutation options helpers.
    *
-   * See {@link https://tanstack.com/query/v5/docs/framework/solid/reference/createMutation}
+   * See {@link https://tanstack.com/query/v5/docs/framework/svelte/reference/createMutation}
    *
    * Can be:
    * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -130,11 +152,33 @@ export type UserConfig = Plugin.Name<'@tanstack/svelte-query'> & {
          */
         enabled?: boolean;
         /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated mutation options.
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```typescript
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         *
+         * @default false
+         */
+        meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
+        /**
          * Custom naming pattern for generated mutation options names. The name variable is
          * obtained from the SDK function name.
          *
          * @default '{{name}}Mutation'
-         * @see https://tanstack.com/query/v5/docs/framework/solid/reference/createMutation
+         * @see https://tanstack.com/query/v5/docs/framework/svelte/reference/createMutation
          */
         name?: StringName;
       };
@@ -216,6 +260,28 @@ export type UserConfig = Plugin.Name<'@tanstack/svelte-query'> & {
          * @default true
          */
         enabled?: boolean;
+        /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated query options.
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```typescript
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         *
+         * @default false
+         */
+        meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
         /**
          * Custom naming pattern for generated query options names. The name variable is
          * obtained from the SDK function name.
@@ -299,6 +365,28 @@ export type Config = Plugin.Name<'@tanstack/svelte-query'> & {
      */
     enabled: boolean;
     /**
+     * Custom function to generate metadata for the operation.
+     * Can return any valid meta object that will be included in the generated infinite query options.
+     * @param operation - The operation object containing all available metadata
+     * @returns A meta object with any properties you want to include
+     *
+     * @example
+     * ```typescript
+     * meta: (operation) => ({
+     *   customField: operation.id,
+     *   isDeprecated: operation.deprecated,
+     *   tags: operation.tags,
+     *   customObject: {
+     *     method: operation.method,
+     *     path: operation.path
+     *   }
+     * })
+     * ```
+     *
+     * @default false
+     */
+    meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
+    /**
      * Custom naming pattern for generated infinite query options names. The name variable is
      * obtained from the SDK function name.
      *
@@ -326,11 +414,33 @@ export type Config = Plugin.Name<'@tanstack/svelte-query'> & {
      */
     enabled: boolean;
     /**
+     * Custom function to generate metadata for the operation.
+     * Can return any valid meta object that will be included in the generated mutation options.
+     * @param operation - The operation object containing all available metadata
+     * @returns A meta object with any properties you want to include
+     *
+     * @example
+     * ```typescript
+     * meta: (operation) => ({
+     *   customField: operation.id,
+     *   isDeprecated: operation.deprecated,
+     *   tags: operation.tags,
+     *   customObject: {
+     *     method: operation.method,
+     *     path: operation.path
+     *   }
+     * })
+     * ```
+     *
+     * @default false
+     */
+    meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
+    /**
      * Custom naming pattern for generated mutation options names. The name variable is
      * obtained from the SDK function name.
      *
      * @default '{{name}}Mutation'
-     * @see https://tanstack.com/query/v5/docs/framework/solid/reference/createMutation
+     * @see https://tanstack.com/query/v5/docs/framework/svelte/reference/createMutation
      */
     name: StringName;
   };
@@ -392,6 +502,28 @@ export type Config = Plugin.Name<'@tanstack/svelte-query'> & {
      * @default true
      */
     enabled: boolean;
+    /**
+     * Custom function to generate metadata for the operation.
+     * Can return any valid meta object that will be included in the generated query options.
+     * @param operation - The operation object containing all available metadata
+     * @returns A meta object with any properties you want to include
+     *
+     * @example
+     * ```typescript
+     * meta: (operation) => ({
+     *   customField: operation.id,
+     *   isDeprecated: operation.deprecated,
+     *   tags: operation.tags,
+     *   customObject: {
+     *     method: operation.method,
+     *     path: operation.path
+     *   }
+     * })
+     * ```
+     *
+     * @default false
+     */
+    meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
     /**
      * Custom naming pattern for generated query options names. The name variable is
      * obtained from the SDK function name.
