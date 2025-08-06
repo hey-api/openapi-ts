@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.80.3
+
+### Patch Changes
+
+- [#2287](https://github.com/hey-api/openapi-ts/pull/2287) [`6df1237`](https://github.com/hey-api/openapi-ts/commit/6df1237cefcb803da55cb780285fc82be05e019a) Thanks [@MaxwellAt](https://github.com/MaxwellAt)! - fix(zod): improve handling of additional properties
+
 ## 0.80.2
 
 ### Patch Changes
