@@ -59,6 +59,11 @@ export const createQueryKeyFunction = ({
             name: 'infinite',
             type: tsc.typeReferenceNode({ typeName: 'boolean' }),
           },
+          {
+            isRequired: false,
+            name: 'tags',
+            type: tsc.typeReferenceNode({ typeName: 'ReadonlyArray<string>' }),
+          },
         ],
         returnType: tsc.typeTupleNode({
           types: [returnType],
@@ -95,6 +100,22 @@ export const createQueryKeyFunction = ({
                       name: '_infinite',
                     }),
                     right: infiniteIdentifier,
+                  }),
+                }),
+              ],
+            }),
+          }),
+          tsc.ifStatement({
+            expression: tsc.identifier({ text: 'tags' }),
+            thenStatement: tsc.block({
+              statements: [
+                tsc.expressionToStatement({
+                  expression: tsc.binaryExpression({
+                    left: tsc.propertyAccessExpression({
+                      expression: 'params',
+                      name: 'tags',
+                    }),
+                    right: tsc.identifier({ text: 'tags' }),
                   }),
                 }),
               ],
@@ -218,10 +239,12 @@ export const createQueryKeyFunction = ({
 const createQueryKeyLiteral = ({
   id,
   isInfinite,
+  operation,
   plugin,
 }: {
   id: string;
   isInfinite?: boolean;
+  operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
   const file = plugin.context.file({ id: plugin.name })!;
@@ -231,12 +254,23 @@ const createQueryKeyLiteral = ({
     case: plugin.config.case,
     namespace: 'value',
   });
+
+  const tagsExpression =
+    operation.tags && operation.tags.length > 0
+      ? tsc.arrayLiteralExpression({
+          elements: operation.tags.map((tag) =>
+            tsc.stringLiteral({ text: tag }),
+          ),
+        })
+      : undefined;
+
   const createQueryKeyCallExpression = tsc.callExpression({
     functionName: identifierCreateQueryKey.name || '',
     parameters: [
       tsc.ots.string(id),
       'options',
-      isInfinite ? tsc.ots.boolean(true) : undefined,
+      tsc.ots.boolean(!!isInfinite),
+      tagsExpression,
     ],
   });
   return createQueryKeyCallExpression;
@@ -257,6 +291,13 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
       name: '_infinite',
       type: tsc.keywordTypeNode({
         keyword: 'boolean',
+      }),
+    },
+    {
+      isRequired: false,
+      name: 'tags',
+      type: tsc.typeReferenceNode({
+        typeName: 'ReadonlyArray<string>',
       }),
     },
   ];
@@ -337,6 +378,7 @@ export const queryKeyStatement = ({
       statements: createQueryKeyLiteral({
         id: operation.id,
         isInfinite,
+        operation,
         plugin,
       }),
     }),
