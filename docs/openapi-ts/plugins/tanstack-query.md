@@ -1,6 +1,6 @@
 ---
-title: TanStack Query
-description: TanStack Query plugin for Hey API. Compatible with all our features.
+title: TanStack Query v5 Plugin
+description: Generate TanStack Query v5 functions and query keys from OpenAPI with the TanStack Query plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
 <script setup lang="ts">
@@ -24,6 +24,7 @@ Launch demo
 
 ## Features
 
+- TanStack Query v5 support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - create query keys following the best practices
 - type-safe query options, infinite query options, and mutation options

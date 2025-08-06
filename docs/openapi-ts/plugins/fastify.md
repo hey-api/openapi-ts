@@ -1,6 +1,6 @@
 ---
-title: Fastify
-description: Fastify plugin for Hey API. Compatible with all our features.
+title: Fastify v5 Plugin
+description: Generate Fastify v5 route handlers from OpenAPI with the Fastify plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
 <Heading>
@@ -30,6 +30,7 @@ StackBlitz
 
 ## Features
 
+- Fastify v5 support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - type-safe route handlers
 - minimal learning curve thanks to extending the underlying technology
