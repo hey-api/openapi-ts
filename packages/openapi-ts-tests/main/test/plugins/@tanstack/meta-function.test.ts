@@ -107,6 +107,7 @@ describe('TanStack Query Meta Function Customization', () => {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
         const relativePath = filePath.slice(outputPath.length + 1);
         const fileName = path.basename(relativePath);
+        const frameworkDir = path.dirname(relativePath).split(path.sep).pop()!;
         await expect(fileContent).toMatchFileSnapshot(
           path.join(
             __dirname,
@@ -116,6 +117,7 @@ describe('TanStack Query Meta Function Customization', () => {
             'plugins',
             '@tanstack',
             'meta',
+            frameworkDir,
             fileName,
           ),
         );
