@@ -53,19 +53,6 @@ describe('TanStack Query Meta Function Customization', () => {
     },
   ] as const;
 
-  // Custom meta function that returns the expected field names
-  const customMetaFunction = (operation: any) => ({
-    id: operation.id,
-    method: operation.method,
-    path: operation.path,
-  });
-
-  const metaConfig = {
-    infiniteQueryOptions: { meta: customMetaFunction },
-    mutationOptions: { meta: customMetaFunction },
-    queryOptions: { meta: customMetaFunction },
-  };
-
   // Generate scenarios for each framework
   const scenarios = frameworks.map((framework) => ({
     config: createConfig({
@@ -79,8 +66,28 @@ describe('TanStack Query Meta Function Customization', () => {
       ),
       plugins: [
         {
+          infiniteQueryOptions: {
+            meta: (operation) => ({
+              id: operation.id,
+              method: operation.method,
+              path: operation.path,
+            }),
+          },
+          mutationOptions: {
+            meta: (operation) => ({
+              id: operation.id,
+              method: operation.method,
+              path: operation.path,
+            }),
+          },
           name: framework.name,
-          ...metaConfig,
+          queryOptions: {
+            meta: (operation) => ({
+              id: operation.id,
+              method: operation.method,
+              path: operation.path,
+            }),
+          },
         },
         '@hey-api/client-fetch',
       ],
