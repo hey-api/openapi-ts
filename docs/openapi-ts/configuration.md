@@ -155,7 +155,7 @@ Plugins are responsible for generating artifacts from your input. By default, He
 
 You can learn more on the [Output](/openapi-ts/output) page.
 
-## Config API
+## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/types/config.d.ts) interface.
 
