@@ -1,3 +1,4 @@
+import type { IR } from '../../../ir/types';
 import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
 
@@ -381,7 +382,7 @@ export type Config = Plugin.Name<'@tanstack/vue-query'> & {
      * })
      * ```
      */
-    meta?: (operation: any) => Record<string, any>;
+    meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
     /**
      * Custom naming pattern for generated infinite query options names. The name variable is
      * obtained from the SDK function name.
