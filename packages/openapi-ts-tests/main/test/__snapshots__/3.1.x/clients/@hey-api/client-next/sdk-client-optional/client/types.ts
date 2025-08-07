@@ -64,6 +64,13 @@ export interface RequestOptions<
   url: Url;
 }
 
+export interface ResolvedRequestOptions<
+  ThrowOnError extends boolean = boolean,
+  Url extends string = string,
+> extends RequestOptions<ThrowOnError, Url> {
+  serializedBody?: string;
+}
+
 export type RequestResult<
   TData = unknown,
   TError = unknown,
@@ -126,7 +133,7 @@ type BuildUrlFn = <
 ) => string;
 
 export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
-  interceptors: Middleware<Response, unknown, RequestOptions>;
+  interceptors: Middleware<Response, unknown, ResolvedRequestOptions>;
 };
 
 /**

@@ -1,4 +1,4 @@
-import type { Client, Config, RequestOptions } from './types.js';
+import type { Client, Config, ResolvedRequestOptions } from './types.js';
 import {
   buildUrl,
   createConfig,
@@ -28,7 +28,7 @@ export const createClient = (config: Config = {}): Client => {
     Request,
     Response,
     unknown,
-    RequestOptions
+    ResolvedRequestOptions
   >();
 
   const request: Client['request'] = async (options) => {
@@ -37,6 +37,7 @@ export const createClient = (config: Config = {}): Client => {
       ...options,
       fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
       headers: mergeHeaders(_config.headers, options.headers),
+      serializedBody: undefined,
     };
 
     if (opts.security) {
@@ -51,11 +52,11 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     if (opts.body && opts.bodySerializer) {
-      opts.body = opts.bodySerializer(opts.body);
+      opts.serializedBody = opts.bodySerializer(opts.body);
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (opts.body === undefined || opts.body === '') {
+    if (opts.serializedBody === undefined || opts.serializedBody === '') {
       opts.headers.delete('Content-Type');
     }
 
@@ -63,6 +64,7 @@ export const createClient = (config: Config = {}): Client => {
     const requestInit: ReqInit = {
       redirect: 'follow',
       ...opts,
+      body: opts.serializedBody,
     };
 
     let request = new Request(url, requestInit);
