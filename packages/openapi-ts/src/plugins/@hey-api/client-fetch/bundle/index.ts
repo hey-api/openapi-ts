@@ -16,6 +16,7 @@ export type {
   OptionsLegacyParser,
   RequestOptions,
   RequestResult,
+  ResolvedRequestOptions,
   ResponseStyle,
   TDataShape,
 } from './types';
