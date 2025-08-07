@@ -1,122 +1,122 @@
-import type { Auth } from '../core/auth';
+import type { Auth, AuthToken } from './auth';
 import type {
-  Client as CoreClient,
-  Config as CoreConfig,
-} from '../core/types';
-import type { Middleware } from './utils';
+  BodySerializer,
+  QuerySerializer,
+  QuerySerializerOptions,
+} from './bodySerializer';
 
-export type ResponseStyle = 'data' | 'fields';
-
-export interface Config<T extends ClientOptions = ClientOptions>
-  extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
-    CoreConfig {
+export interface Client<
+  RequestFn = never,
+  Config = unknown,
+  MethodFn = never,
+  BuildUrlFn = never,
+> {
   /**
-   * Base URL for all requests made by this client.
+   * Returns the final request URL.
    */
-  baseUrl?: T['baseUrl'];
-  /**
-   * Fetch API implementation. You can use this option to provide a custom
-   * fetch instance.
-   *
-   * @default globalThis.fetch
-   */
-  fetch?: (request: Request) => ReturnType<typeof fetch>;
-  /**
-   * Please don't use the Fetch client for Next.js applications. The `next`
-   * options won't have any effect.
-   *
-   * Install {@link https://www.npmjs.com/package/@hey-api/client-next `@hey-api/client-next`} instead.
-   */
-  next?: never;
-  /**
-   * Return the response data parsed in a specified format. By default, `auto`
-   * will infer the appropriate method from the `Content-Type` response header.
-   * You can override this behavior with any of the {@link Body} methods.
-   * Select `stream` if you don't want to parse response data at all.
-   *
-   * @default 'auto'
-   */
-  parseAs?:
-    | 'arrayBuffer'
-    | 'auto'
-    | 'blob'
-    | 'formData'
-    | 'json'
-    | 'stream'
-    | 'text';
-  /**
-   * Should we return only data or multiple fields (data, error, response, etc.)?
-   *
-   * @default 'fields'
-   */
-  responseStyle?: ResponseStyle;
-  /**
-   * Throw an error instead of returning it in the response?
-   *
-   * @default false
-   */
-  throwOnError?: T['throwOnError'];
+  buildUrl: BuildUrlFn;
+  connect: MethodFn;
+  delete: MethodFn;
+  get: MethodFn;
+  getConfig: () => Config;
+  head: MethodFn;
+  options: MethodFn;
+  patch: MethodFn;
+  post: MethodFn;
+  put: MethodFn;
+  request: RequestFn;
+  setConfig: (config: Config) => Config;
+  trace: MethodFn;
 }
 
-export interface RequestOptions<
-  TResponseStyle extends ResponseStyle = 'fields',
-  ThrowOnError extends boolean = boolean,
-  Url extends string = string,
-> extends Config<{
-    responseStyle: TResponseStyle;
-    throwOnError: ThrowOnError;
-  }> {
+export interface Config {
   /**
-   * Any body that you want to add to your request.
+   * Auth token or a function returning auth token. The resolved value will be
+   * added to the request payload as defined by its `security` array.
+   */
+  auth?: ((auth: Auth) => Promise<AuthToken> | AuthToken) | AuthToken;
+  /**
+   * A function for serializing request body parameter. By default,
+   * {@link JSON.stringify()} will be used.
+   */
+  bodySerializer?: BodySerializer | null;
+  /**
+   * An object containing any HTTP headers that you want to pre-populate your
+   * `Headers` object with.
    *
-   * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
+   * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
    */
-  body?: unknown;
-  path?: Record<string, unknown>;
-  query?: Record<string, unknown>;
+  headers?:
+    | RequestInit['headers']
+    | Record<
+        string,
+        | string
+        | number
+        | boolean
+        | (string | number | boolean)[]
+        | null
+        | undefined
+        | unknown
+      >;
   /**
-   * Security mechanism(s) to use for the request.
+   * The request method.
+   *
+   * {@link https://developer.mozilla.org/docs/Web/API/fetch#method See more}
    */
-  security?: ReadonlyArray<Auth>;
-  url: Url;
+  method?:
+    | 'CONNECT'
+    | 'DELETE'
+    | 'GET'
+    | 'HEAD'
+    | 'OPTIONS'
+    | 'PATCH'
+    | 'POST'
+    | 'PUT'
+    | 'TRACE';
+  /**
+   * A function for serializing request query parameters. By default, arrays
+   * will be exploded in form style, objects will be exploded in deepObject
+   * style, and reserved characters are percent-encoded.
+   *
+   * This method will have no effect if the native `paramsSerializer()` Axios
+   * API function is used.
+   *
+   * {@link https://swagger.io/docs/specification/serialization/#query View examples}
+   */
+  querySerializer?: QuerySerializer | QuerySerializerOptions;
+  /**
+   * A function validating request data. This is useful if you want to ensure
+   * the request conforms to the desired shape, so it can be safely sent to
+   * the server.
+   */
+  requestValidator?: (data: unknown) => Promise<unknown>;
+  /**
+   * A function transforming response data before it's returned. This is useful
+   * for post-processing data, e.g. converting ISO strings into Date objects.
+   */
+  responseTransformer?: (data: unknown) => Promise<unknown>;
+  /**
+   * A function validating response data. This is useful if you want to ensure
+   * the response conforms to the desired shape, so it can be safely passed to
+   * the transformers and returned to the user.
+   */
+  responseValidator?: (data: unknown) => Promise<unknown>;
 }
 
-export type RequestResult<
-  TData = unknown,
-  TError = unknown,
-  ThrowOnError extends boolean = boolean,
-  TResponseStyle extends ResponseStyle = 'fields',
-> = ThrowOnError extends true
-  ? Promise<
-      TResponseStyle extends 'data'
-        ? TData extends Record<string, unknown>
-          ? TData[keyof TData]
-          : TData
-        : {
-            data: TData extends Record<string, unknown>
-              ? TData[keyof TData]
-              : TData;
-            request: Request;
-            response: Response;
-          }
-    >
-  : Promise<
-      TResponseStyle extends 'data'
-        ?
-            | (TData extends Record<string, unknown>
-                ? TData[keyof TData]
-                : TData)
-            | undefined
-        : (
-            | {
-                data: TData extends Record<string, unknown>
-                  ? TData[keyof TData]
-                  : TData;
-                error: undefined;
-              }
-            | {
-                data: undefined;
-                error: TError extends Record<string, unknown>
+type IsExactlyNeverOrNeverUndefined<T> = [T] extends [never]
+  ? true
+  : [T] extends [never | undefined]
+    ? [undefined] extends [T]
+      ? false
+      : true
+    : false;
+
+export type OmitNever<T extends Record<string, unknown>> = {
+  [K in keyof T as IsExactlyNeverOrNeverUndefined<T[K]> extends true
+    ? never
+    : K]: T[K];
+};
+n>
                   ? TError[keyof TError]
                   : TError;
               }
