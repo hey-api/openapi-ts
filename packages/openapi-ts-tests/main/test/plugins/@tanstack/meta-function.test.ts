@@ -101,7 +101,16 @@ describe('TanStack Query Meta Function Customization', () => {
         const relativePath = filePath.slice(outputPath.length + 1);
         const fileName = path.basename(relativePath);
         await expect(fileContent).toMatchFileSnapshot(
-          path.join(__dirname, '__snapshots__', 'meta', fileName),
+          path.join(
+            __dirname,
+            '..',
+            '..',
+            '__snapshots__',
+            'plugins',
+            '@tanstack',
+            'meta',
+            fileName,
+          ),
         );
       }),
     );
