@@ -98,15 +98,10 @@ describe('TanStack Query Meta Function Customization', () => {
     await Promise.all(
       filePaths.map(async (filePath) => {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
+        const relativePath = filePath.slice(outputPath.length + 1);
+        const fileName = path.basename(relativePath);
         await expect(fileContent).toMatchFileSnapshot(
-          path.join(
-            __dirname,
-            '__snapshots__',
-            version,
-            namespace,
-            '@tanstack',
-            filePath.slice(outputPath.length + 1),
-          ),
+          path.join(__dirname, '__snapshots__', 'meta', fileName),
         );
       }),
     );
