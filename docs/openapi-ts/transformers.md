@@ -32,13 +32,11 @@ If your data isn't being transformed as expected, we encourage you to leave feed
 In your [configuration](/openapi-ts/get-started), add `@hey-api/transformers` to your plugins and you'll be ready to generate transformers. :tada:
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     '@hey-api/transformers', // [!code ++]
   ],
 };
@@ -49,13 +47,11 @@ export default {
 To automatically transform response data in your SDKs, set `sdk.transformer` to `true`.
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     '@hey-api/transformers',
     {
       name: '@hey-api/sdk', // [!code ++]
@@ -70,13 +66,11 @@ export default {
 To convert date strings into `Date` objects, use the `dates` configuration option.
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     {
       dates: true, // [!code ++]
       name: '@hey-api/transformers',
@@ -139,7 +133,7 @@ export type GetFooResponse = Baz;
 
 :::
 
-## Config API
+## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/transformers/types.d.ts) interface.
 

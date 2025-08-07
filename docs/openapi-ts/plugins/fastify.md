@@ -16,6 +16,8 @@ Fastify plugin is currently in beta. The interface might change before it become
 
 [Fastify](https://fastify.dev) is a fast and low overhead web framework for Node.js.
 
+The Fastify plugin for Hey API generates route handlers from your OpenAPI spec, fully compatible with all core features.
+
 <!-- ### Demo
 
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-fastify-example')(event)">
@@ -40,13 +42,11 @@ StackBlitz
 In your [configuration](/openapi-ts/get-started), add `fastify` to your plugins and you'll be ready to generate Fastify artifacts. :tada:
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     'fastify', // [!code ++]
   ],
 };
@@ -60,7 +60,9 @@ The Fastify plugin will generate the following artifacts, depending on the input
 
 Route handlers are generated from all endpoints. The generated interface follows the naming convention of SDK functions.
 
-```ts
+::: code-group
+
+```ts [example]
 const fastify = Fastify();
 const serviceHandlers: RouteHandlers = {
   createPets(request, reply) {
@@ -79,7 +81,22 @@ const serviceHandlers: RouteHandlers = {
 fastify.register(glue, { serviceHandlers });
 ```
 
-## Config API
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'fastify',
+    },
+  ],
+};
+```
+
+:::
+
+## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/fastify/types.d.ts) interface.
 

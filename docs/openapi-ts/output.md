@@ -60,8 +60,6 @@ import type { Pet } from './client/types.gen';
 If you're not importing artifacts from the index file, you can skip generating it altogether by setting the `output.indexFile` option to `false`.
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
@@ -76,13 +74,11 @@ export default {
 You can choose which files should be re-exported by setting the `exportFromIndex` option to `true` on any plugin. For example, here's how you would re-export [Zod](/openapi-ts/plugins/zod) plugin exports.
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     {
       exportFromIndex: true, // [!code ++]
       name: 'zod',
