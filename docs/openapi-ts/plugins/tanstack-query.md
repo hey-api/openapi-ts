@@ -1,6 +1,6 @@
 ---
-title: TanStack Query
-description: TanStack Query plugin for Hey API. Compatible with all our features.
+title: TanStack Query v5 Plugin
+description: Generate TanStack Query v5 functions and query keys from OpenAPI with the TanStack Query plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
 <script setup lang="ts">
@@ -16,6 +16,8 @@ import { embedProject } from '../../embed'
 
 [TanStack Query](https://tanstack.com/query) is a powerful asynchronous state management solution for TypeScript/JavaScript, React, Solid, Vue, Svelte, and Angular.
 
+The TanStack Query plugin for Hey API generates functions and query keys from your OpenAPI spec, fully compatible with SDKs, transformers, and all core features.
+
 ### Demo
 
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-tanstack-react-query-example')(event)">
@@ -24,6 +26,7 @@ Launch demo
 
 ## Features
 
+- TanStack Query v5 support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - create query keys following the best practices
 - type-safe query options, infinite query options, and mutation options
@@ -100,7 +103,9 @@ The TanStack Query plugin will generate the following artifacts, depending on th
 
 Queries are generated from GET and POST endpoints. The generated query functions follow the naming convention of SDK functions and by default append `Options`, e.g. `getPetByIdOptions()`.
 
-```ts
+::: code-group
+
+```ts [example]
 const { data, error } = useQuery({
   ...getPetByIdOptions({
     path: {
@@ -110,13 +115,135 @@ const { data, error } = useQuery({
 });
 ```
 
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryOptions: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
 You can customize the naming and casing pattern for `queryOptions` functions using the `.name` and `.case` options.
+
+### Meta
+
+You can use the `meta` field to attach arbitrary information to a query. To generate metadata for `queryOptions`, provide a function to the `.meta` option.
+
+::: code-group
+
+```ts [example]
+queryOptions({
+  // ...other fields
+  meta: {
+    id: 'getPetById',
+  },
+});
+```
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryOptions: {
+        meta: (operation) => ({ id: operation.id }), // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+:::
 
 ## Query Keys
 
+Query keys contain normalized SDK function parameters and additional metadata.
+
+::: code-group
+
+```ts [example]
+const queryKey = [
+  {
+    _id: 'getPetById',
+    baseUrl: 'https://get.heyapi.dev',
+    path: {
+      petId: 1,
+    },
+  },
+];
+```
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryKeys: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
+### Tags
+
+You can include operation tags in your query keys by setting `tags` to `true`. This will make query keys larger but provides better cache invalidation capabilities.
+
+::: code-group
+
+```ts [example]
+const queryKey = [
+  {
+    _id: 'getPetById',
+    baseUrl: 'https://get.heyapi.dev',
+    path: {
+      petId: 1,
+    },
+    tags: ['pets', 'one', 'get'], // [!code ++]
+  },
+];
+```
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryKeys: {
+        tags: true, // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+:::
+
+### Accessing Query Keys
+
 If you have access to the result of query options function, you can get the query key from the `queryKey` field.
 
-```ts
+::: code-group
+
+```ts [example]
 const { queryKey } = getPetByIdOptions({
   path: {
     petId: 1,
@@ -124,9 +251,27 @@ const { queryKey } = getPetByIdOptions({
 });
 ```
 
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryOptions: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
 Alternatively, you can access the same query key by calling query key functions. The generated query key functions follow the naming convention of SDK functions and by default append `QueryKey`, e.g. `getPetByIdQueryKey()`.
 
-```ts
+::: code-group
+
+```ts [example]
 const queryKey = getPetByIdQueryKey({
   path: {
     petId: 1,
@@ -134,13 +279,31 @@ const queryKey = getPetByIdQueryKey({
 });
 ```
 
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryKeys: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
 You can customize the naming and casing pattern for `queryKeys` functions using the `.name` and `.case` options.
 
 ## Infinite Queries
 
 Infinite queries are generated from GET and POST endpoints if we detect a [pagination](/openapi-ts/configuration/parser#pagination) parameter. The generated infinite query functions follow the naming convention of SDK functions and by default append `InfiniteOptions`, e.g. `getFooInfiniteOptions()`.
 
-```ts
+::: code-group
+
+```ts [example]
 const { data, error } = useInfiniteQuery({
   ...getFooInfiniteOptions({
     path: {
@@ -152,13 +315,137 @@ const { data, error } = useInfiniteQuery({
 });
 ```
 
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryOptions: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
 You can customize the naming and casing pattern for `infiniteQueryOptions` functions using the `.name` and `.case` options.
+
+### Meta
+
+You can use the `meta` field to attach arbitrary information to a query. To generate metadata for `infiniteQueryOptions`, provide a function to the `.meta` option.
+
+::: code-group
+
+```ts [example]
+infiniteQueryOptions({
+  // ...other fields
+  meta: {
+    id: 'getPetById',
+  },
+});
+```
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryOptions: {
+        meta: (operation) => ({ id: operation.id }), // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+:::
 
 ## Infinite Query Keys
 
+Infinite query keys contain normalized SDK function parameters and additional metadata.
+
+::: code-group
+
+```ts [example]
+const queryKey = [
+  {
+    _id: 'getPetById',
+    _infinite: true,
+    baseUrl: 'https://get.heyapi.dev',
+    path: {
+      petId: 1,
+    },
+  },
+];
+```
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryKeys: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
+### Tags
+
+You can include operation tags in your infinite query keys by setting `tags` to `true`. This will make query keys larger but provides better cache invalidation capabilities.
+
+::: code-group
+
+```ts [example]
+const queryKey = [
+  {
+    _id: 'getPetById',
+    _infinite: true,
+    baseUrl: 'https://get.heyapi.dev',
+    path: {
+      petId: 1,
+    },
+    tags: ['pets', 'one', 'get'], // [!code ++]
+  },
+];
+```
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryKeys: {
+        tags: true, // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+:::
+
+### Accessing Infinite Query Keys
+
 If you have access to the result of infinite query options function, you can get the query key from the `queryKey` field.
 
-```ts
+::: code-group
+
+```ts [example]
 const { queryKey } = getPetByIdInfiniteOptions({
   path: {
     petId: 1,
@@ -166,9 +453,27 @@ const { queryKey } = getPetByIdInfiniteOptions({
 });
 ```
 
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryOptions: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
 Alternatively, you can access the same query key by calling query key functions. The generated query key functions follow the naming convention of SDK functions and by default append `InfiniteQueryKey`, e.g. `getPetByIdInfiniteQueryKey()`.
 
-```ts
+::: code-group
+
+```ts [example]
 const queryKey = getPetByIdInfiniteQueryKey({
   path: {
     petId: 1,
@@ -176,13 +481,31 @@ const queryKey = getPetByIdInfiniteQueryKey({
 });
 ```
 
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryKeys: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
 You can customize the naming and casing pattern for `infiniteQueryKeys` functions using the `.name` and `.case` options.
 
 ## Mutations
 
 Mutations are generated from DELETE, PATCH, POST, and PUT endpoints. The generated mutation functions follow the naming convention of SDK functions and by default append `Mutation`, e.g. `addPetMutation()`.
 
-```ts
+::: code-group
+
+```ts [example]
 const addPet = useMutation({
   ...addPetMutation(),
   onError: (error) => {
@@ -197,9 +520,58 @@ addPet.mutate({
 });
 ```
 
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      mutationOptions: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
 You can customize the naming and casing pattern for `mutationOptions` functions using the `.name` and `.case` options.
 
-## Config API
+### Meta
+
+You can use the `meta` field to attach arbitrary information to a mutation. To generate metadata for `mutationOptions`, provide a function to the `.meta` option.
+
+::: code-group
+
+```ts [example]
+const mutationOptions = {
+  // ...other fields
+  meta: {
+    id: 'getPetById',
+  },
+};
+```
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      mutationOptions: {
+        meta: (operation) => ({ id: operation.id }), // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+:::
+
+## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@tanstack/react-query/types.d.ts) interface.
 

@@ -1,6 +1,6 @@
 ---
-title: Zod
-description: Zod plugin for Hey API. Compatible with all our features.
+title: Zod Mini Plugin
+description: Generate Zod Mini schemas from OpenAPI with the Zod plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
 <script setup lang="ts">
@@ -16,6 +16,8 @@ import ZodHeading from './ZodHeading.vue';
 
 [Zod](https://zod.dev) is a TypeScript-first schema validation library with static type inference.
 
+The Zod plugin for Hey API generates schemas from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
+
 <!-- ### Demo
 
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-zod-example')(event)">
@@ -24,6 +26,7 @@ Launch demo
 
 ## Features
 
+- Zod Mini support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - Zod schemas for requests, responses, and reusable definitions
 
@@ -76,21 +79,7 @@ A single request schema is generated for each endpoint. It may contain a request
 
 ::: code-group
 
-```js [config]
-export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
-  output: 'src/client',
-  plugins: [
-    // ...other plugins
-    {
-      name: 'zod',
-      requests: true, // [!code ++]
-    },
-  ],
-};
-```
-
-```ts [output]
+```ts [example]
 const zData = z.object({
   body: z
     .object({
@@ -103,6 +92,20 @@ const zData = z.object({
   }),
   query: z.optional(z.never()),
 });
+```
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      requests: true, // [!code ++]
+    },
+  ],
+};
 ```
 
 :::
@@ -119,6 +122,17 @@ A single Zod schema is generated for all endpoint's responses. If the endpoint d
 
 ::: code-group
 
+```ts [example]
+const zResponse = z.union([
+  z.object({
+    foo: z.optional(z.string()),
+  }),
+  z.object({
+    bar: z.optional(z.number()),
+  }),
+]);
+```
+
 ```js [config]
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
@@ -133,17 +147,6 @@ export default {
 };
 ```
 
-```ts [output]
-const zResponse = z.union([
-  z.object({
-    foo: z.optional(z.string()),
-  }),
-  z.object({
-    bar: z.optional(z.number()),
-  }),
-]);
-```
-
 :::
 
 You can customize the naming and casing pattern for `responses` schemas using the `.name` and `.case` options.
@@ -153,6 +156,14 @@ You can customize the naming and casing pattern for `responses` schemas using th
 A Zod schema is generated for every reusable definition from your input.
 
 ::: code-group
+
+```ts [example]
+const zFoo = z.int();
+
+const zBar = z.object({
+  bar: z.optional(z.array(z.int())),
+});
+```
 
 ```js [config]
 export default {
@@ -168,14 +179,6 @@ export default {
 };
 ```
 
-```ts [output]
-const zFoo = z.int();
-
-const zBar = z.object({
-  bar: z.optional(z.array(z.int())),
-});
-```
-
 :::
 
 You can customize the naming and casing pattern for `definitions` schemas using the `.name` and `.case` options.
@@ -185,6 +188,12 @@ You can customize the naming and casing pattern for `definitions` schemas using 
 It's often useful to associate a schema with some additional [metadata](https://zod.dev/metadata) for documentation, code generation, AI structured outputs, form validation, and other purposes. If this is your use case, you can set `metadata` to `true` to generate additional metadata about schemas.
 
 ::: code-group
+
+```ts [example]
+export const zFoo = z.string().register(z.globalRegistry, {
+  description: 'Additional metadata',
+});
+```
 
 ```js [config]
 export default {
@@ -200,12 +209,6 @@ export default {
 };
 ```
 
-```ts [output]
-export const zFoo = z.string().register(z.globalRegistry, {
-  description: 'Additional metadata',
-});
-```
-
 :::
 
 ## Types
@@ -213,6 +216,10 @@ export const zFoo = z.string().register(z.globalRegistry, {
 In addition to Zod schemas, you can generate schema-specific types. These can be generated for all schemas or for specific resources.
 
 ::: code-group
+
+```ts [example]
+export type ResponseZodType = z.infer<typeof zResponse>;
+```
 
 ```js [config]
 export default {
@@ -235,15 +242,11 @@ export default {
 };
 ```
 
-```ts [output]
-export type ResponseZodType = z.infer<typeof zResponse>;
-```
-
 :::
 
 You can customize the naming and casing pattern for schema-specific `types` using the `.name` and `.case` options.
 
-## Config API
+## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/zod/types.d.ts) interface.
 
