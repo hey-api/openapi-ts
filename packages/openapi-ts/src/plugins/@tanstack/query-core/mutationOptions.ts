@@ -3,6 +3,7 @@ import type ts from 'typescript';
 import type { IR } from '../../../ir/types';
 import { tsc } from '../../../tsc';
 import { createOperationComment } from '../../shared/utils/operation';
+import { handleMeta } from './meta';
 import type { PluginInstance, PluginState } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
 
@@ -110,6 +111,31 @@ export const createMutationOptions = ({
     namespace: 'value',
   });
 
+  const mutationOptionsObj: Array<{ key: string; value: ts.Expression }> = [
+    {
+      key: 'mutationFn',
+      value: tsc.arrowFunction({
+        async: true,
+        multiLine: true,
+        parameters: [
+          {
+            name: 'localOptions',
+          },
+        ],
+        statements,
+      }),
+    },
+  ];
+
+  const meta = handleMeta(plugin, operation, 'mutationOptions');
+
+  if (meta) {
+    mutationOptionsObj.push({
+      key: 'meta',
+      value: meta,
+    });
+  }
+
   const expression = tsc.arrowFunction({
     parameters: [
       {
@@ -122,21 +148,7 @@ export const createMutationOptions = ({
     statements: [
       tsc.constVariable({
         expression: tsc.objectExpression({
-          obj: [
-            {
-              key: 'mutationFn',
-              value: tsc.arrowFunction({
-                async: true,
-                multiLine: true,
-                parameters: [
-                  {
-                    name: 'localOptions',
-                  },
-                ],
-                statements,
-              }),
-            },
-          ],
+          obj: mutationOptionsObj,
         }),
         name: mutationOptionsFn,
         typeName: mutationType,

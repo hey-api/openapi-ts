@@ -26,13 +26,11 @@ You can modify the contents of `sdk.gen.ts` by configuring the `@hey-api/sdk` pl
 ::: code-group
 
 ```js [flat]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     {
       asClass: false, // default // [!code ++]
       name: '@hey-api/sdk',
@@ -42,13 +40,11 @@ export default {
 ```
 
 ```js [class]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
+    // ...other plugins
     {
       asClass: true, // [!code ++]
       name: '@hey-api/sdk',
@@ -224,7 +220,7 @@ export default {
 
 Learn more about available validators on the [Validators](/openapi-ts/validators) page.
 
-## Config API
+## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/sdk/types.d.ts) interface.
 

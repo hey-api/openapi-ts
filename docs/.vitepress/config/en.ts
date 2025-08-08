@@ -305,4 +305,5 @@ export default defineConfig({
       },
     ],
   },
+  title: 'Hey API',
 });

@@ -9,6 +9,7 @@ import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
+import { handleMeta } from './meta';
 import {
   createQueryKeyFunction,
   createQueryKeyType,
@@ -440,6 +441,49 @@ export const createInfiniteQueryOptions = ({
     namespace: 'value',
   });
 
+  const infiniteQueryOptionsObj: Array<{ key: string; value: ts.Expression }> =
+    [
+      {
+        key: 'queryFn',
+        value: tsc.arrowFunction({
+          async: true,
+          multiLine: true,
+          parameters: [
+            {
+              destructure: [
+                {
+                  name: 'pageParam',
+                },
+                {
+                  name: 'queryKey',
+                },
+                {
+                  name: 'signal',
+                },
+              ],
+            },
+          ],
+          statements,
+        }),
+      },
+      {
+        key: 'queryKey',
+        value: tsc.callExpression({
+          functionName: identifierInfiniteQueryKey.name || '',
+          parameters: ['options'],
+        }),
+      },
+    ];
+
+  const meta = handleMeta(plugin, operation, 'infiniteQueryOptions');
+
+  if (meta) {
+    infiniteQueryOptionsObj.push({
+      key: 'meta',
+      value: meta,
+    });
+  }
+
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
@@ -463,38 +507,7 @@ export const createInfiniteQueryOptions = ({
                   lines: ['@ts-ignore'],
                 },
               ],
-              obj: [
-                {
-                  key: 'queryFn',
-                  value: tsc.arrowFunction({
-                    async: true,
-                    multiLine: true,
-                    parameters: [
-                      {
-                        destructure: [
-                          {
-                            name: 'pageParam',
-                          },
-                          {
-                            name: 'queryKey',
-                          },
-                          {
-                            name: 'signal',
-                          },
-                        ],
-                      },
-                    ],
-                    statements,
-                  }),
-                },
-                {
-                  key: 'queryKey',
-                  value: tsc.callExpression({
-                    functionName: identifierInfiniteQueryKey.name || '',
-                    parameters: ['options'],
-                  }),
-                },
-              ],
+              obj: infiniteQueryOptionsObj,
             }),
           ],
           name: infiniteQueryOptionsFn,
