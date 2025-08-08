@@ -6,6 +6,7 @@ import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
+import { handleMeta } from './meta';
 import {
   createQueryKeyFunction,
   createQueryKeyType,
@@ -136,6 +137,45 @@ export const createQueryOptions = ({
     namespace: 'value',
   });
 
+  const queryOptionsObj: Array<{ key: string; value: ts.Expression }> = [
+    {
+      key: 'queryFn',
+      value: tsc.arrowFunction({
+        async: true,
+        multiLine: true,
+        parameters: [
+          {
+            destructure: [
+              {
+                name: 'queryKey',
+              },
+              {
+                name: 'signal',
+              },
+            ],
+          },
+        ],
+        statements,
+      }),
+    },
+    {
+      key: 'queryKey',
+      value: tsc.callExpression({
+        functionName: identifierQueryKey.name || '',
+        parameters: ['options'],
+      }),
+    },
+  ];
+
+  const meta = handleMeta(plugin, operation, 'queryOptions');
+
+  if (meta) {
+    queryOptionsObj.push({
+      key: 'meta',
+      value: meta,
+    });
+  }
+
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
@@ -153,35 +193,7 @@ export const createQueryOptions = ({
         tsc.returnFunctionCall({
           args: [
             tsc.objectExpression({
-              obj: [
-                {
-                  key: 'queryFn',
-                  value: tsc.arrowFunction({
-                    async: true,
-                    multiLine: true,
-                    parameters: [
-                      {
-                        destructure: [
-                          {
-                            name: 'queryKey',
-                          },
-                          {
-                            name: 'signal',
-                          },
-                        ],
-                      },
-                    ],
-                    statements,
-                  }),
-                },
-                {
-                  key: 'queryKey',
-                  value: tsc.callExpression({
-                    functionName: identifierQueryKey.name || '',
-                    parameters: ['options'],
-                  }),
-                },
-              ],
+              obj: queryOptionsObj,
             }),
           ],
           name: queryOptionsFn,
