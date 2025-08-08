@@ -472,6 +472,49 @@ export default {
 
 You can customize the naming and casing pattern for `mutationOptions` functions using the `.name` and `.case` options.
 
+:::
+
+## Meta Function Customization
+
+The TanStack Query plugin supports custom meta functions that allow you to generate any metadata you want for your operations.
+
+::: code-group
+
+```ts [example]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@tanstack/react-query',
+      queryOptions: {
+        meta: (operation) => ({
+          // ... your meta object
+        }),
+      },
+    },
+  ],
+};
+```
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryOptions: {
+        meta: (operation) => ({
+          // ... your meta object
+        }),
+      },
+    },
+  ],
+};
+```
+
 ## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@tanstack/react-query/types.d.ts) interface.
