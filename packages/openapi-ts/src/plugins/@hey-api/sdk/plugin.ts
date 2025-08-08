@@ -162,7 +162,7 @@ const generateClassSdk = ({
         }
 
         const parentClassName = entry.path[index - 1];
-        if (parentClassName) {
+        if (parentClassName && parentClassName !== currentClassName) {
           const parentClass = sdkClasses.get(parentClassName)!;
           parentClass.classes.add(currentClassName);
           sdkClasses.set(parentClassName, parentClass);
