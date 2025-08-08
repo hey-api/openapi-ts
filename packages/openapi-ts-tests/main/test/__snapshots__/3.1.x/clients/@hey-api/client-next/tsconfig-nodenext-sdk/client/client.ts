@@ -1,4 +1,4 @@
-import type { Client, Config, RequestOptions } from './types.js';
+import type { Client, Config, ResolvedRequestOptions } from './types.js';
 import {
   buildUrl,
   createConfig,
@@ -24,7 +24,11 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const interceptors = createInterceptors<Response, unknown, RequestOptions>();
+  const interceptors = createInterceptors<
+    Response,
+    unknown,
+    ResolvedRequestOptions
+  >();
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
@@ -33,6 +37,7 @@ export const createClient = (config: Config = {}): Client => {
       ...options,
       fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
       headers: mergeHeaders(_config.headers, options.headers),
+      serializedBody: undefined,
     };
 
     if (opts.security) {
@@ -47,11 +52,11 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     if (opts.body && opts.bodySerializer) {
-      opts.body = opts.bodySerializer(opts.body);
+      opts.serializedBody = opts.bodySerializer(opts.body);
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (opts.body === undefined || opts.body === '') {
+    if (opts.serializedBody === undefined || opts.serializedBody === '') {
       opts.headers.delete('Content-Type');
     }
 
@@ -67,7 +72,7 @@ export const createClient = (config: Config = {}): Client => {
     const _fetch = opts.fetch!;
     let response = await _fetch(url, {
       ...opts,
-      body: opts.body as ReqInit['body'],
+      body: opts.serializedBody as ReqInit['body'],
     });
 
     for (const fn of interceptors.response._fns) {
