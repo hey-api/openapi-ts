@@ -133,6 +133,39 @@ export default {
 
 You can customize the naming and casing pattern for `queryOptions` functions using the `.name` and `.case` options.
 
+### Meta
+
+You can use the `meta` field to attach arbitrary information to a query. To generate metadata for `queryOptions`, provide a function to the `.meta` option.
+
+::: code-group
+
+```ts [example]
+queryOptions({
+  // ...other fields
+  meta: {
+    id: 'getPetById',
+  },
+});
+```
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryOptions: {
+        meta: (operation) => ({ id: operation.id }), // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+:::
+
 ## Query Keys
 
 Query keys contain normalized SDK function parameters and additional metadata.
@@ -299,6 +332,39 @@ export default {
 :::
 
 You can customize the naming and casing pattern for `infiniteQueryOptions` functions using the `.name` and `.case` options.
+
+### Meta
+
+You can use the `meta` field to attach arbitrary information to a query. To generate metadata for `infiniteQueryOptions`, provide a function to the `.meta` option.
+
+::: code-group
+
+```ts [example]
+infiniteQueryOptions({
+  // ...other fields
+  meta: {
+    id: 'getPetById',
+  },
+});
+```
+
+```js [config]
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryOptions: {
+        meta: (operation) => ({ id: operation.id }), // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+:::
 
 ## Infinite Query Keys
 
@@ -472,28 +538,18 @@ export default {
 
 You can customize the naming and casing pattern for `mutationOptions` functions using the `.name` and `.case` options.
 
-:::
+### Meta
 
-## Meta Function Customization
-
-The TanStack Query plugin supports custom meta functions that allow you to generate any metadata you want for your operations.
+You can use the `meta` field to attach arbitrary information to a mutation. To generate metadata for `mutationOptions`, provide a function to the `.meta` option.
 
 ::: code-group
 
 ```ts [example]
-export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
-  output: 'src/client',
-  plugins: [
-    {
-      name: '@tanstack/react-query',
-      queryOptions: {
-        meta: (operation) => ({
-          // ... your meta object
-        }),
-      },
-    },
-  ],
+const mutationOptions = {
+  // ...other fields
+  meta: {
+    id: 'getPetById',
+  },
 };
 ```
 
@@ -505,15 +561,15 @@ export default {
     // ...other plugins
     {
       name: '@tanstack/react-query',
-      queryOptions: {
-        meta: (operation) => ({
-          // ... your meta object
-        }),
+      mutationOptions: {
+        meta: (operation) => ({ id: operation.id }), // [!code ++]
       },
     },
   ],
 };
 ```
+
+:::
 
 ## API
 
