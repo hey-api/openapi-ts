@@ -68,7 +68,7 @@ export const generateLegacyOutput = async ({
     clientPlugin.config.bundle
   ) {
     generateClientBundle({
-      legacy: false,
+      legacy: true,
       outputPath,
       // @ts-expect-error
       plugin: clientPlugin,
