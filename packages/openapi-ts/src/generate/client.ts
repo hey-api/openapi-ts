@@ -164,7 +164,7 @@ export const generateClientBundle = ({
     const coreDistPath = path.resolve(packageRoot, 'dist', 'clients', 'core');
     copyRecursivePnP(coreDistPath, coreOutputPath);
 
-    if (legacy !== true) {
+    if (!legacy) {
       infixDotGenToFiles(coreOutputPath);
     }
 
@@ -186,7 +186,7 @@ export const generateClientBundle = ({
     );
     copyRecursivePnP(clientDistPath, clientOutputPath);
 
-    if (legacy !== true) {
+    if (!legacy) {
       infixDotGenToFiles(clientOutputPath);
     }
 
