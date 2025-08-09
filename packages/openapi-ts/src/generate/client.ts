@@ -142,10 +142,12 @@ const infixDotGenToFiles = (outputPath: string) => {
  * Creates a `client` folder containing the same modules as the client package.
  */
 export const generateClientBundle = ({
+  legacy,
   outputPath,
   plugin,
   tsConfig,
 }: {
+  legacy?: boolean;
   outputPath: string;
   plugin: DefinePlugin<Client.Config & { name: string }>['Config'];
   tsConfig: ts.ParsedCommandLine | null;
@@ -162,7 +164,9 @@ export const generateClientBundle = ({
     const coreDistPath = path.resolve(packageRoot, 'dist', 'clients', 'core');
     copyRecursivePnP(coreDistPath, coreOutputPath);
 
-    infixDotGenToFiles(coreOutputPath);
+    if (legacy !== true) {
+      infixDotGenToFiles(coreOutputPath);
+    }
 
     if (shouldAppendJs) {
       const coreFiles = fs.readdirSync(coreOutputPath);
@@ -182,7 +186,9 @@ export const generateClientBundle = ({
     );
     copyRecursivePnP(clientDistPath, clientOutputPath);
 
-    infixDotGenToFiles(clientOutputPath);
+    if (legacy !== true) {
+      infixDotGenToFiles(clientOutputPath);
+    }
 
     if (shouldAppendJs) {
       const clientFiles = fs.readdirSync(clientOutputPath);
