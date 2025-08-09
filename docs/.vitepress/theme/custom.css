@@ -238,16 +238,22 @@ h3#demo + button {
   max-width: 180px;
 }
 
-.sponsors-list > ul li.fastapi svg circle,
-.sponsors-list > ul li.fastapi svg > path {
-  fill: var(--vp-c-text-1) !important;
+.sponsors-list > ul li svg {
+  color: var(--vp-c-text-1) !important;
+  height: 100% !important;
 }
 
+/* FastAPI */
 .sponsors-list > ul li.fastapi svg > g > path {
   fill: white !important;
 }
 html.dark .sponsors-list > ul li.fastapi svg > g > path {
   fill: var(--vp-button-brand-bg) !important;
+}
+/* Cella */
+html.dark .sponsors-list > ul li.cella svg > path:nth-child(2),
+html.dark .sponsors-list > ul li.cella svg > path:nth-child(3) {
+  filter: invert();
 }
 
 .sponsors-list > ul.bronze {
