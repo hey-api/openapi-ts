@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.80.7
+
+### Patch Changes
+
+- [#2396](https://github.com/hey-api/openapi-ts/pull/2396) [`b0958a0`](https://github.com/hey-api/openapi-ts/commit/b0958a05c308c4fcd8ca17d61d8691b6fb3471fe) Thanks [@Shinigami92](https://github.com/Shinigami92)! - fix(client): add `.gen` to client files
+
 ## 0.80.6
 
 ### Patch Changes
