@@ -74,7 +74,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
         <a href="https://kutt.it/skQUVd" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/scalar-logo-wordmark-480w.jpeg">
-            <img alt="Scalar logo" height="40px" src="https://heyapi.dev/images/scalar-logo-wordmark-480w.jpeg">
+            <img alt="Scalar logo" height="40px" src="https://heyapi.dev/images/scalar-logo-wordmark.svg">
           </picture>
         </a>
         <br/>
@@ -114,7 +114,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
         <a href="https://kutt.it/KkqSaw" target="_blank">
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/cella-logo-wordmark-480w.webp">
-            <img alt="Cella logo" height="34px" src="https://heyapi.dev/images/cella-logo-wordmark-480w.jpeg">
+            <img alt="Cella logo" height="34px" src="https://heyapi.dev/images/cella-logo-wordmark.svg">
           </picture>
         </a>
       </td>
