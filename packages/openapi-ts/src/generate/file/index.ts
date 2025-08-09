@@ -647,7 +647,7 @@ const ensureUniqueIdentifier = ({
   };
 };
 
-const splitNameAndExtension = (fileName: string) => {
+export const splitNameAndExtension = (fileName: string) => {
   const match = fileName.match(/\.[0-9a-z]+$/i);
   const extension = match ? match[0].slice(1) : '';
   const name = fileName.slice(
@@ -660,5 +660,4 @@ const splitNameAndExtension = (fileName: string) => {
 export const _test = {
   ensureUniqueIdentifier,
   parseRef,
-  splitNameAndExtension,
 };

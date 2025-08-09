@@ -1,12 +1,12 @@
-export type { Auth } from '../core/auth.js';
-export type { QuerySerializerOptions } from '../core/bodySerializer.js';
+export type { Auth } from '../core/auth.gen';
+export type { QuerySerializerOptions } from '../core/bodySerializer.gen';
 export {
   formDataBodySerializer,
   jsonBodySerializer,
   urlSearchParamsBodySerializer,
-} from '../core/bodySerializer.js';
-export { buildClientParams } from '../core/params.js';
-export { createClient } from './client.js';
+} from '../core/bodySerializer.gen';
+export { buildClientParams } from '../core/params.gen';
+export { createClient } from './client.gen';
 export type {
   Client,
   ClientOptions,
@@ -19,5 +19,5 @@ export type {
   ResolvedRequestOptions,
   ResponseStyle,
   TDataShape,
-} from './types.js';
-export { createConfig, mergeHeaders } from './utils.js';
+} from './types.gen';
+export { createConfig, mergeHeaders } from './utils.gen';
