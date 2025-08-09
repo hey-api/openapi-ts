@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { _test } from '../index';
+import { _test, splitNameAndExtension } from '../index';
 import type { Identifiers } from '../types';
 
-const { ensureUniqueIdentifier, parseRef, splitNameAndExtension } = _test;
+const { ensureUniqueIdentifier, parseRef } = _test;
 
 describe('parseRef', () => {
   it('should parse simple ref without properties', () => {

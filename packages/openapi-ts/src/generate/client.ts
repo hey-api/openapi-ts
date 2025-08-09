@@ -9,6 +9,7 @@ import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import type { DefinePlugin } from '../plugins/types';
 import type { ImportExportItemObject } from '../tsc/utils';
 import type { Config } from '../types/config';
+import { splitNameAndExtension } from './file';
 import { ensureDirSync, relativeModulePath } from './utils';
 
 // Use require.resolve to find the package root, then construct the path
@@ -89,7 +90,7 @@ const copyRecursivePnP = (src: string, dest: string) => {
   }
 };
 
-const replaceRelativeImports = (filePath: string) => {
+const appendRelativeImportsSuffix = (filePath: string, suffix = '.js') => {
   let content = fs.readFileSync(filePath, 'utf8');
 
   // Replace relative imports to append .js extension for ESM compatibility
@@ -105,21 +106,48 @@ const replaceRelativeImports = (filePath: string) => {
       if (fileName.includes('.')) {
         return match;
       }
-      return `from '${importPath}.js'`;
+      return `from '${importPath}${suffix}'`;
     },
   );
 
   fs.writeFileSync(filePath, content, 'utf8');
 };
 
+const replaceRelativeImports = (filePath: string) =>
+  appendRelativeImportsSuffix(filePath);
+
+const infixDotGenToFiles = (outputPath: string) => {
+  const coreFiles = fs.readdirSync(outputPath);
+  for (const file of coreFiles) {
+    const filePath = path.resolve(outputPath, file);
+    if (file !== 'index.ts') {
+      const { extension, name } = splitNameAndExtension(filePath);
+      const newFilePath = path.resolve(
+        outputPath,
+        [name, 'gen', extension].filter(Boolean).join('.'),
+      );
+      fs.renameSync(filePath, newFilePath);
+
+      appendRelativeImportsSuffix(
+        path.resolve(outputPath, newFilePath),
+        '.gen',
+      );
+    } else {
+      appendRelativeImportsSuffix(path.resolve(outputPath, filePath), '.gen');
+    }
+  }
+};
+
 /**
  * Creates a `client` folder containing the same modules as the client package.
  */
 export const generateClientBundle = ({
+  legacy,
   outputPath,
   plugin,
   tsConfig,
 }: {
+  legacy?: boolean;
   outputPath: string;
   plugin: DefinePlugin<Client.Config & { name: string }>['Config'];
   tsConfig: ts.ParsedCommandLine | null;
@@ -135,6 +163,11 @@ export const generateClientBundle = ({
     ensureDirSync(coreOutputPath);
     const coreDistPath = path.resolve(packageRoot, 'dist', 'clients', 'core');
     copyRecursivePnP(coreDistPath, coreOutputPath);
+
+    if (!legacy) {
+      infixDotGenToFiles(coreOutputPath);
+    }
+
     if (shouldAppendJs) {
       const coreFiles = fs.readdirSync(coreOutputPath);
       for (const file of coreFiles) {
@@ -152,6 +185,11 @@ export const generateClientBundle = ({
       clientDistFolderName,
     );
     copyRecursivePnP(clientDistPath, clientOutputPath);
+
+    if (!legacy) {
+      infixDotGenToFiles(clientOutputPath);
+    }
+
     if (shouldAppendJs) {
       const clientFiles = fs.readdirSync(clientOutputPath);
       for (const file of clientFiles) {
