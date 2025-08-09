@@ -58,6 +58,6 @@
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
     "typescript": "5.8.3",
-    "vite": "6.2.7"
+    "vite": "7.0.6"
   }
 }

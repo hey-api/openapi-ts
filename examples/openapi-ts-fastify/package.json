@@ -9,8 +9,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "fastify": "5.2.0",
-    "fastify-openapi-glue": "4.8.0"
+    "fastify": "5.4.0",
+    "fastify-openapi-glue": "4.9.1"
   },
   "devDependencies": {
     "@config/vite-base": "workspace:*",
@@ -18,7 +18,7 @@
     "eslint": "9.17.0",
     "prettier": "3.4.2",
     "typescript": "5.8.3",
-    "vite": "6.2.7",
-    "vitest": "3.1.1"
+    "vite": "7.0.6",
+    "vitest": "3.2.4"
   }
 }

@@ -15,11 +15,11 @@
     "typecheck": "vue-tsc --build --force"
   },
   "dependencies": {
-    "@tanstack/vue-query": "5.73.3",
-    "@tanstack/vue-query-devtools": "5.73.3",
-    "pinia": "2.3.0",
-    "vue": "3.5.13",
-    "vue-router": "4.5.0"
+    "@tanstack/vue-query": "5.83.1",
+    "@tanstack/vue-query-devtools": "5.84.0",
+    "pinia": "3.0.3",
+    "vue": "3.5.18",
+    "vue-router": "4.5.1"
   },
   "devDependencies": {
     "@config/vite-base": "workspace:*",
@@ -43,9 +43,9 @@
     "prettier": "3.4.2",
     "tailwindcss": "3.4.9",
     "typescript": "5.8.3",
-    "vite": "6.2.7",
+    "vite": "7.0.6",
     "vite-plugin-vue-devtools": "7.7.0",
-    "vitest": "3.1.1",
+    "vitest": "3.2.4",
     "vue-tsc": "2.2.0"
   }
 }
