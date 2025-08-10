@@ -1,0 +1,469 @@
+import { tsc } from '../../../tsc';
+import { stringCase } from '../../../utils/stringCase';
+import {
+  createOperationComment,
+  isOperationOptionsRequired,
+} from '../../shared/utils/operation';
+import { sdkId } from '../sdk/constants';
+import { operationClasses } from '../sdk/operation';
+import { serviceFunctionIdentifier } from '../sdk/plugin-legacy';
+import { typesId } from '../typescript/ref';
+import type { HeyApiAngularResourcePlugin } from './types';
+
+export const angularResourcePluginHandler: HeyApiAngularResourcePlugin['Handler'] =
+  ({ plugin }) => {
+    // Check if SDK plugin exists
+    const sdkPlugin = plugin.getPlugin('@hey-api/sdk');
+
+    if (!sdkPlugin) {
+      throw new Error(
+        '@hey-api/sdk plugin is required for @hey-api/angular-resource plugin',
+      );
+    }
+
+    // Create the httpResource file
+    const file = plugin.createFile({
+      id: plugin.name,
+      path: plugin.output,
+    });
+
+    // Import Angular core decorators
+    if (plugin.config.asClass) {
+      file.import({
+        module: '@angular/core',
+        name: 'Injectable',
+      });
+    }
+
+    file.import({
+      module: '@angular/core',
+      name: 'resource',
+    });
+
+    file.import({
+      module: file.relativePathToFile({
+        context: plugin.context,
+        id: sdkId,
+      }),
+      name: 'Options',
+    });
+
+    if (plugin.config.asClass) {
+      generateAngularClassServices({ file, plugin, sdkPlugin });
+    } else {
+      generateAngularFunctionServices({ file, plugin, sdkPlugin });
+    }
+  };
+
+interface AngularServiceClassEntry {
+  className: string;
+  classes: Set<string>;
+  methods: Set<string>;
+  nodes: Array<any>;
+  root: boolean;
+}
+
+const generateAngularClassServices = ({
+  file,
+  plugin,
+  sdkPlugin,
+}: {
+  file: any;
+  plugin: HeyApiAngularResourcePlugin['Instance'];
+  sdkPlugin: any;
+}) => {
+  const serviceClasses = new Map<string, AngularServiceClassEntry>();
+  const generatedClasses = new Set<string>();
+
+  // Iterate through operations to build class structure
+  plugin.forEach('operation', ({ operation }) => {
+    const isRequiredOptions = isOperationOptionsRequired({
+      context: plugin.context,
+      operation,
+    });
+
+    const classes = operationClasses({
+      context: plugin.context,
+      operation,
+      plugin: sdkPlugin,
+    });
+
+    for (const entry of classes.values()) {
+      entry.path.forEach((currentClassName, index) => {
+        if (!serviceClasses.has(currentClassName)) {
+          serviceClasses.set(currentClassName, {
+            className: currentClassName,
+            classes: new Set(),
+            methods: new Set(),
+            nodes: [],
+            root: !index,
+          });
+        }
+
+        const parentClassName = entry.path[index - 1];
+        if (parentClassName && parentClassName !== currentClassName) {
+          const parentClass = serviceClasses.get(parentClassName)!;
+          parentClass.classes.add(currentClassName);
+          serviceClasses.set(parentClassName, parentClass);
+        }
+
+        const isLast = entry.path.length === index + 1;
+        if (!isLast) {
+          return;
+        }
+
+        const currentClass = serviceClasses.get(currentClassName)!;
+
+        // Generate the resource method name
+        const resourceMethodName = plugin.config.methodNameBuilder!(operation);
+
+        // Avoid duplicate methods
+        if (currentClass.methods.has(resourceMethodName)) {
+          return;
+        }
+
+        // Generate Angular resource method
+        const methodNode = generateAngularResourceMethod({
+          file,
+          isRequiredOptions,
+          methodName: resourceMethodName,
+          operation,
+          plugin,
+          sdkPlugin,
+        });
+
+        if (!currentClass.nodes.length) {
+          currentClass.nodes.push(methodNode);
+        } else {
+          currentClass.nodes.push(tsc.identifier({ text: '\n' }), methodNode);
+        }
+
+        currentClass.methods.add(resourceMethodName);
+        serviceClasses.set(currentClassName, currentClass);
+      });
+    }
+  });
+
+  // Generate classes
+  const generateClass = (currentClass: AngularServiceClassEntry) => {
+    if (generatedClasses.has(currentClass.className)) {
+      return;
+    }
+
+    // Handle child classes
+    if (currentClass.classes.size) {
+      for (const childClassName of currentClass.classes) {
+        const childClass = serviceClasses.get(childClassName)!;
+        generateClass(childClass);
+
+        currentClass.nodes.push(
+          tsc.propertyDeclaration({
+            initializer: tsc.newExpression({
+              argumentsArray: [],
+              expression: tsc.identifier({
+                text: plugin.config.classNameBuilder!(childClass.className),
+              }),
+            }),
+            name: stringCase({
+              case: 'camelCase',
+              value: childClass.className,
+            }),
+          }),
+        );
+      }
+    }
+
+    const node = tsc.classDeclaration({
+      decorator: currentClass.root
+        ? {
+            args: [
+              {
+                providedIn: 'root',
+              },
+            ],
+            name: 'Injectable',
+          }
+        : undefined,
+      exportClass: currentClass.root,
+      name: plugin.config.classNameBuilder!(currentClass.className),
+      nodes: currentClass.nodes,
+    });
+
+    file.add(node);
+    generatedClasses.add(currentClass.className);
+  };
+
+  for (const serviceClass of serviceClasses.values()) {
+    generateClass(serviceClass);
+  }
+};
+
+const generateAngularFunctionServices = ({
+  file,
+  plugin,
+  sdkPlugin,
+}: {
+  file: any;
+  plugin: HeyApiAngularResourcePlugin['Instance'];
+  sdkPlugin: any;
+}) => {
+  plugin.forEach('operation', ({ operation }) => {
+    const isRequiredOptions = isOperationOptionsRequired({
+      context: plugin.context,
+      operation,
+    });
+
+    const node = generateAngularResourceFunction({
+      file,
+      functionName: plugin.config.methodNameBuilder!(operation),
+      isRequiredOptions,
+      operation,
+      plugin,
+      sdkPlugin,
+    });
+
+    file.add(node);
+  });
+};
+
+const generateResourceCallExpression = ({
+  file,
+  operation,
+  plugin,
+  sdkPlugin,
+}: {
+  file: any;
+  operation: any;
+  plugin: any;
+  sdkPlugin: any;
+}) => {
+  // Import the SDK function/method instead of recreating the logic
+  let sdkFunctionCall;
+
+  if (sdkPlugin.config.asClass) {
+    // For class-based SDK, use the class methods
+    const classes = operationClasses({
+      context: plugin.context,
+      operation,
+      plugin: sdkPlugin,
+    });
+
+    // Get the first class entry to determine the method path
+    const firstEntry = Array.from(classes.values())[0];
+    if (firstEntry) {
+      // Import the root class from SDK
+      const rootClassName = firstEntry.path[0];
+      const sdkImport = file.import({
+        module: file.relativePathToFile({
+          context: plugin.context,
+          id: sdkId,
+        }),
+        name: rootClassName,
+      });
+
+      // Build the method access path
+      let methodAccess: any = tsc.identifier({ text: sdkImport.name });
+
+      // Navigate through the class hierarchy
+      for (let i = 1; i < firstEntry.path.length; i++) {
+        const className = firstEntry.path[i];
+        if (className) {
+          methodAccess = tsc.propertyAccessExpression({
+            expression: methodAccess,
+            name: stringCase({
+              case: 'camelCase',
+              value: className,
+            }),
+          });
+        }
+      }
+
+      // Add the final method name
+      methodAccess = tsc.propertyAccessExpression({
+        expression: methodAccess,
+        name: firstEntry.methodName,
+      });
+
+      sdkFunctionCall = tsc.callExpression({
+        functionName: methodAccess,
+        parameters: [tsc.identifier({ text: 'params' })],
+      });
+    }
+  } else {
+    // For function-based SDK, import and call the function directly
+    const functionName = serviceFunctionIdentifier({
+      config: plugin.context.config,
+      handleIllegal: true,
+      id: operation.id,
+      operation,
+    });
+
+    const sdkImport = file.import({
+      module: file.relativePathToFile({
+        context: plugin.context,
+        id: sdkId,
+      }),
+      name: functionName,
+    });
+
+    sdkFunctionCall = tsc.callExpression({
+      functionName: sdkImport.name,
+      parameters: [tsc.identifier({ text: 'params' })],
+    });
+  }
+
+  return tsc.callExpression({
+    functionName: 'resource',
+    parameters: [
+      tsc.objectExpression({
+        obj: [
+          {
+            key: 'loader',
+            value: tsc.arrowFunction({
+              async: true,
+              parameters: [
+                {
+                  destructure: [{ name: 'params' }],
+                  type: undefined,
+                },
+              ],
+              statements: [
+                tsc.returnStatement({
+                  expression: sdkFunctionCall,
+                }),
+              ],
+            }),
+          },
+          {
+            key: 'params',
+            value: tsc.arrowFunction({
+              parameters: [],
+              statements: [
+                tsc.returnStatement({
+                  expression: tsc.identifier({ text: 'options' }),
+                }),
+              ],
+            }),
+          },
+        ],
+      }),
+    ],
+  });
+};
+
+const generateAngularResourceMethod = ({
+  file,
+  isRequiredOptions,
+  methodName,
+  operation,
+  plugin,
+  sdkPlugin,
+}: {
+  file: any;
+  isRequiredOptions: boolean;
+  methodName: string;
+  operation: any;
+  plugin: any;
+  sdkPlugin: any;
+}) => {
+  // Import operation data type
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const fileTypeScript = plugin.context.file({ id: typesId })!;
+  const dataType = file.import({
+    asType: true,
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+    name: fileTypeScript.getName(
+      pluginTypeScript.api.getId({ operation, type: 'data' }),
+    ),
+  });
+
+  return tsc.methodDeclaration({
+    accessLevel: 'public',
+    comment: createOperationComment({ operation }),
+    // isStatic: true,
+    name: methodName,
+    parameters: [
+      {
+        isRequired: isRequiredOptions,
+        name: 'options',
+        type: `Options<${dataType.name || 'unknown'}, ThrowOnError>`,
+      },
+    ],
+    returnType: undefined,
+    statements: [
+      tsc.returnStatement({
+        expression: generateResourceCallExpression({
+          file,
+          operation,
+          plugin,
+          sdkPlugin,
+        }),
+      }),
+    ],
+    types: [
+      {
+        default: false,
+        extends: 'boolean',
+        name: 'ThrowOnError',
+      },
+    ],
+  });
+};
+
+const generateAngularResourceFunction = ({
+  file,
+  functionName,
+  isRequiredOptions,
+  operation,
+  plugin,
+  sdkPlugin,
+}: {
+  file: any;
+  functionName: string;
+  isRequiredOptions: boolean;
+  operation: any;
+  plugin: any;
+  sdkPlugin: any;
+}) => {
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const fileTypeScript = plugin.context.file({ id: typesId })!;
+  const dataType = file.import({
+    asType: true,
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+    name: fileTypeScript.getName(
+      pluginTypeScript.api.getId({ operation, type: 'data' }),
+    ),
+  });
+
+  return tsc.constVariable({
+    comment: createOperationComment({ operation }),
+    exportConst: true,
+    expression: tsc.arrowFunction({
+      parameters: [
+        {
+          isRequired: isRequiredOptions,
+          name: 'options',
+          type: `Options<${dataType.name || 'unknown'}, ThrowOnError>`,
+        },
+      ],
+      statements: [
+        tsc.returnStatement({
+          expression: generateResourceCallExpression({
+            file,
+            operation,
+            plugin,
+            sdkPlugin,
+          }),
+        }),
+      ],
+      types: [
+        {
+          default: false,
+          extends: 'boolean',
+          name: 'ThrowOnError',
+        },
+      ],
+    }),
+    name: functionName,
+  });
+};

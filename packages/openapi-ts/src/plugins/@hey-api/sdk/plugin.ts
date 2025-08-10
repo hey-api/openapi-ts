@@ -114,6 +114,7 @@ const generateClassSdk = ({
   plugin: HeyApiSdkPlugin['Instance'];
 }) => {
   const client = getClientPlugin(plugin.context.config);
+  const isAngularClient = client.name === '@hey-api/client-angular';
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = plugin.context.file({ id: sdkId })!;
   const sdkClasses = new Map<string, SdkClassEntry>();
@@ -297,6 +298,17 @@ const generateClassSdk = ({
     }
 
     const node = tsc.classDeclaration({
+      decorator:
+        currentClass.root && isAngularClient
+          ? {
+              args: [
+                {
+                  providedIn: 'root',
+                },
+              ],
+              name: 'Injectable',
+            }
+          : undefined,
       exportClass: currentClass.root,
       extendedClasses: plugin.config.instance ? ['_HeyApiClient'] : undefined,
       name: currentClass.className,
@@ -425,12 +437,20 @@ export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   });
 
   const client = getClientPlugin(plugin.context.config);
+  const isAngularClient = client.name === '@hey-api/client-angular';
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   if (isNuxtClient) {
     file.import({
       asType: true,
       module: clientModule,
       name: 'Composable',
+    });
+  }
+
+  if (isAngularClient && plugin.config.asClass) {
+    file.import({
+      module: '@angular/core',
+      name: 'Injectable',
     });
   }
 
