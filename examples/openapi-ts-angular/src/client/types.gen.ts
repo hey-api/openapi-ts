@@ -136,11 +136,11 @@ export type UpdatePetResponse = UpdatePetResponses[keyof UpdatePetResponses];
 export type FindPetsByStatusData = {
   body?: never;
   path?: never;
-  query?: {
+  query: {
     /**
      * Status values that need to be considered for filter
      */
-    status?: 'available' | 'pending' | 'sold';
+    status: 'available' | 'pending' | 'sold';
   };
   url: '/pet/findByStatus';
 };
@@ -169,11 +169,11 @@ export type FindPetsByStatusResponse =
 export type FindPetsByTagsData = {
   body?: never;
   path?: never;
-  query?: {
+  query: {
     /**
      * Tags to filter by
      */
-    tags?: Array<string>;
+    tags: Array<string>;
   };
   url: '/pet/findByTags';
 };
