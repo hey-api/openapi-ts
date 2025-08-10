@@ -56,6 +56,7 @@
 - [Philipp Katz](https://github.com/qqilihq)
 - [Rico](https://github.com/btmnk)
 - [Ryo Yamada](https://github.com/Liooo)
+- [Shinigami](https://github.com/Shinigami92)
 - [Simen Bekkhus](https://github.com/SimenB)
 - [Stian Jensen](https://github.com/stianjensen)
 - [Tran Phuc](https://github.com/Glup3)
