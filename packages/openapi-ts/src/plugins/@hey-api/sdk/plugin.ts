@@ -114,8 +114,8 @@ const generateClassSdk = ({
   plugin: HeyApiSdkPlugin['Instance'];
 }) => {
   const client = getClientPlugin(plugin.context.config);
-  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const isAngularClient = client.name === '@hey-api/client-angular';
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = plugin.context.file({ id: sdkId })!;
   const sdkClasses = new Map<string, SdkClassEntry>();
   /**
@@ -437,8 +437,8 @@ export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   });
 
   const client = getClientPlugin(plugin.context.config);
-  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const isAngularClient = client.name === '@hey-api/client-angular';
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   if (isNuxtClient) {
     file.import({
       asType: true,

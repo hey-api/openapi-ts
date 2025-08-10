@@ -5,9 +5,9 @@ import type { HeyApiClientNextPlugin } from '../client-next';
 import type { HeyApiClientNuxtPlugin } from '../client-nuxt';
 
 export type PluginHandler =
+  | HeyApiClientAngularPlugin['Handler']
   | HeyApiClientAxiosPlugin['Handler']
   | HeyApiClientFetchPlugin['Handler']
-  | HeyApiClientAngularPlugin['Handler']
   | HeyApiClientNextPlugin['Handler']
   | HeyApiClientNuxtPlugin['Handler'];
 

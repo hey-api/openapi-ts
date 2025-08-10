@@ -101,8 +101,13 @@
     "typescript": "^5.5.3"
   },
   "devDependencies": {
-    "@angular/common": "20.1.6",
-    "@angular/core": "20.1.6",
+    "@angular/common": "19.2.0",
+    "@angular/compiler": "19.2.0",
+    "@angular/compiler-cli": "19.2.0",
+    "@angular/core": "19.2.0",
+    "@angular/platform-browser": "19.2.0",
+    "@angular/platform-browser-dynamic": "19.2.0",
+    "@angular/router": "19.2.0",
     "@config/vite-base": "workspace:*",
     "@types/bun": "1.2.19",
     "@types/cross-spawn": "6.0.6",
@@ -116,11 +121,12 @@
     "node-fetch": "3.3.2",
     "nuxt": "3.14.1592",
     "prettier": "3.4.2",
-    "rxjs": "7.8.2",
+    "rxjs": "7.8.1",
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
     "typescript": "5.8.3",
     "vue": "3.5.13",
-    "yaml": "2.8.0"
+    "yaml": "2.8.0",
+    "zone.js": "0.15.0"
   }
 }
