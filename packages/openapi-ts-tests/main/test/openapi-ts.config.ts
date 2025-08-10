@@ -65,7 +65,7 @@ export default defineConfig(() => {
     // name: 'foo',
     output: {
       // case: 'snake_case',
-      clean: false,
+      clean: true,
       // format: 'prettier',
       // indexFile: false,
       // lint: 'eslint',
