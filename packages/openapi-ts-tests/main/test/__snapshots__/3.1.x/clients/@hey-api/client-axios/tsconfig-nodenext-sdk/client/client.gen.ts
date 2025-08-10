@@ -1,14 +1,14 @@
 import type { AxiosError, AxiosInstance, RawAxiosRequestHeaders } from 'axios';
 import axios from 'axios';
 
-import type { Client, Config } from './types.gen';
+import type { Client, Config } from './types.gen.js';
 import {
   buildUrl,
   createConfig,
   mergeConfigs,
   mergeHeaders,
   setAuthParams,
-} from './utils.gen';
+} from './utils.gen.js';
 
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);

@@ -1,14 +1,14 @@
 import type { ComputedRef, Ref } from 'vue';
 import { isRef, toValue, unref } from 'vue';
 
-import { getAuthToken } from '../core/auth.gen';
-import type { QuerySerializerOptions } from '../core/bodySerializer.gen';
-import { jsonBodySerializer } from '../core/bodySerializer.gen';
+import { getAuthToken } from '../core/auth.gen.js';
+import type { QuerySerializerOptions } from '../core/bodySerializer.gen.js';
+import { jsonBodySerializer } from '../core/bodySerializer.gen.js';
 import {
   serializeArrayParam,
   serializeObjectParam,
   serializePrimitiveParam,
-} from '../core/pathSerializer.gen';
+} from '../core/pathSerializer.gen.js';
 import type {
   ArraySeparatorStyle,
   BuildUrlOptions,
@@ -17,7 +17,7 @@ import type {
   Config,
   QuerySerializer,
   RequestOptions,
-} from './types.gen';
+} from './types.gen.js';
 
 type PathSerializer = Pick<Required<BuildUrlOptions>, 'path' | 'url'>;
 

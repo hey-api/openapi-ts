@@ -87,7 +87,7 @@ const copyRecursivePnP = (src: string, dest: string) => {
   }
 };
 
-const appendRelativeImportsSuffix = (filePath: string, suffix = '.js') => {
+const appendRelativeImportsSuffix = (filePath: string, suffix: string) => {
   let content = fs.readFileSync(filePath, 'utf8');
 
   // Replace relative imports to append .js extension for ESM compatibility
@@ -110,28 +110,42 @@ const appendRelativeImportsSuffix = (filePath: string, suffix = '.js') => {
   fs.writeFileSync(filePath, content, 'utf8');
 };
 
-const replaceRelativeImports = (filePath: string) =>
-  appendRelativeImportsSuffix(filePath);
+const renameAndReplaceRelativeImports = ({
+  fileName,
+  outputPath,
+  shouldAppendJs,
+  shouldRename,
+}: {
+  fileName: string;
+  outputPath: string;
+  shouldAppendJs: boolean;
+  shouldRename: boolean;
+}) => {
+  const { extension, name } = splitNameAndExtension(fileName);
+  let filePath = path.resolve(outputPath, fileName);
+  let suffix = '';
 
-const infixDotGenToFiles = (outputPath: string) => {
-  const coreFiles = fs.readdirSync(outputPath);
-  for (const file of coreFiles) {
-    const filePath = path.resolve(outputPath, file);
-    if (file !== 'index.ts') {
-      const { extension, name } = splitNameAndExtension(filePath);
-      const newFilePath = path.resolve(
+  if (shouldRename) {
+    const infix = 'gen';
+    suffix = `.${infix}`;
+
+    // rename file: foo.ts -> foo.gen.ts
+    if (name !== 'index') {
+      const renamedFilePath = path.resolve(
         outputPath,
-        [name, 'gen', extension].filter(Boolean).join('.'),
+        [name, infix, extension].join('.'),
       );
-      fs.renameSync(filePath, newFilePath);
-
-      appendRelativeImportsSuffix(
-        path.resolve(outputPath, newFilePath),
-        '.gen',
-      );
-    } else {
-      appendRelativeImportsSuffix(path.resolve(outputPath, filePath), '.gen');
+      fs.renameSync(filePath, renamedFilePath);
+      filePath = renamedFilePath;
     }
+  }
+
+  if (shouldAppendJs) {
+    suffix = `${suffix}.js`;
+  }
+
+  if (suffix) {
+    appendRelativeImportsSuffix(filePath, suffix);
   }
 };
 
@@ -161,16 +175,16 @@ export const generateClientBundle = ({
     const coreDistPath = path.resolve(__dirname, 'clients', 'core');
     copyRecursivePnP(coreDistPath, coreOutputPath);
 
-    if (!legacy) {
-      infixDotGenToFiles(coreOutputPath);
+    const coreFiles = fs.readdirSync(coreOutputPath);
+    for (const file of coreFiles) {
+      renameAndReplaceRelativeImports({
+        fileName: file,
+        outputPath: coreOutputPath,
+        shouldAppendJs,
+        shouldRename: !legacy,
+      });
     }
 
-    if (shouldAppendJs) {
-      const coreFiles = fs.readdirSync(coreOutputPath);
-      for (const file of coreFiles) {
-        replaceRelativeImports(path.resolve(coreOutputPath, file));
-      }
-    }
     // copy client bundle
     const clientOutputPath = path.resolve(outputPath, 'client');
     ensureDirSync(clientOutputPath);
@@ -182,15 +196,14 @@ export const generateClientBundle = ({
     );
     copyRecursivePnP(clientDistPath, clientOutputPath);
 
-    if (!legacy) {
-      infixDotGenToFiles(clientOutputPath);
-    }
-
-    if (shouldAppendJs) {
-      const clientFiles = fs.readdirSync(clientOutputPath);
-      for (const file of clientFiles) {
-        replaceRelativeImports(path.resolve(clientOutputPath, file));
-      }
+    const clientFiles = fs.readdirSync(clientOutputPath);
+    for (const file of clientFiles) {
+      renameAndReplaceRelativeImports({
+        fileName: file,
+        outputPath: clientOutputPath,
+        shouldAppendJs,
+        shouldRename: !legacy,
+      });
     }
     return;
   }
