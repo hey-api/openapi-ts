@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.80.8
+
+### Patch Changes
+
+- [#2418](https://github.com/hey-api/openapi-ts/pull/2418) [`340a6cd`](https://github.com/hey-api/openapi-ts/commit/340a6cd8f90fac70ff752c11abfa4691180bd34a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): add auto-generated header to client files
+
+- [#2418](https://github.com/hey-api/openapi-ts/pull/2418) [`969d7cf`](https://github.com/hey-api/openapi-ts/commit/969d7cfd7ff17705148477e4ce2b0ca3cee81de9) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): correctly rename client files with nodenext bundler
+
+- [#2416](https://github.com/hey-api/openapi-ts/pull/2416) [`9cff8c8`](https://github.com/hey-api/openapi-ts/commit/9cff8c871e2707b22f9ea521bce95c6ffd532079) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): set correct name for pagination parameters in infinite query options
+
 ## 0.80.7
 
 ### Patch Changes
