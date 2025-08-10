@@ -23,6 +23,7 @@ export type PluginNames =
   | PluginClientNames
   | '@hey-api/schemas'
   | '@hey-api/sdk'
+  | '@hey-api/angular-resource'
   | '@hey-api/transformers'
   | '@hey-api/typescript'
   | '@tanstack/angular-query-experimental'

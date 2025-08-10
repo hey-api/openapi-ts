@@ -10,9 +10,14 @@ export default defineConfig({
   },
   plugins: [
     '@hey-api/client-angular',
+    '@tanstack/angular-query-experimental',
+    {
+      // asClass: true,
+      name: '@hey-api/angular-resource',
+    },
     '@hey-api/schemas',
     {
-      asClass: false,
+      asClass: true,
       name: '@hey-api/sdk',
     },
     {
