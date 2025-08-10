@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "cli": "nx",
+  "$id": "openapi-client",
+  "title": "OpenAPI Client Generator",
+  "description": "Generate an OpenAPI client library from an OpenAPI spec file",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the project",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What name would you like to use for the library? (e.g. my-api)"
+    },
+    "directory": {
+      "type": "string",
+      "description": "Directory where the library will be created",
+      "default": "libs"
+    },
+    "scope": {
+      "type": "string",
+      "description": "The scope of the project",
+      "x-prompt": "What is the scope of the project? (e.g. @my-org)"
+    },
+    "spec": {
+      "type": "string",
+      "description": "Path to the OpenAPI spec file (URL or local path)",
+      "x-prompt": "What is the path to the OpenAPI spec file? (URI or local file path)"
+    },
+    "client": {
+      "type": "string",
+      "description": "The type of client to generate (@hey-api/client-fetch, @hey-api/client-axios, etc)",
+      "default": "@hey-api/client-fetch"
+    },
+    "plugins": {
+      "type": "array",
+      "description": "The plugins to be provided to @hey-api/openapi-ts",
+      "default": [],
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "description": "Add tags to the library (comma-separated)",
+      "default": ["api", "openapi"],
+      "items": {
+        "type": "string"
+      }
+    },
+    "test": {
+      "type": "string",
+      "description": "The test runner to use",
+      "default": "none",
+      "enum": ["none", "vitest"]
+    },
+    "private": {
+      "type": "boolean",
+      "description": "Whether to make the generated package private, put false if you want to publish the package.",
+      "default": true
+    },
+    "asClass": {
+      "type": "boolean",
+      "description": "** not working ** Whether to use the class style for the generated code, defaults to `false`",
+      "default": false
+    },
+    "baseTsConfigName": {
+      "type": "string",
+      "description": "The name of the base tsconfig file that contains the compiler paths used to resolve the imports, use this if the base tsconfig file is in the workspace root, if provided with a baseTsConfigPath then the baseTsConfigName will be added to the path. DO not use this if the baseTsConfigPath is a file."
+    },
+    "baseTsConfigPath": {
+      "type": "string",
+      "description": "The path to the base tsconfig file that contains the compiler paths used to resolve the imports, use this if the base tsconfig file is not in the workspace root. This can be a file or a directory. If it is a directory and the baseTsConfigName is provided then the baseTsConfigName will be added to the path. If it is a file and the baseTsConfigName is provided then there will be an error."
+    },
+    "serveCmdName": {
+      "type": "string",
+      "description": "The command name to use to serve the implicit dependencies, defaults to `serve`. This is used to watch the implicit dependencies for changes."
+    },
+    "projectReferences": {
+      "type": "boolean",
+      "description": "Whether to not add project references to the generated project, defaults to `true`",
+      "default": true
+    }
+  },
+  "required": ["name", "spec", "scope"]
+}

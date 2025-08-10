@@ -1,0 +1,7 @@
+{
+  "extends": "<%- pathToTsConfig %>/<%- tsConfigName %>",
+  "compilerOptions": {
+  },
+  "files": [],
+  "include": []
+}

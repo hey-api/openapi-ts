@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "update-api": {
+      "implementation": "./dist/updateApi.cjs",
+      "schema": "./dist/executors/update-api/updateApi.schema.json",
+      "description": "Updates the OpenAPI spec file and generates new client code if needed."
+    }
+  }
+}

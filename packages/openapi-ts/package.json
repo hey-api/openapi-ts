@@ -85,7 +85,7 @@
     "typecheck": "tsc --noEmit"
   },
   "engines": {
-    "node": "^18.18.0 || ^20.9.0 || >=22.10.0"
+    "node": "^20.9.0 || >=22.12.0"
   },
   "dependencies": {
     "@hey-api/json-schema-ref-parser": "1.0.6",

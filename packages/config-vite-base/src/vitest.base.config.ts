@@ -15,16 +15,17 @@ export function createVitestConfig(
         provider: 'v8',
       },
       exclude: [...configDefaults.exclude],
-      pool: platform() === 'win32' ? 'threads' : 'forks',
+      pool: 'forks',
       poolOptions: {
         forks: {
-          singleFork: false,
+          singleFork: true,
         },
         threads: {
-          singleThread: false,
+          singleThread: true,
         },
       },
       root,
+      setupFiles: ['@config/vite-base/setup'],
       testTimeout: platform() === 'win32' ? 10000 : 5000,
     },
   });
