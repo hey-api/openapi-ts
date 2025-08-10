@@ -80,8 +80,8 @@ export const parameterWithPagination = ({
         in: parameter.location,
         name:
           parameter.pagination === true
-            ? name
-            : `${name}.${parameter.pagination}`,
+            ? parameter.name
+            : `${parameter.name}.${parameter.pagination}`,
         schema: getPaginationSchema({ context, parameter })!,
       };
     }
@@ -94,8 +94,8 @@ export const parameterWithPagination = ({
         in: parameter.location,
         name:
           parameter.pagination === true
-            ? name
-            : `${name}.${parameter.pagination}`,
+            ? parameter.name
+            : `${parameter.name}.${parameter.pagination}`,
         schema: getPaginationSchema({ context, parameter })!,
       };
     }
@@ -108,8 +108,8 @@ export const parameterWithPagination = ({
         in: parameter.location,
         name:
           parameter.pagination === true
-            ? name
-            : `${name}.${parameter.pagination}`,
+            ? parameter.name
+            : `${parameter.name}.${parameter.pagination}`,
         schema: getPaginationSchema({ context, parameter })!,
       };
     }
@@ -122,8 +122,8 @@ export const parameterWithPagination = ({
         in: parameter.location,
         name:
           parameter.pagination === true
-            ? name
-            : `${name}.${parameter.pagination}`,
+            ? parameter.name
+            : `${parameter.name}.${parameter.pagination}`,
         schema: getPaginationSchema({ context, parameter })!,
       };
     }
