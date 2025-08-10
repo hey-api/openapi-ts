@@ -4,32 +4,30 @@ import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
-import { clientPluginHandler } from '../client-core/plugin';
+import { sdkId } from '../sdk/constants';
 import { operationClasses } from '../sdk/operation';
 import { serviceFunctionIdentifier } from '../sdk/plugin-legacy';
 import { typesId } from '../typescript/ref';
-import type { HeyApiClientAngularPlugin } from './types';
+import type { HeyApiAngularResourcePlugin } from './types';
 
-export const angularClientPluginHandler: HeyApiClientAngularPlugin['Handler'] =
-  (args) => {
-    // First, run the standard client plugin handler to create/copy the client
-    clientPluginHandler(args);
-
-    const { plugin } = args;
-
-    // Check if SDK plugin exists and if we should generate class-based services
+export const angularResourcePluginHandler: HeyApiAngularResourcePlugin['Handler'] =
+  ({ plugin }) => {
+    // Check if SDK plugin exists
     const sdkPlugin = plugin.getPlugin('@hey-api/sdk');
+
     if (!sdkPlugin) {
-      return;
+      throw new Error(
+        '@hey-api/sdk plugin is required for @hey-api/angular-resource plugin',
+      );
     }
 
-    // Now create our Angular-specific httpResource file
+    // Create the httpResource file
     const file = plugin.createFile({
-      id: 'httpResource',
-      path: plugin.output + '.resource',
+      id: plugin.name,
+      path: plugin.output,
     });
 
-    // Import Angular core decorators and rxjs
+    // Import Angular core decorators
     if (sdkPlugin.config.asClass) {
       file.import({
         module: '@angular/core',
@@ -42,9 +40,13 @@ export const angularClientPluginHandler: HeyApiClientAngularPlugin['Handler'] =
       name: 'resource',
     });
 
-    // Import types from the main types file if needed
-    // const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
-    // const fileTypeScript = plugin.context.file({ id: typesId })!;;
+    file.import({
+      module: file.relativePathToFile({
+        context: plugin.context,
+        id: sdkId,
+      }),
+      name: 'Options',
+    });
 
     if (sdkPlugin.config.asClass) {
       generateAngularClassServices({ file, plugin, sdkPlugin });
@@ -67,7 +69,7 @@ const generateAngularClassServices = ({
   sdkPlugin,
 }: {
   file: any;
-  plugin: HeyApiClientAngularPlugin['Instance'];
+  plugin: HeyApiAngularResourcePlugin['Instance'];
   sdkPlugin: any;
 }) => {
   const serviceClasses = new Map<string, AngularServiceClassEntry>();
@@ -124,6 +126,7 @@ const generateAngularClassServices = ({
           methodName: entry.methodName,
           operation,
           plugin,
+          sdkPlugin,
         });
 
         if (!currentClass.nodes.length) {
@@ -195,10 +198,10 @@ const generateAngularClassServices = ({
 const generateAngularFunctionServices = ({
   file,
   plugin,
-  // sdkPlugin,
+  sdkPlugin,
 }: {
   file: any;
-  plugin: HeyApiClientAngularPlugin['Instance'];
+  plugin: HeyApiAngularResourcePlugin['Instance'];
   sdkPlugin: any;
 }) => {
   plugin.forEach('operation', ({ operation }) => {
@@ -220,14 +223,100 @@ const generateAngularFunctionServices = ({
       isRequiredOptions,
       operation,
       plugin,
+      sdkPlugin,
     });
 
     file.add(node);
   });
 };
 
-const generateResourceCallExpression = () =>
-  tsc.callExpression({
+const generateResourceCallExpression = ({
+  file,
+  operation,
+  plugin,
+  sdkPlugin,
+}: {
+  file: any;
+  operation: any;
+  plugin: any;
+  sdkPlugin: any;
+}) => {
+  // Import the SDK function/method instead of recreating the logic
+  let sdkFunctionCall;
+
+  if (sdkPlugin.config.asClass) {
+    // For class-based SDK, use the class methods
+    const classes = operationClasses({
+      context: plugin.context,
+      operation,
+      plugin: sdkPlugin,
+    });
+
+    // Get the first class entry to determine the method path
+    const firstEntry = Array.from(classes.values())[0];
+    if (firstEntry) {
+      // Import the root class from SDK
+      const rootClassName = firstEntry.path[0];
+      const sdkImport = file.import({
+        module: file.relativePathToFile({
+          context: plugin.context,
+          id: sdkId,
+        }),
+        name: rootClassName,
+      });
+
+      // Build the method access path
+      let methodAccess: any = tsc.identifier({ text: sdkImport.name });
+
+      // Navigate through the class hierarchy
+      for (let i = 1; i < firstEntry.path.length; i++) {
+        const className = firstEntry.path[i];
+        if (className) {
+          methodAccess = tsc.propertyAccessExpression({
+            expression: methodAccess,
+            name: stringCase({
+              case: 'camelCase',
+              value: className,
+            }),
+          });
+        }
+      }
+
+      // Add the final method name
+      methodAccess = tsc.propertyAccessExpression({
+        expression: methodAccess,
+        name: firstEntry.methodName,
+      });
+
+      sdkFunctionCall = tsc.callExpression({
+        functionName: methodAccess,
+        parameters: [tsc.identifier({ text: 'params' })],
+      });
+    }
+  } else {
+    // For function-based SDK, import and call the function directly
+    const functionName = serviceFunctionIdentifier({
+      config: plugin.context.config,
+      handleIllegal: true,
+      id: operation.id,
+      operation,
+    });
+
+    const sdkImport = file.import({
+      module: file.relativePathToFile({
+        context: plugin.context,
+        id: sdkId,
+      }),
+      name: functionName,
+    });
+
+    sdkFunctionCall = tsc.callExpression({
+      functionName: sdkImport.name,
+      parameters: [tsc.identifier({ text: 'options' })],
+    });
+  }
+
+  return tsc.callExpression({
     functionName: 'resource',
     parameters: [
       tsc.objectExpression({
@@ -235,20 +324,16 @@ const generateResourceCallExpression = () =>
           {
             key: 'loader',
             value: tsc.arrowFunction({
-              parameters: [],
+              async: true,
+              parameters: [
+                {
+                  destructure: [{ name: 'params' }],
+                  type: undefined,
+                },
+              ],
               statements: [
-                tsc.expressionToStatement({
-                  expression: tsc.callExpression({
-                    functionName: 'throw',
-                    parameters: [
-                      tsc.newExpression({
-                        argumentsArray: [
-                          tsc.stringLiteral({ text: 'Not implemented' }),
-                        ],
-                        expression: tsc.identifier({ text: 'Error' }),
-                      }),
-                    ],
-                  }),
+                tsc.returnStatement({
+                  expression: sdkFunctionCall,
                 }),
               ],
             }),
@@ -268,6 +353,7 @@ const generateResourceCallExpression = () =>
       }),
     ],
   });
+};
 
 const generateAngularResourceMethod = ({
   file,
@@ -275,12 +361,14 @@ const generateAngularResourceMethod = ({
   methodName,
   operation,
   plugin,
+  sdkPlugin,
 }: {
   file: any;
   isRequiredOptions: boolean;
   methodName: string;
   operation: any;
   plugin: any;
+  sdkPlugin: any;
 }) => {
   // Import operation data type
   const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
@@ -296,19 +384,24 @@ const generateAngularResourceMethod = ({
   return tsc.methodDeclaration({
     accessLevel: 'public',
     comment: createOperationComment({ operation }),
-    isStatic: true,
+    // isStatic: true,
     name: methodName,
     parameters: [
       {
         isRequired: isRequiredOptions,
         name: 'options',
-        type: dataType.name ? `Omit<${dataType.name}, 'url'>` : 'unknown',
+        type: `Options<${dataType.name || 'unknown'}, ThrowOnError>`,
       },
     ],
     returnType: undefined,
     statements: [
       tsc.returnStatement({
-        expression: generateResourceCallExpression(),
+        expression: generateResourceCallExpression({
+          file,
+          operation,
+          plugin,
+          sdkPlugin,
+        }),
       }),
     ],
     types: [
@@ -327,12 +420,14 @@ const generateAngularResourceFunction = ({
   isRequiredOptions,
   operation,
   plugin,
+  sdkPlugin,
 }: {
   file: any;
   functionName: string;
   isRequiredOptions: boolean;
   operation: any;
   plugin: any;
+  sdkPlugin: any;
 }) => {
   const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
   const fileTypeScript = plugin.context.file({ id: typesId })!;
@@ -352,12 +447,17 @@ const generateAngularResourceFunction = ({
         {
           isRequired: isRequiredOptions,
           name: 'options',
-          type: dataType.name ? `Omit<${dataType.name}, 'url'>` : 'unknown',
+          type: `Options<${dataType.name || 'unknown'}, ThrowOnError>`,
         },
       ],
       statements: [
         tsc.returnStatement({
-          expression: generateResourceCallExpression(),
+          expression: generateResourceCallExpression({
+            file,
+            operation,
+            plugin,
+            sdkPlugin,
+          }),
         }),
       ],
       types: [
