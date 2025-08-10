@@ -147,7 +147,7 @@ export const createQuerySerializer = <T = unknown>({
  */
 export const getParseAs = (
   contentType: string | null,
-): Exclude<Config['parseAs'], 'auto'> => {
+): 'blob' | 'formData' | 'json' | 'stream' | 'text' | undefined => {
   if (!contentType) {
     // If no Content-Type header is provided, the best we can do is return the raw response body,
     // which is effectively the same as the 'stream' option.
@@ -411,7 +411,7 @@ export const createConfig = <T extends ClientOptions = ClientOptions>(
 ): Config<Omit<ClientOptions, keyof T> & T> => ({
   ...jsonBodySerializer,
   headers: defaultHeaders,
-  parseAs: 'auto',
+  // parseAs: 'auto',
   querySerializer: defaultQuerySerializer,
   ...override,
 });

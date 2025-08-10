@@ -10,11 +10,6 @@ export default defineConfig({
   },
   plugins: [
     '@hey-api/client-angular',
-    '@tanstack/angular-query-experimental',
-    {
-      asClass: true,
-      name: '@hey-api/angular-resource',
-    },
     '@hey-api/schemas',
     {
       asClass: false,
@@ -29,6 +24,11 @@ export default defineConfig({
     {
       enums: 'javascript',
       name: '@hey-api/typescript',
+    },
+    '@tanstack/angular-query-experimental',
+    {
+      asClass: true,
+      name: '@hey-api/angular-resource',
     },
   ],
 });
