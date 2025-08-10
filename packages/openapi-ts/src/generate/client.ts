@@ -1,6 +1,6 @@
 import fs from 'node:fs';
-import { createRequire } from 'node:module';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import ts from 'typescript';
 
@@ -12,11 +12,8 @@ import type { Config } from '../types/config';
 import { splitNameAndExtension } from './file';
 import { ensureDirSync, relativeModulePath } from './utils';
 
-// Use require.resolve to find the package root, then construct the path
-// This approach works with Yarn PnP and doesn't rely on specific file exports
-const packageRoot = path.dirname(
-  createRequire(import.meta.url).resolve('@hey-api/openapi-ts/package.json'),
-);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const getClientSrcPath = (name: string) => {
   const pluginFilePathComponents = name.split(path.sep);
@@ -161,7 +158,7 @@ export const generateClientBundle = ({
     // copy client core
     const coreOutputPath = path.resolve(outputPath, 'core');
     ensureDirSync(coreOutputPath);
-    const coreDistPath = path.resolve(packageRoot, 'dist', 'clients', 'core');
+    const coreDistPath = path.resolve(__dirname, 'clients', 'core');
     copyRecursivePnP(coreDistPath, coreOutputPath);
 
     if (!legacy) {
@@ -179,8 +176,7 @@ export const generateClientBundle = ({
     ensureDirSync(clientOutputPath);
     const clientDistFolderName = plugin.name.slice('@hey-api/client-'.length);
     const clientDistPath = path.resolve(
-      packageRoot,
-      'dist',
+      __dirname,
       'clients',
       clientDistFolderName,
     );
