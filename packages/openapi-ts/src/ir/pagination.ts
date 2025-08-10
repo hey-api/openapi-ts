@@ -9,7 +9,7 @@ export function getPaginationKeywordsRegExp(
 }
 
 export interface Pagination {
-  in: string;
+  in: 'body' | 'cookie' | 'header' | 'path' | 'query';
   name: string;
   schema: IR.SchemaObject;
 }
