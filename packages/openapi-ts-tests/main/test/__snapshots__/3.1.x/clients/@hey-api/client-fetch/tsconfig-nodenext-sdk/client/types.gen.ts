@@ -1,9 +1,9 @@
-import type { Auth } from '../core/auth.gen';
+import type { Auth } from '../core/auth.gen.js';
 import type {
   Client as CoreClient,
   Config as CoreConfig,
-} from '../core/types.gen';
-import type { Middleware } from './utils.gen';
+} from '../core/types.gen.js';
+import type { Middleware } from './utils.gen.js';
 
 export type ResponseStyle = 'data' | 'fields';
 

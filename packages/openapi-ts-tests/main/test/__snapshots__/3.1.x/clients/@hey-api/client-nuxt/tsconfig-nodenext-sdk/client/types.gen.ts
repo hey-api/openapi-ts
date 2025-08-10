@@ -8,12 +8,12 @@ import type {
 } from 'nuxt/app';
 import type { Ref } from 'vue';
 
-import type { Auth } from '../core/auth.gen';
-import type { QuerySerializerOptions } from '../core/bodySerializer.gen';
+import type { Auth } from '../core/auth.gen.js';
+import type { QuerySerializerOptions } from '../core/bodySerializer.gen.js';
 import type {
   Client as CoreClient,
   Config as CoreConfig,
-} from '../core/types.gen';
+} from '../core/types.gen.js';
 
 export type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';

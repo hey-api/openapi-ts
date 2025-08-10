@@ -1,4 +1,4 @@
-import type { Client, Config, ResolvedRequestOptions } from './types.gen';
+import type { Client, Config, ResolvedRequestOptions } from './types.gen.js';
 import {
   buildUrl,
   createConfig,
@@ -7,7 +7,7 @@ import {
   mergeConfigs,
   mergeHeaders,
   setAuthParams,
-} from './utils.gen';
+} from './utils.gen.js';
 
 type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
   body?: any;

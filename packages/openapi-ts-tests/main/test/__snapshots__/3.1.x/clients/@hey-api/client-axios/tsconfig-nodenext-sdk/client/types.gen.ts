@@ -7,11 +7,11 @@ import type {
   CreateAxiosDefaults,
 } from 'axios';
 
-import type { Auth } from '../core/auth.gen';
+import type { Auth } from '../core/auth.gen.js';
 import type {
   Client as CoreClient,
   Config as CoreConfig,
-} from '../core/types.gen';
+} from '../core/types.gen.js';
 
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<CreateAxiosDefaults, 'auth' | 'baseURL' | 'headers' | 'method'>,
