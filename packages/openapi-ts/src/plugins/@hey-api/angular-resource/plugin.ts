@@ -28,7 +28,7 @@ export const angularResourcePluginHandler: HeyApiAngularResourcePlugin['Handler'
     });
 
     // Import Angular core decorators
-    if (sdkPlugin.config.asClass) {
+    if (plugin.config.asClass) {
       file.import({
         module: '@angular/core',
         name: 'Injectable',
@@ -48,7 +48,7 @@ export const angularResourcePluginHandler: HeyApiAngularResourcePlugin['Handler'
       name: 'Options',
     });
 
-    if (sdkPlugin.config.asClass) {
+    if (plugin.config.asClass) {
       generateAngularClassServices({ file, plugin, sdkPlugin });
     } else {
       generateAngularFunctionServices({ file, plugin, sdkPlugin });
@@ -114,8 +114,11 @@ const generateAngularClassServices = ({
 
         const currentClass = serviceClasses.get(currentClassName)!;
 
+        // Generate the resource method name
+        const resourceMethodName = plugin.config.methodNameBuilder!(operation);
+
         // Avoid duplicate methods
-        if (currentClass.methods.has(entry.methodName)) {
+        if (currentClass.methods.has(resourceMethodName)) {
           return;
         }
 
@@ -123,7 +126,7 @@ const generateAngularClassServices = ({
         const methodNode = generateAngularResourceMethod({
           file,
           isRequiredOptions,
-          methodName: entry.methodName,
+          methodName: resourceMethodName,
           operation,
           plugin,
           sdkPlugin,
@@ -135,7 +138,7 @@ const generateAngularClassServices = ({
           currentClass.nodes.push(tsc.identifier({ text: '\n' }), methodNode);
         }
 
-        currentClass.methods.add(entry.methodName);
+        currentClass.methods.add(resourceMethodName);
         serviceClasses.set(currentClassName, currentClass);
       });
     }
@@ -158,7 +161,7 @@ const generateAngularClassServices = ({
             initializer: tsc.newExpression({
               argumentsArray: [],
               expression: tsc.identifier({
-                text: `${childClass.className}Resource`,
+                text: plugin.config.classNameBuilder!(childClass.className),
               }),
             }),
             name: stringCase({
@@ -182,7 +185,7 @@ const generateAngularClassServices = ({
           }
         : undefined,
       exportClass: currentClass.root,
-      name: `${currentClass.className}Resource`,
+      name: plugin.config.classNameBuilder!(currentClass.className),
       nodes: currentClass.nodes,
     });
 
@@ -210,16 +213,9 @@ const generateAngularFunctionServices = ({
       operation,
     });
 
-    const functionName = serviceFunctionIdentifier({
-      config: plugin.context.config,
-      handleIllegal: true,
-      id: operation.id,
-      operation,
-    });
-
     const node = generateAngularResourceFunction({
       file,
-      functionName: `${functionName}Resource`,
+      functionName: plugin.config.methodNameBuilder!(operation),
       isRequiredOptions,
       operation,
       plugin,
@@ -312,7 +308,7 @@ const generateResourceCallExpression = ({
 
     sdkFunctionCall = tsc.callExpression({
       functionName: sdkImport.name,
-      parameters: [tsc.identifier({ text: 'options' })],
+      parameters: [tsc.identifier({ text: 'params' })],
     });
   }
 

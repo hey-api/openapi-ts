@@ -5,6 +5,12 @@ import type { HeyApiAngularResourcePlugin } from './types';
 export const defaultConfig: HeyApiAngularResourcePlugin['Config'] = {
   config: {
     asClass: false,
+    classNameBuilder(className) {
+      return className + 'Resources';
+    },
+    methodNameBuilder(operation) {
+      return String(operation.id) + 'Resource';
+    },
   },
   dependencies: [
     '@hey-api/client-angular',
