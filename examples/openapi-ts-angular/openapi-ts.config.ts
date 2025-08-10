@@ -11,7 +11,10 @@ export default defineConfig({
   plugins: [
     '@hey-api/client-angular',
     '@hey-api/schemas',
-    '@hey-api/sdk',
+    {
+      asClass: false,
+      name: '@hey-api/sdk',
+    },
     {
       enums: 'javascript',
       name: '@hey-api/typescript',

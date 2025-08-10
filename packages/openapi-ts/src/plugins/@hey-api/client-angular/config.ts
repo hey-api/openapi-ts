@@ -1,6 +1,6 @@
 import { definePluginConfig } from '../../shared/utils/config';
 import { clientDefaultConfig, clientDefaultMeta } from '../client-core/config';
-import { clientPluginHandler } from '../client-core/plugin';
+import { angularClientPluginHandler } from './plugin';
 import type { HeyApiClientAngularPlugin } from './types';
 
 export const defaultConfig: HeyApiClientAngularPlugin['Config'] = {
@@ -10,7 +10,7 @@ export const defaultConfig: HeyApiClientAngularPlugin['Config'] = {
     httpResource: false,
     throwOnError: false,
   },
-  handler: clientPluginHandler as HeyApiClientAngularPlugin['Handler'],
+  handler: angularClientPluginHandler,
   name: '@hey-api/client-angular',
 };
 
