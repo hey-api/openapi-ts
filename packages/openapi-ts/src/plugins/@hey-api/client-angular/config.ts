@@ -7,6 +7,7 @@ export const defaultConfig: HeyApiClientAngularPlugin['Config'] = {
   ...clientDefaultMeta,
   config: {
     ...clientDefaultConfig,
+    httpResource: false,
     throwOnError: false,
   },
   handler: clientPluginHandler as HeyApiClientAngularPlugin['Handler'],

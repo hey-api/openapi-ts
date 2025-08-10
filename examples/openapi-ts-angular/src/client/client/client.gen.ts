@@ -8,7 +8,7 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import type { Client, Config, ResolvedRequestOptions } from './types';
+import type { Client, Config, ResolvedRequestOptions } from './types.gen';
 import {
   buildUrl,
   createConfig,
@@ -16,7 +16,7 @@ import {
   mergeConfigs,
   mergeHeaders,
   setAuthParams,
-} from './utils';
+} from './utils.gen';
 
 export function provideHeyApiClient(client: Client) {
   return provideAppInitializer(() => {

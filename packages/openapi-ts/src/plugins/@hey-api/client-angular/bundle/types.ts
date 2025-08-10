@@ -1,3 +1,9 @@
+import type {
+  HttpClient,
+  HttpRequest,
+  HttpResponse,
+} from '@angular/common/http';
+
 import type { Auth } from '../../client-core/bundle/auth';
 import type {
   Client as CoreClient,
@@ -15,47 +21,15 @@ export interface Config<T extends ClientOptions = ClientOptions>
    */
   baseUrl?: T['baseUrl'];
   /**
-   * Fetch API implementation. You can use this option to provide a custom
-   * fetch instance.
-   *
-   * @default globalThis.fetch
+   * The HTTP client to use for making requests.
    */
-  fetch?: (request: Request) => ReturnType<typeof fetch>;
-  /**
-   * Please don't use the Fetch client for Next.js applications. The `next`
-   * options won't have any effect.
-   *
-   * Install {@link https://www.npmjs.com/package/@hey-api/client-next `@hey-api/client-next`} instead.
-   */
-  next?: never;
-  /**
-   * Return the response data parsed in a specified format. By default, `auto`
-   * will infer the appropriate method from the `Content-Type` response header.
-   * You can override this behavior with any of the {@link Body} methods.
-   * Select `stream` if you don't want to parse response data at all.
-   *
-   * @default 'auto'
-   */
-  parseAs?:
-    | 'arrayBuffer'
-    | 'auto'
-    | 'blob'
-    | 'formData'
-    | 'json'
-    | 'stream'
-    | 'text';
+  httpClient?: HttpClient;
   /**
    * Should we return only data or multiple fields (data, error, response, etc.)?
    *
    * @default 'fields'
    */
   responseStyle?: ResponseStyle;
-  /**
-   * Throw an error instead of returning it in the response?
-   *
-   * @default false
-   */
-  throwOnError?: T['throwOnError'];
 }
 
 export interface RequestOptions<
@@ -171,7 +145,12 @@ type BuildUrlFn = <
 ) => string;
 
 export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
-  interceptors: Middleware<Request, Response, unknown, ResolvedRequestOptions>;
+  interceptors: Middleware<
+    HttpRequest<unknown>,
+    HttpResponse<unknown>,
+    unknown,
+    ResolvedRequestOptions
+  >;
 };
 
 /**

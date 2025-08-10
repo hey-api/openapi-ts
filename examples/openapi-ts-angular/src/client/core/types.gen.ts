@@ -1,9 +1,9 @@
-import type { Auth, AuthToken } from './auth';
+import type { Auth, AuthToken } from './auth.gen';
 import type {
   BodySerializer,
   QuerySerializer,
   QuerySerializerOptions,
-} from './bodySerializer';
+} from './bodySerializer.gen';
 
 export interface Client<
   RequestFn = never,
@@ -102,3 +102,17 @@ export interface Config {
    */
   responseValidator?: (data: unknown) => Promise<unknown>;
 }
+
+type IsExactlyNeverOrNeverUndefined<T> = [T] extends [never]
+  ? true
+  : [T] extends [never | undefined]
+    ? [undefined] extends [T]
+      ? false
+      : true
+    : false;
+
+export type OmitNever<T extends Record<string, unknown>> = {
+  [K in keyof T as IsExactlyNeverOrNeverUndefined<T[K]> extends true
+    ? never
+    : K]: T[K];
+};
