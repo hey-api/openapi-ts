@@ -6,6 +6,7 @@ import type { PluginClientNames } from '../plugins/types';
  */
 export const getHttpRequestName = (clientName: PluginClientNames): string => {
   switch (clientName) {
+    case '@hey-api/client-angular':
     case 'legacy/angular':
       return 'AngularHttpRequest';
     case 'legacy/axios':
