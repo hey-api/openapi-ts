@@ -8,6 +8,7 @@ import type { PluginInstance } from './shared/utils/instance';
 export type PluginClientNames =
   | '@hey-api/client-axios'
   | '@hey-api/client-fetch'
+  | '@hey-api/client-angular'
   | '@hey-api/client-next'
   | '@hey-api/client-nuxt'
   | 'legacy/angular'
