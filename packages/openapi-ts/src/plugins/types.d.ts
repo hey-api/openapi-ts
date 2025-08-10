@@ -6,6 +6,7 @@ import type { Files } from '../types/utils';
 import type { PluginInstance } from './shared/utils/instance';
 
 export type PluginClientNames =
+  | '@hey-api/client-angular'
   | '@hey-api/client-axios'
   | '@hey-api/client-fetch'
   | '@hey-api/client-next'
@@ -20,6 +21,7 @@ export type PluginValidatorNames = 'valibot' | 'zod';
 
 export type PluginNames =
   | PluginClientNames
+  | '@hey-api/angular-resource'
   | '@hey-api/schemas'
   | '@hey-api/sdk'
   | '@hey-api/transformers'

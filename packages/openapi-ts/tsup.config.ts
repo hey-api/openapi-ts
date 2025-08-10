@@ -35,6 +35,7 @@ export default defineConfig((options) => ({
   onSuccess: async () => {
     // Copy client files to dist folder for runtime access
     const pluginNames = [
+      'client-angular',
       'client-axios',
       'client-core',
       'client-fetch',
