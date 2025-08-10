@@ -12,12 +12,18 @@ export default defineConfig({
     '@hey-api/client-angular',
     '@tanstack/angular-query-experimental',
     {
-      // asClass: true,
+      asClass: true,
       name: '@hey-api/angular-resource',
     },
     '@hey-api/schemas',
     {
-      asClass: true,
+      asClass: false,
+      classNameBuilder(name) {
+        return `${name}Service`;
+      },
+      methodNameBuilder(operation) {
+        return String(operation.id);
+      },
       name: '@hey-api/sdk',
     },
     {

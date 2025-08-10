@@ -1,3 +1,4 @@
+import type { Operation } from '../../../types/client';
 import type { DefinePlugin, Plugin } from '../../types';
 
 export type UserConfig = Plugin.Name<'@hey-api/angular-resource'> & {
@@ -6,6 +7,9 @@ export type UserConfig = Plugin.Name<'@hey-api/angular-resource'> & {
    * @default false
    */
   asClass?: boolean;
+
+  classNameBuilder?: (className: string) => string;
+  methodNameBuilder?: (operation: IR.OperationObject | Operation) => string;
 
   /**
    * Name of the generated file.
@@ -21,6 +25,9 @@ export type Config = Plugin.Name<'@hey-api/angular-resource'> & {
    * @default false
    */
   asClass: boolean;
+
+  classNameBuilder?: (className: string) => string;
+  methodNameBuilder?: (operation: IR.OperationObject | Operation) => string;
 
   /**
    * Name of the generated file.

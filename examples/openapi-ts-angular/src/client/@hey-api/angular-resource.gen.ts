@@ -3,7 +3,27 @@
 import { Injectable, resource } from '@angular/core';
 
 import type { Options } from '../sdk.gen';
-import { Pet, Store, User } from '../sdk.gen';
+import {
+  addPet,
+  createUser,
+  createUsersWithListInput,
+  deleteOrder,
+  deletePet,
+  deleteUser,
+  findPetsByStatus,
+  findPetsByTags,
+  getInventory,
+  getOrderById,
+  getPetById,
+  getUserByName,
+  loginUser,
+  logoutUser,
+  placeOrder,
+  updatePet,
+  updatePetWithForm,
+  updateUser,
+  uploadFile,
+} from '../sdk.gen';
 import type {
   AddPetData,
   CreateUserData,
@@ -29,16 +49,16 @@ import type {
 @Injectable({
   providedIn: 'root',
 })
-export class PetResource {
+export class PetServiceResources {
   /**
    * Add a new pet to the store.
    * Add a new pet to the store.
    */
-  public addPet<ThrowOnError extends boolean = false>(
+  public addPetResource<ThrowOnError extends boolean = false>(
     options: Options<AddPetData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => Pet.addPet(params),
+      loader: async ({ params }) => addPet(params),
       params: () => options,
     });
   }
@@ -47,11 +67,11 @@ export class PetResource {
    * Update an existing pet.
    * Update an existing pet by Id.
    */
-  public updatePet<ThrowOnError extends boolean = false>(
+  public updatePetResource<ThrowOnError extends boolean = false>(
     options: Options<UpdatePetData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => Pet.updatePet(params),
+      loader: async ({ params }) => updatePet(params),
       params: () => options,
     });
   }
@@ -60,11 +80,11 @@ export class PetResource {
    * Finds Pets by status.
    * Multiple status values can be provided with comma separated strings.
    */
-  public findPetsByStatus<ThrowOnError extends boolean = false>(
+  public findPetsByStatusResource<ThrowOnError extends boolean = false>(
     options: Options<FindPetsByStatusData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => Pet.findPetsByStatus(params),
+      loader: async ({ params }) => findPetsByStatus(params),
       params: () => options,
     });
   }
@@ -73,11 +93,11 @@ export class PetResource {
    * Finds Pets by tags.
    * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
    */
-  public findPetsByTags<ThrowOnError extends boolean = false>(
+  public findPetsByTagsResource<ThrowOnError extends boolean = false>(
     options: Options<FindPetsByTagsData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => Pet.findPetsByTags(params),
+      loader: async ({ params }) => findPetsByTags(params),
       params: () => options,
     });
   }
@@ -86,11 +106,11 @@ export class PetResource {
    * Deletes a pet.
    * Delete a pet.
    */
-  public deletePet<ThrowOnError extends boolean = false>(
+  public deletePetResource<ThrowOnError extends boolean = false>(
     options: Options<DeletePetData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => Pet.deletePet(params),
+      loader: async ({ params }) => deletePet(params),
       params: () => options,
     });
   }
@@ -99,11 +119,11 @@ export class PetResource {
    * Find pet by ID.
    * Returns a single pet.
    */
-  public getPetById<ThrowOnError extends boolean = false>(
+  public getPetByIdResource<ThrowOnError extends boolean = false>(
     options: Options<GetPetByIdData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => Pet.getPetById(params),
+      loader: async ({ params }) => getPetById(params),
       params: () => options,
     });
   }
@@ -112,11 +132,11 @@ export class PetResource {
    * Updates a pet in the store with form data.
    * Updates a pet resource based on the form data.
    */
-  public updatePetWithForm<ThrowOnError extends boolean = false>(
+  public updatePetWithFormResource<ThrowOnError extends boolean = false>(
     options: Options<UpdatePetWithFormData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => Pet.updatePetWithForm(params),
+      loader: async ({ params }) => updatePetWithForm(params),
       params: () => options,
     });
   }
@@ -125,11 +145,11 @@ export class PetResource {
    * Uploads an image.
    * Upload image of the pet.
    */
-  public uploadFile<ThrowOnError extends boolean = false>(
+  public uploadFileResource<ThrowOnError extends boolean = false>(
     options: Options<UploadFileData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => Pet.uploadFile(params),
+      loader: async ({ params }) => uploadFile(params),
       params: () => options,
     });
   }
@@ -138,16 +158,16 @@ export class PetResource {
 @Injectable({
   providedIn: 'root',
 })
-export class StoreResource {
+export class StoreServiceResources {
   /**
    * Returns pet inventories by status.
    * Returns a map of status codes to quantities.
    */
-  public getInventory<ThrowOnError extends boolean = false>(
+  public getInventoryResource<ThrowOnError extends boolean = false>(
     options?: Options<GetInventoryData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => Store.getInventory(params),
+      loader: async ({ params }) => getInventory(params),
       params: () => options,
     });
   }
@@ -156,11 +176,11 @@ export class StoreResource {
    * Place an order for a pet.
    * Place a new order in the store.
    */
-  public placeOrder<ThrowOnError extends boolean = false>(
+  public placeOrderResource<ThrowOnError extends boolean = false>(
     options?: Options<PlaceOrderData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => Store.placeOrder(params),
+      loader: async ({ params }) => placeOrder(params),
       params: () => options,
     });
   }
@@ -169,11 +189,11 @@ export class StoreResource {
    * Delete purchase order by identifier.
    * For valid response try integer IDs with value < 1000. Anything above 1000 or non-integers will generate API errors.
    */
-  public deleteOrder<ThrowOnError extends boolean = false>(
+  public deleteOrderResource<ThrowOnError extends boolean = false>(
     options: Options<DeleteOrderData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => Store.deleteOrder(params),
+      loader: async ({ params }) => deleteOrder(params),
       params: () => options,
     });
   }
@@ -182,11 +202,11 @@ export class StoreResource {
    * Find purchase order by ID.
    * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
    */
-  public getOrderById<ThrowOnError extends boolean = false>(
+  public getOrderByIdResource<ThrowOnError extends boolean = false>(
     options: Options<GetOrderByIdData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => Store.getOrderById(params),
+      loader: async ({ params }) => getOrderById(params),
       params: () => options,
     });
   }
@@ -195,16 +215,16 @@ export class StoreResource {
 @Injectable({
   providedIn: 'root',
 })
-export class UserResource {
+export class UserServiceResources {
   /**
    * Create user.
    * This can only be done by the logged in user.
    */
-  public createUser<ThrowOnError extends boolean = false>(
+  public createUserResource<ThrowOnError extends boolean = false>(
     options?: Options<CreateUserData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => User.createUser(params),
+      loader: async ({ params }) => createUser(params),
       params: () => options,
     });
   }
@@ -213,11 +233,11 @@ export class UserResource {
    * Creates list of users with given input array.
    * Creates list of users with given input array.
    */
-  public createUsersWithListInput<ThrowOnError extends boolean = false>(
+  public createUsersWithListInputResource<ThrowOnError extends boolean = false>(
     options?: Options<CreateUsersWithListInputData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => User.createUsersWithListInput(params),
+      loader: async ({ params }) => createUsersWithListInput(params),
       params: () => options,
     });
   }
@@ -226,11 +246,11 @@ export class UserResource {
    * Logs user into the system.
    * Log into the system.
    */
-  public loginUser<ThrowOnError extends boolean = false>(
+  public loginUserResource<ThrowOnError extends boolean = false>(
     options?: Options<LoginUserData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => User.loginUser(params),
+      loader: async ({ params }) => loginUser(params),
       params: () => options,
     });
   }
@@ -239,11 +259,11 @@ export class UserResource {
    * Logs out current logged in user session.
    * Log user out of the system.
    */
-  public logoutUser<ThrowOnError extends boolean = false>(
+  public logoutUserResource<ThrowOnError extends boolean = false>(
     options?: Options<LogoutUserData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => User.logoutUser(params),
+      loader: async ({ params }) => logoutUser(params),
       params: () => options,
     });
   }
@@ -252,11 +272,11 @@ export class UserResource {
    * Delete user resource.
    * This can only be done by the logged in user.
    */
-  public deleteUser<ThrowOnError extends boolean = false>(
+  public deleteUserResource<ThrowOnError extends boolean = false>(
     options: Options<DeleteUserData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => User.deleteUser(params),
+      loader: async ({ params }) => deleteUser(params),
       params: () => options,
     });
   }
@@ -265,11 +285,11 @@ export class UserResource {
    * Get user by user name.
    * Get user detail based on username.
    */
-  public getUserByName<ThrowOnError extends boolean = false>(
+  public getUserByNameResource<ThrowOnError extends boolean = false>(
     options: Options<GetUserByNameData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => User.getUserByName(params),
+      loader: async ({ params }) => getUserByName(params),
       params: () => options,
     });
   }
@@ -278,11 +298,11 @@ export class UserResource {
    * Update user resource.
    * This can only be done by the logged in user.
    */
-  public updateUser<ThrowOnError extends boolean = false>(
+  public updateUserResource<ThrowOnError extends boolean = false>(
     options: Options<UpdateUserData, ThrowOnError>,
   ) {
     return resource({
-      loader: async ({ params }) => User.updateUser(params),
+      loader: async ({ params }) => updateUser(params),
       params: () => options,
     });
   }
