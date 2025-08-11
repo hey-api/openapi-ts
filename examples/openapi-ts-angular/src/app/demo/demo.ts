@@ -5,7 +5,7 @@ import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import type { AddPetErrors, Pet } from '../../client';
-import { getPetById } from '../../client';
+import { PetService } from '../../client';
 import { createClient } from '../../client/client';
 
 const localClient = createClient({
@@ -38,6 +38,7 @@ export class Demo {
       }
   >(undefined);
 
+  #petService = inject(PetService);
   #http = inject(HttpClient);
 
   // // you can set a global httpClient for this client like so, in your app.config, or on each request (like below)
@@ -48,7 +49,7 @@ export class Demo {
   // }
 
   onGetPetByIdLocalClient = async () => {
-    const { data, error, response } = await getPetById({
+    const { data, error, response } = await this.#petService.getPetById({
       client: localClient,
       httpClient: this.#http,
       path: {
@@ -71,7 +72,7 @@ export class Demo {
   };
 
   onGetPetById = async () => {
-    const { data, error, response } = await getPetById({
+    const { data, error, response } = await this.#petService.getPetById({
       path: {
         // random id 1-10
         petId: Math.floor(Math.random() * (10 - 1 + 1) + 1),

@@ -197,7 +197,7 @@ const generateClassSdk = ({
         const functionNode = tsc.methodDeclaration({
           accessLevel: 'public',
           comment: createOperationComment({ operation }),
-          isStatic: !plugin.config.instance,
+          isStatic: isAngularClient ? false : !plugin.config.instance,
           name: entry.methodName,
           parameters: opParameters.parameters,
           returnType: undefined,
