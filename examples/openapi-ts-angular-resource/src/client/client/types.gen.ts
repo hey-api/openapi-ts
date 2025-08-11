@@ -163,6 +163,13 @@ type RequestFn = <
     Pick<Required<RequestOptions<TResponseStyle, ThrowOnError>>, 'method'>,
 ) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
 
+type RequestOptionsFn = <
+  ThrowOnError extends boolean = false,
+  TResponseStyle extends ResponseStyle = 'fields',
+>(
+  options: RequestOptions<TResponseStyle, ThrowOnError>,
+) => HttpRequest<unknown>;
+
 type BuildUrlFn = <
   TData extends {
     body?: unknown;
@@ -181,6 +188,8 @@ export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
     unknown,
     ResolvedRequestOptions
   >;
+
+  requestOptions: RequestOptionsFn;
 };
 
 /**

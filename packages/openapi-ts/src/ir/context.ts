@@ -142,7 +142,7 @@ export class IRContext<Spec extends Record<string, any> = any> {
       dependencies: plugin.dependencies ?? [],
       handler: plugin.handler,
       name: plugin.name,
-      output: plugin.output!,
+      output: plugin.output! as string,
     });
     this.plugins[instance.name] = instance;
     return instance;
