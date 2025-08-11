@@ -1,0 +1,36 @@
+<button (click)="onGetPetById()" type="button">Get Random Pet</button>
+
+<!-- Error Display -->
+@if (pet.error()) {
+<div class="error-message">
+  <div class="error-title">Error occurred:</div>
+  <div class="error-details">{{ pet.error() }}</div>
+</div>
+}
+
+<!-- Pet Display Card -->
+@if (pet.value()) {
+<div class="pet-card">
+  <div class="pet-info">
+    <div class="pet-avatar">
+      @if (pet.value()?.photoUrls?.[0]) {
+      <img
+        [src]="pet.value()?.photoUrls?.[0]"
+        [alt]="pet.value()?.name || 'Pet'"
+        class="pet-image"
+      />
+      } @else {
+      <div class="pet-placeholder">
+        {{ pet.value()?.name?.slice(0, 1) || 'N' }}
+      </div>
+      }
+    </div>
+    <div class="pet-details">
+      <div class="pet-name">Name: {{ pet.value()?.name || 'N/A' }}</div>
+      <div class="pet-category">
+        Category: {{ pet.value()?.category?.name || 'N/A' }}
+      </div>
+    </div>
+  </div>
+</div>
+}

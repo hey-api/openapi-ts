@@ -115,7 +115,10 @@ const generateAngularClassServices = ({
         const currentClass = serviceClasses.get(currentClassName)!;
 
         // Generate the resource method name
-        const resourceMethodName = plugin.config.methodNameBuilder!(operation);
+        const resourceMethodName = plugin.config.methodNameBuilder!.call(
+          plugin.config,
+          operation,
+        );
 
         // Avoid duplicate methods
         if (currentClass.methods.has(resourceMethodName)) {
@@ -215,7 +218,10 @@ const generateAngularFunctionServices = ({
 
     const node = generateAngularResourceFunction({
       file,
-      functionName: plugin.config.methodNameBuilder!(operation),
+      functionName: plugin.config.methodNameBuilder!.call(
+        plugin.config,
+        operation,
+      ),
       isRequiredOptions,
       operation,
       plugin,
@@ -286,7 +292,7 @@ const generateResourceCallExpression = ({
 
       sdkFunctionCall = tsc.callExpression({
         functionName: methodAccess,
-        parameters: [tsc.identifier({ text: 'params' })],
+        parameters: [tsc.identifier({ text: 'request' })],
       });
     }
   } else {
@@ -308,7 +314,7 @@ const generateResourceCallExpression = ({
 
     sdkFunctionCall = tsc.callExpression({
       functionName: sdkImport.name,
-      parameters: [tsc.identifier({ text: 'params' })],
+      parameters: [tsc.identifier({ text: 'request' })],
     });
   }
 
@@ -323,7 +329,7 @@ const generateResourceCallExpression = ({
               async: true,
               parameters: [
                 {
-                  destructure: [{ name: 'params' }],
+                  destructure: [{ name: 'request' }],
                   type: undefined,
                 },
               ],
@@ -335,15 +341,8 @@ const generateResourceCallExpression = ({
             }),
           },
           {
-            key: 'params',
-            value: tsc.arrowFunction({
-              parameters: [],
-              statements: [
-                tsc.returnStatement({
-                  expression: tsc.identifier({ text: 'options' }),
-                }),
-              ],
-            }),
+            key: 'request',
+            value: tsc.identifier({ text: 'options' }),
           },
         ],
       }),
@@ -386,7 +385,7 @@ const generateAngularResourceMethod = ({
       {
         isRequired: isRequiredOptions,
         name: 'options',
-        type: `Options<${dataType.name || 'unknown'}, ThrowOnError>`,
+        type: `() => Options<${dataType.name || 'unknown'}, ThrowOnError>`,
       },
     ],
     returnType: undefined,
@@ -443,7 +442,7 @@ const generateAngularResourceFunction = ({
         {
           isRequired: isRequiredOptions,
           name: 'options',
-          type: `Options<${dataType.name || 'unknown'}, ThrowOnError>`,
+          type: `() => Options<${dataType.name || 'unknown'}, ThrowOnError>`,
         },
       ],
       statements: [
