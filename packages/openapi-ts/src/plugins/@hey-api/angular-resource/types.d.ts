@@ -8,7 +8,16 @@ export type UserConfig = Plugin.Name<'@hey-api/angular-resource'> & {
    */
   asClass?: boolean;
 
+  /**
+   * Builds the class name for the generated resource.
+   * By default, the class name is suffixed with "Resources".
+   */
   classNameBuilder?: (className: string) => string;
+
+  /**
+   * Builds the method name for the generated resource.
+   * By default, the operation id is used, if `asClass` is false, the method is also suffixed with "Resource".
+   */
   methodNameBuilder?: (operation: IR.OperationObject | Operation) => string;
 
   /**

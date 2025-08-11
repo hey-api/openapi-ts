@@ -9,6 +9,10 @@ export const defaultConfig: HeyApiAngularResourcePlugin['Config'] = {
       return className + 'Resources';
     },
     methodNameBuilder(operation) {
+      if (this.asClass) {
+        return String(operation.id);
+      }
+
       return String(operation.id) + 'Resource';
     },
   },
