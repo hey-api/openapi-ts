@@ -64,15 +64,16 @@ export const appConfig = {
 
 ### Injectable Classes Configuration
 
-You can configure the Angular client to generate injectable classes by setting the `asClass` option to `true` in your plugin configuration. This will generate Angular services with `@Injectable()` decorators, making them available for dependency injection.
+You can configure the SDK to generate injectable classes by setting the `asClass` option to `true` in your plugin configuration. This will generate Angular services with `@Injectable()` decorators, making them available for dependency injection.
 
 ```js
 export default {
   input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
+    '@hey-api/client-angular',
     {
-      name: '@hey-api/client-angular',
+      name: '@hey-api/sdk',
       asClass: true, // [!code ++]
     },
   ],

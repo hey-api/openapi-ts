@@ -102,45 +102,41 @@ export type RequestResult<
   TError = unknown,
   ThrowOnError extends boolean = boolean,
   TResponseStyle extends ResponseStyle = 'fields',
-> = ThrowOnError extends true
-  ? Promise<
-      TResponseStyle extends 'data'
-        ? TData extends Record<string, unknown>
-          ? TData[keyof TData]
-          : TData
-        : {
-            data: TData extends Record<string, unknown>
-              ? TData[keyof TData]
-              : TData;
-            request: HttpRequest<unknown>;
-            response: HttpResponse<TData>;
-          }
-    >
-  : Promise<
-      TResponseStyle extends 'data'
-        ?
-            | (TData extends Record<string, unknown>
+> = Promise<
+  ThrowOnError extends true
+    ? TResponseStyle extends 'data'
+      ? TData extends Record<string, unknown>
+        ? TData[keyof TData]
+        : TData
+      : {
+          data: TData extends Record<string, unknown>
+            ? TData[keyof TData]
+            : TData;
+          request: HttpRequest<unknown>;
+          response: HttpResponse<TData>;
+        }
+    : TResponseStyle extends 'data'
+      ?
+          | (TData extends Record<string, unknown> ? TData[keyof TData] : TData)
+          | undefined
+      :
+          | {
+              data: TData extends Record<string, unknown>
                 ? TData[keyof TData]
-                : TData)
-            | undefined
-        :
-            | {
-                data: TData extends Record<string, unknown>
-                  ? TData[keyof TData]
-                  : TData;
-                error: undefined;
-                request: HttpRequest<unknown>;
-                response: HttpResponse<TData>;
-              }
-            | {
-                data: undefined;
-                error: TError[keyof TError];
-                request: HttpRequest<unknown>;
-                response: HttpErrorResponse & {
-                  error: TError[keyof TError] | null;
-                };
-              }
-    >;
+                : TData;
+              error: undefined;
+              request: HttpRequest<unknown>;
+              response: HttpResponse<TData>;
+            }
+          | {
+              data: undefined;
+              error: TError[keyof TError];
+              request: HttpRequest<unknown>;
+              response: HttpErrorResponse & {
+                error: TError[keyof TError] | null;
+              };
+            }
+>;
 
 export interface ClientOptions {
   baseUrl?: string;
@@ -167,6 +163,13 @@ type RequestFn = <
     Pick<Required<RequestOptions<TResponseStyle, ThrowOnError>>, 'method'>,
 ) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
 
+type RequestOptionsFn = <
+  ThrowOnError extends boolean = false,
+  TResponseStyle extends ResponseStyle = 'fields',
+>(
+  options: RequestOptions<TResponseStyle, ThrowOnError>,
+) => HttpRequest<unknown>;
+
 type BuildUrlFn = <
   TData extends {
     body?: unknown;
@@ -185,6 +188,8 @@ export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
     unknown,
     ResolvedRequestOptions
   >;
+
+  requestOptions: RequestOptionsFn;
 };
 
 /**
