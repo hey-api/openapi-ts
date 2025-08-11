@@ -187,14 +187,13 @@ export const getParseAs = (
   return;
 };
 
-export const setAuthParams = async ({
-  security,
-  ...options
-}: Pick<Required<RequestOptions>, 'security'> &
-  Pick<RequestOptions, 'auth' | 'query'> & {
-    headers: HttpHeaders;
-  }) => {
-  for (const auth of security) {
+export const setAuthParams = async (
+  options: Pick<Required<RequestOptions>, 'security'> &
+    Pick<RequestOptions, 'auth' | 'query'> & {
+      headers: HttpHeaders;
+    },
+) => {
+  for (const auth of options.security) {
     const token = await getAuthToken(auth, options.auth);
 
     if (!token) {
@@ -211,11 +210,11 @@ export const setAuthParams = async ({
         options.query[name] = token;
         break;
       case 'cookie':
-        options.headers.append('Cookie', `${name}=${token}`);
+        options.headers = options.headers.append('Cookie', `${name}=${token}`);
         break;
       case 'header':
       default:
-        options.headers.set(name, token);
+        options.headers = options.headers.set(name, token);
         break;
     }
 
