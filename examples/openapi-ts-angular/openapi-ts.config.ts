@@ -14,24 +14,10 @@ export default defineConfig({
       // throwOnError: true,
     },
     '@hey-api/schemas',
-    {
-      asClass: false,
-      classNameBuilder(name) {
-        return `${name}Service`;
-      },
-      methodNameBuilder(operation) {
-        return String(operation.id);
-      },
-      name: '@hey-api/sdk',
-    },
+    '@hey-api/sdk',
     {
       enums: 'javascript',
       name: '@hey-api/typescript',
-    },
-    '@tanstack/angular-query-experimental',
-    {
-      asClass: true,
-      name: '@hey-api/angular-resource',
     },
   ],
 });
