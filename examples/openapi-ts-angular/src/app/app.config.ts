@@ -7,6 +7,8 @@ import {
 } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 
+import { client } from '../client/client.gen';
+import { provideHeyApiClient } from '../client/client/client.gen';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -15,5 +17,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch()),
+    provideHeyApiClient(client),
   ],
 };
