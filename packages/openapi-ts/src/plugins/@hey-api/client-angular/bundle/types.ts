@@ -1,8 +1,11 @@
 import type {
   HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
+import type { Injector } from '@angular/core';
 
 import type { Auth } from '../../client-core/bundle/auth';
 import type {
@@ -15,11 +18,29 @@ export type ResponseStyle = 'data' | 'fields';
 
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
-    CoreConfig {
+    Omit<CoreConfig, 'headers'> {
   /**
    * Base URL for all requests made by this client.
    */
   baseUrl?: T['baseUrl'];
+  /**
+   * An object containing any HTTP headers that you want to pre-populate your
+   * `HttpHeaders` object with.
+   *
+   * {@link https://angular.dev/api/common/http/HttpHeaders#constructor See more}
+   */
+  headers?:
+    | HttpHeaders
+    | Record<
+        string,
+        | string
+        | number
+        | boolean
+        | (string | number | boolean)[]
+        | null
+        | undefined
+        | unknown
+      >;
   /**
    * The HTTP client to use for making requests.
    */
@@ -30,6 +51,13 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * @default 'fields'
    */
   responseStyle?: ResponseStyle;
+
+  /**
+   * Throw an error instead of returning it in the response?
+   *
+   * @default false
+   */
+  throwOnError?: T['throwOnError'];
 }
 
 export interface RequestOptions<
@@ -46,6 +74,10 @@ export interface RequestOptions<
    * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
    */
   body?: unknown;
+  /**
+   * Optional custom injector for dependency resolution if you don't implicitly or explicitly provide one.
+   */
+  injector?: Injector;
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   /**
@@ -78,8 +110,8 @@ export type RequestResult<
             data: TData extends Record<string, unknown>
               ? TData[keyof TData]
               : TData;
-            request: Request;
-            response: Response;
+            request: HttpRequest<unknown>;
+            response: HttpResponse<TData>;
           }
     >
   : Promise<
@@ -89,23 +121,23 @@ export type RequestResult<
                 ? TData[keyof TData]
                 : TData)
             | undefined
-        : (
+        :
             | {
                 data: TData extends Record<string, unknown>
                   ? TData[keyof TData]
                   : TData;
                 error: undefined;
+                request: HttpRequest<unknown>;
+                response: HttpResponse<TData>;
               }
             | {
                 data: undefined;
-                error: TError extends Record<string, unknown>
-                  ? TError[keyof TError]
-                  : TError;
+                error: TError[keyof TError];
+                request: HttpRequest<unknown>;
+                response: HttpErrorResponse & {
+                  error: TError[keyof TError] | null;
+                };
               }
-          ) & {
-            request: Request;
-            response: Response;
-          }
     >;
 
 export interface ClientOptions {
