@@ -1,16 +1,64 @@
 :host {
   display: grid;
   gap: 20px;
-
   max-width: 400px;
   margin: auto;
+}
+
+.pet-store-header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 mat-card {
   margin-bottom: 20px;
 }
 
+.pet-card {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.pet-card-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.pet-card-subtitle {
+  font-size: 1rem;
+  color: #666;
+}
+
+.pet-card-image {
+  object-fit: cover;
+  min-height: 180px;
+  background: #fafafa;
+}
+
+.pet-status {
+  margin-top: 0.5rem;
+  color: #888;
+}
+
+.pet-form-card {
+  margin-top: 2rem;
+  max-width: 400px;
+}
+
+.pet-form-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.pet-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .actions {
   display: flex;
-  gap: 10px;
+  gap: 0.5rem;
 }

@@ -9,7 +9,10 @@ export default defineConfig({
     path: './src/client',
   },
   plugins: [
-    '@hey-api/client-fetch',
+    {
+      name: '@hey-api/client-angular',
+      // throwOnError: true,
+    },
     '@hey-api/schemas',
     '@hey-api/sdk',
     {

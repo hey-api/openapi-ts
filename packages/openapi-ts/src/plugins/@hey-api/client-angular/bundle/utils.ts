@@ -5,7 +5,6 @@ import type {
   QuerySerializer,
   QuerySerializerOptions,
 } from '../../client-core/bundle/bodySerializer';
-import { jsonBodySerializer } from '../../client-core/bundle/bodySerializer';
 import {
   serializeArrayParam,
   serializeObjectParam,
@@ -425,9 +424,7 @@ const defaultHeaders = {
 export const createConfig = <T extends ClientOptions = ClientOptions>(
   override: Config<Omit<ClientOptions, keyof T> & T> = {},
 ): Config<Omit<ClientOptions, keyof T> & T> => ({
-  ...jsonBodySerializer,
   headers: defaultHeaders,
-  // parseAs: 'auto',
   querySerializer: defaultQuerySerializer,
   ...override,
 });

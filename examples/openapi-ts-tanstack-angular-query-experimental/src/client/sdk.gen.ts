@@ -136,9 +136,9 @@ export const updatePet = <ThrowOnError extends boolean = false>(
  * Multiple status values can be provided with comma separated strings.
  */
 export const findPetsByStatus = <ThrowOnError extends boolean = false>(
-  options?: Options<FindPetsByStatusData, ThrowOnError>,
+  options: Options<FindPetsByStatusData, ThrowOnError>,
 ) =>
-  (options?.client ?? _heyApiClient).get<
+  (options.client ?? _heyApiClient).get<
     FindPetsByStatusResponses,
     FindPetsByStatusErrors,
     ThrowOnError
@@ -158,9 +158,9 @@ export const findPetsByStatus = <ThrowOnError extends boolean = false>(
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
 export const findPetsByTags = <ThrowOnError extends boolean = false>(
-  options?: Options<FindPetsByTagsData, ThrowOnError>,
+  options: Options<FindPetsByTagsData, ThrowOnError>,
 ) =>
-  (options?.client ?? _heyApiClient).get<
+  (options.client ?? _heyApiClient).get<
     FindPetsByTagsResponses,
     FindPetsByTagsErrors,
     ThrowOnError
