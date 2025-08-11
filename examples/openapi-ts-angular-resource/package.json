@@ -1,5 +1,5 @@
 {
-  "name": "@example/openapi-ts-angular",
+  "name": "@example/openapi-ts-angular-resource",
   "private": true,
   "version": "0.0.0",
   "scripts": {
