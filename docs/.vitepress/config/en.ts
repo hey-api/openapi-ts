@@ -108,7 +108,7 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/clients/angular',
-                text: 'Angular <span data-soon>soon</span>',
+                text: 'Angular',
               },
               {
                 link: '/openapi-ts/clients/effect',
