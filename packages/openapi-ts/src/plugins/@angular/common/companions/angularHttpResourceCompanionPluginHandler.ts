@@ -1,43 +1,44 @@
-import { tsc } from '../../../tsc';
-import { stringCase } from '../../../utils/stringCase';
+import { tsc } from '../../../../tsc';
+import { stringCase } from '../../../../utils/stringCase';
+import { sdkId } from '../../../@hey-api/sdk/constants';
+import { operationClasses } from '../../../@hey-api/sdk/operation';
+import { typesId } from '../../../@hey-api/typescript/ref';
 import {
   createOperationComment,
   isOperationOptionsRequired,
-} from '../../shared/utils/operation';
-import { sdkId } from '../sdk/constants';
-import { operationClasses } from '../sdk/operation';
-import { serviceFunctionIdentifier } from '../sdk/plugin-legacy';
-import { typesId } from '../typescript/ref';
-import type { HeyApiAngularResourcePlugin } from './types';
+} from '../../../shared/utils/operation';
+import type { HeyApiAngularCommonPlugin } from '../types';
+import { REQUEST_APIS_SUFFIX } from './angularHttpRequestsCompanionPluginHandler';
 
-export const angularResourcePluginHandler: HeyApiAngularResourcePlugin['Handler'] =
+export const RESOURCE_APIS_SUFFIX = '/http/httpResource';
+
+export const angularHttpResourceCompanionPluginHandler: HeyApiAngularCommonPlugin['Handler'] =
   ({ plugin }) => {
-    // Check if SDK plugin exists
     const sdkPlugin = plugin.getPlugin('@hey-api/sdk');
 
-    if (!sdkPlugin) {
-      throw new Error(
-        '@hey-api/sdk plugin is required for @hey-api/angular-resource plugin',
-      );
-    }
-
-    // Create the httpResource file
     const file = plugin.createFile({
-      id: plugin.name,
-      path: plugin.output,
+      exportFromIndex: true,
+      id: plugin.name + RESOURCE_APIS_SUFFIX,
+      path: plugin.output + RESOURCE_APIS_SUFFIX,
     });
 
-    // Import Angular core decorators
-    if (plugin.config.asClass) {
+    if (plugin.config.httpResource?.asClass) {
       file.import({
         module: '@angular/core',
         name: 'Injectable',
       });
     }
 
+    if (plugin.config.httpRequest?.asClass) {
+      file.import({
+        module: '@angular/core',
+        name: 'inject',
+      });
+    }
+
     file.import({
-      module: '@angular/core',
-      name: 'resource',
+      module: '@angular/common/http',
+      name: 'httpResource',
     });
 
     file.import({
@@ -48,7 +49,7 @@ export const angularResourcePluginHandler: HeyApiAngularResourcePlugin['Handler'
       name: 'Options',
     });
 
-    if (plugin.config.asClass) {
+    if (plugin.config.httpResource!.asClass) {
       generateAngularClassServices({ file, plugin, sdkPlugin });
     } else {
       generateAngularFunctionServices({ file, plugin, sdkPlugin });
@@ -69,7 +70,7 @@ const generateAngularClassServices = ({
   sdkPlugin,
 }: {
   file: any;
-  plugin: HeyApiAngularResourcePlugin['Instance'];
+  plugin: HeyApiAngularCommonPlugin['Instance'];
   sdkPlugin: any;
 }) => {
   const serviceClasses = new Map<string, AngularServiceClassEntry>();
@@ -115,10 +116,8 @@ const generateAngularClassServices = ({
         const currentClass = serviceClasses.get(currentClassName)!;
 
         // Generate the resource method name
-        const resourceMethodName = plugin.config.methodNameBuilder!.call(
-          plugin.config,
-          operation,
-        );
+        const resourceMethodName =
+          plugin.config.httpResource!.methodNameBuilder!(operation);
 
         // Avoid duplicate methods
         if (currentClass.methods.has(resourceMethodName)) {
@@ -164,7 +163,9 @@ const generateAngularClassServices = ({
             initializer: tsc.newExpression({
               argumentsArray: [],
               expression: tsc.identifier({
-                text: plugin.config.classNameBuilder!(childClass.className),
+                text: plugin.config.httpResource!.classNameBuilder!(
+                  childClass.className,
+                ),
               }),
             }),
             name: stringCase({
@@ -188,7 +189,9 @@ const generateAngularClassServices = ({
           }
         : undefined,
       exportClass: currentClass.root,
-      name: plugin.config.classNameBuilder!(currentClass.className),
+      name: plugin.config.httpResource!.classNameBuilder!(
+        currentClass.className,
+      ),
       nodes: currentClass.nodes,
     });
 
@@ -207,7 +210,7 @@ const generateAngularFunctionServices = ({
   sdkPlugin,
 }: {
   file: any;
-  plugin: HeyApiAngularResourcePlugin['Instance'];
+  plugin: HeyApiAngularCommonPlugin['Instance'];
   sdkPlugin: any;
 }) => {
   plugin.forEach('operation', ({ operation }) => {
@@ -218,10 +221,7 @@ const generateAngularFunctionServices = ({
 
     const node = generateAngularResourceFunction({
       file,
-      functionName: plugin.config.methodNameBuilder!.call(
-        plugin.config,
-        operation,
-      ),
+      functionName: plugin.config.httpResource!.methodNameBuilder!(operation),
       isRequiredOptions,
       operation,
       plugin,
@@ -234,41 +234,58 @@ const generateAngularFunctionServices = ({
 
 const generateResourceCallExpression = ({
   file,
+  isRequiredOptions,
   operation,
   plugin,
+  responseTypeName,
   sdkPlugin,
 }: {
   file: any;
+  isRequiredOptions: boolean;
   operation: any;
   plugin: any;
+  responseTypeName: string;
   sdkPlugin: any;
 }) => {
-  // Import the SDK function/method instead of recreating the logic
-  let sdkFunctionCall;
+  // Check if httpRequest is configured to use classes
+  const useRequestClasses = plugin.config.httpRequest?.asClass;
+  let requestFunctionCall;
 
-  if (sdkPlugin.config.asClass) {
-    // For class-based SDK, use the class methods
+  // Create the options call expression based on whether options are required
+  const optionsCallExpression = isRequiredOptions
+    ? tsc.callExpression({
+        functionName: 'options',
+        parameters: [],
+      })
+    : tsc.conditionalExpression({
+        condition: tsc.identifier({ text: 'options' }),
+        whenFalse: tsc.identifier({ text: 'undefined' }),
+        whenTrue: tsc.callExpression({
+          functionName: 'options',
+          parameters: [],
+        }),
+      });
+
+  if (useRequestClasses) {
+    // For class-based request methods, use inject and class hierarchy
     const classes = operationClasses({
       context: plugin.context,
       operation,
       plugin: sdkPlugin,
     });
 
-    // Get the first class entry to determine the method path
     const firstEntry = Array.from(classes.values())[0];
     if (firstEntry) {
-      // Import the root class from SDK
+      // Import the root class from HTTP requests
       const rootClassName = firstEntry.path[0];
-      const sdkImport = file.import({
-        module: file.relativePathToFile({
-          context: plugin.context,
-          id: sdkId,
-        }),
-        name: rootClassName,
-      });
+      const requestClassName =
+        plugin.config.httpRequest!.classNameBuilder!(rootClassName);
 
-      // Build the method access path
-      let methodAccess: any = tsc.identifier({ text: sdkImport.name });
+      // Build the method access path using inject
+      let methodAccess: any = tsc.callExpression({
+        functionName: 'inject',
+        parameters: [tsc.identifier({ text: requestClassName })],
+      });
 
       // Navigate through the class hierarchy
       for (let i = 1; i < firstEntry.path.length; i++) {
@@ -284,69 +301,51 @@ const generateResourceCallExpression = ({
         }
       }
 
-      // Add the final method name
+      // Add the final method name with "Request" suffix
+      const requestMethodName =
+        plugin.config.httpRequest!.methodNameBuilder!(operation);
       methodAccess = tsc.propertyAccessExpression({
         expression: methodAccess,
-        name: firstEntry.methodName,
+        name: requestMethodName,
       });
 
-      sdkFunctionCall = tsc.callExpression({
+      requestFunctionCall = tsc.callExpression({
         functionName: methodAccess,
-        parameters: [tsc.identifier({ text: 'request' })],
+        parameters: [optionsCallExpression],
       });
     }
   } else {
-    // For function-based SDK, import and call the function directly
-    const functionName = serviceFunctionIdentifier({
-      config: plugin.context.config,
-      handleIllegal: true,
-      id: operation.id,
-      operation,
-    });
+    // For function-based request methods, import and call the function directly
+    const requestFunctionName =
+      plugin.config.httpRequest!.methodNameBuilder!(operation);
 
-    const sdkImport = file.import({
+    const requestImport = file.import({
       module: file.relativePathToFile({
         context: plugin.context,
-        id: sdkId,
+        id: plugin.name + REQUEST_APIS_SUFFIX,
       }),
-      name: functionName,
+      name: requestFunctionName,
     });
 
-    sdkFunctionCall = tsc.callExpression({
-      functionName: sdkImport.name,
-      parameters: [tsc.identifier({ text: 'request' })],
+    requestFunctionCall = tsc.callExpression({
+      functionName: requestImport.name,
+      parameters: [optionsCallExpression],
     });
   }
 
   return tsc.callExpression({
-    functionName: 'resource',
+    functionName: 'httpResource',
     parameters: [
-      tsc.objectExpression({
-        obj: [
-          {
-            key: 'loader',
-            value: tsc.arrowFunction({
-              async: true,
-              parameters: [
-                {
-                  destructure: [{ name: 'request' }],
-                  type: undefined,
-                },
-              ],
-              statements: [
-                tsc.returnStatement({
-                  expression: sdkFunctionCall,
-                }),
-              ],
-            }),
-          },
-          {
-            key: 'request',
-            value: tsc.identifier({ text: 'options' }),
-          },
+      tsc.arrowFunction({
+        parameters: [],
+        statements: [
+          tsc.returnStatement({
+            expression: requestFunctionCall,
+          }),
         ],
       }),
     ],
+    types: [tsc.typeNode(responseTypeName)],
   });
 };
 
@@ -376,6 +375,15 @@ const generateAngularResourceMethod = ({
     ),
   });
 
+  // Import operation response type
+  const responseType = file.import({
+    asType: true,
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+    name: fileTypeScript.getName(
+      pluginTypeScript.api.getId({ operation, type: 'response' }),
+    ),
+  });
+
   return tsc.methodDeclaration({
     accessLevel: 'public',
     comment: createOperationComment({ operation }),
@@ -393,8 +401,10 @@ const generateAngularResourceMethod = ({
       tsc.returnStatement({
         expression: generateResourceCallExpression({
           file,
+          isRequiredOptions,
           operation,
           plugin,
+          responseTypeName: responseType.name || 'unknown',
           sdkPlugin,
         }),
       }),
@@ -434,6 +444,15 @@ const generateAngularResourceFunction = ({
     ),
   });
 
+  // Import operation response type
+  const responseType = file.import({
+    asType: true,
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+    name: fileTypeScript.getName(
+      pluginTypeScript.api.getId({ operation, type: 'response' }),
+    ),
+  });
+
   return tsc.constVariable({
     comment: createOperationComment({ operation }),
     exportConst: true,
@@ -449,8 +468,10 @@ const generateAngularResourceFunction = ({
         tsc.returnStatement({
           expression: generateResourceCallExpression({
             file,
+            isRequiredOptions,
             operation,
             plugin,
+            responseTypeName: responseType.name || 'unknown',
             sdkPlugin,
           }),
         }),

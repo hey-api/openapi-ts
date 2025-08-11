@@ -14,8 +14,11 @@ export default defineConfig({
       throwOnError: true,
     },
     {
-      asClass: true,
-      name: '@hey-api/angular-resource',
+      httpResource: {
+        asClass: true,
+        enabled: true,
+      },
+      name: '@angular/common',
     },
     '@hey-api/schemas',
     {

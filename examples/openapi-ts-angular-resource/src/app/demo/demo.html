@@ -4,7 +4,7 @@
 @if (pet.error()) {
 <div class="error-message">
   <div class="error-title">Error occurred:</div>
-  <div class="error-details">{{ pet.error() }}</div>
+  <div class="error-details">{{ pet.error()|json }}</div>
 </div>
 }
 

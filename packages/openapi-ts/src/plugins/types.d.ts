@@ -21,7 +21,7 @@ export type PluginValidatorNames = 'valibot' | 'zod';
 
 export type PluginNames =
   | PluginClientNames
-  | '@hey-api/angular-resource'
+  | '@angular/common'
   | '@hey-api/schemas'
   | '@hey-api/sdk'
   | '@hey-api/transformers'

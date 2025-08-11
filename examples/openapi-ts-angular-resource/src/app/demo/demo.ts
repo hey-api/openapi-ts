@@ -2,7 +2,7 @@ import { JsonPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { PetResources } from '../../client/@hey-api/angular-resource.gen';
+import { PetResources } from '../../client';
 
 @Component({
   host: { ngSkipHydration: 'true' },
