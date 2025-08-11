@@ -72,8 +72,6 @@ export class Demo {
 
   onGetPetById = async () => {
     const { data, error, response } = await getPetById({
-      client: localClient,
-      httpClient: this.#http,
       path: {
         // random id 1-10
         petId: Math.floor(Math.random() * (10 - 1 + 1) + 1),
