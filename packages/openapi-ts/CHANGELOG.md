@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.80.9
+
+### Patch Changes
+
+- [#2426](https://github.com/hey-api/openapi-ts/pull/2426) [`7308d9b`](https://github.com/hey-api/openapi-ts/commit/7308d9b8f5eb96d984dc323b5e6276eafcd30382) Thanks [@flow96](https://github.com/flow96)! - fix(sdk): handle infinite loop in nested operation IDs and tags with duplicate values
+
 ## 0.80.8
 
 ### Patch Changes
