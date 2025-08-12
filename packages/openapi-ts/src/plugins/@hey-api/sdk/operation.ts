@@ -130,9 +130,11 @@ export const operationClasses = ({
     if (className) {
       // If root class is already within classCandidates or the same as className
       // do not add it again as this will cause a recursion issue.
-      if (classCandidates.indexOf(rootClass) >= 0 || rootClass === className)
+      if (classCandidates.includes(rootClass) || rootClass === className) {
         path = [...classCandidates, className];
-      else path = [rootClass, ...classCandidates, className];
+      } else {
+        path = [rootClass, ...classCandidates, className];
+      }
     }
 
     classNames.set(rootClass, {
