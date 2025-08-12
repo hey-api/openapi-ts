@@ -32,14 +32,13 @@ export default defineConfig({
         type: 'image/png',
       },
     ],
-    [
-      'script',
-      {},
-      'window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };',
-    ],
     process.env.NODE_ENV === 'production' && [
       'script',
-      { defer: '', src: '/_vercel/insights/script.js' },
+      {
+        'data-website-id': '4dffba2d-03a6-4358-9d90-229038c8575d',
+        defer: '',
+        src: 'https://cloud.umami.is/script.js',
+      },
     ],
   ].filter(Boolean) as Array<HeadConfig>,
   lastUpdated: true,
