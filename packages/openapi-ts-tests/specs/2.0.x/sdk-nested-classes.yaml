@@ -1,0 +1,72 @@
+swagger: '2.0'
+info:
+  title: OpenAPI 2.0 sdk nested classes example
+  version: 1.0.0
+  description: Test schema for nested class generation with various operationId patterns
+host: api.example.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /business/providers/domains:
+    get:
+      tags:
+        - business
+        - providers
+        - domains
+      operationId: business.providers.domains.get
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+    post:
+      tags:
+        - providers
+        - domains
+        - business
+      operationId: business.providers.domains.post
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+    put:
+      tags:
+        - domains
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+  /locations/businesses:
+    get:
+      tags:
+        - locations
+        - business
+      operationId: business.get
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+  /locations:
+    get:
+      tags:
+        - locations
+      operationId: get
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string

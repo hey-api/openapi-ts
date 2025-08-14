@@ -23,6 +23,8 @@ const serializeFormDataPair = (
 ): void => {
   if (typeof value === 'string' || value instanceof Blob) {
     data.append(key, value);
+  } else if (value instanceof Date) {
+    data.append(key, value.toISOString());
   } else {
     data.append(key, JSON.stringify(value));
   }
