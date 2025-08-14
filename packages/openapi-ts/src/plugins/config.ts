@@ -1,5 +1,5 @@
-import type { HeyApiAngularResourcePlugin } from './@angular/common';
-import { defaultConfig as heyApiAngularResource } from './@angular/common';
+import type { AngularCommonPlugin } from './@angular/common';
+import { defaultConfig as angularCommon } from './@angular/common';
 import type { HeyApiClientAngularPlugin } from './@hey-api/client-angular';
 import { defaultConfig as heyApiClientAngular } from './@hey-api/client-angular';
 import type { HeyApiClientAxiosPlugin } from './@hey-api/client-axios';
@@ -47,7 +47,7 @@ import type { ZodPlugin } from './zod';
 import { defaultConfig as zod } from './zod';
 
 export interface PluginConfigMap {
-  '@angular/common': HeyApiAngularResourcePlugin['Types'];
+  '@angular/common': AngularCommonPlugin['Types'];
   '@hey-api/client-angular': HeyApiClientAngularPlugin['Types'];
   '@hey-api/client-axios': HeyApiClientAxiosPlugin['Types'];
   '@hey-api/client-fetch': HeyApiClientFetchPlugin['Types'];
@@ -75,7 +75,7 @@ export interface PluginConfigMap {
 export const defaultPluginConfigs: {
   [K in PluginNames]: Plugin.Config<PluginConfigMap[K]>;
 } = {
-  '@angular/common': heyApiAngularResource,
+  '@angular/common': angularCommon,
   '@hey-api/client-angular': heyApiClientAngular,
   '@hey-api/client-axios': heyApiClientAxios,
   '@hey-api/client-fetch': heyApiClientFetch,
