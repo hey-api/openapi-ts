@@ -481,6 +481,37 @@ for (const version of versions) {
         }),
         description: 'custom read-only and write-only naming',
       },
+      {
+        config: createConfig({
+          input: 'sdk-nested-classes.yaml',
+          output: 'sdk-nested-classes',
+          plugins: [
+            '@hey-api/client-fetch',
+            {
+              asClass: true,
+              classStructure: 'auto',
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description: 'generate nested classes with auto class structure',
+      },
+      {
+        config: createConfig({
+          input: 'sdk-nested-classes.yaml',
+          output: 'sdk-nested-classes-instance',
+          plugins: [
+            '@hey-api/client-fetch',
+            {
+              asClass: true,
+              classStructure: 'auto',
+              instance: 'NestedSdkWithInstance',
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description: 'generate nested classes with auto class structure',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {

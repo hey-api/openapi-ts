@@ -124,13 +124,23 @@ export const operationClasses = ({
       context,
       value: className || rootClass,
     });
+
+    // Default path
+    let path = [rootClass];
+    if (className) {
+      // If root class is already within classCandidates or the same as className
+      // do not add it again as this will cause a recursion issue.
+      if (classCandidates.includes(rootClass) || rootClass === className) {
+        path = [...classCandidates, className];
+      } else {
+        path = [rootClass, ...classCandidates, className];
+      }
+    }
+
     classNames.set(rootClass, {
       className: finalClassName,
       methodName: methodName || getOperationMethodName({ operation, plugin }),
-      path: (className
-        ? [rootClass, ...classCandidates, className]
-        : [rootClass]
-      ).map((value) =>
+      path: path.map((value) =>
         operationClassName({
           context,
           value,
