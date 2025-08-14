@@ -56,6 +56,13 @@ export type UserConfig = Plugin.Name<'@angular/common'> & {
    * Options for generating HTTP resource APIs.
    */
   httpResource?: AngularHttpResourceOptions;
+
+  /**
+   * Name of the generated file.
+   *
+   * @default '@angular/common'
+   */
+  output?: string;
 };
 
 export type AngularCommonPlugin = DefinePlugin<UserConfig, UserConfig>;
