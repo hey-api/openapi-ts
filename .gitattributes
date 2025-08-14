@@ -1,2 +1,5 @@
 * text=auto eol=lf
-*lock.* linguist-generated=true
+bun.lockb linguist-generated=true
+package-lock.json linguist-generated=true
+pnpm-lock.yaml linguist-generated=true
+yarn.lock linguist-generated=true
