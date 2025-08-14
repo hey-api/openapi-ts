@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.80.10
+
+### Patch Changes
+
+- [#2438](https://github.com/hey-api/openapi-ts/pull/2438) [`760fd61`](https://github.com/hey-api/openapi-ts/commit/760fd61701080a890ba8e8efc5eac46699db4bbf) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): handle dates in formdata serializer
+
+## 0.80.9
+
+### Patch Changes
+
+- [#2426](https://github.com/hey-api/openapi-ts/pull/2426) [`7308d9b`](https://github.com/hey-api/openapi-ts/commit/7308d9b8f5eb96d984dc323b5e6276eafcd30382) Thanks [@flow96](https://github.com/flow96)! - fix(sdk): handle infinite loop in nested operation IDs and tags with duplicate values
+
 ## 0.80.8
 
 ### Patch Changes
