@@ -1,48 +1,63 @@
-<mat-card *ngIf="pet.data()!">
-  <mat-card-header>
-    <mat-card-title>{{ pet.data()!.name }}</mat-card-title>
-    <mat-card-subtitle>{{ pet.data()!.category }}</mat-card-subtitle>
-  </mat-card-header>
-  <img
-    mat-card-image
-    [src]="pet.data()!.photoUrls.at(0)"
-    alt="{{ pet.data()!.name }}"
-  />
-</mat-card>
+@let pet = petState.data();
+<div class="pet-store-header">
+  <button mat-raised-button color="primary" (click)="getRandomPet()">
+    Get Random Pet
+  </button>
 
-<pre *ngIf="addPet.data()">
-  <code>{{addPet.data()|json}}</code>
-</pre>
+  <mat-card class="pet-card mat-elevation-z8">
+    @if (petState.isLoading()) {
+      <mat-spinner />
+    }
 
-<pre *ngIf="updatePet.data()">
-  <code>{{updatePet.data()|json}}</code>
-</pre>
+    @if (pet) {
+      <mat-card-header>
+        <mat-card-title class="pet-card-title">{{ pet.name }}</mat-card-title>
+        <mat-card-subtitle class="pet-card-subtitle">{{
+          pet.category?.name
+        }}</mat-card-subtitle>
+      </mat-card-header>
+      <!-- <img mat-card-image [src]="pet.photoUrls.at(0)" alt="{{ pet.name }}" class="pet-card-image" /> -->
+      <mat-card-content>
+        <p class="pet-status">
+          Status: <b>{{ pet.status }}</b>
+        </p>
+      </mat-card-content>
+    }
+  </mat-card>
+</div>
 
-<button mat-raised-button (click)="getRandomPet()">Get Random Pet</button>
+@if (addPet.data()) {
+  <pre>
+    <code>{{addPet.data()|json}}</code>
+  </pre>
+}
+
+@if (updatePet.data()) {
+  <pre>
+    <code>{{updatePet.data()|json}}</code>
+  </pre>
+}
 
 <form #petForm="ngForm" (submit)="onSubmit(petForm)">
-  <mat-card>
+  <mat-card class="pet-form-card mat-elevation-z4">
     <mat-card-header>
-      <mat-card-title><p>Pet Form</p></mat-card-title>
+      <mat-card-title
+        ><span class="pet-form-title">Pet Form</span></mat-card-title
+      >
     </mat-card-header>
-    <mat-card-content>
+    <mat-card-content class="pet-form-content">
       <mat-form-field appearance="fill">
         <mat-label>Name</mat-label>
-        <input matInput name="name" ngModel required />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Category</mat-label>
-        <input matInput name="category" ngModel required />
+        <input matInput name="name" [(ngModel)]="nextPetState.name" required />
       </mat-form-field>
     </mat-card-content>
     <mat-card-footer>
-      <mat-card-actions>
-        <button mat-button color="primary" type="submit">Add Pet</button>
+      <mat-card-actions class="actions">
+        <button mat-raised-button color="primary" type="submit">Add Pet</button>
         <button
-          mat-button
+          mat-stroked-button
           color="accent"
-          (click)="handleUpdatePet(petForm.value.name, petForm.value.category)"
+          (click)="handleUpdatePet($event)"
         >
           Update Pet
         </button>

@@ -62,6 +62,7 @@ export type QueryKey<TOptions extends Options> = [
   Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
     _id: string;
     _infinite?: boolean;
+    tags?: ReadonlyArray<string>;
   },
 ];
 
@@ -69,13 +70,19 @@ const createQueryKey = <TOptions extends Options>(
   id: string,
   options?: TOptions,
   infinite?: boolean,
+  tags?: ReadonlyArray<string>,
 ): [QueryKey<TOptions>[0]] => {
   const params: QueryKey<TOptions>[0] = {
     _id: id,
-    baseUrl: (options?.client ?? _heyApiClient).getConfig().baseUrl,
+    baseUrl:
+      options?.baseUrl ||
+      (options?.client ?? _heyApiClient).getConfig().baseUrl,
   } as QueryKey<TOptions>[0];
   if (infinite) {
     params._infinite = infinite;
+  }
+  if (tags) {
+    params.tags = tags;
   }
   if (options?.body) {
     params.body = options.body;
@@ -162,7 +169,7 @@ export const updatePetMutation = (
 };
 
 export const findPetsByStatusQueryKey = (
-  options?: Options<FindPetsByStatusData>,
+  options: Options<FindPetsByStatusData>,
 ) => createQueryKey('findPetsByStatus', options);
 
 /**
@@ -170,7 +177,7 @@ export const findPetsByStatusQueryKey = (
  * Multiple status values can be provided with comma separated strings.
  */
 export const findPetsByStatusOptions = (
-  options?: Options<FindPetsByStatusData>,
+  options: Options<FindPetsByStatusData>,
 ) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -185,14 +192,14 @@ export const findPetsByStatusOptions = (
     queryKey: findPetsByStatusQueryKey(options),
   });
 
-export const findPetsByTagsQueryKey = (options?: Options<FindPetsByTagsData>) =>
+export const findPetsByTagsQueryKey = (options: Options<FindPetsByTagsData>) =>
   createQueryKey('findPetsByTags', options);
 
 /**
  * Finds Pets by tags.
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
-export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
+export const findPetsByTagsOptions = (options: Options<FindPetsByTagsData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await findPetsByTags({

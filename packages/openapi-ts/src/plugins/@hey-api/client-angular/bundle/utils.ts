@@ -1,9 +1,10 @@
+import { HttpHeaders } from '@angular/common/http';
+
 import { getAuthToken } from '../../client-core/bundle/auth';
 import type {
   QuerySerializer,
   QuerySerializerOptions,
 } from '../../client-core/bundle/bodySerializer';
-import { jsonBodySerializer } from '../../client-core/bundle/bodySerializer';
 import {
   serializeArrayParam,
   serializeObjectParam,
@@ -186,14 +187,13 @@ export const getParseAs = (
   return;
 };
 
-export const setAuthParams = async ({
-  security,
-  ...options
-}: Pick<Required<RequestOptions>, 'security'> &
-  Pick<RequestOptions, 'auth' | 'query'> & {
-    headers: Headers;
-  }) => {
-  for (const auth of security) {
+export const setAuthParams = async (
+  options: Pick<Required<RequestOptions>, 'security'> &
+    Pick<RequestOptions, 'auth' | 'query'> & {
+      headers: HttpHeaders;
+    },
+) => {
+  for (const auth of options.security) {
     const token = await getAuthToken(auth, options.auth);
 
     if (!token) {
@@ -210,11 +210,11 @@ export const setAuthParams = async ({
         options.query[name] = token;
         break;
       case 'cookie':
-        options.headers.append('Cookie', `${name}=${token}`);
+        options.headers = options.headers.append('Cookie', `${name}=${token}`);
         break;
       case 'header':
       default:
-        options.headers.set(name, token);
+        options.headers = options.headers.set(name, token);
         break;
     }
 
@@ -275,33 +275,47 @@ export const mergeConfigs = (a: Config, b: Config): Config => {
 
 export const mergeHeaders = (
   ...headers: Array<Required<Config>['headers'] | undefined>
-): Headers => {
-  const mergedHeaders = new Headers();
+): HttpHeaders => {
+  let mergedHeaders = new HttpHeaders();
+
   for (const header of headers) {
     if (!header || typeof header !== 'object') {
       continue;
     }
 
-    const iterator =
-      header instanceof Headers ? header.entries() : Object.entries(header);
-
-    for (const [key, value] of iterator) {
-      if (value === null) {
-        mergedHeaders.delete(key);
-      } else if (Array.isArray(value)) {
-        for (const v of value) {
-          mergedHeaders.append(key, v as string);
+    if (header instanceof HttpHeaders) {
+      // Merge HttpHeaders instance
+      header.keys().forEach((key) => {
+        const values = header.getAll(key);
+        if (values) {
+          values.forEach((value) => {
+            mergedHeaders = mergedHeaders.append(key, value);
+          });
         }
-      } else if (value !== undefined) {
-        // assume object headers are meant to be JSON stringified, i.e. their
-        // content value in OpenAPI specification is 'application/json'
-        mergedHeaders.set(
-          key,
-          typeof value === 'object' ? JSON.stringify(value) : (value as string),
-        );
+      });
+    } else {
+      // Merge plain object headers
+      for (const [key, value] of Object.entries(header)) {
+        if (value === null) {
+          mergedHeaders = mergedHeaders.delete(key);
+        } else if (Array.isArray(value)) {
+          for (const v of value) {
+            mergedHeaders = mergedHeaders.append(key, v as string);
+          }
+        } else if (value !== undefined) {
+          // assume object headers are meant to be JSON stringified, i.e. their
+          // content value in OpenAPI specification is 'application/json'
+          mergedHeaders = mergedHeaders.set(
+            key,
+            typeof value === 'object'
+              ? JSON.stringify(value)
+              : (value as string),
+          );
+        }
       }
     }
   }
+
   return mergedHeaders;
 };
 
@@ -409,9 +423,7 @@ const defaultHeaders = {
 export const createConfig = <T extends ClientOptions = ClientOptions>(
   override: Config<Omit<ClientOptions, keyof T> & T> = {},
 ): Config<Omit<ClientOptions, keyof T> & T> => ({
-  ...jsonBodySerializer,
   headers: defaultHeaders,
-  // parseAs: 'auto',
   querySerializer: defaultQuerySerializer,
   ...override,
 });

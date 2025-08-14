@@ -9,26 +9,17 @@ export default defineConfig({
     path: './src/client',
   },
   plugins: [
-    '@hey-api/client-angular',
+    {
+      name: '@hey-api/client-angular',
+    },
     '@hey-api/schemas',
     {
-      asClass: false,
-      classNameBuilder(name) {
-        return `${name}Service`;
-      },
-      methodNameBuilder(operation) {
-        return String(operation.id);
-      },
+      asClass: true,
       name: '@hey-api/sdk',
     },
     {
       enums: 'javascript',
       name: '@hey-api/typescript',
-    },
-    '@tanstack/angular-query-experimental',
-    {
-      asClass: true,
-      name: '@hey-api/angular-resource',
     },
   ],
 });
