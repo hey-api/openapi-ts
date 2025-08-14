@@ -58,4 +58,4 @@ export type UserConfig = Plugin.Name<'@angular/common'> & {
   httpResource?: AngularHttpResourceOptions;
 };
 
-export type HeyApiAngularCommonPlugin = DefinePlugin<UserConfig, UserConfig>;
+export type AngularCommonPlugin = DefinePlugin<UserConfig, UserConfig>;

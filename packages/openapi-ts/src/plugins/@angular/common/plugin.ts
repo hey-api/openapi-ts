@@ -1,8 +1,8 @@
 import { angularHttpRequestsCompanionPluginHandler } from './companions/angularHttpRequestsCompanionPluginHandler';
 import { angularHttpResourceCompanionPluginHandler } from './companions/angularHttpResourceCompanionPluginHandler';
-import type { HeyApiAngularCommonPlugin } from './types';
+import type { AngularCommonPlugin } from './types';
 
-export const handler: HeyApiAngularCommonPlugin['Handler'] = (args) => {
+export const handler: AngularCommonPlugin['Handler'] = (args) => {
   angularHttpRequestsCompanionPluginHandler(args);
 
   if (args.plugin.config.httpResource?.enabled) {

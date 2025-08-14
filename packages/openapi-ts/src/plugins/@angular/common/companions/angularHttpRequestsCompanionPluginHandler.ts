@@ -8,11 +8,11 @@ import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '../../../shared/utils/operation';
-import type { HeyApiAngularCommonPlugin } from '../types';
+import type { AngularCommonPlugin } from '../types';
 
 export const REQUEST_APIS_SUFFIX = '/http/httpRequests';
 
-export const angularHttpRequestsCompanionPluginHandler: HeyApiAngularCommonPlugin['Handler'] =
+export const angularHttpRequestsCompanionPluginHandler: AngularCommonPlugin['Handler'] =
   ({ plugin }) => {
     const sdkPlugin = plugin.getPlugin('@hey-api/sdk');
 
@@ -63,7 +63,7 @@ const generateAngularClassRequests = ({
   sdkPlugin,
 }: {
   file: any;
-  plugin: HeyApiAngularCommonPlugin['Instance'];
+  plugin: AngularCommonPlugin['Instance'];
   sdkPlugin: any;
 }) => {
   const requestClasses = new Map<string, AngularRequestClassEntry>();
@@ -201,7 +201,7 @@ const generateAngularFunctionRequests = ({
   plugin,
 }: {
   file: any;
-  plugin: HeyApiAngularCommonPlugin['Instance'];
+  plugin: AngularCommonPlugin['Instance'];
 }) => {
   plugin.forEach('operation', ({ operation }) => {
     const isRequiredOptions = isOperationOptionsRequired({
