@@ -88,7 +88,7 @@ export const generateLegacyOutput = async ({
 
   for (const name of config.pluginOrder) {
     const plugin = config.plugins[name]!;
-    const outputParts = (plugin.output ?? '').split('/');
+    const outputParts = (plugin.output ?? '').toString().split('/');
     const outputDir = path.resolve(
       config.output.path,
       ...outputParts.slice(0, outputParts.length - 1),
