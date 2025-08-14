@@ -7,6 +7,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
     asClass: false,
     auth: true,
+    classNameBuilder: '{{name}}',
     classStructure: 'auto',
     client: true,
     exportFromIndex: true,
@@ -81,6 +82,13 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       plugin.config.asClass = true;
     } else {
       plugin.config.instance = false;
+    }
+
+    // Set default classNameBuilder based on client type
+    if (plugin.config.classNameBuilder === '{{name}}') {
+      if (plugin.config.client === '@hey-api/client-angular') {
+        plugin.config.classNameBuilder = '{{name}}Service';
+      }
     }
   },
 };

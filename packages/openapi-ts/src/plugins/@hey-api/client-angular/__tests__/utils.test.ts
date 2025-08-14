@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Auth } from '../../client-core/bundle/auth';
@@ -91,28 +92,29 @@ describe('getParseAs', () => {
 describe('setAuthParams', () => {
   it('sets bearer token in headers', async () => {
     const auth = vi.fn().mockReturnValue('foo');
-    const headers = new Headers();
+    const headers = new HttpHeaders();
     const query: Record<any, unknown> = {};
-    await setAuthParams({
+    const options = {
       auth,
       headers,
       query,
       security: [
         {
           name: 'baz',
-          scheme: 'bearer',
-          type: 'http',
+          scheme: 'bearer' as const,
+          type: 'http' as const,
         },
       ],
-    });
+    };
+    await setAuthParams(options);
     expect(auth).toHaveBeenCalled();
-    expect(headers.get('baz')).toBe('Bearer foo');
+    expect(options.headers.get('baz')).toBe('Bearer foo');
     expect(Object.keys(query).length).toBe(0);
   });
 
   it('sets access token in query', async () => {
     const auth = vi.fn().mockReturnValue('foo');
-    const headers = new Headers();
+    const headers = new HttpHeaders();
     const query: Record<any, unknown> = {};
     await setAuthParams({
       auth,
@@ -134,47 +136,49 @@ describe('setAuthParams', () => {
 
   it('sets Authorization header when `in` and `name` are undefined', async () => {
     const auth = vi.fn().mockReturnValue('foo');
-    const headers = new Headers();
+    const headers = new HttpHeaders();
     const query: Record<any, unknown> = {};
-    await setAuthParams({
+    const options = {
       auth,
       headers,
       query,
       security: [
         {
-          type: 'http',
+          type: 'http' as const,
         },
       ],
-    });
+    };
+    await setAuthParams(options);
     expect(auth).toHaveBeenCalled();
-    expect(headers.get('Authorization')).toBe('foo');
+    expect(options.headers.get('Authorization')).toBe('foo');
     expect(query).toEqual({});
   });
 
   it('sets first scheme only', async () => {
     const auth = vi.fn().mockReturnValue('foo');
-    const headers = new Headers();
+    const headers = new HttpHeaders();
     const query: Record<any, unknown> = {};
-    await setAuthParams({
+    const options = {
       auth,
       headers,
       query,
       security: [
         {
           name: 'baz',
-          scheme: 'bearer',
-          type: 'http',
+          scheme: 'bearer' as const,
+          type: 'http' as const,
         },
         {
-          in: 'query',
+          in: 'query' as const,
           name: 'baz',
-          scheme: 'bearer',
-          type: 'http',
+          scheme: 'bearer' as const,
+          type: 'http' as const,
         },
       ],
-    });
+    };
+    await setAuthParams(options);
     expect(auth).toHaveBeenCalled();
-    expect(headers.get('baz')).toBe('Bearer foo');
+    expect(options.headers.get('baz')).toBe('Bearer foo');
     expect(Object.keys(query).length).toBe(0);
   });
 
@@ -185,7 +189,7 @@ describe('setAuthParams', () => {
       }
       return 'foo';
     });
-    const headers = new Headers();
+    const headers = new HttpHeaders();
     const query: Record<any, unknown> = {};
     await setAuthParams({
       auth,
@@ -211,22 +215,23 @@ describe('setAuthParams', () => {
 
   it('sets an API key in a cookie', async () => {
     const auth = vi.fn().mockReturnValue('foo');
-    const headers = new Headers();
+    const headers = new HttpHeaders();
     const query: Record<any, unknown> = {};
-    await setAuthParams({
+    const options = {
       auth,
       headers,
       query,
       security: [
         {
-          in: 'cookie',
+          in: 'cookie' as const,
           name: 'baz',
-          type: 'apiKey',
+          type: 'apiKey' as const,
         },
       ],
-    });
+    };
+    await setAuthParams(options);
     expect(auth).toHaveBeenCalled();
-    expect(headers.get('Cookie')).toBe('baz=foo');
+    expect(options.headers.get('Cookie')).toBe('baz=foo');
     expect(query).toEqual({});
   });
 });

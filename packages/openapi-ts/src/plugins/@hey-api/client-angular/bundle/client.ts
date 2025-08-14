@@ -1,14 +1,26 @@
 import type { HttpResponse } from '@angular/common/http';
-import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpEventType,
+  HttpRequest,
+} from '@angular/common/http';
 import {
   assertInInjectionContext,
   inject,
   provideAppInitializer,
+  runInInjectionContext,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import type { Client, Config, ResolvedRequestOptions } from './types';
+import type {
+  Client,
+  Config,
+  RequestOptions,
+  ResolvedRequestOptions,
+  ResponseStyle,
+} from './types';
 import {
   buildUrl,
   createConfig,
@@ -42,19 +54,58 @@ export const createClient = (config: Config = {}): Client => {
     ResolvedRequestOptions
   >();
 
-  const request: Client['request'] = async (options) => {
+  const requestOptions = <
+    ThrowOnError extends boolean = false,
+    TResponseStyle extends ResponseStyle = 'fields',
+  >(
+    options: RequestOptions<TResponseStyle, ThrowOnError>,
+  ) => {
     const opts = {
       ..._config,
       ...options,
       headers: mergeHeaders(_config.headers, options.headers),
       httpClient: options.httpClient ?? _config.httpClient,
-      serializedBody: undefined,
+      method: 'GET',
+      serializedBody: options.body as any,
     };
 
     if (!opts.httpClient) {
-      assertInInjectionContext(request);
-      opts.httpClient = inject(HttpClient);
+      if (opts.injector) {
+        opts.httpClient = runInInjectionContext(opts.injector, () =>
+          inject(HttpClient),
+        );
+      } else {
+        assertInInjectionContext(requestOptions);
+        opts.httpClient = inject(HttpClient);
+      }
     }
+
+    if (opts.body && opts.bodySerializer) {
+      opts.serializedBody = opts.bodySerializer(opts.body);
+    }
+
+    // remove Content-Type header if body is empty to avoid sending invalid requests
+    if (opts.serializedBody === undefined || opts.serializedBody === '') {
+      opts.headers.delete('Content-Type');
+    }
+
+    const url = buildUrl(opts as any);
+
+    const req = new HttpRequest<unknown>(
+      opts.method,
+      url,
+      opts.serializedBody || null,
+      {
+        redirect: 'follow',
+        ...opts,
+      },
+    );
+
+    return { opts, req };
+  };
+
+  const request: Client['request'] = async (options) => {
+    const { opts, req: initialReq } = requestOptions(options);
 
     if (opts.security) {
       await setAuthParams({
@@ -67,26 +118,11 @@ export const createClient = (config: Config = {}): Client => {
       await opts.requestValidator(opts);
     }
 
-    if (opts.body && opts.bodySerializer) {
-      opts.serializedBody = opts.bodySerializer(opts.body);
-    }
-
-    // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (opts.serializedBody === undefined || opts.serializedBody === '') {
-      opts.headers.delete('Content-Type');
-    }
-
-    const url = buildUrl(opts);
-
-    let req = new HttpRequest<unknown>(opts.method, url, {
-      redirect: 'follow',
-      ...opts,
-      body: opts.serializedBody,
-    });
+    let req = initialReq;
 
     for (const fn of interceptors.request._fns) {
       if (fn) {
-        req = await fn(req, opts);
+        req = await fn(req, opts as any);
       }
     }
 
@@ -98,46 +134,56 @@ export const createClient = (config: Config = {}): Client => {
 
     try {
       response = await firstValueFrom(
-        opts.httpClient
-          .request(req)
+        opts
+          .httpClient!.request(req)
           .pipe(filter((event) => event.type === HttpEventType.Response)),
       );
 
       for (const fn of interceptors.response._fns) {
         if (fn) {
-          response = await fn(response, req, opts);
+          response = await fn(response, req, opts as any);
         }
       }
 
-      let bodyResponse = response.body as Record<string, unknown>;
+      let bodyResponse: any = response.body;
 
       if (opts.responseValidator) {
         await opts.responseValidator(bodyResponse);
       }
 
       if (opts.responseTransformer) {
-        bodyResponse = (await opts.responseTransformer(bodyResponse)) as Record<
-          string,
-          unknown
-        >;
+        bodyResponse = await opts.responseTransformer(bodyResponse);
       }
 
-      return (
-        opts.responseStyle === 'data'
-          ? bodyResponse
-          : { data: bodyResponse, ...result }
-      ) as any;
+      return opts.responseStyle === 'data'
+        ? bodyResponse
+        : { data: bodyResponse, ...result };
     } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        response = error;
+      }
+
+      let finalError = error instanceof HttpErrorResponse ? error.error : error;
+
       for (const fn of interceptors.error._fns) {
         if (fn) {
-          (await fn(error, response!, req, opts)) as string;
+          finalError = (await fn(
+            finalError,
+            response as HttpResponse<unknown>,
+            req,
+            opts as any,
+          )) as string;
         }
+      }
+
+      if (opts.throwOnError) {
+        throw finalError;
       }
 
       return opts.responseStyle === 'data'
         ? undefined
         : {
-            error,
+            error: finalError,
             ...result,
           };
     }
@@ -156,6 +202,19 @@ export const createClient = (config: Config = {}): Client => {
     post: (options) => request({ ...options, method: 'POST' }),
     put: (options) => request({ ...options, method: 'PUT' }),
     request,
+    requestOptions: (options) => {
+      if (options.security) {
+        throw new Error('Security is not supported in requestOptions');
+      }
+
+      if (options.requestValidator) {
+        throw new Error(
+          'Request validation is not supported in requestOptions',
+        );
+      }
+
+      return requestOptions(options).req;
+    },
     setConfig,
     trace: (options) => request({ ...options, method: 'TRACE' }),
   };
