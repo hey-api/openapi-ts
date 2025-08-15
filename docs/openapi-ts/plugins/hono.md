@@ -3,6 +3,10 @@ title: Hono
 description: Hono plugin for Hey API. Compatible with all our features.
 ---
 
+<script setup lang="ts">
+import FeatureStatus from '@components/FeatureStatus.vue';
+</script>
+
 # Hono <span data-soon>soon</span>
 
 <FeatureStatus issueNumber=1483 name="Hono" />

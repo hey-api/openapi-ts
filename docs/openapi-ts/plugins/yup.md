@@ -3,6 +3,10 @@ title: Yup
 description: Yup plugin for Hey API. Compatible with all our features.
 ---
 
+<script setup lang="ts">
+import FeatureStatus from '@components/FeatureStatus.vue';
+</script>
+
 # Yup <span data-soon>soon</span>
 
 <FeatureStatus issueNumber=1478 name="Yup" />

@@ -3,6 +3,10 @@ title: Supertest
 description: Supertest plugin for Hey API. Compatible with all our features.
 ---
 
+<script setup lang="ts">
+import FeatureStatus from '@components/FeatureStatus.vue';
+</script>
+
 # Supertest <span data-soon>soon</span>
 
 <FeatureStatus issueNumber=1488 name="Supertest" />

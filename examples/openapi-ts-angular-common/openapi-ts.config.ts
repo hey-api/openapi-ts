@@ -14,9 +14,10 @@ export default defineConfig({
       throwOnError: true,
     },
     {
-      httpResource: {
+      exportFromIndex: true,
+      httpRequests: true,
+      httpResources: {
         asClass: true,
-        enabled: true,
       },
       name: '@angular/common',
     },

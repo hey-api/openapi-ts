@@ -3,6 +3,10 @@ title: Koa
 description: Koa plugin for Hey API. Compatible with all our features.
 ---
 
+<script setup lang="ts">
+import FeatureStatus from '@components/FeatureStatus.vue';
+</script>
+
 # Koa <span data-soon>soon</span>
 
 <FeatureStatus issueNumber=1482 name="Koa" />

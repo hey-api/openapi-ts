@@ -3,6 +3,13 @@ title: Fastify v5 Plugin
 description: Generate Fastify v5 route handlers from OpenAPI with the Fastify plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
+<script setup lang="ts">
+import AuthorsList from '@components/AuthorsList.vue';
+import Heading from '@components/Heading.vue';
+import { jacobCohen } from '@data/people.js';
+import VersionLabel from '@components/VersionLabel.vue';
+</script>
+
 <Heading>
   <h1>Fastify</h1>
   <VersionLabel value="v5" />
@@ -18,17 +25,9 @@ Fastify plugin is currently in beta. The interface might change before it become
 
 The Fastify plugin for Hey API generates route handlers from your OpenAPI spec, fully compatible with all core features.
 
-<!-- ### Demo
-
-<button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-fastify-example')(event)">
-StackBlitz
-</button> -->
-
 ### Collaborators
 
-<AuthorsList :people="[
-  { name: 'Jacob Cohen', github: 'https://github.com/jacobinu' },
-]" />
+<AuthorsList :people="[jacobCohen]" />
 
 ## Features
 

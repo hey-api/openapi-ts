@@ -95,6 +95,10 @@ export default defineConfig({
                 text: 'Fetch API',
               },
               {
+                link: '/openapi-ts/clients/angular',
+                text: 'Angular',
+              },
+              {
                 link: '/openapi-ts/clients/axios',
                 text: 'Axios',
               },
@@ -105,10 +109,6 @@ export default defineConfig({
               {
                 link: '/openapi-ts/clients/nuxt',
                 text: 'Nuxt',
-              },
-              {
-                link: '/openapi-ts/clients/angular',
-                text: 'Angular',
               },
               {
                 link: '/openapi-ts/clients/effect',
@@ -218,6 +218,10 @@ export default defineConfig({
           {
             collapsed: true,
             items: [
+              {
+                link: '/openapi-ts/plugins/angular',
+                text: 'Angular',
+              },
               {
                 link: '/openapi-ts/plugins/fastify',
                 text: 'Fastify',

@@ -1,7 +1,12 @@
 ---
-title: Nuxt client
-description: Nuxt client for Hey API. Compatible with all our features.
+title: Nuxt v3 Client
+description: Generate a type-safe Nuxt v3 client from OpenAPI with the Nuxt client for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
+
+<script setup lang="ts">
+import Heading from '@components/Heading.vue';
+import VersionLabel from '@components/VersionLabel.vue';
+</script>
 
 <Heading>
   <h1>Nuxt</h1>
@@ -16,12 +21,11 @@ Nuxt client is currently in beta. The interface might change before it becomes s
 
 [Nuxt](https://nuxt.com) is an open source framework that makes web development intuitive and powerful.
 
-<!-- <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-example')(event)">
-Launch demo
-</button> -->
+The Nuxt client for Hey API generates a type-safe client from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
 
 ## Features
 
+- Nuxt v3 support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - type-safe response data and errors
 - response data validation and transformation

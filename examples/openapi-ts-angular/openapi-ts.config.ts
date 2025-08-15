@@ -9,9 +9,7 @@ export default defineConfig({
     path: './src/client',
   },
   plugins: [
-    {
-      name: '@hey-api/client-angular',
-    },
+    '@hey-api/client-angular',
     '@hey-api/schemas',
     {
       asClass: true,

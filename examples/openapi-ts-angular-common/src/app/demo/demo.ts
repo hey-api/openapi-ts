@@ -2,7 +2,7 @@ import { JsonPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { PetResources } from '../../client';
+import { PetServiceResources } from '../../client';
 
 @Component({
   host: { ngSkipHydration: 'true' },
@@ -12,7 +12,7 @@ import { PetResources } from '../../client';
   templateUrl: './demo.html',
 })
 export class Demo {
-  #petResources = inject(PetResources);
+  #petResources = inject(PetServiceResources);
 
   petId = signal(0);
 
