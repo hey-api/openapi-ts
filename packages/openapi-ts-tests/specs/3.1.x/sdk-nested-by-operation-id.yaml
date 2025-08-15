@@ -1,0 +1,63 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 sdk nested classes example
+  version: 1
+paths:
+  /v1/tenants/providers/domains:
+    get:
+      tags:
+        - v1
+        - tenants
+        - providers
+        - domains
+      operationId: v1.tenants.providers.domains.get
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK
+    post:
+      tags:
+        - v1
+        - tenants
+        - providers
+        - domains
+      operationId: v1.tenants.providers.domains.post
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK
+  /v2/tenants/providers/domains:
+    get:
+      tags:
+        - v2
+        - tenants
+        - providers
+        - domains
+      operationId: v2.tenants.providers.domains.get
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK
+    post:
+      tags:
+        - v2
+        - tenants
+        - providers
+        - domains
+      operationId: v2.tenants.providers.domains.post
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK

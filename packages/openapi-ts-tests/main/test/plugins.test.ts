@@ -512,6 +512,60 @@ for (const version of versions) {
         }),
         description: 'generate nested classes with auto class structure',
       },
+      {
+        config: createConfig({
+          input: 'sdk-nested-by-operation-id.yaml',
+          output: 'sdk-nested-classes-group-by-operation-id',
+          plugins: [
+            '@hey-api/client-fetch',
+            {
+              asClass: true,
+              classStructure: 'auto',
+              groupByOperationId: true,
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description:
+          'generate nested classes with groupByOperationId set to true',
+      },
+      {
+        config: createConfig({
+          input: 'sdk-nested-by-operation-id.yaml',
+          output: 'sdk-nested-group-id-instance',
+          plugins: [
+            '@hey-api/client-fetch',
+            {
+              asClass: true,
+              classStructure: 'auto',
+              groupByOperationId: true,
+              instance: 'MySDK',
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description:
+          'generate nested classes with groupByOperationId and instance set to a custom name',
+      },
+      {
+        config: createConfig({
+          input: 'sdk-nested-by-operation-id.yaml',
+          output: 'sdk-nested-group-id-instance-custom-name',
+          plugins: [
+            '@hey-api/client-fetch',
+            {
+              asClass: true,
+              classNameBuilder: '{{name}}Service',
+              classStructure: 'auto',
+              groupByOperationId: true,
+              instance: 'MySDK',
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description:
+          'generate nested classes with groupByOperationId, instance set to a custom name and classNameBuilder set to a custom name',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {

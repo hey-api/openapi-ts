@@ -88,7 +88,7 @@ const getOperationMethodName = ({
 /**
  * Returns a list of classes where this operation appears in the generated SDK.
  */
-export const operationClassesNestedByOperationId = ({
+export const operationClassesGroupByOperationId = ({
   context,
   operation,
   plugin,
@@ -124,7 +124,11 @@ export const operationClassesNestedByOperationId = ({
     });
   }
 
-  // classCandidates = ["v1", "tenants", "providers"];
+  // If a custom instance name is provided, shift it to the front of the class candidates (it will be the root class)
+  if (plugin.config.instance) {
+    classCandidates.unshift(plugin.config.instance as string);
+  }
+
   let previousClassName = '';
   const rootClasses = classCandidates.map((value) => {
     const currentClassName =
@@ -269,7 +273,7 @@ export const operationClasses = ({
 }): Map<string, ClassNameEntry> => {
   // Use nested operationId class generator above
   if (plugin.config.groupByOperationId) {
-    return operationClassesNestedByOperationId({
+    return operationClassesGroupByOperationId({
       context,
       operation,
       plugin,
