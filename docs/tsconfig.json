@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "esModuleInterop": true,
     "paths": {
       "@components/*": ["./.vitepress/theme/components/*"],
       "@data": ["./data/*"],
