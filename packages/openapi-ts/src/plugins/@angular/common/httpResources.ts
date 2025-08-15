@@ -50,9 +50,9 @@ const generateAngularClassServices = ({
 
     for (const entry of classes.values()) {
       entry.path.forEach((currentClassName, index) => {
-        if (!serviceClasses.has(currentClassName)) {
-          serviceClasses.set(currentClassName, {
-            className: currentClassName,
+        if (!serviceClasses.has(currentClassName.className)) {
+          serviceClasses.set(currentClassName.className, {
+            className: currentClassName.className,
             classes: new Set(),
             methods: new Set(),
             nodes: [],
@@ -62,9 +62,9 @@ const generateAngularClassServices = ({
 
         const parentClassName = entry.path[index - 1];
         if (parentClassName && parentClassName !== currentClassName) {
-          const parentClass = serviceClasses.get(parentClassName)!;
-          parentClass.classes.add(currentClassName);
-          serviceClasses.set(parentClassName, parentClass);
+          const parentClass = serviceClasses.get(parentClassName.className)!;
+          parentClass.classes.add(currentClassName.className);
+          serviceClasses.set(parentClassName.className, parentClass);
         }
 
         const isLast = entry.path.length === index + 1;
@@ -72,7 +72,7 @@ const generateAngularClassServices = ({
           return;
         }
 
-        const currentClass = serviceClasses.get(currentClassName)!;
+        const currentClass = serviceClasses.get(currentClassName.className)!;
 
         // Generate the resource method name
         const resourceMethodName =
@@ -100,7 +100,7 @@ const generateAngularClassServices = ({
         }
 
         currentClass.methods.add(resourceMethodName);
-        serviceClasses.set(currentClassName, currentClass);
+        serviceClasses.set(currentClassName.className, currentClass);
       });
     }
   });
@@ -264,7 +264,7 @@ const generateResourceCallExpression = ({
             expression: methodAccess,
             name: stringCase({
               case: 'camelCase',
-              value: className,
+              value: className.className,
             }),
           });
         }

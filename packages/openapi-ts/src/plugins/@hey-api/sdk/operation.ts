@@ -36,7 +36,12 @@ interface ClassNameEntry {
   /**
    * JSONPath-like array to class location.
    */
-  path: ReadonlyArray<string>;
+  path: ReadonlyArray<PathEntry>;
+}
+
+interface PathEntry {
+  className: string;
+  propertyName: string;
 }
 
 const operationClassName = ({
@@ -83,7 +88,96 @@ const getOperationMethodName = ({
 /**
  * Returns a list of classes where this operation appears in the generated SDK.
  */
-export const operationClasses = ({
+export const operationClassesNestedByOperationId = ({
+  context,
+  operation,
+  plugin,
+}: {
+  context: IR.Context;
+  operation: IR.OperationObject;
+  plugin: {
+    config: Pick<
+      HeyApiSdkPlugin['Instance']['config'],
+      'asClass' | 'classStructure' | 'instance'
+    >;
+  };
+}): Map<string, ClassNameEntry> => {
+  const classNames = new Map<string, ClassNameEntry>();
+
+  let methodName: string | undefined;
+  let classCandidates: Array<string> = [];
+
+  if (!operation.operationId) {
+    throw new Error(
+      'Operation ID is required when nestByOperationId is true. Missing in operation: ' +
+        operation.path,
+    );
+  }
+
+  classCandidates = operation.operationId?.split(/[./]/).filter(Boolean) ?? [];
+  if (classCandidates.length > 1) {
+    // Pop the method candidate from the class candidates to not have it in the path
+    const methodCandidate = classCandidates.pop()!;
+    methodName = stringCase({
+      case: 'camelCase',
+      value: sanitizeNamespaceIdentifier(methodCandidate),
+    });
+  }
+
+  // classCandidates = ["v1", "tenants", "providers"];
+  let previousClassName = '';
+  const rootClasses = classCandidates.map((value) => {
+    const currentClassName =
+      previousClassName +
+      stringCase({
+        case: 'PascalCase',
+        value,
+      });
+    previousClassName = currentClassName;
+    return currentClassName;
+  });
+
+  const className =
+    rootClasses.length > 0 ? rootClasses[rootClasses.length - 1]! : undefined;
+
+  for (const rootClass of rootClasses) {
+    const finalClassName = operationClassName({
+      context,
+      value: className || rootClass,
+    });
+
+    const path: PathEntry[] = [];
+    rootClasses.forEach((className, index) => {
+      const propertyName = stringCase({
+        case: 'camelCase',
+        value: transformClassName({
+          config: context.config,
+          name: classCandidates[index] ?? '',
+        }),
+      });
+      path.push({
+        className: operationClassName({
+          context,
+          value: className,
+        }),
+        propertyName,
+      });
+    });
+
+    classNames.set(rootClass, {
+      className: finalClassName,
+      methodName: methodName || getOperationMethodName({ operation, plugin }),
+      path,
+    });
+  }
+
+  return classNames;
+};
+
+/**
+ * Returns a list of classes where this operation appears in the generated SDK.
+ */
+const operationClassesDefault = ({
   context,
   operation,
   plugin,
@@ -140,16 +234,53 @@ export const operationClasses = ({
     classNames.set(rootClass, {
       className: finalClassName,
       methodName: methodName || getOperationMethodName({ operation, plugin }),
-      path: path.map((value) =>
-        operationClassName({
+      path: path.map((value) => ({
+        className: operationClassName({
           context,
           value,
         }),
-      ),
+        propertyName: transformClassName({
+          config: context.config,
+          name: value,
+        }),
+      })),
     });
   }
 
   return classNames;
+};
+
+/**
+ * Returns a list of classes where this operation appears in the generated SDK.
+ */
+export const operationClasses = ({
+  context,
+  operation,
+  plugin,
+}: {
+  context: IR.Context;
+  operation: IR.OperationObject;
+  plugin: {
+    config: Pick<
+      HeyApiSdkPlugin['Instance']['config'],
+      'asClass' | 'classStructure' | 'instance' | 'groupByOperationId'
+    >;
+  };
+}): Map<string, ClassNameEntry> => {
+  // Use nested operationId class generator above
+  if (plugin.config.groupByOperationId) {
+    return operationClassesNestedByOperationId({
+      context,
+      operation,
+      plugin,
+    });
+  }
+
+  return operationClassesDefault({
+    context,
+    operation,
+    plugin,
+  });
 };
 
 export const operationOptionsType = ({

@@ -51,9 +51,9 @@ const generateAngularClassRequests = ({
 
     for (const entry of classes.values()) {
       entry.path.forEach((currentClassName, index) => {
-        if (!requestClasses.has(currentClassName)) {
-          requestClasses.set(currentClassName, {
-            className: currentClassName,
+        if (!requestClasses.has(currentClassName.className)) {
+          requestClasses.set(currentClassName.className, {
+            className: currentClassName.className,
             classes: new Set(),
             methods: new Set(),
             nodes: [],
@@ -63,9 +63,9 @@ const generateAngularClassRequests = ({
 
         const parentClassName = entry.path[index - 1];
         if (parentClassName && parentClassName !== currentClassName) {
-          const parentClass = requestClasses.get(parentClassName)!;
-          parentClass.classes.add(currentClassName);
-          requestClasses.set(parentClassName, parentClass);
+          const parentClass = requestClasses.get(parentClassName.className)!;
+          parentClass.classes.add(currentClassName.className);
+          requestClasses.set(parentClassName.className, parentClass);
         }
 
         const isLast = entry.path.length === index + 1;
@@ -73,7 +73,7 @@ const generateAngularClassRequests = ({
           return;
         }
 
-        const currentClass = requestClasses.get(currentClassName)!;
+        const currentClass = requestClasses.get(currentClassName.className)!;
 
         // Generate the request method name with "Request" suffix
         const requestMethodName =
@@ -101,7 +101,7 @@ const generateAngularClassRequests = ({
         }
 
         currentClass.methods.add(requestMethodName);
-        requestClasses.set(currentClassName, currentClass);
+        requestClasses.set(currentClassName.className, currentClass);
       });
     }
   });

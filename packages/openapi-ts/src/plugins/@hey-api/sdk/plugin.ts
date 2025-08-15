@@ -93,7 +93,7 @@ interface SdkClassEntry {
   /**
    * Child classes located inside this class.
    */
-  classes: Set<string>;
+  classes: Set<{ className: string; propertyName: string }>;
   /**
    * Track unique added method nodes.
    */
@@ -152,9 +152,9 @@ const generateClassSdk = ({
 
     for (const entry of classes.values()) {
       entry.path.forEach((currentClassName, index) => {
-        if (!sdkClasses.has(currentClassName)) {
-          sdkClasses.set(currentClassName, {
-            className: currentClassName,
+        if (!sdkClasses.has(currentClassName.className)) {
+          sdkClasses.set(currentClassName.className, {
+            className: currentClassName.className,
             classes: new Set(),
             methods: new Set(),
             nodes: [],
@@ -164,9 +164,12 @@ const generateClassSdk = ({
 
         const parentClassName = entry.path[index - 1];
         if (parentClassName && parentClassName !== currentClassName) {
-          const parentClass = sdkClasses.get(parentClassName)!;
-          parentClass.classes.add(currentClassName);
-          sdkClasses.set(parentClassName, parentClass);
+          const parentClass = sdkClasses.get(parentClassName.className)!;
+          parentClass.classes.add({
+            className: currentClassName.className,
+            propertyName: currentClassName.propertyName,
+          });
+          sdkClasses.set(parentClassName.className, parentClass);
         }
 
         const isLast = entry.path.length === index + 1;
@@ -175,7 +178,7 @@ const generateClassSdk = ({
           return;
         }
 
-        const currentClass = sdkClasses.get(currentClassName)!;
+        const currentClass = sdkClasses.get(currentClassName.className)!;
 
         // avoid duplicate methods
         if (currentClass.methods.has(entry.methodName)) {
@@ -247,7 +250,7 @@ const generateClassSdk = ({
 
         currentClass.methods.add(entry.methodName);
 
-        sdkClasses.set(currentClassName, currentClass);
+        sdkClasses.set(currentClassName.className, currentClass);
       });
     }
   });
@@ -259,8 +262,18 @@ const generateClassSdk = ({
 
     if (currentClass.classes.size) {
       for (const childClassName of currentClass.classes) {
-        const childClass = sdkClasses.get(childClassName)!;
+        const childClass = sdkClasses.get(childClassName.className)!;
         generateClass(childClass);
+
+        // Skip if the property already exists
+        /** @ts-ignore */
+        if (
+          currentClass.nodes.find(
+            (node) => node.name?.escapedText === childClassName.propertyName,
+          )
+        ) {
+          continue;
+        }
 
         currentClass.nodes.push(
           tsc.propertyDeclaration({
@@ -290,7 +303,7 @@ const generateClassSdk = ({
             modifier: plugin.config.instance ? undefined : 'static',
             name: stringCase({
               case: 'camelCase',
-              value: childClass.className,
+              value: childClassName.propertyName,
             }),
           }),
         );
