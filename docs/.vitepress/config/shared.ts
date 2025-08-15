@@ -53,10 +53,18 @@ export default defineConfig({
     externalLinkIcon: true,
     logo: '/images/logo-48w.png',
     search: {
-      provider: 'local',
+      options: {
+        apiKey: '2565c35b4ad91c2f8f8ae32cf9bbe899',
+        appId: 'OWEH2O8E50',
+        disableUserPersonalization: false,
+        indexName: 'openapi-ts docs',
+        insights: true,
+      },
+      provider: 'algolia',
     },
     socialLinks: [
       { icon: 'linkedin', link: 'https://linkedin.com/company/heyapi' },
+      { icon: 'bluesky', link: 'https://bsky.app/profile/heyapi.dev' },
       { icon: 'x', link: 'https://x.com/mrlubos' },
       { icon: 'github', link: 'https://github.com/hey-api/openapi-ts' },
     ],
