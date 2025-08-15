@@ -22,7 +22,7 @@ Launch demo
 - runs in CLI, Node.js 18+, or npx
 - works with OpenAPI 2.0, 3.0, and 3.1
 - customizable types and SDKs
-- clients for your runtime (Fetch API, Axios, Next.js, Nuxt, etc.)
+- clients for your runtime (Fetch API, Angular, Axios, Next.js, Nuxt, etc.)
 - plugin ecosystem to reduce third-party boilerplate
 - custom plugins and custom clients
 - [integration](/openapi-ts/integrations) with Hey API Platform

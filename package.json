@@ -35,8 +35,7 @@
     "test:update": "turbo run test:update",
     "test:watch": "turbo run test:watch",
     "test": "turbo run test",
-    "typecheck": "turbo run typecheck --filter=\"!@example/openapi-ts-sample\"",
-    "vitepress": "turbo run $1 --filter=\"@docs/openapi-ts\""
+    "typecheck": "turbo run typecheck --filter=\"!@example/openapi-ts-sample\""
   },
   "engines": {
     "node": "^18.18.0 || ^20.9.0 || >=22.10.0"
