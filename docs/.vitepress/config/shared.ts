@@ -1,4 +1,5 @@
 import { defineConfig, type HeadConfig } from 'vitepress';
+import llmstxt from 'vitepress-plugin-llms';
 
 const domain = process.env.SITE_DOMAIN || 'http://localhost:5173';
 
@@ -105,5 +106,14 @@ export default defineConfig({
         },
       ],
     );
+  },
+  vite: {
+    plugins: [
+      llmstxt({
+        experimental: {
+          depth: 2,
+        },
+      }),
+    ],
   },
 });
