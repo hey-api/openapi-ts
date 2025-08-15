@@ -3,6 +3,10 @@ title: SWR
 description: SWR plugin for Hey API. Compatible with all our features.
 ---
 
+<script setup lang="ts">
+import FeatureStatus from '@components/FeatureStatus.vue';
+</script>
+
 # SWR <span data-soon>soon</span>
 
 <FeatureStatus issueNumber=1479 name="SWR" />

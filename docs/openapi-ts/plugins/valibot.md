@@ -3,9 +3,10 @@ title: Valibot v1 Plugin
 description: Generate Valibot v1 schemas from OpenAPI with the Valibot plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
-<!-- <script setup lang="ts">
-import { embedProject } from '../../embed'
-</script> -->
+<script setup lang="ts">
+import Heading from '@components/Heading.vue';
+import VersionLabel from '@components/VersionLabel.vue';
+</script>
 
 <Heading>
   <h1>Valibot</h1>
@@ -17,12 +18,6 @@ import { embedProject } from '../../embed'
 [Valibot](https://valibot.dev) is the open source schema library for TypeScript with bundle size, type safety and developer experience in mind.
 
 The Valibot plugin for Hey API generates schemas from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
-
-<!-- ### Demo
-
-<button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-valibot-example')(event)">
-Launch demo
-</button> -->
 
 ## Features
 

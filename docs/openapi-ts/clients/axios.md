@@ -1,9 +1,12 @@
 ---
-title: Axios client
-description: Axios client for Hey API. Compatible with all our features.
+title: Axios v1 Client
+description: Generate a type-safe Axios v1 client from OpenAPI with the Axios client for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
 <script setup lang="ts">
+import Heading from '@components/Heading.vue';
+import VersionLabel from '@components/VersionLabel.vue';
+
 import { embedProject } from '../../embed'
 </script>
 
@@ -16,6 +19,8 @@ import { embedProject } from '../../embed'
 
 [Axios](https://axios-http.com) is a simple promise based HTTP client for the browser and Node.js. Axios provides a simple to use library in a small package with a very extensible interface.
 
+The Axios client for Hey API generates a type-safe client from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
+
 ### Demo
 
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-axios-example')(event)">
@@ -24,6 +29,7 @@ Launch demo
 
 ## Features
 
+- Axios v1 support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - type-safe response data and errors
 - response data validation and transformation

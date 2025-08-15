@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["./.vitepress/theme/components/*"],
+      "@data": ["./data/*"],
+      "@versions/*": ["./.vitepress/theme/versions/*"]
+    }
+  },
+  "include": [".vitepress/**/*", "./**/*.ts", "./**/*.vue"]
+}

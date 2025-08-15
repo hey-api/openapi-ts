@@ -59,12 +59,12 @@ import {
   updatePetWithFormRequest,
   updateUserRequest,
   uploadFileRequest,
-} from './httpRequests.gen';
+} from './requests.gen';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PetResources {
+export class PetServiceResources {
   /**
    * Add a new pet to the store.
    * Add a new pet to the store.
@@ -155,7 +155,7 @@ export class PetResources {
 @Injectable({
   providedIn: 'root',
 })
-export class StoreResources {
+export class StoreServiceResources {
   /**
    * Returns pet inventories by status.
    * Returns a map of status codes to quantities.
@@ -206,7 +206,7 @@ export class StoreResources {
 @Injectable({
   providedIn: 'root',
 })
-export class UserResources {
+export class UserServiceResources {
   /**
    * Create user.
    * This can only be done by the logged in user.

@@ -3,42 +3,49 @@ import { handler } from './plugin';
 import type { AngularCommonPlugin } from './types';
 
 export const defaultConfig: AngularCommonPlugin['Config'] = {
-  config: {},
+  config: {
+    exportFromIndex: false,
+  },
   dependencies: ['@hey-api/client-angular', '@hey-api/sdk'],
   handler,
   name: '@angular/common',
   output: '@angular/common',
-  resolveConfig(plugin) {
-    plugin.config.httpResource = {
-      asClass: false,
-      classNameBuilder(className) {
-        return className + 'Resources';
+  resolveConfig: (plugin, context) => {
+    plugin.config.httpRequests = context.valueToObject({
+      defaultValue: {
+        asClass: false,
+        classNameBuilder: '{{name}}Requests',
+        enabled: true,
       },
-      enabled: false,
-      methodNameBuilder(operation) {
-        if (plugin.config.httpResource?.asClass) {
-          return String(operation.id);
-        }
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+      },
+      value: plugin.config.httpRequests,
+    });
 
-        return String(operation.id) + 'Resource';
-      },
-      ...plugin.config.httpResource,
-    };
+    if (!plugin.config.httpRequests.methodNameBuilder) {
+      const { asClass } = plugin.config.httpRequests;
+      plugin.config.httpRequests.methodNameBuilder = (operation) =>
+        asClass ? String(operation.id) : `${String(operation.id)}Request`;
+    }
 
-    plugin.config.httpRequest = {
-      asClass: false,
-      classNameBuilder(className) {
-        return className + 'Requests';
+    plugin.config.httpResources = context.valueToObject({
+      defaultValue: {
+        asClass: false,
+        classNameBuilder: '{{name}}Resources',
+        enabled: true,
       },
-      methodNameBuilder(operation) {
-        if (plugin.config.httpRequest?.asClass) {
-          return String(operation.id);
-        }
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+      },
+      value: plugin.config.httpResources,
+    });
 
-        return String(operation.id) + 'Request';
-      },
-      ...plugin.config.httpRequest,
-    };
+    if (!plugin.config.httpResources.methodNameBuilder) {
+      const { asClass } = plugin.config.httpResources;
+      plugin.config.httpResources.methodNameBuilder = (operation) =>
+        asClass ? String(operation.id) : `${String(operation.id)}Resource`;
+    }
   },
 };
 

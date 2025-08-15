@@ -25,6 +25,7 @@ These plugins help reduce boilerplate associated with third-party dependencies. 
 - [`@tanstack/solid-query`](/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/svelte-query`](/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/vue-query`](/openapi-ts/plugins/tanstack-query)
+- [`@angular/common`](/openapi-ts/plugins/angular)
 - [`fastify`](/openapi-ts/plugins/fastify)
 - [`valibot`](/openapi-ts/plugins/valibot)
 - [`zod`](/openapi-ts/plugins/zod)

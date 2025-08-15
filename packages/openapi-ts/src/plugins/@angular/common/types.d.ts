@@ -1,62 +1,77 @@
-import type { Operation } from '../../../types/client';
+import type { StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
-
-export type AngularHttpResourceOptions = {
-  /**
-   * Whether to generate the resource as a class.
-   * @default false
-   */
-  asClass?: boolean;
-
-  /**
-   * Builds the class name for the generated resource.
-   * By default, the class name is suffixed with "Resources".
-   */
-  classNameBuilder?: (className: string) => string;
-
-  /**
-   * Wether or not to create http resource APIs.
-   */
-  enabled: boolean;
-
-  /**
-   * Builds the method name for the generated resource.
-   * By default, the operation id is used, if `asClass` is false, the method is also suffixed with "Resource".
-   */
-  methodNameBuilder?: (operation: IR.OperationObject | Operation) => string;
-};
-
-export type AngularHttpRequestOptions = {
-  /**
-   * Whether to generate the resource as a class.
-   * @default false
-   */
-  asClass?: boolean;
-
-  /**
-   * Builds the class name for the generated resource.
-   * By default, the class name is suffixed with "Resources".
-   */
-  classNameBuilder?: (className: string) => string;
-
-  /**
-   * Builds the method name for the generated resource.
-   * By default, the operation id is used, if `asClass` is false, the method is also suffixed with "Resource".
-   */
-  methodNameBuilder?: (operation: IR.OperationObject | Operation) => string;
-};
 
 export type UserConfig = Plugin.Name<'@angular/common'> & {
   /**
-   * Options for generating HTTP Request instances.
+   * Should the exports from the generated files be re-exported in the index
+   * barrel file?
+   *
+   * @default false
    */
-  httpRequest?: AngularHttpRequestOptions;
-
+  exportFromIndex?: boolean;
+  /**
+   * Options for generating HTTP Request instances.
+   *
+   * @default true
+   */
+  httpRequests?:
+    | boolean
+    | {
+        /**
+         * Whether to generate the resource as a class.
+         *
+         * @default false
+         */
+        asClass?: boolean;
+        /**
+         * Builds the class name for the generated resource.
+         * By default, the class name is suffixed with "Resources".
+         */
+        classNameBuilder?: StringName;
+        /**
+         * Whether or not to create HTTP Request instances.
+         *
+         * @default true
+         */
+        enabled?: boolean;
+        /**
+         * Builds the method name for the generated resource.
+         *
+         * By default, the operation id is used, if `asClass` is false, the method is also suffixed with "Resource".
+         */
+        methodNameBuilder?: (operation: IR.OperationObject) => string;
+      };
   /**
    * Options for generating HTTP resource APIs.
+   *
+   * @default true
    */
-  httpResource?: AngularHttpResourceOptions;
-
+  httpResources?:
+    | boolean
+    | {
+        /**
+         * Whether to generate the resource as a class.
+         * @default false
+         */
+        asClass?: boolean;
+        /**
+         * Builds the class name for the generated resource.
+         * By default, the class name is suffixed with "Resources".
+         */
+        classNameBuilder?: StringName;
+        /**
+         * Whether or not to create HTTP resource APIs.
+         *
+         * @default true
+         */
+        enabled?: boolean;
+        /**
+         * Builds the method name for the generated resource.
+         *
+         * By default, the operation id is used, if `asClass` is false, the method is also suffixed with "Resource".
+         */
+        methodNameBuilder?: (operation: IR.OperationObject) => string;
+      };
   /**
    * Name of the generated file.
    *
@@ -65,4 +80,74 @@ export type UserConfig = Plugin.Name<'@angular/common'> & {
   output?: string;
 };
 
-export type AngularCommonPlugin = DefinePlugin<UserConfig, UserConfig>;
+export type Config = Plugin.Name<'@angular/common'> & {
+  /**
+   * Should the exports from the generated files be re-exported in the index
+   * barrel file?
+   *
+   * @default false
+   */
+  exportFromIndex: boolean;
+  /**
+   * Options for generating HTTP Request instances.
+   */
+  httpRequests: {
+    /**
+     * Whether to generate the resource as a class.
+     *
+     * @default false
+     */
+    asClass: boolean;
+    /**
+     * Builds the class name for the generated resource.
+     * By default, the class name is suffixed with "Resources".
+     */
+    classNameBuilder: StringName;
+    /**
+     * Whether or not to create HTTP Request instances.
+     *
+     * @default true
+     */
+    enabled: boolean;
+    /**
+     * Builds the method name for the generated resource.
+     * By default, the operation id is used, if `asClass` is false, the method is also suffixed with "Resource".
+     */
+    methodNameBuilder: (operation: IR.OperationObject) => string;
+  };
+  /**
+   * Options for generating HTTP resource APIs.
+   */
+  httpResources: {
+    /**
+     * Whether to generate the resource as a class.
+     *
+     * @default false
+     */
+    asClass: boolean;
+    /**
+     * Builds the class name for the generated resource.
+     * By default, the class name is suffixed with "Resources".
+     */
+    classNameBuilder: StringName;
+    /**
+     * Whether or not to create HTTP resource APIs.
+     *
+     * @default true
+     */
+    enabled: boolean;
+    /**
+     * Builds the method name for the generated resource.
+     * By default, the operation id is used, if `asClass` is false, the method is also suffixed with "Resource".
+     */
+    methodNameBuilder: (operation: IR.OperationObject) => string;
+  };
+  /**
+   * Name of the generated file.
+   *
+   * @default '@angular/common'
+   */
+  output: string;
+};
+
+export type AngularCommonPlugin = DefinePlugin<UserConfig, Config>;

@@ -4,25 +4,20 @@ description: Generate Zod v4 schemas from OpenAPI with the Zod plugin for openap
 ---
 
 <script setup lang="ts">
-// import { embedProject } from '../../embed'
-import ZodHeading from './zod/ZodHeading.vue';
+import Heading from '@components/Heading.vue';
+import ZodVersionSwitcher from '@versions/ZodVersionSwitcher.vue';
 </script>
 
-<ZodHeading>
+<Heading>
   <h1>Zod</h1>
-</ZodHeading>
+  <ZodVersionSwitcher />
+</Heading>
 
 ### About
 
 [Zod](https://zod.dev) is a TypeScript-first schema validation library with static type inference.
 
 The Zod plugin for Hey API generates schemas from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
-
-<!-- ### Demo
-
-<button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-zod-example')(event)">
-Launch demo
-</button> -->
 
 ## Features
 

@@ -4,6 +4,9 @@ description: Generate TanStack Query v5 functions and query keys from OpenAPI wi
 ---
 
 <script setup lang="ts">
+import Heading from '@components/Heading.vue';
+import VersionLabel from '@components/VersionLabel.vue';
+
 import { embedProject } from '../../embed'
 </script>
 
