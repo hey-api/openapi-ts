@@ -3,6 +3,10 @@ title: AdonisJS
 description: AdonisJS plugin for Hey API. Compatible with all our features.
 ---
 
+<script setup lang="ts">
+import FeatureStatus from '@components/FeatureStatus.vue';
+</script>
+
 # AdonisJS <span data-soon>soon</span>
 
 <FeatureStatus issueNumber=2364 name="AdonisJS" />

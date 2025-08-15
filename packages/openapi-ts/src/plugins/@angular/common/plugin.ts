@@ -1,11 +1,13 @@
-import { angularHttpRequestsCompanionPluginHandler } from './companions/angularHttpRequestsCompanionPluginHandler';
-import { angularHttpResourceCompanionPluginHandler } from './companions/angularHttpResourceCompanionPluginHandler';
+import { createHttpRequests } from './httpRequests';
+import { createHttpResources } from './httpResources';
 import type { AngularCommonPlugin } from './types';
 
-export const handler: AngularCommonPlugin['Handler'] = (args) => {
-  angularHttpRequestsCompanionPluginHandler(args);
+export const handler: AngularCommonPlugin['Handler'] = ({ plugin }) => {
+  if (plugin.config.httpRequests.enabled) {
+    createHttpRequests({ plugin });
+  }
 
-  if (args.plugin.config.httpResource?.enabled) {
-    angularHttpResourceCompanionPluginHandler(args);
+  if (plugin.config.httpResources.enabled) {
+    createHttpResources({ plugin });
   }
 };

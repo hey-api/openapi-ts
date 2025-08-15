@@ -11,6 +11,7 @@ There are two approaches to developing APIs: code-first, where you start with th
 
 Hey API natively supports the following frameworks.
 
+- [Angular](/openapi-ts/plugins/angular)
 - [Fastify](/openapi-ts/plugins/fastify)
 - [Adonis](/openapi-ts/plugins/adonis) <span data-soon>Soon</span>
 - [Express](/openapi-ts/plugins/express) <span data-soon>Soon</span>

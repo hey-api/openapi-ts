@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import VersionSwitcher from '@components/VersionSwitcher.vue';
+
 const versions = [
   {
     label: 'Zod 4',
@@ -19,8 +21,5 @@ const versions = [
 </script>
 
 <template>
-  <Heading>
-    <slot />
-    <VersionSwitcher :values="versions" default="v4" />
-  </Heading>
+  <VersionSwitcher :values="versions" default="v4" />
 </template>
