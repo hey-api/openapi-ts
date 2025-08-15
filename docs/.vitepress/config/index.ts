@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import { defineConfig } from 'vitepress';
 
 import en from './en';
@@ -13,6 +15,12 @@ export default defineConfig({
     ...shared.vite,
     resolve: {
       ...shared.vite?.resolve,
+      alias: {
+        ...shared.vite?.resolve?.alias,
+        '@components': path.resolve(__dirname, '..', 'theme', 'components'),
+        '@data': path.resolve(__dirname, '..', '..', 'data'),
+        '@versions': path.resolve(__dirname, '..', 'theme', 'versions'),
+      },
       preserveSymlinks: true,
     },
   },

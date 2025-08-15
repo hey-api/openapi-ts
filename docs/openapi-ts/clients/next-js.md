@@ -1,6 +1,6 @@
 ---
-title: Next.js client
-description: Next.js client for Hey API. Compatible with all our features.
+title: Next.js Client
+description: Generate a type-safe Next.js client from OpenAPI with the Next.js client for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
 # Next.js
@@ -9,9 +9,7 @@ description: Next.js client for Hey API. Compatible with all our features.
 
 [Next.js](https://nextjs.org) is the React framework for the web. Used by some of the world's largest companies, Next.js enables you to create high-quality web applications with the power of React components.
 
-<!-- <button class="buttonLink" @click="(event) => embedProject('hey-api-client-next-example')(event)">
-Launch demo
-</button> -->
+The Next.js client for Hey API generates a type-safe client from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
 
 ## Features
 

@@ -26,10 +26,10 @@ We all send HTTP requests in a slightly different way. Hey API doesn't force you
 Hey API natively supports the following clients.
 
 - [Fetch API](/openapi-ts/clients/fetch)
+- [Angular](/openapi-ts/clients/angular)
 - [Axios](/openapi-ts/clients/axios)
 - [Next.js](/openapi-ts/clients/next-js)
 - [Nuxt](/openapi-ts/clients/nuxt)
-- [Angular](/openapi-ts/clients/angular) <span data-soon>Soon</span>
 - [Effect](/openapi-ts/clients/effect) <span data-soon>Soon</span>
 - [Legacy](/openapi-ts/clients/legacy)
 

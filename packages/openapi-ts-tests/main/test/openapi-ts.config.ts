@@ -40,8 +40,8 @@ export default defineConfig(() => {
       path: path.resolve(
         getSpecsPath(),
         '3.1.x',
-        // 'full.yaml',
-        'validators-circular-ref.json',
+        'full.yaml',
+        // 'validators-circular-ref.json',
       ),
       // path: 'http://localhost:4000/',
       // path: 'https://get.heyapi.dev/',
@@ -127,7 +127,8 @@ export default defineConfig(() => {
       {
         // baseUrl: false,
         // exportFromIndex: true,
-        name: '@hey-api/client-fetch',
+        // name: '@hey-api/client-fetch',
+        name: '@hey-api/client-angular',
         // name: 'legacy/angular',
         // strictBaseUrl: true,
         throwOnError: true,
@@ -231,7 +232,7 @@ export default defineConfig(() => {
           //     infer: 'D{{name}}ZodType',
           //   },
         },
-        // exportFromIndex: true,
+        exportFromIndex: true,
         metadata: true,
         name: 'zod',
         // requests: {
@@ -258,6 +259,12 @@ export default defineConfig(() => {
         exportFromIndex: true,
         // name: '@hey-api/schemas',
         // type: 'json',
+      },
+      {
+        // httpRequest
+        // httpResource
+        exportFromIndex: true,
+        name: '@angular/common',
       },
     ],
     // useOptions: false,

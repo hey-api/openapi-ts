@@ -3,6 +3,10 @@ title: Effect client
 description: Effect client for Hey API. Compatible with all our features.
 ---
 
+<script setup lang="ts">
+import FeatureStatus from '@components/FeatureStatus.vue';
+</script>
+
 # Effect <span data-soon>soon</span>
 
 <FeatureStatus issueNumber=2082 name="Effect" />

@@ -3,6 +3,10 @@ title: Faker
 description: Faker plugin for Hey API. Compatible with all our features.
 ---
 
+<script setup lang="ts">
+import FeatureStatus from '@components/FeatureStatus.vue';
+</script>
+
 # Faker <span data-soon>soon</span>
 
 <FeatureStatus issueNumber=1485 name="Faker" />

@@ -1,6 +1,6 @@
 ---
-title: Fetch API client
-description: Fetch API client for Hey API. Compatible with all our features.
+title: Fetch API Client
+description: Generate a type-safe Fetch API client from OpenAPI with the Fetch API client for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
 <script setup lang="ts">
@@ -12,6 +12,8 @@ import { embedProject } from '../../embed'
 ### About
 
 The [Fetch API](https://developer.mozilla.org/docs/Web/API/Fetch_API) provides an interface for fetching resources (including across the network). It is a more powerful and flexible replacement for XMLHttpRequest.
+
+The Fetch API client for Hey API generates a type-safe client from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
 
 ### Demo
 

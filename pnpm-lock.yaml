@@ -203,7 +203,7 @@ importers:
         specifier: 5.8.3
         version: 5.8.3
 
-  examples/openapi-ts-angular-resource:
+  examples/openapi-ts-angular-common:
     dependencies:
       '@angular/common':
         specifier: 19.2.0
