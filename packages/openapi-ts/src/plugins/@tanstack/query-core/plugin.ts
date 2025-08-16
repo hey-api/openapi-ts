@@ -49,11 +49,11 @@ export const handler = ({ plugin }: Parameters<PluginHandler>[0]) => {
       (
         entry
           ? [
-              entry.path[0],
+              entry.path[0]?.className,
               ...entry.path.slice(1).map((className) =>
                 stringCase({
                   case: 'camelCase',
-                  value: className,
+                  value: className.className,
                 }),
               ),
               entry.methodName,
