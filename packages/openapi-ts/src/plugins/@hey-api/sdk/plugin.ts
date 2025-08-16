@@ -266,11 +266,12 @@ const generateClassSdk = ({
         generateClass(childClass);
 
         // Skip if the property already exists
-        /** @ts-ignore */
         if (
-          currentClass.nodes.find(
-            (node) => node.name?.escapedText === childClassName.propertyName,
-          )
+          currentClass.nodes.find((node: ts.ClassElement) => (
+              node.name &&
+              ts.isIdentifier(node.name) &&
+              node.name.escapedText === childClassName.propertyName
+            ))
         ) {
           continue;
         }
