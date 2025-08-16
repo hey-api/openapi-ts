@@ -247,7 +247,7 @@ const generateResourceCallExpression = ({
           case: 'preserve',
           name: plugin.config.httpRequests.classNameBuilder,
         },
-        name: rootClassName,
+        name: rootClassName.className,
       });
 
       // Build the method access path using inject
