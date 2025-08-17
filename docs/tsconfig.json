@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "esModuleInterop": true,
+    "module": "nodenext",
     "paths": {
       "@components/*": ["./.vitepress/theme/components/*"],
       "@data": ["./data/*"],

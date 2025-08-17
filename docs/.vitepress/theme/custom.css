@@ -415,3 +415,11 @@ footer.VPDocFooter > .edit-info > .last-updated {
   /* don't render last updated date */
   display: none;
 }
+
+.DocSearch-Modal {
+  display: flex;
+}
+
+.DocSearch-Footer {
+  position: initial;
+}
