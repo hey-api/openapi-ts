@@ -1,7 +1,7 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "pnpm run build",
   "cleanUrls": true,
-  "devCommand": "npm run dev",
+  "devCommand": "pnpm run dev",
   "framework": "vitepress",
   "outputDirectory": ".vitepress/dist",
   "redirects": [
