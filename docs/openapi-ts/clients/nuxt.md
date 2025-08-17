@@ -9,7 +9,7 @@ import VersionLabel from '@components/VersionLabel.vue';
 </script>
 
 <Heading>
-  <h1>Nuxt</h1>
+  <h1>Nuxt<span class="sr-only"> 3</span></h1>
   <VersionLabel value="v3" />
 </Heading>
 
