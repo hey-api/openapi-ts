@@ -11,7 +11,7 @@ import { embedProject } from '../../embed'
 </script>
 
 <Heading>
-  <h1>Axios</h1>
+  <h1>Axios<span class="sr-only"> 1</span></h1>
   <VersionLabel value="v1" />
 </Heading>
 
