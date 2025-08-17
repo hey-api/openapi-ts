@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import { defineConfig, type HeadConfig } from 'vitepress';
 import llmstxt from 'vitepress-plugin-llms';
 
@@ -115,5 +117,22 @@ export default defineConfig({
         },
       }),
     ],
+    resolve: {
+      alias: [
+        {
+          find: '@components',
+          replacement: path.resolve(__dirname, '..', 'theme', 'components'),
+        },
+        {
+          find: '@data',
+          replacement: path.resolve(__dirname, '..', '..', 'data'),
+        },
+        {
+          find: '@versions',
+          replacement: path.resolve(__dirname, '..', 'theme', 'versions'),
+        },
+      ],
+      preserveSymlinks: true,
+    },
   },
 });
