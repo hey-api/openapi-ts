@@ -9,7 +9,7 @@ import ZodVersionSwitcher from '@versions/ZodVersionSwitcher.vue';
 </script>
 
 <Heading>
-  <h1>Zod</h1>
+  <h1>Zod<span class="sr-only"> Mini</span></h1>
   <ZodVersionSwitcher />
 </Heading>
 
