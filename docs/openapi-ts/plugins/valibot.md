@@ -9,7 +9,7 @@ import VersionLabel from '@components/VersionLabel.vue';
 </script>
 
 <Heading>
-  <h1>Valibot</h1>
+  <h1>Valibot<span class="sr-only"> 1</span></h1>
   <VersionLabel value="v1" />
 </Heading>
 
