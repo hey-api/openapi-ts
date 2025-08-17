@@ -11,7 +11,7 @@ import VersionLabel from '@components/VersionLabel.vue';
 </script>
 
 <Heading>
-  <h1>Fastify<span class="sr-only"> 5</span></h1>
+  <h1>Fastify<span class="sr-only"> v5</span></h1>
   <VersionLabel value="v5" />
 </Heading>
 

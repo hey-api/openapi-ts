@@ -9,7 +9,7 @@ import ZodVersionSwitcher from '@versions/ZodVersionSwitcher.vue';
 </script>
 
 <Heading>
-  <h1>Zod<span class="sr-only"> 4</span></h1>
+  <h1>Zod<span class="sr-only"> v4</span></h1>
   <ZodVersionSwitcher />
 </Heading>
 
