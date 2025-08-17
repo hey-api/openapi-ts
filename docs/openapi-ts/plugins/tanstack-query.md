@@ -11,7 +11,7 @@ import { embedProject } from '../../embed'
 </script>
 
 <Heading>
-  <h1>TanStack Query<span class="sr-only"> 5</span></h1>
+  <h1>TanStack Query<span class="sr-only"> v5</span></h1>
   <VersionLabel value="v5" />
 </Heading>
 

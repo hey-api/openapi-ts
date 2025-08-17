@@ -11,7 +11,7 @@ import AngularVersionSwitcher from '@versions/AngularVersionSwitcher.vue';
 </script>
 
 <Heading>
-  <h1>Angular<span class="sr-only"> 20</span></h1>
+  <h1>Angular<span class="sr-only"> v20</span></h1>
   <AngularVersionSwitcher />
 </Heading>
 
