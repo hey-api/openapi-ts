@@ -1,0 +1,2 @@
+patchedDependencies:
+  vitepress: patches/vitepress.patch
