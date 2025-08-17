@@ -2,3 +2,6 @@ packages:
   - docs
   - examples/**/*
   - packages/**/*
+
+patchedDependencies:
+  vitepress: patches/vitepress.patch
