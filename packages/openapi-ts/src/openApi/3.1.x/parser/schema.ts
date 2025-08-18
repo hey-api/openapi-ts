@@ -541,9 +541,9 @@ const parseAnyOf = ({
     });
 
     // `$ref` should be defined with discriminators
-    if (schema.discriminator && compositionSchema.$ref) {
+    if (schema.discriminator && irCompositionSchema.$ref != null) {
       const values = discriminatorValues(
-        compositionSchema.$ref,
+        irCompositionSchema.$ref,
         schema.discriminator.mapping,
       );
       const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
@@ -697,9 +697,9 @@ const parseOneOf = ({
     });
 
     // `$ref` should be defined with discriminators
-    if (schema.discriminator && compositionSchema.$ref) {
+    if (schema.discriminator && irCompositionSchema.$ref != null) {
       const values = discriminatorValues(
-        compositionSchema.$ref,
+        irCompositionSchema.$ref,
         schema.discriminator.mapping,
       );
       const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
