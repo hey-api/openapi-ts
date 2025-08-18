@@ -8,12 +8,14 @@ components:
       oneOf:
         - $ref: '#/components/schemas/Bar'
         - $ref: '#/components/schemas/Baz'
+        - $ref: '#/components/schemas/Spæcial'
       discriminator:
         propertyName: foo
         mapping:
           one: '#/components/schemas/Bar'
           two: '#/components/schemas/Bar'
           three: '#/components/schemas/Baz'
+          four: '#/components/schemas/Spæcial'
     Bar:
       type: object
       properties:
@@ -29,3 +31,10 @@ components:
           type: string
           enum:
             - three
+    Spæcial:
+      type: object
+      properties:
+        foo:
+          type: string
+          enum:
+            - four
