@@ -4,7 +4,9 @@ export type Foo = ({
     foo: 'one' | 'two';
 } & Bar) | ({
     foo: 'three';
-} & Baz);
+} & Baz) | ({
+    foo: 'four';
+} & Spæcial);
 
 export type Bar = {
     foo?: 'one' | 'two';
@@ -12,6 +14,10 @@ export type Bar = {
 
 export type Baz = {
     foo?: 'three';
+};
+
+export type Spæcial = {
+    foo?: 'four';
 };
 
 export type ClientOptions = {
