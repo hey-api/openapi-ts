@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.80.14
+
+### Patch Changes
+
+- [#2475](https://github.com/hey-api/openapi-ts/pull/2475) [`b9204ad`](https://github.com/hey-api/openapi-ts/commit/b9204ad1603374713d507deaa416ed56d6ce6aea) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): cache visited graph nodes to boost performance
+
 ## 0.80.13
 
 ### Patch Changes
