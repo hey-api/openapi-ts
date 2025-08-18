@@ -1,4 +1,5 @@
 import { createOperationKey } from '../../../ir/operation';
+import type { Logger } from '../../../utils/logger';
 import { addNamespace, removeNamespace } from '../../shared/utils/filter';
 import { httpMethods } from '../../shared/utils/operation';
 import type {
@@ -12,11 +13,13 @@ import type {
  * Replace source spec with filtered version.
  */
 export const filterSpec = ({
+  logger,
   operations,
   preserveOrder,
   schemas,
   spec,
 }: {
+  logger: Logger;
   operations: Set<string>;
   parameters: Set<string>;
   preserveOrder: boolean;
@@ -25,6 +28,7 @@ export const filterSpec = ({
   schemas: Set<string>;
   spec: OpenApiV2_0_X;
 }) => {
+  const eventFilterSpec = logger.timeEvent('filter-spec');
   if (spec.definitions) {
     const filtered: typeof spec.definitions = {};
 
@@ -75,4 +79,5 @@ export const filterSpec = ({
       }
     }
   }
+  eventFilterSpec.timeEnd();
 };

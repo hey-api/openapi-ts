@@ -3,7 +3,7 @@ import path from 'node:path';
 import { createClient } from '@hey-api/openapi-ts';
 import { describe, expect, it } from 'vitest';
 
-import { Performance } from '../../../openapi-ts/src/utils/performance';
+import { Performance } from '../../../openapi-ts/src/utils/logger';
 import { getSpecsPath } from '../../utils';
 
 const V3_SPEC_PATH = path.resolve(getSpecsPath(), 'v3.json');

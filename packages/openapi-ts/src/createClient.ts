@@ -14,7 +14,7 @@ import type { Config } from './types/config';
 import type { WatchValues } from './types/types';
 import { isLegacyClient, legacyNameFromConfig } from './utils/config';
 import type { Templates } from './utils/handlebars';
-import { Performance } from './utils/performance';
+import type { Logger } from './utils/logger';
 import { postProcessClient } from './utils/postprocess';
 
 const isPlatformPath = (path: string) =>
@@ -168,11 +168,13 @@ const logInputPath = (inputPath: ReturnType<typeof compileInputPath>) => {
 export const createClient = async ({
   config,
   dependencies,
+  logger,
   templates,
   watch: _watch,
 }: {
   config: Config;
   dependencies: Record<string, string>;
+  logger: Logger;
   templates: Templates;
   /**
    * Always falsy on the first run, truthy on subsequent runs.
@@ -189,14 +191,14 @@ export const createClient = async ({
     logInputPath(inputPath);
   }
 
-  Performance.start('spec');
+  const eventSpec = logger.timeEvent('spec');
   const { data, error, response } = await getSpec({
     fetchOptions: config.input.fetch,
     inputPath: inputPath.path,
     timeout,
     watch,
   });
-  Performance.end('spec');
+  eventSpec.timeEnd();
 
   // throw on first run if there's an error to preserve user experience
   // if in watch mode, subsequent errors won't throw to gracefully handle
@@ -218,17 +220,17 @@ export const createClient = async ({
       logInputPath(inputPath);
     }
 
-    Performance.start('input.patch');
+    const eventInputPatch = logger.timeEvent('input.patch');
     patchOpenApiSpec({ patchOptions: config.parser.patch, spec: data });
-    Performance.end('input.patch');
+    eventInputPatch.timeEnd();
 
-    Performance.start('parser');
+    const eventParser = logger.timeEvent('parser');
     if (
       config.experimentalParser &&
       !isLegacyClient(config) &&
       !legacyNameFromConfig(config)
     ) {
-      context = parseOpenApiSpec({ config, dependencies, spec: data });
+      context = parseOpenApiSpec({ config, dependencies, logger, spec: data });
     }
 
     // fallback to legacy parser
@@ -236,17 +238,17 @@ export const createClient = async ({
       const parsed = parseLegacy({ openApi: data });
       client = postProcessClient(parsed, config);
     }
-    Performance.end('parser');
+    eventParser.timeEnd();
 
-    Performance.start('generator');
+    const eventGenerator = logger.timeEvent('generator');
     if (context) {
       await generateOutput({ context });
     } else if (client) {
       await generateLegacyOutput({ client, openApi: data, templates });
     }
-    Performance.end('generator');
+    eventGenerator.timeEnd();
 
-    Performance.start('postprocess');
+    const eventPostprocess = logger.timeEvent('postprocess');
     if (!config.dryRun) {
       processOutput({ config });
 
@@ -259,12 +261,12 @@ export const createClient = async ({
         );
       }
     }
-    Performance.end('postprocess');
+    eventPostprocess.timeEnd();
   }
 
   if (config.input.watch.enabled && typeof inputPath.path === 'string') {
     setTimeout(() => {
-      createClient({ config, dependencies, templates, watch });
+      createClient({ config, dependencies, logger, templates, watch });
     }, config.input.watch.interval);
   }
 
