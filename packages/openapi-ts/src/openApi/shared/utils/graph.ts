@@ -1,3 +1,4 @@
+import type { Logger } from '../../../utils/logger';
 import { normalizeJsonPointer, pathToJsonPointer } from '../../../utils/ref';
 import { childSchemaRelationships } from './schemaChildRelationships';
 
@@ -373,9 +374,11 @@ export const seedLocalScopes = (nodes: Graph['nodes']): void => {
  */
 export const buildGraph = (
   root: unknown,
+  logger: Logger,
 ): {
   graph: Graph;
 } => {
+  const eventBuildGraph = logger.timeEvent('build-graph');
   const graph: Graph = {
     allDependencies: new Map(),
     dependencies: new Map(),
@@ -471,5 +474,6 @@ export const buildGraph = (
     graph.allDependencies.set(pointer, allDependencies);
   }
 
+  eventBuildGraph.timeEnd();
   return { graph };
 };

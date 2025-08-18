@@ -1,5 +1,6 @@
 import { createOperationKey } from '../../../ir/operation';
 import type { Config } from '../../../types/config';
+import type { Logger } from '../../../utils/logger';
 import type { PathItemObject, PathsObject } from '../../3.1.x/types/spec';
 import type { OpenApi } from '../../types';
 import type { ResourceMetadata } from '../graph/meta';
@@ -270,7 +271,9 @@ const collectFiltersSetFromRegExps = ({
 export const createFilters = (
   config: Config['parser']['filters'],
   spec: OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X,
+  logger: Logger,
 ): Filters => {
+  const eventCreateFilters = logger.timeEvent('create-filters');
   const excludeOperations = createFiltersSetAndRegExps(
     'operation',
     config?.operations?.exclude,
@@ -355,6 +358,7 @@ export const createFilters = (
       include: new Set(config?.tags?.include),
     },
   };
+  eventCreateFilters.timeEnd();
   return filters;
 };
 
@@ -944,9 +948,11 @@ const collectOperationDependencies = ({
 
 export const createFilteredDependencies = ({
   filters,
+  logger,
   resourceMetadata,
 }: {
   filters: Filters;
+  logger: Logger;
   resourceMetadata: ResourceMetadata;
 }): {
   operations: Set<string>;
@@ -955,6 +961,9 @@ export const createFilteredDependencies = ({
   responses: Set<string>;
   schemas: Set<string>;
 } => {
+  const eventCreateFilteredDependencies = logger.timeEvent(
+    'create-filtered-dependencies',
+  );
   const { schemas } = collectSchemas({ filters, resourceMetadata });
   const { parameters } = collectParameters({
     filters,
@@ -1001,6 +1010,7 @@ export const createFilteredDependencies = ({
     });
   }
 
+  eventCreateFilteredDependencies.timeEnd();
   return {
     operations,
     parameters,
