@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.80.13
+
+### Patch Changes
+
+- [#2471](https://github.com/hey-api/openapi-ts/pull/2471) [`82af768`](https://github.com/hey-api/openapi-ts/commit/82af768a102409f981006a4b6f0219f9d86256dc) Thanks [@josstn](https://github.com/josstn)! - fix(parser): handle non-ascii characters in discriminator
+
 ## 0.80.12
 
 ### Patch Changes
