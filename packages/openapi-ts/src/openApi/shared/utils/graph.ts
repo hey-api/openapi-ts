@@ -79,14 +79,21 @@ export const annotateChildScopes = (nodes: Graph['nodes']): void => {
  * Recursively collects all $ref dependencies in the subtree rooted at `pointer`.
  */
 const collectAllDependenciesForPointer = ({
+  cache,
   graph,
   pointer,
   visited,
 }: {
+  cache: Map<string, Set<string>>;
   graph: Graph;
   pointer: string;
   visited: Set<string>;
 }): Set<string> => {
+  const cached = cache.get(pointer);
+  if (cached) {
+    return cached;
+  }
+
   if (visited.has(pointer)) {
     return new Set();
   }
@@ -109,6 +116,7 @@ const collectAllDependenciesForPointer = ({
       allDependencies.add(depPointer);
       // Recursively collect dependencies of the referenced node
       const transitiveDependencies = collectAllDependenciesForPointer({
+        cache,
         graph,
         pointer: depPointer,
         visited,
@@ -123,6 +131,7 @@ const collectAllDependenciesForPointer = ({
   for (const [childPointer, childInfo] of graph.nodes) {
     if (childInfo.parentPointer === pointer) {
       const transitiveDependencies = collectAllDependenciesForPointer({
+        cache,
         graph,
         pointer: childPointer,
         visited,
@@ -133,6 +142,7 @@ const collectAllDependenciesForPointer = ({
     }
   }
 
+  cache.set(pointer, allDependencies);
   return allDependencies;
 };
 
@@ -465,8 +475,10 @@ export const buildGraph = (
   propagateScopes(graph);
   annotateChildScopes(graph.nodes);
 
+  const cache = new Map<string, Set<string>>();
   for (const pointer of graph.nodes.keys()) {
     const allDependencies = collectAllDependenciesForPointer({
+      cache,
       graph,
       pointer,
       visited: new Set(),
@@ -475,5 +487,57 @@ export const buildGraph = (
   }
 
   eventBuildGraph.timeEnd();
+
+  // functions creating data for debug scripts located in `debug-helpers/`
+  // const { maxChildren, maxDepth, totalNodes } = analyzeGraphStructure(graph);
+  // const nodesForViz = exportGraphForVisualization(graph);
+  // fs.writeFileSync('debug-helpers/graph.json', JSON.stringify(nodesForViz, null, 2));
+
   return { graph };
+};
+
+export const analyzeGraphStructure = (graph: Graph) => {
+  let maxDepth = 0;
+  let maxChildren = 0;
+
+  const computeDepth = (pointer: string, depth: number): void => {
+    maxDepth = Math.max(maxDepth, depth);
+
+    const children = Array.from(graph.nodes.entries())
+      .filter(([, nodeInfo]) => nodeInfo.parentPointer === pointer)
+      .map(([childPointer]) => childPointer);
+
+    maxChildren = Math.max(maxChildren, children.length);
+
+    for (const childPointer of children) {
+      computeDepth(childPointer, depth + 1);
+    }
+  };
+
+  const totalNodes = graph.nodes.size;
+  if (graph.nodes.has('#')) {
+    computeDepth('#', 1);
+  }
+
+  return { maxChildren, maxDepth, totalNodes };
+};
+
+export const exportGraphForVisualization = (graph: Graph) => {
+  const childrenMap = new Map<string, string[]>();
+
+  for (const [pointer, nodeInfo] of graph.nodes) {
+    if (!nodeInfo.parentPointer) continue;
+    if (!childrenMap.has(nodeInfo.parentPointer)) {
+      childrenMap.set(nodeInfo.parentPointer, []);
+    }
+    childrenMap.get(nodeInfo.parentPointer)!.push(pointer);
+  }
+
+  const nodes = Array.from(graph.nodes.keys()).map((pointer) => ({
+    children: childrenMap.get(pointer)?.length ?? 0,
+    childrenPointers: childrenMap.get(pointer) || [],
+    pointer,
+  }));
+
+  return nodes;
 };
