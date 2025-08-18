@@ -1,6 +1,7 @@
 import { IRContext } from '../ir/context';
 import type { IR } from '../ir/types';
 import type { Config } from '../types/config';
+import type { Logger } from '../utils/logger';
 import { parseV2_0_X } from './2.0.x';
 import { parseV3_0_X } from './3.0.x';
 import { parseV3_1_X } from './3.1.x';
@@ -64,15 +65,18 @@ export function parseLegacy({
 export const parseOpenApiSpec = ({
   config,
   dependencies,
+  logger,
   spec,
 }: {
   config: Config;
   dependencies: Record<string, string>;
+  logger: Logger;
   spec: unknown;
 }): IR.Context | undefined => {
   const context = new IRContext({
     config,
     dependencies,
+    logger,
     spec: spec as OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X,
   });
 

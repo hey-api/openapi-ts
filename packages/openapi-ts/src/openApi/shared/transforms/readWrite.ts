@@ -1,4 +1,5 @@
 import type { Config } from '../../../types/config';
+import type { Logger } from '../../../utils/logger';
 import { jsonPointerToPath } from '../../../utils/ref';
 import { buildGraph, type Graph, type Scope } from '../utils/graph';
 import { buildName } from '../utils/name';
@@ -71,7 +72,11 @@ const getComponentContext = (
  * This is used to safely remove only the true originals after splitting,
  * even if names are swapped or overwritten by split variants.
  */
-const captureOriginalSchemas = (spec: unknown): OriginalSchemas => {
+const captureOriginalSchemas = (
+  spec: unknown,
+  logger: Logger,
+): OriginalSchemas => {
+  const event = logger.timeEvent('capture-original-schemas');
   const originals: OriginalSchemas = {};
   if (hasComponentsSchemasObject(spec)) {
     for (const [name, obj] of Object.entries(
@@ -84,6 +89,7 @@ const captureOriginalSchemas = (spec: unknown): OriginalSchemas => {
       originals[`#/definitions/${name}`] = obj;
     }
   }
+  event.timeEnd();
   return originals;
 };
 
@@ -95,15 +101,22 @@ const captureOriginalSchemas = (spec: unknown): OriginalSchemas => {
  * @param spec - The OpenAPI spec object
  * @param split - The split schemas (from splitSchemas)
  */
-const insertSplitSchemasIntoSpec = (
-  spec: unknown,
-  split: Pick<SplitSchemas, 'schemas'>,
-) => {
+const insertSplitSchemasIntoSpec = ({
+  logger,
+  spec,
+  split,
+}: {
+  logger: Logger;
+  spec: unknown;
+  split: Pick<SplitSchemas, 'schemas'>;
+}) => {
+  const event = logger.timeEvent('insert-split-schemas-into-spec');
   if (hasComponentsSchemasObject(spec)) {
     Object.assign((spec as any).components.schemas, split.schemas);
   } else if (hasDefinitionsObject(spec)) {
     Object.assign((spec as any).definitions, split.schemas);
   }
+  event.timeEnd();
 };
 
 /**
@@ -264,14 +277,17 @@ const pruneSchemaByScope = (
  * @param split - The split mapping (from splitSchemas)
  */
 const removeOriginalSplitSchemas = ({
+  logger,
   originalSchemas,
   spec,
   split,
 }: {
+  logger: Logger;
   originalSchemas: OriginalSchemas;
   spec: unknown;
   split: Pick<SplitSchemas, 'mapping'>;
 }) => {
+  const event = logger.timeEvent('remove-original-split-schemas');
   const schemasObj = getSchemasObject(spec);
 
   for (const originalPointer of Object.keys(split.mapping)) {
@@ -286,6 +302,7 @@ const removeOriginalSplitSchemas = ({
       delete schemasObj[name];
     }
   }
+  event.timeEnd();
 };
 
 /**
@@ -300,12 +317,15 @@ const removeOriginalSplitSchemas = ({
 export const splitSchemas = ({
   config,
   graph,
+  logger,
   spec,
 }: {
   config: ReadWriteConfig;
   graph: Graph;
+  logger: Logger;
   spec: unknown;
 }): SplitSchemas => {
+  const event = logger.timeEvent('split-schemas');
   const existingNames = new Set<string>();
   const split: SplitSchemas = {
     mapping: {},
@@ -393,6 +413,7 @@ export const splitSchemas = ({
     split.reverseMapping[writePointer] = pointer;
   }
 
+  event.timeEnd();
   return split;
 };
 
@@ -411,10 +432,16 @@ type WalkArgs = {
  * @param spec - The OpenAPI spec object
  * @param split - The split mapping (from splitSchemas)
  */
-export const updateRefsInSpec = (
-  spec: unknown,
-  split: Omit<SplitSchemas, 'schemas'>,
-): void => {
+export const updateRefsInSpec = ({
+  logger,
+  spec,
+  split,
+}: {
+  logger: Logger;
+  spec: unknown;
+  split: Omit<SplitSchemas, 'schemas'>;
+}): void => {
+  const event = logger.timeEvent('update-refs-in-spec');
   const schemasPointerNamespace = specToSchemasPointerNamespace(spec);
 
   const walk = ({
@@ -578,6 +605,7 @@ export const updateRefsInSpec = (
     node: spec,
     path: [],
   });
+  event.timeEnd();
 };
 
 /**
@@ -593,15 +621,17 @@ export const updateRefsInSpec = (
  */
 export const readWriteTransform = ({
   config,
+  logger,
   spec,
 }: {
   config: ReadWriteConfig;
+  logger: Logger;
   spec: unknown;
 }) => {
-  const { graph } = buildGraph(spec);
-  const originalSchemas = captureOriginalSchemas(spec);
-  const split = splitSchemas({ config, graph, spec });
-  insertSplitSchemasIntoSpec(spec, split);
-  updateRefsInSpec(spec, split);
-  removeOriginalSplitSchemas({ originalSchemas, spec, split });
+  const { graph } = buildGraph(spec, logger);
+  const originalSchemas = captureOriginalSchemas(spec, logger);
+  const split = splitSchemas({ config, graph, logger, spec });
+  insertSplitSchemasIntoSpec({ logger, spec, split });
+  updateRefsInSpec({ logger, spec, split });
+  removeOriginalSplitSchemas({ logger, originalSchemas, spec, split });
 };

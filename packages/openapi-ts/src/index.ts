@@ -16,7 +16,7 @@ import type { IR } from './ir/types';
 import type { Client } from './types/client';
 import type { Config, UserConfig } from './types/config';
 import { registerHandlebarTemplates } from './utils/handlebars';
-import { Performance, PerformanceReport } from './utils/performance';
+import { Logger } from './utils/logger';
 
 type Configs = UserConfig | (() => UserConfig) | (() => Promise<UserConfig>);
 
@@ -38,9 +38,10 @@ export const createClient = async (
   try {
     checkNodeVersion();
 
-    Performance.start('createClient');
+    const logger = new Logger();
+    const eventCreateClient = logger.timeEvent('createClient');
 
-    Performance.start('config');
+    const eventConfig = logger.timeEvent('config');
     const configResults = await initConfigs(resolvedConfig);
     for (const result of configResults.results) {
       configs.push(result.config);
@@ -48,17 +49,18 @@ export const createClient = async (
         throw result.errors[0];
       }
     }
-    Performance.end('config');
+    eventConfig.timeEnd();
 
-    Performance.start('handlebars');
+    const eventHandlebars = logger.timeEvent('handlebars');
     const templates = registerHandlebarTemplates();
-    Performance.end('handlebars');
+    eventHandlebars.timeEnd();
 
     const clients = await Promise.all(
       configs.map((config) =>
         pCreateClient({
           config,
           dependencies: configResults.dependencies,
+          logger,
           templates,
         }),
       ),
@@ -67,23 +69,11 @@ export const createClient = async (
       Client | IR.Context
     >;
 
-    Performance.end('createClient');
+    eventCreateClient.timeEnd();
 
     const config = configs[0];
     if (config && config.logs.level === 'debug') {
-      const perfReport = new PerformanceReport({
-        totalMark: 'createClient',
-      });
-      perfReport.report({
-        marks: [
-          'config',
-          'openapi',
-          'handlebars',
-          'parser',
-          'generator',
-          'postprocess',
-        ],
-      });
+      logger.report();
     }
 
     return result;

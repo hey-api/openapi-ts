@@ -1,4 +1,5 @@
 import { createOperationKey } from '../../../ir/operation';
+import type { Logger } from '../../../utils/logger';
 import { jsonPointerToPath } from '../../../utils/ref';
 import { addNamespace, stringToNamespace } from '../utils/filter';
 import type { Graph } from '../utils/graph';
@@ -49,9 +50,13 @@ export type ResourceMetadata = {
  */
 export const buildResourceMetadata = (
   graph: Graph,
+  logger: Logger,
 ): {
   resourceMetadata: ResourceMetadata;
 } => {
+  const eventBuildResourceMetadata = logger.timeEvent(
+    'build-resource-metadata',
+  );
   const resourceMetadata: ResourceMetadata = {
     operations: new Map(),
     parameters: new Map(),
@@ -159,5 +164,6 @@ export const buildResourceMetadata = (
     }
   }
 
+  eventBuildResourceMetadata.timeEnd();
   return { resourceMetadata };
 };
