@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.80.12
+
+### Patch Changes
+
+- [#2467](https://github.com/hey-api/openapi-ts/pull/2467) [`c76a8de`](https://github.com/hey-api/openapi-ts/commit/c76a8decad12a4a67cab83827bb007b36d794f6a) Thanks [@bjornhenriksson](https://github.com/bjornhenriksson)! - fix(zod): add `dates.local` option to allow unqualified (timezone-less) datetimes
+
 ## 0.80.11
 
 ### Patch Changes
