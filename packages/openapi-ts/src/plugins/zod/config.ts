@@ -67,6 +67,7 @@ export const defaultConfig: ZodPlugin['Config'] = {
 
     plugin.config.dates = context.valueToObject({
       defaultValue: {
+        local: false,
         offset: false,
       },
       value: plugin.config.dates,

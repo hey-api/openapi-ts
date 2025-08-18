@@ -515,6 +515,15 @@ const stringTypeToZodSchema = ({
     }),
   });
 
+  const dateTimeOptions: { key: string; value: boolean }[] = [];
+
+  if (plugin.config.dates.offset) {
+    dateTimeOptions.push({ key: 'offset', value: true });
+  }
+  if (plugin.config.dates.local) {
+    dateTimeOptions.push({ key: 'local', value: true });
+  }
+
   if (schema.format) {
     switch (schema.format) {
       case 'date':
@@ -537,18 +546,14 @@ const stringTypeToZodSchema = ({
             }),
             name: identifiers.datetime,
           }),
-          parameters: plugin.config.dates.offset
-            ? [
-                tsc.objectExpression({
-                  obj: [
-                    {
-                      key: 'offset',
-                      value: true,
-                    },
-                  ],
-                }),
-              ]
-            : [],
+          parameters:
+            dateTimeOptions.length > 0
+              ? [
+                  tsc.objectExpression({
+                    obj: dateTimeOptions,
+                  }),
+                ]
+              : [],
         });
         break;
       case 'email':
