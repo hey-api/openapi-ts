@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': patch
 ---
 
-Adds local option for Zod's datetime options
+fix(zod): add `dates.local` option to allow unqualified (timezone-less) datetimes
