@@ -10,6 +10,8 @@ export type Baz = Qux;
 
 export type Bar = Qux;
 
+export type Spæcial = Qux;
+
 export type Qux = {
     id: string;
     type: Quux;
@@ -21,7 +23,9 @@ export type Quuz = ({
     type: 'bar';
 } & Bar) | ({
     type: 'baz';
-} & Baz);
+} & Baz) | ({
+    type: 'non-ascii';
+} & Spæcial);
 
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
