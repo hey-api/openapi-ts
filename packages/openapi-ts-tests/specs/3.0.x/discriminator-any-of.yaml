@@ -16,6 +16,9 @@ components:
     Bar:
       allOf:
         - $ref: '#/components/schemas/Qux'
+    Spæcial:
+      allOf:
+        - $ref: '#/components/schemas/Qux'
     Qux:
       type: object
       properties:
@@ -35,8 +38,10 @@ components:
       anyOf:
         - $ref: '#/components/schemas/Bar'
         - $ref: '#/components/schemas/Baz'
+        - $ref: '#/components/schemas/Spæcial'
       discriminator:
         propertyName: type
         mapping:
           bar: '#/components/schemas/Bar'
           baz: '#/components/schemas/Baz'
+          'non-ascii': '#/components/schemas/Spæcial'
