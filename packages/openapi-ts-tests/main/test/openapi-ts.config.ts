@@ -31,16 +31,11 @@ export default defineConfig(() => {
       //   openapi: '3.1.0',
       //   paths: {},
       // },
-      // path: path.resolve(
-      //   getSpecsPath(),
-      //   '3.1.x',
-      //   'invalid',
-      //   'servers-entry.yaml',
-      // ),
       path: path.resolve(
         getSpecsPath(),
-        '3.1.x',
-        'full.yaml',
+        '3.0.x',
+        // 'invalid',
+        'perf.yaml',
         // 'validators-circular-ref.json',
       ),
       // path: 'http://localhost:4000/',
@@ -59,7 +54,7 @@ export default defineConfig(() => {
       // },
     },
     logs: {
-      // level: 'silent',
+      level: 'debug',
       path: './logs',
     },
     // name: 'foo',
@@ -127,11 +122,11 @@ export default defineConfig(() => {
       {
         // baseUrl: false,
         // exportFromIndex: true,
-        // name: '@hey-api/client-fetch',
-        name: '@hey-api/client-angular',
+        name: '@hey-api/client-fetch',
+        // name: '@hey-api/client-angular',
         // name: 'legacy/angular',
         // strictBaseUrl: true,
-        throwOnError: true,
+        // throwOnError: true,
       },
       {
         // case: 'snake_case',
@@ -164,11 +159,11 @@ export default defineConfig(() => {
         // instance: true,
         name: '@hey-api/sdk',
         // operationId: false,
-        params: 'experiment',
+        // params: 'experiment',
         // responseStyle: 'data',
         // transformer: '@hey-api/transformers',
         // transformer: true,
-        validator: 'zod',
+        // validator: 'zod',
         // validator: {
         //   request: 'zod',
         //   response: 'zod',
@@ -234,7 +229,7 @@ export default defineConfig(() => {
         },
         exportFromIndex: true,
         metadata: true,
-        name: 'zod',
+        // name: 'zod',
         // requests: {
         //   // case: 'SCREAMING_SNAKE_CASE',
         //   // name: 'z{{name}}TestData',
@@ -264,7 +259,7 @@ export default defineConfig(() => {
         // httpRequest
         // httpResource
         exportFromIndex: true,
-        name: '@angular/common',
+        // name: '@angular/common',
       },
     ],
     // useOptions: false,

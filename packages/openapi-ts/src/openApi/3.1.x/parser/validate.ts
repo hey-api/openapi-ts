@@ -1,4 +1,5 @@
 import { createOperationKey } from '../../../ir/operation';
+import type { Logger } from '../../../utils/logger';
 import { httpMethods } from '../../shared/utils/operation';
 import type {
   ValidatorIssue,
@@ -6,7 +7,11 @@ import type {
 } from '../../shared/utils/validator';
 import type { OpenApiV3_1_X, PathItemObject, PathsObject } from '../types/spec';
 
-export const validateOpenApiSpec = (spec: OpenApiV3_1_X): ValidatorResult => {
+export const validateOpenApiSpec = (
+  spec: OpenApiV3_1_X,
+  logger: Logger,
+): ValidatorResult => {
+  const eventValidate = logger.timeEvent('validate');
   const issues: Array<ValidatorIssue> = [];
   const operationIds = new Map();
 
@@ -82,6 +87,7 @@ export const validateOpenApiSpec = (spec: OpenApiV3_1_X): ValidatorResult => {
     }
   }
 
+  eventValidate.timeEnd();
   return {
     issues,
     valid: !issues.some((issue) => issue.severity === 'error'),

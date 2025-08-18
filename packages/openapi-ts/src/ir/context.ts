@@ -9,6 +9,7 @@ import type { PluginNames } from '../plugins/types';
 import type { StringCase } from '../types/case';
 import type { Config } from '../types/config';
 import type { Files } from '../types/utils';
+import type { Logger } from '../utils/logger';
 import { resolveRef } from '../utils/ref';
 import type { IR } from './types';
 
@@ -48,6 +49,8 @@ export class IRContext<Spec extends Record<string, any> = any> {
    * Intermediate representation model obtained from `spec`.
    */
   public ir: IR.Model = {};
+  /** Logger instance */
+  public logger: Logger;
   /**
    * The package metadata and utilities for the current context, constructed
    * from the provided dependencies. Used for managing package-related
@@ -71,13 +74,16 @@ export class IRContext<Spec extends Record<string, any> = any> {
   constructor({
     config,
     dependencies,
+    logger,
     spec,
   }: {
     config: Config;
     dependencies: Record<string, string>;
+    logger: Logger;
     spec: Spec;
   }) {
     this.config = config;
+    this.logger = logger;
     this.package = packageFactory(dependencies);
     this.spec = spec;
   }

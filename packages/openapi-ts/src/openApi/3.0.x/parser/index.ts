@@ -28,18 +28,27 @@ import { validateOpenApiSpec } from './validate';
 
 export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
   if (context.config.parser.validate_EXPERIMENTAL) {
-    const result = validateOpenApiSpec(context.spec);
+    const result = validateOpenApiSpec(context.spec, context.logger);
     handleValidatorResult({ context, result });
   }
 
   const shouldFilterSpec = hasFilters(context.config.parser.filters);
   if (shouldFilterSpec) {
-    const filters = createFilters(context.config.parser.filters, context.spec);
-    const { graph } = buildGraph(context.spec);
-    const { resourceMetadata } = buildResourceMetadata(graph);
-    const sets = createFilteredDependencies({ filters, resourceMetadata });
+    const filters = createFilters(
+      context.config.parser.filters,
+      context.spec,
+      context.logger,
+    );
+    const { graph } = buildGraph(context.spec, context.logger);
+    const { resourceMetadata } = buildResourceMetadata(graph, context.logger);
+    const sets = createFilteredDependencies({
+      filters,
+      logger: context.logger,
+      resourceMetadata,
+    });
     filterSpec({
       ...sets,
+      logger: context.logger,
       preserveOrder: filters.preserveOrder,
       spec: context.spec,
     });

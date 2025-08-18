@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { Logger } from '../../../../utils/logger';
 import { getSpecsPath, specFileToJson } from '../../../__tests__/utils';
 import type { ValidatorResult } from '../../../shared/utils/validator';
 import { validateOpenApiSpec } from '../validate';
@@ -37,7 +38,8 @@ describe('validate', () => {
 
   it.each(scenarios)('$description', ({ file, issues, valid }) => {
     const spec = specFileToJson(file);
-    const result = validateOpenApiSpec(spec);
+    const logger = new Logger();
+    const result = validateOpenApiSpec(spec, logger);
     expect(result.valid).toBe(valid);
     expect(result.issues).toEqual(issues);
   });
