@@ -16,7 +16,7 @@
     "test": "vitest --watch=false"
   },
   "dependencies": {
-    "@tanstack/svelte-query": "5.73.3"
+    "@tanstack/svelte-query": "5.85.3"
   },
   "devDependencies": {
     "@config/vite-base": "workspace:*",
@@ -38,6 +38,6 @@
     "typescript": "5.8.3",
     "typescript-eslint": "8.29.1",
     "vite": "7.1.2",
-    "vitest": "3.1.1"
+    "vitest": "3.2.4"
   }
 }

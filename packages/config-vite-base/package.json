@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "vite": "7.1.2",
-    "vitest": "^3.1.1"
+    "vitest": "^3.2.4"
   },
   "devDependencies": {
     "typescript": "^5.8.3"

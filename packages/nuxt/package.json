@@ -53,7 +53,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@nuxt/kit": "3.15.4",
+    "@nuxt/kit": "4.0.3",
     "defu": "6.1.4",
     "mlly": "1.7.4"
   },
