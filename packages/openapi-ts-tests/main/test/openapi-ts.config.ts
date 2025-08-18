@@ -33,9 +33,9 @@ export default defineConfig(() => {
       // },
       path: path.resolve(
         getSpecsPath(),
-        '3.0.x',
+        '3.1.x',
         // 'invalid',
-        'perf.yaml',
+        'full.yaml',
         // 'validators-circular-ref.json',
       ),
       // path: 'http://localhost:4000/',
@@ -54,7 +54,7 @@ export default defineConfig(() => {
       // },
     },
     logs: {
-      level: 'debug',
+      // level: 'debug',
       path: './logs',
     },
     // name: 'foo',
@@ -107,7 +107,7 @@ export default defineConfig(() => {
           // name: '{{name}}',
         },
         readWrite: {
-          enabled: false,
+          // enabled: false,
           requests: '{{name}}Writable',
           responses: '{{name}}',
         },
