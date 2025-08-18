@@ -34,6 +34,15 @@ export type UserConfig = Plugin.Name<'zod'> & {
    */
   dates?: {
     /**
+     * Whether to allow unqualified (timezone-less) datetimes:
+     *
+     * When enabled, Zod will accept datetime strings without timezone information.
+     * When disabled, Zod will require timezone information in datetime strings.
+     *
+     * @default false
+     */
+    local?: boolean;
+    /**
      * Whether to include timezone offset information when handling dates.
      *
      * When enabled, date strings will preserve timezone information.
@@ -365,6 +374,15 @@ export type Config = Plugin.Name<'zod'> & {
    * date validation features.
    */
   dates: {
+    /**
+     * Whether to allow unqualified (timezone-less) datetimes:
+     *
+     * When enabled, Zod will accept datetime strings without timezone information.
+     * When disabled, Zod will require timezone information in datetime strings.
+     *
+     * @default false
+     */
+    local: boolean;
     /**
      * Whether to include timezone offset information when handling dates.
      *
