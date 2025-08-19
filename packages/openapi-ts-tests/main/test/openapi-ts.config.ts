@@ -54,7 +54,7 @@ export default defineConfig(() => {
       // },
     },
     logs: {
-      // level: 'debug',
+      level: 'debug',
       path: './logs',
     },
     // name: 'foo',
@@ -80,7 +80,7 @@ export default defineConfig(() => {
           //   // '/^[A-Z]+ /v1//',
           // ],
         },
-        // orphans: false,
+        // orphans: true,
         // preserveOrder: true,
         // schemas: {
         //   include: ['Foo'],
@@ -190,7 +190,7 @@ export default defineConfig(() => {
         // mutationOptions: {
         //   name: '{{name}}MO',
         // },
-        // name: '@tanstack/react-query',
+        name: '@tanstack/react-query',
         // queryKeys: {
         //   name: '{{name}}QK',
         // },

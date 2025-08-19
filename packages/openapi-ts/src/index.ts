@@ -29,6 +29,7 @@ colors.enabled = colorSupport().hasBasic;
  */
 export const createClient = async (
   userConfig?: Configs,
+  logger = new Logger(),
 ): Promise<ReadonlyArray<Client | IR.Context>> => {
   const resolvedConfig =
     typeof userConfig === 'function' ? await userConfig() : userConfig;
@@ -38,7 +39,6 @@ export const createClient = async (
   try {
     checkNodeVersion();
 
-    const logger = new Logger();
     const eventCreateClient = logger.timeEvent('createClient');
 
     const eventConfig = logger.timeEvent('config');
@@ -72,9 +72,7 @@ export const createClient = async (
     eventCreateClient.timeEnd();
 
     const config = configs[0];
-    if (config && config.logs.level === 'debug') {
-      logger.report();
-    }
+    logger.report(config && config.logs.level === 'debug');
 
     return result;
   } catch (error) {
@@ -134,3 +132,4 @@ export { compiler, tsc } from './tsc';
 export type { UserConfig } from './types/config';
 export type { LegacyIR } from './types/types';
 export { utils } from './utils/exports';
+export { Logger } from './utils/logger';
