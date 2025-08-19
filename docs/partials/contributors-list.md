@@ -7,6 +7,7 @@
 - [Alexander Skvortcov](https://github.com/askvortcov)
 - [Andrea](https://github.com/andreasciamanna)
 - [Ben Vincent](https://github.com/bvincent1)
+- [Björn Henriksson](https://github.com/bjornhenriksson)
 - [Bogdan ](https://github.com/BogdanMaier)
 - [Brian Tarricone](https://github.com/kelnos)
 - [Carl Kittelberger](https://github.com/icedream)
