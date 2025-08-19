@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.80.15
+
+### Patch Changes
+
+- [#2480](https://github.com/hey-api/openapi-ts/pull/2480) [`d9af1bb`](https://github.com/hey-api/openapi-ts/commit/d9af1bb3d1abb4c8caa4f8fd6a3fcef50d2187d9) Thanks [@dracomithril](https://github.com/dracomithril)! - fix(client): call `auth()` function for every unique security `name`
+
+- [#2481](https://github.com/hey-api/openapi-ts/pull/2481) [`7e8264e`](https://github.com/hey-api/openapi-ts/commit/7e8264eae199f4ce52f1666937bca838626cacc3) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): cache parent to children nodes
+
 ## 0.80.14
 
 ### Patch Changes
