@@ -172,4 +172,41 @@ describe('setAuthParams', () => {
     expect(headers.baz).toBeUndefined();
     expect(query.baz).toBe('Bearer foo');
   });
+
+  it('sets only one specific header', async () => {
+    const auth = vi.fn(({ name }: Auth) => {
+      if (name === 'baz') {
+        return 'foo';
+      }
+      return 'buz';
+    });
+    const headers: Record<any, unknown> = {};
+    const query: Record<any, unknown> = {};
+    await setAuthParams({
+      auth,
+      headers,
+      query,
+      security: [
+        {
+          name: 'baz',
+          scheme: 'bearer',
+          type: 'http',
+        },
+        {
+          name: 'fiz',
+          type: 'http',
+        },
+        {
+          in: 'query',
+          name: 'baz',
+          scheme: 'bearer',
+          type: 'http',
+        },
+      ],
+    });
+    expect(auth).toHaveBeenCalled();
+    expect(headers['baz']).toBe('Bearer foo');
+    expect(headers['fiz']).toBe('buz');
+    expect(Object.keys(query).length).toBe(0);
+  });
 });
