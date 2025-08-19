@@ -3,6 +3,7 @@ import colors from 'ansi-colors';
 interface LoggerEvent {
   end?: PerformanceMark;
   events: Array<LoggerEvent>;
+  id: string; // unique internal key
   name: string;
   start: PerformanceMark;
 }
@@ -16,24 +17,11 @@ interface StoredEventResult {
   position: ReadonlyArray<number>;
 }
 
+let loggerCounter = 0;
+const nameToId = (name: string) => `${name}-${loggerCounter++}`;
 const idEnd = (id: string) => `${id}-end`;
-
 const idLength = (id: string) => `${id}-length`;
-
 const idStart = (id: string) => `${id}-start`;
-
-export const Performance = {
-  clear: (): void => {
-    performance.clearMarks();
-    performance.clearMeasures();
-  },
-  end: (id: string): PerformanceMark => performance.mark(idEnd(id)),
-  getEntriesByName: (id: string): PerformanceEntryList =>
-    performance.getEntriesByName(idLength(id)),
-  measure: (id: string): PerformanceMeasure =>
-    performance.measure(idLength(id), idStart(id), idEnd(id)),
-  start: (id: string): PerformanceMark => performance.mark(idStart(id)),
-};
 
 const getSeverity = (
   duration: number,
@@ -79,27 +67,33 @@ export class Logger {
       }
     }
     if (event && !event.end) {
-      event.end = performance.mark(idEnd(event.name));
+      event.end = performance.mark(idEnd(event.id));
     }
   }
 
-  report() {
+  report(print: boolean = true): PerformanceMeasure | undefined {
     const firstEvent = this.events[0];
     if (!firstEvent) return;
     const lastEvent = this.events[this.events.length - 1]!;
+    const name = 'root';
+    const id = nameToId(name);
     const measure = performance.measure(
-      idLength('root'),
-      idStart(firstEvent.name),
-      idEnd(lastEvent.name),
+      idLength(id),
+      idStart(firstEvent.id),
+      idEnd(lastEvent.id),
     );
-    this.reportEvent({
-      end: lastEvent.end,
-      events: this.events,
-      indent: 0,
-      measure,
-      name: 'root',
-      start: firstEvent!.start,
-    });
+    if (print) {
+      this.reportEvent({
+        end: lastEvent.end,
+        events: this.events,
+        id,
+        indent: 0,
+        measure,
+        name,
+        start: firstEvent!.start,
+      });
+    }
+    return measure;
   }
 
   private reportEvent({
@@ -114,9 +108,9 @@ export class Logger {
 
     parent.events.forEach((event, index) => {
       const measure = performance.measure(
-        idLength(event.name),
-        idStart(event.name),
-        idEnd(event.name),
+        idLength(event.id),
+        idStart(event.id),
+        idEnd(event.id),
       );
       const duration = Math.ceil(measure.duration * 100) / 100;
       const percentage =
@@ -131,7 +125,7 @@ export class Logger {
 
       const branch = index === lastIndex ? '└─ ' : '├─ ';
       const prefix = !indent ? '' : '│  '.repeat(indent - 1) + branch;
-      const maxLength = 30 - prefix.length;
+      const maxLength = 38 - prefix.length;
 
       const percentageBranch = !indent ? '' : '↳ ';
       const percentagePrefix = indent
@@ -151,14 +145,14 @@ export class Logger {
     });
   }
 
-  private start(name: string): PerformanceMark {
-    return performance.mark(idStart(name));
+  private start(id: string): PerformanceMark {
+    return performance.mark(idStart(id));
   }
 
   private storeEvent({
     result,
     ...event
-  }: Pick<LoggerEvent, 'events' | 'name' | 'start'> & {
+  }: Pick<LoggerEvent, 'events' | 'id' | 'name' | 'start'> & {
     result: StoredEventResult;
   }): void {
     const lastEventIndex = event.events.length - 1;
@@ -173,9 +167,11 @@ export class Logger {
   }
 
   timeEvent(name: string) {
-    const start = this.start(name);
+    const id = nameToId(name);
+    const start = this.start(id);
     const event: LoggerEvent = {
       events: this.events,
+      id,
       name,
       start,
     };
