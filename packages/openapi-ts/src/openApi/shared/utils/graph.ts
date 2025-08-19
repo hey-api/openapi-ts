@@ -75,6 +75,12 @@ export const annotateChildScopes = (nodes: Graph['nodes']): void => {
   }
 };
 
+interface Cache {
+  allDependencies: Map<string, Set<string>>;
+  childDependencies: Map<string, Set<string>>;
+  parentToChildren: Map<string, Array<string>>;
+}
+
 /**
  * Recursively collects all $ref dependencies in the subtree rooted at `pointer`.
  */
@@ -84,12 +90,12 @@ const collectAllDependenciesForPointer = ({
   pointer,
   visited,
 }: {
-  cache: Map<string, Set<string>>;
+  cache: Cache;
   graph: Graph;
   pointer: string;
   visited: Set<string>;
 }): Set<string> => {
-  const cached = cache.get(pointer);
+  const cached = cache.allDependencies.get(pointer);
   if (cached) {
     return cached;
   }
@@ -128,21 +134,26 @@ const collectAllDependenciesForPointer = ({
   }
 
   // Recursively collect dependencies of all children
-  for (const [childPointer, childInfo] of graph.nodes) {
-    if (childInfo.parentPointer === pointer) {
-      const transitiveDependencies = collectAllDependenciesForPointer({
-        cache,
-        graph,
-        pointer: childPointer,
-        visited,
-      });
+  const children = cache.parentToChildren.get(pointer);
+  if (children) {
+    for (const childPointer of children) {
+      let transitiveDependencies = cache.childDependencies.get(childPointer);
+      if (!transitiveDependencies) {
+        transitiveDependencies = collectAllDependenciesForPointer({
+          cache,
+          graph,
+          pointer: childPointer,
+          visited,
+        });
+        cache.childDependencies.set(childPointer, transitiveDependencies);
+      }
       for (const dep of transitiveDependencies) {
         allDependencies.add(dep);
       }
     }
   }
 
-  cache.set(pointer, allDependencies);
+  cache.allDependencies.set(pointer, allDependencies);
   return allDependencies;
 };
 
@@ -462,6 +473,21 @@ export const buildGraph = (
     path: [],
   });
 
+  const cache: Cache = {
+    allDependencies: new Map(),
+    childDependencies: new Map(),
+    parentToChildren: new Map(),
+  };
+
+  for (const [pointer, nodeInfo] of graph.nodes) {
+    const parent = nodeInfo.parentPointer;
+    if (!parent) continue;
+    if (!cache.parentToChildren.has(parent)) {
+      cache.parentToChildren.set(parent, []);
+    }
+    cache.parentToChildren.get(parent)!.push(pointer);
+  }
+
   for (const [pointerFrom, pointers] of graph.dependencies) {
     for (const pointerTo of pointers) {
       if (!graph.reverseDependencies.has(pointerTo)) {
@@ -475,7 +501,6 @@ export const buildGraph = (
   propagateScopes(graph);
   annotateChildScopes(graph.nodes);
 
-  const cache = new Map<string, Set<string>>();
   for (const pointer of graph.nodes.keys()) {
     const allDependencies = collectAllDependenciesForPointer({
       cache,
@@ -494,50 +519,4 @@ export const buildGraph = (
   // fs.writeFileSync('debug-helpers/graph.json', JSON.stringify(nodesForViz, null, 2));
 
   return { graph };
-};
-
-export const analyzeGraphStructure = (graph: Graph) => {
-  let maxDepth = 0;
-  let maxChildren = 0;
-
-  const computeDepth = (pointer: string, depth: number): void => {
-    maxDepth = Math.max(maxDepth, depth);
-
-    const children = Array.from(graph.nodes.entries())
-      .filter(([, nodeInfo]) => nodeInfo.parentPointer === pointer)
-      .map(([childPointer]) => childPointer);
-
-    maxChildren = Math.max(maxChildren, children.length);
-
-    for (const childPointer of children) {
-      computeDepth(childPointer, depth + 1);
-    }
-  };
-
-  const totalNodes = graph.nodes.size;
-  if (graph.nodes.has('#')) {
-    computeDepth('#', 1);
-  }
-
-  return { maxChildren, maxDepth, totalNodes };
-};
-
-export const exportGraphForVisualization = (graph: Graph) => {
-  const childrenMap = new Map<string, string[]>();
-
-  for (const [pointer, nodeInfo] of graph.nodes) {
-    if (!nodeInfo.parentPointer) continue;
-    if (!childrenMap.has(nodeInfo.parentPointer)) {
-      childrenMap.set(nodeInfo.parentPointer, []);
-    }
-    childrenMap.get(nodeInfo.parentPointer)!.push(pointer);
-  }
-
-  const nodes = Array.from(graph.nodes.keys()).map((pointer) => ({
-    children: childrenMap.get(pointer)?.length ?? 0,
-    childrenPointers: childrenMap.get(pointer) || [],
-    pointer,
-  }));
-
-  return nodes;
 };
