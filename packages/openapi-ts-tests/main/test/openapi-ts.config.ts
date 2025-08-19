@@ -35,7 +35,8 @@ export default defineConfig(() => {
         getSpecsPath(),
         '3.1.x',
         // 'invalid',
-        'full.yaml',
+        'openai.yaml',
+        // 'full.yaml',
         // 'validators-circular-ref.json',
       ),
       // path: 'http://localhost:4000/',
@@ -54,7 +55,7 @@ export default defineConfig(() => {
       // },
     },
     logs: {
-      level: 'debug',
+      // level: 'debug',
       path: './logs',
     },
     // name: 'foo',
