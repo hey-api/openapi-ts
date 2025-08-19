@@ -203,7 +203,7 @@ const operationToIrOperation = ({
   }
 
   if (operation.security) {
-    const securitySchemeObjects: Array<IR.SecurityObject> = [];
+    const securitySchemeObjects: Map<string, IR.SecurityObject> = new Map();
 
     for (const securityRequirementObject of operation.security) {
       for (const name in securityRequirementObject) {
@@ -213,12 +213,12 @@ const operationToIrOperation = ({
           continue;
         }
 
-        securitySchemeObjects.push(securitySchemeObject);
+        securitySchemeObjects.set(name, securitySchemeObject);
       }
     }
 
-    if (securitySchemeObjects.length) {
-      irOperation.security = securitySchemeObjects;
+    if (securitySchemeObjects.size) {
+      irOperation.security = Array.from(securitySchemeObjects.values());
     }
   }
 
