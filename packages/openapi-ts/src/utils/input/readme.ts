@@ -4,10 +4,10 @@
 const registryRegExp = /^(@([\w-]+)\/([\w\-.]+)#)?([\w-]+)$/;
 
 /**
- * Generates the Hey API Registry URL for a given UUID.
+ * Creates a full ReadMe API Registry URL.
  *
- * @param uuid - The Hey API Registry UUID
- * @returns The full API registry URL
+ * @param uuid - ReadMe UUID
+ * @returns The full ReadMe API registry URL.
  */
 export const getRegistryUrl = (uuid: string): string =>
   `https://dash.readme.com/api/v1/api-registry/${uuid}`;
@@ -39,7 +39,7 @@ export const parseShorthand = (shorthand: string): Parsed => {
   const [, , organization, project, uuid] = match;
 
   if (!uuid) {
-    throw new Error('The ReadMe shorthand UUID cannot be empty.');
+    throw new Error('The ReadMe UUID cannot be empty.');
   }
 
   const result: Parsed = {
