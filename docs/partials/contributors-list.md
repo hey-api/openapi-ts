@@ -47,6 +47,7 @@
 - [Matsu](https://github.com/Matsuuu)
 - [Max Scopp](https://github.com/max-scopp)
 - [Maximilian Dewald](https://github.com/maxdewald)
+- [Michał Grezel](https://github.com/dracomithril)
 - [Michiel Lankamp](https://github.com/mlankamp)
 - [Mika Vilpas](https://github.com/mikavilpas)
 - [Miklos](https://github.com/jumika)
