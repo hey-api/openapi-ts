@@ -1,4 +1,5 @@
 import type { Config, UserConfig } from '../types/config';
+import { isReadmeInput, transformReadmeInput } from '../utils/readme';
 
 const defaultWatch: Config['input']['watch'] = {
   enabled: false,
@@ -38,7 +39,12 @@ export const getInput = (userConfig: UserConfig): Config['input'] => {
   };
 
   if (typeof userConfig.input === 'string') {
-    input.path = userConfig.input;
+    // Handle ReadMe input format transformation
+    if (isReadmeInput(userConfig.input)) {
+      input.path = transformReadmeInput(userConfig.input);
+    } else {
+      input.path = userConfig.input;
+    }
   } else if (
     userConfig.input &&
     (userConfig.input.path !== undefined ||
@@ -50,6 +56,11 @@ export const getInput = (userConfig: UserConfig): Config['input'] => {
       path: 'https://get.heyapi.dev',
       ...userConfig.input,
     };
+
+    // Handle ReadMe input format transformation when path is specified
+    if (typeof input.path === 'string' && isReadmeInput(input.path)) {
+      input.path = transformReadmeInput(input.path);
+    }
 
     // watch only remote files
     if (input.watch !== undefined) {
