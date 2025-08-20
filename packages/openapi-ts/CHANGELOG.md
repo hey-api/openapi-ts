@@ -116,7 +116,7 @@
 
   ```js
   export default {
-    input: 'https://get.heyapi.dev/hey-api/backend',
+    input: 'hey-api/backend', // sign up at app.heyapi.dev
     output: 'src/client',
     plugins: [
       // ...other plugins
@@ -130,7 +130,7 @@
 
   ```js
   export default {
-    input: 'https://get.heyapi.dev/hey-api/backend',
+    input: 'hey-api/backend', // sign up at app.heyapi.dev
     output: 'src/client',
     plugins: [
       // ...other plugins
@@ -261,7 +261,7 @@
 
   ```js
   export default {
-    input: 'https://get.heyapi.dev/hey-api/backend',
+    input: 'hey-api/backend', // sign up at app.heyapi.dev
     output: 'src/client',
     plugins: [
       // ...other plugins
@@ -438,7 +438,7 @@
 
   ```js
   export default {
-    input: 'https://get.heyapi.dev/hey-api/backend',
+    input: 'hey-api/backend', // sign up at app.heyapi.dev
     output: 'src/client',
     plugins: [
       // ...other plugins
@@ -625,7 +625,7 @@
 
   ```js
   export default {
-    input: 'https://get.heyapi.dev/hey-api/backend',
+    input: 'hey-api/backend', // sign up at app.heyapi.dev
     output: {
       path: 'src/client',
       tsConfigPath: 'off',
@@ -717,7 +717,7 @@
 
   ```js
   export default {
-    input: 'https://get.heyapi.dev/hey-api/backend',
+    input: 'hey-api/backend', // sign up at app.heyapi.dev
     output: 'src/client',
     plugins: [
       // ...other plugins
@@ -2854,7 +2854,7 @@
 - Better handling of services without tags
 - Updated dependencies
   , // [!code --]
-  path: 'https://get.heyapi.dev/hey-api/backend',
+  path: 'hey-api/backend', // sign up at app.heyapi.dev
   },
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
@@ -2926,7 +2926,7 @@
 
   ```js
   export default {
-    input: 'https://get.heyapi.dev/hey-api/backend',
+    input: 'hey-api/backend', // sign up at app.heyapi.dev
     output: {
       path: 'src/client',
       tsConfigPath: 'off',
@@ -3018,7 +3018,7 @@
 
   ```js
   export default {
-    input: 'https://get.heyapi.dev/hey-api/backend',
+    input: 'hey-api/backend', // sign up at app.heyapi.dev
     output: 'src/client',
     plugins: [
       // ...other plugins

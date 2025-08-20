@@ -144,9 +144,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
 The fastest way to use `@hey-api/openapi-ts` is via npx
 
 ```sh
-npx @hey-api/openapi-ts \
-  -i https://get.heyapi.dev/hey-api/backend \
-  -o src/client
+npx @hey-api/openapi-ts -i hey-api/backend -o src/client
 ```
 
 Congratulations on creating your first client! 🎉 You can learn more about the generated files on the [Output](https://heyapi.dev/openapi-ts/output) page.
@@ -213,7 +211,7 @@ You can also generate output programmatically by importing `@hey-api/openapi-ts`
 import { createClient } from '@hey-api/openapi-ts';
 
 createClient({
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
 });
 ```
@@ -228,7 +226,7 @@ createClient({
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
 });
 ```
@@ -238,7 +236,7 @@ export default defineConfig({
 ```js
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 module.exports = {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
 };
 ```
@@ -248,7 +246,7 @@ module.exports = {
 ```js
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
 };
 ```

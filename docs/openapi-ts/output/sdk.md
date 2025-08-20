@@ -27,7 +27,7 @@ You can modify the contents of `sdk.gen.ts` by configuring the `@hey-api/sdk` pl
 
 ```js [flat]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -41,7 +41,7 @@ export default {
 
 ```js [class]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -55,7 +55,7 @@ export default {
 
 ```js [none]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     '@hey-api/typescript',
@@ -152,7 +152,7 @@ For a more granular approach, add a validator plugin and set `sdk.validator` to 
 
 ```js [sdk]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     {
@@ -165,7 +165,7 @@ export default {
 
 ```js [validator]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     {
@@ -188,7 +188,7 @@ You can choose to validate only requests or responses.
 
 ```js [requests]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     {
@@ -203,7 +203,7 @@ export default {
 
 ```js [responses]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     {

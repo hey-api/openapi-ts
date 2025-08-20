@@ -15,7 +15,7 @@ Output can be a path to the destination folder or an object containing the desti
 
 ```js [path]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client', // [!code ++]
 };
 ```
@@ -23,7 +23,7 @@ export default {
 <!-- prettier-ignore-start -->
 ```js [object]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: { // [!code ++]
     path: 'src/client', // [!code ++]
     // ...other options // [!code ++]
@@ -42,7 +42,7 @@ To format your output folder contents, set `output.format` to a valid formatter.
 
 ```js [disabled]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
     format: false, // [!code ++]
     path: 'src/client',
@@ -52,7 +52,7 @@ export default {
 
 ```js [prettier]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
     format: 'prettier', // [!code ++]
     path: 'src/client',
@@ -62,7 +62,7 @@ export default {
 
 ```js [biome]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
     format: 'biome', // [!code ++]
     path: 'src/client',
@@ -82,7 +82,7 @@ To lint your output folder contents, set `output.lint` to a valid linter.
 
 ```js [disabled]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
     lint: false, // [!code ++]
     path: 'src/client',
@@ -92,7 +92,7 @@ export default {
 
 ```js [eslint]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
     lint: 'eslint', // [!code ++]
     path: 'src/client',
@@ -102,7 +102,7 @@ export default {
 
 ```js [biome]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
     lint: 'biome', // [!code ++]
     path: 'src/client',
@@ -112,7 +112,7 @@ export default {
 
 ```js [oxlint]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
     lint: 'oxlint', // [!code ++]
     path: 'src/client',
@@ -132,7 +132,7 @@ We use the [TSConfig file](https://www.typescriptlang.org/tsconfig/) to generate
 
 ```js [custom]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
     path: 'src/client',
     tsConfigPath: './config/tsconfig.custom.json', // [!code ++]
@@ -142,7 +142,7 @@ export default {
 
 ```js [off]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
     path: 'src/client',
     tsConfigPath: 'off', // [!code ++]
@@ -158,7 +158,7 @@ By default, you can't keep custom files in the `output.path` folder because it's
 
 ```js
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
     clean: false, // [!code ++]
     path: 'src/client',

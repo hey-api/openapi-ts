@@ -36,16 +36,21 @@ function App() {
   const [isRequiredNameError] = useState(false);
 
   const onCreateResponse = async (values: FormData) => {
-    const response = await sdk.responses.create({
+    const stream = await sdk.responses.create({
       input: values.get('input') as string,
       model: 'gpt-5-nano',
+      stream: true,
     });
 
-    console.log(response.output_text);
+    for await (const event of stream) {
+      console.log(event);
+    }
+
     const { data, error } = await client.createResponse({
       body: {
         input: values.get('input') as string,
         model: 'gpt-5-nano',
+        stream: true,
       },
     });
     if (error) {

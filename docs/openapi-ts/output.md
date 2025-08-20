@@ -61,7 +61,7 @@ If you're not importing artifacts from the index file, you can skip generating i
 
 ```js
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
     indexFile: false, // [!code ++]
     path: 'src/client',
@@ -75,7 +75,7 @@ You can choose which files should be re-exported by setting the `exportFromIndex
 
 ```js
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
