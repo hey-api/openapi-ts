@@ -36,8 +36,8 @@ export default {
   plugins: [
     // ...other plugins
     {
-      compatibilityVersion: 'mini', // [!code ++]
       name: 'zod', // [!code ++]
+      compatibilityVersion: 'mini', // [!code ++]
     },
   ],
 };
@@ -53,7 +53,10 @@ export default {
   output: 'src/client',
   plugins: [
     // ...other plugins
-    'zod',
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+    },
     {
       name: '@hey-api/sdk', // [!code ++]
       validator: true, // [!code ++]
@@ -97,6 +100,7 @@ export default {
     // ...other plugins
     {
       name: 'zod',
+      compatibilityVersion: 'mini',
       requests: true, // [!code ++]
     },
   ],
@@ -136,6 +140,7 @@ export default {
     // ...other plugins
     {
       name: 'zod',
+      compatibilityVersion: 'mini',
       responses: true, // [!code ++]
     },
   ],
@@ -168,6 +173,7 @@ export default {
     // ...other plugins
     {
       name: 'zod',
+      compatibilityVersion: 'mini',
       definitions: true, // [!code ++]
     },
   ],
@@ -177,6 +183,68 @@ export default {
 :::
 
 You can customize the naming and casing pattern for `definitions` schemas using the `.name` and `.case` options.
+
+## ISO Datetimes
+
+By default, values without a timezone or with a timezone offset are not allowed in the `z.iso.datetime()` method.
+
+### Timezone offsets
+
+You can allow values with timezone offsets by setting `dates.offset` to `true`.
+
+::: code-group
+
+```ts [example]
+export const zFoo = z.iso.datetime({ offset: true });
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+      dates: {
+        offset: true, // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+:::
+
+### Local times
+
+You can allow values without a timezone by setting `dates.local` to `true`.
+
+::: code-group
+
+```ts [example]
+export const zFoo = z.iso.datetime({ local: true });
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+      dates: {
+        local: true, // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+:::
 
 ## Metadata
 
@@ -198,6 +266,7 @@ export default {
     // ...other plugins
     {
       name: 'zod',
+      compatibilityVersion: 'mini',
       metadata: true, // [!code ++]
     },
   ],
@@ -224,6 +293,7 @@ export default {
     // ...other plugins
     {
       name: 'zod',
+      compatibilityVersion: 'mini',
       types: {
         infer: false, // by default, no `z.infer` types [!code ++]
       },
