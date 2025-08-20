@@ -8,8 +8,30 @@ function incrementPetId() {
   petId.value++;
 }
 
-function addNewPet() {
+async function addNewPet() {
   name.value = name.value === 'foo' ? 'bar' : 'foo';
+
+  const pet = await addPet({
+    body: {
+      category: {
+        id: BigInt(0),
+        name: 'cats',
+      },
+      id: BigInt(0),
+      name: 'doggy',
+      photoUrls: ['string'],
+      status: 'available',
+      tags: [
+        {
+          id: BigInt(0),
+          name: 'string',
+        },
+      ],
+    },
+    composable: '$fetch',
+  });
+
+  console.log('Added new pet:', pet);
 }
 
 function changeStatus() {
