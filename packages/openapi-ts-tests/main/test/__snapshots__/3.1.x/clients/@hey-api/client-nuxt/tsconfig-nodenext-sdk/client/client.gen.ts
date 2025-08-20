@@ -67,7 +67,11 @@ export const createClient = (config: Config = {}): Client => {
           }
 
           if (requestValidator) {
-            await requestValidator(options);
+            await requestValidator({
+              ...options,
+              // @ts-expect-error
+              body: options.rawBody,
+            });
           }
         },
         ...opts.onRequest,
@@ -109,6 +113,7 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     if (composable === 'useFetch' || composable === 'useLazyFetch') {
+      opts.rawBody = opts.body;
       const bodyParams = reactive({
         body: opts.body,
         bodySerializer: opts.bodySerializer,
