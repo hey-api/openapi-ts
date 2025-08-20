@@ -39,6 +39,8 @@ export default defineConfig(() => {
         // 'full.yaml',
         // 'validators-circular-ref.json',
       ),
+      // https://registry.scalar.com/@lubos-heyapi-dev-team/apis/demo-api-scalar-galaxy/latest?format=json
+      // path: 'scalar:@lubos-heyapi-dev-team/demo-api-scalar-galaxy',
       // path: 'hey-api/backend',
       // path: 'hey-api/backend?branch=main&version=1.0.0',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',

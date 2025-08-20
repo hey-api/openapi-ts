@@ -33,6 +33,7 @@ export interface UserConfig {
     | `${string}/${string}`
     | `readme:@${string}/${string}#${string}`
     | `readme:${string}`
+    | `scalar:@${string}/${string}`
     | (string & {})
     | (Record<string, unknown> & { path?: never })
     | Input;
