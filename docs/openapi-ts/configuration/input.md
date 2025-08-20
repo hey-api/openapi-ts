@@ -104,6 +104,17 @@ export default {
 
 We also provide shorthands for other registries:
 
+::: details Scalar
+Prefix your input with `scalar:` to use the Scalar API Registry.
+
+```js [long]
+export default {
+  input: 'scalar:@scalar/access-service', // [!code ++]
+};
+```
+
+:::
+
 ::: details ReadMe
 Prefix your input with `readme:` to use the ReadMe API Registry.
 

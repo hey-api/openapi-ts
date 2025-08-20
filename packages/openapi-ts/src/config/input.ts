@@ -1,10 +1,7 @@
 import type { Config, UserConfig } from '../types/config';
 import type { Input } from '../types/input';
-import {
-  heyApiRegistryBaseUrl,
-  inputToHeyApiPath,
-} from '../utils/input/heyApi';
-import { inputToReadmePath } from '../utils/input/readme';
+import { inputToApiRegistry } from '../utils/input';
+import { heyApiRegistryBaseUrl } from '../utils/input/heyApi';
 
 const defaultWatch: Config['input']['watch'] = {
   enabled: false,
@@ -69,20 +66,7 @@ export const getInput = (userConfig: UserConfig): Config['input'] => {
   }
 
   if (typeof input.path === 'string') {
-    if (input.path.startsWith('readme:')) {
-      input.path = inputToReadmePath(input.path);
-    } else if (!input.path.startsWith('.')) {
-      if (input.path.startsWith(heyApiRegistryBaseUrl)) {
-        input.path = input.path.slice(heyApiRegistryBaseUrl.length + 1);
-        input.path = inputToHeyApiPath(input as Input & { path: string });
-      } else {
-        const parts = input.path.split('/');
-        const cleanParts = parts.filter(Boolean);
-        if (parts.length === 2 && cleanParts.length === 2) {
-          input.path = inputToHeyApiPath(input as Input & { path: string });
-        }
-      }
-    }
+    inputToApiRegistry(input as Input & { path: string });
   }
 
   if (

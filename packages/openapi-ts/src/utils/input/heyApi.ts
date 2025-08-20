@@ -8,12 +8,12 @@ const registryRegExp = /^([\w-]+)\/([\w-]+)(?:\?([\w=&.-]*))?$/;
 export const heyApiRegistryBaseUrl = 'https://get.heyapi.dev';
 
 /**
- * Generates the Hey API Registry URL for a given UUID.
+ * Creates a full Hey API Registry URL.
  *
- * @param organization - Organization slug
- * @param project - Project slug
+ * @param organization - Hey API organization slug
+ * @param project - Hey API project slug
  * @param queryParams - Optional query parameters
- * @returns The full API registry URL
+ * @returns The full Hey API registry URL.
  */
 export const getRegistryUrl = (
   organization: string,
@@ -63,7 +63,7 @@ export const parseShorthand = (
   }
 
   if (!project) {
-    throw new Error('The Hey API organization cannot be empty.');
+    throw new Error('The Hey API project cannot be empty.');
   }
 
   const result: Parsed = {
