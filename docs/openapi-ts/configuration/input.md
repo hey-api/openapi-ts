@@ -9,7 +9,7 @@ You must provide an input so we can load your OpenAPI specification.
 
 ## Input
 
-The input can be a string path, URL, API registry shorthand, an object containing any of these, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
+The input can be a string path, URL, [API registry](#api-registry), an object containing any of these, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
 
 ::: code-group
 
