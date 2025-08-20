@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.80.16
+
+### Patch Changes
+
+- [#2490](https://github.com/hey-api/openapi-ts/pull/2490) [`03f37ea`](https://github.com/hey-api/openapi-ts/commit/03f37ea9481a28c7c05dba5f0fddfc2bc225e6a0) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): Nuxt client receives raw body in request validators
+
+- [#2479](https://github.com/hey-api/openapi-ts/pull/2479) [`4038e1c`](https://github.com/hey-api/openapi-ts/commit/4038e1cef96c031acde97ccf82176a0fedbb3f8c) Thanks [@dracomithril](https://github.com/dracomithril)! - fix(parser): deduplicate security schemas based on name
+
+- [#2489](https://github.com/hey-api/openapi-ts/pull/2489) [`9bfbb63`](https://github.com/hey-api/openapi-ts/commit/9bfbb63bff087da4cffc76603f8c9f45f34f430a) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): input supports Hey API Registry shorthand
+
+- [#2485](https://github.com/hey-api/openapi-ts/pull/2485) [`e074a36`](https://github.com/hey-api/openapi-ts/commit/e074a3600701badc7f220b283a55188dc85a5572) Thanks [@bombillazo](https://github.com/bombillazo)! - feat(parser): input supports ReadMe API Registry with `readme:` prefix
+
+- [#2491](https://github.com/hey-api/openapi-ts/pull/2491) [`ce602fe`](https://github.com/hey-api/openapi-ts/commit/ce602fede185ba622398bdd42e38d3f78323c32c) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): input supports Scalar API Registry with `scalar:` prefix
+
 ## 0.80.15
 
 ### Patch Changes
