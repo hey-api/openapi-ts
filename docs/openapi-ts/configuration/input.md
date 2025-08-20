@@ -52,6 +52,42 @@ export default {
 If you use an HTTPS URL with a self-signed certificate in development, you will need to set [`NODE_TLS_REJECT_UNAUTHORIZED=0`](https://github.com/hey-api/openapi-ts/issues/276#issuecomment-2043143501) in your environment.
 :::
 
+### ReadMe API Registry
+
+You can use ReadMe API Registry UUIDs to fetch OpenAPI specifications directly from ReadMe's platform. This is useful when API providers use ReadMe as their source of truth for API documentation.
+
+::: code-group
+
+```js [simple format]
+export default {
+  input: 'readme:abc123def456', // [!code ++]
+};
+```
+
+```js [full format]
+export default {
+  input: 'readme:@organization/project#abc123def456', // [!code ++]
+};
+```
+
+```js [object format]
+export default {
+  input: {
+    path: 'readme:abc123def456', // [!code ++]
+    // ...other options
+  },
+};
+```
+
+:::
+
+The ReadMe input formats are:
+
+- `readme:uuid` - Simple format using only the UUID
+- `readme:@organization/project#uuid` - Full format including organization and project names
+
+Both formats will fetch the OpenAPI specification from `https://dash.readme.com/api/v1/api-registry/{uuid}`.
+
 ### Hey API Platform options
 
 You might want to use the [Hey API Platform](/openapi-ts/integrations) to store your specifications. If you do so, the `input` object provides options to help with constructing the correct URL.
