@@ -35,8 +35,8 @@ export default defineConfig(() => {
         getSpecsPath(),
         '3.1.x',
         // 'invalid',
-        'openai.yaml',
-        // 'full.yaml',
+        // 'openai.yaml',
+        'full.yaml',
         // 'validators-circular-ref.json',
       ),
       // https://registry.scalar.com/@lubos-heyapi-dev-team/apis/demo-api-scalar-galaxy/latest?format=json
@@ -106,7 +106,7 @@ export default defineConfig(() => {
       },
       transforms: {
         enums: {
-          // enabled: false,
+          enabled: false,
           mode: 'root',
           // name: '{{name}}',
         },
@@ -144,7 +144,7 @@ export default defineConfig(() => {
         //   error: '他們_error_{{name}}',
         //   name: '你們_errors_{{name}}',
         // },
-        name: '@hey-api/typescript',
+        // name: '@hey-api/typescript',
         // requests: '我們_data_{{name}}',
         // responses: {
         //   name: '我_responses_{{name}}',
@@ -166,7 +166,7 @@ export default defineConfig(() => {
         // responseStyle: 'data',
         // transformer: '@hey-api/transformers',
         // transformer: true,
-        // validator: 'zod',
+        validator: 'valibot',
         // validator: {
         //   request: 'zod',
         //   response: 'zod',
@@ -205,9 +205,9 @@ export default defineConfig(() => {
         // case: 'SCREAMING_SNAKE_CASE',
         // comments: false,
         definitions: 'z{{name}}Definition',
-        // exportFromIndex: true,
+        exportFromIndex: true,
         metadata: true,
-        // name: 'valibot',
+        name: 'valibot',
         requests: {
           // case: 'SCREAMING_SNAKE_CASE',
           name: 'z{{name}}TestData',
@@ -220,10 +220,11 @@ export default defineConfig(() => {
       {
         // case: 'snake_case',
         // comments: false,
-        compatibilityVersion: 4,
-        // dates: {
-        //   offset: true,
-        // },
+        compatibilityVersion: 3,
+        dates: {
+          local: true,
+          // offset: true,
+        },
         definitions: {
           // name: 'z{{name}}Definition',
           //   types: {
@@ -232,7 +233,7 @@ export default defineConfig(() => {
         },
         exportFromIndex: true,
         metadata: true,
-        // name: 'zod',
+        name: 'zod',
         // requests: {
         //   // case: 'SCREAMING_SNAKE_CASE',
         //   // name: 'z{{name}}TestData',

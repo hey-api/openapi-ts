@@ -67,7 +67,7 @@ export default defineConfig([
 
 You must provide an input so we can load your OpenAPI specification.
 
-The input can be a string path, URL, API registry shorthand, an object containing any of these, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
+The input can be a string path, URL, [API registry](/openapi-ts/configuration/input#api-registry) shorthand, an object containing any of these, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
 
 You can learn more on the [Input](/openapi-ts/configuration/input) page.
 
