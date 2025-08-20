@@ -96,9 +96,7 @@ You can generate clients from public projects or any private projects you can ac
 ::: code-group
 
 ```sh [Hey API]
-npx @hey-api/openapi-ts \
-  -i https://get.heyapi.dev/hey-api/backend \
-  -o src/client
+npx @hey-api/openapi-ts -i hey-api/backend -o src/client
 ```
 
 ```sh [OpenAPI TypeScript]

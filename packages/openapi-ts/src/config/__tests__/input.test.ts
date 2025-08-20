@@ -96,7 +96,7 @@ describe('input config', () => {
       };
 
       const result = getInput(userConfig);
-      expect(result.path).toBe('https://get.heyapi.dev');
+      expect(result.path).toBe('https://get.heyapi.dev/myorg/myproject');
     });
 
     it('should handle object input (existing functionality)', () => {
@@ -178,7 +178,9 @@ describe('input config', () => {
         output: 'src/client',
       };
 
-      expect(() => getInput(userConfig)).toThrow('Invalid ReadMe input format');
+      expect(() => getInput(userConfig)).toThrow(
+        'Invalid ReadMe shorthand format',
+      );
     });
 
     it('should throw error for invalid ReadMe UUID', () => {
@@ -187,7 +189,9 @@ describe('input config', () => {
         output: 'src/client',
       };
 
-      expect(() => getInput(userConfig)).toThrow('Invalid ReadMe input format');
+      expect(() => getInput(userConfig)).toThrow(
+        'Invalid ReadMe shorthand format',
+      );
     });
 
     it('should throw error for invalid ReadMe format in object input', () => {
@@ -198,7 +202,9 @@ describe('input config', () => {
         output: 'src/client',
       };
 
-      expect(() => getInput(userConfig)).toThrow('Invalid ReadMe input format');
+      expect(() => getInput(userConfig)).toThrow(
+        'Invalid ReadMe shorthand format',
+      );
     });
   });
 });
