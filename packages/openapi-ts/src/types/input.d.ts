@@ -38,7 +38,7 @@ export type Input = {
   /**
    * Path to the OpenAPI specification. This can be either:
    *   - local file
-   *.  - remote path
+   *   - remote path
    *   - ReadMe API Registry UUID (full and simplified formats)
    *
    * Both JSON and YAML file formats are supported. You can also pass the parsed
