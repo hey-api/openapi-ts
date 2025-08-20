@@ -31,7 +31,7 @@ In your [configuration](/openapi-ts/get-started), add `zod` to your plugins and 
 
 ```js
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -46,7 +46,7 @@ To add data validators to your SDKs, set `sdk.validator` to `true`.
 
 ```js
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -88,7 +88,7 @@ const zData = z.object({
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -127,7 +127,7 @@ const zResponse = z.union([
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -159,7 +159,7 @@ const zBar = z.object({
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -189,7 +189,7 @@ export const zFoo = z.string().register(z.globalRegistry, {
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -215,7 +215,7 @@ export type ResponseZodType = z.infer<typeof zResponse>;
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins

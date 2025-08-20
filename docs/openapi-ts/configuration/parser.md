@@ -16,7 +16,7 @@ You can add custom patches with `patch`.
 <!-- prettier-ignore-start -->
 ```js
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     patch: { // [!code ++]
@@ -58,7 +58,7 @@ To validate your input, set `validate_EXPERIMENTAL` to `true`.
 <!-- prettier-ignore-start -->
 ```js
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     validate_EXPERIMENTAL: true, // [!code ++]
@@ -80,7 +80,7 @@ Set `include` to match operations to be included or `exclude` to match operation
 <!-- prettier-ignore-start -->
 ```js [include]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -95,7 +95,7 @@ export default {
 <!-- prettier-ignore-start -->
 ```js [exclude]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -119,7 +119,7 @@ Set `include` to match tags to be included or `exclude` to match tags to be excl
 <!-- prettier-ignore-start -->
 ```js [include]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -134,7 +134,7 @@ export default {
 <!-- prettier-ignore-start -->
 ```js [exclude]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -156,7 +156,7 @@ You can filter out deprecated resources by setting `deprecated` to `false`.
 <!-- prettier-ignore-start -->
 ```js
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -176,7 +176,7 @@ Set `include` to match schemas to be included or `exclude` to match schemas to b
 <!-- prettier-ignore-start -->
 ```js [include]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -191,7 +191,7 @@ export default {
 <!-- prettier-ignore-start -->
 ```js [exclude]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -215,7 +215,7 @@ Set `include` to match parameters to be included or `exclude` to match parameter
 <!-- prettier-ignore-start -->
 ```js [include]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -230,7 +230,7 @@ export default {
 <!-- prettier-ignore-start -->
 ```js [exclude]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -254,7 +254,7 @@ Set `include` to match request bodies to be included or `exclude` to match reque
 <!-- prettier-ignore-start -->
 ```js [include]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -269,7 +269,7 @@ export default {
 <!-- prettier-ignore-start -->
 ```js [exclude]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -293,7 +293,7 @@ Set `include` to match responses to be included or `exclude` to match responses 
 <!-- prettier-ignore-start -->
 ```js [include]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -308,7 +308,7 @@ export default {
 <!-- prettier-ignore-start -->
 ```js [exclude]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -330,7 +330,7 @@ If you only want to exclude orphaned resources, set `orphans` to `false`. This i
 <!-- prettier-ignore-start -->
 ```js
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -348,7 +348,7 @@ For performance reasons, we don't preserve the original order when filtering out
 <!-- prettier-ignore-start -->
 ```js
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     filters: { // [!code ++]
@@ -377,7 +377,7 @@ You may want all enums to be reusable. This is because only root enums are typic
 <!-- prettier-ignore-start -->
 ```js [root]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     transforms: { // [!code ++]
@@ -390,7 +390,7 @@ export default {
 <!-- prettier-ignore-start -->
 ```js [inline]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     transforms: { // [!code ++]
@@ -414,7 +414,7 @@ Your schemas might contain read-only or write-only fields. Using such schemas di
 <!-- prettier-ignore-start -->
 ```js [default]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     transforms: { // [!code ++]
@@ -430,7 +430,7 @@ export default {
 <!-- prettier-ignore-start -->
 ```js [disabled]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     transforms: { // [!code ++]
@@ -458,7 +458,7 @@ You can provide custom pagination keywords using `pagination.keywords`.
 import { defaultPaginationKeywords } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     pagination: { // [!code ++]
@@ -471,7 +471,7 @@ export default {
 <!-- prettier-ignore-start -->
 ```js [override]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: { // [!code ++]
     pagination: { // [!code ++]

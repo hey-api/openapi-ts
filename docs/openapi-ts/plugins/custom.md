@@ -155,7 +155,7 @@ Once we're satisfied with our plugin, we can register it in the [configuration](
 import { defineConfig } from 'path/to/my-plugin';
 
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     defineConfig({

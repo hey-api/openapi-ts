@@ -43,7 +43,7 @@ In your [configuration](/openapi-ts/get-started), add TanStack Query to your plu
 
 ```js [react]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -54,7 +54,7 @@ export default {
 
 ```js [vue]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -65,7 +65,7 @@ export default {
 
 ```js [angular]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -76,7 +76,7 @@ export default {
 
 ```js [svelte]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -87,7 +87,7 @@ export default {
 
 ```js [solid]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -120,7 +120,7 @@ const { data, error } = useQuery({
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -153,7 +153,7 @@ queryOptions({
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -179,7 +179,7 @@ Query keys contain normalized SDK function parameters and additional metadata.
 const queryKey = [
   {
     _id: 'getPetById',
-    baseUrl: 'https://get.heyapi.dev',
+    baseUrl: 'https://app.heyapi.dev',
     path: {
       petId: 1,
     },
@@ -189,7 +189,7 @@ const queryKey = [
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -213,7 +213,7 @@ You can include operation tags in your query keys by setting `tags` to `true`. T
 const queryKey = [
   {
     _id: 'getPetById',
-    baseUrl: 'https://get.heyapi.dev',
+    baseUrl: 'https://app.heyapi.dev',
     path: {
       petId: 1,
     },
@@ -224,7 +224,7 @@ const queryKey = [
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -256,7 +256,7 @@ const { queryKey } = getPetByIdOptions({
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -284,7 +284,7 @@ const queryKey = getPetByIdQueryKey({
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -320,7 +320,7 @@ const { data, error } = useInfiniteQuery({
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -353,7 +353,7 @@ infiniteQueryOptions({
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -380,7 +380,7 @@ const queryKey = [
   {
     _id: 'getPetById',
     _infinite: true,
-    baseUrl: 'https://get.heyapi.dev',
+    baseUrl: 'https://app.heyapi.dev',
     path: {
       petId: 1,
     },
@@ -390,7 +390,7 @@ const queryKey = [
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -415,7 +415,7 @@ const queryKey = [
   {
     _id: 'getPetById',
     _infinite: true,
-    baseUrl: 'https://get.heyapi.dev',
+    baseUrl: 'https://app.heyapi.dev',
     path: {
       petId: 1,
     },
@@ -426,7 +426,7 @@ const queryKey = [
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -458,7 +458,7 @@ const { queryKey } = getPetByIdInfiniteOptions({
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -486,7 +486,7 @@ const queryKey = getPetByIdInfiniteQueryKey({
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -525,7 +525,7 @@ addPet.mutate({
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
@@ -558,7 +558,7 @@ const mutationOptions = {
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins

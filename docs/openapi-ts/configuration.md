@@ -13,7 +13,7 @@ description: Configure @hey-api/openapi-ts.
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
 });
 ```
@@ -21,7 +21,7 @@ export default defineConfig({
 ```js [openapi-ts.config.cjs]
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 module.exports = {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
 };
 ```
@@ -29,7 +29,7 @@ module.exports = {
 ```js [openapi-ts.config.mjs]
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
 };
 ```
@@ -65,7 +65,9 @@ export default defineConfig([
 
 ## Input
 
-You must set the input so we can load your OpenAPI specification. It can be a path or URL, object containing a path or URL, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
+You must provide an input so we can load your OpenAPI specification.
+
+The input can be a string path, URL, API registry shorthand, an object containing any of these, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
 
 You can learn more on the [Input](/openapi-ts/configuration/input) page.
 
@@ -79,7 +81,13 @@ export default {
 
 ```js [url]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend', // [!code ++]
+  input: 'https://get.heyapi.dev/hey-api/backend', // sign up at app.heyapi.dev // [!code ++]
+};
+```
+
+```js [registry]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev // [!code ++]
 };
 ```
 
@@ -87,7 +95,7 @@ export default {
 ```js [object]
 export default {
   input: { // [!code ++]
-    path: 'https://get.heyapi.dev/hey-api/backend', // [!code ++]
+    path: 'hey-api/backend', // sign up at app.heyapi.dev // [!code ++]
     // ...other options // [!code ++]
   }, // [!code ++]
 };
@@ -120,7 +128,7 @@ You can learn more on the [Output](/openapi-ts/configuration/output) page.
 
 ```js [path]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client', // [!code ++]
 };
 ```
@@ -128,7 +136,7 @@ export default {
 <!-- prettier-ignore-start -->
 ```js [object]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: { // [!code ++]
     path: 'src/client', // [!code ++]
     // ...other options // [!code ++]

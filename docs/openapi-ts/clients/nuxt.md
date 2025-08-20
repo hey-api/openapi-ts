@@ -64,7 +64,7 @@ In your [configuration](/openapi-ts/get-started), add `@hey-api/client-nuxt` to 
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: ['@hey-api/client-nuxt'], // [!code ++]
 };
@@ -72,7 +72,7 @@ export default {
 
 ```sh [cli]
 npx @hey-api/openapi-ts \
-  -i https://get.heyapi.dev/hey-api/backend \
+  -i hey-api/backend \
   -o src/client \
   -c @hey-api/client-nuxt # [!code ++]
 ```
@@ -111,7 +111,7 @@ Since `client.gen.ts` is a generated file, we can't directly modify it. Instead,
 
 ```js
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     {
