@@ -72,6 +72,7 @@ export interface RequestOptions<
       body?: unknown;
       path?: FetchOptions<unknown>['query'];
       query?: FetchOptions<unknown>['query'];
+      rawBody?: unknown;
     }> {
   asyncDataOptions?: AsyncDataOptions<ResT, ResT, KeysOf<ResT>, DefaultT>;
   composable: TComposable;

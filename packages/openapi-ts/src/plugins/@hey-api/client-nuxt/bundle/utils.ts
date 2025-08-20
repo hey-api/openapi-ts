@@ -369,6 +369,7 @@ export const executeFetchFn = (
   fetchFn: Required<Config>['$fetch'],
 ) => {
   const unwrappedOpts = unwrapRefs(opts);
+  unwrappedOpts.rawBody = unwrappedOpts.body;
   unwrappedOpts.body = serializeBody(unwrappedOpts);
   return fetchFn(
     buildUrl(opts),

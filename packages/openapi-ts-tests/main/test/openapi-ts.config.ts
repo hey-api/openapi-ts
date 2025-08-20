@@ -124,8 +124,7 @@ export default defineConfig(() => {
       {
         // baseUrl: false,
         // exportFromIndex: true,
-        name: '@hey-api/client-fetch',
-        // name: '@hey-api/client-angular',
+        name: '@hey-api/client-nuxt',
         // name: 'legacy/angular',
         // strictBaseUrl: true,
         // throwOnError: true,
