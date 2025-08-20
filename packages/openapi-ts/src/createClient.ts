@@ -14,11 +14,12 @@ import type { Config } from './types/config';
 import type { WatchValues } from './types/types';
 import { isLegacyClient, legacyNameFromConfig } from './utils/config';
 import type { Templates } from './utils/handlebars';
+import { heyApiRegistryBaseUrl } from './utils/input/heyApi';
 import type { Logger } from './utils/logger';
 import { postProcessClient } from './utils/postprocess';
 
-const isPlatformPath = (path: string) =>
-  path.startsWith('https://get.heyapi.dev');
+const isHeyApiRegistryPath = (path: string) =>
+  path.startsWith(heyApiRegistryBaseUrl);
 // || path.startsWith('http://localhost:4000')
 
 export const compileInputPath = (input: Omit<Config['input'], 'watch'>) => {
@@ -38,7 +39,7 @@ export const compileInputPath = (input: Omit<Config['input'], 'watch'>) => {
 
   if (
     input.path &&
-    (typeof input.path !== 'string' || !isPlatformPath(input.path))
+    (typeof input.path !== 'string' || !isHeyApiRegistryPath(input.path))
   ) {
     result.path = input.path;
     return result;
@@ -134,11 +135,11 @@ const logInputPath = (inputPath: ReturnType<typeof compileInputPath>) => {
   const baseString = colors.cyan('Generating from');
 
   if (typeof inputPath.path === 'string') {
-    const baseInput = isPlatformPath(inputPath.path)
+    const baseInput = isHeyApiRegistryPath(inputPath.path)
       ? `${inputPath.organization ?? ''}/${inputPath.project ?? ''}`
       : inputPath.path;
     console.log(`⏳ ${baseString} ${baseInput}`);
-    if (isPlatformPath(inputPath.path)) {
+    if (isHeyApiRegistryPath(inputPath.path)) {
       if (inputPath.branch) {
         console.log(
           `${colors.gray('branch:')} ${colors.green(inputPath.branch)}`,

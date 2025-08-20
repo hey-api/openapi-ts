@@ -5,11 +5,11 @@ description: Configure @hey-api/openapi-ts.
 
 # Input
 
-You must set the input so we can load your OpenAPI specification.
+You must provide an input so we can load your OpenAPI specification.
 
 ## Input
 
-Input can be a path or URL, object containing a path or URL, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
+The input can be a string path, URL, API registry shorthand, an object containing any of these, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
 
 ::: code-group
 
@@ -21,7 +21,13 @@ export default {
 
 ```js [url]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend', // [!code ++]
+  input: 'https://get.heyapi.dev/hey-api/backend', // sign up at app.heyapi.dev // [!code ++]
+};
+```
+
+```js [registry]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev // [!code ++]
 };
 ```
 
@@ -29,7 +35,7 @@ export default {
 ```js [object]
 export default {
   input: { // [!code ++]
-    path: 'https://get.heyapi.dev/hey-api/backend', // [!code ++]
+    path: 'hey-api/backend', // sign up at app.heyapi.dev // [!code ++]
     // ...other options // [!code ++]
   }, // [!code ++]
 };
@@ -52,56 +58,6 @@ export default {
 If you use an HTTPS URL with a self-signed certificate in development, you will need to set [`NODE_TLS_REJECT_UNAUTHORIZED=0`](https://github.com/hey-api/openapi-ts/issues/276#issuecomment-2043143501) in your environment.
 :::
 
-### ReadMe API Registry
-
-You can use ReadMe API Registry UUIDs to fetch OpenAPI specifications directly from ReadMe's platform. This is useful when API providers use ReadMe as their source of truth for API documentation.
-
-::: code-group
-
-```js [simple format]
-export default {
-  input: 'readme:abc123def456', // [!code ++]
-};
-```
-
-```js [full format]
-export default {
-  input: 'readme:@organization/project#abc123def456', // [!code ++]
-};
-```
-
-```js [object format]
-export default {
-  input: {
-    path: 'readme:abc123def456', // [!code ++]
-    // ...other options
-  },
-};
-```
-
-:::
-
-The ReadMe input formats are:
-
-- `readme:uuid` - Simple format using only the UUID
-- `readme:@organization/project#uuid` - Full format including organization and project names
-
-Both formats will fetch the OpenAPI specification from `https://dash.readme.com/api/v1/api-registry/{uuid}`.
-
-### Hey API Platform options
-
-You might want to use the [Hey API Platform](/openapi-ts/integrations) to store your specifications. If you do so, the `input` object provides options to help with constructing the correct URL.
-
-```js
-export default {
-  input: {
-    path: 'https://get.heyapi.dev/',
-    branch: 'main', // [!code ++]
-    project: 'backend', // [!code ++]
-  },
-};
-```
-
 ### Request options
 
 You can pass any valid Fetch API [options](https://developer.mozilla.org/docs/Web/API/RequestInit) to the request for fetching your specification. This is useful if your file is behind auth for example.
@@ -121,6 +77,52 @@ export default {
 ```
 <!-- prettier-ignore-end -->
 
+## API Registry
+
+You can store your specifications in an API registry to serve as a single source of truth. This helps prevent drift, improves discoverability, enables version tracking, and more.
+
+### Hey API
+
+You can learn more about [Hey API Platform](https://app.heyapi.dev) on the [Integrations](/openapi-ts/integrations) page.
+
+```js [uuid]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev // [!code ++]
+};
+```
+
+The `input` object lets you provide additional options to construct the correct URL.
+
+```js
+export default {
+  input: {
+    path: 'hey-api/backend', // sign up at app.heyapi.dev
+    branch: 'main', // [!code ++]
+  },
+};
+```
+
+We also provide shorthands for other registries:
+
+::: details ReadMe
+Prefix your input with `readme:` to use the ReadMe API Registry.
+
+::: code-group
+
+```js [uuid]
+export default {
+  input: 'readme:nysezql0wwo236', // [!code ++]
+};
+```
+
+```js [long]
+export default {
+  input: 'readme:@developers/v2.0#nysezql0wwo236', // [!code ++]
+};
+```
+
+:::
+
 ## Watch Mode
 
 ::: warning
@@ -134,7 +136,7 @@ If your schema changes frequently, you may want to automatically regenerate the 
 ```js [config]
 export default {
   input: {
-    path: 'https://get.heyapi.dev/hey-api/backend',
+    path: 'hey-api/backend', // sign up at app.heyapi.dev
     watch: true, // [!code ++]
   },
 };
@@ -142,7 +144,7 @@ export default {
 
 ```sh [cli]
 npx @hey-api/openapi-ts \
-  -i https://get.heyapi.dev/hey-api/backend \
+  -i hey-api/backend \
   -o src/client \
   -w  # [!code ++]
 ```

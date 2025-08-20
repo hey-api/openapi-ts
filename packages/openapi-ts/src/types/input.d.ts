@@ -36,16 +36,17 @@ export type Input = {
    */
   organization?: string;
   /**
-   * Path to the OpenAPI specification. This can be either:
-   *   - local file
-   *   - remote path
-   *   - ReadMe API Registry UUID (full and simplified formats)
+   * Path to the OpenAPI specification. This can be:
+   *   - path
+   *   - URL
+   *   - API registry shorthand
    *
    * Both JSON and YAML file formats are supported. You can also pass the parsed
    * object directly if you're fetching the file yourself.
    */
   path?:
     | `https://get.heyapi.dev/${string}/${string}`
+    | `${string}/${string}`
     | `readme:@${string}/${string}#${string}`
     | `readme:${string}`
     | (string & {})
