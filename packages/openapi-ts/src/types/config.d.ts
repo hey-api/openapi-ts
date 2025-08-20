@@ -18,14 +18,20 @@ export interface UserConfig {
    */
   dryRun?: boolean;
   /**
-   * Path to the OpenAPI specification. This can be either local or remote path.
+   * Path to the OpenAPI specification. This can be either:
+   *   - local file
+   *.  - remote path
+   *   - ReadMe API Registry UUID (full and simplified formats)
+   *
    * Both JSON and YAML file formats are supported. You can also pass the parsed
    * object directly if you're fetching the file yourself.
    *
    * Alternatively, you can define a configuration object with more options.
    */
   input:
-    | 'https://get.heyapi.dev/<organization>/<project>'
+    | `https://get.heyapi.dev/${string}/${string}`
+    | `readme:@${string}/${string}#${string}`
+    | `readme:${string}`
     | (string & {})
     | (Record<string, unknown> & { path?: never })
     | Input;
