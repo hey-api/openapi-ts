@@ -920,7 +920,7 @@ const parseManyTypes = ({
     } else {
       const irTypeSchema = parseOneType({
         context,
-        irSchema: typeIrSchema,
+        irSchema: { ...typeIrSchema },
         schema: {
           ...schema,
           type,
