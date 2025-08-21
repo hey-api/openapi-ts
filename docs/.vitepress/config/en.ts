@@ -196,8 +196,16 @@ export default defineConfig({
             collapsed: true,
             items: [
               {
+                link: '/openapi-ts/plugins/chance',
+                text: 'Chance <span data-soon>soon</span>',
+              },
+              {
                 link: '/openapi-ts/plugins/faker',
                 text: 'Faker <span data-soon>soon</span>',
+              },
+              {
+                link: '/openapi-ts/plugins/falso',
+                text: 'Falso <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/msw',
