@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.80.18
+
+### Patch Changes
+
+- [#2502](https://github.com/hey-api/openapi-ts/pull/2502) [`ac7efbf`](https://github.com/hey-api/openapi-ts/commit/ac7efbfd96e7a5e530e91655df6ac481c9a5eaa5) Thanks [@malcolm-kee](https://github.com/malcolm-kee)! - fix(parser): OpenAPI 3.1 parser handles multiple `type` values
+
 ## 0.80.17
 
 ### Patch Changes
