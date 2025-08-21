@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.80.17
+
+### Patch Changes
+
+- [#2500](https://github.com/hey-api/openapi-ts/pull/2500) [`98d7bc3`](https://github.com/hey-api/openapi-ts/commit/98d7bc37387e16c6f38194a111d6df384eee3a82) Thanks [@max-scopp](https://github.com/max-scopp)! - fix(client): Angular client correctly applies default GET method
+
 ## 0.80.16
 
 ### Patch Changes
