@@ -37,8 +37,10 @@ The following plugins are planned but not in development yet. You can help us pr
 - [Adonis](/openapi-ts/plugins/adonis) <span data-soon>Soon</span>
 - [Ajv](/openapi-ts/plugins/ajv) <span data-soon>Soon</span>
 - [Arktype](/openapi-ts/plugins/arktype) <span data-soon>Soon</span>
+- [Chance](/openapi-ts/plugins/chance) <span data-soon>Soon</span>
 - [Express](/openapi-ts/plugins/express) <span data-soon>Soon</span>
 - [Faker](/openapi-ts/plugins/faker) <span data-soon>Soon</span>
+- [Falso](/openapi-ts/plugins/falso) <span data-soon>Soon</span>
 - [Hono](/openapi-ts/plugins/hono) <span data-soon>Soon</span>
 - [Joi](/openapi-ts/plugins/joi) <span data-soon>Soon</span>
 - [Koa](/openapi-ts/plugins/koa) <span data-soon>Soon</span>
