@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.81.0
+
+### Minor Changes
+
+- [#2510](https://github.com/hey-api/openapi-ts/pull/2510) [`d43ef3f`](https://github.com/hey-api/openapi-ts/commit/d43ef3f3bb47bad3f4fafbcf7be86b328543f440) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(client): add support for server-sent events (SSE)
+
 ## 0.80.18
 
 ### Patch Changes
