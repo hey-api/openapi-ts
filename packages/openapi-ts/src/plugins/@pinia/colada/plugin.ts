@@ -4,7 +4,6 @@ import { clientApi } from '../../../generate/client';
 import type { IR } from '../../../ir/types';
 import { tsc } from '../../../tsc';
 import { stringCase } from '../../../utils/stringCase';
-import { clientId } from '../../@hey-api/client-core/utils';
 import { sdkId } from '../../@hey-api/sdk/constants';
 import {
   operationClasses,
@@ -256,7 +255,10 @@ const createMutationOptions = ({
   queryFn: string;
   state: PluginState;
 }) => {
-  if (!plugin.config.mutationOptions || !shouldGenerateMutation(operation, plugin)) {
+  if (
+    !plugin.config.mutationOptions ||
+    !shouldGenerateMutation(operation, plugin)
+  ) {
     return state;
   }
 
@@ -331,6 +333,11 @@ const createMutationOptions = ({
     });
   }
 
+  const isRequiredOptionsForMutation = isOperationOptionsRequired({
+    context: plugin.context,
+    operation,
+  });
+
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
@@ -339,7 +346,7 @@ const createMutationOptions = ({
     expression: tsc.arrowFunction({
       parameters: [
         {
-          isRequired: false,
+          isRequired: isRequiredOptionsForMutation,
           name: 'options',
           type: typeData,
         },
@@ -384,7 +391,10 @@ export const handler: PluginHandler = ({ plugin }) => {
         // Import Options type from SDK
         file.import({
           ...clientApi.Options,
-          module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
+          module: file.relativePathToFile({
+            context: plugin.context,
+            id: sdkId,
+          }),
         });
       }
       return { file: filesMap.get(fileId)!, state: stateMap.get(fileId)! };
@@ -393,7 +403,7 @@ export const handler: PluginHandler = ({ plugin }) => {
     // Group by tag mode
     const tag = operation.tags?.[0] || 'default';
     const fileId = `${plugin.name}/${tag}`;
-    
+
     if (!filesMap.has(fileId)) {
       const file = plugin.createFile({
         case: plugin.config.case,
@@ -483,20 +493,8 @@ export const handler: PluginHandler = ({ plugin }) => {
     },
   );
 
-  // Add client import to all files that need it
-  filesMap.forEach((file, fileId) => {
-    const state = stateMap.get(fileId)!;
-    if (state.hasQueries || state.hasMutations) {
-      file.import({
-        alias: '_heyApiClient',
-        module: file.relativePathToFile({
-          context: plugin.context,
-          id: clientId,
-        }),
-        name: 'client',
-      });
-    }
-  });
+  // Note: Client import removed as it's not currently used in the generated code
+  // The SDK functions are called directly instead
 
   // If groupByTag is enabled, create an index file that re-exports all tag files
   if (plugin.config.groupByTag && plugin.config.exportFromIndex) {
@@ -509,9 +507,11 @@ export const handler: PluginHandler = ({ plugin }) => {
     filesMap.forEach((file, fileId) => {
       if (fileId !== plugin.name) {
         const tag = fileId.split('/').pop()!;
-        indexFile.add(tsc.exportAllDeclaration({
-          module: `./${tag}`,
-        }));
+        indexFile.add(
+          tsc.exportAllDeclaration({
+            module: `./${tag}`,
+          }),
+        );
       }
     });
   }

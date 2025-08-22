@@ -4,11 +4,11 @@ import type { PiniaColadaPlugin } from './types';
 
 export const defaultConfig: PiniaColadaPlugin['Config'] = {
   config: {
+    autoDetectHttpMethod: true,
     case: 'camelCase',
     comments: true,
     exportFromIndex: false,
     groupByTag: false,
-    autoDetectHttpMethod: true,
     operationTypes: {},
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],

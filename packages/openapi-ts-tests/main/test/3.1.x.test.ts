@@ -823,12 +823,13 @@ describe(`OpenAPI ${version}`, () => {
           '@hey-api/client-fetch',
           '@hey-api/sdk',
           {
-            name: '@pinia/colada',
             autoDetectHttpMethod: false,
+            name: '@pinia/colada',
           },
         ],
       }),
-      description: 'generates Pinia Colada plugin code with auto-detection disabled',
+      description:
+        'generates Pinia Colada plugin code with auto-detection disabled',
     },
     {
       config: createConfig({
@@ -840,13 +841,14 @@ describe(`OpenAPI ${version}`, () => {
           {
             name: '@pinia/colada',
             operationTypes: {
-              getPetById: 'both',
               addPet: 'query',
+              getPetById: 'both',
             },
           },
         ],
       }),
-      description: 'generates Pinia Colada plugin code with operation type overrides',
+      description:
+        'generates Pinia Colada plugin code with operation type overrides',
     },
     {
       config: createConfig({
@@ -856,8 +858,8 @@ describe(`OpenAPI ${version}`, () => {
           '@hey-api/client-fetch',
           '@hey-api/sdk',
           {
-            name: '@pinia/colada',
             groupByTag: true,
+            name: '@pinia/colada',
           },
         ],
       }),
@@ -871,13 +873,14 @@ describe(`OpenAPI ${version}`, () => {
           '@hey-api/client-fetch',
           '@hey-api/sdk',
           {
-            name: '@pinia/colada',
-            groupByTag: true,
             exportFromIndex: true,
+            groupByTag: true,
+            name: '@pinia/colada',
           },
         ],
       }),
-      description: 'generates Pinia Colada plugin code grouped by tags with index file',
+      description:
+        'generates Pinia Colada plugin code grouped by tags with index file',
     },
     {
       config: createConfig({
@@ -887,17 +890,18 @@ describe(`OpenAPI ${version}`, () => {
           '@hey-api/client-fetch',
           '@hey-api/sdk',
           {
+            mutationOptions: {
+              name: '{{name}}MutationOptions',
+            },
             name: '@pinia/colada',
             queryOptions: {
               name: '{{name}}QueryOptions',
             },
-            mutationOptions: {
-              name: '{{name}}MutationOptions',
-            },
           },
         ],
       }),
-      description: 'generates Pinia Colada plugin code with custom naming patterns',
+      description:
+        'generates Pinia Colada plugin code with custom naming patterns',
     },
     {
       config: createConfig({
@@ -907,18 +911,19 @@ describe(`OpenAPI ${version}`, () => {
           '@hey-api/client-fetch',
           '@hey-api/sdk',
           {
-            name: '@pinia/colada',
             case: 'PascalCase',
-            queryOptions: {
-              case: 'camelCase',
-            },
             mutationOptions: {
               case: 'snake_case',
+            },
+            name: '@pinia/colada',
+            queryOptions: {
+              case: 'camelCase',
             },
           },
         ],
       }),
-      description: 'generates Pinia Colada plugin code with different case settings',
+      description:
+        'generates Pinia Colada plugin code with different case settings',
     },
     {
       config: createConfig({
@@ -928,11 +933,11 @@ describe(`OpenAPI ${version}`, () => {
           '@hey-api/client-fetch',
           '@hey-api/sdk',
           {
-            name: '@pinia/colada',
-            queryOptions: false,
             mutationOptions: {
               enabled: true,
             },
+            name: '@pinia/colada',
+            queryOptions: false,
           },
         ],
       }),
@@ -946,35 +951,36 @@ describe(`OpenAPI ${version}`, () => {
           '@hey-api/client-fetch',
           '@hey-api/sdk',
           {
-            name: '@pinia/colada',
             autoDetectHttpMethod: true,
-            groupByTag: true,
             exportFromIndex: true,
+            groupByTag: true,
+            mutationOptions: {
+              case: 'camelCase',
+              meta: (operation) => ({
+                method: operation.method,
+                operationId: operation.id,
+              }),
+              name: 'use{{name}}Mutation',
+            },
+            name: '@pinia/colada',
             operationTypes: {
-              getPetById: 'both',
               addPet: 'query',
+              getPetById: 'both',
               updatePet: 'mutation',
             },
             queryOptions: {
-              name: 'use{{name}}Query',
               case: 'camelCase',
               meta: (operation) => ({
                 operationId: operation.id,
                 tags: operation.tags,
               }),
-            },
-            mutationOptions: {
-              name: 'use{{name}}Mutation',
-              case: 'camelCase',
-              meta: (operation) => ({
-                operationId: operation.id,
-                method: operation.method,
-              }),
+              name: 'use{{name}}Query',
             },
           },
         ],
       }),
-      description: 'generates Pinia Colada plugin code with complex configuration combining all features',
+      description:
+        'generates Pinia Colada plugin code with complex configuration combining all features',
     },
   ];
 
