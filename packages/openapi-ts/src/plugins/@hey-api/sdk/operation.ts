@@ -555,23 +555,30 @@ export const operationStatements = ({
     }
   }
 
-  if (client.name === '@hey-api/client-axios') {
+  let hasServerSentEvents = false;
+  let responseTypeValue: ReturnType<typeof getResponseType> | undefined;
+
+  for (const statusCode in operation.responses) {
+    const response = operation.responses[statusCode]!;
+
     // try to infer `responseType` option for Axios. We don't need this in
     // Fetch API client because it automatically detects the correct response
     // during runtime.
-    for (const statusCode in operation.responses) {
+    if (!responseTypeValue && client.name === '@hey-api/client-axios') {
       // this doesn't handle default status code for now
       if (statusCodeToGroup({ statusCode }) === '2XX') {
-        const response = operation.responses[statusCode];
-        const responseType = getResponseType(response?.mediaType);
-        if (responseType) {
+        responseTypeValue = getResponseType(response.mediaType);
+        if (responseTypeValue) {
           requestOptions.push({
             key: 'responseType',
-            value: responseType,
+            value: responseTypeValue,
           });
-          break;
         }
       }
+    }
+
+    if (response.mediaType === 'text/event-stream') {
+      hasServerSentEvents = true;
     }
   }
 
@@ -753,6 +760,19 @@ export const operationStatements = ({
     types.push(tsc.stringLiteral({ text: plugin.config.responseStyle }));
   }
 
+  const functionName = hasServerSentEvents
+    ? tsc.propertyAccessExpression({
+        expression: tsc.propertyAccessExpression({
+          expression: clientExpression,
+          name: tsc.identifier({ text: operation.method }),
+        }),
+        name: tsc.identifier({ text: 'sse' }),
+      })
+    : tsc.propertyAccessExpression({
+        expression: clientExpression,
+        name: tsc.identifier({ text: operation.method }),
+      });
+
   statements.push(
     tsc.returnFunctionCall({
       args: [
@@ -761,10 +781,7 @@ export const operationStatements = ({
           obj: requestOptions,
         }),
       ],
-      name: tsc.propertyAccessExpression({
-        expression: clientExpression,
-        name: tsc.identifier({ text: operation.method }),
-      }),
+      name: functionName,
       types,
     }),
   );

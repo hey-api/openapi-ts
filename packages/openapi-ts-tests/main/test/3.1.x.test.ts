@@ -807,6 +807,81 @@ describe(`OpenAPI ${version}`, () => {
       description:
         'generates validator schemas for all integer format combinations (number/integer/string types with int8, int16, int32, int64, uint8, uint16, uint32, uint64 formats)',
     },
+    {
+      config: createConfig({
+        input: 'opencode.yaml',
+        output: 'sse-angular',
+        parser: {
+          filters: {
+            operations: {
+              include: ['GET /event'],
+            },
+          },
+        },
+        plugins: ['@hey-api/client-angular', '@hey-api/sdk'],
+      }),
+      description: 'client with SSE (Angular)',
+    },
+    {
+      config: createConfig({
+        input: 'opencode.yaml',
+        output: 'sse-axios',
+        parser: {
+          filters: {
+            operations: {
+              include: ['GET /event'],
+            },
+          },
+        },
+        plugins: ['@hey-api/client-axios', '@hey-api/sdk'],
+      }),
+      description: 'client with SSE (Axios)',
+    },
+    {
+      config: createConfig({
+        input: 'opencode.yaml',
+        output: 'sse-fetch',
+        parser: {
+          filters: {
+            operations: {
+              include: ['GET /event'],
+            },
+          },
+        },
+        plugins: ['@hey-api/client-fetch', '@hey-api/sdk'],
+      }),
+      description: 'client with SSE (Fetch)',
+    },
+    {
+      config: createConfig({
+        input: 'opencode.yaml',
+        output: 'sse-next',
+        parser: {
+          filters: {
+            operations: {
+              include: ['GET /event'],
+            },
+          },
+        },
+        plugins: ['@hey-api/client-next', '@hey-api/sdk'],
+      }),
+      description: 'client with SSE (Next.js)',
+    },
+    {
+      config: createConfig({
+        input: 'opencode.yaml',
+        output: 'sse-nuxt',
+        parser: {
+          filters: {
+            operations: {
+              include: ['GET /event'],
+            },
+          },
+        },
+        plugins: ['@hey-api/client-nuxt', '@hey-api/sdk'],
+      }),
+      description: 'client with SSE (Nuxt)',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
