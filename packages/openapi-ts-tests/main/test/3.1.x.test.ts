@@ -807,6 +807,78 @@ describe(`OpenAPI ${version}`, () => {
       description:
         'generates validator schemas for all integer format combinations (number/integer/string types with int8, int16, int32, int64, uint8, uint16, uint32, uint64 formats)',
     },
+    {
+      config: createConfig({
+        input: 'petstore.yaml',
+        output: 'plugins/@pinia/colada/default',
+        plugins: ['@hey-api/client-fetch', '@hey-api/sdk', '@pinia/colada'],
+      }),
+      description: 'generates Pinia Colada plugin code with default settings',
+    },
+    {
+      config: createConfig({
+        input: 'petstore.yaml',
+        output: 'plugins/@pinia/colada/autoDetectDisabled',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/sdk',
+          {
+            name: '@pinia/colada',
+            autoDetectHttpMethod: false,
+          },
+        ],
+      }),
+      description: 'generates Pinia Colada plugin code with auto-detection disabled',
+    },
+    {
+      config: createConfig({
+        input: 'petstore.yaml',
+        output: 'plugins/@pinia/colada/operationOverrides',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/sdk',
+          {
+            name: '@pinia/colada',
+            operationTypes: {
+              getPetById: 'both',
+              addPet: 'query',
+            },
+          },
+        ],
+      }),
+      description: 'generates Pinia Colada plugin code with operation type overrides',
+    },
+    {
+      config: createConfig({
+        input: 'petstore.yaml',
+        output: 'plugins/@pinia/colada/groupByTag',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/sdk',
+          {
+            name: '@pinia/colada',
+            groupByTag: true,
+          },
+        ],
+      }),
+      description: 'generates Pinia Colada plugin code grouped by OpenAPI tags',
+    },
+    {
+      config: createConfig({
+        input: 'petstore.yaml',
+        output: 'plugins/@pinia/colada/groupByTagWithIndex',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/sdk',
+          {
+            name: '@pinia/colada',
+            groupByTag: true,
+            exportFromIndex: true,
+          },
+        ],
+      }),
+      description: 'generates Pinia Colada plugin code grouped by tags with index file',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
