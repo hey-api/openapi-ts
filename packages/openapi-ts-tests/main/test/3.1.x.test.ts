@@ -879,6 +879,103 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'generates Pinia Colada plugin code grouped by tags with index file',
     },
+    {
+      config: createConfig({
+        input: 'petstore.yaml',
+        output: 'plugins/@pinia/colada/customNaming',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/sdk',
+          {
+            name: '@pinia/colada',
+            queryOptions: {
+              name: '{{name}}QueryOptions',
+            },
+            mutationOptions: {
+              name: '{{name}}MutationOptions',
+            },
+          },
+        ],
+      }),
+      description: 'generates Pinia Colada plugin code with custom naming patterns',
+    },
+    {
+      config: createConfig({
+        input: 'petstore.yaml',
+        output: 'plugins/@pinia/colada/caseSettings',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/sdk',
+          {
+            name: '@pinia/colada',
+            case: 'PascalCase',
+            queryOptions: {
+              case: 'camelCase',
+            },
+            mutationOptions: {
+              case: 'snake_case',
+            },
+          },
+        ],
+      }),
+      description: 'generates Pinia Colada plugin code with different case settings',
+    },
+    {
+      config: createConfig({
+        input: 'petstore.yaml',
+        output: 'plugins/@pinia/colada/disabledOptions',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/sdk',
+          {
+            name: '@pinia/colada',
+            queryOptions: false,
+            mutationOptions: {
+              enabled: true,
+            },
+          },
+        ],
+      }),
+      description: 'generates Pinia Colada plugin code with queries disabled',
+    },
+    {
+      config: createConfig({
+        input: 'petstore.yaml',
+        output: 'plugins/@pinia/colada/complexConfiguration',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/sdk',
+          {
+            name: '@pinia/colada',
+            autoDetectHttpMethod: true,
+            groupByTag: true,
+            exportFromIndex: true,
+            operationTypes: {
+              getPetById: 'both',
+              addPet: 'query',
+              updatePet: 'mutation',
+            },
+            queryOptions: {
+              name: 'use{{name}}Query',
+              case: 'camelCase',
+              meta: (operation) => ({
+                operationId: operation.id,
+                tags: operation.tags,
+              }),
+            },
+            mutationOptions: {
+              name: 'use{{name}}Mutation',
+              case: 'camelCase',
+              meta: (operation) => ({
+                operationId: operation.id,
+                method: operation.method,
+              }),
+            },
+          },
+        ],
+      }),
+      description: 'generates Pinia Colada plugin code with complex configuration combining all features',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
