@@ -7,6 +7,28 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
+## v0.81.0
+
+### Server-Sent Events (SSE)
+
+This release adds support for server-sent events (SSE). Instead of treating `text/event-stream` content types as regular HTTP methods, we now generate SSE streams. In practice, you will want to update your affected endpoints to process streamed events.
+
+::: code-group
+
+```js [before]
+const { data } = await foo();
+console.log(data.type);
+```
+
+```js [after]
+const { stream } = await foo();
+for await (const event of stream) {
+  console.log(event.type);
+}
+```
+
+:::
+
 ## v0.80.0
 
 ### Added Zod 4 and Zod Mini
