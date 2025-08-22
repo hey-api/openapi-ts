@@ -19,7 +19,10 @@ describe('@pinia/colada integration tests', () => {
     return {
       input: inputPath,
       logs: { level: 'silent' },
-      output: path.join(outputDir, typeof userConfig.output === 'string' ? userConfig.output : ''),
+      output: path.join(
+        outputDir,
+        typeof userConfig.output === 'string' ? userConfig.output : '',
+      ),
       ...userConfig,
     };
   };
@@ -28,11 +31,7 @@ describe('@pinia/colada integration tests', () => {
     {
       config: createConfig({
         output: 'client-fetch',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/sdk',
-          '@pinia/colada',
-        ],
+        plugins: ['@hey-api/client-fetch', '@hey-api/sdk', '@pinia/colada'],
       }),
       description: 'works with @hey-api/client-fetch',
       expectedClient: 'client-fetch',
@@ -40,11 +39,7 @@ describe('@pinia/colada integration tests', () => {
     {
       config: createConfig({
         output: 'client-axios',
-        plugins: [
-          '@hey-api/client-axios',
-          '@hey-api/sdk',
-          '@pinia/colada',
-        ],
+        plugins: ['@hey-api/client-axios', '@hey-api/sdk', '@pinia/colada'],
       }),
       description: 'works with @hey-api/client-axios',
       expectedClient: 'client-axios',
@@ -61,7 +56,12 @@ describe('@pinia/colada integration tests', () => {
         ],
       }),
       description: 'works with multiple plugins',
-      expectedFiles: ['@pinia/colada.gen.ts', 'schemas.gen.ts', 'sdk.gen.ts', 'types.gen.ts'],
+      expectedFiles: [
+        '@pinia/colada.gen.ts',
+        'schemas.gen.ts',
+        'sdk.gen.ts',
+        'types.gen.ts',
+      ],
     },
     {
       config: createConfig({
@@ -99,8 +99,8 @@ describe('@pinia/colada integration tests', () => {
         plugins: [
           '@hey-api/client-fetch',
           {
-            name: '@hey-api/sdk',
             asClass: true,
+            name: '@hey-api/sdk',
           },
           '@pinia/colada',
         ],
@@ -113,12 +113,12 @@ describe('@pinia/colada integration tests', () => {
         plugins: [
           '@hey-api/client-fetch',
           {
-            name: '@hey-api/sdk',
             case: 'PascalCase',
+            name: '@hey-api/sdk',
           },
           {
-            name: '@pinia/colada',
             case: 'camelCase',
+            name: '@pinia/colada',
           },
         ],
       }),
@@ -130,8 +130,8 @@ describe('@pinia/colada integration tests', () => {
         plugins: [
           '@hey-api/client-fetch',
           {
-            name: '@hey-api/typescript',
             enums: 'typescript',
+            name: '@hey-api/typescript',
           },
           '@hey-api/sdk',
           '@pinia/colada',
@@ -145,8 +145,8 @@ describe('@pinia/colada integration tests', () => {
         plugins: [
           '@hey-api/client-fetch',
           {
-            name: '@hey-api/typescript',
             enums: 'javascript',
+            name: '@hey-api/typescript',
           },
           '@hey-api/sdk',
           '@pinia/colada',
@@ -156,45 +156,55 @@ describe('@pinia/colada integration tests', () => {
     },
   ];
 
-  it.each(scenarios)('$description', async ({ config, expectedFiles, expectedClient }) => {
-    await createClient(config);
+  it.each(scenarios)(
+    '$description',
+    async ({ config, expectedClient, expectedFiles }) => {
+      await createClient(config);
 
-    const outputPath = typeof config.output === 'string' ? config.output : config.output.path;
-    const filePaths = getFilePaths(outputPath);
+      const outputPath =
+        typeof config.output === 'string' ? config.output : config.output.path;
+      const filePaths = getFilePaths(outputPath);
 
-    // Verify that the Pinia Colada file was generated
-    const piniaFiles = filePaths.filter(path => path.includes('@pinia/colada') && path.endsWith('.gen.ts'));
-    expect(piniaFiles.length).toBeGreaterThan(0);
+      // Verify that the Pinia Colada file was generated
+      const piniaFiles = filePaths.filter(
+        (path) => path.includes('@pinia/colada') && path.endsWith('.gen.ts'),
+      );
+      expect(piniaFiles.length).toBeGreaterThan(0);
 
-    // Check for expected files if specified
-    if (expectedFiles) {
-      expectedFiles.forEach(expectedFile => {
-        const fileExists = filePaths.some(filePath => filePath.endsWith(expectedFile));
-        expect(fileExists).toBe(true);
-      });
-    }
-
-    // Verify content of main Pinia Colada file
-    const mainPiniaFile = piniaFiles.find(path => !path.includes('/') || path.endsWith('@pinia/colada.gen.ts'));
-    if (mainPiniaFile) {
-      const content = fs.readFileSync(mainPiniaFile, 'utf-8');
-      
-      // Should import from the correct client
-      if (expectedClient) {
-        expect(content).toContain(`from '../client.gen'`);
+      // Check for expected files if specified
+      if (expectedFiles) {
+        expectedFiles.forEach((expectedFile) => {
+          const fileExists = filePaths.some((filePath) =>
+            filePath.endsWith(expectedFile),
+          );
+          expect(fileExists).toBe(true);
+        });
       }
-      
-      // Should have query and mutation functions
-      expect(content).toMatch(/export const \w+Query/);
-      expect(content).toMatch(/export const \w+Mutation/);
-      
-      // Should import SDK functions
-      expect(content).toContain(`from '../sdk.gen'`);
-      
-      // Should import types
-      expect(content).toContain(`from '../types.gen'`);
-    }
-  });
+
+      // Verify content of main Pinia Colada file
+      const mainPiniaFile = piniaFiles.find(
+        (path) => !path.includes('/') || path.endsWith('@pinia/colada.gen.ts'),
+      );
+      if (mainPiniaFile) {
+        const content = fs.readFileSync(mainPiniaFile, 'utf-8');
+
+        // Should import from the correct client
+        if (expectedClient) {
+          expect(content).toContain(`from '../client.gen'`);
+        }
+
+        // Should have query and mutation functions
+        expect(content).toMatch(/export const \w+Query/);
+        expect(content).toMatch(/export const \w+Mutation/);
+
+        // Should import SDK functions
+        expect(content).toContain(`from '../sdk.gen'`);
+
+        // Should import types
+        expect(content).toContain(`from '../types.gen'`);
+      }
+    },
+  );
 
   describe('Plugin dependency validation', () => {
     it('should require @hey-api/sdk plugin', async () => {
@@ -239,21 +249,24 @@ describe('@pinia/colada integration tests', () => {
 
       await createClient(config);
 
-      const outputPath = typeof config.output === 'string' ? config.output : config.output.path;
+      const outputPath =
+        typeof config.output === 'string' ? config.output : config.output.path;
       const filePaths = getFilePaths(outputPath);
-      const piniaFile = filePaths.find(path => path.includes('@pinia/colada') && path.endsWith('.gen.ts'));
+      const piniaFile = filePaths.find(
+        (path) => path.includes('@pinia/colada') && path.endsWith('.gen.ts'),
+      );
 
       if (piniaFile) {
         const content = fs.readFileSync(piniaFile, 'utf-8');
-        
+
         // Basic TypeScript syntax checks
         expect(content).not.toContain('import {');
         expect(content).toMatch(/export const \w+: /); // Should have type annotations
         expect(content).not.toContain('any;'); // Should avoid any types
-        
+
         // Should have proper imports
         expect(content).toMatch(/import.*from/);
-        
+
         // Should have proper exports
         expect(content).toMatch(/export const/);
       }
@@ -262,12 +275,12 @@ describe('@pinia/colada integration tests', () => {
 
   describe('OpenAPI version compatibility', () => {
     const versions = ['2.0.x', '3.0.x', '3.1.x'];
-    
+
     it.each(versions)('should work with OpenAPI %s', async (version) => {
       // Use a simple spec for each version
       const specFile = version === '2.0.x' ? 'minimal.json' : 'petstore.yaml';
       const inputPath = path.join(getSpecsPath(), version, specFile);
-      
+
       // Skip if spec doesn't exist for this version
       if (!fs.existsSync(inputPath)) {
         return;
@@ -292,8 +305,8 @@ describe('@pinia/colada integration tests', () => {
     it('should handle empty OpenAPI specs gracefully', async () => {
       // Create a minimal valid OpenAPI spec
       const minimalSpec = {
-        openapi: '3.1.0',
         info: { title: 'Test', version: '1.0.0' },
+        openapi: '3.1.0',
         paths: {},
       };
 
@@ -314,10 +327,13 @@ describe('@pinia/colada integration tests', () => {
       await expect(createClient(config)).resolves.not.toThrow();
 
       // Should still generate basic structure even with no operations
-      const outputPath = typeof config.output === 'string' ? config.output : config.output.path;
+      const outputPath =
+        typeof config.output === 'string' ? config.output : config.output.path;
       const filePaths = getFilePaths(outputPath);
-      const piniaFile = filePaths.find(path => path.includes('@pinia/colada'));
-      
+      const piniaFile = filePaths.find((path) =>
+        path.includes('@pinia/colada'),
+      );
+
       if (piniaFile) {
         const content = fs.readFileSync(piniaFile, 'utf-8');
         expect(content).toContain('// This file is auto-generated');

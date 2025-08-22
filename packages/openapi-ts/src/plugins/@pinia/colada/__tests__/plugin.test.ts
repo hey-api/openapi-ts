@@ -13,8 +13,8 @@ const createMockOperation = (
   method,
   operationId: id,
   path: '/test',
-  tags,
   responses: {},
+  tags,
 });
 
 // Mock plugin instance helper
@@ -23,19 +23,19 @@ const createMockPlugin = (
 ): any => ({
   config: {
     autoDetectHttpMethod: true,
-    operationTypes: {},
-    groupByTag: false,
     exportFromIndex: false,
+    groupByTag: false,
+    operationTypes: {},
     ...config,
   },
-  createFile: vi.fn(() => ({
-    add: vi.fn(),
-    import: vi.fn(),
-    identifier: vi.fn(() => ({ name: 'testIdentifier' })),
-  })),
   context: {
     file: vi.fn(),
   },
+  createFile: vi.fn(() => ({
+    add: vi.fn(),
+    identifier: vi.fn(() => ({ name: 'testIdentifier' })),
+    import: vi.fn(),
+  })),
   getPlugin: vi.fn(() => ({
     config: {
       responseStyle: 'response',
@@ -102,9 +102,16 @@ describe('@pinia/colada plugin', () => {
       const postOperation = createMockOperation('post');
       const plugin = createMockPlugin({ autoDetectHttpMethod: false });
 
+      // Verify the plugin config is set correctly
+      expect(plugin.config.autoDetectHttpMethod).toBe(false);
+
       // Legacy behavior: GET and POST generate queries, others generate mutations
-      const getShouldGenerateQuery = ['get', 'post'].includes(getOperation.method);
-      const postShouldGenerateQuery = ['get', 'post'].includes(postOperation.method);
+      const getShouldGenerateQuery = ['get', 'post'].includes(
+        getOperation.method,
+      );
+      const postShouldGenerateQuery = ['get', 'post'].includes(
+        postOperation.method,
+      );
 
       expect(getShouldGenerateQuery).toBe(true);
       expect(postShouldGenerateQuery).toBe(true);
@@ -121,7 +128,8 @@ describe('@pinia/colada plugin', () => {
       // Override should force POST to be a query
       const override = plugin.config.operationTypes[operation.id];
       const shouldGenerateQuery = override === 'query' || override === 'both';
-      const shouldGenerateMutation = override === 'mutation' || override === 'both';
+      const shouldGenerateMutation =
+        override === 'mutation' || override === 'both';
 
       expect(shouldGenerateQuery).toBe(true);
       expect(shouldGenerateMutation).toBe(false);
@@ -136,7 +144,8 @@ describe('@pinia/colada plugin', () => {
       // Override should force GET to be a mutation
       const override = plugin.config.operationTypes[operation.id];
       const shouldGenerateQuery = override === 'query' || override === 'both';
-      const shouldGenerateMutation = override === 'mutation' || override === 'both';
+      const shouldGenerateMutation =
+        override === 'mutation' || override === 'both';
 
       expect(shouldGenerateQuery).toBe(false);
       expect(shouldGenerateMutation).toBe(true);
@@ -150,7 +159,8 @@ describe('@pinia/colada plugin', () => {
 
       const override = plugin.config.operationTypes[operation.id];
       const shouldGenerateQuery = override === 'query' || override === 'both';
-      const shouldGenerateMutation = override === 'mutation' || override === 'both';
+      const shouldGenerateMutation =
+        override === 'mutation' || override === 'both';
 
       expect(shouldGenerateQuery).toBe(true);
       expect(shouldGenerateMutation).toBe(true);
@@ -173,7 +183,9 @@ describe('@pinia/colada plugin', () => {
 
     it('should use separate files by tag when groupByTag is true', () => {
       const petOperation = createMockOperation('get', 'getPet', ['pet']);
-      const storeOperation = createMockOperation('get', 'getInventory', ['store']);
+      const storeOperation = createMockOperation('get', 'getInventory', [
+        'store',
+      ]);
       const plugin = createMockPlugin({ groupByTag: true });
 
       // When groupByTag is true, operations should be grouped by first tag
@@ -214,9 +226,9 @@ describe('@pinia/colada plugin', () => {
     it('should allow custom configuration overrides', () => {
       const customConfig = {
         autoDetectHttpMethod: false,
-        operationTypes: { testOp: 'both' as const },
-        groupByTag: true,
         exportFromIndex: true,
+        groupByTag: true,
+        operationTypes: { testOp: 'both' as const },
       };
       const plugin = createMockPlugin(customConfig);
 
@@ -238,19 +250,28 @@ describe('@pinia/colada plugin', () => {
 
       const plugin = createMockPlugin({
         autoDetectHttpMethod: true,
-        operationTypes: {
-          getPet: 'both', // Force GET to generate both
-          addPet: 'query', // Force POST to be query only
-        },
         groupByTag: true,
+        operationTypes: {
+          // Force GET to generate both
+          addPet: 'query',
+          getPet: 'both', // Force POST to be query only
+        },
       });
 
       operations.forEach((operation) => {
         const override = plugin.config.operationTypes[operation.id];
-        const shouldGenerateQuery = override === 'query' || override === 'both' ||
-          (!override && plugin.config.autoDetectHttpMethod && operation.method === 'get');
-        const shouldGenerateMutation = override === 'mutation' || override === 'both' ||
-          (!override && plugin.config.autoDetectHttpMethod && operation.method !== 'get');
+        const shouldGenerateQuery =
+          override === 'query' ||
+          override === 'both' ||
+          (!override &&
+            plugin.config.autoDetectHttpMethod &&
+            operation.method === 'get');
+        const shouldGenerateMutation =
+          override === 'mutation' ||
+          override === 'both' ||
+          (!override &&
+            plugin.config.autoDetectHttpMethod &&
+            operation.method !== 'get');
 
         if (operation.id === 'getPet') {
           expect(shouldGenerateQuery).toBe(true);

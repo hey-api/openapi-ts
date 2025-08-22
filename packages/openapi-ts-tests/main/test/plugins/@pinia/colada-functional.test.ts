@@ -16,11 +16,11 @@ const outputDir = path.join(__dirname, 'generated', version, 'functional');
 describe('@pinia/colada functional tests', () => {
   const setupPiniaColadaTest = async (pluginConfig: any = {}) => {
     const inputPath = path.join(getSpecsPath(), version, 'petstore.yaml');
-    
+
     await createClient({
       input: inputPath,
-      output: outputDir,
       logs: { level: 'silent' },
+      output: outputDir,
       plugins: [
         '@hey-api/client-fetch',
         '@hey-api/sdk',
@@ -49,7 +49,7 @@ describe('@pinia/colada functional tests', () => {
 
     // Test the query options structure
     const queryOptions = piniaColada.getPetByIdQuery({ path: { petId: 1 } });
-    
+
     expect(queryOptions).toHaveProperty('key');
     expect(queryOptions).toHaveProperty('query');
     expect(queryOptions.key).toEqual(['getPetById', { petId: 1 }]);
@@ -66,21 +66,25 @@ describe('@pinia/colada functional tests', () => {
 
     // Test the mutation options structure
     const mutationOptions = piniaColada.addPetMutation();
-    
+
     expect(mutationOptions).toHaveProperty('mutation');
     expect(typeof mutationOptions.mutation).toBe('function');
   });
 
   it('should respect autoDetectHttpMethod setting', async () => {
-    const piniaColadaDefault = await setupPiniaColadaTest({ autoDetectHttpMethod: true });
-    
+    const piniaColadaDefault = await setupPiniaColadaTest({
+      autoDetectHttpMethod: true,
+    });
+
     // With auto-detection, GET should be query, POST should be mutation
     expect(piniaColadaDefault.getPetByIdQuery).toBeDefined(); // GET -> query
     expect(piniaColadaDefault.addPetMutation).toBeDefined(); // POST -> mutation
     expect(piniaColadaDefault.addPetQuery).toBeUndefined(); // POST should not generate query
 
-    const piniaColadaDisabled = await setupPiniaColadaTest({ autoDetectHttpMethod: false });
-    
+    const piniaColadaDisabled = await setupPiniaColadaTest({
+      autoDetectHttpMethod: false,
+    });
+
     // With auto-detection disabled, both GET and POST should generate queries (legacy behavior)
     expect(piniaColadaDisabled.getPetByIdQuery).toBeDefined();
     // Note: The legacy behavior test might need adjustment based on actual implementation
@@ -89,8 +93,8 @@ describe('@pinia/colada functional tests', () => {
   it('should respect operation type overrides', async () => {
     const piniaColada = await setupPiniaColadaTest({
       operationTypes: {
-        getPetById: 'both',
         addPet: 'query',
+        getPetById: 'both',
       },
     });
 
@@ -106,22 +110,30 @@ describe('@pinia/colada functional tests', () => {
   it('should generate files by tag when groupByTag is enabled', async () => {
     await createClient({
       input: path.join(getSpecsPath(), version, 'petstore.yaml'),
-      output: path.join(outputDir, 'grouped'),
       logs: { level: 'silent' },
+      output: path.join(outputDir, 'grouped'),
       plugins: [
         '@hey-api/client-fetch',
         '@hey-api/sdk',
         {
-          name: '@pinia/colada',
           groupByTag: true,
+          name: '@pinia/colada',
         },
       ],
     });
 
     // Check that separate files are created for each tag
     const petFile = path.join(outputDir, 'grouped', '@pinia/colada/pet.gen.ts');
-    const storeFile = path.join(outputDir, 'grouped', '@pinia/colada/store.gen.ts');
-    const userFile = path.join(outputDir, 'grouped', '@pinia/colada/user.gen.ts');
+    const storeFile = path.join(
+      outputDir,
+      'grouped',
+      '@pinia/colada/store.gen.ts',
+    );
+    const userFile = path.join(
+      outputDir,
+      'grouped',
+      '@pinia/colada/user.gen.ts',
+    );
 
     expect(fs.existsSync(petFile)).toBe(true);
     expect(fs.existsSync(storeFile)).toBe(true);
@@ -137,21 +149,25 @@ describe('@pinia/colada functional tests', () => {
   it('should generate index file when exportFromIndex is enabled', async () => {
     await createClient({
       input: path.join(getSpecsPath(), version, 'petstore.yaml'),
-      output: path.join(outputDir, 'with-index'),
       logs: { level: 'silent' },
+      output: path.join(outputDir, 'with-index'),
       plugins: [
         '@hey-api/client-fetch',
         '@hey-api/sdk',
         {
-          name: '@pinia/colada',
-          groupByTag: true,
           exportFromIndex: true,
+          groupByTag: true,
+          name: '@pinia/colada',
         },
       ],
     });
 
     // Check that index file is created
-    const indexFile = path.join(outputDir, 'with-index', '@pinia/colada/index.gen.ts');
+    const indexFile = path.join(
+      outputDir,
+      'with-index',
+      '@pinia/colada/index.gen.ts',
+    );
     expect(fs.existsSync(indexFile)).toBe(true);
 
     // Check that index file exports from other files
@@ -164,30 +180,34 @@ describe('@pinia/colada functional tests', () => {
   it('should include meta properties in generated code', async () => {
     await createClient({
       input: path.join(getSpecsPath(), version, 'petstore.yaml'),
-      output: path.join(outputDir, 'with-meta'),
       logs: { level: 'silent' },
+      output: path.join(outputDir, 'with-meta'),
       plugins: [
         '@hey-api/client-fetch',
         '@hey-api/sdk',
         {
+          mutationOptions: {
+            meta: (operation) => ({
+              httpMethod: operation.method,
+              operationId: operation.id,
+            }),
+          },
           name: '@pinia/colada',
           queryOptions: {
             meta: (operation) => ({
-              operationId: operation.id,
               httpMethod: operation.method,
-            }),
-          },
-          mutationOptions: {
-            meta: (operation) => ({
               operationId: operation.id,
-              httpMethod: operation.method,
             }),
           },
         },
       ],
     });
 
-    const generatedFile = path.join(outputDir, 'with-meta', '@pinia/colada.gen.ts');
+    const generatedFile = path.join(
+      outputDir,
+      'with-meta',
+      '@pinia/colada.gen.ts',
+    );
     const content = fs.readFileSync(generatedFile, 'utf-8');
 
     // Check that meta properties are included
@@ -197,15 +217,15 @@ describe('@pinia/colada functional tests', () => {
 
   it('should handle query function calls with abort signal', async () => {
     const piniaColada = await setupPiniaColadaTest();
-    
+
     const queryOptions = piniaColada.getPetByIdQuery({ path: { petId: 1 } });
-    
+
     // Mock fetch to capture the call
     const mockFetch = vi.fn().mockResolvedValue({
-      ok: true,
       json: () => Promise.resolve({ id: 1, name: 'Test Pet' }),
+      ok: true,
     });
-    
+
     // Replace global fetch
     const originalFetch = global.fetch;
     global.fetch = mockFetch;
@@ -219,7 +239,7 @@ describe('@pinia/colada functional tests', () => {
         expect.any(String),
         expect.objectContaining({
           signal: abortController.signal,
-        })
+        }),
       );
     } finally {
       // Restore original fetch
@@ -229,15 +249,15 @@ describe('@pinia/colada functional tests', () => {
 
   it('should handle mutation function calls correctly', async () => {
     const piniaColada = await setupPiniaColadaTest();
-    
+
     const mutationOptions = piniaColada.addPetMutation();
-    
+
     // Mock fetch to capture the call
     const mockFetch = vi.fn().mockResolvedValue({
-      ok: true,
       json: () => Promise.resolve({ id: 1, name: 'New Pet' }),
+      ok: true,
     });
-    
+
     const originalFetch = global.fetch;
     global.fetch = mockFetch;
 
@@ -249,9 +269,9 @@ describe('@pinia/colada functional tests', () => {
       expect(mockFetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
-          method: 'POST',
           body: expect.stringContaining('Test Pet'),
-        })
+          method: 'POST',
+        }),
       );
     } finally {
       global.fetch = originalFetch;

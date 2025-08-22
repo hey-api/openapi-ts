@@ -54,11 +54,11 @@ describe('@pinia/colada plugin meta functions', () => {
             name: '@pinia/colada',
             queryOptions: {
               meta: (operation) => ({
-                operationId: operation.id,
                 httpMethod: operation.method,
+                isDeprecated: operation.deprecated || false,
+                operationId: operation.id,
                 operationPath: operation.path,
                 tags: operation.tags,
-                isDeprecated: operation.deprecated || false,
               }),
             },
           },
@@ -74,16 +74,16 @@ describe('@pinia/colada plugin meta functions', () => {
           '@hey-api/client-fetch',
           '@hey-api/sdk',
           {
-            name: '@pinia/colada',
             mutationOptions: {
               meta: (operation) => ({
-                operationId: operation.id,
                 httpMethod: operation.method,
+                operationId: operation.id,
                 operationPath: operation.path,
-                tags: operation.tags,
                 security: operation.security || [],
+                tags: operation.tags,
               }),
             },
+            name: '@pinia/colada',
           },
         ],
       }),
@@ -97,25 +97,26 @@ describe('@pinia/colada plugin meta functions', () => {
           '@hey-api/client-fetch',
           '@hey-api/sdk',
           {
+            mutationOptions: {
+              meta: (operation) => ({
+                id: operation.id,
+                method: operation.method,
+                type: 'mutation',
+              }),
+            },
             name: '@pinia/colada',
             queryOptions: {
               meta: (operation) => ({
+                id: operation.id,
+                method: operation.method,
                 type: 'query',
-                id: operation.id,
-                method: operation.method,
-              }),
-            },
-            mutationOptions: {
-              meta: (operation) => ({
-                type: 'mutation',
-                id: operation.id,
-                method: operation.method,
               }),
             },
           },
         ],
       }),
-      description: 'generates Pinia Colada code with both query and mutation meta functions',
+      description:
+        'generates Pinia Colada code with both query and mutation meta functions',
     },
     {
       config: createConfig({
@@ -125,25 +126,26 @@ describe('@pinia/colada plugin meta functions', () => {
           '@hey-api/client-fetch',
           '@hey-api/sdk',
           {
-            name: '@pinia/colada',
-            groupByTag: true,
             exportFromIndex: true,
-            queryOptions: {
-              meta: (operation) => ({
-                tag: operation.tags?.[0] || 'default',
-                operationId: operation.id,
-              }),
-            },
+            groupByTag: true,
             mutationOptions: {
               meta: (operation) => ({
-                tag: operation.tags?.[0] || 'default',
                 operationId: operation.id,
+                tag: operation.tags?.[0] || 'default',
+              }),
+            },
+            name: '@pinia/colada',
+            queryOptions: {
+              meta: (operation) => ({
+                operationId: operation.id,
+                tag: operation.tags?.[0] || 'default',
               }),
             },
           },
         ],
       }),
-      description: 'generates Pinia Colada code with meta functions and groupByTag',
+      description:
+        'generates Pinia Colada code with meta functions and groupByTag',
     },
     {
       config: createConfig({
@@ -153,19 +155,7 @@ describe('@pinia/colada plugin meta functions', () => {
           '@hey-api/client-fetch',
           '@hey-api/sdk',
           {
-            name: '@pinia/colada',
             autoDetectHttpMethod: false,
-            operationTypes: {
-              getPetById: 'both',
-              addPet: 'query',
-            },
-            queryOptions: {
-              meta: (operation) => ({
-                customField: `query_${operation.id}`,
-                httpMethod: operation.method,
-                forced: operation.id === 'addPet',
-              }),
-            },
             mutationOptions: {
               meta: (operation) => ({
                 customField: `mutation_${operation.id}`,
@@ -173,10 +163,23 @@ describe('@pinia/colada plugin meta functions', () => {
                 shouldBeBoth: operation.id === 'getPetById',
               }),
             },
+            name: '@pinia/colada',
+            operationTypes: {
+              addPet: 'query',
+              getPetById: 'both',
+            },
+            queryOptions: {
+              meta: (operation) => ({
+                customField: `query_${operation.id}`,
+                forced: operation.id === 'addPet',
+                httpMethod: operation.method,
+              }),
+            },
           },
         ],
       }),
-      description: 'generates Pinia Colada code with meta functions and custom configuration',
+      description:
+        'generates Pinia Colada code with meta functions and custom configuration',
     },
   ];
 
@@ -214,8 +217,8 @@ describe('@pinia/colada plugin meta functions', () => {
             name: '@pinia/colada',
             queryOptions: {
               meta: () => ({
-                testProperty: 'testValue',
                 anotherProperty: 42,
+                testProperty: 'testValue',
               }),
             },
           },
@@ -227,17 +230,18 @@ describe('@pinia/colada plugin meta functions', () => {
       const outputPath =
         typeof config.output === 'string' ? config.output : config.output.path;
       const filePaths = getFilePaths(outputPath);
-      
+
       // Find the generated Pinia Colada file
-      const piniaFile = filePaths.find((filePath) => 
-        filePath.includes('@pinia/colada') && filePath.endsWith('.gen.ts')
+      const piniaFile = filePaths.find(
+        (filePath) =>
+          filePath.includes('@pinia/colada') && filePath.endsWith('.gen.ts'),
       );
 
       expect(piniaFile).toBeDefined();
 
       if (piniaFile) {
         const fileContent = fs.readFileSync(piniaFile, 'utf-8');
-        
+
         // Check that meta properties are included in the generated code
         expect(fileContent).toContain('testProperty');
         expect(fileContent).toContain('testValue');
