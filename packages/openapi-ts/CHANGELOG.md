@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.80.18
+
+### Patch Changes
+
+- [#2502](https://github.com/hey-api/openapi-ts/pull/2502) [`ac7efbf`](https://github.com/hey-api/openapi-ts/commit/ac7efbfd96e7a5e530e91655df6ac481c9a5eaa5) Thanks [@malcolm-kee](https://github.com/malcolm-kee)! - fix(parser): OpenAPI 3.1 parser handles multiple `type` values
+
+## 0.80.17
+
+### Patch Changes
+
+- [#2500](https://github.com/hey-api/openapi-ts/pull/2500) [`98d7bc3`](https://github.com/hey-api/openapi-ts/commit/98d7bc37387e16c6f38194a111d6df384eee3a82) Thanks [@max-scopp](https://github.com/max-scopp)! - fix(client): Angular client correctly applies default GET method
+
 ## 0.80.16
 
 ### Patch Changes

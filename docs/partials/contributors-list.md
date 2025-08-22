@@ -43,6 +43,7 @@
 - [Lubos](https://github.com/mrlubos)
 - [Maarten Knijnenberg](https://github.com/mknijnenberg)
 - [Mads Hougesen](https://github.com/hougesen)
+- [Malcolm Kee](https://github.com/malcolm-kee)
 - [Marcel Richter](https://github.com/mrclrchtr)
 - [Marek Lukáš](https://github.com/tajnymag)
 - [Matsu](https://github.com/Matsuuu)

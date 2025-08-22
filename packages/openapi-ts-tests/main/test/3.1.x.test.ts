@@ -466,6 +466,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'union-types.json',
+        output: 'union-types',
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'handles union of primitive types',
+    },
+    {
+      config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
         plugins: ['@hey-api/typescript', 'valibot'],
