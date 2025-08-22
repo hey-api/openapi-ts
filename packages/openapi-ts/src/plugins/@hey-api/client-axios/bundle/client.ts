@@ -1,7 +1,8 @@
 import type { AxiosError, AxiosInstance, RawAxiosRequestHeaders } from 'axios';
 import axios from 'axios';
 
-import type { Client, Config } from './types';
+import { createSseClient } from '../../client-core/bundle/serverSentEvents';
+import type { Client, Config, RequestOptions } from './types';
 import {
   buildUrl,
   createConfig,
@@ -36,8 +37,7 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  // @ts-expect-error
-  const request: Client['request'] = async (options) => {
+  const beforeRequest = async (options: RequestOptions) => {
     const opts = {
       ..._config,
       ...options,
@@ -62,6 +62,13 @@ export const createClient = (config: Config = {}): Client => {
 
     const url = buildUrl(opts);
 
+    return { opts, url };
+  };
+
+  // @ts-expect-error
+  const request: Client['request'] = async (options) => {
+    // @ts-expect-error
+    const { opts, url } = await beforeRequest(options);
     try {
       // assign Axios here for consistency with fetch
       const _axios = opts.axios!;
@@ -104,18 +111,37 @@ export const createClient = (config: Config = {}): Client => {
     }
   };
 
+  const makeMethod = (method: Required<Config>['method']) => {
+    const fn = (options: RequestOptions) => request({ ...options, method });
+    fn.sse = async (options: RequestOptions) => {
+      const { opts, url } = await beforeRequest(options);
+      return createSseClient({
+        ...opts,
+        body: opts.body as BodyInit | null | undefined,
+        headers: opts.headers as Record<string, string>,
+        method,
+        // @ts-expect-error
+        signal: opts.signal,
+        url,
+      });
+    };
+    return fn;
+  };
+
   return {
     buildUrl,
-    delete: (options) => request({ ...options, method: 'DELETE' }),
-    get: (options) => request({ ...options, method: 'GET' }),
+    connect: makeMethod('CONNECT'),
+    delete: makeMethod('DELETE'),
+    get: makeMethod('GET'),
     getConfig,
-    head: (options) => request({ ...options, method: 'HEAD' }),
+    head: makeMethod('HEAD'),
     instance,
-    options: (options) => request({ ...options, method: 'OPTIONS' }),
-    patch: (options) => request({ ...options, method: 'PATCH' }),
-    post: (options) => request({ ...options, method: 'POST' }),
-    put: (options) => request({ ...options, method: 'PUT' }),
+    options: makeMethod('OPTIONS'),
+    patch: makeMethod('PATCH'),
+    post: makeMethod('POST'),
+    put: makeMethod('PUT'),
     request,
     setConfig,
+    trace: makeMethod('TRACE'),
   } as Client;
 };

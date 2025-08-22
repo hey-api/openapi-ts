@@ -36,7 +36,8 @@ export default defineConfig(() => {
         '3.1.x',
         // 'invalid',
         // 'openai.yaml',
-        'full.yaml',
+        // 'full.yaml',
+        'opencode.yaml',
         // 'validators-circular-ref.json',
       ),
       // https://registry.scalar.com/@lubos-heyapi-dev-team/apis/demo-api-scalar-galaxy/latest?format=json
@@ -79,10 +80,10 @@ export default defineConfig(() => {
       filters: {
         // deprecated: false,
         operations: {
-          // include: [
-          //   'GET /api/v{api-version}/defaults',
-          //   // '/^[A-Z]+ /v1//',
-          // ],
+          include: [
+            'GET /event',
+            // '/^[A-Z]+ /v1//',
+          ],
         },
         // orphans: true,
         // preserveOrder: true,
@@ -126,7 +127,7 @@ export default defineConfig(() => {
       {
         // baseUrl: false,
         // exportFromIndex: true,
-        name: '@hey-api/client-nuxt',
+        name: '@hey-api/client-fetch',
         // name: 'legacy/angular',
         // strictBaseUrl: true,
         // throwOnError: true,

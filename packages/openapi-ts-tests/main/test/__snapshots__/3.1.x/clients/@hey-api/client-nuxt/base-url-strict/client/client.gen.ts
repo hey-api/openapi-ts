@@ -8,7 +8,8 @@ import {
 } from 'nuxt/app';
 import { reactive, ref, watch } from 'vue';
 
-import type { Client, Config } from './types.gen';
+import { createSseClient } from '../core/serverSentEvents.gen';
+import type { Client, Config, RequestOptions } from './types.gen';
 import {
   buildUrl,
   createConfig,
@@ -18,6 +19,7 @@ import {
   mergeInterceptors,
   serializeBody,
   setAuthParams,
+  unwrapRefs,
 } from './utils.gen';
 
 export const createClient = (config: Config = {}): Client => {
@@ -28,6 +30,32 @@ export const createClient = (config: Config = {}): Client => {
   const setConfig = (config: Config): Config => {
     _config = mergeConfigs(_config, config);
     return getConfig();
+  };
+
+  const beforeRequest = async (options: RequestOptions) => {
+    const opts = {
+      ..._config,
+      ...options,
+      $fetch: options.$fetch ?? _config.$fetch ?? $fetch,
+      headers: mergeHeaders(_config.headers, options.headers),
+      onRequest: mergeInterceptors(_config.onRequest, options.onRequest),
+      onResponse: mergeInterceptors(_config.onResponse, options.onResponse),
+    };
+
+    if (opts.security) {
+      await setAuthParams({
+        ...opts,
+        security: opts.security,
+      });
+    }
+
+    if (opts.requestValidator) {
+      await opts.requestValidator(opts);
+    }
+
+    const url = buildUrl(opts);
+
+    return { opts, url };
   };
 
   const request: Client['request'] = ({
@@ -109,7 +137,11 @@ export const createClient = (config: Config = {}): Client => {
     const fetchFn = opts.$fetch;
 
     if (composable === '$fetch') {
-      return executeFetchFn(opts, fetchFn);
+      return executeFetchFn(
+        // @ts-expect-error
+        opts,
+        fetchFn,
+      );
     }
 
     if (composable === 'useFetch' || composable === 'useLazyFetch') {
@@ -128,7 +160,12 @@ export const createClient = (config: Config = {}): Client => {
         : useFetch(() => buildUrl(opts), opts);
     }
 
-    const handler: any = () => executeFetchFn(opts, fetchFn);
+    const handler: any = () =>
+      executeFetchFn(
+        // @ts-expect-error
+        opts,
+        fetchFn,
+      );
 
     if (composable === 'useAsyncData') {
       return key
@@ -145,19 +182,34 @@ export const createClient = (config: Config = {}): Client => {
     return undefined as any;
   };
 
+  const makeMethod = (method: Required<Config>['method']) => {
+    const fn = (options: RequestOptions) => request({ ...options, method });
+    fn.sse = async (options: RequestOptions) => {
+      const { opts, url } = await beforeRequest(options);
+      return createSseClient({
+        ...unwrapRefs(opts),
+        body: opts.body as BodyInit | null | undefined,
+        method,
+        signal: unwrapRefs(opts.signal) as AbortSignal,
+        url,
+      });
+    };
+    return fn;
+  };
+
   return {
     buildUrl,
-    connect: (options) => request({ ...options, method: 'CONNECT' }),
-    delete: (options) => request({ ...options, method: 'DELETE' }),
-    get: (options) => request({ ...options, method: 'GET' }),
+    connect: makeMethod('CONNECT'),
+    delete: makeMethod('DELETE'),
+    get: makeMethod('GET'),
     getConfig,
-    head: (options) => request({ ...options, method: 'HEAD' }),
-    options: (options) => request({ ...options, method: 'OPTIONS' }),
-    patch: (options) => request({ ...options, method: 'PATCH' }),
-    post: (options) => request({ ...options, method: 'POST' }),
-    put: (options) => request({ ...options, method: 'PUT' }),
+    head: makeMethod('HEAD'),
+    options: makeMethod('OPTIONS'),
+    patch: makeMethod('PATCH'),
+    post: makeMethod('POST'),
+    put: makeMethod('PUT'),
     request,
     setConfig,
-    trace: (options) => request({ ...options, method: 'TRACE' }),
-  };
+    trace: makeMethod('TRACE'),
+  } as Client;
 };

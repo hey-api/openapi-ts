@@ -1,4 +1,10 @@
-import type { Client, Config, ResolvedRequestOptions } from './types';
+import { createSseClient } from '../../client-core/bundle/serverSentEvents';
+import type {
+  Client,
+  Config,
+  RequestOptions,
+  ResolvedRequestOptions,
+} from './types';
 import {
   buildUrl,
   createConfig,
@@ -31,7 +37,7 @@ export const createClient = (config: Config = {}): Client => {
     ResolvedRequestOptions
   >();
 
-  const request: Client['request'] = async (options) => {
+  const beforeRequest = async (options: RequestOptions) => {
     const opts = {
       ..._config,
       ...options,
@@ -61,6 +67,13 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     const url = buildUrl(opts);
+
+    return { opts, url };
+  };
+
+  const request: Client['request'] = async (options) => {
+    // @ts-expect-error
+    const { opts, url } = await beforeRequest(options);
     const requestInit: ReqInit = {
       redirect: 'follow',
       ...opts,
@@ -178,20 +191,35 @@ export const createClient = (config: Config = {}): Client => {
         };
   };
 
+  const makeMethod = (method: Required<Config>['method']) => {
+    const fn = (options: RequestOptions) => request({ ...options, method });
+    fn.sse = async (options: RequestOptions) => {
+      const { opts, url } = await beforeRequest(options);
+      return createSseClient({
+        ...opts,
+        body: opts.body as BodyInit | null | undefined,
+        headers: opts.headers as unknown as Record<string, string>,
+        method,
+        url,
+      });
+    };
+    return fn;
+  };
+
   return {
     buildUrl,
-    connect: (options) => request({ ...options, method: 'CONNECT' }),
-    delete: (options) => request({ ...options, method: 'DELETE' }),
-    get: (options) => request({ ...options, method: 'GET' }),
+    connect: makeMethod('CONNECT'),
+    delete: makeMethod('DELETE'),
+    get: makeMethod('GET'),
     getConfig,
-    head: (options) => request({ ...options, method: 'HEAD' }),
+    head: makeMethod('HEAD'),
     interceptors,
-    options: (options) => request({ ...options, method: 'OPTIONS' }),
-    patch: (options) => request({ ...options, method: 'PATCH' }),
-    post: (options) => request({ ...options, method: 'POST' }),
-    put: (options) => request({ ...options, method: 'PUT' }),
+    options: makeMethod('OPTIONS'),
+    patch: makeMethod('PATCH'),
+    post: makeMethod('POST'),
+    put: makeMethod('PUT'),
     request,
     setConfig,
-    trace: (options) => request({ ...options, method: 'TRACE' }),
-  };
+    trace: makeMethod('TRACE'),
+  } as Client;
 };
