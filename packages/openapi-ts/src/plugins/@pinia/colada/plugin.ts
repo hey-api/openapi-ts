@@ -43,39 +43,71 @@ const handleMeta = (
 };
 
 const useTypeData = ({
+  file,
   operation,
   plugin,
 }: {
+  file: ReturnType<PluginInstance['createFile']>;
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
-  const file = plugin.context.file({ id: plugin.name })!;
   const pluginSdk = plugin.getPlugin('@hey-api/sdk')!;
   const typeData = operationOptionsType({ file, operation, plugin: pluginSdk });
   return typeData;
 };
 
+const shouldGenerateQuery = (
+  operation: IR.OperationObject,
+  plugin: PluginInstance,
+): boolean => {
+  // Check for explicit override first
+  const override = plugin.config.operationTypes[operation.id];
+  if (override === 'mutation') return false;
+  if (override === 'query' || override === 'both') return true;
+
+  // Use auto-detection if enabled
+  if (plugin.config.autoDetectHttpMethod) {
+    return operation.method === 'get';
+  }
+
+  // Default behavior (backward compatibility)
+  return ['get', 'post'].includes(operation.method);
+};
+
+const shouldGenerateMutation = (
+  operation: IR.OperationObject,
+  plugin: PluginInstance,
+): boolean => {
+  // Check for explicit override first
+  const override = plugin.config.operationTypes[operation.id];
+  if (override === 'query') return false;
+  if (override === 'mutation' || override === 'both') return true;
+
+  // Use auto-detection if enabled
+  if (plugin.config.autoDetectHttpMethod) {
+    return operation.method !== 'get';
+  }
+
+  // Default behavior (backward compatibility)
+  return operation.method !== 'get';
+};
+
 const createQueryOptions = ({
+  file,
   operation,
   plugin,
   queryFn,
   state,
 }: {
+  file: ReturnType<PluginInstance['createFile']>;
   operation: IR.OperationObject;
   plugin: PluginInstance;
   queryFn: string;
   state: PluginState;
 }) => {
-  if (
-    !plugin.config.queryOptions ||
-    !(['get', 'post'] as ReadonlyArray<typeof operation.method>).includes(
-      operation.method,
-    )
-  ) {
+  if (!plugin.config.queryOptions || !shouldGenerateQuery(operation, plugin)) {
     return state;
   }
-
-  const file = plugin.context.file({ id: plugin.name })!;
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
     operation,
@@ -87,7 +119,7 @@ const createQueryOptions = ({
 
   state.hasUsedQueryFn = true;
 
-  const typeData = useTypeData({ operation, plugin });
+  const typeData = useTypeData({ file, operation, plugin });
 
   const identifierQueryOptions = file.identifier({
     $ref: `#/pinia-colada-query-options/${operation.id}`,
@@ -212,26 +244,21 @@ const createQueryOptions = ({
 };
 
 const createMutationOptions = ({
+  file,
   operation,
   plugin,
   queryFn,
   state,
 }: {
+  file: ReturnType<PluginInstance['createFile']>;
   operation: IR.OperationObject;
   plugin: PluginInstance;
   queryFn: string;
   state: PluginState;
 }) => {
-  if (
-    !plugin.config.mutationOptions ||
-    (['get'] as ReadonlyArray<typeof operation.method>).includes(
-      operation.method,
-    )
-  ) {
+  if (!plugin.config.mutationOptions || !shouldGenerateMutation(operation, plugin)) {
     return state;
   }
-
-  const file = plugin.context.file({ id: plugin.name })!;
 
   if (!state.hasMutations) {
     state.hasMutations = true;
@@ -239,7 +266,7 @@ const createMutationOptions = ({
 
   state.hasUsedQueryFn = true;
 
-  const typeData = useTypeData({ operation, plugin });
+  const typeData = useTypeData({ file, operation, plugin });
 
   const identifierMutationOptions = file.identifier({
     $ref: `#/pinia-colada-mutation-options/${operation.id}`,
@@ -334,27 +361,64 @@ const createMutationOptions = ({
 };
 
 export const handler: PluginHandler = ({ plugin }) => {
-  const file = plugin.createFile({
-    case: plugin.config.case,
-    id: plugin.name,
-    path: plugin.output,
-  });
+  const filesMap = new Map<string, ReturnType<typeof plugin.createFile>>();
+  const stateMap = new Map<string, PluginState>();
 
-  const state: PluginState = {
-    hasMutations: false,
-    hasQueries: false,
-    hasUsedQueryFn: false,
+  // Helper to get or create file for an operation
+  const getFileForOperation = (operation: IR.OperationObject) => {
+    if (!plugin.config.groupByTag) {
+      // Single file mode
+      const fileId = plugin.name;
+      if (!filesMap.has(fileId)) {
+        const file = plugin.createFile({
+          case: plugin.config.case,
+          id: fileId,
+          path: plugin.output,
+        });
+        filesMap.set(fileId, file);
+        stateMap.set(fileId, {
+          hasMutations: false,
+          hasQueries: false,
+          hasUsedQueryFn: false,
+        });
+        // Import Options type from SDK
+        file.import({
+          ...clientApi.Options,
+          module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
+        });
+      }
+      return { file: filesMap.get(fileId)!, state: stateMap.get(fileId)! };
+    }
+
+    // Group by tag mode
+    const tag = operation.tags?.[0] || 'default';
+    const fileId = `${plugin.name}/${tag}`;
+    
+    if (!filesMap.has(fileId)) {
+      const file = plugin.createFile({
+        case: plugin.config.case,
+        id: fileId,
+        path: `${plugin.output}/${tag}`,
+      });
+      filesMap.set(fileId, file);
+      stateMap.set(fileId, {
+        hasMutations: false,
+        hasQueries: false,
+        hasUsedQueryFn: false,
+      });
+      // Import Options type from SDK
+      file.import({
+        ...clientApi.Options,
+        module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
+      });
+    }
+    return { file: filesMap.get(fileId)!, state: stateMap.get(fileId)! };
   };
-
-  // Import Options type from SDK
-  file.import({
-    ...clientApi.Options,
-    module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
-  });
 
   plugin.forEach(
     'operation',
     ({ operation }: { operation: IR.OperationObject }) => {
+      const { file, state } = getFileForOperation(operation);
       state.hasUsedQueryFn = false;
 
       const sdkPlugin = plugin.getPlugin('@hey-api/sdk');
@@ -392,6 +456,7 @@ export const handler: PluginHandler = ({ plugin }) => {
         ).join('.');
 
       createQueryOptions({
+        file,
         operation,
         plugin,
         queryFn,
@@ -399,6 +464,7 @@ export const handler: PluginHandler = ({ plugin }) => {
       });
 
       createMutationOptions({
+        file,
         operation,
         plugin,
         queryFn,
@@ -417,14 +483,36 @@ export const handler: PluginHandler = ({ plugin }) => {
     },
   );
 
-  if (state.hasQueries || state.hasMutations) {
-    file.import({
-      alias: '_heyApiClient',
-      module: file.relativePathToFile({
-        context: plugin.context,
-        id: clientId,
-      }),
-      name: 'client',
+  // Add client import to all files that need it
+  filesMap.forEach((file, fileId) => {
+    const state = stateMap.get(fileId)!;
+    if (state.hasQueries || state.hasMutations) {
+      file.import({
+        alias: '_heyApiClient',
+        module: file.relativePathToFile({
+          context: plugin.context,
+          id: clientId,
+        }),
+        name: 'client',
+      });
+    }
+  });
+
+  // If groupByTag is enabled, create an index file that re-exports all tag files
+  if (plugin.config.groupByTag && plugin.config.exportFromIndex) {
+    const indexFile = plugin.createFile({
+      case: plugin.config.case,
+      id: `${plugin.name}/index`,
+      path: `${plugin.output}/index`,
+    });
+
+    filesMap.forEach((file, fileId) => {
+      if (fileId !== plugin.name) {
+        const tag = fileId.split('/').pop()!;
+        indexFile.add(tsc.exportAllDeclaration({
+          module: `./${tag}`,
+        }));
+      }
     });
   }
 };

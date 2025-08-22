@@ -22,6 +22,36 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> & {
    */
   exportFromIndex?: boolean;
   /**
+   * Group generated files by OpenAPI tags. When enabled, operations will be organized
+   * into separate files based on their tags, allowing for better code organization
+   * and tree-shaking.
+   *
+   * @default false
+   */
+  groupByTag?: boolean;
+  /**
+   * Auto-detect whether to generate query or mutation based on HTTP method.
+   * - GET requests → query
+   * - POST/PUT/PATCH/DELETE → mutation
+   * Can be overridden per operation using the `operationTypes` option.
+   *
+   * @default true
+   */
+  autoDetectHttpMethod?: boolean;
+  /**
+   * Override the auto-detected operation type for specific operations.
+   * Useful for edge cases where the HTTP method doesn't match the intended behavior.
+   *
+   * @example
+   * ```typescript
+   * operationTypes: {
+   *   'getPetById': 'mutation', // Force GET to be a mutation
+   *   'deletePet': 'query',      // Force DELETE to be a query
+   * }
+   * ```
+   */
+  operationTypes?: Record<string, 'query' | 'mutation' | 'both'>;
+  /**
    * Configuration for generated mutation options helpers.
    *
    * Can be:
@@ -158,6 +188,28 @@ export type Config = Plugin.Name<'@pinia/colada'> & {
    * @default false
    */
   exportFromIndex: boolean;
+  /**
+   * Group generated files by OpenAPI tags. When enabled, operations will be organized
+   * into separate files based on their tags, allowing for better code organization
+   * and tree-shaking.
+   *
+   * @default false
+   */
+  groupByTag: boolean;
+  /**
+   * Auto-detect whether to generate query or mutation based on HTTP method.
+   * - GET requests → query
+   * - POST/PUT/PATCH/DELETE → mutation
+   * Can be overridden per operation using the `operationTypes` option.
+   *
+   * @default true
+   */
+  autoDetectHttpMethod: boolean;
+  /**
+   * Override the auto-detected operation type for specific operations.
+   * Useful for edge cases where the HTTP method doesn't match the intended behavior.
+   */
+  operationTypes: Record<string, 'query' | 'mutation' | 'both'>;
   /**
    * Resolved configuration for generated mutation options helpers.
    */
