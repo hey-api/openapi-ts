@@ -514,8 +514,8 @@ export const buildGraph = (
   eventBuildGraph.timeEnd();
 
   // functions creating data for debug scripts located in `debug-helpers/`
-  // const { maxChildren, maxDepth, totalNodes } = analyzeGraphStructure(graph);
-  // const nodesForViz = exportGraphForVisualization(graph);
+  // const { maxChildren, maxDepth, totalNodes } = debugTools.graph.analyzeStructure(graph);
+  // const nodesForViz = debugTools.graph.exportForVisualization(graph);
   // fs.writeFileSync('debug-helpers/graph.json', JSON.stringify(nodesForViz, null, 2));
 
   return { graph };

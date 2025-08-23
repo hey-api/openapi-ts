@@ -1,6 +1,6 @@
-import type { Graph } from './graph';
+import type { Graph } from '../openApi/shared/utils/graph';
 
-export const analyzeGraphStructure = (graph: Graph) => {
+const analyzeStructure = (graph: Graph) => {
   let maxDepth = 0;
   let maxChildren = 0;
 
@@ -26,7 +26,7 @@ export const analyzeGraphStructure = (graph: Graph) => {
   return { maxChildren, maxDepth, totalNodes };
 };
 
-export const exportGraphForVisualization = (graph: Graph) => {
+const exportForVisualization = (graph: Graph) => {
   const childrenMap = new Map<string, string[]>();
 
   for (const [pointer, nodeInfo] of graph.nodes) {
@@ -45,3 +45,8 @@ export const exportGraphForVisualization = (graph: Graph) => {
 
   return nodes;
 };
+
+export const graph = {
+  analyzeStructure,
+  exportForVisualization,
+} as const;
