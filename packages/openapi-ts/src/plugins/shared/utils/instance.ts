@@ -88,6 +88,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
             'requestBody',
             'schema',
             'server',
+            'webhook',
           ] as ReadonlyArray<WalkEventType>),
     );
 
@@ -164,6 +165,26 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
             operation: pathItem[method]!,
             path,
             type: 'operation',
+          };
+          try {
+            callback(event as WalkEvent<T>);
+          } catch (error) {
+            this.forEachError(error, event);
+          }
+        }
+      }
+    }
+
+    if (eventSet.has('webhook') && this.context.ir.webhooks) {
+      for (const key in this.context.ir.webhooks) {
+        const webhook = this.context.ir.webhooks[key];
+        for (const _method in webhook) {
+          const method = _method as keyof typeof webhook;
+          const event: WalkEvent<'webhook'> = {
+            key,
+            method,
+            operation: webhook[method]!,
+            type: 'webhook',
           };
           try {
             callback(event as WalkEvent<T>);

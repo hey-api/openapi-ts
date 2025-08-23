@@ -11,6 +11,7 @@ import { exportZodSchema } from '../export';
 import { getZodModule } from '../shared/module';
 import { operationToZodSchema } from '../shared/operation';
 import type { SchemaWithType, State, ZodSchema } from '../shared/types';
+import { webhookToZodSchema } from '../shared/webhook';
 import type { ZodPlugin } from '../types';
 
 const arrayTypeToZodSchema = ({
@@ -1105,38 +1106,58 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
     name: identifiers.z.text,
   });
 
-  plugin.forEach('operation', 'parameter', 'requestBody', 'schema', (event) => {
-    if (event.type === 'operation') {
-      operationToZodSchema({
-        getZodSchema: (schema) => {
-          const state: State = {
-            circularReferenceTracker: [],
-            currentReferenceTracker: [],
-            hasCircularReference: false,
-          };
-          return schemaToZodSchema({ plugin, schema, state });
-        },
-        operation: event.operation,
-        plugin,
-      });
-    } else if (event.type === 'parameter') {
-      handleComponent({
-        id: event.$ref,
-        plugin,
-        schema: event.parameter.schema,
-      });
-    } else if (event.type === 'requestBody') {
-      handleComponent({
-        id: event.$ref,
-        plugin,
-        schema: event.requestBody.schema,
-      });
-    } else if (event.type === 'schema') {
-      handleComponent({
-        id: event.$ref,
-        plugin,
-        schema: event.schema,
-      });
-    }
-  });
+  plugin.forEach(
+    'operation',
+    'parameter',
+    'requestBody',
+    'schema',
+    'webhook',
+    (event) => {
+      if (event.type === 'operation') {
+        operationToZodSchema({
+          getZodSchema: (schema) => {
+            const state: State = {
+              circularReferenceTracker: [],
+              currentReferenceTracker: [],
+              hasCircularReference: false,
+            };
+            return schemaToZodSchema({ plugin, schema, state });
+          },
+          operation: event.operation,
+          plugin,
+        });
+      } else if (event.type === 'parameter') {
+        handleComponent({
+          id: event.$ref,
+          plugin,
+          schema: event.parameter.schema,
+        });
+      } else if (event.type === 'requestBody') {
+        handleComponent({
+          id: event.$ref,
+          plugin,
+          schema: event.requestBody.schema,
+        });
+      } else if (event.type === 'schema') {
+        handleComponent({
+          id: event.$ref,
+          plugin,
+          schema: event.schema,
+        });
+      } else if (event.type === 'webhook') {
+        webhookToZodSchema({
+          getZodSchema: (schema) => {
+            const state: State = {
+              circularReferenceTracker: [],
+              currentReferenceTracker: [],
+              hasCircularReference: false,
+            };
+            return schemaToZodSchema({ plugin, schema, state });
+          },
+          operation: event.operation,
+          plugin,
+        });
+      }
+    },
+  );
 };

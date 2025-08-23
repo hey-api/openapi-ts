@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import type { IR } from '../../../../ir/types';
 import type { SecuritySchemeObject } from '../../types/spec';
-import { parseOperation } from '../operation';
+import { parsePathOperation } from '../operation';
 
-type ParseOperationProps = Parameters<typeof parseOperation>[0];
+type ParseOperationProps = Parameters<typeof parsePathOperation>[0];
 
 describe('operation', () => {
   const context = {
@@ -65,7 +65,7 @@ describe('operation', () => {
       ids: new Map<string, string>(),
     };
 
-    parseOperation({
+    parsePathOperation({
       context,
       method,
       operation,

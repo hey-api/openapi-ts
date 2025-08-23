@@ -208,10 +208,13 @@ type IRSecurityObject = SecuritySchemeObject;
 
 type IRServerObject = ServerObject;
 
+type IRWebhookObject = IRPathItemObject;
+
 interface IRModel {
   components?: IRComponentsObject;
   paths?: IRPathsObject;
   servers?: ReadonlyArray<IRServerObject>;
+  webhooks?: Record<string, IRWebhookObject>;
 }
 
 export namespace IR {
@@ -225,10 +228,12 @@ export namespace IR {
   export type ParametersObject = IRParametersObject;
   export type PathItemObject = IRPathItemObject;
   export type PathsObject = IRPathsObject;
+  export type ReferenceObject = ReferenceObject;
   export type RequestBodyObject = IRRequestBodyObject;
   export type ResponseObject = IRResponseObject;
   export type ResponsesObject = IRResponsesObject;
   export type SchemaObject = IRSchemaObject;
   export type SecurityObject = IRSecurityObject;
   export type ServerObject = IRServerObject;
+  export type WebhookObject = IRWebhookObject;
 }

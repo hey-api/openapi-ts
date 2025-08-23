@@ -37,8 +37,8 @@ export default defineConfig(() => {
         // 'invalid',
         // 'openai.yaml',
         // 'full.yaml',
-        'opencode.yaml',
-        // 'validators-circular-ref.json',
+        // 'opencode.yaml',
+        'zoom-video-sdk.json',
       ),
       // https://registry.scalar.com/@lubos-heyapi-dev-team/apis/demo-api-scalar-galaxy/latest?format=json
       // path: 'scalar:@lubos-heyapi-dev-team/demo-api-scalar-galaxy',
@@ -145,13 +145,17 @@ export default defineConfig(() => {
         //   error: '他們_error_{{name}}',
         //   name: '你們_errors_{{name}}',
         // },
-        // name: '@hey-api/typescript',
+        name: '@hey-api/typescript',
         // requests: '我們_data_{{name}}',
         // responses: {
         //   name: '我_responses_{{name}}',
         //   response: '他_response_{{name}}',
         // },
         // tree: true,
+        webhooks: {
+          name: 'Webby{{name}}Hook',
+          payload: '{{name}}WebhookEvent',
+        },
       },
       {
         // asClass: true,
@@ -216,6 +220,9 @@ export default defineConfig(() => {
         responses: {
           // case: 'snake_case',
           name: 'z{{name}}TestResponse',
+        },
+        webhooks: {
+          name: 'q{{name}}CoolWebhook',
         },
       },
       {
