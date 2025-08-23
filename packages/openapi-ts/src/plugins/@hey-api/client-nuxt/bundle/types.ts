@@ -116,7 +116,7 @@ export interface ClientOptions {
   baseURL?: string;
 }
 
-type MethodFnBase = <
+type MethodFn = <
   TComposable extends Composable,
   ResT = unknown,
   TError = unknown,
@@ -125,7 +125,7 @@ type MethodFnBase = <
   options: Omit<RequestOptions<TComposable, ResT, DefaultT>, 'method'>,
 ) => RequestResult<TComposable, ResT, TError>;
 
-type MethodFnServerSentEvents = <
+type SseFn = <
   TComposable extends Composable,
   ResT = unknown,
   TError = unknown,
@@ -133,10 +133,6 @@ type MethodFnServerSentEvents = <
 >(
   options: Omit<RequestOptions<TComposable, ResT, DefaultT>, 'method'>,
 ) => Promise<ServerSentEventsResult<RequestResult<TComposable, ResT, TError>>>;
-
-type MethodFn = MethodFnBase & {
-  sse: MethodFnServerSentEvents;
-};
 
 type RequestFn = <
   TComposable extends Composable,
@@ -178,7 +174,7 @@ type BuildUrlFn = <TData extends Omit<TDataShape, 'headers'>>(
   options: BuildUrlOptions<TData>,
 ) => string;
 
-export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn>;
+export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn, SseFn>;
 
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 

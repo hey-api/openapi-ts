@@ -22,7 +22,7 @@ export type Options<TComposable extends Composable, TData extends TDataShape = T
  * Get events
  */
 export const eventSubscribe = <TComposable extends Composable, DefaultT extends EventSubscribeResponse = EventSubscribeResponse>(options: Options<TComposable, EventSubscribeData, EventSubscribeResponse, DefaultT>) => {
-    return (options.client ?? _heyApiClient).get.sse<TComposable, EventSubscribeResponse | DefaultT, unknown, DefaultT>({
+    return (options.client ?? _heyApiClient).sse.get<TComposable, EventSubscribeResponse | DefaultT, unknown, DefaultT>({
         url: '/event',
         ...options
     });

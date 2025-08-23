@@ -22,7 +22,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  * Get events
  */
 export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError>) => {
-    return (options?.client ?? _heyApiClient).get.sse<EventSubscribeResponses, unknown, ThrowOnError>({
+    return (options?.client ?? _heyApiClient).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({
         responseType: 'text',
         url: '/event',
         ...options
