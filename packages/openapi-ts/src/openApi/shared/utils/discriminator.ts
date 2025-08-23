@@ -3,6 +3,7 @@ import { refToName } from '../../../utils/ref';
 export const discriminatorValues = (
   $ref: string,
   mapping?: Record<string, string>,
+  shouldUseRefAsValue?: () => boolean,
 ): ReadonlyArray<string> => {
   const values: Array<string> = [];
 
@@ -12,7 +13,7 @@ export const discriminatorValues = (
     }
   }
 
-  if (!values.length) {
+  if (!values.length && (!shouldUseRefAsValue || shouldUseRefAsValue())) {
     return [refToName($ref)];
   }
 
