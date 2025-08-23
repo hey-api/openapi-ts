@@ -118,7 +118,7 @@ export type RequestResult<
         })
     >;
 
-type MethodFnBase = <
+type MethodFn = <
   TData = unknown,
   TError = unknown,
   ThrowOnError extends boolean = false,
@@ -126,17 +126,13 @@ type MethodFnBase = <
   options: Omit<RequestOptions<TData, ThrowOnError>, 'method'>,
 ) => RequestResult<TData, TError, ThrowOnError>;
 
-type MethodFnServerSentEvents = <
+type SseFn = <
   TData = unknown,
   TError = unknown,
   ThrowOnError extends boolean = false,
 >(
   options: Omit<RequestOptions<TData, ThrowOnError>, 'method'>,
 ) => Promise<ServerSentEventsResult<TData, TError>>;
-
-type MethodFn = MethodFnBase & {
-  sse: MethodFnServerSentEvents;
-};
 
 type RequestFn = <
   TData = unknown,
@@ -158,7 +154,13 @@ type BuildUrlFn = <
   options: Pick<TData, 'url'> & Omit<Options<TData>, 'axios'>,
 ) => string;
 
-export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
+export type Client = CoreClient<
+  RequestFn,
+  Config,
+  MethodFn,
+  BuildUrlFn,
+  SseFn
+> & {
   instance: AxiosInstance;
 };
 
