@@ -760,18 +760,17 @@ export const operationStatements = ({
     types.push(tsc.stringLiteral({ text: plugin.config.responseStyle }));
   }
 
-  const functionName = hasServerSentEvents
+  let functionName = hasServerSentEvents
     ? tsc.propertyAccessExpression({
-        expression: tsc.propertyAccessExpression({
-          expression: clientExpression,
-          name: tsc.identifier({ text: operation.method }),
-        }),
+        expression: clientExpression,
         name: tsc.identifier({ text: 'sse' }),
       })
-    : tsc.propertyAccessExpression({
-        expression: clientExpression,
-        name: tsc.identifier({ text: operation.method }),
-      });
+    : clientExpression;
+
+  functionName = tsc.propertyAccessExpression({
+    expression: functionName,
+    name: tsc.identifier({ text: operation.method }),
+  });
 
   statements.push(
     tsc.returnFunctionCall({
