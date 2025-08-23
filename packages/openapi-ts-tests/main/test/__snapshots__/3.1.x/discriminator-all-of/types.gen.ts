@@ -60,9 +60,7 @@ export type BazUnion = {
     baz?: string;
 };
 
-export type QuxExtend = FooUnion & {
-    id?: 'QuxExtend';
-};
+export type QuxExtend = FooUnion;
 
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
