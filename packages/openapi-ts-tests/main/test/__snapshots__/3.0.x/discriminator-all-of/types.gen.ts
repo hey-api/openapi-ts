@@ -44,6 +44,26 @@ export type QuxMapped = FooMapped & {
     qux?: boolean;
 };
 
+export type FooUnion = ({
+    id: 'bar';
+} & BarUnion) | ({
+    id: 'baz';
+} & BazUnion);
+
+export type BarUnion = {
+    id?: string;
+    bar?: string;
+};
+
+export type BazUnion = {
+    id?: string;
+    baz?: string;
+};
+
+export type QuxExtend = FooUnion & {
+    id?: 'QuxExtend';
+};
+
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
