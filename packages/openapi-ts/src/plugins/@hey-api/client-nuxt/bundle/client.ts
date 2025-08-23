@@ -7,6 +7,7 @@ import {
 import { reactive, ref, watch } from 'vue';
 
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
+import type { HttpMethod } from '../../client-core/bundle/types';
 import type { Client, Config, RequestOptions } from './types';
 import {
   buildUrl,
@@ -180,9 +181,12 @@ export const createClient = (config: Config = {}): Client => {
     return undefined as any;
   };
 
-  const makeMethod = (method: Required<Config>['method']) => {
-    const fn = (options: RequestOptions) => request({ ...options, method });
-    fn.sse = async (options: RequestOptions) => {
+  const makeMethodFn =
+    (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
+      request({ ...options, method });
+
+  const makeSseFn =
+    (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
       const { opts, url } = await beforeRequest(options);
       return createSseClient({
         ...unwrapRefs(opts),
@@ -192,22 +196,31 @@ export const createClient = (config: Config = {}): Client => {
         url,
       });
     };
-    return fn;
-  };
 
   return {
     buildUrl,
-    connect: makeMethod('CONNECT'),
-    delete: makeMethod('DELETE'),
-    get: makeMethod('GET'),
+    connect: makeMethodFn('CONNECT'),
+    delete: makeMethodFn('DELETE'),
+    get: makeMethodFn('GET'),
     getConfig,
-    head: makeMethod('HEAD'),
-    options: makeMethod('OPTIONS'),
-    patch: makeMethod('PATCH'),
-    post: makeMethod('POST'),
-    put: makeMethod('PUT'),
+    head: makeMethodFn('HEAD'),
+    options: makeMethodFn('OPTIONS'),
+    patch: makeMethodFn('PATCH'),
+    post: makeMethodFn('POST'),
+    put: makeMethodFn('PUT'),
     request,
     setConfig,
-    trace: makeMethod('TRACE'),
+    sse: {
+      connect: makeSseFn('CONNECT'),
+      delete: makeSseFn('DELETE'),
+      get: makeSseFn('GET'),
+      head: makeSseFn('HEAD'),
+      options: makeSseFn('OPTIONS'),
+      patch: makeSseFn('PATCH'),
+      post: makeSseFn('POST'),
+      put: makeSseFn('PUT'),
+      trace: makeSseFn('TRACE'),
+    },
+    trace: makeMethodFn('TRACE'),
   } as Client;
 };
