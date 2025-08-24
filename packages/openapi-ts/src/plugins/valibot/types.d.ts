@@ -141,6 +141,42 @@ export type UserConfig = Plugin.Name<'valibot'> & {
          */
         name?: StringName;
       };
+  /**
+   * Configuration for webhook-specific Valibot schemas.
+   *
+   * Controls generation of Valibot schemas for webhook payloads.
+   *
+   * Can be:
+   * - `boolean`: Shorthand for `{ enabled: boolean }`
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
+   * - `object`: Full configuration object
+   *
+   * @default true
+   */
+  webhooks?:
+    | boolean
+    | StringName
+    | {
+        /**
+         * The casing convention to use for generated names.
+         *
+         * @default 'camelCase'
+         */
+        case?: StringCase;
+        /**
+         * Whether to generate Valibot schemas for webhook definitions.
+         *
+         * @default true
+         */
+        enabled?: boolean;
+        /**
+         * Custom naming pattern for generated schema names. The name variable
+         * is obtained from the webhook key.
+         *
+         * @default 'v{{name}}WebhookRequest'
+         */
+        name?: StringName;
+      };
 };
 
 export type Config = Plugin.Name<'valibot'> & {
@@ -255,6 +291,32 @@ export type Config = Plugin.Name<'valibot'> & {
      * obtained from the operation name.
      *
      * @default 'v{{name}}Response'
+     */
+    name: StringName;
+  };
+  /**
+   * Configuration for webhook-specific Valibot schemas.
+   *
+   * Controls generation of Valibot schemas for webhook payloads.
+   */
+  webhooks: {
+    /**
+     * The casing convention to use for generated names.
+     *
+     * @default 'camelCase'
+     */
+    case: StringCase;
+    /**
+     * Whether to generate Valibot schemas for webhook definitions.
+     *
+     * @default true
+     */
+    enabled: boolean;
+    /**
+     * Custom naming pattern for generated schema names. The name variable
+     * is obtained from the webhook key.
+     *
+     * @default 'v{{name}}WebhookRequest'
      */
     name: StringName;
   };

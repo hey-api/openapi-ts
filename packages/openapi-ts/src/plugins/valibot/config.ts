@@ -56,6 +56,20 @@ export const defaultConfig: ValibotPlugin['Config'] = {
       },
       value: plugin.config.responses,
     });
+
+    plugin.config.webhooks = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: 'v{{name}}WebhookRequest',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.webhooks,
+    });
   },
   tags: ['validator'],
 };

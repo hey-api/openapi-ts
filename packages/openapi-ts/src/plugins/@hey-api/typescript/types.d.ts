@@ -198,6 +198,41 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> & {
          */
         response?: StringName;
       };
+  /**
+   * Configuration for webhook-specific types.
+   *
+   * Controls generation of types for webhook payloads and webhook requests.
+   *
+   * Can be:
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
+   * - `object`: Full configuration object
+   *
+   * @default '{{name}}WebhookRequest'
+   */
+  webhooks?:
+    | StringName
+    | {
+        /**
+         * The casing convention to use for generated webhook type names.
+         *
+         * @default 'PascalCase'
+         */
+        case?: StringCase;
+        /**
+         * Custom naming pattern for generated webhook type names. The name
+         * variable is obtained from the webhook key.
+         *
+         * @default '{{name}}WebhookRequest'
+         */
+        name?: StringName;
+        /**
+         * Custom naming pattern for generated webhook type names. The name
+         * variable is obtained from the webhook key.
+         *
+         * @default '{{name}}WebhookPayload'
+         */
+        payload?: StringName;
+      };
 
   // DEPRECATED OPTIONS BELOW
 
@@ -391,6 +426,33 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
      * @default '{{name}}Response'
      */
     response: StringName;
+  };
+  /**
+   * Configuration for webhook-specific types.
+   *
+   * Controls generation of types for webhook payloads and webhook requests.
+   */
+  webhooks: {
+    /**
+     * The casing convention to use for generated webhook type names.
+     *
+     * @default 'PascalCase'
+     */
+    case: StringCase;
+    /**
+     * Custom naming pattern for generated webhook type names. The name
+     * variable is obtained from the webhook key.
+     *
+     * @default '{{name}}WebhookRequest'
+     */
+    name: StringName;
+    /**
+     * Custom naming pattern for generated webhook type names. The name
+     * variable is obtained from the webhook key.
+     *
+     * @default '{{name}}WebhookPayload'
+     */
+    payload: StringName;
   };
 
   // DEPRECATED OPTIONS BELOW
