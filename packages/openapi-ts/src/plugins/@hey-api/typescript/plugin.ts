@@ -15,6 +15,8 @@ import { createClientOptions } from './clientOptions';
 import { operationToType } from './operation';
 import { typesId } from './ref';
 import type { HeyApiTypeScriptPlugin, PluginState } from './types';
+import { webhookToType } from './webhook';
+import { createWebhooks } from './webhooks';
 
 export type OnRef = (id: string) => void;
 
@@ -677,8 +679,23 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
       name: clientOptionsName,
     },
   );
+  // reserve identifier for Webhooks
+  const webhooksName = buildName({
+    config: {
+      case: plugin.config.case,
+    },
+    name: 'Webhooks',
+  });
+  const webhooksNodeInfo = file.updateNode(
+    plugin.api.getId({ type: 'Webhooks' }),
+    {
+      exported: true,
+      name: webhooksName,
+    },
+  );
 
   const servers: Array<IR.ServerObject> = [];
+  const webhookNames: Array<string> = [];
 
   plugin.forEach(
     'operation',
@@ -686,6 +703,7 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
     'requestBody',
     'schema',
     'server',
+    'webhook',
     (event) => {
       if (event.type === 'operation') {
         operationToType({ operation: event.operation, plugin, state });
@@ -712,6 +730,13 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
         });
       } else if (event.type === 'server') {
         servers.push(event.server);
+      } else if (event.type === 'webhook') {
+        const webhookName = webhookToType({
+          operation: event.operation,
+          plugin,
+          state,
+        });
+        webhookNames.push(webhookName);
       }
     },
   );
@@ -765,4 +790,5 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   }
 
   createClientOptions({ nodeInfo: clientOptionsNodeInfo, plugin, servers });
+  createWebhooks({ nodeInfo: webhooksNodeInfo, plugin, webhookNames });
 };

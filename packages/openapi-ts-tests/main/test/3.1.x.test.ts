@@ -890,6 +890,14 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'client with SSE (Nuxt)',
     },
+    {
+      config: createConfig({
+        input: 'zoom-video-sdk.json',
+        output: 'webhooks',
+        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
+      }),
+      description: 'webhook types and validator schemas',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

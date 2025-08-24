@@ -103,7 +103,13 @@ const createResponseValidator = ({
 type GetIdArgs =
   | {
       operation: IR.OperationObject;
-      type: 'data' | 'responses' | 'type-infer-data' | 'type-infer-responses';
+      type:
+        | 'data'
+        | 'responses'
+        | 'type-infer-data'
+        | 'type-infer-responses'
+        | 'type-infer-webhook-request'
+        | 'webhook-request';
     }
   | {
       type: 'ref' | 'type-infer-ref';
@@ -116,6 +122,8 @@ const getId = (args: GetIdArgs): string => {
     case 'responses':
     case 'type-infer-data':
     case 'type-infer-responses':
+    case 'type-infer-webhook-request':
+    case 'webhook-request':
       return `${args.operation.id}-${args.type}`;
     case 'ref':
     case 'type-infer-ref':

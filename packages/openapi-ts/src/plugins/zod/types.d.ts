@@ -341,6 +341,83 @@ export type UserConfig = Plugin.Name<'zod'> & {
           enabled?: boolean;
         };
   };
+  /**
+   * Configuration for webhook-specific Zod schemas.
+   *
+   * Controls generation of Zod schemas for webhook payloads.
+   *
+   * Can be:
+   * - `boolean`: Shorthand for `{ enabled: boolean }`
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
+   * - `object`: Full configuration object
+   *
+   * @default true
+   */
+  webhooks?:
+    | boolean
+    | StringName
+    | {
+        /**
+         * The casing convention to use for generated names.
+         *
+         * @default 'camelCase'
+         */
+        case?: StringCase;
+        /**
+         * Whether to generate Zod schemas for webhook definitions.
+         *
+         * @default true
+         */
+        enabled?: boolean;
+        /**
+         * Custom naming pattern for generated schema names. The name variable
+         * is obtained from the webhook key.
+         *
+         * @default 'z{{name}}WebhookRequest'
+         */
+        name?: StringName;
+        /**
+         * Configuration for TypeScript type generation from Zod schemas.
+         *
+         * Controls generation of TypeScript types based on the generated Zod schemas.
+         */
+        types?: {
+          /**
+           * Configuration for `z.infer` types.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default false
+           */
+          infer?:
+            | boolean
+            | StringName
+            | {
+                /**
+                 * The casing convention to use for generated type names.
+                 *
+                 * @default 'PascalCase'
+                 */
+                case?: StringCase;
+                /**
+                 * Whether to generate TypeScript types from Zod schemas.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Custom naming pattern for generated type names. The name variable is
+                 * obtained from the Zod schema name.
+                 *
+                 * @default '{{name}}WebhookRequestZodType'
+                 */
+                name?: StringName;
+              };
+        };
+      };
 };
 
 export type Config = Plugin.Name<'zod'> & {
@@ -610,6 +687,63 @@ export type Config = Plugin.Name<'zod'> & {
        * @default true
        */
       enabled: boolean;
+    };
+  };
+  /**
+   * Configuration for webhook-specific Zod schemas.
+   *
+   * Controls generation of Zod schemas for webhook payloads.
+   */
+  webhooks: {
+    /**
+     * The casing convention to use for generated names.
+     *
+     * @default 'camelCase'
+     */
+    case: StringCase;
+    /**
+     * Whether to generate Zod schemas for webhook definitions.
+     *
+     * @default true
+     */
+    enabled: boolean;
+    /**
+     * Custom naming pattern for generated schema names. The name variable is
+     * is obtained from the webhook key.
+     *
+     * @default 'z{{name}}WebhookRequest'
+     */
+    name: StringName;
+    /**
+     * Configuration for TypeScript type generation from Zod schemas.
+     *
+     * Controls generation of TypeScript types based on the generated Zod schemas.
+     */
+    types: {
+      /**
+       * Configuration for `z.infer` types.
+       */
+      infer: {
+        /**
+         * The casing convention to use for generated type names.
+         *
+         * @default 'PascalCase'
+         */
+        case: StringCase;
+        /**
+         * Whether to generate TypeScript types from Zod schemas.
+         *
+         * @default true
+         */
+        enabled: boolean;
+        /**
+         * Custom naming pattern for generated type names. The name variable is
+         * obtained from the Zod schema name.
+         *
+         * @default '{{name}}WebhookRequestZodType'
+         */
+        name: StringName;
+      };
     };
   };
 };

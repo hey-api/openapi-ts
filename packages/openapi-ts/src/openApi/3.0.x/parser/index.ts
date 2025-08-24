@@ -19,7 +19,7 @@ import type {
   SecuritySchemeObject,
 } from '../types/spec';
 import { filterSpec } from './filter';
-import { parseOperation } from './operation';
+import { parsePathOperation } from './operation';
 import { parametersArrayToObject, parseParameter } from './parameter';
 import { parseRequestBody } from './requestBody';
 import { parseSchema } from './schema';
@@ -129,11 +129,11 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
       : pathItem;
 
     const operationArgs: Omit<
-      Parameters<typeof parseOperation>[0],
+      Parameters<typeof parsePathOperation>[0],
       'method' | 'operation'
     > & {
       operation: Omit<
-        Parameters<typeof parseOperation>[0]['operation'],
+        Parameters<typeof parsePathOperation>[0]['operation'],
         'responses'
       >;
     } = {
@@ -154,7 +154,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     };
 
     if (finalPathItem.delete) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'delete',
         operation: {
@@ -172,7 +172,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     if (finalPathItem.get) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'get',
         operation: {
@@ -190,7 +190,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     if (finalPathItem.head) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'head',
         operation: {
@@ -208,7 +208,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     if (finalPathItem.options) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'options',
         operation: {
@@ -226,7 +226,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     if (finalPathItem.patch) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'patch',
         operation: {
@@ -244,7 +244,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     if (finalPathItem.post) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'post',
         operation: {
@@ -262,7 +262,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     if (finalPathItem.put) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'put',
         operation: {
@@ -280,7 +280,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     if (finalPathItem.trace) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'trace',
         operation: {
