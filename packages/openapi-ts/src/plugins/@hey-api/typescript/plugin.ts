@@ -246,14 +246,41 @@ const objectTypeToIdentifier = ({
     }
   }
 
-  if (
-    schema.additionalProperties &&
-    (schema.additionalProperties.type !== 'never' || !indexPropertyItems.length)
-  ) {
-    if (schema.additionalProperties.type === 'never') {
-      indexPropertyItems = [schema.additionalProperties];
-    } else {
-      indexPropertyItems.unshift(schema.additionalProperties);
+  // include pattern value schemas into the index union
+  if (schema.patternProperties) {
+    for (const pattern in schema.patternProperties) {
+      const ir = schema.patternProperties[pattern]!;
+      indexPropertyItems.unshift(ir);
+    }
+  }
+
+  const hasPatterns =
+    !!schema.patternProperties &&
+    Object.keys(schema.patternProperties).length > 0;
+
+  const addPropsRaw = schema.additionalProperties;
+  const addPropsObj =
+    addPropsRaw !== false && addPropsRaw
+      ? (addPropsRaw as IR.SchemaObject)
+      : undefined;
+  const shouldCreateIndex =
+    hasPatterns ||
+    (!!addPropsObj &&
+      (addPropsObj.type !== 'never' || !indexPropertyItems.length));
+
+  if (shouldCreateIndex) {
+    // only inject additionalProperties when it’s not "never"
+    const addProps = addPropsObj;
+    if (addProps && addProps.type !== 'never') {
+      indexPropertyItems.unshift(addProps);
+    } else if (
+      !hasPatterns &&
+      !indexPropertyItems.length &&
+      addProps &&
+      addProps.type === 'never'
+    ) {
+      // keep "never" only when there are NO patterns and NO explicit properties
+      indexPropertyItems = [addProps];
     }
 
     if (hasOptionalProperties) {
@@ -265,18 +292,20 @@ const objectTypeToIdentifier = ({
     indexProperty = {
       isRequired: !schema.propertyNames,
       name: 'key',
-      type: schemaToType({
-        onRef,
-        plugin,
-        schema:
-          indexPropertyItems.length === 1
-            ? indexPropertyItems[0]!
-            : {
-                items: indexPropertyItems,
-                logicalOperator: 'or',
-              },
-        state,
-      }),
+      type:
+        indexPropertyItems.length === 1
+          ? schemaToType({
+              onRef,
+              plugin,
+              schema: indexPropertyItems[0]!,
+              state,
+            })
+          : schemaToType({
+              onRef,
+              plugin,
+              schema: { items: indexPropertyItems, logicalOperator: 'or' },
+              state,
+            }),
     };
 
     if (schema.propertyNames?.$ref) {
@@ -290,6 +319,8 @@ const objectTypeToIdentifier = ({
       }) as ts.TypeReferenceNode;
     }
   }
+
+  // removed duplicate legacy block
 
   return tsc.typeInterfaceNode({
     indexKey,

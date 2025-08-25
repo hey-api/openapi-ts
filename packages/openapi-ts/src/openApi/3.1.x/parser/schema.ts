@@ -295,7 +295,9 @@ const parseObject = ({
     const isEmptyObjectInAllOf =
       state.inAllOf &&
       schema.additionalProperties === false &&
-      (!schema.properties || Object.keys(schema.properties).length === 0);
+      (!schema.properties || Object.keys(schema.properties).length === 0) &&
+      (!schema.patternProperties ||
+        Object.keys(schema.patternProperties).length === 0);
 
     if (!isEmptyObjectInAllOf) {
       irSchema.additionalProperties = {
@@ -309,6 +311,24 @@ const parseObject = ({
       state,
     });
     irSchema.additionalProperties = irAdditionalPropertiesSchema;
+  }
+
+  if (schema.patternProperties) {
+    const patternProperties: Record<string, IR.SchemaObject> = {};
+
+    for (const pattern in schema.patternProperties) {
+      const patternSchema = schema.patternProperties[pattern]!;
+      const irPatternSchema = schemaToIrSchema({
+        context,
+        schema: patternSchema,
+        state,
+      });
+      patternProperties[pattern] = irPatternSchema;
+    }
+
+    if (Object.keys(patternProperties).length) {
+      irSchema.patternProperties = patternProperties;
+    }
   }
 
   if (schema.propertyNames) {
@@ -781,6 +801,16 @@ const parseOneOf = ({
   return irSchema;
 };
 
+const parsePatternProperties = ({
+  context,
+  schema,
+  state,
+}: {
+  context: IR.Context;
+  schema: SchemaWithRequired<SchemaObject, 'patternProperties'>;
+  state: SchemaState;
+}): IR.SchemaObject => parseObject({ context, schema, state });
+
 const parseRef = ({
   context,
   schema,
@@ -1060,6 +1090,14 @@ export const schemaToIrSchema = ({
     return parseOneOf({
       context,
       schema: schema as SchemaWithRequired<SchemaObject, 'oneOf'>,
+      state,
+    });
+  }
+
+  if (schema.patternProperties) {
+    return parsePatternProperties({
+      context,
+      schema: schema as SchemaWithRequired<SchemaObject, 'patternProperties'>,
       state,
     });
   }
