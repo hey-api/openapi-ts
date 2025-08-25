@@ -28,6 +28,8 @@ import type { HeyApiTransformersPlugin } from './@hey-api/transformers';
 import { defaultConfig as heyApiTransformers } from './@hey-api/transformers';
 import type { HeyApiTypeScriptPlugin } from './@hey-api/typescript';
 import { defaultConfig as heyApiTypeScript } from './@hey-api/typescript';
+import type { PiniaColadaPlugin } from './@pinia/colada';
+import { defaultConfig as piniaColada } from './@pinia/colada';
 import type { TanStackAngularQueryPlugin } from './@tanstack/angular-query-experimental';
 import { defaultConfig as tanStackAngularQuery } from './@tanstack/angular-query-experimental';
 import type { TanStackReactQueryPlugin } from './@tanstack/react-query';
@@ -57,6 +59,7 @@ export interface PluginConfigMap {
   '@hey-api/sdk': HeyApiSdkPlugin['Types'];
   '@hey-api/transformers': HeyApiTransformersPlugin['Types'];
   '@hey-api/typescript': HeyApiTypeScriptPlugin['Types'];
+  '@pinia/colada': PiniaColadaPlugin['Types'];
   '@tanstack/angular-query-experimental': TanStackAngularQueryPlugin['Types'];
   '@tanstack/react-query': TanStackReactQueryPlugin['Types'];
   '@tanstack/solid-query': TanStackSolidQueryPlugin['Types'];
@@ -85,6 +88,7 @@ export const defaultPluginConfigs: {
   '@hey-api/sdk': heyApiSdk,
   '@hey-api/transformers': heyApiTransformers,
   '@hey-api/typescript': heyApiTypeScript,
+  '@pinia/colada': piniaColada,
   '@tanstack/angular-query-experimental': tanStackAngularQuery,
   '@tanstack/react-query': tanStackReactQuery,
   '@tanstack/solid-query': tanStackSolidQuery,
