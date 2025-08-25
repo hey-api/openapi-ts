@@ -11,8 +11,6 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
     importPath: '@pinia/colada',
     includeTypes: true,
     prefixUse: true,
-    resolveQuery: undefined,
-    resolveQueryKey: undefined,
     suffixQueryMutation: true,
     useInfiniteQueries: false,
   },
@@ -20,82 +18,6 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
   handler: handler as PiniaColadaPlugin['Handler'],
   name: '@pinia/colada',
   output: '@pinia/colada',
-  resolveConfig: (plugin, context) => {
-    // plugin.config.infiniteQueryKeys = context.valueToObject({
-    //   defaultValue: {
-    //     case: plugin.config.case ?? 'camelCase',
-    //     enabled: true,
-    //     name: '{{name}}InfiniteQueryKey',
-    //     tags: false,
-    //   },
-    //   mappers: {
-    //     boolean: (enabled) => ({ enabled }),
-    //     function: (name) => ({ name }),
-    //     string: (name) => ({ name }),
-    //   },
-    //   value: plugin.config.infiniteQueryKeys,
-    // });
-
-    // plugin.config.infiniteQueryOptions = context.valueToObject({
-    //   defaultValue: {
-    //     case: plugin.config.case ?? 'camelCase',
-    //     enabled: true,
-    //     meta: false,
-    //     name: '{{name}}InfiniteOptions',
-    //   },
-    //   mappers: {
-    //     boolean: (enabled) => ({ enabled }),
-    //     function: (name) => ({ name }),
-    //     string: (name) => ({ name }),
-    //   },
-    //   value: plugin.config.infiniteQueryOptions,
-    // });
-
-    // plugin.config.mutationOptions = context.valueToObject({
-    //   defaultValue: {
-    //     case: plugin.config.case ?? 'camelCase',
-    //     enabled: true,
-    //     meta: false,
-    //     name: '{{name}}Mutation',
-    //   },
-    //   mappers: {
-    //     boolean: (enabled) => ({ enabled }),
-    //     function: (name) => ({ name }),
-    //     string: (name) => ({ name }),
-    //   },
-    //   value: plugin.config.mutationOptions,
-    // });
-
-    // plugin.config.queryKeys = context.valueToObject({
-    //   defaultValue: {
-    //     case: plugin.config.case ?? 'camelCase',
-    //     enabled: true,
-    //     name: '{{name}}QueryKey',
-    //     tags: false,
-    //   },
-    //   mappers: {
-    //     boolean: (enabled) => ({ enabled }),
-    //     function: (name) => ({ name }),
-    //     string: (name) => ({ name }),
-    //   },
-    //   value: plugin.config.queryKeys,
-    // });
-
-    // plugin.config.queryOptions = context.valueToObject({
-    //   defaultValue: {
-    //     case: plugin.config.case ?? 'camelCase',
-    //     enabled: true,
-    //     meta: false,
-    //     name: '{{name}}Options',
-    //   },
-    //   mappers: {
-    //     boolean: (enabled) => ({ enabled }),
-    //     function: (name) => ({ name }),
-    //     string: (name) => ({ name }),
-    //   },
-    //   value: plugin.config.queryOptions,
-    // });
-  },
 };
 
 /**

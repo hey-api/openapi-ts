@@ -41,9 +41,14 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
     if (isQuery(operation, plugin)) {
       createQueryFunction({ context: plugin.context, file, operation, plugin });
     } else {
-      createMutationFunction({ context: plugin.context, file, operation, plugin });
+      createMutationFunction({
+        context: plugin.context,
+        file,
+        operation,
+        plugin,
+      });
     }
-  })
+  });
 
   // Add client import to all generated files
   Object.entries(plugin.context.files).forEach(([fileId, file]) => {
@@ -51,7 +56,10 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
       // Make sure we have a client import
       file.import({
         alias: '_heyApiClient',
-        module: file.relativePathToFile({ context: plugin.context, id: clientId }),
+        module: file.relativePathToFile({
+          context: plugin.context,
+          id: clientId,
+        }),
         name: 'client',
       });
     }

@@ -2,20 +2,23 @@ import type { TypeNode } from 'typescript';
 
 import type { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
-import type { Property} from '../../../tsc';
+import type { Property } from '../../../tsc';
 import { tsc } from '../../../tsc';
 import { escapeComment } from '../../../utils/escape';
 import { stringCase } from '../../../utils/stringCase';
 import { irParametersToIrSchema } from '../../@hey-api/typescript/operation';
-import {
-  schemaToType,
-} from '../../@hey-api/typescript/plugin';
-import {
-  importIdentifierData,
-  importIdentifierError,
-  importIdentifierResponse,
-} from '../../@hey-api/typescript/ref';
+import { schemaToType } from '../../@hey-api/typescript/plugin';
 import type { PiniaColadaPlugin } from './types';
+
+const importIdentifierData = () => ({
+  name: '',
+});
+const importIdentifierError = () => ({
+  name: '',
+});
+const importIdentifierResponse = () => ({
+  name: '',
+});
 
 /**
  * Determines if an operation should be a query or mutation
@@ -182,7 +185,6 @@ function getParameterQualifiedName(name: ParamNames) {
  * Creates a composable function for an operation
  */
 export const createComposable = ({
-  context,
   file,
   isQuery,
   operation,
@@ -216,13 +218,9 @@ export const createComposable = ({
   ];
 
   // Get identifiers for data, response and error types
-  const identifierData = importIdentifierData({ context, file, operation });
-  const identifierResponse = importIdentifierResponse({
-    context,
-    file,
-    operation,
-  });
-  const identifierError = importIdentifierError({ context, file, operation });
+  const identifierData = importIdentifierData();
+  const identifierResponse = importIdentifierResponse();
+  const identifierError = importIdentifierError();
 
   /**
    * Creates a parameter for a composable function
