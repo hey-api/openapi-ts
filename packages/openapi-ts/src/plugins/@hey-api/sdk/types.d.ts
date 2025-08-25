@@ -64,6 +64,12 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> & {
    */
   exportFromIndex?: boolean;
   /**
+   * Group operations by operationId?
+   *
+   * @default false
+   */
+  groupByOperationId?: boolean;
+  /**
    * Include only service classes with names matching regular expression
    *
    * This option has no effect if `sdk.asClass` is `false`.
@@ -238,6 +244,12 @@ export type Config = Plugin.Name<'@hey-api/sdk'> & {
    * @default true
    */
   exportFromIndex: boolean;
+  /**
+   * Group operations by operationId?
+   *
+   * @default false
+   */
+  groupByOperationId?: boolean;
   /**
    * Include only service classes with names matching regular expression
    *
