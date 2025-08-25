@@ -523,7 +523,7 @@ for (const version of versions) {
       },
     ];
 
-    it.only.each(scenarios)('$description', async ({ config }) => {
+    it.each(scenarios)('$description', async ({ config }) => {
       await createClient(config);
 
       const outputPath =

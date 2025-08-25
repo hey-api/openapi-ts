@@ -18,7 +18,10 @@ export const createMutationFunction = ({
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
   // Allow hooks to customize or skip mutation generation
-  if (plugin.config.onMutation && plugin.config.onMutation(operation) === false) {
+  if (
+    plugin.config.onMutation &&
+    plugin.config.onMutation(operation) === false
+  ) {
     return;
   }
 
