@@ -1,7 +1,6 @@
-import type { TypeScriptFile } from '../../../generate/files';
+import type { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
-import type { Plugin } from '../../types';
-import type { Config } from './types';
+import type { PiniaColadaPlugin } from './types';
 import { createComposable } from './utils';
 
 /**
@@ -14,12 +13,11 @@ export const createQueryFunction = ({
   plugin,
 }: {
   context: IR.Context;
-  file: TypeScriptFile;
+  file: GeneratedFile;
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
+  plugin: PiniaColadaPlugin['Instance'];
 }) => {
-  // Allow hooks to customize or skip query generation
-  if (plugin?.onQuery && plugin.onQuery(operation) === false) {
+  if (plugin.config.onQuery && plugin.config.onQuery(operation) === false) {
     return;
   }
 

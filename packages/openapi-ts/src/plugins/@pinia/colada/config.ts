@@ -4,7 +4,6 @@ import type { PiniaColadaPlugin } from './types';
 
 export const defaultConfig: PiniaColadaPlugin['Config'] = {
   config: {
-    enableCaching: false,
     enablePaginationOnKey: undefined,
     errorHandling: 'specific',
     exportFromIndex: false,

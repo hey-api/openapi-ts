@@ -1,30 +1,31 @@
-import type { TypeNode } from '../../../compiler';
-import { compiler, type Property } from '../../../compiler';
-import type { TypeScriptFile } from '../../../generate/files';
+import type { TypeNode } from 'typescript';
+
+import type { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
+import type { Property} from '../../../tsc';
+import { tsc } from '../../../tsc';
 import { escapeComment } from '../../../utils/escape';
 import { stringCase } from '../../../utils/stringCase';
+import { irParametersToIrSchema } from '../../@hey-api/typescript/operation';
 import {
-  irParametersToIrSchema,
   schemaToType,
-} from '../../@hey-api/typescript/plugin.js';
+} from '../../@hey-api/typescript/plugin';
 import {
   importIdentifierData,
   importIdentifierError,
   importIdentifierResponse,
 } from '../../@hey-api/typescript/ref';
-import type { Plugin } from '../../types';
-import type { Config } from './types';
+import type { PiniaColadaPlugin } from './types';
 
 /**
  * Determines if an operation should be a query or mutation
  */
 export const isQuery = (
   operation: IR.OperationObject,
-  plugin: Plugin.Instance<Config>,
+  plugin: PiniaColadaPlugin['Instance'],
 ): boolean => {
   // 1. Check for hook override
-  const hookResult = plugin?.resolveQuery?.(operation);
+  const hookResult = plugin.config.resolveQuery?.(operation);
   if (hookResult !== undefined) {
     return hookResult;
   }
@@ -44,7 +45,7 @@ export const isQuery = (
  */
 export const generateCacheConfig = (
   operation: IR.OperationObject,
-  plugin: Plugin.Instance<Config>,
+  plugin: PiniaColadaPlugin['Instance'],
 ) => {
   const obj: Array<{
     key: string;
@@ -52,25 +53,25 @@ export const generateCacheConfig = (
   }> = [];
 
   // Use default stale time if specified in config
-  if (plugin.defaultStaleTime !== undefined) {
+  if (plugin.config.defaultStaleTime !== undefined) {
     obj.push({
       key: 'staleTime',
-      value: plugin.defaultStaleTime,
+      value: plugin.config.defaultStaleTime,
     });
   }
 
   // Use default cache time if specified in config
-  if (plugin.defaultCacheTime !== undefined) {
+  if (plugin.config.defaultCacheTime !== undefined) {
     obj.push({
       key: 'gcTime',
-      value: plugin.defaultCacheTime,
+      value: plugin.config.defaultCacheTime,
     });
   }
 
   // Add pagination config if enabled and operation has pagination parameters
   if (
-    plugin.enablePaginationOnKey &&
-    hasPagination(operation, plugin.enablePaginationOnKey)
+    plugin.config.enablePaginationOnKey &&
+    hasPagination(operation, plugin.config.enablePaginationOnKey)
   ) {
     obj.push({
       key: 'infinite',
@@ -137,13 +138,13 @@ function getNonPluralizedName<T extends ParamNames>(
 }
 type DataKeyNames = Exclude<ParamNames, 'cookies'>;
 function getDataSubType(identifier: string, dataKey: DataKeyNames) {
-  return compiler.indexedAccessTypeNode({
-    indexType: compiler.literalTypeNode({
-      literal: compiler.stringLiteral({
+  return tsc.indexedAccessTypeNode({
+    indexType: tsc.literalTypeNode({
+      literal: tsc.stringLiteral({
         text: dataKey,
       }),
     }),
-    objectType: compiler.typeReferenceNode({
+    objectType: tsc.typeReferenceNode({
       typeName: identifier,
     }),
   });
@@ -161,8 +162,8 @@ function createParameterConst(
   )
     return [];
   return [
-    compiler.constVariable({
-      expression: compiler.callExpression({
+    tsc.constVariable({
+      expression: tsc.callExpression({
         functionName: 'toRef',
         parameters: [getParameterQualifiedName(name)],
       }),
@@ -171,7 +172,7 @@ function createParameterConst(
   ];
 }
 function getParameterQualifiedName(name: ParamNames) {
-  return compiler.propertyAccessExpression({
+  return tsc.propertyAccessExpression({
     expression: 'params',
     isOptional: true,
     name,
@@ -188,10 +189,10 @@ export const createComposable = ({
   plugin,
 }: {
   context: IR.Context;
-  file: TypeScriptFile;
+  file: GeneratedFile;
   isQuery: boolean;
   operation: IR.OperationObject;
-  plugin: Plugin.Instance<Config>;
+  plugin: PiniaColadaPlugin['Instance'];
 }) => {
   // Import necessary functions and types
   file.import({
@@ -209,7 +210,7 @@ export const createComposable = ({
   });
 
   // Get query key from hooks or generate default
-  const queryKey = plugin?.resolveQueryKey?.(operation) ?? [
+  const queryKey = plugin.config.resolveQueryKey?.(operation) ?? [
     operation.tags?.[0] || 'default',
     operation.id,
   ];
@@ -229,7 +230,7 @@ export const createComposable = ({
   function createParameter(
     name: ParamNames,
     operation?: IR.OperationObject,
-  ): Property[] {
+  ): Array<Property> {
     const nonPluralizedName = getNonPluralizedName(name);
     if (nonPluralizedName === 'body' && !operation?.body?.schema) return [];
     if (
@@ -237,19 +238,18 @@ export const createComposable = ({
       !operation?.parameters?.[nonPluralizedName]
     )
       return [];
-    let type: TypeNode = compiler.keywordTypeNode({
-      keyword: 'unknown',
-    });
+    let type: TypeNode = tsc.keywordTypeNode({ keyword: 'unknown' });
     if (nonPluralizedName === 'cookie') {
       type =
         schemaToType({
-          context,
-          namespace: [],
+          onRef: undefined,
           plugin: plugin as any,
           schema: irParametersToIrSchema({
             parameters: operation?.parameters?.cookie || {},
           }),
-          state: undefined,
+          state: {
+            usedTypeIDs: new Set(),
+          },
         }) ?? type;
     } else if (name !== 'cookies') {
       type = identifierData.name
@@ -268,20 +268,20 @@ export const createComposable = ({
   );
 
   // Create the composable function
-  const node = compiler.constVariable({
+  const node = tsc.constVariable({
     comment: [
       operation.deprecated && '@deprecated',
       operation.summary && escapeComment(operation.summary),
       operation.description && escapeComment(operation.description),
     ].filter(Boolean),
     exportConst: true,
-    expression: compiler.arrowFunction({
+    expression: tsc.arrowFunction({
       async: true,
       parameters: [
         {
           isRequired: parameters.length > 0,
           name: 'params',
-          type: compiler.typeInterfaceNode({
+          type: tsc.typeInterfaceNode({
             properties: parameters,
             useLegacyResolution: true,
           }),
@@ -290,7 +290,7 @@ export const createComposable = ({
         {
           isRequired: false,
           name: 'options',
-          type: compiler.typeReferenceNode({
+          type: tsc.typeReferenceNode({
             typeName: isQuery
               ? `UseQueryOptions<${identifierResponse.name || 'unknown'}, ${identifierError.name || 'unknown'}, ${identifierData.name || 'unknown'}>`
               : `UseMutationOptions<${identifierResponse.name || 'unknown'}, ${identifierData.name || 'unknown'}, ${identifierError.name || 'unknown'}>`,
@@ -304,19 +304,19 @@ export const createComposable = ({
         ),
 
         // Create query/mutation result
-        compiler.constVariable({
-          expression: compiler.callExpression({
+        tsc.constVariable({
+          expression: tsc.callExpression({
             functionName: isQuery ? 'useQuery' : 'useMutation',
             parameters: [
-              compiler.objectExpression({
+              tsc.objectExpression({
                 obj: [
                   // Query/mutation function
                   {
                     key: isQuery ? 'query' : 'mutation',
-                    value: compiler.callExpression({
+                    value: tsc.callExpression({
                       functionName: '_heyApiClient',
                       parameters: [
-                        compiler.objectExpression({
+                        tsc.objectExpression({
                           obj: [
                             {
                               key: 'method',
@@ -346,9 +346,7 @@ export const createComposable = ({
                                     nonPluralizedName === 'body'
                                       ? 'data'
                                       : name,
-                                  value: compiler.identifier({
-                                    text: `${name}Ref`,
-                                  }),
+                                  value: tsc.identifier({ text: `${name}Ref` }),
                                 },
                               ];
                             }),
@@ -360,9 +358,9 @@ export const createComposable = ({
                   // Query key (optional for mutations)
                   {
                     key: 'key',
-                    value: compiler.arrayLiteralExpression({
+                    value: tsc.arrayLiteralExpression({
                       elements: [
-                        ...queryKey.map((k: string) => compiler.ots.string(k)),
+                        ...queryKey.map((k: string) => tsc.ots.string(k)),
                         // Add path params to query key if they exist
                         ...parametersPluralizedNames.flatMap((name) => {
                           const nonPluralizedName = getNonPluralizedName(name);
@@ -376,7 +374,7 @@ export const createComposable = ({
                             !operation?.parameters?.[nonPluralizedName]
                           )
                             return [];
-                          return [compiler.identifier({ text: `${name}Ref` })];
+                          return [tsc.identifier({ text: `${name}Ref` })];
                         }),
                       ],
                     }),
@@ -393,8 +391,8 @@ export const createComposable = ({
         }),
 
         // Return useQuery/useMutation call with reactive parameters
-        compiler.returnStatement({
-          expression: compiler.objectExpression({
+        tsc.returnStatement({
+          expression: tsc.objectExpression({
             obj: [
               // Spread the query/mutation result
               {
@@ -413,7 +411,7 @@ export const createComposable = ({
                 return [
                   {
                     key: name,
-                    value: compiler.identifier({ text: `${name}Ref` }),
+                    value: tsc.identifier({ text: `${name}Ref` }),
                   },
                 ];
               }),
@@ -425,8 +423,8 @@ export const createComposable = ({
     name: generateFunctionName(
       operation,
       isQuery,
-      plugin.prefixUse,
-      plugin.suffixQueryMutation,
+      plugin.config.prefixUse,
+      plugin.config.suffixQueryMutation,
     ),
   });
 

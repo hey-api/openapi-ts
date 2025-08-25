@@ -9,7 +9,8 @@ import { schemaToType } from './plugin';
 import { typesId } from './ref';
 import type { HeyApiTypeScriptPlugin, PluginState } from './types';
 
-const irParametersToIrSchema = ({
+// TODO: exported just for @pinia/colada, remove export once that plugin does not depend on it
+export const irParametersToIrSchema = ({
   parameters,
 }: {
   parameters: Record<string, IR.ParameterObject>;
