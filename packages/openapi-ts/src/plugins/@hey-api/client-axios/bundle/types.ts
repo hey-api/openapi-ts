@@ -9,6 +9,10 @@ import type {
 
 import type { Auth } from '../../client-core/bundle/auth';
 import type {
+  ServerSentEventsOptions,
+  ServerSentEventsResult,
+} from '../../client-core/bundle/serverSentEvents';
+import type {
   Client as CoreClient,
   Config as CoreConfig,
 } from '../../client-core/bundle/types';
@@ -54,11 +58,20 @@ export interface Config<T extends ClientOptions = ClientOptions>
 }
 
 export interface RequestOptions<
+  TData = unknown,
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
 > extends Config<{
-    throwOnError: ThrowOnError;
-  }> {
+      throwOnError: ThrowOnError;
+    }>,
+    Pick<
+      ServerSentEventsOptions<TData>,
+      | 'onSseError'
+      | 'onSseEvent'
+      | 'sseDefaultRetryDelay'
+      | 'sseMaxRetryAttempts'
+      | 'sseMaxRetryDelay'
+    > {
   /**
    * Any body that you want to add to your request.
    *
@@ -72,6 +85,11 @@ export interface RequestOptions<
    */
   security?: ReadonlyArray<Auth>;
   url: Url;
+}
+
+export interface ClientOptions {
+  baseURL?: string;
+  throwOnError?: boolean;
 }
 
 export type RequestResult<
@@ -98,26 +116,29 @@ export type RequestResult<
         })
     >;
 
-export interface ClientOptions {
-  baseURL?: string;
-  throwOnError?: boolean;
-}
-
 type MethodFn = <
   TData = unknown,
   TError = unknown,
   ThrowOnError extends boolean = false,
 >(
-  options: Omit<RequestOptions<ThrowOnError>, 'method'>,
+  options: Omit<RequestOptions<TData, ThrowOnError>, 'method'>,
 ) => RequestResult<TData, TError, ThrowOnError>;
+
+type SseFn = <
+  TData = unknown,
+  TError = unknown,
+  ThrowOnError extends boolean = false,
+>(
+  options: Omit<RequestOptions<TData, ThrowOnError>, 'method'>,
+) => Promise<ServerSentEventsResult<TData, TError>>;
 
 type RequestFn = <
   TData = unknown,
   TError = unknown,
   ThrowOnError extends boolean = false,
 >(
-  options: Omit<RequestOptions<ThrowOnError>, 'method'> &
-    Pick<Required<RequestOptions<ThrowOnError>>, 'method'>,
+  options: Omit<RequestOptions<TData, ThrowOnError>, 'method'> &
+    Pick<Required<RequestOptions<TData, ThrowOnError>>, 'method'>,
 ) => RequestResult<TData, TError, ThrowOnError>;
 
 type BuildUrlFn = <
@@ -131,7 +152,13 @@ type BuildUrlFn = <
   options: Pick<TData, 'url'> & Omit<Options<TData>, 'axios'>,
 ) => string;
 
-export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
+export type Client = CoreClient<
+  RequestFn,
+  Config,
+  MethodFn,
+  BuildUrlFn,
+  SseFn
+> & {
   instance: AxiosInstance;
 };
 
@@ -160,7 +187,11 @@ type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 export type Options<
   TData extends TDataShape = TDataShape,
   ThrowOnError extends boolean = boolean,
-> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> &
+  TResponse = unknown,
+> = OmitKeys<
+  RequestOptions<TResponse, ThrowOnError>,
+  'body' | 'path' | 'query' | 'url'
+> &
   Omit<TData, 'url'>;
 
 export type OptionsLegacyParser<
@@ -168,12 +199,16 @@ export type OptionsLegacyParser<
   ThrowOnError extends boolean = boolean,
 > = TData extends { body?: any }
   ? TData extends { headers?: any }
-    ? OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'headers' | 'url'> & TData
-    : OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'url'> &
+    ? OmitKeys<
+        RequestOptions<unknown, ThrowOnError>,
+        'body' | 'headers' | 'url'
+      > &
+        TData
+    : OmitKeys<RequestOptions<unknown, ThrowOnError>, 'body' | 'url'> &
         TData &
-        Pick<RequestOptions<ThrowOnError>, 'headers'>
+        Pick<RequestOptions<unknown, ThrowOnError>, 'headers'>
   : TData extends { headers?: any }
-    ? OmitKeys<RequestOptions<ThrowOnError>, 'headers' | 'url'> &
+    ? OmitKeys<RequestOptions<unknown, ThrowOnError>, 'headers' | 'url'> &
         TData &
-        Pick<RequestOptions<ThrowOnError>, 'body'>
-    : OmitKeys<RequestOptions<ThrowOnError>, 'url'> & TData;
+        Pick<RequestOptions<unknown, ThrowOnError>, 'body'>
+    : OmitKeys<RequestOptions<unknown, ThrowOnError>, 'url'> & TData;

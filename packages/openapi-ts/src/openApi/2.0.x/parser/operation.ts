@@ -340,7 +340,7 @@ const operationToIrOperation = ({
   return irOperation;
 };
 
-export const parseOperation = ({
+export const parsePathOperation = ({
   context,
   method,
   operation,
