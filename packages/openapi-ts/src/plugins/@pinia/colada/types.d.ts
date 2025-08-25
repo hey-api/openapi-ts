@@ -6,21 +6,15 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> & {
   /**
    * Default cache time for queries in milliseconds.
    *
-   * @default 300000
+   * @default undefined
    */
   defaultCacheTime?: number;
   /**
    * Default stale time for queries in milliseconds.
    *
-   * @default 0
+   * @default undefined
    */
   defaultStaleTime?: number;
-  /**
-   * Enable caching for queries.
-   *
-   * @default false
-   */
-  enableCaching?: boolean;
   /**
    * Enable pagination support on this key when found in the query parameters or body.
    *
@@ -118,21 +112,15 @@ export type Config = Plugin.Name<'@pinia/colada'> & {
   /**
    * Default cache time for queries in milliseconds.
    *
-   * @default 300000
+   * @default undefined
    */
-  defaultCacheTime?: number;
+  defaultCacheTime: number | undefined;
   /**
    * Default stale time for queries in milliseconds.
    *
-   * @default 0
+   * @default undefined
    */
-  defaultStaleTime?: number;
-  /**
-   * Enable caching for queries.
-   *
-   * @default false
-   */
-  enableCaching?: boolean;
+  defaultStaleTime: number | undefined;
   /**
    * Enable pagination support on this key when found in the query parameters or body.
    *
