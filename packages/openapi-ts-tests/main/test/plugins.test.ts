@@ -363,25 +363,15 @@ for (const version of versions) {
         description:
           'generate Fetch API client with TanStack Vue Query plugin with custom names',
       },
-      {
-        config: createConfig({
-          output: 'default',
-          plugins: ['@pinia/colada', '@hey-api/client-fetch'],
-        }),
-        description: 'generate with plugin Pinia Colada',
-      },
-      /* {
-        config: createConfig({
-          output: 'asFileSdk',
-          plugins: [
-            {
-              groupByTag: true,
-              name: '@pinia/colada',
-            },
-          ],
-        }),
-        description: 'generate with plugin Pinia Colada using file-based SDK',
-      }, */
+      // TODO: add Pinia Colada snapshots
+      // {
+      //   config: createConfig({
+      //     output: 'fetch',
+      //     plugins: ['@pinia/colada', '@hey-api/client-fetch'],
+      //   }),
+      //   description:
+      //     'generate Fetch API client with Pinia Colada plugin',
+      // },
       {
         config: createConfig({
           output: 'default',
