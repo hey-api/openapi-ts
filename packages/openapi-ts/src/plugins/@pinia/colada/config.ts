@@ -9,10 +9,8 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
     errorHandling: 'specific',
     exportFromIndex: false,
     groupByTag: false,
-    // importPath: PluginName,
+    importPath: '@pinia/colada',
     includeTypes: true,
-    // name: PluginName,
-    // output: PluginName,
     prefixUse: true,
     resolveQuery: undefined,
     resolveQueryKey: undefined,
@@ -21,8 +19,8 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
   },
   dependencies: ['@hey-api/typescript'],
   handler: handler as PiniaColadaPlugin['Handler'],
-  name: '@tanstack/react-query',
-  output: '@tanstack/react-query',
+  name: '@pinia/colada',
+  output: '@pinia/colada',
   resolveConfig: (plugin, context) => {
     // plugin.config.infiniteQueryKeys = context.valueToObject({
     //   defaultValue: {

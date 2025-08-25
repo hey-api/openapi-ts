@@ -61,48 +61,40 @@ type BaseConfig = {
   exportFromIndex?: boolean;
   name: AnyPluginName;
   output?: string;
-}
-
-interface Meta<Config extends BaseConfig> {
-  /**
-   * Dependency plugins will be always processed, regardless of whether user
-   * explicitly defines them in their `plugins` config.
-   */
-  _dependencies?: ReadonlyArray<AnyPluginName>;
-  /**
-   * Allows overriding config before it's sent to the parser. An example is
-   * defining `validator` as `true` and the plugin figures out which plugin
-   * should be used for validation.
-   */
-  _infer?: (
-    config: Config & Omit<Meta<Config>, '_infer'>,
-    context: PluginContext,
-  ) => void;
-  /**
-   * Optional tags can be used to help with deciding plugin order and inferring
-   * plugin configuration options.
-   */
-  _tags?: ReadonlyArray<PluginTag>;
-}
-
-export type DefaultPluginConfigs<T> = {
-  [K in PluginNames]: BaseConfig &
-    Meta<any> & {
-      _handler: Plugin.Handler<Required<Extract<T, { name: K }>>>;
-      _handlerLegacy?: Plugin.LegacyHandler<Required<Extract<T, { name: K }>>>;
-    };
 };
 
 /**
  * Public Plugin API.
  */
 export namespace Plugin {
-  export type Config<Config extends BaseConfig> = Config &
-    Meta<Config> & {
-      _handler: Plugin.Handler<Config>;
-      _handlerLegacy?: Plugin.LegacyHandler<Config>;
-      exportFromIndex?: boolean;
-    };
+  export type Config<T extends Types> = Pick<T, 'api'> & {
+    config: Omit<T['config'], 'name' | 'output'>;
+    /**
+     * Dependency plugins will be always processed, regardless of whether user
+     * explicitly defines them in their `plugins` config.
+     */
+    dependencies?: ReadonlyArray<AnyPluginName>;
+    handler: Handler<T>;
+    handlerLegacy?: LegacyHandler<T>;
+    name: T['config']['name'];
+    output: NonNullable<T['config']['output']>;
+    /**
+     * Resolves static configuration values into their runtime equivalents. For
+     * example, when `validator` is set to `true`, it figures out which plugin
+     * should be used for validation.
+     */
+    resolveConfig?: (
+      plugin: Omit<Plugin.Config<T>, 'dependencies'> & {
+        dependencies: Set<AnyPluginName>;
+      },
+      context: PluginContext,
+    ) => void;
+    /**
+     * Optional tags can be used to help with deciding plugin order and resolving
+     * plugin configuration options.
+     */
+    tags?: ReadonlyArray<PluginTag>;
+  };
 
   export type ConfigWithName<T extends Types> = Omit<Config<T>, 'config'> & {
     config: Omit<T['config'], 'output'>;
