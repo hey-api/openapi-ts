@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.81.2
+
+### Patch Changes
+
+- [#1680](https://github.com/hey-api/openapi-ts/pull/1680) [`9e4cc3d`](https://github.com/hey-api/openapi-ts/commit/9e4cc3df784999ead1691848a4db0b7238e45809) Thanks [@josh-hemphill](https://github.com/josh-hemphill)! - feat(plugin): add `@pinia/colada` plugin
+
 ## 0.81.1
 
 ### Patch Changes
