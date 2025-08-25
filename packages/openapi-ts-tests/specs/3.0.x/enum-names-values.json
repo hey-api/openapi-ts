@@ -1,0 +1,36 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "OpenAPI 3.0.2 enum names values example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "1-10": {
+        "enum": ["1-10", "11-20"],
+        "type": "string"
+      },
+      "myFoo": {
+        "enum": ["myFoo", "myBar"],
+        "type": "string"
+      },
+      "MyFoo": {
+        "enum": ["MyFoo", "MyBar"],
+        "type": "string"
+      },
+      "Foo": {
+        "enum": ["foo", "bar", null, "", true, false],
+        "nullable": true,
+        "type": "string"
+      },
+      "Numbers": {
+        "enum": [100, 200, 300, -100, -200, -300],
+        "type": "number"
+      },
+      "Arrays": {
+        "enum": [["foo"], ["bar"], ["baz"]],
+        "type": "array"
+      }
+    }
+  }
+}

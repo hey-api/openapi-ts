@@ -1,18 +1,17 @@
 import type ts from 'typescript';
 
-import { compiler } from '../../../compiler';
-import { getOperationKey } from '../../../openApi/common/parser/operation';
+import { createOperationKey } from '../../../ir/operation';
+import { tsc } from '../../../tsc';
 import type { ModelMeta, OperationResponse } from '../../../types/client';
 import { getConfig } from '../../../utils/config';
 import { isModelDate, unsetUniqueTypeName } from '../../../utils/type';
-import type { Plugin } from '../../types';
 import {
   modelResponseTransformerTypeName,
   operationResponseTransformerTypeName,
   operationResponseTypeName,
 } from '../sdk/plugin-legacy';
 import { generateType, type TypesProps } from '../typescript/plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiTransformersPlugin } from './types';
 
 interface ModelProps extends TypesProps {
   meta?: ModelMeta;
@@ -93,7 +92,7 @@ const processArray = (props: ModelProps) => {
     }
 
     return [
-      compiler.transformArrayMutation({
+      tsc.transformArrayMutation({
         path: props.path,
         transformerName: nameModelResponseTransformer,
       }),
@@ -108,12 +107,12 @@ const processArray = (props: ModelProps) => {
       model.link.properties.find((property) => isModelDate(property)))
   ) {
     return [
-      compiler.transformArrayMap({
+      tsc.transformArrayMap({
         path: props.path,
-        transformExpression: compiler.conditionalExpression({
-          condition: compiler.identifier({ text: 'item' }),
-          whenFalse: compiler.identifier({ text: 'item' }),
-          whenTrue: compiler.transformNewDate({
+        transformExpression: tsc.conditionalExpression({
+          condition: tsc.identifier({ text: 'item' }),
+          whenFalse: tsc.identifier({ text: 'item' }),
+          whenTrue: tsc.transformNewDate({
             parameterName: 'item',
           }),
         }),
@@ -134,7 +133,7 @@ const processProperty = (props: ModelProps) => {
     model.export !== 'array' &&
     isModelDate(model)
   ) {
-    return [compiler.transformDateMutation({ path })];
+    return [tsc.transformDateMutation({ path })];
   }
 
   // otherwise we recurse in case it's an object/array, and if it's not that will just bail with []
@@ -173,14 +172,14 @@ const processModel = (props: ModelProps): ts.Statement[] => {
 
       return model.in === 'response'
         ? [
-            compiler.expressionToStatement({
-              expression: compiler.callExpression({
+            tsc.expressionToStatement({
+              expression: tsc.callExpression({
                 functionName: nameModelResponseTransformer,
                 parameters: [dataVariableName],
               }),
             }),
           ]
-        : compiler.transformFunctionMutation({
+        : tsc.transformFunctionMutation({
             path: props.path,
             transformerName: nameModelResponseTransformer,
           });
@@ -219,7 +218,7 @@ const generateResponseTransformer = ({
     return result;
   }
 
-  const expression = compiler.arrowFunction({
+  const expression = tsc.arrowFunction({
     async,
     multiLine: true,
     parameters: [
@@ -229,12 +228,12 @@ const generateResponseTransformer = ({
     ],
     statements: [
       ...statements,
-      compiler.returnVariable({
+      tsc.returnVariable({
         expression: dataVariableName,
       }),
     ],
   });
-  const statement = compiler.constVariable({
+  const statement = tsc.constVariable({
     exportConst: true,
     expression,
     name,
@@ -249,7 +248,7 @@ const generateResponseTransformer = ({
 };
 
 // handles only response transformers for now
-export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
+export const handlerLegacy: HeyApiTransformersPlugin['LegacyHandler'] = ({
   client,
   files,
 }) => {
@@ -259,7 +258,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
     files.types?.add(node);
   };
   const onRemoveNode: TypesProps['onRemoveNode'] = () => {
-    files.types?.removeNode();
+    files.types?.removeNode_LEGACY();
   };
 
   for (const service of client.services) {
@@ -283,7 +282,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
       if (nonVoidResponses.length > 1) {
         if (config.logs.level === 'debug') {
           console.warn(
-            `❗️ Transformers warning: route ${getOperationKey(operation)} has ${nonVoidResponses.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
+            `❗️ Transformers warning: route ${createOperationKey(operation)} has ${nonVoidResponses.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
           );
         }
         continue;
@@ -319,9 +318,9 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
                   }
 
                   return [
-                    compiler.ifStatement({
-                      expression: compiler.safeAccessExpression(['data']),
-                      thenStatement: compiler.block({ statements }),
+                    tsc.ifStatement({
+                      expression: tsc.safeAccessExpression(['data']),
+                      thenStatement: tsc.block({ statements }),
                     }),
                   ];
                 })

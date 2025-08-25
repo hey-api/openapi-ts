@@ -1,5 +1,25 @@
 # @hey-api/nuxt
 
+## 0.2.0
+
+### Minor Changes
+
+- [#2175](https://github.com/hey-api/openapi-ts/pull/2175) [`6d56fa8`](https://github.com/hey-api/openapi-ts/commit/6d56fa8d80fd02c67746324b8edd6d008f788d67) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: remove `@hey-api/client-nuxt` dependency
+
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [[`96cd12c`](https://github.com/hey-api/openapi-ts/commit/96cd12c87ca11a396e0df47771ceb1f9f20860d7)]:
+  - @hey-api/client-nuxt@0.4.2
+
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [[`565e0b8`](https://github.com/hey-api/openapi-ts/commit/565e0b89fbab4556ecdc63dfe08250942681140e)]:
+  - @hey-api/client-nuxt@0.4.1
+
 ## 0.1.5
 
 ### Patch Changes

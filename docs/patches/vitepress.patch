@@ -1,0 +1,288 @@
+diff --git a/dist/client/shared.js b/dist/client/shared.js
+index f65eb22fe2b0dfeb9bd823c00c737f5035f2c891..16a45edcf11b71881b31f1203add291a2c447d22 100644
+--- a/dist/client/shared.js
++++ b/dist/client/shared.js
+@@ -16,6 +16,7 @@ export const notFoundPageData = {
+     lastUpdated: 0,
+     isNotFound: true
+ };
++const versionedPaths = ['clients', 'plugins'];
+ export function isActive(currentPath, matchPath, asRegex = false) {
+     if (matchPath === undefined) {
+         return false;
+@@ -24,8 +25,19 @@ export function isActive(currentPath, matchPath, asRegex = false) {
+     if (asRegex) {
+         return new RegExp(matchPath).test(currentPath);
+     }
+-    if (normalize(matchPath) !== currentPath) {
+-        return false;
++    const normalizedMatchPath = normalize(matchPath);
++    if (normalizedMatchPath !== currentPath) {
++        const currentPathParts = currentPath.split('/');
++        if (currentPathParts.length > 3 &&
++            versionedPaths.some((entry) => entry === currentPathParts[2])) {
++            currentPath = currentPathParts.slice(0, 4).join('/');
++            if (normalizedMatchPath !== currentPath) {
++                return false;
++            }
++        }
++        else {
++            return false;
++        }
+     }
+     const hashMatch = matchPath.match(HASH_RE);
+     if (hashMatch) {
+diff --git a/dist/node/chunk-CwUP9ZhX.js b/dist/node/chunk-CwUP9ZhX.js
+index e8b4954d00f247fb852096bb1f8f077fcfc1f93f..8db594d1bdaac76359656a95ac96cd98161b1062 100644
+--- a/dist/node/chunk-CwUP9ZhX.js
++++ b/dist/node/chunk-CwUP9ZhX.js
+@@ -2053,7 +2053,7 @@ function requireBrowser () {
+ 			} catch (error) {
+ 				return '[UnexpectedJSONParseError]: ' + error.message;
+ 			}
+-		}; 
++		};
+ 	} (browser, browser.exports));
+ 	return browser.exports;
+ }
+@@ -2328,7 +2328,7 @@ function requireNode () {
+ 		formatters.O = function (v) {
+ 			this.inspectOpts.colors = this.useColors;
+ 			return util.inspect(v, this.inspectOpts);
+-		}; 
++		};
+ 	} (node, node.exports));
+ 	return node.exports;
+ }
+@@ -3522,7 +3522,7 @@ function requireFs () {
+ 		    'fs.realpath.native is not a function. Is fs being monkey-patched?',
+ 		    'Warning', 'fs-extra-WARN0003'
+ 		  );
+-		} 
++		}
+ 	} (fs$1));
+ 	return fs$1;
+ }
+@@ -6185,7 +6185,7 @@ class AST {
+                         const aps = addPatternStart;
+                         // check if we have a possibility of matching . or ..,
+                         // and prevent that.
+-                        const needNoTrav = 
++                        const needNoTrav =
+                         // dots are allowed, and the pattern starts with [ or .
+                         (dot && aps.has(src.charAt(0))) ||
+                             // the pattern starts with \., and then [ or .
+@@ -8616,11 +8616,11 @@ class LRUCache {
+             b.__abortController instanceof AC);
+     }
+     async fetch(k, fetchOptions = {}) {
+-        const { 
++        const {
+         // get options
+-        allowStale = this.allowStale, updateAgeOnGet = this.updateAgeOnGet, noDeleteOnStaleGet = this.noDeleteOnStaleGet, 
++        allowStale = this.allowStale, updateAgeOnGet = this.updateAgeOnGet, noDeleteOnStaleGet = this.noDeleteOnStaleGet,
+         // set options
+-        ttl = this.ttl, noDisposeOnSet = this.noDisposeOnSet, size = 0, sizeCalculation = this.sizeCalculation, noUpdateTTL = this.noUpdateTTL, 
++        ttl = this.ttl, noDisposeOnSet = this.noDisposeOnSet, size = 0, sizeCalculation = this.sizeCalculation, noUpdateTTL = this.noUpdateTTL,
+         // fetch exclusive options
+         noDeleteOnFetchRejection = this.noDeleteOnFetchRejection, allowStaleOnFetchRejection = this.allowStaleOnFetchRejection, ignoreFetchAbort = this.ignoreFetchAbort, allowStaleOnFetchAbort = this.allowStaleOnFetchAbort, context, forceRefresh = false, status, signal, } = fetchOptions;
+         if (!this.#hasFetchMethod) {
+@@ -14468,7 +14468,7 @@ function requireUtils$4 () {
+ 		  }
+ 
+ 		  return last;
+-		}; 
++		};
+ 	} (utils$5));
+ 	return utils$5;
+ }
+@@ -17226,7 +17226,7 @@ function requireDist$1 () {
+ 		exports.fdir = void 0;
+ 		const builder_1 = requireBuilder();
+ 		Object.defineProperty(exports, "fdir", { enumerable: true, get: function () { return builder_1.Builder; } });
+-		__exportStar(requireTypes$1(), exports); 
++		__exportStar(requireTypes$1(), exports);
+ 	} (dist$1));
+ 	return dist$1;
+ }
+@@ -18267,6 +18267,7 @@ const notFoundPageData = {
+   lastUpdated: 0,
+   isNotFound: true
+ };
++const versionedPaths = ["clients", "plugins"];
+ function isActive(currentPath, matchPath, asRegex = false) {
+   if (matchPath === void 0) {
+     return false;
+@@ -18275,8 +18276,17 @@ function isActive(currentPath, matchPath, asRegex = false) {
+   if (asRegex) {
+     return new RegExp(matchPath).test(currentPath);
+   }
+-  if (normalize$1(matchPath) !== currentPath) {
+-    return false;
++  const normalizedMatchPath = normalize$1(matchPath);
++  if (normalizedMatchPath !== currentPath) {
++    const currentPathParts = currentPath.split("/");
++    if (currentPathParts.length > 3 && versionedPaths.some((entry) => entry === currentPathParts[2])) {
++      currentPath = currentPathParts.slice(0, 4).join("/");
++      if (normalizedMatchPath !== currentPath) {
++        return false;
++      }
++    } else {
++      return false;
++    }
+   }
+   const hashMatch = matchPath.match(HASH_RE);
+   if (hashMatch) {
+@@ -23631,7 +23641,7 @@ function requireEngines () {
+ 		  stringify: function() {
+ 		    throw new Error('stringifying JavaScript is not supported');
+ 		  }
+-		}; 
++		};
+ 	} (engines));
+ 	return engines.exports;
+ }
+@@ -23731,7 +23741,7 @@ function requireUtils$2 () {
+ 		exports.startsWith = function(str, substr, len) {
+ 		  if (typeof len !== 'number') len = substr.length;
+ 		  return str.slice(0, len) === substr;
+-		}; 
++		};
+ 	} (utils$3));
+ 	return utils$3;
+ }
+@@ -25043,7 +25053,7 @@ const decodeMap = new Map([
+ /**
+  * Polyfill for `String.fromCodePoint`. It is used to create a string from a Unicode code point.
+  */
+-const fromCodePoint$1 = 
++const fromCodePoint$1 =
+ // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, node/no-unsupported-features/es-builtins
+ (_a = String.fromCodePoint) !== null && _a !== void 0 ? _a : function (codePoint) {
+     let output = "";
+@@ -25135,7 +25145,7 @@ var DecodingMode;
+ class EntityDecoder {
+     constructor(
+     /** The tree used to decode entities. */
+-    decodeTree, 
++    decodeTree,
+     /**
+      * The function that is called when a codepoint is decoded.
+      *
+@@ -25145,7 +25155,7 @@ class EntityDecoder {
+      * @param codepoint The decoded codepoint.
+      * @param consumed The number of bytes consumed by the decoder.
+      */
+-    emitCodePoint, 
++    emitCodePoint,
+     /** An object that is used to produce errors. */
+     errors) {
+         this.decodeTree = decodeTree;
+@@ -25458,7 +25468,7 @@ function getDecoder(decodeTree) {
+         while ((offset = str.indexOf("&", offset)) >= 0) {
+             ret += str.slice(lastIndex, offset);
+             decoder.startEntity(decodeMode);
+-            const len = decoder.write(str, 
++            const len = decoder.write(str,
+             // Skip the "&"
+             offset + 1);
+             if (len < 0) {
+@@ -38931,7 +38941,7 @@ class SignalExit extends SignalExitBase {
+ const process$1 = globalThis.process;
+ // wrap so that we call the method on the actual handler, without
+ // exporting it directly.
+-const { 
++const {
+ /**
+  * Called when the process is exiting, whether via signal, explicit
+  * exit, or running out of stuff to do.
+@@ -41070,7 +41080,7 @@ function requireEastasianwidth () {
+ 		    eawLen += charLen;
+ 		  }
+ 		  return result;
+-		}; 
++		};
+ 	} (eastasianwidth));
+ 	return eastasianwidth.exports;
+ }
+@@ -42826,7 +42836,7 @@ function requireTypes () {
+ 		    IndexTagNames["sitemapindex"] = "sitemapindex";
+ 		    IndexTagNames["loc"] = "loc";
+ 		    IndexTagNames["lastmod"] = "lastmod";
+-		})(exports.IndexTagNames || (exports.IndexTagNames = {})); 
++		})(exports.IndexTagNames || (exports.IndexTagNames = {}));
+ 	} (types));
+ 	return types;
+ }
+@@ -42840,7 +42850,7 @@ function requireSitemapXml () {
+ 	hasRequiredSitemapXml = 1;
+ 	Object.defineProperty(sitemapXml, "__esModule", { value: true });
+ 	sitemapXml.element = sitemapXml.ctag = sitemapXml.otag = sitemapXml.text = void 0;
+-	const invalidXMLUnicodeRegex = 
++	const invalidXMLUnicodeRegex =
+ 	// eslint-disable-next-line no-control-regex
+ 	/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u0084\u0086-\u009F\uD800-\uDFFF\uFDD0-\uFDDF\u{1FFFE}-\u{1FFFF}\u{2FFFE}-\u{2FFFF}\u{3FFFE}-\u{3FFFF}\u{4FFFE}-\u{4FFFF}\u{5FFFE}-\u{5FFFF}\u{6FFFE}-\u{6FFFF}\u{7FFFE}-\u{7FFFF}\u{8FFFE}-\u{8FFFF}\u{9FFFE}-\u{9FFFF}\u{AFFFE}-\u{AFFFF}\u{BFFFE}-\u{BFFFF}\u{CFFFE}-\u{CFFFF}\u{DFFFE}-\u{DFFFF}\u{EFFFE}-\u{EFFFF}\u{FFFFE}-\u{FFFFF}\u{10FFFE}-\u{10FFFF}]/gu;
+ 	const amp = /&/g;
+@@ -43586,7 +43596,7 @@ function requireSitemapStream () {
+ 		        });
+ 		    });
+ 		}
+-		exports.streamToPromise = streamToPromise; 
++		exports.streamToPromise = streamToPromise;
+ 	} (sitemapStream));
+ 	return sitemapStream;
+ }
+@@ -43809,7 +43819,7 @@ function requireSitemapIndexStream () {
+ 		        });
+ 		    }
+ 		}
+-		exports.SitemapAndIndexStream = SitemapAndIndexStream; 
++		exports.SitemapAndIndexStream = SitemapAndIndexStream;
+ 	} (sitemapIndexStream));
+ 	return sitemapIndexStream;
+ }
+@@ -45470,7 +45480,7 @@ function requireSax () {
+ 		      }
+ 		    }());
+ 		  }
+-		})(exports); 
++		})(exports);
+ 	} (sax));
+ 	return sax;
+ }
+@@ -46277,7 +46287,7 @@ function requireSitemapSimple () {
+ 		    }
+ 		};
+ 		exports.simpleSitemapAndIndex = simpleSitemapAndIndex;
+-		exports.default = exports.simpleSitemapAndIndex; 
++		exports.default = exports.simpleSitemapAndIndex;
+ 	} (sitemapSimple));
+ 	return sitemapSimple;
+ }
+@@ -46333,7 +46343,7 @@ function requireDist () {
+ 		Object.defineProperty(exports, "XMLToSitemapIndexStream", { enumerable: true, get: function () { return sitemap_index_parser_1.XMLToSitemapIndexStream; } });
+ 		Object.defineProperty(exports, "IndexObjectStreamToJSON", { enumerable: true, get: function () { return sitemap_index_parser_1.IndexObjectStreamToJSON; } });
+ 		var sitemap_simple_1 = requireSitemapSimple();
+-		Object.defineProperty(exports, "simpleSitemapAndIndex", { enumerable: true, get: function () { return sitemap_simple_1.simpleSitemapAndIndex; } }); 
++		Object.defineProperty(exports, "simpleSitemapAndIndex", { enumerable: true, get: function () { return sitemap_simple_1.simpleSitemapAndIndex; } });
+ 	} (dist));
+ 	return dist;
+ }
+@@ -48930,7 +48940,7 @@ function requireLodash_template () {
+ 		  return false;
+ 		}
+ 
+-		module.exports = template; 
++		module.exports = template;
+ 	} (lodash_template, lodash_template.exports));
+ 	return lodash_template.exports;
+ }
+@@ -49165,7 +49175,7 @@ function requirePostcssPrefixSelector () {
+ 
+ 	  return {
+ 	    postcssPlugin: 'postcss-prefix-selector',
+-	    prepare(result) { 
++	    prepare(result) {
+ 	      const root = result.root;
+ 	      const file = root.source.input.file;
+ 

@@ -6,7 +6,7 @@ import type {
   SchemaType,
   SchemaWithRequired,
 } from '../../shared/types/schema';
-import { discriminatorValue } from '../../shared/utils/discriminator';
+import { discriminatorValues } from '../../shared/utils/discriminator';
 import { mergeSchemaAccessScopes } from '../../shared/utils/schema';
 import type { SchemaObject } from '../types/spec';
 
@@ -23,6 +23,8 @@ export const getSchemaType = ({
   if (schema.properties) {
     return 'object';
   }
+
+  return;
 };
 
 const parseSchemaJsDoc = ({
@@ -32,6 +34,10 @@ const parseSchemaJsDoc = ({
   irSchema: IR.SchemaObject;
   schema: SchemaObject;
 }) => {
+  if (schema.example) {
+    irSchema.example = schema.example;
+  }
+
   if (schema.description) {
     irSchema.description = schema.description;
   }
@@ -44,9 +50,11 @@ const parseSchemaJsDoc = ({
 const parseSchemaMeta = ({
   irSchema,
   schema,
+  state,
 }: {
   irSchema: IR.SchemaObject;
   schema: SchemaObject;
+  state: SchemaState;
 }) => {
   if (schema.default !== undefined) {
     irSchema.default = schema.default;
@@ -96,6 +104,10 @@ const parseSchemaMeta = ({
     irSchema.accessScope = 'read';
     irSchema.accessScopes = mergeSchemaAccessScopes(irSchema.accessScopes, [
       'read',
+    ]);
+  } else if (state.isProperty) {
+    irSchema.accessScopes = mergeSchemaAccessScopes(irSchema.accessScopes, [
+      'both',
     ]);
   }
 };
@@ -213,7 +225,10 @@ const parseObject = ({
       const irPropertySchema = schemaToIrSchema({
         context,
         schema: property,
-        state,
+        state: {
+          ...state,
+          isProperty: true,
+        },
       });
       irSchema.accessScopes = mergeSchemaAccessScopes(
         irSchema.accessScopes,
@@ -234,22 +249,25 @@ const parseObject = ({
       };
     }
   } else if (typeof schema.additionalProperties === 'boolean') {
-    irSchema.additionalProperties = {
-      type: schema.additionalProperties ? 'unknown' : 'never',
-    };
+    // Avoid [key: string]: never for empty objects with additionalProperties: false inside allOf
+    // This would override inherited properties from other schemas in the composition
+    const isEmptyObjectInAllOf =
+      state.inAllOf &&
+      schema.additionalProperties === false &&
+      (!schema.properties || Object.keys(schema.properties).length === 0);
+
+    if (!isEmptyObjectInAllOf) {
+      irSchema.additionalProperties = {
+        type: schema.additionalProperties ? 'unknown' : 'never',
+      };
+    }
   } else {
     const irAdditionalPropertiesSchema = schemaToIrSchema({
       context,
       schema: schema.additionalProperties,
       state,
     });
-    // no need to add "any" additional properties if there are no defined properties
-    if (
-      irSchema.properties ||
-      irAdditionalPropertiesSchema.type !== 'unknown'
-    ) {
-      irSchema.additionalProperties = irAdditionalPropertiesSchema;
-    }
+    irSchema.additionalProperties = irAdditionalPropertiesSchema;
   }
 
   if (schema.required) {
@@ -304,10 +322,19 @@ const parseAllOf = ({
   const compositionSchemas = schema.allOf;
 
   for (const compositionSchema of compositionSchemas) {
+    // Don't propagate inAllOf flag to $ref schemas to avoid issues with reusable components
+    const isRef = '$ref' in compositionSchema;
+    const schemaState = isRef
+      ? state
+      : {
+          ...state,
+          inAllOf: true,
+        };
+
     const irCompositionSchema = schemaToIrSchema({
       context,
       schema: compositionSchema,
-      state,
+      state: schemaState,
     });
 
     irSchema.accessScopes = mergeSchemaAccessScopes(
@@ -332,12 +359,22 @@ const parseAllOf = ({
       const ref = context.resolveRef<SchemaObject>(compositionSchema.$ref);
       // `$ref` should be passed from the root `parseSchema()` call
       if (ref.discriminator && state.$ref) {
+        const values = discriminatorValues(state.$ref);
+        const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
+          (value) => ({
+            const: value,
+            type: 'string',
+          }),
+        );
         const irDiscriminatorSchema: IR.SchemaObject = {
           properties: {
-            [ref.discriminator]: {
-              const: discriminatorValue(state.$ref),
-              type: 'string',
-            },
+            [ref.discriminator]:
+              valueSchemas.length > 1
+                ? {
+                    items: valueSchemas,
+                    logicalOperator: 'or',
+                  }
+                : valueSchemas[0]!,
           },
           type: 'object',
         };
@@ -483,6 +520,8 @@ const parseEnum = ({
       typeOfEnumValue === 'boolean'
     ) {
       enumType = typeOfEnumValue;
+    } else if (typeOfEnumValue === 'object' && Array.isArray(enumValue)) {
+      enumType = 'array';
     } else if (enumValue === null) {
       // nullable must be true
       if (schema['x-nullable']) {
@@ -517,6 +556,10 @@ const parseEnum = ({
     // cast enum back
     if (enumType === 'null') {
       irTypeSchema.type = enumType;
+    }
+
+    if (irTypeSchema.type === 'array') {
+      irTypeSchema.type = 'tuple';
     }
 
     irSchema.accessScopes = mergeSchemaAccessScopes(
@@ -565,6 +608,7 @@ const parseRef = ({
       state: {
         ...state,
         $ref: schema.$ref,
+        isProperty: false,
       },
     });
     irSchema.accessScopes = mergeSchemaAccessScopes(
@@ -596,6 +640,7 @@ const parseNullableType = ({
   parseSchemaMeta({
     irSchema: typeIrSchema,
     schema,
+    state,
   });
 
   if (typeIrSchema.default === null) {
@@ -638,6 +683,7 @@ const parseType = ({
   parseSchemaMeta({
     irSchema,
     schema,
+    state,
   });
 
   const type = getSchemaType({ schema });
@@ -686,6 +732,7 @@ const parseOneType = ({
     parseSchemaMeta({
       irSchema,
       schema,
+      state,
     });
   }
 
@@ -740,6 +787,7 @@ const parseOneType = ({
 const parseUnknown = ({
   irSchema,
   schema,
+  state,
 }: {
   context: IR.Context;
   irSchema?: IR.SchemaObject;
@@ -755,6 +803,7 @@ const parseUnknown = ({
   parseSchemaMeta({
     irSchema,
     schema,
+    state,
   });
 
   return irSchema;

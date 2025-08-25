@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-tanstack-svelte-query",
   "private": true,
-  "version": "0.0.33",
+  "version": "0.0.39",
   "type": "module",
   "scripts": {
     "build": "vite build",
@@ -16,11 +16,10 @@
     "test": "vitest --watch=false"
   },
   "dependencies": {
-    "@hey-api/client-fetch": "workspace:*",
-    "@config/vite-base": "workspace:*",
     "@tanstack/svelte-query": "5.73.3"
   },
   "devDependencies": {
+    "@config/vite-base": "workspace:*",
     "@fontsource/fira-mono": "5.0.0",
     "@hey-api/openapi-ts": "workspace:*",
     "@neoconfetti/svelte": "2.0.0",
@@ -38,7 +37,7 @@
     "svelte-check": "4.1.4",
     "typescript": "5.8.3",
     "typescript-eslint": "8.29.1",
-    "vite": "6.2.6",
+    "vite": "7.1.2",
     "vitest": "3.1.1"
   }
 }

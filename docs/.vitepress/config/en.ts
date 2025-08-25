@@ -5,15 +5,23 @@ export default defineConfig({
     '🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.',
   lang: 'en-US',
   themeConfig: {
+    editLink: {
+      pattern: 'https://github.com/hey-api/openapi-ts/edit/main/docs/:path',
+      text: 'Edit',
+    },
     footer: {
       message: 'Released under the MIT License.',
     },
     nav: [
       {
         link: 'https://github.com/sponsors/hey-api',
-        text: 'Sponsor Hey API 💰',
+        text: 'Sponsor Hey API',
       },
     ],
+    outline: {
+      label: 'Table of Contents',
+      level: 2,
+    },
     sidebar: [
       {
         items: [
@@ -22,11 +30,26 @@ export default defineConfig({
             text: 'Get Started',
           },
           {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/configuration/input',
+                text: 'Input',
+              },
+              {
+                link: '/openapi-ts/configuration/output',
+                text: 'Output',
+              },
+              {
+                link: '/openapi-ts/configuration/parser',
+                text: 'Parser',
+              },
+            ],
             link: '/openapi-ts/configuration',
             text: 'Configuration',
           },
         ],
-        text: '@hey-api/openapi-ts',
+        text: 'Introduction',
       },
       {
         items: [
@@ -40,6 +63,10 @@ export default defineConfig({
               {
                 link: '/openapi-ts/output/sdk',
                 text: 'SDK',
+              },
+              {
+                link: '/openapi-ts/output/client',
+                text: 'Client',
               },
               {
                 link: '/openapi-ts/output/json-schema',
@@ -68,6 +95,10 @@ export default defineConfig({
                 text: 'Fetch API',
               },
               {
+                link: '/openapi-ts/clients/angular',
+                text: 'Angular',
+              },
+              {
                 link: '/openapi-ts/clients/axios',
                 text: 'Axios',
               },
@@ -78,6 +109,10 @@ export default defineConfig({
               {
                 link: '/openapi-ts/clients/nuxt',
                 text: 'Nuxt',
+              },
+              {
+                link: '/openapi-ts/clients/effect',
+                text: 'Effect <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/clients/custom',
@@ -94,6 +129,10 @@ export default defineConfig({
           {
             collapsed: true,
             items: [
+              {
+                link: '/openapi-ts/plugins/valibot',
+                text: 'Valibot',
+              },
               {
                 link: '/openapi-ts/plugins/zod',
                 text: 'Zod',
@@ -117,10 +156,6 @@ export default defineConfig({
               {
                 link: '/openapi-ts/plugins/typebox',
                 text: 'TypeBox <span data-soon>soon</span>',
-              },
-              {
-                link: '/openapi-ts/plugins/valibot',
-                text: 'Valibot <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/yup',
@@ -161,8 +196,16 @@ export default defineConfig({
             collapsed: true,
             items: [
               {
+                link: '/openapi-ts/plugins/chance',
+                text: 'Chance <span data-soon>soon</span>',
+              },
+              {
                 link: '/openapi-ts/plugins/faker',
                 text: 'Faker <span data-soon>soon</span>',
+              },
+              {
+                link: '/openapi-ts/plugins/falso',
+                text: 'Falso <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/msw',
@@ -184,8 +227,16 @@ export default defineConfig({
             collapsed: true,
             items: [
               {
+                link: '/openapi-ts/plugins/angular',
+                text: 'Angular',
+              },
+              {
                 link: '/openapi-ts/plugins/fastify',
                 text: 'Fastify',
+              },
+              {
+                link: '/openapi-ts/plugins/adonis',
+                text: 'Adonis <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/express',
@@ -213,6 +264,34 @@ export default defineConfig({
       {
         items: [
           {
+            link: '/openapi-ts/community/spotlight',
+            text: 'Spotlight',
+          },
+          {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/community/contributing/building',
+                text: 'Building',
+              },
+              {
+                link: '/openapi-ts/community/contributing/developing',
+                text: 'Developing',
+              },
+              {
+                link: '/openapi-ts/community/contributing/testing',
+                text: 'Testing',
+              },
+            ],
+            link: '/openapi-ts/community/contributing',
+            text: 'Contributing',
+          },
+        ],
+        text: 'Community',
+      },
+      {
+        items: [
+          {
             link: '/openapi-ts/integrations',
             text: 'GitHub',
           },
@@ -226,24 +305,17 @@ export default defineConfig({
             text: 'Migrating',
           },
           {
-            link: '/license',
+            link: '/openapi-ts/license',
             text: 'License',
-          },
-          {
-            link: '/about',
-            text: 'Philosophy',
-          },
-          {
-            link: '/contributing',
-            text: 'Contributing',
           },
           {
             link: 'https://github.com/orgs/hey-api/discussions/1495',
             text: 'Roadmap',
           },
         ],
-        text: '@hey-api',
+        text: '@hey-api/openapi-ts',
       },
     ],
   },
+  title: 'Hey API',
 });

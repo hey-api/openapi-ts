@@ -1,0 +1,70 @@
+openapi: 3.0.3
+info:
+  title: OpenAPI 3.0 sdk nested classes example
+  version: 1.0.0
+  description: Test schema for nested class generation with various operationId patterns
+servers:
+  - url: https://api.example.com/v1
+paths:
+  /business/providers/domains:
+    get:
+      tags:
+        - business
+        - providers
+        - domains
+      operationId: business.providers.domains.get
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+    post:
+      tags:
+        - providers
+        - domains
+        - business
+      operationId: business.providers.domains.post
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+    put:
+      tags:
+        - domains
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /locations/businesses:
+    get:
+      tags:
+        - locations
+        - business
+      operationId: business.get
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /locations:
+    get:
+      tags:
+        - locations
+      operationId: get
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string

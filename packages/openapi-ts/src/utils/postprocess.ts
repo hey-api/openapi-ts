@@ -52,7 +52,8 @@ const postProcessOperations = (
   operations.forEach((parserOperation) => {
     const tags =
       parserOperation.tags?.length &&
-      (config.plugins['@hey-api/sdk']?.asClass || legacyNameFromConfig(config))
+      (config.plugins['@hey-api/sdk']?.config.asClass ||
+        legacyNameFromConfig(config))
         ? parserOperation.tags.filter(unique)
         : ['Default'];
     tags.forEach((tag) => {

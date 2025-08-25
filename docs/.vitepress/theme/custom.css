@@ -31,6 +31,27 @@ html.dark {
   --vp-home-hero-image-filter: blur(144px);
 }
 
+html.mac {
+  --vs-background-color: var(--vp-input-switch-bg-color);
+  --vs-border: 1px solid var(--vp-input-border-color);
+  --vs-menu-border: 1px solid var(--vp-input-border-color);
+  --vs-menu-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  --vs-option-background-color: var(--vp-sidebar-bg-color);
+  --vs-option-disabled-background-color: var(--vp-sidebar-bg-color);
+  --vs-option-focused-background-color: var(--vp-sidebar-bg-color);
+  --vs-option-focused-text-color: var(--vp-c-brand-1);
+  --vs-option-hover-background-color: var(--vp-sidebar-bg-color);
+  --vs-option-hover-text-color: var(--vp-c-brand-1);
+  --vs-option-selected-background-color: var(--vp-sidebar-bg-color);
+  --vs-option-selected-text-color: var(--vp-c-brand-1);
+  --vs-option-text-color: var(--vp-c-text-2);
+  --vs-padding-x: 8px;
+  --vs-padding-y: 4px;
+  --vs-padding: var(--vs-padding-y) var(--vs-padding-x);
+  --vs-text-color: var(--vp-c-text-1);
+  --vs-width: auto;
+}
+
 [data-soon] {
   background-color: var(--vp-button-brand-bg);
   border-radius: 1em;
@@ -46,6 +67,24 @@ iframe {
   background-color: var(--vp-sidebar-bg-color);
   border: none;
   margin: 0;
+}
+
+.VPFeatures.VPHomeFeatures > .container {
+  max-width: initial;
+}
+
+.VPFeatures.VPHomeFeatures > .container > .items {
+  gap: 1rem;
+  justify-content: center;
+  margin: 0;
+  padding: 0.2rem 0;
+}
+
+.VPFeatures.VPHomeFeatures > .container > .items > .item {
+  flex-shrink: 0;
+  max-width: 390px;
+  padding: 0;
+  width: 100%;
 }
 
 .authors-list {
@@ -131,8 +170,6 @@ h3#demo + button {
 .sponsors-list > ul {
   display: flex;
   flex-direction: column;
-  row-gap: 2rem;
-  column-gap: 3rem;
   padding: 0;
 }
 
@@ -151,11 +188,81 @@ h3#demo + button {
 
 .sponsors-list li {
   align-items: center;
+  border: 1px solid transparent;
+  border-radius: 10px;
   display: flex;
-  height: 100px;
+  flex-direction: column;
+  row-gap: 0.5rem;
   justify-content: center;
   max-width: 240px;
+  padding: 1rem;
+  transition: border-color ease-out 300ms;
   width: 100%;
+}
+
+.sponsors-list li a:first-of-type {
+  height: 66px;
+}
+
+.sponsors-list li a:first-of-type picture,
+.sponsors-list li a:first-of-type img {
+  height: 100%;
+}
+
+.sponsors-list li p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 120%;
+}
+
+.sponsors-list li a:last-of-type {
+  font-size: 0.86rem;
+  line-height: 100%;
+}
+
+.sponsors-list > ul.gold {
+  row-gap: 2rem;
+  column-gap: 3rem;
+}
+
+.sponsors-list > ul.gold li {
+  max-width: 240px;
+}
+
+.sponsors-list > ul.silver {
+  row-gap: 2rem;
+  column-gap: 3rem;
+}
+
+.sponsors-list > ul.silver li {
+  max-width: 180px;
+}
+
+.sponsors-list > ul li svg {
+  color: var(--vp-c-text-1) !important;
+  height: 100% !important;
+}
+
+/* FastAPI */
+.sponsors-list > ul li.fastapi svg > g > path {
+  fill: white !important;
+}
+html.dark .sponsors-list > ul li.fastapi svg > g > path {
+  fill: var(--vp-button-brand-bg) !important;
+}
+/* Cella */
+html.dark .sponsors-list > ul li.cella svg > path:nth-child(2),
+html.dark .sponsors-list > ul li.cella svg > path:nth-child(3) {
+  filter: invert();
+}
+
+.sponsors-list > ul.bronze {
+  row-gap: 2rem;
+  column-gap: 1rem;
+}
+
+.sponsors-list > ul.bronze li {
+  max-width: 100px;
 }
 
 .sponsors-list li + li {
@@ -164,19 +271,14 @@ h3#demo + button {
 
 .sponsors-list li > a {
   align-items: center;
-  border: 1px solid transparent;
-  border-radius: 10px;
   display: flex;
-  height: 100%;
   justify-content: center;
-  padding: 1rem;
   text-decoration: none;
-  transition: border-color ease-out 300ms;
   width: 100%;
 }
 
 html.dark .authors-list li > a,
-html.dark .sponsors-list li > a {
+html.dark .sponsors-list li {
   background-color: var(--vp-button-brand-bg);
 }
 
@@ -187,8 +289,8 @@ html.dark .sponsors-list li > a {
 
 .authors-list li > a:hover,
 .authors-list li > a:focus,
-.sponsors-list li > a:hover,
-.sponsors-list li > a:focus {
+.sponsors-list li:has(> a:hover),
+.sponsors-list li:has(> a:focus) {
   border-color: var(--vp-c-brand-1);
 }
 
@@ -199,15 +301,80 @@ html.dark .sponsors-list li > a {
   text-transform: lowercase;
 }
 
-.VPFeatures.VPHomeFeatures > .container {
-  max-width: initial;
+.migration {
+  background-color: var(--vp-c-brand-3);
+  border-radius: 10px;
+  border: 1px solid transparent;
+  color: var(--vp-button-brand-text);
+  column-gap: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0 auto 1rem;
+  max-width: 392px;
+  padding: 1rem;
+  row-gap: 1rem;
+  transition: border-color ease-out 250ms;
+  width: auto;
 }
 
-.VPFeatures.VPHomeFeatures > .container > .items {
-  gap: 1rem;
-  justify-content: center;
-  margin: 0;
-  padding: 0.2rem 0;
+a.migration:hover,
+a.migration:focus {
+  border-color: var(--vp-c-brand-1);
+}
+
+.contributors-list ul {
+  margin-bottom: 1.3rem;
+  margin-top: 1.3rem;
+}
+
+.vue-select .control {
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.vue-select .control:hover {
+  border-color: var(--vp-c-brand-1);
+}
+
+.vue-select .control .indicators-container {
+  padding: 0;
+}
+
+.vue-select .control .value-container.has-value:has(.single-value) {
+  padding-inline-end: 0;
+}
+
+.vue-select .control .indicators-container button.dropdown-icon {
+  height: 100%;
+  padding: var(--vs-padding);
+  width: calc(
+    var(--vs-indicator-icon-size) + var(--vs-padding-x) + var(--vs-padding-x)
+  );
+}
+
+.vue-select .menu {
+  width: fit-content !important;
+}
+
+.vue-select .menu .menu-option {
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+  white-space: nowrap;
+  transition:
+    background-color 0.25s,
+    border-color 0.25s,
+    color 0.25s,
+    opacity 0.25s;
+}
+
+.vue-select .menu:hover .menu-option.focused:not(:hover) {
+  border-left: 2px solid transparent;
+}
+
+.vue-select .menu .menu-option:hover,
+.vue-select .menu:not(:hover) .menu-option.focused {
+  border-left: 2px solid var(--vp-c-brand-1);
 }
 
 @media (min-width: 640px) {
@@ -220,6 +387,17 @@ html.dark .sponsors-list li > a {
   .sponsors-list > ul {
     flex-direction: row;
   }
+
+  .contributors-list ul {
+    columns: 2;
+  }
+}
+
+@media (min-width: 892px) {
+  .migration {
+    flex-direction: row;
+    max-width: 798px;
+  }
 }
 
 @media (min-width: 960px) {
@@ -227,11 +405,33 @@ html.dark .sponsors-list li > a {
     gap: 1rem;
     padding: 0.5rem 0;
   }
+
+  .VPNavBar.has-sidebar > .wrapper > .container > .title {
+    background-color: var(--vp-sidebar-bg-color);
+  }
 }
 
-.VPFeatures.VPHomeFeatures > .container > .items > .item {
-  flex-shrink: 0;
-  max-width: 390px;
+footer.VPDocFooter > .edit-info > .last-updated {
+  /* don't render last updated date */
+  display: none;
+}
+
+.DocSearch-Modal {
+  display: flex;
+}
+
+.DocSearch-Footer {
+  position: initial;
+}
+
+.sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
   padding: 0;
-  width: 100%;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }

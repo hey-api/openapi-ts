@@ -3,7 +3,7 @@ title: Clients
 description: REST clients for Hey API. Compatible with all our features.
 ---
 
-<script setup>
+<script setup lang="ts">
 import { embedProject } from '../embed'
 </script>
 
@@ -26,12 +26,14 @@ We all send HTTP requests in a slightly different way. Hey API doesn't force you
 Hey API natively supports the following clients.
 
 - [Fetch API](/openapi-ts/clients/fetch)
+- [Angular](/openapi-ts/clients/angular)
 - [Axios](/openapi-ts/clients/axios)
 - [Next.js](/openapi-ts/clients/next-js)
 - [Nuxt](/openapi-ts/clients/nuxt)
+- [Effect](/openapi-ts/clients/effect) <span data-soon>Soon</span>
 - [Legacy](/openapi-ts/clients/legacy)
 
 Don't see your client? [Build your own](/openapi-ts/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
-<!--@include: ../examples.md-->
-<!--@include: ../sponsors.md-->
+<!--@include: ../partials/examples.md-->
+<!--@include: ../partials/sponsors.md-->

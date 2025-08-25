@@ -3,14 +3,16 @@ title: Arktype
 description: Arktype plugin for Hey API. Compatible with all our features.
 ---
 
+<script setup lang="ts">
+import FeatureStatus from '@components/FeatureStatus.vue';
+</script>
+
 # Arktype <span data-soon>soon</span>
 
-::: warning
-This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1473).
-:::
+<FeatureStatus issueNumber=1473 name="Arktype" />
 
 ### About
 
 [Arktype](https://arktype.io) is a TypeScript's 1:1 validator, optimized from editor to runtime.
 
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/sponsors.md-->

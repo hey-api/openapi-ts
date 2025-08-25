@@ -1,0 +1,156 @@
+/* Pet Card Styles */
+.pet-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.pet-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pet-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--red-to-pink-to-purple-horizontal-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pet-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pet-placeholder {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pet-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pet-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin: 0;
+}
+
+.pet-category {
+  font-size: 0.875rem;
+  color: var(--gray-700);
+  background: rgba(255, 65, 248, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  display: inline-block;
+  width: fit-content;
+}
+
+/* Error Message Styles */
+.error-message {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+}
+
+.error-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #dc2626;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-title::before {
+  content: '⚠️';
+  font-size: 1.125rem;
+}
+
+.error-details {
+  font-size: 0.875rem;
+  color: #991b1b;
+  background: rgba(239, 68, 68, 0.05);
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-left: 3px solid #ef4444;
+}
+
+/* Button Styles Enhancement */
+button {
+  background: var(--red-to-pink-to-purple-horizontal-gradient);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 120ms ease;
+  margin-top: 1rem;
+  margin-right: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 650px) {
+  .pet-card {
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .pet-info {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .pet-avatar {
+    width: 80px;
+    height: 80px;
+    align-self: center;
+  }
+
+  .error-message {
+    padding: 0.75rem;
+    margin-top: 1rem;
+  }
+}

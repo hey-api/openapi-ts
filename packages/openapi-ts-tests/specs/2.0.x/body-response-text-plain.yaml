@@ -1,0 +1,22 @@
+swagger: 2.0
+info:
+  title: OpenAPI 2.0 body response text plain example
+  version: 1
+paths:
+  /foo:
+    post:
+      consumes:
+        - text/plain
+      produces:
+        - text/plain
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string

@@ -1,9 +1,19 @@
 ---
-title: Fastify
-description: Fastify plugin for Hey API. Compatible with all our features.
+title: Fastify v5 Plugin
+description: Generate Fastify v5 route handlers from OpenAPI with the Fastify plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
-# Fastify
+<script setup lang="ts">
+import AuthorsList from '@components/AuthorsList.vue';
+import Heading from '@components/Heading.vue';
+import { jacobCohen } from '@data/people.js';
+import VersionLabel from '@components/VersionLabel.vue';
+</script>
+
+<Heading>
+  <h1>Fastify<span class="sr-only"> v5</span></h1>
+  <VersionLabel value="v5" />
+</Heading>
 
 ::: warning
 Fastify plugin is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
@@ -13,20 +23,15 @@ Fastify plugin is currently in beta. The interface might change before it become
 
 [Fastify](https://fastify.dev) is a fast and low overhead web framework for Node.js.
 
-<!-- ### Demo
-
-<button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-fastify-example')(event)">
-StackBlitz
-</button> -->
+The Fastify plugin for Hey API generates route handlers from your OpenAPI spec, fully compatible with all core features.
 
 ### Collaborators
 
-<AuthorsList :people="[
-  { name: 'Jacob Cohen', github: 'https://github.com/jacobinu' },
-]" />
+<AuthorsList :people="[jacobCohen]" />
 
 ## Features
 
+- Fastify v5 support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - type-safe route handlers
 - minimal learning curve thanks to extending the underlying technology
@@ -36,14 +41,11 @@ StackBlitz
 In your [configuration](/openapi-ts/get-started), add `fastify` to your plugins and you'll be ready to generate Fastify artifacts. :tada:
 
 ```js
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     'fastify', // [!code ++]
   ],
 };
@@ -57,7 +59,9 @@ The Fastify plugin will generate the following artifacts, depending on the input
 
 Route handlers are generated from all endpoints. The generated interface follows the naming convention of SDK functions.
 
-```ts
+::: code-group
+
+```ts [example]
 const fastify = Fastify();
 const serviceHandlers: RouteHandlers = {
   createPets(request, reply) {
@@ -76,5 +80,24 @@ const serviceHandlers: RouteHandlers = {
 fastify.register(glue, { serviceHandlers });
 ```
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'fastify',
+    },
+  ],
+};
+```
+
+:::
+
+## API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/fastify/types.d.ts) interface.
+
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

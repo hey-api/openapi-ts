@@ -4,18 +4,24 @@ import { getConfig } from './config';
 import { reservedJavaScriptKeywordsRegExp } from './regexp';
 import { stringCase } from './stringCase';
 
-export const transformServiceName = ({
+export const transformClassName = ({
   config,
   name,
 }: {
   config: Config;
   name: string;
 }) => {
-  if (config.plugins['@hey-api/sdk']?.serviceNameBuilder) {
-    return config.plugins['@hey-api/sdk'].serviceNameBuilder.replace(
-      '{{name}}',
-      name,
-    );
+  const plugin = config.plugins['@hey-api/sdk'];
+  if (plugin?.config.classNameBuilder) {
+    let customName = '';
+
+    if (typeof plugin.config.classNameBuilder === 'function') {
+      customName = plugin.config.classNameBuilder(name);
+    } else {
+      customName = plugin.config.classNameBuilder.replace('{{name}}', name);
+    }
+
+    return customName;
   }
 
   return name;
@@ -23,7 +29,7 @@ export const transformServiceName = ({
 
 export const transformTypeName = (name: string) => {
   const config = getConfig();
-  if (config.plugins['@hey-api/typescript']?.style === 'PascalCase') {
+  if (config.plugins['@hey-api/typescript']?.config.style === 'PascalCase') {
     return stringCase({
       case: 'PascalCase',
       value: name,

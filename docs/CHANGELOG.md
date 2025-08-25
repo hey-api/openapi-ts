@@ -1,5 +1,11 @@
 # @docs/openapi-ts
 
+## 0.10.2
+
+### Patch Changes
+
+- [#2117](https://github.com/hey-api/openapi-ts/pull/2117) [`a1435b9`](https://github.com/hey-api/openapi-ts/commit/a1435b915a272d9ffa599c194ee52c2a33f77fcd) Thanks [@johnny-mh](https://github.com/johnny-mh)! - docs: add docs for `input.patch` feature
+
 ## 0.10.1
 
 ### Patch Changes

@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
-import type { NgForm } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { JsonPipe } from '@angular/common';
+import { Component, effect, inject, signal, viewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   injectMutation,
@@ -21,12 +21,13 @@ import {
 
 @Component({
   imports: [
-    CommonModule,
+    JsonPipe,
     FormsModule,
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    MatProgressSpinner,
   ],
   selector: 'app-pet-store',
   standalone: true,
@@ -35,83 +36,72 @@ import {
 })
 export class PetStoreComponent {
   #snackbar = inject(MatSnackBar);
+  form = viewChild.required(NgForm);
 
-  petId = signal<Pet['id']>(null!);
-  pet = injectQuery(() => ({
-    enabled: this.petId() !== null,
+  petId = signal<Pet['id']>(undefined);
+
+  petState = injectQuery(() => ({
+    enabled: (this.petId() ?? 0) > 0,
     ...getPetByIdOptions({
       path: { petId: this.petId()! },
     }),
   }));
 
-  addPet = injectMutation(() => addPetMutation());
-  updatePet = injectMutation(() => updatePetMutation());
+  addPet = injectMutation(() => ({
+    ...addPetMutation(),
+    onError: (err) => {
+      this.#snackbar.open(err.message);
+    },
+    onSuccess: () => {
+      this.#snackbar.open('Pet added successfully!');
+    },
+  }));
+  updatePet = injectMutation(() => ({
+    ...updatePetMutation(),
+    onError: (err) => {
+      this.#snackbar.open(err.message);
+    },
+    onSuccess: () => {
+      this.#snackbar.open('Pet updated successfully!');
+    },
+  }));
+
+  nextPetState: Partial<Pet> = {};
 
   constructor() {
     effect(() => {
-      if (this.pet.isError()) {
-        this.#snackbar.open(`Pet "${this.petId()}" not found.`);
+      const err = this.petState.error();
+
+      if (err) {
+        this.#snackbar.open(String(err));
       }
     });
+
+    effect(() => {
+      this.nextPetState = { ...this.petState.data() };
+    });
   }
-
-  //  updatePet = useMutation({
-  //   ...updatePetMutation(),
-  //   onError: (error) => {
-  //     console.log(error);
-  //   },
-  //   onSuccess: (data) => {
-  //     setPet(data);
-  //   },
-  // });
-
-  //  { data, error } = useQuery({
-  //   ...getPetByIdOptions({
-  //     client: localClient,
-  //     path: {
-  //       petId: petId!,
-  //     },
-  //   }),
-  //   enabled: Boolean(petId),
-  // });
 
   getRandomPet() {
     // random id 1-10
     this.petId.set(Math.floor(Math.random() * (10 - 1 + 1) + 1));
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  handleUpdatePet(name: string, category: string) {
-    throw new Error('Method not implemented.');
-  }
+  handleUpdatePet = async (event: Event) => {
+    event.preventDefault();
 
-  onSubmit(form: NgForm) {
+    await this.updatePet.mutateAsync({
+      body: this.nextPetState as Pet,
+    });
+  };
+
+  onSubmit = async (form: NgForm) => {
     if (!form.valid) {
       return;
     }
 
-    const { category, name } = form.value as {
-      category: string;
-      name: string;
-    };
-
-    this.addPet.mutate({
-      body: {
-        category: {
-          id: 0,
-          name: category,
-        },
-        id: 0,
-        name,
-        photoUrls: ['string'],
-        status: 'available',
-        tags: [
-          {
-            id: 0,
-            name: 'string',
-          },
-        ],
-      },
+    await this.addPet.mutateAsync({
+      body: this.nextPetState as Pet,
     });
-  }
+  };
 }

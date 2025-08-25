@@ -1,43 +1,44 @@
 import type ts from 'typescript';
 
-import { compiler, type Property } from '../../compiler';
 import { operationResponsesMap } from '../../ir/operation';
 import { hasParameterGroupObjectRequired } from '../../ir/parameter';
 import type { IR } from '../../ir/types';
+import { type Property, tsc } from '../../tsc';
 import { typesId } from '../@hey-api/typescript/ref';
-import { operationIrRef } from '../shared/utils/ref';
-import type { Plugin } from '../types';
-import type { Config } from './types';
+import type { FastifyPlugin } from './types';
 
 const fastifyId = 'fastify';
 
 const operationToRouteHandler = ({
-  context,
   operation,
+  plugin,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
+  plugin: FastifyPlugin['Instance'];
 }): Property | undefined => {
-  const file = context.file({ id: fastifyId })!;
-  const fileTypes = context.file({ id: typesId })!;
+  const file = plugin.context.file({ id: fastifyId })!;
 
   const properties: Array<Property> = [];
 
-  const identifierData = fileTypes.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'data' }),
-    namespace: 'type',
-  });
-  if (identifierData.name) {
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const fileTypeScript = plugin.context.file({ id: typesId })!;
+  const dataName = fileTypeScript.getName(
+    pluginTypeScript.api.getId({ operation, type: 'data' }),
+  );
+  if (dataName) {
     if (operation.body) {
       file.import({
         asType: true,
-        module: file.relativePathToFile({ context, id: typesId }),
-        name: identifierData.name,
+        module: file.relativePathToFile({
+          context: plugin.context,
+          id: typesId,
+        }),
+        name: dataName,
       });
       properties.push({
         isRequired: operation.body.required,
         name: 'Body',
-        type: `${identifierData.name}['body']`,
+        type: `${dataName}['body']`,
       });
     }
 
@@ -45,45 +46,54 @@ const operationToRouteHandler = ({
       if (operation.parameters.header) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: typesId }),
-          name: identifierData.name,
+          module: file.relativePathToFile({
+            context: plugin.context,
+            id: typesId,
+          }),
+          name: dataName,
         });
         properties.push({
           isRequired: hasParameterGroupObjectRequired(
             operation.parameters.header,
           ),
           name: 'Headers',
-          type: `${identifierData.name}['headers']`,
+          type: `${dataName}['headers']`,
         });
       }
 
       if (operation.parameters.path) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: typesId }),
-          name: identifierData.name,
+          module: file.relativePathToFile({
+            context: plugin.context,
+            id: typesId,
+          }),
+          name: dataName,
         });
         properties.push({
           isRequired: hasParameterGroupObjectRequired(
             operation.parameters.path,
           ),
           name: 'Params',
-          type: `${identifierData.name}['path']`,
+          type: `${dataName}['path']`,
         });
       }
 
       if (operation.parameters.query) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: typesId }),
-          name: identifierData.name,
+          module: file.relativePathToFile({
+            context: plugin.context,
+            id: typesId,
+          }),
+          name: dataName,
         });
         properties.push({
           isRequired: hasParameterGroupObjectRequired(
             operation.parameters.query,
           ),
           name: 'Querystring',
-          type: `${identifierData.name}['query']`,
+          type: `${dataName}['query']`,
         });
       }
     }
@@ -92,36 +102,41 @@ const operationToRouteHandler = ({
   const { errors, responses } = operationResponsesMap(operation);
 
   let errorsTypeReference: ts.TypeReferenceNode | undefined = undefined;
-  const identifierErrors = fileTypes.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'errors' }),
-    namespace: 'type',
-  });
-  if (identifierErrors.name && errors && errors.properties) {
+  const errorName = fileTypeScript.getName(
+    pluginTypeScript.api.getId({ operation, type: 'errors' }),
+  );
+  if (errorName && errors && errors.properties) {
     const keys = Object.keys(errors.properties);
     if (keys.length) {
       const hasDefaultResponse = keys.includes('default');
       if (!hasDefaultResponse) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: typesId }),
-          name: identifierErrors.name,
+          module: file.relativePathToFile({
+            context: plugin.context,
+            id: typesId,
+          }),
+          name: errorName,
         });
-        errorsTypeReference = compiler.typeReferenceNode({
-          typeName: identifierErrors.name,
+        errorsTypeReference = tsc.typeReferenceNode({
+          typeName: errorName,
         });
       } else if (keys.length > 1) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: typesId }),
-          name: identifierErrors.name,
+          module: file.relativePathToFile({
+            context: plugin.context,
+            id: typesId,
+          }),
+          name: errorName,
         });
-        const errorsType = compiler.typeReferenceNode({
-          typeName: identifierErrors.name,
+        const errorsType = tsc.typeReferenceNode({
+          typeName: errorName,
         });
-        const defaultType = compiler.literalTypeNode({
-          literal: compiler.stringLiteral({ text: 'default' }),
+        const defaultType = tsc.literalTypeNode({
+          literal: tsc.stringLiteral({ text: 'default' }),
         });
-        errorsTypeReference = compiler.typeReferenceNode({
+        errorsTypeReference = tsc.typeReferenceNode({
           typeArguments: [errorsType, defaultType],
           typeName: 'Omit',
         });
@@ -130,36 +145,41 @@ const operationToRouteHandler = ({
   }
 
   let responsesTypeReference: ts.TypeReferenceNode | undefined = undefined;
-  const identifierResponses = fileTypes.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'responses' }),
-    namespace: 'type',
-  });
-  if (identifierResponses.name && responses && responses.properties) {
+  const responseName = fileTypeScript.getName(
+    pluginTypeScript.api.getId({ operation, type: 'responses' }),
+  );
+  if (responseName && responses && responses.properties) {
     const keys = Object.keys(responses.properties);
     if (keys.length) {
       const hasDefaultResponse = keys.includes('default');
       if (!hasDefaultResponse) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: typesId }),
-          name: identifierResponses.name,
+          module: file.relativePathToFile({
+            context: plugin.context,
+            id: typesId,
+          }),
+          name: responseName,
         });
-        responsesTypeReference = compiler.typeReferenceNode({
-          typeName: identifierResponses.name,
+        responsesTypeReference = tsc.typeReferenceNode({
+          typeName: responseName,
         });
       } else if (keys.length > 1) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: typesId }),
-          name: identifierResponses.name,
+          module: file.relativePathToFile({
+            context: plugin.context,
+            id: typesId,
+          }),
+          name: responseName,
         });
-        const responsesType = compiler.typeReferenceNode({
-          typeName: identifierResponses.name,
+        const responsesType = tsc.typeReferenceNode({
+          typeName: responseName,
         });
-        const defaultType = compiler.literalTypeNode({
-          literal: compiler.stringLiteral({ text: 'default' }),
+        const defaultType = tsc.literalTypeNode({
+          literal: tsc.stringLiteral({ text: 'default' }),
         });
-        responsesTypeReference = compiler.typeReferenceNode({
+        responsesTypeReference = tsc.typeReferenceNode({
           typeArguments: [responsesType, defaultType],
           typeName: 'Omit',
         });
@@ -173,7 +193,7 @@ const operationToRouteHandler = ({
   if (replyTypes.length) {
     properties.push({
       name: 'Reply',
-      type: compiler.typeIntersectionNode({
+      type: tsc.typeIntersectionNode({
         types: replyTypes,
       }),
     });
@@ -185,8 +205,8 @@ const operationToRouteHandler = ({
 
   const routeHandler: Property = {
     name: operation.id,
-    type: compiler.typeNode('RouteHandler', [
-      compiler.typeInterfaceNode({
+    type: tsc.typeNode('RouteHandler', [
+      tsc.typeInterfaceNode({
         properties,
         useLegacyResolution: false,
       }),
@@ -195,50 +215,47 @@ const operationToRouteHandler = ({
   return routeHandler;
 };
 
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  const file = context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
+  const file = plugin.createFile({
     id: fastifyId,
     path: plugin.output,
   });
 
   const routeHandlers: Array<Property> = [];
 
-  context.subscribe('operation', ({ operation }) => {
-    const routeHandler = operationToRouteHandler({ context, operation });
+  plugin.forEach('operation', ({ operation }) => {
+    const routeHandler = operationToRouteHandler({ operation, plugin });
     if (routeHandler) {
       routeHandlers.push(routeHandler);
     }
   });
 
-  context.subscribe('after', () => {
-    const identifier = file.identifier({
-      $ref: 'RouteHandlers',
-      create: true,
-      namespace: 'type',
-    });
-
-    if (!identifier.name) {
-      return;
-    }
-
-    if (routeHandlers.length) {
-      file.import({
-        asType: true,
-        module: 'fastify',
-        name: 'RouteHandler',
-      });
-    }
-
-    file.add(
-      compiler.typeAliasDeclaration({
-        exportType: true,
-        name: identifier.name,
-        type: compiler.typeInterfaceNode({
-          properties: routeHandlers,
-          useLegacyResolution: false,
-        }),
-      }),
-    );
+  const identifier = file.identifier({
+    $ref: 'RouteHandlers',
+    create: true,
+    namespace: 'type',
   });
+
+  if (!identifier.name) {
+    return;
+  }
+
+  if (routeHandlers.length) {
+    file.import({
+      asType: true,
+      module: 'fastify',
+      name: 'RouteHandler',
+    });
+  }
+
+  file.add(
+    tsc.typeAliasDeclaration({
+      exportType: true,
+      name: identifier.name,
+      type: tsc.typeInterfaceNode({
+        properties: routeHandlers,
+        useLegacyResolution: false,
+      }),
+    }),
+  );
 };

@@ -1,0 +1,95 @@
+openapi: 3.0.3
+info:
+  title: OpenAPI 3.0.3 discriminator all of example
+  version: 1
+components:
+  schemas:
+    Foo:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+      discriminator:
+        propertyName: id
+    Bar:
+      allOf:
+        - $ref: '#/components/schemas/Foo'
+        - type: object
+          properties:
+            bar:
+              type: string
+    Baz:
+      allOf:
+        - $ref: '#/components/schemas/Foo'
+        - type: object
+          properties:
+            baz:
+              type: string
+    Qux:
+      allOf:
+        - $ref: '#/components/schemas/Foo'
+        - type: object
+          properties:
+            qux:
+              type: boolean
+    FooMapped:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+      discriminator:
+        propertyName: id
+        mapping:
+          bar: '#/components/schemas/BarMapped'
+          baz: '#/components/schemas/BazMapped'
+    BarMapped:
+      allOf:
+        - $ref: '#/components/schemas/FooMapped'
+        - type: object
+          properties:
+            bar:
+              type: string
+    BazMapped:
+      allOf:
+        - $ref: '#/components/schemas/FooMapped'
+        - type: object
+          properties:
+            baz:
+              type: string
+    QuxMapped:
+      allOf:
+        - $ref: '#/components/schemas/FooMapped'
+        - type: object
+          properties:
+            qux:
+              type: boolean
+    FooUnion:
+      oneOf:
+        - $ref: '#/components/schemas/BarUnion'
+        - $ref: '#/components/schemas/BazUnion'
+      discriminator:
+        propertyName: id
+        mapping:
+          bar: '#/components/schemas/BarUnion'
+          baz: '#/components/schemas/BazUnion'
+    BarUnion:
+      type: object
+      properties:
+        id:
+          type: string
+        bar:
+          type: string
+    BazUnion:
+      type: object
+      properties:
+        id:
+          type: string
+        baz:
+          type: string
+    QuxExtend: # this is a schema that extends the FooUnion schema
+      allOf:
+        - $ref: '#/components/schemas/FooUnion'

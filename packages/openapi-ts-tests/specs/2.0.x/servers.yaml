@@ -1,0 +1,18 @@
+swagger: 2.0
+info:
+  title: OpenAPI 2.0 servers example
+  version: 1
+host: foo.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /foo:
+    get:
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string

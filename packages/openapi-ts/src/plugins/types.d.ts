@@ -1,14 +1,12 @@
-import type { IR } from '../ir/types';
+import type { ValueToObject } from '../config/utils/config';
+import type { Package } from '../config/utils/package';
 import type { OpenApi as LegacyOpenApi } from '../openApi';
-import type { OpenApi } from '../openApi/types';
 import type { Client as LegacyClient } from '../types/client';
 import type { Files } from '../types/utils';
-
-type OmitUnderscoreKeys<T> = {
-  [K in keyof T as K extends `_${string}` ? never : K]: T[K];
-};
+import type { PluginInstance } from './shared/utils/instance';
 
 export type PluginClientNames =
+  | '@hey-api/client-angular'
   | '@hey-api/client-axios'
   | '@hey-api/client-fetch'
   | '@hey-api/client-next'
@@ -19,10 +17,11 @@ export type PluginClientNames =
   | 'legacy/node'
   | 'legacy/xhr';
 
-export type PluginValidatorNames = 'zod';
+export type PluginValidatorNames = 'valibot' | 'zod';
 
 export type PluginNames =
   | PluginClientNames
+  | '@angular/common'
   | '@hey-api/schemas'
   | '@hey-api/sdk'
   | '@hey-api/transformers'
@@ -40,15 +39,21 @@ export type AnyPluginName = PluginNames | (string & {});
 
 type PluginTag = 'client' | 'transformer' | 'validator';
 
-export interface PluginContext {
-  ensureDependency: (name: PluginNames | true) => void;
-  pluginByTag: (
+export type PluginContext = {
+  package: Package;
+  pluginByTag: <T extends AnyPluginName | boolean = AnyPluginName>(
     tag: PluginTag,
-    errorMessage?: string,
-  ) => AnyPluginName | undefined;
-}
+    props?: {
+      defaultPlugin?: Exclude<T, boolean>;
+      errorMessage?: string;
+    },
+  ) => Exclude<T, boolean> | undefined;
+  valueToObject: ValueToObject;
+};
 
-interface BaseConfig {
+type BaseApi = Record<string, unknown>;
+
+type BaseConfig = {
   /**
    * Should the exports from the plugin's file be re-exported in the index
    * barrel file?
@@ -99,9 +104,18 @@ export namespace Plugin {
       exportFromIndex?: boolean;
     };
 
-  export type DefineConfig<Config extends BaseConfig> = (
-    config?: Plugin.UserConfig<Omit<Config, 'name'>>,
-  ) => Omit<Plugin.Config<Config>, 'name'> & {
+  export type ConfigWithName<T extends Types> = Omit<Config<T>, 'config'> & {
+    config: Omit<T['config'], 'output'>;
+  };
+
+  /** @deprecated use `definePluginConfig()` instead */
+  export type DefineConfig<
+    Config extends BaseConfig,
+    ResolvedConfig extends BaseConfig = Config,
+  > = (config?: UserConfig<Omit<Config, 'name'>>) => Omit<
+    Plugin.Config<Config, ResolvedConfig>,
+    'name'
+  > & {
     /**
      * Cast name to `any` so it doesn't throw type error in `plugins` array.
      * We could allow any `string` as plugin `name` in the object syntax, but
@@ -111,35 +125,45 @@ export namespace Plugin {
     name: any;
   };
 
-  /**
-   * Plugin implementation for experimental parser.
-   */
-  export type Handler<Config extends BaseConfig, ReturnType = void> = (args: {
-    context: IR.Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
-    plugin: Plugin.Instance<Config>;
-  }) => ReturnType;
-
-  export type Instance<Config extends BaseConfig> = OmitUnderscoreKeys<Config> &
-    Pick<Required<BaseConfig>, 'exportFromIndex' | 'output'>;
-
-  /**
-   * @deprecated
-   *
-   * Plugin implementation for legacy parser.
-   */
-  export type LegacyHandler<Config extends BaseConfig> = (args: {
-    client: LegacyClient;
-    files: Files;
-    openApi: LegacyOpenApi;
-    plugin: Plugin.Instance<Config>;
-  }) => void;
-
   export interface Name<Name extends PluginNames> {
     name: Name;
   }
+
+  export type Types<
+    Config extends BaseConfig = BaseConfig,
+    ResolvedConfig extends BaseConfig = Config,
+    Api extends BaseApi = never,
+  > = ([Api] extends [never] ? { api?: BaseApi } : { api: Api }) & {
+    config: Config;
+    resolvedConfig: ResolvedConfig;
+  };
 
   /**
    * Users cannot modify output file path to avoid risk of conflicts.
    */
   export type UserConfig<Config extends BaseConfig> = Omit<Config, 'output'>;
 }
+
+export type DefinePlugin<
+  Config extends BaseConfig = BaseConfig,
+  ResolvedConfig extends BaseConfig = Config,
+  Api extends BaseApi = never,
+> = {
+  Config: Plugin.Config<Plugin.Types<Config, ResolvedConfig, Api>>;
+  Handler: (args: {
+    plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
+  }) => void;
+  Instance: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
+  /**
+   * Plugin implementation for legacy parser.
+   *
+   * @deprecated
+   */
+  LegacyHandler: (args: {
+    client: LegacyClient;
+    files: Files;
+    openApi: LegacyOpenApi;
+    plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
+  }) => void;
+  Types: Plugin.Types<Config, ResolvedConfig, Api>;
+};

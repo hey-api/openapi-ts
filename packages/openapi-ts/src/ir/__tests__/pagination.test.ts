@@ -1,12 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { defaultPaginationKeywords } from '../../config/parser';
 import type { Config } from '../../types/config';
 import { operationPagination } from '../operation';
 import { getPaginationKeywordsRegExp } from '../pagination';
 import type { IR } from '../types';
 
 describe('paginationKeywordsRegExp', () => {
-  const defaultScenarios: Array<{
+  const defaultScenarios: ReadonlyArray<{
     result: boolean;
     value: string;
   }> = [
@@ -47,12 +48,14 @@ describe('paginationKeywordsRegExp', () => {
   it.each(defaultScenarios)(
     'is $value pagination param? $output',
     async ({ result, value }) => {
-      const paginationRegExp = getPaginationKeywordsRegExp();
+      const paginationRegExp = getPaginationKeywordsRegExp({
+        keywords: defaultPaginationKeywords,
+      });
       expect(paginationRegExp.test(value)).toEqual(result);
     },
   );
 
-  const customScenarios: Array<{
+  const customScenarios: ReadonlyArray<{
     result: boolean;
     value: string;
   }> = [
@@ -65,7 +68,7 @@ describe('paginationKeywordsRegExp', () => {
   it.each(customScenarios)(
     'with custom config, $value should match? $result',
     async ({ result, value }) => {
-      const pagination: Config['input']['pagination'] = {
+      const pagination: Config['parser']['pagination'] = {
         keywords: ['customPagination', 'pageSize', 'perPage'],
       };
       const paginationRegExp = getPaginationKeywordsRegExp(pagination);
@@ -95,7 +98,7 @@ describe('operationPagination', () => {
     path: '/test' as const,
   };
 
-  const queryScenarios: Array<{
+  const queryScenarios: ReadonlyArray<{
     hasPagination: boolean;
     operation: IR.OperationObject;
   }> = [
@@ -125,19 +128,38 @@ describe('operationPagination', () => {
         },
       },
     },
+    {
+      hasPagination: true,
+      operation: {
+        ...baseOperationMeta,
+        id: 'op3',
+        method: 'get',
+        parameters: {
+          query: {
+            pagesize: queryParam('pageSize', 'string', true),
+          },
+        },
+      },
+    },
   ];
 
   it.each(queryScenarios)(
     'query params for $operation.id → $hasPagination',
-    ({
-      hasPagination,
-      operation,
-    }: {
-      hasPagination: boolean;
-      operation: IR.OperationObject;
-    }) => {
-      const result = operationPagination({ context: emptyContext, operation });
-      expect(Boolean(result)).toEqual(hasPagination);
+    ({ hasPagination, operation }: (typeof queryScenarios)[number]) => {
+      const pagination = operationPagination({
+        context: emptyContext,
+        operation,
+      });
+      expect(Boolean(pagination)).toEqual(hasPagination);
+      if (pagination && pagination.in !== 'body') {
+        const parameter =
+          operation.parameters?.[pagination.in]?.[
+            pagination.name.toLocaleLowerCase()
+          ];
+        if (parameter) {
+          expect(pagination.name).toBe(parameter.name);
+        }
+      }
     },
   );
 

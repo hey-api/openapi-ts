@@ -1,0 +1,73 @@
+swagger: 2.0
+info:
+  title: OpenAPI 2.0 sdk instance example
+  version: 1
+paths:
+  /foo:
+    get:
+      tags:
+        - fooBaz
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+    post:
+      tags:
+        - fooBaz
+      operationId: foo.-post
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+    put:
+      tags:
+        - fooBaz
+      operationId: /foo/-put/
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+  /foo/bar:
+    get:
+      tags:
+        - barBaz
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+    post:
+      tags:
+        - fooBaz
+        - barBaz
+      operationId: foo.bar.post
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+    put:
+      tags:
+        - fooBaz
+        - barBaz
+      operationId: /foo/bar/put/
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string

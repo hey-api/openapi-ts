@@ -1,14 +1,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
 import { openApi } from '../../../../generate/__tests__/mocks';
-import { TypeScriptFile } from '../../../../generate/files';
+import { GeneratedFile } from '../../../../generate/file';
 import type { Operation } from '../../../../types/client';
 import type { Config } from '../../../../types/config';
 import type { Files } from '../../../../types/utils';
 import { setConfig } from '../../../../utils/config';
+import { PluginInstance } from '../../../shared/utils/instance';
 import { handlerLegacy } from '../plugin-legacy';
 
 vi.mock('node:fs');
@@ -22,7 +24,13 @@ describe('handlerLegacy', () => {
       exportCore: true,
       input: {
         path: '',
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
@@ -30,6 +38,31 @@ describe('handlerLegacy', () => {
       },
       output: {
         path: '',
+      },
+      parser: {
+        pagination: {
+          keywords: [],
+        },
+        transforms: {
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
+          readWrite: {
+            enabled: false,
+            requests: {
+              case: 'preserve',
+              name: '',
+            },
+            responses: {
+              case: 'preserve',
+              name: '',
+            },
+          },
+        },
+        validate_EXPERIMENTAL: false,
       },
       pluginOrder: [
         '@hey-api/typescript',
@@ -39,34 +72,45 @@ describe('handlerLegacy', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          config: {
+            name: '@hey-api/schemas',
+          },
+          handler: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          asClass: true,
+          config: {
+            asClass: true,
+            name: '@hey-api/sdk',
+          },
+          handler: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          api: {
+            getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
+          },
+          config: {
+            name: '@hey-api/typescript',
+          },
+          handler: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          _tags: ['client'],
+          config: {
+            name: 'legacy/fetch',
+          },
+          handler: () => {},
           name: 'legacy/fetch',
+          output: '',
+          tags: ['client'],
         },
       },
       useOptions: false,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     const client: Parameters<typeof handlerLegacy>[0]['client'] = {
@@ -109,8 +153,9 @@ describe('handlerLegacy', () => {
 
     const files: Files = {};
 
-    files.types = new TypeScriptFile({
+    files.types = new GeneratedFile({
       dir: '/',
+      id: 'types',
       name: 'types.ts',
     });
 
@@ -118,11 +163,16 @@ describe('handlerLegacy', () => {
       client,
       files,
       openApi,
-      plugin: {
-        exportFromIndex: false,
+      plugin: new PluginInstance({
+        config: {
+          exportFromIndex: false,
+        },
+        context: {} as any,
+        dependencies: [],
+        handler: () => {},
         name: '@hey-api/sdk',
         output: '',
-      },
+      }),
     });
 
     files.sdk!.write();
@@ -183,7 +233,13 @@ describe('methodNameBuilder', () => {
       exportCore: true,
       input: {
         path: '',
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
@@ -191,6 +247,31 @@ describe('methodNameBuilder', () => {
       },
       output: {
         path: '',
+      },
+      parser: {
+        pagination: {
+          keywords: [],
+        },
+        transforms: {
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
+          readWrite: {
+            enabled: false,
+            requests: {
+              case: 'preserve',
+              name: '',
+            },
+            responses: {
+              case: 'preserve',
+              name: '',
+            },
+          },
+        },
+        validate_EXPERIMENTAL: false,
       },
       pluginOrder: [
         '@hey-api/typescript',
@@ -200,40 +281,52 @@ describe('methodNameBuilder', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          config: {
+            name: '@hey-api/schemas',
+          },
+          handler: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          asClass: true,
+          config: {
+            asClass: true,
+            name: '@hey-api/sdk',
+          },
+          handler: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          api: {
+            getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
+          },
+          config: {
+            name: '@hey-api/typescript',
+          },
+          handler: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          _tags: ['client'],
+          config: {
+            name: 'legacy/fetch',
+          },
+          handler: () => {},
           name: 'legacy/fetch',
+          output: '',
+          tags: ['client'],
         },
       },
       useOptions: false,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     const files: Files = {};
 
-    files.types = new TypeScriptFile({
+    files.types = new GeneratedFile({
       dir: '/',
+      id: 'types',
       name: 'types.ts',
     });
 
@@ -241,11 +334,16 @@ describe('methodNameBuilder', () => {
       client,
       files,
       openApi,
-      plugin: {
-        exportFromIndex: false,
+      plugin: new PluginInstance({
+        config: {
+          exportFromIndex: false,
+        },
+        context: {} as any,
+        dependencies: [],
+        handler: () => {},
         name: '@hey-api/sdk',
         output: '',
-      },
+      }),
     });
 
     files.sdk!.write();
@@ -266,7 +364,13 @@ describe('methodNameBuilder', () => {
       exportCore: true,
       input: {
         path: '',
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
@@ -274,6 +378,31 @@ describe('methodNameBuilder', () => {
       },
       output: {
         path: '',
+      },
+      parser: {
+        pagination: {
+          keywords: [],
+        },
+        transforms: {
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
+          readWrite: {
+            enabled: false,
+            requests: {
+              case: 'preserve',
+              name: '',
+            },
+            responses: {
+              case: 'preserve',
+              name: '',
+            },
+          },
+        },
+        validate_EXPERIMENTAL: false,
       },
       pluginOrder: [
         '@hey-api/typescript',
@@ -283,41 +412,53 @@ describe('methodNameBuilder', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          config: {
+            name: '@hey-api/schemas',
+          },
+          handler: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          asClass: true,
-          methodNameBuilder,
+          config: {
+            asClass: true,
+            methodNameBuilder,
+            name: '@hey-api/sdk',
+          },
+          handler: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          api: {
+            getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
+          },
+          config: {
+            name: '@hey-api/typescript',
+          },
+          handler: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          _tags: ['client'],
+          config: {
+            name: 'legacy/fetch',
+          },
+          handler: () => {},
           name: 'legacy/fetch',
+          output: '',
+          tags: ['client'],
         },
       },
       useOptions: false,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     const files: Files = {};
 
-    files.types = new TypeScriptFile({
+    files.types = new GeneratedFile({
       dir: '/',
+      id: 'types',
       name: 'types.ts',
     });
 
@@ -325,11 +466,16 @@ describe('methodNameBuilder', () => {
       client,
       files,
       openApi,
-      plugin: {
-        exportFromIndex: false,
+      plugin: new PluginInstance({
+        config: {
+          exportFromIndex: false,
+        },
+        context: {} as any,
+        dependencies: [],
+        handler: () => {},
         name: '@hey-api/sdk',
         output: '',
-      },
+      }),
     });
 
     files.sdk!.write();
@@ -352,7 +498,13 @@ describe('methodNameBuilder', () => {
       exportCore: true,
       input: {
         path: '',
+        watch: {
+          enabled: false,
+          interval: 1_000,
+          timeout: 60_000,
+        },
       },
+      interactive: false,
       logs: {
         file: true,
         level: 'info',
@@ -360,6 +512,31 @@ describe('methodNameBuilder', () => {
       },
       output: {
         path: '',
+      },
+      parser: {
+        pagination: {
+          keywords: [],
+        },
+        transforms: {
+          enums: {
+            case: 'preserve',
+            enabled: false,
+            mode: 'root',
+            name: '',
+          },
+          readWrite: {
+            enabled: false,
+            requests: {
+              case: 'preserve',
+              name: '',
+            },
+            responses: {
+              case: 'preserve',
+              name: '',
+            },
+          },
+        },
+        validate_EXPERIMENTAL: false,
       },
       pluginOrder: [
         '@hey-api/typescript',
@@ -369,41 +546,53 @@ describe('methodNameBuilder', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          config: {
+            name: '@hey-api/schemas',
+          },
+          handler: () => {},
           name: '@hey-api/schemas',
+          output: '',
         },
         '@hey-api/sdk': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          asClass: false,
-          methodNameBuilder,
+          config: {
+            asClass: false,
+            methodNameBuilder,
+            name: '@hey-api/sdk',
+          },
+          handler: () => {},
           name: '@hey-api/sdk',
+          output: '',
         },
         '@hey-api/typescript': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
+          api: {
+            getId: () => '',
+            schemaToType: () => ({}) as ts.TypeNode,
+          },
+          config: {
+            name: '@hey-api/typescript',
+          },
+          handler: () => {},
           name: '@hey-api/typescript',
+          output: '',
         },
         'legacy/fetch': {
-          _handler: () => {},
-          _handlerLegacy: () => {},
-          _tags: ['client'],
+          config: {
+            name: 'legacy/fetch',
+          },
+          handler: () => {},
           name: 'legacy/fetch',
+          output: '',
+          tags: ['client'],
         },
       },
       useOptions: false,
-      watch: {
-        enabled: false,
-        interval: 1_000,
-        timeout: 60_000,
-      },
     });
 
     const files: Files = {};
 
-    files.types = new TypeScriptFile({
+    files.types = new GeneratedFile({
       dir: '/',
+      id: 'types',
       name: 'types.ts',
     });
 
@@ -411,11 +600,16 @@ describe('methodNameBuilder', () => {
       client,
       files,
       openApi,
-      plugin: {
-        exportFromIndex: false,
+      plugin: new PluginInstance({
+        config: {
+          exportFromIndex: false,
+        },
+        context: {} as any,
+        dependencies: [],
+        handler: () => {},
         name: '@hey-api/sdk',
         output: '',
-      },
+      }),
     });
 
     files.sdk!.write();

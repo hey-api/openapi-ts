@@ -1,0 +1,32 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1.0 parameter tuple example",
+    "version": "1"
+  },
+  "paths": {
+    "/foo": {
+      "post": {
+        "parameters": [
+          {
+            "name": "tuple",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "number"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

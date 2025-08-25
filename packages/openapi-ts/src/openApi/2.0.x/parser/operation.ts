@@ -1,8 +1,6 @@
 import type { IR, IRBodyObject } from '../../../ir/types';
-import {
-  ensureUniqueOperationId,
-  operationToId,
-} from '../../shared/utils/operation';
+import type { State } from '../../shared/types/state';
+import { operationToId } from '../../shared/utils/operation';
 import type {
   OperationObject,
   ParameterObject,
@@ -11,13 +9,13 @@ import type {
   SchemaObject,
   SecuritySchemeObject,
 } from '../types/spec';
-import { contentToSchema, mediaTypeObject } from './mediaType';
+import { contentToSchema, mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
 import { schemaToIrSchema } from './schema';
 
 interface Operation
   extends Omit<OperationObject, 'parameters'>,
-    Pick<IR.OperationObject, 'id' | 'parameters'> {
+    Pick<IR.OperationObject, 'parameters'> {
   requestBody?: OperationObject['parameters'];
 }
 
@@ -46,17 +44,31 @@ const parseOperationJsDoc = ({
 };
 
 const initIrOperation = ({
+  context,
   method,
   operation,
   path,
+  state,
 }: Pick<IR.OperationObject, 'method' | 'path'> & {
+  context: IR.Context;
   operation: Operation;
+  state: State;
 }): IR.OperationObject => {
   const irOperation: IR.OperationObject = {
-    id: operation.id,
+    id: operationToId({
+      context,
+      id: operation.operationId,
+      method,
+      path,
+      state,
+    }),
     method,
     path,
   };
+
+  if (operation.operationId) {
+    irOperation.operationId = operation.operationId;
+  }
 
   parseOperationJsDoc({
     irOperation,
@@ -72,12 +84,20 @@ const operationToIrOperation = ({
   operation,
   path,
   securitySchemesMap,
+  state,
 }: Pick<IR.OperationObject, 'method' | 'path'> & {
   context: IR.Context;
   operation: Operation;
   securitySchemesMap: Map<string, SecuritySchemeObject>;
+  state: State;
 }): IR.OperationObject => {
-  const irOperation = initIrOperation({ method, operation, path });
+  const irOperation = initIrOperation({
+    context,
+    method,
+    operation,
+    path,
+    state,
+  });
 
   if (operation.parameters) {
     irOperation.parameters = operation.parameters;
@@ -108,10 +128,13 @@ const operationToIrOperation = ({
             required: undefined,
             type: requestBody.type === 'file' ? 'string' : requestBody.type,
           };
-    const content = mediaTypeObject({
+    const contents = mediaTypeObjects({
       mimeTypes: operation.consumes,
       response: { schema },
     });
+    // TODO: add support for multiple content types, for now prefer JSON
+    const content =
+      contents.find((content) => content.type === 'json') || contents[0];
 
     if (content) {
       const pagination = paginationField({
@@ -204,11 +227,14 @@ const operationToIrOperation = ({
       '$ref' in response
         ? context.resolveRef<ResponseObject>(response.$ref)
         : response;
-    const content = mediaTypeObject({
+    const contents = mediaTypeObjects({
       // assume JSON by default
       mimeTypes: operation.produces ? operation.produces : ['application/json'],
       response: responseObject,
     });
+    // TODO: add support for multiple content types, for now prefer JSON
+    const content =
+      contents.find((content) => content.type === 'json') || contents[0];
 
     if (content) {
       irOperation.responses[name] = {
@@ -235,7 +261,7 @@ const operationToIrOperation = ({
   }
 
   if (operation.security) {
-    const securitySchemeObjects: Array<IR.SecurityObject> = [];
+    const securitySchemeObjects: Map<string, IR.SecurityObject> = new Map();
 
     for (const securityRequirementObject of operation.security) {
       for (const name in securityRequirementObject) {
@@ -299,12 +325,12 @@ const operationToIrOperation = ({
           continue;
         }
 
-        securitySchemeObjects.push(irSecuritySchemeObject);
+        securitySchemeObjects.set(name, irSecuritySchemeObject);
       }
     }
 
-    if (securitySchemeObjects.length) {
-      irOperation.security = securitySchemeObjects;
+    if (securitySchemeObjects.size) {
+      irOperation.security = Array.from(securitySchemeObjects.values());
     }
   }
 
@@ -314,13 +340,13 @@ const operationToIrOperation = ({
   return irOperation;
 };
 
-export const parseOperation = ({
+export const parsePathOperation = ({
   context,
   method,
   operation,
-  operationIds,
   path,
   securitySchemesMap,
+  state,
 }: {
   context: IR.Context;
   method: Extract<
@@ -328,18 +354,10 @@ export const parseOperation = ({
     'delete' | 'get' | 'head' | 'options' | 'patch' | 'post' | 'put' | 'trace'
   >;
   operation: Operation;
-  operationIds: Map<string, string>;
   path: keyof IR.PathsObject;
   securitySchemesMap: Map<string, SecuritySchemeObject>;
+  state: State;
 }) => {
-  ensureUniqueOperationId({
-    context,
-    id: operation.operationId,
-    method,
-    operationIds,
-    path,
-  });
-
   if (!context.ir.paths) {
     context.ir.paths = {};
   }
@@ -348,18 +366,12 @@ export const parseOperation = ({
     context.ir.paths[path] = {};
   }
 
-  operation.id = operationToId({
-    context,
-    id: operation.operationId,
-    method,
-    path,
-  });
-
   context.ir.paths[path][method] = operationToIrOperation({
     context,
     method,
     operation,
     path,
     securitySchemesMap,
+    state,
   });
 };

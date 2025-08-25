@@ -1,0 +1,40 @@
+openapi: 3.0.0
+info:
+  title: OpenAPI 3.0.0 discriminator mapped many example
+  version: 1
+components:
+  schemas:
+    Foo:
+      oneOf:
+        - $ref: '#/components/schemas/Bar'
+        - $ref: '#/components/schemas/Baz'
+        - $ref: '#/components/schemas/Spæcial'
+      discriminator:
+        propertyName: foo
+        mapping:
+          one: '#/components/schemas/Bar'
+          two: '#/components/schemas/Bar'
+          three: '#/components/schemas/Baz'
+          four: '#/components/schemas/Spæcial'
+    Bar:
+      type: object
+      properties:
+        foo:
+          type: string
+          enum:
+            - one
+            - two
+    Baz:
+      type: object
+      properties:
+        foo:
+          type: string
+          enum:
+            - three
+    Spæcial:
+      type: object
+      properties:
+        foo:
+          type: string
+          enum:
+            - four

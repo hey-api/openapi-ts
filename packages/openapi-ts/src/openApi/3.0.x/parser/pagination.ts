@@ -7,7 +7,7 @@ import type {
   RequestBodyObject,
 } from '../types/spec';
 import type { SchemaObject } from '../types/spec';
-import { mediaTypeObject } from './mediaType';
+import { mediaTypeObjects } from './mediaType';
 import { getSchemaType } from './schema';
 
 const isPaginationType = (
@@ -29,7 +29,7 @@ export const paginationField = ({
   schema: SchemaObject | ReferenceObject;
 }): boolean | string => {
   const paginationRegExp = getPaginationKeywordsRegExp(
-    context.config.input.pagination,
+    context.config.parser.pagination,
   );
   if (paginationRegExp.test(name)) {
     return true;
@@ -49,7 +49,10 @@ export const paginationField = ({
 
       if (!refSchema) {
         // parameter or body
-        const content = mediaTypeObject({ content: ref.content });
+        const contents = mediaTypeObjects({ content: ref.content });
+        // TODO: add support for multiple content types, for now prefer JSON
+        const content =
+          contents.find((content) => content.type === 'json') || contents[0];
         if (content?.schema) {
           refSchema = content.schema;
         }
@@ -75,7 +78,7 @@ export const paginationField = ({
 
   for (const name in schema.properties) {
     const paginationRegExp = getPaginationKeywordsRegExp(
-      context.config.input.pagination,
+      context.config.parser.pagination,
     );
 
     if (paginationRegExp.test(name)) {

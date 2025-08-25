@@ -1,7 +1,8 @@
 {
-  "buildCommand": "npm run build",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm run build",
   "cleanUrls": true,
-  "devCommand": "npm run dev",
+  "devCommand": "pnpm run dev",
   "framework": "vitepress",
   "outputDirectory": ".vitepress/dist",
   "redirects": [

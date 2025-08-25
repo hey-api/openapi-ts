@@ -26,14 +26,11 @@ You can modify the contents of `sdk.gen.ts` by configuring the `@hey-api/sdk` pl
 ::: code-group
 
 ```js [flat]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     {
       asClass: false, // default // [!code ++]
       name: '@hey-api/sdk',
@@ -43,14 +40,11 @@ export default {
 ```
 
 ```js [class]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     {
       asClass: true, // [!code ++]
       name: '@hey-api/sdk',
@@ -61,10 +55,9 @@ export default {
 
 ```js [none]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
-    '@hey-api/client-fetch',
     '@hey-api/typescript',
     '@hey-api/sdk', // [!code --]
   ],
@@ -80,8 +73,7 @@ Below are different outputs depending on your chosen style. No SDKs approach wil
 ::: code-group
 
 ```ts [flat]
-import type { Options } from '@hey-api/client-fetch';
-
+import type { Options } from './client';
 import { client as _heyApiClient } from './client.gen';
 import type { AddPetData, AddPetError, AddPetResponse } from './types.gen';
 
@@ -93,8 +85,7 @@ export const addPet = (options: Options<AddPetData>) =>
 ```
 
 ```ts [class]
-import type { Options } from '@hey-api/client-fetch';
-
+import type { Options } from './client';
 import { client as _heyApiClient } from './client.gen';
 import type { AddPetData, AddPetError, AddPetResponse } from './types.gen';
 
@@ -139,7 +130,7 @@ PetService.addPet({
 ```
 
 ```ts [none]
-import { client } from '@hey-api/client-fetch';
+import { client } from './client/client';
 
 client.post({
   body: {
@@ -151,5 +142,87 @@ client.post({
 
 :::
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+## Validators
+
+There are two ways to configure validators. If you only want to add validators to your SDKs, set `sdk.validator` to a validator plugin name. This will implicitly add the selected plugin with default values.
+
+For a more granular approach, add a validator plugin and set `sdk.validator` to the plugin name or `true` to automatically select a plugin. Until you customize the validator plugin, both approaches will produce the same default output.
+
+::: code-group
+
+```js [sdk]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@hey-api/sdk',
+      validator: 'zod', // [!code ++]
+    },
+  ],
+};
+```
+
+```js [validator]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@hey-api/sdk',
+      validator: true, // or 'zod' // [!code ++]
+    },
+    {
+      name: 'zod', // [!code ++]
+      // other options
+    },
+  ],
+};
+```
+
+:::
+
+You can choose to validate only requests or responses.
+
+::: code-group
+
+```js [requests]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@hey-api/sdk',
+      validator: {
+        request: 'zod', // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+```js [responses]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@hey-api/sdk',
+      validator: {
+        response: 'zod', // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+:::
+
+Learn more about available validators on the [Validators](/openapi-ts/validators) page.
+
+## API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/sdk/types.d.ts) interface.
+
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

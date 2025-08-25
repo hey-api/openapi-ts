@@ -1,23 +1,28 @@
 import path from 'node:path';
 
-import { generateLegacyOutput, generateOutput } from './generate/output';
+import colors from 'ansi-colors';
+
+import { generateLegacyOutput } from './generate/legacy/output';
+import { generateOutput } from './generate/output';
 import { getSpec } from './getSpec';
 import type { IR } from './ir/types';
 import { parseLegacy, parseOpenApiSpec } from './openApi';
+import { patchOpenApiSpec } from './openApi/shared/utils/patch';
 import { processOutput } from './processOutput';
 import type { Client } from './types/client';
 import type { Config } from './types/config';
 import type { WatchValues } from './types/types';
 import { isLegacyClient, legacyNameFromConfig } from './utils/config';
 import type { Templates } from './utils/handlebars';
-import { Performance } from './utils/performance';
+import { heyApiRegistryBaseUrl } from './utils/input/heyApi';
+import type { Logger } from './utils/logger';
 import { postProcessClient } from './utils/postprocess';
 
-const isPlatformPath = (path: string) =>
-  path.startsWith('https://get.heyapi.dev');
+const isHeyApiRegistryPath = (path: string) =>
+  path.startsWith(heyApiRegistryBaseUrl);
 // || path.startsWith('http://localhost:4000')
 
-export const compileInputPath = (input: Config['input']) => {
+export const compileInputPath = (input: Omit<Config['input'], 'watch'>) => {
   const result: Pick<
     Partial<Config['input']>,
     | 'api_key'
@@ -34,7 +39,7 @@ export const compileInputPath = (input: Config['input']) => {
 
   if (
     input.path &&
-    (typeof input.path !== 'string' || !isPlatformPath(input.path))
+    (typeof input.path !== 'string' || !isHeyApiRegistryPath(input.path))
   ) {
     result.path = input.path;
     return result;
@@ -95,13 +100,13 @@ export const compileInputPath = (input: Config['input']) => {
 
   if (!result.organization) {
     throw new Error(
-      '🚫 missing organization - from which Hey API platform organization do you want to generate your output?',
+      'missing organization - from which Hey API Platform organization do you want to generate your output?',
     );
   }
 
   if (!result.project) {
     throw new Error(
-      '🚫 missing project - from which Hey API platform project do you want to generate your output?',
+      'missing project - from which Hey API Platform project do you want to generate your output?',
     );
   }
 
@@ -126,44 +131,34 @@ export const compileInputPath = (input: Config['input']) => {
   return result;
 };
 
-const logInputPath = ({
-  config,
-  inputPath,
-  watch,
-}: {
-  config: Config;
-  inputPath: ReturnType<typeof compileInputPath>;
-  watch?: boolean;
-}) => {
-  if (config.logs.level === 'silent') {
-    return;
-  }
-
-  if (watch) {
-    console.clear();
-  }
-
-  const baseString = watch
-    ? 'Input changed, generating from'
-    : 'Generating from';
+const logInputPath = (inputPath: ReturnType<typeof compileInputPath>) => {
+  const baseString = colors.cyan('Generating from');
 
   if (typeof inputPath.path === 'string') {
-    const baseInput = isPlatformPath(inputPath.path)
-      ? `${inputPath.organization}/${inputPath.project}`
+    const baseInput = isHeyApiRegistryPath(inputPath.path)
+      ? `${inputPath.organization ?? ''}/${inputPath.project ?? ''}`
       : inputPath.path;
     console.log(`⏳ ${baseString} ${baseInput}`);
-    if (isPlatformPath(inputPath.path)) {
+    if (isHeyApiRegistryPath(inputPath.path)) {
       if (inputPath.branch) {
-        console.log(`branch: ${inputPath.branch}`);
+        console.log(
+          `${colors.gray('branch:')} ${colors.green(inputPath.branch)}`,
+        );
       }
       if (inputPath.commit_sha) {
-        console.log(`commit: ${inputPath.commit_sha}`);
+        console.log(
+          `${colors.gray('commit:')} ${colors.green(inputPath.commit_sha)}`,
+        );
       }
       if (inputPath.tags?.length) {
-        console.log(`tags: ${inputPath.tags.join(', ')}`);
+        console.log(
+          `${colors.gray('tags:')} ${colors.green(inputPath.tags.join(', '))}`,
+        );
       }
       if (inputPath.version) {
-        console.log(`version: ${inputPath.version}`);
+        console.log(
+          `${colors.gray('version:')} ${colors.green(inputPath.version)}`,
+        );
       }
     }
   } else {
@@ -173,32 +168,38 @@ const logInputPath = ({
 
 export const createClient = async ({
   config,
+  dependencies,
+  logger,
   templates,
   watch: _watch,
 }: {
   config: Config;
+  dependencies: Record<string, string>;
+  logger: Logger;
   templates: Templates;
+  /**
+   * Always falsy on the first run, truthy on subsequent runs.
+   */
   watch?: WatchValues;
 }) => {
   const inputPath = compileInputPath(config.input);
-  const timeout = config.watch.timeout;
+  const { timeout } = config.input.watch;
 
   const watch: WatchValues = _watch || { headers: new Headers() };
 
-  logInputPath({
-    config,
-    inputPath,
-    watch: Boolean(_watch),
-  });
+  // on first run, print the message as soon as possible
+  if (config.logs.level !== 'silent' && !_watch) {
+    logInputPath(inputPath);
+  }
 
-  Performance.start('spec');
+  const eventSpec = logger.timeEvent('spec');
   const { data, error, response } = await getSpec({
     fetchOptions: config.input.fetch,
     inputPath: inputPath.path,
     timeout,
     watch,
   });
-  Performance.end('spec');
+  eventSpec.timeEnd();
 
   // throw on first run if there's an error to preserve user experience
   // if in watch mode, subsequent errors won't throw to gracefully handle
@@ -213,13 +214,24 @@ export const createClient = async ({
   let context: IR.Context | undefined;
 
   if (data) {
-    Performance.start('parser');
+    // on subsequent runs in watch mode, print the mssage only if we know we're
+    // generating the output
+    if (config.logs.level !== 'silent' && _watch) {
+      console.clear();
+      logInputPath(inputPath);
+    }
+
+    const eventInputPatch = logger.timeEvent('input.patch');
+    patchOpenApiSpec({ patchOptions: config.parser.patch, spec: data });
+    eventInputPatch.timeEnd();
+
+    const eventParser = logger.timeEvent('parser');
     if (
       config.experimentalParser &&
       !isLegacyClient(config) &&
       !legacyNameFromConfig(config)
     ) {
-      context = parseOpenApiSpec({ config, spec: data });
+      context = parseOpenApiSpec({ config, dependencies, logger, spec: data });
     }
 
     // fallback to legacy parser
@@ -227,17 +239,17 @@ export const createClient = async ({
       const parsed = parseLegacy({ openApi: data });
       client = postProcessClient(parsed, config);
     }
-    Performance.end('parser');
+    eventParser.timeEnd();
 
-    Performance.start('generator');
+    const eventGenerator = logger.timeEvent('generator');
     if (context) {
       await generateOutput({ context });
     } else if (client) {
       await generateLegacyOutput({ client, openApi: data, templates });
     }
-    Performance.end('generator');
+    eventGenerator.timeEnd();
 
-    Performance.start('postprocess');
+    const eventPostprocess = logger.timeEvent('postprocess');
     if (!config.dryRun) {
       processOutput({ config });
 
@@ -245,16 +257,18 @@ export const createClient = async ({
         const outputPath = process.env.INIT_CWD
           ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
           : config.output.path;
-        console.log(`🚀 Done! Your output is in ${outputPath}`);
+        console.log(
+          `${colors.green('🚀 Done!')} Your output is in ${colors.cyanBright(outputPath)}`,
+        );
       }
     }
-    Performance.end('postprocess');
+    eventPostprocess.timeEnd();
   }
 
-  if (config.watch.enabled && typeof inputPath.path === 'string') {
+  if (config.input.watch.enabled && typeof inputPath.path === 'string') {
     setTimeout(() => {
-      createClient({ config, templates, watch });
-    }, config.watch.interval);
+      createClient({ config, dependencies, logger, templates, watch });
+    }, config.input.watch.interval);
   }
 
   return context || client;
