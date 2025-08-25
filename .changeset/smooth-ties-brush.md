@@ -1,5 +1,5 @@
 ---
-'@hey-api/openapi-ts': minor
+'@hey-api/openapi-ts': patch
 ---
 
-Add @pinia/colada Plugin
+feat(plugin): add `@pinia/colada` plugin
