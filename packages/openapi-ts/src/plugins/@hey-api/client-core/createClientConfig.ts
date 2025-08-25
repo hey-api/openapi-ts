@@ -1,20 +1,26 @@
-import { compiler } from '../../../compiler';
 import { clientModulePath } from '../../../generate/client';
+import { tsc } from '../../../tsc';
 import { clientId } from '../client-core/utils';
 import { typesId } from '../typescript/ref';
 import type { PluginHandler } from './types';
 
-export const createClientConfigType: PluginHandler = ({ context }) => {
-  const file = context.file({ id: clientId })!;
+export const createClientConfigType = ({
+  plugin,
+}: Parameters<PluginHandler>[0]) => {
+  const file = plugin.context.file({ id: clientId })!;
 
   const clientModule = clientModulePath({
-    config: context.config,
+    config: plugin.context.config,
     sourceOutput: file.nameWithoutExtension(),
   });
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const fileTypeScript = plugin.context.file({ id: typesId })!;
   const clientOptions = file.import({
     asType: true,
-    module: file.relativePathToFile({ context, id: typesId }),
-    name: 'ClientOptions',
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+    name: fileTypeScript.getName(
+      pluginTypeScript.api.getId({ type: 'ClientOptions' }),
+    ),
   });
   const configType = file.import({
     asType: true,
@@ -28,12 +34,12 @@ export const createClientConfigType: PluginHandler = ({ context }) => {
     name: 'ClientOptions',
   });
 
-  const defaultClientOptionsType = compiler.typeReferenceNode({
+  const defaultClientOptionsType = tsc.typeReferenceNode({
     typeName: defaultClientOptions.name,
   });
-  const tType = compiler.typeReferenceNode({ typeName: 'T' });
+  const tType = tsc.typeReferenceNode({ typeName: 'T' });
 
-  const typeCreateClientConfig = compiler.typeAliasDeclaration({
+  const typeCreateClientConfig = tsc.typeAliasDeclaration({
     comment: [
       'The `createClientConfig()` function will be called on client initialization',
       "and the returned object will become the client's initial configuration.",
@@ -44,14 +50,14 @@ export const createClientConfigType: PluginHandler = ({ context }) => {
     ],
     exportType: true,
     name: 'CreateClientConfig',
-    type: compiler.functionTypeNode({
+    type: tsc.functionTypeNode({
       parameters: [
-        compiler.parameterDeclaration({
+        tsc.parameterDeclaration({
           name: 'override',
           required: false,
-          type: compiler.typeReferenceNode({
+          type: tsc.typeReferenceNode({
             typeArguments: [
-              compiler.typeIntersectionNode({
+              tsc.typeIntersectionNode({
                 types: [defaultClientOptionsType, tType],
               }),
             ],
@@ -59,11 +65,11 @@ export const createClientConfigType: PluginHandler = ({ context }) => {
           }),
         }),
       ],
-      returnType: compiler.typeReferenceNode({
+      returnType: tsc.typeReferenceNode({
         typeArguments: [
-          compiler.typeIntersectionNode({
+          tsc.typeIntersectionNode({
             types: [
-              compiler.typeReferenceNode({
+              tsc.typeReferenceNode({
                 typeArguments: [defaultClientOptionsType],
                 typeName: 'Required',
               }),
@@ -76,7 +82,9 @@ export const createClientConfigType: PluginHandler = ({ context }) => {
     }),
     typeParameters: [
       {
-        default: compiler.typeReferenceNode({ typeName: clientOptions.name }),
+        default: clientOptions.name
+          ? tsc.typeReferenceNode({ typeName: clientOptions.name })
+          : undefined,
         extends: defaultClientOptionsType,
         name: 'T',
       },

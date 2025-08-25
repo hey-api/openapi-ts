@@ -14,14 +14,11 @@ You can modify the contents of `schemas.gen.ts` by configuring the `@hey-api/sch
 ::: code-group
 
 ```js [json]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     {
       name: '@hey-api/schemas',
       type: 'json', // [!code ++]
@@ -31,14 +28,11 @@ export default {
 ```
 
 ```js [form]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     {
       name: '@hey-api/schemas',
       type: 'form', // [!code ++]
@@ -48,14 +42,11 @@ export default {
 ```
 
 ```js [disabled]
-import { defaultPlugins } from '@hey-api/openapi-ts';
-
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
-    ...defaultPlugins,
-    '@hey-api/client-fetch',
+    // ...other plugins
     '@hey-api/schemas', // [!code --]
   ],
 };
@@ -99,5 +90,9 @@ if (userInput.length > maxInputLength) {
 }
 ```
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+## API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/schemas/types.d.ts) interface.
+
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

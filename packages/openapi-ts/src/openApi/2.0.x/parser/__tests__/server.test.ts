@@ -7,8 +7,8 @@ import { parseServers } from '../server';
 describe('parseServers', () => {
   it('host + basePath + schemes', () => {
     const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
-      // @ts-expect-error
       config: {
+        // @ts-expect-error
         input: {
           path: '',
         },
@@ -33,8 +33,8 @@ describe('parseServers', () => {
 
   it('schemes + host', () => {
     const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
-      // @ts-expect-error
       config: {
+        // @ts-expect-error
         input: {
           path: '',
         },
@@ -55,8 +55,8 @@ describe('parseServers', () => {
 
   it('host + basePath', () => {
     const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
-      // @ts-expect-error
       config: {
+        // @ts-expect-error
         input: {
           path: '',
         },
@@ -77,8 +77,8 @@ describe('parseServers', () => {
 
   it('host', () => {
     const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
-      // @ts-expect-error
       config: {
+        // @ts-expect-error
         input: {
           path: '',
         },
@@ -98,8 +98,8 @@ describe('parseServers', () => {
 
   it('basePath', () => {
     const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
-      // @ts-expect-error
       config: {
+        // @ts-expect-error
         input: {
           path: '',
         },

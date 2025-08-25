@@ -1,0 +1,47 @@
+openapi: 3.0.3
+info:
+  title: OpenAPI 3.0.3 discriminator one of example
+  version: 1
+components:
+  schemas:
+    Foo:
+      oneOf:
+        - $ref: '#/components/schemas/Bar'
+        - $ref: '#/components/schemas/Baz'
+      discriminator:
+        propertyName: type
+    Baz:
+      allOf:
+        - $ref: '#/components/schemas/Qux'
+    Bar:
+      allOf:
+        - $ref: '#/components/schemas/Qux'
+    Spæcial:
+      allOf:
+        - $ref: '#/components/schemas/Qux'
+    Qux:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          $ref: '#/components/schemas/Quux'
+      required:
+        - id
+        - type
+    Quux:
+      enum:
+        - Bar
+        - Baz
+      type: string
+    Quuz:
+      oneOf:
+        - $ref: '#/components/schemas/Bar'
+        - $ref: '#/components/schemas/Baz'
+        - $ref: '#/components/schemas/Spæcial'
+      discriminator:
+        propertyName: type
+        mapping:
+          bar: '#/components/schemas/Bar'
+          baz: '#/components/schemas/Baz'
+          'non-ascii': '#/components/schemas/Spæcial'

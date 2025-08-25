@@ -1,14 +1,15 @@
 import ts from 'typescript';
 
-import { compiler } from '../../../compiler';
-import { operationResponsesMap } from '../../../ir/operation';
+import {
+  createOperationKey,
+  operationResponsesMap,
+} from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
-import { irRef } from '../../../utils/ref';
+import { tsc } from '../../../tsc';
 import { stringCase } from '../../../utils/stringCase';
-import { operationIrRef } from '../../shared/utils/ref';
-import type { Plugin } from '../../types';
 import { typesId } from '../typescript/ref';
-import type { Config } from './types';
+import { bigIntExpressions, dateExpressions } from './expressions';
+import type { HeyApiTransformersPlugin } from './types';
 
 interface OperationIRRef {
   /**
@@ -16,75 +17,6 @@ interface OperationIRRef {
    */
   id: string;
 }
-
-const bigIntExpressions = ({
-  dataExpression,
-}: {
-  dataExpression?: ts.Expression | string;
-}): Array<ts.Expression> => {
-  const bigIntCallExpression =
-    dataExpression !== undefined
-      ? compiler.callExpression({
-          functionName: 'BigInt',
-          parameters: [
-            compiler.callExpression({
-              functionName: compiler.propertyAccessExpression({
-                expression: dataExpression,
-                name: 'toString',
-              }),
-            }),
-          ],
-        })
-      : undefined;
-
-  if (bigIntCallExpression) {
-    if (typeof dataExpression === 'string') {
-      return [bigIntCallExpression];
-    }
-
-    if (dataExpression) {
-      return [
-        compiler.assignment({
-          left: dataExpression,
-          right: bigIntCallExpression,
-        }),
-      ];
-    }
-  }
-
-  return [];
-};
-
-const dateExpressions = ({
-  dataExpression,
-}: {
-  dataExpression?: ts.Expression | string;
-}): Array<ts.Expression> => {
-  const identifierDate = compiler.identifier({ text: 'Date' });
-
-  if (typeof dataExpression === 'string') {
-    return [
-      compiler.newExpression({
-        argumentsArray: [compiler.identifier({ text: dataExpression })],
-        expression: identifierDate,
-      }),
-    ];
-  }
-
-  if (dataExpression) {
-    return [
-      compiler.assignment({
-        left: dataExpression,
-        right: compiler.newExpression({
-          argumentsArray: [dataExpression],
-          expression: identifierDate,
-        }),
-      }),
-    ];
-  }
-
-  return [];
-};
 
 export const operationTransformerIrRef = ({
   id,
@@ -104,6 +36,7 @@ export const operationTransformerIrRef = ({
       affix = 'ResponseTransformer';
       break;
   }
+  const irRef = '#/ir/';
   return `${irRef}${stringCase({
     // TODO: parser - do not pascalcase for functions, only for types
     case: 'camelCase',
@@ -146,7 +79,7 @@ const ensureStatements = (
   nodes.map((node) =>
     ts.isStatement(node)
       ? node
-      : compiler.expressionToStatement({ expression: node }),
+      : tsc.expressionToStatement({ expression: node }),
   );
 
 const isNodeReturnStatement = ({
@@ -156,17 +89,14 @@ const isNodeReturnStatement = ({
 }) => node.kind === ts.SyntaxKind.ReturnStatement;
 
 const schemaResponseTransformerNodes = ({
-  context,
   plugin,
   schema,
 }: {
-  context: IR.Context;
-  plugin: Plugin.Instance<Config>;
+  plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
-  const identifierData = compiler.identifier({ text: dataVariableName });
+  const identifierData = tsc.identifier({ text: dataVariableName });
   const nodes = processSchemaType({
-    context,
     dataExpression: identifierData,
     plugin,
     schema,
@@ -176,23 +106,21 @@ const schemaResponseTransformerNodes = ({
     nodes.length &&
     !isNodeReturnStatement({ node: nodes[nodes.length - 1]! })
   ) {
-    nodes.push(compiler.returnStatement({ expression: identifierData }));
+    nodes.push(tsc.returnStatement({ expression: identifierData }));
   }
   return nodes;
 };
 
 const processSchemaType = ({
-  context,
   dataExpression,
   plugin,
   schema,
 }: {
-  context: IR.Context;
   dataExpression?: ts.Expression | string;
-  plugin: Plugin.Instance<Config>;
+  plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
-  const file = context.file({ id: transformersId })!;
+  const file = plugin.context.file({ id: transformersId })!;
 
   if (schema.$ref) {
     let identifier = file.identifier({
@@ -203,22 +131,23 @@ const processSchemaType = ({
 
     if (identifier.created && identifier.name) {
       // create each schema response transformer only once
-      const refSchema = context.resolveIrRef<IR.SchemaObject>(schema.$ref);
+      const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
+        schema.$ref,
+      );
       const nodes = schemaResponseTransformerNodes({
-        context,
         plugin,
         schema: refSchema,
       });
       if (nodes.length) {
-        const node = compiler.constVariable({
-          expression: compiler.arrowFunction({
+        const node = tsc.constVariable({
+          expression: tsc.arrowFunction({
             async: false,
             multiLine: true,
             parameters: [
               {
                 name: dataVariableName,
                 // TODO: parser - add types, generate types without transforms
-                type: compiler.keywordTypeNode({ keyword: 'any' }),
+                type: tsc.keywordTypeNode({ keyword: 'any' }),
               },
             ],
             statements: ensureStatements(nodes),
@@ -237,7 +166,7 @@ const processSchemaType = ({
     }
 
     if (identifier.name) {
-      const callExpression = compiler.callExpression({
+      const callExpression = tsc.callExpression({
         functionName: identifier.name,
         parameters: [dataExpression],
       });
@@ -246,7 +175,7 @@ const processSchemaType = ({
         // In a map callback, the item needs to be returned, not just the transformation result
         if (typeof dataExpression === 'string' && dataExpression === 'item') {
           return [
-            compiler.returnStatement({
+            tsc.returnStatement({
               expression: callExpression,
             }),
           ];
@@ -255,7 +184,7 @@ const processSchemaType = ({
         return [
           typeof dataExpression === 'string'
             ? callExpression
-            : compiler.assignment({
+            : tsc.assignment({
                 left: dataExpression,
                 right: callExpression,
               }),
@@ -275,7 +204,6 @@ const processSchemaType = ({
     const nodes = !schema.items
       ? []
       : processSchemaType({
-          context,
           dataExpression: 'item',
           plugin,
           schema: schema.items?.[0]
@@ -298,22 +226,22 @@ const processSchemaType = ({
 
     if (!hasReturnStatement) {
       mapCallbackStatements.push(
-        compiler.returnStatement({
-          expression: compiler.identifier({ text: 'item' }),
+        tsc.returnStatement({
+          expression: tsc.identifier({ text: 'item' }),
         }),
       );
     }
 
     return [
-      compiler.assignment({
+      tsc.assignment({
         left: dataExpression,
-        right: compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
+        right: tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
             expression: dataExpression,
             name: 'map',
           }),
           parameters: [
-            compiler.arrowFunction({
+            tsc.arrowFunction({
               multiLine: true,
               parameters: [
                 {
@@ -335,12 +263,11 @@ const processSchemaType = ({
 
     for (const name in schema.properties) {
       const property = schema.properties[name]!;
-      const propertyAccessExpression = compiler.propertyAccessExpression({
+      const propertyAccessExpression = tsc.propertyAccessExpression({
         expression: dataExpression || dataVariableName,
         name,
       });
       const propertyNodes = processSchemaType({
-        context,
         dataExpression: propertyAccessExpression,
         plugin,
         schema: property,
@@ -361,9 +288,9 @@ const processSchemaType = ({
           // todo: Probably, it would make more sense to go with if(x !== undefined && x !== null) instead of if(x)
           // this place influences all underlying transformers, while it's not exactly transformer itself
           // Keep in mind that !!0 === false, so it already makes output for Bigint undesirable
-          compiler.ifStatement({
+          tsc.ifStatement({
             expression: propertyAccessExpression,
-            thenStatement: compiler.block({
+            thenStatement: tsc.block({
               statements: ensureStatements(propertyNodes),
             }),
           }),
@@ -374,22 +301,9 @@ const processSchemaType = ({
     return nodes;
   }
 
-  if (
-    plugin.dates &&
-    schema.type === 'string' &&
-    (schema.format === 'date' || schema.format === 'date-time')
-  ) {
-    return dateExpressions({ dataExpression });
-  }
-
-  if (plugin.bigInt && schema.type === 'integer' && schema.format === 'int64') {
-    return bigIntExpressions({ dataExpression });
-  }
-
   if (schema.items) {
     if (schema.items.length === 1) {
       return processSchemaType({
-        context,
         dataExpression: 'item',
         plugin,
         schema: schema.items[0]!,
@@ -407,7 +321,6 @@ const processSchemaType = ({
     ) {
       for (const item of schema.items) {
         const nodes = processSchemaType({
-          context,
           dataExpression: dataExpression || 'item',
           plugin,
           schema: item,
@@ -416,16 +329,16 @@ const processSchemaType = ({
           if (dataExpression) {
             arrayNodes = arrayNodes.concat(nodes);
           } else {
-            const identifierItem = compiler.identifier({ text: 'item' });
+            const identifierItem = tsc.identifier({ text: 'item' });
             // processed means the item was transformed
             arrayNodes.push(
-              compiler.ifStatement({
+              tsc.ifStatement({
                 expression: identifierItem,
-                thenStatement: compiler.block({
+                thenStatement: tsc.block({
                   statements: ensureStatements(nodes),
                 }),
               }),
-              compiler.returnStatement({ expression: identifierItem }),
+              tsc.returnStatement({ expression: identifierItem }),
             );
           }
         }
@@ -435,9 +348,31 @@ const processSchemaType = ({
 
     // assume enums do not contain transformable values
     if (schema.type !== 'enum') {
-      console.warn(
-        `❗️ Transformers warning: schema ${JSON.stringify(schema)} is too complex and won't be currently processed. This will likely produce an incomplete transformer which is not what you want. Please open an issue if you'd like this improved https://github.com/hey-api/openapi-ts/issues`,
-      );
+      if (
+        !(schema.items ?? []).every((item) =>
+          (
+            ['boolean', 'integer', 'null', 'number', 'string'] as ReadonlyArray<
+              typeof item.type
+            >
+          ).includes(item.type),
+        )
+      ) {
+        console.warn(
+          `❗️ Transformers warning: schema ${JSON.stringify(schema)} is too complex and won't be currently processed. This will likely produce an incomplete transformer which is not what you want. Please open an issue if you'd like this improved https://github.com/hey-api/openapi-ts/issues`,
+        );
+      }
+    }
+  }
+
+  for (const transformer of plugin.config.transformers ?? []) {
+    const t = transformer({
+      config: plugin.config,
+      dataExpression,
+      file,
+      schema,
+    });
+    if (t) {
+      return t;
     }
   }
 
@@ -445,14 +380,27 @@ const processSchemaType = ({
 };
 
 // handles only response transformers for now
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  const file = context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
+  const file = plugin.createFile({
     id: transformersId,
     path: plugin.output,
   });
 
-  context.subscribe('operation', ({ operation }) => {
+  if (plugin.config.dates) {
+    plugin.config.transformers = [
+      ...(plugin.config.transformers ?? []),
+      dateExpressions,
+    ];
+  }
+
+  if (plugin.config.bigInt) {
+    plugin.config.transformers = [
+      ...(plugin.config.transformers ?? []),
+      bigIntExpressions,
+    ];
+  }
+
+  plugin.forEach('operation', ({ operation }) => {
     const { response } = operationResponsesMap(operation);
 
     if (!response) {
@@ -460,19 +408,21 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     }
 
     if (response.items && response.items.length > 1) {
-      if (context.config.logs.level === 'debug') {
+      if (plugin.context.config.logs.level === 'debug') {
         console.warn(
-          `❗️ Transformers warning: route ${`${operation.method.toUpperCase()} ${operation.path}`} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
+          `❗️ Transformers warning: route ${createOperationKey(operation)} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
         );
       }
       return;
     }
 
-    const identifierResponse = context.file({ id: typesId })!.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'response' }),
-      namespace: 'type',
-    });
-    if (!identifierResponse.name) {
+    const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+    const fileTypeScript = plugin.context.file({ id: typesId })!;
+    const responseName = fileTypeScript.getName(
+      pluginTypeScript.api.getId({ operation, type: 'response' }),
+    );
+
+    if (!responseName) {
       return;
     }
 
@@ -486,33 +436,32 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     }
 
     // TODO: parser - consider handling simple string response which is also a date
-    const nodes = schemaResponseTransformerNodes({
-      context,
-      plugin,
-      schema: response,
-    });
+    const nodes = schemaResponseTransformerNodes({ plugin, schema: response });
     if (nodes.length) {
       file.import({
         asType: true,
-        module: file.relativePathToFile({ context, id: typesId }),
-        name: identifierResponse.name,
+        module: file.relativePathToFile({
+          context: plugin.context,
+          id: typesId,
+        }),
+        name: responseName,
       });
-      const responseTransformerNode = compiler.constVariable({
+      const responseTransformerNode = tsc.constVariable({
         exportConst: true,
-        expression: compiler.arrowFunction({
+        expression: tsc.arrowFunction({
           async: true,
           multiLine: true,
           parameters: [
             {
               name: dataVariableName,
               // TODO: parser - add types, generate types without transforms
-              type: compiler.keywordTypeNode({ keyword: 'any' }),
+              type: tsc.keywordTypeNode({ keyword: 'any' }),
             },
           ],
-          returnType: compiler.typeReferenceNode({
+          returnType: tsc.typeReferenceNode({
             typeArguments: [
-              compiler.typeReferenceNode({
-                typeName: identifierResponse.name,
+              tsc.typeReferenceNode({
+                typeName: responseName,
               }),
             ],
             typeName: 'Promise',

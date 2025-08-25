@@ -42,16 +42,16 @@ export default defineNuxtModule<ModuleOptions>({
   async setup(options) {
     const nuxt = useNuxt();
 
-    nuxt.options.build.transpile.push('@hey-api/client-nuxt');
-
     const config = defu(options.config, {
       output: {
         path: path.join(nuxt.options.buildDir, 'client'),
       },
-      plugins: (options.config.plugins || []).some((plugin: any) => {
-        const pluginName = typeof plugin === 'string' ? plugin : plugin.name;
-        return pluginName === '@hey-api/plugin-nuxt';
-      })
+      plugins: (options.config.plugins || []).some(
+        (plugin: Required<UserConfig>['plugins'][number]) => {
+          const pluginName = typeof plugin === 'string' ? plugin : plugin.name;
+          return pluginName === '@hey-api/client-nuxt';
+        },
+      )
         ? []
         : ['@hey-api/client-nuxt'],
     } satisfies Partial<UserConfig>) as UserConfig;
@@ -113,4 +113,4 @@ export default defineNuxtModule<ModuleOptions>({
       }
     }
   },
-});
+}) as any;

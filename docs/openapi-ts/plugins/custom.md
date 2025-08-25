@@ -19,7 +19,7 @@ We recommend following the design pattern of the native plugins. You can browse 
 
 ```ts [index.ts]
 export { defaultConfig, defineConfig } from './config';
-export type { Config } from './types';
+export type { MyPlugin } from './types';
 ```
 
 :::
@@ -31,7 +31,9 @@ export type { Config } from './types';
 ::: code-group
 
 ```ts [types.d.ts]
-export interface Config {
+import type { DefinePlugin } from '@hey-api/openapi-ts';
+
+export type UserConfig = {
   /**
    * Plugin name. Must be unique.
    */
@@ -48,32 +50,31 @@ export interface Config {
    * @default false
    */
   myOption?: boolean;
-}
+};
+
+export type MyPlugin = DefinePlugin<UserConfig>;
 ```
 
 :::
 
 ## Configuration
 
-::: tip
-Reserved fields are prefixed with an underscore and are not exposed to the user.
-:::
-
-`config.ts` contains the runtime configuration for your plugin. It must implement the `Config` interface we created above and define `_handler()` and `_handlerLegacy()` functions from the `Plugin.Config` interface.
+`config.ts` contains the runtime configuration for your plugin. It must implement the `MyPlugin` interface we created above and define the `handler()` function from the `MyPlugin['Config']` interface.
 
 ::: code-group
 
 ```ts [config.ts]
-import type { Plugin } from '@hey-api/openapi-ts';
+import { definePluginConfig } from '@hey-api/openapi-ts';
 
 import { handler } from './plugin';
-import type { Config } from './types';
+import type { MyPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config> = {
-  _dependencies: ['@hey-api/typescript'],
-  _handler: handler,
-  _handlerLegacy: () => {},
-  myOption: false, // implements default value from types
+export const defaultConfig: MyPlugin['Config'] = {
+  config: {
+    myOption: false, // implements default value from types
+  },
+  dependencies: ['@hey-api/typescript'],
+  handler,
   name: 'my-plugin',
   output: 'my-plugin',
 };
@@ -81,10 +82,7 @@ export const defaultConfig: Plugin.Config<Config> = {
 /**
  * Type helper for `my-plugin` plugin, returns {@link Plugin.Config} object
  */
-export const defineConfig: Plugin.DefineConfig<Config> = (config) => ({
-  ...defaultConfig,
-  ...config,
-});
+export const defineConfig = definePluginConfig(defaultConfig);
 ```
 
 :::
@@ -99,37 +97,27 @@ Re-exporting your plugin from index file may result in broken output due to nami
 
 ## Handler
 
-Notice we defined `_handler` in our `config.ts` file. This method is responsible for generating the actual output. We recommend implementing it in `plugin.ts`.
+Notice we defined `handler` in our `config.ts` file. This method is responsible for generating the actual output. We recommend implementing it in `plugin.ts`.
 
 ::: code-group
 
 ```ts [plugin.ts]
-import type { Plugin } from '@hey-api/openapi-ts';
+import type { MyPlugin } from './types';
 
-import type { Config } from './types';
-
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
+export const handler: MyPlugin['Handler'] = ({ plugin }) => {
   // create an output file. it will not be
   // generated until it contains nodes
-  const file = context.createFile({
+  const file = plugin.createFile({
     id: plugin.name,
     path: plugin.output,
   });
 
-  context.subscribe('before', () => {
-    // do something before parsing the input
-  });
-
-  context.subscribe('operation', ({ operation }) => {
-    // do something with the operation model
-  });
-
-  context.subscribe('schema', ({ operation }) => {
-    // do something with the schema model
-  });
-
-  context.subscribe('after', () => {
-    // do something after parsing the input
+  plugin.forEach('operation', 'schema', (event) => {
+    if (event.type === 'operation') {
+      // do something with the operation model
+    } else if (event.type === 'schema') {
+      // do something with the schema model
+    }
   });
 
   // we're using the TypeScript Compiler API
@@ -155,9 +143,9 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
 :::
 
-### Legacy
+### Legacy Handler
 
-Notice we defined `_handlerLegacy` in our `config.ts` file. This method is responsible for generating the actual output when using the legacy parser. We do not recommend implementing this method unless you must use the legacy parser. You can use one of our [`plugin-legacy.ts`](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/%40hey-api/typescript/plugin-legacy.ts) files as an inspiration for potential implementation.
+You can also define an optional `handlerLegacy` function in `config.ts`. This method is responsible for generating the output when using the legacy parser. We do not recommend implementing this method unless you must use the legacy parser. You can use one of our [`plugin-legacy.ts`](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/%40hey-api/typescript/plugin-legacy.ts) files as an inspiration for potential implementation.
 
 ## Usage
 
@@ -167,10 +155,9 @@ Once we're satisfied with our plugin, we can register it in the [configuration](
 import { defineConfig } from 'path/to/my-plugin';
 
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
-    '@hey-api/client-fetch',
     defineConfig({
       myOption: true,
     }),
@@ -192,5 +179,5 @@ export const foo = 'Hello, world!';
 
 Congratulations! You've successfully created your own plugin! :tada:
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

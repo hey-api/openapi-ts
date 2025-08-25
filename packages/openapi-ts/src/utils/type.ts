@@ -1,6 +1,8 @@
-import { compiler, type Property, type TypeNode } from '../compiler';
+import type ts from 'typescript';
+
 import type { Model } from '../openApi';
 import { sanitizeOperationParameterName } from '../openApi';
+import { type Property, tsc } from '../tsc';
 import type { Client } from '../types/client';
 import { getConfig, isLegacyClient } from './config';
 import { refSchemasPartial } from './const';
@@ -18,16 +20,19 @@ const base = (model: Model) => {
   const config = getConfig();
 
   if (model.base === 'binary') {
-    return compiler.typeUnionNode({
+    return tsc.typeUnionNode({
       types: ['Blob', 'File'],
     });
   }
 
-  if (config.plugins['@hey-api/transformers']?.dates && isModelDate(model)) {
-    return compiler.typeNode('Date');
+  if (
+    config.plugins['@hey-api/transformers']?.config.dates &&
+    isModelDate(model)
+  ) {
+    return tsc.typeNode('Date');
   }
 
-  return compiler.typeNode(model.base);
+  return tsc.typeNode(model.base);
 };
 
 const typeReference = (model: Model) => {
@@ -43,10 +48,10 @@ const typeReference = (model: Model) => {
   if (model.export === 'reference' && model.$refs.length === 1) {
     if (model.$refs[0]!.startsWith(refSchemasPartial)) {
       const meta = getSchemasMeta(model.base);
-      typeNode = compiler.typeNode(meta.name);
+      typeNode = tsc.typeNode(meta.name);
     }
   }
-  const unionNode = compiler.typeUnionNode({
+  const unionNode = tsc.typeUnionNode({
     isNullable,
     types: [typeNode],
   });
@@ -58,7 +63,7 @@ const typeArray = (model: Model) => {
     // We treat an array of `model.link` as constant size array definition.
     if (Array.isArray(model.link)) {
       const types = model.link.map((m) => toType(m));
-      const tuple = compiler.typeTupleNode({
+      const tuple = tsc.typeTupleNode({
         isNullable: model.isNullable,
         types,
       });
@@ -74,22 +79,22 @@ const typeArray = (model: Model) => {
       model.maxItems <= 100
     ) {
       const types = Array(model.maxItems).fill(toType(model.link));
-      const tuple = compiler.typeTupleNode({
+      const tuple = tsc.typeTupleNode({
         isNullable: model.isNullable,
         types,
       });
       return tuple;
     }
 
-    return compiler.typeArrayNode([toType(model.link)], model.isNullable);
+    return tsc.typeArrayNode([toType(model.link)], model.isNullable);
   }
 
-  return compiler.typeArrayNode([base(model)], model.isNullable);
+  return tsc.typeArrayNode([base(model)], model.isNullable);
 };
 
 const typeEnum = (model: Model) => {
   const values = model.enum.map((enumerator) => enumValue(enumerator.value));
-  return compiler.typeUnionNode({
+  return tsc.typeUnionNode({
     isNullable: model.isNullable,
     types: values,
   });
@@ -98,7 +103,7 @@ const typeEnum = (model: Model) => {
 const typeDict = (model: Model) => {
   const type =
     model.link && !Array.isArray(model.link) ? toType(model.link) : base(model);
-  return compiler.typeRecordNode(['string'], [type], model.isNullable, true);
+  return tsc.typeRecordNode(['string'], [type], model.isNullable, true);
 };
 
 const typeUnionOrIntersection = ({
@@ -110,7 +115,7 @@ const typeUnionOrIntersection = ({
 }) => {
   const types = model.properties
     .map((model) => {
-      const str = compiler.nodeToString({
+      const str = tsc.nodeToString({
         node: toType(model),
         unescape: true,
       });
@@ -120,14 +125,14 @@ const typeUnionOrIntersection = ({
 
   const node =
     style === 'union'
-      ? compiler.typeUnionNode({
+      ? tsc.typeUnionNode({
           // avoid printing duplicate null statements
           isNullable:
             model.isNullable &&
             !model.properties.find((property) => property.isNullable),
           types,
         })
-      : compiler.typeIntersectionNode({
+      : tsc.typeIntersectionNode({
           isNullable: model.isNullable,
           types,
         });
@@ -137,14 +142,14 @@ const typeUnionOrIntersection = ({
     return node;
   }
 
-  return compiler.typeParenthesizedNode({
+  return tsc.typeParenthesizedNode({
     type: node,
   });
 };
 
 const typeInterface = (model: Model) => {
   if (!model.properties.length) {
-    return compiler.typeNode('unknown');
+    return tsc.typeNode('unknown');
   }
 
   const config = getConfig();
@@ -167,7 +172,7 @@ const typeInterface = (model: Model) => {
       name = property.name;
       if (maybeRequired) {
         maybeRequired = '';
-        value = compiler.typeUnionNode({
+        value = tsc.typeUnionNode({
           types: [value, 'undefined'],
         });
       }
@@ -184,14 +189,14 @@ const typeInterface = (model: Model) => {
     };
   });
 
-  return compiler.typeInterfaceNode({
+  return tsc.typeInterfaceNode({
     isNullable: model.isNullable,
     properties,
     useLegacyResolution: true,
   });
 };
 
-export const toType = (model: Model): TypeNode => {
+export const toType = (model: Model): ts.TypeNode => {
   switch (model.export) {
     case 'all-of':
       return typeUnionOrIntersection({

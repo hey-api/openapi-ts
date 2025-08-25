@@ -1,0 +1,105 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1.0 validators union merge example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Contact"
+          },
+          {
+            "properties": {
+              "username": {
+                "type": "string"
+              }
+            },
+            "required": ["username"],
+            "type": "object"
+          }
+        ]
+      },
+      "Contact": {
+        "oneOf": [
+          {
+            "properties": {
+              "email": {
+                "type": "string"
+              }
+            },
+            "required": ["email"],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "phone": {
+                "type": "string"
+              }
+            },
+            "required": ["phone"],
+            "type": "object"
+          }
+        ]
+      },
+      "PetStore": {
+        "type": "object",
+        "required": ["animals"],
+        "properties": {
+          "animals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "details"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["dog", "cat"],
+                  "default": "dog"
+                },
+                "details": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/DogDetails" },
+                    { "$ref": "#/components/schemas/CatDetails" }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "DogDetails": {
+        "type": "object",
+        "required": ["breed", "barkVolume"],
+        "properties": {
+          "breed": {
+            "type": "string"
+          },
+          "barkVolume": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          }
+        }
+      },
+      "CatDetails": {
+        "type": "object",
+        "required": ["furLength", "purrs"],
+        "properties": {
+          "furLength": {
+            "type": "string",
+            "enum": ["short", "medium", "long"]
+          },
+          "purrs": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

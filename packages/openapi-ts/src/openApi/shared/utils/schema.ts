@@ -1,11 +1,13 @@
+export const deepClone = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
+
 /**
  * Accepts `accessScopes` from two schemas and returns a merged and
  * deduplicated value.
  */
 export const mergeSchemaAccessScopes = (
-  a: ReadonlyArray<'read' | 'write'> | undefined,
-  b: ReadonlyArray<'read' | 'write'> | undefined,
-): ReadonlyArray<'read' | 'write'> | undefined => {
+  a: ReadonlyArray<'both' | 'read' | 'write'> | undefined,
+  b: ReadonlyArray<'both' | 'read' | 'write'> | undefined,
+): ReadonlyArray<'both' | 'read' | 'write'> | undefined => {
   if (!a?.length) {
     return b?.length ? b : undefined;
   }

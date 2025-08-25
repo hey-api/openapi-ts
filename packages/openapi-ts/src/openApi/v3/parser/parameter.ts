@@ -20,4 +20,6 @@ export const getParameterSchema = (
       }
     }
   }
+
+  return;
 };

@@ -1,7 +1,7 @@
 import type { IR } from '../../../ir/types';
 import { refToName } from '../../../utils/ref';
 import type { RequestBodyObject, SchemaObject } from '../types/spec';
-import { mediaTypeObject } from './mediaType';
+import { mediaTypeObjects } from './mediaType';
 import { schemaToIrSchema } from './schema';
 
 const requestBodyToIrRequestBody = ({
@@ -12,9 +12,10 @@ const requestBodyToIrRequestBody = ({
   requestBody: RequestBodyObject;
 }): IR.RequestBodyObject => {
   // TODO: parser - fix
-  const content = mediaTypeObject({
-    content: requestBody.content,
-  });
+  const contents = mediaTypeObjects({ content: requestBody.content });
+  // TODO: add support for multiple content types, for now prefer JSON
+  const content =
+    contents.find((content) => content.type === 'json') || contents[0];
   const schema = content ? content.schema : undefined;
 
   const finalSchema: SchemaObject = {

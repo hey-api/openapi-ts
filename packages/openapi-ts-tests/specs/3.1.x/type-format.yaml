@@ -1,0 +1,41 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 type format example
+  version: 1
+paths:
+  /foo:
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Foo'
+components:
+  schemas:
+    Foo:
+      type: object
+      properties:
+        bar:
+          type: integer
+        foo:
+          default: 0
+          format: int64
+          type: integer
+        id:
+          type: string
+          format: typeid
+          example: 'user_123'
+      required:
+        - id
+        - foo
+    Bar:
+      type: object
+      required:
+        - foo
+      properties:
+        foo:
+          type: integer
+      additionalProperties:
+        type: integer

@@ -21,6 +21,14 @@ export const hasOperationDataRequired = (
   return false;
 };
 
+export const createOperationKey = ({
+  method,
+  path,
+}: {
+  method: string;
+  path: string;
+}) => `${method.toUpperCase()} ${path}`;
+
 export const operationPagination = ({
   context,
   operation,
@@ -31,7 +39,10 @@ export const operationPagination = ({
   const body = operation.body;
 
   if (!body || !body.pagination) {
-    return parameterWithPagination(operation.parameters);
+    return parameterWithPagination({
+      context,
+      parameters: operation.parameters,
+    });
   }
 
   if (body.pagination === true) {
@@ -52,7 +63,10 @@ export const operationPagination = ({
   const paginationProp = finalSchema?.properties?.[body.pagination];
 
   if (!paginationProp) {
-    return parameterWithPagination(operation.parameters);
+    return parameterWithPagination({
+      context,
+      parameters: operation.parameters,
+    });
   }
 
   return {

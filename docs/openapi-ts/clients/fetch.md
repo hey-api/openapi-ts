@@ -1,21 +1,19 @@
 ---
-title: Fetch API client
-description: Fetch API client for Hey API. Compatible with all our features.
+title: Fetch API Client
+description: Generate a type-safe Fetch API client from OpenAPI with the Fetch API client for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
-<script setup>
+<script setup lang="ts">
 import { embedProject } from '../../embed'
 </script>
 
 # Fetch API
 
-::: warning
-Fetch API client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
-:::
-
 ### About
 
 The [Fetch API](https://developer.mozilla.org/docs/Web/API/Fetch_API) provides an interface for fetching resources (including across the network). It is a more powerful and flexible replacement for XMLHttpRequest.
+
+The Fetch API client for Hey API generates a type-safe client from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
 
 ### Demo
 
@@ -23,29 +21,17 @@ The [Fetch API](https://developer.mozilla.org/docs/Web/API/Fetch_API) provides a
 Launch demo
 </button>
 
+## Features
+
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- type-safe response data and errors
+- response data validation and transformation
+- access to the original request and response
+- granular request and response customization options
+- minimal learning curve thanks to extending the underlying technology
+- support bundling inside the generated output
+
 ## Installation
-
-Start by adding `@hey-api/client-fetch` to your dependencies.
-
-::: code-group
-
-```sh [npm]
-npm install @hey-api/client-fetch
-```
-
-```sh [pnpm]
-pnpm add @hey-api/client-fetch
-```
-
-```sh [yarn]
-yarn add @hey-api/client-fetch
-```
-
-```sh [bun]
-bun add @hey-api/client-fetch
-```
-
-:::
 
 In your [configuration](/openapi-ts/get-started), add `@hey-api/client-fetch` to your plugins and you'll be ready to generate client artifacts. :tada:
 
@@ -53,7 +39,7 @@ In your [configuration](/openapi-ts/get-started), add `@hey-api/client-fetch` to
 
 ```js [config]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'], // [!code ++]
 };
@@ -61,10 +47,16 @@ export default {
 
 ```sh [cli]
 npx @hey-api/openapi-ts \
-  -i https://get.heyapi.dev/hey-api/backend \
+  -i hey-api/backend \
   -o src/client \
   -c @hey-api/client-fetch # [!code ++]
 ```
+
+:::
+
+::: tip
+
+This step is optional because Fetch is the default client.
 
 :::
 
@@ -76,7 +68,7 @@ When we installed the client above, it created a [`client.gen.ts`](/openapi-ts/o
 
 ### `setConfig()`
 
-This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Fetch API configuration option to `setConfig()`, and even your own Fetch implementation.
+This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Fetch API configuration option to `setConfig()`, and even your own [Fetch](#custom-fetch) implementation.
 
 ```js
 import { client } from 'client/client.gen';
@@ -94,7 +86,7 @@ Since `client.gen.ts` is a generated file, we can't directly modify it. Instead,
 
 ```js
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     {
@@ -127,7 +119,7 @@ With this approach, `client.gen.ts` will call `createClientConfig()` before init
 You can also create your own client instance. You can use it to manually send requests or point it to a different domain.
 
 ```js
-import { createClient } from '@hey-api/client-fetch';
+import { createClient } from './client/client';
 
 const myClient = createClient({
   baseUrl: 'https://example.com',
@@ -154,27 +146,42 @@ const response = await getFoo({
 
 ## Interceptors
 
-Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application. They can be added with `use` and removed with `eject`. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
+Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application. They can be added with `use`, removed with `eject`, and updated wth `update`. The `use` and `update` methods will return the id of the interceptor for use with `eject` and `update`. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
 
 ::: code-group
 
 ```js [use]
 import { client } from 'client/client.gen';
-
 // Supports async functions
-client.interceptors.request.use(async (request) => {
+async function myInterceptor(request) {
   // do something
   return request;
-});
+}
+interceptorId = client.interceptors.request.use(myInterceptor);
 ```
 
 ```js [eject]
 import { client } from 'client/client.gen';
 
-client.interceptors.request.eject((request) => {
+// eject interceptor by interceptor id
+client.interceptors.request.eject(interceptorId);
+
+// eject interceptor by reference to interceptor function
+client.interceptors.request.eject(myInterceptor);
+```
+
+```js [update]
+import { client } from 'client/client.gen';
+
+async function myNewInterceptor(request) {
   // do something
   return request;
-});
+}
+// update interceptor by interceptor id
+client.interceptors.request.update(interceptorId, myNewInterceptor);
+
+// update interceptor by reference to interceptor function
+client.interceptors.request.update(myInterceptor, myNewInterceptor);
 ```
 
 :::
@@ -185,26 +192,42 @@ and an example response interceptor
 
 ```js [use]
 import { client } from 'client/client.gen';
-
-client.interceptors.response.use((response) => {
+async function myInterceptor(response) {
   // do something
   return response;
-});
+}
+// Supports async functions
+interceptorId = client.interceptors.response.use(myInterceptor);
 ```
 
 ```js [eject]
 import { client } from 'client/client.gen';
 
-client.interceptors.response.eject((response) => {
+// eject interceptor by interceptor id
+client.interceptors.response.eject(interceptorId);
+
+// eject interceptor by reference to interceptor function
+client.interceptors.response.eject(myInterceptor);
+```
+
+```js [update]
+import { client } from 'client/client.gen';
+
+async function myNewInterceptor(response) {
   // do something
   return response;
-});
+}
+// update interceptor by interceptor id
+client.interceptors.response.update(interceptorId, myNewInterceptor);
+
+// update interceptor by reference to interceptor function
+client.interceptors.response.update(myInterceptor, myNewInterceptor);
 ```
 
 :::
 
 ::: tip
-To eject, you must provide a reference to the function that was passed to `use()`.
+To eject, you must provide the id or reference of the interceptor passed to `use()`, the id is the value returned by `use()` and `update()`.
 :::
 
 ## Auth
@@ -258,22 +281,25 @@ const url = client.buildUrl<FooData>({
 console.log(url); // prints '/foo/1?bar=baz'
 ```
 
-## Bundling
+## Custom `fetch`
 
-Sometimes, you may not want to declare client packages as a dependency. This scenario is common if you're using Hey API to generate output that is repackaged and published for other consumers under your own brand. For such cases, our clients support bundling through the `client.bundle` configuration option.
+You can implement your own `fetch` method. This is useful if you need to extend the default `fetch` method with extra functionality, or replace it altogether.
 
 ```js
-export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
-  output: 'src/client',
-  plugins: [
-    {
-      bundle: true, // [!code ++]
-      name: '@hey-api/client-fetch',
-    },
-  ],
-};
+import { client } from 'client/client.gen';
+
+client.setConfig({
+  fetch: () => {
+    /* custom `fetch` method */
+  },
+});
 ```
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom method to be.
+
+## API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/client-fetch/types.d.ts) interface.
+
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

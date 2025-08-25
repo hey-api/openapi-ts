@@ -1,6 +1,5 @@
 import './App.css';
 
-import { createClient } from '@hey-api/client-fetch';
 import * as Form from '@radix-ui/react-form';
 import { DownloadIcon, PlusIcon, ReloadIcon } from '@radix-ui/react-icons';
 import {
@@ -23,6 +22,7 @@ import {
   getPetByIdOptions,
   updatePetMutation,
 } from './client/@tanstack/react-query.gen';
+import { createClient } from './client/client';
 import { PetSchema } from './client/schemas.gen';
 import type { Pet } from './client/types.gen';
 

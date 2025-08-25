@@ -1,0 +1,72 @@
+{
+  "name": "@hey-api/custom-client",
+  "version": "0.1.1",
+  "description": "Custom client for `@hey-api/openapi-ts` codegen. Used for testing.",
+  "private": true,
+  "homepage": "https://heyapi.dev/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "email": "lubos@heyapi.dev",
+    "name": "Hey API",
+    "url": "https://heyapi.dev"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./plugin": {
+      "import": {
+        "types": "./dist/plugin.d.ts",
+        "default": "./dist/plugin.js"
+      },
+      "require": {
+        "types": "./dist/plugin.d.cts",
+        "default": "./dist/plugin.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup && rollup -c && pnpm check-exports",
+    "check-exports": "attw --profile node16 --pack .",
+    "dev": "tsup --watch",
+    "prepublishOnly": "pnpm build",
+    "test:coverage": "vitest run --coverage",
+    "test:update": "vitest watch --update",
+    "test:watch": "vitest watch",
+    "test": "vitest run",
+    "typecheck": "vitest --typecheck --watch=false"
+  },
+  "peerDependencies": {
+    "@hey-api/openapi-ts": "< 2"
+  },
+  "devDependencies": {
+    "@config/vite-base": "workspace:*",
+    "@hey-api/openapi-ts": "workspace:*"
+  }
+}

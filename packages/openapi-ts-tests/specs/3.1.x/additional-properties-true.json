@@ -1,0 +1,53 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1.0 additional properties true example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "required": ["foo"],
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "Bar": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Foo"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true
+          }
+        ]
+      },
+      "Baz": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Foo"
+          },
+          {
+            "required": ["bar"],
+            "type": "object",
+            "properties": {
+              "bar": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        ]
+      },
+      "Qux": {
+        "type": "object",
+        "additionalProperties": {}
+      }
+    }
+  }
+}

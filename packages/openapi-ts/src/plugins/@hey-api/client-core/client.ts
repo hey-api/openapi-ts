@@ -1,15 +1,14 @@
-import { compiler } from '../../../compiler';
 import { clientModulePath } from '../../../generate/client';
+import { tsc } from '../../../tsc';
 import { parseUrl } from '../../../utils/url';
-import { clientId, getClientBaseUrlKey } from '../client-core/utils';
 import { typesId } from '../typescript/ref';
 import type { PluginHandler } from './types';
+import { clientId, getClientBaseUrlKey } from './utils';
 
-const resolveBaseUrlString: PluginHandler<string | undefined> = ({
-  context,
+const resolveBaseUrlString = ({
   plugin,
-}) => {
-  const { baseUrl } = plugin;
+}: Parameters<PluginHandler>[0]): string | undefined => {
+  const { baseUrl } = plugin.config;
 
   if (baseUrl === false) {
     return;
@@ -19,7 +18,7 @@ const resolveBaseUrlString: PluginHandler<string | undefined> = ({
     return baseUrl;
   }
 
-  const { servers } = context.ir;
+  const { servers } = plugin.context.ir;
 
   if (!servers) {
     return;
@@ -28,11 +27,11 @@ const resolveBaseUrlString: PluginHandler<string | undefined> = ({
   return servers[typeof baseUrl === 'number' ? baseUrl : 0]?.url;
 };
 
-export const createClient: PluginHandler = ({ context, plugin }) => {
-  const file = context.file({ id: clientId })!;
+export const createClient = ({ plugin }: Parameters<PluginHandler>[0]) => {
+  const file = plugin.context.file({ id: clientId })!;
 
   const clientModule = clientModulePath({
-    config: context.config,
+    config: plugin.context.config,
     sourceOutput: file.nameWithoutExtension(),
   });
   const createClient = file.import({
@@ -43,17 +42,21 @@ export const createClient: PluginHandler = ({ context, plugin }) => {
     module: clientModule,
     name: 'createConfig',
   });
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const fileTypeScript = plugin.context.file({ id: typesId })!;
   const clientOptions = file.import({
     asType: true,
-    module: file.relativePathToFile({ context, id: typesId }),
-    name: 'ClientOptions',
+    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
+    name: fileTypeScript.getName(
+      pluginTypeScript.api.getId({ type: 'ClientOptions' }),
+    ),
   });
 
-  const createClientConfig = plugin.runtimeConfigPath
+  const createClientConfig = plugin.config.runtimeConfigPath
     ? file.import({
         module: file.relativePathToFile({
-          context,
-          id: plugin.runtimeConfigPath,
+          context: plugin.context,
+          id: plugin.config.runtimeConfigPath,
         }),
         name: 'createClientConfig',
       })
@@ -61,18 +64,28 @@ export const createClient: PluginHandler = ({ context, plugin }) => {
 
   const defaultValues: Array<unknown> = [];
 
-  const resolvedBaseUrl = resolveBaseUrlString({ context, plugin });
+  const resolvedBaseUrl = resolveBaseUrlString({
+    plugin: plugin as any,
+  });
   if (resolvedBaseUrl) {
     const url = parseUrl(resolvedBaseUrl);
     if (url.protocol && url.host && !resolvedBaseUrl.includes('{')) {
       defaultValues.push({
-        key: getClientBaseUrlKey(context.config),
+        key: getClientBaseUrlKey(plugin.context.config),
         value: resolvedBaseUrl,
+      });
+    } else if (resolvedBaseUrl !== '/' && resolvedBaseUrl.startsWith('/')) {
+      const baseUrl = resolvedBaseUrl.endsWith('/')
+        ? resolvedBaseUrl.slice(0, -1)
+        : resolvedBaseUrl;
+      defaultValues.push({
+        key: getClientBaseUrlKey(plugin.context.config),
+        value: baseUrl,
       });
     }
   }
 
-  if ('throwOnError' in plugin && plugin.throwOnError) {
+  if ('throwOnError' in plugin.config && plugin.config.throwOnError) {
     defaultValues.push({
       key: 'throwOnError',
       value: true,
@@ -80,22 +93,24 @@ export const createClient: PluginHandler = ({ context, plugin }) => {
   }
 
   const createConfigParameters = [
-    compiler.callExpression({
+    tsc.callExpression({
       functionName: createConfig.name,
       parameters: defaultValues.length
-        ? [compiler.objectExpression({ obj: defaultValues })]
+        ? [tsc.objectExpression({ obj: defaultValues })]
         : undefined,
-      types: [compiler.typeReferenceNode({ typeName: clientOptions.name })],
+      types: clientOptions.name
+        ? [tsc.typeReferenceNode({ typeName: clientOptions.name })]
+        : undefined,
     }),
   ];
 
-  const statement = compiler.constVariable({
+  const statement = tsc.constVariable({
     exportConst: true,
-    expression: compiler.callExpression({
+    expression: tsc.callExpression({
       functionName: createClient.name,
       parameters: createClientConfig
         ? [
-            compiler.callExpression({
+            tsc.callExpression({
               functionName: createClientConfig.name,
               parameters: createConfigParameters,
             }),

@@ -22,7 +22,7 @@ const BASIC_MEDIA_TYPES = [
 ];
 
 export const getContent = (
-  openApi: OpenApi,
+  _openApi: OpenApi,
   content: Dictionary<OpenApiMediaType>,
 ): Content | undefined => {
   const basicMediaTypeWithSchema = Object.keys(content)
@@ -49,4 +49,6 @@ export const getContent = (
       schema: content[firstMediaTypeWithSchema]!.schema as OpenApiSchema,
     };
   }
+
+  return;
 };

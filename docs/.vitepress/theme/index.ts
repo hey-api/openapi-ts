@@ -5,13 +5,10 @@ import DefaultTheme from 'vitepress/theme';
 // custom CSS must be imported after default theme to correctly apply styles
 import './custom.css';
 
-import AuthorsList from './components/AuthorsList.vue';
-import Layout from './Layout.vue';
+import Layout from './components/Layout.vue';
 
 export default {
   Layout,
-  enhanceApp: ({ app }) => {
-    app.component('AuthorsList', AuthorsList);
-  },
+  enhanceApp: () => {},
   extends: DefaultTheme,
 } satisfies Theme;

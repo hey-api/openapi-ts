@@ -1,4 +1,21 @@
+import { mergeSchemaAccessScopes } from '../openApi/shared/utils/schema';
 import type { IR } from './types';
+
+const assignItems = ({
+  items,
+  schema,
+}: {
+  items: Array<IR.SchemaObject>;
+  schema: IR.SchemaObject;
+}) => {
+  for (const item of items) {
+    schema.accessScopes = mergeSchemaAccessScopes(
+      schema.accessScopes,
+      item.accessScopes,
+    );
+  }
+  schema.items = items;
+};
 
 /**
  * Simply adds `items` to the schema. Also handles setting the logical operator
@@ -20,12 +37,12 @@ export const addItemsToSchema = ({
   }
 
   if (schema.type === 'tuple') {
-    schema.items = items;
+    assignItems({ items, schema });
     return schema;
   }
 
   if (items.length !== 1) {
-    schema.items = items;
+    assignItems({ items, schema });
     schema.logicalOperator = logicalOperator;
     return schema;
   }
@@ -39,6 +56,6 @@ export const addItemsToSchema = ({
     return schema;
   }
 
-  schema.items = items;
+  assignItems({ items, schema });
   return schema;
 };

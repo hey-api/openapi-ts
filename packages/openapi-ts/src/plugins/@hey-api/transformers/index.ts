@@ -1,2 +1,2 @@
 export { defaultConfig, defineConfig } from './config';
-export type { Config } from './types';
+export type { HeyApiTransformersPlugin, TypeTransformer } from './types';

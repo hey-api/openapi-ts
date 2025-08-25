@@ -3,7 +3,7 @@ import type {
   SecuritySchemeObject,
   ServerObject,
 } from '../openApi/3.1.x/types/spec';
-import type { IRContext } from './context';
+import type { ContextFile as CtxFile, IRContext } from './context';
 import type { IRMediaType } from './mediaType';
 
 interface IRBodyObject {
@@ -30,6 +30,7 @@ interface IROperationObject {
   description?: string;
   id: string;
   method: keyof IRPathItemObject;
+  operationId?: string;
   parameters?: IRParametersObject;
   path: keyof IRPathsObject;
   responses?: IRResponsesObject;
@@ -138,6 +139,7 @@ interface IRSchemaObject
     | 'pattern'
     | 'required'
     | 'title'
+    | 'example'
   > {
   /**
    * If the schema is intended to be used as an object property, it can be
@@ -150,7 +152,7 @@ interface IRSchemaObject
    * contains any read-only or write-only fields. This value controls whether
    * we split the schema into individual schemas for payloads and responses.
    */
-  accessScopes?: ReadonlyArray<'read' | 'write'>;
+  accessScopes?: ReadonlyArray<'both' | 'read' | 'write'>;
   /**
    * If type is `object`, `additionalProperties` can be used to either define
    * a schema for properties not included in `properties` or disallow such
@@ -177,6 +179,13 @@ interface IRSchemaObject
    */
   properties?: Record<string, IRSchemaObject>;
   /**
+   * The names of `properties` can be validated against a schema, irrespective
+   * of their values. This can be useful if you don't want to enforce specific
+   * properties, but you want to make sure that the names of those properties
+   * follow a specific convention.
+   */
+  propertyNames?: IRSchemaObject;
+  /**
    * Each schema eventually resolves into `type`.
    */
   type?:
@@ -199,26 +208,32 @@ type IRSecurityObject = SecuritySchemeObject;
 
 type IRServerObject = ServerObject;
 
+type IRWebhookObject = IRPathItemObject;
+
 interface IRModel {
   components?: IRComponentsObject;
   paths?: IRPathsObject;
   servers?: ReadonlyArray<IRServerObject>;
+  webhooks?: Record<string, IRWebhookObject>;
 }
 
 export namespace IR {
   export type BodyObject = IRBodyObject;
   export type ComponentsObject = IRComponentsObject;
   export type Context<Spec extends Record<string, any> = any> = IRContext<Spec>;
+  export type ContextFile = CtxFile;
   export type Model = IRModel;
   export type OperationObject = IROperationObject;
   export type ParameterObject = IRParameterObject;
   export type ParametersObject = IRParametersObject;
   export type PathItemObject = IRPathItemObject;
   export type PathsObject = IRPathsObject;
+  export type ReferenceObject = ReferenceObject;
   export type RequestBodyObject = IRRequestBodyObject;
   export type ResponseObject = IRResponseObject;
   export type ResponsesObject = IRResponsesObject;
   export type SchemaObject = IRSchemaObject;
   export type SecurityObject = IRSecurityObject;
   export type ServerObject = IRServerObject;
+  export type WebhookObject = IRWebhookObject;
 }

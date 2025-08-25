@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-fastify",
   "private": true,
-  "version": "0.1.10",
+  "version": "0.1.16",
   "type": "module",
   "scripts": {
     "openapi-ts": "openapi-ts",
@@ -9,17 +9,16 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@hey-api/client-fetch": "workspace:*",
     "fastify": "5.2.0",
     "fastify-openapi-glue": "4.8.0"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "workspace:*",
     "@config/vite-base": "workspace:*",
+    "@hey-api/openapi-ts": "workspace:*",
     "eslint": "9.17.0",
     "prettier": "3.4.2",
     "typescript": "5.8.3",
-    "vite": "6.2.6",
+    "vite": "7.1.2",
     "vitest": "3.1.1"
   }
 }

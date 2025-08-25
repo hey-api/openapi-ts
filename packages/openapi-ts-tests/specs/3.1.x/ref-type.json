@@ -1,0 +1,58 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1.0 ref type example",
+    "version": "1"
+  },
+  "paths": {
+    "/foo": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Foo",
+                  "type": ["object", "null"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "properties": {
+          "foo": {
+            "items": {
+              "properties": {
+                "baz": {
+                  "$ref": "#/components/schemas/Bar",
+                  "type": ["object", "null"]
+                }
+              },
+              "required": ["baz"],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["foo"],
+        "type": "object"
+      },
+      "Bar": {
+        "properties": {
+          "bar": {
+            "type": "integer"
+          }
+        },
+        "required": ["bar"],
+        "type": "object"
+      }
+    }
+  }
+}

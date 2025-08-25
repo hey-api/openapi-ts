@@ -1,22 +1,21 @@
-import type { Plugin } from '../../types';
+import { definePluginConfig } from '../../shared/utils/config';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
-import type { Config } from './types';
+import type { HeyApiSchemasPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config> = {
-  _handler: handler,
-  _handlerLegacy: handlerLegacy,
-  exportFromIndex: false,
+export const defaultConfig: HeyApiSchemasPlugin['Config'] = {
+  config: {
+    exportFromIndex: false,
+    nameBuilder: (name) => `${name}Schema`,
+    type: 'json',
+  },
+  handler,
+  handlerLegacy,
   name: '@hey-api/schemas',
-  nameBuilder: (name) => `${name}Schema`,
   output: 'schemas',
-  type: 'json',
 };
 
 /**
  * Type helper for `@hey-api/schemas` plugin, returns {@link Plugin.Config} object
  */
-export const defineConfig: Plugin.DefineConfig<Config> = (config) => ({
-  ...defaultConfig,
-  ...config,
-});
+export const defineConfig = definePluginConfig(defaultConfig);

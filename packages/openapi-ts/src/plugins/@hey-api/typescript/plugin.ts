@@ -1,146 +1,35 @@
 import ts from 'typescript';
 
-import type { Property } from '../../../compiler';
-import { compiler } from '../../../compiler';
-import { operationResponsesMap } from '../../../ir/operation';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
-import { escapeComment } from '../../../utils/escape';
-import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
+import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
+import { buildName } from '../../../openApi/shared/utils/name';
+import type { Property } from '../../../tsc';
+import { tsc } from '../../../tsc';
+import { refToName } from '../../../utils/ref';
 import { numberRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { fieldName } from '../../shared/utils/case';
-import { operationIrRef } from '../../shared/utils/ref';
-import type { Plugin } from '../../types';
+import { createSchemaComment } from '../../shared/utils/schema';
 import { createClientOptions } from './clientOptions';
+import { operationToType } from './operation';
 import { typesId } from './ref';
-import type { Config } from './types';
+import type { HeyApiTypeScriptPlugin, PluginState } from './types';
+import { webhookToType } from './webhook';
+import { createWebhooks } from './webhooks';
+
+export type OnRef = (id: string) => void;
 
 interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
   extends Omit<IR.SchemaObject, 'type'> {
   type: Extract<Required<IR.SchemaObject>['type'], T>;
 }
 
-interface State {
-  /**
-   * If set, we keep the specified properties (read-only or write-only) and
-   * strip the other type.
-   */
-  accessScope?: 'read' | 'write';
-}
-
-const parseSchemaJsDoc = ({ schema }: { schema: IR.SchemaObject }) => {
-  const comments = [
-    schema.description && escapeComment(schema.description),
-    schema.deprecated && '@deprecated',
-  ].filter(Boolean);
-
-  if (!comments.length) {
-    return;
-  }
-
-  return comments;
-};
-
-const scopeToRef = ({
-  $ref,
-  accessScope,
-  plugin,
-}: {
-  $ref: string;
-  accessScope?: 'read' | 'write';
-  plugin: Plugin.Instance<Config>;
-}) => {
-  if (!accessScope) {
-    return $ref;
-  }
-
-  const refParts = $ref.split('/');
-  const name = refParts.pop()!;
-  const nameBuilder =
-    accessScope === 'read'
-      ? plugin.readableNameBuilder
-      : plugin.writableNameBuilder;
-  const processedName = processNameBuilder({ name, nameBuilder });
-  refParts.push(processedName);
-  return refParts.join('/');
-};
-
-const processNameBuilder = ({
-  name,
-  nameBuilder,
-}: {
-  name: string;
-  nameBuilder: string | undefined;
-}) => {
-  if (!nameBuilder) {
-    return name;
-  }
-
-  return nameBuilder.replace('{{name}}', name);
-};
-
-const shouldSkipSchema = ({
-  schema,
-  state,
-}: {
-  schema: IR.SchemaObject;
-  state: State | undefined;
-}) =>
-  Boolean(
-    state?.accessScope &&
-      schema.accessScope &&
-      state.accessScope !== schema.accessScope,
-  );
-
-const addJavaScriptEnum = ({
-  $ref,
-  context,
-  plugin,
-  schema,
-}: {
-  $ref: string;
-  context: IR.Context;
-  plugin: Plugin.Instance<Config>;
-  schema: SchemaWithType<'enum'>;
-}) => {
-  const file = context.file({ id: typesId })!;
-  const identifier = file.identifier({
-    $ref,
-    create: true,
-    namespace: 'value',
-  });
-
-  // TODO: parser - this is the old parser behavior where we would NOT
-  // print nested enum identifiers if they already exist. This is a
-  // blocker for referencing these identifiers within the file as
-  // we cannot guarantee just because they have a duplicate identifier,
-  // they have a duplicate value.
-  if (!identifier.created) {
-    return;
-  }
-
-  const enumObject = schemaToEnumObject({ plugin, schema });
-
-  const expression = compiler.objectExpression({
-    multiLine: true,
-    obj: enumObject.obj,
-  });
-  const node = compiler.constVariable({
-    assertion: 'const',
-    comment: parseSchemaJsDoc({ schema }),
-    exportConst: true,
-    expression,
-    name: identifier.name || '',
-  });
-  return node;
-};
-
 const schemaToEnumObject = ({
   plugin,
   schema,
 }: {
-  plugin: Plugin.Instance<Config>;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: IR.SchemaObject;
 }) => {
   const typeofItems: Array<
@@ -154,7 +43,7 @@ const schemaToEnumObject = ({
     | 'undefined'
   > = [];
 
-  const obj = (schema.items ?? []).map((item) => {
+  const obj = (schema.items ?? []).map((item, index) => {
     const typeOfItemConst = typeof item.const;
 
     if (!typeofItems.includes(typeOfItemConst)) {
@@ -172,11 +61,13 @@ const schemaToEnumObject = ({
       key = item.const ? 'true' : 'false';
     } else if (item.const === null) {
       key = 'null';
+    } else {
+      key = `${index}`;
     }
 
     if (key) {
       key = stringCase({
-        case: plugin.enumsCase,
+        case: plugin.config.enums.case,
         stripLeadingSeparators: false,
         value: key,
       });
@@ -185,15 +76,15 @@ const schemaToEnumObject = ({
       // TypeScript enum keys cannot be numbers
       if (
         numberRegExp.test(key) &&
-        (plugin.enums === 'typescript' ||
-          plugin.enums === 'typescript+namespace')
+        plugin.config.enums.enabled &&
+        plugin.config.enums.mode === 'typescript'
       ) {
         key = `_${key}`;
       }
     }
 
     return {
-      comments: parseSchemaJsDoc({ schema: item }),
+      comments: createSchemaComment({ schema: item }),
       key,
       value: item.const,
     };
@@ -205,278 +96,79 @@ const schemaToEnumObject = ({
   };
 };
 
-const addTypeEnum = ({
-  $ref,
-  context,
-  plugin,
-  schema,
-  state,
-}: {
-  $ref: string;
-  context: IR.Context;
-  plugin: Plugin.Instance<Config>;
-  schema: SchemaWithType<'enum'>;
-  state: State | undefined;
-}): ts.TypeAliasDeclaration | undefined => {
-  const file = context.file({ id: typesId })!;
-  const identifier = file.identifier({
-    $ref,
-    create: true,
-    namespace: 'type',
-  });
-
-  // TODO: parser - this is the old parser behavior where we would NOT
-  // print nested enum identifiers if they already exist. This is a
-  // blocker for referencing these identifiers within the file as
-  // we cannot guarantee just because they have a duplicate identifier,
-  // they have a duplicate value.
-  if (
-    !identifier.created &&
-    !isRefOpenApiComponent($ref) &&
-    plugin.enums !== 'typescript+namespace'
-  ) {
-    return;
-  }
-
-  const type = schemaToType({
-    context,
-    plugin,
-    schema: {
-      ...schema,
-      type: undefined,
-    },
-    state,
-  });
-
-  if (type) {
-    const node = compiler.typeAliasDeclaration({
-      comment: parseSchemaJsDoc({ schema }),
-      exportType: true,
-      name: identifier.name || '',
-      type,
-    });
-    return node;
-  }
-};
-
-const addTypeScriptEnum = ({
-  $ref,
-  context,
-  plugin,
-  schema,
-  state,
-}: {
-  $ref: string;
-  context: IR.Context;
-  plugin: Plugin.Instance<Config>;
-  schema: SchemaWithType<'enum'>;
-  state: State | undefined;
-}) => {
-  const file = context.file({ id: typesId })!;
-  const identifier = file.identifier({
-    $ref,
-    create: true,
-    namespace: 'value',
-  });
-
-  // TODO: parser - this is the old parser behavior where we would NOT
-  // print nested enum identifiers if they already exist. This is a
-  // blocker for referencing these identifiers within the file as
-  // we cannot guarantee just because they have a duplicate identifier,
-  // they have a duplicate value.
-  if (!identifier.created && plugin.enums !== 'typescript+namespace') {
-    return;
-  }
-
-  const enumObject = schemaToEnumObject({ plugin, schema });
-
-  // TypeScript enums support only string and number values so we need to fallback to types
-  if (
-    enumObject.typeofItems.filter(
-      (type) => type !== 'number' && type !== 'string',
-    ).length
-  ) {
-    const node = addTypeEnum({
-      $ref,
-      context,
-      plugin,
-      schema,
-      state,
-    });
-    return node;
-  }
-
-  const node = compiler.enumDeclaration({
-    leadingComment: parseSchemaJsDoc({ schema }),
-    name: identifier.name || '',
-    obj: enumObject.obj,
-  });
-  return node;
-};
-
 const arrayTypeToIdentifier = ({
-  context,
-  namespace,
+  onRef,
   plugin,
   schema,
   state,
 }: {
-  context: IR.Context;
-  namespace: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  onRef: OnRef | undefined;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'array'>;
-  state: State | undefined;
+  state: PluginState;
 }): ts.TypeNode => {
   if (!schema.items) {
-    return compiler.typeArrayNode(
-      compiler.keywordTypeNode({
+    return tsc.typeArrayNode(
+      tsc.keywordTypeNode({
         keyword: 'unknown',
       }),
     );
   }
 
-  schema = deduplicateSchema({ schema });
+  schema = deduplicateSchema({ detectFormat: false, schema });
 
   const itemTypes: Array<ts.TypeNode> = [];
 
-  // at least one item is guaranteed (or at least was before read/write only)
   for (const item of schema.items!) {
     const type = schemaToType({
-      context,
-      namespace,
+      onRef,
       plugin,
       schema: item,
       state,
     });
-
-    if (type) {
-      itemTypes.push(type);
-    }
+    itemTypes.push(type);
   }
 
   if (itemTypes.length === 1) {
-    return compiler.typeArrayNode(itemTypes[0]!);
+    return tsc.typeArrayNode(itemTypes[0]!);
   }
 
   if (schema.logicalOperator === 'and') {
-    return compiler.typeArrayNode(
-      compiler.typeIntersectionNode({ types: itemTypes }),
-    );
+    return tsc.typeArrayNode(tsc.typeIntersectionNode({ types: itemTypes }));
   }
 
-  return compiler.typeArrayNode(compiler.typeUnionNode({ types: itemTypes }));
+  return tsc.typeArrayNode(tsc.typeUnionNode({ types: itemTypes }));
 };
 
 const booleanTypeToIdentifier = ({
   schema,
 }: {
-  context: IR.Context;
-  namespace: Array<ts.Statement>;
   schema: SchemaWithType<'boolean'>;
 }): ts.TypeNode => {
   if (schema.const !== undefined) {
-    return compiler.literalTypeNode({
-      literal: compiler.ots.boolean(schema.const as boolean),
+    return tsc.literalTypeNode({
+      literal: tsc.ots.boolean(schema.const as boolean),
     });
   }
 
-  return compiler.keywordTypeNode({
+  return tsc.keywordTypeNode({
     keyword: 'boolean',
   });
 };
 
 const enumTypeToIdentifier = ({
-  $ref,
-  context,
-  namespace,
+  onRef,
   plugin,
   schema,
   state,
 }: {
-  $ref?: string;
-  context: IR.Context;
-  namespace: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  onRef: OnRef | undefined;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'enum'>;
-  state: State | undefined;
-}): ts.TypeNode | undefined => {
-  const file = context.file({ id: typesId })!;
-  const isRefComponent = $ref ? isRefOpenApiComponent($ref) : false;
-  const shouldExportEnum = isRefComponent || Boolean(plugin.exportInlineEnums);
-
-  if ($ref && shouldExportEnum) {
-    // when enums are disabled (default), emit only reusable components
-    // as types, otherwise the output would be broken if we skipped all enums
-    if (!plugin.enums) {
-      const typeNode = addTypeEnum({
-        $ref,
-        context,
-        plugin,
-        schema,
-        state,
-      });
-      if (typeNode) {
-        file.add(typeNode);
-      }
-    }
-
-    if (plugin.enums === 'javascript') {
-      const typeNode = addTypeEnum({
-        $ref,
-        context,
-        plugin,
-        schema,
-        state,
-      });
-      if (typeNode) {
-        file.add(typeNode);
-      }
-
-      const objectNode = addJavaScriptEnum({
-        $ref,
-        context,
-        plugin,
-        schema,
-      });
-      if (objectNode) {
-        file.add(objectNode);
-      }
-    }
-
-    if (plugin.enums === 'typescript') {
-      const enumNode = addTypeScriptEnum({
-        $ref,
-        context,
-        plugin,
-        schema,
-        state,
-      });
-      if (enumNode) {
-        file.add(enumNode);
-      }
-    }
-
-    if (plugin.enums === 'typescript+namespace') {
-      const enumNode = addTypeScriptEnum({
-        $ref,
-        context,
-        plugin,
-        schema,
-        state,
-      });
-      if (enumNode) {
-        if (isRefComponent) {
-          file.add(enumNode);
-        } else {
-          // emit enum inside TypeScript namespace
-          namespace.push(enumNode);
-        }
-      }
-    }
-  }
-
+  state: PluginState;
+}): ts.TypeNode => {
   const type = schemaToType({
-    context,
+    onRef,
     plugin,
     schema: {
       ...schema,
@@ -488,79 +180,64 @@ const enumTypeToIdentifier = ({
 };
 
 const numberTypeToIdentifier = ({
-  context,
+  plugin,
   schema,
 }: {
-  context: IR.Context;
-  namespace: Array<ts.Statement>;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'integer' | 'number'>;
 }): ts.TypeNode => {
   if (schema.const !== undefined) {
-    return compiler.literalTypeNode({
-      literal: compiler.ots.number(schema.const as number),
+    return tsc.literalTypeNode({
+      literal: tsc.ots.number(schema.const as number),
     });
   }
 
   if (schema.type === 'integer' && schema.format === 'int64') {
     // TODO: parser - add ability to skip type transformers
-    if (context.config.plugins['@hey-api/transformers']?.bigInt) {
-      return compiler.typeReferenceNode({ typeName: 'bigint' });
+    if (plugin.getPlugin('@hey-api/transformers')?.config.bigInt) {
+      return tsc.typeReferenceNode({ typeName: 'bigint' });
     }
   }
 
-  return compiler.keywordTypeNode({
+  return tsc.keywordTypeNode({
     keyword: 'number',
   });
 };
 
 const objectTypeToIdentifier = ({
-  context,
-  namespace,
+  onRef,
   plugin,
   schema,
   state,
 }: {
-  context: IR.Context;
-  namespace: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  onRef: OnRef | undefined;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'object'>;
-  state: State | undefined;
-}): ts.TypeNode | undefined => {
+  state: PluginState;
+}): ts.TypeNode => {
   // TODO: parser - handle constants
+  let indexKey: ts.TypeReferenceNode | undefined;
   let indexProperty: Property | undefined;
   const schemaProperties: Array<Property> = [];
   let indexPropertyItems: Array<IR.SchemaObject> = [];
   const required = schema.required ?? [];
   let hasOptionalProperties = false;
-  let hasSkippedProperties = false;
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
-
-    const skip = shouldSkipSchema({
+    const propertyType = schemaToType({
+      onRef,
+      plugin,
       schema: property,
       state,
     });
-
-    if (skip) {
-      hasSkippedProperties = true;
-      continue;
-    }
-
     const isRequired = required.includes(name);
     schemaProperties.push({
-      comment: parseSchemaJsDoc({ schema: property }),
+      comment: createSchemaComment({ schema: property }),
       isReadOnly: property.accessScope === 'read',
       isRequired,
-      name: fieldName({ context, name }),
-      type: schemaToType({
-        $ref: `${irRef}${name}`,
-        context,
-        namespace,
-        plugin,
-        schema: property,
-        state,
-      }),
+      name: fieldName({ context: plugin.context, name }),
+      type: propertyType,
     });
     indexPropertyItems.push(property);
 
@@ -586,11 +263,10 @@ const objectTypeToIdentifier = ({
     }
 
     indexProperty = {
-      isRequired: true,
+      isRequired: !schema.propertyNames,
       name: 'key',
       type: schemaToType({
-        context,
-        namespace,
+        onRef,
         plugin,
         schema:
           indexPropertyItems.length === 1
@@ -602,13 +278,21 @@ const objectTypeToIdentifier = ({
         state,
       }),
     };
+
+    if (schema.propertyNames?.$ref) {
+      indexKey = schemaToType({
+        onRef,
+        plugin,
+        schema: {
+          $ref: schema.propertyNames.$ref,
+        },
+        state,
+      }) as ts.TypeReferenceNode;
+    }
   }
 
-  if (hasSkippedProperties && !schemaProperties.length && !indexProperty) {
-    return;
-  }
-
-  return compiler.typeInterfaceNode({
+  return tsc.typeInterfaceNode({
+    indexKey,
     indexProperty,
     properties: schemaProperties,
     useLegacyResolution: false,
@@ -616,27 +300,28 @@ const objectTypeToIdentifier = ({
 };
 
 const stringTypeToIdentifier = ({
-  context,
+  plugin,
   schema,
+  state,
 }: {
-  context: IR.Context;
-  namespace: Array<ts.Statement>;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'string'>;
+  state: PluginState;
 }): ts.TypeNode => {
   if (schema.const !== undefined) {
-    return compiler.literalTypeNode({
-      literal: compiler.stringLiteral({ text: schema.const as string }),
+    return tsc.literalTypeNode({
+      literal: tsc.stringLiteral({ text: schema.const as string }),
     });
   }
 
   if (schema.format) {
     if (schema.format === 'binary') {
-      return compiler.typeUnionNode({
+      return tsc.typeUnionNode({
         types: [
-          compiler.typeReferenceNode({
+          tsc.typeReferenceNode({
             typeName: 'Blob',
           }),
-          compiler.typeReferenceNode({
+          tsc.typeReferenceNode({
             typeName: 'File',
           }),
         ],
@@ -645,93 +330,105 @@ const stringTypeToIdentifier = ({
 
     if (schema.format === 'date-time' || schema.format === 'date') {
       // TODO: parser - add ability to skip type transformers
-      if (context.config.plugins['@hey-api/transformers']?.dates) {
-        return compiler.typeReferenceNode({ typeName: 'Date' });
+      if (plugin.getPlugin('@hey-api/transformers')?.config.dates) {
+        return tsc.typeReferenceNode({ typeName: 'Date' });
       }
+    }
+
+    if (schema.format === 'typeid' && typeof schema.example === 'string') {
+      const parts = String(schema.example).split('_');
+      parts.pop(); // remove the ID part
+      const type = parts.join('_');
+      state.usedTypeIDs.add(type);
+      const typeName = ensureValidIdentifier(
+        stringCase({
+          case: plugin.config.case,
+          value: type + '_id',
+        }),
+      );
+      return tsc.typeReferenceNode({
+        typeName,
+      });
     }
   }
 
-  return compiler.keywordTypeNode({
+  return tsc.keywordTypeNode({
     keyword: 'string',
   });
 };
 
 const tupleTypeToIdentifier = ({
-  context,
-  namespace,
+  onRef,
   plugin,
   schema,
   state,
 }: {
-  context: IR.Context;
-  namespace: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  onRef: OnRef | undefined;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'tuple'>;
-  state: State | undefined;
+  state: PluginState;
 }): ts.TypeNode => {
   let itemTypes: Array<ts.Expression | ts.TypeNode> = [];
 
   if (schema.const && Array.isArray(schema.const)) {
     itemTypes = schema.const.map((value) => {
-      const expression = compiler.valueToExpression({ value });
-      return expression ?? compiler.identifier({ text: 'unknown' });
+      const expression = tsc.valueToExpression({ value });
+      return expression ?? tsc.identifier({ text: 'unknown' });
     });
   } else if (schema.items) {
     for (const item of schema.items) {
       const type = schemaToType({
-        context,
-        namespace,
+        onRef,
         plugin,
         schema: item,
         state,
       });
-
-      if (type) {
-        itemTypes.push(type);
-      }
+      itemTypes.push(type);
     }
   }
 
-  return compiler.typeTupleNode({
+  return tsc.typeTupleNode({
     types: itemTypes,
   });
 };
 
 const schemaTypeToIdentifier = ({
-  $ref,
-  context,
-  namespace,
+  onRef,
   plugin,
   schema,
   state,
 }: {
-  $ref?: string;
-  context: IR.Context;
-  namespace: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  onRef: OnRef | undefined;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: IR.SchemaObject;
-  state: State | undefined;
-}): ts.TypeNode | undefined => {
+  state: PluginState;
+}): ts.TypeNode => {
+  const transformersPlugin = plugin.getPlugin('@hey-api/transformers');
+  if (transformersPlugin?.config.typeTransformers) {
+    for (const typeTransformer of transformersPlugin.config.typeTransformers) {
+      const file = plugin.context.file({ id: typesId })!;
+      const typeNode = typeTransformer({ file, schema });
+      if (typeNode) {
+        return typeNode;
+      }
+    }
+  }
+
   switch (schema.type as Required<IR.SchemaObject>['type']) {
     case 'array':
       return arrayTypeToIdentifier({
-        context,
-        namespace,
+        onRef,
         plugin,
         schema: schema as SchemaWithType<'array'>,
         state,
       });
     case 'boolean':
       return booleanTypeToIdentifier({
-        context,
-        namespace,
         schema: schema as SchemaWithType<'boolean'>,
       });
     case 'enum':
       return enumTypeToIdentifier({
-        $ref,
-        context,
-        namespace,
+        onRef,
         plugin,
         schema: schema as SchemaWithType<'enum'>,
         state,
@@ -739,50 +436,47 @@ const schemaTypeToIdentifier = ({
     case 'integer':
     case 'number':
       return numberTypeToIdentifier({
-        context,
-        namespace,
+        plugin,
         schema: schema as SchemaWithType<'integer' | 'number'>,
       });
     case 'never':
-      return compiler.keywordTypeNode({
+      return tsc.keywordTypeNode({
         keyword: 'never',
       });
     case 'null':
-      return compiler.literalTypeNode({
-        literal: compiler.null(),
+      return tsc.literalTypeNode({
+        literal: tsc.null(),
       });
     case 'object':
       return objectTypeToIdentifier({
-        context,
-        namespace,
+        onRef,
         plugin,
         schema: schema as SchemaWithType<'object'>,
         state,
       });
     case 'string':
       return stringTypeToIdentifier({
-        context,
-        namespace,
+        plugin,
         schema: schema as SchemaWithType<'string'>,
+        state,
       });
     case 'tuple':
       return tupleTypeToIdentifier({
-        context,
-        namespace,
+        onRef,
         plugin,
         schema: schema as SchemaWithType<'tuple'>,
         state,
       });
     case 'undefined':
-      return compiler.keywordTypeNode({
+      return tsc.keywordTypeNode({
         keyword: 'undefined',
       });
     case 'unknown':
-      return compiler.keywordTypeNode({
+      return tsc.keywordTypeNode({
         keyword: 'unknown',
       });
     case 'void':
-      return compiler.keywordTypeNode({
+      return tsc.keywordTypeNode({
         keyword: 'void',
       });
   }
@@ -1064,235 +758,312 @@ const operationToType = ({
 };
 
 export const schemaToType = ({
-  $ref,
-  context,
-  namespace = [],
+  onRef,
   plugin,
   schema,
   state,
 }: {
-  $ref?: string;
-  context: IR.Context;
-  namespace?: Array<ts.Statement>;
-  plugin: Plugin.Instance<Config>;
+  /**
+   * Callback that can be used to perform side-effects when we encounter a
+   * reference. For example, we might want to import the referenced type.
+   */
+  onRef: OnRef | undefined;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: IR.SchemaObject;
-  state: State | undefined;
-}): ts.TypeNode | undefined => {
-  const file = context.file({ id: typesId })!;
-
-  let type: ts.TypeNode | undefined;
+  state: PluginState;
+}): ts.TypeNode => {
+  const file = plugin.context.file({ id: typesId })!;
 
   if (schema.$ref) {
-    const refSchema = context.resolveIrRef<IR.SchemaObject>(schema.$ref);
-    const finalRef = scopeToRef({
-      $ref: schema.$ref,
-      accessScope: refSchema.accessScopes?.length
-        ? state?.accessScope
-        : undefined,
-      plugin,
-    });
-    const identifier = file.identifier({
-      $ref: finalRef,
-      create: true,
-      namespace: 'type',
-    });
-    type = compiler.typeReferenceNode({
-      typeName: identifier.name || '',
-    });
-  } else if (schema.type) {
-    type = schemaTypeToIdentifier({
-      $ref,
-      context,
-      namespace,
-      plugin,
-      schema,
-      state,
-    });
-  } else if (schema.items) {
-    schema = deduplicateSchema({ schema });
+    if (onRef) {
+      onRef(plugin.api.getId({ type: 'ref', value: schema.$ref }));
+    }
+    return file.getNode(plugin.api.getId({ type: 'ref', value: schema.$ref }))
+      .node;
+  }
+
+  if (schema.type) {
+    return schemaTypeToIdentifier({ onRef, plugin, schema, state });
+  }
+
+  if (schema.items) {
+    schema = deduplicateSchema({ detectFormat: false, schema });
     if (schema.items) {
       const itemTypes: Array<ts.TypeNode> = [];
 
       for (const item of schema.items) {
-        const type = schemaToType({
-          context,
-          namespace,
-          plugin,
-          schema: item,
-          state,
-        });
-        if (type) {
-          itemTypes.push(type);
-        }
+        const type = schemaToType({ onRef, plugin, schema: item, state });
+        itemTypes.push(type);
       }
 
-      type =
-        schema.logicalOperator === 'and'
-          ? compiler.typeIntersectionNode({ types: itemTypes })
-          : compiler.typeUnionNode({ types: itemTypes });
-    } else {
-      type = schemaToType({
-        context,
-        namespace,
-        plugin,
-        schema,
-        state,
-      });
+      return schema.logicalOperator === 'and'
+        ? tsc.typeIntersectionNode({ types: itemTypes })
+        : tsc.typeUnionNode({ types: itemTypes });
     }
-  } else {
-    // catch-all fallback for failed schemas
-    type = schemaTypeToIdentifier({
-      context,
-      namespace,
-      plugin,
-      schema: {
-        type: 'unknown',
-      },
-      state,
-    });
+
+    return schemaToType({ onRef, plugin, schema, state });
   }
 
-  // emit nodes only if $ref points to a reusable component
-  if ($ref && isRefOpenApiComponent($ref)) {
-    // emit namespace if it has any members
-    if (namespace.length) {
-      const identifier = file.identifier({
-        $ref,
-        create: true,
-        namespace: 'value',
-      });
-      const node = compiler.namespaceDeclaration({
-        name: identifier.name || '',
-        statements: namespace,
-      });
-      file.add(node);
-    }
-
-    // enum handler emits its own artifacts
-    if (schema.type !== 'enum' && type) {
-      const identifier = file.identifier({
-        $ref,
-        create: true,
-        namespace: 'type',
-      });
-      const node = compiler.typeAliasDeclaration({
-        comment: parseSchemaJsDoc({ schema }),
-        exportType: true,
-        name: identifier.name || '',
-        type,
-      });
-      file.add(node);
-    }
-  }
-
-  return type;
+  // catch-all fallback for failed schemas
+  return schemaTypeToIdentifier({
+    onRef,
+    plugin,
+    schema: {
+      type: 'unknown',
+    },
+    state,
+  });
 };
 
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  const file = context.createFile({
-    exportFromIndex: plugin.exportFromIndex,
+const exportType = ({
+  id,
+  plugin,
+  schema,
+  type,
+}: {
+  id: string;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
+  schema: IR.SchemaObject;
+  type: ts.TypeNode;
+}) => {
+  const file = plugin.context.file({ id: typesId })!;
+
+  const nodeInfo = file.getNode(plugin.api.getId({ type: 'ref', value: id }));
+
+  // root enums have an additional export
+  if (schema.type === 'enum' && plugin.config.enums.enabled) {
+    const enumObject = schemaToEnumObject({ plugin, schema });
+
+    if (plugin.config.enums.mode === 'javascript') {
+      // JavaScript enums might want to ignore null values
+      if (
+        plugin.config.enums.constantsIgnoreNull &&
+        enumObject.typeofItems.includes('object')
+      ) {
+        enumObject.obj = enumObject.obj.filter((item) => item.value !== null);
+      }
+
+      const objectNode = tsc.constVariable({
+        assertion: 'const',
+        comment: createSchemaComment({ schema }),
+        exportConst: nodeInfo.exported,
+        expression: tsc.objectExpression({
+          multiLine: true,
+          obj: enumObject.obj,
+        }),
+        name: nodeInfo.node,
+      });
+      file.add(objectNode);
+
+      // TODO: https://github.com/hey-api/openapi-ts/issues/2289
+      const typeofType = tsc.typeOfExpression({
+        text: nodeInfo.node.typeName as unknown as string,
+      }) as unknown as ts.TypeNode;
+      const keyofType = ts.factory.createTypeOperatorNode(
+        ts.SyntaxKind.KeyOfKeyword,
+        typeofType,
+      );
+      const node = tsc.typeAliasDeclaration({
+        comment: createSchemaComment({ schema }),
+        exportType: nodeInfo.exported,
+        name: nodeInfo.node,
+        type: tsc.indexedAccessTypeNode({
+          indexType: keyofType,
+          objectType: typeofType,
+        }),
+      });
+      file.add(node);
+      return;
+    } else if (plugin.config.enums.mode === 'typescript') {
+      // TypeScript enums support only string and number values
+      const shouldCreateTypeScriptEnum = !enumObject.typeofItems.some(
+        (type) => type !== 'number' && type !== 'string',
+      );
+      if (shouldCreateTypeScriptEnum) {
+        const enumNode = tsc.enumDeclaration({
+          leadingComment: createSchemaComment({ schema }),
+          name: nodeInfo.node,
+          obj: enumObject.obj,
+        });
+        file.add(enumNode);
+        return;
+      }
+    }
+  }
+
+  const node = tsc.typeAliasDeclaration({
+    comment: createSchemaComment({ schema }),
+    exportType: nodeInfo.exported,
+    name: nodeInfo.node,
+    type,
+  });
+  file.add(node);
+};
+
+const handleComponent = ({
+  id,
+  plugin,
+  schema,
+  state,
+}: {
+  id: string;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
+  schema: IR.SchemaObject;
+  state: PluginState;
+}) => {
+  const file = plugin.context.file({ id: typesId })!;
+  const type = schemaToType({ onRef: undefined, plugin, schema, state });
+  const name = buildName({
+    config: plugin.config.definitions,
+    name: refToName(id),
+  });
+  file.updateNode(plugin.api.getId({ type: 'ref', value: id }), {
+    exported: true,
+    name,
+  });
+  exportType({
+    id,
+    plugin,
+    schema,
+    type,
+  });
+};
+
+export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
+  const state: PluginState = {
+    usedTypeIDs: new Set(),
+  };
+
+  const file = plugin.createFile({
+    case: plugin.config.case,
     id: typesId,
-    identifierCase: plugin.identifierCase,
     path: plugin.output,
   });
 
   // reserve identifier for ClientOptions
-  const clientOptions = file.identifier({
-    $ref: 'ClientOptions',
-    create: true,
-    namespace: 'type',
+  const clientOptionsName = buildName({
+    config: {
+      case: plugin.config.case,
+    },
+    name: 'ClientOptions',
   });
-
-  context.subscribe('schema', ({ $ref, schema }) => {
-    if (
-      !schema.accessScopes?.length ||
-      plugin.readOnlyWriteOnlyBehavior === 'off'
-    ) {
-      schemaToType({
-        $ref,
-        context,
-        plugin,
-        schema,
-        state: undefined,
-      });
-      return;
-    }
-
-    // we need both scopes because as soon as the schema contains one,
-    // it cannot be used for both payloads and responses
-    schemaToType({
-      $ref: scopeToRef({
-        $ref,
-        accessScope: 'read',
-        plugin,
-      }),
-      context,
-      plugin,
-      schema,
-      state: {
-        accessScope: 'read',
-      },
-    });
-    schemaToType({
-      $ref: scopeToRef({
-        $ref,
-        accessScope: 'write',
-        plugin,
-      }),
-      context,
-      plugin,
-      schema,
-      state: {
-        accessScope: 'write',
-      },
-    });
+  const clientOptionsNodeInfo = file.updateNode(
+    plugin.api.getId({ type: 'ClientOptions' }),
+    {
+      exported: true,
+      name: clientOptionsName,
+    },
+  );
+  // reserve identifier for Webhooks
+  const webhooksName = buildName({
+    config: {
+      case: plugin.config.case,
+    },
+    name: 'Webhooks',
   });
-
-  context.subscribe('parameter', ({ $ref, parameter }) => {
-    schemaToType({
-      $ref,
-      context,
-      plugin,
-      schema: parameter.schema,
-      state: undefined,
-    });
-  });
-
-  context.subscribe('requestBody', ({ $ref, requestBody }) => {
-    schemaToType({
-      $ref,
-      context,
-      plugin,
-      schema: requestBody.schema,
-      state:
-        plugin.readOnlyWriteOnlyBehavior === 'off'
-          ? undefined
-          : {
-              accessScope: 'write',
-            },
-    });
-  });
-
-  context.subscribe('operation', ({ operation }) => {
-    operationToType({
-      context,
-      operation,
-      plugin,
-    });
-  });
+  const webhooksNodeInfo = file.updateNode(
+    plugin.api.getId({ type: 'Webhooks' }),
+    {
+      exported: true,
+      name: webhooksName,
+    },
+  );
 
   const servers: Array<IR.ServerObject> = [];
+  const webhookNames: Array<string> = [];
 
-  context.subscribe('server', ({ server }) => {
-    servers.push(server);
-  });
+  plugin.forEach(
+    'operation',
+    'parameter',
+    'requestBody',
+    'schema',
+    'server',
+    'webhook',
+    (event) => {
+      if (event.type === 'operation') {
+        operationToType({ operation: event.operation, plugin, state });
+      } else if (event.type === 'parameter') {
+        handleComponent({
+          id: event.$ref,
+          plugin,
+          schema: event.parameter.schema,
+          state,
+        });
+      } else if (event.type === 'requestBody') {
+        handleComponent({
+          id: event.$ref,
+          plugin,
+          schema: event.requestBody.schema,
+          state,
+        });
+      } else if (event.type === 'schema') {
+        handleComponent({
+          id: event.$ref,
+          plugin,
+          schema: event.schema,
+          state,
+        });
+      } else if (event.type === 'server') {
+        servers.push(event.server);
+      } else if (event.type === 'webhook') {
+        const webhookName = webhookToType({
+          operation: event.operation,
+          plugin,
+          state,
+        });
+        webhookNames.push(webhookName);
+      }
+    },
+  );
 
-  context.subscribe('after', () => {
-    createClientOptions({
-      context,
-      identifier: clientOptions,
-      plugin,
-      servers,
+  if (state.usedTypeIDs.size) {
+    const typeParameter = tsc.typeParameterDeclaration({
+      constraint: tsc.keywordTypeNode({
+        keyword: 'string',
+      }),
+      name: 'T',
     });
-  });
+    const node = tsc.typeAliasDeclaration({
+      exportType: true,
+      name: 'TypeID',
+      type: tsc.templateLiteralType({
+        value: [
+          tsc.typeReferenceNode({
+            typeName: 'T',
+          }),
+          '_',
+          tsc.keywordTypeNode({
+            keyword: 'string',
+          }),
+        ],
+      }),
+      typeParameters: [typeParameter],
+    });
+    file.add(node);
+
+    for (const name of state.usedTypeIDs.values()) {
+      const typeName = ensureValidIdentifier(
+        stringCase({
+          case: plugin.config.case,
+          value: name + '_id',
+        }),
+      );
+      const node = tsc.typeAliasDeclaration({
+        exportType: true,
+        name: typeName,
+        type: tsc.typeReferenceNode({
+          typeArguments: [
+            tsc.literalTypeNode({
+              literal: tsc.stringLiteral({ text: name }),
+            }),
+          ],
+          typeName: 'TypeID',
+        }),
+      });
+      file.add(node);
+    }
+  }
+
+  createClientOptions({ nodeInfo: clientOptionsNodeInfo, plugin, servers });
+  createWebhooks({ nodeInfo: webhooksNodeInfo, plugin, webhookNames });
 };

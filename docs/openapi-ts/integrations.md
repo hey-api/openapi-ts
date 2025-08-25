@@ -9,7 +9,7 @@ description: Automate your client generation with our OpenAPI specifications sto
 This feature is in development! :tada: Try it out and provide feedback on [GitHub](https://github.com/orgs/hey-api/discussions/1773).
 :::
 
-You can automate your client generation with our platform thanks to reproducible builds. Create dependency links between your clients and APIs, and watch the magic unfold. It's completely language and codegen agnostic.
+You can automate your client generation with Hey API Platform thanks to reproducible builds. Create dependency links between your clients and APIs, and watch the magic unfold. It's completely language and codegen agnostic.
 
 ## Features
 
@@ -96,10 +96,7 @@ You can generate clients from public projects or any private projects you can ac
 ::: code-group
 
 ```sh [Hey API]
-npx @hey-api/openapi-ts \
-  -i https://get.heyapi.dev/hey-api/backend \
-  -o src/client \
-  -c @hey-api/client-fetch
+npx @hey-api/openapi-ts -i hey-api/backend -o src/client
 ```
 
 ```sh [OpenAPI TypeScript]
@@ -194,4 +191,4 @@ We'd love your feedback! You can contact us on social media (search Hey API), [e
 
 The platform is currently in beta with our focus being on delivering a great experience. We plan to announce pricing once we have gathered enough data around usage patterns. However, we can guarantee there will always be a free plan available. Our mission to bring the finest tooling for working with APIs remains unchanged.
 
-<!--@include: ../sponsors.md-->
+<!--@include: ../partials/sponsors.md-->

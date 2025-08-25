@@ -1,19 +1,18 @@
 import ts from 'typescript';
 
-import { compiler } from '../../../compiler';
-import { tsNodeToString } from '../../../compiler/utils';
 import { clientApi } from '../../../generate/client';
-import {
-  hasOperationDataRequired,
-  operationPagination,
-} from '../../../ir/operation';
+import { operationPagination } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
-import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
-import { schemaToType } from '../../@hey-api/typescript/plugin';
+import { tsc } from '../../../tsc';
+import { tsNodeToString } from '../../../tsc/utils';
+import {
+  createOperationComment,
+  isOperationOptionsRequired,
+} from '../../shared/utils/operation';
+import { handleMeta } from './meta';
 import {
   createQueryKeyFunction,
   createQueryKeyType,
-  queryKeyFunctionIdentifier,
   queryKeyName,
   queryKeyStatement,
 } from './queryKey';
@@ -24,52 +23,65 @@ const createInfiniteParamsFn = 'createInfiniteParams';
 const infiniteQueryOptionsFn = 'infiniteQueryOptions';
 
 const createInfiniteParamsFunction = ({
-  context,
   plugin,
 }: {
-  context: IR.Context;
   plugin: PluginInstance;
 }) => {
-  const file = context.file({ id: plugin.name })!;
+  const file = plugin.context.file({ id: plugin.name })!;
 
-  const fn = compiler.constVariable({
-    expression: compiler.arrowFunction({
+  const identifierCreateInfiniteParams = file.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-create-infinite-params/${createInfiniteParamsFn}`,
+    case: plugin.config.case,
+    create: true,
+    namespace: 'value',
+  });
+
+  const fn = tsc.constVariable({
+    expression: tsc.arrowFunction({
       multiLine: true,
       parameters: [
         {
           name: 'queryKey',
-          type: compiler.typeReferenceNode({
+          type: tsc.typeReferenceNode({
             typeName: `QueryKey<${clientApi.Options.name}>`,
           }),
         },
         {
           name: 'page',
-          type: compiler.typeReferenceNode({ typeName: 'K' }),
+          type: tsc.typeReferenceNode({ typeName: 'K' }),
         },
       ],
       statements: [
-        compiler.constVariable({
-          expression: compiler.identifier({
-            text: 'queryKey[0]',
+        tsc.constVariable({
+          expression: tsc.objectExpression({
+            obj: [
+              {
+                spread: tsc.propertyAccessExpression({
+                  expression: 'queryKey',
+                  name: 0,
+                }),
+              },
+            ],
           }),
           name: 'params',
         }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({
+        tsc.ifStatement({
+          expression: tsc.propertyAccessExpression({
+            expression: tsc.identifier({
               text: 'page',
             }),
-            name: compiler.identifier({ text: 'body' }),
+            name: tsc.identifier({ text: 'body' }),
           }),
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: 'body',
                   }),
-                  right: compiler.objectExpression({
+                  right: tsc.objectExpression({
                     multiLine: true,
                     obj: [
                       {
@@ -87,22 +99,22 @@ const createInfiniteParamsFunction = ({
             ],
           }),
         }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({
+        tsc.ifStatement({
+          expression: tsc.propertyAccessExpression({
+            expression: tsc.identifier({
               text: 'page',
             }),
-            name: compiler.identifier({ text: 'headers' }),
+            name: tsc.identifier({ text: 'headers' }),
           }),
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: 'headers',
                   }),
-                  right: compiler.objectExpression({
+                  right: tsc.objectExpression({
                     multiLine: true,
                     obj: [
                       {
@@ -118,22 +130,22 @@ const createInfiniteParamsFunction = ({
             ],
           }),
         }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({
+        tsc.ifStatement({
+          expression: tsc.propertyAccessExpression({
+            expression: tsc.identifier({
               text: 'page',
             }),
-            name: compiler.identifier({ text: 'path' }),
+            name: tsc.identifier({ text: 'path' }),
           }),
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: 'path',
                   }),
-                  right: compiler.objectExpression({
+                  right: tsc.objectExpression({
                     multiLine: true,
                     obj: [
                       {
@@ -151,22 +163,22 @@ const createInfiniteParamsFunction = ({
             ],
           }),
         }),
-        compiler.ifStatement({
-          expression: compiler.propertyAccessExpression({
-            expression: compiler.identifier({
+        tsc.ifStatement({
+          expression: tsc.propertyAccessExpression({
+            expression: tsc.identifier({
               text: 'page',
             }),
-            name: compiler.identifier({ text: 'query' }),
+            name: tsc.identifier({ text: 'query' }),
           }),
-          thenStatement: compiler.block({
+          thenStatement: tsc.block({
             statements: [
-              compiler.expressionToStatement({
-                expression: compiler.binaryExpression({
-                  left: compiler.propertyAccessExpression({
+              tsc.expressionToStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.propertyAccessExpression({
                     expression: 'params',
                     name: 'query',
                   }),
-                  right: compiler.objectExpression({
+                  right: tsc.objectExpression({
                     multiLine: true,
                     obj: [
                       {
@@ -184,22 +196,22 @@ const createInfiniteParamsFunction = ({
             ],
           }),
         }),
-        compiler.returnVariable({
-          expression: compiler.asExpression({
-            expression: compiler.asExpression({
-              expression: compiler.identifier({ text: 'params' }),
-              type: compiler.keywordTypeNode({ keyword: 'unknown' }),
+        tsc.returnVariable({
+          expression: tsc.asExpression({
+            expression: tsc.asExpression({
+              expression: tsc.identifier({ text: 'params' }),
+              type: tsc.keywordTypeNode({ keyword: 'unknown' }),
             }),
             type: ts.factory.createTypeQueryNode(
-              compiler.identifier({ text: 'page' }),
+              tsc.identifier({ text: 'page' }),
             ),
           }),
         }),
       ],
       types: [
         {
-          extends: compiler.typeReferenceNode({
-            typeName: compiler.identifier({
+          extends: tsc.typeReferenceNode({
+            typeName: tsc.identifier({
               text: `Pick<QueryKey<${clientApi.Options.name}>[0], 'body' | 'headers' | 'path' | 'query'>`,
             }),
           }),
@@ -207,64 +219,57 @@ const createInfiniteParamsFunction = ({
         },
       ],
     }),
-    name: createInfiniteParamsFn,
+    name: identifierCreateInfiniteParams.name || '',
   });
   file.add(fn);
 };
 
-const infiniteQueryOptionsFunctionIdentifier = ({
-  context,
-  operation,
-}: {
-  context: IR.Context;
-  operation: IR.OperationObject;
-}) =>
-  `${serviceFunctionIdentifier({
-    config: context.config,
-    id: operation.id,
-    operation,
-  })}InfiniteOptions`;
-
 export const createInfiniteQueryOptions = ({
-  context,
   operation,
   plugin,
   queryFn,
   state,
 }: {
-  context: IR.Context;
   operation: IR.OperationObject;
   plugin: PluginInstance;
   queryFn: string;
   state: PluginState;
 }) => {
   if (
-    !plugin.infiniteQueryOptions ||
-    !(['get', 'post'] as (typeof operation.method)[]).includes(operation.method)
+    !plugin.config.infiniteQueryOptions ||
+    !(['get', 'post'] as ReadonlyArray<typeof operation.method>).includes(
+      operation.method,
+    )
   ) {
     return state;
   }
 
-  const pagination = operationPagination({ context, operation });
+  const pagination = operationPagination({
+    context: plugin.context,
+    operation,
+  });
 
   if (!pagination) {
     return state;
   }
 
-  const file = context.file({ id: plugin.name })!;
-  const isRequired = hasOperationDataRequired(operation);
+  const file = plugin.context.file({ id: plugin.name })!;
+  const isRequiredOptions = isOperationOptionsRequired({
+    context: plugin.context,
+    operation,
+  });
 
   if (!state.hasInfiniteQueries) {
     state.hasInfiniteQueries = true;
 
     if (!state.hasCreateQueryKeyParamsFunction) {
-      createQueryKeyType({ context, plugin });
-      createQueryKeyFunction({ context, plugin });
+      createQueryKeyType({ plugin });
+      createQueryKeyFunction({ plugin });
       state.hasCreateQueryKeyParamsFunction = true;
     }
 
     if (!state.hasCreateInfiniteParamsFunction) {
-      createInfiniteParamsFunction({ context, plugin });
+      createInfiniteParamsFunction({ plugin });
       state.hasCreateInfiniteParamsFunction = true;
     }
 
@@ -282,31 +287,29 @@ export const createInfiniteQueryOptions = ({
 
   state.hasUsedQueryFn = true;
 
-  const typeData = useTypeData({ context, operation, plugin });
-  const typeError = useTypeError({ context, operation, plugin });
-  const typeResponse = useTypeResponse({ context, operation, plugin });
+  const typeData = useTypeData({ operation, plugin });
+  const typeError = useTypeError({ operation, plugin });
+  const typeResponse = useTypeResponse({ operation, plugin });
 
   const typeQueryKey = `${queryKeyName}<${typeData}>`;
   const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
+  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
   // TODO: parser - this is a bit clunky, need to compile type to string because
-  // `compiler.returnFunctionCall()` accepts only strings, should be cleaned up
-  const type = schemaToType({
-    context,
-    plugin: context.config.plugins['@hey-api/typescript'] as Parameters<
-      typeof schemaToType
-    >[0]['plugin'],
+  // `tsc.returnFunctionCall()` accepts only strings, should be cleaned up
+  const typescriptState = {
+    usedTypeIDs: new Set<string>(),
+  };
+  const type = pluginTypeScript.api.schemaToType({
+    plugin: pluginTypeScript,
     schema: pagination.schema,
-    state: undefined,
+    state: typescriptState,
   });
-  const typePageParam = type
-    ? `${tsNodeToString({
-        node: type,
-        unescape: true,
-      })} | ${typePageObjectParam}`
-    : `${typePageObjectParam}`;
+  const typePageParam = `${tsNodeToString({
+    node: type,
+    unescape: true,
+  })} | ${typePageObjectParam}`;
 
   const node = queryKeyStatement({
-    context,
     isInfinite: true,
     operation,
     plugin,
@@ -314,162 +317,204 @@ export const createInfiniteQueryOptions = ({
   });
   file.add(node);
 
-  const infiniteQueryKeyName = queryKeyFunctionIdentifier({
-    context,
-    isInfinite: true,
-    operation,
-  });
-  const identifierQueryKey = file.identifier({
-    $ref: `#/queryKey/${infiniteQueryKeyName}`,
+  const identifierInfiniteQueryKey = file.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-infinite-query-key/${operation.id}`,
+    case: plugin.config.infiniteQueryKeys.case,
+    nameTransformer: plugin.config.infiniteQueryKeys.name,
     namespace: 'value',
   });
 
-  const statement = compiler.constVariable({
-    // TODO: describe options, same as the actual function call
-    comment: [],
+  const awaitSdkExpression = tsc.awaitExpression({
+    expression: tsc.callExpression({
+      functionName: queryFn,
+      parameters: [
+        tsc.objectExpression({
+          multiLine: true,
+          obj: [
+            {
+              spread: 'options',
+            },
+            {
+              spread: 'params',
+            },
+            {
+              key: 'signal',
+              shorthand: true,
+              value: tsc.identifier({
+                text: 'signal',
+              }),
+            },
+            {
+              key: 'throwOnError',
+              value: true,
+            },
+          ],
+        }),
+      ],
+    }),
+  });
+
+  const identifierCreateInfiniteParams = file.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-create-infinite-params/${createInfiniteParamsFn}`,
+    case: plugin.config.case,
+    namespace: 'value',
+  });
+
+  const statements: Array<ts.Statement> = [
+    tsc.constVariable({
+      comment: [
+        {
+          jsdoc: false,
+          lines: ['@ts-ignore'],
+        },
+      ],
+      expression: tsc.conditionalExpression({
+        condition: tsc.binaryExpression({
+          left: tsc.typeOfExpression({
+            text: 'pageParam',
+          }),
+          operator: '===',
+          right: tsc.ots.string('object'),
+        }),
+        whenFalse: tsc.objectExpression({
+          multiLine: true,
+          obj: [
+            {
+              key: pagination.in,
+              value: tsc.objectExpression({
+                multiLine: true,
+                obj: [
+                  {
+                    key: pagination.name,
+                    value: tsc.identifier({
+                      text: 'pageParam',
+                    }),
+                  },
+                ],
+              }),
+            },
+          ],
+        }),
+        whenTrue: tsc.identifier({
+          text: 'pageParam',
+        }),
+      }),
+      name: 'page',
+      typeName: typePageObjectParam,
+    }),
+    tsc.constVariable({
+      expression: tsc.callExpression({
+        functionName: identifierCreateInfiniteParams.name || '',
+        parameters: ['queryKey', 'page'],
+      }),
+      name: 'params',
+    }),
+  ];
+
+  if (plugin.getPlugin('@hey-api/sdk')?.config.responseStyle === 'data') {
+    statements.push(
+      tsc.returnVariable({
+        expression: awaitSdkExpression,
+      }),
+    );
+  } else {
+    statements.push(
+      tsc.constVariable({
+        destructure: true,
+        expression: awaitSdkExpression,
+        name: 'data',
+      }),
+      tsc.returnVariable({
+        expression: 'data',
+      }),
+    );
+  }
+
+  const identifierInfiniteQueryOptions = file.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/tanstack-query-infinite-query-options/${operation.id}`,
+    case: plugin.config.infiniteQueryOptions.case,
+    create: true,
+    nameTransformer: plugin.config.infiniteQueryOptions.name,
+    namespace: 'value',
+  });
+
+  const infiniteQueryOptionsObj: Array<{ key: string; value: ts.Expression }> =
+    [
+      {
+        key: 'queryFn',
+        value: tsc.arrowFunction({
+          async: true,
+          multiLine: true,
+          parameters: [
+            {
+              destructure: [
+                {
+                  name: 'pageParam',
+                },
+                {
+                  name: 'queryKey',
+                },
+                {
+                  name: 'signal',
+                },
+              ],
+            },
+          ],
+          statements,
+        }),
+      },
+      {
+        key: 'queryKey',
+        value: tsc.callExpression({
+          functionName: identifierInfiniteQueryKey.name || '',
+          parameters: ['options'],
+        }),
+      },
+    ];
+
+  const meta = handleMeta(plugin, operation, 'infiniteQueryOptions');
+
+  if (meta) {
+    infiniteQueryOptionsObj.push({
+      key: 'meta',
+      value: meta,
+    });
+  }
+
+  const statement = tsc.constVariable({
+    comment: plugin.config.comments
+      ? createOperationComment({ operation })
+      : undefined,
     exportConst: true,
-    expression: compiler.arrowFunction({
+    expression: tsc.arrowFunction({
       parameters: [
         {
-          isRequired,
+          isRequired: isRequiredOptions,
           name: 'options',
           type: typeData,
         },
       ],
       statements: [
-        compiler.returnFunctionCall({
+        tsc.returnFunctionCall({
           args: [
-            compiler.objectExpression({
+            tsc.objectExpression({
               comments: [
                 {
                   jsdoc: false,
                   lines: ['@ts-ignore'],
                 },
               ],
-              obj: [
-                {
-                  key: 'queryFn',
-                  value: compiler.arrowFunction({
-                    async: true,
-                    multiLine: true,
-                    parameters: [
-                      {
-                        destructure: [
-                          {
-                            name: 'pageParam',
-                          },
-                          {
-                            name: 'queryKey',
-                          },
-                          {
-                            name: 'signal',
-                          },
-                        ],
-                      },
-                    ],
-                    statements: [
-                      compiler.constVariable({
-                        comment: [
-                          {
-                            jsdoc: false,
-                            lines: ['@ts-ignore'],
-                          },
-                        ],
-                        expression: compiler.conditionalExpression({
-                          condition: compiler.binaryExpression({
-                            left: compiler.typeOfExpression({
-                              text: 'pageParam',
-                            }),
-                            operator: '===',
-                            right: compiler.ots.string('object'),
-                          }),
-                          whenFalse: compiler.objectExpression({
-                            multiLine: true,
-                            obj: [
-                              {
-                                key: pagination.in,
-                                value: compiler.objectExpression({
-                                  multiLine: true,
-                                  obj: [
-                                    {
-                                      key: pagination.name,
-                                      value: compiler.identifier({
-                                        text: 'pageParam',
-                                      }),
-                                    },
-                                  ],
-                                }),
-                              },
-                            ],
-                          }),
-                          whenTrue: compiler.identifier({
-                            text: 'pageParam',
-                          }),
-                        }),
-                        name: 'page',
-                        typeName: typePageObjectParam,
-                      }),
-                      compiler.constVariable({
-                        expression: compiler.callExpression({
-                          functionName: createInfiniteParamsFn,
-                          parameters: ['queryKey', 'page'],
-                        }),
-                        name: 'params',
-                      }),
-                      compiler.constVariable({
-                        destructure: true,
-                        expression: compiler.awaitExpression({
-                          expression: compiler.callExpression({
-                            functionName: queryFn,
-                            parameters: [
-                              compiler.objectExpression({
-                                multiLine: true,
-                                obj: [
-                                  {
-                                    spread: 'options',
-                                  },
-                                  {
-                                    spread: 'params',
-                                  },
-                                  {
-                                    key: 'signal',
-                                    shorthand: true,
-                                    value: compiler.identifier({
-                                      text: 'signal',
-                                    }),
-                                  },
-                                  {
-                                    key: 'throwOnError',
-                                    value: true,
-                                  },
-                                ],
-                              }),
-                            ],
-                          }),
-                        }),
-                        name: 'data',
-                      }),
-                      compiler.returnVariable({
-                        expression: 'data',
-                      }),
-                    ],
-                  }),
-                },
-                {
-                  key: 'queryKey',
-                  value: compiler.callExpression({
-                    functionName: identifierQueryKey.name || '',
-                    parameters: ['options'],
-                  }),
-                },
-              ],
+              obj: infiniteQueryOptionsObj,
             }),
           ],
           name: infiniteQueryOptionsFn,
           // TODO: better types syntax
           types: [
             typeResponse,
-            typeError.name,
+            typeError.name || 'unknown',
             `${typeof state.typeInfiniteData === 'string' ? state.typeInfiniteData : state.typeInfiniteData.name}<${typeResponse}>`,
             typeQueryKey,
             typePageParam,
@@ -477,10 +522,8 @@ export const createInfiniteQueryOptions = ({
         }),
       ],
     }),
-    name: infiniteQueryOptionsFunctionIdentifier({
-      context,
-      operation,
-    }),
+    name: identifierInfiniteQueryOptions.name || '',
   });
   file.add(statement);
+  return;
 };

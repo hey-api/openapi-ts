@@ -1,26 +1,25 @@
 import ts from 'typescript';
 
-import { compiler } from '../../../compiler';
-import type { Identifier } from '../../../generate/files';
+import type { NodeInfo } from '../../../generate/file/types';
 import type { IR } from '../../../ir/types';
+import { tsc } from '../../../tsc';
 import { parseUrl } from '../../../utils/url';
-import type { Plugin } from '../../types';
 import { getClientBaseUrlKey, getClientPlugin } from '../client-core/utils';
 import { typesId } from './ref';
-import type { Config } from './types';
+import type { HeyApiTypeScriptPlugin } from './types';
 
-const stringType = compiler.keywordTypeNode({ keyword: 'string' });
+const stringType = tsc.keywordTypeNode({ keyword: 'string' });
 
 const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {
   const url = parseUrl(server.url);
 
   if (url.protocol && url.host) {
-    return compiler.literalTypeNode({
-      literal: compiler.stringLiteral({ text: server.url }),
+    return tsc.literalTypeNode({
+      literal: tsc.stringLiteral({ text: server.url }),
     });
   }
 
-  return compiler.templateLiteralType({
+  return tsc.templateLiteralType({
     value: [
       url.protocol || stringType,
       '://',
@@ -32,22 +31,17 @@ const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {
 };
 
 export const createClientOptions = ({
-  context,
-  identifier,
+  nodeInfo,
+  plugin,
   servers,
 }: {
-  context: IR.Context;
-  identifier: Identifier;
-  plugin: Plugin.Instance<Config>;
+  nodeInfo: NodeInfo;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   servers: ReadonlyArray<IR.ServerObject>;
 }) => {
-  const file = context.file({ id: typesId })!;
+  const file = plugin.context.file({ id: typesId })!;
 
-  if (!identifier.name) {
-    return;
-  }
-
-  const client = getClientPlugin(context.config);
+  const client = getClientPlugin(plugin.context.config);
 
   const types: Array<ts.TypeNode> = servers.map((server) =>
     serverToBaseUrlType({ server }),
@@ -55,27 +49,29 @@ export const createClientOptions = ({
 
   if (!servers.length) {
     types.push(stringType);
-  } else if (!('strictBaseUrl' in client && client.strictBaseUrl)) {
+  } else if (
+    !('strictBaseUrl' in client.config && client.config.strictBaseUrl)
+  ) {
     types.push(
-      compiler.typeIntersectionNode({
+      tsc.typeIntersectionNode({
         types: [stringType, ts.factory.createTypeLiteralNode([])],
       }),
     );
   }
 
-  const typeClientOptions = compiler.typeAliasDeclaration({
-    exportType: true,
-    name: identifier.name,
-    type: compiler.typeInterfaceNode({
-      properties: [
-        {
-          name: getClientBaseUrlKey(context.config),
-          type: compiler.typeUnionNode({ types }),
-        },
-      ],
-      useLegacyResolution: false,
-    }),
+  const type = tsc.typeInterfaceNode({
+    properties: [
+      {
+        name: getClientBaseUrlKey(plugin.context.config),
+        type: tsc.typeUnionNode({ types }),
+      },
+    ],
+    useLegacyResolution: false,
   });
-
-  file.add(typeClientOptions);
+  const node = tsc.typeAliasDeclaration({
+    exportType: nodeInfo.exported,
+    name: nodeInfo.node,
+    type,
+  });
+  file.add(node);
 };

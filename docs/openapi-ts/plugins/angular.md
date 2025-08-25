@@ -1,0 +1,123 @@
+---
+title: Angular v20 Plugin
+description: Generate Angular v20 HTTP requests and resources from OpenAPI with the Angular plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
+---
+
+<script setup lang="ts">
+import AuthorsList from '@components/AuthorsList.vue';
+import Heading from '@components/Heading.vue';
+import { maxScopp } from '@data/people.js';
+import AngularVersionSwitcher from '@versions/AngularVersionSwitcher.vue';
+</script>
+
+<Heading>
+  <h1>Angular<span class="sr-only"> v20</span></h1>
+  <AngularVersionSwitcher />
+</Heading>
+
+::: warning
+Angular client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
+:::
+
+### About
+
+[Angular](https://angular.dev/) is a web framework that empowers developers to build fast, reliable applications.
+
+The Angular plugin for Hey API generates HTTP requests and resources from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
+
+### Collaborators
+
+<AuthorsList :people="[maxScopp]" />
+
+## Features
+
+- Angular v20 support
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- generate HTTP requests
+- generate HTTP resources
+- minimal learning curve thanks to extending the underlying technology
+
+## Installation
+
+In your [configuration](/openapi-ts/get-started), add `@angular/common` to your plugins and you'll be ready to generate Angular artifacts. :tada:
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@angular/common', // [!code ++]
+  ],
+};
+```
+
+## Output
+
+The Angular plugin will generate the following artifacts, depending on the input specification.
+
+## Requests
+
+A single function is generated for each endpoint. It returns an [`HttpRequest`](https://angular.dev/api/common/http/HttpRequest) result.
+
+::: code-group
+
+```ts [example]
+export const addPetRequest = (options) =>
+  client.requestOptions({
+    method: 'POST',
+    responseStyle: 'data',
+    url: '/pet',
+    ...options,
+  });
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@angular/common',
+      httpRequests: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
+## Resources
+
+A single function is generated for each endpoint. It returns a result from [`httpResource`](https://angular.dev/api/common/http/httpResource) call.
+
+::: code-group
+
+```ts [example]
+export const addPetResource = (options) =>
+  httpResource(() => addPetRequest(options()));
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@angular/common',
+      httpResources: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
+## API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@angular/common/types.d.ts) interface.
+
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

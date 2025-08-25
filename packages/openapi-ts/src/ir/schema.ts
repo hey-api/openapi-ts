@@ -4,8 +4,10 @@ import type { IR } from './types';
  * Ensure we don't produce redundant types, e.g. string | string.
  */
 export const deduplicateSchema = <T extends IR.SchemaObject>({
+  detectFormat = true,
   schema,
 }: {
+  detectFormat?: boolean;
   schema: T;
 }): T => {
   if (!schema.items) {
@@ -17,7 +19,7 @@ export const deduplicateSchema = <T extends IR.SchemaObject>({
 
   for (const item of schema.items) {
     // skip nested schemas for now, handle if necessary
-    if (!item.type && item.items) {
+    if ((!item.type && item.items) || schema.type === 'tuple') {
       uniqueItems.push(item);
       continue;
     }
@@ -35,7 +37,12 @@ export const deduplicateSchema = <T extends IR.SchemaObject>({
     ) {
       // const needs namespace to handle empty string values, otherwise
       // fallback would equal an actual value and we would skip an item
-      const typeId = `${item.$ref ?? ''}${item.type ?? ''}${item.const !== undefined ? `const-${item.const}` : ''}`;
+      const constant = item.const !== undefined ? `const-${item.const}` : '';
+      const format =
+        item.format !== undefined && detectFormat
+          ? `format-${item.format}`
+          : '';
+      const typeId = `${item.$ref ?? ''}${item.type ?? ''}${constant}${format}`;
       if (!typeIds.includes(typeId)) {
         typeIds.push(typeId);
         uniqueItems.push(item);
@@ -46,28 +53,29 @@ export const deduplicateSchema = <T extends IR.SchemaObject>({
     uniqueItems.push(item);
   }
 
-  schema.items = uniqueItems;
+  let result = { ...schema };
+  result.items = uniqueItems;
 
   if (
-    schema.items.length <= 1 &&
-    schema.type !== 'array' &&
-    schema.type !== 'enum' &&
-    schema.type !== 'tuple'
+    result.items.length <= 1 &&
+    result.type !== 'array' &&
+    result.type !== 'enum' &&
+    result.type !== 'tuple'
   ) {
     // bring the only item up to clean up the schema
-    const liftedSchema = schema.items[0];
-    delete schema.logicalOperator;
-    delete schema.items;
-    schema = {
-      ...schema,
+    const liftedSchema = result.items[0];
+    delete result.logicalOperator;
+    delete result.items;
+    result = {
+      ...result,
       ...liftedSchema,
     };
   }
 
   // exclude unknown if it's the only type left
-  if (schema.type === 'unknown') {
+  if (result.type === 'unknown') {
     return {} as T;
   }
 
-  return schema;
+  return result;
 };

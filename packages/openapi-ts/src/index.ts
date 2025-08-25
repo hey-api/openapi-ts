@@ -1,17 +1,26 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import colors from 'ansi-colors';
+// @ts-expect-error
+import colorSupport from 'color-support';
 
+import { checkNodeVersion } from './config/engine';
+import { initConfigs } from './config/init';
+import { getLogs } from './config/logs';
 import { createClient as pCreateClient } from './createClient';
-import { ensureDirSync } from './generate/utils';
-import { getLogs } from './getLogs';
-import { initConfigs } from './initConfigs';
+import {
+  logCrashReport,
+  openGitHubIssueWithCrashReport,
+  printCrashReport,
+  shouldReportCrash,
+} from './error';
 import type { IR } from './ir/types';
 import type { Client } from './types/client';
 import type { Config, UserConfig } from './types/config';
 import { registerHandlebarTemplates } from './utils/handlebars';
-import { Performance, PerformanceReport } from './utils/performance';
+import { Logger } from './utils/logger';
 
 type Configs = UserConfig | (() => UserConfig) | (() => Promise<UserConfig>);
+
+colors.enabled = colorSupport().hasBasic;
 
 /**
  * Generate a client from the provided configuration.
@@ -20,67 +29,73 @@ type Configs = UserConfig | (() => UserConfig) | (() => Promise<UserConfig>);
  */
 export const createClient = async (
   userConfig?: Configs,
+  logger = new Logger(),
 ): Promise<ReadonlyArray<Client | IR.Context>> => {
   const resolvedConfig =
     typeof userConfig === 'function' ? await userConfig() : userConfig;
 
-  let configs: Config[] = [];
+  const configs: Array<Config> = [];
 
   try {
-    Performance.start('createClient');
+    checkNodeVersion();
 
-    Performance.start('config');
-    configs = await initConfigs(resolvedConfig);
-    Performance.end('config');
+    const eventCreateClient = logger.timeEvent('createClient');
 
-    Performance.start('handlebars');
+    const eventConfig = logger.timeEvent('config');
+    const configResults = await initConfigs(resolvedConfig);
+    for (const result of configResults.results) {
+      configs.push(result.config);
+      if (result.errors.length) {
+        throw result.errors[0];
+      }
+    }
+    eventConfig.timeEnd();
+
+    const eventHandlebars = logger.timeEvent('handlebars');
     const templates = registerHandlebarTemplates();
-    Performance.end('handlebars');
+    eventHandlebars.timeEnd();
 
     const clients = await Promise.all(
-      configs.map((config) => pCreateClient({ config, templates })),
+      configs.map((config) =>
+        pCreateClient({
+          config,
+          dependencies: configResults.dependencies,
+          logger,
+          templates,
+        }),
+      ),
     );
     const result = clients.filter((client) => Boolean(client)) as ReadonlyArray<
       Client | IR.Context
     >;
 
-    Performance.end('createClient');
+    eventCreateClient.timeEnd();
 
     const config = configs[0];
-    if (config && config.logs.level === 'debug') {
-      const perfReport = new PerformanceReport({
-        totalMark: 'createClient',
-      });
-      perfReport.report({
-        marks: [
-          'config',
-          'openapi',
-          'handlebars',
-          'parser',
-          'generator',
-          'postprocess',
-        ],
-      });
-    }
+    logger.report(config && config.logs.level === 'debug');
 
     return result;
   } catch (error) {
     const config = configs[0] as Config | undefined;
     const dryRun = config ? config.dryRun : resolvedConfig?.dryRun;
+    const isInteractive = config
+      ? config.interactive
+      : resolvedConfig?.interactive;
+    const logs = config?.logs ?? getLogs(resolvedConfig);
 
-    // TODO: add setting for log output
-    if (!dryRun) {
-      const logs = config?.logs ?? getLogs(resolvedConfig);
-      if (logs.level !== 'silent' && logs.file) {
-        const logName = `openapi-ts-error-${Date.now()}.log`;
-        const logsDir = path.resolve(process.cwd(), logs.path ?? '');
-        ensureDirSync(logsDir);
-        const logPath = path.resolve(logsDir, logName);
-        fs.writeFileSync(logPath, `${error.message}\n${error.stack}`);
-        console.error(`🔥 Unexpected error occurred. Log saved to ${logPath}`);
+    let logPath: string | undefined;
+
+    if (logs.level !== 'silent' && logs.file && !dryRun) {
+      logPath = logCrashReport(error, logs.path ?? '');
+    }
+
+    if (logs.level !== 'silent') {
+      printCrashReport({ error, logPath });
+      if (await shouldReportCrash({ error, isInteractive })) {
+        await openGitHubIssueWithCrashReport(error);
       }
     }
-    console.error(`🔥 Unexpected error occurred. ${error.message}`);
+
     throw error;
   }
 };
@@ -91,13 +106,30 @@ export const createClient = async (
 export const defineConfig = async (config: Configs): Promise<UserConfig> =>
   typeof config === 'function' ? await config() : config;
 
-export { defaultPlugins } from './initConfigs';
+export { defaultPaginationKeywords } from './config/parser';
+export { defaultPlugins } from './config/plugins';
 export type { IR } from './ir/types';
-export type { OpenApi } from './openApi/types';
-export { clientDefaultConfig } from './plugins/@hey-api/client-core/config';
+export type {
+  OpenApi,
+  OpenApiMetaObject,
+  OpenApiOperationObject,
+  OpenApiParameterObject,
+  OpenApiRequestBodyObject,
+  OpenApiResponseObject,
+  OpenApiSchemaObject,
+} from './openApi/types';
+export {
+  clientDefaultConfig,
+  clientDefaultMeta,
+} from './plugins/@hey-api/client-core/config';
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
 export type { Client } from './plugins/@hey-api/client-core/types';
-export type { Plugin } from './plugins/types';
+export type { ExpressionTransformer } from './plugins/@hey-api/transformers/expressions';
+export type { TypeTransformer } from './plugins/@hey-api/transformers/types';
+export { definePluginConfig } from './plugins/shared/utils/config';
+export type { DefinePlugin, Plugin } from './plugins/types';
+export { compiler, tsc } from './tsc';
 export type { UserConfig } from './types/config';
 export type { LegacyIR } from './types/types';
 export { utils } from './utils/exports';
+export { Logger } from './utils/logger';

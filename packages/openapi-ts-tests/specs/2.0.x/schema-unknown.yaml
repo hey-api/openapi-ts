@@ -1,0 +1,135 @@
+swagger: 2.0
+info:
+  title: OpenAPI 2.0 schema unknown example
+  description: https://github.com/hey-api/openapi-ts/issues/1402
+  version: 1
+host: api.postmarkapp.com
+basePath: /
+produces:
+  - application/json
+consumes:
+  - application/json
+definitions:
+  SendEmailRequest:
+    properties:
+      From:
+        description: The sender email address. Must have a registered and confirmed Sender Signature.
+        type: string
+      To:
+        description: Recipient email address. Multiple addresses are comma seperated. Max 50.
+        type: string
+      Cc:
+        description: Recipient email address. Multiple addresses are comma seperated. Max 50.
+        type: string
+      Bcc:
+        description: Bcc recipient email address. Multiple addresses are comma seperated. Max 50.
+        type: string
+      Subject:
+        description: Email Subject
+        type: string
+      Tag:
+        description: Email tag that allows you to categorize outgoing emails and get detailed statistics.
+        type: string
+      HtmlBody:
+        description: If no TextBody specified HTML email message
+        type: string
+      TextBody:
+        description: If no HtmlBody specified Plain text email message
+        type: string
+      ReplyTo:
+        description: Reply To override email address. Defaults to the Reply To set in the sender signature.
+        type: string
+      TrackOpens:
+        description: Activate open tracking for this email.
+        type: boolean
+      TrackLinks:
+        description: Replace links in content to enable "click tracking" stats. Default is 'null', which uses the server's LinkTracking setting'.
+        type: string
+        enum: ['None', 'HtmlAndText', 'HtmlOnly', 'TextOnly']
+      Headers:
+        $ref: '#/definitions/HeaderCollection'
+      Attachments:
+        $ref: '#/definitions/AttachmentCollection'
+  MessageHeader:
+    description: A single header for an email message.
+    properties:
+      Name:
+        description: The header's name.
+        type: string
+      Value:
+        description: The header's value.
+        type: string
+  HeaderCollection:
+    type: array
+    items:
+      $ref: '#/definitions/MessageHeader'
+  Attachment:
+    description: An attachment for an email message.
+    properties:
+      Name:
+        type: string
+      Content:
+        type: string
+      ContentType:
+        type: string
+      ContentID:
+        type: string
+  AttachmentCollection:
+    type: array
+    items:
+      $ref: '#/definitions/Attachment'
+  SendEmailResponse:
+    description: The standard response when a postmark message is sent
+    properties:
+      To:
+        type: string
+      SubmittedAt:
+        type: string
+        format: 'date-time'
+      MessageID:
+        type: string
+      ErrorCode:
+        type: integer
+      Message:
+        type: string
+  StandardPostmarkResponse:
+    description: 'A Postmark API error.'
+    properties:
+      ErrorCode:
+        type: integer
+      Message:
+        type: string
+responses:
+  422:
+    description: 'An error was generated due to incorrect use of the API. See the Message associated with this response for more information.'
+    schema:
+      $ref: '#/definitions/StandardPostmarkResponse'
+  500:
+    description: 'Indicates an internal server error occurred.'
+paths:
+  #Message Sending API
+  /email:
+    post:
+      operationId: sendEmail
+      tags:
+        - Sending API
+      summary: Send a single email
+      parameters:
+        - name: X-Postmark-Server-Token
+          required: true
+          description: The token associated with the Server on which this request will operate.
+          type: string
+          in: header
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/SendEmailRequest'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/SendEmailResponse'
+        422:
+          $ref: '#/responses/422'
+        500:
+          $ref: '#/responses/500'

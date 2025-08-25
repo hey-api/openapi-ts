@@ -1,0 +1,25 @@
+{
+  "name": "@test/openapi-ts-zod-v3",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:coverage": "vitest run --coverage",
+    "test:update": "vitest watch --update",
+    "test:watch": "vitest watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": "^18.18.0 || ^20.9.0 || >=22.10.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.5.3"
+  },
+  "devDependencies": {
+    "@config/vite-base": "workspace:*",
+    "@hey-api/openapi-ts": "workspace:*",
+    "typescript": "5.8.3",
+    "zod": "3.25.3"
+  }
+}

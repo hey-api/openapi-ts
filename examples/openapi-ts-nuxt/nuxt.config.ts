@@ -27,12 +27,5 @@ export default defineNuxtConfig({
       ],
     },
   },
-  imports: {
-    transform: {
-      // Build was throwing an error.
-      // see https://github.com/nuxt/nuxt/issues/18823#issuecomment-1419704343
-      exclude: [/\bclient-nuxt\b/],
-    },
-  },
   modules: ['@hey-api/nuxt'],
 });

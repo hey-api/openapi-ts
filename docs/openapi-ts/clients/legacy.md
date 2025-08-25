@@ -3,7 +3,7 @@ title: Legacy clients
 description: Legacy clients for Hey API.
 ---
 
-<script setup>
+<script setup lang="ts">
 import { embedProject } from '../../embed'
 </script>
 
@@ -19,7 +19,7 @@ Before client packages, clients were generated using `@hey-api/openapi-ts`. In f
 
 ```js [fetch]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: ['legacy/fetch'], // [!code ++]
 };
@@ -27,7 +27,7 @@ export default {
 
 ```js [axios]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: ['legacy/axios'], // [!code ++]
 };
@@ -35,7 +35,7 @@ export default {
 
 ```js [angular]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: ['legacy/angular'], // [!code ++]
 };
@@ -43,7 +43,7 @@ export default {
 
 ```js [node]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: ['legacy/node'], // [!code ++]
 };
@@ -51,7 +51,7 @@ export default {
 
 ```js [xhr]
 export default {
-  input: 'https://get.heyapi.dev/hey-api/backend',
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: ['legacy/xhr'], // [!code ++]
 };
@@ -132,5 +132,5 @@ To eject, you must provide the same function that was passed to `use()`.
 Angular client does not currently support request interceptors.
 :::
 
-<!--@include: ../../examples.md-->
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/examples.md-->
+<!--@include: ../../partials/sponsors.md-->

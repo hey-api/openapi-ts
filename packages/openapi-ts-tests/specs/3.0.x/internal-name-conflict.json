@@ -1,0 +1,35 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "OpenAPI 3.0.4 internal name conflict example",
+    "version": "1"
+  },
+  "paths": {
+    "/foo": {
+      "get": {
+        "operationId": "create__",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "create_",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "operationId": "create",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

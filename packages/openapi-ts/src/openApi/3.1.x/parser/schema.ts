@@ -6,8 +6,7 @@ import type {
   SchemaType,
   SchemaWithRequired,
 } from '../../shared/types/schema';
-import { discriminatorValue } from '../../shared/utils/discriminator';
-import { mergeSchemaAccessScopes } from '../../shared/utils/schema';
+import { discriminatorValues } from '../../shared/utils/discriminator';
 import type { SchemaObject } from '../types/spec';
 
 export const getSchemaTypes = ({
@@ -40,6 +39,10 @@ const parseSchemaJsDoc = ({
 }) => {
   if (schema.deprecated !== undefined) {
     irSchema.deprecated = schema.deprecated;
+  }
+
+  if (schema.example) {
+    irSchema.example = schema.example;
   }
 
   if (schema.description) {
@@ -86,11 +89,11 @@ const parseSchemaMeta = ({
     irSchema.default = schema.default;
   }
 
-  if (schema.exclusiveMaximum) {
+  if (schema.exclusiveMaximum !== undefined) {
     irSchema.exclusiveMaximum = schema.exclusiveMaximum;
   }
 
-  if (schema.exclusiveMinimum) {
+  if (schema.exclusiveMinimum !== undefined) {
     irSchema.exclusiveMinimum = schema.exclusiveMinimum;
   }
 
@@ -128,14 +131,8 @@ const parseSchemaMeta = ({
 
   if (schema.readOnly) {
     irSchema.accessScope = 'read';
-    irSchema.accessScopes = mergeSchemaAccessScopes(irSchema.accessScopes, [
-      'read',
-    ]);
   } else if (schema.writeOnly) {
     irSchema.accessScope = 'write';
-    irSchema.accessScopes = mergeSchemaAccessScopes(irSchema.accessScopes, [
-      'write',
-    ]);
   }
 };
 
@@ -168,10 +165,6 @@ const parseArray = ({
       schema: item,
       state,
     });
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irItemSchema.accessScopes,
-    );
     schemaItems.push(irItemSchema);
   }
 
@@ -181,11 +174,6 @@ const parseArray = ({
       schema: schema.items,
       state,
     });
-
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irItemsSchema.accessScopes,
-    );
 
     if (
       !schemaItems.length &&
@@ -282,12 +270,11 @@ const parseObject = ({
       const irPropertySchema = schemaToIrSchema({
         context,
         schema: property,
-        state,
+        state: {
+          ...state,
+          isProperty: true,
+        },
       });
-      irSchema.accessScopes = mergeSchemaAccessScopes(
-        irSchema.accessScopes,
-        irPropertySchema.accessScopes,
-      );
       schemaProperties[name] = irPropertySchema;
     }
   }
@@ -303,22 +290,33 @@ const parseObject = ({
       };
     }
   } else if (typeof schema.additionalProperties === 'boolean') {
-    irSchema.additionalProperties = {
-      type: schema.additionalProperties ? 'unknown' : 'never',
-    };
+    // Avoid [key: string]: never for empty objects with additionalProperties: false inside allOf
+    // This would override inherited properties from other schemas in the composition
+    const isEmptyObjectInAllOf =
+      state.inAllOf &&
+      schema.additionalProperties === false &&
+      (!schema.properties || Object.keys(schema.properties).length === 0);
+
+    if (!isEmptyObjectInAllOf) {
+      irSchema.additionalProperties = {
+        type: schema.additionalProperties ? 'unknown' : 'never',
+      };
+    }
   } else {
     const irAdditionalPropertiesSchema = schemaToIrSchema({
       context,
       schema: schema.additionalProperties,
       state,
     });
-    // no need to add "any" additional properties if there are no defined properties
-    if (
-      irSchema.properties ||
-      irAdditionalPropertiesSchema.type !== 'unknown'
-    ) {
-      irSchema.additionalProperties = irAdditionalPropertiesSchema;
-    }
+    irSchema.additionalProperties = irAdditionalPropertiesSchema;
+  }
+
+  if (schema.propertyNames) {
+    irSchema.propertyNames = schemaToIrSchema({
+      context,
+      schema: schema.propertyNames,
+      state,
+    });
   }
 
   if (schema.required) {
@@ -372,16 +370,20 @@ const parseAllOf = ({
   const compositionSchemas = schema.allOf;
 
   for (const compositionSchema of compositionSchemas) {
+    // Don't propagate inAllOf flag to $ref schemas to avoid issues with reusable components
+    const isRef = '$ref' in compositionSchema;
+    const schemaState = isRef
+      ? state
+      : {
+          ...state,
+          inAllOf: true,
+        };
+
     const irCompositionSchema = schemaToIrSchema({
       context,
       schema: compositionSchema,
-      state,
+      state: schemaState,
     });
-
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irCompositionSchema.accessScopes,
-    );
 
     if (schema.required) {
       if (irCompositionSchema.required) {
@@ -400,23 +402,44 @@ const parseAllOf = ({
       const ref = context.resolveRef<SchemaObject>(compositionSchema.$ref);
       // `$ref` should be passed from the root `parseSchema()` call
       if (ref.discriminator && state.$ref) {
-        const irDiscriminatorSchema: IR.SchemaObject = {
-          properties: {
-            [ref.discriminator.propertyName]: {
-              const: discriminatorValue(state.$ref, ref.discriminator.mapping),
+        const values = discriminatorValues(
+          state.$ref,
+          ref.discriminator.mapping,
+          // If the ref has oneOf, we only use the schema name as the value
+          // only if current schema is part of the oneOf. Else it is extending
+          // the ref schema
+          ref.oneOf
+            ? () => ref.oneOf!.some((o) => '$ref' in o && o.$ref === state.$ref)
+            : undefined,
+        );
+        if (values.length > 0) {
+          const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
+            (value) => ({
+              const: value,
               type: 'string',
+            }),
+          );
+          const irDiscriminatorSchema: IR.SchemaObject = {
+            properties: {
+              [ref.discriminator.propertyName]:
+                valueSchemas.length > 1
+                  ? {
+                      items: valueSchemas,
+                      logicalOperator: 'or',
+                    }
+                  : valueSchemas[0]!,
             },
-          },
-          type: 'object',
-        };
-        if (ref.required?.includes(ref.discriminator.propertyName)) {
-          irDiscriminatorSchema.required = [ref.discriminator.propertyName];
+            type: 'object',
+          };
+          if (ref.required?.includes(ref.discriminator.propertyName)) {
+            irDiscriminatorSchema.required = [ref.discriminator.propertyName];
+          }
+          schemaItems.push(irDiscriminatorSchema);
         }
-        schemaItems.push(irDiscriminatorSchema);
       }
 
       if (!state.circularReferenceTracker.has(compositionSchema.$ref)) {
-        const irRefSchema = schemaToIrSchema({
+        schemaToIrSchema({
           context,
           schema: ref,
           state: {
@@ -424,10 +447,6 @@ const parseAllOf = ({
             $ref: compositionSchema.$ref,
           },
         });
-        irSchema.accessScopes = mergeSchemaAccessScopes(
-          irSchema.accessScopes,
-          irRefSchema.accessScopes,
-        );
       }
     }
   }
@@ -441,11 +460,6 @@ const parseAllOf = ({
       },
       state,
     });
-
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irObjectSchema.accessScopes,
-    );
 
     if (irObjectSchema.properties) {
       for (const requiredProperty of irObjectSchema.required ?? []) {
@@ -469,11 +483,6 @@ const parseAllOf = ({
                 },
                 state,
               });
-
-              irSchema.accessScopes = mergeSchemaAccessScopes(
-                irSchema.accessScopes,
-                irCompositionSchema.accessScopes,
-              );
 
               if (irCompositionSchema.properties?.[requiredProperty]) {
                 irObjectSchema.properties[requiredProperty] =
@@ -539,22 +548,27 @@ const parseAnyOf = ({
       state,
     });
 
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irCompositionSchema.accessScopes,
-    );
-
     // `$ref` should be defined with discriminators
-    if (schema.discriminator && compositionSchema.$ref) {
+    if (schema.discriminator && irCompositionSchema.$ref != null) {
+      const values = discriminatorValues(
+        irCompositionSchema.$ref,
+        schema.discriminator.mapping,
+      );
+      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
+        (value) => ({
+          const: value,
+          type: 'string',
+        }),
+      );
       const irDiscriminatorSchema: IR.SchemaObject = {
         properties: {
-          [schema.discriminator.propertyName]: {
-            const: discriminatorValue(
-              compositionSchema.$ref,
-              schema.discriminator.mapping,
-            ),
-            type: 'string',
-          },
+          [schema.discriminator.propertyName]:
+            valueSchemas.length > 1
+              ? {
+                  items: valueSchemas,
+                  logicalOperator: 'or',
+                }
+              : valueSchemas[0]!,
         },
         type: 'object',
       };
@@ -587,11 +601,6 @@ const parseAnyOf = ({
       },
       state,
     });
-
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irObjectSchema.accessScopes,
-    );
 
     if (irObjectSchema.properties) {
       irSchema = {
@@ -630,6 +639,8 @@ const parseEnum = ({
       typeOfEnumValue === 'boolean'
     ) {
       enumType = typeOfEnumValue;
+    } else if (typeOfEnumValue === 'object' && Array.isArray(enumValue)) {
+      enumType = 'array';
     } else if (enumValue === null) {
       // type must contain null
       if (schemaTypes.includes('null')) {
@@ -658,11 +669,6 @@ const parseEnum = ({
       },
       state,
     });
-
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irTypeSchema.accessScopes,
-    );
 
     schemaItems.push(irTypeSchema);
   }
@@ -698,23 +704,29 @@ const parseOneOf = ({
       state,
     });
 
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irCompositionSchema.accessScopes,
-    );
-
     // `$ref` should be defined with discriminators
-    if (schema.discriminator && compositionSchema.$ref) {
+    if (schema.discriminator && irCompositionSchema.$ref != null) {
+      const values = discriminatorValues(
+        irCompositionSchema.$ref,
+        schema.discriminator.mapping,
+      );
+      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
+        (value) => ({
+          const: value,
+          type: 'string',
+        }),
+      );
       const irDiscriminatorSchema: IR.SchemaObject = {
         properties: {
-          [schema.discriminator.propertyName]: {
-            const: discriminatorValue(
-              compositionSchema.$ref,
-              schema.discriminator.mapping,
-            ),
-            type: 'string',
-          },
+          [schema.discriminator.propertyName]:
+            valueSchemas.length > 1
+              ? {
+                  items: valueSchemas,
+                  logicalOperator: 'or',
+                }
+              : valueSchemas[0]!,
         },
+        required: [schema.discriminator.propertyName],
         type: 'object',
       };
       irCompositionSchema = {
@@ -728,6 +740,7 @@ const parseOneOf = ({
     // to avoid unnecessary brackets
     if (
       irCompositionSchema.logicalOperator === 'or' &&
+      irCompositionSchema.type !== 'array' &&
       irCompositionSchema.items
     ) {
       schemaItems = schemaItems.concat(irCompositionSchema.items);
@@ -757,11 +770,6 @@ const parseOneOf = ({
       state,
     });
 
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irObjectSchema.accessScopes,
-    );
-
     if (irObjectSchema.properties) {
       irSchema = {
         items: [irSchema, irObjectSchema],
@@ -782,27 +790,41 @@ const parseRef = ({
   schema: SchemaWithRequired<SchemaObject, '$ref'>;
   state: SchemaState;
 }): IR.SchemaObject => {
-  const irSchema = initIrSchema({ schema });
+  let irSchema = initIrSchema({ schema });
+
+  const irRefSchema: IR.SchemaObject = {};
 
   // refs using unicode characters become encoded, didn't investigate why
   // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
-  irSchema.$ref = decodeURI(schema.$ref);
+  irRefSchema.$ref = decodeURI(schema.$ref);
 
   if (!state.circularReferenceTracker.has(schema.$ref)) {
     const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
-    const irRefSchema = schemaToIrSchema({
+    schemaToIrSchema({
       context,
       schema: refSchema,
       state: {
         ...state,
         $ref: schema.$ref,
+        isProperty: false,
       },
     });
-    irSchema.accessScopes = mergeSchemaAccessScopes(
-      irSchema.accessScopes,
-      irRefSchema.accessScopes,
-    );
   }
+
+  const schemaItems: Array<IR.SchemaObject> = [];
+  schemaItems.push(irRefSchema);
+
+  if (schema.type && typeof schema.type !== 'string') {
+    if (schema.type.includes('null')) {
+      schemaItems.push({ type: 'null' });
+    }
+  }
+
+  irSchema = addItemsToSchema({
+    items: schemaItems,
+    mutateSchemaOneItem: true,
+    schema: irSchema,
+  });
 
   return irSchema;
 };
@@ -822,11 +844,7 @@ const parseOneType = ({
 }): IR.SchemaObject => {
   if (!irSchema) {
     irSchema = initIrSchema({ schema });
-
-    parseSchemaMeta({
-      irSchema,
-      schema,
-    });
+    parseSchemaMeta({ irSchema, schema });
   }
 
   switch (schema.type) {
@@ -871,11 +889,7 @@ const parseOneType = ({
       });
     default:
       // gracefully handle invalid type
-      return parseUnknown({
-        context,
-        irSchema,
-        schema,
-      });
+      return parseUnknown({ context, irSchema, schema });
   }
 };
 
@@ -898,10 +912,7 @@ const parseManyTypes = ({
 
   const typeIrSchema: IR.SchemaObject = {};
 
-  parseSchemaMeta({
-    irSchema: typeIrSchema,
-    schema,
-  });
+  parseSchemaMeta({ irSchema: typeIrSchema, schema });
 
   if (schema.type.includes('null') && typeIrSchema.default === null) {
     // clear to avoid duplicate default inside the non-null schema.
@@ -917,18 +928,13 @@ const parseManyTypes = ({
     } else {
       const irTypeSchema = parseOneType({
         context,
-        irSchema: typeIrSchema,
+        irSchema: { ...typeIrSchema },
         schema: {
           ...schema,
           type,
         },
         state,
       });
-
-      irSchema.accessScopes = mergeSchemaAccessScopes(
-        irSchema.accessScopes,
-        irTypeSchema.accessScopes,
-      );
 
       schemaItems.push(irTypeSchema);
     }
@@ -953,10 +959,7 @@ const parseType = ({
 }): IR.SchemaObject => {
   const irSchema = initIrSchema({ schema });
 
-  parseSchemaMeta({
-    irSchema,
-    schema,
-  });
+  parseSchemaMeta({ irSchema, schema });
 
   const schemaTypes = getSchemaTypes({ schema });
 
@@ -997,10 +1000,7 @@ const parseUnknown = ({
 
   irSchema.type = 'unknown';
 
-  parseSchemaMeta({
-    irSchema,
-    schema,
-  });
+  parseSchemaMeta({ irSchema, schema });
 
   return irSchema;
 };
@@ -1073,10 +1073,7 @@ export const schemaToIrSchema = ({
     });
   }
 
-  return parseUnknown({
-    context,
-    schema,
-  });
+  return parseUnknown({ context, schema });
 };
 
 export const parseSchema = ({

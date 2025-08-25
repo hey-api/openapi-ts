@@ -1,18 +1,15 @@
-import type { Plugin } from '../../types';
-import type { Config } from './types';
+import { definePluginConfig } from '../../shared/utils/config';
+import type { HeyApiClientLegacyAngularPlugin } from './types';
 
-export const defaultConfig: Plugin.Config<Config> = {
-  _handler: () => {},
-  _handlerLegacy: () => {},
-  _tags: ['client'],
+export const defaultConfig: HeyApiClientLegacyAngularPlugin['Config'] = {
+  config: {},
+  handler: () => {},
   name: 'legacy/angular',
   output: 'client',
+  tags: ['client'],
 };
 
 /**
  * Type helper for `legacy/angular` plugin, returns {@link Plugin.Config} object
  */
-export const defineConfig: Plugin.DefineConfig<Config> = (config) => ({
-  ...defaultConfig,
-  ...config,
-});
+export const defineConfig = definePluginConfig(defaultConfig);

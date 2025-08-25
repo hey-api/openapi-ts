@@ -3,14 +3,16 @@ title: MSW
 description: MSW plugin for Hey API. Compatible with all our features.
 ---
 
+<script setup lang="ts">
+import FeatureStatus from '@components/FeatureStatus.vue';
+</script>
+
 # MSW <span data-soon>soon</span>
 
-::: warning
-This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1486).
-:::
+<FeatureStatus issueNumber=1486 name="MSW" />
 
 ### About
 
 [MSW](https://mswjs.io) is an API mocking library that allows you to write client-agnostic mocks and reuse them across any frameworks, tools, and environments.
 
-<!--@include: ../../sponsors.md-->
+<!--@include: ../../partials/sponsors.md-->
