@@ -1,34 +1,29 @@
 import type { IR } from '../../../ir/types';
-// import type { StringCase, StringName } from '../../../types/case';
+import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
 
 export type UserConfig = Plugin.Name<'@pinia/colada'> & {
   /**
-   * Default cache time for queries in milliseconds.
+   * Auto-detect whether to generate query or mutation based on HTTP method.
+   * - GET requests → query
+   * - POST/PUT/PATCH/DELETE → mutation
+   * Can be overridden per operation using the `operationTypes` option.
    *
-   * @default undefined
+   * @default true
    */
-  defaultCacheTime?: number;
+  autoDetectHttpMethod?: boolean;
   /**
-   * Default stale time for queries in milliseconds.
+   * The casing convention to use for generated names.
    *
-   * @default undefined
+   * @default 'camelCase'
    */
-  defaultStaleTime?: number;
+  case?: StringCase;
   /**
-   * Enable pagination support on this key when found in the query parameters or body.
+   * Add comments from SDK functions to the generated Pinia Colada code?
    *
-   * @default undefined
+   * @default true
    */
-  enablePaginationOnKey?: string;
-  /**
-   * How to handle error responses.
-   * 'unified' - Unified error type for all errors
-   * 'specific' - Specific error types per operation
-   *
-   * @default 'specific'
-   */
-  errorHandling?: 'unified' | 'specific';
+  comments?: boolean;
   /**
    * Should the exports from the generated files be re-exported in the index barrel file?
    *
@@ -36,105 +31,166 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> & {
    */
   exportFromIndex?: boolean;
   /**
-   * Group operations by tag into separate files.
+   * Group generated files by OpenAPI tags. When enabled, operations will be organized
+   * into separate files based on their tags, allowing for better code organization
+   * and tree-shaking.
    *
    * @default false
    */
   groupByTag?: boolean;
   /**
-   * Import path for the plugin.
+   * Configuration for generated mutation options helpers.
+   *
+   * Can be:
+   * - `boolean`: Shorthand for `{ enabled: boolean }`
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
+   * - `object`: Full configuration object
+   *
+   * @default true
+   */
+  mutationOptions?:
+    | boolean
+    | StringName
+    | {
+        /**
+         * The casing convention to use for generated names.
+         *
+         * @default 'camelCase'
+         */
+        case?: StringCase;
+        /**
+         * Whether to generate mutation options helpers.
+         *
+         * @default true
+         */
+        enabled?: boolean;
+        /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated mutation options.
+         *
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```typescript
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         */
+        meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
+        /**
+         * Custom naming pattern for generated mutation options names. The name variable is
+         * obtained from the SDK function name.
+         *
+         * @default '{{name}}Mutation'
+         */
+        name?: StringName;
+      };
+  /**
+   * Override the auto-detected operation type for specific operations.
+   * Useful for edge cases where the HTTP method doesn't match the intended behavior.
+   *
+   * @example
+   * ```typescript
+   * operationTypes: {
+   *   'getPetById': 'mutation', // Force GET to be a mutation
+   *   'deletePet': 'query',      // Force DELETE to be a query
+   * }
+   * ```
+   */
+  operationTypes?: Record<string, 'query' | 'mutation' | 'both'>;
+  /**
+   * Name of the generated file.
    *
    * @default '@pinia/colada'
    */
-  importPath?: string;
+  output?: string;
   /**
-   * Include types in the generated files.
+   * Configuration for generated query options helpers.
+   *
+   * Can be:
+   * - `boolean`: Shorthand for `{ enabled: boolean }`
+   * - `string` or `function`: Shorthand for `{ name: string | function }`
+   * - `object`: Full configuration object
    *
    * @default true
    */
-  includeTypes?: boolean;
-  /**
-   * Custom hook to customize or skip mutation generation.
-   * Return false to skip generating a mutation for this operation.
-   *
-   * @default undefined
-   */
-  onMutation?: (operation: IR.OperationObject) => boolean | undefined;
-  /**
-   * Custom hook to customize or skip query generation.
-   * Return false to skip generating a query for this operation.
-   *
-   * @default undefined
-   */
-  onQuery?: (operation: IR.OperationObject) => boolean | undefined;
-  /**
-   * Plugin output path.
-   *
-   * @default '@pinia/colada'
-   */
-  output: string;
-  /**
-   * Whether to prefix generated function names with 'use'.
-   *
-   * @default true
-   */
-  prefixUse?: boolean;
-  /**
-   * Custom hook that determines if an operation should be a query or not.
-   * Return true to force query, false to force mutation, undefined to use default logic.
-   *
-   * @default undefined
-   */
-  resolveQuery?: (operation: IR.OperationObject) => boolean | undefined;
-  /**
-   * Custom hook to resolve query key.
-   * Default is [operation.tags?.[0] || 'default', operation.id]
-   *
-   * @default undefined
-   */
-  resolveQueryKey?: (operation: IR.OperationObject) => Array<string>;
-  /**
-   * Whether to suffix generated function names with 'Query' or 'Mutation' to indicate the type
-   * of Pinia Colada operation that is used under the hood.
-   *
-   * @default true
-   */
-  suffixQueryMutation?: boolean;
-  /**
-   * Use infinite queries.
-   *
-   * @default false
-   */
-  useInfiniteQueries?: boolean;
+  queryOptions?:
+    | boolean
+    | StringName
+    | {
+        /**
+         * The casing convention to use for generated names.
+         *
+         * @default 'camelCase'
+         */
+        case?: StringCase;
+        /**
+         * Whether to generate query options helpers.
+         *
+         * @default true
+         */
+        enabled?: boolean;
+        /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated query options.
+         *
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```typescript
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         */
+        meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
+        /**
+         * Custom naming pattern for generated query options names. The name variable is
+         * obtained from the SDK function name.
+         *
+         * @default '{{name}}Query'
+         */
+        name?: StringName;
+      };
 };
 
 export type Config = Plugin.Name<'@pinia/colada'> & {
   /**
-   * Default cache time for queries in milliseconds.
+   * Auto-detect whether to generate query or mutation based on HTTP method.
+   * - GET requests → query
+   * - POST/PUT/PATCH/DELETE → mutation
+   * Can be overridden per operation using the `operationTypes` option.
    *
-   * @default undefined
+   * @default true
    */
-  defaultCacheTime: number | undefined;
+  autoDetectHttpMethod: boolean;
   /**
-   * Default stale time for queries in milliseconds.
+   * The casing convention to use for generated names.
    *
-   * @default undefined
+   * @default 'camelCase'
    */
-  defaultStaleTime: number | undefined;
+  case: StringCase;
   /**
-   * Enable pagination support on this key when found in the query parameters or body.
+   * Add comments from SDK functions to the generated Pinia Colada code?
    *
-   * @default undefined
+   * @default true
    */
-  enablePaginationOnKey?: string;
-  /**
-   * How to handle error responses.
-   * 'unified' - Unified error type for all errors
-   * 'specific' - Specific error types per operation
-   *
-   * @default 'specific'
-   */
-  errorHandling?: 'unified' | 'specific';
+  comments: boolean;
   /**
    * Should the exports from the generated files be re-exported in the index barrel file?
    *
@@ -142,76 +198,114 @@ export type Config = Plugin.Name<'@pinia/colada'> & {
    */
   exportFromIndex: boolean;
   /**
-   * Group operations by tag into separate files.
+   * Group generated files by OpenAPI tags. When enabled, operations will be organized
+   * into separate files based on their tags, allowing for better code organization
+   * and tree-shaking.
    *
    * @default false
    */
-  groupByTag?: boolean;
+  groupByTag: boolean;
   /**
-   * Import path for the plugin.
-   *
-   * @default '@pinia/colada'
+   * Resolved configuration for generated mutation options helpers.
    */
-  importPath?: string;
+  mutationOptions: {
+    /**
+     * The casing convention to use for generated names.
+     *
+     * @default 'camelCase'
+     */
+    case: StringCase;
+    /**
+     * Whether to generate mutation options helpers.
+     *
+     * @default true
+     */
+    enabled: boolean;
+    /**
+     * Custom function to generate metadata for the operation.
+     * Can return any valid meta object that will be included in the generated mutation options.
+     *
+     * @param operation - The operation object containing all available metadata
+     * @returns A meta object with any properties you want to include
+     *
+     * @example
+     * ```typescript
+     * meta: (operation) => ({
+     *   customField: operation.id,
+     *   isDeprecated: operation.deprecated,
+     *   tags: operation.tags,
+     *   customObject: {
+     *     method: operation.method,
+     *     path: operation.path
+     *   }
+     * })
+     * ```
+     */
+    meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
+    /**
+     * Custom naming pattern for generated mutation options names. The name variable is
+     * obtained from the SDK function name.
+     *
+     * @default '{{name}}Mutation'
+     */
+    name: StringName;
+  };
   /**
-   * Include types in the generated files.
-   *
-   * @default true
+   * Override the auto-detected operation type for specific operations.
+   * Useful for edge cases where the HTTP method doesn't match the intended behavior.
    */
-  includeTypes?: boolean;
+  operationTypes: Record<string, 'query' | 'mutation' | 'both'>;
   /**
-   * Custom hook to customize or skip mutation generation.
-   * Return false to skip generating a mutation for this operation.
-   *
-   * @default undefined
-   */
-  onMutation?: (operation: IR.OperationObject) => boolean | undefined;
-  /**
-   * Custom hook to customize or skip query generation.
-   * Return false to skip generating a query for this operation.
-   *
-   * @default undefined
-   */
-  onQuery?: (operation: IR.OperationObject) => boolean | undefined;
-  /**
-   * Plugin output path.
+   * Name of the generated file.
    *
    * @default '@pinia/colada'
    */
   output: string;
   /**
-   * Whether to prefix generated function names with 'use'.
-   *
-   * @default true
+   * Resolved configuration for generated query options helpers.
    */
-  prefixUse?: boolean;
-  /**
-   * Custom hook that determines if an operation should be a query or not.
-   * Return true to force query, false to force mutation, undefined to use default logic.
-   *
-   * @default undefined
-   */
-  resolveQuery?: (operation: IR.OperationObject) => boolean | undefined;
-  /**
-   * Custom hook to resolve query key.
-   * Default is [operation.tags?.[0] || 'default', operation.id]
-   *
-   * @default undefined
-   */
-  resolveQueryKey?: (operation: IR.OperationObject) => Array<string>;
-  /**
-   * Whether to suffix generated function names with 'Query' or 'Mutation' to indicate the type
-   * of Pinia Colada operation that is used under the hood.
-   *
-   * @default true
-   */
-  suffixQueryMutation?: boolean;
-  /**
-   * Use infinite queries.
-   *
-   * @default false
-   */
-  useInfiniteQueries?: boolean;
+  queryOptions: {
+    /**
+     * The casing convention to use for generated names.
+     *
+     * @default 'camelCase'
+     */
+    case: StringCase;
+    /**
+     * Whether to generate query options helpers.
+     *
+     * @default true
+     */
+    enabled: boolean;
+    /**
+     * Custom function to generate metadata for the operation.
+     * Can return any valid meta object that will be included in the generated query options.
+     *
+     * @param operation - The operation object containing all available metadata
+     * @returns A meta object with any properties you want to include
+     *
+     * @example
+     * ```typescript
+     * meta: (operation) => ({
+     *   customField: operation.id,
+     *   isDeprecated: operation.deprecated,
+     *   tags: operation.tags,
+     *   customObject: {
+     *     method: operation.method,
+     *     path: operation.path
+     *   }
+     * })
+     * ```
+     */
+    meta?: false | ((operation: IR.OperationObject) => Record<string, any>);
+    /**
+     * Custom naming pattern for generated query options names. The name variable is
+     * obtained from the SDK function name.
+     *
+     * @default '{{name}}Query'
+     */
+    name: StringName;
+  };
 };
 
 export type PiniaColadaPlugin = DefinePlugin<UserConfig, Config>;
