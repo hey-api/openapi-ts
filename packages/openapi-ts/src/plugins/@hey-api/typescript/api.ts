@@ -5,11 +5,18 @@ import { schemaToType } from './plugin';
 
 type GetIdArgs =
   | {
-      type: 'ClientOptions';
+      type: 'ClientOptions' | 'Webhooks';
     }
   | {
       operation: IR.OperationObject;
-      type: 'data' | 'error' | 'errors' | 'response' | 'responses';
+      type:
+        | 'data'
+        | 'error'
+        | 'errors'
+        | 'response'
+        | 'responses'
+        | 'webhook-payload'
+        | 'webhook-request';
     }
   | {
       type: 'ref';
@@ -23,6 +30,8 @@ const getId = (args: GetIdArgs): string => {
     case 'errors':
     case 'response':
     case 'responses':
+    case 'webhook-payload':
+    case 'webhook-request':
       return `${args.operation.id}-${args.type}`;
     case 'ref':
       return args.value;

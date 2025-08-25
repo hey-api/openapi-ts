@@ -1,0 +1,3045 @@
+openapi: 3.1.1
+info:
+  title: opencode
+  description: opencode api
+  version: 1.0.0
+paths:
+  /event:
+    get:
+      responses:
+        '200':
+          description: Event stream
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/Event'
+      operationId: event.subscribe
+      parameters: []
+      description: Get events
+  /app:
+    get:
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App'
+      operationId: app.get
+      parameters: []
+      description: Get app info
+  /app/init:
+    post:
+      responses:
+        '200':
+          description: Initialize the app
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: app.init
+      parameters: []
+      description: Initialize the app
+  /config:
+    get:
+      responses:
+        '200':
+          description: Get config info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+      operationId: config.get
+      parameters: []
+      description: Get config info
+  /session:
+    get:
+      responses:
+        '200':
+          description: List of sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+      operationId: session.list
+      parameters: []
+      description: List all sessions
+    post:
+      responses:
+        '200':
+          description: Successfully created session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: session.create
+      parameters: []
+      description: Create a new session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                parentID:
+                  type: string
+                title:
+                  type: string
+  /session/{id}:
+    get:
+      responses:
+        '200':
+          description: Get session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+      operationId: session.get
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      description: Get session
+    delete:
+      responses:
+        '200':
+          description: Successfully deleted session
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: session.delete
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      description: Delete a session and all its data
+    patch:
+      responses:
+        '200':
+          description: Successfully updated session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+      operationId: session.update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      description: Update session properties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+  /session/{id}/children:
+    get:
+      responses:
+        '200':
+          description: List of children
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+      operationId: session.children
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      description: Get a session's children
+  /session/{id}/init:
+    post:
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: session.init
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: Session ID
+          required: true
+      description: Analyze the app and create an AGENTS.md file
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messageID:
+                  type: string
+                providerID:
+                  type: string
+                modelID:
+                  type: string
+              required:
+                - messageID
+                - providerID
+                - modelID
+  /session/{id}/abort:
+    post:
+      responses:
+        '200':
+          description: Aborted session
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: session.abort
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      description: Abort a session
+  /session/{id}/share:
+    post:
+      responses:
+        '200':
+          description: Successfully shared session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+      operationId: session.share
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      description: Share a session
+    delete:
+      responses:
+        '200':
+          description: Successfully unshared session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+      operationId: session.unshare
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      description: Unshare the session
+  /session/{id}/summarize:
+    post:
+      responses:
+        '200':
+          description: Summarized session
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: session.summarize
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: Session ID
+          required: true
+      description: Summarize the session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                providerID:
+                  type: string
+                modelID:
+                  type: string
+              required:
+                - providerID
+                - modelID
+  /session/{id}/message:
+    get:
+      responses:
+        '200':
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    info:
+                      $ref: '#/components/schemas/Message'
+                    parts:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Part'
+                  required:
+                    - info
+                    - parts
+      operationId: session.messages
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: Session ID
+          required: true
+      description: List messages for a session
+    post:
+      responses:
+        '200':
+          description: Created message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/AssistantMessage'
+                  parts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Part'
+                required:
+                  - info
+                  - parts
+      operationId: session.chat
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: Session ID
+          required: true
+      description: Create and send a new message to a session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messageID:
+                  type: string
+                  pattern: ^msg
+                providerID:
+                  type: string
+                modelID:
+                  type: string
+                agent:
+                  type: string
+                system:
+                  type: string
+                tools:
+                  type: object
+                  additionalProperties:
+                    type: boolean
+                parts:
+                  type: array
+                  items:
+                    oneOf:
+                      - $ref: '#/components/schemas/TextPartInput'
+                      - $ref: '#/components/schemas/FilePartInput'
+                      - $ref: '#/components/schemas/AgentPartInput'
+                    discriminator:
+                      propertyName: type
+                      mapping:
+                        text: '#/components/schemas/TextPartInput'
+                        file: '#/components/schemas/FilePartInput'
+                        agent: '#/components/schemas/AgentPartInput'
+              required:
+                - providerID
+                - modelID
+                - parts
+  /session/{id}/message/{messageID}:
+    get:
+      responses:
+        '200':
+          description: Message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/Message'
+                  parts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Part'
+                required:
+                  - info
+                  - parts
+      operationId: session.message
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: Session ID
+          required: true
+        - in: path
+          name: messageID
+          schema:
+            type: string
+            description: Message ID
+          required: true
+      description: Get a message from a session
+  /session/{id}/shell:
+    post:
+      responses:
+        '200':
+          description: Created message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistantMessage'
+      operationId: session.shell
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: Session ID
+          required: true
+      description: Run a shell command
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                agent:
+                  type: string
+                command:
+                  type: string
+              required:
+                - agent
+                - command
+  /session/{id}/revert:
+    post:
+      responses:
+        '200':
+          description: Updated session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+      operationId: session.revert
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      description: Revert a message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messageID:
+                  type: string
+                  pattern: ^msg
+                partID:
+                  type: string
+                  pattern: ^prt
+              required:
+                - messageID
+  /session/{id}/unrevert:
+    post:
+      responses:
+        '200':
+          description: Updated session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+      operationId: session.unrevert
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      description: Restore all reverted messages
+  /session/{id}/permissions/{permissionID}:
+    post:
+      responses:
+        '200':
+          description: Permission processed successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: postSessionByIdPermissionsByPermissionID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: permissionID
+          schema:
+            type: string
+          required: true
+      description: Respond to a permission request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                response:
+                  type: string
+                  enum:
+                    - once
+                    - always
+                    - reject
+              required:
+                - response
+  /config/providers:
+    get:
+      responses:
+        '200':
+          description: List of providers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  providers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Provider'
+                  default:
+                    type: object
+                    additionalProperties:
+                      type: string
+                required:
+                  - providers
+                  - default
+      operationId: config.providers
+      parameters: []
+      description: List all providers
+  /find:
+    get:
+      responses:
+        '200':
+          description: Matches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    path:
+                      type: object
+                      properties:
+                        text:
+                          type: string
+                      required:
+                        - text
+                    lines:
+                      type: object
+                      properties:
+                        text:
+                          type: string
+                      required:
+                        - text
+                    line_number:
+                      type: number
+                    absolute_offset:
+                      type: number
+                    submatches:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          match:
+                            type: object
+                            properties:
+                              text:
+                                type: string
+                            required:
+                              - text
+                          start:
+                            type: number
+                          end:
+                            type: number
+                        required:
+                          - match
+                          - start
+                          - end
+                  required:
+                    - path
+                    - lines
+                    - line_number
+                    - absolute_offset
+                    - submatches
+      operationId: find.text
+      parameters:
+        - in: query
+          name: pattern
+          schema:
+            type: string
+          required: true
+      description: Find text in files
+  /find/file:
+    get:
+      responses:
+        '200':
+          description: File paths
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+      operationId: find.files
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          required: true
+      description: Find files
+  /find/symbol:
+    get:
+      responses:
+        '200':
+          description: Symbols
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Symbol'
+      operationId: find.symbols
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          required: true
+      description: Find workspace symbols
+  /file:
+    get:
+      responses:
+        '200':
+          description: File content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                      - raw
+                      - patch
+                  content:
+                    type: string
+                required:
+                  - type
+                  - content
+      operationId: file.read
+      parameters:
+        - in: query
+          name: path
+          schema:
+            type: string
+          required: true
+      description: Read a file
+  /file/status:
+    get:
+      responses:
+        '200':
+          description: File status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/File'
+      operationId: file.status
+      parameters: []
+      description: Get file status
+  /log:
+    post:
+      responses:
+        '200':
+          description: Log entry written successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: app.log
+      parameters: []
+      description: Write a log entry to the server logs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service:
+                  type: string
+                  description: Service name for the log entry
+                level:
+                  type: string
+                  enum:
+                    - debug
+                    - info
+                    - error
+                    - warn
+                  description: Log level
+                message:
+                  type: string
+                  description: Log message
+                extra:
+                  type: object
+                  additionalProperties: {}
+                  description: Additional metadata for the log entry
+              required:
+                - service
+                - level
+                - message
+  /agent:
+    get:
+      responses:
+        '200':
+          description: List of agents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Agent'
+      operationId: app.agents
+      parameters: []
+      description: List all agents
+  /tui/append-prompt:
+    post:
+      responses:
+        '200':
+          description: Prompt processed successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: tui.appendPrompt
+      parameters: []
+      description: Append prompt to the TUI
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+              required:
+                - text
+  /tui/open-help:
+    post:
+      responses:
+        '200':
+          description: Help dialog opened successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: tui.openHelp
+      parameters: []
+      description: Open the help dialog
+  /tui/open-sessions:
+    post:
+      responses:
+        '200':
+          description: Session dialog opened successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: tui.openSessions
+      parameters: []
+      description: Open the session dialog
+  /tui/open-themes:
+    post:
+      responses:
+        '200':
+          description: Theme dialog opened successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: tui.openThemes
+      parameters: []
+      description: Open the theme dialog
+  /tui/open-models:
+    post:
+      responses:
+        '200':
+          description: Model dialog opened successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: tui.openModels
+      parameters: []
+      description: Open the model dialog
+  /tui/submit-prompt:
+    post:
+      responses:
+        '200':
+          description: Prompt submitted successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: tui.submitPrompt
+      parameters: []
+      description: Submit the prompt
+  /tui/clear-prompt:
+    post:
+      responses:
+        '200':
+          description: Prompt cleared successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: tui.clearPrompt
+      parameters: []
+      description: Clear the prompt
+  /tui/execute-command:
+    post:
+      responses:
+        '200':
+          description: Command executed successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: tui.executeCommand
+      parameters: []
+      description: Execute a TUI command (e.g. agent_cycle)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                command:
+                  type: string
+              required:
+                - command
+  /tui/show-toast:
+    post:
+      responses:
+        '200':
+          description: Toast notification shown successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: tui.showToast
+      parameters: []
+      description: Show a toast notification in the TUI
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                message:
+                  type: string
+                variant:
+                  type: string
+                  enum:
+                    - info
+                    - success
+                    - warning
+                    - error
+              required:
+                - message
+                - variant
+  /auth/{id}:
+    put:
+      responses:
+        '200':
+          description: Successfully set authentication credentials
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: auth.set
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      description: Set authentication credentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auth'
+components:
+  schemas:
+    Event:
+      oneOf:
+        - $ref: '#/components/schemas/Event.installation.updated'
+        - $ref: '#/components/schemas/Event.lsp.client.diagnostics'
+        - $ref: '#/components/schemas/Event.message.updated'
+        - $ref: '#/components/schemas/Event.message.removed'
+        - $ref: '#/components/schemas/Event.message.part.updated'
+        - $ref: '#/components/schemas/Event.message.part.removed'
+        - $ref: '#/components/schemas/Event.storage.write'
+        - $ref: '#/components/schemas/Event.permission.updated'
+        - $ref: '#/components/schemas/Event.permission.replied'
+        - $ref: '#/components/schemas/Event.file.edited'
+        - $ref: '#/components/schemas/Event.session.updated'
+        - $ref: '#/components/schemas/Event.session.deleted'
+        - $ref: '#/components/schemas/Event.session.idle'
+        - $ref: '#/components/schemas/Event.session.error'
+        - $ref: '#/components/schemas/Event.server.connected'
+        - $ref: '#/components/schemas/Event.file.watcher.updated'
+        - $ref: '#/components/schemas/Event.ide.installed'
+      discriminator:
+        propertyName: type
+        mapping:
+          installation.updated: '#/components/schemas/Event.installation.updated'
+          lsp.client.diagnostics: '#/components/schemas/Event.lsp.client.diagnostics'
+          message.updated: '#/components/schemas/Event.message.updated'
+          message.removed: '#/components/schemas/Event.message.removed'
+          message.part.updated: '#/components/schemas/Event.message.part.updated'
+          message.part.removed: '#/components/schemas/Event.message.part.removed'
+          storage.write: '#/components/schemas/Event.storage.write'
+          permission.updated: '#/components/schemas/Event.permission.updated'
+          permission.replied: '#/components/schemas/Event.permission.replied'
+          file.edited: '#/components/schemas/Event.file.edited'
+          session.updated: '#/components/schemas/Event.session.updated'
+          session.deleted: '#/components/schemas/Event.session.deleted'
+          session.idle: '#/components/schemas/Event.session.idle'
+          session.error: '#/components/schemas/Event.session.error'
+          server.connected: '#/components/schemas/Event.server.connected'
+          file.watcher.updated: '#/components/schemas/Event.file.watcher.updated'
+          ide.installed: '#/components/schemas/Event.ide.installed'
+    Event.installation.updated:
+      type: object
+      properties:
+        type:
+          type: string
+          const: installation.updated
+        properties:
+          type: object
+          properties:
+            version:
+              type: string
+          required:
+            - version
+      required:
+        - type
+        - properties
+    Event.lsp.client.diagnostics:
+      type: object
+      properties:
+        type:
+          type: string
+          const: lsp.client.diagnostics
+        properties:
+          type: object
+          properties:
+            serverID:
+              type: string
+            path:
+              type: string
+          required:
+            - serverID
+            - path
+      required:
+        - type
+        - properties
+    Event.message.updated:
+      type: object
+      properties:
+        type:
+          type: string
+          const: message.updated
+        properties:
+          type: object
+          properties:
+            info:
+              $ref: '#/components/schemas/Message'
+          required:
+            - info
+      required:
+        - type
+        - properties
+    Message:
+      oneOf:
+        - $ref: '#/components/schemas/UserMessage'
+        - $ref: '#/components/schemas/AssistantMessage'
+      discriminator:
+        propertyName: role
+        mapping:
+          user: '#/components/schemas/UserMessage'
+          assistant: '#/components/schemas/AssistantMessage'
+    UserMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionID:
+          type: string
+        role:
+          type: string
+          const: user
+        time:
+          type: object
+          properties:
+            created:
+              type: number
+          required:
+            - created
+      required:
+        - id
+        - sessionID
+        - role
+        - time
+    AssistantMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionID:
+          type: string
+        role:
+          type: string
+          const: assistant
+        time:
+          type: object
+          properties:
+            created:
+              type: number
+            completed:
+              type: number
+          required:
+            - created
+        error:
+          oneOf:
+            - $ref: '#/components/schemas/ProviderAuthError'
+            - $ref: '#/components/schemas/UnknownError'
+            - $ref: '#/components/schemas/MessageOutputLengthError'
+            - $ref: '#/components/schemas/MessageAbortedError'
+          discriminator:
+            propertyName: name
+            mapping:
+              ProviderAuthError: '#/components/schemas/ProviderAuthError'
+              UnknownError: '#/components/schemas/UnknownError'
+              MessageOutputLengthError: '#/components/schemas/MessageOutputLengthError'
+              MessageAbortedError: '#/components/schemas/MessageAbortedError'
+        system:
+          type: array
+          items:
+            type: string
+        modelID:
+          type: string
+        providerID:
+          type: string
+        mode:
+          type: string
+        path:
+          type: object
+          properties:
+            cwd:
+              type: string
+            root:
+              type: string
+          required:
+            - cwd
+            - root
+        summary:
+          type: boolean
+        cost:
+          type: number
+        tokens:
+          type: object
+          properties:
+            input:
+              type: number
+            output:
+              type: number
+            reasoning:
+              type: number
+            cache:
+              type: object
+              properties:
+                read:
+                  type: number
+                write:
+                  type: number
+              required:
+                - read
+                - write
+          required:
+            - input
+            - output
+            - reasoning
+            - cache
+      required:
+        - id
+        - sessionID
+        - role
+        - time
+        - system
+        - modelID
+        - providerID
+        - mode
+        - path
+        - cost
+        - tokens
+    ProviderAuthError:
+      type: object
+      properties:
+        name:
+          type: string
+          const: ProviderAuthError
+        data:
+          type: object
+          properties:
+            providerID:
+              type: string
+            message:
+              type: string
+          required:
+            - providerID
+            - message
+      required:
+        - name
+        - data
+    UnknownError:
+      type: object
+      properties:
+        name:
+          type: string
+          const: UnknownError
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+          required:
+            - message
+      required:
+        - name
+        - data
+    MessageOutputLengthError:
+      type: object
+      properties:
+        name:
+          type: string
+          const: MessageOutputLengthError
+        data:
+          type: object
+      required:
+        - name
+        - data
+    MessageAbortedError:
+      type: object
+      properties:
+        name:
+          type: string
+          const: MessageAbortedError
+        data:
+          type: object
+      required:
+        - name
+        - data
+    Event.message.removed:
+      type: object
+      properties:
+        type:
+          type: string
+          const: message.removed
+        properties:
+          type: object
+          properties:
+            sessionID:
+              type: string
+            messageID:
+              type: string
+          required:
+            - sessionID
+            - messageID
+      required:
+        - type
+        - properties
+    Event.message.part.updated:
+      type: object
+      properties:
+        type:
+          type: string
+          const: message.part.updated
+        properties:
+          type: object
+          properties:
+            part:
+              $ref: '#/components/schemas/Part'
+          required:
+            - part
+      required:
+        - type
+        - properties
+    Part:
+      oneOf:
+        - $ref: '#/components/schemas/TextPart'
+        - $ref: '#/components/schemas/ReasoningPart'
+        - $ref: '#/components/schemas/FilePart'
+        - $ref: '#/components/schemas/ToolPart'
+        - $ref: '#/components/schemas/StepStartPart'
+        - $ref: '#/components/schemas/StepFinishPart'
+        - $ref: '#/components/schemas/SnapshotPart'
+        - $ref: '#/components/schemas/PatchPart'
+        - $ref: '#/components/schemas/AgentPart'
+      discriminator:
+        propertyName: type
+        mapping:
+          text: '#/components/schemas/TextPart'
+          reasoning: '#/components/schemas/ReasoningPart'
+          file: '#/components/schemas/FilePart'
+          tool: '#/components/schemas/ToolPart'
+          step-start: '#/components/schemas/StepStartPart'
+          step-finish: '#/components/schemas/StepFinishPart'
+          snapshot: '#/components/schemas/SnapshotPart'
+          patch: '#/components/schemas/PatchPart'
+          agent: '#/components/schemas/AgentPart'
+    TextPart:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionID:
+          type: string
+        messageID:
+          type: string
+        type:
+          type: string
+          const: text
+        text:
+          type: string
+        synthetic:
+          type: boolean
+        time:
+          type: object
+          properties:
+            start:
+              type: number
+            end:
+              type: number
+          required:
+            - start
+      required:
+        - id
+        - sessionID
+        - messageID
+        - type
+        - text
+    ReasoningPart:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionID:
+          type: string
+        messageID:
+          type: string
+        type:
+          type: string
+          const: reasoning
+        text:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: {}
+        time:
+          type: object
+          properties:
+            start:
+              type: number
+            end:
+              type: number
+          required:
+            - start
+      required:
+        - id
+        - sessionID
+        - messageID
+        - type
+        - text
+        - time
+    FilePart:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionID:
+          type: string
+        messageID:
+          type: string
+        type:
+          type: string
+          const: file
+        mime:
+          type: string
+        filename:
+          type: string
+        url:
+          type: string
+        source:
+          $ref: '#/components/schemas/FilePartSource'
+      required:
+        - id
+        - sessionID
+        - messageID
+        - type
+        - mime
+        - url
+    FilePartSource:
+      oneOf:
+        - $ref: '#/components/schemas/FileSource'
+        - $ref: '#/components/schemas/SymbolSource'
+      discriminator:
+        propertyName: type
+        mapping:
+          file: '#/components/schemas/FileSource'
+          symbol: '#/components/schemas/SymbolSource'
+    FileSource:
+      type: object
+      properties:
+        text:
+          $ref: '#/components/schemas/FilePartSourceText'
+        type:
+          type: string
+          const: file
+        path:
+          type: string
+      required:
+        - text
+        - type
+        - path
+    FilePartSourceText:
+      type: object
+      properties:
+        value:
+          type: string
+        start:
+          type: integer
+        end:
+          type: integer
+      required:
+        - value
+        - start
+        - end
+    SymbolSource:
+      type: object
+      properties:
+        text:
+          $ref: '#/components/schemas/FilePartSourceText'
+        type:
+          type: string
+          const: symbol
+        path:
+          type: string
+        range:
+          $ref: '#/components/schemas/Range'
+        name:
+          type: string
+        kind:
+          type: integer
+      required:
+        - text
+        - type
+        - path
+        - range
+        - name
+        - kind
+    Range:
+      type: object
+      properties:
+        start:
+          type: object
+          properties:
+            line:
+              type: number
+            character:
+              type: number
+          required:
+            - line
+            - character
+        end:
+          type: object
+          properties:
+            line:
+              type: number
+            character:
+              type: number
+          required:
+            - line
+            - character
+      required:
+        - start
+        - end
+    ToolPart:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionID:
+          type: string
+        messageID:
+          type: string
+        type:
+          type: string
+          const: tool
+        callID:
+          type: string
+        tool:
+          type: string
+        state:
+          $ref: '#/components/schemas/ToolState'
+      required:
+        - id
+        - sessionID
+        - messageID
+        - type
+        - callID
+        - tool
+        - state
+    ToolState:
+      oneOf:
+        - $ref: '#/components/schemas/ToolStatePending'
+        - $ref: '#/components/schemas/ToolStateRunning'
+        - $ref: '#/components/schemas/ToolStateCompleted'
+        - $ref: '#/components/schemas/ToolStateError'
+      discriminator:
+        propertyName: status
+        mapping:
+          pending: '#/components/schemas/ToolStatePending'
+          running: '#/components/schemas/ToolStateRunning'
+          completed: '#/components/schemas/ToolStateCompleted'
+          error: '#/components/schemas/ToolStateError'
+    ToolStatePending:
+      type: object
+      properties:
+        status:
+          type: string
+          const: pending
+      required:
+        - status
+    ToolStateRunning:
+      type: object
+      properties:
+        status:
+          type: string
+          const: running
+        input: {}
+        title:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: {}
+        time:
+          type: object
+          properties:
+            start:
+              type: number
+          required:
+            - start
+      required:
+        - status
+        - time
+    ToolStateCompleted:
+      type: object
+      properties:
+        status:
+          type: string
+          const: completed
+        input:
+          type: object
+          additionalProperties: {}
+        output:
+          type: string
+        title:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: {}
+        time:
+          type: object
+          properties:
+            start:
+              type: number
+            end:
+              type: number
+          required:
+            - start
+            - end
+      required:
+        - status
+        - input
+        - output
+        - title
+        - metadata
+        - time
+    ToolStateError:
+      type: object
+      properties:
+        status:
+          type: string
+          const: error
+        input:
+          type: object
+          additionalProperties: {}
+        error:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: {}
+        time:
+          type: object
+          properties:
+            start:
+              type: number
+            end:
+              type: number
+          required:
+            - start
+            - end
+      required:
+        - status
+        - input
+        - error
+        - time
+    StepStartPart:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionID:
+          type: string
+        messageID:
+          type: string
+        type:
+          type: string
+          const: step-start
+      required:
+        - id
+        - sessionID
+        - messageID
+        - type
+    StepFinishPart:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionID:
+          type: string
+        messageID:
+          type: string
+        type:
+          type: string
+          const: step-finish
+        cost:
+          type: number
+        tokens:
+          type: object
+          properties:
+            input:
+              type: number
+            output:
+              type: number
+            reasoning:
+              type: number
+            cache:
+              type: object
+              properties:
+                read:
+                  type: number
+                write:
+                  type: number
+              required:
+                - read
+                - write
+          required:
+            - input
+            - output
+            - reasoning
+            - cache
+      required:
+        - id
+        - sessionID
+        - messageID
+        - type
+        - cost
+        - tokens
+    SnapshotPart:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionID:
+          type: string
+        messageID:
+          type: string
+        type:
+          type: string
+          const: snapshot
+        snapshot:
+          type: string
+      required:
+        - id
+        - sessionID
+        - messageID
+        - type
+        - snapshot
+    PatchPart:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionID:
+          type: string
+        messageID:
+          type: string
+        type:
+          type: string
+          const: patch
+        hash:
+          type: string
+        files:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - sessionID
+        - messageID
+        - type
+        - hash
+        - files
+    AgentPart:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionID:
+          type: string
+        messageID:
+          type: string
+        type:
+          type: string
+          const: agent
+        name:
+          type: string
+        source:
+          type: object
+          properties:
+            value:
+              type: string
+            start:
+              type: integer
+            end:
+              type: integer
+          required:
+            - value
+            - start
+            - end
+      required:
+        - id
+        - sessionID
+        - messageID
+        - type
+        - name
+    Event.message.part.removed:
+      type: object
+      properties:
+        type:
+          type: string
+          const: message.part.removed
+        properties:
+          type: object
+          properties:
+            sessionID:
+              type: string
+            messageID:
+              type: string
+            partID:
+              type: string
+          required:
+            - sessionID
+            - messageID
+            - partID
+      required:
+        - type
+        - properties
+    Event.storage.write:
+      type: object
+      properties:
+        type:
+          type: string
+          const: storage.write
+        properties:
+          type: object
+          properties:
+            key:
+              type: string
+            content: {}
+          required:
+            - key
+      required:
+        - type
+        - properties
+    Event.permission.updated:
+      type: object
+      properties:
+        type:
+          type: string
+          const: permission.updated
+        properties:
+          $ref: '#/components/schemas/Permission'
+      required:
+        - type
+        - properties
+    Permission:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        pattern:
+          type: string
+        sessionID:
+          type: string
+        messageID:
+          type: string
+        callID:
+          type: string
+        title:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: {}
+        time:
+          type: object
+          properties:
+            created:
+              type: number
+          required:
+            - created
+      required:
+        - id
+        - type
+        - sessionID
+        - messageID
+        - title
+        - metadata
+        - time
+    Event.permission.replied:
+      type: object
+      properties:
+        type:
+          type: string
+          const: permission.replied
+        properties:
+          type: object
+          properties:
+            sessionID:
+              type: string
+            permissionID:
+              type: string
+            response:
+              type: string
+          required:
+            - sessionID
+            - permissionID
+            - response
+      required:
+        - type
+        - properties
+    Event.file.edited:
+      type: object
+      properties:
+        type:
+          type: string
+          const: file.edited
+        properties:
+          type: object
+          properties:
+            file:
+              type: string
+          required:
+            - file
+      required:
+        - type
+        - properties
+    Event.session.updated:
+      type: object
+      properties:
+        type:
+          type: string
+          const: session.updated
+        properties:
+          type: object
+          properties:
+            info:
+              $ref: '#/components/schemas/Session'
+          required:
+            - info
+      required:
+        - type
+        - properties
+    Session:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: ^ses
+        parentID:
+          type: string
+          pattern: ^ses
+        share:
+          type: object
+          properties:
+            url:
+              type: string
+          required:
+            - url
+        title:
+          type: string
+        version:
+          type: string
+        time:
+          type: object
+          properties:
+            created:
+              type: number
+            updated:
+              type: number
+          required:
+            - created
+            - updated
+        revert:
+          type: object
+          properties:
+            messageID:
+              type: string
+            partID:
+              type: string
+            snapshot:
+              type: string
+            diff:
+              type: string
+          required:
+            - messageID
+      required:
+        - id
+        - title
+        - version
+        - time
+    Event.session.deleted:
+      type: object
+      properties:
+        type:
+          type: string
+          const: session.deleted
+        properties:
+          type: object
+          properties:
+            info:
+              $ref: '#/components/schemas/Session'
+          required:
+            - info
+      required:
+        - type
+        - properties
+    Event.session.idle:
+      type: object
+      properties:
+        type:
+          type: string
+          const: session.idle
+        properties:
+          type: object
+          properties:
+            sessionID:
+              type: string
+          required:
+            - sessionID
+      required:
+        - type
+        - properties
+    Event.session.error:
+      type: object
+      properties:
+        type:
+          type: string
+          const: session.error
+        properties:
+          type: object
+          properties:
+            sessionID:
+              type: string
+            error:
+              oneOf:
+                - $ref: '#/components/schemas/ProviderAuthError'
+                - $ref: '#/components/schemas/UnknownError'
+                - $ref: '#/components/schemas/MessageOutputLengthError'
+                - $ref: '#/components/schemas/MessageAbortedError'
+              discriminator:
+                propertyName: name
+                mapping:
+                  ProviderAuthError: '#/components/schemas/ProviderAuthError'
+                  UnknownError: '#/components/schemas/UnknownError'
+                  MessageOutputLengthError: '#/components/schemas/MessageOutputLengthError'
+                  MessageAbortedError: '#/components/schemas/MessageAbortedError'
+      required:
+        - type
+        - properties
+    Event.server.connected:
+      type: object
+      properties:
+        type:
+          type: string
+          const: server.connected
+        properties:
+          type: object
+      required:
+        - type
+        - properties
+    Event.file.watcher.updated:
+      type: object
+      properties:
+        type:
+          type: string
+          const: file.watcher.updated
+        properties:
+          type: object
+          properties:
+            file:
+              type: string
+            event:
+              anyOf:
+                - type: string
+                  const: rename
+                - type: string
+                  const: change
+          required:
+            - file
+            - event
+      required:
+        - type
+        - properties
+    Event.ide.installed:
+      type: object
+      properties:
+        type:
+          type: string
+          const: ide.installed
+        properties:
+          type: object
+          properties:
+            ide:
+              type: string
+          required:
+            - ide
+      required:
+        - type
+        - properties
+    App:
+      type: object
+      properties:
+        hostname:
+          type: string
+        git:
+          type: boolean
+        path:
+          type: object
+          properties:
+            config:
+              type: string
+            data:
+              type: string
+            root:
+              type: string
+            cwd:
+              type: string
+            state:
+              type: string
+          required:
+            - config
+            - data
+            - root
+            - cwd
+            - state
+        time:
+          type: object
+          properties:
+            initialized:
+              type: number
+      required:
+        - hostname
+        - git
+        - path
+        - time
+    Config:
+      type: object
+      properties:
+        $schema:
+          type: string
+          description: JSON schema reference for configuration validation
+        theme:
+          type: string
+          description: Theme name to use for the interface
+        keybinds:
+          $ref: '#/components/schemas/KeybindsConfig'
+          description: Custom keybind configurations
+        tui:
+          type: object
+          properties:
+            scroll_speed:
+              type: number
+              minimum: 1
+              default: 2
+              description: TUI scroll speed
+          required:
+            - scroll_speed
+          description: TUI specific settings
+        plugin:
+          type: array
+          items:
+            type: string
+        snapshot:
+          type: boolean
+        share:
+          type: string
+          enum:
+            - manual
+            - auto
+            - disabled
+          description:
+            Control sharing behavior:'manual' allows manual sharing via
+            commands, 'auto' enables automatic sharing, 'disabled' disables all
+            sharing
+        autoshare:
+          type: boolean
+          description:
+            "@deprecated Use 'share' field instead. Share newly created
+            sessions automatically"
+        autoupdate:
+          type: boolean
+          description: Automatically update to the latest version
+        disabled_providers:
+          type: array
+          items:
+            type: string
+          description: Disable providers that are loaded automatically
+        model:
+          type: string
+          description: Model to use in the format of provider/model, eg anthropic/claude-2
+        small_model:
+          type: string
+          description:
+            Small model to use for tasks like title generation in the format of
+            provider/model
+        username:
+          type: string
+          description:
+            Custom username to display in conversations instead of system
+            username
+        mode:
+          type: object
+          properties:
+            build:
+              $ref: '#/components/schemas/AgentConfig'
+            plan:
+              $ref: '#/components/schemas/AgentConfig'
+          additionalProperties:
+            $ref: '#/components/schemas/AgentConfig'
+          description: '@deprecated Use `agent` field instead.'
+        agent:
+          type: object
+          properties:
+            plan:
+              $ref: '#/components/schemas/AgentConfig'
+            build:
+              $ref: '#/components/schemas/AgentConfig'
+            general:
+              $ref: '#/components/schemas/AgentConfig'
+          additionalProperties:
+            $ref: '#/components/schemas/AgentConfig'
+          description: Agent configuration, see https://opencode.ai/docs/agent
+        provider:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              api:
+                type: string
+              name:
+                type: string
+              env:
+                type: array
+                items:
+                  type: string
+              id:
+                type: string
+              npm:
+                type: string
+              models:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    release_date:
+                      type: string
+                    attachment:
+                      type: boolean
+                    reasoning:
+                      type: boolean
+                    temperature:
+                      type: boolean
+                    tool_call:
+                      type: boolean
+                    cost:
+                      type: object
+                      properties:
+                        input:
+                          type: number
+                        output:
+                          type: number
+                        cache_read:
+                          type: number
+                        cache_write:
+                          type: number
+                      required:
+                        - input
+                        - output
+                    limit:
+                      type: object
+                      properties:
+                        context:
+                          type: number
+                        output:
+                          type: number
+                      required:
+                        - context
+                        - output
+                    options:
+                      type: object
+                      additionalProperties: {}
+              options:
+                type: object
+                properties:
+                  apiKey:
+                    type: string
+                  baseURL:
+                    type: string
+                additionalProperties: {}
+            additionalProperties: false
+          description: Custom provider configurations and model overrides
+        mcp:
+          type: object
+          additionalProperties:
+            oneOf:
+              - $ref: '#/components/schemas/McpLocalConfig'
+              - $ref: '#/components/schemas/McpRemoteConfig'
+            discriminator:
+              propertyName: type
+              mapping:
+                local: '#/components/schemas/McpLocalConfig'
+                remote: '#/components/schemas/McpRemoteConfig'
+          description: MCP (Model Context Protocol) server configurations
+        formatter:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              disabled:
+                type: boolean
+              command:
+                type: array
+                items:
+                  type: string
+              environment:
+                type: object
+                additionalProperties:
+                  type: string
+              extensions:
+                type: array
+                items:
+                  type: string
+        lsp:
+          type: object
+          additionalProperties:
+            anyOf:
+              - type: object
+                properties:
+                  disabled:
+                    type: boolean
+                    const: true
+                required:
+                  - disabled
+              - type: object
+                properties:
+                  command:
+                    type: array
+                    items:
+                      type: string
+                  extensions:
+                    type: array
+                    items:
+                      type: string
+                  disabled:
+                    type: boolean
+                  env:
+                    type: object
+                    additionalProperties:
+                      type: string
+                  initialization:
+                    type: object
+                    additionalProperties: {}
+                required:
+                  - command
+        instructions:
+          type: array
+          items:
+            type: string
+          description: Additional instruction files or patterns to include
+        layout:
+          $ref: '#/components/schemas/LayoutConfig'
+          description: '@deprecated Always uses stretch layout.'
+        permission:
+          type: object
+          properties:
+            edit:
+              anyOf:
+                - type: string
+                  const: ask
+                - type: string
+                  const: allow
+                - type: string
+                  const: deny
+            bash:
+              anyOf:
+                - anyOf:
+                    - type: string
+                      const: ask
+                    - type: string
+                      const: allow
+                    - type: string
+                      const: deny
+                - type: object
+                  additionalProperties:
+                    anyOf:
+                      - type: string
+                        const: ask
+                      - type: string
+                        const: allow
+                      - type: string
+                        const: deny
+            webfetch:
+              anyOf:
+                - type: string
+                  const: ask
+                - type: string
+                  const: allow
+                - type: string
+                  const: deny
+        tools:
+          type: object
+          additionalProperties:
+            type: boolean
+        experimental:
+          type: object
+          properties:
+            hook:
+              type: object
+              properties:
+                file_edited:
+                  type: object
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        command:
+                          type: array
+                          items:
+                            type: string
+                        environment:
+                          type: object
+                          additionalProperties:
+                            type: string
+                      required:
+                        - command
+                session_completed:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      command:
+                        type: array
+                        items:
+                          type: string
+                      environment:
+                        type: object
+                        additionalProperties:
+                          type: string
+                    required:
+                      - command
+      additionalProperties: false
+    KeybindsConfig:
+      type: object
+      properties:
+        leader:
+          type: string
+          default: ctrl+x
+          description: Leader key for keybind combinations
+        app_help:
+          type: string
+          default: <leader>h
+          description: Show help dialog
+        app_exit:
+          type: string
+          default: ctrl+c,<leader>q
+          description: Exit the application
+        editor_open:
+          type: string
+          default: <leader>e
+          description: Open external editor
+        theme_list:
+          type: string
+          default: <leader>t
+          description: List available themes
+        project_init:
+          type: string
+          default: <leader>i
+          description: Create/update AGENTS.md
+        tool_details:
+          type: string
+          default: <leader>d
+          description: Toggle tool details
+        thinking_blocks:
+          type: string
+          default: <leader>b
+          description: Toggle thinking blocks
+        session_export:
+          type: string
+          default: <leader>x
+          description: Export session to editor
+        session_new:
+          type: string
+          default: <leader>n
+          description: Create a new session
+        session_list:
+          type: string
+          default: <leader>l
+          description: List all sessions
+        session_timeline:
+          type: string
+          default: <leader>g
+          description: Show session timeline
+        session_share:
+          type: string
+          default: <leader>s
+          description: Share current session
+        session_unshare:
+          type: string
+          default: none
+          description: Unshare current session
+        session_interrupt:
+          type: string
+          default: esc
+          description: Interrupt current session
+        session_compact:
+          type: string
+          default: <leader>c
+          description: Compact the session
+        session_child_cycle:
+          type: string
+          default: ctrl+right
+          description: Cycle to next child session
+        session_child_cycle_reverse:
+          type: string
+          default: ctrl+left
+          description: Cycle to previous child session
+        messages_page_up:
+          type: string
+          default: pgup
+          description: Scroll messages up by one page
+        messages_page_down:
+          type: string
+          default: pgdown
+          description: Scroll messages down by one page
+        messages_half_page_up:
+          type: string
+          default: ctrl+alt+u
+          description: Scroll messages up by half page
+        messages_half_page_down:
+          type: string
+          default: ctrl+alt+d
+          description: Scroll messages down by half page
+        messages_first:
+          type: string
+          default: ctrl+g
+          description: Navigate to first message
+        messages_last:
+          type: string
+          default: ctrl+alt+g
+          description: Navigate to last message
+        messages_copy:
+          type: string
+          default: <leader>y
+          description: Copy message
+        messages_undo:
+          type: string
+          default: <leader>u
+          description: Undo message
+        messages_redo:
+          type: string
+          default: <leader>r
+          description: Redo message
+        model_list:
+          type: string
+          default: <leader>m
+          description: List available models
+        model_cycle_recent:
+          type: string
+          default: f2
+          description: Next recent model
+        model_cycle_recent_reverse:
+          type: string
+          default: shift+f2
+          description: Previous recent model
+        agent_list:
+          type: string
+          default: <leader>a
+          description: List agents
+        agent_cycle:
+          type: string
+          default: tab
+          description: Next agent
+        agent_cycle_reverse:
+          type: string
+          default: shift+tab
+          description: Previous agent
+        input_clear:
+          type: string
+          default: ctrl+c
+          description: Clear input field
+        input_paste:
+          type: string
+          default: ctrl+v
+          description: Paste from clipboard
+        input_submit:
+          type: string
+          default: enter
+          description: Submit input
+        input_newline:
+          type: string
+          default: shift+enter,ctrl+j
+          description: Insert newline in input
+        switch_mode:
+          type: string
+          default: none
+          description: '@deprecated use agent_cycle. Next mode'
+        switch_mode_reverse:
+          type: string
+          default: none
+          description: '@deprecated use agent_cycle_reverse. Previous mode'
+        switch_agent:
+          type: string
+          default: tab
+          description: '@deprecated use agent_cycle. Next agent'
+        switch_agent_reverse:
+          type: string
+          default: shift+tab
+          description: '@deprecated use agent_cycle_reverse. Previous agent'
+        file_list:
+          type: string
+          default: none
+          description: '@deprecated Currently not available. List files'
+        file_close:
+          type: string
+          default: none
+          description: '@deprecated Close file'
+        file_search:
+          type: string
+          default: none
+          description: '@deprecated Search file'
+        file_diff_toggle:
+          type: string
+          default: none
+          description: '@deprecated Split/unified diff'
+        messages_previous:
+          type: string
+          default: none
+          description: '@deprecated Navigate to previous message'
+        messages_next:
+          type: string
+          default: none
+          description: '@deprecated Navigate to next message'
+        messages_layout_toggle:
+          type: string
+          default: none
+          description: '@deprecated Toggle layout'
+        messages_revert:
+          type: string
+          default: none
+          description: '@deprecated use messages_undo. Revert message'
+      required:
+        - leader
+        - app_help
+        - app_exit
+        - editor_open
+        - theme_list
+        - project_init
+        - tool_details
+        - thinking_blocks
+        - session_export
+        - session_new
+        - session_list
+        - session_timeline
+        - session_share
+        - session_unshare
+        - session_interrupt
+        - session_compact
+        - session_child_cycle
+        - session_child_cycle_reverse
+        - messages_page_up
+        - messages_page_down
+        - messages_half_page_up
+        - messages_half_page_down
+        - messages_first
+        - messages_last
+        - messages_copy
+        - messages_undo
+        - messages_redo
+        - model_list
+        - model_cycle_recent
+        - model_cycle_recent_reverse
+        - agent_list
+        - agent_cycle
+        - agent_cycle_reverse
+        - input_clear
+        - input_paste
+        - input_submit
+        - input_newline
+        - switch_mode
+        - switch_mode_reverse
+        - switch_agent
+        - switch_agent_reverse
+        - file_list
+        - file_close
+        - file_search
+        - file_diff_toggle
+        - messages_previous
+        - messages_next
+        - messages_layout_toggle
+        - messages_revert
+      additionalProperties: false
+    AgentConfig:
+      type: object
+      properties:
+        model:
+          type: string
+        temperature:
+          type: number
+        top_p:
+          type: number
+        prompt:
+          type: string
+        tools:
+          type: object
+          additionalProperties:
+            type: boolean
+        disable:
+          type: boolean
+        description:
+          type: string
+          description: Description of when to use the agent
+        mode:
+          anyOf:
+            - type: string
+              const: subagent
+            - type: string
+              const: primary
+            - type: string
+              const: all
+        permission:
+          type: object
+          properties:
+            edit:
+              anyOf:
+                - type: string
+                  const: ask
+                - type: string
+                  const: allow
+                - type: string
+                  const: deny
+            bash:
+              anyOf:
+                - anyOf:
+                    - type: string
+                      const: ask
+                    - type: string
+                      const: allow
+                    - type: string
+                      const: deny
+                - type: object
+                  additionalProperties:
+                    anyOf:
+                      - type: string
+                        const: ask
+                      - type: string
+                        const: allow
+                      - type: string
+                        const: deny
+            webfetch:
+              anyOf:
+                - type: string
+                  const: ask
+                - type: string
+                  const: allow
+                - type: string
+                  const: deny
+      additionalProperties: {}
+    Provider:
+      type: object
+      properties:
+        api:
+          type: string
+        name:
+          type: string
+        env:
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+        npm:
+          type: string
+        models:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Model'
+      required:
+        - name
+        - env
+        - id
+        - models
+    Model:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        release_date:
+          type: string
+        attachment:
+          type: boolean
+        reasoning:
+          type: boolean
+        temperature:
+          type: boolean
+        tool_call:
+          type: boolean
+        cost:
+          type: object
+          properties:
+            input:
+              type: number
+            output:
+              type: number
+            cache_read:
+              type: number
+            cache_write:
+              type: number
+          required:
+            - input
+            - output
+        limit:
+          type: object
+          properties:
+            context:
+              type: number
+            output:
+              type: number
+          required:
+            - context
+            - output
+        options:
+          type: object
+          additionalProperties: {}
+      required:
+        - id
+        - name
+        - release_date
+        - attachment
+        - reasoning
+        - temperature
+        - tool_call
+        - cost
+        - limit
+        - options
+    McpLocalConfig:
+      type: object
+      properties:
+        type:
+          type: string
+          const: local
+          description: Type of MCP server connection
+        command:
+          type: array
+          items:
+            type: string
+          description: Command and arguments to run the MCP server
+        environment:
+          type: object
+          additionalProperties:
+            type: string
+          description: Environment variables to set when running the MCP server
+        enabled:
+          type: boolean
+          description: Enable or disable the MCP server on startup
+      required:
+        - type
+        - command
+      additionalProperties: false
+    McpRemoteConfig:
+      type: object
+      properties:
+        type:
+          type: string
+          const: remote
+          description: Type of MCP server connection
+        url:
+          type: string
+          description: URL of the remote MCP server
+        enabled:
+          type: boolean
+          description: Enable or disable the MCP server on startup
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          description: Headers to send with the request
+      required:
+        - type
+        - url
+      additionalProperties: false
+    LayoutConfig:
+      type: string
+      enum:
+        - auto
+        - stretch
+    Error:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties: {}
+      required:
+        - data
+    TextPartInput:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          const: text
+        text:
+          type: string
+        synthetic:
+          type: boolean
+        time:
+          type: object
+          properties:
+            start:
+              type: number
+            end:
+              type: number
+          required:
+            - start
+      required:
+        - type
+        - text
+    FilePartInput:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          const: file
+        mime:
+          type: string
+        filename:
+          type: string
+        url:
+          type: string
+        source:
+          $ref: '#/components/schemas/FilePartSource'
+      required:
+        - type
+        - mime
+        - url
+    AgentPartInput:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          const: agent
+        name:
+          type: string
+        source:
+          type: object
+          properties:
+            value:
+              type: string
+            start:
+              type: integer
+            end:
+              type: integer
+          required:
+            - value
+            - start
+            - end
+      required:
+        - type
+        - name
+    Symbol:
+      type: object
+      properties:
+        name:
+          type: string
+        kind:
+          type: number
+        location:
+          type: object
+          properties:
+            uri:
+              type: string
+            range:
+              $ref: '#/components/schemas/Range'
+          required:
+            - uri
+            - range
+      required:
+        - name
+        - kind
+        - location
+    File:
+      type: object
+      properties:
+        path:
+          type: string
+        added:
+          type: integer
+        removed:
+          type: integer
+        status:
+          type: string
+          enum:
+            - added
+            - deleted
+            - modified
+      required:
+        - path
+        - added
+        - removed
+        - status
+    Agent:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        mode:
+          anyOf:
+            - type: string
+              const: subagent
+            - type: string
+              const: primary
+            - type: string
+              const: all
+        builtIn:
+          type: boolean
+        topP:
+          type: number
+        temperature:
+          type: number
+        permission:
+          type: object
+          properties:
+            edit:
+              anyOf:
+                - type: string
+                  const: ask
+                - type: string
+                  const: allow
+                - type: string
+                  const: deny
+            bash:
+              type: object
+              additionalProperties:
+                anyOf:
+                  - type: string
+                    const: ask
+                  - type: string
+                    const: allow
+                  - type: string
+                    const: deny
+            webfetch:
+              anyOf:
+                - type: string
+                  const: ask
+                - type: string
+                  const: allow
+                - type: string
+                  const: deny
+          required:
+            - edit
+            - bash
+        model:
+          type: object
+          properties:
+            modelID:
+              type: string
+            providerID:
+              type: string
+          required:
+            - modelID
+            - providerID
+        prompt:
+          type: string
+        tools:
+          type: object
+          additionalProperties:
+            type: boolean
+        options:
+          type: object
+          additionalProperties: {}
+      required:
+        - name
+        - mode
+        - builtIn
+        - permission
+        - tools
+        - options
+    Auth:
+      oneOf:
+        - $ref: '#/components/schemas/OAuth'
+        - $ref: '#/components/schemas/ApiAuth'
+        - $ref: '#/components/schemas/WellKnownAuth'
+      discriminator:
+        propertyName: type
+        mapping:
+          oauth: '#/components/schemas/OAuth'
+          api: '#/components/schemas/ApiAuth'
+          wellknown: '#/components/schemas/WellKnownAuth'
+    OAuth:
+      type: object
+      properties:
+        type:
+          type: string
+          const: oauth
+        refresh:
+          type: string
+        access:
+          type: string
+        expires:
+          type: number
+      required:
+        - type
+        - refresh
+        - access
+        - expires
+    ApiAuth:
+      type: object
+      properties:
+        type:
+          type: string
+          const: api
+        key:
+          type: string
+      required:
+        - type
+        - key
+    WellKnownAuth:
+      type: object
+      properties:
+        type:
+          type: string
+          const: wellknown
+        key:
+          type: string
+        token:
+          type: string
+      required:
+        - type
+        - key
+        - token

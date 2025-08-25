@@ -28,6 +28,12 @@ type WalkEvents =
   | {
       server: IR.ServerObject;
       type: 'server';
+    }
+  | {
+      key: string;
+      method: keyof IR.PathItemObject;
+      operation: IR.OperationObject;
+      type: 'webhook';
     };
 
 export type WalkEventType = WalkEvents['type'];

@@ -13,6 +13,10 @@ import type { Ref } from 'vue';
 import type { Auth } from '../core/auth.gen';
 import type { QuerySerializerOptions } from '../core/bodySerializer.gen';
 import type {
+  ServerSentEventsOptions,
+  ServerSentEventsResult,
+} from '../core/serverSentEvents.gen';
+import type {
   Client as CoreClient,
   Config as CoreConfig,
 } from '../core/types.gen';
@@ -75,7 +79,15 @@ export interface RequestOptions<
       path?: FetchOptions<unknown>['query'];
       query?: FetchOptions<unknown>['query'];
       rawBody?: unknown;
-    }> {
+    }>,
+    Pick<
+      ServerSentEventsOptions<ResT>,
+      | 'onSseError'
+      | 'onSseEvent'
+      | 'sseDefaultRetryDelay'
+      | 'sseMaxRetryAttempts'
+      | 'sseMaxRetryDelay'
+    > {
   asyncDataOptions?: AsyncDataOptions<ResT, ResT, KeysOf<ResT>, DefaultT>;
   composable: TComposable;
   key?: string;
@@ -114,6 +126,15 @@ type MethodFn = <
 >(
   options: Omit<RequestOptions<TComposable, ResT, DefaultT>, 'method'>,
 ) => RequestResult<TComposable, ResT, TError>;
+
+type SseFn = <
+  TComposable extends Composable,
+  ResT = unknown,
+  TError = unknown,
+  DefaultT = undefined,
+>(
+  options: Omit<RequestOptions<TComposable, ResT, DefaultT>, 'method'>,
+) => Promise<ServerSentEventsResult<RequestResult<TComposable, ResT, TError>>>;
 
 type RequestFn = <
   TComposable extends Composable,
@@ -155,7 +176,7 @@ type BuildUrlFn = <TData extends Omit<TDataShape, 'headers'>>(
   options: BuildUrlOptions<TData>,
 ) => string;
 
-export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn>;
+export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn, SseFn>;
 
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 

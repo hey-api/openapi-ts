@@ -265,6 +265,59 @@ export const defaultConfig: ZodPlugin['Config'] = {
       },
       value: plugin.config.responses,
     });
+
+    plugin.config.webhooks = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: 'z{{name}}WebhookRequest',
+        types: {
+          ...plugin.config.types,
+          infer: {
+            ...(plugin.config.types.infer as Extract<
+              typeof plugin.config.types.infer,
+              Record<string, unknown>
+            >),
+            name: '{{name}}WebhookRequestZodType',
+          },
+        },
+      },
+      mappers: {
+        ...mappers,
+        object: (fields, defaultValue) => ({
+          ...fields,
+          types: context.valueToObject({
+            defaultValue: defaultValue.types!,
+            mappers: {
+              object: (fields, defaultValue) => ({
+                ...fields,
+                infer: context.valueToObject({
+                  defaultValue: {
+                    ...(defaultValue.infer as Extract<
+                      typeof defaultValue.infer,
+                      Record<string, unknown>
+                    >),
+                    enabled:
+                      fields.infer !== undefined
+                        ? Boolean(fields.infer)
+                        : (
+                            defaultValue.infer as Extract<
+                              typeof defaultValue.infer,
+                              Record<string, unknown>
+                            >
+                          ).enabled,
+                  },
+                  mappers,
+                  value: fields.infer,
+                }),
+              }),
+            },
+            value: fields.types,
+          }),
+        }),
+      },
+      value: plugin.config.webhooks,
+    });
   },
   tags: ['validator'],
 };

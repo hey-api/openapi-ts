@@ -16,6 +16,7 @@ import {
 } from './number-helpers';
 import { operationToValibotSchema } from './operation';
 import type { ValibotPlugin } from './types';
+import { webhookToValibotSchema } from './webhook';
 
 interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
   extends Omit<IR.SchemaObject, 'type'> {
@@ -1199,41 +1200,54 @@ export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
     name: '*',
   });
 
-  plugin.forEach('operation', 'parameter', 'requestBody', 'schema', (event) => {
-    const state: State = {
-      circularReferenceTracker: new Set(),
-      hasCircularReference: false,
-      nameCase: plugin.config.definitions.case,
-      nameTransformer: plugin.config.definitions.name,
-    };
+  plugin.forEach(
+    'operation',
+    'parameter',
+    'requestBody',
+    'schema',
+    'webhook',
+    (event) => {
+      const state: State = {
+        circularReferenceTracker: new Set(),
+        hasCircularReference: false,
+        nameCase: plugin.config.definitions.case,
+        nameTransformer: plugin.config.definitions.name,
+      };
 
-    if (event.type === 'operation') {
-      operationToValibotSchema({
-        operation: event.operation,
-        plugin,
-        state,
-      });
-    } else if (event.type === 'parameter') {
-      schemaToValibotSchema({
-        $ref: event.$ref,
-        plugin,
-        schema: event.parameter.schema,
-        state,
-      });
-    } else if (event.type === 'requestBody') {
-      schemaToValibotSchema({
-        $ref: event.$ref,
-        plugin,
-        schema: event.requestBody.schema,
-        state,
-      });
-    } else if (event.type === 'schema') {
-      schemaToValibotSchema({
-        $ref: event.$ref,
-        plugin,
-        schema: event.schema,
-        state,
-      });
-    }
-  });
+      if (event.type === 'operation') {
+        operationToValibotSchema({
+          operation: event.operation,
+          plugin,
+          state,
+        });
+      } else if (event.type === 'parameter') {
+        schemaToValibotSchema({
+          $ref: event.$ref,
+          plugin,
+          schema: event.parameter.schema,
+          state,
+        });
+      } else if (event.type === 'requestBody') {
+        schemaToValibotSchema({
+          $ref: event.$ref,
+          plugin,
+          schema: event.requestBody.schema,
+          state,
+        });
+      } else if (event.type === 'schema') {
+        schemaToValibotSchema({
+          $ref: event.$ref,
+          plugin,
+          schema: event.schema,
+          state,
+        });
+      } else if (event.type === 'webhook') {
+        webhookToValibotSchema({
+          operation: event.operation,
+          plugin,
+          state,
+        });
+      }
+    },
+  );
 };

@@ -18,7 +18,7 @@ import type {
   SecuritySchemeObject,
 } from '../types/spec';
 import { filterSpec } from './filter';
-import { parseOperation } from './operation';
+import { parsePathOperation } from './operation';
 import { parametersArrayToObject } from './parameter';
 import { parseSchema } from './schema';
 import { parseServers } from './server';
@@ -102,21 +102,23 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
       responses: {},
       security: context.spec.security,
     };
-    const operationArgs: Omit<Parameters<typeof parseOperation>[0], 'method'> =
-      {
-        context,
-        operation: {
-          ...commonOperation,
-          parameters: parametersArrayToObject({
-            context,
-            operation: commonOperation,
-            parameters: finalPathItem.parameters,
-          }),
-        },
-        path: path as PathKeys,
-        securitySchemesMap,
-        state,
-      };
+    const operationArgs: Omit<
+      Parameters<typeof parsePathOperation>[0],
+      'method'
+    > = {
+      context,
+      operation: {
+        ...commonOperation,
+        parameters: parametersArrayToObject({
+          context,
+          operation: commonOperation,
+          parameters: finalPathItem.parameters,
+        }),
+      },
+      path: path as PathKeys,
+      securitySchemesMap,
+      state,
+    };
 
     if (finalPathItem.delete) {
       const parameters = mergeParametersObjects({
@@ -127,7 +129,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
         }),
         target: operationArgs.operation.parameters,
       });
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'delete',
         operation: {
@@ -147,7 +149,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
         }),
         target: operationArgs.operation.parameters,
       });
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'get',
         operation: {
@@ -167,7 +169,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
         }),
         target: operationArgs.operation.parameters,
       });
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'head',
         operation: {
@@ -187,7 +189,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
         }),
         target: operationArgs.operation.parameters,
       });
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'options',
         operation: {
@@ -207,7 +209,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
         }),
         target: operationArgs.operation.parameters,
       });
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'patch',
         operation: {
@@ -227,7 +229,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
         }),
         target: operationArgs.operation.parameters,
       });
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'post',
         operation: {
@@ -247,7 +249,7 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
         }),
         target: operationArgs.operation.parameters,
       });
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'put',
         operation: {

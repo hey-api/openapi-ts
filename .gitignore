@@ -24,7 +24,6 @@ test/generated
 test/e2e/generated
 
 # debug files
-debug
 openapi-ts-debug-*
 # error files
 logs

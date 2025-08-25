@@ -3,7 +3,9 @@
 import type { AxiosError, AxiosInstance, RawAxiosRequestHeaders } from 'axios';
 import axios from 'axios';
 
-import type { Client, Config } from './types.gen';
+import { createSseClient } from '../core/serverSentEvents.gen';
+import type { HttpMethod } from '../core/types.gen';
+import type { Client, Config, RequestOptions } from './types.gen';
 import {
   buildUrl,
   createConfig,
@@ -38,8 +40,7 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  // @ts-expect-error
-  const request: Client['request'] = async (options) => {
+  const beforeRequest = async (options: RequestOptions) => {
     const opts = {
       ..._config,
       ...options,
@@ -64,6 +65,13 @@ export const createClient = (config: Config = {}): Client => {
 
     const url = buildUrl(opts);
 
+    return { opts, url };
+  };
+
+  // @ts-expect-error
+  const request: Client['request'] = async (options) => {
+    // @ts-expect-error
+    const { opts, url } = await beforeRequest(options);
     try {
       // assign Axios here for consistency with fetch
       const _axios = opts.axios!;
@@ -106,18 +114,49 @@ export const createClient = (config: Config = {}): Client => {
     }
   };
 
+  const makeMethodFn =
+    (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
+      request({ ...options, method });
+
+  const makeSseFn =
+    (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
+      const { opts, url } = await beforeRequest(options);
+      return createSseClient({
+        ...opts,
+        body: opts.body as BodyInit | null | undefined,
+        headers: opts.headers as Record<string, string>,
+        method,
+        // @ts-expect-error
+        signal: opts.signal,
+        url,
+      });
+    };
+
   return {
     buildUrl,
-    delete: (options) => request({ ...options, method: 'DELETE' }),
-    get: (options) => request({ ...options, method: 'GET' }),
+    connect: makeMethodFn('CONNECT'),
+    delete: makeMethodFn('DELETE'),
+    get: makeMethodFn('GET'),
     getConfig,
-    head: (options) => request({ ...options, method: 'HEAD' }),
+    head: makeMethodFn('HEAD'),
     instance,
-    options: (options) => request({ ...options, method: 'OPTIONS' }),
-    patch: (options) => request({ ...options, method: 'PATCH' }),
-    post: (options) => request({ ...options, method: 'POST' }),
-    put: (options) => request({ ...options, method: 'PUT' }),
+    options: makeMethodFn('OPTIONS'),
+    patch: makeMethodFn('PATCH'),
+    post: makeMethodFn('POST'),
+    put: makeMethodFn('PUT'),
     request,
     setConfig,
+    sse: {
+      connect: makeSseFn('CONNECT'),
+      delete: makeSseFn('DELETE'),
+      get: makeSseFn('GET'),
+      head: makeSseFn('HEAD'),
+      options: makeSseFn('OPTIONS'),
+      patch: makeSseFn('PATCH'),
+      post: makeSseFn('POST'),
+      put: makeSseFn('PUT'),
+      trace: makeSseFn('TRACE'),
+    },
+    trace: makeMethodFn('TRACE'),
   } as Client;
 };

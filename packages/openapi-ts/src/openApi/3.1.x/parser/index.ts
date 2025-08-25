@@ -19,12 +19,13 @@ import type {
   SecuritySchemeObject,
 } from '../types/spec';
 import { filterSpec } from './filter';
-import { parseOperation } from './operation';
+import { parsePathOperation } from './operation';
 import { parametersArrayToObject, parseParameter } from './parameter';
 import { parseRequestBody } from './requestBody';
 import { parseSchema } from './schema';
 import { parseServers } from './server';
 import { validateOpenApiSpec } from './validate';
+import { parseWebhooks } from './webhook';
 
 export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
   if (context.config.parser.validate_EXPERIMENTAL) {
@@ -128,26 +129,28 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
         }
       : pathItem;
 
-    const operationArgs: Omit<Parameters<typeof parseOperation>[0], 'method'> =
-      {
-        context,
-        operation: {
-          description: finalPathItem.description,
-          parameters: parametersArrayToObject({
-            context,
-            parameters: finalPathItem.parameters,
-          }),
-          security: context.spec.security,
-          servers: finalPathItem.servers,
-          summary: finalPathItem.summary,
-        },
-        path: path as keyof PathsObject,
-        securitySchemesMap,
-        state,
-      };
+    const operationArgs: Omit<
+      Parameters<typeof parsePathOperation>[0],
+      'method'
+    > = {
+      context,
+      operation: {
+        description: finalPathItem.description,
+        parameters: parametersArrayToObject({
+          context,
+          parameters: finalPathItem.parameters,
+        }),
+        security: context.spec.security,
+        servers: finalPathItem.servers,
+        summary: finalPathItem.summary,
+      },
+      path: path as keyof PathsObject,
+      securitySchemesMap,
+      state,
+    };
 
     if (finalPathItem.delete) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'delete',
         operation: {
@@ -165,7 +168,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
     }
 
     if (finalPathItem.get) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'get',
         operation: {
@@ -183,7 +186,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
     }
 
     if (finalPathItem.head) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'head',
         operation: {
@@ -201,7 +204,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
     }
 
     if (finalPathItem.options) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'options',
         operation: {
@@ -219,7 +222,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
     }
 
     if (finalPathItem.patch) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'patch',
         operation: {
@@ -237,7 +240,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
     }
 
     if (finalPathItem.post) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'post',
         operation: {
@@ -255,7 +258,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
     }
 
     if (finalPathItem.put) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'put',
         operation: {
@@ -273,7 +276,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
     }
 
     if (finalPathItem.trace) {
-      parseOperation({
+      parsePathOperation({
         ...operationArgs,
         method: 'trace',
         operation: {
@@ -290,4 +293,6 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
       });
     }
   }
+
+  parseWebhooks({ context, securitySchemesMap });
 };

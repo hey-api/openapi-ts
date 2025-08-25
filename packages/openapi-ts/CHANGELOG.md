@@ -1,5 +1,37 @@
 # @hey-api/openapi-ts
 
+## 0.81.1
+
+### Patch Changes
+
+- [#2516](https://github.com/hey-api/openapi-ts/pull/2516) [`c71d5db`](https://github.com/hey-api/openapi-ts/commit/c71d5dbfc5888f03ab06a7c763ada42c1af6c096) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(typescript): add webhooks configuration options
+
+- [#2515](https://github.com/hey-api/openapi-ts/pull/2515) [`b81051e`](https://github.com/hey-api/openapi-ts/commit/b81051e27945e330c0a7c157aff49029bcd6dfda) Thanks [@malcolm-kee](https://github.com/malcolm-kee)! - fix(parser): correctly handle schema extending discriminated schema
+
+- [#2513](https://github.com/hey-api/openapi-ts/pull/2513) [`34fa59f`](https://github.com/hey-api/openapi-ts/commit/34fa59fe2f0e6b4ba6578f25a6e64f964c04155c) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): move sse functions into their own namespace
+
+- [#2516](https://github.com/hey-api/openapi-ts/pull/2516) [`c71d5db`](https://github.com/hey-api/openapi-ts/commit/c71d5dbfc5888f03ab06a7c763ada42c1af6c096) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(validator): add webhooks configuration options
+
+- [#2516](https://github.com/hey-api/openapi-ts/pull/2516) [`c71d5db`](https://github.com/hey-api/openapi-ts/commit/c71d5dbfc5888f03ab06a7c763ada42c1af6c096) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): handle webhooks in OpenAPI 3.1
+
+## 0.81.0
+
+### Minor Changes
+
+- [#2510](https://github.com/hey-api/openapi-ts/pull/2510) [`d43ef3f`](https://github.com/hey-api/openapi-ts/commit/d43ef3f3bb47bad3f4fafbcf7be86b328543f440) Thanks [@mrlubos](https://github.com/mrlubos)! - feat(client): add support for server-sent events (SSE)
+
+## 0.80.18
+
+### Patch Changes
+
+- [#2502](https://github.com/hey-api/openapi-ts/pull/2502) [`ac7efbf`](https://github.com/hey-api/openapi-ts/commit/ac7efbfd96e7a5e530e91655df6ac481c9a5eaa5) Thanks [@malcolm-kee](https://github.com/malcolm-kee)! - fix(parser): OpenAPI 3.1 parser handles multiple `type` values
+
+## 0.80.17
+
+### Patch Changes
+
+- [#2500](https://github.com/hey-api/openapi-ts/pull/2500) [`98d7bc3`](https://github.com/hey-api/openapi-ts/commit/98d7bc37387e16c6f38194a111d6df384eee3a82) Thanks [@max-scopp](https://github.com/max-scopp)! - fix(client): Angular client correctly applies default GET method
+
 ## 0.80.16
 
 ### Patch Changes

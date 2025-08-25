@@ -466,6 +466,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'union-types.json',
+        output: 'union-types',
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'handles union of primitive types',
+    },
+    {
+      config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
         plugins: ['@hey-api/typescript', 'valibot'],
@@ -981,6 +989,89 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description:
         'generates Pinia Colada plugin code with complex configuration combining all features',
+    },
+    {
+      config: createConfig({
+        input: 'opencode.yaml',
+        output: 'sse-angular',
+        parser: {
+          filters: {
+            operations: {
+              include: ['GET /event'],
+            },
+          },
+        },
+        plugins: ['@hey-api/client-angular', '@hey-api/sdk'],
+      }),
+      description: 'client with SSE (Angular)',
+    },
+    {
+      config: createConfig({
+        input: 'opencode.yaml',
+        output: 'sse-axios',
+        parser: {
+          filters: {
+            operations: {
+              include: ['GET /event'],
+            },
+          },
+        },
+        plugins: ['@hey-api/client-axios', '@hey-api/sdk'],
+      }),
+      description: 'client with SSE (Axios)',
+    },
+    {
+      config: createConfig({
+        input: 'opencode.yaml',
+        output: 'sse-fetch',
+        parser: {
+          filters: {
+            operations: {
+              include: ['GET /event'],
+            },
+          },
+        },
+        plugins: ['@hey-api/client-fetch', '@hey-api/sdk'],
+      }),
+      description: 'client with SSE (Fetch)',
+    },
+    {
+      config: createConfig({
+        input: 'opencode.yaml',
+        output: 'sse-next',
+        parser: {
+          filters: {
+            operations: {
+              include: ['GET /event'],
+            },
+          },
+        },
+        plugins: ['@hey-api/client-next', '@hey-api/sdk'],
+      }),
+      description: 'client with SSE (Next.js)',
+    },
+    {
+      config: createConfig({
+        input: 'opencode.yaml',
+        output: 'sse-nuxt',
+        parser: {
+          filters: {
+            operations: {
+              include: ['GET /event'],
+            },
+          },
+        },
+        plugins: ['@hey-api/client-nuxt', '@hey-api/sdk'],
+      }),
+      description: 'client with SSE (Nuxt)',
+    },
+    {
+      config: createConfig({
+        input: 'zoom-video-sdk.json',
+        output: 'webhooks',
+        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
+      }),
+      description: 'webhook types and validator schemas',
     },
   ];
 
