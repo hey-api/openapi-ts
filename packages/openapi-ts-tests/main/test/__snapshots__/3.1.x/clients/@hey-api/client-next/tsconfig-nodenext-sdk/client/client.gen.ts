@@ -103,20 +103,38 @@ export const createClient = (config: Config = {}): Client => {
     };
 
     if (response.ok) {
-      if (
-        response.status === 204 ||
-        response.headers.get('Content-Length') === '0'
-      ) {
-        return {
-          data: {},
-          ...result,
-        };
-      }
-
       const parseAs =
         (opts.parseAs === 'auto'
           ? getParseAs(response.headers.get('Content-Type'))
           : opts.parseAs) ?? 'json';
+
+      if (
+        response.status === 204 ||
+        response.headers.get('Content-Length') === '0'
+      ) {
+        let emptyData: any;
+        switch (parseAs) {
+          case 'arrayBuffer':
+          case 'blob':
+          case 'text':
+            emptyData = await response[parseAs]();
+            break;
+          case 'formData':
+            emptyData = new FormData();
+            break;
+          case 'stream':
+            emptyData = response.body;
+            break;
+          case 'json':
+          default:
+            emptyData = {};
+            break;
+        }
+        return {
+          data: emptyData,
+          ...result,
+        };
+      }
 
       let data: any;
       switch (parseAs) {
