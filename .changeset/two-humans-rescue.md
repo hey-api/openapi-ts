@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': patch
 ---
 
-Handle patternProperties keyword added in OpenAPI 3.1
+fix(parser): handle `patternProperties` in OpenAPI 3.1
