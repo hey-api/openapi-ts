@@ -435,3 +435,15 @@ footer.VPDocFooter > .edit-info > .last-updated {
   white-space: nowrap;
   width: 1px;
 }
+
+.VPNavBarTitle a.title {
+  column-gap: 4px;
+}
+
+.VPImage.logo {
+  margin-right: 0;
+}
+
+.VPNavBarTitle {
+  color: var(--vp-c-text-1);
+}
