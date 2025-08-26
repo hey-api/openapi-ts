@@ -361,10 +361,10 @@ export const splitSchemas = ({
 
   for (const [pointer, nodeInfo] of graph.nodes) {
     const name = pointerToSchema(pointer);
-    // Only split top-level schemas, with both read-only and write-only scopes.
+    // Only split top-level schemas, with either read-only or write-only scopes (or both).
     if (
       !name ||
-      !(nodeInfo.scopes?.has('read') && nodeInfo.scopes?.has('write'))
+      !(nodeInfo.scopes?.has('read') || nodeInfo.scopes?.has('write'))
     ) {
       continue;
     }
