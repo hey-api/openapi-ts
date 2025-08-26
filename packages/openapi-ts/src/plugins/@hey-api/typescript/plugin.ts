@@ -320,8 +320,6 @@ const objectTypeToIdentifier = ({
     }
   }
 
-  // removed duplicate legacy block
-
   return tsc.typeInterfaceNode({
     indexKey,
     indexProperty,
