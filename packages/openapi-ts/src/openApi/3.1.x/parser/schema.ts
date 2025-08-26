@@ -801,16 +801,6 @@ const parseOneOf = ({
   return irSchema;
 };
 
-const parsePatternProperties = ({
-  context,
-  schema,
-  state,
-}: {
-  context: IR.Context;
-  schema: SchemaWithRequired<SchemaObject, 'patternProperties'>;
-  state: SchemaState;
-}): IR.SchemaObject => parseObject({ context, schema, state });
-
 const parseRef = ({
   context,
   schema,
@@ -1090,14 +1080,6 @@ export const schemaToIrSchema = ({
     return parseOneOf({
       context,
       schema: schema as SchemaWithRequired<SchemaObject, 'oneOf'>,
-      state,
-    });
-  }
-
-  if (schema.patternProperties) {
-    return parsePatternProperties({
-      context,
-      schema: schema as SchemaWithRequired<SchemaObject, 'patternProperties'>,
       state,
     });
   }
