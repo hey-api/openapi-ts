@@ -46,6 +46,13 @@ describe(`OpenAPI ${version}`, () => {
   const scenarios = [
     {
       config: createConfig({
+        input: 'pattern-properties.json',
+        output: 'pattern-properties',
+      }),
+      description: 'handles pattern properties',
+    },
+    {
+      config: createConfig({
         input: 'additional-properties-false.json',
         output: 'additional-properties-false',
       }),
