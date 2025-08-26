@@ -57,23 +57,6 @@ export const getFooE = (options?: Options<GetFooData>) => {
     });
 };
 
-export const fooPostD = (options?: Options<FooPostData>) => createQueryKey('fooPost', options);
-
-export const fooPostE = (options?: Options<FooPostData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await fooPost({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: fooPostD(options)
-    });
-};
-
 export const fooPostC = (options?: Partial<Options<FooPostData>>): UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> => {
     const mutationOptions: UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> = {
         mutationFn: async (localOptions) => {
@@ -116,23 +99,6 @@ export const getFooBarE = (options?: Options<GetFooBarData>) => {
             return data;
         },
         queryKey: getFooBarD(options)
-    });
-};
-
-export const fooBarPostD = (options?: Options<FooBarPostData>) => createQueryKey('fooBarPost', options);
-
-export const fooBarPostE = (options?: Options<FooBarPostData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await fooBarPost({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: fooBarPostD(options)
     });
 };
 

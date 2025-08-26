@@ -27,6 +27,7 @@ describe('operationNameFn', () => {
       path: '',
     },
     parser: {
+      hooks: {},
       pagination: {
         keywords: [],
       },

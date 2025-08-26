@@ -38,6 +38,7 @@ describe('generateLegacySchemas', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },
@@ -174,6 +175,7 @@ describe('generateLegacySchemas', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },

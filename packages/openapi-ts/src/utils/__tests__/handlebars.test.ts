@@ -34,6 +34,7 @@ describe('registerHandlebarHelpers', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },
@@ -143,6 +144,7 @@ describe('registerHandlebarTemplates', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },

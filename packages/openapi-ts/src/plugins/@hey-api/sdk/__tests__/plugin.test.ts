@@ -40,6 +40,7 @@ describe('handlerLegacy', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },
@@ -249,6 +250,7 @@ describe('methodNameBuilder', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },
@@ -380,6 +382,7 @@ describe('methodNameBuilder', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },
@@ -514,6 +517,7 @@ describe('methodNameBuilder', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },

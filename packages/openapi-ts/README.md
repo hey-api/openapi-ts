@@ -297,16 +297,17 @@ Don't see your client? [Build your own](https://heyapi.dev/openapi-ts/clients/cu
 
 These plugins help reduce boilerplate associated with third-party dependencies. Hey API natively supports the most popular packages. Please open an issue on [GitHub](https://github.com/hey-api/openapi-ts/issues) if you'd like us to support your favorite package.
 
+- [`@angular/common`](https://heyapi.dev/openapi-ts/plugins/angular)
 - [`@hey-api/schemas`](https://heyapi.dev/openapi-ts/output/json-schema)
 - [`@hey-api/sdk`](https://heyapi.dev/openapi-ts/output/sdk)
 - [`@hey-api/transformers`](https://heyapi.dev/openapi-ts/transformers)
 - [`@hey-api/typescript`](https://heyapi.dev/openapi-ts/output/typescript)
+- [`@pinia/colada`](https://heyapi.dev/openapi-ts/plugins/pinia-colada)
 - [`@tanstack/angular-query-experimental`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/react-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/solid-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/svelte-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/vue-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
-- [`@angular/common`](https://heyapi.dev/openapi-ts/plugins/angular)
 - [`fastify`](https://heyapi.dev/openapi-ts/plugins/fastify)
 - [`valibot`](https://heyapi.dev/openapi-ts/plugins/valibot)
 - [`zod`](https://heyapi.dev/openapi-ts/plugins/zod)
@@ -328,7 +329,6 @@ The following plugins are planned but not in development yet. You can help us pr
 - [MSW](https://heyapi.dev/openapi-ts/plugins/msw)
 - [Nest](https://heyapi.dev/openapi-ts/plugins/nest)
 - [Nock](https://heyapi.dev/openapi-ts/plugins/nock)
-- [Pinia Colada](https://heyapi.dev/openapi-ts/plugins/pinia-colada)
 - [Superstruct](https://heyapi.dev/openapi-ts/plugins/superstruct)
 - [Supertest](https://heyapi.dev/openapi-ts/plugins/supertest)
 - [SWR](https://heyapi.dev/openapi-ts/plugins/swr)

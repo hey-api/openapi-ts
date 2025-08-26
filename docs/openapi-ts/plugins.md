@@ -20,12 +20,13 @@ Apart from being responsible for the default output, core plugins are the founda
 
 These plugins help reduce boilerplate associated with third-party dependencies. Hey API natively supports the most popular packages. Please open an issue on [GitHub](https://github.com/hey-api/openapi-ts/issues) if you'd like us to support your favorite package.
 
+- [`@angular/common`](/openapi-ts/plugins/angular)
+- [`@pinia/colada`](/openapi-ts/plugins/pinia-colada)
 - [`@tanstack/angular-query-experimental`](/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/react-query`](/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/solid-query`](/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/svelte-query`](/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/vue-query`](/openapi-ts/plugins/tanstack-query)
-- [`@angular/common`](/openapi-ts/plugins/angular)
 - [`fastify`](/openapi-ts/plugins/fastify)
 - [`valibot`](/openapi-ts/plugins/valibot)
 - [`zod`](/openapi-ts/plugins/zod)
@@ -47,7 +48,6 @@ The following plugins are planned but not in development yet. You can help us pr
 - [MSW](/openapi-ts/plugins/msw) <span data-soon>Soon</span>
 - [Nest](/openapi-ts/plugins/nest) <span data-soon>Soon</span>
 - [Nock](/openapi-ts/plugins/nock) <span data-soon>Soon</span>
-- [Pinia Colada](/openapi-ts/plugins/pinia-colada) <span data-soon>Soon</span>
 - [Superstruct](/openapi-ts/plugins/superstruct) <span data-soon>Soon</span>
 - [Supertest](/openapi-ts/plugins/supertest) <span data-soon>Soon</span>
 - [SWR](/openapi-ts/plugins/swr) <span data-soon>Soon</span>
