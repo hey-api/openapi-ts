@@ -38,6 +38,7 @@ describe('generateLegacyTypes', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },

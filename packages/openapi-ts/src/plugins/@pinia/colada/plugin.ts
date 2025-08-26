@@ -1,67 +1,106 @@
-import { clientId } from '../../@hey-api/client-core/utils';
-import { createMutationFunction } from './mutation';
-import { createQueryFunction } from './query';
+import type { GeneratedFile } from '../../../generate/file';
+import { tsc } from '../../../tsc';
+import { stringCase } from '../../../utils/stringCase';
+import { sdkId } from '../../@hey-api/sdk/constants';
+import { operationClasses } from '../../@hey-api/sdk/operation';
+import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
+import { createMutationOptions } from './mutation';
+import { createQueryOptions } from './query';
+import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
-import { isQuery } from './utils';
+import { getFileForOperation } from './utils';
 
 export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
-  if (!plugin.config.groupByTag) {
-    plugin.createFile({
-      id: plugin.name,
-      path: plugin.output,
-    });
-  }
-
-  // Create files based on grouping strategy
-  const getFile = (tag: string) => {
-    if (!plugin.config.groupByTag) {
-      return (
-        plugin.context.file({ id: plugin.name }) ??
-        plugin.createFile({
-          id: plugin.name,
-          path: plugin.output,
-        })
-      );
-    }
-
-    const fileId = `${plugin.name}/${tag}`;
-    return (
-      plugin.context.file({ id: fileId }) ??
-      plugin.createFile({
-        id: fileId,
-        path: `${plugin.output}/${tag}`,
-      })
-    );
-  };
+  const files = new Map<string, GeneratedFile>();
+  const states = new Map<string, PluginState>();
 
   plugin.forEach('operation', ({ operation }) => {
-    const file = getFile(operation.tags?.[0] || 'default');
+    const { file, state } = getFileForOperation({
+      files,
+      operation,
+      plugin,
+      states,
+    });
+    state.hasUsedQueryFn = false;
 
-    // Determine if the operation should be a query or mutation
-    if (isQuery(operation, plugin)) {
-      createQueryFunction({ context: plugin.context, file, operation, plugin });
-    } else {
-      createMutationFunction({
-        context: plugin.context,
-        file,
-        operation,
-        plugin,
-      });
-    }
-  });
+    const sdkPlugin = plugin.getPlugin('@hey-api/sdk')!;
+    const classes = sdkPlugin.config.asClass
+      ? operationClasses({
+          context: plugin.context,
+          operation,
+          plugin: sdkPlugin,
+        })
+      : undefined;
+    const entry = classes ? classes.values().next().value : undefined;
+    const queryFn =
+      // TODO: this should use class graph to determine correct path string
+      // as it's really easy to break once we change the class casing
+      (
+        entry
+          ? [
+              entry.path[0],
+              ...entry.path.slice(1).map((className: string) =>
+                stringCase({
+                  case: 'camelCase',
+                  value: className,
+                }),
+              ),
+              entry.methodName,
+            ].filter(Boolean)
+          : [
+              serviceFunctionIdentifier({
+                config: plugin.context.config,
+                handleIllegal: true,
+                id: operation.id,
+                operation,
+              }),
+            ]
+      ).join('.');
 
-  // Add client import to all generated files
-  Object.entries(plugin.context.files).forEach(([fileId, file]) => {
-    if (fileId.startsWith(plugin.name)) {
-      // Make sure we have a client import
+    createQueryOptions({
+      file,
+      operation,
+      plugin,
+      queryFn,
+      state,
+    });
+
+    createMutationOptions({
+      file,
+      operation,
+      plugin,
+      queryFn,
+      state,
+    });
+
+    if (state.hasUsedQueryFn) {
       file.import({
-        alias: '_heyApiClient',
         module: file.relativePathToFile({
           context: plugin.context,
-          id: clientId,
+          id: sdkId,
         }),
-        name: 'client',
+        name: queryFn.split('.')[0]!,
       });
     }
   });
+
+  // re-export all split files
+  if (plugin.config.groupByTag && plugin.config.exportFromIndex) {
+    const indexFile = plugin.createFile({
+      case: plugin.config.case,
+      id: `${plugin.name}/index`,
+      path: `${plugin.output}/index`,
+    });
+
+    files.forEach((_, fileId) => {
+      if (fileId !== plugin.name) {
+        const tag = fileId.split('/').pop()!;
+        indexFile.add(
+          tsc.exportAllDeclaration({
+            module: `./${tag}`,
+          }),
+        );
+      }
+    });
+  }
 };

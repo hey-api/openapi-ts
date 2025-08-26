@@ -35,6 +35,7 @@ describe('generateIndexFile', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },

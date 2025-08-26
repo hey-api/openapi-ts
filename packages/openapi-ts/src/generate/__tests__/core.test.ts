@@ -51,6 +51,7 @@ describe('generateLegacyCore', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },
@@ -186,6 +187,7 @@ describe('generateLegacyCore', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },
@@ -304,6 +306,7 @@ describe('generateLegacyCore', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },

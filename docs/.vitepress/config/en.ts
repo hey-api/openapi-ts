@@ -173,12 +173,12 @@ export default defineConfig({
             collapsed: true,
             items: [
               {
-                link: '/openapi-ts/plugins/tanstack-query',
-                text: 'TanStack Query',
+                link: '/openapi-ts/plugins/pinia-colada',
+                text: 'Pinia Colada',
               },
               {
-                link: '/openapi-ts/plugins/pinia-colada',
-                text: 'Pinia Colada <span data-soon>soon</span>',
+                link: '/openapi-ts/plugins/tanstack-query',
+                text: 'TanStack Query',
               },
               {
                 link: '/openapi-ts/plugins/swr',

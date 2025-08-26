@@ -36,6 +36,7 @@ describe('generateLegacyClientClass', () => {
         path: '',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },

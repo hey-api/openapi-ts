@@ -11,8 +11,8 @@ Any reasonably large application will have to deal with state management at some
 
 Hey API natively supports the following state managers.
 
+- [Pinia Colada](/openapi-ts/plugins/pinia-colada)
 - [TanStack Query](/openapi-ts/plugins/tanstack-query)
-- [Pinia Colada](/openapi-ts/plugins/pinia-colada) <span data-soon>Soon</span>
 - [SWR](/openapi-ts/plugins/swr) <span data-soon>Soon</span>
 - [Zustand](/openapi-ts/plugins/zustand) <span data-soon>Soon</span>
 
