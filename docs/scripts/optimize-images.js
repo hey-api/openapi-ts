@@ -46,6 +46,15 @@ const images = [
   {
     sizes: [
       {
+        formats: ['png'],
+        width: 300,
+      },
+    ],
+    source: 'logo-astronaut.png',
+  },
+  {
+    sizes: [
+      {
         formats: ['jpeg', 'webp'],
         width: 480,
       },
