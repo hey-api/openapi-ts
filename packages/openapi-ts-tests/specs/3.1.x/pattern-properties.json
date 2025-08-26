@@ -1,0 +1,163 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1.0 pattern properties example",
+    "version": "1"
+  },
+  "paths": {
+    "/pattern-test": {
+      "post": {
+        "summary": "Test pattern properties",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatternPropertiesTest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatternPropertiesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PatternPropertiesTest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataObject"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MetadataObject": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "patternProperties": {
+          "^meta_": {
+            "type": "string",
+            "description": "Any property starting with 'meta_' must be a string"
+          },
+          "^config_": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "enabled": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          },
+          "^tag_[a-zA-Z0-9_]+$": {
+            "type": "string",
+            "description": "Tag properties must match pattern and be strings"
+          },
+          "^[0-9]+_item$": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Numbered item properties must be arrays of strings"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NestedPatternObject": {
+        "type": "object",
+        "properties": {
+          "base": {
+            "type": "string"
+          }
+        },
+        "patternProperties": {
+          "^nested_": {
+            "type": "object",
+            "patternProperties": {
+              "^sub_": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "UnionPatternObject": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["user", "admin", "guest"]
+          }
+        },
+        "patternProperties": {
+          "^user_": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "^admin_": {
+            "allOf": [
+              {
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "level": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "PatternPropertiesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/MetadataObject"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
