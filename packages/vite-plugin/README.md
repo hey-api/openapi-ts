@@ -60,7 +60,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
         <a href="https://kutt.it/skQUVd" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/scalar-logo-wordmark-480w.jpeg">
-            <img alt="Scalar logo" height="40px" src="https://heyapi.dev/images/scalar-logo-wordmark.svg">
+            <img alt="Scalar logo" height="40px" src="https://heyapi.dev/scalar-logo-wordmark.svg">
           </picture>
         </a>
         <br/>
@@ -71,7 +71,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
       <td align="center">
         <a href="https://kutt.it/Dr9GuW" target="_blank">
           <picture height="40px">
-            <img alt="FastAPI logo" height="40px" src="https://heyapi.dev/images/fastapi-logo-wordmark.svg">
+            <img alt="FastAPI logo" height="40px" src="https://heyapi.dev/fastapi-logo-wordmark.svg">
           </picture>
         </a>
         <br/>
@@ -100,7 +100,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
         <a href="https://kutt.it/KkqSaw" target="_blank">
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/cella-logo-wordmark-480w.webp">
-            <img alt="Cella logo" height="34px" src="https://heyapi.dev/images/cella-logo-wordmark.svg">
+            <img alt="Cella logo" height="34px" src="https://heyapi.dev/cella-logo-wordmark.svg">
           </picture>
         </a>
       </td>
