@@ -2,12 +2,12 @@ import type ts from 'typescript';
 
 import type { IR } from '../../../ir/types';
 import { tsc } from '../../../tsc';
-import type { PluginInstance } from './types';
+import type { PiniaColadaPlugin } from './types';
 
 export const handleMeta = (
-  plugin: PluginInstance,
+  plugin: PiniaColadaPlugin['Instance'],
   operation: IR.OperationObject,
-  configPath: 'queryOptions' | 'infiniteQueryOptions' | 'mutationOptions',
+  configPath: 'queryOptions' | 'mutationOptions',
 ): ts.Expression | undefined => {
   const metaFn = plugin.config[configPath].meta;
   if (!metaFn) return;

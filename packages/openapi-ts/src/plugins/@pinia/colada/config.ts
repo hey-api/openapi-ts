@@ -4,14 +4,12 @@ import type { PiniaColadaPlugin } from './types';
 
 export const defaultConfig: PiniaColadaPlugin['Config'] = {
   config: {
-    autoDetectHttpMethod: true,
     case: 'camelCase',
     comments: true,
     exportFromIndex: false,
     groupByTag: false,
-    operationTypes: {},
   },
-  dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
+  dependencies: ['@hey-api/typescript', '@hey-api/sdk'],
   handler: handler as PiniaColadaPlugin['Handler'],
   name: '@pinia/colada',
   output: '@pinia/colada',
@@ -20,7 +18,6 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
-        meta: false,
         name: '{{name}}Mutation',
       },
       mappers: {
@@ -35,7 +32,6 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
-        meta: false,
         name: '{{name}}Query',
       },
       mappers: {

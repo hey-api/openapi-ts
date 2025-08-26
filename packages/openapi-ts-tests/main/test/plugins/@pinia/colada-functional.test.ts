@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { createClient } from '@hey-api/openapi-ts';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getSpecsPath } from '../../../utils';
+import { getSpecsPath } from '../../../../utils';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -69,25 +69,6 @@ describe('@pinia/colada functional tests', () => {
 
     expect(mutationOptions).toHaveProperty('mutation');
     expect(typeof mutationOptions.mutation).toBe('function');
-  });
-
-  it('should respect autoDetectHttpMethod setting', async () => {
-    const piniaColadaDefault = await setupPiniaColadaTest({
-      autoDetectHttpMethod: true,
-    });
-
-    // With auto-detection, GET should be query, POST should be mutation
-    expect(piniaColadaDefault.getPetByIdQuery).toBeDefined(); // GET -> query
-    expect(piniaColadaDefault.addPetMutation).toBeDefined(); // POST -> mutation
-    expect(piniaColadaDefault.addPetQuery).toBeUndefined(); // POST should not generate query
-
-    const piniaColadaDisabled = await setupPiniaColadaTest({
-      autoDetectHttpMethod: false,
-    });
-
-    // With auto-detection disabled, both GET and POST should generate queries (legacy behavior)
-    expect(piniaColadaDisabled.getPetByIdQuery).toBeDefined();
-    // Note: The legacy behavior test might need adjustment based on actual implementation
   });
 
   it('should respect operation type overrides', async () => {

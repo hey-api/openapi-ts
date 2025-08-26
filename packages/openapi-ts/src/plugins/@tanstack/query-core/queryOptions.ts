@@ -29,10 +29,8 @@ export const createQueryOptions = ({
   state: PluginState;
 }) => {
   if (
-    !plugin.config.queryOptions ||
-    !(['get', 'post'] as ReadonlyArray<typeof operation.method>).includes(
-      operation.method,
-    )
+    !plugin.config.queryOptions.enabled ||
+    !plugin.hooks.operation.isQuery(operation)
   ) {
     return state;
   }
