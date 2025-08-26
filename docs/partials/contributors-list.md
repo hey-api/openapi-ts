@@ -28,6 +28,7 @@
 - [Jason Lee](https://github.com/LeeChSien)
 - [Jianqi Pan](https://github.com/Jannchie)
 - [Jordan Shatford](https://github.com/jordanshatford)
+- [Josh](https://github.com/josh-hemphill)
 - [Joshua](https://github.com/Joshua-hypt)
 - [Jostein Stuhaug](https://github.com/josstn)
 - [Juan Ibarra](https://github.com/j-ibarra)
