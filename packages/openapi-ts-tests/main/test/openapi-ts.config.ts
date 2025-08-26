@@ -36,9 +36,9 @@ export default defineConfig(() => {
         '3.1.x',
         // 'invalid',
         // 'openai.yaml',
-        // 'full.yaml',
+        'full.yaml',
         // 'opencode.yaml',
-        'zoom-video-sdk.json',
+        // 'zoom-video-sdk.json',
       ),
       // https://registry.scalar.com/@lubos-heyapi-dev-team/apis/demo-api-scalar-galaxy/latest?format=json
       // path: 'scalar:@lubos-heyapi-dev-team/demo-api-scalar-galaxy',
@@ -81,7 +81,7 @@ export default defineConfig(() => {
         // deprecated: false,
         operations: {
           include: [
-            'GET /event',
+            // 'GET /event',
             // '/^[A-Z]+ /v1//',
           ],
         },
@@ -93,6 +93,11 @@ export default defineConfig(() => {
         // tags: {
         //   exclude: ['bar'],
         // },
+      },
+      hooks: {
+        operations: {
+          // isMutation: () => true,
+        },
       },
       pagination: {
         // keywords: ['aa'],
@@ -171,7 +176,7 @@ export default defineConfig(() => {
         // responseStyle: 'data',
         // transformer: '@hey-api/transformers',
         // transformer: true,
-        validator: 'valibot',
+        // validator: 'valibot',
         // validator: {
         //   request: 'zod',
         //   response: 'zod',
@@ -198,7 +203,7 @@ export default defineConfig(() => {
         // mutationOptions: {
         //   name: '{{name}}MO',
         // },
-        name: '@tanstack/react-query',
+        // name: '@tanstack/react-query',
         // queryKeys: {
         //   name: '{{name}}QK',
         // },
@@ -212,7 +217,7 @@ export default defineConfig(() => {
         definitions: 'z{{name}}Definition',
         exportFromIndex: true,
         metadata: true,
-        name: 'valibot',
+        // name: 'valibot',
         requests: {
           // case: 'SCREAMING_SNAKE_CASE',
           name: 'z{{name}}TestData',
@@ -241,7 +246,7 @@ export default defineConfig(() => {
         },
         exportFromIndex: true,
         metadata: true,
-        name: 'zod',
+        // name: 'zod',
         // requests: {
         //   // case: 'SCREAMING_SNAKE_CASE',
         //   // name: 'z{{name}}TestData',
@@ -272,6 +277,14 @@ export default defineConfig(() => {
         // httpResource
         exportFromIndex: true,
         // name: '@angular/common',
+      },
+      {
+        name: '@pinia/colada',
+        '~hooks': {
+          operations: {
+            // isQuery: () => true,
+          },
+        },
       },
     ],
     // useOptions: false,

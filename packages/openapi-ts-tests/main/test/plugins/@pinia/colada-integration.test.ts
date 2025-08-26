@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
 import { describe, expect, it } from 'vitest';
 
-import { getFilePaths, getSpecsPath } from '../../../utils';
+import { getFilePaths, getSpecsPath } from '../../../../utils';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,16 +14,22 @@ const version = '3.1.x';
 const outputDir = path.join(__dirname, 'generated', version, 'integration');
 
 describe('@pinia/colada integration tests', () => {
-  const createConfig = (userConfig: UserConfig): UserConfig => {
+  const createConfig = (
+    userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
+  ): UserConfig => {
     const inputPath = path.join(getSpecsPath(), version, 'petstore.yaml');
     return {
-      input: inputPath,
-      logs: { level: 'silent' },
-      output: path.join(
-        outputDir,
-        typeof userConfig.output === 'string' ? userConfig.output : '',
-      ),
+      logs: {
+        level: 'silent',
+      },
       ...userConfig,
+      input: userConfig.input ?? inputPath,
+      output:
+        userConfig.output ??
+        path.join(
+          outputDir,
+          typeof userConfig.output === 'string' ? userConfig.output : '',
+        ),
     };
   };
 
@@ -70,6 +76,7 @@ describe('@pinia/colada integration tests', () => {
           '@hey-api/client-fetch',
           {
             name: '@hey-api/sdk',
+            // @ts-expect-error
             transformer: {
               name: 'custom',
             },
@@ -113,6 +120,7 @@ describe('@pinia/colada integration tests', () => {
         plugins: [
           '@hey-api/client-fetch',
           {
+            // @ts-expect-error
             case: 'PascalCase',
             name: '@hey-api/sdk',
           },

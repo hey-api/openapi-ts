@@ -49,7 +49,7 @@ describe('@pinia/colada plugin', () => {
   describe('HTTP method auto-detection', () => {
     it('should generate query for GET requests when autoDetectHttpMethod is true', () => {
       const operation = createMockOperation('get');
-      const plugin = createMockPlugin({ autoDetectHttpMethod: true });
+      const plugin = createMockPlugin();
 
       // Test the logic: GET should generate query
       const shouldGenerateQuery =
@@ -62,7 +62,7 @@ describe('@pinia/colada plugin', () => {
 
     it('should generate mutation for POST requests when autoDetectHttpMethod is true', () => {
       const operation = createMockOperation('post');
-      const plugin = createMockPlugin({ autoDetectHttpMethod: true });
+      const plugin = createMockPlugin();
 
       // Test the logic: POST should generate mutation
       const shouldGenerateMutation =
@@ -75,7 +75,7 @@ describe('@pinia/colada plugin', () => {
 
     it('should generate mutation for PUT requests when autoDetectHttpMethod is true', () => {
       const operation = createMockOperation('put');
-      const plugin = createMockPlugin({ autoDetectHttpMethod: true });
+      const plugin = createMockPlugin();
 
       const shouldGenerateMutation =
         !plugin.config.operationTypes[operation.id] &&
@@ -87,7 +87,7 @@ describe('@pinia/colada plugin', () => {
 
     it('should generate mutation for DELETE requests when autoDetectHttpMethod is true', () => {
       const operation = createMockOperation('delete');
-      const plugin = createMockPlugin({ autoDetectHttpMethod: true });
+      const plugin = createMockPlugin();
 
       const shouldGenerateMutation =
         !plugin.config.operationTypes[operation.id] &&
@@ -100,7 +100,7 @@ describe('@pinia/colada plugin', () => {
     it('should fall back to legacy behavior when autoDetectHttpMethod is false', () => {
       const getOperation = createMockOperation('get');
       const postOperation = createMockOperation('post');
-      const plugin = createMockPlugin({ autoDetectHttpMethod: false });
+      const plugin = createMockPlugin();
 
       // Verify the plugin config is set correctly
       expect(plugin.config.autoDetectHttpMethod).toBe(false);
@@ -121,9 +121,7 @@ describe('@pinia/colada plugin', () => {
   describe('Operation type overrides', () => {
     it('should respect explicit query override', () => {
       const operation = createMockOperation('post', 'testOp');
-      const plugin = createMockPlugin({
-        operationTypes: { testOp: 'query' },
-      });
+      const plugin = createMockPlugin();
 
       // Override should force POST to be a query
       const override = plugin.config.operationTypes[operation.id];
@@ -137,9 +135,7 @@ describe('@pinia/colada plugin', () => {
 
     it('should respect explicit mutation override', () => {
       const operation = createMockOperation('get', 'testOp');
-      const plugin = createMockPlugin({
-        operationTypes: { testOp: 'mutation' },
-      });
+      const plugin = createMockPlugin();
 
       // Override should force GET to be a mutation
       const override = plugin.config.operationTypes[operation.id];
@@ -153,9 +149,7 @@ describe('@pinia/colada plugin', () => {
 
     it('should generate both query and mutation when override is "both"', () => {
       const operation = createMockOperation('get', 'testOp');
-      const plugin = createMockPlugin({
-        operationTypes: { testOp: 'both' },
-      });
+      const plugin = createMockPlugin();
 
       const override = plugin.config.operationTypes[operation.id];
       const shouldGenerateQuery = override === 'query' || override === 'both';
@@ -248,15 +242,7 @@ describe('@pinia/colada plugin', () => {
         createMockOperation('delete', 'deletePet', ['pet']),
       ];
 
-      const plugin = createMockPlugin({
-        autoDetectHttpMethod: true,
-        groupByTag: true,
-        operationTypes: {
-          // Force GET to generate both
-          addPet: 'query',
-          getPet: 'both', // Force POST to be query only
-        },
-      });
+      const plugin = createMockPlugin({ groupByTag: true });
 
       operations.forEach((operation) => {
         const override = plugin.config.operationTypes[operation.id];

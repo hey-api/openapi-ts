@@ -5,23 +5,39 @@ import type { PluginConfigMap } from '../../config';
 import type { Plugin } from '../../types';
 import type { WalkEvent, WalkEventType } from '../types/instance';
 
+const defaultGetKind: Required<Required<IR.Hooks>['operations']>['getKind'] = (
+  operation,
+) => {
+  switch (operation.method) {
+    case 'delete':
+    case 'patch':
+    case 'post':
+    case 'put':
+      return ['mutation'];
+    case 'get':
+      return ['query'];
+    default:
+      return [];
+  }
+};
+
 export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
-  public api: T['api'];
-  public config: Omit<T['resolvedConfig'], 'name' | 'output'>;
-  public context: IR.Context;
-  public dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
+  api: T['api'];
+  config: Omit<T['resolvedConfig'], 'name' | 'output'>;
+  context: IR.Context;
+  dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
   private handler: Plugin.Config<T>['handler'];
-  public name: T['resolvedConfig']['name'];
-  public output: Required<T['config']>['output'];
+  name: T['resolvedConfig']['name'];
+  output: Required<T['config']>['output'];
   /**
    * The package metadata and utilities for the current context, constructed
    * from the provided dependencies. Used for managing package-related
    * information such as name, version, and dependency resolution during
    * code generation.
    */
-  public package: IR.Context['package'];
+  package: IR.Context['package'];
 
-  public constructor(
+  constructor(
     props: Pick<
       Required<Plugin.Config<T>>,
       'config' | 'dependencies' | 'handler'
@@ -42,7 +58,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.package = props.context.package;
   }
 
-  public createFile(file: IR.ContextFile) {
+  createFile(file: IR.ContextFile) {
     return this.context.createFile({
       exportFromIndex: this.config.exportFromIndex,
       ...file,
@@ -71,7 +87,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    *   }
    * });
    */
-  public forEach<T extends WalkEventType = WalkEventType>(
+  forEach<T extends WalkEventType = WalkEventType>(
     ...args: [
       ...events: ReadonlyArray<T>,
       callback: (event: WalkEvent<T>) => void,
@@ -216,16 +232,49 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    * @param name Plugin name as defined in the configuration.
    * @returns The plugin instance if found, undefined otherwise.
    */
-  public getPlugin<T extends keyof PluginConfigMap>(
+  getPlugin<T extends keyof PluginConfigMap>(
     name: T,
   ): T extends any ? PluginInstance<PluginConfigMap[T]> | undefined : never {
     return this.context.plugins[name] as any;
   }
 
+  hooks = {
+    operation: {
+      isMutation: (operation: IR.OperationObject): boolean => {
+        const isMutation =
+          this.config['~hooks']?.operations?.isMutation ??
+          this.context.config.parser.hooks.operations?.isMutation;
+        const isMutationResult = isMutation?.(operation);
+        if (isMutationResult !== undefined) {
+          return isMutationResult;
+        }
+        const getKind =
+          this.config['~hooks']?.operations?.getKind ??
+          this.context.config.parser.hooks.operations?.getKind ??
+          defaultGetKind;
+        return getKind(operation).includes('mutation');
+      },
+      isQuery: (operation: IR.OperationObject): boolean => {
+        const isQuery =
+          this.config['~hooks']?.operations?.isQuery ??
+          this.context.config.parser.hooks.operations?.isQuery;
+        const isQueryResult = isQuery?.(operation);
+        if (isQueryResult !== undefined) {
+          return isQueryResult;
+        }
+        const getKind =
+          this.config['~hooks']?.operations?.getKind ??
+          this.context.config.parser.hooks.operations?.getKind ??
+          defaultGetKind;
+        return getKind(operation).includes('query');
+      },
+    },
+  };
+
   /**
    * Executes plugin's handler function.
    */
-  public async run() {
+  async run() {
     await this.handler({ plugin: this });
   }
 }

@@ -735,7 +735,7 @@ export const handlerLegacy = ({
 
       // queries
       if (
-        plugin.config.queryOptions &&
+        plugin.config.queryOptions.enabled &&
         (['GET', 'POST'] as ReadonlyArray<Method>).includes(operation.method)
       ) {
         if (!hasQueries) {
