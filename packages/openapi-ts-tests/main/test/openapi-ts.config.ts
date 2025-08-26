@@ -96,7 +96,12 @@ export default defineConfig(() => {
       },
       hooks: {
         operations: {
-          // isMutation: () => true,
+          isQuery: (op) => {
+            if (op.method === 'post' && op.path === '/search') {
+              return true;
+            }
+            return undefined;
+          },
         },
       },
       pagination: {
@@ -203,13 +208,23 @@ export default defineConfig(() => {
         // mutationOptions: {
         //   name: '{{name}}MO',
         // },
-        // name: '@tanstack/react-query',
+        name: '@tanstack/react-query',
         // queryKeys: {
         //   name: '{{name}}QK',
         // },
         // queryOptions: {
         //   name: '{{name}}QO',
         // },
+        '~hooks': {
+          operations: {
+            getKind: (op) => {
+              if (op.method === 'post' && op.path === '/search') {
+                return ['query'];
+              }
+              return undefined;
+            },
+          },
+        },
       },
       {
         // case: 'SCREAMING_SNAKE_CASE',
@@ -280,9 +295,17 @@ export default defineConfig(() => {
       },
       {
         name: '@pinia/colada',
+        queryOptions: {
+          name: '{{name}}Query',
+        },
         '~hooks': {
           operations: {
-            // isQuery: () => true,
+            getKind: (op) => {
+              if (op.method === 'post' && op.path === '/search') {
+                return ['query'];
+              }
+              return undefined;
+            },
           },
         },
       },

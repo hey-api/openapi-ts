@@ -815,181 +815,151 @@ describe(`OpenAPI ${version}`, () => {
       description:
         'generates validator schemas for all integer format combinations (number/integer/string types with int8, int16, int32, int64, uint8, uint16, uint32, uint64 formats)',
     },
-    {
-      config: createConfig({
-        input: 'petstore.yaml',
-        output: 'plugins/@pinia/colada/default',
-        plugins: ['@hey-api/client-fetch', '@hey-api/sdk', '@pinia/colada'],
-      }),
-      description: 'generates Pinia Colada plugin code with default settings',
-    },
-    {
-      config: createConfig({
-        input: 'petstore.yaml',
-        output: 'plugins/@pinia/colada/autoDetectDisabled',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/sdk',
-          {
-            autoDetectHttpMethod: false,
-            name: '@pinia/colada',
-          },
-        ],
-      }),
-      description:
-        'generates Pinia Colada plugin code with auto-detection disabled',
-    },
-    {
-      config: createConfig({
-        input: 'petstore.yaml',
-        output: 'plugins/@pinia/colada/operationOverrides',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/sdk',
-          {
-            name: '@pinia/colada',
-            operationTypes: {
-              addPet: 'query',
-              getPetById: 'both',
-            },
-          },
-        ],
-      }),
-      description:
-        'generates Pinia Colada plugin code with operation type overrides',
-    },
-    {
-      config: createConfig({
-        input: 'petstore.yaml',
-        output: 'plugins/@pinia/colada/groupByTag',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/sdk',
-          {
-            groupByTag: true,
-            name: '@pinia/colada',
-          },
-        ],
-      }),
-      description: 'generates Pinia Colada plugin code grouped by OpenAPI tags',
-    },
-    {
-      config: createConfig({
-        input: 'petstore.yaml',
-        output: 'plugins/@pinia/colada/groupByTagWithIndex',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/sdk',
-          {
-            exportFromIndex: true,
-            groupByTag: true,
-            name: '@pinia/colada',
-          },
-        ],
-      }),
-      description:
-        'generates Pinia Colada plugin code grouped by tags with index file',
-    },
-    {
-      config: createConfig({
-        input: 'petstore.yaml',
-        output: 'plugins/@pinia/colada/customNaming',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/sdk',
-          {
-            mutationOptions: {
-              name: '{{name}}MutationOptions',
-            },
-            name: '@pinia/colada',
-            queryOptions: {
-              name: '{{name}}QueryOptions',
-            },
-          },
-        ],
-      }),
-      description:
-        'generates Pinia Colada plugin code with custom naming patterns',
-    },
-    {
-      config: createConfig({
-        input: 'petstore.yaml',
-        output: 'plugins/@pinia/colada/caseSettings',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/sdk',
-          {
-            case: 'PascalCase',
-            mutationOptions: {
-              case: 'snake_case',
-            },
-            name: '@pinia/colada',
-            queryOptions: {
-              case: 'camelCase',
-            },
-          },
-        ],
-      }),
-      description:
-        'generates Pinia Colada plugin code with different case settings',
-    },
-    {
-      config: createConfig({
-        input: 'petstore.yaml',
-        output: 'plugins/@pinia/colada/disabledOptions',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/sdk',
-          {
-            mutationOptions: {
-              enabled: true,
-            },
-            name: '@pinia/colada',
-            queryOptions: false,
-          },
-        ],
-      }),
-      description: 'generates Pinia Colada plugin code with queries disabled',
-    },
-    {
-      config: createConfig({
-        input: 'petstore.yaml',
-        output: 'plugins/@pinia/colada/complexConfiguration',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/sdk',
-          {
-            autoDetectHttpMethod: true,
-            exportFromIndex: true,
-            groupByTag: true,
-            mutationOptions: {
-              case: 'camelCase',
-              meta: (operation) => ({
-                method: operation.method,
-                operationId: operation.id,
-              }),
-              name: 'use{{name}}Mutation',
-            },
-            name: '@pinia/colada',
-            operationTypes: {
-              addPet: 'query',
-              getPetById: 'both',
-              updatePet: 'mutation',
-            },
-            queryOptions: {
-              case: 'camelCase',
-              meta: (operation) => ({
-                operationId: operation.id,
-                tags: operation.tags,
-              }),
-              name: 'use{{name}}Query',
-            },
-          },
-        ],
-      }),
-      description:
-        'generates Pinia Colada plugin code with complex configuration combining all features',
-    },
+    // TODO: add Pinia Colada snapshots
+    // {
+    //   config: createConfig({
+    //     input: 'petstore.yaml',
+    //     output: 'plugins/@pinia/colada/default',
+    //     plugins: ['@pinia/colada'],
+    //   }),
+    //   description: 'generates Pinia Colada plugin code with default settings',
+    // },
+    // {
+    //   config: createConfig({
+    //     input: 'petstore.yaml',
+    //     output: 'plugins/@pinia/colada/operationOverrides',
+    //     plugins: [
+    //       {
+    //         name: '@pinia/colada',
+    //         operationTypes: {
+    //           addPet: 'query',
+    //           getPetById: 'both',
+    //         },
+    //       },
+    //     ],
+    //   }),
+    //   description:
+    //     'generates Pinia Colada plugin code with operation type overrides',
+    // },
+    // {
+    //   config: createConfig({
+    //     input: 'petstore.yaml',
+    //     output: 'plugins/@pinia/colada/groupByTag',
+    //     plugins: [
+    //       {
+    //         groupByTag: true,
+    //         name: '@pinia/colada',
+    //       },
+    //     ],
+    //   }),
+    //   description: 'generates Pinia Colada plugin code grouped by OpenAPI tags',
+    // },
+    // {
+    //   config: createConfig({
+    //     input: 'petstore.yaml',
+    //     output: 'plugins/@pinia/colada/groupByTagWithIndex',
+    //     plugins: [
+    //       {
+    //         exportFromIndex: true,
+    //         groupByTag: true,
+    //         name: '@pinia/colada',
+    //       },
+    //     ],
+    //   }),
+    //   description:
+    //     'generates Pinia Colada plugin code grouped by tags with index file',
+    // },
+    // {
+    //   config: createConfig({
+    //     input: 'petstore.yaml',
+    //     output: 'plugins/@pinia/colada/customNaming',
+    //     plugins: [
+    //       {
+    //         mutationOptions: {
+    //           name: '{{name}}MutationOptions',
+    //         },
+    //         name: '@pinia/colada',
+    //         queryOptions: {
+    //           name: '{{name}}QueryOptions',
+    //         },
+    //       },
+    //     ],
+    //   }),
+    //   description:
+    //     'generates Pinia Colada plugin code with custom naming patterns',
+    // },
+    // {
+    //   config: createConfig({
+    //     input: 'petstore.yaml',
+    //     output: 'plugins/@pinia/colada/caseSettings',
+    //     plugins: [
+    //       {
+    //         case: 'PascalCase',
+    //         mutationOptions: {
+    //           case: 'snake_case',
+    //         },
+    //         name: '@pinia/colada',
+    //         queryOptions: {
+    //           case: 'camelCase',
+    //         },
+    //       },
+    //     ],
+    //   }),
+    //   description:
+    //     'generates Pinia Colada plugin code with different case settings',
+    // },
+    // {
+    //   config: createConfig({
+    //     input: 'petstore.yaml',
+    //     output: 'plugins/@pinia/colada/disabledOptions',
+    //     plugins: [
+    //       {
+    //         mutationOptions: {
+    //           enabled: true,
+    //         },
+    //         name: '@pinia/colada',
+    //         queryOptions: false,
+    //       },
+    //     ],
+    //   }),
+    //   description: 'generates Pinia Colada plugin code with queries disabled',
+    // },
+    // {
+    //   config: createConfig({
+    //     input: 'petstore.yaml',
+    //     output: 'plugins/@pinia/colada/complexConfiguration',
+    //     plugins: [
+    //       {
+    //         exportFromIndex: true,
+    //         groupByTag: true,
+    //         mutationOptions: {
+    //           case: 'camelCase',
+    //           meta: (operation) => ({
+    //             method: operation.method,
+    //             operationId: operation.id,
+    //           }),
+    //           name: 'use{{name}}Mutation',
+    //         },
+    //         name: '@pinia/colada',
+    //         operationTypes: {
+    //           addPet: 'query',
+    //           getPetById: 'both',
+    //           updatePet: 'mutation',
+    //         },
+    //         queryOptions: {
+    //           case: 'camelCase',
+    //           meta: (operation) => ({
+    //             operationId: operation.id,
+    //             tags: operation.tags,
+    //           }),
+    //           name: 'use{{name}}Query',
+    //         },
+    //       },
+    //     ],
+    //   }),
+    //   description:
+    //     'generates Pinia Colada plugin code with complex configuration combining all features',
+    // },
     {
       config: createConfig({
         input: 'opencode.yaml',

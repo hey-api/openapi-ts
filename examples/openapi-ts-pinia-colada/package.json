@@ -15,7 +15,7 @@
     "typecheck": "vue-tsc --build --force"
   },
   "dependencies": {
-    "@pinia/colada": "0.17.0",
+    "@pinia/colada": "0.17.2",
     "pinia": "2.3.0",
     "vue": "3.5.13",
     "vue-router": "4.5.0"

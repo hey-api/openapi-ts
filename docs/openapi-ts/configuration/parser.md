@@ -18,9 +18,9 @@ You can add custom patches with `patch`.
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    patch: { // [!code ++]
-      schemas: { // [!code ++]
+  parser: {
+    patch: {
+      schemas: {
         Foo: (schema) => { // [!code ++]
           // convert date-time format to timestamp // [!code ++]
           delete schema.properties.updatedAt.format; // [!code ++]
@@ -38,9 +38,9 @@ export default {
           // remove property // [!code ++]
           delete schema.properties.internalField; // [!code ++]
         }, // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
 <!-- prettier-ignore-end -->
@@ -55,17 +55,15 @@ If you don't control or trust your input, you might want to validate it. Any det
 
 To validate your input, set `validate_EXPERIMENTAL` to `true`.
 
-<!-- prettier-ignore-start -->
 ```js
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
+  parser: {
     validate_EXPERIMENTAL: true, // [!code ++]
-  }, // [!code ++]
+  },
 };
 ```
-<!-- prettier-ignore-end -->
 
 ## Filters
 
@@ -77,36 +75,33 @@ Set `include` to match operations to be included or `exclude` to match operation
 
 ::: code-group
 
-<!-- prettier-ignore-start -->
 ```js [include]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
-      operations: { // [!code ++]
+  parser: {
+    filters: {
+      operations: {
         include: ['GET /api/v1/foo', '/^[A-Z]+ /api/v1//'], // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
-<!-- prettier-ignore-start -->
+
 ```js [exclude]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
-      operations: { // [!code ++]
+  parser: {
+    filters: {
+      operations: {
         exclude: ['GET /api/v1/foo', '/^[A-Z]+ /api/v1//'], // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
 
 :::
 
@@ -116,36 +111,33 @@ Set `include` to match tags to be included or `exclude` to match tags to be excl
 
 ::: code-group
 
-<!-- prettier-ignore-start -->
 ```js [include]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
-      tags: { // [!code ++]
+  parser: {
+    filters: {
+      tags: {
         include: ['v2'], // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
-<!-- prettier-ignore-start -->
+
 ```js [exclude]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
-      tags: { // [!code ++]
+  parser: {
+    filters: {
+      tags: {
         exclude: ['v1'], // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
 
 :::
 
@@ -153,19 +145,17 @@ export default {
 
 You can filter out deprecated resources by setting `deprecated` to `false`.
 
-<!-- prettier-ignore-start -->
 ```js
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
+  parser: {
+    filters: {
       deprecated: false, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
 
 ### Schemas
 
@@ -173,36 +163,33 @@ Set `include` to match schemas to be included or `exclude` to match schemas to b
 
 ::: code-group
 
-<!-- prettier-ignore-start -->
 ```js [include]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
-      schemas: { // [!code ++]
+  parser: {
+    filters: {
+      schemas: {
         include: ['Foo', '/^Bar/'], // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
-<!-- prettier-ignore-start -->
+
 ```js [exclude]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
-      schemas: { // [!code ++]
+  parser: {
+    filters: {
+      schemas: {
         exclude: ['Foo', '/^Bar/'], // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
 
 :::
 
@@ -212,36 +199,33 @@ Set `include` to match parameters to be included or `exclude` to match parameter
 
 ::: code-group
 
-<!-- prettier-ignore-start -->
 ```js [include]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
-      parameters: { // [!code ++]
+  parser: {
+    filters: {
+      parameters: {
         include: ['QueryParameter', '/^MyQueryParameter/'], // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
-<!-- prettier-ignore-start -->
+
 ```js [exclude]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
-      parameters: { // [!code ++]
+  parser: {
+    filters: {
+      parameters: {
         exclude: ['QueryParameter', '/^MyQueryParameter/'], // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
 
 :::
 
@@ -251,36 +235,33 @@ Set `include` to match request bodies to be included or `exclude` to match reque
 
 ::: code-group
 
-<!-- prettier-ignore-start -->
 ```js [include]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
-      requestBodies: { // [!code ++]
+  parser: {
+    filters: {
+      requestBodies: {
         include: ['Payload', '/^SpecialPayload/'], // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
-<!-- prettier-ignore-start -->
+
 ```js [exclude]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
-      requestBodies: { // [!code ++]
+  parser: {
+    filters: {
+      requestBodies: {
         exclude: ['Payload', '/^SpecialPayload/'], // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
 
 :::
 
@@ -290,36 +271,33 @@ Set `include` to match responses to be included or `exclude` to match responses 
 
 ::: code-group
 
-<!-- prettier-ignore-start -->
 ```js [include]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
-      responses: { // [!code ++]
+  parser: {
+    filters: {
+      responses: {
         include: ['Foo', '/^Bar/'], // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
-<!-- prettier-ignore-start -->
+
 ```js [exclude]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
-      responses: { // [!code ++]
+  parser: {
+    filters: {
+      responses: {
         exclude: ['Foo', '/^Bar/'], // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
 
 :::
 
@@ -327,37 +305,33 @@ export default {
 
 If you only want to exclude orphaned resources, set `orphans` to `false`. This is the default value when combined with any other filters. If this isn't the desired behavior, you may want to set `orphans` to `true` to always preserve unused resources.
 
-<!-- prettier-ignore-start -->
 ```js
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
+  parser: {
+    filters: {
       orphans: false, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
 
 ### Order
 
 For performance reasons, we don't preserve the original order when filtering out resources. If maintaining the original order is important to you, set `preserveOrder` to `true`.
 
-<!-- prettier-ignore-start -->
 ```js
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    filters: { // [!code ++]
+  parser: {
+    filters: {
       preserveOrder: true, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
 
 ## Transforms
 
@@ -374,32 +348,29 @@ You may want all enums to be reusable. This is because only root enums are typic
 
 ::: code-group
 
-<!-- prettier-ignore-start -->
 ```js [root]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    transforms: { // [!code ++]
+  parser: {
+    transforms: {
       enums: 'root', // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
-<!-- prettier-ignore-start -->
+
 ```js [inline]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    transforms: { // [!code ++]
+  parser: {
+    transforms: {
       enums: 'inline', // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
 
 :::
 
@@ -411,35 +382,32 @@ Your schemas might contain read-only or write-only fields. Using such schemas di
 
 ::: code-group
 
-<!-- prettier-ignore-start -->
 ```js [default]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    transforms: { // [!code ++]
-      readWrite: { // [!code ++]
+  parser: {
+    transforms: {
+      readWrite: {
         requests: '{{name}}Writable', // [!code ++]
         responses: '{{name}}', // [!code ++]
-      }, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+      },
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
-<!-- prettier-ignore-start -->
+
 ```js [disabled]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    transforms: { // [!code ++]
+  parser: {
+    transforms: {
       readWrite: false, // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
 
 :::
 
@@ -453,31 +421,105 @@ You can provide custom pagination keywords using `pagination.keywords`.
 
 ::: code-group
 
-<!-- prettier-ignore-start -->
 ```js [extend]
 import { defaultPaginationKeywords } from '@hey-api/openapi-ts';
 
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    pagination: { // [!code ++]
-      keywords: [...defaultPaginationKeywords, 'extra', 'pagination', 'keywords'], // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+  parser: {
+    pagination: {
+      keywords: [
+        ...defaultPaginationKeywords, // [!code ++]
+        'extra', // [!code ++]
+        'pagination', // [!code ++]
+        'keywords', // [!code ++]
+      ],
+    },
+  },
 };
 ```
-<!-- prettier-ignore-end -->
-<!-- prettier-ignore-start -->
+
 ```js [override]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  parser: { // [!code ++]
-    pagination: { // [!code ++]
-      keywords: ['custom', 'pagination', 'keywords'], // [!code ++]
-    }, // [!code ++]
-  }, // [!code ++]
+  parser: {
+    pagination: {
+      keywords: [
+        'custom', // [!code ++]
+        'pagination', // [!code ++]
+        'keywords', // [!code ++]
+      ],
+    },
+  },
+};
+```
+
+:::
+
+## Hooks
+
+Hooks affect runtime behavior but aren’t tied to any single plugin. They can be configured globally via `parser.hooks` or per plugin through the `~hooks` property.
+
+### Operations {#hooks-operations}
+
+Each operation has a list of classifiers that can include `query`, `mutation`, both, or none. Plugins may use these values to decide whether to generate specific output. For example, you usually don’t want to generate [TanStack Query options](/openapi-ts/plugins/tanstack-query#queries) for PATCH operations.
+
+#### Query operations {#hooks-query-operations}
+
+By default, GET operations are classified as `query` operations.
+
+#### Mutation operations {#hooks-mutation-operations}
+
+By default, DELETE, PATCH, POST, and PUT operations are classified as `mutation` operations.
+
+#### Example: POST search query
+
+Imagine your API has a POST `/search` endpoint that accepts a large payload. By default, it's classified as a `mutation`, but in practice it behaves like a `query`, and your [state management](/openapi-ts/state-management) plugin should generate query hooks.
+
+You can fix this by classifying the operation as `query` in a matcher. If a matcher returns no value, we fall back to less specific matchers until one does.
+
+::: code-group
+
+<!-- prettier-ignore-start -->
+```js [parser]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    hooks: {
+      operations: {
+        isQuery: (op) => {
+          if (op.method === 'post' && op.path === '/search') { // [!code ++]
+            return true; // [!code ++]
+          } // [!code ++]
+        },
+      },
+    },
+  },
+};
+```
+<!-- prettier-ignore-end -->
+<!-- prettier-ignore-start -->
+```js [plugin]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@tanstack/react-query',
+      '~hooks': {
+        operations: {
+          getKind: (op) => {
+            if (op.method === 'post' && op.path === '/search') { // [!code ++]
+              return ['query']; // [!code ++]
+            } // [!code ++]
+          },
+        },
+      },
+    },
+  ],
 };
 ```
 <!-- prettier-ignore-end -->

@@ -17,8 +17,8 @@ export const getFileForOperation = ({
   plugin: PiniaColadaPlugin['Instance'];
   states: Map<string, PluginState>;
 }) => {
+  // single file
   if (!plugin.config.groupByTag) {
-    // Single file mode
     const fileId = plugin.name;
     if (!files.has(fileId)) {
       const file = plugin.createFile({
@@ -44,7 +44,7 @@ export const getFileForOperation = ({
     return { file: files.get(fileId)!, state: states.get(fileId)! };
   }
 
-  // Group by tag mode
+  // group by tag
   const tag = operation.tags?.[0] || 'default';
   const fileId = `${plugin.name}/${tag}`;
 
@@ -60,7 +60,7 @@ export const getFileForOperation = ({
       hasQueries: false,
       hasUsedQueryFn: false,
     });
-    // Import Options type from SDK
+    // import Options type from SDK
     file.import({
       ...clientApi.Options,
       module: file.relativePathToFile({ context: plugin.context, id: sdkId }),

@@ -49,6 +49,7 @@ describe('generateLegacyOutput', () => {
         path: './dist',
       },
       parser: {
+        hooks: {},
         pagination: {
           keywords: [],
         },

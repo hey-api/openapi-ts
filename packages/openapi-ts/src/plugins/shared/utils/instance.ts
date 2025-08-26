@@ -240,36 +240,42 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
 
   hooks = {
     operation: {
-      isMutation: (operation: IR.OperationObject): boolean => {
-        const isMutation =
-          this.config['~hooks']?.operations?.isMutation ??
-          this.context.config.parser.hooks.operations?.isMutation;
-        const isMutationResult = isMutation?.(operation);
-        if (isMutationResult !== undefined) {
-          return isMutationResult;
-        }
-        const getKind =
-          this.config['~hooks']?.operations?.getKind ??
-          this.context.config.parser.hooks.operations?.getKind ??
-          defaultGetKind;
-        return getKind(operation).includes('mutation');
-      },
-      isQuery: (operation: IR.OperationObject): boolean => {
-        const isQuery =
-          this.config['~hooks']?.operations?.isQuery ??
-          this.context.config.parser.hooks.operations?.isQuery;
-        const isQueryResult = isQuery?.(operation);
-        if (isQueryResult !== undefined) {
-          return isQueryResult;
-        }
-        const getKind =
-          this.config['~hooks']?.operations?.getKind ??
-          this.context.config.parser.hooks.operations?.getKind ??
-          defaultGetKind;
-        return getKind(operation).includes('query');
-      },
+      isMutation: (operation: IR.OperationObject): boolean =>
+        this.isOperationKind(operation, 'mutation'),
+      isQuery: (operation: IR.OperationObject): boolean =>
+        this.isOperationKind(operation, 'query'),
     },
   };
+
+  private isOperationKind(
+    operation: IR.OperationObject,
+    kind: 'mutation' | 'query',
+  ): boolean {
+    const methodName = kind === 'query' ? 'isQuery' : 'isMutation';
+    const isFnPlugin = this.config['~hooks']?.operations?.[methodName];
+    const isFnPluginResult = isFnPlugin?.(operation);
+    if (isFnPluginResult !== undefined) {
+      return isFnPluginResult;
+    }
+    const getKindFnPlugin = this.config['~hooks']?.operations?.getKind;
+    const getKindFnPluginResult = getKindFnPlugin?.(operation);
+    if (getKindFnPluginResult !== undefined) {
+      return getKindFnPluginResult.includes(kind);
+    }
+    const isFnParser =
+      this.context.config.parser.hooks.operations?.[methodName];
+    const isFnParserResult = isFnParser?.(operation);
+    if (isFnParserResult !== undefined) {
+      return isFnParserResult;
+    }
+    const getKindFnParser =
+      this.context.config.parser.hooks.operations?.getKind;
+    const getKindFnParserResult = getKindFnParser?.(operation);
+    if (getKindFnParserResult !== undefined) {
+      return getKindFnParserResult.includes(kind);
+    }
+    return defaultGetKind(operation).includes(kind);
+  }
 
   /**
    * Executes plugin's handler function.
