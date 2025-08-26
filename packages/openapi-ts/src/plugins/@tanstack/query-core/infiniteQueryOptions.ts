@@ -236,10 +236,8 @@ export const createInfiniteQueryOptions = ({
   state: PluginState;
 }) => {
   if (
-    !plugin.config.infiniteQueryOptions ||
-    !(['get', 'post'] as ReadonlyArray<typeof operation.method>).includes(
-      operation.method,
-    )
+    !plugin.config.infiniteQueryOptions.enabled ||
+    !plugin.hooks.operation.isQuery(operation)
   ) {
     return state;
   }

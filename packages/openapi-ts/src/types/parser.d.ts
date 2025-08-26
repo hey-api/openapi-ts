@@ -1,3 +1,4 @@
+import type { IR } from '../ir/types';
 import type {
   OpenApiMetaObject,
   OpenApiOperationObject,
@@ -16,6 +17,13 @@ export type Parser = {
    * to plugins.
    */
   filters?: Filters;
+  /**
+   * Optional hooks to override default plugin behavior.
+   *
+   * Use these to classify resources, control which outputs are generated,
+   * or provide custom behavior for specific resources.
+   */
+  hooks?: IR.Hooks;
   /**
    * Pagination configuration.
    */
@@ -178,6 +186,13 @@ export type ResolvedParser = {
    * to plugins.
    */
   filters?: Filters;
+  /**
+   * Optional hooks to override default plugin behavior.
+   *
+   * Use these to classify resources, control which outputs are generated,
+   * or provide custom behavior for specific resources.
+   */
+  hooks: IR.Hooks;
   /**
    * Pagination configuration.
    */

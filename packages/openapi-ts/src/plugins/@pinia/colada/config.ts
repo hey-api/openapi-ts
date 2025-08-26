@@ -4,20 +4,44 @@ import type { PiniaColadaPlugin } from './types';
 
 export const defaultConfig: PiniaColadaPlugin['Config'] = {
   config: {
-    enablePaginationOnKey: undefined,
-    errorHandling: 'specific',
+    case: 'camelCase',
+    comments: true,
     exportFromIndex: false,
     groupByTag: false,
-    importPath: '@pinia/colada',
-    includeTypes: true,
-    prefixUse: true,
-    suffixQueryMutation: true,
-    useInfiniteQueries: false,
   },
-  dependencies: ['@hey-api/typescript'],
+  dependencies: ['@hey-api/typescript', '@hey-api/sdk'],
   handler: handler as PiniaColadaPlugin['Handler'],
   name: '@pinia/colada',
   output: '@pinia/colada',
+  resolveConfig: (plugin, context) => {
+    plugin.config.mutationOptions = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: '{{name}}Mutation',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.mutationOptions,
+    });
+
+    plugin.config.queryOptions = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: '{{name}}Query',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.queryOptions,
+    });
+  },
 };
 
 /**

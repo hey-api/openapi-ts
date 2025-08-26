@@ -114,49 +114,6 @@ export const getFooInfiniteOptions = (options: Options<GetFooData>) => {
     });
 };
 
-export const postFooQueryKey = (options: Options<PostFooData>) => createQueryKey('postFoo', options);
-
-export const postFooOptions = (options: Options<PostFooData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await postFoo({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: postFooQueryKey(options)
-    });
-};
-
-export const postFooInfiniteQueryKey = (options: Options<PostFooData>): QueryKey<Options<PostFooData>> => createQueryKey('postFoo', options, true);
-
-export const postFooInfiniteOptions = (options: Options<PostFooData>) => {
-    return infiniteQueryOptions<unknown, DefaultError, InfiniteData<unknown>, QueryKey<Options<PostFooData>>, number | null | Pick<QueryKey<Options<PostFooData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
-    // @ts-ignore
-    {
-        queryFn: async ({ pageParam, queryKey, signal }) => {
-            // @ts-ignore
-            const page: Pick<QueryKey<Options<PostFooData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
-                body: {
-                    page: pageParam
-                }
-            };
-            const params = createInfiniteParams(queryKey, page);
-            const { data } = await postFoo({
-                ...options,
-                ...params,
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: postFooInfiniteQueryKey(options)
-    });
-};
-
 export const postFooMutation = (options?: Partial<Options<PostFooData>>): UseMutationOptions<unknown, DefaultError, Options<PostFooData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostFooData>> = {
         mutationFn: async (localOptions) => {

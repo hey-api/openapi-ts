@@ -13,6 +13,7 @@ export const defaultPaginationKeywords = [
 export const getParser = (userConfig: UserConfig): Config['parser'] => {
   const parser: Config['parser'] = {
     ...userConfig.parser,
+    hooks: {},
     pagination: {
       keywords: defaultPaginationKeywords,
     },

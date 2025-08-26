@@ -34,7 +34,6 @@ export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
-        meta: false,
         name: '{{name}}InfiniteOptions',
       },
       mappers: {
@@ -49,7 +48,6 @@ export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
-        meta: false,
         name: '{{name}}Mutation',
       },
       mappers: {
@@ -79,7 +77,6 @@ export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
-        meta: false,
         name: '{{name}}Options',
       },
       mappers: {

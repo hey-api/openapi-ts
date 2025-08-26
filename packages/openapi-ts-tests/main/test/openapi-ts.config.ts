@@ -36,9 +36,9 @@ export default defineConfig(() => {
         '3.1.x',
         // 'invalid',
         // 'openai.yaml',
-        // 'full.yaml',
+        'full.yaml',
         // 'opencode.yaml',
-        'zoom-video-sdk.json',
+        // 'zoom-video-sdk.json',
       ),
       // https://registry.scalar.com/@lubos-heyapi-dev-team/apis/demo-api-scalar-galaxy/latest?format=json
       // path: 'scalar:@lubos-heyapi-dev-team/demo-api-scalar-galaxy',
@@ -81,7 +81,7 @@ export default defineConfig(() => {
         // deprecated: false,
         operations: {
           include: [
-            'GET /event',
+            // 'GET /event',
             // '/^[A-Z]+ /v1//',
           ],
         },
@@ -93,6 +93,16 @@ export default defineConfig(() => {
         // tags: {
         //   exclude: ['bar'],
         // },
+      },
+      hooks: {
+        operations: {
+          isQuery: (op) => {
+            if (op.method === 'post' && op.path === '/search') {
+              return true;
+            }
+            return undefined;
+          },
+        },
       },
       pagination: {
         // keywords: ['aa'],
@@ -171,7 +181,7 @@ export default defineConfig(() => {
         // responseStyle: 'data',
         // transformer: '@hey-api/transformers',
         // transformer: true,
-        validator: 'valibot',
+        // validator: 'valibot',
         // validator: {
         //   request: 'zod',
         //   response: 'zod',
@@ -205,6 +215,16 @@ export default defineConfig(() => {
         // queryOptions: {
         //   name: '{{name}}QO',
         // },
+        '~hooks': {
+          operations: {
+            getKind: (op) => {
+              if (op.method === 'post' && op.path === '/search') {
+                return ['query'];
+              }
+              return undefined;
+            },
+          },
+        },
       },
       {
         // case: 'SCREAMING_SNAKE_CASE',
@@ -212,7 +232,7 @@ export default defineConfig(() => {
         definitions: 'z{{name}}Definition',
         exportFromIndex: true,
         metadata: true,
-        name: 'valibot',
+        // name: 'valibot',
         requests: {
           // case: 'SCREAMING_SNAKE_CASE',
           name: 'z{{name}}TestData',
@@ -241,7 +261,7 @@ export default defineConfig(() => {
         },
         exportFromIndex: true,
         metadata: true,
-        name: 'zod',
+        // name: 'zod',
         // requests: {
         //   // case: 'SCREAMING_SNAKE_CASE',
         //   // name: 'z{{name}}TestData',
@@ -272,6 +292,22 @@ export default defineConfig(() => {
         // httpResource
         exportFromIndex: true,
         // name: '@angular/common',
+      },
+      {
+        name: '@pinia/colada',
+        queryOptions: {
+          name: '{{name}}Query',
+        },
+        '~hooks': {
+          operations: {
+            getKind: (op) => {
+              if (op.method === 'post' && op.path === '/search') {
+                return ['query'];
+              }
+              return undefined;
+            },
+          },
+        },
       },
     ],
     // useOptions: false,

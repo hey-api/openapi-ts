@@ -57,23 +57,6 @@ export const getFooOptions = (options?: Options<GetFooData>) => {
     });
 };
 
-export const fooPostQueryKey = (options?: Options<FooPostData>) => createQueryKey('fooPost', options);
-
-export const fooPostOptions = (options?: Options<FooPostData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await FooBazService.fooService.post({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: fooPostQueryKey(options)
-    });
-};
-
 export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> => {
     const mutationOptions: UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> = {
         mutationFn: async (localOptions) => {
@@ -116,23 +99,6 @@ export const getFooBarOptions = (options?: Options<GetFooBarData>) => {
             return data;
         },
         queryKey: getFooBarQueryKey(options)
-    });
-};
-
-export const fooBarPostQueryKey = (options?: Options<FooBarPostData>) => createQueryKey('fooBarPost', options);
-
-export const fooBarPostOptions = (options?: Options<FooBarPostData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await FooBazService.fooService.barService.post({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: fooBarPostQueryKey(options)
     });
 };
 
