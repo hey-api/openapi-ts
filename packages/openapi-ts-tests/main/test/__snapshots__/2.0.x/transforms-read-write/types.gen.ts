@@ -28,8 +28,20 @@ export type Corge = {
     };
 };
 
+export type FooReadWritable = BarReadWritable;
+
+export type BarReadWritable = Baz;
+
+export type QuuxWritable = {
+    baz?: Array<Baz>;
+};
+
+export type CorgeWritable = {
+    foo?: string;
+};
+
 export type PostFooReadData = {
-    body: FooRead;
+    body: FooReadWritable;
     path?: never;
     query?: never;
     url: '/foo-read';

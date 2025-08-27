@@ -364,7 +364,8 @@ export const splitSchemas = ({
     // Only split top-level schemas, with either read-only or write-only scopes (or both).
     if (
       !name ||
-      !(nodeInfo.scopes?.has('read') || nodeInfo.scopes?.has('write'))
+      !(nodeInfo.scopes?.has('read') || nodeInfo.scopes?.has('write')) ||
+      !nodeInfo.scopes?.has('normal')
     ) {
       continue;
     }
@@ -466,7 +467,8 @@ export const updateRefsInSpec = ({
       let nextPointer = currentPointer;
       let nextContext = context;
       if (isPathRootSchema(path)) {
-        nextPointer = `${schemasPointerNamespace}${path[2]}`;
+        const nameSegment = path[path.length - 1] as string;
+        nextPointer = `${schemasPointerNamespace}${nameSegment}`;
         const originalPointer = split.reverseMapping[nextPointer];
         if (originalPointer) {
           const mapping = split.mapping[originalPointer];
@@ -581,10 +583,19 @@ export const updateRefsInSpec = ({
           });
         } else if (key === '$ref' && typeof value === 'string') {
           const map = split.mapping[value];
-          if (nextContext === 'read' && map?.read) {
-            (node as Record<string, unknown>)[key] = map.read;
-          } else if (nextContext === 'write' && map?.write) {
-            (node as Record<string, unknown>)[key] = map.write;
+          if (map) {
+            if (nextContext === 'read' && map.read) {
+              (node as Record<string, unknown>)[key] = map.read;
+            } else if (nextContext === 'write' && map.write) {
+              (node as Record<string, unknown>)[key] = map.write;
+            } else if (!nextContext) {
+              // Fallback when no explicit context is known (e.g., OAS2 definitions): prefer read variant
+              if (map.read) {
+                (node as Record<string, unknown>)[key] = map.read;
+              } else if (map.write) {
+                (node as Record<string, unknown>)[key] = map.write;
+              }
+            }
           }
         } else {
           walk({

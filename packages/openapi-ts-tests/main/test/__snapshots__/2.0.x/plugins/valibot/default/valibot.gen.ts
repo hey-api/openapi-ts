@@ -398,6 +398,165 @@ export const vFailureFailure = v.object({
     reference_code: v.optional(v.string())
 });
 
+/**
+ * Testing multiline comments in string: First line
+ * Second line
+ *
+ * Fourth line
+ */
+export const vCommentWithBreaksWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+ */
+export const vCommentWithBackticksWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing backticks and quotes in string: `backticks`, 'quotes', "double quotes" and ```multiple backticks``` should work
+ */
+export const vCommentWithBackticksAndQuotesWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing slashes in string: \backwards\\\ and /forwards/// should work
+ */
+export const vCommentWithSlashesWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing expression placeholders in string: ${expression} should work
+ */
+export const vCommentWithExpressionPlaceholdersWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing quotes in string: 'single quote''' and "double quotes""" should work
+ */
+export const vCommentWithQuotesWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * Testing reserved characters in string: * inline * and ** inline ** should work
+ */
+export const vCommentWithReservedCharactersWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * This is a simple number
+ */
+export const vSimpleIntegerWritable = v.pipe(v.number(), v.integer());
+
+/**
+ * This is a simple boolean
+ */
+export const vSimpleBooleanWritable = v.boolean();
+
+/**
+ * This is a simple string
+ */
+export const vSimpleStringWritable = v.string();
+
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
+export const vNonAsciiStringæøåÆøÅöôêÊ字符串Writable = v.string();
+
+/**
+ * This is a simple file
+ */
+export const vSimpleFileWritable = v.string();
+
+/**
+ * This is a simple string
+ */
+export const vSimpleStringWithPatternWritable = v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/));
+
+/**
+ * This is a simple enum with strings
+ */
+export const vEnumWithStringsWritable = v.picklist([
+    'Success',
+    'Warning',
+    'Error',
+    "'Single Quote'",
+    '"Double Quotes"',
+    'Non-ascii: øæåôöØÆÅÔÖ字符串'
+]);
+
+/**
+ * This is a simple enum with numbers
+ */
+export const vEnumWithNumbersWritable = v.unknown();
+
+/**
+ * Success=1,Warning=2,Error=3
+ */
+export const vEnumFromDescriptionWritable = v.number();
+
+/**
+ * This is a simple enum with numbers
+ */
+export const vEnumWithExtensionsWritable = v.unknown();
+
+/**
+ * This is a simple array with numbers
+ */
+export const vArrayWithNumbersWritable = v.array(v.pipe(v.number(), v.integer()));
+
+/**
+ * This is a simple array with booleans
+ */
+export const vArrayWithBooleansWritable = v.array(v.boolean());
+
+/**
+ * This is a simple array with strings
+ */
+export const vArrayWithStringsWritable = v.array(v.string());
+
+/**
+ * This is a string dictionary
+ */
+export const vDictionaryWithStringWritable = v.object({});
+
+/**
+ * This is a string dictionary
+ */
+export const vDictionaryWithDictionaryWritable = v.record(v.string(), v.object({}));
+
+/**
+ * This is a type-only model that defines Date as a string
+ */
+export const vDateWritable = v.string();
+
+/**
+ * This is a model with one nested property
+ */
+export const vModelWithPropertiesWritable = v.object({
+    required: v.string(),
+    string: v.optional(v.string()),
+    number: v.optional(v.number()),
+    boolean: v.optional(v.boolean()),
+    reference: v.optional(vModelWithString),
+    'property with space': v.optional(v.string()),
+    default: v.optional(v.string()),
+    try: v.optional(v.string())
+});
+
+/**
+ * This is a model with one property containing a reference
+ */
+export const vModelWithReferenceWritable = v.object({
+    prop: v.optional(vModelWithPropertiesWritable)
+});
+
+/**
+ * This is a model that contains a some patterns
+ */
+export const vModelWithPatternWritable = v.object({
+    key: v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)),
+    name: v.pipe(v.string(), v.maxLength(255)),
+    id: v.optional(v.pipe(v.string(), v.regex(/^\d{2}-\d{3}-\d{4}$/))),
+    text: v.optional(v.pipe(v.string(), v.regex(/^\w+$/))),
+    patternWithSingleQuotes: v.optional(v.pipe(v.string(), v.regex(/^[a-zA-Z0-9']*$/))),
+    patternWithNewline: v.optional(v.pipe(v.string(), v.regex(/aaa\nbbb/))),
+    patternWithBacktick: v.optional(v.pipe(v.string(), v.regex(/aaa`bbb/)))
+});
+
 export const vServiceWithEmptyTagData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),

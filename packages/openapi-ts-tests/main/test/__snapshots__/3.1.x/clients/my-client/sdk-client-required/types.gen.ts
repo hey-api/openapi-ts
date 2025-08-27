@@ -1103,6 +1103,13 @@ export type DictionaryWithDictionaryWritable = {
 export type ModelFromZendeskWritable = string;
 
 /**
+ * This is a model with one property containing a reference
+ */
+export type ModelWithReferenceWritable = {
+    prop?: ModelWithPropertiesWritable;
+};
+
+/**
  * This is a model with one property containing an array
  */
 export type ModelWithArrayReadOnlyAndWriteOnlyWritable = {
@@ -1114,6 +1121,41 @@ export type ModelWithArrayReadOnlyAndWriteOnlyWritable = {
 export type _3eNum1ПериодWritable = 'Bird' | 'Dog';
 
 export type ConstValueWritable = 'ConstValue';
+
+/**
+ * This is a model with one nested property
+ */
+export type ModelWithPropertiesWritable = {
+    required: string;
+    requiredAndNullable: string | null;
+    string?: string;
+    number?: number;
+    boolean?: boolean;
+    reference?: ModelWithString;
+    'property with space'?: string;
+    default?: string;
+    try?: string;
+};
+
+/**
+ * This is a model that contains a some patterns
+ */
+export type ModelWithPatternWritable = {
+    key: string;
+    name: string;
+    id?: string;
+    text?: string;
+    patternWithSingleQuotes?: string;
+    patternWithNewline?: string;
+    patternWithBacktick?: string;
+};
+
+export type FileWritable = {
+    /**
+     * Mime
+     */
+    mime: string;
+};
 
 /**
  * This is a free-form object without additionalProperties.
@@ -1216,6 +1258,19 @@ export type AdditionalPropertiesUnknownIssue2Writable = {
 };
 
 export type OneOfAllOfIssueWritable = ((ConstValueWritable | GenericSchemaDuplicateIssue1SystemBoolean) & _3eNum1Период) | GenericSchemaDuplicateIssue1SystemString;
+
+export type GenericSchemaDuplicateIssue1SystemBooleanWritable = {
+    item?: boolean;
+    error?: string | null;
+    data?: {
+        [key: string]: never;
+    };
+};
+
+export type GenericSchemaDuplicateIssue1SystemStringWritable = {
+    item?: string | null;
+    error?: string | null;
+};
 
 /**
  * This is a reusable parameter

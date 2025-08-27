@@ -1210,6 +1210,31 @@ export const zDictionaryWithDictionaryWritable = z.record(z.string(), z.record(z
  */
 export const zModelFromZendeskWritable = z.string();
 
+/**
+ * This is a model with one nested property
+ */
+export const zModelWithPropertiesWritable = z.object({
+    required: z.string(),
+    requiredAndNullable: z.union([
+        z.string(),
+        z.null()
+    ]),
+    string: z.optional(z.string()),
+    number: z.optional(z.number()),
+    boolean: z.optional(z.boolean()),
+    reference: z.optional(zModelWithString),
+    'property with space': z.optional(z.string()),
+    default: z.optional(z.string()),
+    try: z.optional(z.string())
+});
+
+/**
+ * This is a model with one property containing a reference
+ */
+export const zModelWithReferenceWritable = z.object({
+    prop: z.optional(zModelWithPropertiesWritable)
+});
+
 export const zModelWithReadOnlyAndWriteOnlyWritable = z.object({
     foo: z.string(),
     baz: z.string()
@@ -1230,6 +1255,23 @@ export const z3eNum1ПериодWritable = z.enum([
 ]);
 
 export const zConstValueWritable = z.literal('ConstValue');
+
+/**
+ * This is a model that contains a some patterns
+ */
+export const zModelWithPatternWritable = z.object({
+    key: z.string().max(64).regex(/^[a-zA-Z0-9_]*$/),
+    name: z.string().max(255),
+    id: z.optional(z.string().regex(/^\d{2}-\d{3}-\d{4}$/)),
+    text: z.optional(z.string().regex(/^\w+$/)),
+    patternWithSingleQuotes: z.optional(z.string().regex(/^[a-zA-Z0-9']*$/)),
+    patternWithNewline: z.optional(z.string().regex(/aaa\nbbb/)),
+    patternWithBacktick: z.optional(z.string().regex(/aaa`bbb/))
+});
+
+export const zFileWritable = z.object({
+    mime: z.string().min(1).max(24)
+});
 
 /**
  * This is a free-form object without additionalProperties.
@@ -1362,6 +1404,26 @@ export const zOneOfAllOfIssueWritable = z.union([
     ]), z3eNum1Период),
     zGenericSchemaDuplicateIssue1SystemString
 ]);
+
+export const zGenericSchemaDuplicateIssue1SystemBooleanWritable = z.object({
+    item: z.optional(z.boolean()),
+    error: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    data: z.optional(z.record(z.string(), z.never()))
+});
+
+export const zGenericSchemaDuplicateIssue1SystemStringWritable = z.object({
+    item: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    error: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
 
 /**
  * Parameter with illegal characters
