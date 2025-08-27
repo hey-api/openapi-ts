@@ -406,6 +406,164 @@ export type FailureFailure = {
     reference_code?: string;
 };
 
+/**
+ * Testing multiline comments in string: First line
+ * Second line
+ *
+ * Fourth line
+ */
+export type CommentWithBreaksWritable = number;
+
+/**
+ * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+ */
+export type CommentWithBackticksWritable = number;
+
+/**
+ * Testing backticks and quotes in string: `backticks`, 'quotes', "double quotes" and ```multiple backticks``` should work
+ */
+export type CommentWithBackticksAndQuotesWritable = number;
+
+/**
+ * Testing slashes in string: \backwards\\\ and /forwards/// should work
+ */
+export type CommentWithSlashesWritable = number;
+
+/**
+ * Testing expression placeholders in string: ${expression} should work
+ */
+export type CommentWithExpressionPlaceholdersWritable = number;
+
+/**
+ * Testing quotes in string: 'single quote''' and "double quotes""" should work
+ */
+export type CommentWithQuotesWritable = number;
+
+/**
+ * Testing reserved characters in string: * inline * and ** inline ** should work
+ */
+export type CommentWithReservedCharactersWritable = number;
+
+/**
+ * This is a simple number
+ */
+export type SimpleIntegerWritable = number;
+
+/**
+ * This is a simple boolean
+ */
+export type SimpleBooleanWritable = boolean;
+
+/**
+ * This is a simple string
+ */
+export type SimpleStringWritable = string;
+
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
+export type NonAsciiStringæøåÆøÅöôêÊ字符串Writable = string;
+
+/**
+ * This is a simple file
+ */
+export type SimpleFileWritable = Blob | File;
+
+/**
+ * This is a simple string
+ */
+export type SimpleStringWithPatternWritable = string;
+
+/**
+ * This is a simple enum with strings
+ */
+export type EnumWithStringsWritable = 'Success' | 'Warning' | 'Error' | "'Single Quote'" | '"Double Quotes"' | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
+
+/**
+ * This is a simple enum with numbers
+ */
+export type EnumWithNumbersWritable = 1 | 2 | 3 | 1.1 | 1.2 | 1.3 | 100 | 200 | 300 | -100 | -200 | -300 | -1.1 | -1.2 | -1.3;
+
+/**
+ * Success=1,Warning=2,Error=3
+ */
+export type EnumFromDescriptionWritable = number;
+
+/**
+ * This is a simple enum with numbers
+ */
+export type EnumWithExtensionsWritable = 200 | 400 | 500;
+
+/**
+ * This is a simple array with numbers
+ */
+export type ArrayWithNumbersWritable = Array<number>;
+
+/**
+ * This is a simple array with booleans
+ */
+export type ArrayWithBooleansWritable = Array<boolean>;
+
+/**
+ * This is a simple array with strings
+ */
+export type ArrayWithStringsWritable = Array<string>;
+
+/**
+ * This is a string dictionary
+ */
+export type DictionaryWithStringWritable = {
+    [key: string]: string;
+};
+
+/**
+ * This is a string dictionary
+ */
+export type DictionaryWithDictionaryWritable = {
+    [key: string]: {
+        [key: string]: string;
+    };
+};
+
+/**
+ * This is a type-only model that defines Date as a string
+ */
+export type DateWritable = string;
+
+/**
+ * This is a model with one property containing a reference
+ */
+export type ModelWithReferenceWritable = {
+    prop?: ModelWithPropertiesWritable;
+};
+
+/**
+ * This is a model with one nested property
+ */
+export type ModelWithPropertiesWritable = {
+    required: string;
+    string?: string;
+    number?: number;
+    boolean?: boolean;
+    reference?: ModelWithString;
+    'property with space'?: string;
+    default?: string;
+    try?: string;
+};
+
+/**
+ * This is a model that contains a some patterns
+ */
+export type ModelWithPatternWritable = {
+    key: string;
+    name: string;
+    id?: string;
+    text?: string;
+    patternWithSingleQuotes?: string;
+    patternWithNewline?: string;
+    patternWithBacktick?: string;
+};
+
 export type ServiceWithEmptyTagData = {
     body?: never;
     path?: never;

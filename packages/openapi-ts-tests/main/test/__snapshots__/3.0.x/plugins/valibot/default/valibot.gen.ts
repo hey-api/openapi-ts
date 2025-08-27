@@ -1210,6 +1210,31 @@ export const vDictionaryWithDictionaryWritable = v.record(v.string(), v.object({
  */
 export const vModelFromZendeskWritable = v.string();
 
+/**
+ * This is a model with one nested property
+ */
+export const vModelWithPropertiesWritable = v.object({
+    required: v.string(),
+    requiredAndNullable: v.union([
+        v.string(),
+        v.null()
+    ]),
+    string: v.optional(v.string()),
+    number: v.optional(v.number()),
+    boolean: v.optional(v.boolean()),
+    reference: v.optional(vModelWithString),
+    'property with space': v.optional(v.string()),
+    default: v.optional(v.string()),
+    try: v.optional(v.string())
+});
+
+/**
+ * This is a model with one property containing a reference
+ */
+export const vModelWithReferenceWritable = v.object({
+    prop: v.optional(vModelWithPropertiesWritable)
+});
+
 export const vModelWithReadOnlyAndWriteOnlyWritable = v.object({
     foo: v.string(),
     baz: v.string()
@@ -1232,6 +1257,23 @@ export const v3eNum1ПериодWritable = v.picklist([
 export const vConstValueWritable = v.picklist([
     'ConstValue'
 ]);
+
+/**
+ * This is a model that contains a some patterns
+ */
+export const vModelWithPatternWritable = v.object({
+    key: v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)),
+    name: v.pipe(v.string(), v.maxLength(255)),
+    id: v.optional(v.pipe(v.string(), v.regex(/^\d{2}-\d{3}-\d{4}$/))),
+    text: v.optional(v.pipe(v.string(), v.regex(/^\w+$/))),
+    patternWithSingleQuotes: v.optional(v.pipe(v.string(), v.regex(/^[a-zA-Z0-9']*$/))),
+    patternWithNewline: v.optional(v.pipe(v.string(), v.regex(/aaa\nbbb/))),
+    patternWithBacktick: v.optional(v.pipe(v.string(), v.regex(/aaa`bbb/)))
+});
+
+export const vFileWritable = v.object({
+    mime: v.pipe(v.string(), v.minLength(1), v.maxLength(24))
+});
 
 /**
  * This is a free-form object without additionalProperties.
@@ -1367,6 +1409,26 @@ export const vOneOfAllOfIssueWritable = v.union([
     ]),
     vGenericSchemaDuplicateIssue1SystemString
 ]);
+
+export const vGenericSchemaDuplicateIssue1SystemBooleanWritable = v.object({
+    item: v.optional(v.boolean()),
+    error: v.optional(v.union([
+        v.string(),
+        v.null()
+    ])),
+    data: v.optional(v.object({}))
+});
+
+export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.object({
+    item: v.optional(v.union([
+        v.string(),
+        v.null()
+    ])),
+    error: v.optional(v.union([
+        v.string(),
+        v.null()
+    ]))
+});
 
 /**
  * Parameter with illegal characters
