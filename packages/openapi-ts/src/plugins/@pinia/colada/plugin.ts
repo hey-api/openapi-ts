@@ -1,11 +1,12 @@
 import type { GeneratedFile } from '../../../generate/file';
 import { tsc } from '../../../tsc';
 import { stringCase } from '../../../utils/stringCase';
+import { clientId } from '../../@hey-api/client-core/utils';
 import { sdkId } from '../../@hey-api/sdk/constants';
 import { operationClasses } from '../../@hey-api/sdk/operation';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
-import { createMutationOptions } from './mutation';
-import { createQueryOptions } from './query';
+import { createMutationOptions } from './mutationOptions';
+import { createQueryOptions } from './queryOptions';
 import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
 import { getFileForOperation } from './utils';
@@ -75,11 +76,23 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
 
     if (state.hasUsedQueryFn) {
       file.import({
+        module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
+        name: queryFn.split('.')[0]!,
+      });
+    }
+  });
+
+  files.forEach((file, fileId) => {
+    const state = states.get(fileId)!;
+
+    if (state.hasQueries) {
+      file.import({
+        alias: '_heyApiClient',
         module: file.relativePathToFile({
           context: plugin.context,
-          id: sdkId,
+          id: clientId,
         }),
-        name: queryFn.split('.')[0]!,
+        name: 'client',
       });
     }
   });

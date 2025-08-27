@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="Two people looking at the blueprint" src="https://heyapi.dev/images/blueprint-640w.png" width="320">
+  <img alt="Two people looking at the blueprint" height="214" src="https://heyapi.dev/images/blueprint-640w.png" width="320">
   <h1 align="center"><b>OpenAPI TypeScript</b></h1>
   <p align="center">🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.</p>
 </div>
