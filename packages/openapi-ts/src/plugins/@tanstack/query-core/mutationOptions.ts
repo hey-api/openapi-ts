@@ -54,6 +54,8 @@ export const createMutationOptions = ({
   // TODO: better types syntax
   const mutationType = `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`;
 
+  const fnOptions = 'fnOptions';
+
   const awaitSdkExpression = tsc.awaitExpression({
     expression: tsc.callExpression({
       functionName: queryFn,
@@ -65,7 +67,7 @@ export const createMutationOptions = ({
               spread: 'options',
             },
             {
-              spread: 'localOptions',
+              spread: fnOptions,
             },
             {
               key: 'throwOnError',
@@ -115,7 +117,7 @@ export const createMutationOptions = ({
         multiLine: true,
         parameters: [
           {
-            name: 'localOptions',
+            name: fnOptions,
           },
         ],
         statements,

@@ -275,7 +275,7 @@ const createQueryKeyLiteral = ({
       isInfinite || tagsExpression
         ? tsc.ots.boolean(Boolean(isInfinite))
         : undefined,
-      tagsExpression ? tagsExpression : undefined,
+      tagsExpression,
     ],
   });
   return createQueryKeyCallExpression;

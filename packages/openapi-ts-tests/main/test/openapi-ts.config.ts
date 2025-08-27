@@ -294,10 +294,14 @@ export default defineConfig(() => {
         // name: '@angular/common',
       },
       {
-        mutationOptions: '{{name}}Mutationssss',
+        // groupByTag: true,
+        // mutationOptions: '{{name}}Mutationssss',
         name: '@pinia/colada',
-        queryOptions: {
-          name: '{{name}}Queryyyyy',
+        // queryOptions: {
+        //   name: '{{name}}Queryyyyy',
+        // },
+        queryKeys: {
+          tags: true,
         },
         '~hooks': {
           operations: {

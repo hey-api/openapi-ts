@@ -59,10 +59,10 @@ export const getFooOptions = (options?: Options<GetFooData>) => {
 
 export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> => {
     const mutationOptions: UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> = {
-        mutationFn: async (localOptions) => {
+        mutationFn: async (fnOptions) => {
             const { data } = await FooBazService.fooService.post({
                 ...options,
-                ...localOptions,
+                ...fnOptions,
                 throwOnError: true
             });
             return data;
@@ -73,10 +73,10 @@ export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMut
 
 export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutationOptions<FooPutResponse, DefaultError, Options<FooPutData>> => {
     const mutationOptions: UseMutationOptions<FooPutResponse, DefaultError, Options<FooPutData>> = {
-        mutationFn: async (localOptions) => {
+        mutationFn: async (fnOptions) => {
             const { data } = await FooBazService.fooService.put({
                 ...options,
-                ...localOptions,
+                ...fnOptions,
                 throwOnError: true
             });
             return data;
@@ -104,10 +104,10 @@ export const getFooBarOptions = (options?: Options<GetFooBarData>) => {
 
 export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): UseMutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> => {
     const mutationOptions: UseMutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> = {
-        mutationFn: async (localOptions) => {
+        mutationFn: async (fnOptions) => {
             const { data } = await FooBazService.fooService.barService.post({
                 ...options,
-                ...localOptions,
+                ...fnOptions,
                 throwOnError: true
             });
             return data;
@@ -118,10 +118,10 @@ export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): 
 
 export const fooBarPutMutation = (options?: Partial<Options<FooBarPutData>>): UseMutationOptions<FooBarPutResponse, DefaultError, Options<FooBarPutData>> => {
     const mutationOptions: UseMutationOptions<FooBarPutResponse, DefaultError, Options<FooBarPutData>> = {
-        mutationFn: async (localOptions) => {
+        mutationFn: async (fnOptions) => {
             const { data } = await FooBazService.fooService.barService.put({
                 ...options,
-                ...localOptions,
+                ...fnOptions,
                 throwOnError: true
             });
             return data;

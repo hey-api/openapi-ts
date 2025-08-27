@@ -28,6 +28,21 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
       value: plugin.config.mutationOptions,
     });
 
+    plugin.config.queryKeys = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: '{{name}}QueryKey',
+        tags: false,
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.queryKeys,
+    });
+
     plugin.config.queryOptions = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',

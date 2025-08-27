@@ -13,6 +13,11 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
     /**
      * Add comments from SDK functions to the generated TanStack Query code?
      *
+     * Duplicating comments this way is useful so you don't need to drill into
+     * the underlying SDK function to learn what it does or whether it's
+     * deprecated. You can set this option to `false` if you prefer less
+     * comment duplication.
+     *
      * @default true
      */
     comments?: boolean;
