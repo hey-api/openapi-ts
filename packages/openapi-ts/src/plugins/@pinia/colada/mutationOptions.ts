@@ -10,7 +10,9 @@ import {
 import { handleMeta } from './meta';
 import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
-import { useTypeData } from './utils';
+import { useTypeData, useTypeError, useTypeResponse } from './utils';
+
+const mutationOptionsType = 'UseMutationOptions';
 
 export const createMutationOptions = ({
   file,
@@ -34,11 +36,19 @@ export const createMutationOptions = ({
 
   if (!state.hasMutations) {
     state.hasMutations = true;
+
+    file.import({
+      asType: true,
+      module: plugin.name,
+      name: mutationOptionsType,
+    });
   }
 
   state.hasUsedQueryFn = true;
 
   const typeData = useTypeData({ file, operation, plugin });
+  const typeError = useTypeError({ file, operation, plugin });
+  const typeResponse = useTypeResponse({ file, operation, plugin });
 
   const identifierMutationOptions = file.identifier({
     $ref: `#/pinia-colada-mutation-options/${operation.id}`,
@@ -48,10 +58,28 @@ export const createMutationOptions = ({
     namespace: 'value',
   });
 
+  const fnOptions = 'fnOptions';
+
   const awaitSdkExpression = tsc.awaitExpression({
     expression: tsc.callExpression({
       functionName: queryFn,
-      parameters: ['options'],
+      parameters: [
+        tsc.objectExpression({
+          multiLine: true,
+          obj: [
+            {
+              spread: 'options',
+            },
+            {
+              spread: fnOptions,
+            },
+            {
+              key: 'throwOnError',
+              value: true,
+            },
+          ],
+        }),
+      ],
     }),
   });
 
@@ -84,8 +112,7 @@ export const createMutationOptions = ({
         multiLine: true,
         parameters: [
           {
-            name: 'options',
-            type: typeData,
+            name: fnOptions,
           },
         ],
         statements,
@@ -120,6 +147,8 @@ export const createMutationOptions = ({
           type: typeData,
         },
       ],
+      // TODO: better types syntax
+      returnType: `${mutationOptionsType}<${typeResponse}, ${typeData}, ${typeError.name}>`,
       statements: [
         tsc.returnStatement({
           expression: tsc.objectExpression({

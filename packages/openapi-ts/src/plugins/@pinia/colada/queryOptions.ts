@@ -8,9 +8,17 @@ import {
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
+import {
+  createQueryKeyFunction,
+  createQueryKeyType,
+  queryKeyStatement,
+} from './queryKey';
 import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
-import { useTypeData } from './utils';
+import { useTypeData, useTypeError, useTypeResponse } from './utils';
+
+const queryOptionsType = 'UseQueryOptions';
+const optionsParamName = 'options';
 
 export const createQueryOptions = ({
   file,
@@ -39,17 +47,48 @@ export const createQueryOptions = ({
 
   if (!state.hasQueries) {
     state.hasQueries = true;
+
+    if (!state.hasCreateQueryKeyParamsFunction) {
+      createQueryKeyType({ file, plugin });
+      createQueryKeyFunction({ file, plugin });
+      state.hasCreateQueryKeyParamsFunction = true;
+    }
+
+    file.import({
+      asType: true,
+      module: plugin.name,
+      name: queryOptionsType,
+    });
   }
 
   state.hasUsedQueryFn = true;
 
+  const node = queryKeyStatement({
+    file,
+    operation,
+    plugin,
+  });
+  file.add(node);
+
   const typeData = useTypeData({ file, operation, plugin });
+  const typeError = useTypeError({ file, operation, plugin });
+  const typeResponse = useTypeResponse({ file, operation, plugin });
 
   const identifierQueryOptions = file.identifier({
     $ref: `#/pinia-colada-query-options/${operation.id}`,
     case: plugin.config.queryOptions.case,
     create: true,
     nameTransformer: plugin.config.queryOptions.name,
+    namespace: 'value',
+  });
+
+  const fnOptions = 'context';
+
+  const identifierQueryKey = file.identifier({
+    // TODO: refactor for better cross-plugin compatibility
+    $ref: `#/pinia-colada-query-key/${operation.id}`,
+    case: plugin.config.queryKeys.case,
+    nameTransformer: plugin.config.queryKeys.name,
     namespace: 'value',
   });
 
@@ -61,13 +100,10 @@ export const createQueryOptions = ({
           multiLine: true,
           obj: [
             {
-              spread: 'options',
+              spread: optionsParamName,
             },
             {
-              key: 'signal',
-              value: tsc.identifier({
-                text: 'context.signal',
-              }),
+              spread: fnOptions,
             },
             {
               key: 'throwOnError',
@@ -103,11 +139,9 @@ export const createQueryOptions = ({
   const queryOptionsObj: Array<{ key: string; value: ts.Expression }> = [
     {
       key: 'key',
-      value: tsc.arrayLiteralExpression({
-        elements: [
-          tsc.stringLiteral({ text: operation.id || '' }),
-          tsc.identifier({ text: 'options?.path' }),
-        ],
+      value: tsc.callExpression({
+        functionName: identifierQueryKey.name || '',
+        parameters: [optionsParamName],
       }),
     },
     {
@@ -117,10 +151,7 @@ export const createQueryOptions = ({
         multiLine: true,
         parameters: [
           {
-            name: 'context',
-            type: tsc.typeReferenceNode({
-              typeName: '{ signal: AbortSignal }',
-            }),
+            name: fnOptions,
           },
         ],
         statements,
@@ -146,10 +177,12 @@ export const createQueryOptions = ({
       parameters: [
         {
           isRequired: isRequiredOptions,
-          name: 'options',
+          name: optionsParamName,
           type: typeData,
         },
       ],
+      // TODO: better types syntax
+      returnType: `${queryOptionsType}<${typeResponse}, ${typeError.name}>`,
       statements: [
         tsc.returnStatement({
           expression: tsc.objectExpression({

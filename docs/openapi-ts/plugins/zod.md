@@ -24,6 +24,7 @@ The Zod plugin for Hey API generates schemas from your OpenAPI spec, fully compa
 - Zod v4 support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - Zod schemas for requests, responses, and reusable definitions
+- minimal learning curve thanks to extending the underlying technology
 
 ## Installation
 
