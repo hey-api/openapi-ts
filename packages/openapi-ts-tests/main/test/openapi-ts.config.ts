@@ -36,8 +36,8 @@ export default defineConfig(() => {
         '3.1.x',
         // 'invalid',
         // 'openai.yaml',
-        'full.yaml',
-        // 'opencode.yaml',
+        // 'full.yaml',
+        'opencode.yaml',
         // 'zoom-video-sdk.json',
       ),
       // https://registry.scalar.com/@lubos-heyapi-dev-team/apis/demo-api-scalar-galaxy/latest?format=json

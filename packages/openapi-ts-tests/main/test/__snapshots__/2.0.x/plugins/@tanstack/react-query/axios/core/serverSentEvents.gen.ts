@@ -8,6 +8,17 @@ export type ServerSentEventsOptions<TData = unknown> = Omit<
 > &
   Pick<Config, 'method' | 'responseTransformer' | 'responseValidator'> & {
     /**
+     * Fetch API implementation. You can use this option to provide a custom
+     * fetch instance.
+     *
+     * @default globalThis.fetch
+     */
+    fetch?: typeof fetch;
+    /**
+     * Implementing clients can call request interceptors inside this hook.
+     */
+    onRequest?: (url: string, init: RequestInit) => Promise<Request>;
+    /**
      * Callback invoked when a network or parsing error occurs during streaming.
      *
      * This option applies only if the endpoint returns a stream of events.
@@ -24,6 +35,7 @@ export type ServerSentEventsOptions<TData = unknown> = Omit<
      * @returns Nothing (void).
      */
     onSseEvent?: (event: StreamEvent<TData>) => void;
+    serializedBody?: RequestInit['body'];
     /**
      * Default retry delay in milliseconds.
      *
@@ -75,6 +87,7 @@ export type ServerSentEventsResult<
 };
 
 export const createSseClient = <TData = unknown>({
+  onRequest,
   onSseError,
   onSseEvent,
   responseTransformer,
@@ -112,7 +125,21 @@ export const createSseClient = <TData = unknown>({
       }
 
       try {
-        const response = await fetch(url, { ...options, headers, signal });
+        const requestInit: RequestInit = {
+          redirect: 'follow',
+          ...options,
+          body: options.serializedBody,
+          headers,
+          signal,
+        };
+        let request = new Request(url, requestInit);
+        if (onRequest) {
+          request = await onRequest(url, requestInit);
+        }
+        // fetch must be assigned here, otherwise it would throw the error:
+        // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
+        const _fetch = options.fetch ?? globalThis.fetch;
+        const response = await _fetch(request);
 
         if (!response.ok)
           throw new Error(
