@@ -256,9 +256,15 @@ interface IRSchemaObject
    */
   logicalOperator?: 'and' | 'or';
   /**
+   * When type is `object`, `patternProperties` can be used to define a schema
+   * for properties that match a specific regex pattern.
+   */
+  patternProperties?: Record<string, IRSchemaObject>;
+  /**
    * When type is `object`, `properties` will contain a map of its properties.
    */
   properties?: Record<string, IRSchemaObject>;
+
   /**
    * The names of `properties` can be validated against a schema, irrespective
    * of their values. This can be useful if you don't want to enforce specific

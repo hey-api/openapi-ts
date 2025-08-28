@@ -11,28 +11,21 @@ export default defineConfig({
     [
       'link',
       {
-        href: '/images/logo-16w.png',
+        href: '/logo-dark.svg',
+        media: '(prefers-color-scheme: dark)',
         rel: 'icon',
         sizes: '16x16',
-        type: 'image/png',
+        type: 'image/svg',
       },
     ],
     [
       'link',
       {
-        href: '/images/logo-32w.png',
+        href: '/logo-light.svg',
+        media: '(prefers-color-scheme: light)',
         rel: 'icon',
-        sizes: '32x32',
-        type: 'image/png',
-      },
-    ],
-    [
-      'link',
-      {
-        href: '/images/logo-48w.png',
-        rel: 'icon',
-        sizes: '48x48',
-        type: 'image/png',
+        sizes: '16x16',
+        type: 'image/svg',
       },
     ],
     process.env.NODE_ENV === 'production' && [
@@ -54,7 +47,11 @@ export default defineConfig({
   },
   themeConfig: {
     externalLinkIcon: true,
-    logo: '/images/logo-48w.png',
+    logo: {
+      alt: 'Hey API logo',
+      dark: '/logo-dark.svg',
+      light: '/logo-light.svg',
+    },
     search: {
       options: {
         apiKey: '2565c35b4ad91c2f8f8ae32cf9bbe899',

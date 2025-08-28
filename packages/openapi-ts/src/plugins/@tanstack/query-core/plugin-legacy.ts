@@ -1224,6 +1224,8 @@ export const handlerLegacy = ({
           typesModulePath,
         });
 
+        const fnOptions = 'fnOptions';
+
         const expression = tsc.arrowFunction({
           parameters: [
             {
@@ -1243,7 +1245,7 @@ export const handlerLegacy = ({
                       multiLine: true,
                       parameters: [
                         {
-                          name: 'localOptions',
+                          name: fnOptions,
                         },
                       ],
                       statements: [
@@ -1260,7 +1262,7 @@ export const handlerLegacy = ({
                                       spread: 'options',
                                     },
                                     {
-                                      spread: 'localOptions',
+                                      spread: fnOptions,
                                     },
                                     {
                                       key: 'throwOnError',

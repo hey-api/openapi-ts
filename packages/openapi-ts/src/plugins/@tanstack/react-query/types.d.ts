@@ -12,6 +12,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
     case?: StringCase;
     /**
      * Add comments from SDK functions to the generated TanStack Query code?
+     *
      * Duplicating comments this way is useful so you don't need to drill into
      * the underlying SDK function to learn what it does or whether it's
      * deprecated. You can set this option to `false` if you prefer less
@@ -497,7 +498,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
     /**
      * Resolved configuration for generated query options helpers.
      *
-     * @see https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions TanStack Query: queryOptions}
      */
     queryOptions: {
       /**

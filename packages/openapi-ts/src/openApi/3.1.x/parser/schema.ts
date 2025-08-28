@@ -295,7 +295,9 @@ const parseObject = ({
     const isEmptyObjectInAllOf =
       state.inAllOf &&
       schema.additionalProperties === false &&
-      (!schema.properties || Object.keys(schema.properties).length === 0);
+      (!schema.properties || Object.keys(schema.properties).length === 0) &&
+      (!schema.patternProperties ||
+        Object.keys(schema.patternProperties).length === 0);
 
     if (!isEmptyObjectInAllOf) {
       irSchema.additionalProperties = {
@@ -309,6 +311,24 @@ const parseObject = ({
       state,
     });
     irSchema.additionalProperties = irAdditionalPropertiesSchema;
+  }
+
+  if (schema.patternProperties) {
+    const patternProperties: Record<string, IR.SchemaObject> = {};
+
+    for (const pattern in schema.patternProperties) {
+      const patternSchema = schema.patternProperties[pattern]!;
+      const irPatternSchema = schemaToIrSchema({
+        context,
+        schema: patternSchema,
+        state,
+      });
+      patternProperties[pattern] = irPatternSchema;
+    }
+
+    if (Object.keys(patternProperties).length) {
+      irSchema.patternProperties = patternProperties;
+    }
   }
 
   if (schema.propertyNames) {
