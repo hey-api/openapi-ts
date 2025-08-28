@@ -513,6 +513,8 @@ export const updateRefsInSpec = ({
       let nextPointer = currentPointer;
       let nextContext = context;
       if (isPathRootSchema(path)) {
+        // Use the last path segment instead of a fixed index (path[2]) because
+        // path depth varies across OAS2/OAS3 and contexts; fixed indexing is brittle.
         const nameSegment = path[path.length - 1] as string;
         nextPointer = `${schemasPointerNamespace}${nameSegment}`;
         const originalPointer = split.reverseMapping[nextPointer];
@@ -628,7 +630,38 @@ export const updateRefsInSpec = ({
             path: [...path, key],
           });
         } else if (key === '$ref' && typeof value === 'string') {
+          // Prefer exact match first
           const map = split.mapping[value];
+          // if (!map && value.startsWith(schemasPointerNamespace)) {
+          //   // Handle nested refs like '#/components/schemas/Foo/properties/Bar'
+          //   // by remapping the base schema pointer and preserving the suffix.
+          //   const path = jsonPointerToPath(value);
+          //   // schemasPointerNamespace ends with trailing '/', so its segments length is:
+          //   const baseSegments = schemasPointerNamespace
+          //     .split('/')
+          //     .filter(Boolean).length;
+          //   if (path.length > baseSegments) {
+          //     const baseSchemaName = path[baseSegments - 1];
+          //     const baseOriginalPointer = `${schemasPointerNamespace}${baseSchemaName}`;
+          //     map = split.mapping[baseOriginalPointer];
+          //     if (map) {
+          //       const suffixSegments = path.slice(baseSegments);
+          //       const suffix = suffixSegments.length
+          //         ? `/${suffixSegments.join('/')}`
+          //         : '';
+          //       if (map.read && (!nextContext || nextContext === 'read')) {
+          //         (node as Record<string, unknown>)[key] =
+          //           `${map.read}${suffix}`;
+          //       } else if (
+          //         map.write &&
+          //         (!nextContext || nextContext === 'write')
+          //       ) {
+          //         (node as Record<string, unknown>)[key] =
+          //           `${map.write}${suffix}`;
+          //       }
+          //     }
+          //   }
+          // } else
           if (map) {
             if (map.read && (!nextContext || nextContext === 'read')) {
               (node as Record<string, unknown>)[key] = map.read;
