@@ -5,6 +5,25 @@ export const _400Schema = {
     type: 'string'
 } as const;
 
+export const ExternalRefASchema = {
+    description: 'External ref to shared model (A)',
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string'
+        },
+        name: {
+            type: 'string'
+        }
+    },
+    required: ['id']
+} as const;
+
+export const ExternalRefBSchema = {
+    description: 'External ref to shared model (B)',
+    '$ref': '#/components/schemas/ExternalRefA'
+} as const;
+
 export const camelCaseCommentWithBreaksSchema = {
     description: `Testing multiline comments in string: First line
 Second line
