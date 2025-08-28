@@ -224,6 +224,15 @@ export const createClient = (config: Config = {}): Client => {
         body: opts.body as BodyInit | null | undefined,
         headers: opts.headers as unknown as Record<string, string>,
         method,
+        onRequest: async (url, init) => {
+          let request = new Request(url, init);
+          for (const fn of interceptors.request._fns) {
+            if (fn) {
+              request = await fn(request, opts);
+            }
+          }
+          return request;
+        },
         url,
       });
     };

@@ -3,5 +3,11 @@ packages:
   - examples/**/*
   - packages/**/*
 
+onlyBuiltDependencies:
+  - esbuild
+  - lmdb
+  - sharp
+  - unrs-resolver
+
 patchedDependencies:
   vitepress: patches/vitepress.patch

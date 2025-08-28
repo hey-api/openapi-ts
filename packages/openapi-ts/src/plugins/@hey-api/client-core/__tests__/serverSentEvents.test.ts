@@ -16,6 +16,17 @@ function makeStream(chunks: string[]) {
   });
 }
 
+function toRequest(input: RequestInfo, init?: RequestInit): Request {
+  if (input instanceof Request) {
+    const url = input.url.startsWith('http')
+      ? input.url
+      : `http://localhost${input.url}`;
+    return new Request(url, input);
+  }
+  const url = input.startsWith('http') ? input : `http://localhost${input}`;
+  return new Request(url, init);
+}
+
 describe('createSseClient', () => {
   let fetchMock: any;
 
@@ -35,7 +46,10 @@ describe('createSseClient', () => {
     });
 
     const onEvent = vi.fn();
-    const { stream } = createSseClient({ onSseEvent: onEvent, url: '/sse' });
+    const { stream } = createSseClient({
+      onSseEvent: onEvent,
+      url: 'http://localhost/sse',
+    });
 
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
@@ -55,7 +69,7 @@ describe('createSseClient', () => {
       ok: true,
     });
 
-    const { stream } = createSseClient({ url: '/sse' });
+    const { stream } = createSseClient({ url: 'http://localhost/sse' });
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
 
@@ -76,7 +90,7 @@ describe('createSseClient', () => {
       onSseError: onError,
       signal: controller.signal,
       sseDefaultRetryDelay: 0,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     const iter = stream[Symbol.asyncIterator]();
@@ -97,7 +111,10 @@ describe('createSseClient', () => {
     });
 
     const onEvent = vi.fn();
-    const { stream } = createSseClient({ onSseEvent: onEvent, url: '/sse' });
+    const { stream } = createSseClient({
+      onSseEvent: onEvent,
+      url: 'http://localhost/sse',
+    });
 
     const iter = stream[Symbol.asyncIterator]();
     await iter.next();
@@ -117,7 +134,7 @@ describe('createSseClient', () => {
       ok: true,
     });
 
-    const { stream } = createSseClient({ url: '/sse' });
+    const { stream } = createSseClient({ url: 'http://localhost/sse' });
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
     expect(result).toEqual([1, 2, 3]);
@@ -129,31 +146,39 @@ describe('createSseClient', () => {
       ok: true,
     });
 
-    const { stream } = createSseClient({ url: '/sse' });
+    const { stream } = createSseClient({ url: 'http://localhost/sse' });
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
     expect(result).toEqual(['partial']);
   });
 
   it('sets Last-Event-ID header on reconnect', async () => {
-    let headersSeen: Headers | undefined;
-    fetchMock.mockImplementation(async (_url: any, opts: any) => {
-      headersSeen = opts?.headers.get('Last-Event-ID');
-      return {
-        body: makeStream(['data: a\n\n']),
-        ok: true,
-      };
-    });
+    let headersSeen: string | null | undefined;
+    fetchMock.mockImplementation(
+      async (input: RequestInfo, init?: RequestInit) => {
+        const req = toRequest(input, init);
+        headersSeen = req.headers.get('Last-Event-ID');
+        return {
+          body: makeStream(['data: a\n\n']),
+          ok: true,
+        };
+      },
+    );
 
     const onEvent = vi.fn();
-    const { stream } = createSseClient({ onSseEvent: onEvent, url: '/sse' });
+    const { stream } = createSseClient({
+      onSseEvent: onEvent,
+      url: 'http://localhost/sse',
+    });
 
     const iter = stream[Symbol.asyncIterator]();
     await iter.next();
     await iter.return?.();
 
     // simulate next fetch after reconnect
-    await fetchMock('/sse', { headers: new Headers({ 'Last-Event-ID': '1' }) });
+    await fetchMock('http://localhost/sse', {
+      headers: new Headers({ 'Last-Event-ID': '1' }),
+    });
     expect(headersSeen).toBe('1');
   });
 
@@ -166,7 +191,7 @@ describe('createSseClient', () => {
     const controller = new AbortController();
     const { stream } = createSseClient({
       signal: controller.signal,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     const iter = stream[Symbol.asyncIterator]();
@@ -188,22 +213,28 @@ describe('createSseClient', () => {
       ok: true,
     });
 
-    const { stream } = createSseClient({ url: '/sse' });
+    const { stream } = createSseClient({ url: 'http://localhost/sse' });
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
     expect(result).toEqual([{ foo: 1 }, 'bar', { baz: 2 }]);
   });
 
   it('passes custom headers', async () => {
-    let headersSeen: Headers | undefined;
-    fetchMock.mockImplementation(async (_url: any, opts: any) => {
-      headersSeen = opts.headers.get('X-Custom');
-      return { body: makeStream([]), ok: true };
-    });
+    let headersSeen: string | null | undefined;
+    fetchMock.mockImplementation(
+      async (input: RequestInfo, init?: RequestInit) => {
+        const req = toRequest(input, init);
+        headersSeen = req.headers.get('X-Custom');
+        return {
+          body: makeStream([]),
+          ok: true,
+        };
+      },
+    );
 
     const { stream } = createSseClient({
       headers: { 'X-Custom': 'abc' },
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     const iter = stream[Symbol.asyncIterator]();
@@ -219,7 +250,7 @@ describe('createSseClient', () => {
       ok: true,
     });
 
-    const { stream } = createSseClient({ url: '/sse' });
+    const { stream } = createSseClient({ url: 'http://localhost/sse' });
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
     expect(result).toEqual([{ foo: 'bar' }]);
@@ -227,7 +258,7 @@ describe('createSseClient', () => {
 
   it('handles empty stream', async () => {
     fetchMock.mockResolvedValue({ body: makeStream([]), ok: true });
-    const { stream } = createSseClient({ url: '/sse' });
+    const { stream } = createSseClient({ url: 'http://localhost/sse' });
     const iter = stream[Symbol.asyncIterator]();
     const first = await iter.next();
     expect(first).toEqual({ done: true, value: undefined });
@@ -238,14 +269,17 @@ describe('createSseClient', () => {
     fetchMock.mockImplementation(async () => {
       attempt++;
       if (attempt < 2) throw new Error('fail');
-      return { body: makeStream(['data: ok\n\n']), ok: true };
+      return {
+        body: makeStream(['data: ok\n\n']),
+        ok: true,
+      };
     });
 
     const onError = vi.fn();
     const { stream } = createSseClient({
       onSseError: onError,
       sseDefaultRetryDelay: 0,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     const result: any[] = [];
@@ -262,7 +296,10 @@ describe('createSseClient', () => {
     });
 
     const onEvent = vi.fn();
-    const { stream } = createSseClient({ onSseEvent: onEvent, url: '/sse' });
+    const { stream } = createSseClient({
+      onSseEvent: onEvent,
+      url: 'http://localhost/sse',
+    });
     const iter = stream[Symbol.asyncIterator]();
     const ev = await iter.next();
     expect(ev.value).toBe('x');
@@ -276,7 +313,10 @@ describe('createSseClient', () => {
     });
 
     const onEvent = vi.fn();
-    const { stream } = createSseClient({ onSseEvent: onEvent, url: '/sse' });
+    const { stream } = createSseClient({
+      onSseEvent: onEvent,
+      url: 'http://localhost/sse',
+    });
     const iter = stream[Symbol.asyncIterator]();
     const ev = await iter.next();
     expect(ev.done).toBe(true);
@@ -299,7 +339,7 @@ describe('createSseClient', () => {
     const { stream } = createSseClient({
       onSseError: onError,
       onSseEvent: onEvent,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
     const iter = stream[Symbol.asyncIterator]();
     const ev = await iter.next();
@@ -316,7 +356,7 @@ describe('createSseClient', () => {
     const controller = new AbortController();
     const { stream } = createSseClient({
       signal: controller.signal,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
     const iter = stream[Symbol.asyncIterator]();
     await iter.next();
@@ -343,7 +383,7 @@ describe('createSseClient', () => {
     controller.abort();
     const { stream } = createSseClient({
       signal: controller.signal,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
     const iter = stream[Symbol.asyncIterator]();
     const ev = await iter.next();
@@ -352,12 +392,21 @@ describe('createSseClient', () => {
 
   it('respects custom HTTP method', async () => {
     let methodSeen: string | undefined;
-    fetchMock.mockImplementation(async (_url: any, opts: any) => {
-      methodSeen = opts.method;
-      return { body: makeStream(['data: ok\n\n']), ok: true };
-    });
+    fetchMock.mockImplementation(
+      async (input: RequestInfo, init?: RequestInit) => {
+        const req = toRequest(input, init);
+        methodSeen = req.method;
+        return {
+          body: makeStream(['data: ok\n\n']),
+          ok: true,
+        };
+      },
+    );
 
-    const { stream } = createSseClient({ method: 'POST', url: '/sse' });
+    const { stream } = createSseClient({
+      method: 'POST',
+      url: 'http://localhost/sse',
+    });
     const iter = stream[Symbol.asyncIterator]();
     await iter.next();
     await iter.return?.();
@@ -374,7 +423,7 @@ describe('createSseClient', () => {
     const controller = new AbortController();
     const { stream } = createSseClient({
       signal: controller.signal,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     const iter = stream[Symbol.asyncIterator]();
@@ -397,7 +446,7 @@ describe('createSseClient', () => {
       onSseEvent: (ev) => {
         lastEventId = ev.id;
       },
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     stream[Symbol.asyncIterator]();
@@ -422,7 +471,7 @@ describe('createSseClient', () => {
       onSseError: onError,
       sseDefaultRetryDelay: 0,
       sseMaxRetryAttempts: 2,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     const iter = stream[Symbol.asyncIterator]();
@@ -439,7 +488,10 @@ describe('createSseClient', () => {
     fetchMock.mockImplementation(() => {
       attempt++;
       if (attempt < 3) throw new Error('fail');
-      return Promise.resolve({ body: makeStream(['data: ok\n\n']), ok: true });
+      return Promise.resolve({
+        body: makeStream(['data: ok\n\n']),
+        ok: true,
+      });
     });
 
     const onError = vi.fn();
@@ -448,7 +500,7 @@ describe('createSseClient', () => {
       sseDefaultRetryDelay: 10,
       // Inject a fake sleep that resolves instantly
       sseSleepFn: async () => {},
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     const iter = stream[Symbol.asyncIterator]();
@@ -471,7 +523,7 @@ describe('createSseClient', () => {
     const { stream } = createSseClient({
       onSseError: onError,
       sseMaxRetryAttempts: 0,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     const iter = stream[Symbol.asyncIterator]();
@@ -494,7 +546,7 @@ describe('createSseClient', () => {
 
     const { stream } = createSseClient({
       responseValidator: validator,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     const result: any[] = [];
@@ -516,7 +568,7 @@ describe('createSseClient', () => {
 
     const { stream } = createSseClient({
       responseTransformer: transformer,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     const result: any[] = [];
@@ -546,7 +598,7 @@ describe('createSseClient', () => {
       responseValidator: validator,
       sseDefaultRetryDelay: 0,
       sseMaxRetryAttempts: 1,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     const iter = stream[Symbol.asyncIterator]();
@@ -567,7 +619,7 @@ describe('createSseClient', () => {
     const { stream } = createSseClient({
       responseTransformer: transformer,
       responseValidator: validator,
-      url: '/sse',
+      url: 'http://localhost/sse',
     });
 
     const result: any[] = [];
