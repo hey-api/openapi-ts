@@ -26,7 +26,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
    *
    * @default globalThis.fetch
    */
-  fetch?: (request: Request) => ReturnType<typeof fetch>;
+  fetch?: typeof fetch;
   /**
    * Please don't use the Fetch client for Next.js applications. The `next`
    * options won't have any effect.
