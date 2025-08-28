@@ -74,6 +74,7 @@
 - [Mxwllas](https://github.com/Mxwllas)
 - [RndUsername](https://github.com/RndUsername)
 - [Schroedi](https://github.com/Schroedi)
+- [alexedme](https://github.com/alexedme)
 - [fml09](https://github.com/fml09)
 - [henry-encord](https://github.com/henry-encord)
 - [hunshcn](https://github.com/hunshcn)
