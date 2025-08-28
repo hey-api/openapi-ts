@@ -118,12 +118,17 @@ export type {
   OpenApiResponseObject,
   OpenApiSchemaObject,
 } from './openApi/types';
+export type { AngularClient } from './plugins/@hey-api/client-angular';
+export type { AxiosClient } from './plugins/@hey-api/client-axios';
 export {
   clientDefaultConfig,
   clientDefaultMeta,
 } from './plugins/@hey-api/client-core/config';
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
 export type { Client } from './plugins/@hey-api/client-core/types';
+export type { FetchClient } from './plugins/@hey-api/client-fetch';
+export type { NextClient } from './plugins/@hey-api/client-next';
+export type { NuxtClient } from './plugins/@hey-api/client-nuxt';
 export type { ExpressionTransformer } from './plugins/@hey-api/transformers/expressions';
 export type { TypeTransformer } from './plugins/@hey-api/transformers/types';
 export { definePluginConfig } from './plugins/shared/utils/config';

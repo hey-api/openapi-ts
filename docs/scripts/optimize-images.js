@@ -9,6 +9,19 @@ const images = [
     sizes: [
       {
         formats: ['png'],
+        width: 300,
+      },
+      {
+        formats: ['png'],
+        width: 640,
+      },
+    ],
+    source: 'blueprint.png',
+  },
+  {
+    sizes: [
+      {
+        formats: ['png'],
         width: 16,
       },
       {
@@ -29,6 +42,15 @@ const images = [
       },
     ],
     source: 'logo.png',
+  },
+  {
+    sizes: [
+      {
+        formats: ['png'],
+        width: 300,
+      },
+    ],
+    source: 'logo-astronaut.png',
   },
   {
     sizes: [

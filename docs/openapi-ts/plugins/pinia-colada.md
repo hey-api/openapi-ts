@@ -59,7 +59,7 @@ Queries are generated from [query operations](/openapi-ts/configuration/parser#h
 ::: code-group
 
 ```ts [example]
-const { data, error } = useQuery({
+const query = useQuery({
   ...getPetByIdQuery({
     path: {
       petId: 1,
@@ -85,39 +85,6 @@ export default {
 :::
 
 You can customize the naming and casing pattern for `queryOptions` functions using the `.name` and `.case` options.
-
-### Meta
-
-You can use the `meta` field to attach arbitrary information to a query. To generate metadata for `queryOptions`, provide a function to the `.meta` option.
-
-::: code-group
-
-```ts [example]
-queryOptions({
-  // ...other fields
-  meta: {
-    id: 'getPetById',
-  },
-});
-```
-
-```js [config]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: 'src/client',
-  plugins: [
-    // ...other plugins
-    {
-      name: '@pinia/colada',
-      queryOptions: {
-        meta: (operation) => ({ id: operation.id }), // [!code ++]
-      },
-    },
-  ],
-};
-```
-
-:::
 
 ## Query Keys
 
@@ -153,14 +120,51 @@ export default {
 
 :::
 
-### Accessing Query Keys
+### Tags
 
-If you have access to the result of query options function, you can get the query key from the `queryKey` field.
+You can include operation tags in your query keys by setting `tags` to `true`. This will make query keys larger but provides better cache invalidation capabilities.
 
 ::: code-group
 
 ```ts [example]
-const { queryKey } = getPetByIdOptions({
+const key = [
+  {
+    _id: 'getPetById',
+    baseUrl: 'https://app.heyapi.dev',
+    path: {
+      petId: 1,
+    },
+    tags: ['pets', 'one', 'get'], // [!code ++]
+  },
+];
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@pinia/colada',
+      queryKeys: {
+        tags: true, // [!code ++]
+      },
+    },
+  ],
+};
+```
+
+:::
+
+### Accessing Query Keys
+
+If you have access to the result of query options function, you can get the query key from the `key` field.
+
+::: code-group
+
+```ts [example]
+const { key } = getPetByIdQuery({
   path: {
     petId: 1,
   },
@@ -188,7 +192,7 @@ Alternatively, you can access the same query key by calling query key functions.
 ::: code-group
 
 ```ts [example]
-const queryKey = getPetByIdQueryKey({
+const key = getPetByIdQueryKey({
   path: {
     petId: 1,
   },
@@ -212,6 +216,45 @@ export default {
 :::
 
 You can customize the naming and casing pattern for `queryKeys` functions using the `.name` and `.case` options.
+
+## Mutations
+
+Mutations are generated from [mutation operations](/openapi-ts/configuration/parser#hooks-mutation-operations). The generated mutation functions follow the naming convention of SDK functions and by default append `Mutation`, e.g. `addPetMutation()`.
+
+::: code-group
+
+```ts [example]
+const addPet = useMutation({
+  ...addPetMutation(),
+  onError: (error) => {
+    console.log(error);
+  },
+});
+
+addPet.mutate({
+  body: {
+    name: 'Kitty',
+  },
+});
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@pinia/colada',
+      mutationOptions: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
+You can customize the naming and casing pattern for `mutationOptions` functions using the `.name` and `.case` options.
 
 ## API
 

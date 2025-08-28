@@ -16,6 +16,7 @@ import type { PluginInstance, PluginState } from './types';
 import { useTypeData } from './useType';
 
 const queryOptionsFn = 'queryOptions';
+const optionsParamName = 'options';
 
 export const createQueryOptions = ({
   operation,
@@ -83,7 +84,7 @@ export const createQueryOptions = ({
           multiLine: true,
           obj: [
             {
-              spread: 'options',
+              spread: optionsParamName,
             },
             {
               spread: 'queryKey[0]',
@@ -160,7 +161,7 @@ export const createQueryOptions = ({
       key: 'queryKey',
       value: tsc.callExpression({
         functionName: identifierQueryKey.name || '',
-        parameters: ['options'],
+        parameters: [optionsParamName],
       }),
     },
   ];
@@ -183,17 +184,13 @@ export const createQueryOptions = ({
       parameters: [
         {
           isRequired: isRequiredOptions,
-          name: 'options',
+          name: optionsParamName,
           type: typeData,
         },
       ],
       statements: [
         tsc.returnFunctionCall({
-          args: [
-            tsc.objectExpression({
-              obj: queryOptionsObj,
-            }),
-          ],
+          args: [tsc.objectExpression({ obj: queryOptionsObj })],
           name: queryOptionsFn,
         }),
       ],

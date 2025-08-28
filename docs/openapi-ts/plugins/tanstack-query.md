@@ -109,7 +109,7 @@ Queries are generated from [query operations](/openapi-ts/configuration/parser#h
 ::: code-group
 
 ```ts [example]
-const { data, error } = useQuery({
+const query = useQuery({
   ...getPetByIdOptions({
     path: {
       petId: 1,
@@ -307,7 +307,7 @@ Infinite queries are generated from [query operations](/openapi-ts/configuration
 ::: code-group
 
 ```ts [example]
-const { data, error } = useInfiniteQuery({
+const query = useInfiniteQuery({
   ...getFooInfiniteOptions({
     path: {
       fooId: 1,
