@@ -70,13 +70,6 @@ export type CorgeWritable = {
     };
 };
 
-export type FooReadWriteRefWritable = {
-    foo?: FooReadWriteWritable;
-    bar?: FooReadWriteRefWritable;
-};
-
-export type FooReadWriteRef2Writable = FooReadWriteWritable;
-
 /**
  * Query parameter
  */

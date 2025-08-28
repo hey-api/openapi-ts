@@ -1059,156 +1059,6 @@ export const zOneOfAllOfIssue = z.union([
 ]);
 
 /**
- * Model with number-only name
- */
-export const z400Writable = z.string();
-
-/**
- * Testing multiline comments in string: First line
- * Second line
- *
- * Fourth line
- */
-export const zCamelCaseCommentWithBreaksWritable = z.number().int();
-
-/**
- * Testing multiline comments in string: First line
- * Second line
- *
- * Fourth line
- */
-export const zCommentWithBreaksWritable = z.number().int();
-
-/**
- * Testing backticks in string: `backticks` and ```multiple backticks``` should work
- */
-export const zCommentWithBackticksWritable = z.number().int();
-
-/**
- * Testing backticks and quotes in string: `backticks`, 'quotes', "double quotes" and ```multiple backticks``` should work
- */
-export const zCommentWithBackticksAndQuotesWritable = z.number().int();
-
-/**
- * Testing slashes in string: \backwards\\\ and /forwards/// should work
- */
-export const zCommentWithSlashesWritable = z.number().int();
-
-/**
- * Testing expression placeholders in string: ${expression} should work
- */
-export const zCommentWithExpressionPlaceholdersWritable = z.number().int();
-
-/**
- * Testing quotes in string: 'single quote''' and "double quotes""" should work
- */
-export const zCommentWithQuotesWritable = z.number().int();
-
-/**
- * Testing reserved characters in string: * inline * and ** inline ** should work
- */
-export const zCommentWithReservedCharactersWritable = z.number().int();
-
-/**
- * This is a simple number
- */
-export const zSimpleIntegerWritable = z.number().int();
-
-/**
- * This is a simple boolean
- */
-export const zSimpleBooleanWritable = z.boolean();
-
-/**
- * This is a simple string
- */
-export const zSimpleStringWritable = z.string();
-
-/**
- * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
- */
-export const zNonAsciiStringæøåÆøÅöôêÊ字符串Writable = z.string();
-
-/**
- * This is a simple file
- */
-export const zSimpleFileWritable = z.string();
-
-/**
- * This is a simple string
- */
-export const zSimpleStringWithPatternWritable = z.union([
-    z.string().max(64).regex(/^[a-zA-Z0-9_]*$/),
-    z.null()
-]);
-
-/**
- * This is a simple enum with strings
- */
-export const zEnumWithStringsWritable = z.enum([
-    'Success',
-    'Warning',
-    'Error',
-    "'Single Quote'",
-    '"Double Quotes"',
-    'Non-ascii: øæåôöØÆÅÔÖ字符串'
-]);
-
-export const zEnumWithReplacedCharactersWritable = z.enum([
-    "'Single Quote'",
-    '"Double Quotes"',
-    'øæåôöØÆÅÔÖ字符串',
-    ''
-]);
-
-/**
- * This is a simple enum with numbers
- */
-export const zEnumWithNumbersWritable = z.unknown();
-
-/**
- * Success=1,Warning=2,Error=3
- */
-export const zEnumFromDescriptionWritable = z.number();
-
-/**
- * This is a simple enum with numbers
- */
-export const zEnumWithExtensionsWritable = z.unknown();
-
-export const zEnumWithXEnumNamesWritable = z.unknown();
-
-/**
- * This is a simple array with numbers
- */
-export const zArrayWithNumbersWritable = z.array(z.number().int());
-
-/**
- * This is a simple array with booleans
- */
-export const zArrayWithBooleansWritable = z.array(z.boolean());
-
-/**
- * This is a simple array with strings
- */
-export const zArrayWithStringsWritable = z.array(z.string()).default(['test']);
-
-/**
- * This is a string dictionary
- */
-export const zDictionaryWithStringWritable = z.record(z.string());
-
-/**
- * This is a string dictionary
- */
-export const zDictionaryWithDictionaryWritable = z.record(z.record(z.string()));
-
-/**
- * `Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)
- */
-export const zModelFromZendeskWritable = z.string();
-
-/**
  * This is a model with one nested property
  */
 export const zModelWithPropertiesWritable = z.object({
@@ -1227,36 +1077,6 @@ export const zModelWithPropertiesWritable = z.object({
 });
 
 /**
- * This is a model with one property containing a reference
- */
-export const zModelWithReferenceWritable = z.object({
-    prop: zModelWithPropertiesWritable.optional()
-});
-
-export const zModelWithReadOnlyAndWriteOnlyWritable = z.object({
-    foo: z.string(),
-    baz: z.string()
-});
-
-/**
- * This is a model with one property containing an array
- */
-export const zModelWithArrayReadOnlyAndWriteOnlyWritable = z.object({
-    prop: z.array(zModelWithReadOnlyAndWriteOnlyWritable).optional(),
-    propWithFile: z.array(z.string()).optional(),
-    propWithNumber: z.array(z.number()).optional()
-});
-
-export const z3eNum1ПериодWritable = z.enum([
-    'Bird',
-    'Dog'
-]);
-
-export const zConstValueWritable = z.enum([
-    'ConstValue'
-]);
-
-/**
  * This is a model that contains a some patterns
  */
 export const zModelWithPatternWritable = z.object({
@@ -1273,137 +1093,15 @@ export const zFileWritable = z.object({
     mime: z.string().min(1).max(24)
 });
 
-/**
- * This is a free-form object without additionalProperties.
- */
-export const zFreeFormObjectWithoutAdditionalPropertiesWritable = z.record(z.unknown());
-
-/**
- * This is a free-form object with additionalProperties: true.
- */
-export const zFreeFormObjectWithAdditionalPropertiesEqTrueWritable = z.record(z.unknown());
-
-/**
- * This is a free-form object with additionalProperties: {}.
- */
-export const zFreeFormObjectWithAdditionalPropertiesEqEmptyObjectWritable = z.record(z.unknown());
-
-/**
- * Some % character
- */
-export const zCharactersInDescriptionWritable = z.string();
-
-export const zModelWithNestedArrayEnumsDataFooWritable = z.enum([
-    'foo',
-    'bar'
-]);
-
-export const zModelWithNestedArrayEnumsDataBarWritable = z.enum([
-    'baz',
-    'qux'
-]);
-
-export const zModelWithConstantSizeArrayWritable = z.tuple([
-    z.number(),
-    z.number()
-]);
-
-export const zModelWithAnyOfConstantSizeArrayWritable = z.tuple([
-    z.union([
-        z.number(),
-        z.string()
-    ]),
-    z.union([
-        z.number(),
-        z.string()
-    ]),
-    z.union([
-        z.number(),
-        z.string()
-    ])
-]);
-
-export const zModelWithAnyOfConstantSizeArrayNullableWritable = z.tuple([
-    z.union([
-        z.number(),
-        z.null(),
-        z.string()
-    ]),
-    z.union([
-        z.number(),
-        z.null(),
-        z.string()
-    ]),
-    z.union([
-        z.number(),
-        z.null(),
-        z.string()
-    ])
-]);
-
-/**
- * Model with restricted keyword name
- */
-export const zImportWritable = z.string();
-
-export const zModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable = z.tuple([
-    z.union([
-        z.number(),
-        zImportWritable
-    ]),
-    z.union([
-        z.number(),
-        zImportWritable
-    ])
-]);
-
-export const zModelWithAnyOfConstantSizeArrayAndIntersectWritable = z.tuple([
-    z.intersection(z.number(), z.string()),
-    z.intersection(z.number(), z.string())
-]);
-
-/**
- * Model used to test deduplication strategy (unused)
- */
-export const zParameterSimpleParameterUnusedWritable = z.string();
-
-/**
- * Model used to test deduplication strategy
- */
-export const zPostServiceWithEmptyTagResponseWritable = z.string();
-
-/**
- * Model used to test deduplication strategy
- */
-export const zPostServiceWithEmptyTagResponse2Writable = z.string();
-
-/**
- * Model used to test deduplication strategy
- */
-export const zDeleteFooDataWritable = z.string();
-
-/**
- * Model used to test deduplication strategy
- */
-export const zDeleteFooData2Writable = z.string();
+export const zModelWithReadOnlyAndWriteOnlyWritable = z.object({
+    foo: z.string(),
+    baz: z.string()
+});
 
 export const zAdditionalPropertiesUnknownIssueWritable = z.record(z.union([
     z.string(),
     z.number()
 ]));
-
-export const zAdditionalPropertiesUnknownIssue2Writable = z.record(z.union([
-    z.string(),
-    z.number()
-]));
-
-export const zOneOfAllOfIssueWritable = z.union([
-    z.intersection(z.union([
-        zConstValueWritable,
-        zGenericSchemaDuplicateIssue1SystemBoolean
-    ]), z3eNum1Период),
-    zGenericSchemaDuplicateIssue1SystemString
-]);
 
 export const zGenericSchemaDuplicateIssue1SystemBooleanWritable = z.object({
     item: z.boolean().optional(),
@@ -1449,7 +1147,7 @@ export const zPatchApiVbyApiVersionNoTagData = z.object({
 export const zImportData = z.object({
     body: z.union([
         zModelWithReadOnlyAndWriteOnlyWritable,
-        zModelWithArrayReadOnlyAndWriteOnlyWritable
+        zModelWithArrayReadOnlyAndWriteOnly
     ]),
     path: z.never().optional(),
     query: z.never().optional()
@@ -1585,8 +1283,8 @@ export const zCallWithParametersData = z.object({
         ])
     }),
     query: z.object({
-        foo_ref_enum: zModelWithNestedArrayEnumsDataFooWritable.optional(),
-        foo_all_of_enum: zModelWithNestedArrayEnumsDataFooWritable,
+        foo_ref_enum: zModelWithNestedArrayEnumsDataFoo.optional(),
+        foo_all_of_enum: zModelWithNestedArrayEnumsDataFoo,
         cursor: z.union([
             z.string(),
             z.null()
@@ -2059,7 +1757,7 @@ export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
 export const zNonAsciiæøåÆøÅöôêÊ字符串Response = z.array(zNonAsciiStringæøåÆøÅöôêÊ字符串);
 
 export const zPutWithFormUrlEncodedData = z.object({
-    body: zArrayWithStringsWritable,
+    body: zArrayWithStrings,
     path: z.never().optional(),
     query: z.never().optional()
 });
