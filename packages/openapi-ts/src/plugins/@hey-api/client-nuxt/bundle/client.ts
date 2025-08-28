@@ -192,6 +192,7 @@ export const createClient = (config: Config = {}): Client => {
         ...unwrapRefs(opts),
         body: opts.body as BodyInit | null | undefined,
         method,
+        onRequest: undefined,
         signal: unwrapRefs(opts.signal) as AbortSignal,
         url,
       });

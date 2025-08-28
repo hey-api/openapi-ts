@@ -2,6 +2,10 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { createClient } from '../bundle/client';
 
+type MockFetch = ((...args: any[]) => any) & {
+  preconnect?: any;
+};
+
 describe('buildUrl', () => {
   const client = createClient();
 
@@ -81,7 +85,7 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockFetch = vi.fn().mockResolvedValue(mockResponse);
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
       fetch: mockFetch,
@@ -101,7 +105,7 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockFetch = vi.fn().mockResolvedValue(mockResponse);
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
       fetch: mockFetch,
@@ -123,7 +127,7 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockFetch = vi.fn().mockResolvedValue(mockResponse);
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
       fetch: mockFetch,
@@ -143,7 +147,7 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockFetch = vi.fn().mockResolvedValue(mockResponse);
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
       fetch: mockFetch,
@@ -163,7 +167,7 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockFetch = vi.fn().mockResolvedValue(mockResponse);
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
       fetch: mockFetch,
@@ -184,7 +188,7 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockFetch = vi.fn().mockResolvedValue(mockResponse);
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
       fetch: mockFetch,
@@ -205,7 +209,7 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockFetch = vi.fn().mockResolvedValue(mockResponse);
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
       fetch: mockFetch,
