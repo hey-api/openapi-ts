@@ -6,6 +6,16 @@
 export type _400 = string;
 
 /**
+ * External ref to shared model (A)
+ */
+export type ExternalRefA = {
+    id: string;
+    name?: string;
+};
+
+export type ExternalRefB = ExternalRefA;
+
+/**
  * Testing multiline comments in string: First line
  * Second line
  *
