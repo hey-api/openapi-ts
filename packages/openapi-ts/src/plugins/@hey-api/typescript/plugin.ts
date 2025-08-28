@@ -628,13 +628,17 @@ const exportType = ({
       });
       file.add(node);
       return;
-    } else if (plugin.config.enums.mode === 'typescript') {
+    } else if (
+      plugin.config.enums.mode === 'typescript' ||
+      plugin.config.enums.mode === 'typescript-const'
+    ) {
       // TypeScript enums support only string and number values
       const shouldCreateTypeScriptEnum = !enumObject.typeofItems.some(
         (type) => type !== 'number' && type !== 'string',
       );
       if (shouldCreateTypeScriptEnum) {
         const enumNode = tsc.enumDeclaration({
+          asConst: plugin.config.enums.mode === 'typescript-const',
           leadingComment: createSchemaComment({ schema }),
           name: nodeInfo.node,
           obj: enumObject.obj,
