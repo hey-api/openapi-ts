@@ -1,5 +1,47 @@
 # @hey-api/openapi-ts
 
+## 0.82.0
+
+### Minor Changes
+
+- [#2505](https://github.com/hey-api/openapi-ts/pull/2505) [`97c57f6`](https://github.com/hey-api/openapi-ts/commit/97c57f68af1f907f278707fb526289c73b33ea89) Thanks [@SebastiaanWouters](https://github.com/SebastiaanWouters)! - feat(parser): add Hooks API
+
+  ### Added Hooks API
+
+  This release adds the [Hooks API](https://heyapi.dev/openapi-ts/configuration/parser#hooks), giving you granular control over which operations generate queries and mutations. As a result, we tightened the previous behavior and POST operations no longer generate queries by default. To preserve the old behavior, add a custom matcher.
+
+  ```js
+  export default {
+    input: 'hey-api/backend', // sign up at app.heyapi.dev
+    output: 'src/client',
+    parser: {
+      hooks: {
+        operations: {
+          isQuery: (op) => (op.method === 'post' ? true : undefined),
+        },
+      },
+    },
+  };
+  ```
+
+### Patch Changes
+
+- [#2542](https://github.com/hey-api/openapi-ts/pull/2542) [`c12f7c7`](https://github.com/hey-api/openapi-ts/commit/c12f7c71287ced429db4036678b254a967da3dea) Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): pass fetch option to sse client
+
+- [#2505](https://github.com/hey-api/openapi-ts/pull/2505) [`80dc015`](https://github.com/hey-api/openapi-ts/commit/80dc01515d67bd335427af3dc9be0d49a417b9e3) Thanks [@SebastiaanWouters](https://github.com/SebastiaanWouters)! - feat(plugin): add `@pinia/colada` plugin
+
+- [#2535](https://github.com/hey-api/openapi-ts/pull/2535) [`efdeedc`](https://github.com/hey-api/openapi-ts/commit/efdeedce6765e6b4d3c2e288b0473c1ced6c487f) Thanks [@alexedme](https://github.com/alexedme)! - feat(client): added angular, axios, fetch, next & nuxt client type export for external typing purposes.
+
+- [#2544](https://github.com/hey-api/openapi-ts/pull/2544) [`d4cd30e`](https://github.com/hey-api/openapi-ts/commit/d4cd30e3486fef6c459d4c04d3ca3f7ac19f8d83) Thanks [@carson2222](https://github.com/carson2222)! - fix(parser): improve handling multiple references to shared external variable
+
+- [#2519](https://github.com/hey-api/openapi-ts/pull/2519) [`95f00fa`](https://github.com/hey-api/openapi-ts/commit/95f00fa28a4c56f8f614649f8b4fd73a08f8b81f) Thanks [@volesen](https://github.com/volesen)! - fix(client): improve empty response body handling
+
+- [#1680](https://github.com/hey-api/openapi-ts/pull/1680) [`9e4cc3d`](https://github.com/hey-api/openapi-ts/commit/9e4cc3df784999ead1691848a4db0b7238e45809) Thanks [@josh-hemphill](https://github.com/josh-hemphill)! - feat(plugin): add `@pinia/colada` plugin
+
+- [#2530](https://github.com/hey-api/openapi-ts/pull/2530) [`8d1cfc4`](https://github.com/hey-api/openapi-ts/commit/8d1cfc4e415239266760498ea126c465c53f588c) Thanks [@carson2222](https://github.com/carson2222)! - fix(parser): improve `readWrite` transformer splitting logic
+
+- [#2523](https://github.com/hey-api/openapi-ts/pull/2523) [`7f6de44`](https://github.com/hey-api/openapi-ts/commit/7f6de44be7f445425c70c82833bc0442db2fcbcd) Thanks [@carson2222](https://github.com/carson2222)! - fix(parser): handle `patternProperties` in OpenAPI 3.1
+
 ## 0.81.1
 
 ### Patch Changes
