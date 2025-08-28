@@ -1234,6 +1234,12 @@ components:
           schema:
             $ref: '#/components/schemas/ModelWithString'
   schemas:
+    ExternalRefA:
+      description: External ref to shared model (A)
+      $ref: './external-shared.json#/ExternalSharedModel'
+    ExternalRefB:
+      description: External ref to shared model (B)
+      $ref: './external-shared.json#/ExternalSharedModel'
     '400':
       description: Model with number-only name
       type: string

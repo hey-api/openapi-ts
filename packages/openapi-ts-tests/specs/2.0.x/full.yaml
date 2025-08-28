@@ -681,6 +681,12 @@ paths:
           schema:
             $ref: '#/definitions/failure.Failure'
 definitions:
+  ExternalRefA:
+    description: External ref to shared model (A)
+    $ref: './external-shared.json#/ExternalSharedModel'
+  ExternalRefB:
+    description: External ref to shared model (B)
+    $ref: './external-shared.json#/ExternalSharedModel'
   CommentWithBreaks:
     description: |-
       Testing multiline comments in string: First line
