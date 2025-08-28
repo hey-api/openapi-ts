@@ -747,6 +747,7 @@ export const createObjectType = <
 
 /**
  * Create enum declaration. Example `export enum T = { X, Y };`
+ * @param asConst - whether to use const enums.
  * @param comments - comments to add to each property.
  * @param leadingComment - leading comment to add to enum.
  * @param name - the name of the enum.
