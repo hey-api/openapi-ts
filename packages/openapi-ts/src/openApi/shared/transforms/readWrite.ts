@@ -1,6 +1,7 @@
 import type { Config } from '../../../types/config';
 import type { Logger } from '../../../utils/logger';
 import { jsonPointerToPath } from '../../../utils/ref';
+import deepEqual from '../utils/deepEqual';
 import { buildGraph, type Graph, type Scope } from '../utils/graph';
 import { buildName } from '../utils/name';
 import { deepClone } from '../utils/schema';
@@ -15,43 +16,6 @@ import {
   isPathRootSchema,
   specToSchemasPointerNamespace,
 } from './utils';
-
-/**
- * Deep equality for JSON-compatible values (objects, arrays, primitives).
- * Used to determine whether read/write pruned variants actually differ.
- */
-const deepEqual = (a: unknown, b: unknown): boolean => {
-  if (a === b) return true;
-  if (a === null || b === null) return a === b;
-  const typeA = typeof a;
-  const typeB = typeof b;
-  if (typeA !== typeB) return false;
-  if (typeA !== 'object') return false;
-
-  // Arrays
-  if (Array.isArray(a) || Array.isArray(b)) {
-    if (!Array.isArray(a) || !Array.isArray(b)) return false;
-    if (a.length !== b.length) return false;
-    for (let i = 0; i < a.length; i++) {
-      if (!deepEqual(a[i], b[i])) return false;
-    }
-    return true;
-  }
-
-  // Plain objects
-  const objA = a as Record<string, unknown>;
-  const objB = b as Record<string, unknown>;
-  const keysA = Object.keys(objA).sort();
-  const keysB = Object.keys(objB).sort();
-  if (keysA.length !== keysB.length) return false;
-  for (let i = 0; i < keysA.length; i++) {
-    if (keysA[i] !== keysB[i]) return false;
-  }
-  for (const key of keysA) {
-    if (!deepEqual(objA[key], objB[key])) return false;
-  }
-  return true;
-};
 
 type OriginalSchemas = Record<string, unknown>;
 
@@ -632,36 +596,6 @@ export const updateRefsInSpec = ({
         } else if (key === '$ref' && typeof value === 'string') {
           // Prefer exact match first
           const map = split.mapping[value];
-          // if (!map && value.startsWith(schemasPointerNamespace)) {
-          //   // Handle nested refs like '#/components/schemas/Foo/properties/Bar'
-          //   // by remapping the base schema pointer and preserving the suffix.
-          //   const path = jsonPointerToPath(value);
-          //   // schemasPointerNamespace ends with trailing '/', so its segments length is:
-          //   const baseSegments = schemasPointerNamespace
-          //     .split('/')
-          //     .filter(Boolean).length;
-          //   if (path.length > baseSegments) {
-          //     const baseSchemaName = path[baseSegments - 1];
-          //     const baseOriginalPointer = `${schemasPointerNamespace}${baseSchemaName}`;
-          //     map = split.mapping[baseOriginalPointer];
-          //     if (map) {
-          //       const suffixSegments = path.slice(baseSegments);
-          //       const suffix = suffixSegments.length
-          //         ? `/${suffixSegments.join('/')}`
-          //         : '';
-          //       if (map.read && (!nextContext || nextContext === 'read')) {
-          //         (node as Record<string, unknown>)[key] =
-          //           `${map.read}${suffix}`;
-          //       } else if (
-          //         map.write &&
-          //         (!nextContext || nextContext === 'write')
-          //       ) {
-          //         (node as Record<string, unknown>)[key] =
-          //           `${map.write}${suffix}`;
-          //       }
-          //     }
-          //   }
-          // } else
           if (map) {
             if (map.read && (!nextContext || nextContext === 'read')) {
               (node as Record<string, unknown>)[key] = map.read;
