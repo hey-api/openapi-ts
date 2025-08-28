@@ -1,6 +1,7 @@
 import type { Config } from '../../../types/config';
 import type { Logger } from '../../../utils/logger';
 import { jsonPointerToPath } from '../../../utils/ref';
+import deepEqual from '../utils/deepEqual';
 import { buildGraph, type Graph, type Scope } from '../utils/graph';
 import { buildName } from '../utils/name';
 import { deepClone } from '../utils/schema';
@@ -361,10 +362,11 @@ export const splitSchemas = ({
 
   for (const [pointer, nodeInfo] of graph.nodes) {
     const name = pointerToSchema(pointer);
-    // Only split top-level schemas, with both read-only and write-only scopes.
+    // Only split top-level schemas, with either read-only or write-only scopes (or both).
     if (
       !name ||
-      !(nodeInfo.scopes?.has('read') && nodeInfo.scopes?.has('write'))
+      !(nodeInfo.scopes?.has('read') || nodeInfo.scopes?.has('write')) ||
+      !nodeInfo.scopes?.has('normal')
     ) {
       continue;
     }
@@ -390,6 +392,15 @@ export const splitSchemas = ({
     // write variant
     const writeSchema = deepClone<unknown>(nodeInfo.node);
     pruneSchemaByScope(graph, writeSchema, 'readOnly');
+
+    // If pruning did not change anything (both variants equal and equal to original),
+    // skip splitting and keep the original single schema.
+    if (
+      deepEqual(readSchema, writeSchema) &&
+      deepEqual(readSchema, nodeInfo.node)
+    ) {
+      continue;
+    }
     const writeBase = buildName({
       config: config.requests,
       name,
@@ -466,7 +477,10 @@ export const updateRefsInSpec = ({
       let nextPointer = currentPointer;
       let nextContext = context;
       if (isPathRootSchema(path)) {
-        nextPointer = `${schemasPointerNamespace}${path[2]}`;
+        // Use the last path segment instead of a fixed index (path[2]) because
+        // path depth varies across OAS2/OAS3 and contexts; fixed indexing is brittle.
+        const nameSegment = path[path.length - 1] as string;
+        nextPointer = `${schemasPointerNamespace}${nameSegment}`;
         const originalPointer = split.reverseMapping[nextPointer];
         if (originalPointer) {
           const mapping = split.mapping[originalPointer];
@@ -580,11 +594,14 @@ export const updateRefsInSpec = ({
             path: [...path, key],
           });
         } else if (key === '$ref' && typeof value === 'string') {
+          // Prefer exact match first
           const map = split.mapping[value];
-          if (nextContext === 'read' && map?.read) {
-            (node as Record<string, unknown>)[key] = map.read;
-          } else if (nextContext === 'write' && map?.write) {
-            (node as Record<string, unknown>)[key] = map.write;
+          if (map) {
+            if (map.read && (!nextContext || nextContext === 'read')) {
+              (node as Record<string, unknown>)[key] = map.read;
+            } else if (map.write && (!nextContext || nextContext === 'write')) {
+              (node as Record<string, unknown>)[key] = map.write;
+            }
           }
         } else {
           walk({

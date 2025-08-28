@@ -60,18 +60,15 @@ export type BarWriteWritable = Baz | QuxAllWrite | {
     bar?: string;
 };
 
+export type QuuxWritable = {
+    baz?: Array<Baz>;
+};
+
 export type CorgeWritable = {
     foo?: {
         baz?: boolean;
     };
 };
-
-export type FooReadWriteRefWritable = {
-    foo?: FooReadWriteWritable;
-    bar?: FooReadWriteRefWritable;
-};
-
-export type FooReadWriteRef2Writable = FooReadWriteWritable;
 
 /**
  * Query parameter
