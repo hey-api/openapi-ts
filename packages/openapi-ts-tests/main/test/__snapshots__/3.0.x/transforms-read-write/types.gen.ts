@@ -6,17 +6,13 @@ export type FooRead = BarRead & {
     readonly foo?: string;
 };
 
-export type FooWrite = BarWrite & {
-    foo?: string;
-};
+export type FooWrite = BarWrite;
 
 export type BarRead = Baz | {
     readonly bar?: string;
 };
 
-export type BarWrite = Baz | {
-    bar?: string;
-};
+export type BarWrite = Baz;
 
 export type Baz = {
     baz?: string;
@@ -37,8 +33,24 @@ export type Corge = {
     };
 };
 
-export type FooReadWriteWritable = BarRead & {
+export type FooReadWriteWritable = BarReadWritable & {
     foo?: string;
+};
+
+export type FooReadWritable = BarReadWritable;
+
+export type FooWriteWritable = BarWriteWritable & {
+    foo?: string;
+};
+
+export type BarReadWritable = Baz;
+
+export type BarWriteWritable = Baz | {
+    bar?: string;
+};
+
+export type QuuxWritable = {
+    baz?: Array<Baz>;
 };
 
 export type CorgeWritable = {
@@ -64,7 +76,7 @@ export type PostFooReadWriteResponses = {
 export type PostFooReadWriteResponse = PostFooReadWriteResponses[keyof PostFooReadWriteResponses];
 
 export type PostFooReadData = {
-    body: FooRead;
+    body: FooReadWritable;
     path?: never;
     query?: never;
     url: '/foo-read';
@@ -80,7 +92,7 @@ export type PostFooReadResponses = {
 export type PostFooReadResponse = PostFooReadResponses[keyof PostFooReadResponses];
 
 export type PostFooWriteData = {
-    body: FooWrite;
+    body: FooWriteWritable;
     path?: never;
     query?: never;
     url: '/foo-write';
