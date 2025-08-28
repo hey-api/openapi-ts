@@ -398,6 +398,33 @@ export const vFailureFailure = v.object({
     reference_code: v.optional(v.string())
 });
 
+/**
+ * This is a model with one nested property
+ */
+export const vModelWithPropertiesWritable = v.object({
+    required: v.string(),
+    string: v.optional(v.string()),
+    number: v.optional(v.number()),
+    boolean: v.optional(v.boolean()),
+    reference: v.optional(vModelWithString),
+    'property with space': v.optional(v.string()),
+    default: v.optional(v.string()),
+    try: v.optional(v.string())
+});
+
+/**
+ * This is a model that contains a some patterns
+ */
+export const vModelWithPatternWritable = v.object({
+    key: v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)),
+    name: v.pipe(v.string(), v.maxLength(255)),
+    id: v.optional(v.pipe(v.string(), v.regex(/^\d{2}-\d{3}-\d{4}$/))),
+    text: v.optional(v.pipe(v.string(), v.regex(/^\w+$/))),
+    patternWithSingleQuotes: v.optional(v.pipe(v.string(), v.regex(/^[a-zA-Z0-9']*$/))),
+    patternWithNewline: v.optional(v.pipe(v.string(), v.regex(/aaa\nbbb/))),
+    patternWithBacktick: v.optional(v.pipe(v.string(), v.regex(/aaa`bbb/)))
+});
+
 export const vServiceWithEmptyTagData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),

@@ -962,260 +962,61 @@ export type GenericSchemaDuplicateIssue1SystemString = {
 };
 
 /**
- * Model with number-only name
+ * This is a model with one nested property
  */
-export type _400Writable = string;
-
-/**
- * Testing multiline comments in string: First line
- * Second line
- *
- * Fourth line
- */
-export type CamelCaseCommentWithBreaksWritable = number;
-
-/**
- * Testing multiline comments in string: First line
- * Second line
- *
- * Fourth line
- */
-export type CommentWithBreaksWritable = number;
-
-/**
- * Testing backticks in string: `backticks` and ```multiple backticks``` should work
- */
-export type CommentWithBackticksWritable = number;
-
-/**
- * Testing backticks and quotes in string: `backticks`, 'quotes', "double quotes" and ```multiple backticks``` should work
- */
-export type CommentWithBackticksAndQuotesWritable = number;
-
-/**
- * Testing slashes in string: \backwards\\\ and /forwards/// should work
- */
-export type CommentWithSlashesWritable = number;
-
-/**
- * Testing expression placeholders in string: ${expression} should work
- */
-export type CommentWithExpressionPlaceholdersWritable = number;
-
-/**
- * Testing quotes in string: 'single quote''' and "double quotes""" should work
- */
-export type CommentWithQuotesWritable = number;
-
-/**
- * Testing reserved characters in string: * inline * and ** inline ** should work
- */
-export type CommentWithReservedCharactersWritable = number;
-
-/**
- * This is a simple number
- */
-export type SimpleIntegerWritable = number;
-
-/**
- * This is a simple boolean
- */
-export type SimpleBooleanWritable = boolean;
-
-/**
- * This is a simple string
- */
-export type SimpleStringWritable = string;
-
-/**
- * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
- */
-export type NonAsciiStringæøåÆøÅöôêÊ字符串Writable = string;
-
-/**
- * This is a simple file
- */
-export type SimpleFileWritable = Blob | File;
-
-/**
- * This is a simple string
- */
-export type SimpleStringWithPatternWritable = string | null;
-
-/**
- * This is a simple enum with strings
- */
-export type EnumWithStringsWritable = 'Success' | 'Warning' | 'Error' | "'Single Quote'" | '"Double Quotes"' | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
-
-export type EnumWithReplacedCharactersWritable = "'Single Quote'" | '"Double Quotes"' | 'øæåôöØÆÅÔÖ字符串' | 3.1 | '';
-
-/**
- * This is a simple enum with numbers
- */
-export type EnumWithNumbersWritable = 1 | 2 | 3 | 1.1 | 1.2 | 1.3 | 100 | 200 | 300 | -100 | -200 | -300 | -1.1 | -1.2 | -1.3;
-
-/**
- * Success=1,Warning=2,Error=3
- */
-export type EnumFromDescriptionWritable = number;
-
-/**
- * This is a simple enum with numbers
- */
-export type EnumWithExtensionsWritable = 200 | 400 | 500;
-
-export type EnumWithXEnumNamesWritable = 0 | 1 | 2;
-
-/**
- * This is a simple array with numbers
- */
-export type ArrayWithNumbersWritable = Array<number>;
-
-/**
- * This is a simple array with booleans
- */
-export type ArrayWithBooleansWritable = Array<boolean>;
-
-/**
- * This is a simple array with strings
- */
-export type ArrayWithStringsWritable = Array<string>;
-
-/**
- * This is a string dictionary
- */
-export type DictionaryWithStringWritable = {
-    [key: string]: string;
+export type ModelWithPropertiesWritable = {
+    required: string;
+    requiredAndNullable: string | null;
+    string?: string;
+    number?: number;
+    boolean?: boolean;
+    reference?: ModelWithString;
+    'property with space'?: string;
+    default?: string;
+    try?: string;
 };
 
 /**
- * This is a string dictionary
+ * This is a model that contains a some patterns
  */
-export type DictionaryWithDictionaryWritable = {
-    [key: string]: {
-        [key: string]: string;
-    };
+export type ModelWithPatternWritable = {
+    key: string;
+    name: string;
+    id?: string;
+    text?: string;
+    patternWithSingleQuotes?: string;
+    patternWithNewline?: string;
+    patternWithBacktick?: string;
 };
 
-/**
- * `Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)
- */
-export type ModelFromZendeskWritable = string;
-
-/**
- * This is a model with one property containing an array
- */
-export type ModelWithArrayReadOnlyAndWriteOnlyWritable = {
-    prop?: Array<ModelWithReadOnlyAndWriteOnlyWritable>;
-    propWithFile?: Array<Blob | File>;
-    propWithNumber?: Array<number>;
+export type FileWritable = {
+    /**
+     * Mime
+     */
+    mime: string;
 };
-
-export type _3eNum1ПериодWritable = 'Bird' | 'Dog';
-
-export type ConstValueWritable = 'ConstValue';
-
-/**
- * This is a free-form object without additionalProperties.
- */
-export type FreeFormObjectWithoutAdditionalPropertiesWritable = {
-    [key: string]: unknown;
-};
-
-/**
- * This is a free-form object with additionalProperties: true.
- */
-export type FreeFormObjectWithAdditionalPropertiesEqTrueWritable = {
-    [key: string]: unknown;
-};
-
-/**
- * This is a free-form object with additionalProperties: {}.
- */
-export type FreeFormObjectWithAdditionalPropertiesEqEmptyObjectWritable = {
-    [key: string]: unknown;
-};
-
-/**
- * Some % character
- */
-export type CharactersInDescriptionWritable = string;
-
-export type ModelWithNestedArrayEnumsDataFooWritable = 'foo' | 'bar';
-
-export type ModelWithNestedArrayEnumsDataBarWritable = 'baz' | 'qux';
 
 export type ModelWithReadOnlyAndWriteOnlyWritable = {
     foo: string;
     baz: string;
 };
 
-export type ModelWithConstantSizeArrayWritable = [
-    number,
-    number
-];
-
-export type ModelWithAnyOfConstantSizeArrayWritable = [
-    number | string,
-    number | string,
-    number | string
-];
-
-export type ModelWithAnyOfConstantSizeArrayNullableWritable = [
-    number | null | string,
-    number | null | string,
-    number | null | string
-];
-
-export type ModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable = [
-    number | ImportWritable,
-    number | ImportWritable
-];
-
-export type ModelWithAnyOfConstantSizeArrayAndIntersectWritable = [
-    number & string,
-    number & string
-];
-
-/**
- * Model used to test deduplication strategy (unused)
- */
-export type ParameterSimpleParameterUnusedWritable = string;
-
-/**
- * Model used to test deduplication strategy
- */
-export type PostServiceWithEmptyTagResponseWritable = string;
-
-/**
- * Model used to test deduplication strategy
- */
-export type PostServiceWithEmptyTagResponse2Writable = string;
-
-/**
- * Model used to test deduplication strategy
- */
-export type DeleteFooDataWritable = string;
-
-/**
- * Model used to test deduplication strategy
- */
-export type DeleteFooData2Writable = string;
-
-/**
- * Model with restricted keyword name
- */
-export type ImportWritable = string;
-
 export type AdditionalPropertiesUnknownIssueWritable = {
     [key: string]: string | number;
 };
 
-export type AdditionalPropertiesUnknownIssue2Writable = {
-    [key: string]: string | number;
+export type GenericSchemaDuplicateIssue1SystemBooleanWritable = {
+    item?: boolean;
+    error?: string | null;
+    data?: {
+        [key: string]: never;
+    };
 };
 
-export type OneOfAllOfIssueWritable = ((ConstValueWritable | GenericSchemaDuplicateIssue1SystemBoolean) & _3eNum1Период) | GenericSchemaDuplicateIssue1SystemString;
+export type GenericSchemaDuplicateIssue1SystemStringWritable = {
+    item?: string | null;
+    error?: string | null;
+};
 
 /**
  * This is a reusable parameter
@@ -1259,7 +1060,7 @@ export type PatchApiVbyApiVersionNoTagResponses = {
 };
 
 export type ImportData = {
-    body: ModelWithReadOnlyAndWriteOnlyWritable | ModelWithArrayReadOnlyAndWriteOnlyWritable;
+    body: ModelWithReadOnlyAndWriteOnlyWritable | ModelWithArrayReadOnlyAndWriteOnly;
     path?: never;
     query?: never;
     url: '/api/v{api-version}/no+tag';
@@ -1482,8 +1283,8 @@ export type CallWithParametersData = {
         'api-version': string | null;
     };
     query: {
-        foo_ref_enum?: ModelWithNestedArrayEnumsDataFooWritable;
-        foo_all_of_enum: ModelWithNestedArrayEnumsDataFooWritable;
+        foo_ref_enum?: ModelWithNestedArrayEnumsDataFoo;
+        foo_all_of_enum: ModelWithNestedArrayEnumsDataFoo;
         /**
          * This is the parameter that goes into the query params
          */
@@ -2238,7 +2039,7 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Responses = {
 export type NonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiæøåÆøÅöôêÊ字符串Responses[keyof NonAsciiæøåÆøÅöôêÊ字符串Responses];
 
 export type PutWithFormUrlEncodedData = {
-    body: ArrayWithStringsWritable;
+    body: ArrayWithStrings;
     path?: never;
     query?: never;
     url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串';

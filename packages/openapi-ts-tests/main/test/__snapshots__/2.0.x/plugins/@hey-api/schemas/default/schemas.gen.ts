@@ -669,3 +669,72 @@ export const failure_FailureSchema = {
         }
     }
 } as const;
+
+export const ModelWithPropertiesWritableSchema = {
+    description: 'This is a model with one nested property',
+    type: 'object',
+    required: ['required', 'requiredAndReadOnly'],
+    properties: {
+        required: {
+            type: 'string'
+        },
+        string: {
+            type: 'string'
+        },
+        number: {
+            type: 'number'
+        },
+        boolean: {
+            type: 'boolean'
+        },
+        reference: {
+            '$ref': '#/definitions/ModelWithString'
+        },
+        'property with space': {
+            type: 'string'
+        },
+        default: {
+            type: 'string'
+        },
+        try: {
+            type: 'string'
+        }
+    }
+} as const;
+
+export const ModelWithPatternWritableSchema = {
+    description: 'This is a model that contains a some patterns',
+    type: 'object',
+    required: ['key', 'name'],
+    properties: {
+        key: {
+            maxLength: 64,
+            pattern: '^[a-zA-Z0-9_]*$',
+            type: 'string'
+        },
+        name: {
+            maxLength: 255,
+            type: 'string'
+        },
+        id: {
+            type: 'string',
+            pattern: '^\\d{2}-\\d{3}-\\d{4}$'
+        },
+        text: {
+            type: 'string',
+            pattern: '^\\w+$'
+        },
+        patternWithSingleQuotes: {
+            type: 'string',
+            pattern: "^[a-zA-Z0-9']*$"
+        },
+        patternWithNewline: {
+            type: 'string',
+            pattern: 'aaa\\nbbb'
+        },
+        patternWithBacktick: {
+            type: 'string',
+            pattern: 'aaa`bbb'
+        }
+    }
+} as const;
