@@ -692,7 +692,7 @@ export const failure_FailureSchema = {
 export const ModelWithPropertiesWritableSchema = {
     description: 'This is a model with one nested property',
     type: 'object',
-    required: ['required', 'requiredAndReadOnly'],
+    required: ['required'],
     properties: {
         required: {
             type: 'string'

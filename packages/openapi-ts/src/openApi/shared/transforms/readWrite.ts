@@ -139,13 +139,9 @@ const pruneSchemaByScope = (
   scope: 'readOnly' | 'writeOnly',
 ): boolean => {
   if (schema && typeof schema === 'object') {
-    // Remove $ref if the referenced schema is exclusively the excluded scope
-    if (
-      '$ref' in schema &&
-      typeof (schema as Record<string, unknown>)['$ref'] === 'string'
-    ) {
-      const ref = (schema as Record<string, unknown>)['$ref'] as string;
-      const nodeInfo = graph.nodes.get(ref);
+    // Handle $ref schemas
+    if ('$ref' in schema && typeof schema.$ref === 'string') {
+      const nodeInfo = graph.nodes.get(schema.$ref);
       if (nodeInfo?.scopes) {
         // Only remove $ref if the referenced schema is *exclusively* the excluded scope.
         // This ensures 'normal' or multi-scope schemas are always kept.
@@ -197,6 +193,9 @@ const pruneSchemaByScope = (
         !(value instanceof Array)
       ) {
         const objMap = value as Record<string, unknown>;
+        // Track removed properties for object schemas to update required array
+        const removedProperties = new Set<string>();
+
         for (const key of Object.keys(objMap)) {
           const prop = objMap[key];
           if (
@@ -205,13 +204,42 @@ const pruneSchemaByScope = (
             (prop as Record<string, unknown>)[scope] === true
           ) {
             delete objMap[key];
+            // Track removed properties for object schemas
+            if (keyword === 'properties') {
+              removedProperties.add(key);
+            }
           } else {
             const shouldRemove = pruneSchemaByScope(graph, prop, scope);
             if (shouldRemove) {
               delete objMap[key];
+              // Track removed properties for object schemas
+              if (keyword === 'properties') {
+                removedProperties.add(key);
+              }
             }
           }
         }
+
+        // Update required array if properties were removed
+        if (
+          removedProperties.size > 0 &&
+          keyword === 'properties' &&
+          'required' in schema &&
+          Array.isArray((schema as Record<string, unknown>).required)
+        ) {
+          const required = (schema as Record<string, unknown>)
+            .required as string[];
+          const filteredRequired = required.filter(
+            (prop) => !removedProperties.has(prop),
+          );
+
+          if (filteredRequired.length === 0) {
+            delete (schema as Record<string, unknown>).required;
+          } else {
+            (schema as Record<string, unknown>).required = filteredRequired;
+          }
+        }
+
         if (!Object.keys(objMap).length) {
           delete (schema as Record<string, unknown>)[keyword];
         }
