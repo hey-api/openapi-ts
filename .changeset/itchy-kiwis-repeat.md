@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': patch
 ---
 
-feat: add support for generating const enum as enum type
+feat(typescript): add `typescript-const` to `enums.mode` for generating TypeScript enums as constants
