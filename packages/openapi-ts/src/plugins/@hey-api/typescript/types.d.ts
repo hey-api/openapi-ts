@@ -2,7 +2,7 @@ import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
 import type { Api } from './api';
 
-export type EnumsType = 'javascript' | 'typescript';
+export type EnumsType = 'javascript' | 'typescript' | 'typescript-const';
 
 export type UserConfig = Plugin.Name<'@hey-api/typescript'> & {
   /**
@@ -81,6 +81,7 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> & {
          * Can be:
          * - `javascript`: Generates JavaScript objects
          * - `typescript`: Generates TypeScript enums
+         * - `typescript-const`: Generates TypeScript const enums
          *
          * @default 'javascript'
          */
@@ -330,6 +331,7 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
      * Can be:
      * - `javascript`: Generates JavaScript objects
      * - `typescript`: Generates TypeScript enums
+     * - `typescript-const`: Generates TypeScript const enums
      *
      * @default 'javascript'
      */
