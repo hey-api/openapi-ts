@@ -150,10 +150,23 @@ for (const client of clients) {
         }),
         description: 'SDK with NodeNext tsconfig',
       },
+      {
+        config: createConfig({
+          output: {
+            clean: false,
+            path: 'clean-false',
+          },
+          plugins: [client, '@hey-api/sdk'],
+        }),
+        description: 'avoid appending extension multiple times | twice',
+      },
     ];
 
-    it.each(scenarios)('$description', async ({ config }) => {
+    it.each(scenarios)('$description', async ({ config, description }) => {
       await createClient(config);
+      if (description.endsWith('twice')) {
+        await createClient(config);
+      }
 
       const outputPath =
         typeof config.output === 'string' ? config.output : config.output.path;
