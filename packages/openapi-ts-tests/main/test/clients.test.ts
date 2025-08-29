@@ -150,10 +150,24 @@ for (const client of clients) {
         }),
         description: 'SDK with NodeNext tsconfig',
       },
+      {
+        config: createConfig({
+          output: {
+            clean: false,
+            path: 'clean-false',
+          },
+          plugins: [client, '@hey-api/sdk'],
+        }),
+        description: 'SDK with NodeNext tsconfig',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
       await createClient(config);
+      if (typeof config.output !== 'string' && config.output.clean === false) {
+        // generate client twice to capture output after running in a non-clean state
+        await createClient(config);
+      }
 
       const outputPath =
         typeof config.output === 'string' ? config.output : config.output.path;
