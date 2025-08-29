@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': patch
 ---
 
-Update schema pruning logic to correctly handle required properties
+fix(parser): prune `required` array after removing properties
