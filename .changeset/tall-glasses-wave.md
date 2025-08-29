@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': patch
 ---
 
-Fix issue where .gen.ts would get appended to existing files with clean: false
+fix(output): avoid appending `.gen` to file names multiple times when `output.clean` is `false`
