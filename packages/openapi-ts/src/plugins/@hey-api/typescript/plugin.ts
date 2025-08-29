@@ -77,7 +77,8 @@ const schemaToEnumObject = ({
       if (
         numberRegExp.test(key) &&
         plugin.config.enums.enabled &&
-        plugin.config.enums.mode === 'typescript'
+        (plugin.config.enums.mode === 'typescript' ||
+          plugin.config.enums.mode === 'typescript-const')
       ) {
         key = `_${key}`;
       }
