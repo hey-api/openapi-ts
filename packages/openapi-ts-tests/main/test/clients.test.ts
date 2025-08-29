@@ -158,14 +158,13 @@ for (const client of clients) {
           },
           plugins: [client, '@hey-api/sdk'],
         }),
-        description: 'SDK with NodeNext tsconfig',
+        description: 'avoid appending extension multiple times | twice',
       },
     ];
 
-    it.each(scenarios)('$description', async ({ config }) => {
+    it.each(scenarios)('$description', async ({ config, description }) => {
       await createClient(config);
-      if (typeof config.output !== 'string' && config.output.clean === false) {
-        // generate client twice to capture output after running in a non-clean state
+      if (description.endsWith('twice')) {
         await createClient(config);
       }
 
