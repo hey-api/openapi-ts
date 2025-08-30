@@ -93,7 +93,7 @@ You can also generate output programmatically by importing `@hey-api/openapi-ts`
 
 ::: code-group
 
-```ts [openapi-ts.ts]
+```ts [openapi-ts.config.ts]
 import { createClient } from '@hey-api/openapi-ts';
 
 createClient({
