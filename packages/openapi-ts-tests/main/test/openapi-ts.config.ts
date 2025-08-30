@@ -81,7 +81,7 @@ export default defineConfig(() => {
         // deprecated: false,
         operations: {
           include: [
-            // 'GET /event',
+            'GET /event',
             // '/^[A-Z]+ /v1//',
           ],
         },
@@ -229,21 +229,21 @@ export default defineConfig(() => {
       {
         // case: 'SCREAMING_SNAKE_CASE',
         // comments: false,
-        definitions: 'z{{name}}Definition',
+        // definitions: 'z{{name}}Definition',
         exportFromIndex: true,
-        metadata: true,
-        // name: 'valibot',
-        requests: {
-          // case: 'SCREAMING_SNAKE_CASE',
-          name: 'z{{name}}TestData',
-        },
-        responses: {
-          // case: 'snake_case',
-          name: 'z{{name}}TestResponse',
-        },
-        webhooks: {
-          name: 'q{{name}}CoolWebhook',
-        },
+        // metadata: true,
+        name: 'valibot',
+        // requests: {
+        //   // case: 'SCREAMING_SNAKE_CASE',
+        //   name: 'z{{name}}TestData',
+        // },
+        // responses: {
+        //   // case: 'snake_case',
+        //   name: 'z{{name}}TestResponse',
+        // },
+        // webhooks: {
+        //   name: 'q{{name}}CoolWebhook',
+        // },
       },
       {
         // case: 'snake_case',
@@ -261,7 +261,7 @@ export default defineConfig(() => {
         },
         exportFromIndex: true,
         metadata: true,
-        // name: 'zod',
+        name: 'zod',
         // requests: {
         //   // case: 'SCREAMING_SNAKE_CASE',
         //   // name: 'z{{name}}TestData',

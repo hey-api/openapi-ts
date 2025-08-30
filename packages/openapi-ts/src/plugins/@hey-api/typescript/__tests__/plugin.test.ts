@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 
+import { CodegenProject } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -163,6 +164,7 @@ describe('generateLegacyTypes', () => {
         },
         context: {} as any,
         dependencies: [],
+        gen: new CodegenProject(),
         handler: () => {},
         name: '@hey-api/typescript',
         output: '',

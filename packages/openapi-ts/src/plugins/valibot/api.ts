@@ -16,6 +16,8 @@ const createRequestValidator = ({
   plugin: ValibotPlugin['Instance'];
 }): ts.ArrowFunction | undefined => {
   const { requests } = plugin.config;
+  // const f = plugin.gen.ensureFile(plugin.output);
+  // TODO: replace
   const schemaIdentifier = plugin.context.file({ id: valibotId })!.identifier({
     // TODO: refactor for better cross-plugin compatibility
     $ref: `#/valibot-response/${operation.id}`,
@@ -35,6 +37,10 @@ const createRequestValidator = ({
     }),
     name: schemaIdentifier.name,
   });
+  // file.import({
+  //   module: f.relativePathFromFile({ path: file.nameWithoutExtension() }),
+  //   name: schemaIdentifier.name,
+  // });
 
   file.import({
     alias: identifiers.v.text,
@@ -80,6 +86,8 @@ const createResponseValidator = ({
   plugin: ValibotPlugin['Instance'];
 }): ts.ArrowFunction | undefined => {
   const { responses } = plugin.config;
+  // const f = plugin.gen.ensureFile(plugin.output);
+  // TODO: replace
   const schemaIdentifier = plugin.context.file({ id: valibotId })!.identifier({
     // TODO: refactor for better cross-plugin compatibility
     $ref: `#/valibot-response/${operation.id}`,
@@ -99,6 +107,10 @@ const createResponseValidator = ({
     }),
     name: schemaIdentifier.name,
   });
+  // file.import({
+  //   module: f.relativePathFromFile({ path: file.nameWithoutExtension() }),
+  //   name: schemaIdentifier.name,
+  // });
 
   file.import({
     alias: identifiers.v.text,

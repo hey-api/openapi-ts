@@ -1,3 +1,5 @@
+import type { CodegenProject } from '@hey-api/codegen-core';
+
 import { HeyApiError } from '../../../error';
 import type { IR } from '../../../ir/types';
 import type { OpenApi } from '../../../openApi/types';
@@ -26,6 +28,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   config: Omit<T['resolvedConfig'], 'name' | 'output'>;
   context: IR.Context;
   dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
+  gen: CodegenProject;
   private handler: Plugin.Config<T>['handler'];
   name: T['resolvedConfig']['name'];
   output: Required<T['config']>['output'];
@@ -44,6 +47,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     > & {
       api?: T['api'];
       context: IR.Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
+      gen: CodegenProject;
       name: string;
       output: string;
     },
@@ -52,6 +56,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.config = props.config;
     this.context = props.context;
     this.dependencies = props.dependencies;
+    this.gen = props.gen;
     this.handler = props.handler;
     this.name = props.name;
     this.output = props.output;
