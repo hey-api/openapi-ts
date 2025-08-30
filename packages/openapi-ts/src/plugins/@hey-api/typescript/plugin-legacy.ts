@@ -76,7 +76,12 @@ const generateEnum = ({
     ...setUniqueTypeNameArgs,
   });
   if (created) {
+    const config = getConfig();
+    const pluginTypeScript = config.plugins['@hey-api/typescript'];
     const node = tsc.enumDeclaration({
+      asConst:
+        typeof pluginTypeScript?.config.enums === 'object' &&
+        pluginTypeScript.config.enums.mode === 'typescript-const',
       comments,
       leadingComment,
       name,
@@ -176,9 +181,11 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
     pluginTypeScript?.config &&
     typeof pluginTypeScript.config.enums === 'object' &&
     pluginTypeScript.config.enums.enabled &&
-    pluginTypeScript.config.enums.mode === 'typescript'
+    (pluginTypeScript.config.enums.mode === 'typescript' ||
+      pluginTypeScript.config.enums.mode === 'typescript-const')
   ) {
     generateEnum({
+      asConst: pluginTypeScript.config.enums.mode === 'typescript-const',
       client,
       comments,
       leadingComment: comment,
@@ -237,8 +244,13 @@ const processScopedEnum = ({ model, onNode }: TypesProps) => {
       comments[key] = [escapeComment(comment)];
     }
   });
+  const config = getConfig();
+  const pluginTypeScript = config.plugins['@hey-api/typescript'];
   onNode(
     tsc.enumDeclaration({
+      asConst:
+        typeof pluginTypeScript?.config.enums === 'object' &&
+        pluginTypeScript.config.enums.mode === 'typescript-const',
       comments,
       leadingComment: [
         model.description && escapeComment(model.description),

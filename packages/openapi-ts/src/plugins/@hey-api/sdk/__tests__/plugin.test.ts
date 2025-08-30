@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { CodegenProject } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -170,6 +171,7 @@ describe('handlerLegacy', () => {
         },
         context: {} as any,
         dependencies: [],
+        gen: new CodegenProject(),
         handler: () => {},
         name: '@hey-api/sdk',
         output: '',
@@ -342,6 +344,7 @@ describe('methodNameBuilder', () => {
         },
         context: {} as any,
         dependencies: [],
+        gen: new CodegenProject(),
         handler: () => {},
         name: '@hey-api/sdk',
         output: '',
@@ -475,6 +478,7 @@ describe('methodNameBuilder', () => {
         },
         context: {} as any,
         dependencies: [],
+        gen: new CodegenProject(),
         handler: () => {},
         name: '@hey-api/sdk',
         output: '',
@@ -610,6 +614,7 @@ describe('methodNameBuilder', () => {
         },
         context: {} as any,
         dependencies: [],
+        gen: new CodegenProject(),
         handler: () => {},
         name: '@hey-api/sdk',
         output: '',

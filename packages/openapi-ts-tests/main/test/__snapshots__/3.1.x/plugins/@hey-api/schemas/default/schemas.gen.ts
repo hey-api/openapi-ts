@@ -1564,7 +1564,7 @@ export const ModelWithNestedCompositionEnumsSchema = {
 
 export const ModelWithReadOnlyAndWriteOnlySchema = {
     type: 'object',
-    required: ['foo', 'bar', 'baz'],
+    required: ['foo', 'bar'],
     properties: {
         foo: {
             type: 'string'
@@ -1996,7 +1996,7 @@ export const Generic_Schema_Duplicate_Issue_1_System_String_Schema = {
 export const ModelWithPropertiesWritableSchema = {
     description: 'This is a model with one nested property',
     type: 'object',
-    required: ['required', 'requiredAndReadOnly', 'requiredAndNullable'],
+    required: ['required', 'requiredAndNullable'],
     properties: {
         required: {
             type: 'string'
@@ -2080,7 +2080,7 @@ export const FileWritableSchema = {
 
 export const ModelWithReadOnlyAndWriteOnlyWritableSchema = {
     type: 'object',
-    required: ['foo', 'bar', 'baz'],
+    required: ['foo', 'baz'],
     properties: {
         foo: {
             type: 'string'
