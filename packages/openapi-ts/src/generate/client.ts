@@ -144,7 +144,7 @@ const renameAndEditFileContents = ({
     suffix = `.${infix}`;
 
     // rename file: foo.ts -> foo.gen.ts
-    if (name !== 'index') {
+    if (name !== 'index' && !name.endsWith(suffix)) {
       const renamedFilePath = path.resolve(
         outputPath,
         [name, infix, extension].join('.'),

@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { TypeScriptRenderer } from '../../../generate/renderer';
+// import { TypeScriptRenderer } from '../../../generate/renderer';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
@@ -1101,17 +1101,17 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
     id: zodId,
     path: plugin.output,
   });
-  const f = plugin.gen.createFile(plugin.output, {
-    extension: '.ts',
-    path: '{{path}}.gen',
-    renderer: new TypeScriptRenderer(),
-  });
+  // const f = plugin.gen.createFile(plugin.output, {
+  //   extension: '.ts',
+  //   path: '{{path}}.gen',
+  //   renderer: new TypeScriptRenderer(),
+  // });
 
   file.import({
     module: getZodModule({ plugin }),
     name: identifiers.z.text,
   });
-  f.addImport({ from: getZodModule({ plugin }), names: [identifiers.z.text] });
+  // f.addImport({ from: getZodModule({ plugin }), names: [identifiers.z.text] });
 
   plugin.forEach(
     'operation',
@@ -1174,8 +1174,8 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
     },
   );
 
-  if (plugin.config.exportFromIndex && f.hasContent()) {
-    const index = plugin.gen.ensureFile('index');
-    index.addExport({ from: f, namespaceImport: true });
-  }
+  // if (plugin.config.exportFromIndex && f.hasContent()) {
+  //   const index = plugin.gen.ensureFile('index');
+  //   index.addExport({ from: f, namespaceImport: true });
+  // }
 };

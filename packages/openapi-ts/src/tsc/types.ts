@@ -747,6 +747,7 @@ export const createObjectType = <
 
 /**
  * Create enum declaration. Example `export enum T = { X, Y };`
+ * @param asConst - whether to use const enums.
  * @param comments - comments to add to each property.
  * @param leadingComment - leading comment to add to enum.
  * @param name - the name of the enum.
@@ -756,11 +757,13 @@ export const createObjectType = <
 export const createEnumDeclaration = <
   T extends Record<string, any> | Array<ObjectValue>,
 >({
+  asConst,
   comments: enumMemberComments = {},
   leadingComment: comments,
   name,
   obj,
 }: {
+  asConst: boolean;
   comments?: Record<string | number, Comments>;
   leadingComment?: Comments;
   name: string | ts.TypeReferenceNode;
@@ -800,8 +803,13 @@ export const createEnumDeclaration = <
         return enumMember;
       });
 
+  const defaultModifiers = [createModifier({ keyword: 'export' })];
+  const constModifier = asConst
+    ? [ts.factory.createToken(ts.SyntaxKind.ConstKeyword)]
+    : [];
+  const modifiers = [...defaultModifiers, ...constModifier];
   const node = ts.factory.createEnumDeclaration(
-    [createModifier({ keyword: 'export' })],
+    modifiers,
     typeof name === 'string'
       ? createIdentifier({ text: name })
       : // TODO: https://github.com/hey-api/openapi-ts/issues/2289

@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.82.1
+
+### Patch Changes
+
+- [#2541](https://github.com/hey-api/openapi-ts/pull/2541) [`ad3c633`](https://github.com/hey-api/openapi-ts/commit/ad3c633b21d241ba72f27828870c354bfc00bd7e) Thanks [@ixnas](https://github.com/ixnas)! - feat(typescript): add `typescript-const` to `enums.mode` for generating TypeScript enums as constants
+
+- [#2556](https://github.com/hey-api/openapi-ts/pull/2556) [`74c16f2`](https://github.com/hey-api/openapi-ts/commit/74c16f219706d22aebbc166e8bbb95412a2a5b6f) Thanks [@carson2222](https://github.com/carson2222)! - fix(parser): prune `required` array after removing properties
+
+- [#2559](https://github.com/hey-api/openapi-ts/pull/2559) [`5012a72`](https://github.com/hey-api/openapi-ts/commit/5012a721e7b7064910e5e4056cb4adf3ae63f19b) Thanks [@jgoz](https://github.com/jgoz)! - fix(output): avoid appending `.gen` to file names multiple times when `output.clean` is `false`
+
 ## 0.82.0
 
 ### Minor Changes

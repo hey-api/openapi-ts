@@ -249,6 +249,22 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'enum-names-values.json',
+        output: 'enum-names-values-typescript-const',
+        plugins: [
+          {
+            enums: {
+              case: 'camelCase',
+              mode: 'typescript-const',
+            },
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'handles TypeScript const enum modifier',
+    },
+    {
+      config: createConfig({
         input: 'exclude-deprecated.yaml',
         output: 'exclude-deprecated',
         parser: {

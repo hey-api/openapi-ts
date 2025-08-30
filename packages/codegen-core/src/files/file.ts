@@ -145,7 +145,10 @@ export class CodegenFile implements ICodegenFile {
   }
 
   relativePathFromFile(file: Pick<ICodegenFile, 'path'>): string {
-    let relativePath = path.relative(path.dirname(file.path), this.path);
+    let relativePath = path.posix.relative(
+      path.posix.dirname(file.path),
+      this.path,
+    );
     if (!relativePath.startsWith('.')) {
       relativePath = `./${relativePath}`;
     }
@@ -153,7 +156,10 @@ export class CodegenFile implements ICodegenFile {
   }
 
   relativePathToFile(file: Pick<ICodegenFile, 'path'>): string {
-    let relativePath = path.relative(path.dirname(this.path), file.path);
+    let relativePath = path.posix.relative(
+      path.posix.dirname(this.path),
+      file.path,
+    );
     if (!relativePath.startsWith('.')) {
       relativePath = `./${relativePath}`;
     }
