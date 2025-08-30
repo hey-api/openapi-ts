@@ -46,6 +46,13 @@ describe(`OpenAPI ${version}`, () => {
   const scenarios = [
     {
       config: createConfig({
+        input: 'json-pointer-path.json',
+        output: 'json-pointer-path',
+      }),
+      description: 'handles json pointer to path',
+    },
+    {
+      config: createConfig({
         input: 'pattern-properties.json',
         output: 'pattern-properties',
       }),

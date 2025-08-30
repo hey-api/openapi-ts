@@ -1,0 +1,45 @@
+{
+  "openapi": "3.0.0",
+  "info": { "title": "Sample API", "version": "1.0.0" },
+  "paths": {
+    "/foo/boo": {
+      "get": {
+        "summary": "Get foo",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "foo": { "type": "integer" },
+                      "bar": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Post foo",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/paths/~1foo~1boo/get/responses/200/content/application~1json/schema"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

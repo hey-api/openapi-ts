@@ -1,0 +1,37 @@
+{
+  "swagger": "2.0",
+  "info": { "title": "Sample API", "version": "1.0.0" },
+  "paths": {
+    "/foo/boo": {
+      "get": {
+        "summary": "Get foo",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "foo": { "type": "integer" },
+                  "bar": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Post foo",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/paths/~1foo~1boo/get/responses/200/schema"
+            }
+          }
+        }
+      }
+    }
+  }
+}
