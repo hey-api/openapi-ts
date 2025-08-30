@@ -1,5 +1,11 @@
 import ts from 'typescript';
 
+import type {
+  EnsureUniqueIdentifierData,
+  GeneratedFile,
+} from '../../../generate/file';
+import { parseRef } from '../../../generate/file';
+import type { Identifier, Namespace } from '../../../generate/file/types';
 import {
   createOperationKey,
   operationResponsesMap,
@@ -111,6 +117,36 @@ const schemaResponseTransformerNodes = ({
   return nodes;
 };
 
+/**
+ * Prevents a specific identifier from being created. This is useful for
+ * transformers where we know a certain transformer won't be needed, and
+ * we want to avoid attempting to create since we know it won't happen.
+ */
+const blockIdentifier = ({
+  $ref,
+  file,
+  namespace,
+}: Pick<EnsureUniqueIdentifierData, '$ref'> & {
+  file: GeneratedFile;
+  namespace: Namespace;
+}): Identifier => {
+  const { name, ref } = parseRef($ref);
+  const refValue =
+    file.identifiers[name.toLocaleLowerCase()]?.[namespace]?.[ref];
+  if (!refValue) {
+    throw new Error(
+      `Identifier for $ref ${$ref} in namespace ${namespace} not found`,
+    );
+  }
+
+  refValue.name = false;
+
+  return {
+    created: false,
+    name: refValue.name,
+  };
+};
+
 const processSchemaType = ({
   dataExpression,
   plugin,
@@ -158,8 +194,9 @@ const processSchemaType = ({
       } else {
         // the created schema response transformer was empty, do not generate
         // it and prevent any future attempts
-        identifier = file.blockIdentifier({
+        identifier = blockIdentifier({
           $ref: schemaResponseTransformerRef({ $ref: schema.$ref }),
+          file,
           namespace: 'value',
         });
       }
@@ -474,11 +511,12 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
     } else {
       // the created schema response transformer was empty, do not generate
       // it and prevent any future attempts
-      identifierResponseTransformer = file.blockIdentifier({
+      identifierResponseTransformer = blockIdentifier({
         $ref: operationTransformerIrRef({
           id: operation.id,
           type: 'response',
         }),
+        file,
         namespace: 'value',
       });
     }

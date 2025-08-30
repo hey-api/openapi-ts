@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 
 import ts from 'typescript';
@@ -37,11 +38,13 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
   }
 
   if (!context.config.dryRun) {
+    // TODO: delete old approach
     const indexFile = context.createFile({
       id: '_index',
       path: 'index',
     });
 
+    // TODO: delete old approach
     for (const file of Object.values(context.files)) {
       const fileName = file.nameWithoutExtension();
 
@@ -76,8 +79,19 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
       file.write('\n\n', tsConfig);
     }
 
-    if (context.config.output.indexFile) {
+    // TODO: delete old approach
+    if (!indexFile.isEmpty()) {
       indexFile.write('\n', tsConfig);
+    }
+
+    for (const file of context.gen.render({
+      moduleResolution: tsConfig?.options.moduleResolution,
+    })) {
+      if (!file.content) continue;
+      const filePath = path.resolve(outputPath, file.path);
+      const dir = path.dirname(filePath);
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(filePath, file.content, { encoding: 'utf8' });
     }
   }
 };

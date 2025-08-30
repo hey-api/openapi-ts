@@ -22,6 +22,19 @@ const images = [
     sizes: [
       {
         formats: ['png'],
+        width: 300,
+      },
+      {
+        formats: ['png'],
+        width: 640,
+      },
+    ],
+    source: 'bricks.png',
+  },
+  {
+    sizes: [
+      {
+        formats: ['png'],
         width: 16,
       },
       {

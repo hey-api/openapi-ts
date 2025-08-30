@@ -1,8 +1,11 @@
 import path from 'node:path';
 
+import { CodegenProject } from '@hey-api/codegen-core';
+
 import type { Package } from '../config/utils/package';
 import { packageFactory } from '../config/utils/package';
 import { GeneratedFile } from '../generate/file';
+import { TypeScriptRenderer } from '../generate/renderer';
 import type { PluginConfigMap } from '../plugins/config';
 import { PluginInstance } from '../plugins/shared/utils/instance';
 import type { PluginNames } from '../plugins/types';
@@ -22,6 +25,7 @@ export class IRContext<Spec extends Record<string, any> = any> {
    * A map of files that will be generated from `spec`.
    */
   public files: Files = {};
+  public gen: CodegenProject;
   /**
    * Intermediate representation model obtained from `spec`.
    */
@@ -60,9 +64,17 @@ export class IRContext<Spec extends Record<string, any> = any> {
     spec: Spec;
   }) {
     this.config = config;
+    this.gen = new CodegenProject();
     this.logger = logger;
     this.package = packageFactory(dependencies);
     this.spec = spec;
+
+    if (config.output.indexFile) {
+      this.gen.createFile('index', {
+        extension: '.ts',
+        renderer: new TypeScriptRenderer(),
+      });
+    }
   }
 
   /**
@@ -123,6 +135,7 @@ export class IRContext<Spec extends Record<string, any> = any> {
       config: plugin.config as any,
       context: this as any,
       dependencies: plugin.dependencies ?? [],
+      gen: this.gen,
       handler: plugin.handler,
       name: plugin.name,
       output: plugin.output!,

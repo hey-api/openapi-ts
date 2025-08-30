@@ -120,8 +120,10 @@ describe('experimentalParser', () => {
       paths: {},
     };
     parseOpenApiSpec({
-      // @ts-expect-error
-      config: {},
+      config: {
+        // @ts-expect-error
+        output: {},
+      },
       spec,
     });
     expect(parseV3_0_X).toHaveBeenCalled();
@@ -137,8 +139,10 @@ describe('experimentalParser', () => {
       paths: {},
     };
     parseOpenApiSpec({
-      // @ts-expect-error
-      config: {},
+      config: {
+        // @ts-expect-error
+        output: {},
+      },
       spec,
     });
     expect(parseV3_0_X).toHaveBeenCalled();
@@ -154,8 +158,10 @@ describe('experimentalParser', () => {
       paths: {},
     };
     parseOpenApiSpec({
-      // @ts-expect-error
-      config: {},
+      config: {
+        // @ts-expect-error
+        output: {},
+      },
       spec,
     });
     expect(parseV3_0_X).toHaveBeenCalled();
@@ -171,8 +177,10 @@ describe('experimentalParser', () => {
       paths: {},
     };
     parseOpenApiSpec({
-      // @ts-expect-error
-      config: {},
+      config: {
+        // @ts-expect-error
+        output: {},
+      },
       spec,
     });
     expect(parseV3_0_X).toHaveBeenCalled();
@@ -188,8 +196,10 @@ describe('experimentalParser', () => {
       paths: {},
     };
     parseOpenApiSpec({
-      // @ts-expect-error
-      config: {},
+      config: {
+        // @ts-expect-error
+        output: {},
+      },
       spec,
     });
     expect(parseV3_0_X).toHaveBeenCalled();
@@ -204,8 +214,10 @@ describe('experimentalParser', () => {
       openapi: '3.1.0',
     };
     parseOpenApiSpec({
-      // @ts-expect-error
-      config: {},
+      config: {
+        // @ts-expect-error
+        output: {},
+      },
       spec,
     });
     expect(parseV3_1_X).toHaveBeenCalled();
@@ -220,8 +232,10 @@ describe('experimentalParser', () => {
       openapi: '3.1.1',
     };
     parseOpenApiSpec({
-      // @ts-expect-error
-      config: {},
+      config: {
+        // @ts-expect-error
+        output: {},
+      },
       spec,
     });
     expect(parseV3_1_X).toHaveBeenCalled();
