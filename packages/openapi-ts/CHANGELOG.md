@@ -1,5 +1,12 @@
 # @hey-api/openapi-ts
 
+## 0.82.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @hey-api/codegen-core@0.0.1
+
 ## 0.82.1
 
 ### Patch Changes
