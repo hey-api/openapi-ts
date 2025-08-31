@@ -65,7 +65,7 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (opts.serializedBody === undefined || opts.serializedBody === '') {
+    if (opts.body === undefined || opts.body === '') {
       opts.headers.delete('Content-Type');
     }
 
@@ -80,8 +80,11 @@ export const createClient = (config: Config = {}): Client => {
     const requestInit: ReqInit = {
       redirect: 'follow',
       ...opts,
-      body: opts.serializedBody,
     };
+
+    if (opts.serializedBody) {
+      requestInit.body = opts.serializedBody;
+    }
 
     let request = new Request(url, requestInit);
 
