@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/nuxt",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "🚀 Nuxt module for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {
