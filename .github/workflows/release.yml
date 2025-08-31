@@ -44,9 +44,9 @@ jobs:
       - name: Create Release Pull Request
         uses: changesets/action@v1.5.3
         with:
-          commit: '[ci] release'
+          commit: 'ci: release'
           publish: pnpm changeset publish
-          title: '[ci] release'
+          title: 'ci: release'
           version: pnpm changeset version
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
