@@ -5,6 +5,7 @@ import type { IR } from '../../../ir/types';
 import { tsc } from '../../../tsc';
 import {
   createOperationComment,
+  hasOperationSse,
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
@@ -35,7 +36,8 @@ export const createQueryOptions = ({
 }): void => {
   if (
     !plugin.config.queryOptions.enabled ||
-    !plugin.hooks.operation.isQuery(operation)
+    !plugin.hooks.operation.isQuery(operation) ||
+    hasOperationSse({ operation })
   ) {
     return;
   }
