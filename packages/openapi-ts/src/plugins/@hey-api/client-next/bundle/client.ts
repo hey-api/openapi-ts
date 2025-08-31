@@ -62,7 +62,7 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (opts.serializedBody === undefined || opts.serializedBody === '') {
+    if (opts.body === undefined || opts.body === '') {
       opts.headers.delete('Content-Type');
     }
 
@@ -85,10 +85,15 @@ export const createClient = (config: Config = {}): Client => {
     // fetch must be assigned here, otherwise it would throw the error:
     // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
     const _fetch = opts.fetch!;
-    let response = await _fetch(url, {
+    const requestInit: ReqInit = {
       ...opts,
-      body: opts.serializedBody as ReqInit['body'],
-    });
+    };
+
+    if (opts.serializedBody) {
+      requestInit.body = opts.serializedBody;
+    }
+
+    let response = await _fetch(url, requestInit);
 
     for (const fn of interceptors.response._fns) {
       if (fn) {
