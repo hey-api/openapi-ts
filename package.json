@@ -30,7 +30,6 @@
     "test:changelog": "vitest run .changeset",
     "test:changelog:watch": "vitest watch .changeset",
     "test:coverage": "turbo run test:coverage",
-    "test:e2e": "turbo run test:e2e",
     "test:update": "turbo run test:update",
     "test:watch": "turbo run test:watch",
     "test": "turbo run test",
