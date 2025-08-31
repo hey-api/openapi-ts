@@ -1,5 +1,5 @@
-import { getInfo, getInfoFromPullRequest } from "@changesets/get-github-info";
-import { config } from "dotenv";
+import { getInfo, getInfoFromPullRequest } from '@changesets/get-github-info';
+import { config } from 'dotenv';
 
 config();
 
@@ -12,16 +12,23 @@ function getRepo() {
 
 /** @type {import("@changesets/types").ChangelogFunctions} */
 export default {
-  getDependencyReleaseLine: async (changesets, dependenciesUpdated) => {
+  getDependencyReleaseLine: async (_, dependenciesUpdated) => {
     if (!dependenciesUpdated.length) {
       return '';
     }
 
-    const list = dependenciesUpdated.map((dependency) => `  - ${dependency.name}@${dependency.newVersion}`);
+    const list = dependenciesUpdated.map(
+      (dependency) => `  - ${dependency.name}@${dependency.newVersion}`,
+    );
 
-    return ['### Updated Dependencies:', ...list].join("\n");
+    return ['### Updated Dependencies:', ...list].join('\n');
   },
-  getReleaseLine: async (changeset) => {
+  getReleaseLine: async (changeset, type, changelogOpts) => {
+    console.warn('----🐍🐍🐍🐍🐍🐍🐍');
+    console.warn(changeset);
+    console.warn(type);
+    console.warn(changelogOpts);
+    console.warn('----🐍🐍🐍🐍🐍🐍🐍');
     const repo = getRepo();
 
     /** @type number | undefined */
@@ -83,9 +90,9 @@ export default {
       ? usersFromSummary
           .map(
             (userFromSummary) =>
-              `[@${userFromSummary}](https://github.com/${userFromSummary})`
+              `[@${userFromSummary}](https://github.com/${userFromSummary})`,
           )
-          .join(", ")
+          .join(', ')
       : links.user;
 
     const metadata = [
