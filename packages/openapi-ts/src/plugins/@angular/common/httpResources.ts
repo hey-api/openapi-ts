@@ -1,4 +1,4 @@
-import type ts from 'typescript';
+import ts from 'typescript';
 
 import type { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
@@ -14,6 +14,26 @@ import {
 } from '../../shared/utils/operation';
 import { REQUEST_APIS_SUFFIX, RESOURCE_APIS_SUFFIX } from './constants';
 import type { AngularCommonPlugin } from './types';
+
+// Helper function to create a variable statement
+const createVariableStatement = (
+  name: string,
+  initializer: ts.Expression,
+): ts.VariableStatement =>
+  ts.factory.createVariableStatement(
+    undefined,
+    ts.factory.createVariableDeclarationList(
+      [
+        ts.factory.createVariableDeclaration(
+          name,
+          undefined,
+          undefined,
+          initializer,
+        ),
+      ],
+      ts.NodeFlags.Const,
+    ),
+  );
 
 interface AngularServiceClassEntry {
   className: string;
@@ -198,13 +218,11 @@ const generateAngularFunctionServices = ({
 
 const generateResourceCallExpression = ({
   file,
-  isRequiredOptions,
   operation,
   plugin,
   responseTypeName,
 }: {
   file: GeneratedFile;
-  isRequiredOptions: boolean;
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
   responseTypeName: string;
@@ -213,22 +231,6 @@ const generateResourceCallExpression = ({
 
   // Check if httpRequest is configured to use classes
   const useRequestClasses = plugin.config.httpRequests.asClass;
-  let requestFunctionCall;
-
-  // Create the options call expression based on whether options are required
-  const optionsCallExpression = isRequiredOptions
-    ? tsc.callExpression({
-        functionName: 'options',
-        parameters: [],
-      })
-    : tsc.conditionalExpression({
-        condition: tsc.identifier({ text: 'options' }),
-        whenFalse: tsc.identifier({ text: 'undefined' }),
-        whenTrue: tsc.callExpression({
-          functionName: 'options',
-          parameters: [],
-        }),
-      });
 
   if (useRequestClasses) {
     // For class-based request methods, use inject and class hierarchy
@@ -278,9 +280,37 @@ const generateResourceCallExpression = ({
         name: requestMethodName,
       });
 
-      requestFunctionCall = tsc.callExpression({
-        functionName: methodAccess,
-        parameters: [optionsCallExpression],
+      return tsc.callExpression({
+        functionName: 'httpResource',
+        parameters: [
+          tsc.arrowFunction({
+            parameters: [],
+            statements: [
+              createVariableStatement(
+                'opts',
+                tsc.conditionalExpression({
+                  condition: tsc.identifier({ text: 'options' }),
+                  whenFalse: tsc.identifier({ text: 'undefined' }),
+                  whenTrue: tsc.callExpression({
+                    functionName: 'options',
+                    parameters: [],
+                  }),
+                }),
+              ),
+              tsc.returnStatement({
+                expression: tsc.conditionalExpression({
+                  condition: tsc.identifier({ text: 'opts' }),
+                  whenFalse: tsc.identifier({ text: 'undefined' }),
+                  whenTrue: tsc.callExpression({
+                    functionName: methodAccess,
+                    parameters: [tsc.identifier({ text: 'opts' })],
+                  }),
+                }),
+              }),
+            ],
+          }),
+        ],
+        types: [tsc.typeNode(responseTypeName)],
       });
     }
   } else {
@@ -296,12 +326,41 @@ const generateResourceCallExpression = ({
       name: requestFunctionName,
     });
 
-    requestFunctionCall = tsc.callExpression({
-      functionName: requestImport.name,
-      parameters: [optionsCallExpression],
+    return tsc.callExpression({
+      functionName: 'httpResource',
+      parameters: [
+        tsc.arrowFunction({
+          parameters: [],
+          statements: [
+            createVariableStatement(
+              'opts',
+              tsc.conditionalExpression({
+                condition: tsc.identifier({ text: 'options' }),
+                whenFalse: tsc.identifier({ text: 'undefined' }),
+                whenTrue: tsc.callExpression({
+                  functionName: 'options',
+                  parameters: [],
+                }),
+              }),
+            ),
+            tsc.returnStatement({
+              expression: tsc.conditionalExpression({
+                condition: tsc.identifier({ text: 'opts' }),
+                whenFalse: tsc.identifier({ text: 'undefined' }),
+                whenTrue: tsc.callExpression({
+                  functionName: requestImport.name,
+                  parameters: [tsc.identifier({ text: 'opts' })],
+                }),
+              }),
+            }),
+          ],
+        }),
+      ],
+      types: [tsc.typeNode(responseTypeName)],
     });
   }
 
+  // Fallback return (should not reach here)
   return tsc.callExpression({
     functionName: 'httpResource',
     parameters: [
@@ -309,7 +368,7 @@ const generateResourceCallExpression = ({
         parameters: [],
         statements: [
           tsc.returnStatement({
-            expression: requestFunctionCall,
+            expression: tsc.identifier({ text: 'undefined' }),
           }),
         ],
       }),
@@ -360,7 +419,7 @@ const generateAngularResourceMethod = ({
       {
         isRequired: isRequiredOptions,
         name: 'options',
-        type: `() => Options<${dataType.name || 'unknown'}, ThrowOnError>`,
+        type: `() => Options<${dataType.name || 'unknown'}, ThrowOnError> | undefined`,
       },
     ],
     returnType: undefined,
@@ -368,7 +427,6 @@ const generateAngularResourceMethod = ({
       tsc.returnStatement({
         expression: generateResourceCallExpression({
           file,
-          isRequiredOptions,
           operation,
           plugin,
           responseTypeName: responseType.name || 'unknown',
@@ -425,14 +483,13 @@ const generateAngularResourceFunction = ({
         {
           isRequired: isRequiredOptions,
           name: 'options',
-          type: `() => Options<${dataType.name || 'unknown'}, ThrowOnError>`,
+          type: `() => Options<${dataType.name || 'unknown'}, ThrowOnError> | undefined`,
         },
       ],
       statements: [
         tsc.returnStatement({
           expression: generateResourceCallExpression({
             file,
-            isRequiredOptions,
             operation,
             plugin,
             responseTypeName: responseType.name || 'unknown',
