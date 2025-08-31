@@ -1171,7 +1171,7 @@ importers:
   packages/openapi-ts:
     dependencies:
       '@hey-api/codegen-core':
-        specifier: workspace:^0.0.0
+        specifier: workspace:^0.0.1
         version: link:../codegen-core
       '@hey-api/json-schema-ref-parser':
         specifier: 1.0.7
