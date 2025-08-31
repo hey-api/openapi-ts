@@ -25,6 +25,7 @@ export interface PluginState {
   hasInfiniteQueries: boolean;
   hasMutations: boolean;
   hasQueries: boolean;
+  hasUseQuery?: boolean;
   hasUsedQueryFn: boolean;
   typeInfiniteData: ImportExportItem;
 }
