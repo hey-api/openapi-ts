@@ -53,12 +53,12 @@ export const createClient = (config: Config = {}): Client => {
       });
     }
 
-    if (opts.requestValidator) {
-      await opts.requestValidator(opts);
-    }
-
     if (opts.body && opts.bodySerializer) {
       opts.serializedBody = opts.bodySerializer(opts.body);
+    }
+
+    if (opts.requestValidator) {
+      await opts.requestValidator(opts);
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
