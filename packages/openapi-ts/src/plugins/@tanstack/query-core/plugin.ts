@@ -8,6 +8,7 @@ import { createInfiniteQueryOptions } from './infiniteQueryOptions';
 import { createMutationOptions } from './mutationOptions';
 import { createQueryOptions } from './queryOptions';
 import type { PluginHandler, PluginState } from './types';
+import { createUseQuery } from './useQuery';
 
 export const handler = ({ plugin }: Parameters<PluginHandler>[0]) => {
   const file = plugin.createFile({
@@ -68,26 +69,40 @@ export const handler = ({ plugin }: Parameters<PluginHandler>[0]) => {
             ]
       ).join('.');
 
-    createQueryOptions({
-      operation,
-      plugin,
-      queryFn,
-      state,
-    });
+    if (plugin.hooks.operation.isQuery(operation)) {
+      if (plugin.config.queryOptions.enabled) {
+        createQueryOptions({
+          operation,
+          plugin,
+          queryFn,
+          state,
+        });
+      }
 
-    createInfiniteQueryOptions({
-      operation,
-      plugin,
-      queryFn,
-      state,
-    });
+      if (plugin.config.infiniteQueryOptions.enabled) {
+        createInfiniteQueryOptions({
+          operation,
+          plugin,
+          queryFn,
+          state,
+        });
+      }
 
-    createMutationOptions({
-      operation,
-      plugin,
-      queryFn,
-      state,
-    });
+      if ('useQuery' in plugin.config && plugin.config.useQuery.enabled) {
+        createUseQuery({ operation, plugin, state });
+      }
+    }
+
+    if (plugin.hooks.operation.isMutation(operation)) {
+      if (plugin.config.mutationOptions.enabled) {
+        createMutationOptions({
+          operation,
+          plugin,
+          queryFn,
+          state,
+        });
+      }
+    }
 
     if (state.hasUsedQueryFn) {
       file.import({

@@ -23,12 +23,7 @@ export default {
 
     return ['### Updated Dependencies:', ...list].join('\n');
   },
-  getReleaseLine: async (changeset, type, changelogOpts) => {
-    console.warn('----🐍🐍🐍🐍🐍🐍🐍');
-    console.warn(changeset);
-    console.warn(type);
-    console.warn(changelogOpts);
-    console.warn('----🐍🐍🐍🐍🐍🐍🐍');
+  getReleaseLine: async (changeset) => {
     const repo = getRepo();
 
     /** @type number | undefined */
@@ -73,10 +68,7 @@ export default {
       }
       const commitToFetchFrom = commitFromSummary || changeset.commit;
       if (commitToFetchFrom) {
-        const { links } = await getInfo({
-          commit: commitToFetchFrom,
-          repo,
-        });
+        const { links } = await getInfo({ commit: commitToFetchFrom, repo });
         return links;
       }
       return {

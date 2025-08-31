@@ -205,7 +205,9 @@ The above script can be executed by running `npm run openapi-ts` or equivalent c
 
 ### Node.js
 
-You can also generate output programmatically by importing `@hey-api/openapi-ts` in a TypeScript file.
+You can also generate output programmatically by calling `createClient()` in a JavaScript/TypeScript file.
+
+#### `script.ts`
 
 ```ts
 import { createClient } from '@hey-api/openapi-ts';

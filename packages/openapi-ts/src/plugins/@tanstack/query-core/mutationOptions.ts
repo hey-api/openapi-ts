@@ -19,14 +19,7 @@ export const createMutationOptions = ({
   plugin: PluginInstance;
   queryFn: string;
   state: PluginState;
-}) => {
-  if (
-    !plugin.config.mutationOptions.enabled ||
-    !plugin.hooks.operation.isMutation(operation)
-  ) {
-    return state;
-  }
-
+}): void => {
   const mutationsType =
     plugin.name === '@tanstack/angular-query-experimental' ||
     plugin.name === '@tanstack/svelte-query' ||
@@ -165,6 +158,4 @@ export const createMutationOptions = ({
     name: identifier.name || '',
   });
   file.add(statement);
-
-  return state;
 };
