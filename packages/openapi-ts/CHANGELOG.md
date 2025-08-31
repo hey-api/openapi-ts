@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.82.2
+
+### Patch Changes
+
+- fix: update peer dependencies to be more permissible ([#2574](https://github.com/hey-api/openapi-ts/pull/2574)) ([`996021e`](https://github.com/hey-api/openapi-ts/commit/996021e4ce306ce762dfd55f2a7ec8099be4f24c)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.0.1
+
 ## 0.82.1
 
 ### Patch Changes
