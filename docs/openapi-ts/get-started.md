@@ -89,11 +89,11 @@ The above script can be executed by running `npm run openapi-ts` or equivalent c
 
 ### Node.js
 
-You can also generate output programmatically by importing `@hey-api/openapi-ts` in a JavaScript/TypeScript file.
+You can also generate output programmatically by calling `createClient()` in a JavaScript/TypeScript file.
 
 ::: code-group
 
-```ts [openapi-ts.config.ts]
+```ts [script.ts]
 import { createClient } from '@hey-api/openapi-ts';
 
 createClient({
