@@ -16,9 +16,6 @@
   "engines": {
     "node": "^18.18.0 || ^20.9.0 || >=22.10.0"
   },
-  "peerDependencies": {
-    "typescript": "^5.5.3"
-  },
   "devDependencies": {
     "@angular-devkit/build-angular": "19.2.0",
     "@angular/animations": "19.2.0",
