@@ -81,7 +81,7 @@ export default defineConfig(() => {
         // deprecated: false,
         operations: {
           include: [
-            'GET /event',
+            // 'GET /event',
             // '/^[A-Z]+ /v1//',
           ],
         },
@@ -212,9 +212,11 @@ export default defineConfig(() => {
         // queryKeys: {
         //   name: '{{name}}QK',
         // },
+        queryOptions: false,
         // queryOptions: {
         //   name: '{{name}}QO',
         // },
+        useQuery: true,
         '~hooks': {
           operations: {
             getKind: (op) => {
