@@ -16,6 +16,8 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+import { createSseClient } from '../core/serverSentEvents.gen';
+import type { HttpMethod } from '../core/types.gen';
 import type {
   Client,
   Config,
@@ -60,14 +62,13 @@ export const createClient = (config: Config = {}): Client => {
     ThrowOnError extends boolean = false,
     TResponseStyle extends ResponseStyle = 'fields',
   >(
-    options: RequestOptions<TResponseStyle, ThrowOnError>,
+    options: RequestOptions<unknown, TResponseStyle, ThrowOnError>,
   ) => {
     const opts = {
       ..._config,
       ...options,
       headers: mergeHeaders(_config.headers, options.headers),
       httpClient: options.httpClient ?? _config.httpClient,
-      method: 'GET',
       serializedBody: options.body as any,
     };
 
@@ -94,7 +95,7 @@ export const createClient = (config: Config = {}): Client => {
     const url = buildUrl(opts as any);
 
     const req = new HttpRequest<unknown>(
-      opts.method,
+      opts.method ?? 'GET',
       url,
       opts.serializedBody || null,
       {
@@ -103,11 +104,11 @@ export const createClient = (config: Config = {}): Client => {
       },
     );
 
-    return { opts, req };
+    return { opts, req, url };
   };
 
-  const request: Client['request'] = async (options) => {
-    const { opts, req: initialReq } = requestOptions(options);
+  const beforeRequest = async (options: RequestOptions) => {
+    const { opts, req, url } = requestOptions(options);
 
     if (opts.security) {
       await setAuthParams({
@@ -120,6 +121,13 @@ export const createClient = (config: Config = {}): Client => {
       await opts.requestValidator(opts);
     }
 
+    return { opts, req, url };
+  };
+
+  const request: Client['request'] = async (options) => {
+    // @ts-expect-error
+    const { opts, req: initialReq } = await beforeRequest(options);
+
     let req = initialReq;
 
     for (const fn of interceptors.request._fns) {
@@ -128,26 +136,28 @@ export const createClient = (config: Config = {}): Client => {
       }
     }
 
-    let response;
-    const result = {
+    const result: {
+      request: HttpRequest<unknown>;
+      response: any;
+    } = {
       request: req,
-      response,
+      response: null,
     };
 
     try {
-      response = await firstValueFrom(
+      result.response = (await firstValueFrom(
         opts
           .httpClient!.request(req)
           .pipe(filter((event) => event.type === HttpEventType.Response)),
-      );
+      )) as HttpResponse<unknown>;
 
       for (const fn of interceptors.response._fns) {
         if (fn) {
-          response = await fn(response, req, opts as any);
+          result.response = await fn(result.response, req, opts as any);
         }
       }
 
-      let bodyResponse: any = response.body;
+      let bodyResponse = result.response.body;
 
       if (opts.responseValidator) {
         await opts.responseValidator(bodyResponse);
@@ -162,7 +172,7 @@ export const createClient = (config: Config = {}): Client => {
         : { data: bodyResponse, ...result };
     } catch (error) {
       if (error instanceof HttpErrorResponse) {
-        response = error;
+        result.response = error;
       }
 
       let finalError = error instanceof HttpErrorResponse ? error.error : error;
@@ -171,7 +181,7 @@ export const createClient = (config: Config = {}): Client => {
         if (fn) {
           finalError = (await fn(
             finalError,
-            response as HttpResponse<unknown>,
+            result.response as any,
             req,
             opts as any,
           )) as string;
@@ -191,18 +201,34 @@ export const createClient = (config: Config = {}): Client => {
     }
   };
 
+  const makeMethodFn =
+    (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
+      request({ ...options, method });
+
+  const makeSseFn =
+    (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
+      const { opts, url } = await beforeRequest(options);
+      return createSseClient({
+        ...opts,
+        body: opts.body as BodyInit | null | undefined,
+        headers: opts.headers as unknown as Record<string, string>,
+        method,
+        url,
+      });
+    };
+
   return {
     buildUrl,
-    connect: (options) => request({ ...options, method: 'CONNECT' }),
-    delete: (options) => request({ ...options, method: 'DELETE' }),
-    get: (options) => request({ ...options, method: 'GET' }),
+    connect: makeMethodFn('CONNECT'),
+    delete: makeMethodFn('DELETE'),
+    get: makeMethodFn('GET'),
     getConfig,
-    head: (options) => request({ ...options, method: 'HEAD' }),
+    head: makeMethodFn('HEAD'),
     interceptors,
-    options: (options) => request({ ...options, method: 'OPTIONS' }),
-    patch: (options) => request({ ...options, method: 'PATCH' }),
-    post: (options) => request({ ...options, method: 'POST' }),
-    put: (options) => request({ ...options, method: 'PUT' }),
+    options: makeMethodFn('OPTIONS'),
+    patch: makeMethodFn('PATCH'),
+    post: makeMethodFn('POST'),
+    put: makeMethodFn('PUT'),
     request,
     requestOptions: (options) => {
       if (options.security) {
@@ -218,6 +244,17 @@ export const createClient = (config: Config = {}): Client => {
       return requestOptions(options).req;
     },
     setConfig,
-    trace: (options) => request({ ...options, method: 'TRACE' }),
-  };
+    sse: {
+      connect: makeSseFn('CONNECT'),
+      delete: makeSseFn('DELETE'),
+      get: makeSseFn('GET'),
+      head: makeSseFn('HEAD'),
+      options: makeSseFn('OPTIONS'),
+      patch: makeSseFn('PATCH'),
+      post: makeSseFn('POST'),
+      put: makeSseFn('PUT'),
+      trace: makeSseFn('TRACE'),
+    },
+    trace: makeMethodFn('TRACE'),
+  } as Client;
 };
