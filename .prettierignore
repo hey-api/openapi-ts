@@ -8,7 +8,6 @@
 **/.svelte-kit
 **/.vitepress/cache
 **/.vitepress/dist
-**/test/e2e
 **/test/generated
 **/__snapshots__
 

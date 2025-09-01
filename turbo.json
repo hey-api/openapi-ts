@@ -25,10 +25,6 @@
       "cache": false,
       "dependsOn": []
     },
-    "test:e2e": {
-      "cache": false,
-      "dependsOn": []
-    },
     "test:update": {
       "cache": false,
       "dependsOn": []

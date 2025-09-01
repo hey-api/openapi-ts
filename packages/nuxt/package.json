@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/nuxt",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "🚀 Nuxt module for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {
@@ -58,9 +58,9 @@
     "mlly": "1.7.4"
   },
   "peerDependencies": {
-    "@hey-api/openapi-ts": "< 2",
-    "nuxt": ">= 3.0.0 < 4",
-    "vue": ">= 3.5.13 < 4"
+    "@hey-api/openapi-ts": "<2",
+    "nuxt": ">=3.0.0",
+    "vue": ">=3.5.13"
   },
   "devDependencies": {
     "@config/vite-base": "workspace:*",
