@@ -63,7 +63,10 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (opts.body === undefined || opts.body === '') {
+    if (
+      opts.body === undefined ||
+      (opts.serializedBody !== undefined && opts.serializedBody === '')
+    ) {
       opts.headers.delete('Content-Type');
     }
 
@@ -78,11 +81,8 @@ export const createClient = (config: Config = {}): Client => {
     const requestInit: ReqInit = {
       redirect: 'follow',
       ...opts,
+      body: getValidRequestBody(opts),
     };
-
-    if (opts.serializedBody) {
-      requestInit.body = opts.serializedBody;
-    }
 
     let request = new Request(url, requestInit);
 
@@ -212,6 +212,25 @@ export const createClient = (config: Config = {}): Client => {
           ...result,
         };
   };
+
+  function getValidRequestBody(options: ResolvedRequestOptions) {
+    const hasBody = options.body !== undefined;
+    const isSerializedBody = hasBody && options.bodySerializer;
+
+    if (isSerializedBody) {
+      const hasSerializedBody =
+        options.serializedBody !== undefined && options.serializedBody !== '';
+
+      return hasSerializedBody ? options.serializedBody : null;
+    }
+
+    // plain/text body
+    if (hasBody) {
+      return options.body;
+    }
+
+    return null;
+  }
 
   const makeMethodFn =
     (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>

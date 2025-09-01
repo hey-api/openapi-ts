@@ -223,7 +223,122 @@ describe('zero-length body handling', () => {
   });
 });
 
-describe('request body handling', () => {
+describe('unserialized request body handling', () => {
+  const client = createClient({ baseUrl: 'https://example.com' });
+
+  const scenarios = [
+    { body: 0, textValue: '0' },
+    { body: false, textValue: 'false' },
+    { body: 'test string', textValue: 'test string' },
+    { body: '', textValue: '' },
+  ];
+
+  it.each(scenarios)(
+    'handles plain text body with $body value',
+    async ({ body, textValue }) => {
+      const mockResponse = new Response(JSON.stringify({ success: true }), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        status: 200,
+      });
+
+      const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
+
+      const result = await client.post({
+        body,
+        bodySerializer: null,
+        fetch: mockFetch,
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        url: '/test',
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body: expect.any(ReadableStream),
+        }),
+      );
+
+      await expect(result.request.text()).resolves.toEqual(textValue);
+      expect(result.request.headers.get('Content-Type')).toEqual('text/plain');
+    },
+  );
+});
+
+describe('serialized request body handling', () => {
+  const client = createClient({ baseUrl: 'https://example.com' });
+
+  const scenarios = [
+    {
+      expectBodyValue: false,
+      expectContentHeader: false,
+      serializedBody: '',
+      textValue: '',
+    },
+    {
+      expectBodyValue: true,
+      expectContentHeader: true,
+      serializedBody: 0,
+      textValue: '0',
+    },
+    {
+      expectBodyValue: true,
+      expectContentHeader: true,
+      serializedBody: false,
+      textValue: 'false',
+    },
+    {
+      expectBodyValue: true,
+      expectContentHeader: true,
+      serializedBody: '{"key":"value"}',
+      textValue: '{"key":"value"}',
+    },
+  ];
+
+  it.each(scenarios)(
+    'handles $serializedBody serializedBody',
+    async ({
+      expectBodyValue,
+      expectContentHeader,
+      serializedBody,
+      textValue,
+    }) => {
+      const mockResponse = new Response(JSON.stringify({ success: true }), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        status: 200,
+      });
+
+      const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
+
+      const result = await client.post({
+        body: {},
+        bodySerializer: () => serializedBody,
+        fetch: mockFetch,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        url: '/test',
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body: expectBodyValue ? expect.any(ReadableStream) : null,
+        }),
+      );
+
+      await expect(result.request.text()).resolves.toEqual(textValue);
+      expect(result.request.headers.get('Content-Type')).toEqual(
+        expectContentHeader ? 'application/json' : null,
+      );
+    },
+  );
+});
+
+describe('request interceptor', () => {
   const client = createClient({ baseUrl: 'https://example.com' });
 
   const scenarios = [
@@ -244,34 +359,7 @@ describe('request body handling', () => {
   ];
 
   it.each(scenarios)(
-    'sends $contentType body',
-    async ({ body, bodySerializer, contentType, expectedValue }) => {
-      const mockResponse = new Response(JSON.stringify({ success: true }), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        status: 200,
-      });
-
-      const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
-
-      const result = await client.post({
-        body,
-        bodySerializer,
-        fetch: mockFetch,
-        headers: {
-          'Content-Type': contentType,
-        },
-        url: '/test',
-      });
-
-      await expect(expectedValue(result.request)).resolves.toEqual(body);
-      expect(result.request.headers.get('Content-Type')).toContain(contentType);
-    },
-  );
-
-  it.each(scenarios)(
-    'exposes $contentType serialized and raw body in interceptor',
+    'exposes $contentType serialized and raw body values',
     async ({ body, bodySerializer, contentType, expectedSerializedValue }) => {
       const mockResponse = new Response(JSON.stringify({ success: true }), {
         headers: {
