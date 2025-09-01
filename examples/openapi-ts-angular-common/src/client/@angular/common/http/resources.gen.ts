@@ -70,9 +70,12 @@ export class PetServiceResources {
    * Add a new pet to the store.
    */
   public addPet<ThrowOnError extends boolean = false>(
-    options: () => Options<AddPetData, ThrowOnError>,
+    options: () => Options<AddPetData, ThrowOnError> | undefined,
   ) {
-    return httpResource<AddPetResponse>(() => addPetRequest(options()));
+    return httpResource<AddPetResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? addPetRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -80,9 +83,12 @@ export class PetServiceResources {
    * Update an existing pet by Id.
    */
   public updatePet<ThrowOnError extends boolean = false>(
-    options: () => Options<UpdatePetData, ThrowOnError>,
+    options: () => Options<UpdatePetData, ThrowOnError> | undefined,
   ) {
-    return httpResource<UpdatePetResponse>(() => updatePetRequest(options()));
+    return httpResource<UpdatePetResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? updatePetRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -90,11 +96,12 @@ export class PetServiceResources {
    * Multiple status values can be provided with comma separated strings.
    */
   public findPetsByStatus<ThrowOnError extends boolean = false>(
-    options: () => Options<FindPetsByStatusData, ThrowOnError>,
+    options: () => Options<FindPetsByStatusData, ThrowOnError> | undefined,
   ) {
-    return httpResource<FindPetsByStatusResponse>(() =>
-      findPetsByStatusRequest(options()),
-    );
+    return httpResource<FindPetsByStatusResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? findPetsByStatusRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -102,11 +109,12 @@ export class PetServiceResources {
    * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
    */
   public findPetsByTags<ThrowOnError extends boolean = false>(
-    options: () => Options<FindPetsByTagsData, ThrowOnError>,
+    options: () => Options<FindPetsByTagsData, ThrowOnError> | undefined,
   ) {
-    return httpResource<FindPetsByTagsResponse>(() =>
-      findPetsByTagsRequest(options()),
-    );
+    return httpResource<FindPetsByTagsResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? findPetsByTagsRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -114,9 +122,12 @@ export class PetServiceResources {
    * Delete a pet.
    */
   public deletePet<ThrowOnError extends boolean = false>(
-    options: () => Options<DeletePetData, ThrowOnError>,
+    options: () => Options<DeletePetData, ThrowOnError> | undefined,
   ) {
-    return httpResource<unknown>(() => deletePetRequest(options()));
+    return httpResource<unknown>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? deletePetRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -124,9 +135,12 @@ export class PetServiceResources {
    * Returns a single pet.
    */
   public getPetById<ThrowOnError extends boolean = false>(
-    options: () => Options<GetPetByIdData, ThrowOnError>,
+    options: () => Options<GetPetByIdData, ThrowOnError> | undefined,
   ) {
-    return httpResource<GetPetByIdResponse>(() => getPetByIdRequest(options()));
+    return httpResource<GetPetByIdResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? getPetByIdRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -134,11 +148,12 @@ export class PetServiceResources {
    * Updates a pet resource based on the form data.
    */
   public updatePetWithForm<ThrowOnError extends boolean = false>(
-    options: () => Options<UpdatePetWithFormData, ThrowOnError>,
+    options: () => Options<UpdatePetWithFormData, ThrowOnError> | undefined,
   ) {
-    return httpResource<UpdatePetWithFormResponse>(() =>
-      updatePetWithFormRequest(options()),
-    );
+    return httpResource<UpdatePetWithFormResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? updatePetWithFormRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -146,9 +161,12 @@ export class PetServiceResources {
    * Upload image of the pet.
    */
   public uploadFile<ThrowOnError extends boolean = false>(
-    options: () => Options<UploadFileData, ThrowOnError>,
+    options: () => Options<UploadFileData, ThrowOnError> | undefined,
   ) {
-    return httpResource<UploadFileResponse>(() => uploadFileRequest(options()));
+    return httpResource<UploadFileResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? uploadFileRequest(opts) : undefined;
+    });
   }
 }
 
@@ -161,11 +179,12 @@ export class StoreServiceResources {
    * Returns a map of status codes to quantities.
    */
   public getInventory<ThrowOnError extends boolean = false>(
-    options?: () => Options<GetInventoryData, ThrowOnError>,
+    options?: () => Options<GetInventoryData, ThrowOnError> | undefined,
   ) {
-    return httpResource<GetInventoryResponse>(() =>
-      getInventoryRequest(options ? options() : undefined),
-    );
+    return httpResource<GetInventoryResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? getInventoryRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -173,11 +192,12 @@ export class StoreServiceResources {
    * Place a new order in the store.
    */
   public placeOrder<ThrowOnError extends boolean = false>(
-    options?: () => Options<PlaceOrderData, ThrowOnError>,
+    options?: () => Options<PlaceOrderData, ThrowOnError> | undefined,
   ) {
-    return httpResource<PlaceOrderResponse>(() =>
-      placeOrderRequest(options ? options() : undefined),
-    );
+    return httpResource<PlaceOrderResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? placeOrderRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -185,9 +205,12 @@ export class StoreServiceResources {
    * For valid response try integer IDs with value < 1000. Anything above 1000 or non-integers will generate API errors.
    */
   public deleteOrder<ThrowOnError extends boolean = false>(
-    options: () => Options<DeleteOrderData, ThrowOnError>,
+    options: () => Options<DeleteOrderData, ThrowOnError> | undefined,
   ) {
-    return httpResource<unknown>(() => deleteOrderRequest(options()));
+    return httpResource<unknown>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? deleteOrderRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -195,11 +218,12 @@ export class StoreServiceResources {
    * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
    */
   public getOrderById<ThrowOnError extends boolean = false>(
-    options: () => Options<GetOrderByIdData, ThrowOnError>,
+    options: () => Options<GetOrderByIdData, ThrowOnError> | undefined,
   ) {
-    return httpResource<GetOrderByIdResponse>(() =>
-      getOrderByIdRequest(options()),
-    );
+    return httpResource<GetOrderByIdResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? getOrderByIdRequest(opts) : undefined;
+    });
   }
 }
 
@@ -212,11 +236,12 @@ export class UserServiceResources {
    * This can only be done by the logged in user.
    */
   public createUser<ThrowOnError extends boolean = false>(
-    options?: () => Options<CreateUserData, ThrowOnError>,
+    options?: () => Options<CreateUserData, ThrowOnError> | undefined,
   ) {
-    return httpResource<CreateUserResponse>(() =>
-      createUserRequest(options ? options() : undefined),
-    );
+    return httpResource<CreateUserResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? createUserRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -224,11 +249,14 @@ export class UserServiceResources {
    * Creates list of users with given input array.
    */
   public createUsersWithListInput<ThrowOnError extends boolean = false>(
-    options?: () => Options<CreateUsersWithListInputData, ThrowOnError>,
+    options?: () =>
+      | Options<CreateUsersWithListInputData, ThrowOnError>
+      | undefined,
   ) {
-    return httpResource<CreateUsersWithListInputResponse>(() =>
-      createUsersWithListInputRequest(options ? options() : undefined),
-    );
+    return httpResource<CreateUsersWithListInputResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? createUsersWithListInputRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -236,11 +264,12 @@ export class UserServiceResources {
    * Log into the system.
    */
   public loginUser<ThrowOnError extends boolean = false>(
-    options?: () => Options<LoginUserData, ThrowOnError>,
+    options?: () => Options<LoginUserData, ThrowOnError> | undefined,
   ) {
-    return httpResource<LoginUserResponse>(() =>
-      loginUserRequest(options ? options() : undefined),
-    );
+    return httpResource<LoginUserResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? loginUserRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -248,11 +277,12 @@ export class UserServiceResources {
    * Log user out of the system.
    */
   public logoutUser<ThrowOnError extends boolean = false>(
-    options?: () => Options<LogoutUserData, ThrowOnError>,
+    options?: () => Options<LogoutUserData, ThrowOnError> | undefined,
   ) {
-    return httpResource<unknown>(() =>
-      logoutUserRequest(options ? options() : undefined),
-    );
+    return httpResource<unknown>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? logoutUserRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -260,9 +290,12 @@ export class UserServiceResources {
    * This can only be done by the logged in user.
    */
   public deleteUser<ThrowOnError extends boolean = false>(
-    options: () => Options<DeleteUserData, ThrowOnError>,
+    options: () => Options<DeleteUserData, ThrowOnError> | undefined,
   ) {
-    return httpResource<unknown>(() => deleteUserRequest(options()));
+    return httpResource<unknown>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? deleteUserRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -270,11 +303,12 @@ export class UserServiceResources {
    * Get user detail based on username.
    */
   public getUserByName<ThrowOnError extends boolean = false>(
-    options: () => Options<GetUserByNameData, ThrowOnError>,
+    options: () => Options<GetUserByNameData, ThrowOnError> | undefined,
   ) {
-    return httpResource<GetUserByNameResponse>(() =>
-      getUserByNameRequest(options()),
-    );
+    return httpResource<GetUserByNameResponse>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? getUserByNameRequest(opts) : undefined;
+    });
   }
 
   /**
@@ -282,8 +316,11 @@ export class UserServiceResources {
    * This can only be done by the logged in user.
    */
   public updateUser<ThrowOnError extends boolean = false>(
-    options: () => Options<UpdateUserData, ThrowOnError>,
+    options: () => Options<UpdateUserData, ThrowOnError> | undefined,
   ) {
-    return httpResource<unknown>(() => updateUserRequest(options()));
+    return httpResource<unknown>(() => {
+      const opts = options ? options() : undefined;
+      return opts ? updateUserRequest(opts) : undefined;
+    });
   }
 }
