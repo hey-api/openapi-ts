@@ -48,12 +48,6 @@ export default tseslint.config(
     },
   },
   {
-    files: ['packages/openapi-ts/test/e2e/assets/main-angular-module.ts'],
-    rules: {
-      '@typescript-eslint/consistent-type-imports': 'off',
-    },
-  },
-  {
     files: ['**/*.cjs'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
@@ -68,7 +62,6 @@ export default tseslint.config(
       'temp/',
       'packages/openapi-ts/src/legacy/handlebars/compiled/**/*.js',
       'packages/openapi-ts/src/legacy/handlebars/templates/**/*.hbs',
-      '**/test/e2e/generated/',
       '**/test/generated/',
       '**/__snapshots__/',
       '**/.next/',

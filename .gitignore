@@ -21,7 +21,6 @@ coverage
 
 # test files
 test/generated
-test/e2e/generated
 
 # debug files
 openapi-ts-debug-*
