@@ -588,6 +588,23 @@ const parseRef = ({
   state: SchemaState;
 }): IR.SchemaObject => {
   const irSchema: IR.SchemaObject = {};
+  // Inline non-component refs (e.g. #/paths/...) to avoid generating orphaned named types
+  const isComponentsRef = schema.$ref.startsWith('#/definitions/');
+  if (!isComponentsRef) {
+    if (!state.circularReferenceTracker.has(schema.$ref)) {
+      const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
+      return schemaToIrSchema({
+        context,
+        schema: refSchema,
+        state: {
+          ...state,
+          $ref: schema.$ref,
+          isProperty: false,
+        },
+      });
+    }
+    // Fallback to preserving the ref if circular
+  }
 
   // refs using unicode characters become encoded, didn't investigate why
   // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`

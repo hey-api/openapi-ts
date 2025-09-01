@@ -1,0 +1,56 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 external example
+  version: 1
+components:
+  schemas:
+    ExternalSchemaA:
+      description: External schema (A)
+      $ref: './external-shared.json#/ExternalSharedModel'
+    ExternalSchemaB:
+      description: External schema (B)
+      $ref: './external-shared.json#/ExternalSharedModel'
+    ExternalSchemaC:
+      description: External schema (C)
+      $ref: './external-shared.json#/ExternalSharedModel'
+    ExternalSchemaPropertyA:
+      description: External schema property (A)
+      type: object
+      properties:
+        - $ref: './external-shared.json#/ExternalSharedModelWithUuid'
+    ExternalSchemaPropertyB:
+      description: External schema property (B)
+      type: object
+      properties:
+        - $ref: './external-shared.json#/ExternalSharedModelWithUuid'
+    ExternalSchemaPropertyFromComponent:
+      description: External schema property from component (A.id)
+      type: object
+      properties:
+        - $ref: '#/components/schemas/ExternalSchemaA/properties/id'
+    ExternalSchemaPropertyD:
+      description: External schema property with duplicate refs (D)
+      type: object
+      properties:
+        - $ref: './external-shared.json#/ExternalSharedModelWithUuid'
+        - $ref: './external-shared.json#/ExternalSharedModelWithUuid'
+    ExternalSchemaExternalProp:
+      description: External schema property via external property ref (id)
+      type: object
+      properties:
+        - $ref: './external-shared.json#/ExternalSharedModel/properties/id'
+    ExternalSchemaExternalPropAlias:
+      description: Alias to external property via component property ref
+      type: object
+      properties:
+        - $ref: '#/components/schemas/ExternalSchemaExternalProp/properties/0'
+    ExternalDoubleNestedProp:
+      description: External double nested prop via property ref
+      type: object
+      properties:
+        - $ref: './external-shared.json#/ExternalNested/properties/inner/properties/deep'
+    ExternalDoubleNestedNumeric:
+      description: External double nested numeric properties
+      type: object
+      properties:
+        - $ref: './external-shared.json#/ExternalNestedNumeric/properties/0/properties/1'
