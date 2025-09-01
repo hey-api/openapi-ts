@@ -6,5 +6,31 @@
       "name": { "type": "string" }
     },
     "required": ["id"]
+  },
+  "ExternalSharedModelWithUuid": {
+    "type": "string",
+    "format": "uuid"
+  },
+  "ExternalNested": {
+    "type": "object",
+    "properties": {
+      "inner": {
+        "type": "object",
+        "properties": {
+          "deep": { "type": "string" }
+        }
+      }
+    }
+  },
+  "ExternalNestedNumeric": {
+    "type": "object",
+    "properties": {
+      "0": {
+        "type": "object",
+        "properties": {
+          "1": { "type": "string" }
+        }
+      }
+    }
   }
 }
