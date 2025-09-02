@@ -272,24 +272,28 @@ describe('serialized request body handling', () => {
 
   const scenarios = [
     {
+      body: '',
       expectBodyValue: false,
       expectContentHeader: false,
       serializedBody: '',
       textValue: '',
     },
     {
+      body: 0,
       expectBodyValue: true,
       expectContentHeader: true,
       serializedBody: 0,
       textValue: '0',
     },
     {
+      body: false,
       expectBodyValue: true,
       expectContentHeader: true,
       serializedBody: false,
       textValue: 'false',
     },
     {
+      body: {},
       expectBodyValue: true,
       expectContentHeader: true,
       serializedBody: '{"key":"value"}',
@@ -298,8 +302,9 @@ describe('serialized request body handling', () => {
   ];
 
   it.each(scenarios)(
-    'handles $serializedBody serializedBody',
+    'handles $serializedBody serializedBody value',
     async ({
+      body,
       expectBodyValue,
       expectContentHeader,
       serializedBody,
@@ -315,7 +320,7 @@ describe('serialized request body handling', () => {
       const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
 
       const result = await client.post({
-        body: {},
+        body,
         bodySerializer: () => serializedBody,
         fetch: mockFetch,
         headers: {
