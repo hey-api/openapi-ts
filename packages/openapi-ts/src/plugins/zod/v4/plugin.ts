@@ -1,13 +1,13 @@
 import ts from 'typescript';
 
-// import { TypeScriptRenderer } from '../../../generate/renderer';
+import { TypeScriptRenderer } from '../../../generate/renderer';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { refToName } from '../../../utils/ref';
 import { numberRegExp } from '../../../utils/regexp';
-import { identifiers, zodId } from '../constants';
+import { identifiers } from '../constants';
 import { exportZodSchema } from '../export';
 import { getZodModule } from '../shared/module';
 import { operationToZodSchema } from '../shared/operation';
@@ -26,8 +26,12 @@ const arrayTypeToZodSchema = ({
 }): Omit<ZodSchema, 'typeName'> => {
   const result: Partial<Omit<ZodSchema, 'typeName'>> = {};
 
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
+
   const functionName = tsc.propertyAccessExpression({
-    expression: identifiers.z,
+    expression: zSymbol.placeholder,
     name: identifiers.array,
   });
 
@@ -36,6 +40,7 @@ const arrayTypeToZodSchema = ({
       functionName,
       parameters: [
         unknownTypeToZodSchema({
+          plugin,
           schema: {
             type: 'unknown',
           },
@@ -73,13 +78,13 @@ const arrayTypeToZodSchema = ({
 
       result.expression = tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
-          expression: identifiers.z,
+          expression: zSymbol.placeholder,
           name: identifiers.array,
         }),
         parameters: [
           tsc.callExpression({
             functionName: tsc.propertyAccessExpression({
-              expression: identifiers.z,
+              expression: zSymbol.placeholder,
               name: identifiers.union,
             }),
             parameters: [
@@ -127,16 +132,22 @@ const arrayTypeToZodSchema = ({
 };
 
 const booleanTypeToZodSchema = ({
+  plugin,
   schema,
 }: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'boolean'>;
 }): Omit<ZodSchema, 'typeName'> => {
   const result: Partial<Omit<ZodSchema, 'typeName'>> = {};
 
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
+
   if (typeof schema.const === 'boolean') {
     result.expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.z,
+        expression: zSymbol.placeholder,
         name: identifiers.literal,
       }),
       parameters: [tsc.ots.boolean(schema.const)],
@@ -146,7 +157,7 @@ const booleanTypeToZodSchema = ({
 
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.z,
+      expression: zSymbol.placeholder,
       name: identifiers.boolean,
     }),
   });
@@ -154,8 +165,10 @@ const booleanTypeToZodSchema = ({
 };
 
 const enumTypeToZodSchema = ({
+  plugin,
   schema,
 }: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'enum'>;
 }): Omit<ZodSchema, 'typeName'> => {
   const result: Partial<Omit<ZodSchema, 'typeName'>> = {};
@@ -179,15 +192,20 @@ const enumTypeToZodSchema = ({
 
   if (!enumMembers.length) {
     return unknownTypeToZodSchema({
+      plugin,
       schema: {
         type: 'unknown',
       },
     });
   }
 
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
+
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.z,
+      expression: zSymbol.placeholder,
       name: identifiers.enum,
     }),
     parameters: [
@@ -201,7 +219,7 @@ const enumTypeToZodSchema = ({
   if (isNullable) {
     result.expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.z,
+        expression: zSymbol.placeholder,
         name: identifiers.nullable,
       }),
       parameters: [result.expression],
@@ -211,28 +229,38 @@ const enumTypeToZodSchema = ({
   return result as Omit<ZodSchema, 'typeName'>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const neverTypeToZodSchema = (_props: {
+const neverTypeToZodSchema = ({
+  plugin,
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'never'>;
 }): Omit<ZodSchema, 'typeName'> => {
   const result: Partial<Omit<ZodSchema, 'typeName'>> = {};
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.z,
+      expression: zSymbol.placeholder,
       name: identifiers.never,
     }),
   });
   return result as Omit<ZodSchema, 'typeName'>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const nullTypeToZodSchema = (_props: {
+const nullTypeToZodSchema = ({
+  plugin,
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'null'>;
 }): Omit<ZodSchema, 'typeName'> => {
   const result: Partial<Omit<ZodSchema, 'typeName'>> = {};
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.z,
+      expression: zSymbol.placeholder,
       name: identifiers.null,
     }),
   });
@@ -265,19 +293,25 @@ const numberParameter = ({
 };
 
 const numberTypeToZodSchema = ({
+  plugin,
   schema,
 }: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'integer' | 'number'>;
 }): Omit<ZodSchema, 'typeName'> => {
   const result: Partial<Omit<ZodSchema, 'typeName'>> = {};
 
   const isBigInt = schema.type === 'integer' && schema.format === 'int64';
 
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
+
   if (typeof schema.const === 'number') {
     // TODO: parser - handle bigint constants
     result.expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.z,
+        expression: zSymbol.placeholder,
         name: identifiers.literal,
       }),
       parameters: [tsc.ots.number(schema.const)],
@@ -289,13 +323,13 @@ const numberTypeToZodSchema = ({
     functionName: isBigInt
       ? tsc.propertyAccessExpression({
           expression: tsc.propertyAccessExpression({
-            expression: identifiers.z,
+            expression: zSymbol.placeholder,
             name: identifiers.coerce,
           }),
           name: identifiers.bigint,
         })
       : tsc.propertyAccessExpression({
-          expression: identifiers.z,
+          expression: zSymbol.placeholder,
           name: identifiers.number,
         }),
   });
@@ -303,7 +337,7 @@ const numberTypeToZodSchema = ({
   if (!isBigInt && schema.type === 'integer') {
     result.expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.z,
+        expression: zSymbol.placeholder,
         name: identifiers.int,
       }),
     });
@@ -369,6 +403,10 @@ const objectTypeToZodSchema = ({
 
   const required = schema.required ?? [];
 
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
+
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
     const isRequired = required.includes(name);
@@ -410,7 +448,7 @@ const objectTypeToZodSchema = ({
           // @ts-expect-error
           returnType: propertySchema.typeName
             ? tsc.propertyAccessExpression({
-                expression: identifiers.z,
+                expression: zSymbol.placeholder,
                 name: propertySchema.typeName,
               })
             : undefined,
@@ -442,13 +480,13 @@ const objectTypeToZodSchema = ({
     });
     result.expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.z,
+        expression: zSymbol.placeholder,
         name: identifiers.record,
       }),
       parameters: [
         tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.z,
+            expression: zSymbol.placeholder,
             name: identifiers.string,
           }),
           parameters: [],
@@ -473,7 +511,7 @@ const objectTypeToZodSchema = ({
 
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.z,
+      expression: zSymbol.placeholder,
       name: identifiers.object,
     }),
     parameters: [ts.factory.createObjectLiteralExpression(properties, true)],
@@ -499,10 +537,14 @@ const stringTypeToZodSchema = ({
 }): Omit<ZodSchema, 'typeName'> => {
   const result: Partial<Omit<ZodSchema, 'typeName'>> = {};
 
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
+
   if (typeof schema.const === 'string') {
     result.expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.z,
+        expression: zSymbol.placeholder,
         name: identifiers.literal,
       }),
       parameters: [tsc.ots.string(schema.const)],
@@ -512,7 +554,7 @@ const stringTypeToZodSchema = ({
 
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.z,
+      expression: zSymbol.placeholder,
       name: identifiers.string,
     }),
   });
@@ -532,7 +574,7 @@ const stringTypeToZodSchema = ({
         result.expression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
             expression: tsc.propertyAccessExpression({
-              expression: identifiers.z,
+              expression: zSymbol.placeholder,
               name: identifiers.iso,
             }),
             name: identifiers.date,
@@ -543,7 +585,7 @@ const stringTypeToZodSchema = ({
         result.expression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
             expression: tsc.propertyAccessExpression({
-              expression: identifiers.z,
+              expression: zSymbol.placeholder,
               name: identifiers.iso,
             }),
             name: identifiers.datetime,
@@ -561,7 +603,7 @@ const stringTypeToZodSchema = ({
       case 'email':
         result.expression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.z,
+            expression: zSymbol.placeholder,
             name: identifiers.email,
           }),
         });
@@ -569,7 +611,7 @@ const stringTypeToZodSchema = ({
       case 'ipv4':
         result.expression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.z,
+            expression: zSymbol.placeholder,
             name: identifiers.ipv4,
           }),
         });
@@ -577,7 +619,7 @@ const stringTypeToZodSchema = ({
       case 'ipv6':
         result.expression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.z,
+            expression: zSymbol.placeholder,
             name: identifiers.ipv6,
           }),
         });
@@ -586,7 +628,7 @@ const stringTypeToZodSchema = ({
         result.expression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
             expression: tsc.propertyAccessExpression({
-              expression: identifiers.z,
+              expression: zSymbol.placeholder,
               name: identifiers.iso,
             }),
             name: identifiers.time,
@@ -596,7 +638,7 @@ const stringTypeToZodSchema = ({
       case 'uri':
         result.expression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.z,
+            expression: zSymbol.placeholder,
             name: identifiers.url,
           }),
         });
@@ -604,7 +646,7 @@ const stringTypeToZodSchema = ({
       case 'uuid':
         result.expression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.z,
+            expression: zSymbol.placeholder,
             name: identifiers.uuid,
           }),
         });
@@ -666,11 +708,15 @@ const tupleTypeToZodSchema = ({
 }): Omit<ZodSchema, 'typeName'> => {
   const result: Partial<Omit<ZodSchema, 'typeName'>> = {};
 
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
+
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
       tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
-          expression: identifiers.z,
+          expression: zSymbol.placeholder,
           name: identifiers.literal,
         }),
         parameters: [tsc.valueToExpression({ value })],
@@ -678,7 +724,7 @@ const tupleTypeToZodSchema = ({
     );
     result.expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.z,
+        expression: zSymbol.placeholder,
         name: identifiers.tuple,
       }),
       parameters: [
@@ -707,7 +753,7 @@ const tupleTypeToZodSchema = ({
 
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.z,
+      expression: zSymbol.placeholder,
       name: identifiers.tuple,
     }),
     parameters: [
@@ -720,42 +766,57 @@ const tupleTypeToZodSchema = ({
   return result as Omit<ZodSchema, 'typeName'>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const undefinedTypeToZodSchema = (_props: {
+const undefinedTypeToZodSchema = ({
+  plugin,
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'undefined'>;
 }): Omit<ZodSchema, 'typeName'> => {
   const result: Partial<Omit<ZodSchema, 'typeName'>> = {};
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.z,
+      expression: zSymbol.placeholder,
       name: identifiers.undefined,
     }),
   });
   return result as Omit<ZodSchema, 'typeName'>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const unknownTypeToZodSchema = (_props: {
+const unknownTypeToZodSchema = ({
+  plugin,
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'unknown'>;
 }): Omit<ZodSchema, 'typeName'> => {
   const result: Partial<Omit<ZodSchema, 'typeName'>> = {};
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.z,
+      expression: zSymbol.placeholder,
       name: identifiers.unknown,
     }),
   });
   return result as Omit<ZodSchema, 'typeName'>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const voidTypeToZodSchema = (_props: {
+const voidTypeToZodSchema = ({
+  plugin,
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'void'>;
 }): Omit<ZodSchema, 'typeName'> => {
   const result: Partial<Omit<ZodSchema, 'typeName'>> = {};
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.z,
+      expression: zSymbol.placeholder,
       name: identifiers.void,
     }),
   });
@@ -780,23 +841,28 @@ const schemaTypeToZodSchema = ({
       });
     case 'boolean':
       return booleanTypeToZodSchema({
+        plugin,
         schema: schema as SchemaWithType<'boolean'>,
       });
     case 'enum':
       return enumTypeToZodSchema({
+        plugin,
         schema: schema as SchemaWithType<'enum'>,
       });
     case 'integer':
     case 'number':
       return numberTypeToZodSchema({
+        plugin,
         schema: schema as SchemaWithType<'integer' | 'number'>,
       });
     case 'never':
       return neverTypeToZodSchema({
+        plugin,
         schema: schema as SchemaWithType<'never'>,
       });
     case 'null':
       return nullTypeToZodSchema({
+        plugin,
         schema: schema as SchemaWithType<'null'>,
       });
     case 'object':
@@ -818,14 +884,17 @@ const schemaTypeToZodSchema = ({
       });
     case 'undefined':
       return undefinedTypeToZodSchema({
+        plugin,
         schema: schema as SchemaWithType<'undefined'>,
       });
     case 'unknown':
       return unknownTypeToZodSchema({
+        plugin,
         schema: schema as SchemaWithType<'unknown'>,
       });
     case 'void':
       return voidTypeToZodSchema({
+        plugin,
         schema: schema as SchemaWithType<'void'>,
       });
   }
@@ -847,9 +916,13 @@ const schemaToZodSchema = ({
   schema: IR.SchemaObject;
   state: State;
 }): ZodSchema => {
-  const file = plugin.context.file({ id: zodId })!;
+  const f = plugin.gen.ensureFile(plugin.output);
 
   let zodSchema: Partial<ZodSchema> = {};
+
+  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'zod'),
+  );
 
   if (schema.$ref) {
     const isCircularReference = state.circularReferenceTracker.includes(
@@ -859,30 +932,36 @@ const schemaToZodSchema = ({
     state.circularReferenceTracker.push(schema.$ref);
     state.currentReferenceTracker.push(schema.$ref);
 
-    const id = plugin.api.getId({ type: 'ref', value: schema.$ref });
+    const selector = plugin.api.getSelector('ref', schema.$ref);
+    let symbol = plugin.gen.selectSymbolFirst(selector);
 
     if (isCircularReference) {
-      const expression = file.addNodeReference(id, {
-        factory: (text) => tsc.identifier({ text }),
-      });
+      if (!symbol) {
+        symbol = f.ensureSymbol({ selector });
+      }
+
       if (isSelfReference) {
         zodSchema.expression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.z,
+            expression: zSymbol.placeholder,
             name: identifiers.lazy,
           }),
           parameters: [
             tsc.arrowFunction({
               returnType: tsc.keywordTypeNode({ keyword: 'any' }),
-              statements: [tsc.returnStatement({ expression })],
+              statements: [
+                tsc.returnStatement({
+                  expression: tsc.identifier({ text: symbol.placeholder }),
+                }),
+              ],
             }),
           ],
         });
       } else {
-        zodSchema.expression = expression;
+        zodSchema.expression = tsc.identifier({ text: symbol.placeholder });
       }
       zodSchema.hasCircularReference = true;
-    } else if (!file.getName(id)) {
+    } else if (!symbol) {
       // if $ref hasn't been processed yet, inline it to avoid the
       // "Block-scoped variable used before its declaration." error
       // this could be (maybe?) fixed by reshuffling the generation order
@@ -896,10 +975,8 @@ const schemaToZodSchema = ({
     }
 
     if (!isCircularReference) {
-      const expression = file.addNodeReference(id, {
-        factory: (text) => tsc.identifier({ text }),
-      });
-      zodSchema.expression = expression;
+      const symbol = plugin.gen.selectSymbolFirstOrThrow(selector);
+      zodSchema.expression = tsc.identifier({ text: symbol.placeholder });
     }
 
     state.circularReferenceTracker.pop();
@@ -917,7 +994,7 @@ const schemaToZodSchema = ({
         }),
         parameters: [
           tsc.propertyAccessExpression({
-            expression: identifiers.z,
+            expression: zSymbol.placeholder,
             name: identifiers.globalRegistry,
           }),
           tsc.objectExpression({
@@ -955,7 +1032,7 @@ const schemaToZodSchema = ({
         ) {
           zodSchema.expression = tsc.callExpression({
             functionName: tsc.propertyAccessExpression({
-              expression: identifiers.z,
+              expression: zSymbol.placeholder,
               name: identifiers.intersection,
             }),
             parameters: itemTypes,
@@ -975,7 +1052,7 @@ const schemaToZodSchema = ({
       } else {
         zodSchema.expression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.z,
+            expression: zSymbol.placeholder,
             name: identifiers.union,
           }),
           parameters: [
@@ -1013,7 +1090,7 @@ const schemaToZodSchema = ({
     if (optional) {
       zodSchema.expression = tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
-          expression: identifiers.z,
+          expression: zSymbol.placeholder,
           name: identifiers.optional,
         }),
         parameters: [zodSchema.expression],
@@ -1060,58 +1137,56 @@ const handleComponent = ({
     currentReferenceTracker: [id],
   };
 
-  const file = plugin.context.file({ id: zodId })!;
-  const schemaId = plugin.api.getId({ type: 'ref', value: id });
-
-  if (file.getName(schemaId)) return;
+  const selector = plugin.api.getSelector('ref', id);
+  let symbol = plugin.gen.selectSymbolFirst(selector);
+  if (symbol && !symbol.headless) return;
 
   const zodSchema = schemaToZodSchema({ plugin, schema, state });
-  const typeInferId = plugin.config.definitions.types.infer.enabled
-    ? plugin.api.getId({ type: 'type-infer-ref', value: id })
+  const f = plugin.gen.ensureFile(plugin.output);
+  const baseName = refToName(id);
+  symbol = f.ensureSymbol({ selector });
+  symbol = f.patchSymbol(symbol.id, {
+    name: buildName({
+      config: plugin.config.definitions,
+      name: baseName,
+    }),
+  });
+  const typeInferSymbol = plugin.config.definitions.types.infer.enabled
+    ? f.addSymbol({
+        name: buildName({
+          config: plugin.config.definitions.types.infer,
+          name: baseName,
+        }),
+        selector: plugin.api.getSelector('type-infer-ref', id),
+      })
     : undefined;
   exportZodSchema({
     plugin,
     schema,
-    schemaId,
-    typeInferId,
+    symbol,
+    typeInferSymbol,
     zodSchema,
   });
-  const baseName = refToName(id);
-  file.updateNodeReferences(
-    schemaId,
-    buildName({
-      config: plugin.config.definitions,
-      name: baseName,
-    }),
-  );
-  if (typeInferId) {
-    file.updateNodeReferences(
-      typeInferId,
-      buildName({
-        config: plugin.config.definitions.types.infer,
-        name: baseName,
-      }),
-    );
-  }
 };
 
 export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
-  const file = plugin.createFile({
-    case: plugin.config.case,
-    id: zodId,
-    path: plugin.output,
+  const f = plugin.gen.createFile(plugin.output, {
+    extension: '.ts',
+    path: '{{path}}.gen',
+    renderer: new TypeScriptRenderer(),
   });
-  // const f = plugin.gen.createFile(plugin.output, {
-  //   extension: '.ts',
-  //   path: '{{path}}.gen',
-  //   renderer: new TypeScriptRenderer(),
-  // });
 
-  file.import({
-    module: getZodModule({ plugin }),
-    name: identifiers.z.text,
+  const zSymbol = f.ensureSymbol({
+    name: 'z',
+    selector: plugin.api.getSelector('import', 'zod'),
   });
-  // f.addImport({ from: getZodModule({ plugin }), names: [identifiers.z.text] });
+  f.addImport({
+    aliases: {
+      z: zSymbol.placeholder,
+    },
+    from: getZodModule({ plugin }),
+    names: ['z'],
+  });
 
   plugin.forEach(
     'operation',
@@ -1174,8 +1249,8 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
     },
   );
 
-  // if (plugin.config.exportFromIndex && f.hasContent()) {
-  //   const index = plugin.gen.ensureFile('index');
-  //   index.addExport({ from: f, namespaceImport: true });
-  // }
+  if (plugin.config.exportFromIndex && f.hasContent()) {
+    const index = plugin.gen.ensureFile('index');
+    index.addExport({ from: f, namespaceImport: true });
+  }
 };

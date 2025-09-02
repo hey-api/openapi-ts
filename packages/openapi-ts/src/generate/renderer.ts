@@ -144,7 +144,7 @@ export class TypeScriptRenderer implements ICodegenRenderer {
 
       for (const value of group) {
         if (value.defaultImport) {
-          defaultImport = ts.factory.createIdentifier(value.defaultImport);
+          defaultImport = tsc.identifier({ text: value.defaultImport });
           if (value.typeDefaultImport) {
             isTypeOnly = true;
           }
@@ -159,21 +159,35 @@ export class TypeScriptRenderer implements ICodegenRenderer {
           }
         }
 
-        for (const name of value.names ?? []) {
-          const alias = value.aliases?.[name];
-          const id = tsc.identifier({ text: name });
-          const spec =
-            alias && alias !== name
-              ? ts.factory.createImportSpecifier(
-                  false,
-                  id,
-                  tsc.identifier({ text: alias }),
-                )
-              : ts.factory.createImportSpecifier(false, undefined, id);
-          if (value.typeNames?.includes(name)) {
+        if (value.names && value.names.length > 0) {
+          if (
+            !isTypeOnly &&
+            value.names.every((name) => value.typeNames?.includes(name))
+          ) {
             isTypeOnly = true;
           }
-          specifiers.push(spec);
+
+          for (const name of value.names) {
+            const alias = value.aliases?.[name];
+            const id = tsc.identifier({ text: name });
+            const spec =
+              alias && alias !== name
+                ? ts.factory.createImportSpecifier(
+                    isTypeOnly
+                      ? false
+                      : (value.typeNames?.includes(name) ?? false),
+                    id,
+                    tsc.identifier({ text: alias }),
+                  )
+                : ts.factory.createImportSpecifier(
+                    isTypeOnly
+                      ? false
+                      : (value.typeNames?.includes(name) ?? false),
+                    undefined,
+                    id,
+                  );
+            specifiers.push(spec);
+          }
         }
       }
 

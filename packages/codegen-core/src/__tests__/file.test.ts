@@ -2,13 +2,16 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { CodegenFile } from '../files/file';
 import type { ICodegenImport } from '../imports/types';
-import type { ICodegenSymbol } from '../symbols/types';
+import { CodegenProject } from '../project/project';
+import type { ICodegenSymbolIn } from '../symbols/types';
 
 describe('CodegenFile', () => {
   let file: CodegenFile;
+  let project: CodegenProject;
 
   beforeEach(() => {
-    file = new CodegenFile('a.ts');
+    project = new CodegenProject();
+    file = new CodegenFile('a.ts', project);
   });
 
   it('initializes with empty imports and symbols', () => {
@@ -111,35 +114,52 @@ describe('CodegenFile', () => {
   });
 
   it('adds symbols', () => {
-    const sym1: ICodegenSymbol = { name: 'a' };
-    const sym2: ICodegenSymbol = { name: 'b' };
+    const sym1: ICodegenSymbolIn = { name: 'a' };
+    const sym2: ICodegenSymbolIn = { name: 'b' };
+    const sym3: ICodegenSymbolIn = { headless: true, name: 'c' };
 
     file.addSymbol(sym1);
     file.addSymbol(sym2);
+    file.addSymbol(sym3);
 
     expect(file.symbols.length).toBe(2);
+    expect(file.symbols[0]).not.toBeUndefined();
     expect(file.symbols[0]).not.toBe(sym1);
-    expect(file.symbols[0]).toEqual(sym1);
+    expect(file.symbols[0]).toEqual({
+      ...sym1,
+      id: 0,
+      placeholder: '_heyapi_0_',
+    });
+    expect(file.symbols[1]).not.toBeUndefined();
     expect(file.symbols[1]).not.toBe(sym2);
-    expect(file.symbols[1]).toEqual(sym2);
+    expect(file.symbols[1]).toEqual({
+      ...sym2,
+      id: 1,
+      placeholder: '_heyapi_1_',
+    });
   });
 
-  it('merges duplicate symbols', () => {
-    const sym1: ICodegenSymbol = {
+  it('updates symbols', () => {
+    const sym1: ICodegenSymbolIn = {
+      headless: true,
       name: 'a',
       value: 1,
     };
-    const sym2: ICodegenSymbol = {
-      name: 'a',
+    const inserted = file.addSymbol(sym1);
+    expect(file.symbols.length).toBe(0);
+
+    const sym2: ICodegenSymbolIn = {
+      headless: false,
+      name: 'b',
       value: 'foo',
     };
-
-    file.addSymbol(sym1);
-    file.addSymbol(sym2);
+    file.patchSymbol(inserted.id, sym2);
 
     expect(file.symbols.length).toBe(1);
     expect(file.symbols[0]).toEqual({
-      name: 'a',
+      id: 0,
+      name: 'b',
+      placeholder: '_heyapi_0_',
       value: 'foo',
     });
   });
@@ -162,9 +182,9 @@ describe('CodegenFile', () => {
   });
 
   it('hasSymbol returns true if symbol exists', () => {
-    file.addSymbol({ name: 'Exists', value: {} });
-    expect(file.hasSymbol('Exists')).toBe(true);
-    expect(file.hasSymbol('Missing')).toBe(false);
+    const symbol = file.addSymbol({ name: 'Exists', value: {} });
+    expect(file.hasSymbol(symbol.id)).toBe(true);
+    expect(file.hasSymbol(-1)).toBe(false);
   });
 
   it('imports, exports, and symbols getters cache arrays and update after add', () => {
@@ -182,7 +202,13 @@ describe('CodegenFile', () => {
     expect(file.imports).toEqual([imp]);
 
     file.addSymbol(symbol);
-    expect(file.symbols).toEqual([symbol]);
+    expect(file.symbols).toEqual([
+      {
+        ...symbol,
+        id: 0,
+        placeholder: '_heyapi_0_',
+      },
+    ]);
   });
 
   it('returns relative path to another files', () => {

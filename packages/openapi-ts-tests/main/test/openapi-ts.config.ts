@@ -36,8 +36,9 @@ export default defineConfig(() => {
         '3.1.x',
         // 'invalid',
         // 'openai.yaml',
-        // 'full.yaml',
-        'opencode.yaml',
+        'full.yaml',
+        // 'opencode.yaml',
+        // 'validators-circular-ref-2.yaml',
         // 'zoom-video-sdk.json',
       ),
       // https://registry.scalar.com/@lubos-heyapi-dev-team/apis/demo-api-scalar-galaxy/latest?format=json
@@ -137,7 +138,7 @@ export default defineConfig(() => {
       {
         // baseUrl: false,
         // exportFromIndex: true,
-        name: '@hey-api/client-fetch',
+        // name: '@hey-api/client-fetch',
         // name: 'legacy/angular',
         // strictBaseUrl: true,
         // throwOnError: true,
@@ -155,7 +156,7 @@ export default defineConfig(() => {
         //   error: '他們_error_{{name}}',
         //   name: '你們_errors_{{name}}',
         // },
-        name: '@hey-api/typescript',
+        // name: '@hey-api/typescript',
         // requests: '我們_data_{{name}}',
         // responses: {
         //   name: '我_responses_{{name}}',
@@ -181,10 +182,10 @@ export default defineConfig(() => {
         // responseStyle: 'data',
         // transformer: '@hey-api/transformers',
         // transformer: true,
-        // validator: 'valibot',
+        validator: 'valibot',
         // validator: {
-        //   request: 'zod',
-        //   response: 'zod',
+        //   request: 'valibot',
+        //   response: 'valibot',
         // },
       },
       {
@@ -208,7 +209,7 @@ export default defineConfig(() => {
         // mutationOptions: {
         //   name: '{{name}}MO',
         // },
-        name: '@tanstack/react-query',
+        // name: '@tanstack/react-query',
         // queryKeys: {
         //   name: '{{name}}QK',
         // },
@@ -250,7 +251,7 @@ export default defineConfig(() => {
       {
         // case: 'snake_case',
         // comments: false,
-        compatibilityVersion: 3,
+        compatibilityVersion: 4,
         dates: {
           local: true,
           // offset: true,
@@ -278,11 +279,11 @@ export default defineConfig(() => {
         //     infer: 'F{{name}}ResponseZodType',
         //   },
         // },
-        // types: {
-        //   infer: {
-        //     case: 'snake_case',
-        //   },
-        // },
+        types: {
+          // infer: {
+          //   case: 'snake_case',
+          // },
+        },
       },
       {
         exportFromIndex: true,
@@ -298,7 +299,7 @@ export default defineConfig(() => {
       {
         // groupByTag: true,
         // mutationOptions: '{{name}}Mutationssss',
-        name: '@pinia/colada',
+        // name: '@pinia/colada',
         // queryOptions: {
         //   name: '{{name}}Queryyyyy',
         // },

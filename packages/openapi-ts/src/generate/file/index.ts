@@ -17,8 +17,8 @@ import type {
   Identifiers,
   Namespace,
   NodeInfo,
-  NodeReference,
 } from './types';
+
 export class GeneratedFile {
   private _case: StringCase | undefined;
   /**
@@ -50,11 +50,6 @@ export class GeneratedFile {
    */
   private names: Record<string, string> = {};
   /**
-   * Another approach for named nodes, with proper support for renaming. Keys
-   * are node IDs and values are an array of references for given ID.
-   */
-  private nodeReferences: Record<string, Array<NodeReference>> = {};
-  /**
    * Text value from node is kept in sync with `names`.
    *
    * @deprecated
@@ -70,16 +65,7 @@ export class GeneratedFile {
    * }
    * ```
    */
-  // TODO: nodes can be possibly replaced with `nodeReferences`, i.e. keep
-  // the name `nodes` and rewrite their functionality
   private nodes: Record<string, NodeInfo> = {};
-
-  /**
-   * Path relative to the client output root.
-   */
-  // TODO: parser - add relative path property for quick access, currently
-  // everything is resolved into an absolute path with cwd
-  // public relativePath: string;
 
   public constructor({
     case: _case,
@@ -119,25 +105,6 @@ export class GeneratedFile {
 
   public add(...nodes: Array<ts.Node | string>) {
     this._items = this._items.concat(nodes);
-  }
-
-  /**
-   * Adds a reference node for a name. This can be used later to rename
-   * identifiers.
-   */
-  public addNodeReference<T>(
-    id: string,
-    node: Pick<NodeReference<T>, 'factory'>,
-  ): T {
-    if (!this.nodeReferences[id]) {
-      this.nodeReferences[id] = [];
-    }
-    const result = node.factory(this.names[id] ?? '');
-    this.nodeReferences[id].push({
-      factory: node.factory,
-      node: result as void,
-    });
-    return result;
   }
 
   public get exportFromIndex(): boolean {
@@ -401,28 +368,6 @@ export class GeneratedFile {
       this.nodes[id].exported = args.exported;
     }
     return this.nodes[id];
-  }
-
-  /**
-   * Updates collected reference nodes for a name with the latest value.
-   *
-   * @param id Node ID.
-   * @param name Updated name for the nodes.
-   * @returns noop
-   */
-  public updateNodeReferences(id: string, name: string): void {
-    if (!this.nodeReferences[id]) {
-      return;
-    }
-    const finalName = getUniqueComponentName({
-      base: ensureValidIdentifier(name),
-      components: Object.values(this.names),
-    });
-    this.names[id] = finalName;
-    for (const node of this.nodeReferences[id]) {
-      const nextNode = node.factory(finalName);
-      Object.assign(node.node as unknown as object, nextNode);
-    }
   }
 
   public write(separator = '\n', tsConfig: ts.ParsedCommandLine | null = null) {

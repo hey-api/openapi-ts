@@ -6,4 +6,4 @@ export type { ICodegenOutput } from './output/types';
 export { CodegenProject } from './project/project';
 export type { ICodegenProject } from './project/types';
 export type { ICodegenRenderer } from './renderers/types';
-export type { ICodegenSymbol } from './symbols/types';
+export type { ICodegenSymbolIn, ICodegenSymbolOut } from './symbols/types';

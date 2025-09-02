@@ -1,6 +1,7 @@
 import ts from 'typescript';
 
 import { clientApi, clientModulePath } from '../../../generate/client';
+import { TypeScriptRenderer } from '../../../generate/renderer';
 import { tsc } from '../../../tsc';
 import { stringCase } from '../../../utils/stringCase';
 import {
@@ -38,10 +39,15 @@ const createClientClassNodes = ({
     }),
   });
 
+  const f = plugin.gen.ensureFile(plugin.output);
+
   return [
     tsc.propertyDeclaration({
       initializer: plugin.config.client
-        ? tsc.identifier({ text: '_heyApiClient' })
+        ? tsc.identifier({
+            text: f.ensureSymbol({ selector: plugin.api.getSelector('client') })
+              .placeholder,
+          })
         : undefined,
       modifier: 'protected',
       name: '_client',
@@ -339,6 +345,7 @@ const generateFlatSdk = ({
 }) => {
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const f = plugin.gen.ensureFile(plugin.output);
   const file = plugin.context.file({ id: sdkId })!;
 
   plugin.forEach('operation', ({ operation }) => {
@@ -357,6 +364,16 @@ const generateFlatSdk = ({
           )
         : undefined,
     });
+    if (isNuxtClient) {
+      f.addImport({
+        from: file.relativePathToFile({ context: plugin.context, id: typesId }),
+        typeNames: [
+          fileTypeScript.getName(
+            pluginTypeScript.api.getId({ operation, type: 'response' }),
+          )!,
+        ],
+      });
+    }
     const opParameters = operationParameters({
       file,
       isRequiredOptions,
@@ -368,6 +385,15 @@ const generateFlatSdk = ({
       opParameters,
       operation,
       plugin,
+    });
+    const symbol = f.addSymbol({
+      name: serviceFunctionIdentifier({
+        config: plugin.context.config,
+        handleIllegal: true,
+        id: operation.id,
+        operation,
+      }),
+      selector: plugin.api.getSelector('function', operation.id),
     });
     const node = tsc.constVariable({
       comment: createOperationComment({ operation }),
@@ -408,50 +434,47 @@ const generateFlatSdk = ({
               },
             ],
       }),
-      name: serviceFunctionIdentifier({
-        config: plugin.context.config,
-        handleIllegal: true,
-        id: operation.id,
-        operation,
-      }),
+      name: symbol.placeholder,
     });
-    file.add(node);
+    f.patchSymbol(symbol.id, { value: node });
   });
 };
 
 export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
-  const file = plugin.createFile({
-    id: sdkId,
-    path: plugin.output,
+  const f = plugin.gen.createFile(plugin.output, {
+    extension: '.ts',
+    path: '{{path}}.gen',
+    renderer: new TypeScriptRenderer(),
   });
 
   // import required packages and core files
+  // TODO: remove
+  plugin.createFile({
+    id: sdkId,
+    path: plugin.output,
+  });
   const clientModule = clientModulePath({
     config: plugin.context.config,
-    sourceOutput: file.nameWithoutExtension(),
+    sourceOutput: f.path,
   });
-  const clientOptions = file.import({
-    ...clientApi.Options,
-    alias: 'ClientOptions',
-    module: clientModule,
+  const clientOptions = f.addSymbol({ name: 'ClientOptions' });
+  f.addImport({
+    aliases: {
+      [clientApi.Options.name]: clientOptions.placeholder,
+    },
+    from: clientModule,
+    typeNames: [clientApi.Options.name],
   });
 
   const client = getClientPlugin(plugin.context.config);
   const isAngularClient = client.name === '@hey-api/client-angular';
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   if (isNuxtClient) {
-    file.import({
-      asType: true,
-      module: clientModule,
-      name: 'Composable',
-    });
+    f.addImport({ from: clientModule, typeNames: ['Composable'] });
   }
 
   if (isAngularClient && plugin.config.asClass) {
-    file.import({
-      module: '@angular/core',
-      name: 'Injectable',
-    });
+    f.addImport({ from: '@angular/core', names: ['Injectable'] });
   }
 
   createTypeOptions({ clientOptions, plugin });
@@ -460,5 +483,10 @@ export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
     generateClassSdk({ plugin });
   } else {
     generateFlatSdk({ plugin });
+  }
+
+  if (plugin.config.exportFromIndex && f.hasContent()) {
+    const index = plugin.gen.ensureFile('index');
+    index.addExport({ from: f, namespaceImport: true });
   }
 };

@@ -1,9 +1,11 @@
 import { definePluginConfig } from '../../shared/utils/config';
+import { api } from './api';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiSdkPlugin } from './types';
 
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
+  api,
   config: {
     asClass: false,
     auth: true,

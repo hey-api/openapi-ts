@@ -61,7 +61,11 @@ describe('CodegenProject', () => {
     const file = project.getFileByPath('a.ts')!;
     expect(file).toBeDefined();
     expect(file.symbols.length).toBe(1);
-    expect(file.symbols[0]).toEqual(symbol);
+    expect(file.symbols[0]).toEqual({
+      ...symbol,
+      id: 0,
+      placeholder: '_heyapi_0_',
+    });
   });
 
   it('getAllSymbols returns all symbols from all files', () => {
@@ -87,7 +91,7 @@ describe('CodegenProject', () => {
 
     // @ts-expect-error
     // mutate returned array should not affect internal state
-    files.push(new CodegenFile('b.ts'));
+    files.push(new CodegenFile('b.ts', project));
     expect(project.files).toEqual([file]);
   });
 

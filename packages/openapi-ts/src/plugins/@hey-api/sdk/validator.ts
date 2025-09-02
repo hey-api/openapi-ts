@@ -1,51 +1,41 @@
 import type { IR } from '../../../ir/types';
-import { sdkId } from './constants';
 import type { HeyApiSdkPlugin } from './types';
+
+interface ValidatorProps {
+  operation: IR.OperationObject;
+  plugin: HeyApiSdkPlugin['Instance'];
+}
 
 export const createRequestValidator = ({
   operation,
   plugin,
-}: {
-  operation: IR.OperationObject;
-  plugin: HeyApiSdkPlugin['Instance'];
-}) => {
-  if (!plugin.config.validator.request) {
-    return;
-  }
+}: ValidatorProps) => {
+  if (!plugin.config.validator.request) return;
 
-  const pluginValidator = plugin.getPlugin(plugin.config.validator.request);
-  if (!pluginValidator || !pluginValidator.api.createRequestValidator) {
-    return;
-  }
+  const validator = plugin.getPlugin(plugin.config.validator.request);
+  if (!validator?.api.createRequestValidator) return;
 
-  return pluginValidator.api.createRequestValidator({
-    file: plugin.context.file({ id: sdkId })!,
+  return validator.api.createRequestValidator({
+    file: plugin.gen.ensureFile(plugin.output),
     operation,
     // @ts-expect-error
-    plugin: pluginValidator,
+    plugin: validator,
   });
 };
 
 export const createResponseValidator = ({
   operation,
   plugin,
-}: {
-  operation: IR.OperationObject;
-  plugin: HeyApiSdkPlugin['Instance'];
-}) => {
-  if (!plugin.config.validator.response) {
-    return;
-  }
+}: ValidatorProps) => {
+  if (!plugin.config.validator.response) return;
 
-  const pluginValidator = plugin.getPlugin(plugin.config.validator.response);
-  if (!pluginValidator || !pluginValidator.api.createResponseValidator) {
-    return;
-  }
+  const validator = plugin.getPlugin(plugin.config.validator.response);
+  if (!validator?.api.createResponseValidator) return;
 
-  return pluginValidator.api.createResponseValidator({
-    file: plugin.context.file({ id: sdkId })!,
+  return validator.api.createResponseValidator({
+    file: plugin.gen.ensureFile(plugin.output),
     operation,
     // @ts-expect-error
-    plugin: pluginValidator,
+    plugin: validator,
   });
 };

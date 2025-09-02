@@ -1,14 +1,16 @@
+import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { Identifier } from '../../generate/file/types';
-// import { TypeScriptRenderer } from '../../generate/renderer';
+import { TypeScriptRenderer } from '../../generate/renderer';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
+import { buildName } from '../../openApi/shared/utils/name';
 import { tsc } from '../../tsc';
 import type { StringCase, StringName } from '../../types/case';
+import { refToName } from '../../utils/ref';
 import { numberRegExp } from '../../utils/regexp';
 import { createSchemaComment } from '../shared/utils/schema';
-import { identifiers, valibotId } from './constants';
+import { identifiers } from './constants';
 import {
   INTEGER_FORMATS,
   isIntegerFormat,
@@ -31,14 +33,23 @@ export interface State {
   nameTransformer: StringName;
 }
 
-const pipesToExpression = (pipes: Array<ts.Expression>) => {
+const pipesToExpression = ({
+  pipes,
+  plugin,
+}: {
+  pipes: Array<ts.Expression>;
+  plugin: ValibotPlugin['Instance'];
+}) => {
   if (pipes.length === 1) {
     return pipes[0]!;
   }
 
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.v,
+      expression: vSymbol.placeholder,
       name: identifiers.methods.pipe,
     }),
     parameters: pipes,
@@ -55,8 +66,11 @@ const arrayTypeToValibotSchema = ({
   schema: SchemaWithType<'array'>;
   state: State;
 }): ts.Expression => {
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
   const functionName = tsc.propertyAccessExpression({
-    expression: identifiers.v,
+    expression: vSymbol.placeholder,
     name: identifiers.schemas.array,
   });
 
@@ -67,6 +81,7 @@ const arrayTypeToValibotSchema = ({
       functionName,
       parameters: [
         unknownTypeToValibotSchema({
+          plugin,
           schema: {
             type: 'unknown',
           },
@@ -84,7 +99,7 @@ const arrayTypeToValibotSchema = ({
         schema: item,
         state,
       });
-      return pipesToExpression(schemaPipes);
+      return pipesToExpression({ pipes: schemaPipes, plugin });
     });
 
     if (itemExpressions.length === 1) {
@@ -108,6 +123,7 @@ const arrayTypeToValibotSchema = ({
         functionName,
         parameters: [
           unknownTypeToValibotSchema({
+            plugin,
             schema: {
               type: 'unknown',
             },
@@ -121,7 +137,7 @@ const arrayTypeToValibotSchema = ({
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.actions.length,
       }),
       parameters: [tsc.valueToExpression({ value: schema.minItems })],
@@ -131,7 +147,7 @@ const arrayTypeToValibotSchema = ({
     if (schema.minItems !== undefined) {
       const expression = tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
-          expression: identifiers.v,
+          expression: vSymbol.placeholder,
           name: identifiers.actions.minLength,
         }),
         parameters: [tsc.valueToExpression({ value: schema.minItems })],
@@ -142,7 +158,7 @@ const arrayTypeToValibotSchema = ({
     if (schema.maxItems !== undefined) {
       const expression = tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
-          expression: identifiers.v,
+          expression: vSymbol.placeholder,
           name: identifiers.actions.maxLength,
         }),
         parameters: [tsc.valueToExpression({ value: schema.maxItems })],
@@ -151,18 +167,24 @@ const arrayTypeToValibotSchema = ({
     }
   }
 
-  return pipesToExpression(pipes);
+  return pipesToExpression({ pipes, plugin });
 };
 
 const booleanTypeToValibotSchema = ({
+  plugin,
   schema,
 }: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'boolean'>;
 }) => {
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
+
   if (typeof schema.const === 'boolean') {
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.schemas.literal,
       }),
       parameters: [tsc.ots.boolean(schema.const)],
@@ -172,7 +194,7 @@ const booleanTypeToValibotSchema = ({
 
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.v,
+      expression: vSymbol.placeholder,
       name: identifiers.schemas.boolean,
     }),
   });
@@ -180,8 +202,10 @@ const booleanTypeToValibotSchema = ({
 };
 
 const enumTypeToValibotSchema = ({
+  plugin,
   schema,
 }: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'enum'>;
 }): ts.CallExpression => {
   const enumMembers: Array<ts.LiteralExpression> = [];
@@ -203,15 +227,20 @@ const enumTypeToValibotSchema = ({
 
   if (!enumMembers.length) {
     return unknownTypeToValibotSchema({
+      plugin,
       schema: {
         type: 'unknown',
       },
     });
   }
 
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
+
   let resultExpression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.v,
+      expression: vSymbol.placeholder,
       name: identifiers.schemas.picklist,
     }),
     parameters: [
@@ -225,7 +254,7 @@ const enumTypeToValibotSchema = ({
   if (isNullable) {
     resultExpression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.schemas.nullable,
       }),
       parameters: [resultExpression],
@@ -235,26 +264,36 @@ const enumTypeToValibotSchema = ({
   return resultExpression;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const neverTypeToValibotSchema = (_props: {
+const neverTypeToValibotSchema = ({
+  plugin,
+}: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'never'>;
 }) => {
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.v,
+      expression: vSymbol.placeholder,
       name: identifiers.schemas.never,
     }),
   });
   return expression;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const nullTypeToValibotSchema = (_props: {
+const nullTypeToValibotSchema = ({
+  plugin,
+}: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'null'>;
 }) => {
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.v,
+      expression: vSymbol.placeholder,
       name: identifiers.schemas.null,
     }),
   });
@@ -262,14 +301,20 @@ const nullTypeToValibotSchema = (_props: {
 };
 
 const numberTypeToValibotSchema = ({
+  plugin,
   schema,
 }: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'integer' | 'number'>;
 }) => {
   const format = schema.format;
   const isInteger = schema.type === 'integer';
   const isBigInt = needsBigIntForFormat(format);
   const formatInfo = isIntegerFormat(format) ? INTEGER_FORMATS[format] : null;
+
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
 
   // Return early if const is defined since we can create a literal type directly without additional validation
   if (schema.const !== undefined && schema.const !== null) {
@@ -323,7 +368,7 @@ const numberTypeToValibotSchema = ({
 
     return tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.schemas.literal,
       }),
       parameters: [literalValue],
@@ -336,7 +381,7 @@ const numberTypeToValibotSchema = ({
   if (isBigInt) {
     const unionExpression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.schemas.union,
       }),
       parameters: [
@@ -344,19 +389,19 @@ const numberTypeToValibotSchema = ({
           elements: [
             tsc.callExpression({
               functionName: tsc.propertyAccessExpression({
-                expression: identifiers.v,
+                expression: vSymbol.placeholder,
                 name: identifiers.schemas.number,
               }),
             }),
             tsc.callExpression({
               functionName: tsc.propertyAccessExpression({
-                expression: identifiers.v,
+                expression: vSymbol.placeholder,
                 name: identifiers.schemas.string,
               }),
             }),
             tsc.callExpression({
               functionName: tsc.propertyAccessExpression({
-                expression: identifiers.v,
+                expression: vSymbol.placeholder,
                 name: identifiers.schemas.bigInt,
               }),
             }),
@@ -370,7 +415,7 @@ const numberTypeToValibotSchema = ({
     // Add transform to convert to BigInt
     const transformExpression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.actions.transform,
       }),
       parameters: [
@@ -388,7 +433,7 @@ const numberTypeToValibotSchema = ({
     // For regular number formats, use number schema
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.schemas.number,
       }),
     });
@@ -399,7 +444,7 @@ const numberTypeToValibotSchema = ({
   if (!isBigInt && isInteger) {
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.actions.integer,
       }),
     });
@@ -416,7 +461,7 @@ const numberTypeToValibotSchema = ({
     // Add minimum value validation
     const minExpression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.actions.minValue,
       }),
       parameters: [
@@ -434,7 +479,7 @@ const numberTypeToValibotSchema = ({
     // Add maximum value validation
     const maxExpression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.actions.maxValue,
       }),
       parameters: [
@@ -453,7 +498,7 @@ const numberTypeToValibotSchema = ({
   if (schema.exclusiveMinimum !== undefined) {
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.actions.gtValue,
       }),
       parameters: [
@@ -464,7 +509,7 @@ const numberTypeToValibotSchema = ({
   } else if (schema.minimum !== undefined) {
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.actions.minValue,
       }),
       parameters: [numberParameter({ isBigInt, value: schema.minimum })],
@@ -475,7 +520,7 @@ const numberTypeToValibotSchema = ({
   if (schema.exclusiveMaximum !== undefined) {
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.actions.ltValue,
       }),
       parameters: [
@@ -486,7 +531,7 @@ const numberTypeToValibotSchema = ({
   } else if (schema.maximum !== undefined) {
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.actions.maxValue,
       }),
       parameters: [numberParameter({ isBigInt, value: schema.maximum })],
@@ -494,7 +539,7 @@ const numberTypeToValibotSchema = ({
     pipes.push(expression);
   }
 
-  return pipesToExpression(pipes);
+  return pipesToExpression({ pipes, plugin });
 };
 
 const objectTypeToValibotSchema = ({
@@ -546,11 +591,15 @@ const objectTypeToValibotSchema = ({
     }
     properties.push(
       tsc.propertyAssignment({
-        initializer: pipesToExpression(schemaPipes),
+        initializer: pipesToExpression({ pipes: schemaPipes, plugin }),
         name: propertyName,
       }),
     );
   }
+
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
 
   if (
     schema.additionalProperties &&
@@ -564,18 +613,18 @@ const objectTypeToValibotSchema = ({
     });
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.schemas.record,
       }),
       parameters: [
         tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.v,
+            expression: vSymbol.placeholder,
             name: identifiers.schemas.string,
           }),
           parameters: [],
         }),
-        pipesToExpression(pipes),
+        pipesToExpression({ pipes, plugin }),
       ],
     });
     return {
@@ -586,7 +635,7 @@ const objectTypeToValibotSchema = ({
 
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.v,
+      expression: vSymbol.placeholder,
       name: identifiers.schemas.object,
     }),
     parameters: [ts.factory.createObjectLiteralExpression(properties, true)],
@@ -599,14 +648,20 @@ const objectTypeToValibotSchema = ({
 };
 
 const stringTypeToValibotSchema = ({
+  plugin,
   schema,
 }: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'string'>;
 }) => {
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
+
   if (typeof schema.const === 'string') {
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.schemas.literal,
       }),
       parameters: [tsc.ots.string(schema.const)],
@@ -618,7 +673,7 @@ const stringTypeToValibotSchema = ({
 
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.v,
+      expression: vSymbol.placeholder,
       name: identifiers.schemas.string,
     }),
   });
@@ -630,7 +685,7 @@ const stringTypeToValibotSchema = ({
         pipes.push(
           tsc.callExpression({
             functionName: tsc.propertyAccessExpression({
-              expression: identifiers.v,
+              expression: vSymbol.placeholder,
               name: identifiers.actions.isoDate,
             }),
           }),
@@ -640,7 +695,7 @@ const stringTypeToValibotSchema = ({
         pipes.push(
           tsc.callExpression({
             functionName: tsc.propertyAccessExpression({
-              expression: identifiers.v,
+              expression: vSymbol.placeholder,
               name: identifiers.actions.isoTimestamp,
             }),
           }),
@@ -651,7 +706,7 @@ const stringTypeToValibotSchema = ({
         pipes.push(
           tsc.callExpression({
             functionName: tsc.propertyAccessExpression({
-              expression: identifiers.v,
+              expression: vSymbol.placeholder,
               name: identifiers.actions.ip,
             }),
           }),
@@ -661,7 +716,7 @@ const stringTypeToValibotSchema = ({
         pipes.push(
           tsc.callExpression({
             functionName: tsc.propertyAccessExpression({
-              expression: identifiers.v,
+              expression: vSymbol.placeholder,
               name: identifiers.actions.url,
             }),
           }),
@@ -673,7 +728,7 @@ const stringTypeToValibotSchema = ({
         pipes.push(
           tsc.callExpression({
             functionName: tsc.propertyAccessExpression({
-              expression: identifiers.v,
+              expression: vSymbol.placeholder,
               name: tsc.identifier({ text: schema.format }),
             }),
           }),
@@ -685,7 +740,7 @@ const stringTypeToValibotSchema = ({
   if (schema.minLength === schema.maxLength && schema.minLength !== undefined) {
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.actions.length,
       }),
       parameters: [tsc.valueToExpression({ value: schema.minLength })],
@@ -695,7 +750,7 @@ const stringTypeToValibotSchema = ({
     if (schema.minLength !== undefined) {
       const expression = tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
-          expression: identifiers.v,
+          expression: vSymbol.placeholder,
           name: identifiers.actions.minLength,
         }),
         parameters: [tsc.valueToExpression({ value: schema.minLength })],
@@ -706,7 +761,7 @@ const stringTypeToValibotSchema = ({
     if (schema.maxLength !== undefined) {
       const expression = tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
-          expression: identifiers.v,
+          expression: vSymbol.placeholder,
           name: identifiers.actions.maxLength,
         }),
         parameters: [tsc.valueToExpression({ value: schema.maxLength })],
@@ -718,7 +773,7 @@ const stringTypeToValibotSchema = ({
   if (schema.pattern) {
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.actions.regex,
       }),
       parameters: [tsc.regularExpressionLiteral({ text: schema.pattern })],
@@ -726,7 +781,7 @@ const stringTypeToValibotSchema = ({
     pipes.push(expression);
   }
 
-  return pipesToExpression(pipes);
+  return pipesToExpression({ pipes, plugin });
 };
 
 const tupleTypeToValibotSchema = ({
@@ -738,11 +793,15 @@ const tupleTypeToValibotSchema = ({
   schema: SchemaWithType<'tuple'>;
   state: State;
 }) => {
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
+
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
       tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
-          expression: identifiers.v,
+          expression: vSymbol.placeholder,
           name: identifiers.schemas.literal,
         }),
         parameters: [tsc.valueToExpression({ value })],
@@ -750,7 +809,7 @@ const tupleTypeToValibotSchema = ({
     );
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.schemas.tuple,
       }),
       parameters: [
@@ -769,11 +828,11 @@ const tupleTypeToValibotSchema = ({
         schema: item,
         state,
       });
-      return pipesToExpression(schemaPipes);
+      return pipesToExpression({ pipes: schemaPipes, plugin });
     });
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
-        expression: identifiers.v,
+        expression: vSymbol.placeholder,
         name: identifiers.schemas.tuple,
       }),
       parameters: [
@@ -786,45 +845,64 @@ const tupleTypeToValibotSchema = ({
   }
 
   return unknownTypeToValibotSchema({
+    plugin,
     schema: {
       type: 'unknown',
     },
   });
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const undefinedTypeToValibotSchema = (_props: {
+const undefinedTypeToValibotSchema = ({
+  plugin,
+}: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'undefined'>;
 }) => {
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
+
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.v,
+      expression: vSymbol.placeholder,
       name: identifiers.schemas.undefined,
     }),
   });
   return expression;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const unknownTypeToValibotSchema = (_props: {
+const unknownTypeToValibotSchema = ({
+  plugin,
+}: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'unknown'>;
 }) => {
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
+
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.v,
+      expression: vSymbol.placeholder,
       name: identifiers.schemas.unknown,
     }),
   });
   return expression;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const voidTypeToValibotSchema = (_props: {
+const voidTypeToValibotSchema = ({
+  plugin,
+}: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'void'>;
 }) => {
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
+
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: identifiers.v,
+      expression: vSymbol.placeholder,
       name: identifiers.schemas.void,
     }),
   });
@@ -855,12 +933,14 @@ const schemaTypeToValibotSchema = ({
     case 'boolean':
       return {
         expression: booleanTypeToValibotSchema({
+          plugin,
           schema: schema as SchemaWithType<'boolean'>,
         }),
       };
     case 'enum':
       return {
         expression: enumTypeToValibotSchema({
+          plugin,
           schema: schema as SchemaWithType<'enum'>,
         }),
       };
@@ -868,18 +948,21 @@ const schemaTypeToValibotSchema = ({
     case 'number':
       return {
         expression: numberTypeToValibotSchema({
+          plugin,
           schema: schema as SchemaWithType<'integer' | 'number'>,
         }),
       };
     case 'never':
       return {
         expression: neverTypeToValibotSchema({
+          plugin,
           schema: schema as SchemaWithType<'never'>,
         }),
       };
     case 'null':
       return {
         expression: nullTypeToValibotSchema({
+          plugin,
           schema: schema as SchemaWithType<'null'>,
         }),
       };
@@ -894,12 +977,14 @@ const schemaTypeToValibotSchema = ({
       if (schema.format === 'int64' || schema.format === 'uint64') {
         return {
           expression: numberTypeToValibotSchema({
+            plugin,
             schema: schema as SchemaWithType<'integer' | 'number'>,
           }),
         };
       }
       return {
         expression: stringTypeToValibotSchema({
+          plugin,
           schema: schema as SchemaWithType<'string'>,
         }),
       };
@@ -914,18 +999,21 @@ const schemaTypeToValibotSchema = ({
     case 'undefined':
       return {
         expression: undefinedTypeToValibotSchema({
+          plugin,
           schema: schema as SchemaWithType<'undefined'>,
         }),
       };
     case 'unknown':
       return {
         expression: unknownTypeToValibotSchema({
+          plugin,
           schema: schema as SchemaWithType<'unknown'>,
         }),
       };
     case 'void':
       return {
         expression: voidTypeToValibotSchema({
+          plugin,
           schema: schema as SchemaWithType<'void'>,
         }),
       };
@@ -934,17 +1022,16 @@ const schemaTypeToValibotSchema = ({
 
 export const schemaToValibotSchema = ({
   $ref,
-  identifier: _identifier,
   optional,
   plugin,
   schema,
   state,
+  symbol,
 }: {
   /**
    * When $ref is supplied, a node will be emitted to the file.
    */
   $ref?: string;
-  identifier?: Identifier;
   /**
    * Accept `optional` to handle optional object properties. We can't handle
    * this inside the object function because `.optional()` must come before
@@ -954,30 +1041,36 @@ export const schemaToValibotSchema = ({
   plugin: ValibotPlugin['Instance'];
   schema: IR.SchemaObject;
   state: State;
+  symbol?: ICodegenSymbolOut;
 }): Array<ts.Expression> => {
-  // TODO: replace
-  const file = plugin.context.file({ id: valibotId })!;
-  // const f = plugin.gen.ensureFile(plugin.output);
+  const f = plugin.gen.ensureFile(plugin.output);
 
   let anyType: string | undefined;
-  let identifier: ReturnType<typeof file.identifier> | undefined = _identifier;
   let pipes: Array<ts.Expression> = [];
 
   if ($ref) {
     state.circularReferenceTracker.add($ref);
 
-    if (!identifier) {
-      identifier = file.identifier({
-        $ref,
-        case: state.nameCase,
-        create: true,
-        nameTransformer: state.nameTransformer,
-        namespace: 'value',
-      });
-      // TODO: claim unique name
-      // f.addSymbol({ name: '' });
+    if (!symbol) {
+      const selector = plugin.api.getSelector('ref', $ref);
+      if (!plugin.gen.selectSymbolFirst(selector)) {
+        symbol = f.ensureSymbol({
+          name: buildName({
+            config: {
+              case: state.nameCase,
+              name: state.nameTransformer,
+            },
+            name: refToName($ref),
+          }),
+          selector,
+        });
+      }
     }
   }
+
+  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('import', 'valibot'),
+  );
 
   if (schema.$ref) {
     const isCircularReference = state.circularReferenceTracker.has(schema.$ref);
@@ -985,14 +1078,9 @@ export const schemaToValibotSchema = ({
     // if $ref hasn't been processed yet, inline it to avoid the
     // "Block-scoped variable used before its declaration." error
     // this could be (maybe?) fixed by reshuffling the generation order
-    let identifierRef = file.identifier({
-      $ref: schema.$ref,
-      case: state.nameCase,
-      nameTransformer: state.nameTransformer,
-      namespace: 'value',
-    });
-
-    if (!identifierRef.name) {
+    const selector = plugin.api.getSelector('ref', schema.$ref);
+    let refSymbol = plugin.gen.selectSymbolFirst(selector);
+    if (!refSymbol) {
       const ref = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
       const schemaPipes = schemaToValibotSchema({
         $ref: schema.$ref,
@@ -1002,21 +1090,15 @@ export const schemaToValibotSchema = ({
       });
       pipes.push(...schemaPipes);
 
-      identifierRef = file.identifier({
-        $ref: schema.$ref,
-        case: state.nameCase,
-        nameTransformer: state.nameTransformer,
-        namespace: 'value',
-      });
+      refSymbol = plugin.gen.selectSymbolFirst(selector);
     }
 
-    // if `identifierRef.name` is falsy, we already set expression above
-    if (identifierRef.name) {
-      const refIdentifier = tsc.identifier({ text: identifierRef.name });
+    if (refSymbol) {
+      const refIdentifier = tsc.identifier({ text: refSymbol.placeholder });
       if (isCircularReference) {
         const lazyExpression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.v,
+            expression: vSymbol.placeholder,
             name: identifiers.schemas.lazy,
           }),
           parameters: [
@@ -1043,7 +1125,7 @@ export const schemaToValibotSchema = ({
     if (plugin.config.metadata && schema.description) {
       const expression = tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
-          expression: identifiers.v,
+          expression: vSymbol.placeholder,
           name: identifiers.actions.metadata,
         }),
         parameters: [
@@ -1069,13 +1151,13 @@ export const schemaToValibotSchema = ({
           schema: item,
           state,
         });
-        return pipesToExpression(schemaPipes);
+        return pipesToExpression({ pipes: schemaPipes, plugin });
       });
 
       if (schema.logicalOperator === 'and') {
         const intersectExpression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.v,
+            expression: vSymbol.placeholder,
             name: identifiers.schemas.intersect,
           }),
           parameters: [
@@ -1088,7 +1170,7 @@ export const schemaToValibotSchema = ({
       } else {
         const unionExpression = tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.v,
+            expression: vSymbol.placeholder,
             name: identifiers.schemas.union,
           }),
           parameters: [
@@ -1128,7 +1210,7 @@ export const schemaToValibotSchema = ({
     if (schema.accessScope === 'read') {
       const readonlyExpression = tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
-          expression: identifiers.v,
+          expression: vSymbol.placeholder,
           name: identifiers.actions.readonly,
         }),
       });
@@ -1146,10 +1228,10 @@ export const schemaToValibotSchema = ({
         pipes = [
           tsc.callExpression({
             functionName: tsc.propertyAccessExpression({
-              expression: identifiers.v,
+              expression: vSymbol.placeholder,
               name: identifiers.schemas.optional,
             }),
-            parameters: [pipesToExpression(pipes), callParameter],
+            parameters: [pipesToExpression({ pipes, plugin }), callParameter],
           }),
         ];
       }
@@ -1159,38 +1241,31 @@ export const schemaToValibotSchema = ({
       pipes = [
         tsc.callExpression({
           functionName: tsc.propertyAccessExpression({
-            expression: identifiers.v,
+            expression: vSymbol.placeholder,
             name: identifiers.schemas.optional,
           }),
-          parameters: [pipesToExpression(pipes)],
+          parameters: [pipesToExpression({ pipes, plugin })],
         }),
       ];
     }
   }
 
-  // emit nodes only if $ref points to a reusable component
-  if (identifier && identifier.name && identifier.created) {
+  if (symbol) {
     const statement = tsc.constVariable({
       comment: plugin.config.comments
         ? createSchemaComment({ schema })
         : undefined,
       exportConst: true,
-      expression: pipesToExpression(pipes),
-      name: identifier.name,
+      expression: pipesToExpression({ pipes, plugin }),
+      name: symbol.placeholder,
       typeName: state.hasCircularReference
         ? (tsc.propertyAccessExpression({
-            expression: identifiers.v,
+            expression: vSymbol.placeholder,
             name: anyType || identifiers.types.GenericSchema.text,
           }) as unknown as ts.TypeNode)
         : undefined,
     });
-    file.add(statement);
-    // TODO: update claimed name
-    // f.addSymbol({
-    //   name: identifier.name,
-    //   value: statement,
-    // });
-
+    f.patchSymbol(symbol.id, { value: statement });
     return [];
   }
 
@@ -1198,23 +1273,17 @@ export const schemaToValibotSchema = ({
 };
 
 export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
-  const file = plugin.createFile({
-    case: plugin.config.case,
-    id: valibotId,
-    path: plugin.output,
+  const f = plugin.gen.createFile(plugin.output, {
+    extension: '.ts',
+    path: '{{path}}.gen',
+    renderer: new TypeScriptRenderer(),
   });
-  // const f = plugin.gen.createFile(plugin.output, {
-  //   extension: '.ts',
-  //   path: '{{path}}.gen',
-  //   renderer: new TypeScriptRenderer(),
-  // });
 
-  file.import({
-    alias: identifiers.v.text,
-    module: 'valibot',
-    name: '*',
+  const vSymbol = f.ensureSymbol({
+    name: 'v',
+    selector: plugin.api.getSelector('import', 'valibot'),
   });
-  // f.addImport({ from: 'valibot', namespaceImport: identifiers.v.text });
+  f.addImport({ from: 'valibot', namespaceImport: vSymbol.placeholder });
 
   plugin.forEach(
     'operation',
@@ -1230,45 +1299,51 @@ export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
         nameTransformer: plugin.config.definitions.name,
       };
 
-      if (event.type === 'operation') {
-        operationToValibotSchema({
-          operation: event.operation,
-          plugin,
-          state,
-        });
-      } else if (event.type === 'parameter') {
-        schemaToValibotSchema({
-          $ref: event.$ref,
-          plugin,
-          schema: event.parameter.schema,
-          state,
-        });
-      } else if (event.type === 'requestBody') {
-        schemaToValibotSchema({
-          $ref: event.$ref,
-          plugin,
-          schema: event.requestBody.schema,
-          state,
-        });
-      } else if (event.type === 'schema') {
-        schemaToValibotSchema({
-          $ref: event.$ref,
-          plugin,
-          schema: event.schema,
-          state,
-        });
-      } else if (event.type === 'webhook') {
-        webhookToValibotSchema({
-          operation: event.operation,
-          plugin,
-          state,
-        });
+      switch (event.type) {
+        case 'operation':
+          operationToValibotSchema({
+            operation: event.operation,
+            plugin,
+            state,
+          });
+          break;
+        case 'parameter':
+          schemaToValibotSchema({
+            $ref: event.$ref,
+            plugin,
+            schema: event.parameter.schema,
+            state,
+          });
+          break;
+        case 'requestBody':
+          schemaToValibotSchema({
+            $ref: event.$ref,
+            plugin,
+            schema: event.requestBody.schema,
+            state,
+          });
+          break;
+        case 'schema':
+          schemaToValibotSchema({
+            $ref: event.$ref,
+            plugin,
+            schema: event.schema,
+            state,
+          });
+          break;
+        case 'webhook':
+          webhookToValibotSchema({
+            operation: event.operation,
+            plugin,
+            state,
+          });
+          break;
       }
     },
   );
 
-  // if (plugin.config.exportFromIndex && f.hasContent()) {
-  //   const index = plugin.gen.ensureFile('index');
-  //   index.addExport({ from: f, namespaceImport: true });
-  // }
+  if (plugin.config.exportFromIndex && f.hasContent()) {
+    const index = plugin.gen.ensureFile('index');
+    index.addExport({ from: f, namespaceImport: true });
+  }
 };
