@@ -28,18 +28,27 @@ jobs:
           node-version: 20.x
           cache: 'pnpm'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: pnpm install
 
       - name: Build
         run: pnpm build
 
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v2.1.1
+        with:
+          app-id: ${{ secrets.GIT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.GIT_APP_PRIVATE_KEY }}
+
       - name: Create Release Pull Request
         uses: changesets/action@v1.5.3
         with:
+          commit: 'ci: release'
           publish: pnpm changeset publish
+          title: 'ci: release'
           version: pnpm changeset version
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NPM_CONFIG_PROVENANCE: true
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

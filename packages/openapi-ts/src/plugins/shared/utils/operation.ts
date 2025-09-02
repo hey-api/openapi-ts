@@ -42,3 +42,17 @@ export const isOperationOptionsRequired = ({
     hasOperationDataRequired(operation)
   );
 };
+
+export const hasOperationSse = ({
+  operation,
+}: {
+  operation: IR.OperationObject;
+}): boolean => {
+  for (const statusCode in operation.responses) {
+    const response = operation.responses[statusCode]!;
+    if (response.mediaType === 'text/event-stream') {
+      return true;
+    }
+  }
+  return false;
+};
