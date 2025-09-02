@@ -4,6 +4,7 @@ import type { IR } from '../../../ir/types';
 import { tsc } from '../../../tsc';
 import {
   createOperationComment,
+  hasOperationSse,
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
@@ -28,12 +29,9 @@ export const createQueryOptions = ({
   plugin: PluginInstance;
   queryFn: string;
   state: PluginState;
-}) => {
-  if (
-    !plugin.config.queryOptions.enabled ||
-    !plugin.hooks.operation.isQuery(operation)
-  ) {
-    return state;
+}): void => {
+  if (hasOperationSse({ operation })) {
+    return;
   }
 
   const file = plugin.context.file({ id: plugin.name })!;
@@ -179,7 +177,7 @@ export const createQueryOptions = ({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
-    exportConst: true,
+    exportConst: plugin.config.queryOptions.exported,
     expression: tsc.arrowFunction({
       parameters: [
         {
@@ -200,6 +198,4 @@ export const createQueryOptions = ({
     // TODO: AxiosError<PutSubmissionMetaError>
   });
   file.add(statement);
-
-  return state;
 };

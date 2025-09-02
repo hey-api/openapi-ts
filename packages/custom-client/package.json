@@ -63,7 +63,7 @@
     "typecheck": "vitest --typecheck --watch=false"
   },
   "peerDependencies": {
-    "@hey-api/openapi-ts": "< 2"
+    "@hey-api/openapi-ts": "<2"
   },
   "devDependencies": {
     "@config/vite-base": "workspace:*",

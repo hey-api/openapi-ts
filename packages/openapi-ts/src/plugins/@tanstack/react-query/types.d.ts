@@ -31,7 +31,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
     /**
      * Configuration for generated infinite query key helpers.
      *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions TanStack Query: infiniteQueryOptions}
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -60,8 +60,9 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            * Custom naming pattern for generated infinite query key names. The name variable is
            * obtained from the SDK function name.
            *
+           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
+           *
            * @default '{{name}}InfiniteQueryKey'
-           * @see https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions
            */
           name?: StringName;
           /**
@@ -75,7 +76,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
     /**
      * Configuration for generated infinite query options helpers.
      *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions TanStack Query: infiniteQueryOptions}
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -127,15 +128,16 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            * Custom naming pattern for generated infinite query options names. The name variable is
            * obtained from the SDK function name.
            *
+           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
+           *
            * @default '{{name}}InfiniteOptions'
-           * @see https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions
            */
           name?: StringName;
         };
     /**
      * Configuration for generated mutation options helpers.
      *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation TanStack Query: useMutation}
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -187,8 +189,9 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            * Custom naming pattern for generated mutation options names. The name variable is
            * obtained from the SDK function name.
            *
+           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
+           *
            * @default '{{name}}Mutation'
-           * @see https://tanstack.com/query/v5/docs/framework/react/reference/useMutation
            */
           name?: StringName;
         };
@@ -201,7 +204,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
     /**
      * Configuration for generated query keys.
      *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryKey TanStack Query: queryKey}
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryKey queryKey}
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -230,8 +233,9 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            * Custom naming pattern for generated query key names. The name variable is
            * obtained from the SDK function name.
            *
+           * See {@link https://tanstack.com/query/v5/docs/framework/react/guides/query-keys Query Keys}
+           *
            * @default '{{name}}QueryKey'
-           * @see https://tanstack.com/query/v5/docs/framework/react/reference/queryKey
            */
           name?: StringName;
           /**
@@ -245,7 +249,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
     /**
      * Configuration for generated query options helpers.
      *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions TanStack Query: queryOptions}
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions queryOptions}
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -271,6 +275,12 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            */
           enabled?: boolean;
           /**
+           * Whether to export generated symbols.
+           *
+           * @default true
+           */
+          exported?: boolean;
+          /**
            * Custom function to generate metadata for the operation.
            * Can return any valid meta object that will be included in the generated query options.
            *
@@ -293,13 +303,51 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            * @default undefined
            */
           meta?: (operation: IR.OperationObject) => Record<string, unknown>;
-
           /**
            * Custom naming pattern for generated query options names. The name variable is
            * obtained from the SDK function name.
            *
+           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions queryOptions}
+           *
            * @default '{{name}}Options'
-           * @see https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions
+           */
+          name?: StringName;
+        };
+    /**
+     * Configuration for generated `useQuery()` function helpers.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default false
+     */
+    useQuery?:
+      | boolean
+      | StringName
+      | {
+          /**
+           * The casing convention to use for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: StringCase;
+          /**
+           * Whether to generate `useQuery()` function helpers.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Custom naming pattern for generated `useQuery()` function names. The name variable is
+           * obtained from the SDK function name.
+           *
+           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
+           *
+           * @default 'use{{name}}Query'
            */
           name?: StringName;
         };
@@ -328,7 +376,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
     /**
      * Resolved configuration for generated infinite query key helpers.
      *
-     * @see https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
      */
     infiniteQueryKeys: {
       /**
@@ -346,8 +394,9 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
       /**
        * Custom naming pattern for generated infinite query key names. The name variable is obtained from the SDK function name.
        *
+       * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
+       *
        * @default '{{name}}InfiniteQueryKey'
-       * @see https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions
        */
       name: StringName;
       /**
@@ -361,7 +410,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
     /**
      * Resolved configuration for generated infinite query options helpers.
      *
-     * @see https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
      */
     infiniteQueryOptions: {
       /**
@@ -402,15 +451,16 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
       /**
        * Custom naming pattern for generated infinite query options names. The name variable is obtained from the SDK function name.
        *
+       * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
+       *
        * @default '{{name}}InfiniteOptions'
-       * @see https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions
        */
       name: StringName;
     };
     /**
      * Resolved configuration for generated mutation options helpers.
      *
-     * @see https://tanstack.com/query/v5/docs/framework/react/reference/useMutation
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
      */
     mutationOptions: {
       /**
@@ -451,8 +501,9 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
       /**
        * Custom naming pattern for generated mutation options names. The name variable is obtained from the SDK function name.
        *
+       * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
+       *
        * @default '{{name}}Mutation'
-       * @see https://tanstack.com/query/v5/docs/framework/react/reference/useMutation
        */
       name: StringName;
     };
@@ -465,7 +516,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
     /**
      * Resolved configuration for generated query keys.
      *
-     * @see https://tanstack.com/query/v5/docs/framework/react/reference/queryKey
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/guides/query-keys Query Keys}
      */
     queryKeys: {
       /**
@@ -483,8 +534,9 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
       /**
        * Custom naming pattern for generated query key names. The name variable is obtained from the SDK function name.
        *
+       * See {@link https://tanstack.com/query/v5/docs/framework/react/guides/query-keys Query Keys}
+       *
        * @default '{{name}}QueryKey'
-       * @see https://tanstack.com/query/v5/docs/framework/react/reference/queryKey
        */
       name: StringName;
       /**
@@ -498,7 +550,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
     /**
      * Resolved configuration for generated query options helpers.
      *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions TanStack Query: queryOptions}
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions queryOptions}
      */
     queryOptions: {
       /**
@@ -513,6 +565,12 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        * @default true
        */
       enabled: boolean;
+      /**
+       * Whether to export generated symbols.
+       *
+       * @default true
+       */
+      exported: boolean;
       /**
        * Custom function to generate metadata for the operation.
        * Can return any valid meta object that will be included in the generated query options.
@@ -539,8 +597,37 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
       /**
        * Custom naming pattern for generated query options names. The name variable is obtained from the SDK function name.
        *
+       * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions queryOptions}
+       *
        * @default '{{name}}Options'
-       * @see https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions
+       */
+      name: StringName;
+    };
+    /**
+     * Configuration for generated `useQuery()` function helpers.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
+     */
+    useQuery: {
+      /**
+       * The casing convention to use for generated names.
+       *
+       * @default 'camelCase'
+       */
+      case: StringCase;
+      /**
+       * Whether to generate `useQuery()` function helpers.
+       *
+       * @default true
+       */
+      enabled: boolean;
+      /**
+       * Custom naming pattern for generated `useQuery()` function names. The name variable is
+       * obtained from the SDK function name.
+       *
+       * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
+       *
+       * @default 'use{{name}}Query'
        */
       name: StringName;
     };

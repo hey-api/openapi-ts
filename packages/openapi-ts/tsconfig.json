@@ -6,5 +6,5 @@
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
-  "exclude": ["test/custom/request.ts", "test/e2e/**", "test/generated/**"]
+  "exclude": ["test/custom/request.ts", "test/generated/**"]
 }
