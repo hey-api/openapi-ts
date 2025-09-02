@@ -3,7 +3,6 @@ import type {
   SecuritySchemeObject,
   ServerObject,
 } from '../openApi/3.1.x/types/spec';
-import type { StringCase } from '../types/case';
 import type { IRContext } from './context';
 import type { IRMediaType } from './mediaType';
 
@@ -26,10 +25,6 @@ interface IRComponentsObject {
 }
 
 interface IRContextFile {
-  /**
-   * Define casing for identifiers in this file.
-   */
-  case?: StringCase;
   /**
    * Should the exports from this file be re-exported in the index barrel file?
    */

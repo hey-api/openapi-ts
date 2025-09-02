@@ -1,5 +1,6 @@
 import type { StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
+import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'@angular/common'> & {
   /**
@@ -150,4 +151,4 @@ export type Config = Plugin.Name<'@angular/common'> & {
   output: string;
 };
 
-export type AngularCommonPlugin = DefinePlugin<UserConfig, Config>;
+export type AngularCommonPlugin = DefinePlugin<UserConfig, Config, IApi>;

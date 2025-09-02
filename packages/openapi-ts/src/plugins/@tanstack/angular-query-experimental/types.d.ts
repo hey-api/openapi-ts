@@ -1,6 +1,7 @@
 import type { IR } from '../../../ir/types';
 import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
+import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'@tanstack/angular-query-experimental'> &
   Plugin.Hooks & {
@@ -555,4 +556,4 @@ export type Config = Plugin.Name<'@tanstack/angular-query-experimental'> &
     };
   };
 
-export type TanStackAngularQueryPlugin = DefinePlugin<UserConfig, Config>;
+export type TanStackAngularQueryPlugin = DefinePlugin<UserConfig, Config, IApi>;

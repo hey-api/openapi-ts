@@ -1,32 +1,25 @@
-import type { NodeInfo } from '../../../generate/file/types';
+import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+
 import { tsc } from '../../../tsc';
-import { typesId } from './ref';
-import type { HeyApiTypeScriptPlugin } from './types';
 
 export const createWebhooks = ({
-  nodeInfo,
-  plugin,
+  symbolWebhooks,
   webhookNames,
 }: {
-  nodeInfo: NodeInfo;
-  plugin: HeyApiTypeScriptPlugin['Instance'];
+  symbolWebhooks: ICodegenSymbolOut;
   webhookNames: ReadonlyArray<string>;
 }) => {
-  const file = plugin.context.file({ id: typesId })!;
-
   if (!webhookNames.length) return;
 
   const type = tsc.typeUnionNode({
     types: webhookNames.map((name) =>
-      tsc.typeReferenceNode({
-        typeName: name,
-      }),
+      tsc.typeReferenceNode({ typeName: name }),
     ),
   });
   const node = tsc.typeAliasDeclaration({
-    exportType: nodeInfo.exported,
-    name: nodeInfo.node,
+    exportType: true,
+    name: symbolWebhooks.placeholder,
     type,
   });
-  file.add(node);
+  symbolWebhooks.update({ value: node });
 };

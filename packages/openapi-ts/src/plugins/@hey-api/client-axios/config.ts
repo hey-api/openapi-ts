@@ -1,15 +1,19 @@
 import { definePluginConfig } from '../../shared/utils/config';
 import { clientDefaultConfig, clientDefaultMeta } from '../client-core/config';
 import { clientPluginHandler } from '../client-core/plugin';
+import { Api } from './api';
 import type { HeyApiClientAxiosPlugin } from './types';
 
 export const defaultConfig: HeyApiClientAxiosPlugin['Config'] = {
   ...clientDefaultMeta,
+  api: new Api({
+    name: '@hey-api/client-axios',
+  }),
   config: {
     ...clientDefaultConfig,
     throwOnError: false,
   },
-  handler: clientPluginHandler as HeyApiClientAxiosPlugin['Handler'],
+  handler: clientPluginHandler,
   name: '@hey-api/client-axios',
 };
 

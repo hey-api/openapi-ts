@@ -3,43 +3,48 @@ import type { ICodegenImport } from '../imports/types';
 import type { ICodegenMeta } from '../meta/types';
 import type { ICodegenOutput } from '../output/types';
 import type { ICodegenRenderer } from '../renderers/types';
-import type { ICodegenSymbol } from '../symbols/types';
+import type {
+  ICodegenSymbolIn,
+  ICodegenSymbolOut,
+  SelectorMethods,
+} from '../symbols/types';
 
 /**
  * Represents a code generation project consisting of multiple codegen files.
  * Manages imports, symbols, and output generation across the project.
  */
-export interface ICodegenProject {
+export interface ICodegenProject extends SelectorMethods {
   /**
    * Adds an export declaration to a specific file, creating the file if it doesn't exist.
    *
    * @param fileOrPath - File instance or file path where to add the export.
    * @param imp - The export declaration to add.
    * @example
-   * project.addExportToFile("models/user.ts", { from: "lib", names: ["User"] });
+   * project.addExport("models/user.ts", { from: "lib", names: ["User"] });
    */
-  addExportToFile(fileOrPath: ICodegenFile | string, imp: ICodegenImport): void;
+  addExport(fileOrPath: ICodegenFile | string, imp: ICodegenImport): void;
   /**
    * Adds an import declaration to a specific file, creating the file if it doesn't exist.
    *
    * @param fileOrPath - File instance or file path where to add the import.
    * @param imp - The import declaration to add.
    * @example
-   * project.addImportToFile("models/user.ts", { from: "lib", names: ["User"] });
+   * project.addImport("models/user.ts", { from: "lib", names: ["User"] });
    */
-  addImportToFile(fileOrPath: ICodegenFile | string, imp: ICodegenImport): void;
+  addImport(fileOrPath: ICodegenFile | string, imp: ICodegenImport): void;
   /**
    * Adds a symbol to a specific file, creating the file if it doesn't exist.
    *
    * @param fileOrPath - File instance or file path where to add the symbol.
    * @param symbol - The symbol to add.
+   * @returns The inserted symbol.
    * @example
-   * project.addSymbolToFile("models/user.ts", { name: "User", value: tsNode });
+   * project.addSymbol("models/user.ts", { name: "User", value: tsNode });
    */
-  addSymbolToFile(
+  addSymbol(
     fileOrPath: ICodegenFile | string,
-    symbol: ICodegenSymbol,
-  ): void;
+    symbol: ICodegenSymbolIn,
+  ): ICodegenSymbolOut;
   /**
    * Creates a new codegen file with optional metadata and adds it to the project.
    *
@@ -82,7 +87,7 @@ export interface ICodegenProject {
    * @example
    * project.getAllSymbols().filter(s => s.name === "User");
    */
-  getAllSymbols(): ReadonlyArray<ICodegenSymbol>;
+  getAllSymbols(): ReadonlyArray<Pick<ICodegenSymbolOut, 'name'>>;
   /**
    * Retrieves a file by its logical output path.
    *
@@ -92,6 +97,43 @@ export interface ICodegenProject {
    * const file = project.getFileByPath("models/user.ts");
    */
   getFileByPath(path: string): ICodegenFile | undefined;
+  /**
+   * Retrieves a file from symbol ID included in the file.
+   *
+   * @param id The symbol ID to find.
+   * @returns The file if found, undefined otherwise.
+   * @example
+   * const file = project.getFileBySymbolId(31);
+   */
+  getFileBySymbolId(id: number): ICodegenFile | undefined;
+  /**
+   * Retrieves a symbol from ID included in the project.
+   *
+   * @param id The symbol ID to find.
+   * @returns The symbol if found, undefined otherwise.
+   * @example
+   * const symbol = project.getSymbolById(31);
+   */
+  getSymbolById(id: number): ICodegenSymbolOut | undefined;
+  /**
+   * Returns the current file ID and increments it.
+   *
+   * @returns File ID before being incremented
+   */
+  incrementFileId(): number;
+  /**
+   * Returns the current symbol ID and increments it.
+   *
+   * @returns Symbol ID before being incremented
+   */
+  incrementSymbolId(): number;
+  /**
+   * Tracks added symbol across the project.
+   *
+   * @param symbol The symbol added to file.
+   * @param file The file containing the added symbol.
+   */
+  registerSymbol(symbol: ICodegenSymbolOut, file: ICodegenFile): void;
   /**
    * Produces output representations for all files in the project.
    *

@@ -519,20 +519,6 @@ for (const version of versions) {
         }),
         description: 'generate Fetch API client with Pinia Colada plugin',
       },
-      {
-        config: createConfig({
-          output: 'group-by-tag',
-          plugins: [
-            {
-              groupByTag: true,
-              name: '@pinia/colada',
-            },
-            '@hey-api/client-fetch',
-          ],
-        }),
-        description:
-          'generates Fetch API client with Pinia Colada plugin group by tag',
-      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {

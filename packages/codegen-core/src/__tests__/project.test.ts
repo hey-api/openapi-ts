@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { CodegenFile } from '../files/file';
 import type { ICodegenMeta } from '../meta/types';
-import type { ICodegenOutput } from '../output/types';
 import { CodegenProject } from '../project/project';
 import type { ICodegenRenderer } from '../renderers/types';
 
@@ -31,10 +30,10 @@ describe('CodegenProject', () => {
     expect(project.getFileByPath('b.ts')).toBe(newFile2);
   });
 
-  it('addExportToFile creates file if missing and adds export', () => {
+  it('addExport creates file if missing and adds export', () => {
     const imp = { from: 'lib', names: ['Foo'] };
 
-    project.addExportToFile('a.ts', imp);
+    project.addExport('a.ts', imp);
 
     const file = project.getFileByPath('a.ts')!;
     expect(file).toBeDefined();
@@ -42,10 +41,10 @@ describe('CodegenProject', () => {
     expect(file.exports[0]).toEqual(imp);
   });
 
-  it('addImportToFile creates file if missing and adds import', () => {
+  it('addImport creates file if missing and adds import', () => {
     const imp = { from: 'lib', names: ['Foo'] };
 
-    project.addImportToFile('a.ts', imp);
+    project.addImport('a.ts', imp);
 
     const file = project.getFileByPath('a.ts')!;
     expect(file).toBeDefined();
@@ -53,15 +52,15 @@ describe('CodegenProject', () => {
     expect(file.imports[0]).toEqual(imp);
   });
 
-  it('addSymbolToFile creates file if missing and adds symbol', () => {
+  it('addSymbol creates file if missing and adds symbol', () => {
     const symbol = { name: 'MySymbol', value: {} };
 
-    project.addSymbolToFile('a.ts', symbol);
+    project.addSymbol('a.ts', symbol);
 
     const file = project.getFileByPath('a.ts')!;
     expect(file).toBeDefined();
     expect(file.symbols.length).toBe(1);
-    expect(file.symbols[0]).toEqual(symbol);
+    expect(file.symbols[0]).toMatchObject(symbol);
   });
 
   it('getAllSymbols returns all symbols from all files', () => {
@@ -87,19 +86,20 @@ describe('CodegenProject', () => {
 
     // @ts-expect-error
     // mutate returned array should not affect internal state
-    files.push(new CodegenFile('b.ts'));
+    files.push(new CodegenFile('b.ts', project));
     expect(project.files).toEqual([file]);
   });
 
   it('render returns output from all files', () => {
     class Renderer implements ICodegenRenderer {
       id = 'foo';
-      render(file: CodegenFile, meta?: ICodegenMeta): ICodegenOutput {
-        return {
-          content: `content ${file.path}`,
-          meta: { ...meta },
-          path: file.path,
-        };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      renderHeader(_file: CodegenFile, _meta?: ICodegenMeta): string {
+        return '';
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      renderSymbols(file: CodegenFile, _meta?: ICodegenMeta): string {
+        return `content ${file.path}`;
       }
     }
     const renderer = new Renderer();
@@ -109,8 +109,8 @@ describe('CodegenProject', () => {
 
     const outputs = project.render(meta);
     expect(outputs).toEqual([
-      { content: 'content a.ts', meta: { foo: 42 }, path: 'a.ts' },
-      { content: 'content b.ts', meta: { foo: 42 }, path: 'b.ts' },
+      { content: 'content a.ts', meta: { renderer: 'foo' }, path: 'a.ts' },
+      { content: 'content b.ts', meta: { renderer: 'foo' }, path: 'b.ts' },
     ]);
   });
 

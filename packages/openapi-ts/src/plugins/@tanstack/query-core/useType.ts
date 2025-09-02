@@ -1,8 +1,6 @@
 import type { IR } from '../../../ir/types';
-import type { ImportExportItemObject } from '../../../tsc/utils';
 import { getClientPlugin } from '../../@hey-api/client-core/utils';
 import { operationOptionsType } from '../../@hey-api/sdk/operation';
-import { typesId } from '../../@hey-api/typescript/ref';
 import type { PluginInstance } from './types';
 
 export const useTypeData = ({
@@ -11,10 +9,14 @@ export const useTypeData = ({
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}) => {
-  const file = plugin.context.file({ id: plugin.name })!;
-  const pluginSdk = plugin.getPlugin('@hey-api/sdk')!;
-  const typeData = operationOptionsType({ file, operation, plugin: pluginSdk });
+}): string => {
+  const f = plugin.gen.ensureFile(plugin.output);
+  const pluginSdk = plugin.getPluginOrThrow('@hey-api/sdk');
+  const typeData = operationOptionsType({
+    file: f,
+    operation,
+    plugin: pluginSdk,
+  });
   return typeData;
 };
 
@@ -24,41 +26,43 @@ export const useTypeError = ({
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}) => {
-  const file = plugin.context.file({ id: plugin.name })!;
-  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
-  const fileTypeScript = plugin.context.file({ id: typesId })!;
-  const errorImport = file.import({
-    asType: true,
-    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-    name: fileTypeScript.getName(
-      pluginTypeScript.api.getId({ operation, type: 'error' }),
-    ),
-  });
-  let typeError: ImportExportItemObject = {
-    asType: true,
-    name: errorImport.name || '',
-  };
-  if (!typeError.name) {
-    typeError = file.import({
-      asType: true,
-      module: plugin.name,
-      name: 'DefaultError',
-    });
-  }
+}): string => {
+  const f = plugin.gen.ensureFile(plugin.output);
   const client = getClientPlugin(plugin.context.config);
-  if (client.name === '@hey-api/client-axios') {
-    const axiosError = file.import({
-      asType: true,
-      module: 'axios',
-      name: 'AxiosError',
+  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+
+  const symbolErrorType = plugin.gen.selectSymbolFirst(
+    pluginTypeScript.api.getSelector('error', operation.id),
+  );
+  if (symbolErrorType) {
+    f.addImport({
+      from: symbolErrorType.file,
+      typeNames: [symbolErrorType.placeholder],
     });
-    typeError = {
-      ...axiosError,
-      name: `${axiosError.name}<${typeError.name}>`,
-    };
   }
-  return typeError;
+
+  let typeErrorName: string | undefined = symbolErrorType?.placeholder;
+  if (!typeErrorName) {
+    const symbol = f
+      .ensureSymbol({ selector: plugin.api.getSelector('DefaultError') })
+      .update({ name: 'DefaultError' });
+    f.addImport({
+      from: plugin.name,
+      typeNames: [symbol.placeholder],
+    });
+    typeErrorName = symbol.placeholder;
+  }
+  if (client.name === '@hey-api/client-axios') {
+    const symbol = f
+      .ensureSymbol({ selector: plugin.api.getSelector('AxiosError') })
+      .update({ name: 'AxiosError' });
+    f.addImport({
+      from: 'axios',
+      typeNames: [symbol.placeholder],
+    });
+    typeErrorName = `${symbol.placeholder}<${typeErrorName}>`;
+  }
+  return typeErrorName;
 };
 
 export const useTypeResponse = ({
@@ -67,18 +71,17 @@ export const useTypeResponse = ({
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}) => {
-  const file = plugin.context.file({ id: plugin.name })!;
-  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
-  const fileTypeScript = plugin.context.file({ id: typesId })!;
-  const responseImport = file.import({
-    asType: true,
-    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-    name: fileTypeScript.getName(
-      pluginTypeScript.api.getId({ operation, type: 'response' }),
-    ),
-  });
-
-  const typeResponse = responseImport.name || 'unknown';
-  return typeResponse;
+}): string => {
+  const f = plugin.gen.ensureFile(plugin.output);
+  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+  const symbolResponseType = plugin.gen.selectSymbolFirst(
+    pluginTypeScript.api.getSelector('response', operation.id),
+  );
+  if (symbolResponseType) {
+    f.addImport({
+      from: symbolResponseType.file,
+      typeNames: [symbolResponseType.placeholder],
+    });
+  }
+  return symbolResponseType?.placeholder || 'unknown';
 };

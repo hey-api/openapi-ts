@@ -1,39 +1,42 @@
+import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+
 import { clientModulePath } from '../../../generate/client';
-import type { FileImportResult } from '../../../generate/file/types';
 import { tsc } from '../../../tsc';
 import { getClientPlugin } from '../client-core/utils';
-import { nuxtTypeDefault, nuxtTypeResponse, sdkId } from './constants';
+import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
 import type { HeyApiSdkPlugin } from './types';
 
 export const createTypeOptions = ({
-  clientOptions,
   plugin,
+  symbolClientOptions,
 }: {
-  clientOptions: FileImportResult<string, string>;
   plugin: HeyApiSdkPlugin['Instance'];
+  symbolClientOptions: ICodegenSymbolOut;
 }) => {
-  const file = plugin.context.file({ id: sdkId })!;
+  const f = plugin.gen.ensureFile(plugin.output);
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   const clientModule = clientModulePath({
     config: plugin.context.config,
-    sourceOutput: file.nameWithoutExtension(),
+    sourceOutput: f.path,
   });
-  const tDataShape = file.import({
-    asType: true,
-    module: clientModule,
-    name: 'TDataShape',
-  });
-  const clientType = file.import({
-    asType: true,
-    module: clientModule,
+  const symbolTDataShape = f.addSymbol({ name: 'TDataShape' });
+  const symbolClient = f.ensureSymbol({
     name: 'Client',
+    selector: plugin.api.getSelector('Client'),
+  });
+  f.addImport({
+    from: clientModule,
+    typeNames: [symbolClient.name, symbolTDataShape.name],
   });
 
+  const symbolOptions = f
+    .ensureSymbol({ selector: plugin.api.getSelector('Options') })
+    .update({ name: 'Options' });
   const typeOptions = tsc.typeAliasDeclaration({
     exportType: true,
-    name: 'Options',
+    name: symbolOptions.placeholder,
     type: tsc.typeIntersectionNode({
       types: [
         tsc.typeReferenceNode({
@@ -48,7 +51,7 @@ export const createTypeOptions = ({
                 tsc.typeReferenceNode({ typeName: 'TData' }),
                 tsc.typeReferenceNode({ typeName: 'ThrowOnError' }),
               ],
-          typeName: clientOptions.name,
+          typeName: symbolClientOptions.placeholder,
         }),
         tsc.typeInterfaceNode({
           properties: [
@@ -60,7 +63,9 @@ export const createTypeOptions = ({
               ],
               isRequired: !plugin.config.client,
               name: 'client',
-              type: tsc.typeReferenceNode({ typeName: clientType.name }),
+              type: tsc.typeReferenceNode({
+                typeName: symbolClient.placeholder,
+              }),
             },
             {
               comment: [
@@ -90,10 +95,10 @@ export const createTypeOptions = ({
           }),
           tsc.typeParameterDeclaration({
             constraint: tsc.typeReferenceNode({
-              typeName: tDataShape.name,
+              typeName: symbolTDataShape.placeholder,
             }),
             defaultType: tsc.typeReferenceNode({
-              typeName: tDataShape.name,
+              typeName: symbolTDataShape.placeholder,
             }),
             name: 'TData',
           }),
@@ -109,10 +114,10 @@ export const createTypeOptions = ({
       : [
           tsc.typeParameterDeclaration({
             constraint: tsc.typeReferenceNode({
-              typeName: tDataShape.name,
+              typeName: symbolTDataShape.placeholder,
             }),
             defaultType: tsc.typeReferenceNode({
-              typeName: tDataShape.name,
+              typeName: symbolTDataShape.placeholder,
             }),
             name: 'TData',
           }),
@@ -123,6 +128,5 @@ export const createTypeOptions = ({
           }),
         ],
   });
-
-  file.add(typeOptions);
+  symbolOptions.update({ value: typeOptions });
 };

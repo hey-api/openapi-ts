@@ -55,7 +55,4 @@ export const identifiers = {
   url: tsc.identifier({ text: 'url' }),
   uuid: tsc.identifier({ text: 'uuid' }),
   void: tsc.identifier({ text: 'void' }),
-  z: tsc.identifier({ text: 'z' }),
 };
-
-export const zodId = 'zod';
