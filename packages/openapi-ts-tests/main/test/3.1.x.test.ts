@@ -931,7 +931,6 @@ describe(`OpenAPI ${version}`, () => {
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
-    // it.each([scenarios[0]])('$description', async ({ config }) => {
     await createClient(config);
 
     const outputPath =
