@@ -5,12 +5,13 @@ import type { TanStackSolidQueryPlugin } from '../solid-query/types';
 import type { TanStackSvelteQueryPlugin } from '../svelte-query/types';
 import type { TanStackVueQueryPlugin } from '../vue-query/types';
 
-export type PluginHandler =
-  | TanStackAngularQueryPlugin['Handler']
-  | TanStackReactQueryPlugin['Handler']
-  | TanStackSolidQueryPlugin['Handler']
-  | TanStackSvelteQueryPlugin['Handler']
-  | TanStackVueQueryPlugin['Handler'];
+export interface PluginHandler {
+  (...args: Parameters<TanStackAngularQueryPlugin['Handler']>): void;
+  (...args: Parameters<TanStackReactQueryPlugin['Handler']>): void;
+  (...args: Parameters<TanStackSolidQueryPlugin['Handler']>): void;
+  (...args: Parameters<TanStackSvelteQueryPlugin['Handler']>): void;
+  (...args: Parameters<TanStackVueQueryPlugin['Handler']>): void;
+}
 
 export type PluginInstance =
   | TanStackAngularQueryPlugin['Instance']

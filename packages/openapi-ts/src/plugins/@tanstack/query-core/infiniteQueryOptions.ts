@@ -1,8 +1,8 @@
 import ts from 'typescript';
 
-import { clientApi } from '../../../generate/client';
 import { operationPagination } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
+import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { tsNodeToString } from '../../../tsc/utils';
 import {
@@ -13,29 +13,28 @@ import { handleMeta } from './meta';
 import {
   createQueryKeyFunction,
   createQueryKeyType,
-  queryKeyName,
   queryKeyStatement,
 } from './queryKey';
 import type { PluginInstance, PluginState } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
-
-const createInfiniteParamsFn = 'createInfiniteParams';
-const infiniteQueryOptionsFn = 'infiniteQueryOptions';
 
 const createInfiniteParamsFunction = ({
   plugin,
 }: {
   plugin: PluginInstance;
 }) => {
-  const file = plugin.context.file({ id: plugin.name })!;
+  const f = plugin.gen.ensureFile(plugin.output);
 
-  const identifierCreateInfiniteParams = file.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-create-infinite-params/${createInfiniteParamsFn}`,
-    case: plugin.config.case,
-    create: true,
-    namespace: 'value',
-  });
+  const symbolCreateInfiniteParams = f
+    .ensureSymbol({ selector: plugin.api.getSelector('createInfiniteParams') })
+    .update({
+      name: buildName({
+        config: {
+          case: plugin.config.case,
+        },
+        name: 'createInfiniteParams',
+      }),
+    });
 
   const fn = tsc.constVariable({
     expression: tsc.arrowFunction({
@@ -43,9 +42,7 @@ const createInfiniteParamsFunction = ({
       parameters: [
         {
           name: 'queryKey',
-          type: tsc.typeReferenceNode({
-            typeName: `QueryKey<${clientApi.Options.name}>`,
-          }),
+          type: tsc.typeReferenceNode({ typeName: 'QueryKey<Options>' }),
         },
         {
           name: 'page',
@@ -212,16 +209,16 @@ const createInfiniteParamsFunction = ({
         {
           extends: tsc.typeReferenceNode({
             typeName: tsc.identifier({
-              text: `Pick<QueryKey<${clientApi.Options.name}>[0], 'body' | 'headers' | 'path' | 'query'>`,
+              text: "Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>",
             }),
           }),
           name: 'K',
         },
       ],
     }),
-    name: identifierCreateInfiniteParams.name || '',
+    name: symbolCreateInfiniteParams.placeholder,
   });
-  file.add(fn);
+  symbolCreateInfiniteParams.update({ value: fn });
 };
 
 export const createInfiniteQueryOptions = ({
@@ -244,7 +241,7 @@ export const createInfiniteQueryOptions = ({
     return;
   }
 
-  const file = plugin.context.file({ id: plugin.name })!;
+  const f = plugin.gen.ensureFile(plugin.output);
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
     operation,
@@ -263,18 +260,19 @@ export const createInfiniteQueryOptions = ({
       createInfiniteParamsFunction({ plugin });
       state.hasCreateInfiniteParamsFunction = true;
     }
-
-    file.import({
-      module: plugin.name,
-      name: infiniteQueryOptionsFn,
-    });
-
-    state.typeInfiniteData = file.import({
-      asType: true,
-      module: plugin.name,
-      name: 'InfiniteData',
-    });
   }
+
+  const symbolInfiniteQueryOptions = f
+    .ensureSymbol({ selector: plugin.api.getSelector('infiniteQueryOptions') })
+    .update({ name: 'infiniteQueryOptions' });
+  const symbolInfiniteDataType = f
+    .ensureSymbol({ selector: plugin.api.getSelector('InfiniteData') })
+    .update({ name: 'InfiniteData' });
+  f.addImport({
+    from: plugin.name,
+    names: [symbolInfiniteQueryOptions.name],
+    typeNames: [symbolInfiniteDataType.name],
+  });
 
   state.hasUsedQueryFn = true;
 
@@ -282,9 +280,12 @@ export const createInfiniteQueryOptions = ({
   const typeError = useTypeError({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
 
-  const typeQueryKey = `${queryKeyName}<${typeData}>`;
+  const symbolQueryKeyType = f.ensureSymbol({
+    selector: plugin.api.getSelector('QueryKey'),
+  });
+  const typeQueryKey = `${symbolQueryKeyType.placeholder}<${typeData}>`;
   const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
-  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
   // TODO: parser - this is a bit clunky, need to compile type to string because
   // `tsc.returnFunctionCall()` accepts only strings, should be cleaned up
   const typescriptState = {
@@ -300,21 +301,20 @@ export const createInfiniteQueryOptions = ({
     unescape: true,
   })} | ${typePageObjectParam}`;
 
+  const symbolInfiniteQueryKey = f.addSymbol({
+    name: buildName({
+      config: plugin.config.infiniteQueryKeys,
+      name: operation.id,
+    }),
+  });
   const node = queryKeyStatement({
     isInfinite: true,
     operation,
     plugin,
+    symbol: symbolInfiniteQueryKey,
     typeQueryKey,
   });
-  file.add(node);
-
-  const identifierInfiniteQueryKey = file.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-infinite-query-key/${operation.id}`,
-    case: plugin.config.infiniteQueryKeys.case,
-    nameTransformer: plugin.config.infiniteQueryKeys.name,
-    namespace: 'value',
-  });
+  symbolInfiniteQueryKey.update({ value: node });
 
   const awaitSdkExpression = tsc.awaitExpression({
     expression: tsc.callExpression({
@@ -346,11 +346,8 @@ export const createInfiniteQueryOptions = ({
     }),
   });
 
-  const identifierCreateInfiniteParams = file.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-create-infinite-params/${createInfiniteParamsFn}`,
-    case: plugin.config.case,
-    namespace: 'value',
+  const symbolCreateInfiniteParams = f.ensureSymbol({
+    selector: plugin.api.getSelector('createInfiniteParams'),
   });
 
   const statements: Array<ts.Statement> = [
@@ -397,14 +394,14 @@ export const createInfiniteQueryOptions = ({
     }),
     tsc.constVariable({
       expression: tsc.callExpression({
-        functionName: identifierCreateInfiniteParams.name || '',
+        functionName: symbolCreateInfiniteParams.placeholder,
         parameters: ['queryKey', 'page'],
       }),
       name: 'params',
     }),
   ];
 
-  if (plugin.getPlugin('@hey-api/sdk')?.config.responseStyle === 'data') {
+  if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push(
       tsc.returnVariable({
         expression: awaitSdkExpression,
@@ -422,15 +419,6 @@ export const createInfiniteQueryOptions = ({
       }),
     );
   }
-
-  const identifierInfiniteQueryOptions = file.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-infinite-query-options/${operation.id}`,
-    case: plugin.config.infiniteQueryOptions.case,
-    create: true,
-    nameTransformer: plugin.config.infiniteQueryOptions.name,
-    namespace: 'value',
-  });
 
   const infiniteQueryOptionsObj: Array<{ key: string; value: ts.Expression }> =
     [
@@ -460,7 +448,7 @@ export const createInfiniteQueryOptions = ({
       {
         key: 'queryKey',
         value: tsc.callExpression({
-          functionName: identifierInfiniteQueryKey.name || '',
+          functionName: symbolInfiniteQueryKey.placeholder,
           parameters: ['options'],
         }),
       },
@@ -475,6 +463,12 @@ export const createInfiniteQueryOptions = ({
     });
   }
 
+  const symbolInfiniteQueryOptionsFn = f.addSymbol({
+    name: buildName({
+      config: plugin.config.infiniteQueryOptions,
+      name: operation.id,
+    }),
+  });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
@@ -501,20 +495,19 @@ export const createInfiniteQueryOptions = ({
               obj: infiniteQueryOptionsObj,
             }),
           ],
-          name: infiniteQueryOptionsFn,
+          name: symbolInfiniteQueryOptions.placeholder,
           // TODO: better types syntax
           types: [
             typeResponse,
-            typeError.name || 'unknown',
-            `${typeof state.typeInfiniteData === 'string' ? state.typeInfiniteData : state.typeInfiniteData.name}<${typeResponse}>`,
+            typeError || 'unknown',
+            `${symbolInfiniteDataType.placeholder}<${typeResponse}>`,
             typeQueryKey,
             typePageParam,
           ],
         }),
       ],
     }),
-    name: identifierInfiniteQueryOptions.name || '',
+    name: symbolInfiniteQueryOptionsFn.placeholder,
   });
-  file.add(statement);
-  return;
+  symbolInfiniteQueryOptionsFn.update({ value: statement });
 };

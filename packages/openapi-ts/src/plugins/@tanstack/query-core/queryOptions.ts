@@ -1,6 +1,7 @@
 import type ts from 'typescript';
 
 import type { IR } from '../../../ir/types';
+import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import {
   createOperationComment,
@@ -16,7 +17,6 @@ import {
 import type { PluginInstance, PluginState } from './types';
 import { useTypeData } from './useType';
 
-const queryOptionsFn = 'queryOptions';
 const optionsParamName = 'options';
 
 export const createQueryOptions = ({
@@ -34,7 +34,7 @@ export const createQueryOptions = ({
     return;
   }
 
-  const file = plugin.context.file({ id: plugin.name })!;
+  const f = plugin.gen.ensureFile(plugin.output);
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
     operation,
@@ -48,31 +48,34 @@ export const createQueryOptions = ({
       createQueryKeyFunction({ plugin });
       state.hasCreateQueryKeyParamsFunction = true;
     }
-
-    file.import({
-      module: plugin.name,
-      name: queryOptionsFn,
-    });
   }
+
+  const symbolQueryOptions = f.ensureSymbol({
+    name: 'queryOptions',
+    selector: plugin.api.getSelector('queryOptions'),
+  });
+  f.addImport({
+    from: plugin.name,
+    names: [symbolQueryOptions.name],
+  });
 
   state.hasUsedQueryFn = true;
 
+  const symbolQueryKey = f.addSymbol({
+    name: buildName({
+      config: plugin.config.queryKeys,
+      name: operation.id,
+    }),
+  });
   const node = queryKeyStatement({
     isInfinite: false,
     operation,
     plugin,
+    symbol: symbolQueryKey,
   });
-  file.add(node);
+  symbolQueryKey.update({ value: node });
 
   const typeData = useTypeData({ operation, plugin });
-
-  const identifierQueryKey = file.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-query-key/${operation.id}`,
-    case: plugin.config.queryKeys.case,
-    nameTransformer: plugin.config.queryKeys.name,
-    namespace: 'value',
-  });
 
   const awaitSdkExpression = tsc.awaitExpression({
     expression: tsc.callExpression({
@@ -106,7 +109,7 @@ export const createQueryOptions = ({
 
   const statements: Array<ts.Statement> = [];
 
-  if (plugin.getPlugin('@hey-api/sdk')?.config.responseStyle === 'data') {
+  if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push(
       tsc.returnVariable({
         expression: awaitSdkExpression,
@@ -124,15 +127,6 @@ export const createQueryOptions = ({
       }),
     );
   }
-
-  const identifierQueryOptions = file.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-query-options/${operation.id}`,
-    case: plugin.config.queryOptions.case,
-    create: true,
-    nameTransformer: plugin.config.queryOptions.name,
-    namespace: 'value',
-  });
 
   const queryOptionsObj: Array<{ key: string; value: ts.Expression }> = [
     {
@@ -158,7 +152,7 @@ export const createQueryOptions = ({
     {
       key: 'queryKey',
       value: tsc.callExpression({
-        functionName: identifierQueryKey.name || '',
+        functionName: symbolQueryKey.placeholder,
         parameters: [optionsParamName],
       }),
     },
@@ -173,6 +167,16 @@ export const createQueryOptions = ({
     });
   }
 
+  const symbolQueryOptionsFn = f
+    .ensureSymbol({
+      selector: plugin.api.getSelector('queryOptionsFn', operation.id),
+    })
+    .update({
+      name: buildName({
+        config: plugin.config.queryOptions,
+        name: operation.id,
+      }),
+    });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
@@ -189,13 +193,13 @@ export const createQueryOptions = ({
       statements: [
         tsc.returnFunctionCall({
           args: [tsc.objectExpression({ obj: queryOptionsObj })],
-          name: queryOptionsFn,
+          name: symbolQueryOptions.placeholder,
         }),
       ],
     }),
-    name: identifierQueryOptions.name || '',
+    name: symbolQueryOptionsFn.placeholder,
     // TODO: add type error
     // TODO: AxiosError<PutSubmissionMetaError>
   });
-  file.add(statement);
+  symbolQueryOptionsFn.update({ value: statement });
 };

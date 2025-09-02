@@ -1,6 +1,8 @@
-import ts from 'typescript';
+import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+import type ts from 'typescript';
 
-import { clientApi, clientModulePath } from '../../../generate/client';
+import { clientModulePath } from '../../../generate/client';
+import { TypeScriptRenderer } from '../../../generate/renderer';
 import { tsc } from '../../../tsc';
 import { stringCase } from '../../../utils/stringCase';
 import {
@@ -8,8 +10,7 @@ import {
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
 import { getClientPlugin } from '../client-core/utils';
-import { typesId } from '../typescript/ref';
-import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
+import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import {
   operationClasses,
   operationParameters,
@@ -38,14 +39,28 @@ const createClientClassNodes = ({
     }),
   });
 
+  const f = plugin.gen.ensureFile(plugin.output);
+
+  const symbolClient = f.ensureSymbol({
+    selector: plugin.api.getSelector('Client'),
+  });
+  const client = getClientPlugin(plugin.context.config);
+  let symClient: ICodegenSymbolOut | undefined;
+  if (client.api && 'getSelector' in client.api) {
+    symClient = plugin.gen.selectSymbolFirst(
+      // @ts-expect-error
+      client.api.getSelector('client'),
+    );
+  }
+
   return [
     tsc.propertyDeclaration({
-      initializer: plugin.config.client
-        ? tsc.identifier({ text: '_heyApiClient' })
+      initializer: symClient
+        ? tsc.identifier({ text: symClient.placeholder })
         : undefined,
       modifier: 'protected',
       name: '_client',
-      type: ts.factory.createTypeReferenceNode('Client'),
+      type: tsc.typeReferenceNode({ typeName: symbolClient.placeholder }),
     }),
     // @ts-expect-error
     tsc.identifier({ text: '\n' }),
@@ -60,7 +75,7 @@ const createClientClassNodes = ({
               {
                 isRequired: !plugin.config.client,
                 name: 'client',
-                type: 'Client',
+                type: symbolClient.placeholder,
               },
             ],
             useLegacyResolution: false,
@@ -91,9 +106,13 @@ interface SdkClassEntry {
    */
   className: string;
   /**
-   * Child classes located inside this class.
+   * Symbol IDs for child classes located inside this class.
    */
-  classes: Set<string>;
+  classes: Set<number>;
+  /**
+   * Symbol ID for the class.
+   */
+  id: number;
   /**
    * Track unique added method nodes.
    */
@@ -116,12 +135,12 @@ const generateClassSdk = ({
   const client = getClientPlugin(plugin.context.config);
   const isAngularClient = client.name === '@hey-api/client-angular';
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
-  const file = plugin.context.file({ id: sdkId })!;
-  const sdkClasses = new Map<string, SdkClassEntry>();
+  const f = plugin.gen.ensureFile(plugin.output);
+  const sdkClasses = new Map<number, SdkClassEntry>();
   /**
    * Track unique added classes.
    */
-  const generatedClasses = new Set<string>();
+  const generatedClasses = new Set<number>();
 
   const clientClassNodes = plugin.config.instance
     ? createClientClassNodes({ plugin })
@@ -132,17 +151,19 @@ const generateClassSdk = ({
       context: plugin.context,
       operation,
     });
-    const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
-    const fileTypeScript = plugin.context.file({ id: typesId })!;
-    const responseImport = file.import({
-      asType: true,
-      module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-      name: isNuxtClient
-        ? fileTypeScript.getName(
-            pluginTypeScript.api.getId({ operation, type: 'response' }),
-          )
-        : undefined,
-    });
+    const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+    let symbolResponse: ICodegenSymbolOut | undefined;
+    if (isNuxtClient) {
+      symbolResponse = plugin.gen.selectSymbolFirst(
+        pluginTypeScript.api.getSelector('response', operation.id),
+      );
+      if (symbolResponse) {
+        f.addImport({
+          from: symbolResponse.file,
+          typeNames: [symbolResponse.placeholder],
+        });
+      }
+    }
 
     const classes = operationClasses({
       context: plugin.context,
@@ -152,10 +173,15 @@ const generateClassSdk = ({
 
     for (const entry of classes.values()) {
       entry.path.forEach((currentClassName, index) => {
-        if (!sdkClasses.has(currentClassName)) {
-          sdkClasses.set(currentClassName, {
-            className: currentClassName,
+        const symbolCurrentClass = f.ensureSymbol({
+          name: currentClassName,
+          selector: plugin.api.getSelector('class', currentClassName),
+        });
+        if (!sdkClasses.has(symbolCurrentClass.id)) {
+          sdkClasses.set(symbolCurrentClass.id, {
+            className: symbolCurrentClass.name,
             classes: new Set(),
+            id: symbolCurrentClass.id,
             methods: new Set(),
             nodes: [],
             root: !index,
@@ -163,10 +189,18 @@ const generateClassSdk = ({
         }
 
         const parentClassName = entry.path[index - 1];
-        if (parentClassName && parentClassName !== currentClassName) {
-          const parentClass = sdkClasses.get(parentClassName)!;
-          parentClass.classes.add(currentClassName);
-          sdkClasses.set(parentClassName, parentClass);
+        if (parentClassName) {
+          const symbolParentClass = f.ensureSymbol({
+            name: parentClassName,
+            selector: plugin.api.getSelector('class', parentClassName),
+          });
+          if (
+            symbolParentClass.placeholder !== symbolCurrentClass.placeholder
+          ) {
+            const parentClass = sdkClasses.get(symbolParentClass.id)!;
+            parentClass.classes.add(symbolCurrentClass.id);
+            sdkClasses.set(symbolParentClass.id, parentClass);
+          }
         }
 
         const isLast = entry.path.length === index + 1;
@@ -175,7 +209,7 @@ const generateClassSdk = ({
           return;
         }
 
-        const currentClass = sdkClasses.get(currentClassName)!;
+        const currentClass = sdkClasses.get(symbolCurrentClass.id)!;
 
         // avoid duplicate methods
         if (currentClass.methods.has(entry.methodName)) {
@@ -183,7 +217,7 @@ const generateClassSdk = ({
         }
 
         const opParameters = operationParameters({
-          file,
+          file: f,
           isRequiredOptions,
           operation,
           plugin,
@@ -210,14 +244,14 @@ const generateClassSdk = ({
                   name: nuxtTypeComposable,
                 },
                 {
-                  default: responseImport.name
+                  default: symbolResponse
                     ? tsc.typeReferenceNode({
-                        typeName: responseImport.name,
+                        typeName: symbolResponse.placeholder,
                       })
                     : tsc.typeNode('undefined'),
-                  extends: responseImport.name
+                  extends: symbolResponse
                     ? tsc.typeReferenceNode({
-                        typeName: responseImport.name,
+                        typeName: symbolResponse.placeholder,
                       })
                     : undefined,
                   name: nuxtTypeDefault,
@@ -247,13 +281,15 @@ const generateClassSdk = ({
 
         currentClass.methods.add(entry.methodName);
 
-        sdkClasses.set(currentClassName, currentClass);
+        sdkClasses.set(symbolCurrentClass.id, currentClass);
       });
     }
   });
 
+  const symbolHeyApiClient = f.addSymbol({ name: '_HeyApiClient' });
+
   const generateClass = (currentClass: SdkClassEntry) => {
-    if (generatedClasses.has(currentClass.className)) {
+    if (generatedClasses.has(currentClass.id)) {
       return;
     }
 
@@ -283,10 +319,12 @@ const generateClassSdk = ({
                       ]
                     : [],
                   expression: tsc.identifier({
-                    text: childClass.className,
+                    text: f.getSymbolById(childClass.id)!.placeholder,
                   }),
                 })
-              : tsc.identifier({ text: childClass.className }),
+              : tsc.identifier({
+                  text: f.getSymbolById(childClass.id)!.placeholder,
+                }),
             modifier: plugin.config.instance ? undefined : 'static',
             name: stringCase({
               case: 'camelCase',
@@ -297,6 +335,10 @@ const generateClassSdk = ({
       }
     }
 
+    const symbol = f.ensureSymbol({
+      name: currentClass.className,
+      selector: plugin.api.getSelector('class', currentClass.className),
+    });
     const node = tsc.classDeclaration({
       decorator:
         currentClass.root && isAngularClient
@@ -310,21 +352,23 @@ const generateClassSdk = ({
             }
           : undefined,
       exportClass: currentClass.root,
-      extendedClasses: plugin.config.instance ? ['_HeyApiClient'] : undefined,
-      name: currentClass.className,
+      extendedClasses: plugin.config.instance
+        ? [symbolHeyApiClient.placeholder]
+        : undefined,
+      name: symbol.placeholder,
       nodes: currentClass.nodes,
     });
-    file.add(node);
-    generatedClasses.add(currentClass.className);
+    symbol.update({ value: node });
+    generatedClasses.add(symbol.id);
   };
 
   if (clientClassNodes.length) {
     const node = tsc.classDeclaration({
       exportClass: false,
-      name: '_HeyApiClient',
+      name: symbolHeyApiClient.placeholder,
       nodes: clientClassNodes,
     });
-    file.add(node);
+    symbolHeyApiClient.update({ value: node });
   }
 
   for (const sdkClass of sdkClasses.values()) {
@@ -339,26 +383,28 @@ const generateFlatSdk = ({
 }) => {
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
-  const file = plugin.context.file({ id: sdkId })!;
+  const f = plugin.gen.ensureFile(plugin.output);
 
   plugin.forEach('operation', ({ operation }) => {
     const isRequiredOptions = isOperationOptionsRequired({
       context: plugin.context,
       operation,
     });
-    const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
-    const fileTypeScript = plugin.context.file({ id: typesId })!;
-    const responseImport = file.import({
-      asType: true,
-      module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-      name: isNuxtClient
-        ? fileTypeScript.getName(
-            pluginTypeScript.api.getId({ operation, type: 'response' }),
-          )
-        : undefined,
-    });
+    const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+    let symbolResponse: ICodegenSymbolOut | undefined;
+    if (isNuxtClient) {
+      symbolResponse = plugin.gen.selectSymbolFirst(
+        pluginTypeScript.api.getSelector('response', operation.id),
+      );
+      if (symbolResponse) {
+        f.addImport({
+          from: symbolResponse.file,
+          typeNames: [symbolResponse.placeholder],
+        });
+      }
+    }
     const opParameters = operationParameters({
-      file,
+      file: f,
       isRequiredOptions,
       operation,
       plugin,
@@ -368,6 +414,15 @@ const generateFlatSdk = ({
       opParameters,
       operation,
       plugin,
+    });
+    const symbol = f.addSymbol({
+      name: serviceFunctionIdentifier({
+        config: plugin.context.config,
+        handleIllegal: true,
+        id: operation.id,
+        operation,
+      }),
+      selector: plugin.api.getSelector('function', operation.id),
     });
     const node = tsc.constVariable({
       comment: createOperationComment({ operation }),
@@ -384,14 +439,14 @@ const generateFlatSdk = ({
                 name: nuxtTypeComposable,
               },
               {
-                default: responseImport.name
+                default: symbolResponse
                   ? tsc.typeReferenceNode({
-                      typeName: responseImport.name,
+                      typeName: symbolResponse.placeholder,
                     })
                   : tsc.typeNode('undefined'),
-                extends: responseImport.name
+                extends: symbolResponse
                   ? tsc.typeReferenceNode({
-                      typeName: responseImport.name,
+                      typeName: symbolResponse.placeholder,
                     })
                   : undefined,
                 name: nuxtTypeDefault,
@@ -408,57 +463,54 @@ const generateFlatSdk = ({
               },
             ],
       }),
-      name: serviceFunctionIdentifier({
-        config: plugin.context.config,
-        handleIllegal: true,
-        id: operation.id,
-        operation,
-      }),
+      name: symbol.placeholder,
     });
-    file.add(node);
+    symbol.update({ value: node });
   });
 };
 
 export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
-  const file = plugin.createFile({
-    id: sdkId,
-    path: plugin.output,
+  const f = plugin.gen.createFile(plugin.output, {
+    extension: '.ts',
+    path: '{{path}}.gen',
+    renderer: new TypeScriptRenderer(),
   });
 
   // import required packages and core files
   const clientModule = clientModulePath({
     config: plugin.context.config,
-    sourceOutput: file.nameWithoutExtension(),
+    sourceOutput: f.path,
   });
-  const clientOptions = file.import({
-    ...clientApi.Options,
-    alias: 'ClientOptions',
-    module: clientModule,
+  const symbolClientOptions = f.addSymbol({ name: 'ClientOptions' });
+  f.addImport({
+    aliases: {
+      Options: symbolClientOptions.placeholder,
+    },
+    from: clientModule,
+    typeNames: ['Options'],
   });
 
   const client = getClientPlugin(plugin.context.config);
   const isAngularClient = client.name === '@hey-api/client-angular';
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   if (isNuxtClient) {
-    file.import({
-      asType: true,
-      module: clientModule,
-      name: 'Composable',
-    });
+    f.addImport({ from: clientModule, typeNames: ['Composable'] });
   }
 
   if (isAngularClient && plugin.config.asClass) {
-    file.import({
-      module: '@angular/core',
-      name: 'Injectable',
-    });
+    f.addImport({ from: '@angular/core', names: ['Injectable'] });
   }
 
-  createTypeOptions({ clientOptions, plugin });
+  createTypeOptions({ plugin, symbolClientOptions });
 
   if (plugin.config.asClass) {
     generateClassSdk({ plugin });
   } else {
     generateFlatSdk({ plugin });
+  }
+
+  if (plugin.config.exportFromIndex && f.hasContent()) {
+    const index = plugin.gen.ensureFile('index');
+    index.addExport({ from: f, namespaceImport: true });
   }
 };

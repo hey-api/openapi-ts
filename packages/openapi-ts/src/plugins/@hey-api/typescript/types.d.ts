@@ -1,6 +1,6 @@
 import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
-import type { Api } from './api';
+import type { IApi } from './api';
 
 export type EnumsType = 'javascript' | 'typescript' | 'typescript-const';
 
@@ -493,4 +493,4 @@ export interface PluginState {
   usedTypeIDs: Set<string>;
 }
 
-export type HeyApiTypeScriptPlugin = DefinePlugin<UserConfig, Config, Api>;
+export type HeyApiTypeScriptPlugin = DefinePlugin<UserConfig, Config, IApi>;

@@ -1,8 +1,14 @@
+import type { ICodegenBiMap } from '../bimap/types';
 import type { ICodegenImport } from '../imports/types';
+import type { ICodegenProject } from '../project/types';
 import type { ICodegenRenderer } from '../renderers/types';
-import type { ICodegenSymbol } from '../symbols/types';
+import type {
+  ICodegenSymbolIn,
+  ICodegenSymbolOut,
+  SelectorMethods,
+} from '../symbols/types';
 
-export interface ICodegenFile {
+export interface ICodegenFile extends SelectorMethods {
   /**
    * Adds an export to this file.
    *
@@ -22,7 +28,20 @@ export interface ICodegenFile {
    *
    * @param symbol The symbol to add
    */
-  addSymbol(symbol: ICodegenSymbol): void;
+  addSymbol(symbol: ICodegenSymbolIn): ICodegenSymbolOut;
+  /**
+   * Ensures a symbol for the given selector exists, so it can be
+   * safely used.
+   *
+   * @param symbol The symbol to find. The required selector is used
+   *  to match a symbol. If there's no match, we create a headless
+   *  instance with the provided fields.
+   * @returns The symbol if it exists, headless instance otherwise.
+   */
+  ensureSymbol(
+    symbol: Partial<ICodegenSymbolIn> &
+      Pick<Required<ICodegenSymbolIn>, 'selector'>,
+  ): ICodegenSymbolOut;
   /**
    * Symbols exported from other files.
    **/
@@ -32,7 +51,14 @@ export interface ICodegenFile {
    *
    * @returns List of all symbols used in this file
    */
-  getAllSymbols(): ReadonlyArray<ICodegenSymbol>;
+  getAllSymbols(): ReadonlyArray<Pick<ICodegenSymbolOut, 'name'>>;
+  /**
+   * Finds a symbol by symbol ID.
+   *
+   * @param id Symbol ID
+   * @returns The symbol if it exists, undefined otherwise.
+   */
+  getSymbolById(id: number): ICodegenSymbolOut | undefined;
   /**
    * Checks if this file contains any content.
    *
@@ -45,10 +71,14 @@ export interface ICodegenFile {
   /**
    * Checks if this file defines a symbol with the given name.
    *
-   * @param name Symbol name to check
+   * @param id Symbol ID to check
    * @returns True if the symbol is defined by this file
    */
-  hasSymbol(name: string): boolean;
+  hasSymbol(id: number): boolean;
+  /**
+   * File ID within the project.
+   */
+  id: number;
   /**
    * Symbols imported from other files.
    **/
@@ -89,6 +119,10 @@ export interface ICodegenFile {
    */
   path: string;
   /**
+   * Parent project this file belongs to.
+   */
+  project: ICodegenProject;
+  /**
    * Returns a relative path to this file from another file.
    *
    * @param file The file from which we want the relative path to this file.
@@ -103,7 +137,22 @@ export interface ICodegenFile {
    */
   relativePathToFile(file: Pick<ICodegenFile, 'path'>): string;
   /**
+   * Map holding resolved names for symbols in this file.
+   */
+  resolvedNames: ICodegenBiMap<number, string>;
+  /**
    * Top-level symbols declared in this file.
    **/
-  symbols: ReadonlyArray<ICodegenSymbol>;
+  symbols: ReadonlyArray<ICodegenSymbolOut>;
+  /**
+   * Updates a symbol defined by this file.
+   *
+   * @param id ID of symbol to update.
+   * @param symbol The values to update.
+   * @returns The updated symbol.
+   */
+  updateSymbol(
+    id: number,
+    symbol: Partial<ICodegenSymbolOut>,
+  ): ICodegenSymbolOut;
 }

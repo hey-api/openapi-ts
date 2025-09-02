@@ -1,30 +1,43 @@
-import type { GeneratedFile } from '../../../generate/file';
-import { tsc } from '../../../tsc';
+import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+
+import { TypeScriptRenderer } from '../../../generate/renderer';
 import { stringCase } from '../../../utils/stringCase';
-import { clientId } from '../../@hey-api/client-core/utils';
-import { sdkId } from '../../@hey-api/sdk/constants';
+import { getClientPlugin } from '../../@hey-api/client-core/utils';
 import { operationClasses } from '../../@hey-api/sdk/operation';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { createMutationOptions } from './mutationOptions';
 import { createQueryOptions } from './queryOptions';
 import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
-import { getFileForOperation } from './utils';
 
 export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
-  const files = new Map<string, GeneratedFile>();
-  const states = new Map<string, PluginState>();
+  const f = plugin.gen.createFile(plugin.output, {
+    extension: '.ts',
+    path: '{{path}}.gen',
+    renderer: new TypeScriptRenderer(),
+  });
+
+  const state: PluginState = {
+    hasCreateQueryKeyParamsFunction: false,
+    hasMutations: false,
+    hasQueries: false,
+    hasUsedQueryFn: false,
+  };
+
+  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
+  const symbolOptions = plugin.gen.selectSymbolFirst(
+    sdkPlugin.api.getSelector('Options'),
+  );
+  if (symbolOptions) {
+    f.addImport({
+      from: symbolOptions.file,
+      typeNames: [symbolOptions.placeholder],
+    });
+  }
 
   plugin.forEach('operation', ({ operation }) => {
-    const { file, state } = getFileForOperation({
-      files,
-      operation,
-      plugin,
-      states,
-    });
     state.hasUsedQueryFn = false;
 
-    const sdkPlugin = plugin.getPlugin('@hey-api/sdk')!;
     const classes = sdkPlugin.config.asClass
       ? operationClasses({
           context: plugin.context,
@@ -58,62 +71,61 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
             ]
       ).join('.');
 
-    createQueryOptions({
-      file,
-      operation,
-      plugin,
-      queryFn,
-      state,
-    });
+    if (plugin.hooks.operation.isQuery(operation)) {
+      if (plugin.config.queryOptions.enabled) {
+        createQueryOptions({
+          operation,
+          plugin,
+          queryFn,
+          state,
+        });
+      }
+    }
 
-    createMutationOptions({
-      file,
-      operation,
-      plugin,
-      queryFn,
-      state,
-    });
+    if (plugin.hooks.operation.isMutation(operation)) {
+      if (plugin.config.mutationOptions.enabled) {
+        createMutationOptions({
+          operation,
+          plugin,
+          queryFn,
+          state,
+        });
+      }
+    }
 
     if (state.hasUsedQueryFn) {
-      file.import({
-        module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
-        name: queryFn.split('.')[0]!,
-      });
-    }
-  });
-
-  files.forEach((file, fileId) => {
-    const state = states.get(fileId)!;
-
-    if (state.hasQueries) {
-      file.import({
-        alias: '_heyApiClient',
-        module: file.relativePathToFile({
-          context: plugin.context,
-          id: clientId,
-        }),
-        name: 'client',
-      });
-    }
-  });
-
-  // re-export all split files
-  if (plugin.config.groupByTag && plugin.config.exportFromIndex) {
-    const indexFile = plugin.createFile({
-      case: plugin.config.case,
-      id: `${plugin.name}/index`,
-      path: `${plugin.output}/index`,
-    });
-
-    files.forEach((_, fileId) => {
-      if (fileId !== plugin.name) {
-        const tag = fileId.split('/').pop()!;
-        indexFile.add(
-          tsc.exportAllDeclaration({
-            module: `./${tag}`,
-          }),
-        );
+      // TODO: make this work with static classes
+      const symbolFunction = plugin.gen.selectSymbolFirst(
+        sdkPlugin.api.getSelector('function', operation.id),
+      );
+      if (symbolFunction) {
+        f.addImport({
+          from: symbolFunction.file,
+          names: [symbolFunction.placeholder],
+        });
       }
-    });
+    }
+  });
+
+  if (state.hasQueries) {
+    let symbolClient: ICodegenSymbolOut | undefined;
+    const client = getClientPlugin(plugin.context.config);
+    if (client.api && 'getSelector' in client.api) {
+      symbolClient = plugin.gen.selectSymbolFirst(
+        // @ts-expect-error
+        client.api.getSelector('client'),
+      );
+      if (symbolClient) {
+        f.addImport({
+          from: symbolClient.file,
+          names: [symbolClient.placeholder],
+        });
+      }
+    }
+  }
+
+  if (plugin.config.exportFromIndex && f.hasContent()) {
+    const index = plugin.gen.ensureFile('index');
+    index.addExport({ from: f, namespaceImport: true });
   }
 };

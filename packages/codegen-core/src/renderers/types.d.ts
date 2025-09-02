@@ -1,6 +1,5 @@
-import type { CodegenFile } from '../files/file';
+import type { ICodegenFile } from '../files/types';
 import type { ICodegenMeta } from '../meta/types';
-import type { ICodegenOutput } from '../output/types';
 
 export interface ICodegenRenderer {
   /**
@@ -14,11 +13,30 @@ export interface ICodegenRenderer {
    */
   id: string;
   /**
-   * Returns printable data.
+   * Returns printable data containing header and imports.
    *
    * @param file The file to render.
    * @param meta Arbitrary metadata.
-   * @returns Output for file emit step
+   * @returns Printable string containing header and imports.
    */
-  render(file: CodegenFile, meta?: ICodegenMeta): ICodegenOutput;
+  renderHeader(file: ICodegenFile, meta?: ICodegenMeta): string;
+  /**
+   * Returns printable data containing symbols and exports.
+   *
+   * @param file The file to render.
+   * @param meta Arbitrary metadata.
+   * @returns Printable string containing symbols and exports.
+   */
+  renderSymbols(file: ICodegenFile, meta?: ICodegenMeta): string;
+  /**
+   * Function replacing symbols with resolved names.
+   *
+   * @returns String with replaced symbols.
+   */
+  replacerFn(args: {
+    file: ICodegenFile;
+    headless?: boolean;
+    scope?: 'file' | 'project';
+    symbolId: number;
+  }): string | undefined;
 }
