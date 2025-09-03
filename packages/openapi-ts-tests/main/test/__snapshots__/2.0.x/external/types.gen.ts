@@ -115,18 +115,13 @@ export type ExternalAllOfSchema = ExternalSharedExternalSharedModel & {
  */
 export type ExternalAnyOfSchema = unknown;
 
-export type ExternalSharedExternalSharedModel = {
-    id: string;
-    name?: string;
-};
-
-export type ExternalSharedExternalSharedModelWithUuid = string;
-
 export type ExternalSharedExternalNested = {
     inner?: {
         deep?: string;
     };
 };
+
+export type ExternalSharedDeep = string;
 
 export type ExternalSharedExternalNestedNumeric = {
     0?: {
@@ -134,13 +129,18 @@ export type ExternalSharedExternalNestedNumeric = {
     };
 };
 
+export type ExternalShared1 = string;
+
+export type ExternalSharedExternalSharedModel = {
+    id: string;
+    name?: string;
+};
+
 export type ExternalSharedId = string;
 
 export type ExternalSharedName = string;
 
-export type ExternalSharedDeep = string;
-
-export type ExternalShared1 = string;
+export type ExternalSharedExternalSharedModelWithUuid = string;
 
 export type GetExternalModelData = {
     body?: never;
