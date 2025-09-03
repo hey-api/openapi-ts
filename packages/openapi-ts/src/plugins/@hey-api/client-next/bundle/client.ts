@@ -214,7 +214,8 @@ export const createClient = (config: Config = {}): Client => {
       return options.body;
     }
 
-    return null;
+    // no body was provided
+    return undefined;
   }
 
   const makeMethodFn =
