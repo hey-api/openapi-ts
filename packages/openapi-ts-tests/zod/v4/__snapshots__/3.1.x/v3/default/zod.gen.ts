@@ -7,18 +7,20 @@ import { z } from 'zod/v3';
  */
 export const z400 = z.string();
 
-/**
- * External ref to shared model (A)
- */
-export const zExternalRefA = z.object({
+export const zExternalSharedExternalSharedModel = z.object({
     id: z.string(),
     name: z.string().optional()
 });
 
 /**
+ * External ref to shared model (A)
+ */
+export const zExternalRefA = zExternalSharedExternalSharedModel;
+
+/**
  * External ref to shared model (B)
  */
-export const zExternalRefB = zExternalRefA;
+export const zExternalRefB = zExternalSharedExternalSharedModel;
 
 /**
  * Testing multiline comments in string: First line
