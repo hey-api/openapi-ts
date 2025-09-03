@@ -5,15 +5,9 @@
  */
 export type _400 = string;
 
-/**
- * External ref to shared model (A)
- */
-export type ExternalRefA = {
-    id: string;
-    name?: string;
-};
+export type ExternalRefA = ExternalSharedExternalSharedModel;
 
-export type ExternalRefB = ExternalRefA;
+export type ExternalRefB = ExternalSharedExternalSharedModel;
 
 /**
  * Testing multiline comments in string: First line
@@ -962,6 +956,11 @@ export type GenericSchemaDuplicateIssue1SystemString = {
     item?: string | null;
     error?: string | null;
     readonly hasError?: boolean;
+};
+
+export type ExternalSharedExternalSharedModel = {
+    id: string;
+    name?: string;
 };
 
 /**

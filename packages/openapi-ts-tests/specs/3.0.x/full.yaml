@@ -1236,10 +1236,10 @@ components:
   schemas:
     ExternalRefA:
       description: External ref to shared model (A)
-      $ref: './external-shared.json#/ExternalSharedModel'
+      $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
     ExternalRefB:
       description: External ref to shared model (B)
-      $ref: './external-shared.json#/ExternalSharedModel'
+      $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
     '400':
       description: Model with number-only name
       type: string
