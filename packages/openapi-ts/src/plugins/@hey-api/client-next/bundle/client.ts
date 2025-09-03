@@ -62,10 +62,7 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (
-      opts.body === undefined ||
-      (opts.serializedBody !== undefined && opts.serializedBody === '')
-    ) {
+    if (opts.body === undefined || opts.serializedBody === '') {
       opts.headers.delete('Content-Type');
     }
 
