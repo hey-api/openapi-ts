@@ -86,6 +86,7 @@ export const createTypeOptions = ({
       ? [
           tsc.typeParameterDeclaration({
             constraint: tsc.typeReferenceNode({ typeName: 'Composable' }),
+            defaultType: tsc.typeNode("'$fetch'"),
             name: 'TComposable',
           }),
           tsc.typeParameterDeclaration({
