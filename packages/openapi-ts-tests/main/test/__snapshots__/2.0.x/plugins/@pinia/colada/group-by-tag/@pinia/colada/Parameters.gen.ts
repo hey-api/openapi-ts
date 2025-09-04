@@ -4,7 +4,7 @@ import { type Options, callWithParameters, callWithWeirdParameterNames } from '.
 import type { UseMutationOptions } from '@pinia/colada';
 import type { CallWithParametersData, CallWithWeirdParameterNamesData } from '../../types.gen';
 
-export const callWithParametersMutation = (options: Options<CallWithParametersData>): UseMutationOptions<unknown, Options<CallWithParametersData>, Error> => {
+export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>): UseMutationOptions<unknown, Options<CallWithParametersData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await callWithParameters({
@@ -17,7 +17,7 @@ export const callWithParametersMutation = (options: Options<CallWithParametersDa
     };
 };
 
-export const callWithWeirdParameterNamesMutation = (options: Options<CallWithWeirdParameterNamesData>): UseMutationOptions<unknown, Options<CallWithWeirdParameterNamesData>, Error> => {
+export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>): UseMutationOptions<unknown, Options<CallWithWeirdParameterNamesData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await callWithWeirdParameterNames({

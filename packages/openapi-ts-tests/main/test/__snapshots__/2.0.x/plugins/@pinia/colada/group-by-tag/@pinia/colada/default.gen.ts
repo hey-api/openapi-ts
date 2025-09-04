@@ -55,7 +55,7 @@ export const serviceWithEmptyTagQuery = (options?: Options<ServiceWithEmptyTagDa
     };
 };
 
-export const patchApiVbyApiVersionNoTagMutation = (options?: Options<PatchApiVbyApiVersionNoTagData>): UseMutationOptions<unknown, Options<PatchApiVbyApiVersionNoTagData>, Error> => {
+export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): UseMutationOptions<unknown, Options<PatchApiVbyApiVersionNoTagData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await patchApiVbyApiVersionNoTag({
@@ -68,7 +68,7 @@ export const patchApiVbyApiVersionNoTagMutation = (options?: Options<PatchApiVby
     };
 };
 
-export const fooWowMutation = (options?: Options<FooWowData>): UseMutationOptions<unknown, Options<FooWowData>, Error> => {
+export const fooWowMutation = (options?: Partial<Options<FooWowData>>): UseMutationOptions<unknown, Options<FooWowData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await fooWow({
@@ -85,7 +85,7 @@ export const fooWowMutation = (options?: Options<FooWowData>): UseMutationOption
  * Body should not be unknown
  * Body should not be unknown
  */
-export const postApiVbyApiVersionBodyMutation = (options: Options<PostApiVbyApiVersionBodyData>): UseMutationOptions<PostApiVbyApiVersionBodyResponse, Options<PostApiVbyApiVersionBodyData>, PostApiVbyApiVersionBodyError> => {
+export const postApiVbyApiVersionBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionBodyData>>): UseMutationOptions<PostApiVbyApiVersionBodyResponse, Options<PostApiVbyApiVersionBodyData>, PostApiVbyApiVersionBodyError> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await postApiVbyApiVersionBody({

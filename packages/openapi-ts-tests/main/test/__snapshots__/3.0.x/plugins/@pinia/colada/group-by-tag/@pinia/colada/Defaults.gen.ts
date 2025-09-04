@@ -55,7 +55,7 @@ export const callWithDefaultParametersQuery = (options?: Options<CallWithDefault
     };
 };
 
-export const callWithDefaultOptionalParametersMutation = (options?: Options<CallWithDefaultOptionalParametersData>): UseMutationOptions<unknown, Options<CallWithDefaultOptionalParametersData>, Error> => {
+export const callWithDefaultOptionalParametersMutation = (options?: Partial<Options<CallWithDefaultOptionalParametersData>>): UseMutationOptions<unknown, Options<CallWithDefaultOptionalParametersData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await callWithDefaultOptionalParameters({
@@ -68,7 +68,7 @@ export const callWithDefaultOptionalParametersMutation = (options?: Options<Call
     };
 };
 
-export const callToTestOrderOfParamsMutation = (options: Options<CallToTestOrderOfParamsData>): UseMutationOptions<unknown, Options<CallToTestOrderOfParamsData>, Error> => {
+export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData>>): UseMutationOptions<unknown, Options<CallToTestOrderOfParamsData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await callToTestOrderOfParams({
