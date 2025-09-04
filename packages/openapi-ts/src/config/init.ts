@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { loadConfig } from 'c12';
+import { loadConfig } from 'unconfig';
 
 import { ConfigError } from '../error';
 import type { Config, UserConfig } from '../types/config';
@@ -17,7 +17,7 @@ import { getPlugins } from './plugins';
  * @internal
  */
 export const initConfigs = async (
-  userConfig: UserConfig | undefined,
+  userConfig: UserConfig | ReadonlyArray<UserConfig> | undefined,
 ): Promise<{
   dependencies: Record<string, string>;
   results: ReadonlyArray<{
@@ -26,26 +26,46 @@ export const initConfigs = async (
   }>;
 }> => {
   let configurationFile: string | undefined = undefined;
-  if (userConfig?.configFile) {
-    const parts = userConfig.configFile.split('.');
-    configurationFile = parts.slice(0, parts.length - 1).join('.');
+  if (userConfig && !(userConfig instanceof Array)) {
+    const cf = userConfig.configFile;
+    if (cf) {
+      const parts = cf.split('.');
+      configurationFile = parts.slice(0, parts.length - 1).join('.');
+    }
   }
 
-  const { config: configFromFile, configFile: loadedConfigFile } =
-    await loadConfig<UserConfig>({
-      configFile: configurationFile,
-      name: 'openapi-ts',
-    });
+  const { config: configFromFile, sources } = await loadConfig<
+    UserConfig | ReadonlyArray<UserConfig>
+  >({
+    merge: false,
+    sources: [
+      {
+        extensions: ['ts', 'mts', 'cts', 'js', 'mjs', 'cjs', 'json', ''],
+        files: configurationFile ?? 'openapi-ts.config',
+      },
+    ],
+  });
 
-  const dependencies = getProjectDependencies(
-    Object.keys(configFromFile).length ? loadedConfigFile : undefined,
-  );
+  const loadedConfigFile = Array.isArray(sources)
+    ? (sources as ReadonlyArray<{ config?: unknown; filepath?: string }>).find(
+        (s) => s.config != null,
+      )?.filepath
+    : undefined;
+
+  const dependencies = getProjectDependencies(loadedConfigFile);
 
   const userConfigs: ReadonlyArray<UserConfig> = Array.isArray(userConfig)
     ? userConfig
     : Array.isArray(configFromFile)
-      ? configFromFile.map((config) => mergeConfigs(config, userConfig))
-      : [mergeConfigs(configFromFile, userConfig)];
+      ? configFromFile.map((config) =>
+          mergeConfigs(config, userConfig as UserConfig | undefined),
+        )
+      : [
+          mergeConfigs(
+            (configFromFile as UserConfig) ?? ({} as UserConfig),
+            userConfig as UserConfig | undefined,
+          ),
+        ];
 
   const results: Array<{
     config: Config;
