@@ -220,4 +220,89 @@ describe('zero-length body handling', () => {
     expect(result.data).toBeInstanceOf(Blob);
     expect((result.data as Blob).size).toBeGreaterThan(0);
   });
+
+  it('serializes a json string to a json-parseable body', async () => {
+    const mockResponse = new Response(null, {
+      status: 200,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    const result = await client.request({
+      body: { key: 'value' },
+      fetch: mockFetch,
+      method: 'PUT',
+      url: '/test',
+    });
+
+    expect(await result.request.text()).toBe('{"key":"value"}');
+  });
+
+  it('serializes an empty string to a json-parseable body', async () => {
+    const mockResponse = new Response(null, {
+      status: 200,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    const result = await client.request({
+      body: '',
+      fetch: mockFetch,
+      method: 'PUT',
+      url: '/test',
+    });
+
+    expect(await result.request.text()).toBe('""');
+  });
+
+  it('serializes `0` to a json-parseable body', async () => {
+    const mockResponse = new Response(null, {
+      status: 200,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    const result = await client.request({
+      body: 0,
+      fetch: mockFetch,
+      method: 'PUT',
+      url: '/test',
+    });
+
+    expect(await result.request.text()).toBe('0');
+  });
+
+  it('does not serialize a `null` body', async () => {
+    const mockResponse = new Response(null, {
+      status: 200,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    const result = await client.request({
+      body: null,
+      fetch: mockFetch,
+      method: 'PUT',
+      url: '/test',
+    });
+
+    expect(await result.request.text()).toBe('');
+  });
+
+  it('does not serialize an `undefined` body', async () => {
+    const mockResponse = new Response(null, {
+      status: 200,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    const result = await client.request({
+      body: undefined,
+      fetch: mockFetch,
+      method: 'PUT',
+      url: '/test',
+    });
+
+    expect(await result.request.text()).toBe('');
+  });
 });
