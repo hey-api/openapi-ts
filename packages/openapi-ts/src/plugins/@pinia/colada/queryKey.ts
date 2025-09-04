@@ -7,7 +7,7 @@ import type { IR } from '../../../ir/types';
 import { type Property, tsc } from '../../../tsc';
 import { getClientBaseUrlKey } from '../../@hey-api/client-core/utils';
 import type { PiniaColadaPlugin } from './types';
-import { useTypeData } from './utils';
+import { getPublicTypeData, useTypeData } from './utils';
 
 const createQueryKeyFn = 'createQueryKey';
 const queryKeyName = 'QueryKey';
@@ -352,6 +352,7 @@ export const queryKeyStatement = ({
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
   const typeData = useTypeData({ file, operation, plugin });
+  const { strippedTypeData } = getPublicTypeData({ plugin, typeData });
   const identifier = file.identifier({
     // TODO: refactor for better cross-plugin compatibility
     $ref: `#/pinia-colada-query-key/${operation.id}`,
@@ -367,7 +368,7 @@ export const queryKeyStatement = ({
         {
           isRequired: hasOperationDataRequired(operation),
           name: 'options',
-          type: typeData,
+          type: strippedTypeData,
         },
       ],
       statements: createQueryKeyLiteral({
