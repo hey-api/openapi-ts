@@ -5,7 +5,7 @@ import type { UseMutationOptions, _JSONValue, UseQueryOptions } from '@pinia/col
 import type { DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse } from '../../types.gen';
 import { client as _heyApiClient } from '../../client.gen';
 
-export const deleteFooMutation = (options: Options<DeleteFooData3>): UseMutationOptions<unknown, Options<DeleteFooData3>, Error> => {
+export const deleteFooMutation = (options?: Partial<Options<DeleteFooData3>>): UseMutationOptions<unknown, Options<DeleteFooData3>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await deleteFoo({
@@ -18,7 +18,7 @@ export const deleteFooMutation = (options: Options<DeleteFooData3>): UseMutation
     };
 };
 
-export const callWithParametersMutation = (options: Options<CallWithParametersData>): UseMutationOptions<unknown, Options<CallWithParametersData>, Error> => {
+export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>): UseMutationOptions<unknown, Options<CallWithParametersData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await callWithParameters({
@@ -31,7 +31,7 @@ export const callWithParametersMutation = (options: Options<CallWithParametersDa
     };
 };
 
-export const callWithWeirdParameterNamesMutation = (options: Options<CallWithWeirdParameterNamesData>): UseMutationOptions<unknown, Options<CallWithWeirdParameterNamesData>, Error> => {
+export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>): UseMutationOptions<unknown, Options<CallWithWeirdParameterNamesData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await callWithWeirdParameterNames({
@@ -94,7 +94,7 @@ export const getCallWithOptionalParamQuery = (options: Options<GetCallWithOption
     };
 };
 
-export const postCallWithOptionalParamMutation = (options: Options<PostCallWithOptionalParamData>): UseMutationOptions<PostCallWithOptionalParamResponse, Options<PostCallWithOptionalParamData>, Error> => {
+export const postCallWithOptionalParamMutation = (options?: Partial<Options<PostCallWithOptionalParamData>>): UseMutationOptions<PostCallWithOptionalParamResponse, Options<PostCallWithOptionalParamData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await postCallWithOptionalParam({
