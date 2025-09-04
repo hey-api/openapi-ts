@@ -71,7 +71,7 @@ export const callWithResponseQuery = (options?: Options<CallWithResponseData>): 
     };
 };
 
-export const callWithDuplicateResponsesMutation = (options?: Options<CallWithDuplicateResponsesData>): UseMutationOptions<CallWithDuplicateResponsesResponse, Options<CallWithDuplicateResponsesData>, CallWithDuplicateResponsesError> => {
+export const callWithDuplicateResponsesMutation = (options?: Partial<Options<CallWithDuplicateResponsesData>>): UseMutationOptions<CallWithDuplicateResponsesResponse, Options<CallWithDuplicateResponsesData>, CallWithDuplicateResponsesError> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await callWithDuplicateResponses({
@@ -84,7 +84,7 @@ export const callWithDuplicateResponsesMutation = (options?: Options<CallWithDup
     };
 };
 
-export const callWithResponsesMutation = (options?: Options<CallWithResponsesData>): UseMutationOptions<CallWithResponsesResponse, Options<CallWithResponsesData>, CallWithResponsesError> => {
+export const callWithResponsesMutation = (options?: Partial<Options<CallWithResponsesData>>): UseMutationOptions<CallWithResponsesResponse, Options<CallWithResponsesData>, CallWithResponsesError> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await callWithResponses({

@@ -55,7 +55,7 @@ export const apiVVersionODataControllerCountQuery = (options?: Options<ApiVVersi
     };
 };
 
-export const deleteCallWithoutParametersAndResponseMutation = (options?: Options<DeleteCallWithoutParametersAndResponseData>): UseMutationOptions<unknown, Options<DeleteCallWithoutParametersAndResponseData>, Error> => {
+export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<DeleteCallWithoutParametersAndResponseData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await deleteCallWithoutParametersAndResponse({
@@ -84,7 +84,7 @@ export const getCallWithoutParametersAndResponseQuery = (options?: Options<GetCa
     };
 };
 
-export const patchCallWithoutParametersAndResponseMutation = (options?: Options<PatchCallWithoutParametersAndResponseData>): UseMutationOptions<unknown, Options<PatchCallWithoutParametersAndResponseData>, Error> => {
+export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<PatchCallWithoutParametersAndResponseData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await patchCallWithoutParametersAndResponse({
@@ -97,7 +97,7 @@ export const patchCallWithoutParametersAndResponseMutation = (options?: Options<
     };
 };
 
-export const postCallWithoutParametersAndResponseMutation = (options?: Options<PostCallWithoutParametersAndResponseData>): UseMutationOptions<unknown, Options<PostCallWithoutParametersAndResponseData>, Error> => {
+export const postCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PostCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<PostCallWithoutParametersAndResponseData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await postCallWithoutParametersAndResponse({
@@ -110,7 +110,7 @@ export const postCallWithoutParametersAndResponseMutation = (options?: Options<P
     };
 };
 
-export const putCallWithoutParametersAndResponseMutation = (options?: Options<PutCallWithoutParametersAndResponseData>): UseMutationOptions<unknown, Options<PutCallWithoutParametersAndResponseData>, Error> => {
+export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PutCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<PutCallWithoutParametersAndResponseData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await putCallWithoutParametersAndResponse({
