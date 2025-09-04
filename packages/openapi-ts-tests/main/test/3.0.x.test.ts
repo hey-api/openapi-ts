@@ -673,4 +673,60 @@ describe(`OpenAPI ${version}`, () => {
       }),
     );
   });
+
+  describe('multi config', () => {
+    it('generates outputs for all configs', async () => {
+      const configA = createConfig({
+        input: 'external.yaml',
+        output: 'multi-external',
+      });
+      const configB = createConfig({
+        input: 'enum-inline.json',
+        output: 'multi-enum-inline',
+        parser: { transforms: { enums: 'root' } },
+      });
+
+      await createClient([configA, configB]);
+
+      const outputPathA =
+        typeof configA.output === 'string'
+          ? configA.output
+          : configA.output.path;
+      const outputPathB =
+        typeof configB.output === 'string'
+          ? configB.output
+          : configB.output.path;
+
+      const filesA = getFilePaths(outputPathA);
+      const filesB = getFilePaths(outputPathB);
+
+      await Promise.all(
+        filesA.map(async (filePath) => {
+          const fileContent = fs.readFileSync(filePath, 'utf-8');
+          await expect(fileContent).toMatchFileSnapshot(
+            path.join(
+              __dirname,
+              '__snapshots__',
+              version,
+              filePath.slice(outputDir.length + 1),
+            ),
+          );
+        }),
+      );
+
+      await Promise.all(
+        filesB.map(async (filePath) => {
+          const fileContent = fs.readFileSync(filePath, 'utf-8');
+          await expect(fileContent).toMatchFileSnapshot(
+            path.join(
+              __dirname,
+              '__snapshots__',
+              version,
+              filePath.slice(outputDir.length + 1),
+            ),
+          );
+        }),
+      );
+    });
+  });
 });
