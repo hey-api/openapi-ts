@@ -4,7 +4,7 @@ import { type Options, callWithResultFromHeader } from '../../sdk.gen';
 import type { UseMutationOptions } from '@pinia/colada';
 import type { CallWithResultFromHeaderData } from '../../types.gen';
 
-export const callWithResultFromHeaderMutation = (options?: Options<CallWithResultFromHeaderData>): UseMutationOptions<unknown, Options<CallWithResultFromHeaderData>, Error> => {
+export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallWithResultFromHeaderData>>): UseMutationOptions<unknown, Options<CallWithResultFromHeaderData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await callWithResultFromHeader({

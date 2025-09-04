@@ -3,10 +3,7 @@ import type ts from 'typescript';
 import type { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
 import { tsc } from '../../../tsc';
-import {
-  createOperationComment,
-  isOperationOptionsRequired,
-} from '../../shared/utils/operation';
+import { createOperationComment } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
 import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
@@ -129,11 +126,6 @@ export const createMutationOptions = ({
     });
   }
 
-  const isRequiredOptionsForMutation = isOperationOptionsRequired({
-    context: plugin.context,
-    operation,
-  });
-
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
@@ -142,9 +134,9 @@ export const createMutationOptions = ({
     expression: tsc.arrowFunction({
       parameters: [
         {
-          isRequired: isRequiredOptionsForMutation,
+          isRequired: false,
           name: 'options',
-          type: typeData,
+          type: `Partial<${typeData}>`,
         },
       ],
       // TODO: better types syntax

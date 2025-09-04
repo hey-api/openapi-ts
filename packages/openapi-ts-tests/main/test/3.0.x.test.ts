@@ -46,6 +46,13 @@ describe(`OpenAPI ${version}`, () => {
   const scenarios = [
     {
       config: createConfig({
+        input: 'external.yaml',
+        output: 'external',
+      }),
+      description: 'handles external references',
+    },
+    {
+      config: createConfig({
         input: 'additional-properties-false.json',
         output: 'additional-properties-false',
       }),

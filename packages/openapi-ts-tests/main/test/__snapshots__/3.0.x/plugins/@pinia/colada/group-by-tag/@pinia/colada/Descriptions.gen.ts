@@ -4,7 +4,7 @@ import { type Options, callWithDescriptions } from '../../sdk.gen';
 import type { UseMutationOptions } from '@pinia/colada';
 import type { CallWithDescriptionsData } from '../../types.gen';
 
-export const callWithDescriptionsMutation = (options?: Options<CallWithDescriptionsData>): UseMutationOptions<unknown, Options<CallWithDescriptionsData>, Error> => {
+export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithDescriptionsData>>): UseMutationOptions<unknown, Options<CallWithDescriptionsData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await callWithDescriptions({

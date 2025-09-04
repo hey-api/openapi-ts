@@ -4,7 +4,7 @@ import { type Options, nonAsciiæøåÆøÅöôêÊ字符串, putWithFormUrlEnco
 import type { UseMutationOptions } from '@pinia/colada';
 import type { NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../../types.gen';
 
-export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>): UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>, Error> => {
+export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>): UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
@@ -20,7 +20,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options: Options<N
 /**
  * Login User
  */
-export const putWithFormUrlEncodedMutation = (options: Options<PutWithFormUrlEncodedData>): UseMutationOptions<unknown, Options<PutWithFormUrlEncodedData>, Error> => {
+export const putWithFormUrlEncodedMutation = (options?: Partial<Options<PutWithFormUrlEncodedData>>): UseMutationOptions<unknown, Options<PutWithFormUrlEncodedData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await putWithFormUrlEncoded({

@@ -4,7 +4,7 @@ import { type Options, postApiVbyApiVersionRequestBody } from '../../sdk.gen';
 import type { UseMutationOptions } from '@pinia/colada';
 import type { PostApiVbyApiVersionRequestBodyData } from '../../types.gen';
 
-export const postApiVbyApiVersionRequestBodyMutation = (options?: Options<PostApiVbyApiVersionRequestBodyData>): UseMutationOptions<unknown, Options<PostApiVbyApiVersionRequestBodyData>, Error> => {
+export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionRequestBodyData>>): UseMutationOptions<unknown, Options<PostApiVbyApiVersionRequestBodyData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await postApiVbyApiVersionRequestBody({

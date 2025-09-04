@@ -5,7 +5,7 @@ import type { UseMutationOptions, _JSONValue, UseQueryOptions } from '@pinia/col
 import type { DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data } from '../../types.gen';
 import { client as _heyApiClient } from '../../client.gen';
 
-export const duplicateNameMutation = (options?: Options<DuplicateNameData>): UseMutationOptions<unknown, Options<DuplicateNameData>, Error> => {
+export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameData>>): UseMutationOptions<unknown, Options<DuplicateNameData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await duplicateName({
@@ -68,7 +68,7 @@ export const duplicateName2Query = (options?: Options<DuplicateName2Data>): UseQ
     };
 };
 
-export const duplicateName3Mutation = (options?: Options<DuplicateName3Data>): UseMutationOptions<unknown, Options<DuplicateName3Data>, Error> => {
+export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3Data>>): UseMutationOptions<unknown, Options<DuplicateName3Data>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await duplicateName3({
@@ -81,7 +81,7 @@ export const duplicateName3Mutation = (options?: Options<DuplicateName3Data>): U
     };
 };
 
-export const duplicateName4Mutation = (options?: Options<DuplicateName4Data>): UseMutationOptions<unknown, Options<DuplicateName4Data>, Error> => {
+export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4Data>>): UseMutationOptions<unknown, Options<DuplicateName4Data>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await duplicateName4({
