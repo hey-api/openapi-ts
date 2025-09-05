@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.82.4
+
+### Patch Changes
+
+- fix(client): improve handling of plain text, falsy, and unserialized request bodies ([#2564](https://github.com/hey-api/openapi-ts/pull/2564)) ([`074a459`](https://github.com/hey-api/openapi-ts/commit/074a4598c050036b161a9e04a4b5acae98d97b82)) by [@franworks](https://github.com/franworks)
+
+- feat(pinia-colada): implicit `$fetch` for `client-nuxt` (hide `composable`) ([#2598](https://github.com/hey-api/openapi-ts/pull/2598)) ([`7143078`](https://github.com/hey-api/openapi-ts/commit/7143078fde06b5b2fe00e7a7045317a2f5b40bb7)) by [@brolnickij](https://github.com/brolnickij)
+
+- fix(pinia-colada): optional `options` in mutation factory ([#2593](https://github.com/hey-api/openapi-ts/pull/2593)) ([`4137445`](https://github.com/hey-api/openapi-ts/commit/413744572f403f605c0ba6a69f3614da69fc6f15)) by [@brolnickij](https://github.com/brolnickij)
+
+- fix(parser): improve $ref handling ([#2588](https://github.com/hey-api/openapi-ts/pull/2588)) ([`c97e7a8`](https://github.com/hey-api/openapi-ts/commit/c97e7a8c8b1d24747356feb9a15840c296a9c1c8)) by [@carson2222](https://github.com/carson2222)
+
 ## 0.82.3
 
 ### Patch Changes
