@@ -1,4 +1,4 @@
-import type { CodegenFile } from '../files/file';
+import type { ICodegenFile } from '../files/types';
 import type { ICodegenMeta } from '../meta/types';
 import type { ICodegenOutput } from '../output/types';
 
@@ -20,5 +20,5 @@ export interface ICodegenRenderer {
    * @param meta Arbitrary metadata.
    * @returns Output for file emit step
    */
-  render(file: CodegenFile, meta?: ICodegenMeta): ICodegenOutput;
+  render(file: ICodegenFile, meta?: ICodegenMeta): ICodegenOutput;
 }

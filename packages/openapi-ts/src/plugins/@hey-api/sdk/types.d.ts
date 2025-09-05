@@ -7,6 +7,7 @@ import type {
   PluginClientNames,
   PluginValidatorNames,
 } from '../../types';
+import type { Api } from './api';
 
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> & {
   /**
@@ -337,4 +338,4 @@ export type Config = Plugin.Name<'@hey-api/sdk'> & {
   response: 'body' | 'response';
 };
 
-export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config>;
+export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config, Api>;

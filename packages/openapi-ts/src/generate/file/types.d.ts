@@ -75,17 +75,3 @@ export type NodeInfo = {
    */
   node: ts.TypeReferenceNode;
 };
-
-export type NodeReference<T = void> = {
-  /**
-   * Factory function that creates the node reference.
-   *
-   * @param name Identifier name.
-   * @returns Reference to the node object.
-   */
-  factory: (name: string) => T;
-  /**
-   * Reference to the node object.
-   */
-  node: T;
-};

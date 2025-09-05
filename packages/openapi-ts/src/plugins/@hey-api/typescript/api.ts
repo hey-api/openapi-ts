@@ -3,27 +3,35 @@ import type ts from 'typescript';
 import type { IR } from '../../../ir/types';
 import { schemaToType } from './plugin';
 
-type GetIdArgs =
-  | {
-      type: 'ClientOptions' | 'Webhooks';
-    }
-  | {
-      operation: IR.OperationObject;
-      type:
-        | 'data'
-        | 'error'
-        | 'errors'
-        | 'response'
-        | 'responses'
-        | 'webhook-payload'
-        | 'webhook-request';
-    }
-  | {
-      type: 'ref';
-      value: string;
-    };
+export type Api = {
+  getId: (
+    args:
+      | {
+          type: 'ClientOptions' | 'Webhooks';
+        }
+      | {
+          operation: IR.OperationObject;
+          type:
+            | 'data'
+            | 'error'
+            | 'errors'
+            | 'response'
+            | 'responses'
+            | 'webhook-payload'
+            | 'webhook-request';
+        }
+      | {
+          type: 'ref';
+          value: string;
+        },
+  ) => string;
+  schemaToType: (
+    args: Omit<Parameters<typeof schemaToType>[0], 'onRef'> &
+      Pick<Partial<Parameters<typeof schemaToType>[0]>, 'onRef'>,
+  ) => ts.TypeNode;
+};
 
-const getId = (args: GetIdArgs): string => {
+const getId: Api['getId'] = (args) => {
   switch (args.type) {
     case 'data':
     case 'error':
@@ -38,14 +46,6 @@ const getId = (args: GetIdArgs): string => {
     default:
       return args.type;
   }
-};
-
-export type Api = {
-  getId: (args: GetIdArgs) => string;
-  schemaToType: (
-    args: Omit<Parameters<typeof schemaToType>[0], 'onRef'> &
-      Pick<Partial<Parameters<typeof schemaToType>[0]>, 'onRef'>,
-  ) => ts.TypeNode;
 };
 
 export const api: Api = {

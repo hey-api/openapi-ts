@@ -1,5 +1,5 @@
 import type { IR } from '../../ir/types';
-import { valibotId } from './constants';
+import { buildName } from '../../openApi/shared/utils/name';
 import { schemaToValibotSchema, type State } from './plugin';
 import type { ValibotPlugin } from './types';
 
@@ -12,8 +12,6 @@ export const webhookToValibotSchema = ({
   plugin: ValibotPlugin['Instance'];
   state: State;
 }) => {
-  const file = plugin.context.file({ id: valibotId })!;
-
   if (plugin.config.webhooks.enabled) {
     const requiredProperties = new Set<string>();
 
@@ -112,21 +110,20 @@ export const webhookToValibotSchema = ({
 
     schemaData.required = [...requiredProperties];
 
-    const identifierData = file.identifier({
-      // TODO: refactor for better cross-plugin compatibility
-      $ref: `#/valibot-webhook/${operation.id}`,
-      case: plugin.config.webhooks.case,
-      create: true,
-      nameTransformer: plugin.config.webhooks.name,
-      namespace: 'value',
+    const selector = plugin.api.getSelector('webhook-request', operation.id);
+    const name = buildName({
+      config: plugin.config.webhooks,
+      name: operation.id,
     });
+    const f = plugin.gen.ensureFile(plugin.output);
+    const symbol = f.addSymbol({ name, selector });
     schemaToValibotSchema({
       // TODO: refactor for better cross-plugin compatibility
       $ref: `#/valibot-webhook/${operation.id}`,
-      identifier: identifierData,
       plugin,
       schema: schemaData,
       state,
+      symbol,
     });
   }
 };
