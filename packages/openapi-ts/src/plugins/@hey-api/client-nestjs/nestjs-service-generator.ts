@@ -46,7 +46,7 @@ export const groupOperationsByTags = (
         groups.set(tag, {
           className: tag,
           // Will be processed later with naming conventions
-operations: [], 
+          operations: [],
           tag,
         });
       }

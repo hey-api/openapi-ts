@@ -14,7 +14,8 @@ export const createClientConfigToken = (clientName: string): string => {
 /**
  * Utility functions for consistent naming
  */
-export const createClientClassName = (clientName: string): string => `${stringCase({ case: 'PascalCase', value: clientName })}Client`;
+export const createClientClassName = (clientName: string): string =>
+  `${stringCase({ case: 'PascalCase', value: clientName })}Client`;
 
 export const createServiceClassName = (
   clientName: string,
@@ -70,4 +71,5 @@ export const createModuleFileName = (clientName: string): string => {
 /**
  * Get the client name from plugin config with fallback
  */
-export const getClientName = (config: { clientName?: string }): string => config.clientName || 'Api';
+export const getClientName = (config: { clientName?: string }): string =>
+  config.clientName || 'Api';
