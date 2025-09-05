@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { loadConfig } from 'unconfig';
+import { loadConfig } from 'c12';
 
 import { ConfigError } from '../error';
 import type { Config, UserConfig } from '../types/config';
@@ -34,23 +34,28 @@ export const initConfigs = async (
     }
   }
 
-  const { config: configFromFile, sources } = await loadConfig<
-    UserConfig | ReadonlyArray<UserConfig>
-  >({
-    merge: false,
-    sources: [
-      {
-        extensions: ['ts', 'mts', 'cts', 'js', 'mjs', 'cjs', 'json', ''],
-        files: configurationFile ?? 'openapi-ts.config',
-      },
-    ],
-  });
+  // const { config: configFromFile, sources } = await loadConfig<
+  //   UserConfig | ReadonlyArray<UserConfig>
+  // >({
+  //   merge: false,
+  //   sources: [
+  //     {
+  //       extensions: ['ts', 'mts', 'cts', 'js', 'mjs', 'cjs', 'json', ''],
+  //       files: configurationFile ?? 'openapi-ts.config',
+  //     },
+  //   ],
+  // });
+  const { config: configFromFile, configFile: loadedConfigFile } =
+    await loadConfig<UserConfig>({
+      configFile: configurationFile,
+      name: 'openapi-ts',
+    });
 
-  const loadedConfigFile = Array.isArray(sources)
-    ? (sources as ReadonlyArray<{ config?: unknown; filepath?: string }>).find(
-        (s) => s.config != null,
-      )?.filepath
-    : undefined;
+  // const loadedConfigFile = Array.isArray(sources)
+  //   ? (sources as ReadonlyArray<{ config?: unknown; filepath?: string }>).find(
+  //       (s) => s.config != null,
+  //     )?.filepath
+  //   : undefined;
 
   const dependencies = getProjectDependencies(loadedConfigFile);
 
