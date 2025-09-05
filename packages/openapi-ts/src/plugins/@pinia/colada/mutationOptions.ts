@@ -7,7 +7,12 @@ import { createOperationComment } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
 import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
-import { useTypeData, useTypeError, useTypeResponse } from './utils';
+import {
+  getPublicTypeData,
+  useTypeData,
+  useTypeError,
+  useTypeResponse,
+} from './utils';
 
 const mutationOptionsType = 'UseMutationOptions';
 
@@ -46,6 +51,10 @@ export const createMutationOptions = ({
   const typeData = useTypeData({ file, operation, plugin });
   const typeError = useTypeError({ file, operation, plugin });
   const typeResponse = useTypeResponse({ file, operation, plugin });
+  const { isNuxtClient, strippedTypeData } = getPublicTypeData({
+    plugin,
+    typeData,
+  });
 
   const identifierMutationOptions = file.identifier({
     $ref: `#/pinia-colada-mutation-options/${operation.id}`,
@@ -108,9 +117,12 @@ export const createMutationOptions = ({
         async: true,
         multiLine: true,
         parameters: [
-          {
-            name: fnOptions,
-          },
+          isNuxtClient
+            ? {
+                name: fnOptions,
+                type: `Partial<${strippedTypeData}>`,
+              }
+            : { name: fnOptions },
         ],
         statements,
       }),
@@ -136,11 +148,12 @@ export const createMutationOptions = ({
         {
           isRequired: false,
           name: 'options',
-          type: `Partial<${typeData}>`,
+          type: `Partial<${strippedTypeData}>`,
         },
       ],
-      // TODO: better types syntax
-      returnType: `${mutationOptionsType}<${typeResponse}, ${typeData}, ${typeError.name}>`,
+      returnType: isNuxtClient
+        ? `${mutationOptionsType}<${typeResponse}, ${strippedTypeData}, ${typeError.name}>`
+        : `${mutationOptionsType}<${typeResponse}, ${typeData}, ${typeError.name}>`,
       statements: [
         tsc.returnStatement({
           expression: tsc.objectExpression({
