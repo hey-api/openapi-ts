@@ -18,7 +18,8 @@ import type { Config, UserConfig } from './types/config';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { Logger } from './utils/logger';
 
-type Configs = UserConfig | (() => UserConfig) | (() => Promise<UserConfig>);
+type ConfigValue = UserConfig | ReadonlyArray<UserConfig>;
+type Configs = ConfigValue | (() => ConfigValue) | (() => Promise<ConfigValue>);
 
 colors.enabled = colorSupport().hasBasic;
 
@@ -77,11 +78,14 @@ export const createClient = async (
     return result;
   } catch (error) {
     const config = configs[0] as Config | undefined;
-    const dryRun = config ? config.dryRun : resolvedConfig?.dryRun;
+    const resolvedSingle = (
+      Array.isArray(resolvedConfig) ? resolvedConfig[0] : resolvedConfig
+    ) as UserConfig | undefined;
+    const dryRun = config ? config.dryRun : resolvedSingle?.dryRun;
     const isInteractive = config
       ? config.interactive
-      : resolvedConfig?.interactive;
-    const logs = config?.logs ?? getLogs(resolvedConfig);
+      : resolvedSingle?.interactive;
+    const logs = config?.logs ?? getLogs(resolvedSingle);
 
     let logPath: string | undefined;
 
@@ -103,7 +107,7 @@ export const createClient = async (
 /**
  * Type helper for openapi-ts.config.ts, returns {@link UserConfig} object
  */
-export const defineConfig = async (config: Configs): Promise<UserConfig> =>
+export const defineConfig = async (config: Configs): Promise<ConfigValue> =>
   typeof config === 'function' ? await config() : config;
 
 export { defaultPaginationKeywords } from './config/parser';
