@@ -30,6 +30,7 @@ export const tsc = {
   exportNamedDeclaration: module.createNamedExportDeclarations,
   expressionToStatement: convert.expressionToStatement,
   forOfStatement: types.createForOfStatement,
+  defaultImportDeclaration: module.createDefaultImportDeclaration,
   functionTypeNode: types.createFunctionTypeNode,
   getAccessorDeclaration: types.createGetAccessorDeclaration,
   identifier: utils.createIdentifier,

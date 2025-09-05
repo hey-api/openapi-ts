@@ -111,6 +111,7 @@
     "@angular/platform-browser-dynamic": "19.2.0",
     "@angular/router": "19.2.0",
     "@config/vite-base": "workspace:*",
+    "@nestjs/common": "11.1.6",
     "@types/bun": "1.2.19",
     "@types/cross-spawn": "6.0.6",
     "@types/express": "4.17.21",
