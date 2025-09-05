@@ -164,7 +164,7 @@ export const createQueryOptions = ({
           isNuxtClient
             ? {
                 name: fnOptions,
-                type: `Partial<${strippedTypeData}>`,
+                type: strippedTypeData,
               }
             : { name: fnOptions },
         ],
