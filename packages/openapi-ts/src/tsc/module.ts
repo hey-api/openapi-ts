@@ -176,6 +176,33 @@ export const createConstVariable = ({
 };
 
 /**
+ * Create an import declaration. Example: `import X from './y'`.
+ * @param name - import name
+ * @param module - module containing imports
+ * @returns ts.ImportDeclaration
+ */
+export const createDefaultImportDeclaration = ({
+  module,
+  name,
+}: {
+  module: string;
+  name: string;
+}): ts.ImportDeclaration => {
+  const importClause = ts.factory.createImportClause(
+    false, // isTypeOnly
+    createIdentifier({ text: name }), // name (default import)
+    undefined, // namedBindings
+  );
+  const moduleSpecifier = ots.string(module);
+  const statement = ts.factory.createImportDeclaration(
+    undefined, // modifiers
+    importClause,
+    moduleSpecifier,
+  );
+  return statement;
+};
+
+/**
  * Create a named import declaration. Example: `import { X } from './y'`.
  * @param imports - named exports to import
  * @param module - module containing imports

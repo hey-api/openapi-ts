@@ -2,6 +2,7 @@ import ts from 'typescript';
 
 import { escapeName } from '../utils/escape';
 import { validTypescriptIdentifierRegExp } from '../utils/regexp';
+import { createCallExpression } from './module';
 import {
   addLeadingComments,
   type Comments,
@@ -17,6 +18,10 @@ export type AccessLevel = 'private' | 'protected' | 'public';
 export type FunctionParameter =
   | {
       accessLevel?: AccessLevel;
+      decorators?: {
+        args: any[];
+        name: string;
+      }[];
       default?: any;
       isReadOnly?: boolean;
       isRequired?: boolean;
@@ -214,9 +219,36 @@ export const toParameterDeclarations = (
       });
     }
 
-    const modifiers = parameter.accessLevel
-      ? [createModifier({ keyword: parameter.accessLevel })]
-      : [];
+    const modifiers: ts.ModifierLike[] = [];
+
+    if (parameter.decorators) {
+      // modifiers.push(...parameter.decorators.map((decorator) => {
+      //   return ts.factory.createDecorator(
+      //     ts.factory.createCallExpression(
+      //       ts.factory.createIdentifier(decorator.name),
+      //       undefined,
+      //       decorator.args.map((arg) => ts.factory.createIdentifier(arg))
+      //     )
+      //   );
+      // }));
+
+      modifiers.push(
+        ...parameter.decorators.map((decorator) =>
+          ts.factory.createDecorator(
+            createCallExpression({
+              functionName: decorator.name,
+              parameters: decorator.args
+                .map((arg) => toExpression({ value: arg }))
+                .filter(isType<ts.Expression>),
+            }),
+          ),
+        ),
+      );
+    }
+
+    if (parameter.accessLevel) {
+      modifiers.push(createModifier({ keyword: parameter.accessLevel }));
+    }
 
     if (parameter.isReadOnly) {
       modifiers.push(createModifier({ keyword: 'readonly' }));
