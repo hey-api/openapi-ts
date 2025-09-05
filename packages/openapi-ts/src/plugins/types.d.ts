@@ -9,6 +9,7 @@ export type PluginClientNames =
   | '@hey-api/client-angular'
   | '@hey-api/client-axios'
   | '@hey-api/client-fetch'
+  | '@hey-api/client-nestjs'
   | '@hey-api/client-next'
   | '@hey-api/client-nuxt'
   | 'legacy/angular'
