@@ -4,7 +4,7 @@ import type { Options as ClientOptions, Composable, TDataShape, Client } from '.
 import type { EventSubscribeResponse, EventSubscribeData } from './types.gen';
 import { client as _heyApiClient } from './client.gen';
 
-export type Options<TComposable extends Composable, TData extends TDataShape = TDataShape, ResT = unknown, DefaultT = undefined> = ClientOptions<TComposable, TData, ResT, DefaultT> & {
+export type Options<TComposable extends Composable = '$fetch', TData extends TDataShape = TDataShape, ResT = unknown, DefaultT = undefined> = ClientOptions<TComposable, TData, ResT, DefaultT> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -21,7 +21,7 @@ export type Options<TComposable extends Composable, TData extends TDataShape = T
 /**
  * Get events
  */
-export const eventSubscribe = <TComposable extends Composable, DefaultT extends EventSubscribeResponse = EventSubscribeResponse>(options: Options<TComposable, EventSubscribeData, EventSubscribeResponse, DefaultT>) => {
+export const eventSubscribe = <TComposable extends Composable = '$fetch', DefaultT extends EventSubscribeResponse = EventSubscribeResponse>(options: Options<TComposable, EventSubscribeData, EventSubscribeResponse, DefaultT>) => {
     return (options.client ?? _heyApiClient).sse.get<TComposable, EventSubscribeResponse | DefaultT, unknown, DefaultT>({
         url: '/event',
         ...options

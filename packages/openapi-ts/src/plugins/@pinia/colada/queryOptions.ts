@@ -16,7 +16,12 @@ import {
 } from './queryKey';
 import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
-import { useTypeData, useTypeError, useTypeResponse } from './utils';
+import {
+  getPublicTypeData,
+  useTypeData,
+  useTypeError,
+  useTypeResponse,
+} from './utils';
 
 const queryOptionsType = 'UseQueryOptions';
 const optionsParamName = 'options';
@@ -75,6 +80,10 @@ export const createQueryOptions = ({
   const typeData = useTypeData({ file, operation, plugin });
   const typeError = useTypeError({ file, operation, plugin });
   const typeResponse = useTypeResponse({ file, operation, plugin });
+  const { isNuxtClient, strippedTypeData } = getPublicTypeData({
+    plugin,
+    typeData,
+  });
 
   const identifierQueryOptions = file.identifier({
     $ref: `#/pinia-colada-query-options/${operation.id}`,
@@ -152,9 +161,12 @@ export const createQueryOptions = ({
         async: true,
         multiLine: true,
         parameters: [
-          {
-            name: fnOptions,
-          },
+          isNuxtClient
+            ? {
+                name: fnOptions,
+                type: strippedTypeData,
+              }
+            : { name: fnOptions },
         ],
         statements,
       }),
@@ -180,11 +192,12 @@ export const createQueryOptions = ({
         {
           isRequired: isRequiredOptions,
           name: optionsParamName,
-          type: typeData,
+          type: strippedTypeData,
         },
       ],
-      // TODO: better types syntax
-      returnType: `${queryOptionsType}<${typeResponse}, ${typeError.name}>`,
+      returnType: isNuxtClient
+        ? `${queryOptionsType}<${typeResponse}, ${strippedTypeData}, ${typeError.name}>`
+        : `${queryOptionsType}<${typeResponse}, ${typeError.name}>`,
       statements: [
         tsc.returnStatement({
           expression: tsc.objectExpression({
