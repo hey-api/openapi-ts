@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
 import type { HttpMethod } from '../../client-core/bundle/types';
+import { getValidRequestBody } from '../../client-core/bundle/utils';
 import type { Client, Config, RequestOptions } from './types';
 import {
   buildUrl,
@@ -111,23 +112,6 @@ export const createClient = (config: Config = {}): Client => {
       return e;
     }
   };
-
-  function getValidRequestBody(options: RequestOptions) {
-    const hasBody = options.body !== undefined;
-    const isSerializedBody = hasBody && options.bodySerializer;
-
-    if (isSerializedBody) {
-      return options.body !== '' ? options.body : null;
-    }
-
-    // plain/text body
-    if (hasBody) {
-      return options.body;
-    }
-
-    // no body was provided
-    return undefined;
-  }
 
   const makeMethodFn =
     (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
