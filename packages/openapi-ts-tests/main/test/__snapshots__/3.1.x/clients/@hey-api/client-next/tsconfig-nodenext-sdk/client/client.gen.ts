@@ -2,6 +2,7 @@
 
 import { createSseClient } from '../core/serverSentEvents.gen.js';
 import type { HttpMethod } from '../core/types.gen.js';
+import { getValidRequestBody } from '../core/utils.gen.js';
 import type {
   Client,
   Config,
@@ -199,26 +200,6 @@ export const createClient = (config: Config = {}): Client => {
       ...result,
     };
   };
-
-  function getValidRequestBody(options: ResolvedRequestOptions) {
-    const hasBody = options.body !== undefined;
-    const isSerializedBody = hasBody && options.bodySerializer;
-
-    if (isSerializedBody) {
-      const hasSerializedBody =
-        options.serializedBody !== undefined && options.serializedBody !== '';
-
-      return hasSerializedBody ? options.serializedBody : null;
-    }
-
-    // plain/text body
-    if (hasBody) {
-      return options.body;
-    }
-
-    // no body was provided
-    return undefined;
-  }
 
   const makeMethodFn =
     (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
