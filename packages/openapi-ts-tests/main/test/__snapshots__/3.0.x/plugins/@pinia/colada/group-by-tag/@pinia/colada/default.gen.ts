@@ -55,7 +55,7 @@ export const exportQuery = (options?: Options<ExportData>): UseQueryOptions<unkn
     };
 };
 
-export const patchApiVbyApiVersionNoTagMutation = (options?: Options<PatchApiVbyApiVersionNoTagData>): UseMutationOptions<unknown, Options<PatchApiVbyApiVersionNoTagData>, Error> => {
+export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): UseMutationOptions<unknown, Options<PatchApiVbyApiVersionNoTagData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await patchApiVbyApiVersionNoTag({
@@ -68,7 +68,7 @@ export const patchApiVbyApiVersionNoTagMutation = (options?: Options<PatchApiVby
     };
 };
 
-export const importMutation = (options: Options<ImportData>): UseMutationOptions<ImportResponse, Options<ImportData>, Error> => {
+export const importMutation = (options?: Partial<Options<ImportData>>): UseMutationOptions<ImportResponse, Options<ImportData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await import_({
@@ -81,7 +81,7 @@ export const importMutation = (options: Options<ImportData>): UseMutationOptions
     };
 };
 
-export const fooWowMutation = (options?: Options<FooWowData>): UseMutationOptions<unknown, Options<FooWowData>, Error> => {
+export const fooWowMutation = (options?: Partial<Options<FooWowData>>): UseMutationOptions<unknown, Options<FooWowData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await fooWow({

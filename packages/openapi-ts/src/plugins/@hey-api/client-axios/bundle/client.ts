@@ -57,7 +57,7 @@ export const createClient = (config: Config = {}): Client => {
       await opts.requestValidator(opts);
     }
 
-    if (opts.body && opts.bodySerializer) {
+    if (opts.body !== undefined && opts.bodySerializer) {
       opts.body = opts.bodySerializer(opts.body);
     }
 
@@ -78,7 +78,7 @@ export const createClient = (config: Config = {}): Client => {
       const response = await _axios({
         ...optsWithoutAuth,
         baseURL: opts.baseURL as string,
-        data: opts.body,
+        data: getValidRequestBody(opts),
         headers: opts.headers as RawAxiosRequestHeaders,
         // let `paramsSerializer()` handle query params if it exists
         params: opts.paramsSerializer ? opts.query : undefined,
@@ -111,6 +111,23 @@ export const createClient = (config: Config = {}): Client => {
       return e;
     }
   };
+
+  function getValidRequestBody(options: RequestOptions) {
+    const hasBody = options.body !== undefined;
+    const isSerializedBody = hasBody && options.bodySerializer;
+
+    if (isSerializedBody) {
+      return options.body !== '' ? options.body : null;
+    }
+
+    // plain/text body
+    if (hasBody) {
+      return options.body;
+    }
+
+    // no body was provided
+    return undefined;
+  }
 
   const makeMethodFn =
     (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>

@@ -7,7 +7,7 @@ import type { DeprecatedCallData } from '../../types.gen';
 /**
  * @deprecated
  */
-export const deprecatedCallMutation = (options: Options<DeprecatedCallData>): UseMutationOptions<unknown, Options<DeprecatedCallData>, Error> => {
+export const deprecatedCallMutation = (options?: Partial<Options<DeprecatedCallData>>): UseMutationOptions<unknown, Options<DeprecatedCallData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await deprecatedCall({
