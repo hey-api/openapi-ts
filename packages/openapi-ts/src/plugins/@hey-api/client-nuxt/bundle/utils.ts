@@ -250,6 +250,14 @@ export const mergeConfigs = (a: Config, b: Config): Config => {
   return config;
 };
 
+const headersEntries = (headers: Headers): Array<[string, string]> => {
+  const entries: Array<[string, string]> = [];
+  headers.forEach((value, key) => {
+    entries.push([key, value]);
+  });
+  return entries;
+};
+
 export const mergeHeaders = (
   ...headers: Array<Required<Config>['headers'] | undefined>
 ): Headers => {
@@ -266,7 +274,7 @@ export const mergeHeaders = (
 
     const iterator =
       h instanceof Headers
-        ? h.entries()
+        ? headersEntries(h)
         : Object.entries(h as Record<string, unknown>);
 
     for (const [key, value] of iterator) {
