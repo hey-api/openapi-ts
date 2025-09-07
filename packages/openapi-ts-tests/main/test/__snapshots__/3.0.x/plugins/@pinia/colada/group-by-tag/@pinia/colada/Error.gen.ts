@@ -4,7 +4,7 @@ import { type Options, testErrorCode } from '../../sdk.gen';
 import type { UseMutationOptions } from '@pinia/colada';
 import type { TestErrorCodeData } from '../../types.gen';
 
-export const testErrorCodeMutation = (options: Options<TestErrorCodeData>): UseMutationOptions<unknown, Options<TestErrorCodeData>, Error> => {
+export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData>>): UseMutationOptions<unknown, Options<TestErrorCodeData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await testErrorCode({

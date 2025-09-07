@@ -49,6 +49,22 @@ export const getFileForOperation = ({
   };
 };
 
+export const getPublicTypeData = ({
+  plugin,
+  typeData,
+}: {
+  plugin: PiniaColadaPlugin['Instance'];
+  typeData: string;
+}) => {
+  const client = getClientPlugin(plugin.context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const strippedTypeData = isNuxtClient
+    ? `Omit<${typeData}, 'composable'>`
+    : typeData;
+
+  return { isNuxtClient, strippedTypeData };
+};
+
 export const useTypeData = ({
   file,
   operation,
@@ -59,8 +75,7 @@ export const useTypeData = ({
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
   const pluginSdk = plugin.getPlugin('@hey-api/sdk')!;
-  const typeData = operationOptionsType({ file, operation, plugin: pluginSdk });
-  return typeData;
+  return operationOptionsType({ file, operation, plugin: pluginSdk });
 };
 
 export const useTypeError = ({

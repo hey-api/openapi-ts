@@ -55,7 +55,7 @@ export const multipartResponseQuery = (options?: Options<MultipartResponseData>)
     };
 };
 
-export const multipartRequestMutation = (options?: Options<MultipartRequestData>): UseMutationOptions<unknown, Options<MultipartRequestData>, Error> => {
+export const multipartRequestMutation = (options?: Partial<Options<MultipartRequestData>>): UseMutationOptions<unknown, Options<MultipartRequestData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await multipartRequest({

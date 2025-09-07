@@ -55,7 +55,7 @@ export const complexTypesQuery = (options: Options<ComplexTypesData>): UseQueryO
     };
 };
 
-export const complexParamsMutation = (options: Options<ComplexParamsData>): UseMutationOptions<ComplexParamsResponse, Options<ComplexParamsData>, Error> => {
+export const complexParamsMutation = (options?: Partial<Options<ComplexParamsData>>): UseMutationOptions<ComplexParamsResponse, Options<ComplexParamsData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await complexParams({

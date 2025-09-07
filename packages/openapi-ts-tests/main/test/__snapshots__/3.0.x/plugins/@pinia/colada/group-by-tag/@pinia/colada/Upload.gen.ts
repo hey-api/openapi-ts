@@ -4,7 +4,7 @@ import { type Options, uploadFile } from '../../sdk.gen';
 import type { UseMutationOptions } from '@pinia/colada';
 import type { UploadFileData, UploadFileResponse } from '../../types.gen';
 
-export const uploadFileMutation = (options: Options<UploadFileData>): UseMutationOptions<UploadFileResponse, Options<UploadFileData>, Error> => {
+export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): UseMutationOptions<UploadFileResponse, Options<UploadFileData>, Error> => {
     return {
         mutation: async (fnOptions) => {
             const { data } = await uploadFile({
