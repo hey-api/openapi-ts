@@ -119,14 +119,15 @@ export function getValidRequestBody(options: {
   const hasBody = options.body !== undefined;
   const isSerializedBody = hasBody && options.bodySerializer;
 
-  if (isSerializedBody && Object.hasOwn(options, 'serializedBody')) {
-    const hasSerializedBody =
-      options.serializedBody !== undefined && options.serializedBody !== '';
-
-    return hasSerializedBody ? options.serializedBody : null;
-  }
-
   if (isSerializedBody) {
+    if ('serializedBody' in options) {
+      const hasSerializedBody =
+        options.serializedBody !== undefined && options.serializedBody !== '';
+
+      return hasSerializedBody ? options.serializedBody : null;
+    }
+
+    // not all clients implement a serializedBody property (i.e. client-axios)
     return options.body !== '' ? options.body : null;
   }
 
