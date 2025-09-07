@@ -28,8 +28,10 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * Base URL for all requests made by this client.
    */
   baseUrl?: T['baseUrl'];
+
   /**
    * Custom HeyApi client. Either with your own implementation or as n-th additional client.
+   * @default HeyApiClient
    */
   client?: { new (): HeyApiClient };
   /**
@@ -50,7 +52,13 @@ export interface Config<T extends ClientOptions = ClientOptions>
         | undefined
         | unknown
       >;
+
+  /**
+   * Under which injection token to provide the client.
+   * @default DEFAULT_HEY_API_CLIENT
+   */
   provide?: InjectionToken<HeyApiClient>;
+
   /**
    * Should we return only data or multiple fields (data, error, response, etc.)?
    *

@@ -185,7 +185,7 @@ export class HeyApiClient implements Client {
       {
         redirect: 'follow',
         ...init,
-        ...overrides,
+        ...initOverrides,
       },
     );
 
