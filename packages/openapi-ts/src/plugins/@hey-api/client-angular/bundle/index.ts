@@ -6,7 +6,6 @@ export {
   urlSearchParamsBodySerializer,
 } from '../../client-core/bundle/bodySerializer';
 export { buildClientParams } from '../../client-core/bundle/params';
-export { createClient } from './client';
 export type {
   Client,
   ClientOptions,
@@ -21,3 +20,8 @@ export type {
   TDataShape,
 } from './types';
 export { createConfig, mergeHeaders } from './utils';
+export {
+  HeyApiInterceptor,
+  INTERCEPTORS_CONTEXT,
+  OPTIONS_CONTEXT,
+} from './utils';

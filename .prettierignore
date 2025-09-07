@@ -10,6 +10,9 @@
 **/.vitepress/dist
 **/test/generated
 **/__snapshots__
+**/cache
+.angular
+.gen
 
 **/CHANGELOG.md
 pnpm-lock.yaml

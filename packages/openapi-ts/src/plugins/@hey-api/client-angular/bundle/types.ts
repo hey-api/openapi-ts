@@ -1,11 +1,12 @@
 import type {
-  HttpClient,
   HttpErrorResponse,
+  HttpEvent,
   HttpHeaders,
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
-import type { Injector } from '@angular/core';
+import type { InjectionToken, Injector } from '@angular/core';
+import type { Observable } from 'rxjs';
 
 import type { Auth } from '../../client-core/bundle/auth';
 import type {
@@ -16,7 +17,7 @@ import type {
   Client as CoreClient,
   Config as CoreConfig,
 } from '../../client-core/bundle/types';
-import type { Middleware } from './utils';
+import type { HeyApiClient } from './client';
 
 export type ResponseStyle = 'data' | 'fields';
 
@@ -27,6 +28,10 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * Base URL for all requests made by this client.
    */
   baseUrl?: T['baseUrl'];
+  /**
+   * Custom HeyApi client. Either with your own implementation or as n-th additional client.
+   */
+  client?: { new (): HeyApiClient };
   /**
    * An object containing any HTTP headers that you want to pre-populate your
    * `HttpHeaders` object with.
@@ -45,10 +50,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
         | undefined
         | unknown
       >;
-  /**
-   * The HTTP client to use for making requests.
-   */
-  httpClient?: HttpClient;
+  provide?: InjectionToken<HeyApiClient>;
   /**
    * Should we return only data or multiple fields (data, error, response, etc.)?
    *
@@ -157,25 +159,27 @@ export interface ClientOptions {
 
 type MethodFn = <
   TData = unknown,
-  TError = unknown,
+  // TError = unknown,
   ThrowOnError extends boolean = false,
   TResponseStyle extends ResponseStyle = 'fields',
 >(
   options: Omit<RequestOptions<TData, TResponseStyle, ThrowOnError>, 'method'>,
-) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
+) => Observable<HttpEvent<unknown>>;
+// TODO: Move to sdk: RequestResult<TData, TError, ThrowOnError, TResponseStyle>
 
-type SseFn = <
+export type SseFn = <
   TData = unknown,
   TError = unknown,
   ThrowOnError extends boolean = false,
   TResponseStyle extends ResponseStyle = 'fields',
 >(
   options: Omit<RequestOptions<TData, TResponseStyle, ThrowOnError>, 'method'>,
-) => Promise<ServerSentEventsResult<TData, TError>>;
+) => ServerSentEventsResult<TData, TError>;
 
 type RequestFn = <
+  TResponseBody,
   TData = unknown,
-  TError = unknown,
+  // TError = unknown,
   ThrowOnError extends boolean = false,
   TResponseStyle extends ResponseStyle = 'fields',
 >(
@@ -184,7 +188,9 @@ type RequestFn = <
       Required<RequestOptions<TData, TResponseStyle, ThrowOnError>>,
       'method'
     >,
-) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
+  overrides?: HttpRequest<TDataShape>,
+  // TODO: RequestResult may be a a sdk type, here we still stick with HttpEvent
+) => Observable<HttpEvent<TResponseBody>>;
 
 type RequestOptionsFn = <
   ThrowOnError extends boolean = false,
@@ -211,12 +217,13 @@ export type Client = CoreClient<
   BuildUrlFn,
   SseFn
 > & {
-  interceptors: Middleware<
-    HttpRequest<unknown>,
-    HttpResponse<unknown>,
-    unknown,
-    ResolvedRequestOptions
-  >;
+  // TODO: Move to Angular interceptor
+  // interceptors: Middleware<
+  //   HttpRequest<unknown>,
+  //   HttpResponse<unknown>,
+  //   unknown,
+  //   ResolvedRequestOptions
+  // >;
   requestOptions: RequestOptionsFn;
 };
 
@@ -235,8 +242,8 @@ export type CreateClientConfig<T extends ClientOptions = ClientOptions> = (
 export interface TDataShape {
   body?: unknown;
   headers?: unknown;
-  path?: unknown;
-  query?: unknown;
+  path?: Record<string, unknown>;
+  query?: Record<string, unknown>;
   url: string;
 }
 

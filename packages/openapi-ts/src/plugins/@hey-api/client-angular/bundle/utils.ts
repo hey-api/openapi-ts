@@ -1,4 +1,19 @@
-import { HttpHeaders } from '@angular/common/http';
+import type {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpResponse,
+} from '@angular/common/http';
+import {
+  HttpContextToken,
+  HttpEventType,
+  HttpHeaders,
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import type { Observable } from 'rxjs';
+import { from, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { getAuthToken } from '../../client-core/bundle/auth';
 import type {
@@ -10,7 +25,14 @@ import {
   serializeObjectParam,
   serializePrimitiveParam,
 } from '../../client-core/bundle/pathSerializer';
-import type { Client, ClientOptions, Config, RequestOptions } from './types';
+import type {
+  Client,
+  ClientOptions,
+  Config,
+  RequestOptions,
+  ResolvedRequestOptions,
+  ResponseStyle,
+} from './types';
 
 interface PathSerializer {
   path: Record<string, unknown>;
@@ -338,39 +360,39 @@ type ResInterceptor<Res, Req, Options> = (
 ) => Res | Promise<Res>;
 
 class Interceptors<Interceptor> {
-  _fns: (Interceptor | null)[];
+  fns: (Interceptor | null)[];
 
   constructor() {
-    this._fns = [];
+    this.fns = [];
   }
 
   clear() {
-    this._fns = [];
+    this.fns = [];
   }
 
   getInterceptorIndex(id: number | Interceptor): number {
     if (typeof id === 'number') {
-      return this._fns[id] ? id : -1;
+      return this.fns[id] ? id : -1;
     } else {
-      return this._fns.indexOf(id);
+      return this.fns.indexOf(id);
     }
   }
   exists(id: number | Interceptor) {
     const index = this.getInterceptorIndex(id);
-    return !!this._fns[index];
+    return !!this.fns[index];
   }
 
   eject(id: number | Interceptor) {
     const index = this.getInterceptorIndex(id);
-    if (this._fns[index]) {
-      this._fns[index] = null;
+    if (this.fns[index]) {
+      this.fns[index] = null;
     }
   }
 
   update(id: number | Interceptor, fn: Interceptor) {
     const index = this.getInterceptorIndex(id);
-    if (this._fns[index]) {
-      this._fns[index] = fn;
+    if (this.fns[index]) {
+      this.fns[index] = fn;
       return id;
     } else {
       return false;
@@ -378,8 +400,8 @@ class Interceptors<Interceptor> {
   }
 
   use(fn: Interceptor) {
-    this._fns = [...this._fns, fn];
-    return this._fns.length - 1;
+    this.fns = [...this.fns, fn];
+    return this.fns.length - 1;
   }
 }
 
@@ -388,12 +410,15 @@ class Interceptors<Interceptor> {
 export interface Middleware<Req, Res, Err, Options> {
   error: Pick<
     Interceptors<ErrInterceptor<Err, Res, Req, Options>>,
-    'eject' | 'use'
+    'eject' | 'use' | 'fns'
   >;
-  request: Pick<Interceptors<ReqInterceptor<Req, Options>>, 'eject' | 'use'>;
+  request: Pick<
+    Interceptors<ReqInterceptor<Req, Options>>,
+    'eject' | 'use' | 'fns'
+  >;
   response: Pick<
     Interceptors<ResInterceptor<Res, Req, Options>>,
-    'eject' | 'use'
+    'eject' | 'use' | 'fns'
   >;
 }
 
@@ -427,3 +452,132 @@ export const createConfig = <T extends ClientOptions = ClientOptions>(
   querySerializer: defaultQuerySerializer,
   ...override,
 });
+
+export const INTERCEPTORS_CONTEXT = new HttpContextToken<
+  Middleware<any, any, any, any> | undefined
+>(() => undefined);
+export const OPTIONS_CONTEXT = new HttpContextToken<any>(() => undefined);
+
+@Injectable()
+export class HeyApiInterceptor implements HttpInterceptor {
+  interceptors = createInterceptors<
+    HttpRequest<unknown>,
+    HttpResponse<unknown>,
+    unknown,
+    ResolvedRequestOptions
+  >();
+
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler,
+  ): Observable<HttpEvent<any>> {
+    const interceptors = req.context.get(INTERCEPTORS_CONTEXT);
+    if (!interceptors) {
+      return next.handle(req);
+    }
+
+    const options = req.context.get(OPTIONS_CONTEXT) || {};
+    return from(
+      Promise.resolve().then(async () => {
+        let modifiedReq = req;
+        for (const fn of interceptors.request.fns) {
+          if (fn) {
+            modifiedReq = await fn(modifiedReq, options);
+          }
+        }
+        return modifiedReq;
+      }),
+    ).pipe(
+      switchMap((modifiedReq) => next.handle(modifiedReq)),
+      switchMap((event) => {
+        if (event.type === HttpEventType.Response) {
+          return from(
+            Promise.resolve().then(async () => {
+              let modifiedResponse = event;
+              for (const fn of interceptors.response.fns) {
+                if (fn) {
+                  modifiedResponse = await fn(modifiedResponse, {}, options);
+                }
+              }
+              return modifiedResponse;
+            }),
+          );
+        }
+        return of(event);
+      }),
+      catchError((error) =>
+        from(
+          Promise.resolve().then(async () => {
+            let modifiedError = error;
+            for (const fn of interceptors.error.fns) {
+              if (fn) {
+                modifiedError = await fn(modifiedError, error, req, options);
+              }
+            }
+            throw modifiedError;
+          }),
+        ),
+      ),
+    );
+  }
+}
+
+export function isResponseEvent(
+  event: HttpEvent<unknown>,
+): event is HttpResponse<unknown> {
+  return event.type === HttpEventType.Response;
+}
+
+export const mapToResponseStyle = <
+  TData = unknown,
+  TError = unknown,
+  ThrowOnError extends boolean = false,
+  TResponseStyle extends ResponseStyle = 'fields',
+>(
+  source: Observable<HttpEvent<unknown>>,
+  requestOptions: RequestOptions<TData, TResponseStyle, ThrowOnError>,
+) =>
+  source.pipe(
+    map((event) => {
+      if (!isResponseEvent(event)) {
+        return event;
+      }
+
+      const result: any = {
+        body: event.body as TData,
+        headers: event.headers,
+        status: event.status,
+        statusText: event.statusText,
+        url: event.url || undefined,
+      };
+
+      if (requestOptions.responseStyle === 'data') {
+        return result.body;
+      } else if (requestOptions.responseStyle === 'fields') {
+        return result;
+      }
+
+      return result;
+    }),
+    catchError((error) => {
+      if (requestOptions.throwOnError) {
+        return error;
+      }
+
+      const errResult: any = {
+        error: error.error as TError,
+        headers: error.headers,
+        status: error.status,
+        statusText: error.statusText,
+        url: error.url || undefined,
+      };
+
+      if (requestOptions.responseStyle === 'data') {
+        return of(errResult.error);
+      } else if (requestOptions.responseStyle === 'fields') {
+        return of(errResult);
+      }
+
+      return of(errResult);
+    }),
+  );
