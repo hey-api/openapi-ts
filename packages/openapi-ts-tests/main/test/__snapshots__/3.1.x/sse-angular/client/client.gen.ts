@@ -18,6 +18,7 @@ import { filter } from 'rxjs/operators';
 
 import { createSseClient } from '../core/serverSentEvents.gen';
 import type { HttpMethod } from '../core/types.gen';
+import { getValidRequestBody } from '../core/utils.gen';
 import type {
   Client,
   Config,
@@ -200,25 +201,6 @@ export const createClient = (config: Config = {}): Client => {
           };
     }
   };
-
-  function getValidRequestBody(options: ResolvedRequestOptions) {
-    const hasBody = options.body !== undefined;
-    const isSerializedBody = hasBody && options.bodySerializer;
-
-    if (isSerializedBody) {
-      const hasSerializedBody =
-        options.serializedBody !== undefined && options.serializedBody !== '';
-
-      return hasSerializedBody ? options.serializedBody : null;
-    }
-
-    // plain/text body
-    if (hasBody) {
-      return options.body;
-    }
-
-    return undefined;
-  }
 
   const makeMethodFn =
     (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>

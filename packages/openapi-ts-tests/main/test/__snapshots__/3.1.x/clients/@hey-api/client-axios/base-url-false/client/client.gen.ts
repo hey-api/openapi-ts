@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import { createSseClient } from '../core/serverSentEvents.gen';
 import type { HttpMethod } from '../core/types.gen';
+import { getValidRequestBody } from '../core/utils.gen';
 import type { Client, Config, RequestOptions } from './types.gen';
 import {
   buildUrl,
@@ -113,23 +114,6 @@ export const createClient = (config: Config = {}): Client => {
       return e;
     }
   };
-
-  function getValidRequestBody(options: RequestOptions) {
-    const hasBody = options.body !== undefined;
-    const isSerializedBody = hasBody && options.bodySerializer;
-
-    if (isSerializedBody) {
-      return options.body !== '' ? options.body : null;
-    }
-
-    // plain/text body
-    if (hasBody) {
-      return options.body;
-    }
-
-    // no body was provided
-    return undefined;
-  }
 
   const makeMethodFn =
     (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
