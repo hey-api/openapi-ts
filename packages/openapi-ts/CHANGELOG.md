@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.82.5
+
+### Patch Changes
+
+- fix(client): `mergeHeaders` functions use `.forEach()` instead of `.entries()` ([#2585](https://github.com/hey-api/openapi-ts/pull/2585)) ([`debba72`](https://github.com/hey-api/openapi-ts/commit/debba72348e450f8dc884223681f10e80da77545)) by [@volesen](https://github.com/volesen)
+
+- fix(client): move `getValidRequestBody()` function to `client-core` ([#2605](https://github.com/hey-api/openapi-ts/pull/2605)) ([`b180e4e`](https://github.com/hey-api/openapi-ts/commit/b180e4e105d1d8008e4c92d79857d592080feac7)) by [@franworks](https://github.com/franworks)
+
 ## 0.82.4
 
 ### Patch Changes
