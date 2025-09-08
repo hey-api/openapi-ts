@@ -25,6 +25,7 @@ export const tsc = {
   conditionalExpression: types.createConditionalExpression,
   constVariable: module.createConstVariable,
   constructorDeclaration: classes.createConstructorDeclaration,
+  defaultImportDeclaration: module.createDefaultImportDeclaration,
   enumDeclaration: types.createEnumDeclaration,
   exportAllDeclaration: module.createExportAllDeclaration,
   exportNamedDeclaration: module.createNamedExportDeclarations,

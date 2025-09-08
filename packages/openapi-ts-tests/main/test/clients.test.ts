@@ -493,3 +493,161 @@ describe('my-client', () => {
     );
   });
 });
+
+describe.only('client-nestjs', () => {
+  const namespace = 'clients';
+
+  const outputDir = path.join(
+    __dirname,
+    'generated',
+    '3.1.x',
+    namespace,
+    'client-nestjs',
+  );
+
+  const createConfig = (
+    userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
+  ): UserConfig => ({
+    ...userConfig,
+    input: path.join(getSpecsPath(), '3.1.x', 'full.yaml'),
+    logs: {
+      level: 'silent',
+    },
+    output:
+      typeof userConfig.output === 'string'
+        ? path.join(outputDir, userConfig.output)
+        : {
+            ...userConfig.output,
+            path: path.join(outputDir, userConfig.output.path),
+          },
+  });
+
+  const scenarios = [
+    {
+      config: createConfig({
+        output: 'custom-client-name',
+        plugins: [
+          {
+            clientName: 'MyApi',
+            name: '@hey-api/client-nestjs',
+          },
+        ],
+      }),
+      description: 'custom client name',
+    },
+    {
+      config: createConfig({
+        output: 'custom-module-name',
+        plugins: [
+          {
+            clientName: 'CustomClient',
+            moduleName: 'MyCustomModule',
+            name: '@hey-api/client-nestjs',
+          },
+        ],
+      }),
+      description: 'custom module name',
+    },
+    {
+      config: createConfig({
+        output: 'custom-client-class-name',
+        plugins: [
+          {
+            clientClassName: 'MyHttpClient',
+            clientName: 'TestApi',
+            name: '@hey-api/client-nestjs',
+          },
+        ],
+      }),
+      description: 'custom client class name',
+    },
+    {
+      config: createConfig({
+        output: 'throw-on-error-true',
+        plugins: [
+          {
+            name: '@hey-api/client-nestjs',
+            throwOnError: true,
+          },
+        ],
+      }),
+      description: 'throw on error enabled',
+    },
+    {
+      config: createConfig({
+        output: 'throw-on-error-false',
+        plugins: [
+          {
+            name: '@hey-api/client-nestjs',
+            throwOnError: false,
+          },
+        ],
+      }),
+      description: 'throw on error disabled',
+    },
+    {
+      config: createConfig({
+        output: 'bundled',
+        plugins: [
+          {
+            bundle: true,
+            name: '@hey-api/client-nestjs',
+          },
+        ],
+      }),
+      description: 'bundled client',
+    },
+    {
+      config: createConfig({
+        output: 'no-bundle',
+        plugins: [
+          {
+            bundle: false,
+            name: '@hey-api/client-nestjs',
+          },
+        ],
+      }),
+      description: 'client without bundle',
+    },
+    {
+      config: createConfig({
+        output: 'custom-config-combined',
+        plugins: [
+          {
+            clientClassName: 'SuperClient',
+            clientName: 'AdvancedApi',
+            moduleName: 'AdvancedApiModule',
+            name: '@hey-api/client-nestjs',
+            throwOnError: true,
+          },
+        ],
+      }),
+      description: 'combined custom configuration',
+    },
+  ];
+
+  it.each(scenarios)('$description', async ({ config }) => {
+    await createClient(config);
+
+    const outputPath =
+      typeof config.output === 'string' ? config.output : config.output.path;
+    const filePaths = getFilePaths(outputPath);
+
+    await Promise.all(
+      filePaths.map(async (filePath) => {
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+
+        await expect(fileContent).toMatchFileSnapshot(
+          path.join(
+            __dirname,
+            '__snapshots__',
+            '3.1.x',
+            namespace,
+            'client-nestjs',
+            filePath.slice(outputDir.length + 1),
+          ),
+        );
+      }),
+    );
+  });
+});

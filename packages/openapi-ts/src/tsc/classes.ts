@@ -62,6 +62,7 @@ export const createConstructorDeclaration = ({
  * Create a class method declaration.
  * @param accessLevel - the access level of the method.
  * @param comment - comment to add to function.
+ * @param isAsync - if the function is async.
  * @param isStatic - if the function is static.
  * @param multiLine - if it should be multi line.
  * @param name - name of the method.
@@ -73,6 +74,7 @@ export const createConstructorDeclaration = ({
 export const createMethodDeclaration = ({
   accessLevel,
   comment,
+  isAsync = false,
   isStatic = false,
   multiLine = true,
   name,
@@ -83,6 +85,7 @@ export const createMethodDeclaration = ({
 }: {
   accessLevel?: AccessLevel;
   comment?: Comments;
+  isAsync?: boolean;
   isStatic?: boolean;
   multiLine?: boolean;
   name: string;
@@ -94,6 +97,10 @@ export const createMethodDeclaration = ({
   const modifiers = accessLevel
     ? [createModifier({ keyword: accessLevel })]
     : [];
+
+  if (isAsync) {
+    modifiers.push(createModifier({ keyword: 'async' }));
+  }
 
   if (isStatic) {
     modifiers.push(createModifier({ keyword: 'static' }));
