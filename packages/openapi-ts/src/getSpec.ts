@@ -26,36 +26,125 @@ interface SpecError {
  */
 export const getSpec = async ({
   fetchOptions,
-  inputPath,
+  inputPaths,
   timeout,
   watch,
 }: {
   fetchOptions?: RequestInit;
-  inputPath: Config['input']['path'];
+  inputPaths: Array<Config['input']['path']>;
   timeout: number;
   watch: WatchValues;
 }): Promise<SpecResponse | SpecError> => {
   const refParser = new $RefParser();
-  const resolvedInput = getResolvedInput({ pathOrUrlOrSchema: inputPath });
+  const resolvedInputs = inputPaths.map((inputPath) =>
+    getResolvedInput({ pathOrUrlOrSchema: inputPath }),
+  );
 
-  let arrayBuffer: ArrayBuffer | undefined;
-  // boolean signals whether the file has **definitely** changed
-  let hasChanged: boolean | undefined;
-  let response: Response | undefined;
+  const arrayBuffer: ArrayBuffer[] = [];
+  let anyChanged = false;
+  let lastResponse: Response | undefined;
+  watch.inputs = watch.inputs || {};
 
-  if (resolvedInput.type === 'url') {
-    // do NOT send HEAD request on first run or if unsupported
-    if (watch.lastValue && watch.isHeadMethodSupported !== false) {
+  for (const resolvedInput of resolvedInputs) {
+    let hasChanged: boolean | undefined;
+    let response: Response | undefined;
+
+    const key = `${resolvedInput.type}:${resolvedInput.path ?? ''}`;
+    const state = (watch.inputs[key] = watch.inputs[key] || {
+      headers: new Headers(),
+    });
+
+    if (resolvedInput.type === 'url') {
+      if (state.lastValue && state.isHeadMethodSupported !== false) {
+        try {
+          const request = await sendRequest({
+            fetchOptions: {
+              method: 'HEAD',
+              ...fetchOptions,
+              headers: mergeHeaders(fetchOptions?.headers, state.headers),
+            },
+            timeout,
+            url: resolvedInput.path,
+          });
+
+          lastResponse = request.response;
+
+          if (request.response.status >= 300) {
+            return {
+              error: 'not-ok',
+              response: request.response,
+            };
+          }
+
+          response = request.response;
+        } catch (error) {
+          return {
+            error: 'not-ok',
+            response: new Response((error as Error).message),
+          };
+        }
+
+        if (response.status === 304) {
+          hasChanged = false;
+        } else if (!response.ok && state.isHeadMethodSupported) {
+          return {
+            error: 'not-ok',
+            response,
+          };
+        }
+
+        if (state.isHeadMethodSupported === undefined) {
+          state.isHeadMethodSupported = response.ok;
+        }
+
+        if (hasChanged === undefined) {
+          const eTag = response.headers.get('ETag');
+          if (eTag) {
+            hasChanged = eTag !== state.headers.get('If-None-Match');
+            if (hasChanged) {
+              state.headers.set('If-None-Match', eTag);
+            } else {
+              // Definitely not changed based on ETag
+              hasChanged = false;
+            }
+          }
+        }
+
+        if (hasChanged === undefined) {
+          const lastModified = response.headers.get('Last-Modified');
+          if (lastModified) {
+            hasChanged =
+              lastModified !== state.headers.get('If-Modified-Since');
+            if (hasChanged) {
+              state.headers.set('If-Modified-Since', lastModified);
+            } else {
+              hasChanged = false;
+            }
+          }
+        }
+
+        if (hasChanged === false && state.lastValue !== undefined) {
+          // Use cached content without GET
+          const encoded = new TextEncoder().encode(state.lastValue);
+          const cachedBuffer = new ArrayBuffer(encoded.byteLength);
+          new Uint8Array(cachedBuffer).set(encoded);
+          arrayBuffer.push(cachedBuffer);
+          anyChanged = anyChanged || false;
+          continue;
+        }
+      }
+
       try {
         const request = await sendRequest({
           fetchOptions: {
-            method: 'HEAD',
+            method: 'GET',
             ...fetchOptions,
-            headers: mergeHeaders(fetchOptions?.headers, watch.headers),
           },
           timeout,
           url: resolvedInput.path,
         });
+
+        lastResponse = request.response;
 
         if (request.response.status >= 300) {
           return {
@@ -68,127 +157,76 @@ export const getSpec = async ({
       } catch (error) {
         return {
           error: 'not-ok',
-          response: new Response(error.message),
+          response: new Response((error as Error).message),
         };
       }
 
-      if (!response.ok && watch.isHeadMethodSupported) {
-        // assume the server is no longer running
-        // do nothing, it might be restarted later
+      if (!response.ok) {
         return {
           error: 'not-ok',
           response,
         };
       }
 
-      if (watch.isHeadMethodSupported === undefined) {
-        watch.isHeadMethodSupported = response.ok;
-      }
-
-      if (response.status === 304) {
-        return {
-          error: 'not-modified',
-          response,
-        };
-      }
+      const lastBuffer = response.body
+        ? await response.arrayBuffer()
+        : new ArrayBuffer(0);
+      arrayBuffer.push(lastBuffer);
 
       if (hasChanged === undefined) {
-        const eTag = response.headers.get('ETag');
-        if (eTag) {
-          hasChanged = eTag !== watch.headers.get('If-None-Match');
-
-          if (hasChanged) {
-            watch.headers.set('If-None-Match', eTag);
-          }
-        }
+        const content = new TextDecoder().decode(lastBuffer);
+        hasChanged = content !== state.lastValue;
+        state.lastValue = content;
+      } else if (hasChanged) {
+        // Update lastValue since it changed
+        const content = new TextDecoder().decode(lastBuffer);
+        state.lastValue = content;
       }
-
-      if (hasChanged === undefined) {
-        const lastModified = response.headers.get('Last-Modified');
-        if (lastModified) {
-          hasChanged = lastModified !== watch.headers.get('If-Modified-Since');
-
-          if (hasChanged) {
-            watch.headers.set('If-Modified-Since', lastModified);
-          }
-        }
-      }
-
-      // we definitely know the input has not changed
-      if (hasChanged === false) {
-        return {
-          error: 'not-modified',
-          response,
-        };
-      }
-    }
-
-    try {
-      const request = await sendRequest({
-        fetchOptions: {
-          method: 'GET',
-          ...fetchOptions,
-        },
-        timeout,
-        url: resolvedInput.path,
-      });
-
-      if (request.response.status >= 300) {
-        return {
-          error: 'not-ok',
-          response: request.response,
-        };
-      }
-
-      response = request.response;
-    } catch (error) {
-      return {
-        error: 'not-ok',
-        response: new Response(error.message),
-      };
-    }
-
-    if (!response.ok) {
-      // assume the server is no longer running
-      // do nothing, it might be restarted later
-      return {
-        error: 'not-ok',
-        response,
-      };
-    }
-
-    arrayBuffer = response.body
-      ? await response.arrayBuffer()
-      : new ArrayBuffer(0);
-
-    if (hasChanged === undefined) {
-      const content = new TextDecoder().decode(arrayBuffer);
-      hasChanged = content !== watch.lastValue;
-      watch.lastValue = content;
-    }
-  } else {
-    // we do not support watch mode for files or raw spec data
-    if (!watch.lastValue) {
-      watch.lastValue = resolvedInput.type;
     } else {
-      hasChanged = false;
+      // we do not support watch mode for files or raw spec data
+      if (!state.lastValue) {
+        state.lastValue = resolvedInput.type;
+      } else {
+        hasChanged = false;
+      }
+      // Maintain alignment with resolvedInputs
+      arrayBuffer.push(new ArrayBuffer(0));
     }
+
+    anyChanged = anyChanged || hasChanged !== false;
   }
 
-  if (hasChanged === false) {
+  let data: JSONSchema;
+  if (resolvedInputs.length === 1) {
+    data = await refParser.bundle({
+      arrayBuffer: arrayBuffer[0],
+      pathOrUrlOrSchema: undefined,
+      resolvedInput: resolvedInputs[0],
+    });
+  } else {
+    data = await refParser.bundleMany({
+      arrayBuffer,
+      pathOrUrlOrSchemas: [],
+      resolvedInputs,
+      // : [
+      //   {
+      //     path: 'c:/Users/olafk/DEV/openapi-ts-demo/openapi1.yaml',
+      //     schema: undefined,
+      //     type: 'file',
+      //   },
+      //   {
+      //     path: 'c:/Users/olafk/DEV/openapi-ts-demo/openapi2.yaml',
+      //     schema: undefined,
+      //     type: 'file',
+      //   },
+      // ],
+    });
+  }
+  if (!anyChanged) {
     return {
       error: 'not-modified',
-      response: response!,
-    };
+      response: lastResponse || new Response('', { status: 304 }),
+    } as SpecError;
   }
-
-  const data = await refParser.bundle({
-    arrayBuffer,
-    pathOrUrlOrSchema: undefined,
-    resolvedInput,
-  });
-
-  return {
-    data,
-  };
+  return { data };
 };

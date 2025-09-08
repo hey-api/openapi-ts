@@ -1007,4 +1007,22 @@ describe(`OpenAPI ${version}`, () => {
       );
     });
   });
+
+  describe('multi input', () => {
+    it('parses multiple inputs (object + string) without errors', async () => {
+      const specsBase = path.join(getSpecsPath(), version);
+      await expect(
+        createClient({
+          dryRun: true,
+          input: [
+            { path: path.join(specsBase, 'multi-a.yaml') },
+            path.join(specsBase, 'multi-b.yaml'),
+          ],
+          logs: { level: 'silent' },
+          output: path.join(outputDir, 'multi-input'),
+          plugins: ['@hey-api/typescript'],
+        }),
+      ).resolves.not.toThrow();
+    });
+  });
 });
