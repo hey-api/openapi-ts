@@ -1,0 +1,18 @@
+openapi: 3.0.3
+info:
+  title: Multi B 3.0.x
+  version: 1.0.0
+paths:
+  /b:
+    get:
+      summary: Get B
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  b:
+                    type: string
