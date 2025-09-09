@@ -51,6 +51,7 @@
     "README.md"
   ],
   "scripts": {
+    "postinstall": "nuxt-module-build prepare",
     "build": "nuxt-module-build build",
     "dev": "tsup --watch",
     "prepack": "pnpm build",
