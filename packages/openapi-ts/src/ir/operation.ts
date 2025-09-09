@@ -21,6 +21,20 @@ export const hasOperationDataRequired = (
   return false;
 };
 
+export const hasOperationPathOrQueryAny = (
+  operation: IR.OperationObject,
+): boolean => {
+  const params = operation.parameters;
+  if (!params) {
+    return false;
+  }
+
+  if (params.path && Object.keys(params.path).length) return true;
+  if (params.query && Object.keys(params.query).length) return true;
+
+  return false;
+};
+
 export const createOperationKey = ({
   method,
   path,
