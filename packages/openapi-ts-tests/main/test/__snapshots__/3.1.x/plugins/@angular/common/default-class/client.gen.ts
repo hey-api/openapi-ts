@@ -11,22 +11,8 @@ import { type ClientOptions as DefaultClientOptions, type Config, createClient, 
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-export type CreateClientConfig<T extends DefaultClientOptions2 = ClientOptions> = (override?: Config2<DefaultClientOptions2 & T>) => Config2<Required<DefaultClientOptions2> & T>;
+export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> = (override?: Config<DefaultClientOptions & T>) => Config<Required<DefaultClientOptions> & T>;
 
-export const client = createClient2(createConfig2<ClientOptions>({
-    baseUrl: 'http://localhost:3000/base'
-}));
-
-/**
- * The `createClientConfig()` function will be called on client initialization
- * and the returned object will become the client's initial configuration.
- *
- * You may want to initialize your client this way instead of calling
- * `setConfig()`. This is useful for example if you're using Next.js
- * to ensure your client always has the correct values.
- */
-export type CreateClientConfig2<T extends DefaultClientOptions = ClientOptions> = (override?: Config<DefaultClientOptions & T>) => Config<Required<DefaultClientOptions> & T>;
-
-export const client2 = createClient(createConfig<ClientOptions>({
+export const client = createClient(createConfig<ClientOptions>({
     baseUrl: 'http://localhost:3000/base'
 }));

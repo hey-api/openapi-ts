@@ -38,8 +38,9 @@ export default defineConfig(() => {
         // 'openai.yaml',
         // 'full.yaml',
         // 'opencode.yaml',
+        'sdk-instance.yaml',
         // 'validators-circular-ref-2.yaml',
-        'zoom-video-sdk.json',
+        // 'zoom-video-sdk.json',
       ),
       // https://registry.scalar.com/@lubos-heyapi-dev-team/apis/demo-api-scalar-galaxy/latest?format=json
       // path: 'scalar:@lubos-heyapi-dev-team/demo-api-scalar-galaxy',
@@ -169,14 +170,14 @@ export default defineConfig(() => {
         // },
       },
       {
-        // asClass: true,
+        asClass: true,
         // auth: false,
         // classNameBuilder: '{{name}}',
         // classStructure: 'off',
         // client: false,
         // include...
         // instance: true,
-        // name: '@hey-api/sdk',
+        name: '@hey-api/sdk',
         // operationId: false,
         // params: 'experiment',
         // responseStyle: 'data',
@@ -209,7 +210,7 @@ export default defineConfig(() => {
         // mutationOptions: {
         //   name: '{{name}}MO',
         // },
-        // name: '@tanstack/react-query',
+        name: '@tanstack/react-query',
         // queryKeys: {
         //   name: '{{name}}QK',
         // },

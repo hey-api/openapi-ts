@@ -521,8 +521,25 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'asClass',
+          plugins: [
+            '@pinia/colada',
+            '@hey-api/client-fetch',
+            {
+              asClass: true,
+              classNameBuilder: '{{name}}Service',
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description:
+          'generate Fetch API client with Pinia Colada plugin using class-based SDKs',
+      },
+      {
+        config: createConfig({
           output: 'default',
-          plugins: ['@angular/common'],
+          plugins: ['@angular/common', '@hey-api/client-angular'],
         }),
         description: 'generate Angular requests and resources',
       },
@@ -539,6 +556,7 @@ for (const version of versions) {
               },
               name: '@angular/common',
             },
+            '@hey-api/client-angular',
           ],
         }),
         description: 'generate Angular requests and resources (class)',

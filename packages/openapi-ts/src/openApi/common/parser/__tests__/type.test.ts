@@ -9,7 +9,7 @@ vi.mock('../../../../utils/config', () => {
     plugins: {
       '@hey-api/typescript': {
         api: {
-          getId: () => '',
+          getSelector: () => [],
           schemaToType: () => ({}) as ts.TypeNode,
         },
         config: {

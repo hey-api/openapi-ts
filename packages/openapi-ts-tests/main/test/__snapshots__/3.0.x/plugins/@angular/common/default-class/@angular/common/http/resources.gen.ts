@@ -3,157 +3,157 @@
 import type { Options } from '../../../sdk.gen';
 import type { ExportData, PatchApiVbyApiVersionNoTagData, ImportData, ImportResponse, FooWowData, ApiVVersionODataControllerCountData, ApiVVersionODataControllerCountResponse, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationResponse, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, HeadCallWithoutParametersAndResponseData, OptionsCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, DeleteFooData3 as DeleteFooData, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, DummyAData, DummyAResponse, DummyBData, DummyBResponse, CallWithResponseData, CallWithResponseResponse, CallWithDuplicateResponsesData, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, MultipartResponseData, MultipartResponseResponse, MultipartRequestData, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../../../types.gen';
 import { httpResource } from '@angular/common/http';
-import { DefaultRequests, SimpleRequests, ParametersRequests, DescriptionsRequests, DeprecatedRequests, RequestBodyRequests, FormDataRequests, DefaultsRequests, DuplicateRequests, NoContentRequests, ResponseRequests, MultipleTags1Requests, CollectionFormatRequests, TypesRequests, UploadRequests, FileResponseRequests, ComplexRequests, MultipartRequests, HeaderRequests, ErrorRequests, NonAsciiÆøåÆøÅöôêÊRequests } from './requests.gen';
+import { DefaultServiceRequests, SimpleServiceRequests, ParametersServiceRequests, DescriptionsServiceRequests, DeprecatedServiceRequests, RequestBodyServiceRequests, FormDataServiceRequests, DefaultsServiceRequests, DuplicateServiceRequests, NoContentServiceRequests, ResponseServiceRequests, MultipleTags1ServiceRequests, CollectionFormatServiceRequests, TypesServiceRequests, UploadServiceRequests, FileResponseServiceRequests, ComplexServiceRequests, MultipartServiceRequests, HeaderServiceRequests, ErrorServiceRequests, NonAsciiÆøåÆøÅöôêÊServiceRequests } from './requests.gen';
 import { inject, Injectable } from '@angular/core';
 
 @Injectable({
     providedIn: 'root'
 })
-export class DefaultResources {
+export class DefaultServiceResources {
     public export<ThrowOnError extends boolean = false>(options?: () => Options<ExportData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DefaultRequests).export(opts) : undefined;
+            return opts ? inject(DefaultServiceRequests).export(opts) : undefined;
         });
     }
     
     public patchApiVbyApiVersionNoTag<ThrowOnError extends boolean = false>(options?: () => Options<PatchApiVbyApiVersionNoTagData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DefaultRequests).patchApiVbyApiVersionNoTag(opts) : undefined;
+            return opts ? inject(DefaultServiceRequests).patchApiVbyApiVersionNoTag(opts) : undefined;
         });
     }
     
     public import<ThrowOnError extends boolean = false>(options: () => Options<ImportData, ThrowOnError> | undefined) {
         return httpResource<ImportResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DefaultRequests).import(opts) : undefined;
+            return opts ? inject(DefaultServiceRequests).import(opts) : undefined;
         });
     }
     
     public fooWow<ThrowOnError extends boolean = false>(options?: () => Options<FooWowData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DefaultRequests).fooWow(opts) : undefined;
+            return opts ? inject(DefaultServiceRequests).fooWow(opts) : undefined;
         });
     }
     
     public getApiVbyApiVersionSimpleOperation<ThrowOnError extends boolean = false>(options: () => Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError> | undefined) {
         return httpResource<GetApiVbyApiVersionSimpleOperationResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DefaultRequests).getApiVbyApiVersionSimpleOperation(opts) : undefined;
+            return opts ? inject(DefaultServiceRequests).getApiVbyApiVersionSimpleOperation(opts) : undefined;
         });
     }
 }
 
-class ODataControllerResources {
+class ODataControllerServiceResources {
     public apiVVersionODataControllerCount<ThrowOnError extends boolean = false>(options?: () => Options<ApiVVersionODataControllerCountData, ThrowOnError> | undefined) {
         return httpResource<ApiVVersionODataControllerCountResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(SimpleRequests).api.vVersion.oDataController.apiVVersionODataControllerCount(opts) : undefined;
+            return opts ? inject(SimpleServiceRequests).apiService.vVersionService.oDataControllerService.apiVVersionODataControllerCount(opts) : undefined;
         });
     }
 }
 
-class VVersionResources {
-    oDataController = new ODataControllerResources();
+class VVersionServiceResources {
+    oDataControllerService = new ODataControllerServiceResources();
 }
 
-class ApiResources {
-    vVersion = new VVersionResources();
+class ApiServiceResources {
+    vVersionService = new VVersionServiceResources();
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class SimpleResources {
+export class SimpleServiceResources {
     public deleteCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(SimpleRequests).deleteCallWithoutParametersAndResponse(opts) : undefined;
+            return opts ? inject(SimpleServiceRequests).deleteCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
     
     public getCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<GetCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(SimpleRequests).getCallWithoutParametersAndResponse(opts) : undefined;
+            return opts ? inject(SimpleServiceRequests).getCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
     
     public headCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<HeadCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(SimpleRequests).headCallWithoutParametersAndResponse(opts) : undefined;
+            return opts ? inject(SimpleServiceRequests).headCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
     
     public optionsCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<OptionsCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(SimpleRequests).optionsCallWithoutParametersAndResponse(opts) : undefined;
+            return opts ? inject(SimpleServiceRequests).optionsCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
     
     public patchCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<PatchCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(SimpleRequests).patchCallWithoutParametersAndResponse(opts) : undefined;
+            return opts ? inject(SimpleServiceRequests).patchCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
     
     public postCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<PostCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(SimpleRequests).postCallWithoutParametersAndResponse(opts) : undefined;
+            return opts ? inject(SimpleServiceRequests).postCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
     
     public putCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<PutCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(SimpleRequests).putCallWithoutParametersAndResponse(opts) : undefined;
+            return opts ? inject(SimpleServiceRequests).putCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
-    api = new ApiResources();
+    apiService = new ApiServiceResources();
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class ParametersResources {
+export class ParametersServiceResources {
     public deleteFoo<ThrowOnError extends boolean = false>(options: () => Options<DeleteFooData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ParametersRequests).deleteFoo(opts) : undefined;
+            return opts ? inject(ParametersServiceRequests).deleteFoo(opts) : undefined;
         });
     }
     
     public callWithParameters<ThrowOnError extends boolean = false>(options: () => Options<CallWithParametersData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ParametersRequests).callWithParameters(opts) : undefined;
+            return opts ? inject(ParametersServiceRequests).callWithParameters(opts) : undefined;
         });
     }
     
     public callWithWeirdParameterNames<ThrowOnError extends boolean = false>(options: () => Options<CallWithWeirdParameterNamesData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ParametersRequests).callWithWeirdParameterNames(opts) : undefined;
+            return opts ? inject(ParametersServiceRequests).callWithWeirdParameterNames(opts) : undefined;
         });
     }
     
     public getCallWithOptionalParam<ThrowOnError extends boolean = false>(options: () => Options<GetCallWithOptionalParamData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ParametersRequests).getCallWithOptionalParam(opts) : undefined;
+            return opts ? inject(ParametersServiceRequests).getCallWithOptionalParam(opts) : undefined;
         });
     }
     
     public postCallWithOptionalParam<ThrowOnError extends boolean = false>(options: () => Options<PostCallWithOptionalParamData, ThrowOnError> | undefined) {
         return httpResource<PostCallWithOptionalParamResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ParametersRequests).postCallWithOptionalParam(opts) : undefined;
+            return opts ? inject(ParametersServiceRequests).postCallWithOptionalParam(opts) : undefined;
         });
     }
 }
@@ -161,11 +161,11 @@ export class ParametersResources {
 @Injectable({
     providedIn: 'root'
 })
-export class DescriptionsResources {
+export class DescriptionsServiceResources {
     public callWithDescriptions<ThrowOnError extends boolean = false>(options?: () => Options<CallWithDescriptionsData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DescriptionsRequests).callWithDescriptions(opts) : undefined;
+            return opts ? inject(DescriptionsServiceRequests).callWithDescriptions(opts) : undefined;
         });
     }
 }
@@ -173,14 +173,14 @@ export class DescriptionsResources {
 @Injectable({
     providedIn: 'root'
 })
-export class DeprecatedResources {
+export class DeprecatedServiceResources {
     /**
      * @deprecated
      */
     public deprecatedCall<ThrowOnError extends boolean = false>(options: () => Options<DeprecatedCallData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DeprecatedRequests).deprecatedCall(opts) : undefined;
+            return opts ? inject(DeprecatedServiceRequests).deprecatedCall(opts) : undefined;
         });
     }
 }
@@ -188,11 +188,11 @@ export class DeprecatedResources {
 @Injectable({
     providedIn: 'root'
 })
-export class RequestBodyResources {
+export class RequestBodyServiceResources {
     public postApiVbyApiVersionRequestBody<ThrowOnError extends boolean = false>(options?: () => Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(RequestBodyRequests).postApiVbyApiVersionRequestBody(opts) : undefined;
+            return opts ? inject(RequestBodyServiceRequests).postApiVbyApiVersionRequestBody(opts) : undefined;
         });
     }
 }
@@ -200,11 +200,11 @@ export class RequestBodyResources {
 @Injectable({
     providedIn: 'root'
 })
-export class FormDataResources {
+export class FormDataServiceResources {
     public postApiVbyApiVersionFormData<ThrowOnError extends boolean = false>(options?: () => Options<PostApiVbyApiVersionFormDataData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(FormDataRequests).postApiVbyApiVersionFormData(opts) : undefined;
+            return opts ? inject(FormDataServiceRequests).postApiVbyApiVersionFormData(opts) : undefined;
         });
     }
 }
@@ -212,25 +212,25 @@ export class FormDataResources {
 @Injectable({
     providedIn: 'root'
 })
-export class DefaultsResources {
+export class DefaultsServiceResources {
     public callWithDefaultParameters<ThrowOnError extends boolean = false>(options?: () => Options<CallWithDefaultParametersData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DefaultsRequests).callWithDefaultParameters(opts) : undefined;
+            return opts ? inject(DefaultsServiceRequests).callWithDefaultParameters(opts) : undefined;
         });
     }
     
     public callWithDefaultOptionalParameters<ThrowOnError extends boolean = false>(options?: () => Options<CallWithDefaultOptionalParametersData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DefaultsRequests).callWithDefaultOptionalParameters(opts) : undefined;
+            return opts ? inject(DefaultsServiceRequests).callWithDefaultOptionalParameters(opts) : undefined;
         });
     }
     
     public callToTestOrderOfParams<ThrowOnError extends boolean = false>(options: () => Options<CallToTestOrderOfParamsData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DefaultsRequests).callToTestOrderOfParams(opts) : undefined;
+            return opts ? inject(DefaultsServiceRequests).callToTestOrderOfParams(opts) : undefined;
         });
     }
 }
@@ -238,32 +238,32 @@ export class DefaultsResources {
 @Injectable({
     providedIn: 'root'
 })
-export class DuplicateResources {
+export class DuplicateServiceResources {
     public duplicateName<ThrowOnError extends boolean = false>(options?: () => Options<DuplicateNameData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DuplicateRequests).duplicateName(opts) : undefined;
+            return opts ? inject(DuplicateServiceRequests).duplicateName(opts) : undefined;
         });
     }
     
     public duplicateName2<ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName2Data, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DuplicateRequests).duplicateName2(opts) : undefined;
+            return opts ? inject(DuplicateServiceRequests).duplicateName2(opts) : undefined;
         });
     }
     
     public duplicateName3<ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName3Data, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DuplicateRequests).duplicateName3(opts) : undefined;
+            return opts ? inject(DuplicateServiceRequests).duplicateName3(opts) : undefined;
         });
     }
     
     public duplicateName4<ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName4Data, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DuplicateRequests).duplicateName4(opts) : undefined;
+            return opts ? inject(DuplicateServiceRequests).duplicateName4(opts) : undefined;
         });
     }
 }
@@ -271,18 +271,18 @@ export class DuplicateResources {
 @Injectable({
     providedIn: 'root'
 })
-export class NoContentResources {
+export class NoContentServiceResources {
     public callWithNoContentResponse<ThrowOnError extends boolean = false>(options?: () => Options<CallWithNoContentResponseData, ThrowOnError> | undefined) {
         return httpResource<CallWithNoContentResponseResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(NoContentRequests).callWithNoContentResponse(opts) : undefined;
+            return opts ? inject(NoContentServiceRequests).callWithNoContentResponse(opts) : undefined;
         });
     }
     
     public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseAndNoContentResponseData, ThrowOnError> | undefined) {
         return httpResource<CallWithResponseAndNoContentResponseResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ResponseRequests).callWithResponseAndNoContentResponse(opts) : undefined;
+            return opts ? inject(ResponseServiceRequests).callWithResponseAndNoContentResponse(opts) : undefined;
         });
     }
 }
@@ -290,32 +290,32 @@ export class NoContentResources {
 @Injectable({
     providedIn: 'root'
 })
-export class ResponseResources {
+export class ResponseServiceResources {
     public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseAndNoContentResponseData, ThrowOnError> | undefined) {
         return httpResource<CallWithResponseAndNoContentResponseResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ResponseRequests).callWithResponseAndNoContentResponse(opts) : undefined;
+            return opts ? inject(ResponseServiceRequests).callWithResponseAndNoContentResponse(opts) : undefined;
         });
     }
     
     public callWithResponse<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseData, ThrowOnError> | undefined) {
         return httpResource<CallWithResponseResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ResponseRequests).callWithResponse(opts) : undefined;
+            return opts ? inject(ResponseServiceRequests).callWithResponse(opts) : undefined;
         });
     }
     
     public callWithDuplicateResponses<ThrowOnError extends boolean = false>(options?: () => Options<CallWithDuplicateResponsesData, ThrowOnError> | undefined) {
         return httpResource<CallWithDuplicateResponsesResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ResponseRequests).callWithDuplicateResponses(opts) : undefined;
+            return opts ? inject(ResponseServiceRequests).callWithDuplicateResponses(opts) : undefined;
         });
     }
     
     public callWithResponses<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponsesData, ThrowOnError> | undefined) {
         return httpResource<CallWithResponsesResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ResponseRequests).callWithResponses(opts) : undefined;
+            return opts ? inject(ResponseServiceRequests).callWithResponses(opts) : undefined;
         });
     }
 }
@@ -323,18 +323,18 @@ export class ResponseResources {
 @Injectable({
     providedIn: 'root'
 })
-export class MultipleTags1Resources {
+export class MultipleTags1ServiceResources {
     public dummyA<ThrowOnError extends boolean = false>(options?: () => Options<DummyAData, ThrowOnError> | undefined) {
         return httpResource<DummyAResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(MultipleTags1Requests).dummyA(opts) : undefined;
+            return opts ? inject(MultipleTags1ServiceRequests).dummyA(opts) : undefined;
         });
     }
     
     public dummyB<ThrowOnError extends boolean = false>(options?: () => Options<DummyBData, ThrowOnError> | undefined) {
         return httpResource<DummyBResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(MultipleTags1Requests).dummyB(opts) : undefined;
+            return opts ? inject(MultipleTags1ServiceRequests).dummyB(opts) : undefined;
         });
     }
 }
@@ -342,18 +342,18 @@ export class MultipleTags1Resources {
 @Injectable({
     providedIn: 'root'
 })
-export class MultipleTags2Resources {
+export class MultipleTags2ServiceResources {
     public dummyA<ThrowOnError extends boolean = false>(options?: () => Options<DummyAData, ThrowOnError> | undefined) {
         return httpResource<DummyAResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(MultipleTags1Requests).dummyA(opts) : undefined;
+            return opts ? inject(MultipleTags1ServiceRequests).dummyA(opts) : undefined;
         });
     }
     
     public dummyB<ThrowOnError extends boolean = false>(options?: () => Options<DummyBData, ThrowOnError> | undefined) {
         return httpResource<DummyBResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(MultipleTags1Requests).dummyB(opts) : undefined;
+            return opts ? inject(MultipleTags1ServiceRequests).dummyB(opts) : undefined;
         });
     }
 }
@@ -361,11 +361,11 @@ export class MultipleTags2Resources {
 @Injectable({
     providedIn: 'root'
 })
-export class MultipleTags3Resources {
+export class MultipleTags3ServiceResources {
     public dummyB<ThrowOnError extends boolean = false>(options?: () => Options<DummyBData, ThrowOnError> | undefined) {
         return httpResource<DummyBResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(MultipleTags1Requests).dummyB(opts) : undefined;
+            return opts ? inject(MultipleTags1ServiceRequests).dummyB(opts) : undefined;
         });
     }
 }
@@ -373,11 +373,11 @@ export class MultipleTags3Resources {
 @Injectable({
     providedIn: 'root'
 })
-export class CollectionFormatResources {
+export class CollectionFormatServiceResources {
     public collectionFormat<ThrowOnError extends boolean = false>(options: () => Options<CollectionFormatData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(CollectionFormatRequests).collectionFormat(opts) : undefined;
+            return opts ? inject(CollectionFormatServiceRequests).collectionFormat(opts) : undefined;
         });
     }
 }
@@ -385,11 +385,11 @@ export class CollectionFormatResources {
 @Injectable({
     providedIn: 'root'
 })
-export class TypesResources {
+export class TypesServiceResources {
     public types<ThrowOnError extends boolean = false>(options: () => Options<TypesData, ThrowOnError> | undefined) {
         return httpResource<TypesResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(TypesRequests).types(opts) : undefined;
+            return opts ? inject(TypesServiceRequests).types(opts) : undefined;
         });
     }
 }
@@ -397,11 +397,11 @@ export class TypesResources {
 @Injectable({
     providedIn: 'root'
 })
-export class UploadResources {
+export class UploadServiceResources {
     public uploadFile<ThrowOnError extends boolean = false>(options: () => Options<UploadFileData, ThrowOnError> | undefined) {
         return httpResource<UploadFileResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(UploadRequests).uploadFile(opts) : undefined;
+            return opts ? inject(UploadServiceRequests).uploadFile(opts) : undefined;
         });
     }
 }
@@ -409,11 +409,11 @@ export class UploadResources {
 @Injectable({
     providedIn: 'root'
 })
-export class FileResponseResources {
+export class FileResponseServiceResources {
     public fileResponse<ThrowOnError extends boolean = false>(options: () => Options<FileResponseData, ThrowOnError> | undefined) {
         return httpResource<FileResponseResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(FileResponseRequests).fileResponse(opts) : undefined;
+            return opts ? inject(FileResponseServiceRequests).fileResponse(opts) : undefined;
         });
     }
 }
@@ -421,18 +421,18 @@ export class FileResponseResources {
 @Injectable({
     providedIn: 'root'
 })
-export class ComplexResources {
+export class ComplexServiceResources {
     public complexTypes<ThrowOnError extends boolean = false>(options: () => Options<ComplexTypesData, ThrowOnError> | undefined) {
         return httpResource<ComplexTypesResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ComplexRequests).complexTypes(opts) : undefined;
+            return opts ? inject(ComplexServiceRequests).complexTypes(opts) : undefined;
         });
     }
     
     public complexParams<ThrowOnError extends boolean = false>(options: () => Options<ComplexParamsData, ThrowOnError> | undefined) {
         return httpResource<ComplexParamsResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ComplexRequests).complexParams(opts) : undefined;
+            return opts ? inject(ComplexServiceRequests).complexParams(opts) : undefined;
         });
     }
 }
@@ -440,18 +440,18 @@ export class ComplexResources {
 @Injectable({
     providedIn: 'root'
 })
-export class MultipartResources {
+export class MultipartServiceResources {
     public multipartResponse<ThrowOnError extends boolean = false>(options?: () => Options<MultipartResponseData, ThrowOnError> | undefined) {
         return httpResource<MultipartResponseResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(MultipartRequests).multipartResponse(opts) : undefined;
+            return opts ? inject(MultipartServiceRequests).multipartResponse(opts) : undefined;
         });
     }
     
     public multipartRequest<ThrowOnError extends boolean = false>(options?: () => Options<MultipartRequestData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(MultipartRequests).multipartRequest(opts) : undefined;
+            return opts ? inject(MultipartServiceRequests).multipartRequest(opts) : undefined;
         });
     }
 }
@@ -459,11 +459,11 @@ export class MultipartResources {
 @Injectable({
     providedIn: 'root'
 })
-export class HeaderResources {
+export class HeaderServiceResources {
     public callWithResultFromHeader<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResultFromHeaderData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(HeaderRequests).callWithResultFromHeader(opts) : undefined;
+            return opts ? inject(HeaderServiceRequests).callWithResultFromHeader(opts) : undefined;
         });
     }
 }
@@ -471,11 +471,11 @@ export class HeaderResources {
 @Injectable({
     providedIn: 'root'
 })
-export class ErrorResources {
+export class ErrorServiceResources {
     public testErrorCode<ThrowOnError extends boolean = false>(options: () => Options<TestErrorCodeData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ErrorRequests).testErrorCode(opts) : undefined;
+            return opts ? inject(ErrorServiceRequests).testErrorCode(opts) : undefined;
         });
     }
 }
@@ -483,11 +483,11 @@ export class ErrorResources {
 @Injectable({
     providedIn: 'root'
 })
-export class NonAsciiÆøåÆøÅöôêÊResources {
+export class NonAsciiÆøåÆøÅöôêÊServiceResources {
     public nonAsciiæøåÆøÅöôêÊ字符串<ThrowOnError extends boolean = false>(options: () => Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError> | undefined) {
         return httpResource<NonAsciiæøåÆøÅöôêÊ字符串Response>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(NonAsciiÆøåÆøÅöôêÊRequests).nonAsciiæøåÆøÅöôêÊ字符串(opts) : undefined;
+            return opts ? inject(NonAsciiÆøåÆøÅöôêÊServiceRequests).nonAsciiæøåÆøÅöôêÊ字符串(opts) : undefined;
         });
     }
     
@@ -497,7 +497,7 @@ export class NonAsciiÆøåÆøÅöôêÊResources {
     public putWithFormUrlEncoded<ThrowOnError extends boolean = false>(options: () => Options<PutWithFormUrlEncodedData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(NonAsciiÆøåÆøÅöôêÊRequests).putWithFormUrlEncoded(opts) : undefined;
+            return opts ? inject(NonAsciiÆøåÆøÅöôêÊServiceRequests).putWithFormUrlEncoded(opts) : undefined;
         });
     }
 }

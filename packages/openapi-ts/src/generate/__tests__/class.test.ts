@@ -69,6 +69,9 @@ describe('generateLegacyClientClass', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
+          api: {
+            getSelector: () => [],
+          },
           config: {
             name: '@hey-api/schemas',
           },
@@ -77,6 +80,9 @@ describe('generateLegacyClientClass', () => {
           output: '',
         },
         '@hey-api/sdk': {
+          api: {
+            getSelector: () => [],
+          },
           config: {
             name: '@hey-api/sdk',
           },
@@ -86,7 +92,7 @@ describe('generateLegacyClientClass', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getId: () => '',
+            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {

@@ -68,6 +68,9 @@ describe('generateIndexFile', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
+          api: {
+            getSelector: () => [],
+          },
           config: {
             name: '@hey-api/schemas',
           },
@@ -76,6 +79,9 @@ describe('generateIndexFile', () => {
           output: '',
         },
         '@hey-api/sdk': {
+          api: {
+            getSelector: () => [],
+          },
           config: {
             name: '@hey-api/sdk',
           },
@@ -85,7 +91,7 @@ describe('generateIndexFile', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getId: () => '',
+            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {
