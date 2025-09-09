@@ -16,6 +16,7 @@ import { filter } from 'rxjs/operators';
 
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
 import type { HttpMethod } from '../../client-core/bundle/types';
+import { getValidRequestBody } from '../../client-core/bundle/utils';
 import type {
   Client,
   Config,
@@ -67,7 +68,7 @@ export const createClient = (config: Config = {}): Client => {
       ...options,
       headers: mergeHeaders(_config.headers, options.headers),
       httpClient: options.httpClient ?? _config.httpClient,
-      serializedBody: options.body as any,
+      serializedBody: undefined,
     };
 
     if (!opts.httpClient) {
@@ -81,12 +82,12 @@ export const createClient = (config: Config = {}): Client => {
       }
     }
 
-    if (opts.body && opts.bodySerializer) {
+    if (opts.body !== undefined && opts.bodySerializer) {
       opts.serializedBody = opts.bodySerializer(opts.body);
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (opts.serializedBody === undefined || opts.serializedBody === '') {
+    if (opts.body === undefined || opts.serializedBody === '') {
       opts.headers.delete('Content-Type');
     }
 
@@ -95,7 +96,7 @@ export const createClient = (config: Config = {}): Client => {
     const req = new HttpRequest<unknown>(
       opts.method ?? 'GET',
       url,
-      opts.serializedBody || null,
+      getValidRequestBody(opts),
       {
         redirect: 'follow',
         ...opts,

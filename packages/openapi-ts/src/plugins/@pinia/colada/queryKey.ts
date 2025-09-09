@@ -11,6 +11,7 @@ import {
 } from '../../@hey-api/client-core/utils';
 import type { PiniaColadaPlugin } from './types';
 import { useTypeData } from './useType';
+import { getPublicTypeData } from './utils';
 
 const TOptionsType = 'TOptions';
 
@@ -369,6 +370,7 @@ export const queryKeyStatement = ({
   symbol: ICodegenSymbolOut;
 }) => {
   const typeData = useTypeData({ operation, plugin });
+  const { strippedTypeData } = getPublicTypeData({ plugin, typeData });
   const statement = tsc.constVariable({
     exportConst: true,
     expression: tsc.arrowFunction({
@@ -376,7 +378,7 @@ export const queryKeyStatement = ({
         {
           isRequired: hasOperationDataRequired(operation),
           name: 'options',
-          type: typeData,
+          type: strippedTypeData,
         },
       ],
       statements: createQueryKeyLiteral({

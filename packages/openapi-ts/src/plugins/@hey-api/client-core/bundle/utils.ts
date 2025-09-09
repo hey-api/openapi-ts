@@ -1,4 +1,4 @@
-import type { QuerySerializer } from './bodySerializer';
+import type { BodySerializer, QuerySerializer } from './bodySerializer';
 import {
   type ArraySeparatorStyle,
   serializeArrayParam,
@@ -110,3 +110,32 @@ export const getUrl = ({
   }
   return url;
 };
+
+export function getValidRequestBody(options: {
+  body?: unknown;
+  bodySerializer?: BodySerializer | null;
+  serializedBody?: unknown;
+}) {
+  const hasBody = options.body !== undefined;
+  const isSerializedBody = hasBody && options.bodySerializer;
+
+  if (isSerializedBody) {
+    if ('serializedBody' in options) {
+      const hasSerializedBody =
+        options.serializedBody !== undefined && options.serializedBody !== '';
+
+      return hasSerializedBody ? options.serializedBody : null;
+    }
+
+    // not all clients implement a serializedBody property (i.e. client-axios)
+    return options.body !== '' ? options.body : null;
+  }
+
+  // plain/text body
+  if (hasBody) {
+    return options.body;
+  }
+
+  // no body was provided
+  return undefined;
+}

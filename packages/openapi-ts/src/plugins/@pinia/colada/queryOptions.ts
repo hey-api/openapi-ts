@@ -17,6 +17,7 @@ import {
 import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
+import { getPublicTypeData } from './utils';
 
 const fnOptions = 'context';
 const optionsParamName = 'options';
@@ -79,6 +80,10 @@ export const createQueryOptions = ({
   const typeData = useTypeData({ operation, plugin });
   const typeError = useTypeError({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
+  const { isNuxtClient, strippedTypeData } = getPublicTypeData({
+    plugin,
+    typeData,
+  });
 
   const awaitSdkExpression = tsc.awaitExpression({
     expression: tsc.callExpression({
@@ -138,9 +143,12 @@ export const createQueryOptions = ({
         async: true,
         multiLine: true,
         parameters: [
-          {
-            name: fnOptions,
-          },
+          isNuxtClient
+            ? {
+                name: fnOptions,
+                type: strippedTypeData,
+              }
+            : { name: fnOptions },
         ],
         statements,
       }),
@@ -176,11 +184,13 @@ export const createQueryOptions = ({
         {
           isRequired: isRequiredOptions,
           name: optionsParamName,
-          type: typeData,
+          type: strippedTypeData,
         },
       ],
       // TODO: better types syntax
-      returnType: `${symbolUseQueryOptions.placeholder}<${typeResponse}, ${typeError}>`,
+      returnType: isNuxtClient
+        ? `${symbolUseQueryOptions.placeholder}<${typeResponse}, ${strippedTypeData}, ${typeError}>`
+        : `${symbolUseQueryOptions.placeholder}<${typeResponse}, ${typeError}>`,
       statements: [
         tsc.returnStatement({
           expression: tsc.objectExpression({

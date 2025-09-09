@@ -239,7 +239,7 @@ const generateClassSdk = ({
           types: isNuxtClient
             ? [
                 {
-                  // default: tsc.ots.string('$fetch'),
+                  default: tsc.ots.string('$fetch'),
                   extends: tsc.typeNode('Composable'),
                   name: nuxtTypeComposable,
                 },
@@ -434,7 +434,7 @@ const generateFlatSdk = ({
         types: isNuxtClient
           ? [
               {
-                // default: tsc.ots.string('$fetch'),
+                default: tsc.ots.string('$fetch'),
                 extends: tsc.typeNode('Composable'),
                 name: nuxtTypeComposable,
               },
