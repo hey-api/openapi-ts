@@ -1,11 +1,13 @@
 import { definePluginConfig } from '../../shared/utils/config';
-import { api } from './api';
+import { Api } from './api';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiTypeScriptPlugin } from './types';
 
 export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
-  api,
+  api: new Api({
+    name: '@hey-api/typescript',
+  }),
   config: {
     case: 'PascalCase',
     exportFromIndex: true,

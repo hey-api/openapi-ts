@@ -1,8 +1,12 @@
 import { definePluginConfig } from '../../shared/utils/config';
+import { Api } from './api';
 import { handler } from './plugin';
 import type { AngularCommonPlugin } from './types';
 
 export const defaultConfig: AngularCommonPlugin['Config'] = {
+  api: new Api({
+    name: '@angular/common',
+  }),
   config: {
     exportFromIndex: false,
   },

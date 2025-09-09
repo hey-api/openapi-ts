@@ -1,165 +1,145 @@
+import type {
+  ICodegenFile,
+  ICodegenSymbolSelector,
+} from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { GeneratedFile } from '../../generate/file';
 import type { IR } from '../../ir/types';
 import { tsc } from '../../tsc';
-import { identifiers, valibotId } from './constants';
+import type { Plugin } from '../types';
+import { identifiers } from './constants';
 import type { ValibotPlugin } from './types';
 
-const createRequestValidator = ({
-  file,
-  operation,
-  plugin,
-}: {
-  file: GeneratedFile;
+type SelectorType = 'data' | 'import' | 'ref' | 'responses' | 'webhook-request';
+
+type ValidatorArgs = {
+  file: ICodegenFile;
   operation: IR.OperationObject;
   plugin: ValibotPlugin['Instance'];
-}): ts.ArrowFunction | undefined => {
-  const { requests } = plugin.config;
-  // const f = plugin.gen.ensureFile(plugin.output);
-  // TODO: replace
-  const schemaIdentifier = plugin.context.file({ id: valibotId })!.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/valibot-response/${operation.id}`,
-    // TODO: refactor to not have to define nameTransformer
-    nameTransformer: typeof requests === 'object' ? requests.name : undefined,
-    namespace: 'value',
-  });
+};
 
-  if (!schemaIdentifier.name) {
-    return;
-  }
+export type IApi = {
+  createRequestValidator: (args: ValidatorArgs) => ts.ArrowFunction | undefined;
+  createResponseValidator: (
+    args: ValidatorArgs,
+  ) => ts.ArrowFunction | undefined;
+  /**
+   * @param type Selector type.
+   * @param value Depends on `type`:
+   *  - `data`: `operation.id` string
+   *  - `import`: headless symbols representing module imports
+   *  - `ref`: `$ref` JSON pointer
+   *  - `responses`: `operation.id` string
+   *  - `webhook-request`: `operation.id` string
+   * @returns Selector array
+   */
+  getSelector: (type: SelectorType, value?: string) => ICodegenSymbolSelector;
+};
 
-  file.import({
-    module: file.relativePathToFile({
-      context: plugin.context,
-      id: valibotId,
-    }),
-    name: schemaIdentifier.name,
-  });
-  // file.import({
-  //   module: f.relativePathFromFile({ path: file.nameWithoutExtension() }),
-  //   name: schemaIdentifier.name,
-  // });
+export class Api implements IApi {
+  constructor(public meta: Plugin.Name<'valibot'>) {}
 
-  file.import({
-    alias: identifiers.v.text,
-    module: 'valibot',
-    name: '*',
-  });
+  createRequestValidator({
+    file,
+    operation,
+    plugin,
+  }: ValidatorArgs): ts.ArrowFunction | undefined {
+    const symbol = plugin.gen.selectSymbolFirst(
+      plugin.api.getSelector('data', operation.id),
+    );
+    if (!symbol) return;
 
-  const dataParameterName = 'data';
+    file.addImport({
+      from: symbol.file,
+      names: [symbol.placeholder],
+    });
 
-  return tsc.arrowFunction({
-    async: true,
-    parameters: [
-      {
-        name: dataParameterName,
-      },
-    ],
-    statements: [
-      tsc.returnStatement({
-        expression: tsc.awaitExpression({
-          expression: tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: identifiers.v,
-              name: identifiers.async.parseAsync,
+    const vSymbol = file.ensureSymbol({
+      name: 'v',
+      selector: plugin.api.getSelector('import', 'valibot'),
+    });
+    file.addImport({ from: 'valibot', namespaceImport: vSymbol.placeholder });
+
+    const dataParameterName = 'data';
+
+    return tsc.arrowFunction({
+      async: true,
+      parameters: [
+        {
+          name: dataParameterName,
+        },
+      ],
+      statements: [
+        tsc.returnStatement({
+          expression: tsc.awaitExpression({
+            expression: tsc.callExpression({
+              functionName: tsc.propertyAccessExpression({
+                expression: vSymbol.placeholder,
+                name: identifiers.async.parseAsync,
+              }),
+              parameters: [
+                tsc.identifier({ text: symbol.placeholder }),
+                tsc.identifier({ text: dataParameterName }),
+              ],
             }),
-            parameters: [
-              tsc.identifier({ text: schemaIdentifier.name }),
-              tsc.identifier({ text: dataParameterName }),
-            ],
           }),
         }),
-      }),
-    ],
-  });
-};
-
-const createResponseValidator = ({
-  file,
-  operation,
-  plugin,
-}: {
-  file: GeneratedFile;
-  operation: IR.OperationObject;
-  plugin: ValibotPlugin['Instance'];
-}): ts.ArrowFunction | undefined => {
-  const { responses } = plugin.config;
-  // const f = plugin.gen.ensureFile(plugin.output);
-  // TODO: replace
-  const schemaIdentifier = plugin.context.file({ id: valibotId })!.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/valibot-response/${operation.id}`,
-    // TODO: refactor to not have to define nameTransformer
-    nameTransformer: typeof responses === 'object' ? responses.name : undefined,
-    namespace: 'value',
-  });
-
-  if (!schemaIdentifier.name) {
-    return;
+      ],
+    });
   }
 
-  file.import({
-    module: file.relativePathToFile({
-      context: plugin.context,
-      id: valibotId,
-    }),
-    name: schemaIdentifier.name,
-  });
-  // file.import({
-  //   module: f.relativePathFromFile({ path: file.nameWithoutExtension() }),
-  //   name: schemaIdentifier.name,
-  // });
+  createResponseValidator({
+    file,
+    operation,
+    plugin,
+  }: ValidatorArgs): ts.ArrowFunction | undefined {
+    const symbol = plugin.gen.selectSymbolFirst(
+      plugin.api.getSelector('responses', operation.id),
+    );
+    if (!symbol) return;
 
-  file.import({
-    alias: identifiers.v.text,
-    module: 'valibot',
-    name: '*',
-  });
+    file.addImport({
+      from: symbol.file,
+      names: [symbol.placeholder],
+    });
 
-  const dataParameterName = 'data';
+    const vSymbol = file.ensureSymbol({
+      name: 'v',
+      selector: plugin.api.getSelector('import', 'valibot'),
+    });
+    file.addImport({ from: 'valibot', namespaceImport: vSymbol.placeholder });
 
-  return tsc.arrowFunction({
-    async: true,
-    parameters: [
-      {
-        name: dataParameterName,
-      },
-    ],
-    statements: [
-      tsc.returnStatement({
-        expression: tsc.awaitExpression({
-          expression: tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: identifiers.v,
-              name: identifiers.async.parseAsync,
+    const dataParameterName = 'data';
+
+    return tsc.arrowFunction({
+      async: true,
+      parameters: [
+        {
+          name: dataParameterName,
+        },
+      ],
+      statements: [
+        tsc.returnStatement({
+          expression: tsc.awaitExpression({
+            expression: tsc.callExpression({
+              functionName: tsc.propertyAccessExpression({
+                expression: vSymbol.placeholder,
+                name: identifiers.async.parseAsync,
+              }),
+              parameters: [
+                tsc.identifier({ text: symbol.placeholder }),
+                tsc.identifier({ text: dataParameterName }),
+              ],
             }),
-            parameters: [
-              tsc.identifier({ text: schemaIdentifier.name }),
-              tsc.identifier({ text: dataParameterName }),
-            ],
           }),
         }),
-      }),
-    ],
-  });
-};
+      ],
+    });
+  }
 
-export type Api = {
-  createRequestValidator: (args: {
-    file: GeneratedFile;
-    operation: IR.OperationObject;
-    plugin: ValibotPlugin['Instance'];
-  }) => ts.ArrowFunction | undefined;
-  createResponseValidator: (args: {
-    file: GeneratedFile;
-    operation: IR.OperationObject;
-    plugin: ValibotPlugin['Instance'];
-  }) => ts.ArrowFunction | undefined;
-};
-
-export const api: Api = {
-  createRequestValidator,
-  createResponseValidator,
-};
+  getSelector(
+    ...args: ReadonlyArray<string | undefined>
+  ): ICodegenSymbolSelector {
+    return [this.meta.name, ...(args as ICodegenSymbolSelector)];
+  }
+}

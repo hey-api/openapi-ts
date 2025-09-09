@@ -1,44 +1,43 @@
 import { clientModulePath } from '../../../generate/client';
 import { tsc } from '../../../tsc';
-import { clientId } from '../client-core/utils';
-import { typesId } from '../typescript/ref';
 import type { PluginHandler } from './types';
 
 export const createClientConfigType = ({
   plugin,
 }: Parameters<PluginHandler>[0]) => {
-  const file = plugin.context.file({ id: clientId })!;
+  const f = plugin.gen.ensureFile(plugin.output);
 
   const clientModule = clientModulePath({
     config: plugin.context.config,
-    sourceOutput: file.nameWithoutExtension(),
+    sourceOutput: f.path,
   });
-  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
-  const fileTypeScript = plugin.context.file({ id: typesId })!;
-  const clientOptions = file.import({
-    asType: true,
-    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-    name: fileTypeScript.getName(
-      pluginTypeScript.api.getId({ type: 'ClientOptions' }),
-    ),
+  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+  const symbolClientOptions = plugin.gen.selectSymbolFirstOrThrow(
+    pluginTypeScript.api.getSelector('ClientOptions'),
+  );
+  f.addImport({
+    from: symbolClientOptions.file,
+    typeNames: [symbolClientOptions.placeholder],
   });
-  const configType = file.import({
-    asType: true,
-    module: clientModule,
-    name: 'Config',
+  const symbolConfig = f.addSymbol({ name: 'Config' });
+  const symbolDefaultClientOptions = f.addSymbol({
+    name: 'DefaultClientOptions',
   });
-  const defaultClientOptions = file.import({
-    alias: 'DefaultClientOptions',
-    asType: true,
-    module: clientModule,
-    name: 'ClientOptions',
+  f.addImport({
+    aliases: {
+      ClientOptions: symbolDefaultClientOptions.placeholder,
+      [symbolConfig.name]: symbolConfig.placeholder,
+    },
+    from: clientModule,
+    typeNames: ['ClientOptions', symbolConfig.name],
   });
 
   const defaultClientOptionsType = tsc.typeReferenceNode({
-    typeName: defaultClientOptions.name,
+    typeName: symbolDefaultClientOptions.placeholder,
   });
   const tType = tsc.typeReferenceNode({ typeName: 'T' });
 
+  const symbolCreateClientConfig = f.addSymbol({ name: 'CreateClientConfig' });
   const typeCreateClientConfig = tsc.typeAliasDeclaration({
     comment: [
       'The `createClientConfig()` function will be called on client initialization',
@@ -49,7 +48,7 @@ export const createClientConfigType = ({
       'to ensure your client always has the correct values.',
     ],
     exportType: true,
-    name: 'CreateClientConfig',
+    name: symbolCreateClientConfig.placeholder,
     type: tsc.functionTypeNode({
       parameters: [
         tsc.parameterDeclaration({
@@ -61,7 +60,7 @@ export const createClientConfigType = ({
                 types: [defaultClientOptionsType, tType],
               }),
             ],
-            typeName: configType.name,
+            typeName: symbolConfig.placeholder,
           }),
         }),
       ],
@@ -77,19 +76,18 @@ export const createClientConfigType = ({
             ],
           }),
         ],
-        typeName: configType.name,
+        typeName: symbolConfig.placeholder,
       }),
     }),
     typeParameters: [
       {
-        default: clientOptions.name
-          ? tsc.typeReferenceNode({ typeName: clientOptions.name })
-          : undefined,
+        default: tsc.typeReferenceNode({
+          typeName: symbolClientOptions.placeholder,
+        }),
         extends: defaultClientOptionsType,
         name: 'T',
       },
     ],
   });
-
-  file.add(typeCreateClientConfig);
+  symbolCreateClientConfig.update({ value: typeCreateClientConfig });
 };

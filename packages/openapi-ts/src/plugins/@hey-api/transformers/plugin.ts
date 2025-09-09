@@ -1,82 +1,16 @@
 import ts from 'typescript';
 
-import type {
-  EnsureUniqueIdentifierData,
-  GeneratedFile,
-} from '../../../generate/file';
-import { parseRef } from '../../../generate/file';
-import type { Identifier, Namespace } from '../../../generate/file/types';
+import { TypeScriptRenderer } from '../../../generate/renderer';
 import {
   createOperationKey,
   operationResponsesMap,
 } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
+import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
-import { stringCase } from '../../../utils/stringCase';
-import { typesId } from '../typescript/ref';
-import { bigIntExpressions, dateExpressions } from './expressions';
+import { refToName } from '../../../utils/ref';
 import type { HeyApiTransformersPlugin } from './types';
 
-interface OperationIRRef {
-  /**
-   * Operation ID
-   */
-  id: string;
-}
-
-export const operationTransformerIrRef = ({
-  id,
-  type,
-}: OperationIRRef & {
-  type: 'data' | 'error' | 'response';
-}): string => {
-  let affix = '';
-  switch (type) {
-    case 'data':
-      affix = 'DataResponseTransformer';
-      break;
-    case 'error':
-      affix = 'ErrorResponseTransformer';
-      break;
-    case 'response':
-      affix = 'ResponseTransformer';
-      break;
-  }
-  const irRef = '#/ir/';
-  return `${irRef}${stringCase({
-    // TODO: parser - do not pascalcase for functions, only for types
-    case: 'camelCase',
-    value: id,
-  })}${affix}`;
-};
-
-const schemaIrRef = ({
-  $ref,
-  type,
-}: {
-  $ref: string;
-  type: 'response';
-}): string => {
-  let affix = '';
-  switch (type) {
-    case 'response':
-      affix = 'SchemaResponseTransformer';
-      break;
-  }
-  const parts = $ref.split('/');
-  return `${parts.slice(0, parts.length - 1).join('/')}/${stringCase({
-    case: 'camelCase',
-    value: parts[parts.length - 1]!,
-  })}${affix}`;
-};
-
-export const schemaResponseTransformerRef = ({
-  $ref,
-}: {
-  $ref: string;
-}): string => schemaIrRef({ $ref, type: 'response' });
-
-export const transformersId = 'transformers';
 const dataVariableName = 'data';
 
 const ensureStatements = (
@@ -117,36 +51,6 @@ const schemaResponseTransformerNodes = ({
   return nodes;
 };
 
-/**
- * Prevents a specific identifier from being created. This is useful for
- * transformers where we know a certain transformer won't be needed, and
- * we want to avoid attempting to create since we know it won't happen.
- */
-const blockIdentifier = ({
-  $ref,
-  file,
-  namespace,
-}: Pick<EnsureUniqueIdentifierData, '$ref'> & {
-  file: GeneratedFile;
-  namespace: Namespace;
-}): Identifier => {
-  const { name, ref } = parseRef($ref);
-  const refValue =
-    file.identifiers[name.toLocaleLowerCase()]?.[namespace]?.[ref];
-  if (!refValue) {
-    throw new Error(
-      `Identifier for $ref ${$ref} in namespace ${namespace} not found`,
-    );
-  }
-
-  refValue.name = false;
-
-  return {
-    created: false,
-    name: refValue.name,
-  };
-};
-
 const processSchemaType = ({
   dataExpression,
   plugin,
@@ -156,16 +60,24 @@ const processSchemaType = ({
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
-  const file = plugin.context.file({ id: transformersId })!;
+  const f = plugin.gen.ensureFile(plugin.output);
 
   if (schema.$ref) {
-    let identifier = file.identifier({
-      $ref: schemaResponseTransformerRef({ $ref: schema.$ref }),
-      create: true,
-      namespace: 'value',
-    });
+    const selector = plugin.api.getSelector('response-ref', schema.$ref);
+    let symbolResponseTransformerRef = f.selectSymbolFirst(selector);
 
-    if (identifier.created && identifier.name) {
+    if (!symbolResponseTransformerRef) {
+      symbolResponseTransformerRef = f.addSymbol({
+        name: buildName({
+          config: {
+            case: 'camelCase',
+            name: '{{name}}SchemaResponseTransformer',
+          },
+          name: refToName(schema.$ref),
+        }),
+        selector,
+      });
+
       // create each schema response transformer only once
       const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
         schema.$ref,
@@ -188,23 +100,20 @@ const processSchemaType = ({
             ],
             statements: ensureStatements(nodes),
           }),
-          name: identifier.name,
+          name: symbolResponseTransformerRef.placeholder,
         });
-        file.add(node);
+        symbolResponseTransformerRef.update({ value: node });
       } else {
         // the created schema response transformer was empty, do not generate
         // it and prevent any future attempts
-        identifier = blockIdentifier({
-          $ref: schemaResponseTransformerRef({ $ref: schema.$ref }),
-          file,
-          namespace: 'value',
-        });
+        symbolResponseTransformerRef.update({ value: null });
       }
     }
 
-    if (identifier.name) {
+    symbolResponseTransformerRef = f.selectSymbolFirst(selector);
+    if (symbolResponseTransformerRef?.value) {
       const callExpression = tsc.callExpression({
-        functionName: identifier.name,
+        functionName: symbolResponseTransformerRef.placeholder,
         parameters: [dataExpression],
       });
 
@@ -401,11 +310,11 @@ const processSchemaType = ({
     }
   }
 
-  for (const transformer of plugin.config.transformers ?? []) {
+  for (const transformer of plugin.config.transformers) {
     const t = transformer({
       config: plugin.config,
       dataExpression,
-      file,
+      file: f,
       schema,
     });
     if (t) {
@@ -418,31 +327,15 @@ const processSchemaType = ({
 
 // handles only response transformers for now
 export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
-  const file = plugin.createFile({
-    id: transformersId,
-    path: plugin.output,
+  const f = plugin.gen.createFile(plugin.output, {
+    extension: '.ts',
+    path: '{{path}}.gen',
+    renderer: new TypeScriptRenderer(),
   });
-
-  if (plugin.config.dates) {
-    plugin.config.transformers = [
-      ...(plugin.config.transformers ?? []),
-      dateExpressions,
-    ];
-  }
-
-  if (plugin.config.bigInt) {
-    plugin.config.transformers = [
-      ...(plugin.config.transformers ?? []),
-      bigIntExpressions,
-    ];
-  }
 
   plugin.forEach('operation', ({ operation }) => {
     const { response } = operationResponsesMap(operation);
-
-    if (!response) {
-      return;
-    }
+    if (!response) return;
 
     if (response.items && response.items.length > 1) {
       if (plugin.context.config.logs.level === 'debug') {
@@ -453,35 +346,30 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       return;
     }
 
-    const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
-    const fileTypeScript = plugin.context.file({ id: typesId })!;
-    const responseName = fileTypeScript.getName(
-      pluginTypeScript.api.getId({ operation, type: 'response' }),
+    const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+    const symbolResponse = plugin.gen.selectSymbolFirst(
+      pluginTypeScript.api.getSelector('response', operation.id),
     );
 
-    if (!responseName) {
-      return;
-    }
+    if (!symbolResponse) return;
 
-    let identifierResponseTransformer = file.identifier({
-      $ref: operationTransformerIrRef({ id: operation.id, type: 'response' }),
-      create: true,
-      namespace: 'value',
+    const symbolResponseTransformer = f.addSymbol({
+      name: buildName({
+        config: {
+          case: 'camelCase',
+          name: '{{name}}ResponseTransformer',
+        },
+        name: operation.id,
+      }),
+      selector: plugin.api.getSelector('response', operation.id),
     });
-    if (!identifierResponseTransformer.name) {
-      return;
-    }
 
     // TODO: parser - consider handling simple string response which is also a date
     const nodes = schemaResponseTransformerNodes({ plugin, schema: response });
     if (nodes.length) {
-      file.import({
-        asType: true,
-        module: file.relativePathToFile({
-          context: plugin.context,
-          id: typesId,
-        }),
-        name: responseName,
+      f.addImport({
+        from: symbolResponse.file,
+        typeNames: [symbolResponse.placeholder],
       });
       const responseTransformerNode = tsc.constVariable({
         exportConst: true,
@@ -497,28 +385,17 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
           ],
           returnType: tsc.typeReferenceNode({
             typeArguments: [
-              tsc.typeReferenceNode({
-                typeName: responseName,
-              }),
+              tsc.typeReferenceNode({ typeName: symbolResponse.placeholder }),
             ],
             typeName: 'Promise',
           }),
           statements: ensureStatements(nodes),
         }),
-        name: identifierResponseTransformer.name,
+        name: symbolResponseTransformer.placeholder,
       });
-      file.add(responseTransformerNode);
+      symbolResponseTransformer.update({ value: responseTransformerNode });
     } else {
-      // the created schema response transformer was empty, do not generate
-      // it and prevent any future attempts
-      identifierResponseTransformer = blockIdentifier({
-        $ref: operationTransformerIrRef({
-          id: operation.id,
-          type: 'response',
-        }),
-        file,
-        namespace: 'value',
-      });
+      symbolResponseTransformer.update({ value: null });
     }
   });
 };

@@ -1,68 +1,54 @@
 import type ts from 'typescript';
 
-import type { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
+import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { createOperationComment } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
 import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
-import {
-  getPublicTypeData,
-  useTypeData,
-  useTypeError,
-  useTypeResponse,
-} from './utils';
-
-const mutationOptionsType = 'UseMutationOptions';
+import { useTypeData, useTypeError, useTypeResponse } from './useType';
+import { getPublicTypeData } from './utils';
 
 export const createMutationOptions = ({
-  file,
   operation,
   plugin,
   queryFn,
   state,
 }: {
-  file: GeneratedFile;
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
   queryFn: string;
   state: PluginState;
 }): void => {
-  if (
-    !plugin.config.mutationOptions.enabled ||
-    !plugin.hooks.operation.isMutation(operation)
-  ) {
-    return;
-  }
+  const f = plugin.gen.ensureFile(plugin.output);
 
   if (!state.hasMutations) {
     state.hasMutations = true;
-
-    file.import({
-      asType: true,
-      module: plugin.name,
-      name: mutationOptionsType,
-    });
   }
+
+  const symbolMutationOptionsType = f.ensureSymbol({
+    name: 'UseMutationOptions',
+    selector: plugin.api.getSelector('UseMutationOptions'),
+  });
+  f.addImport({
+    from: plugin.name,
+    typeNames: [symbolMutationOptionsType.name],
+  });
 
   state.hasUsedQueryFn = true;
 
-  const typeData = useTypeData({ file, operation, plugin });
-  const typeError = useTypeError({ file, operation, plugin });
-  const typeResponse = useTypeResponse({ file, operation, plugin });
+  const typeData = useTypeData({ operation, plugin });
+  const typeError = useTypeError({ operation, plugin });
+  const typeResponse = useTypeResponse({ operation, plugin });
   const { isNuxtClient, strippedTypeData } = getPublicTypeData({
     plugin,
     typeData,
   });
-
-  const identifierMutationOptions = file.identifier({
-    $ref: `#/pinia-colada-mutation-options/${operation.id}`,
-    case: plugin.config.mutationOptions.case,
-    create: true,
-    nameTransformer: plugin.config.mutationOptions.name,
-    namespace: 'value',
-  });
+  // TODO: better types syntax
+  const mutationType = isNuxtClient
+    ? `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${strippedTypeData}, ${typeError}>`
+    : `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${typeData}, ${typeError}>`;
 
   const fnOptions = 'fnOptions';
 
@@ -91,7 +77,7 @@ export const createMutationOptions = ({
 
   const statements: Array<ts.Statement> = [];
 
-  if (plugin.getPlugin('@hey-api/sdk')?.config.responseStyle === 'data') {
+  if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push(
       tsc.returnVariable({
         expression: awaitSdkExpression,
@@ -138,6 +124,12 @@ export const createMutationOptions = ({
     });
   }
 
+  const symbolMutationOptions = f.addSymbol({
+    name: buildName({
+      config: plugin.config.mutationOptions,
+      name: operation.id,
+    }),
+  });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
@@ -151,9 +143,7 @@ export const createMutationOptions = ({
           type: `Partial<${strippedTypeData}>`,
         },
       ],
-      returnType: isNuxtClient
-        ? `${mutationOptionsType}<${typeResponse}, ${strippedTypeData}, ${typeError.name}>`
-        : `${mutationOptionsType}<${typeResponse}, ${typeData}, ${typeError.name}>`,
+      returnType: mutationType,
       statements: [
         tsc.returnStatement({
           expression: tsc.objectExpression({
@@ -162,8 +152,7 @@ export const createMutationOptions = ({
         }),
       ],
     }),
-    name: identifierMutationOptions.name || '',
+    name: symbolMutationOptions.placeholder,
   });
-
-  file.add(statement);
+  symbolMutationOptions.update({ value: statement });
 };

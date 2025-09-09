@@ -67,6 +67,9 @@ describe('registerHandlebarHelpers', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
+          api: {
+            getSelector: () => [],
+          },
           config: {
             name: '@hey-api/schemas',
           },
@@ -75,6 +78,9 @@ describe('registerHandlebarHelpers', () => {
           output: '',
         },
         '@hey-api/sdk': {
+          api: {
+            getSelector: () => [],
+          },
           config: {
             name: '@hey-api/sdk',
           },
@@ -84,7 +90,7 @@ describe('registerHandlebarHelpers', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getId: () => '',
+            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {
@@ -177,6 +183,9 @@ describe('registerHandlebarTemplates', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
+          api: {
+            getSelector: () => [],
+          },
           config: {
             name: '@hey-api/schemas',
           },
@@ -185,6 +194,9 @@ describe('registerHandlebarTemplates', () => {
           output: '',
         },
         '@hey-api/sdk': {
+          api: {
+            getSelector: () => [],
+          },
           config: {
             name: '@hey-api/sdk',
           },
@@ -194,7 +206,7 @@ describe('registerHandlebarTemplates', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getId: () => '',
+            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {

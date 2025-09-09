@@ -1,6 +1,7 @@
 import type { IR } from '../../../ir/types';
 import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
+import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
   Plugin.Hooks & {
@@ -561,4 +562,4 @@ export type Config = Plugin.Name<'@tanstack/vue-query'> &
     };
   };
 
-export type TanStackVueQueryPlugin = DefinePlugin<UserConfig, Config>;
+export type TanStackVueQueryPlugin = DefinePlugin<UserConfig, Config, IApi>;

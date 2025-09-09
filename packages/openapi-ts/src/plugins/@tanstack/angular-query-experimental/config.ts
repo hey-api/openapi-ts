@@ -1,9 +1,13 @@
 import { definePluginConfig } from '../../shared/utils/config';
 import { handler } from '../query-core/plugin';
 import { handlerLegacy } from '../query-core/plugin-legacy';
+import { Api } from './api';
 import type { TanStackAngularQueryPlugin } from './types';
 
 export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
+  api: new Api({
+    name: '@tanstack/angular-query-experimental',
+  }),
   config: {
     case: 'camelCase',
     comments: true,

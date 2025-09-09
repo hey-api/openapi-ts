@@ -89,7 +89,6 @@ export class IRContext<Spec extends Record<string, any> = any> {
       ...outputParts.slice(0, outputParts.length - 1),
     );
     const createdFile = new GeneratedFile({
-      case: file.case,
       dir: outputDir,
       exportFromIndex: file.exportFromIndex,
       id: file.id,

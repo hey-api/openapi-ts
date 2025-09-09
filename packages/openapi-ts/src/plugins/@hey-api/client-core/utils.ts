@@ -1,8 +1,6 @@
 import type { Config } from '../../../types/config';
 import type { PluginClientNames } from '../../types';
 
-export const clientId = 'client';
-
 export const getClientBaseUrlKey = (config: Config) => {
   const client = getClientPlugin(config);
   if (

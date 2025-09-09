@@ -1,19 +1,17 @@
+import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { GeneratedFile } from '../../../generate/file';
+import { TypeScriptRenderer } from '../../../generate/renderer';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { stringCase } from '../../../utils/stringCase';
-import { clientId } from '../../@hey-api/client-core/utils';
-import { sdkId } from '../../@hey-api/sdk/constants';
+import { getClientPlugin } from '../../@hey-api/client-core/utils';
 import { operationClasses } from '../../@hey-api/sdk/operation';
-import { typesId } from '../../@hey-api/typescript/ref';
 import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
-import { REQUEST_APIS_SUFFIX } from './constants';
 import type { AngularCommonPlugin } from './types';
 
 interface AngularRequestClassEntry {
@@ -24,19 +22,20 @@ interface AngularRequestClassEntry {
   root: boolean;
 }
 
+const pathSuffix = '/http/requests';
+
 const generateAngularClassRequests = ({
-  file,
   plugin,
 }: {
-  file: GeneratedFile;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
+  const f = plugin.gen.ensureFile(`${plugin.output}${pathSuffix}`);
+
   const requestClasses = new Map<string, AngularRequestClassEntry>();
   const generatedClasses = new Set<string>();
 
-  const sdkPlugin = plugin.getPlugin('@hey-api/sdk')!;
+  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
 
-  // Iterate through operations to build class structure
   plugin.forEach('operation', ({ operation }) => {
     const isRequiredOptions = isOperationOptionsRequired({
       context: plugin.context,
@@ -75,18 +74,14 @@ const generateAngularClassRequests = ({
 
         const currentClass = requestClasses.get(currentClassName)!;
 
-        // Generate the request method name with "Request" suffix
         const requestMethodName =
           plugin.config.httpRequests.methodNameBuilder(operation);
 
-        // Avoid duplicate methods
         if (currentClass.methods.has(requestMethodName)) {
           return;
         }
 
-        // Generate Angular request method
         const methodNode = generateAngularRequestMethod({
-          file,
           isRequiredOptions,
           methodName: requestMethodName,
           operation,
@@ -106,13 +101,11 @@ const generateAngularClassRequests = ({
     }
   });
 
-  // Generate classes
   const generateClass = (currentClass: AngularRequestClassEntry) => {
     if (generatedClasses.has(currentClass.className)) {
       return;
     }
 
-    // Handle child classes
     if (currentClass.classes.size) {
       for (const childClassName of currentClass.classes) {
         const childClass = requestClasses.get(childClassName)!;
@@ -141,18 +134,16 @@ const generateAngularClassRequests = ({
       }
     }
 
-    const node = tsc.classDeclaration({
-      decorator: currentClass.root
-        ? {
-            args: [
-              {
-                providedIn: 'root',
-              },
-            ],
-            name: 'Injectable',
-          }
-        : undefined,
-      exportClass: currentClass.root,
+    const symbolInjectable = f
+      .ensureSymbol({
+        selector: plugin.api.getSelector('Injectable'),
+      })
+      .update({ name: 'Injectable' });
+    f.addImport({
+      from: '@angular/core',
+      names: [symbolInjectable.placeholder],
+    });
+    const symbolClass = f.addSymbol({
       name: buildName({
         config: {
           case: 'preserve',
@@ -160,10 +151,21 @@ const generateAngularClassRequests = ({
         },
         name: currentClass.className,
       }),
+      selector: plugin.api.getSelector('class', currentClass.className),
+    });
+    const node = tsc.classDeclaration({
+      decorator: currentClass.root
+        ? {
+            args: [{ providedIn: 'root' }],
+            name: symbolInjectable.placeholder,
+          }
+        : undefined,
+      exportClass: currentClass.root,
+      name: symbolClass.placeholder,
       nodes: currentClass.nodes,
     });
+    symbolClass.update({ value: node });
 
-    file.add(node);
     generatedClasses.add(currentClass.className);
   };
 
@@ -173,52 +175,55 @@ const generateAngularClassRequests = ({
 };
 
 const generateAngularFunctionRequests = ({
-  file,
   plugin,
 }: {
-  file: GeneratedFile;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
+  const f = plugin.gen.ensureFile(`${plugin.output}${pathSuffix}`);
+
   plugin.forEach('operation', ({ operation }) => {
     const isRequiredOptions = isOperationOptionsRequired({
       context: plugin.context,
       operation,
     });
 
-    // Generate function name with "Request" suffix
-    const functionName =
-      plugin.config.httpRequests.methodNameBuilder(operation);
-
+    const symbol = f.addSymbol({
+      name: plugin.config.httpRequests.methodNameBuilder(operation),
+      selector: plugin.api.getSelector('httpRequest', operation.id),
+    });
     const node = generateAngularRequestFunction({
-      file,
-      functionName,
       isRequiredOptions,
       operation,
       plugin,
+      symbol,
     });
-
-    file.add(node);
+    symbol.update({ value: node });
   });
 };
 
 const generateRequestCallExpression = ({
-  file,
   operation,
   plugin,
 }: {
-  file: GeneratedFile;
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  // TODO: client might not be always defined
-  const heyApiClient = file.import({
-    alias: '_heyApiClient',
-    module: file.relativePathToFile({
-      context: plugin.context,
-      id: clientId,
-    }),
-    name: 'client',
-  });
+  const f = plugin.gen.ensureFile(`${plugin.output}${pathSuffix}`);
+
+  let symbolClient: ICodegenSymbolOut | undefined;
+  const client = getClientPlugin(plugin.context.config);
+  if (client.api && 'getSelector' in client.api) {
+    symbolClient = plugin.gen.selectSymbolFirst(
+      // @ts-expect-error
+      client.api.getSelector('client'),
+    );
+    if (symbolClient) {
+      f.addImport({
+        from: symbolClient.file,
+        names: [symbolClient.placeholder],
+      });
+    }
+  }
 
   const optionsClient = tsc.propertyAccessExpression({
     expression: tsc.identifier({ text: 'options' }),
@@ -226,13 +231,20 @@ const generateRequestCallExpression = ({
     name: 'client',
   });
 
+  let clientExpression: ts.Expression;
+  if (symbolClient) {
+    clientExpression = tsc.binaryExpression({
+      left: optionsClient,
+      operator: '??',
+      right: symbolClient.placeholder,
+    });
+  } else {
+    clientExpression = optionsClient;
+  }
+
   return tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
-      expression: tsc.binaryExpression({
-        left: optionsClient,
-        operator: '??',
-        right: tsc.identifier({ text: heyApiClient.name }),
-      }),
+      expression: clientExpression,
       name: 'requestOptions',
     }),
     parameters: [
@@ -262,28 +274,49 @@ const generateRequestCallExpression = ({
 };
 
 const generateAngularRequestMethod = ({
-  file,
   isRequiredOptions,
   methodName,
   operation,
   plugin,
 }: {
-  file: GeneratedFile;
   isRequiredOptions: boolean;
   methodName: string;
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  // Import operation data type
-  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
-  const fileTypeScript = plugin.context.file({ id: typesId })!;
-  const dataType = file.import({
-    asType: true,
-    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-    name: fileTypeScript.getName(
-      pluginTypeScript.api.getId({ operation, type: 'data' }),
-    ),
+  const f = plugin.gen.ensureFile(`${plugin.output}${pathSuffix}`);
+
+  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+
+  const symbolHttpRequest = f
+    .ensureSymbol({
+      selector: plugin.api.getSelector('HttpRequest'),
+    })
+    .update({ name: 'HttpRequest' });
+  f.addImport({
+    from: '@angular/common/http',
+    typeNames: [symbolHttpRequest.placeholder],
   });
+
+  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
+  const symbolOptions = plugin.gen.selectSymbolFirstOrThrow(
+    sdkPlugin.api.getSelector('Options'),
+  );
+  f.addImport({
+    from: symbolOptions.file,
+    typeNames: [symbolOptions.placeholder],
+  });
+
+  const symbolDataType = plugin.gen.selectSymbolFirst(
+    pluginTypeScript.api.getSelector('data', operation.id),
+  );
+  if (symbolDataType) {
+    f.addImport({
+      from: symbolDataType.file,
+      typeNames: [symbolDataType.placeholder],
+    });
+  }
+  const dataType = symbolDataType?.placeholder || 'unknown';
 
   return tsc.methodDeclaration({
     accessLevel: 'public',
@@ -293,14 +326,13 @@ const generateAngularRequestMethod = ({
       {
         isRequired: isRequiredOptions,
         name: 'options',
-        type: `Options<${dataType.name || 'unknown'}, ThrowOnError>`,
+        type: `${symbolOptions.placeholder}<${dataType}, ThrowOnError>`,
       },
     ],
-    returnType: 'HttpRequest<unknown>',
+    returnType: `${symbolHttpRequest.placeholder}<unknown>`,
     statements: [
       tsc.returnStatement({
         expression: generateRequestCallExpression({
-          file,
           operation,
           plugin,
         }),
@@ -317,27 +349,49 @@ const generateAngularRequestMethod = ({
 };
 
 const generateAngularRequestFunction = ({
-  file,
-  functionName,
   isRequiredOptions,
   operation,
   plugin,
+  symbol,
 }: {
-  file: GeneratedFile;
-  functionName: string;
   isRequiredOptions: boolean;
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
+  symbol: ICodegenSymbolOut;
 }) => {
-  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
-  const fileTypeScript = plugin.context.file({ id: typesId })!;
-  const dataType = file.import({
-    asType: true,
-    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-    name: fileTypeScript.getName(
-      pluginTypeScript.api.getId({ operation, type: 'data' }),
-    ),
+  const f = plugin.gen.ensureFile(`${plugin.output}${pathSuffix}`);
+
+  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+
+  const symbolHttpRequest = f
+    .ensureSymbol({
+      selector: plugin.api.getSelector('HttpRequest'),
+    })
+    .update({ name: 'HttpRequest' });
+  f.addImport({
+    from: '@angular/common/http',
+    typeNames: [symbolHttpRequest.placeholder],
   });
+
+  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
+  const symbolOptions = plugin.gen.selectSymbolFirstOrThrow(
+    sdkPlugin.api.getSelector('Options'),
+  );
+  f.addImport({
+    from: symbolOptions.file,
+    typeNames: [symbolOptions.placeholder],
+  });
+
+  const symbolDataType = plugin.gen.selectSymbolFirst(
+    pluginTypeScript.api.getSelector('data', operation.id),
+  );
+  if (symbolDataType) {
+    f.addImport({
+      from: symbolDataType.file,
+      typeNames: [symbolDataType.placeholder],
+    });
+  }
+  const dataType = symbolDataType?.placeholder || 'unknown';
 
   return tsc.constVariable({
     comment: createOperationComment({ operation }),
@@ -347,14 +401,13 @@ const generateAngularRequestFunction = ({
         {
           isRequired: isRequiredOptions,
           name: 'options',
-          type: `Options<${dataType.name || 'unknown'}, ThrowOnError>`,
+          type: `${symbolOptions.placeholder}<${dataType}, ThrowOnError>`,
         },
       ],
-      returnType: 'HttpRequest<unknown>',
+      returnType: `${symbolHttpRequest.placeholder}<unknown>`,
       statements: [
         tsc.returnStatement({
           expression: generateRequestCallExpression({
-            file,
             operation,
             plugin,
           }),
@@ -368,41 +421,27 @@ const generateAngularRequestFunction = ({
         },
       ],
     }),
-    name: functionName,
+    name: symbol.placeholder,
   });
 };
 
 export const createHttpRequests: AngularCommonPlugin['Handler'] = ({
   plugin,
 }) => {
-  const file = plugin.createFile({
-    id: `${plugin.name}${REQUEST_APIS_SUFFIX}`,
-    path: `${plugin.output}${REQUEST_APIS_SUFFIX}`,
+  const f = plugin.gen.createFile(`${plugin.output}${pathSuffix}`, {
+    extension: '.ts',
+    path: '{{path}}.gen',
+    renderer: new TypeScriptRenderer(),
   });
 
   if (plugin.config.httpRequests.asClass) {
-    file.import({
-      module: '@angular/core',
-      name: 'Injectable',
-    });
+    generateAngularClassRequests({ plugin });
+  } else {
+    generateAngularFunctionRequests({ plugin });
   }
 
-  file.import({
-    module: '@angular/common/http',
-    name: 'HttpRequest',
-  });
-
-  file.import({
-    module: file.relativePathToFile({
-      context: plugin.context,
-      id: sdkId,
-    }),
-    name: 'Options',
-  });
-
-  if (plugin.config.httpRequests.asClass) {
-    generateAngularClassRequests({ file, plugin });
-  } else {
-    generateAngularFunctionRequests({ file, plugin });
+  if (plugin.config.exportFromIndex && f.hasContent()) {
+    const index = plugin.gen.ensureFile('index');
+    index.addExport({ from: f, namespaceImport: true });
   }
 };
