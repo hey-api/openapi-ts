@@ -155,7 +155,7 @@ export const createQueryOptions = ({
   }
 
   const isRequiredOptions = hasOperationDataRequired(operation);
-  const statement = tsc.constVariable({
+  const exportedDefineQuery = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
@@ -178,5 +178,5 @@ export const createQueryOptions = ({
     name: identifierQueryOptions.name || '',
   });
 
-  file.add(statement);
+  file.add(exportedDefineQuery);
 };
