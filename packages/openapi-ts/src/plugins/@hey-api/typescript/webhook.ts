@@ -3,7 +3,6 @@ import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { createSchemaComment } from '../../shared/utils/schema';
 import { schemaToType } from './plugin';
-import { typesId } from './ref';
 import type { HeyApiTypeScriptPlugin, PluginState } from './types';
 
 const operationToDataType = ({
@@ -15,7 +14,7 @@ const operationToDataType = ({
   plugin: HeyApiTypeScriptPlugin['Instance'];
   state: PluginState;
 }): string => {
-  const file = plugin.context.file({ id: typesId })!;
+  const f = plugin.gen.ensureFile(plugin.output);
 
   const data: IR.SchemaObject = {
     type: 'object',
@@ -27,18 +26,19 @@ const operationToDataType = ({
   }
 
   if (operation.body) {
-    const name = buildName({
-      config: {
-        case: plugin.config.webhooks.case,
-        name: plugin.config.webhooks.payload,
-      },
-      name: operation.id,
-    });
-    const id = plugin.api.getId({ operation, type: 'webhook-payload' });
-    const nodeInfo = file.updateNode(id, {
-      exported: true,
-      name,
-    });
+    const symbolWebhookPayload = f
+      .ensureSymbol({
+        selector: plugin.api.getSelector('webhook-payload', operation.id),
+      })
+      .update({
+        name: buildName({
+          config: {
+            case: plugin.config.webhooks.case,
+            name: plugin.config.webhooks.payload,
+          },
+          name: operation.id,
+        }),
+      });
     const type = schemaToType({
       onRef: undefined,
       plugin,
@@ -47,13 +47,19 @@ const operationToDataType = ({
     });
     const node = tsc.typeAliasDeclaration({
       comment: createSchemaComment({ schema: operation.body.schema }),
-      exportType: nodeInfo.exported,
-      name: nodeInfo.node,
+      exportType: true,
+      name: symbolWebhookPayload.placeholder,
       type,
     });
-    file.add(node);
+    symbolWebhookPayload.update({ value: node });
 
-    data.properties.body = { $ref: id };
+    f.ensureSymbol({
+      selector: plugin.api.getSelector('ref', symbolWebhookPayload.placeholder),
+    }).update({
+      name: symbolWebhookPayload.name,
+      placeholder: symbolWebhookPayload.placeholder,
+    });
+    data.properties.body = { $ref: symbolWebhookPayload.placeholder };
     dataRequired.push('body');
   } else {
     data.properties.body = { type: 'never' };
@@ -70,17 +76,13 @@ const operationToDataType = ({
 
   data.required = dataRequired;
 
-  const name = buildName({
-    config: plugin.config.webhooks,
-    name: operation.id,
+  const symbolWebhookRequest = f.addSymbol({
+    name: buildName({
+      config: plugin.config.webhooks,
+      name: operation.id,
+    }),
+    selector: plugin.api.getSelector('webhook-request', operation.id),
   });
-  const nodeInfo = file.updateNode(
-    plugin.api.getId({ operation, type: 'webhook-request' }),
-    {
-      exported: true,
-      name,
-    },
-  );
   const type = schemaToType({
     onRef: undefined,
     plugin,
@@ -88,13 +90,13 @@ const operationToDataType = ({
     state,
   });
   const node = tsc.typeAliasDeclaration({
-    exportType: nodeInfo.exported,
-    name: nodeInfo.node,
+    exportType: true,
+    name: symbolWebhookRequest.placeholder,
     type,
   });
-  file.add(node);
+  symbolWebhookRequest.update({ value: node });
 
-  return name;
+  return symbolWebhookRequest.placeholder;
 };
 
 export const webhookToType = ({
@@ -110,39 +112,4 @@ export const webhookToType = ({
   return name;
 
   // don't handle webhook responses for now, users only need requestBody
-
-  // const file = plugin.context.file({ id: typesId })!;
-
-  // const { responses } = operationResponsesMap(operation);
-
-  // const response = responses?.properties?.['200'];
-
-  // if (response) {
-  //   const name = buildName({
-  //     config: {
-  //       ...plugin.config.responses,
-  //       name: '{{name}}WebhookEvent',
-  //     },
-  //     name: operation.id,
-  //   });
-  //   const nodeInfo = file.updateNode(
-  //     plugin.api.getId({ operation, type: 'webhook-response' }),
-  //     {
-  //       exported: true,
-  //       name,
-  //     },
-  //   );
-  //   const type = schemaToType({
-  //     onRef: undefined,
-  //     plugin,
-  //     schema: response,
-  //     state,
-  //   });
-  //   const node = tsc.typeAliasDeclaration({
-  //     exportType: nodeInfo.exported,
-  //     name: nodeInfo.node,
-  //     type,
-  //   });
-  //   file.add(node);
-  // }
 };

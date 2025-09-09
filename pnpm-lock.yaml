@@ -1127,6 +1127,9 @@ importers:
       '@config/vite-base':
         specifier: workspace:*
         version: link:../config-vite-base
+      '@hey-api/codegen-core':
+        specifier: workspace:*
+        version: link:../codegen-core
       '@hey-api/openapi-ts':
         specifier: workspace:*
         version: link:../openapi-ts
@@ -1324,6 +1327,9 @@ importers:
       '@config/vite-base':
         specifier: workspace:*
         version: link:../../config-vite-base
+      '@hey-api/codegen-core':
+        specifier: workspace:*
+        version: link:../../codegen-core
       '@hey-api/custom-client':
         specifier: workspace:*
         version: link:../../custom-client

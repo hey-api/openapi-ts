@@ -521,17 +521,45 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          output: 'group-by-tag',
+          input: 'sdk-instance.yaml',
+          output: 'asClass',
           plugins: [
-            {
-              groupByTag: true,
-              name: '@pinia/colada',
-            },
+            '@pinia/colada',
             '@hey-api/client-fetch',
+            {
+              asClass: true,
+              classNameBuilder: '{{name}}Service',
+              name: '@hey-api/sdk',
+            },
           ],
         }),
         description:
-          'generates Fetch API client with Pinia Colada plugin group by tag',
+          'generate Fetch API client with Pinia Colada plugin using class-based SDKs',
+      },
+      {
+        config: createConfig({
+          output: 'default',
+          plugins: ['@angular/common', '@hey-api/client-angular'],
+        }),
+        description: 'generate Angular requests and resources',
+      },
+      {
+        config: createConfig({
+          output: 'default-class',
+          plugins: [
+            {
+              httpRequests: {
+                asClass: true,
+              },
+              httpResources: {
+                asClass: true,
+              },
+              name: '@angular/common',
+            },
+            '@hey-api/client-angular',
+          ],
+        }),
+        description: 'generate Angular requests and resources (class)',
       },
     ];
 
