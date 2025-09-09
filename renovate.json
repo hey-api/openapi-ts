@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
-  "schedule": ["before 3am on Monday"],
+  "minimumReleaseAge": "3 days",
   "prConcurrentLimit": 4,
-  "minimumReleaseAge": "3 days"
+  "schedule": ["before 3am on Monday"],
+  "updatePinnedDependencies": true
 }
