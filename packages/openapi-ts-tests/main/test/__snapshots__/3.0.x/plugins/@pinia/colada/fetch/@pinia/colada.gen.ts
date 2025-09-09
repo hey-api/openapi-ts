@@ -5,7 +5,7 @@ import { export_, type Options, patchApiVbyApiVersionNoTag, import_, fooWow, api
 import type { PatchApiVbyApiVersionNoTagData, ImportData, ImportResponse, FooWowData, GetApiVbyApiVersionSimpleOperationData, DeleteCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName3Data, DuplicateName4Data, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, UploadFileData, UploadFileResponse, FileResponseData, ComplexTypesData, MultipartRequestData, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../types.gen';
 import { client as _heyApiClient } from '../client.gen';
 
-export const exportQuery = defineQueryOptions({
+export const exportQuery = defineQueryOptions(() => ({
     key: [
         'export'
     ],
@@ -13,7 +13,7 @@ export const exportQuery = defineQueryOptions({
         const { data } = await export_({ throwOnError: true });
         return data;
     }
-});
+}));
 
 export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): UseMutationOptions<unknown, Options<PatchApiVbyApiVersionNoTagData>, Error> => {
     return {
@@ -54,7 +54,7 @@ export const fooWowMutation = (options?: Partial<Options<FooWowData>>): UseMutat
     };
 };
 
-export const apiVVersionODataControllerCountQuery = defineQueryOptions({
+export const apiVVersionODataControllerCountQuery = defineQueryOptions(() => ({
     key: [
         'apiVVersionODataControllerCount'
     ],
@@ -62,7 +62,7 @@ export const apiVVersionODataControllerCountQuery = defineQueryOptions({
         const { data } = await apiVVersionODataControllerCount({ throwOnError: true });
         return data;
     }
-});
+}));
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'body' | 'path'> & {
@@ -122,7 +122,7 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
     };
 };
 
-export const getCallWithoutParametersAndResponseQuery = defineQueryOptions({
+export const getCallWithoutParametersAndResponseQuery = defineQueryOptions(() => ({
     key: [
         'getCallWithoutParametersAndResponse'
     ],
@@ -130,7 +130,7 @@ export const getCallWithoutParametersAndResponseQuery = defineQueryOptions({
         const { data } = await getCallWithoutParametersAndResponse({ throwOnError: true });
         return data;
     }
-});
+}));
 
 export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<PatchCallWithoutParametersAndResponseData>, Error> => {
     return {
@@ -339,7 +339,7 @@ export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameDat
     };
 };
 
-export const duplicateName2Query = defineQueryOptions({
+export const duplicateName2Query = defineQueryOptions(() => ({
     key: [
         'duplicateName2'
     ],
@@ -347,7 +347,7 @@ export const duplicateName2Query = defineQueryOptions({
         const { data } = await duplicateName2({ throwOnError: true });
         return data;
     }
-});
+}));
 
 export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3Data>>): UseMutationOptions<unknown, Options<DuplicateName3Data>, Error> => {
     return {
@@ -375,7 +375,7 @@ export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4D
     };
 };
 
-export const callWithNoContentResponseQuery = defineQueryOptions({
+export const callWithNoContentResponseQuery = defineQueryOptions(() => ({
     key: [
         'callWithNoContentResponse'
     ],
@@ -383,9 +383,9 @@ export const callWithNoContentResponseQuery = defineQueryOptions({
         const { data } = await callWithNoContentResponse({ throwOnError: true });
         return data;
     }
-});
+}));
 
-export const callWithResponseAndNoContentResponseQuery = defineQueryOptions({
+export const callWithResponseAndNoContentResponseQuery = defineQueryOptions(() => ({
     key: [
         'callWithResponseAndNoContentResponse'
     ],
@@ -393,9 +393,9 @@ export const callWithResponseAndNoContentResponseQuery = defineQueryOptions({
         const { data } = await callWithResponseAndNoContentResponse({ throwOnError: true });
         return data;
     }
-});
+}));
 
-export const dummyAQuery = defineQueryOptions({
+export const dummyAQuery = defineQueryOptions(() => ({
     key: [
         'dummyA'
     ],
@@ -403,9 +403,9 @@ export const dummyAQuery = defineQueryOptions({
         const { data } = await dummyA({ throwOnError: true });
         return data;
     }
-});
+}));
 
-export const dummyBQuery = defineQueryOptions({
+export const dummyBQuery = defineQueryOptions(() => ({
     key: [
         'dummyB'
     ],
@@ -413,9 +413,9 @@ export const dummyBQuery = defineQueryOptions({
         const { data } = await dummyB({ throwOnError: true });
         return data;
     }
-});
+}));
 
-export const callWithResponseQuery = defineQueryOptions({
+export const callWithResponseQuery = defineQueryOptions(() => ({
     key: [
         'callWithResponse'
     ],
@@ -423,7 +423,7 @@ export const callWithResponseQuery = defineQueryOptions({
         const { data } = await callWithResponse({ throwOnError: true });
         return data;
     }
-});
+}));
 
 export const callWithDuplicateResponsesMutation = (options?: Partial<Options<CallWithDuplicateResponsesData>>): UseMutationOptions<CallWithDuplicateResponsesResponse, Options<CallWithDuplicateResponsesData>, CallWithDuplicateResponsesError> => {
     return {
@@ -508,7 +508,7 @@ export const complexTypesQuery = defineQueryOptions((options: Options<ComplexTyp
     }
 }));
 
-export const multipartResponseQuery = defineQueryOptions({
+export const multipartResponseQuery = defineQueryOptions(() => ({
     key: [
         'multipartResponse'
     ],
@@ -516,7 +516,7 @@ export const multipartResponseQuery = defineQueryOptions({
         const { data } = await multipartResponse({ throwOnError: true });
         return data;
     }
-});
+}));
 
 export const multipartRequestMutation = (options?: Partial<Options<MultipartRequestData>>): UseMutationOptions<unknown, Options<MultipartRequestData>, Error> => {
     return {

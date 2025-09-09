@@ -4,7 +4,7 @@ import { defineQueryOptions } from '@pinia/colada';
 import { callWithNoContentResponse } from '../../sdk.gen';
 import { client as _heyApiClient } from '../../client.gen';
 
-export const callWithNoContentResponseQuery = defineQueryOptions({
+export const callWithNoContentResponseQuery = defineQueryOptions(() => ({
     key: [
         'callWithNoContentResponse'
     ],
@@ -12,4 +12,4 @@ export const callWithNoContentResponseQuery = defineQueryOptions({
         const { data } = await callWithNoContentResponse({ throwOnError: true });
         return data;
     }
-});
+}));

@@ -4,7 +4,7 @@ import { defineQueryOptions } from '@pinia/colada';
 import { dummyA, dummyB } from '../../sdk.gen';
 import { client as _heyApiClient } from '../../client.gen';
 
-export const dummyAQuery = defineQueryOptions({
+export const dummyAQuery = defineQueryOptions(() => ({
     key: [
         'dummyA'
     ],
@@ -12,9 +12,9 @@ export const dummyAQuery = defineQueryOptions({
         const { data } = await dummyA({ throwOnError: true });
         return data;
     }
-});
+}));
 
-export const dummyBQuery = defineQueryOptions({
+export const dummyBQuery = defineQueryOptions(() => ({
     key: [
         'dummyB'
     ],
@@ -22,4 +22,4 @@ export const dummyBQuery = defineQueryOptions({
         const { data } = await dummyB({ throwOnError: true });
         return data;
     }
-});
+}));
