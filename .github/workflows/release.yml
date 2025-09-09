@@ -30,10 +30,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          cache: pnpm
 
       - name: Install Dependencies
-        run: pnpm install
+        # prevent lockfile mismatch error
+        run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm build
@@ -56,3 +57,17 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NPM_CONFIG_PROVENANCE: true
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Get current branch
+        run: echo "CURRENT_BRANCH=$(git branch --show-current)" >> $GITHUB_ENV
+
+      - name: Update lock file
+        if: env.CURRENT_BRANCH == 'changeset-release/main'
+        run: pnpm install --lockfile-only
+
+      - name: Commit lock file
+        if: env.CURRENT_BRANCH == 'changeset-release/main'
+        uses: stefanzweifel/git-auto-commit-action@v6.0.1
+        with:
+          branch: ${{ env.CURRENT_BRANCH }}
+          commit_message: 'chore: update lock file'
