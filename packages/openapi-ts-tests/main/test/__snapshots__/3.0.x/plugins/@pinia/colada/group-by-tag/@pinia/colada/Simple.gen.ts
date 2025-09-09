@@ -5,7 +5,7 @@ import { apiVVersionODataControllerCount, type Options, deleteCallWithoutParamet
 import type { DeleteCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData } from '../../types.gen';
 import { client as _heyApiClient } from '../../client.gen';
 
-export const apiVVersionODataControllerCountQuery = defineQueryOptions(() => ({
+export const apiVVersionODataControllerCountQuery = defineQueryOptions({
     key: [
         'apiVVersionODataControllerCount'
     ],
@@ -13,7 +13,7 @@ export const apiVVersionODataControllerCountQuery = defineQueryOptions(() => ({
         const { data } = await apiVVersionODataControllerCount({ throwOnError: true });
         return data;
     }
-}));
+});
 
 export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<DeleteCallWithoutParametersAndResponseData>, Error> => {
     return {
@@ -28,7 +28,7 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
     };
 };
 
-export const getCallWithoutParametersAndResponseQuery = defineQueryOptions(() => ({
+export const getCallWithoutParametersAndResponseQuery = defineQueryOptions({
     key: [
         'getCallWithoutParametersAndResponse'
     ],
@@ -36,7 +36,7 @@ export const getCallWithoutParametersAndResponseQuery = defineQueryOptions(() =>
         const { data } = await getCallWithoutParametersAndResponse({ throwOnError: true });
         return data;
     }
-}));
+});
 
 export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<PatchCallWithoutParametersAndResponseData>, Error> => {
     return {

@@ -5,7 +5,7 @@ import { export_, type Options, patchApiVbyApiVersionNoTag, import_, fooWow, get
 import type { PatchApiVbyApiVersionNoTagData, ImportData, ImportResponse, FooWowData, GetApiVbyApiVersionSimpleOperationData } from '../../types.gen';
 import { client as _heyApiClient } from '../../client.gen';
 
-export const exportQuery = defineQueryOptions(() => ({
+export const exportQuery = defineQueryOptions({
     key: [
         'export'
     ],
@@ -13,7 +13,7 @@ export const exportQuery = defineQueryOptions(() => ({
         const { data } = await export_({ throwOnError: true });
         return data;
     }
-}));
+});
 
 export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): UseMutationOptions<unknown, Options<PatchApiVbyApiVersionNoTagData>, Error> => {
     return {
