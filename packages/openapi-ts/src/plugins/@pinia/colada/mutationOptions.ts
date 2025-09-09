@@ -1,8 +1,10 @@
 import type ts from 'typescript';
 
+import { clientApi } from '../../../generate/client';
 import type { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
 import { tsc } from '../../../tsc';
+import { sdkId } from '../../@hey-api/sdk/constants';
 import { createOperationComment } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
 import type { PluginState } from './state';
@@ -43,6 +45,14 @@ export const createMutationOptions = ({
       asType: true,
       module: plugin.name,
       name: mutationOptionsType,
+    });
+
+    file.import({
+      ...clientApi.Options,
+      module: file.relativePathToFile({
+        context: plugin.context,
+        id: sdkId,
+      }),
     });
   }
 
