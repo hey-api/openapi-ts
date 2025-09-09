@@ -18,7 +18,7 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
     };
 };
 
-export const getCallWithoutParametersAndResponseQuery = defineQueryOptions(() => ({
+export const getCallWithoutParametersAndResponseQuery = defineQueryOptions({
     key: [
         'getCallWithoutParametersAndResponse'
     ],
@@ -26,7 +26,7 @@ export const getCallWithoutParametersAndResponseQuery = defineQueryOptions(() =>
         const { data } = await getCallWithoutParametersAndResponse({ throwOnError: true });
         return data;
     }
-}));
+});
 
 export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<PatchCallWithoutParametersAndResponseData>, Error> => {
     return {

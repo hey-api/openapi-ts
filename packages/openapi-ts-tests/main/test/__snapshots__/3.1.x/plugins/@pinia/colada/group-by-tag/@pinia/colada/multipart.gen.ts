@@ -5,7 +5,7 @@ import { multipartResponse, type Options, multipartRequest } from '../../sdk.gen
 import type { MultipartRequestData } from '../../types.gen';
 import { client as _heyApiClient } from '../../client.gen';
 
-export const multipartResponseQuery = defineQueryOptions(() => ({
+export const multipartResponseQuery = defineQueryOptions({
     key: [
         'multipartResponse'
     ],
@@ -13,7 +13,7 @@ export const multipartResponseQuery = defineQueryOptions(() => ({
         const { data } = await multipartResponse({ throwOnError: true });
         return data;
     }
-}));
+});
 
 export const multipartRequestMutation = (options?: Partial<Options<MultipartRequestData>>): UseMutationOptions<unknown, Options<MultipartRequestData>, Error> => {
     return {

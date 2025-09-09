@@ -18,7 +18,7 @@ export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameDat
     };
 };
 
-export const duplicateName2Query = defineQueryOptions(() => ({
+export const duplicateName2Query = defineQueryOptions({
     key: [
         'duplicateName2'
     ],
@@ -26,7 +26,7 @@ export const duplicateName2Query = defineQueryOptions(() => ({
         const { data } = await duplicateName2({ throwOnError: true });
         return data;
     }
-}));
+});
 
 export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3Data>>): UseMutationOptions<unknown, Options<DuplicateName3Data>, Error> => {
     return {

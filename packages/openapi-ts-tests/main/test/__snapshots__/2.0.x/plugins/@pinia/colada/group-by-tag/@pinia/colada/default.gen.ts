@@ -5,7 +5,7 @@ import { serviceWithEmptyTag, type Options, patchApiVbyApiVersionNoTag, fooWow, 
 import type { PatchApiVbyApiVersionNoTagData, FooWowData, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse } from '../../types.gen';
 import { client as _heyApiClient } from '../../client.gen';
 
-export const serviceWithEmptyTagQuery = defineQueryOptions(() => ({
+export const serviceWithEmptyTagQuery = defineQueryOptions({
     key: [
         'serviceWithEmptyTag'
     ],
@@ -13,7 +13,7 @@ export const serviceWithEmptyTagQuery = defineQueryOptions(() => ({
         const { data } = await serviceWithEmptyTag({ throwOnError: true });
         return data;
     }
-}));
+});
 
 export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): UseMutationOptions<unknown, Options<PatchApiVbyApiVersionNoTagData>, Error> => {
     return {

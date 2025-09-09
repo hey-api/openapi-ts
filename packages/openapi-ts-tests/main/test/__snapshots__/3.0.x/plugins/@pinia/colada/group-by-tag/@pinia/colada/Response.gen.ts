@@ -5,7 +5,7 @@ import { callWithResponseAndNoContentResponse, callWithResponse, type Options, c
 import type { CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse } from '../../types.gen';
 import { client as _heyApiClient } from '../../client.gen';
 
-export const callWithResponseAndNoContentResponseQuery = defineQueryOptions(() => ({
+export const callWithResponseAndNoContentResponseQuery = defineQueryOptions({
     key: [
         'callWithResponseAndNoContentResponse'
     ],
@@ -13,9 +13,9 @@ export const callWithResponseAndNoContentResponseQuery = defineQueryOptions(() =
         const { data } = await callWithResponseAndNoContentResponse({ throwOnError: true });
         return data;
     }
-}));
+});
 
-export const callWithResponseQuery = defineQueryOptions(() => ({
+export const callWithResponseQuery = defineQueryOptions({
     key: [
         'callWithResponse'
     ],
@@ -23,7 +23,7 @@ export const callWithResponseQuery = defineQueryOptions(() => ({
         const { data } = await callWithResponse({ throwOnError: true });
         return data;
     }
-}));
+});
 
 export const callWithDuplicateResponsesMutation = (options?: Partial<Options<CallWithDuplicateResponsesData>>): UseMutationOptions<CallWithDuplicateResponsesResponse, Options<CallWithDuplicateResponsesData>, CallWithDuplicateResponsesError> => {
     return {
