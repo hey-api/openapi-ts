@@ -512,7 +512,7 @@ const generateAngularResourceFunction = ({
 export const createHttpResources: AngularCommonPlugin['Handler'] = ({
   plugin,
 }) => {
-  plugin.gen.createFile(`${plugin.output}${pathSuffix}`, {
+  const f = plugin.gen.createFile(`${plugin.output}${pathSuffix}`, {
     extension: '.ts',
     path: '{{path}}.gen',
     renderer: new TypeScriptRenderer(),
@@ -522,5 +522,10 @@ export const createHttpResources: AngularCommonPlugin['Handler'] = ({
     generateAngularClassServices({ plugin });
   } else {
     generateAngularFunctionServices({ plugin });
+  }
+
+  if (plugin.config.exportFromIndex && f.hasContent()) {
+    const index = plugin.gen.ensureFile('index');
+    index.addExport({ from: f, namespaceImport: true });
   }
 };

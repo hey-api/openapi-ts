@@ -428,7 +428,7 @@ const generateAngularRequestFunction = ({
 export const createHttpRequests: AngularCommonPlugin['Handler'] = ({
   plugin,
 }) => {
-  plugin.gen.createFile(`${plugin.output}${pathSuffix}`, {
+  const f = plugin.gen.createFile(`${plugin.output}${pathSuffix}`, {
     extension: '.ts',
     path: '{{path}}.gen',
     renderer: new TypeScriptRenderer(),
@@ -438,5 +438,10 @@ export const createHttpRequests: AngularCommonPlugin['Handler'] = ({
     generateAngularClassRequests({ plugin });
   } else {
     generateAngularFunctionRequests({ plugin });
+  }
+
+  if (plugin.config.exportFromIndex && f.hasContent()) {
+    const index = plugin.gen.ensureFile('index');
+    index.addExport({ from: f, namespaceImport: true });
   }
 };

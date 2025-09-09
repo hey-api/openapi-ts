@@ -7,18 +7,20 @@ import * as v from 'valibot';
  */
 export const v400 = v.string();
 
-/**
- * External ref to shared model (A)
- */
-export const vExternalRefA = v.object({
+export const vExternalSharedExternalSharedModel = v.object({
     id: v.string(),
     name: v.optional(v.string())
 });
 
 /**
+ * External ref to shared model (A)
+ */
+export const vExternalRefA = vExternalSharedExternalSharedModel;
+
+/**
  * External ref to shared model (B)
  */
-export const vExternalRefB = vExternalRefA;
+export const vExternalRefB = vExternalSharedExternalSharedModel;
 
 /**
  * Testing multiline comments in string: First line

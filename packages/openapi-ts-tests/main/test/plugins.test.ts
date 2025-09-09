@@ -519,6 +519,30 @@ for (const version of versions) {
         }),
         description: 'generate Fetch API client with Pinia Colada plugin',
       },
+      {
+        config: createConfig({
+          output: 'default',
+          plugins: ['@angular/common'],
+        }),
+        description: 'generate Angular requests and resources',
+      },
+      {
+        config: createConfig({
+          output: 'default-class',
+          plugins: [
+            {
+              httpRequests: {
+                asClass: true,
+              },
+              httpResources: {
+                asClass: true,
+              },
+              name: '@angular/common',
+            },
+          ],
+        }),
+        description: 'generate Angular requests and resources (class)',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
