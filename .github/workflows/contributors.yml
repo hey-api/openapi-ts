@@ -7,7 +7,10 @@ on:
 
 jobs:
   update:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v4.2.2
 
