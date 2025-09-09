@@ -683,10 +683,10 @@ paths:
 definitions:
   ExternalRefA:
     description: External ref to shared model (A)
-    $ref: './external-shared.json#/ExternalSharedModel'
+    $ref: './external-shared.json#/definitions/ExternalSharedModel'
   ExternalRefB:
     description: External ref to shared model (B)
-    $ref: './external-shared.json#/ExternalSharedModel'
+    $ref: './external-shared.json#/definitions/ExternalSharedModel'
   CommentWithBreaks:
     description: |-
       Testing multiline comments in string: First line

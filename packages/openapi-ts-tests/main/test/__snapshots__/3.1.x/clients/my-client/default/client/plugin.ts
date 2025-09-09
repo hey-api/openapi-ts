@@ -8,8 +8,7 @@ import {
   definePluginConfig,
 } from '@hey-api/openapi-ts';
 
-type SelectorType =
-  | 'client';
+type SelectorType = 'client';
 
 export type IApi = {
   /**
@@ -24,8 +23,10 @@ export type IApi = {
 export class Api implements IApi {
   constructor(public meta: Pick<Config, 'name'>) {}
 
-  getSelector(...args: ReadonlyArray<string | undefined>): ICodegenSymbolSelector {
-    return [this.meta.name, ...args as ICodegenSymbolSelector];
+  getSelector(
+    ...args: ReadonlyArray<string | undefined>
+  ): ICodegenSymbolSelector {
+    return [this.meta.name, ...(args as ICodegenSymbolSelector)];
   }
 }
 

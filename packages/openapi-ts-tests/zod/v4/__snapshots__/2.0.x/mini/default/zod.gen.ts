@@ -2,15 +2,14 @@
 
 import * as z from 'zod/mini';
 
-/**
- * External ref to shared model (A)
- */
-export const zExternalRefA = z.object({
+export const zExternalSharedExternalSharedModel = z.object({
     id: z.string(),
     name: z.optional(z.string())
 });
 
-export const zExternalRefB = zExternalRefA;
+export const zExternalRefA = zExternalSharedExternalSharedModel;
+
+export const zExternalRefB = zExternalSharedExternalSharedModel;
 
 /**
  * Testing multiline comments in string: First line

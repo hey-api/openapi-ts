@@ -1,0 +1,433 @@
+openapi: 3.0.0
+info:
+  title: OpenAPI 3.0 external example
+  version: 1
+# Paths using external references
+paths:
+  /external-model:
+    get:
+      summary: Get external model
+      parameters:
+        - $ref: '#/components/parameters/ExternalIdParam'
+        - $ref: '#/components/parameters/ExternalUuidParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExternalModelResponse'
+        '400':
+          $ref: '#/components/responses/ExternalUuidResponse'
+    post:
+      summary: Create external model
+      requestBody:
+        $ref: '#/components/requestBodies/ExternalModelBody'
+      responses:
+        '201':
+          $ref: '#/components/responses/ExternalModelResponse'
+        '422':
+          $ref: '#/components/responses/ExternalUnionResponse'
+
+  /external-uuid:
+    get:
+      summary: Get external UUID
+      parameters:
+        - $ref: '#/components/parameters/ExternalUuidParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExternalUuidResponse'
+    put:
+      summary: Update external UUID
+      requestBody:
+        $ref: '#/components/requestBodies/ExternalUuidBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExternalUuidResponse'
+
+  /external-nested:
+    get:
+      summary: Get external nested object
+      parameters:
+        - $ref: '#/components/parameters/ExternalDeepParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExternalNestedResponse'
+    post:
+      summary: Create external nested object
+      requestBody:
+        $ref: '#/components/requestBodies/ExternalNestedBody'
+      responses:
+        '201':
+          $ref: '#/components/responses/ExternalNestedResponse'
+
+  /external-mixed:
+    get:
+      summary: Get mixed external data
+      parameters:
+        - $ref: '#/components/parameters/ExternalIdParam'
+        - $ref: '#/components/parameters/ExternalUuidParam'
+        - $ref: '#/components/parameters/ExternalDeepParam'
+        - $ref: '#/components/parameters/ExternalNumericParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExternalArrayResponse'
+    post:
+      summary: Create mixed external data
+      requestBody:
+        $ref: '#/components/requestBodies/ExternalMixedBody'
+      responses:
+        '201':
+          $ref: '#/components/responses/ExternalModelResponse'
+
+  /external-array:
+    get:
+      summary: Get array of external models
+      responses:
+        '200':
+          $ref: '#/components/responses/ExternalArrayResponse'
+    post:
+      summary: Create array of external models
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/ExternalArrayResponse'
+
+  /external-union:
+    get:
+      summary: Get union of external types
+      responses:
+        '200':
+          $ref: '#/components/responses/ExternalUnionResponse'
+    post:
+      summary: Create union of external types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+                - $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+                - $ref: './external-shared.json#/components/schemas/ExternalNested'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/ExternalUnionResponse'
+
+  /external-properties/{id}:
+    get:
+      summary: Get external properties
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: './external-shared.json#/components/schemas/ExternalSharedModel/properties/id'
+        - name: uuid
+          in: query
+          schema:
+            $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+        - name: deep
+          in: header
+          schema:
+            $ref: './external-shared.json#/components/schemas/ExternalNested/properties/inner/properties/deep'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    $ref: './external-shared.json#/components/schemas/ExternalSharedModel/properties/id'
+                  name:
+                    $ref: './external-shared.json#/components/schemas/ExternalSharedModel/properties/name'
+                  uuid:
+                    $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+                  deep:
+                    $ref: './external-shared.json#/components/schemas/ExternalNested/properties/inner/properties/deep'
+                  numeric:
+                    $ref: './external-shared.json#/components/schemas/ExternalNestedNumeric/properties/0/properties/1'
+
+components:
+  schemas:
+    # Basic external schema references (multiple uses of each type)
+    ExternalSchemaA:
+      description: External schema (A)
+      $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+    ExternalSchemaB:
+      description: External schema (B) - second use of ExternalSharedModel
+      $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+    ExternalSchemaC:
+      description: External schema (C) - third use of ExternalSharedModel
+      $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+
+    # Path-based references using /path syntax
+    ExternalSchemaPathA:
+      description: External schema via path reference (A)
+      $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+    ExternalSchemaPathB:
+      description: External schema via path reference (B) - second use
+      $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+
+    # UUID type references (multiple uses)
+    ExternalSchemaPropertyA:
+      description: External schema property (A)
+      type: object
+      properties:
+        uuid1:
+          $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+    ExternalSchemaPropertyB:
+      description: External schema property (B) - second use of UUID
+      type: object
+      properties:
+        uuid2:
+          $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+    ExternalSchemaPropertyC:
+      description: External schema property (C) - third use of UUID
+      type: object
+      properties:
+        uuid3:
+          $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+
+    # Duplicate refs in same schema
+    ExternalSchemaPropertyD:
+      description: External schema property with duplicate refs (D)
+      type: object
+      properties:
+        uuid4:
+          $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+        uuid5:
+          $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+
+    # External property references
+    ExternalSchemaExternalProp:
+      description: External schema property via external property ref (id)
+      type: object
+      properties:
+        id3:
+          $ref: './external-shared.json#/components/schemas/ExternalSharedModel/properties/id'
+        id4:
+          $ref: './external-shared.json#/components/schemas/ExternalSharedModel/properties/id'
+
+    # Alias references
+    ExternalSchemaExternalPropAlias:
+      description: Alias to external property via component property ref
+      type: object
+      properties:
+        id5:
+          $ref: '#/components/schemas/ExternalSchemaExternalProp/properties/id3'
+        id6:
+          $ref: '#/components/schemas/ExternalSchemaExternalProp/properties/id4'
+
+    # Nested property references (multiple uses)
+    ExternalDoubleNestedProp:
+      description: External double nested prop via property ref
+      type: object
+      properties:
+        deep1:
+          $ref: './external-shared.json#/components/schemas/ExternalNested/properties/inner/properties/deep'
+        deep2:
+          $ref: './external-shared.json#/components/schemas/ExternalNested/properties/inner/properties/deep'
+
+    # Numeric property references (multiple uses)
+    ExternalDoubleNestedNumeric:
+      description: External double nested numeric properties
+      type: object
+      properties:
+        numeric1:
+          $ref: './external-shared.json#/components/schemas/ExternalNestedNumeric/properties/0/properties/1'
+        numeric2:
+          $ref: './external-shared.json#/components/schemas/ExternalNestedNumeric/properties/0/properties/1'
+
+    # Complex nested object references
+    ExternalNestedObjectA:
+      description: External nested object reference (A)
+      $ref: './external-shared.json#/components/schemas/ExternalNested'
+    ExternalNestedObjectB:
+      description: External nested object reference (B) - second use
+      $ref: './external-shared.json#/components/schemas/ExternalNested'
+
+    # Numeric nested object references
+    ExternalNestedNumericObjectA:
+      description: External numeric nested object reference (A)
+      $ref: './external-shared.json#/components/schemas/ExternalNestedNumeric'
+    ExternalNestedNumericObjectB:
+      description: External numeric nested object reference (B) - second use
+      $ref: './external-shared.json#/components/schemas/ExternalNestedNumeric'
+
+    # Mixed property references
+    ExternalMixedProperties:
+      description: Mixed external property references
+      type: object
+      properties:
+        id7:
+          $ref: './external-shared.json#/components/schemas/ExternalSharedModel/properties/id'
+        name1:
+          $ref: './external-shared.json#/components/schemas/ExternalSharedModel/properties/name'
+        uuid6:
+          $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+        deep3:
+          $ref: './external-shared.json#/components/schemas/ExternalNested/properties/inner/properties/deep'
+        numeric3:
+          $ref: './external-shared.json#/components/schemas/ExternalNestedNumeric/properties/0/properties/1'
+
+    # Array of external references
+    ExternalArraySchema:
+      description: Array containing external references
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+        uuidItems:
+          type: array
+          items:
+            $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+
+    # Union types with external references
+    ExternalUnionSchema:
+      description: Union type with external references
+      oneOf:
+        - $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+        - $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+        - $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+        - $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+
+    # AllOf with external references
+    ExternalAllOfSchema:
+      description: AllOf with external references
+      allOf:
+        - $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+        - $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+        - type: object
+          properties:
+            additional:
+              $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+
+    # AnyOf with external references
+    ExternalAnyOfSchema:
+      description: AnyOf with external references
+      anyOf:
+        - $ref: './external-shared.json#/components/schemas/ExternalNested'
+        - $ref: './external-shared.json#/components/schemas/ExternalNested'
+        - $ref: './external-shared.json#/components/schemas/ExternalNestedNumeric'
+        - $ref: './external-shared.json#/components/schemas/ExternalNestedNumeric'
+
+  # Parameters using external references
+  parameters:
+    ExternalIdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        $ref: './external-shared.json#/components/schemas/ExternalSharedModel/properties/id'
+    ExternalUuidParam:
+      name: uuid
+      in: query
+      schema:
+        $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+    ExternalDeepParam:
+      name: deep
+      in: header
+      schema:
+        $ref: './external-shared.json#/components/schemas/ExternalNested/properties/inner/properties/deep'
+    ExternalNumericParam:
+      name: numeric
+      in: query
+      schema:
+        $ref: './external-shared.json#/components/schemas/ExternalNestedNumeric/properties/0/properties/1'
+
+  # Request bodies using external references
+  requestBodies:
+    ExternalModelBody:
+      description: Request body using external model
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+    ExternalUuidBody:
+      description: Request body using external UUID
+      content:
+        application/json:
+          schema:
+            $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+    ExternalNestedBody:
+      description: Request body using external nested object
+      content:
+        application/json:
+          schema:
+            $ref: './external-shared.json#/components/schemas/ExternalNested'
+    ExternalMixedBody:
+      description: Request body with mixed external properties
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                $ref: './external-shared.json#/components/schemas/ExternalSharedModel/properties/id'
+              name:
+                $ref: './external-shared.json#/components/schemas/ExternalSharedModel/properties/name'
+              uuid:
+                $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+              deep:
+                $ref: './external-shared.json#/components/schemas/ExternalNested/properties/inner/properties/deep'
+
+  # Responses using external references
+  responses:
+    ExternalModelResponse:
+      description: Response using external model
+      content:
+        application/json:
+          schema:
+            $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+    ExternalUuidResponse:
+      description: Response using external UUID
+      content:
+        application/json:
+          schema:
+            $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+    ExternalNestedResponse:
+      description: Response using external nested object
+      content:
+        application/json:
+          schema:
+            $ref: './external-shared.json#/components/schemas/ExternalNested'
+    ExternalArrayResponse:
+      description: Response with array of external models
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+    ExternalUnionResponse:
+      description: Response with union of external types
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: './external-shared.json#/components/schemas/ExternalSharedModel'
+              - $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+              - $ref: './external-shared.json#/components/schemas/ExternalNested'
+
+  # Headers using external references
+  headers:
+    ExternalIdHeader:
+      description: Header using external ID property
+      schema:
+        $ref: './external-shared.json#/components/schemas/ExternalSharedModel/properties/id'
+    ExternalUuidHeader:
+      description: Header using external UUID
+      schema:
+        $ref: './external-shared.json#/components/schemas/ExternalSharedModelWithUuid'
+    ExternalDeepHeader:
+      description: Header using external deep property
+      schema:
+        $ref: './external-shared.json#/components/schemas/ExternalNested/properties/inner/properties/deep'

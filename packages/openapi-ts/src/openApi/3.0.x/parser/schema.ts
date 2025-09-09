@@ -818,6 +818,24 @@ const parseRef = ({
   schema: ReferenceObject;
   state: SchemaState;
 }): IR.SchemaObject => {
+  // Inline non-component refs (e.g. #/paths/...) to avoid generating orphaned named types
+  const isComponentsRef = schema.$ref.startsWith('#/components/');
+  if (!isComponentsRef) {
+    if (!state.circularReferenceTracker.has(schema.$ref)) {
+      const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
+      return schemaToIrSchema({
+        context,
+        schema: refSchema,
+        state: {
+          ...state,
+          $ref: schema.$ref,
+          isProperty: false,
+        },
+      });
+    }
+    // Fallback to preserving the ref if circular
+  }
+
   const irSchema: IR.SchemaObject = {};
 
   // refs using unicode characters become encoded, didn't investigate why

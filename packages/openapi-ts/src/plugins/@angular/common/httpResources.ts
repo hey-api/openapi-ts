@@ -199,34 +199,37 @@ const generateAngularFunctionServices = ({
 };
 
 const generateResourceCallExpression = ({
-  isRequiredOptions,
   operation,
   plugin,
 }: {
-  isRequiredOptions: boolean;
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
   const f = plugin.gen.ensureFile(`${plugin.output}${pathSuffix}`);
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
+  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
-  let requestFunctionCall;
+  const symbolHttpResource = f
+    .ensureSymbol({
+      selector: plugin.api.getSelector('httpResource'),
+    })
+    .update({ name: 'httpResource' });
+  f.addImport({
+    from: '@angular/common/http',
+    names: [symbolHttpResource.placeholder],
+  });
 
-  // Create the options call expression based on whether options are required
-  const optionsCallExpression = isRequiredOptions
-    ? tsc.callExpression({
-        functionName: 'options',
-        parameters: [],
-      })
-    : tsc.conditionalExpression({
-        condition: tsc.identifier({ text: 'options' }),
-        whenFalse: tsc.identifier({ text: 'undefined' }),
-        whenTrue: tsc.callExpression({
-          functionName: 'options',
-          parameters: [],
-        }),
-      });
+  const symbolResponseType = plugin.gen.selectSymbolFirst(
+    pluginTypeScript.api.getSelector('response', operation.id),
+  );
+  if (symbolResponseType) {
+    f.addImport({
+      from: symbolResponseType.file,
+      typeNames: [symbolResponseType.placeholder],
+    });
+  }
+  const responseType = symbolResponseType?.placeholder || 'unknown';
 
   if (plugin.config.httpRequests.asClass) {
     // For class-based request methods, use inject and class hierarchy
@@ -277,17 +280,42 @@ const generateResourceCallExpression = ({
         }
       }
 
-      // Add the final method name with "Request" suffix
-      const requestMethodName =
-        plugin.config.httpRequests.methodNameBuilder(operation);
       methodAccess = tsc.propertyAccessExpression({
         expression: methodAccess,
-        name: requestMethodName,
+        name: plugin.config.httpRequests.methodNameBuilder(operation),
       });
 
-      requestFunctionCall = tsc.callExpression({
-        functionName: methodAccess,
-        parameters: [optionsCallExpression],
+      return tsc.callExpression({
+        functionName: symbolHttpResource.placeholder,
+        parameters: [
+          tsc.arrowFunction({
+            parameters: [],
+            statements: [
+              tsc.constVariable({
+                expression: tsc.conditionalExpression({
+                  condition: tsc.identifier({ text: 'options' }),
+                  whenFalse: tsc.identifier({ text: 'undefined' }),
+                  whenTrue: tsc.callExpression({
+                    functionName: 'options',
+                    parameters: [],
+                  }),
+                }),
+                name: 'opts',
+              }),
+              tsc.returnStatement({
+                expression: tsc.conditionalExpression({
+                  condition: tsc.identifier({ text: 'opts' }),
+                  whenFalse: tsc.identifier({ text: 'undefined' }),
+                  whenTrue: tsc.callExpression({
+                    functionName: methodAccess,
+                    parameters: [tsc.identifier({ text: 'opts' })],
+                  }),
+                }),
+              }),
+            ],
+          }),
+        ],
+        types: [tsc.typeNode(responseType)],
       });
     }
   } else {
@@ -298,34 +326,42 @@ const generateResourceCallExpression = ({
       from: symbolHttpRequest.file,
       names: [symbolHttpRequest.placeholder],
     });
-    requestFunctionCall = tsc.callExpression({
-      functionName: symbolHttpRequest.placeholder,
-      parameters: [optionsCallExpression],
+
+    return tsc.callExpression({
+      functionName: symbolHttpResource.placeholder,
+      parameters: [
+        tsc.arrowFunction({
+          parameters: [],
+          statements: [
+            tsc.constVariable({
+              expression: tsc.conditionalExpression({
+                condition: tsc.identifier({ text: 'options' }),
+                whenFalse: tsc.identifier({ text: 'undefined' }),
+                whenTrue: tsc.callExpression({
+                  functionName: 'options',
+                  parameters: [],
+                }),
+              }),
+              name: 'opts',
+            }),
+            tsc.returnStatement({
+              expression: tsc.conditionalExpression({
+                condition: tsc.identifier({ text: 'opts' }),
+                whenFalse: tsc.identifier({ text: 'undefined' }),
+                whenTrue: tsc.callExpression({
+                  functionName: symbolHttpRequest.placeholder,
+                  parameters: [tsc.identifier({ text: 'opts' })],
+                }),
+              }),
+            }),
+          ],
+        }),
+      ],
+      types: [tsc.typeNode(responseType)],
     });
   }
 
-  const symbolHttpResource = f
-    .ensureSymbol({
-      selector: plugin.api.getSelector('httpResource'),
-    })
-    .update({ name: 'httpResource' });
-  f.addImport({
-    from: '@angular/common/http',
-    names: [symbolHttpResource.placeholder],
-  });
-
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  const symbolResponseType = plugin.gen.selectSymbolFirst(
-    pluginTypeScript.api.getSelector('response', operation.id),
-  );
-  if (symbolResponseType) {
-    f.addImport({
-      from: symbolResponseType.file,
-      typeNames: [symbolResponseType.placeholder],
-    });
-  }
-  const responseType = symbolResponseType?.placeholder || 'unknown';
-
+  // Fallback return (should not reach here)
   return tsc.callExpression({
     functionName: symbolHttpResource.placeholder,
     parameters: [
@@ -333,7 +369,7 @@ const generateResourceCallExpression = ({
         parameters: [],
         statements: [
           tsc.returnStatement({
-            expression: requestFunctionCall,
+            expression: tsc.identifier({ text: 'undefined' }),
           }),
         ],
       }),
@@ -385,14 +421,13 @@ const generateAngularResourceMethod = ({
       {
         isRequired: isRequiredOptions,
         name: 'options',
-        type: `() => ${symbolOptions.placeholder}<${dataType}, ThrowOnError>`,
+        type: `() => ${symbolOptions.placeholder}<${dataType}, ThrowOnError> | undefined`,
       },
     ],
     returnType: undefined,
     statements: [
       tsc.returnStatement({
         expression: generateResourceCallExpression({
-          isRequiredOptions,
           operation,
           plugin,
         }),
@@ -451,13 +486,12 @@ const generateAngularResourceFunction = ({
         {
           isRequired: isRequiredOptions,
           name: 'options',
-          type: `() => ${symbolOptions.placeholder}<${dataType}, ThrowOnError>`,
+          type: `() => ${symbolOptions.placeholder}<${dataType}, ThrowOnError> | undefined`,
         },
       ],
       statements: [
         tsc.returnStatement({
           expression: generateResourceCallExpression({
-            isRequiredOptions,
             operation,
             plugin,
           }),

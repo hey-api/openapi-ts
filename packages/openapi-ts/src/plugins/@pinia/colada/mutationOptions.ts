@@ -3,14 +3,12 @@ import type ts from 'typescript';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
-import {
-  createOperationComment,
-  isOperationOptionsRequired,
-} from '../../shared/utils/operation';
+import { createOperationComment } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
 import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
+import { getPublicTypeData } from './utils';
 
 export const createMutationOptions = ({
   operation,
@@ -43,8 +41,14 @@ export const createMutationOptions = ({
   const typeData = useTypeData({ operation, plugin });
   const typeError = useTypeError({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
+  const { isNuxtClient, strippedTypeData } = getPublicTypeData({
+    plugin,
+    typeData,
+  });
   // TODO: better types syntax
-  const mutationType = `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${typeData}, ${typeError}>`;
+  const mutationType = isNuxtClient
+    ? `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${strippedTypeData}, ${typeError}>`
+    : `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${typeData}, ${typeError}>`;
 
   const fnOptions = 'fnOptions';
 
@@ -99,9 +103,12 @@ export const createMutationOptions = ({
         async: true,
         multiLine: true,
         parameters: [
-          {
-            name: fnOptions,
-          },
+          isNuxtClient
+            ? {
+                name: fnOptions,
+                type: `Partial<${strippedTypeData}>`,
+              }
+            : { name: fnOptions },
         ],
         statements,
       }),
@@ -117,11 +124,6 @@ export const createMutationOptions = ({
     });
   }
 
-  const isRequiredOptionsForMutation = isOperationOptionsRequired({
-    context: plugin.context,
-    operation,
-  });
-
   const symbolMutationOptions = f.addSymbol({
     name: buildName({
       config: plugin.config.mutationOptions,
@@ -136,9 +138,9 @@ export const createMutationOptions = ({
     expression: tsc.arrowFunction({
       parameters: [
         {
-          isRequired: isRequiredOptionsForMutation,
+          isRequired: false,
           name: 'options',
-          type: typeData,
+          type: `Partial<${strippedTypeData}>`,
         },
       ],
       returnType: mutationType,

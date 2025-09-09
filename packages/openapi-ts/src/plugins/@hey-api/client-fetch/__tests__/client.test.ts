@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import type { ResolvedRequestOptions } from '../bundle';
 import { createClient } from '../bundle/client';
 
 type MockFetch = ((...args: any[]) => any) & {
@@ -220,4 +221,188 @@ describe('zero-length body handling', () => {
     expect(result.data).toBeInstanceOf(Blob);
     expect((result.data as Blob).size).toBeGreaterThan(0);
   });
+});
+
+describe('unserialized request body handling', () => {
+  const client = createClient({ baseUrl: 'https://example.com' });
+
+  const scenarios = [
+    { body: 0, textValue: '0' },
+    { body: false, textValue: 'false' },
+    { body: 'test string', textValue: 'test string' },
+    { body: '', textValue: '' },
+  ];
+
+  it.each(scenarios)(
+    'handles plain text body with $body value',
+    async ({ body, textValue }) => {
+      const mockResponse = new Response(JSON.stringify({ success: true }), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        status: 200,
+      });
+
+      const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
+
+      const result = await client.post({
+        body,
+        bodySerializer: null,
+        fetch: mockFetch,
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        url: '/test',
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body: expect.any(ReadableStream),
+        }),
+      );
+
+      await expect(result.request.text()).resolves.toEqual(textValue);
+      expect(result.request.headers.get('Content-Type')).toEqual('text/plain');
+    },
+  );
+});
+
+describe('serialized request body handling', () => {
+  const client = createClient({ baseUrl: 'https://example.com' });
+
+  const scenarios = [
+    {
+      body: '',
+      expectBodyValue: false,
+      expectContentHeader: false,
+      serializedBody: '',
+      textValue: '',
+    },
+    {
+      body: 0,
+      expectBodyValue: true,
+      expectContentHeader: true,
+      serializedBody: 0,
+      textValue: '0',
+    },
+    {
+      body: false,
+      expectBodyValue: true,
+      expectContentHeader: true,
+      serializedBody: false,
+      textValue: 'false',
+    },
+    {
+      body: {},
+      expectBodyValue: true,
+      expectContentHeader: true,
+      serializedBody: '{"key":"value"}',
+      textValue: '{"key":"value"}',
+    },
+  ];
+
+  it.each(scenarios)(
+    'handles $serializedBody serializedBody value',
+    async ({
+      body,
+      expectBodyValue,
+      expectContentHeader,
+      serializedBody,
+      textValue,
+    }) => {
+      const mockResponse = new Response(JSON.stringify({ success: true }), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        status: 200,
+      });
+
+      const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
+
+      const result = await client.post({
+        body,
+        bodySerializer: () => serializedBody,
+        fetch: mockFetch,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        url: '/test',
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body: expectBodyValue ? expect.any(ReadableStream) : null,
+        }),
+      );
+
+      await expect(result.request.text()).resolves.toEqual(textValue);
+      expect(result.request.headers.get('Content-Type')).toEqual(
+        expectContentHeader ? 'application/json' : null,
+      );
+    },
+  );
+});
+
+describe('request interceptor', () => {
+  const client = createClient({ baseUrl: 'https://example.com' });
+
+  const scenarios = [
+    {
+      body: 'test string',
+      bodySerializer: null,
+      contentType: 'text/plain',
+      expectedSerializedValue: undefined,
+      expectedValue: async (request: Request) => await request.text(),
+    },
+    {
+      body: { key: 'value' },
+      bodySerializer: (body: object) => JSON.stringify(body),
+      contentType: 'application/json',
+      expectedSerializedValue: '{"key":"value"}',
+      expectedValue: async (request: Request) => await request.json(),
+    },
+  ];
+
+  it.each(scenarios)(
+    'exposes $contentType serialized and raw body values',
+    async ({ body, bodySerializer, contentType, expectedSerializedValue }) => {
+      const mockResponse = new Response(JSON.stringify({ success: true }), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        status: 200,
+      });
+
+      const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
+
+      const mockRequestInterceptor = vi
+        .fn()
+        .mockImplementation(
+          (request: Request, options: ResolvedRequestOptions) => {
+            expect(options.serializedBody).toBe(expectedSerializedValue);
+            expect(options.body).toBe(body);
+
+            return request;
+          },
+        );
+
+      const interceptorId = client.interceptors.request.use(
+        mockRequestInterceptor,
+      );
+
+      await client.post({
+        body,
+        bodySerializer,
+        fetch: mockFetch,
+        headers: {
+          'Content-Type': contentType,
+        },
+        url: '/test',
+      });
+
+      expect(mockRequestInterceptor).toHaveBeenCalledOnce();
+
+      client.interceptors.request.eject(interceptorId);
+    },
+  );
 });
