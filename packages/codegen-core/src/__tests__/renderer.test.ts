@@ -15,20 +15,23 @@ describe('replaceWrappedIds', () => {
       1: 'Foo',
       12: 'baz',
       2: 'bar',
-      4: '() => string',
-      5: 'string',
+      4: 'Bar',
+      5: 'Foo',
     };
 
     const replaced = replaceWrappedIds(source, (id) => substitutions[id]);
 
     expect(replaced).toEqual(`/* @ts-nocheck */
 
+type Foo = string;
+type Bar = () => Foo;
+
 /**
  * something about Foo. Did you know that _Foo_?
  */
 export class Foo {
   // Foo is great!
-  bar(baz: ReturnType<() => string>): string {
+  bar(baz: ReturnType<Bar>): Foo {
     return baz;
   }
 }

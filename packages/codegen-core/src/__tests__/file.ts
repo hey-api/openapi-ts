@@ -1,5 +1,8 @@
 /* @ts-nocheck */
 
+type _heyapi_5_ = string;
+type _heyapi_4_ = () => _heyapi_5_;
+
 /**
  * something about _heyapi_1_. Did you know that __heyapi_1__?
  */

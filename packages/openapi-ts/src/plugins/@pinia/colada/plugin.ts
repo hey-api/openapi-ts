@@ -94,14 +94,15 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
     }
 
     if (state.hasUsedQueryFn) {
-      // TODO: make this work with static classes
-      const symbolFunction = plugin.gen.selectSymbolFirst(
-        sdkPlugin.api.getSelector('function', operation.id),
+      const symbolImport = plugin.gen.selectSymbolFirst(
+        entry
+          ? sdkPlugin.api.getSelector('class', entry.path[0])
+          : sdkPlugin.api.getSelector('function', operation.id),
       );
-      if (symbolFunction) {
+      if (symbolImport) {
         f.addImport({
-          from: symbolFunction.file,
-          names: [symbolFunction.placeholder],
+          from: symbolImport.file,
+          names: [symbolImport.placeholder],
         });
       }
     }

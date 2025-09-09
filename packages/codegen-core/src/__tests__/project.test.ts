@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { CodegenFile } from '../files/file';
+import type { ICodegenFile } from '../files/types';
 import type { ICodegenMeta } from '../meta/types';
 import { CodegenProject } from '../project/project';
 import type { ICodegenRenderer } from '../renderers/types';
@@ -100,6 +101,15 @@ describe('CodegenProject', () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       renderSymbols(file: CodegenFile, _meta?: ICodegenMeta): string {
         return `content ${file.path}`;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      replacerFn(_args: {
+        file: ICodegenFile;
+        headless?: boolean;
+        scope?: 'file' | 'project';
+        symbolId: number;
+      }): string | undefined {
+        return undefined;
       }
     }
     const renderer = new Renderer();

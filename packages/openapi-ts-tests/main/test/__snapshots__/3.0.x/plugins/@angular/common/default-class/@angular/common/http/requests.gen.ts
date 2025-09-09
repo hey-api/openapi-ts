@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
     providedIn: 'root'
 })
-export class DefaultRequests {
+export class DefaultServiceRequests {
     public export<ThrowOnError extends boolean = false>(options?: Options<ExportData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -56,7 +56,7 @@ export class DefaultRequests {
     }
 }
 
-class ODataControllerRequests {
+class ODataControllerServiceRequests {
     public apiVVersionODataControllerCount<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionODataControllerCountData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -67,18 +67,18 @@ class ODataControllerRequests {
     }
 }
 
-class VVersionRequests {
-    oDataController = new ODataControllerRequests();
+class VVersionServiceRequests {
+    oDataControllerService = new ODataControllerServiceRequests();
 }
 
-class ApiRequests {
-    vVersion = new VVersionRequests();
+class ApiServiceRequests {
+    vVersionService = new VVersionServiceRequests();
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class SimpleRequests {
+export class SimpleServiceRequests {
     public deleteCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -141,13 +141,13 @@ export class SimpleRequests {
             ...options
         });
     }
-    api = new ApiRequests();
+    apiService = new ApiServiceRequests();
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class ParametersRequests {
+export class ParametersServiceRequests {
     public deleteFoo<ThrowOnError extends boolean = false>(options: Options<DeleteFooData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -197,7 +197,7 @@ export class ParametersRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class DescriptionsRequests {
+export class DescriptionsServiceRequests {
     public callWithDescriptions<ThrowOnError extends boolean = false>(options?: Options<CallWithDescriptionsData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -211,7 +211,7 @@ export class DescriptionsRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class DeprecatedRequests {
+export class DeprecatedServiceRequests {
     /**
      * @deprecated
      */
@@ -228,7 +228,7 @@ export class DeprecatedRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class RequestBodyRequests {
+export class RequestBodyServiceRequests {
     public postApiVbyApiVersionRequestBody<ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -242,7 +242,7 @@ export class RequestBodyRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class FormDataRequests {
+export class FormDataServiceRequests {
     public postApiVbyApiVersionFormData<ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionFormDataData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -256,7 +256,7 @@ export class FormDataRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class DefaultsRequests {
+export class DefaultsServiceRequests {
     public callWithDefaultParameters<ThrowOnError extends boolean = false>(options?: Options<CallWithDefaultParametersData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -288,7 +288,7 @@ export class DefaultsRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class DuplicateRequests {
+export class DuplicateServiceRequests {
     public duplicateName<ThrowOnError extends boolean = false>(options?: Options<DuplicateNameData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -329,7 +329,7 @@ export class DuplicateRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class NoContentRequests {
+export class NoContentServiceRequests {
     public callWithNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithNoContentResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -352,7 +352,7 @@ export class NoContentRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class ResponseRequests {
+export class ResponseServiceRequests {
     public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -393,7 +393,7 @@ export class ResponseRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class MultipleTags1Requests {
+export class MultipleTags1ServiceRequests {
     public dummyA<ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -416,7 +416,7 @@ export class MultipleTags1Requests {
 @Injectable({
     providedIn: 'root'
 })
-export class MultipleTags2Requests {
+export class MultipleTags2ServiceRequests {
     public dummyA<ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -439,7 +439,7 @@ export class MultipleTags2Requests {
 @Injectable({
     providedIn: 'root'
 })
-export class MultipleTags3Requests {
+export class MultipleTags3ServiceRequests {
     public dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -453,7 +453,7 @@ export class MultipleTags3Requests {
 @Injectable({
     providedIn: 'root'
 })
-export class CollectionFormatRequests {
+export class CollectionFormatServiceRequests {
     public collectionFormat<ThrowOnError extends boolean = false>(options: Options<CollectionFormatData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -467,7 +467,7 @@ export class CollectionFormatRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class TypesRequests {
+export class TypesServiceRequests {
     public types<ThrowOnError extends boolean = false>(options: Options<TypesData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -481,7 +481,7 @@ export class TypesRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class UploadRequests {
+export class UploadServiceRequests {
     public uploadFile<ThrowOnError extends boolean = false>(options: Options<UploadFileData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -495,7 +495,7 @@ export class UploadRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class FileResponseRequests {
+export class FileResponseServiceRequests {
     public fileResponse<ThrowOnError extends boolean = false>(options: Options<FileResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -509,7 +509,7 @@ export class FileResponseRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class ComplexRequests {
+export class ComplexServiceRequests {
     public complexTypes<ThrowOnError extends boolean = false>(options: Options<ComplexTypesData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -532,7 +532,7 @@ export class ComplexRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class MultipartRequests {
+export class MultipartServiceRequests {
     public multipartResponse<ThrowOnError extends boolean = false>(options?: Options<MultipartResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -555,7 +555,7 @@ export class MultipartRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class HeaderRequests {
+export class HeaderServiceRequests {
     public callWithResultFromHeader<ThrowOnError extends boolean = false>(options?: Options<CallWithResultFromHeaderData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -569,7 +569,7 @@ export class HeaderRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class ErrorRequests {
+export class ErrorServiceRequests {
     public testErrorCode<ThrowOnError extends boolean = false>(options: Options<TestErrorCodeData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
@@ -583,7 +583,7 @@ export class ErrorRequests {
 @Injectable({
     providedIn: 'root'
 })
-export class NonAsciiÆøåÆøÅöôêÊRequests {
+export class NonAsciiÆøåÆøÅöôêÊServiceRequests {
     public nonAsciiæøåÆøÅöôêÊ字符串<ThrowOnError extends boolean = false>(options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
