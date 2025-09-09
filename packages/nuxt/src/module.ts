@@ -9,7 +9,7 @@ import { defu } from 'defu';
 import { findExports, findTypeExports } from 'mlly';
 import { findPath } from 'nuxt/kit';
 
-interface ModuleOptions {
+export interface ModuleOptions {
   /**
    * Module alias.
    *
@@ -113,4 +113,4 @@ export default defineNuxtModule<ModuleOptions>({
       }
     }
   },
-}) as any;
+});
