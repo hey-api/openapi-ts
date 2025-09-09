@@ -1223,11 +1223,8 @@ export const handlerMini: ZodPlugin['Handler'] = ({ plugin }) => {
     selector: plugin.api.getSelector('import', 'zod'),
   });
   f.addImport({
-    aliases: {
-      z: zSymbol.placeholder,
-    },
     from: getZodModule({ plugin }),
-    names: ['z'],
+    namespaceImport: zSymbol.placeholder,
   });
 
   plugin.forEach(

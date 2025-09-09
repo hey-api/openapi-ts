@@ -252,7 +252,7 @@ export default defineConfig(() => {
       {
         // case: 'snake_case',
         // comments: false,
-        compatibilityVersion: 4,
+        compatibilityVersion: 'mini',
         dates: {
           local: true,
           // offset: true,
@@ -265,7 +265,7 @@ export default defineConfig(() => {
         },
         exportFromIndex: true,
         metadata: true,
-        // name: 'zod',
+        name: 'zod',
         // requests: {
         //   // case: 'SCREAMING_SNAKE_CASE',
         //   // name: 'z{{name}}TestData',
