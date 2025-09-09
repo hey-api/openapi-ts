@@ -204,10 +204,7 @@ export const createQueryOptions = ({
               ],
               statements: tsc.objectExpression({ obj: queryOptionsObj }),
             })
-          : tsc.arrowFunction({
-              parameters: [],
-              statements: tsc.objectExpression({ obj: queryOptionsObj }),
-            }),
+          : tsc.objectExpression({ obj: queryOptionsObj }),
       ],
     }),
     name: identifierQueryOptions.name || '',
