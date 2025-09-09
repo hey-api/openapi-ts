@@ -58,6 +58,10 @@ export default defineNuxtModule<ModuleOptions>({
 
     if (nuxt.options._prepare) {
       config.watch = false;
+
+      if (!config.input && options.autoImport) {
+        return;
+      }
     }
 
     const folder = path.resolve(
