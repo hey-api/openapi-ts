@@ -1,5 +1,6 @@
 import type ts from 'typescript';
 
+import { clientApi } from '../../../generate/client';
 import type { GeneratedFile } from '../../../generate/file';
 import {
   hasOperationDataRequired,
@@ -7,6 +8,7 @@ import {
 } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { tsc } from '../../../tsc';
+import { sdkId } from '../../@hey-api/sdk/constants';
 import {
   createOperationComment,
   hasOperationSse,
@@ -49,9 +51,6 @@ export const createQueryOptions = ({
   }
 
   state.hasUsedQueryFn = true;
-
-  const typeData = useTypeData({ file, operation, plugin });
-  const { strippedTypeData } = getPublicTypeData({ plugin, typeData });
 
   const hasAnyRequestFields = hasOperationPathOrQueryAny(operation);
   if (hasAnyRequestFields && !state.hasCreateQueryKeyParamsFunction) {
@@ -172,6 +171,19 @@ export const createQueryOptions = ({
     });
   }
 
+  const getOptionsParamType = (): string => {
+    file.import({
+      ...clientApi.Options,
+      module: file.relativePathToFile({
+        context: plugin.context,
+        id: sdkId,
+      }),
+    });
+
+    const typeData = useTypeData({ file, operation, plugin });
+    return getPublicTypeData({ plugin, typeData }).strippedTypeData!;
+  };
+
   const isRequiredOptions = hasOperationDataRequired(operation);
   const exportedDefineQuery = tsc.constVariable({
     comment: plugin.config.comments
@@ -187,7 +199,7 @@ export const createQueryOptions = ({
                 {
                   isRequired: isRequiredOptions,
                   name: optionsParamName,
-                  type: strippedTypeData,
+                  type: getOptionsParamType(),
                 },
               ],
               statements: tsc.objectExpression({ obj: queryOptionsObj }),

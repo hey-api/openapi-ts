@@ -1,9 +1,7 @@
-import { clientApi } from '../../../generate/client';
 import type { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
 import type { ImportExportItemObject } from '../../../tsc/utils';
 import { getClientPlugin } from '../../@hey-api/client-core/utils';
-import { sdkId } from '../../@hey-api/sdk/constants';
 import { operationOptionsType } from '../../@hey-api/sdk/operation';
 import { typesId } from '../../@hey-api/typescript/ref';
 import { getInitialState, type PluginState } from './state';
@@ -36,11 +34,6 @@ export const getFileForOperation = ({
     });
     files.set(fileId, file);
     states.set(fileId, getInitialState());
-    // import Options type from SDK
-    file.import({
-      ...clientApi.Options,
-      module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
-    });
   }
 
   return {
