@@ -1,7 +1,10 @@
 import type ts from 'typescript';
 
 import type { GeneratedFile } from '../../../generate/file';
-import { hasOperationDataRequired } from '../../../ir/operation';
+import {
+  hasOperationDataRequired,
+  hasOperationPathOrQueryAny,
+} from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { tsc } from '../../../tsc';
 import {
@@ -50,7 +53,8 @@ export const createQueryOptions = ({
   const typeData = useTypeData({ file, operation, plugin });
   const { strippedTypeData } = getPublicTypeData({ plugin, typeData });
 
-  if (!state.hasCreateQueryKeyParamsFunction) {
+  const hasAnyRequestFields = hasOperationPathOrQueryAny(operation);
+  if (hasAnyRequestFields && !state.hasCreateQueryKeyParamsFunction) {
     createQueryKeyType({ file, plugin });
     createQueryKeyFunction({ file, plugin });
 
@@ -87,18 +91,28 @@ export const createQueryOptions = ({
     expression: tsc.callExpression({
       functionName: queryFn,
       parameters: [
-        tsc.objectExpression({
-          multiLine: true,
-          obj: [
-            {
-              spread: optionsParamName,
-            },
-            {
-              key: 'throwOnError',
-              value: true,
-            },
-          ],
-        }),
+        hasAnyRequestFields
+          ? tsc.objectExpression({
+              multiLine: true,
+              obj: [
+                {
+                  spread: optionsParamName,
+                },
+                {
+                  key: 'throwOnError',
+                  value: true,
+                },
+              ],
+            })
+          : tsc.objectExpression({
+              multiLine: false,
+              obj: [
+                {
+                  key: 'throwOnError',
+                  value: true,
+                },
+              ],
+            }),
       ],
     }),
   });
@@ -126,14 +140,18 @@ export const createQueryOptions = ({
   const queryOptionsObj: Array<{ key: string; value: ts.Expression }> = [
     {
       key: 'key',
-      value: tsc.callExpression({
-        functionName: identifierCreateQueryKey.name || '',
-        parameters: [
-          tsc.ots.string(operation.id),
-          optionsParamName,
-          tagsExpression,
-        ].filter(Boolean) as Array<string | ts.Expression>,
-      }),
+      value: hasAnyRequestFields
+        ? tsc.callExpression({
+            functionName: identifierCreateQueryKey.name || '',
+            parameters: [
+              tsc.ots.string(operation.id),
+              optionsParamName,
+              tagsExpression,
+            ].filter(Boolean) as Array<string | ts.Expression>,
+          })
+        : tsc.arrayLiteralExpression({
+            elements: [tsc.ots.string(operation.id)],
+          }),
     },
     {
       key: 'query',
@@ -163,16 +181,18 @@ export const createQueryOptions = ({
     expression: tsc.callExpression({
       functionName: 'defineQueryOptions',
       parameters: [
-        tsc.arrowFunction({
-          parameters: [
-            {
-              isRequired: isRequiredOptions,
-              name: optionsParamName,
-              type: strippedTypeData,
-            },
-          ],
-          statements: tsc.objectExpression({ obj: queryOptionsObj }),
-        }),
+        hasAnyRequestFields
+          ? tsc.arrowFunction({
+              parameters: [
+                {
+                  isRequired: isRequiredOptions,
+                  name: optionsParamName,
+                  type: strippedTypeData,
+                },
+              ],
+              statements: tsc.objectExpression({ obj: queryOptionsObj }),
+            })
+          : tsc.objectExpression({ obj: queryOptionsObj }),
       ],
     }),
     name: identifierQueryOptions.name || '',
