@@ -1109,10 +1109,10 @@ export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
   });
   f.addImport({
     aliases: {
-      z: zSymbol.placeholder,
+      [zSymbol.name]: zSymbol.placeholder,
     },
     from: getZodModule({ plugin }),
-    names: ['z'],
+    names: [zSymbol.name],
   });
 
   plugin.forEach(
