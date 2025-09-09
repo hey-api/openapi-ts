@@ -22,6 +22,11 @@ export const createQueryKeyFunction = ({
   file: GeneratedFile;
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
+  file.import({
+    asType: true,
+    module: plugin.name,
+    name: '_JSONValue',
+  });
   const identifierCreateQueryKey = file.identifier({
     // TODO: refactor for better cross-plugin compatibility
     $ref: `#/pinia-colada-create-query-key/${createQueryKeyFn}`,
@@ -101,7 +106,7 @@ export const createQueryKeyFunction = ({
                         expression: tsc.identifier({ text: 'tags' }),
                         type: tsc.keywordTypeNode({ keyword: 'unknown' }),
                       }),
-                      type: tsc.keywordTypeNode({ keyword: 'undefined' }),
+                      type: tsc.typeReferenceNode({ typeName: '_JSONValue' }),
                     }),
                   }),
                 }),
@@ -153,7 +158,7 @@ export const createQueryKeyFunction = ({
                         }),
                         type: tsc.keywordTypeNode({ keyword: 'unknown' }),
                       }),
-                      type: tsc.keywordTypeNode({ keyword: 'undefined' }),
+                      type: tsc.typeReferenceNode({ typeName: '_JSONValue' }),
                     }),
                   }),
                 }),
@@ -205,7 +210,7 @@ export const createQueryKeyFunction = ({
                         }),
                         type: tsc.keywordTypeNode({ keyword: 'unknown' }),
                       }),
-                      type: tsc.keywordTypeNode({ keyword: 'undefined' }),
+                      type: tsc.typeReferenceNode({ typeName: '_JSONValue' }),
                     }),
                   }),
                 }),
