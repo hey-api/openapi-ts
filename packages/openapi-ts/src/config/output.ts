@@ -10,12 +10,18 @@ export const getOutput = (userConfig: UserConfig): Config['output'] => {
     tsConfigPath: '',
   };
 
-  if (typeof userConfig.output === 'string') {
-    output.path = userConfig.output;
+  // After expansion, output should always be a single output (string or Output object)
+  // but TypeScript doesn't know this, so we need to handle the array case defensively
+  const singleOutput = Array.isArray(userConfig.output)
+    ? userConfig.output[0]
+    : userConfig.output;
+
+  if (typeof singleOutput === 'string') {
+    output.path = singleOutput;
   } else {
     output = {
       ...output,
-      ...userConfig.output,
+      ...singleOutput,
     };
   }
 

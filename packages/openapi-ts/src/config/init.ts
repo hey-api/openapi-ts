@@ -14,6 +14,33 @@ import { getParser } from './parser';
 import { getPlugins } from './plugins';
 
 /**
+ * Expands a UserConfig with multiple outputs into multiple UserConfigs with single outputs
+ * @internal
+ */
+const expandMultiOutputConfigs = (
+  userConfigs: ReadonlyArray<UserConfig>,
+): ReadonlyArray<UserConfig> => {
+  const expandedConfigs: Array<UserConfig> = [];
+
+  for (const userConfig of userConfigs) {
+    if (Array.isArray(userConfig.output)) {
+      // Multi-output configuration - expand into multiple single-output configs
+      for (const output of userConfig.output) {
+        expandedConfigs.push({
+          ...userConfig,
+          output,
+        });
+      }
+    } else {
+      // Single output configuration - keep as is
+      expandedConfigs.push(userConfig);
+    }
+  }
+
+  return expandedConfigs;
+};
+
+/**
  * @internal
  */
 export const initConfigs = async (
@@ -57,9 +84,10 @@ export const initConfigs = async (
   //     )?.filepath
   //   : undefined;
 
-  const dependencies = getProjectDependencies(loadedConfigFile);
-
-  const userConfigs: ReadonlyArray<UserConfig> = Array.isArray(userConfig)
+  const dependencies = getProjectDependencies(
+    Object.keys(configFromFile).length ? loadedConfigFile : undefined,
+  );
+  const baseUserConfigs: ReadonlyArray<UserConfig> = Array.isArray(userConfig)
     ? userConfig
     : Array.isArray(configFromFile)
       ? configFromFile.map((config) =>
@@ -71,6 +99,9 @@ export const initConfigs = async (
             userConfig as UserConfig | undefined,
           ),
         ];
+
+  // Expand multi-output configurations into multiple single-output configurations
+  const userConfigs = expandMultiOutputConfigs(baseUserConfigs);
 
   const results: Array<{
     config: Config;

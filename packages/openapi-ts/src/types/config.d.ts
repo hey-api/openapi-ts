@@ -43,9 +43,11 @@ export interface UserConfig {
    */
   logs?: string | Logs;
   /**
-   * The relative location of the output folder.
+   * The relative location of the output folder. You can specify multiple
+   * outputs to generate different versions of your SDK with different
+   * configurations (e.g., different plugins, formatters, or paths).
    */
-  output: string | Output;
+  output: string | Output | (string | Output)[];
   /**
    * Customize how the input is parsed and transformed before it's passed to
    * plugins.
@@ -139,7 +141,7 @@ export type Config = Omit<
         watch: Extract<Required<Required<Input>['watch']>, object>;
       };
     logs: Extract<Required<UserConfig['logs']>, object>;
-    output: Extract<UserConfig['output'], object>;
+    output: Output;
     /**
      * Customize how the input is parsed and transformed before it's passed to
      * plugins.
