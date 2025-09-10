@@ -2,4 +2,4 @@
 '@hey-api/codegen-core': minor
 ---
 
-feat: expand symbol api
+feat: expand Symbol API
