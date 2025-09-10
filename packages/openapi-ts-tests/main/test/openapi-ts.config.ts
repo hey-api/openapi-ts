@@ -36,9 +36,9 @@ export default defineConfig(() => {
         '3.1.x',
         // 'invalid',
         // 'openai.yaml',
-        // 'full.yaml',
+        'full.yaml',
         // 'opencode.yaml',
-        'sdk-instance.yaml',
+        // 'sdk-instance.yaml',
         // 'validators-circular-ref-2.yaml',
         // 'zoom-video-sdk.json',
       ),
@@ -98,6 +98,12 @@ export default defineConfig(() => {
       },
       hooks: {
         operations: {
+          getKind() {
+            // noop
+          },
+          isMutation() {
+            // noop
+          },
           isQuery: (op) => {
             if (op.method === 'post' && op.path === '/search') {
               return true;
@@ -226,6 +232,12 @@ export default defineConfig(() => {
                 return ['query'];
               }
               return undefined;
+            },
+            isMutation() {
+              // noop
+            },
+            isQuery: () => {
+              // noop
             },
           },
         },
