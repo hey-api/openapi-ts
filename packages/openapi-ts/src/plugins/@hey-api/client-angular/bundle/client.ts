@@ -129,7 +129,7 @@ export const createClient = (config: Config = {}): Client => {
 
     let req = initialReq;
 
-    for (const fn of interceptors.request._fns) {
+    for (const fn of interceptors.request.fns) {
       if (fn) {
         req = await fn(req, opts as any);
       }
@@ -150,7 +150,7 @@ export const createClient = (config: Config = {}): Client => {
           .pipe(filter((event) => event.type === HttpEventType.Response)),
       )) as HttpResponse<unknown>;
 
-      for (const fn of interceptors.response._fns) {
+      for (const fn of interceptors.response.fns) {
         if (fn) {
           result.response = await fn(result.response, req, opts as any);
         }
@@ -176,7 +176,7 @@ export const createClient = (config: Config = {}): Client => {
 
       let finalError = error instanceof HttpErrorResponse ? error.error : error;
 
-      for (const fn of interceptors.error._fns) {
+      for (const fn of interceptors.error.fns) {
         if (fn) {
           finalError = (await fn(
             finalError,
