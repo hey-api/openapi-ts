@@ -39,13 +39,11 @@ const arrayTypeToIdentifier = ({
 }): ts.TypeNode => {
   if (!schema.items) {
     return tsc.typeArrayNode(
-      tsc.keywordTypeNode({
-        keyword: 'unknown',
-      }),
+      tsc.keywordTypeNode({ keyword: plugin.config.topType }),
     );
   }
 
-  schema = deduplicateSchema({ detectFormat: false, schema });
+  schema = deduplicateSchema({ detectFormat: true, schema });
 
   const itemTypes: Array<ts.TypeNode> = [];
 
@@ -332,7 +330,7 @@ const tupleTypeToIdentifier = ({
   if (schema.const && Array.isArray(schema.const)) {
     itemTypes = schema.const.map((value) => {
       const expression = tsc.valueToExpression({ value });
-      return expression ?? tsc.identifier({ text: 'unknown' });
+      return expression ?? tsc.identifier({ text: plugin.config.topType });
     });
   } else if (schema.items) {
     for (const item of schema.items) {
@@ -432,7 +430,7 @@ const schemaTypeToIdentifier = ({
       });
     case 'unknown':
       return tsc.keywordTypeNode({
-        keyword: 'unknown',
+        keyword: plugin.config.topType,
       });
     case 'void':
       return tsc.keywordTypeNode({

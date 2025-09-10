@@ -119,19 +119,18 @@ type ErrInterceptor<Err, Res, Req, Options> = (error: Err, response: Res, reques
 type ReqInterceptor<Req, Options> = (request: Req, options: Options) => Req | Promise<Req>;
 type ResInterceptor<Res, Req, Options> = (response: Res, request: Req, options: Options) => Res | Promise<Res>;
 declare class Interceptors<Interceptor> {
-    _fns: (Interceptor | null)[];
-    constructor();
+    fns: Array<Interceptor | null>;
     clear(): void;
-    getInterceptorIndex(id: number | Interceptor): number;
-    exists(id: number | Interceptor): boolean;
     eject(id: number | Interceptor): void;
-    update(id: number | Interceptor, fn: Interceptor): number | false | Interceptor;
+    exists(id: number | Interceptor): boolean;
+    getInterceptorIndex(id: number | Interceptor): number;
+    update(id: number | Interceptor, fn: Interceptor): number | Interceptor | false;
     use(fn: Interceptor): number;
 }
 interface Middleware<Req, Res, Err, Options> {
-    error: Pick<Interceptors<ErrInterceptor<Err, Res, Req, Options>>, 'eject' | 'use'>;
-    request: Pick<Interceptors<ReqInterceptor<Req, Options>>, 'eject' | 'use'>;
-    response: Pick<Interceptors<ResInterceptor<Res, Req, Options>>, 'eject' | 'use'>;
+    error: Interceptors<ErrInterceptor<Err, Res, Req, Options>>;
+    request: Interceptors<ReqInterceptor<Req, Options>>;
+    response: Interceptors<ResInterceptor<Res, Req, Options>>;
 }
 declare const createConfig: <T extends ClientOptions = ClientOptions>(override?: Config<Omit<ClientOptions, keyof T> & T>) => Config<Omit<ClientOptions, keyof T> & T>;
 

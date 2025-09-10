@@ -181,9 +181,18 @@ export const createTypeUnionNode = ({
   isNullable?: boolean;
   types: ReadonlyArray<any | ts.TypeNode>;
 }) => {
-  const nodes = types.map((type) => createTypeNode(type));
-  const node = ts.factory.createUnionTypeNode(nodes);
-  return maybeNullable({ isNullable, node });
+  // flatten nested unions
+  const nodes: Array<ts.TypeNode> = [];
+  for (const type of types) {
+    const node = createTypeNode(type);
+    if (ts.isUnionTypeNode(node)) {
+      nodes.push(...node.types);
+    } else {
+      nodes.push(node);
+    }
+  }
+  const unionNode = ts.factory.createUnionTypeNode(nodes);
+  return maybeNullable({ isNullable, node: unionNode });
 };
 
 /**
@@ -199,9 +208,18 @@ export const createTypeIntersectionNode = ({
   isNullable?: boolean;
   types: (any | ts.TypeNode)[];
 }) => {
-  const nodes = types.map((type) => createTypeNode(type));
-  const node = ts.factory.createIntersectionTypeNode(nodes);
-  return maybeNullable({ isNullable, node });
+  // flatten nested intersections
+  const nodes: Array<ts.TypeNode> = [];
+  for (const type of types) {
+    const node = createTypeNode(type);
+    if (ts.isIntersectionTypeNode(node)) {
+      nodes.push(...node.types);
+    } else {
+      nodes.push(node);
+    }
+  }
+  const intersectionNode = ts.factory.createIntersectionTypeNode(nodes);
+  return maybeNullable({ isNullable, node: intersectionNode });
 };
 
 /**
