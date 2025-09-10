@@ -77,7 +77,7 @@ export const createClient = (config: Config = {}): Client => {
     // @ts-expect-error
     const { opts, url } = await beforeRequest(options);
 
-    for (const fn of interceptors.request._fns) {
+    for (const fn of interceptors.request.fns) {
       if (fn) {
         await fn(opts);
       }
@@ -93,7 +93,7 @@ export const createClient = (config: Config = {}): Client => {
 
     let response = await _fetch(url, requestInit);
 
-    for (const fn of interceptors.response._fns) {
+    for (const fn of interceptors.response.fns) {
       if (fn) {
         response = await fn(response, opts);
       }
@@ -181,7 +181,7 @@ export const createClient = (config: Config = {}): Client => {
     const error = jsonError ?? textError;
     let finalError = error;
 
-    for (const fn of interceptors.error._fns) {
+    for (const fn of interceptors.error.fns) {
       if (fn) {
         finalError = (await fn(error, response, opts)) as string;
       }
@@ -218,7 +218,7 @@ export const createClient = (config: Config = {}): Client => {
             method: init.method as Config['method'],
             url,
           };
-          for (const fn of interceptors.request._fns) {
+          for (const fn of interceptors.request.fns) {
             if (fn) {
               await fn(requestInit);
               request = new Request(requestInit.url, requestInit);
