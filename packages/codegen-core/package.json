@@ -43,7 +43,8 @@
   },
   "files": [
     "dist",
-    "LICENSE.md"
+    "LICENSE.md",
+    "README.md"
   ],
   "scripts": {
     "build": "tsup && pnpm check-exports",
