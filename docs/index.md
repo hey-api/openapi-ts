@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: One OpenAPI spec.<br/>Infinite outputs.
-  tagline: Codegen for JavaScript/TypeScript projects. Trusted over 2,000,000 times each month to generate reliable API clients and SDKs.
+  tagline: Codegen for JavaScript/TypeScript projects. Trusted over 2,500,000 times each month to generate reliable API clients and SDKs.
   actions:
     - link: /openapi-ts/get-started
       text: Get Started

@@ -44,7 +44,7 @@
   "files": [
     "dist",
     "LICENSE.md",
-    "src"
+    "README.md"
   ],
   "scripts": {
     "build": "nuxt-module-build build",
