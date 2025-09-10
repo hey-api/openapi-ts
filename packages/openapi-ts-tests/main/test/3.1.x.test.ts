@@ -941,6 +941,14 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'webhook types and validator schemas',
     },
+    {
+      config: createConfig({
+        input: 'string-with-format.yaml',
+        output: 'string-with-format',
+        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
+      }),
+      description: 'anyOf string and binary string',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

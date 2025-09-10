@@ -36,9 +36,10 @@ export default defineConfig(() => {
         '3.1.x',
         // 'invalid',
         // 'openai.yaml',
-        'full.yaml',
+        // 'full.yaml',
         // 'opencode.yaml',
         // 'sdk-instance.yaml',
+        'string-with-format.yaml',
         // 'validators-circular-ref-2.yaml',
         // 'zoom-video-sdk.json',
       ),
@@ -138,9 +139,9 @@ export default defineConfig(() => {
       validate_EXPERIMENTAL: true,
     },
     plugins: [
-      customClientPlugin({
-        baseUrl: false,
-      }),
+      // customClientPlugin({
+      //   baseUrl: false,
+      // }),
       // myClientPlugin(),
       {
         // baseUrl: false,
@@ -169,7 +170,7 @@ export default defineConfig(() => {
         //   name: '我_responses_{{name}}',
         //   response: '他_response_{{name}}',
         // },
-        topType: 'any',
+        // topType: 'any',
         // tree: true,
         // webhooks: {
         //   name: 'Webby{{name}}Hook',
@@ -184,7 +185,7 @@ export default defineConfig(() => {
         // client: false,
         // include...
         // instance: true,
-        name: '@hey-api/sdk',
+        // name: '@hey-api/sdk',
         // operationId: false,
         // params: 'experiment',
         // responseStyle: 'data',
@@ -217,7 +218,7 @@ export default defineConfig(() => {
         // mutationOptions: {
         //   name: '{{name}}MO',
         // },
-        name: '@tanstack/react-query',
+        // name: '@tanstack/react-query',
         // queryKeys: {
         //   name: '{{name}}QK',
         // },
@@ -278,7 +279,7 @@ export default defineConfig(() => {
         },
         exportFromIndex: true,
         metadata: true,
-        name: 'zod',
+        // name: 'zod',
         // requests: {
         //   // case: 'SCREAMING_SNAKE_CASE',
         //   // name: 'z{{name}}TestData',
