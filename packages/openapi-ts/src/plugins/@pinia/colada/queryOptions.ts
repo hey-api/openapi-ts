@@ -42,15 +42,14 @@ export const createQueryOptions = ({
     operation,
   });
 
-  const hasAnyRequestFields = hasOperationPathOrQueryAny(operation);
   if (!state.hasQueries) {
     state.hasQueries = true;
+  }
 
-    if (hasAnyRequestFields && !state.hasCreateQueryKeyParamsFunction) {
-      createQueryKeyType({ plugin });
-      createQueryKeyFunction({ plugin });
-      state.hasCreateQueryKeyParamsFunction = true;
-    }
+  if (!state.hasCreateQueryKeyParamsFunction) {
+    createQueryKeyType({ plugin });
+    createQueryKeyFunction({ plugin });
+    state.hasCreateQueryKeyParamsFunction = true;
   }
 
   const symbolUseQueryOptions = f.ensureSymbol({
@@ -71,25 +70,25 @@ export const createQueryOptions = ({
       name: operation.id,
     }),
   });
-  if (hasAnyRequestFields) {
-    const node = queryKeyStatement({
-      operation,
-      plugin,
-      symbol: symbolQueryKey,
-    });
-    symbolQueryKey.update({ value: node });
-  }
+  const node = queryKeyStatement({
+    operation,
+    plugin,
+    symbol: symbolQueryKey,
+  });
+  symbolQueryKey.update({ value: node });
 
   const typeData = useTypeData({ operation, plugin });
   const { strippedTypeData } = getPublicTypeData({
     plugin,
     typeData,
   });
+  const hasAnyRequestFields = hasOperationPathOrQueryAny(operation);
+  const needsOptionsScope = hasAnyRequestFields || !!operation.body;
   const awaitSdkExpression = tsc.awaitExpression({
     expression: tsc.callExpression({
       functionName: queryFn,
       parameters: [
-        hasAnyRequestFields
+        needsOptionsScope
           ? tsc.objectExpression({
               multiLine: true,
               obj: [
@@ -130,14 +129,10 @@ export const createQueryOptions = ({
   const queryOptionsObj: Array<{ key: string; value: ts.Expression }> = [
     {
       key: 'key',
-      value: hasAnyRequestFields
-        ? tsc.callExpression({
-            functionName: symbolQueryKey.placeholder,
-            parameters: [optionsParamName],
-          })
-        : tsc.arrayLiteralExpression({
-            elements: [tsc.ots.string(operation.id)],
-          }),
+      value: tsc.callExpression({
+        functionName: symbolQueryKey.placeholder,
+        parameters: needsOptionsScope ? [optionsParamName] : [],
+      }),
     },
     {
       key: 'query',
@@ -176,7 +171,7 @@ export const createQueryOptions = ({
     expression: tsc.callExpression({
       functionName: 'defineQueryOptions',
       parameters: [
-        hasAnyRequestFields
+        needsOptionsScope
           ? tsc.arrowFunction({
               parameters: [
                 {
