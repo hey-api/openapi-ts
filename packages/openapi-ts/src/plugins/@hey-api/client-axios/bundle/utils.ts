@@ -125,7 +125,6 @@ export const setAuthParams = async ({
 
 export const buildUrl: Client['buildUrl'] = (options) =>
   getUrl({
-    baseUrl: options.baseURL as string,
     path: options.path,
     // let `paramsSerializer()` handle query params if it exists
     query: !options.paramsSerializer ? options.query : undefined,
