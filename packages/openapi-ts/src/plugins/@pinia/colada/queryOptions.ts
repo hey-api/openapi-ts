@@ -10,11 +10,7 @@ import {
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
-import {
-  createQueryKeyFunction,
-  createQueryKeyType,
-  queryKeyStatement,
-} from './queryKey';
+import { ensureQueryKeyInfra, queryKeyStatement } from './queryKey';
 import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
 import { useTypeData } from './useType';
@@ -46,20 +42,8 @@ export const createQueryOptions = ({
     state.hasQueries = true;
   }
 
-  if (!state.hasCreateQueryKeyParamsFunction) {
-    createQueryKeyType({ plugin });
-    createQueryKeyFunction({ plugin });
-    state.hasCreateQueryKeyParamsFunction = true;
-  }
+  ensureQueryKeyInfra({ plugin, state });
 
-  const symbolUseQueryOptions = f.ensureSymbol({
-    name: 'UseQueryOptions',
-    selector: plugin.api.getSelector('UseQueryOptions'),
-  });
-  f.addImport({
-    from: plugin.name,
-    typeNames: [symbolUseQueryOptions.name],
-  });
   f.addImport({ from: plugin.name, names: ['defineQueryOptions'] });
 
   state.hasUsedQueryFn = true;
