@@ -169,6 +169,7 @@ export default defineConfig(() => {
         //   name: '我_responses_{{name}}',
         //   response: '他_response_{{name}}',
         // },
+        topType: 'any',
         // tree: true,
         // webhooks: {
         //   name: 'Webby{{name}}Hook',

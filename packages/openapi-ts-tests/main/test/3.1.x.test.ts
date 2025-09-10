@@ -70,7 +70,20 @@ describe(`OpenAPI ${version}`, () => {
         input: 'additional-properties-true.json',
         output: 'additional-properties-true',
       }),
-      description: 'allows arbitrary properties on objects',
+      description: 'allows arbitrary properties on objects (unknown top type)',
+    },
+    {
+      config: createConfig({
+        input: 'additional-properties-true.json',
+        output: 'additional-properties-true-any',
+        plugins: [
+          {
+            name: '@hey-api/typescript',
+            topType: 'any',
+          },
+        ],
+      }),
+      description: 'allows arbitrary properties on objects (any top type)',
     },
     {
       config: createConfig({
