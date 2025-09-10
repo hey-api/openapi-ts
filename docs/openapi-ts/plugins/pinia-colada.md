@@ -100,7 +100,7 @@ useQuery(getPetByIdQuery, () => ({
 }));
 ```
 
-To pass `useQuery` [configuration](https://pinia-colada.esm.dev/api/@pinia/colada/interfaces/UseQueryOptions.html#Properties):
+To pass `useQuery` [properties](https://pinia-colada.esm.dev/api/@pinia/colada/interfaces/UseQueryOptions.html#Properties):
 
 ```ts
 const petId = ref<number | null>(null);
