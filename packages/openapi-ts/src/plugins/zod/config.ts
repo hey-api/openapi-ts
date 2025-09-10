@@ -1,7 +1,7 @@
 import colors from 'ansi-colors';
 
 import { definePluginConfig, mappers } from '../shared/utils/config';
-import { api } from './api';
+import { Api } from './api';
 import { handler } from './plugin';
 import type { ZodPlugin } from './types';
 
@@ -10,7 +10,9 @@ type CompatibilityVersion = NonNullable<
 >;
 
 export const defaultConfig: ZodPlugin['Config'] = {
-  api,
+  api: new Api({
+    name: 'zod',
+  }),
   config: {
     case: 'camelCase',
     comments: true,

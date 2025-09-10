@@ -1,9 +1,13 @@
 import { definePluginConfig } from '../../shared/utils/config';
 import { handler } from '../query-core/plugin';
 import { handlerLegacy } from '../query-core/plugin-legacy';
+import { Api } from './api';
 import type { TanStackVueQueryPlugin } from './types';
 
 export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
+  api: new Api({
+    name: '@tanstack/vue-query',
+  }),
   config: {
     case: 'camelCase',
     comments: true,

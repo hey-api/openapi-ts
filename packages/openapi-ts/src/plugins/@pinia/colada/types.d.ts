@@ -1,6 +1,7 @@
 import type { IR } from '../../../ir/types';
 import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
+import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'@pinia/colada'> &
   Plugin.Hooks & {
@@ -28,14 +29,6 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
      * @default false
      */
     exportFromIndex?: boolean;
-    /**
-     * Group generated files by OpenAPI tags. When enabled, operations will be organized
-     * into separate files based on their tags, allowing for better code organization
-     * and tree-shaking.
-     *
-     * @default false
-     */
-    groupByTag?: boolean;
     /**
      * Configuration for generated mutation options helpers.
      *
@@ -226,14 +219,6 @@ export type Config = Plugin.Name<'@pinia/colada'> &
      */
     exportFromIndex: boolean;
     /**
-     * Group generated files by OpenAPI tags. When enabled, operations will be organized
-     * into separate files based on their tags, allowing for better code organization
-     * and tree-shaking.
-     *
-     * @default false
-     */
-    groupByTag: boolean;
-    /**
      * Resolved configuration for generated mutation options helpers.
      */
     mutationOptions: {
@@ -374,4 +359,4 @@ export type Config = Plugin.Name<'@pinia/colada'> &
     };
   };
 
-export type PiniaColadaPlugin = DefinePlugin<UserConfig, Config>;
+export type PiniaColadaPlugin = DefinePlugin<UserConfig, Config, IApi>;
