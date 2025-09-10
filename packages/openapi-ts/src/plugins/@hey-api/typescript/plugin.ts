@@ -43,7 +43,7 @@ const arrayTypeToIdentifier = ({
     );
   }
 
-  schema = deduplicateSchema({ detectFormat: false, schema });
+  schema = deduplicateSchema({ detectFormat: true, schema });
 
   const itemTypes: Array<ts.TypeNode> = [];
 
