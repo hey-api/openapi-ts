@@ -1,0 +1,15 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 string with format example
+  version: '1'
+components:
+  schemas:
+    Foo:
+      properties:
+        foo:
+          items:
+            anyOf:
+              - type: string
+                format: binary
+              - type: string
+          type: array
