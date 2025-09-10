@@ -12,6 +12,7 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
     case: 'PascalCase',
     exportFromIndex: true,
     style: 'preserve',
+    topType: 'unknown',
     tree: false,
   },
   handler,

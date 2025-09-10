@@ -200,6 +200,16 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> & {
         response?: StringName;
       };
   /**
+   * The top type to use for untyped or unspecified schema values.
+   *
+   * Can be:
+   * - `unknown` (default): safe top type, you must narrow before use
+   * - `any`: disables type checking, can be used anywhere
+   *
+   * @default 'unknown'
+   */
+  topType?: 'any' | 'unknown';
+  /**
    * Configuration for webhook-specific types.
    *
    * Controls generation of types for webhook payloads and webhook requests.
@@ -429,6 +439,12 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
      */
     response: StringName;
   };
+  /**
+   * The top type to use for untyped or unspecified schema values.
+   *
+   * @default 'unknown'
+   */
+  topType: 'any' | 'unknown';
   /**
    * Configuration for webhook-specific types.
    *
