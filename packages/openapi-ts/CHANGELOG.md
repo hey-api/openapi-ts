@@ -1,5 +1,29 @@
 # @hey-api/openapi-ts
 
+## 0.83.0
+
+### Minor Changes
+
+- feat: Symbol API
+
+### Symbol API
+
+This release adds the Symbol API, which significantly reduces the risk of naming collisions. While the generated output should only include formatting changes, this feature introduces breaking changes to the Plugin API that affect custom plugins.
+
+We will update the [custom plugin guide](https://heyapi.dev/openapi-ts/plugins/custom) once the Plugin API becomes more stable. ([#2582](https://github.com/hey-api/openapi-ts/pull/2582)) ([`10aea89`](https://github.com/hey-api/openapi-ts/commit/10aea8910771ff72ef9b08d4eacdd6b028833c4c)) by [@mrlubos](https://github.com/mrlubos)
+
+- feat(pinia-colada): remove `groupByTag` option
+
+### Removed `groupByTag` Pinia Colada option
+
+This option has been removed to provide a more consistent API across plugins. We plan to bring it back in a future release. ([#2582](https://github.com/hey-api/openapi-ts/pull/2582)) ([`10aea89`](https://github.com/hey-api/openapi-ts/commit/10aea8910771ff72ef9b08d4eacdd6b028833c4c)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.1.0
+
 ## 0.82.5
 
 ### Patch Changes
