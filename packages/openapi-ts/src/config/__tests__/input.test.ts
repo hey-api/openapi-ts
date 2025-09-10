@@ -169,6 +169,20 @@ describe('input config', () => {
       expect(result.watch.enabled).toBe(true);
       expect(result.watch.interval).toBe(1500);
     });
+
+    it('should work with multi-output configurations', () => {
+      const userConfig: UserConfig = {
+        input: 'readme:abc123',
+        output: ['src/client-1', 'src/client-2'],
+      };
+
+      const result = getInput(userConfig);
+      expect(result.path).toBe(
+        'https://dash.readme.com/api/v1/api-registry/abc123',
+      );
+      // Input processing should be the same regardless of output configuration
+      expect(result.watch.enabled).toBe(false);
+    });
   });
 
   describe('error handling', () => {

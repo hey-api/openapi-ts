@@ -44,6 +44,7 @@ export const getInput = (userConfig: UserConfig): Config['input'] => {
     input.path = userConfig.input;
   } else if (
     userConfig.input &&
+    !Array.isArray(userConfig.input) &&
     (userConfig.input.path !== undefined ||
       userConfig.input.organization !== undefined)
   ) {

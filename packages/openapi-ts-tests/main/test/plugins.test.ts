@@ -539,7 +539,13 @@ for (const version of versions) {
       await createClient(config);
 
       const outputPath =
-        typeof config.output === 'string' ? config.output : config.output.path;
+        typeof config.output === 'string'
+          ? config.output
+          : Array.isArray(config.output)
+            ? typeof config.output[0] === 'string'
+              ? config.output[0]
+              : (config.output[0] as any)?.path || ''
+            : (config.output as any).path;
       const filePaths = getFilePaths(outputPath);
 
       await Promise.all(

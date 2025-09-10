@@ -62,6 +62,68 @@ describe('OpenAPI v2', () => {
   });
 });
 
+describe('Multi-output', () => {
+  it('generates multiple outputs with different configurations', async () => {
+    const results = await createClient({
+      input: V3_SPEC_PATH,
+      logs: { level: 'silent' },
+      output: [
+        toOutputPath('multi-output-legacy-1'),
+        {
+          clean: true,
+          indexFile: false,
+          path: toOutputPath('multi-output-legacy-2'),
+        },
+      ],
+      plugins: ['legacy/fetch', '@hey-api/typescript'],
+    });
+
+    expect(results).toHaveLength(2);
+
+    // Verify that both results are client objects
+    results.forEach((result) => {
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('services');
+    });
+  });
+
+  it('generates multiple outputs with different plugins', async () => {
+    const results = await createClient([
+      {
+        input: V3_SPEC_PATH,
+        logs: { level: 'silent' },
+        output: toOutputPath('multi-output-fetch'),
+        plugins: ['legacy/fetch', '@hey-api/typescript'],
+      },
+      {
+        input: V3_SPEC_PATH,
+        logs: { level: 'silent' },
+        output: toOutputPath('multi-output-sdk'),
+        plugins: ['@hey-api/typescript', '@hey-api/sdk'],
+      },
+    ]);
+
+    expect(results).toHaveLength(2);
+
+    // Verify that both results are valid client/context objects
+    results.forEach((result) => {
+      expect(result).toBeDefined();
+    });
+  });
+
+  it('handles empty output array gracefully', async () => {
+    const results = await createClient({
+      input: V3_SPEC_PATH,
+      logs: { level: 'silent' },
+      output: [],
+      plugins: ['@hey-api/typescript'],
+    });
+
+    // Should result in no outputs
+    expect(results).toHaveLength(0);
+  });
+});
+
 describe('OpenAPI v3', () => {
   const config: UserConfig = {
     exportCore: true,
