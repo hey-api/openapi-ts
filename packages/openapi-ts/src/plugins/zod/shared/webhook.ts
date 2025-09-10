@@ -1,6 +1,5 @@
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
-import { zodId } from '../constants';
 import { exportZodSchema } from '../export';
 import type { ZodPlugin } from '../types';
 import type { ZodSchema } from './types';
@@ -14,7 +13,7 @@ export const webhookToZodSchema = ({
   operation: IR.OperationObject;
   plugin: ZodPlugin['Instance'];
 }) => {
-  const file = plugin.context.file({ id: zodId })!;
+  const f = plugin.gen.ensureFile(plugin.output);
 
   if (plugin.config.webhooks.enabled) {
     const requiredProperties = new Set<string>();
@@ -115,32 +114,31 @@ export const webhookToZodSchema = ({
     schemaData.required = [...requiredProperties];
 
     const zodSchema = getZodSchema(schemaData);
-    const schemaId = plugin.api.getId({ operation, type: 'webhook-request' });
-    const typeInferId = plugin.config.webhooks.types.infer.enabled
-      ? plugin.api.getId({ operation, type: 'type-infer-webhook-request' })
+    const symbol = f.addSymbol({
+      name: buildName({
+        config: plugin.config.webhooks,
+        name: operation.id,
+      }),
+      selector: plugin.api.getSelector('webhook-request', operation.id),
+    });
+    const typeInferSymbol = plugin.config.webhooks.types.infer.enabled
+      ? f.addSymbol({
+          name: buildName({
+            config: plugin.config.webhooks.types.infer,
+            name: operation.id,
+          }),
+          selector: plugin.api.getSelector(
+            'type-infer-webhook-request',
+            operation.id,
+          ),
+        })
       : undefined;
     exportZodSchema({
       plugin,
       schema: schemaData,
-      schemaId,
-      typeInferId,
+      symbol,
+      typeInferSymbol,
       zodSchema,
     });
-    file.updateNodeReferences(
-      schemaId,
-      buildName({
-        config: plugin.config.webhooks,
-        name: operation.id,
-      }),
-    );
-    if (typeInferId) {
-      file.updateNodeReferences(
-        typeInferId,
-        buildName({
-          config: plugin.config.webhooks.types.infer,
-          name: operation.id,
-        }),
-      );
-    }
   }
 };

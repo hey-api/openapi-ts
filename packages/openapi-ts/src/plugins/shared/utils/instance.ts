@@ -243,6 +243,22 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return this.context.plugins[name] as any;
   }
 
+  /**
+   * Retrieves a registered plugin instance by its name from the context. This
+   * allows plugins to access other plugins that have been registered in the
+   * same context, enabling cross-plugin communication and dependencies.
+   *
+   * @param name Plugin name as defined in the configuration.
+   * @returns The plugin instance if found, throw otherwise.
+   */
+  getPluginOrThrow<T extends keyof PluginConfigMap>(
+    name: T,
+  ): T extends any ? PluginInstance<PluginConfigMap[T]> : never {
+    const plugin = this.getPlugin(name);
+    if (!plugin) throw new Error(`plugin not found ${name}`);
+    return plugin as any;
+  }
+
   hooks = {
     operation: {
       isMutation: (operation: IR.OperationObject): boolean =>

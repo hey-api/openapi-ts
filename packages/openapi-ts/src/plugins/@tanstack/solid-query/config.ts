@@ -1,9 +1,13 @@
 import { definePluginConfig } from '../../shared/utils/config';
 import { handler } from '../query-core/plugin';
 import { handlerLegacy } from '../query-core/plugin-legacy';
+import { Api } from './api';
 import type { TanStackSolidQueryPlugin } from './types';
 
 export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
+  api: new Api({
+    name: '@tanstack/solid-query',
+  }),
   config: {
     case: 'camelCase',
     comments: true,

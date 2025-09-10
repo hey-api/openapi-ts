@@ -4,10 +4,3 @@ export interface PluginState {
   hasQueries: boolean;
   hasUsedQueryFn: boolean;
 }
-
-export const getInitialState = (): PluginState => ({
-  hasCreateQueryKeyParamsFunction: false,
-  hasMutations: false,
-  hasQueries: false,
-  hasUsedQueryFn: false,
-});

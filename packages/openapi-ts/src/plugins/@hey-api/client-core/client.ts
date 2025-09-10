@@ -1,9 +1,10 @@
+import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+
 import { clientModulePath } from '../../../generate/client';
 import { tsc } from '../../../tsc';
 import { parseUrl } from '../../../utils/url';
-import { typesId } from '../typescript/ref';
 import type { PluginHandler } from './types';
-import { clientId, getClientBaseUrlKey } from './utils';
+import { getClientBaseUrlKey } from './utils';
 
 const resolveBaseUrlString = ({
   plugin,
@@ -27,40 +28,46 @@ const resolveBaseUrlString = ({
   return servers[typeof baseUrl === 'number' ? baseUrl : 0]?.url;
 };
 
-export const createClient = ({ plugin }: Parameters<PluginHandler>[0]) => {
-  const file = plugin.context.file({ id: clientId })!;
+export const createClient: PluginHandler = ({ plugin }) => {
+  const f = plugin.gen.ensureFile(plugin.output);
 
   const clientModule = clientModulePath({
     config: plugin.context.config,
-    sourceOutput: file.nameWithoutExtension(),
+    sourceOutput: f.path,
   });
-  const createClient = file.import({
-    module: clientModule,
-    name: 'createClient',
+  const symbolCreateClient = f.addSymbol({ name: 'createClient' });
+  f.addImport({
+    aliases: {
+      [symbolCreateClient.name]: symbolCreateClient.placeholder,
+    },
+    from: clientModule,
+    names: [symbolCreateClient.name],
   });
-  const createConfig = file.import({
-    module: clientModule,
-    name: 'createConfig',
+  const symbolCreateConfig = f.addSymbol({ name: 'createConfig' });
+  f.addImport({
+    aliases: {
+      [symbolCreateConfig.name]: symbolCreateConfig.placeholder,
+    },
+    from: clientModule,
+    names: [symbolCreateConfig.name],
   });
-  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
-  const fileTypeScript = plugin.context.file({ id: typesId })!;
-  const clientOptions = file.import({
-    asType: true,
-    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-    name: fileTypeScript.getName(
-      pluginTypeScript.api.getId({ type: 'ClientOptions' }),
-    ),
+  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+  const symbolClientOptions = plugin.gen.selectSymbolFirstOrThrow(
+    pluginTypeScript.api.getSelector('ClientOptions'),
+  );
+  f.addImport({
+    from: symbolClientOptions.file,
+    typeNames: [symbolClientOptions.placeholder],
   });
 
-  const createClientConfig = plugin.config.runtimeConfigPath
-    ? file.import({
-        module: file.relativePathToFile({
-          context: plugin.context,
-          id: plugin.config.runtimeConfigPath,
-        }),
-        name: 'createClientConfig',
-      })
-    : undefined;
+  let symbolCreateClientConfig: ICodegenSymbolOut | undefined;
+  if (plugin.config.runtimeConfigPath) {
+    symbolCreateClientConfig = f.addSymbol({ name: 'createClientConfig' });
+    f.addImport({
+      from: f.relativePathToFile({ path: plugin.config.runtimeConfigPath }),
+      names: [symbolCreateClientConfig.placeholder],
+    });
+  }
 
   const defaultValues: Array<unknown> = [];
 
@@ -94,30 +101,34 @@ export const createClient = ({ plugin }: Parameters<PluginHandler>[0]) => {
 
   const createConfigParameters = [
     tsc.callExpression({
-      functionName: createConfig.name,
+      functionName: symbolCreateConfig.placeholder,
       parameters: defaultValues.length
         ? [tsc.objectExpression({ obj: defaultValues })]
         : undefined,
-      types: clientOptions.name
-        ? [tsc.typeReferenceNode({ typeName: clientOptions.name })]
-        : undefined,
+      types: [
+        tsc.typeReferenceNode({ typeName: symbolClientOptions.placeholder }),
+      ],
     }),
   ];
 
+  const symbolClient = f.addSymbol({
+    name: 'client',
+    selector: plugin.api.getSelector('client'),
+  });
   const statement = tsc.constVariable({
     exportConst: true,
     expression: tsc.callExpression({
-      functionName: createClient.name,
-      parameters: createClientConfig
+      functionName: symbolCreateClient.placeholder,
+      parameters: symbolCreateClientConfig
         ? [
             tsc.callExpression({
-              functionName: createClientConfig.name,
+              functionName: symbolCreateClientConfig.placeholder,
               parameters: createConfigParameters,
             }),
           ]
         : createConfigParameters,
     }),
-    name: 'client',
+    name: symbolClient.placeholder,
   });
-  file.add(statement);
+  symbolClient.update({ value: statement });
 };

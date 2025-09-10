@@ -1,9 +1,13 @@
 import { definePluginConfig } from '../../shared/utils/config';
+import { Api } from './api';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiSchemasPlugin } from './types';
 
 export const defaultConfig: HeyApiSchemasPlugin['Config'] = {
+  api: new Api({
+    name: '@hey-api/schemas',
+  }),
   config: {
     exportFromIndex: false,
     nameBuilder: (name) => `${name}Schema`,

@@ -7,7 +7,6 @@ import ts from 'typescript';
 import type { Client } from '../plugins/@hey-api/client-core/types';
 import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import type { DefinePlugin } from '../plugins/types';
-import type { ImportExportItemObject } from '../tsc/utils';
 import type { Config } from '../types/config';
 import { splitNameAndExtension } from './file';
 import { ensureDirSync, relativeModulePath } from './utils';
@@ -52,17 +51,6 @@ export const clientModulePath = ({
 
   return client.name;
 };
-
-export const clientApi = {
-  Options: {
-    asType: true,
-    name: 'Options',
-  },
-  OptionsLegacyParser: {
-    asType: true,
-    name: 'OptionsLegacyParser',
-  },
-} satisfies Record<string, ImportExportItemObject>;
 
 /**
  * Recursively copies files and directories.

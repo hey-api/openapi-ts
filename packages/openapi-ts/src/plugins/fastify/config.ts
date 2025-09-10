@@ -1,8 +1,12 @@
 import { definePluginConfig } from '../shared/utils/config';
+import { Api } from './api';
 import { handler } from './plugin';
 import type { FastifyPlugin } from './types';
 
 export const defaultConfig: FastifyPlugin['Config'] = {
+  api: new Api({
+    name: 'fastify',
+  }),
   config: {
     exportFromIndex: false,
   },

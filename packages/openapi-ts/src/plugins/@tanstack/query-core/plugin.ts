@@ -1,7 +1,8 @@
-import { clientApi } from '../../../generate/client';
+import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+
+import { TypeScriptRenderer } from '../../../generate/renderer';
 import { stringCase } from '../../../utils/stringCase';
-import { clientId } from '../../@hey-api/client-core/utils';
-import { sdkId } from '../../@hey-api/sdk/constants';
+import { getClientPlugin } from '../../@hey-api/client-core/utils';
 import { operationClasses } from '../../@hey-api/sdk/operation';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { createInfiniteQueryOptions } from './infiniteQueryOptions';
@@ -10,11 +11,11 @@ import { createQueryOptions } from './queryOptions';
 import type { PluginHandler, PluginState } from './types';
 import { createUseQuery } from './useQuery';
 
-export const handler = ({ plugin }: Parameters<PluginHandler>[0]) => {
-  const file = plugin.createFile({
-    case: plugin.config.case,
-    id: plugin.name,
-    path: plugin.output,
+export const handler: PluginHandler = ({ plugin }) => {
+  const f = plugin.gen.createFile(plugin.output, {
+    extension: '.ts',
+    path: '{{path}}.gen',
+    renderer: new TypeScriptRenderer(),
   });
 
   const state: PluginState = {
@@ -27,16 +28,21 @@ export const handler = ({ plugin }: Parameters<PluginHandler>[0]) => {
     typeInfiniteData: undefined!,
   };
 
-  file.import({
-    ...clientApi.Options,
-    module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
-  });
+  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
+  const symbolOptions = plugin.gen.selectSymbolFirst(
+    sdkPlugin.api.getSelector('Options'),
+  );
+  if (symbolOptions) {
+    f.addImport({
+      from: symbolOptions.file,
+      typeNames: [symbolOptions.placeholder],
+    });
+  }
 
   plugin.forEach('operation', ({ operation }) => {
     state.hasUsedQueryFn = false;
 
-    const sdkPlugin = plugin.getPlugin('@hey-api/sdk');
-    const classes = sdkPlugin?.config.asClass
+    const classes = sdkPlugin.config.asClass
       ? operationClasses({
           context: plugin.context,
           operation,
@@ -105,21 +111,39 @@ export const handler = ({ plugin }: Parameters<PluginHandler>[0]) => {
     }
 
     if (state.hasUsedQueryFn) {
-      file.import({
-        module: file.relativePathToFile({ context: plugin.context, id: sdkId }),
-        name: queryFn.split('.')[0]!,
-      });
+      const symbolImport = plugin.gen.selectSymbolFirst(
+        entry
+          ? sdkPlugin.api.getSelector('class', entry.path[0])
+          : sdkPlugin.api.getSelector('function', operation.id),
+      );
+      if (symbolImport) {
+        f.addImport({
+          from: symbolImport.file,
+          names: [symbolImport.placeholder],
+        });
+      }
     }
   });
 
   if (state.hasQueries || state.hasInfiniteQueries) {
-    file.import({
-      alias: '_heyApiClient',
-      module: file.relativePathToFile({
-        context: plugin.context,
-        id: clientId,
-      }),
-      name: 'client',
-    });
+    let symbolClient: ICodegenSymbolOut | undefined;
+    const client = getClientPlugin(plugin.context.config);
+    if (client.api && 'getSelector' in client.api) {
+      symbolClient = plugin.gen.selectSymbolFirst(
+        // @ts-expect-error
+        client.api.getSelector('client'),
+      );
+      if (symbolClient) {
+        f.addImport({
+          from: symbolClient.file,
+          names: [symbolClient.placeholder],
+        });
+      }
+    }
+  }
+
+  if (plugin.config.exportFromIndex && f.hasContent()) {
+    const index = plugin.gen.ensureFile('index');
+    index.addExport({ from: f, namespaceImport: true });
   }
 };

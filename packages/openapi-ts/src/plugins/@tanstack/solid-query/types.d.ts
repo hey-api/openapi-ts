@@ -1,6 +1,7 @@
 import type { IR } from '../../../ir/types';
 import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
+import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
   Plugin.Hooks & {
@@ -556,4 +557,4 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
     };
   };
 
-export type TanStackSolidQueryPlugin = DefinePlugin<UserConfig, Config>;
+export type TanStackSolidQueryPlugin = DefinePlugin<UserConfig, Config, IApi>;

@@ -1,10 +1,12 @@
 import { definePluginConfig } from '../shared/utils/config';
-import { api } from './api';
+import { Api } from './api';
 import { handler } from './plugin';
 import type { ValibotPlugin } from './types';
 
 export const defaultConfig: ValibotPlugin['Config'] = {
-  api,
+  api: new Api({
+    name: 'valibot',
+  }),
   config: {
     case: 'camelCase',
     comments: true,

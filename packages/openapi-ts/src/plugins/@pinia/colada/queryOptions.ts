@@ -1,91 +1,90 @@
 import type ts from 'typescript';
 
-import { clientApi } from '../../../generate/client';
-import type { GeneratedFile } from '../../../generate/file';
-import {
-  hasOperationDataRequired,
-  hasOperationPathOrQueryAny,
-} from '../../../ir/operation';
+import { hasOperationPathOrQueryAny } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
+import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
-import { sdkId } from '../../@hey-api/sdk/constants';
 import {
   createOperationComment,
   hasOperationSse,
+  isOperationOptionsRequired,
 } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
-import { createQueryKeyFunction, createQueryKeyType } from './queryKey';
+import {
+  createQueryKeyFunction,
+  createQueryKeyType,
+  queryKeyStatement,
+} from './queryKey';
 import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
-import { getPublicTypeData, useTypeData } from './utils';
-
+import { useTypeData } from './useType';
+import { getPublicTypeData } from './utils';
 const optionsParamName = 'options';
 
 export const createQueryOptions = ({
-  file,
   operation,
   plugin,
   queryFn,
   state,
 }: {
-  file: GeneratedFile;
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
   queryFn: string;
   state: PluginState;
 }): void => {
-  if (
-    !plugin.config.queryOptions.enabled ||
-    !plugin.hooks.operation.isQuery(operation) ||
-    hasOperationSse({ operation })
-  ) {
+  if (hasOperationSse({ operation })) {
     return;
   }
 
+  const f = plugin.gen.ensureFile(plugin.output);
+  const isRequiredOptions = isOperationOptionsRequired({
+    context: plugin.context,
+    operation,
+  });
+
+  const hasAnyRequestFields = hasOperationPathOrQueryAny(operation);
   if (!state.hasQueries) {
     state.hasQueries = true;
-    file.import({
-      module: '@pinia/colada',
-      name: 'defineQueryOptions',
-    });
+
+    if (hasAnyRequestFields && !state.hasCreateQueryKeyParamsFunction) {
+      createQueryKeyType({ plugin });
+      createQueryKeyFunction({ plugin });
+      state.hasCreateQueryKeyParamsFunction = true;
+    }
   }
+
+  const symbolUseQueryOptions = f.ensureSymbol({
+    name: 'UseQueryOptions',
+    selector: plugin.api.getSelector('UseQueryOptions'),
+  });
+  f.addImport({
+    from: plugin.name,
+    typeNames: [symbolUseQueryOptions.name],
+  });
+  f.addImport({ from: plugin.name, names: ['defineQueryOptions'] });
 
   state.hasUsedQueryFn = true;
 
-  const hasAnyRequestFields = hasOperationPathOrQueryAny(operation);
-  if (hasAnyRequestFields && !state.hasCreateQueryKeyParamsFunction) {
-    createQueryKeyType({ file, plugin });
-    createQueryKeyFunction({ file, plugin });
-
-    state.hasCreateQueryKeyParamsFunction = true;
-  }
-
-  const identifierCreateQueryKey = file.identifier({
-    $ref: '#/pinia-colada-create-query-key/createQueryKey',
-    case: plugin.config.case,
-    create: true,
-    namespace: 'value',
+  const symbolQueryKey = f.addSymbol({
+    name: buildName({
+      config: plugin.config.queryKeys,
+      name: operation.id,
+    }),
   });
-
-  let tagsExpression: ts.Expression | undefined;
-  if (
-    plugin.config.queryKeys.tags &&
-    operation.tags &&
-    operation.tags.length > 0
-  ) {
-    tagsExpression = tsc.arrayLiteralExpression({
-      elements: operation.tags.map((tag) => tsc.stringLiteral({ text: tag })),
+  if (hasAnyRequestFields) {
+    const node = queryKeyStatement({
+      operation,
+      plugin,
+      symbol: symbolQueryKey,
     });
+    symbolQueryKey.update({ value: node });
   }
 
-  const identifierQueryOptions = file.identifier({
-    $ref: `#/pinia-colada-query-options/${operation.id}`,
-    case: plugin.config.queryOptions.case,
-    create: true,
-    nameTransformer: plugin.config.queryOptions.name,
-    namespace: 'value',
+  const typeData = useTypeData({ operation, plugin });
+  const { strippedTypeData } = getPublicTypeData({
+    plugin,
+    typeData,
   });
-
   const awaitSdkExpression = tsc.awaitExpression({
     expression: tsc.callExpression({
       functionName: queryFn,
@@ -94,30 +93,22 @@ export const createQueryOptions = ({
           ? tsc.objectExpression({
               multiLine: true,
               obj: [
-                {
-                  spread: optionsParamName,
-                },
-                {
-                  key: 'throwOnError',
-                  value: true,
-                },
+                ...(isRequiredOptions
+                  ? ([{ spread: optionsParamName }] as const)
+                  : []),
+                { key: 'throwOnError', value: true },
               ],
             })
           : tsc.objectExpression({
               multiLine: false,
-              obj: [
-                {
-                  key: 'throwOnError',
-                  value: true,
-                },
-              ],
+              obj: [{ key: 'throwOnError', value: true }],
             }),
       ],
     }),
   });
 
   const statements: Array<ts.Statement> = [];
-  if (plugin.getPlugin('@hey-api/sdk')?.config.responseStyle === 'data') {
+  if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push(
       tsc.returnVariable({
         expression: awaitSdkExpression,
@@ -141,12 +132,8 @@ export const createQueryOptions = ({
       key: 'key',
       value: hasAnyRequestFields
         ? tsc.callExpression({
-            functionName: identifierCreateQueryKey.name || '',
-            parameters: [
-              tsc.ots.string(operation.id),
-              optionsParamName,
-              tagsExpression,
-            ].filter(Boolean) as Array<string | ts.Expression>,
+            functionName: symbolQueryKey.placeholder,
+            parameters: [optionsParamName],
           })
         : tsc.arrayLiteralExpression({
             elements: [tsc.ots.string(operation.id)],
@@ -171,21 +158,17 @@ export const createQueryOptions = ({
     });
   }
 
-  const getOptionsParamType = (): string => {
-    file.import({
-      ...clientApi.Options,
-      module: file.relativePathToFile({
-        context: plugin.context,
-        id: sdkId,
+  const symbolQueryOptionsFn = f
+    .ensureSymbol({
+      selector: plugin.api.getSelector('queryOptionsFn', operation.id),
+    })
+    .update({
+      name: buildName({
+        config: plugin.config.queryOptions,
+        name: operation.id,
       }),
     });
-
-    const typeData = useTypeData({ file, operation, plugin });
-    return getPublicTypeData({ plugin, typeData }).strippedTypeData!;
-  };
-
-  const isRequiredOptions = hasOperationDataRequired(operation);
-  const exportedDefineQuery = tsc.constVariable({
+  const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
@@ -199,7 +182,7 @@ export const createQueryOptions = ({
                 {
                   isRequired: isRequiredOptions,
                   name: optionsParamName,
-                  type: getOptionsParamType(),
+                  type: strippedTypeData,
                 },
               ],
               statements: tsc.objectExpression({ obj: queryOptionsObj }),
@@ -207,8 +190,8 @@ export const createQueryOptions = ({
           : tsc.objectExpression({ obj: queryOptionsObj }),
       ],
     }),
-    name: identifierQueryOptions.name || '',
+    name: symbolQueryOptionsFn.placeholder,
   });
 
-  file.add(exportedDefineQuery);
+  symbolQueryOptionsFn.update({ value: statement });
 };

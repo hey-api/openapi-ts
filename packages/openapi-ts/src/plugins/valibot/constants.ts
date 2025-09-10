@@ -263,7 +263,4 @@ export const identifiers = {
   utils: {
     // TODO: implement if necessary
   },
-  v: tsc.identifier({ text: 'v' }),
 };
-
-export const valibotId = 'valibot';

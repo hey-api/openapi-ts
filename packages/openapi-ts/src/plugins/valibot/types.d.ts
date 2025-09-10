@@ -1,6 +1,6 @@
 import type { StringCase, StringName } from '../../types/case';
 import type { DefinePlugin, Plugin } from '../types';
-import type { Api } from './api';
+import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'valibot'> & {
   /**
@@ -322,4 +322,4 @@ export type Config = Plugin.Name<'valibot'> & {
   };
 };
 
-export type ValibotPlugin = DefinePlugin<UserConfig, Config, Api>;
+export type ValibotPlugin = DefinePlugin<UserConfig, Config, IApi>;

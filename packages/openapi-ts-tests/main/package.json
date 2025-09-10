@@ -27,6 +27,7 @@
     "@angular/platform-browser-dynamic": "19.2.0",
     "@angular/router": "19.2.0",
     "@config/vite-base": "workspace:*",
+    "@hey-api/codegen-core": "workspace:*",
     "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@pinia/colada": "0.17.2",

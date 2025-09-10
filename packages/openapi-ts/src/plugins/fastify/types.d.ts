@@ -1,4 +1,5 @@
 import type { DefinePlugin, Plugin } from '../types';
+import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'fastify'> & {
   /**
@@ -16,4 +17,4 @@ export type UserConfig = Plugin.Name<'fastify'> & {
   output?: string;
 };
 
-export type FastifyPlugin = DefinePlugin<UserConfig>;
+export type FastifyPlugin = DefinePlugin<UserConfig, UserConfig, IApi>;

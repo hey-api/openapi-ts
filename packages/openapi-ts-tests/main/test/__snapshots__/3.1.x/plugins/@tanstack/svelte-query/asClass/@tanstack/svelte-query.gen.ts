@@ -3,7 +3,7 @@
 import { type Options, FooBazService, BarBazService } from '../sdk.gen';
 import { queryOptions, type MutationOptions, type DefaultError } from '@tanstack/svelte-query';
 import type { GetFooData, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse } from '../types.gen';
-import { client as _heyApiClient } from '../client.gen';
+import { client } from '../client.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -16,7 +16,7 @@ export type QueryKey<TOptions extends Options> = [
 const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean, tags?: ReadonlyArray<string>): [
     QueryKey<TOptions>[0]
 ] => {
-    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? _heyApiClient).getConfig().baseUrl } as QueryKey<TOptions>[0];
+    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
     if (infinite) {
         params._infinite = infinite;
     }

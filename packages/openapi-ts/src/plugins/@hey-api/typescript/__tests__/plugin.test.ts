@@ -72,6 +72,9 @@ describe('generateLegacyTypes', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
+          api: {
+            getSelector: () => [],
+          },
           config: {
             name: '@hey-api/schemas',
           },
@@ -80,6 +83,9 @@ describe('generateLegacyTypes', () => {
           output: '',
         },
         '@hey-api/sdk': {
+          api: {
+            getSelector: () => [],
+          },
           config: {
             name: '@hey-api/sdk',
           },
@@ -89,7 +95,7 @@ describe('generateLegacyTypes', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getId: () => '',
+            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
           },
           config: {
