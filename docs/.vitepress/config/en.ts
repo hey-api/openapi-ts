@@ -48,6 +48,10 @@ export default defineConfig({
             link: '/openapi-ts/configuration',
             text: 'Configuration',
           },
+          {
+            link: '/openapi-ts/output',
+            text: 'Output',
+          },
         ],
         text: 'Introduction',
       },
@@ -57,35 +61,24 @@ export default defineConfig({
             collapsed: true,
             items: [
               {
-                link: '/openapi-ts/output/typescript',
+                link: '/openapi-ts/plugins/typescript',
                 text: 'TypeScript',
               },
               {
-                link: '/openapi-ts/output/sdk',
+                link: '/openapi-ts/plugins/sdk',
                 text: 'SDK',
               },
               {
-                link: '/openapi-ts/output/client',
-                text: 'Client',
+                link: '/openapi-ts/plugins/transformers',
+                text: 'Transformers',
               },
               {
-                link: '/openapi-ts/output/json-schema',
-                text: 'JSON Schema',
+                link: '/openapi-ts/plugins/schemas',
+                text: 'Schemas',
               },
             ],
-            link: '/openapi-ts/output',
-            text: 'Output',
-          },
-          {
-            collapsed: true,
-            items: [
-              {
-                link: '/openapi-ts/plugins/custom',
-                text: 'Custom Plugin',
-              },
-            ],
-            link: '/openapi-ts/plugins',
-            text: 'Plugins',
+            link: '/openapi-ts/core',
+            text: 'Core',
           },
           {
             collapsed: true,
@@ -113,10 +106,6 @@ export default defineConfig({
               {
                 link: '/openapi-ts/clients/effect',
                 text: 'Effect <span data-soon>soon</span>',
-              },
-              {
-                link: '/openapi-ts/clients/custom',
-                text: 'Custom Client',
               },
               {
                 link: '/openapi-ts/clients/legacy',
@@ -164,10 +153,6 @@ export default defineConfig({
             ],
             link: '/openapi-ts/validators',
             text: 'Validators',
-          },
-          {
-            link: '/openapi-ts/transformers',
-            text: 'Transformers',
           },
           {
             collapsed: true,
@@ -257,6 +242,20 @@ export default defineConfig({
             ],
             link: '/openapi-ts/web-frameworks',
             text: 'Web Frameworks',
+          },
+          {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/plugins/custom',
+                text: 'Plugin',
+              },
+              {
+                link: '/openapi-ts/clients/custom',
+                text: 'Client',
+              },
+            ],
+            text: 'Custom',
           },
         ],
         text: 'Guides and Concepts',
