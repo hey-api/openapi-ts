@@ -4,10 +4,10 @@ import path from 'node:path';
 import type { UserConfig } from '@hey-api/openapi-ts';
 import { createClient } from '@hey-api/openapi-ts';
 import { addImportsSources, defineNuxtModule, useNuxt } from '@nuxt/kit';
+import { findPath } from '@nuxt/kit';
 import type {} from '@nuxt/schema';
 import { defu } from 'defu';
 import { findExports, findTypeExports } from 'mlly';
-import { findPath } from 'nuxt/kit';
 
 export interface ModuleOptions {
   /**
