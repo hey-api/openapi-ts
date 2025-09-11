@@ -182,20 +182,40 @@ export const createClient = async ({
    */
   watch?: WatchValues;
 }) => {
-  const inputPath = compileInputPath(config.input);
-  const { timeout } = config.input.watch;
+  // Support single or multiple input paths
+  const { watch: watchOptions, ...inputWithoutWatch } = config.input as Omit<
+    Config['input'],
+    'watch'
+  > & { watch: Config['input']['watch'] };
+  const inputPathsArray: Array<Config['input']['path']> = Array.isArray(
+    inputWithoutWatch.path,
+  )
+    ? (inputWithoutWatch.path as Array<Config['input']['path']>)
+    : [inputWithoutWatch.path as unknown as Config['input']['path']];
+  const compiledInputs = inputPathsArray.map((p) => {
+    if (typeof p === 'string') {
+      return compileInputPath({ ...inputWithoutWatch, path: p });
+    }
+    if (p && typeof p === 'object') {
+      // If the entry is an object (Input), spread it at the top level so we
+      // don't end up with a double-nested `path: { path: '...' }`.
+      return compileInputPath({ ...inputWithoutWatch, ...(p as any) });
+    }
+    return compileInputPath({ ...inputWithoutWatch, path: p as any });
+  });
+  const { timeout } = watchOptions;
 
-  const watch: WatchValues = _watch || { headers: new Headers() };
+  const watch: WatchValues = _watch || { headers: new Headers(), inputs: {} };
 
   // on first run, print the message as soon as possible
   if (config.logs.level !== 'silent' && !_watch) {
-    logInputPath(inputPath);
+    compiledInputs.forEach((ci) => logInputPath(ci));
   }
 
   const eventSpec = logger.timeEvent('spec');
   const { data, error, response } = await getSpec({
     fetchOptions: config.input.fetch,
-    inputPath: inputPath.path,
+    inputPaths: compiledInputs.map((ci) => ci.path),
     timeout,
     watch,
   });
@@ -218,7 +238,7 @@ export const createClient = async ({
     // generating the output
     if (config.logs.level !== 'silent' && _watch) {
       console.clear();
-      logInputPath(inputPath);
+      compiledInputs.forEach((ci) => logInputPath(ci));
     }
 
     const eventInputPatch = logger.timeEvent('input.patch');
@@ -265,7 +285,10 @@ export const createClient = async ({
     eventPostprocess.timeEnd();
   }
 
-  if (config.input.watch.enabled && typeof inputPath.path === 'string') {
+  if (
+    config.input.watch.enabled &&
+    compiledInputs.some((ci) => typeof ci.path === 'string')
+  ) {
     setTimeout(() => {
       createClient({ config, dependencies, logger, templates, watch });
     }, config.input.watch.interval);
