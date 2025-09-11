@@ -41,13 +41,16 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
 
-export const getFooQuery = defineQueryOptions({
-    key: getFooQueryKey(),
+export const getFooQuery = defineQueryOptions((options?: Options<GetFooData>) => ({
+    key: getFooQueryKey(options),
     query: async () => {
-        const { data } = await FooBazService.getFoo({ throwOnError: true });
+        const { data } = await FooBazService.getFoo({
+            ...options,
+            throwOnError: true
+        });
         return data;
     }
-});
+}));
 
 export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMutationOptions<FooPostResponse, Options<FooPostData>, Error> => {
     return {
@@ -77,13 +80,16 @@ export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutat
 
 export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
 
-export const getFooBarQuery = defineQueryOptions({
-    key: getFooBarQueryKey(),
+export const getFooBarQuery = defineQueryOptions((options?: Options<GetFooBarData>) => ({
+    key: getFooBarQueryKey(options),
     query: async () => {
-        const { data } = await BarBazService.getFooBar({ throwOnError: true });
+        const { data } = await BarBazService.getFooBar({
+            ...options,
+            throwOnError: true
+        });
         return data;
     }
-});
+}));
 
 export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): UseMutationOptions<FooBarPostResponse, Options<FooBarPostData>, Error> => {
     return {
