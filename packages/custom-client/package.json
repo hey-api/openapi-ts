@@ -63,10 +63,12 @@
     "typecheck": "vitest --typecheck --watch=false"
   },
   "peerDependencies": {
+    "@hey-api/codegen-core": "<2",
     "@hey-api/openapi-ts": "<2"
   },
   "devDependencies": {
     "@config/vite-base": "workspace:*",
+    "@hey-api/codegen-core": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*"
   }
 }

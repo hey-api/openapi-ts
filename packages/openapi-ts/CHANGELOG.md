@@ -1,5 +1,61 @@
 # @hey-api/openapi-ts
 
+## 0.83.1
+
+### Patch Changes
+
+- feat(typescript): add `topType` option allowing to choose `any` over `unknown` ([#2629](https://github.com/hey-api/openapi-ts/pull/2629)) ([`444a49a`](https://github.com/hey-api/openapi-ts/commit/444a49a3f0855575c3ef1a3350fd102d42553f3e)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(client): expose all interceptor methods ([#2627](https://github.com/hey-api/openapi-ts/pull/2627)) ([`5a74da0`](https://github.com/hey-api/openapi-ts/commit/5a74da055e835b5160cb11e3d2be6921feeb18ad)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(config): correctly load user-defined hooks ([#2623](https://github.com/hey-api/openapi-ts/pull/2623)) ([`1193c4d`](https://github.com/hey-api/openapi-ts/commit/1193c4dce77e0cb02c32b25661f22065a18bd095)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(typescript): handle string and binary string in composite keywords ([#2630](https://github.com/hey-api/openapi-ts/pull/2630)) ([`43a0661`](https://github.com/hey-api/openapi-ts/commit/43a06617448344448375e0c13a156cb91666f3e9)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.83.0
+
+### Minor Changes
+
+- feat: Symbol API
+
+### Symbol API
+
+This release adds the Symbol API, which significantly reduces the risk of naming collisions. While the generated output should only include formatting changes, this feature introduces breaking changes to the Plugin API that affect custom plugins.
+
+We will update the [custom plugin guide](https://heyapi.dev/openapi-ts/plugins/custom) once the Plugin API becomes more stable. ([#2582](https://github.com/hey-api/openapi-ts/pull/2582)) ([`10aea89`](https://github.com/hey-api/openapi-ts/commit/10aea8910771ff72ef9b08d4eacdd6b028833c4c)) by [@mrlubos](https://github.com/mrlubos)
+
+- feat(pinia-colada): remove `groupByTag` option
+
+### Removed `groupByTag` Pinia Colada option
+
+This option has been removed to provide a more consistent API across plugins. We plan to bring it back in a future release. ([#2582](https://github.com/hey-api/openapi-ts/pull/2582)) ([`10aea89`](https://github.com/hey-api/openapi-ts/commit/10aea8910771ff72ef9b08d4eacdd6b028833c4c)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.1.0
+
+## 0.82.5
+
+### Patch Changes
+
+- fix(client): `mergeHeaders` functions use `.forEach()` instead of `.entries()` ([#2585](https://github.com/hey-api/openapi-ts/pull/2585)) ([`debba72`](https://github.com/hey-api/openapi-ts/commit/debba72348e450f8dc884223681f10e80da77545)) by [@volesen](https://github.com/volesen)
+
+- fix(client): move `getValidRequestBody()` function to `client-core` ([#2605](https://github.com/hey-api/openapi-ts/pull/2605)) ([`b180e4e`](https://github.com/hey-api/openapi-ts/commit/b180e4e105d1d8008e4c92d79857d592080feac7)) by [@franworks](https://github.com/franworks)
+
+## 0.82.4
+
+### Patch Changes
+
+- fix(client): improve handling of plain text, falsy, and unserialized request bodies ([#2564](https://github.com/hey-api/openapi-ts/pull/2564)) ([`074a459`](https://github.com/hey-api/openapi-ts/commit/074a4598c050036b161a9e04a4b5acae98d97b82)) by [@franworks](https://github.com/franworks)
+
+- feat(pinia-colada): implicit `$fetch` for `client-nuxt` (hide `composable`) ([#2598](https://github.com/hey-api/openapi-ts/pull/2598)) ([`7143078`](https://github.com/hey-api/openapi-ts/commit/7143078fde06b5b2fe00e7a7045317a2f5b40bb7)) by [@brolnickij](https://github.com/brolnickij)
+
+- fix(pinia-colada): optional `options` in mutation factory ([#2593](https://github.com/hey-api/openapi-ts/pull/2593)) ([`4137445`](https://github.com/hey-api/openapi-ts/commit/413744572f403f605c0ba6a69f3614da69fc6f15)) by [@brolnickij](https://github.com/brolnickij)
+
+- fix(parser): improve $ref handling ([#2588](https://github.com/hey-api/openapi-ts/pull/2588)) ([`c97e7a8`](https://github.com/hey-api/openapi-ts/commit/c97e7a8c8b1d24747356feb9a15840c296a9c1c8)) by [@carson2222](https://github.com/carson2222)
+
 ## 0.82.3
 
 ### Patch Changes

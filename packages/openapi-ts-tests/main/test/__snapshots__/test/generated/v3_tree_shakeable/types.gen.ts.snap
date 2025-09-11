@@ -23,7 +23,7 @@ export type _import = string;
 
 export type AdditionalPropertiesIntegerIssue = {
     value: number;
-    [key: string]: (number) | undefined;
+    [key: string]: number | undefined;
 };
 
 export type AdditionalPropertiesUnknownIssue = {
@@ -72,12 +72,12 @@ export type ArrayWithArray = Array<Array<ModelWithString>>;
 /**
  * This is a simple array with booleans
  */
-export type ArrayWithBooleans = Array<(boolean)>;
+export type ArrayWithBooleans = Array<boolean>;
 
 /**
  * This is a simple array with numbers
  */
-export type ArrayWithNumbers = Array<(number)>;
+export type ArrayWithNumbers = Array<number>;
 
 /**
  * This is a simple array with properties
@@ -95,7 +95,7 @@ export type ArrayWithReferences = Array<ModelWithString>;
 /**
  * This is a simple array with strings
  */
-export type ArrayWithStrings = Array<(string)>;
+export type ArrayWithStrings = Array<string>;
 
 /**
  * Testing multiline comments in string: First line
@@ -252,7 +252,7 @@ export type CompositionWithOneOfAndProperties = ({
  */
 export type CompositionWithOneOfAndSimpleArrayDictionary = {
     propA?: (boolean | {
-    [key: string]: Array<(boolean)>;
+    [key: string]: Array<boolean>;
 });
 };
 
@@ -261,7 +261,7 @@ export type CompositionWithOneOfAndSimpleArrayDictionary = {
  */
 export type CompositionWithOneOfAndSimpleDictionary = {
     propA?: (boolean | {
-    [key: string]: (number);
+    [key: string]: number;
 });
 };
 
@@ -315,7 +315,7 @@ export type DictionaryWithArray = {
  */
 export type DictionaryWithDictionary = {
     [key: string]: {
-        [key: string]: (string);
+        [key: string]: string;
     };
 };
 
@@ -332,7 +332,7 @@ export type DictionaryWithProperties = {
 export type DictionaryWithPropertiesAndAdditionalProperties = {
     foo?: number;
     bar?: boolean;
-    [key: string]: (string | number | boolean) | undefined;
+    [key: string]: string | number | boolean | undefined;
 };
 
 /**
@@ -346,7 +346,7 @@ export type DictionaryWithReference = {
  * This is a string dictionary
  */
 export type DictionaryWithString = {
-    [key: string]: (string);
+    [key: string]: string;
 };
 
 /**
@@ -581,8 +581,8 @@ export type ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = [
  */
 export type ModelWithArray = {
     prop?: Array<ModelWithString>;
-    propWithFile?: Array<((Blob | File))>;
-    propWithNumber?: Array<(number)>;
+    propWithFile?: Array<Blob | File>;
+    propWithNumber?: Array<number>;
 };
 
 /**
@@ -590,8 +590,8 @@ export type ModelWithArray = {
  */
 export type ModelWithArrayReadOnlyAndWriteOnly = {
     prop?: Array<ModelWithReadOnlyAndWriteOnly>;
-    propWithFile?: Array<((Blob | File))>;
-    propWithNumber?: Array<(number)>;
+    propWithFile?: Array<Blob | File>;
+    propWithNumber?: Array<number>;
 };
 
 /**
@@ -664,7 +664,7 @@ export type ModelWithConstantSizeArray = [
  */
 export type ModelWithDictionary = {
     prop?: {
-        [key: string]: (string);
+        [key: string]: string;
     };
 };
 
@@ -759,7 +759,7 @@ export type ModelWithInteger = {
 };
 
 export type ModelWithNestedArrayEnums = {
-    array_strings?: Array<(string)>;
+    array_strings?: Array<string>;
     data?: (ModelWithNestedArrayEnumsData);
 };
 
@@ -791,13 +791,13 @@ export type ModelWithNestedCompositionEnums = {
  */
 export type ModelWithNestedEnums = {
     dictionaryWithEnum?: {
-        [key: string]: ('Success' | 'Warning' | 'Error');
+        [key: string]: 'Success' | 'Warning' | 'Error';
     };
     dictionaryWithEnumFromDescription?: {
-        [key: string]: (number);
+        [key: string]: number;
     };
-    arrayWithEnum?: Array<('Success' | 'Warning' | 'Error')>;
-    arrayWithDescription?: Array<(number)>;
+    arrayWithEnum?: Array<'Success' | 'Warning' | 'Error'>;
+    arrayWithDescription?: Array<number>;
     /**
      * This is a simple enum with strings
      */
@@ -1021,7 +1021,7 @@ export type OneOfAllOfIssue = ((ConstValue | Generic_Schema_Duplicate_Issue_1_Sy
 export type Pageable = {
     page?: number;
     size?: number;
-    sort?: Array<(string)>;
+    sort?: Array<string>;
 };
 
 /**
@@ -1079,7 +1079,7 @@ export type SimpleBoolean = boolean;
 /**
  * This is a simple file
  */
-export type SimpleFile = (Blob | File);
+export type SimpleFile = Blob | File;
 
 /**
  * This is a simple number
@@ -1388,23 +1388,23 @@ export type CollectionFormatData = {
     /**
      * This is an array parameter that is sent as csv format (comma-separated values)
      */
-    parameterArrayCsv: Array<(string)> | null;
+    parameterArrayCsv: Array<string> | null;
     /**
      * This is an array parameter that is sent as multi format (multiple parameter instances)
      */
-    parameterArrayMulti: Array<(string)> | null;
+    parameterArrayMulti: Array<string> | null;
     /**
      * This is an array parameter that is sent as pipes format (pipe-separated values)
      */
-    parameterArrayPipes: Array<(string)> | null;
+    parameterArrayPipes: Array<string> | null;
     /**
      * This is an array parameter that is sent as ssv format (space-separated values)
      */
-    parameterArraySsv: Array<(string)> | null;
+    parameterArraySsv: Array<string> | null;
     /**
      * This is an array parameter that is sent as tsv format (tab-separated values)
      */
-    parameterArrayTsv: Array<(string)> | null;
+    parameterArrayTsv: Array<string> | null;
 };
 
 export type TypesData = {
@@ -1415,7 +1415,7 @@ export type TypesData = {
     /**
      * This is an array parameter
      */
-    parameterArray: Array<(string)> | null;
+    parameterArray: Array<string> | null;
     /**
      * This is a boolean parameter
      */
@@ -1460,7 +1460,7 @@ export type TypesResponse = (number | string | boolean | {
 });
 
 export type UploadFileData = {
-    formData: (Blob | File);
+    formData: Blob | File;
 };
 
 export type UploadFileResponse = (boolean);
@@ -1469,7 +1469,7 @@ export type FileResponseData = {
     id: string;
 };
 
-export type FileResponseResponse = ((Blob | File));
+export type FileResponseResponse = (Blob | File);
 
 export type ComplexTypesData = {
     /**
@@ -1492,13 +1492,13 @@ export type ComplexTypesResponse = (Array<ModelWithString>);
 
 export type MultipartRequestData = {
     formData?: {
-        content?: (Blob | File);
+        content?: Blob | File;
         data?: ((ModelWithString) | null);
     };
 };
 
 export type MultipartResponseResponse = ({
-    file?: (Blob | File);
+    file?: Blob | File;
     metadata?: {
         foo?: string;
         bar?: string;
@@ -1513,7 +1513,7 @@ export type ComplexParamsData = {
         enabled?: boolean;
         readonly type: 'Monkey' | 'Horse' | 'Bird';
         listOfModels?: Array<ModelWithString> | null;
-        listOfStrings?: Array<(string)> | null;
+        listOfStrings?: Array<string> | null;
         parameters: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
         readonly user?: {
             readonly id?: number;

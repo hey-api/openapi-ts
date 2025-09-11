@@ -1,6 +1,6 @@
 import type { StringCase, StringName } from '../../../types/case';
 import type { DefinePlugin, Plugin } from '../../types';
-import type { Api } from './api';
+import type { IApi } from './api';
 
 export type EnumsType = 'javascript' | 'typescript' | 'typescript-const';
 
@@ -199,6 +199,16 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> & {
          */
         response?: StringName;
       };
+  /**
+   * The top type to use for untyped or unspecified schema values.
+   *
+   * Can be:
+   * - `unknown` (default): safe top type, you must narrow before use
+   * - `any`: disables type checking, can be used anywhere
+   *
+   * @default 'unknown'
+   */
+  topType?: 'any' | 'unknown';
   /**
    * Configuration for webhook-specific types.
    *
@@ -430,6 +440,12 @@ export type Config = Plugin.Name<'@hey-api/typescript'> & {
     response: StringName;
   };
   /**
+   * The top type to use for untyped or unspecified schema values.
+   *
+   * @default 'unknown'
+   */
+  topType: 'any' | 'unknown';
+  /**
    * Configuration for webhook-specific types.
    *
    * Controls generation of types for webhook payloads and webhook requests.
@@ -493,4 +509,4 @@ export interface PluginState {
   usedTypeIDs: Set<string>;
 }
 
-export type HeyApiTypeScriptPlugin = DefinePlugin<UserConfig, Config, Api>;
+export type HeyApiTypeScriptPlugin = DefinePlugin<UserConfig, Config, IApi>;

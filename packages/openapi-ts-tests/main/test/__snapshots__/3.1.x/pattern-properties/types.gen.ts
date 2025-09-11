@@ -27,7 +27,7 @@ export type UnionPatternObject = {
         [key: string]: unknown;
     } & {
         level?: number;
-    }) | (string | number) | ('user' | 'admin' | 'guest') | undefined;
+    }) | string | number | 'user' | 'admin' | 'guest' | undefined;
 };
 
 export type PatternPropertiesResponse = {

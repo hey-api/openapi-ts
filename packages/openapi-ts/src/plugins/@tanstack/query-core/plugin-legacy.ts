@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { clientApi, clientModulePath } from '../../../generate/client';
+import { clientModulePath } from '../../../generate/client';
 import { relativeModulePath } from '../../../generate/utils';
 import { createOperationKey } from '../../../ir/operation';
 import { getPaginationKeywordsRegExp } from '../../../ir/pagination';
@@ -114,7 +114,7 @@ const createInfiniteParamsFunction = ({
       parameters: [
         {
           name: 'queryKey',
-          type: tsc.typeNode(`QueryKey<${clientApi.OptionsLegacyParser.name}>`),
+          type: tsc.typeNode('QueryKey<OptionsLegacyParser>'),
         },
         {
           name: 'page',
@@ -268,7 +268,7 @@ const createInfiniteParamsFunction = ({
         {
           extends: tsc.typeReferenceNode({
             typeName: tsc.identifier({
-              text: `Pick<QueryKey<${clientApi.OptionsLegacyParser.name}>[0], 'body' | 'headers' | 'path' | 'query'>`,
+              text: "Pick<QueryKey<OptionsLegacyParser>[0], 'body' | 'headers' | 'path' | 'query'>",
             }),
           }),
           name: 'K',
@@ -445,9 +445,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
       types: [
         {
           extends: tsc.typeReferenceNode({
-            typeName: tsc.identifier({
-              text: clientApi.OptionsLegacyParser.name,
-            }),
+            typeName: tsc.identifier({ text: 'OptionsLegacyParser' }),
           }),
           name: TOptionsType,
         },
@@ -495,9 +493,7 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
     typeParameters: [
       {
         extends: tsc.typeReferenceNode({
-          typeName: tsc.identifier({
-            text: clientApi.OptionsLegacyParser.name,
-          }),
+          typeName: tsc.identifier({ text: 'OptionsLegacyParser' }),
         }),
         name: TOptionsType,
       },
@@ -682,8 +678,9 @@ export const handlerLegacy = ({
   const file = files[plugin.name]!;
 
   file.import({
-    ...clientApi.OptionsLegacyParser,
+    asType: true,
     module: clientModulePath({ config, sourceOutput: plugin.output }),
+    name: 'OptionsLegacyParser',
   });
 
   const typesModulePath = relativeModulePath({

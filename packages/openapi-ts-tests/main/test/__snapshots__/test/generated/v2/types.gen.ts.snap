@@ -12,12 +12,12 @@ export type ArrayWithArray = Array<Array<ModelWithString>>;
 /**
  * This is a simple array with booleans
  */
-export type ArrayWithBooleans = Array<(boolean)>;
+export type ArrayWithBooleans = Array<boolean>;
 
 /**
  * This is a simple array with numbers
  */
-export type ArrayWithNumbers = Array<(number)>;
+export type ArrayWithNumbers = Array<number>;
 
 /**
  * This is a simple array with properties
@@ -35,7 +35,7 @@ export type ArrayWithReferences = Array<ModelWithString>;
 /**
  * This is a simple array with strings
  */
-export type ArrayWithStrings = Array<(string)>;
+export type ArrayWithStrings = Array<string>;
 
 /**
  * Testing backticks in string: `backticks` and ```multiple backticks``` should work
@@ -92,7 +92,7 @@ export type DictionaryWithArray = {
  */
 export type DictionaryWithDictionary = {
     [key: string]: {
-        [key: string]: (string);
+        [key: string]: string;
     };
 };
 
@@ -117,7 +117,7 @@ export type DictionaryWithReference = {
  * This is a string dictionary
  */
 export type DictionaryWithString = {
-    [key: string]: (string);
+    [key: string]: string;
 };
 
 /**
@@ -218,8 +218,8 @@ export type ModelThatExtendsExtends = ModelWithString & ModelThatExtends & {
  */
 export type ModelWithArray = {
     prop?: Array<ModelWithString>;
-    propWithFile?: Array<((Blob | File))>;
-    propWithNumber?: Array<(number)>;
+    propWithFile?: Array<Blob | File>;
+    propWithNumber?: Array<number>;
 };
 
 /**
@@ -244,7 +244,7 @@ export type ModelWithCircularReference = {
  */
 export type ModelWithDictionary = {
     prop?: {
-        [key: string]: (string);
+        [key: string]: string;
     };
 };
 
@@ -330,13 +330,13 @@ export type ModelWithInteger = {
  */
 export type ModelWithNestedEnums = {
     dictionaryWithEnum?: {
-        [key: string]: ('Success' | 'Warning' | 'Error');
+        [key: string]: 'Success' | 'Warning' | 'Error';
     };
     dictionaryWithEnumFromDescription?: {
-        [key: string]: (number);
+        [key: string]: number;
     };
-    arrayWithEnum?: Array<('Success' | 'Warning' | 'Error')>;
-    arrayWithDescription?: Array<(number)>;
+    arrayWithEnum?: Array<'Success' | 'Warning' | 'Error'>;
+    arrayWithDescription?: Array<number>;
 };
 
 /**
@@ -461,7 +461,7 @@ export type SimpleBoolean = boolean;
 /**
  * This is a simple file
  */
-export type SimpleFile = (Blob | File);
+export type SimpleFile = Blob | File;
 
 /**
  * This is a simple number

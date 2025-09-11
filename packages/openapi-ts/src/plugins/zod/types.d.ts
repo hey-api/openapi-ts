@@ -1,6 +1,6 @@
 import type { StringCase, StringName } from '../../types/case';
 import type { DefinePlugin, Plugin } from '../types';
-import type { Api } from './api';
+import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'zod'> & {
   /**
@@ -748,4 +748,4 @@ export type Config = Plugin.Name<'zod'> & {
   };
 };
 
-export type ZodPlugin = DefinePlugin<UserConfig, Config, Api>;
+export type ZodPlugin = DefinePlugin<UserConfig, Config, IApi>;

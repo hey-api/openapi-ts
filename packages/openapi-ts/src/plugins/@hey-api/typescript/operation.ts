@@ -1,16 +1,12 @@
-import ts from 'typescript';
-
 import { operationResponsesMap } from '../../../ir/operation';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { schemaToType } from './plugin';
-import { typesId } from './ref';
 import type { HeyApiTypeScriptPlugin, PluginState } from './types';
 
-// TODO: exported just for @pinia/colada, remove export once that plugin does not depend on it
-export const irParametersToIrSchema = ({
+const irParametersToIrSchema = ({
   parameters,
 }: {
   parameters: Record<string, IR.ParameterObject>;
@@ -55,7 +51,6 @@ const operationToDataType = ({
   plugin: HeyApiTypeScriptPlugin['Instance'];
   state: PluginState;
 }) => {
-  const file = plugin.context.file({ id: typesId })!;
   const data: IR.SchemaObject = {
     type: 'object',
   };
@@ -126,17 +121,14 @@ const operationToDataType = ({
 
   data.required = dataRequired;
 
-  const name = buildName({
-    config: plugin.config.requests,
-    name: operation.id,
+  const f = plugin.gen.ensureFile(plugin.output);
+  const symbol = f.addSymbol({
+    name: buildName({
+      config: plugin.config.requests,
+      name: operation.id,
+    }),
+    selector: plugin.api.getSelector('data', operation.id),
   });
-  const nodeInfo = file.updateNode(
-    plugin.api.getId({ operation, type: 'data' }),
-    {
-      exported: true,
-      name,
-    },
-  );
   const type = schemaToType({
     onRef: undefined,
     plugin,
@@ -144,11 +136,11 @@ const operationToDataType = ({
     state,
   });
   const node = tsc.typeAliasDeclaration({
-    exportType: nodeInfo.exported,
-    name: nodeInfo.node,
+    exportType: true,
+    name: symbol.placeholder,
     type,
   });
-  file.add(node);
+  symbol.update({ value: node });
 };
 
 export const operationToType = ({
@@ -162,23 +154,19 @@ export const operationToType = ({
 }) => {
   operationToDataType({ operation, plugin, state });
 
-  const file = plugin.context.file({ id: typesId })!;
+  const f = plugin.gen.ensureFile(plugin.output);
 
   const { error, errors, response, responses } =
     operationResponsesMap(operation);
 
   if (errors) {
-    const name = buildName({
-      config: plugin.config.errors,
-      name: operation.id,
+    const symbolErrors = f.addSymbol({
+      name: buildName({
+        config: plugin.config.errors,
+        name: operation.id,
+      }),
+      selector: plugin.api.getSelector('errors', operation.id),
     });
-    const nodeInfo = file.updateNode(
-      plugin.api.getId({ operation, type: 'errors' }),
-      {
-        exported: true,
-        name,
-      },
-    );
     const type = schemaToType({
       onRef: undefined,
       plugin,
@@ -186,55 +174,49 @@ export const operationToType = ({
       state,
     });
     const node = tsc.typeAliasDeclaration({
-      exportType: nodeInfo.exported,
-      name: nodeInfo.node,
+      exportType: true,
+      name: symbolErrors.placeholder,
       type,
     });
-    file.add(node);
+    symbolErrors.update({ value: node });
 
     if (error) {
-      const name = buildName({
-        config: {
-          case: plugin.config.errors.case,
-          name: plugin.config.errors.error,
-        },
-        name: operation.id,
+      const symbol = f.addSymbol({
+        name: buildName({
+          config: {
+            case: plugin.config.errors.case,
+            name: plugin.config.errors.error,
+          },
+          name: operation.id,
+        }),
+        selector: plugin.api.getSelector('error', operation.id),
       });
-      const errorNodeInfo = file.updateNode(
-        plugin.api.getId({ operation, type: 'error' }),
-        {
-          exported: true,
-          name,
-        },
-      );
       const type = tsc.indexedAccessTypeNode({
-        indexType: ts.factory.createTypeOperatorNode(
-          ts.SyntaxKind.KeyOfKeyword,
-          nodeInfo.node,
-        ),
-        objectType: nodeInfo.node,
+        indexType: tsc.typeOperatorNode({
+          operator: 'keyof',
+          type: tsc.typeReferenceNode({ typeName: symbolErrors.placeholder }),
+        }),
+        objectType: tsc.typeReferenceNode({
+          typeName: symbolErrors.placeholder,
+        }),
       });
       const node = tsc.typeAliasDeclaration({
-        exportType: errorNodeInfo.exported,
-        name: errorNodeInfo.node,
+        exportType: true,
+        name: symbol.placeholder,
         type,
       });
-      file.add(node);
+      symbol.update({ value: node });
     }
   }
 
   if (responses) {
-    const name = buildName({
-      config: plugin.config.responses,
-      name: operation.id,
+    const symbolResponses = f.addSymbol({
+      name: buildName({
+        config: plugin.config.responses,
+        name: operation.id,
+      }),
+      selector: plugin.api.getSelector('responses', operation.id),
     });
-    const nodeInfo = file.updateNode(
-      plugin.api.getId({ operation, type: 'responses' }),
-      {
-        exported: true,
-        name,
-      },
-    );
     const type = schemaToType({
       onRef: undefined,
       plugin,
@@ -242,40 +224,40 @@ export const operationToType = ({
       state,
     });
     const node = tsc.typeAliasDeclaration({
-      exportType: nodeInfo.exported,
-      name: nodeInfo.node,
+      exportType: true,
+      name: symbolResponses.placeholder,
       type,
     });
-    file.add(node);
+    symbolResponses.update({ value: node });
 
     if (response) {
-      const name = buildName({
-        config: {
-          case: plugin.config.responses.case,
-          name: plugin.config.responses.response,
-        },
-        name: operation.id,
+      const symbol = f.addSymbol({
+        name: buildName({
+          config: {
+            case: plugin.config.responses.case,
+            name: plugin.config.responses.response,
+          },
+          name: operation.id,
+        }),
+        selector: plugin.api.getSelector('response', operation.id),
       });
-      const responseNodeInfo = file.updateNode(
-        plugin.api.getId({ operation, type: 'response' }),
-        {
-          exported: true,
-          name,
-        },
-      );
       const type = tsc.indexedAccessTypeNode({
-        indexType: ts.factory.createTypeOperatorNode(
-          ts.SyntaxKind.KeyOfKeyword,
-          nodeInfo.node,
-        ),
-        objectType: nodeInfo.node,
+        indexType: tsc.typeOperatorNode({
+          operator: 'keyof',
+          type: tsc.typeReferenceNode({
+            typeName: symbolResponses.placeholder,
+          }),
+        }),
+        objectType: tsc.typeReferenceNode({
+          typeName: symbolResponses.placeholder,
+        }),
       });
       const node = tsc.typeAliasDeclaration({
-        exportType: responseNodeInfo.exported,
-        name: responseNodeInfo.node,
+        exportType: true,
+        name: symbol.placeholder,
         type,
       });
-      file.add(node);
+      symbol.update({ value: node });
     }
   }
 };

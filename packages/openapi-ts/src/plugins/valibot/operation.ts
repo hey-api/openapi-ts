@@ -1,6 +1,6 @@
 import { operationResponsesMap } from '../../ir/operation';
 import type { IR } from '../../ir/types';
-import { valibotId } from './constants';
+import { buildName } from '../../openApi/shared/utils/name';
 import { schemaToValibotSchema, type State } from './plugin';
 import type { ValibotPlugin } from './types';
 
@@ -13,8 +13,6 @@ export const operationToValibotSchema = ({
   plugin: ValibotPlugin['Instance'];
   state: State;
 }) => {
-  const file = plugin.context.file({ id: valibotId })!;
-
   if (plugin.config.requests.enabled) {
     const requiredProperties = new Set<string>();
 
@@ -113,21 +111,21 @@ export const operationToValibotSchema = ({
 
     schemaData.required = [...requiredProperties];
 
-    const identifierData = file.identifier({
-      // TODO: refactor for better cross-plugin compatibility
-      $ref: `#/valibot-data/${operation.id}`,
-      case: plugin.config.requests.case,
-      create: true,
-      nameTransformer: plugin.config.requests.name,
-      namespace: 'value',
+    const f = plugin.gen.ensureFile(plugin.output);
+    const symbol = f.addSymbol({
+      name: buildName({
+        config: plugin.config.requests,
+        name: operation.id,
+      }),
+      selector: plugin.api.getSelector('data', operation.id),
     });
     schemaToValibotSchema({
       // TODO: refactor for better cross-plugin compatibility
       $ref: `#/valibot-data/${operation.id}`,
-      identifier: identifierData,
       plugin,
       schema: schemaData,
       state,
+      symbol,
     });
   }
 
@@ -136,21 +134,21 @@ export const operationToValibotSchema = ({
       const { response } = operationResponsesMap(operation);
 
       if (response) {
-        const identifierResponse = file.identifier({
-          // TODO: refactor for better cross-plugin compatibility
-          $ref: `#/valibot-response/${operation.id}`,
-          case: plugin.config.responses.case,
-          create: true,
-          nameTransformer: plugin.config.responses.name,
-          namespace: 'value',
+        const f = plugin.gen.ensureFile(plugin.output);
+        const symbol = f.addSymbol({
+          name: buildName({
+            config: plugin.config.responses,
+            name: operation.id,
+          }),
+          selector: plugin.api.getSelector('responses', operation.id),
         });
         schemaToValibotSchema({
           // TODO: refactor for better cross-plugin compatibility
           $ref: `#/valibot-response/${operation.id}`,
-          identifier: identifierResponse,
           plugin,
           schema: response,
           state,
+          symbol,
         });
       }
     }

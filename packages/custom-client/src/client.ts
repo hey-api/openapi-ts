@@ -68,7 +68,7 @@ export const createClient = (config: Config = {}): Client => {
 
     let request = new Request(url, requestInit);
 
-    for (const fn of interceptors.request._fns) {
+    for (const fn of interceptors.request.fns) {
       if (fn) {
         request = await fn(request, opts);
       }
@@ -79,7 +79,7 @@ export const createClient = (config: Config = {}): Client => {
     const _fetch = opts.fetch!;
     let response = await _fetch(request);
 
-    for (const fn of interceptors.response._fns) {
+    for (const fn of interceptors.response.fns) {
       if (fn) {
         response = await fn(response, request, opts);
       }
@@ -147,7 +147,7 @@ export const createClient = (config: Config = {}): Client => {
 
     let finalError = error;
 
-    for (const fn of interceptors.error._fns) {
+    for (const fn of interceptors.error.fns) {
       if (fn) {
         finalError = (await fn(error, response, request, opts)) as string;
       }

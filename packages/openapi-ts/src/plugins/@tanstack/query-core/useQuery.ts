@@ -1,4 +1,5 @@
 import type { IR } from '../../../ir/types';
+import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import {
   createOperationComment,
@@ -8,7 +9,6 @@ import {
 import type { PluginInstance, PluginState } from './types';
 import { useTypeData } from './useType';
 
-const useQueryFn = 'useQuery';
 const optionsParamName = 'options';
 
 export const createUseQuery = ({
@@ -24,33 +24,30 @@ export const createUseQuery = ({
     return;
   }
 
-  const file = plugin.context.file({ id: plugin.name })!;
+  if (!('useQuery' in plugin.config)) {
+    return;
+  }
+
+  const f = plugin.gen.ensureFile(plugin.output);
+
+  const symbolUseQueryFn = f.addSymbol({
+    name: buildName({
+      config: plugin.config.useQuery,
+      name: operation.id,
+    }),
+  });
 
   if (!state.hasUseQuery) {
     state.hasUseQuery = true;
-
-    file.import({
-      module: plugin.name,
-      name: useQueryFn,
-    });
   }
 
-  const identifierUseQuery = file.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-use-query/${operation.id}`,
-    case: 'useQuery' in plugin.config ? plugin.config.useQuery.case : undefined,
-    create: true,
-    nameTransformer:
-      'useQuery' in plugin.config ? plugin.config.useQuery.name : undefined,
-    namespace: 'value',
+  const symbolUseQuery = f.ensureSymbol({
+    name: 'useQuery',
+    selector: plugin.api.getSelector('useQuery'),
   });
-
-  const identifierQueryOptions = file.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-query-options/${operation.id}`,
-    case: plugin.config.queryOptions.case,
-    nameTransformer: plugin.config.queryOptions.name,
-    namespace: 'value',
+  f.addImport({
+    from: plugin.name,
+    names: [symbolUseQuery.name],
   });
 
   const isRequiredOptions = isOperationOptionsRequired({
@@ -59,6 +56,9 @@ export const createUseQuery = ({
   });
   const typeData = useTypeData({ operation, plugin });
 
+  const symbolQueryOptionsFn = f.ensureSymbol({
+    selector: plugin.api.getSelector('queryOptionsFn', operation.id),
+  });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
@@ -75,10 +75,10 @@ export const createUseQuery = ({
       statements: [
         tsc.returnStatement({
           expression: tsc.callExpression({
-            functionName: useQueryFn,
+            functionName: symbolUseQuery.placeholder,
             parameters: [
               tsc.callExpression({
-                functionName: identifierQueryOptions.name || '',
+                functionName: symbolQueryOptionsFn.placeholder,
                 parameters: [optionsParamName],
               }),
             ],
@@ -86,7 +86,7 @@ export const createUseQuery = ({
         }),
       ],
     }),
-    name: identifierUseQuery.name || '',
+    name: symbolUseQueryFn.placeholder,
   });
-  file.add(statement);
+  symbolUseQueryFn.update({ value: statement });
 };

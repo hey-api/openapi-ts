@@ -1,5 +1,6 @@
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
 import type { HttpMethod } from '../../client-core/bundle/types';
+import { getValidRequestBody } from '../../client-core/bundle/utils';
 import type {
   Client,
   Config,
@@ -58,12 +59,12 @@ export const createClient = (config: Config = {}): Client => {
       await opts.requestValidator(opts);
     }
 
-    if (opts.body && opts.bodySerializer) {
+    if (opts.body !== undefined && opts.bodySerializer) {
       opts.serializedBody = opts.bodySerializer(opts.body);
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (opts.serializedBody === undefined || opts.serializedBody === '') {
+    if (opts.body === undefined || opts.serializedBody === '') {
       opts.headers.delete('Content-Type');
     }
 
@@ -78,12 +79,12 @@ export const createClient = (config: Config = {}): Client => {
     const requestInit: ReqInit = {
       redirect: 'follow',
       ...opts,
-      body: opts.serializedBody,
+      body: getValidRequestBody(opts),
     };
 
     let request = new Request(url, requestInit);
 
-    for (const fn of interceptors.request._fns) {
+    for (const fn of interceptors.request.fns) {
       if (fn) {
         request = await fn(request, opts);
       }
@@ -94,7 +95,7 @@ export const createClient = (config: Config = {}): Client => {
     const _fetch = opts.fetch!;
     let response = await _fetch(request);
 
-    for (const fn of interceptors.response._fns) {
+    for (const fn of interceptors.response.fns) {
       if (fn) {
         response = await fn(response, request, opts);
       }
@@ -189,7 +190,7 @@ export const createClient = (config: Config = {}): Client => {
     const error = jsonError ?? textError;
     let finalError = error;
 
-    for (const fn of interceptors.error._fns) {
+    for (const fn of interceptors.error.fns) {
       if (fn) {
         finalError = (await fn(error, response, request, opts)) as string;
       }
@@ -224,7 +225,7 @@ export const createClient = (config: Config = {}): Client => {
         method,
         onRequest: async (url, init) => {
           let request = new Request(url, init);
-          for (const fn of interceptors.request._fns) {
+          for (const fn of interceptors.request.fns) {
             if (fn) {
               request = await fn(request, opts);
             }

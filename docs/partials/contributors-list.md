@@ -17,6 +17,7 @@
 - [Daschi](https://github.com/Daschi1)
 - [David Bieregger](https://github.com/BierDav)
 - [David Ovčačík](https://github.com/dovca)
+- [Dmitriy Brolnickij](https://github.com/brolnickij)
 - [Finn Poppinga](https://github.com/fpoppinga)
 - [Florian Lutze](https://github.com/flow96)
 - [Francisco García](https://github.com/goltra)

@@ -78,7 +78,20 @@ describe(`OpenAPI ${version}`, () => {
         input: 'additional-properties-true.json',
         output: 'additional-properties-true',
       }),
-      description: 'allows arbitrary properties on objects',
+      description: 'allows arbitrary properties on objects (unknown top type)',
+    },
+    {
+      config: createConfig({
+        input: 'additional-properties-true.json',
+        output: 'additional-properties-true-any',
+        plugins: [
+          {
+            name: '@hey-api/typescript',
+            topType: 'any',
+          },
+        ],
+      }),
+      description: 'allows arbitrary properties on objects (any top type)',
     },
     {
       config: createConfig({
@@ -935,6 +948,14 @@ describe(`OpenAPI ${version}`, () => {
         plugins: ['@hey-api/typescript', 'valibot', 'zod'],
       }),
       description: 'webhook types and validator schemas',
+    },
+    {
+      config: createConfig({
+        input: 'string-with-format.yaml',
+        output: 'string-with-format',
+        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
+      }),
+      description: 'anyOf string and binary string',
     },
   ];
 

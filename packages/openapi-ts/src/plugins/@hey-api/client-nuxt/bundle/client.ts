@@ -59,7 +59,7 @@ export const createClient = (config: Config = {}): Client => {
 
   const request: Client['request'] = ({
     asyncDataOptions,
-    composable,
+    composable = '$fetch',
     ...options
   }) => {
     const key = options.key;

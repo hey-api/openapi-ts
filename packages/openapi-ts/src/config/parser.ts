@@ -40,6 +40,10 @@ export const getParser = (userConfig: UserConfig): Config['parser'] => {
   };
 
   if (userConfig.parser) {
+    if (userConfig.parser.hooks) {
+      parser.hooks = userConfig.parser.hooks;
+    }
+
     if (userConfig.parser.pagination?.keywords) {
       parser.pagination.keywords = userConfig.parser.pagination.keywords;
     }

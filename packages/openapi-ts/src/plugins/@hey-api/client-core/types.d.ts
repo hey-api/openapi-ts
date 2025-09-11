@@ -4,12 +4,13 @@ import type { HeyApiClientFetchPlugin } from '../client-fetch';
 import type { HeyApiClientNextPlugin } from '../client-next';
 import type { HeyApiClientNuxtPlugin } from '../client-nuxt';
 
-export type PluginHandler =
-  | HeyApiClientAngularPlugin['Handler']
-  | HeyApiClientAxiosPlugin['Handler']
-  | HeyApiClientFetchPlugin['Handler']
-  | HeyApiClientNextPlugin['Handler']
-  | HeyApiClientNuxtPlugin['Handler'];
+export interface PluginHandler {
+  (...args: Parameters<HeyApiClientAngularPlugin['Handler']>): void;
+  (...args: Parameters<HeyApiClientAxiosPlugin['Handler']>): void;
+  (...args: Parameters<HeyApiClientFetchPlugin['Handler']>): void;
+  (...args: Parameters<HeyApiClientNextPlugin['Handler']>): void;
+  (...args: Parameters<HeyApiClientNuxtPlugin['Handler']>): void;
+}
 
 /**
  * Public Client API.

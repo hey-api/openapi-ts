@@ -7,9 +7,21 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
+## v0.83.0
+
+### Symbol API
+
+This release adds the Symbol API, which significantly reduces the risk of naming collisions. While the generated output should only include formatting changes, this feature introduces breaking changes to the Plugin API that affect custom plugins.
+
+We will update the [custom plugin guide](/openapi-ts/plugins/custom) once the Plugin API becomes more stable.
+
+### Removed `groupByTag` Pinia Colada option
+
+This option has been removed to provide a more consistent API across plugins. We plan to bring it back in a future release.
+
 ## v0.82.0
 
-### Added Hooks API
+### Hooks API
 
 This release adds the [Hooks API](/openapi-ts/configuration/parser#hooks), giving you granular control over which operations generate queries and mutations. As a result, we tightened the previous behavior and POST operations no longer generate queries by default. To preserve the old behavior, add a custom matcher.
 

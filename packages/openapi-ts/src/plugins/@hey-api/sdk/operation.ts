@@ -1,7 +1,7 @@
+import type { ICodegenFile, ICodegenSymbolOut } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import { clientApi, clientModulePath } from '../../../generate/client';
-import type { GeneratedFile } from '../../../generate/file';
+import { clientModulePath } from '../../../generate/client';
 import { statusCodeToGroup } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { sanitizeNamespaceIdentifier } from '../../../openApi';
@@ -12,15 +12,10 @@ import { reservedJavaScriptKeywordsRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { transformClassName } from '../../../utils/transform';
 import type { Field, Fields } from '../client-core/bundle/params';
-import { clientId, getClientPlugin } from '../client-core/utils';
-import {
-  operationTransformerIrRef,
-  transformersId,
-} from '../transformers/plugin';
-import { typesId } from '../typescript/ref';
+import { getClientPlugin } from '../client-core/utils';
 import type { PluginState } from '../typescript/types';
 import { operationAuth } from './auth';
-import { nuxtTypeComposable, nuxtTypeDefault, sdkId } from './constants';
+import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import type { HeyApiSdkPlugin } from './types';
 import { createRequestValidator, createResponseValidator } from './validator';
 
@@ -158,7 +153,7 @@ export const operationOptionsType = ({
   plugin,
   throwOnError,
 }: {
-  file: GeneratedFile;
+  file: ICodegenFile;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
   throwOnError?: string;
@@ -166,36 +161,44 @@ export const operationOptionsType = ({
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
-  const fileTypeScript = plugin.context.file({ id: typesId })!;
-  const dataImport = file.import({
-    asType: true,
-    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-    name: fileTypeScript.getName(
-      pluginTypeScript.api.getId({ operation, type: 'data' }),
-    ),
-  });
-  const optionsName = clientApi.Options.name;
+  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+
+  const symbolDataType = plugin.gen.selectSymbolFirst(
+    pluginTypeScript.api.getSelector('data', operation.id),
+  );
+  if (symbolDataType) {
+    file.addImport({
+      from: symbolDataType.file,
+      typeNames: [symbolDataType.placeholder],
+    });
+  }
+  const dataType = symbolDataType?.placeholder || 'unknown';
+
+  const symbolOptions = plugin.gen.selectSymbolFirstOrThrow(
+    plugin.api.getSelector('Options'),
+  );
 
   if (isNuxtClient) {
-    const responseImport = file.import({
-      asType: true,
-      module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-      name: fileTypeScript.getName(
-        pluginTypeScript.api.getId({
-          operation,
-          type: isNuxtClient ? 'response' : 'responses',
-        }),
-      ),
-    });
-    return `${optionsName}<${nuxtTypeComposable}, ${dataImport.name || 'unknown'}, ${responseImport.name || 'unknown'}, ${nuxtTypeDefault}>`;
+    const symbolResponseType = plugin.gen.selectSymbolFirst(
+      pluginTypeScript.api.getSelector('response', operation.id),
+    );
+    if (symbolResponseType) {
+      file.addImport({
+        from: symbolResponseType.file,
+        typeNames: [symbolResponseType.placeholder],
+      });
+    }
+    const responseType = symbolResponseType?.placeholder || 'unknown';
+    return `${symbolOptions.placeholder}<${nuxtTypeComposable}, ${dataType}, ${responseType}, ${nuxtTypeDefault}>`;
   }
 
   // TODO: refactor this to be more generic, works for now
   if (throwOnError) {
-    return `${optionsName}<${dataImport.name || 'unknown'}, ${throwOnError}>`;
+    return `${symbolOptions.placeholder}<${dataType}, ${throwOnError}>`;
   }
-  return dataImport.name ? `${optionsName}<${dataImport.name}>` : optionsName;
+  return symbolDataType
+    ? `${symbolOptions.placeholder}<${symbolDataType.placeholder}>`
+    : symbolOptions.placeholder;
 };
 
 type OperationParameters = {
@@ -210,7 +213,7 @@ export const operationParameters = ({
   operation,
   plugin,
 }: {
-  file: GeneratedFile;
+  file: ICodegenFile;
   isRequiredOptions: boolean;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
@@ -221,7 +224,7 @@ export const operationParameters = ({
     parameters: [],
   };
 
-  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
+  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
   const typescriptState: PluginState = {
     usedTypeIDs: new Set<string>(),
   };
@@ -229,8 +232,6 @@ export const operationParameters = ({
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   if (plugin.config.params_EXPERIMENTAL === 'experiment') {
-    const fileTypeScript = plugin.context.file({ id: typesId })!;
-
     if (operation.parameters?.path) {
       for (const key in operation.parameters.path) {
         const parameter = operation.parameters.path[key]!;
@@ -245,14 +246,10 @@ export const operationParameters = ({
           isRequired: parameter.required,
           name,
           type: pluginTypeScript.api.schemaToType({
-            onRef: (id) => {
-              file.import({
-                asType: true,
-                module: file.relativePathToFile({
-                  context: plugin.context,
-                  id: typesId,
-                }),
-                name: fileTypeScript.getName(id),
+            onRef: (symbol) => {
+              file.addImport({
+                from: symbol.file,
+                typeNames: [symbol.placeholder],
               });
             },
             plugin: pluginTypeScript,
@@ -277,14 +274,10 @@ export const operationParameters = ({
           isRequired: parameter.required,
           name,
           type: pluginTypeScript.api.schemaToType({
-            onRef: (id) => {
-              file.import({
-                asType: true,
-                module: file.relativePathToFile({
-                  context: plugin.context,
-                  id: typesId,
-                }),
-                name: fileTypeScript.getName(id),
+            onRef: (symbol) => {
+              file.addImport({
+                from: symbol.file,
+                typeNames: [symbol.placeholder],
               });
             },
             plugin: pluginTypeScript,
@@ -304,14 +297,10 @@ export const operationParameters = ({
         isRequired: operation.body.required,
         name,
         type: pluginTypeScript.api.schemaToType({
-          onRef: (id) => {
-            file.import({
-              asType: true,
-              module: file.relativePathToFile({
-                context: plugin.context,
-                id: typesId,
-              }),
-              name: fileTypeScript.getName(id),
+          onRef: (symbol) => {
+            file.addImport({
+              from: symbol.file,
+              typeNames: [symbol.placeholder],
             });
           },
           plugin: pluginTypeScript,
@@ -404,34 +393,40 @@ export const operationStatements = ({
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
 }): Array<ts.Statement> => {
-  const file = plugin.context.file({ id: sdkId })!;
-  const sdkOutput = file.nameWithoutExtension();
+  const f = plugin.gen.ensureFile(plugin.output);
 
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  const pluginTypeScript = plugin.getPlugin('@hey-api/typescript')!;
-  const fileTypeScript = plugin.context.file({ id: typesId })!;
-  const responseImport = file.import({
-    asType: true,
-    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-    name: fileTypeScript.getName(
-      pluginTypeScript.api.getId({
-        operation,
-        type: isNuxtClient ? 'response' : 'responses',
-      }),
+  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+
+  const symbolResponseType = plugin.gen.selectSymbolFirst(
+    pluginTypeScript.api.getSelector(
+      isNuxtClient ? 'response' : 'responses',
+      operation.id,
     ),
-  });
-  const errorImport = file.import({
-    asType: true,
-    module: file.relativePathToFile({ context: plugin.context, id: typesId }),
-    name: fileTypeScript.getName(
-      pluginTypeScript.api.getId({
-        operation,
-        type: isNuxtClient ? 'error' : 'errors',
-      }),
+  );
+  if (symbolResponseType) {
+    f.addImport({
+      from: symbolResponseType.file,
+      typeNames: [symbolResponseType.placeholder],
+    });
+  }
+  const responseType = symbolResponseType?.placeholder || 'unknown';
+
+  const symbolErrorType = plugin.gen.selectSymbolFirst(
+    pluginTypeScript.api.getSelector(
+      isNuxtClient ? 'error' : 'errors',
+      operation.id,
     ),
-  });
+  );
+  if (symbolErrorType) {
+    f.addImport({
+      from: symbolErrorType.file,
+      typeNames: [symbolErrorType.placeholder],
+    });
+  }
+  const errorType = symbolErrorType?.placeholder || 'unknown';
 
   // TODO: transform parameters
   // const query = {
@@ -449,19 +444,23 @@ export const operationStatements = ({
   //   }
   // }
 
-  const requestOptions: ObjectValue[] = [];
+  const requestOptions: Array<ObjectValue> = [];
 
   if (operation.body) {
     switch (operation.body.type) {
       case 'form-data': {
-        const imported = file.import({
-          module: clientModulePath({
-            config: plugin.context.config,
-            sourceOutput: sdkOutput,
-          }),
+        const symbol = f.ensureSymbol({
           name: 'formDataBodySerializer',
+          selector: plugin.api.getSelector('formDataBodySerializer'),
         });
-        requestOptions.push({ spread: imported.name });
+        f.addImport({
+          from: clientModulePath({
+            config: plugin.context.config,
+            sourceOutput: f.path,
+          }),
+          names: [symbol.name],
+        });
+        requestOptions.push({ spread: symbol.placeholder });
         break;
       }
       case 'json':
@@ -476,14 +475,18 @@ export const operationStatements = ({
         });
         break;
       case 'url-search-params': {
-        const imported = file.import({
-          module: clientModulePath({
-            config: plugin.context.config,
-            sourceOutput: sdkOutput,
-          }),
+        const symbol = f.ensureSymbol({
           name: 'urlSearchParamsBodySerializer',
+          selector: plugin.api.getSelector('urlSearchParamsBodySerializer'),
         });
-        requestOptions.push({ spread: imported.name });
+        f.addImport({
+          from: clientModulePath({
+            config: plugin.context.config,
+            sourceOutput: f.path,
+          }),
+          names: [symbol.name],
+        });
+        requestOptions.push({ spread: symbol.placeholder });
         break;
       }
     }
@@ -532,25 +535,20 @@ export const operationStatements = ({
   }
 
   if (plugin.config.transformer === '@hey-api/transformers') {
-    const identifierTransformer = plugin.context
-      .file({ id: transformersId })!
-      .identifier({
-        $ref: operationTransformerIrRef({ id: operation.id, type: 'response' }),
-        namespace: 'value',
+    const pluginTransformers = plugin.getPluginOrThrow(
+      plugin.config.transformer,
+    );
+    const symbolResponseTransformer = plugin.gen.selectSymbolFirst(
+      pluginTransformers.api.getSelector('response', operation.id),
+    );
+    if (symbolResponseTransformer?.value) {
+      f.addImport({
+        from: symbolResponseTransformer.file,
+        names: [symbolResponseTransformer.placeholder],
       });
-
-    if (identifierTransformer.name) {
-      file.import({
-        module: file.relativePathToFile({
-          context: plugin.context,
-          id: transformersId,
-        }),
-        name: identifierTransformer.name,
-      });
-
       requestOptions.push({
         key: 'responseTransformer',
-        value: identifierTransformer.name,
+        value: symbolResponseTransformer.placeholder,
       });
     }
   }
@@ -644,17 +642,24 @@ export const operationStatements = ({
       }
       config.push(tsc.objectExpression({ obj }));
     }
-    const imported = file.import({
-      module: clientModulePath({
-        config: plugin.context.config,
-        sourceOutput: sdkOutput,
-      }),
+    const symbol = f.ensureSymbol({
       name: 'buildClientParams',
+      selector: plugin.api.getSelector('buildClientParams'),
+    });
+    f.addImport({
+      aliases: {
+        buildClientParams: symbol.placeholder,
+      },
+      from: clientModulePath({
+        config: plugin.context.config,
+        sourceOutput: f.path,
+      }),
+      names: ['buildClientParams'],
     });
     statements.push(
       tsc.constVariable({
         expression: tsc.callExpression({
-          functionName: imported.name,
+          functionName: symbol.placeholder,
           parameters: [
             tsc.arrayLiteralExpression({ elements: args }),
             tsc.arrayLiteralExpression({ elements: config }),
@@ -703,19 +708,19 @@ export const operationStatements = ({
     }
   }
 
-  const responseType = responseImport.name || 'unknown';
-  const errorType = errorImport.name || 'unknown';
-
-  const heyApiClient = plugin.config.client
-    ? file.import({
-        alias: '_heyApiClient',
-        module: file.relativePathToFile({
-          context: plugin.context,
-          id: clientId,
-        }),
-        name: 'client',
-      })
-    : undefined;
+  let symbolClient: ICodegenSymbolOut | undefined;
+  if (plugin.config.client && client.api && 'getSelector' in client.api) {
+    symbolClient = plugin.gen.selectSymbolFirst(
+      // @ts-expect-error
+      client.api.getSelector('client'),
+    );
+    if (symbolClient) {
+      f.addImport({
+        from: symbolClient.file,
+        names: [symbolClient.placeholder],
+      });
+    }
+  }
 
   const optionsClient = tsc.propertyAccessExpression({
     expression: tsc.identifier({ text: 'options' }),
@@ -724,7 +729,6 @@ export const operationStatements = ({
   });
 
   let clientExpression: ts.Expression;
-
   if (plugin.config.instance) {
     clientExpression = tsc.binaryExpression({
       left: optionsClient,
@@ -734,11 +738,11 @@ export const operationStatements = ({
         name: '_client',
       }),
     });
-  } else if (heyApiClient?.name) {
+  } else if (symbolClient) {
     clientExpression = tsc.binaryExpression({
       left: optionsClient,
       operator: '??',
-      right: tsc.identifier({ text: heyApiClient.name }),
+      right: symbolClient.placeholder,
     });
   } else {
     clientExpression = optionsClient;
