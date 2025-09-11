@@ -138,7 +138,7 @@ Configuration to pass to `@hey-api/openapi-ts`.
 - [output](/openapi-ts/configuration/output)
   - Defaults to `.nuxt/client`
 - [parser](/openapi-ts/configuration/parser)
-- [plugins](/openapi-ts/transformers)
+- [plugins](/openapi-ts/plugins/transformers)
 
 ## Configuration
 
