@@ -14,7 +14,9 @@ import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
 import { useTypeData } from './useType';
 import { getPublicTypeData } from './utils';
+
 const optionsParamName = 'options';
+const fnOptions = 'context';
 
 export const createQueryOptions = ({
   operation,
@@ -73,6 +75,7 @@ export const createQueryOptions = ({
           multiLine: true,
           obj: [
             { spread: optionsParamName },
+            { spread: fnOptions },
             { key: 'throwOnError', value: true },
           ],
         }),
@@ -113,7 +116,7 @@ export const createQueryOptions = ({
       value: tsc.arrowFunction({
         async: true,
         multiLine: true,
-        parameters: [],
+        parameters: [{ name: fnOptions }],
         statements,
       }),
     },
