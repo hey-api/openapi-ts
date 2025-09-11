@@ -146,7 +146,7 @@ for (const zodVersion of zodVersions) {
       const outputPath =
         typeof config.output === 'string'
           ? config.output
-          : Array.isArray(config.output)
+          : config.output instanceof Array
             ? typeof config.output[0] === 'string'
               ? config.output[0]
               : config.output[0]?.path || ''

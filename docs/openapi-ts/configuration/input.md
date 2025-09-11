@@ -9,7 +9,7 @@ You must provide an input so we can load your OpenAPI specification.
 
 ## Input
 
-The input can be a string path, URL, [API registry](#api-registry), an object containing any of these, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
+The input can be a string path, URL, [API registry](#api-registry), an object containing any of these, or an object representing an OpenAPI specification. You can also pass an array of inputs to merge multiple specifications. Hey API supports all valid OpenAPI versions and file formats.
 
 ::: code-group
 
@@ -51,6 +51,20 @@ export default {
 };
 ```
 <!-- prettier-ignore-end -->
+
+```js [array]
+export default {
+  input: [
+    // [!code ++]
+    'hey-api/backend', // [!code ++]
+    './overrides/openapi.yaml', // [!code ++]
+  ], // [!code ++]
+};
+// When you pass multiple inputs as an array, `@hey-api/openapi-ts` bundles them into a single resolved OpenAPI
+// document. To avoid name collisions between files, component names may be prefixed with the input file’s base
+// name when needed (for example, `users.yaml` ➜ `users.*`). References across files are resolved, and
+// later inputs in the array can override earlier ones on conflict.
+```
 
 :::
 
