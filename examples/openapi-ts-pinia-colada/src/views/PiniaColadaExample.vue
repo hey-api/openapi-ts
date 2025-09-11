@@ -1,11 +1,17 @@
 <script lang="ts" setup>
 import type { Pet } from '@/client'
+import type { RequestOptions } from '@/client/client'
+import { PiniaColadaDevtools } from '@pinia/colada-devtools'
 import { createClient } from '@/client/client'
 import { PetSchema } from '@/client/schemas.gen'
-import { addPetMutation, getPetByIdQuery, updatePetMutation } from '@/client/@pinia/colada.gen'
-import { useQuery, useMutation } from '@pinia/colada'
+import {
+  addPetMutation,
+  getPetByIdQuery,
+  getPetByIdQueryKey,
+  updatePetMutation
+} from '@/client/@pinia/colada.gen'
+import { useQuery, useMutation, useQueryCache } from '@pinia/colada'
 import { ref, watch } from 'vue'
-import type { RequestOptions } from '@/client/client'
 
 const localClient = createClient({
   // set default base url for requests made by this client
@@ -30,103 +36,90 @@ localClient.interceptors.request.use((request: Request, options: RequestOptions)
   return request
 })
 
-const pet = ref<Pet>()
-const petId = ref<number>()
+const isPetNameRequired = PetSchema.required.includes('name')
 
+const petId = ref<number | undefined>()
 const petInput = ref({ name: '', category: '' })
 
-const addPet = useMutation(addPetMutation())
+const { data: pet, error } = useQuery(() => ({
+  ...getPetByIdQuery(petQueryOptions()),
+  enabled: petId.value !== undefined
+}))
+const { mutateAsync: createPet } = useMutation(addPetMutation())
+const { mutateAsync: updatePet } = useMutation(updatePetMutation())
 
-const updatePet = useMutation(updatePetMutation())
+const queryCache = useQueryCache()
+async function invalidateCurrentPet() {
+  const key = getPetByIdQueryKey(petQueryOptions())
+  await queryCache.invalidateQueries({ key, exact: true })
+}
 
-const { data, error } = useQuery(() => {
-  if (!petId.value) {
-    return {
-      key: ['getPetById', 'none'],
-      query: async () => undefined,
-      enabled: false
-    }
+async function updatePetIdAndInvalidate(newId: number | undefined) {
+  if (newId !== undefined) {
+    petId.value = newId
   }
 
-  return {
-    ...getPetByIdQuery({
-      client: localClient,
-      path: {
-        petId: petId.value
-      }
-    }),
-    enabled: true
-  }
-})
-
-const handleAddPet = async () => {
-  if (PetSchema.required.includes('name') && !petInput.value?.name?.length) {
-    return
-  }
-
-  const result = await addPet.mutateAsync({
-    body: {
-      category: {
-        id: 0,
-        name: petInput.value.category
-      },
-      id: 0,
-      name: petInput.value?.name,
-      photoUrls: ['string'],
-      status: 'available',
-      tags: [
-        {
-          id: 0,
-          name: 'string'
-        }
-      ]
-    }
-  })
-
-  if (result) {
-    pet.value = result
-    petId.value = result.id ?? petId.value
+  if (petId.value !== undefined) {
+    await invalidateCurrentPet()
   }
 }
 
-function setRandomPetId() {
-  // random id 1-10
-  petId.value = Math.floor(Math.random() * (10 - 1 + 1) + 1)
+async function handleAddPet() {
+  if (isPetNameRequired && !petInput.value.name) return
+
+  const result = await createPet({ body: buildPetBody() })
+  if (!result) return
+
+  await updatePetIdAndInvalidate(result.id)
 }
 
-const handleUpdatePet = async () => {
-  const result = await updatePet.mutateAsync({
-    body: {
-      category: {
-        id: pet.value?.category?.id ?? 0,
-        name: petInput.value.category
-      },
-      id: pet.value?.id ?? 0,
-      name: petInput.value.name,
-      photoUrls: ['string'],
-      status: 'available',
-      tags: [
-        {
-          id: 0,
-          name: 'string'
-        }
-      ]
-    },
-    // setting headers per request
+async function handleUpdatePet() {
+  if (!pet.value) return
+
+  const result = await updatePet({
+    body: buildPetBody(pet.value),
     headers: {
       Authorization: 'Bearer <token_from_method>'
     }
   })
+  if (!result) return
 
-  if (result) {
-    pet.value = result
-    petId.value = result.id ?? petId.value
+  await updatePetIdAndInvalidate(result.id)
+}
+
+function petQueryOptions() {
+  return {
+    client: localClient,
+    path: { petId: petId.value as number }
   }
 }
 
-watch(data, () => {
-  pet.value = data.value as Pet | undefined
-})
+function randomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+function setRandomPetId() {
+  petId.value = randomInt(1, 10)
+}
+
+function buildPetBody(base?: Partial<Pet>) {
+  return {
+    category: {
+      id: base?.category?.id ?? 0,
+      name: petInput.value.category
+    },
+    id: base?.id ?? 0,
+    name: petInput.value.name,
+    photoUrls: ['string'],
+    status: 'available' as const,
+    tags: [
+      {
+        id: 0,
+        name: 'string'
+      }
+    ]
+  }
+}
 
 watch(error, (error) => {
   console.log(error)
@@ -218,4 +211,6 @@ watch(error, (error) => {
       </form>
     </div>
   </div>
+
+  <pinia-colada-devtools />
 </template>
