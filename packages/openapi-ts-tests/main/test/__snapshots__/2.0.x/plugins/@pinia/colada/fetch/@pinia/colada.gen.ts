@@ -6,10 +6,9 @@ import type { ServiceWithEmptyTagData, PatchApiVbyApiVersionNoTagData, FooWowDat
 import { client } from '../client.gen';
 
 export type QueryKey<TOptions extends Options> = [
-    Pick<TOptions, 'body' | 'path'> & {
+    Pick<TOptions, 'path'> & {
         _id: string;
         baseUrl?: _JSONValue;
-        headers?: _JSONValue;
         query?: _JSONValue;
         tags?: _JSONValue;
     }
@@ -21,12 +20,6 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
     if (tags) {
         params.tags = tags as unknown as _JSONValue;
-    }
-    if (options?.body) {
-        params.body = options.body;
-    }
-    if (options?.headers) {
-        params.headers = options.headers as unknown as _JSONValue;
     }
     if (options?.path) {
         params.path = options.path;
