@@ -62,7 +62,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
 }
 
 export interface RequestOptions<
-  TComposable extends Composable = Composable,
+  TComposable extends Composable = '$fetch',
   ResT = unknown,
   DefaultT = undefined,
   Url extends string = string,
@@ -87,7 +87,7 @@ export interface RequestOptions<
       | 'sseMaxRetryDelay'
     > {
   asyncDataOptions?: AsyncDataOptions<ResT, ResT, KeysOf<ResT>, DefaultT>;
-  composable: TComposable;
+  composable?: TComposable;
   key?: string;
   /**
    * Security mechanism(s) to use for the request.
@@ -117,7 +117,7 @@ export interface ClientOptions {
 }
 
 type MethodFn = <
-  TComposable extends Composable,
+  TComposable extends Composable = '$fetch',
   ResT = unknown,
   TError = unknown,
   DefaultT = undefined,
@@ -126,7 +126,7 @@ type MethodFn = <
 ) => RequestResult<TComposable, ResT, TError>;
 
 type SseFn = <
-  TComposable extends Composable,
+  TComposable extends Composable = '$fetch',
   ResT = unknown,
   TError = unknown,
   DefaultT = undefined,
@@ -135,7 +135,7 @@ type SseFn = <
 ) => Promise<ServerSentEventsResult<RequestResult<TComposable, ResT, TError>>>;
 
 type RequestFn = <
-  TComposable extends Composable,
+  TComposable extends Composable = '$fetch',
   ResT = unknown,
   TError = unknown,
   DefaultT = undefined,
@@ -179,7 +179,7 @@ export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn, SseFn>;
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export type Options<
-  TComposable extends Composable,
+  TComposable extends Composable = '$fetch',
   TData extends TDataShape = TDataShape,
   ResT = unknown,
   DefaultT = undefined,

@@ -1,11 +1,10 @@
+import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { NodeInfo } from '../../../generate/file/types';
 import type { IR } from '../../../ir/types';
 import { tsc } from '../../../tsc';
 import { parseUrl } from '../../../utils/url';
 import { getClientBaseUrlKey, getClientPlugin } from '../client-core/utils';
-import { typesId } from './ref';
 import type { HeyApiTypeScriptPlugin } from './types';
 
 const stringType = tsc.keywordTypeNode({ keyword: 'string' });
@@ -31,16 +30,14 @@ const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {
 };
 
 export const createClientOptions = ({
-  nodeInfo,
   plugin,
   servers,
+  symbolClientOptions,
 }: {
-  nodeInfo: NodeInfo;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   servers: ReadonlyArray<IR.ServerObject>;
+  symbolClientOptions: ICodegenSymbolOut;
 }) => {
-  const file = plugin.context.file({ id: typesId })!;
-
   const client = getClientPlugin(plugin.context.config);
 
   const types: Array<ts.TypeNode> = servers.map((server) =>
@@ -69,9 +66,9 @@ export const createClientOptions = ({
     useLegacyResolution: false,
   });
   const node = tsc.typeAliasDeclaration({
-    exportType: nodeInfo.exported,
-    name: nodeInfo.node,
+    exportType: true,
+    name: symbolClientOptions.placeholder,
     type,
   });
-  file.add(node);
+  symbolClientOptions.update({ value: node });
 };

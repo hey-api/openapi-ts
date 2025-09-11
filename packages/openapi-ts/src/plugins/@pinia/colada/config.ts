@@ -1,13 +1,16 @@
 import { definePluginConfig } from '../../shared/utils/config';
+import { Api } from './api';
 import { handler } from './plugin';
 import type { PiniaColadaPlugin } from './types';
 
 export const defaultConfig: PiniaColadaPlugin['Config'] = {
+  api: new Api({
+    name: '@pinia/colada',
+  }),
   config: {
     case: 'camelCase',
     comments: true,
     exportFromIndex: false,
-    groupByTag: false,
   },
   dependencies: ['@hey-api/typescript', '@hey-api/sdk'],
   handler: handler as PiniaColadaPlugin['Handler'],

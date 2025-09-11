@@ -1,8 +1,9 @@
+import type { ICodegenFile } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
 import type { DefinePlugin, Plugin } from '../../types';
+import type { IApi } from './api';
 import type { ExpressionTransformer } from './expressions';
 
 /**
@@ -13,7 +14,7 @@ export type TypeTransformer = ({
   file,
   schema,
 }: {
-  file: GeneratedFile;
+  file: ICodegenFile;
   schema: IR.SchemaObject;
 }) => ts.TypeNode | undefined;
 
@@ -47,11 +48,46 @@ export type UserConfig = Plugin.Name<'@hey-api/transformers'> & {
    * Custom transforms to apply to the generated code.
    */
   transformers?: ReadonlyArray<ExpressionTransformer>;
-
   /**
    * Custom type transformers that modify the TypeScript types generated.
    */
   typeTransformers?: ReadonlyArray<TypeTransformer>;
 };
 
-export type HeyApiTransformersPlugin = DefinePlugin<UserConfig>;
+export type Config = Plugin.Name<'@hey-api/transformers'> & {
+  /**
+   * Convert long integers into BigInt values?
+   *
+   * @default true
+   */
+  bigInt: boolean;
+  /**
+   * Convert date strings into Date objects?
+   *
+   * @default true
+   */
+  dates: boolean;
+  /**
+   * Should the exports from the generated files be re-exported in the index
+   * barrel file?
+   *
+   * @default false
+   */
+  exportFromIndex: boolean;
+  /**
+   * Name of the generated file.
+   *
+   * @default 'transformers'
+   */
+  output: string;
+  /**
+   * Custom transforms to apply to the generated code.
+   */
+  transformers: ReadonlyArray<ExpressionTransformer>;
+  /**
+   * Custom type transformers that modify the TypeScript types generated.
+   */
+  typeTransformers: ReadonlyArray<TypeTransformer>;
+};
+
+export type HeyApiTransformersPlugin = DefinePlugin<UserConfig, Config, IApi>;

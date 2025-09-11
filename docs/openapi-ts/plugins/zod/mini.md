@@ -66,7 +66,7 @@ export default {
 };
 ```
 
-Learn more about data validators in your SDKs on the [SDKs](/openapi-ts/output/sdk#validators) page.
+Learn more about data validators in your SDKs on the [SDKs](/openapi-ts/plugins/sdk#validators) page.
 
 ## Output
 

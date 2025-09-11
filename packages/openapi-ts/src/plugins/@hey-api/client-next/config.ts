@@ -1,15 +1,19 @@
 import { definePluginConfig } from '../../shared/utils/config';
 import { clientDefaultConfig, clientDefaultMeta } from '../client-core/config';
 import { clientPluginHandler } from '../client-core/plugin';
+import { Api } from './api';
 import type { HeyApiClientNextPlugin } from './types';
 
 export const defaultConfig: HeyApiClientNextPlugin['Config'] = {
   ...clientDefaultMeta,
+  api: new Api({
+    name: '@hey-api/client-next',
+  }),
   config: {
     ...clientDefaultConfig,
     throwOnError: false,
   },
-  handler: clientPluginHandler as HeyApiClientNextPlugin['Handler'],
+  handler: clientPluginHandler,
   name: '@hey-api/client-next',
 };
 

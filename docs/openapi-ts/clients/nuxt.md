@@ -175,6 +175,10 @@ Interceptors (middleware) can be used to modify requests before they're sent or 
 
 You can pass any Nuxt/ofetch arguments to the client instance.
 
+::: tip
+If you omit `composable`, `$fetch` is used by default.
+:::
+
 ```js
 import { client } from 'client/client.gen';
 

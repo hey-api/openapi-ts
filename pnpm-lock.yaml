@@ -1127,6 +1127,9 @@ importers:
       '@config/vite-base':
         specifier: workspace:*
         version: link:../config-vite-base
+      '@hey-api/codegen-core':
+        specifier: workspace:*
+        version: link:../codegen-core
       '@hey-api/openapi-ts':
         specifier: workspace:*
         version: link:../openapi-ts
@@ -1174,7 +1177,7 @@ importers:
         specifier: 1.0.3
         version: 1.0.3(magicast@0.3.5)
       '@hey-api/codegen-core':
-        specifier: workspace:^0.0.1
+        specifier: workspace:^0.1.0
         version: link:../codegen-core
       '@hey-api/json-schema-ref-parser':
         specifier: 1.2.0
@@ -1191,9 +1194,6 @@ importers:
       handlebars:
         specifier: 4.7.8
         version: 4.7.8
-      js-yaml:
-        specifier: 4.1.0
-        version: 4.1.0
       open:
         specifier: 10.1.2
         version: 10.1.2
@@ -1234,9 +1234,6 @@ importers:
       '@types/express':
         specifier: 4.17.21
         version: 4.17.21
-      '@types/js-yaml':
-        specifier: 4.0.9
-        version: 4.0.9
       '@types/semver':
         specifier: 7.7.0
         version: 7.7.0
@@ -1324,6 +1321,9 @@ importers:
       '@config/vite-base':
         specifier: workspace:*
         version: link:../../config-vite-base
+      '@hey-api/codegen-core':
+        specifier: workspace:*
+        version: link:../../codegen-core
       '@hey-api/custom-client':
         specifier: workspace:*
         version: link:../../custom-client
@@ -5966,9 +5966,6 @@ packages:
 
   '@types/jasmine@5.1.9':
     resolution: {integrity: sha512-8t4HtkW4wxiPVedMpeZ63n3vlWxEIquo/zc1Tm8ElU+SqVV7+D3Na2PWaJUp179AzTragMWVwkMv7mvty0NfyQ==}
-
-  '@types/js-yaml@4.0.9':
-    resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
 
   '@types/jsdom@21.1.7':
     resolution: {integrity: sha512-yOriVnggzrnQ3a9OKOCxaVuSug3w3/SbOj5i7VwXWZEyUNl3bLF9V3MfxGbZKuwqJOQyRfqXyROBB1CoZLFWzA==}
@@ -19627,8 +19624,6 @@ snapshots:
       '@types/node': 22.10.5
 
   '@types/jasmine@5.1.9': {}
-
-  '@types/js-yaml@4.0.9': {}
 
   '@types/jsdom@21.1.7':
     dependencies:

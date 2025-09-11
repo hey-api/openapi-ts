@@ -1,13 +1,12 @@
 import type ts from 'typescript';
 
 import type { IR } from '../../../ir/types';
+import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { createOperationComment } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
 import type { PluginInstance, PluginState } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
-
-const mutationOptionsFn = 'mutationOptions';
 
 export const createMutationOptions = ({
   operation,
@@ -27,17 +26,20 @@ export const createMutationOptions = ({
       ? 'MutationOptions'
       : 'UseMutationOptions';
 
-  const file = plugin.context.file({ id: plugin.name })!;
+  const f = plugin.gen.ensureFile(plugin.output);
 
   if (!state.hasMutations) {
     state.hasMutations = true;
-
-    file.import({
-      asType: true,
-      module: plugin.name,
-      name: mutationsType,
-    });
   }
+
+  const symbolMutationOptionsType = f.ensureSymbol({
+    name: mutationsType,
+    selector: plugin.api.getSelector('MutationOptions'),
+  });
+  f.addImport({
+    from: plugin.name,
+    typeNames: [symbolMutationOptionsType.name],
+  });
 
   state.hasUsedQueryFn = true;
 
@@ -45,7 +47,7 @@ export const createMutationOptions = ({
   const typeError = useTypeError({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
   // TODO: better types syntax
-  const mutationType = `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`;
+  const mutationType = `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${typeError}, ${typeData}>`;
 
   const fnOptions = 'fnOptions';
 
@@ -74,7 +76,7 @@ export const createMutationOptions = ({
 
   const statements: Array<ts.Statement> = [];
 
-  if (plugin.getPlugin('@hey-api/sdk')?.config.responseStyle === 'data') {
+  if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push(
       tsc.returnVariable({
         expression: awaitSdkExpression,
@@ -92,15 +94,6 @@ export const createMutationOptions = ({
       }),
     );
   }
-
-  const identifier = file.identifier({
-    // TODO: refactor for better cross-plugin compatibility
-    $ref: `#/tanstack-query-mutation-options/${operation.id}`,
-    case: plugin.config.mutationOptions.case,
-    create: true,
-    nameTransformer: plugin.config.mutationOptions.name,
-    namespace: 'value',
-  });
 
   const mutationOptionsObj: Array<{ key: string; value: ts.Expression }> = [
     {
@@ -127,6 +120,7 @@ export const createMutationOptions = ({
     });
   }
 
+  const mutationOptionsFn = 'mutationOptions';
   const expression = tsc.arrowFunction({
     parameters: [
       {
@@ -149,13 +143,19 @@ export const createMutationOptions = ({
       }),
     ],
   });
+  const symbolMutationOptions = f.addSymbol({
+    name: buildName({
+      config: plugin.config.mutationOptions,
+      name: operation.id,
+    }),
+  });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
     exportConst: true,
     expression,
-    name: identifier.name || '',
+    name: symbolMutationOptions.placeholder,
   });
-  file.add(statement);
+  symbolMutationOptions.update({ value: statement });
 };

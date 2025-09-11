@@ -37,7 +37,10 @@ export default defineConfig(() => {
         // 'invalid',
         // 'openai.yaml',
         // 'full.yaml',
-        'opencode.yaml',
+        // 'opencode.yaml',
+        // 'sdk-instance.yaml',
+        'string-with-format.yaml',
+        // 'validators-circular-ref-2.yaml',
         // 'zoom-video-sdk.json',
       ),
       // https://registry.scalar.com/@lubos-heyapi-dev-team/apis/demo-api-scalar-galaxy/latest?format=json
@@ -67,7 +70,7 @@ export default defineConfig(() => {
       // case: 'snake_case',
       clean: true,
       // format: 'prettier',
-      // indexFile: false,
+      indexFile: false,
       // lint: 'eslint',
       path: path.resolve(__dirname, 'generated', 'sample'),
       // tsConfigPath: path.resolve(
@@ -96,6 +99,12 @@ export default defineConfig(() => {
       },
       hooks: {
         operations: {
+          getKind() {
+            // noop
+          },
+          isMutation() {
+            // noop
+          },
           isQuery: (op) => {
             if (op.method === 'post' && op.path === '/search') {
               return true;
@@ -136,8 +145,8 @@ export default defineConfig(() => {
       // myClientPlugin(),
       {
         // baseUrl: false,
-        // exportFromIndex: true,
-        name: '@hey-api/client-fetch',
+        exportFromIndex: true,
+        // name: '@hey-api/client-fetch',
         // name: 'legacy/angular',
         // strictBaseUrl: true,
         // throwOnError: true,
@@ -149,7 +158,7 @@ export default defineConfig(() => {
           // case: 'PascalCase',
           // constantsIgnoreNull: true,
           // enabled: false,
-          // mode: 'typescript',
+          mode: 'javascript',
         },
         // errors: {
         //   error: '他們_error_{{name}}',
@@ -161,21 +170,22 @@ export default defineConfig(() => {
         //   name: '我_responses_{{name}}',
         //   response: '他_response_{{name}}',
         // },
+        // topType: 'any',
         // tree: true,
-        webhooks: {
-          name: 'Webby{{name}}Hook',
-          payload: '{{name}}WebhookEvent',
-        },
+        // webhooks: {
+        //   name: 'Webby{{name}}Hook',
+        //   payload: '{{name}}WebhookEvent',
+        // },
       },
       {
-        // asClass: true,
+        asClass: true,
         // auth: false,
         // classNameBuilder: '{{name}}',
         // classStructure: 'off',
         // client: false,
         // include...
         // instance: true,
-        name: '@hey-api/sdk',
+        // name: '@hey-api/sdk',
         // operationId: false,
         // params: 'experiment',
         // responseStyle: 'data',
@@ -183,8 +193,8 @@ export default defineConfig(() => {
         // transformer: true,
         // validator: 'valibot',
         // validator: {
-        //   request: 'zod',
-        //   response: 'zod',
+        //   request: 'valibot',
+        //   response: 'valibot',
         // },
       },
       {
@@ -208,11 +218,11 @@ export default defineConfig(() => {
         // mutationOptions: {
         //   name: '{{name}}MO',
         // },
-        name: '@tanstack/react-query',
+        // name: '@tanstack/react-query',
         // queryKeys: {
         //   name: '{{name}}QK',
         // },
-        queryOptions: false,
+        // queryOptions: false,
         // queryOptions: {
         //   name: '{{name}}QO',
         // },
@@ -225,6 +235,12 @@ export default defineConfig(() => {
               }
               return undefined;
             },
+            isMutation() {
+              // noop
+            },
+            isQuery: () => {
+              // noop
+            },
           },
         },
       },
@@ -232,12 +248,12 @@ export default defineConfig(() => {
         // case: 'SCREAMING_SNAKE_CASE',
         // comments: false,
         // definitions: 'z{{name}}Definition',
-        exportFromIndex: true,
+        // exportFromIndex: true,
         // metadata: true,
-        name: 'valibot',
+        // name: 'valibot',
         // requests: {
-        //   // case: 'SCREAMING_SNAKE_CASE',
-        //   name: 'z{{name}}TestData',
+        //   case: 'PascalCase',
+        //   name: '{{name}}Data',
         // },
         // responses: {
         //   // case: 'snake_case',
@@ -250,7 +266,7 @@ export default defineConfig(() => {
       {
         // case: 'snake_case',
         // comments: false,
-        compatibilityVersion: 3,
+        compatibilityVersion: 'mini',
         dates: {
           local: true,
           // offset: true,
@@ -263,7 +279,7 @@ export default defineConfig(() => {
         },
         exportFromIndex: true,
         metadata: true,
-        name: 'zod',
+        // name: 'zod',
         // requests: {
         //   // case: 'SCREAMING_SNAKE_CASE',
         //   // name: 'z{{name}}TestData',
@@ -278,11 +294,11 @@ export default defineConfig(() => {
         //     infer: 'F{{name}}ResponseZodType',
         //   },
         // },
-        // types: {
-        //   infer: {
-        //     case: 'snake_case',
-        //   },
-        // },
+        types: {
+          // infer: {
+          //   case: 'snake_case',
+          // },
+        },
       },
       {
         exportFromIndex: true,
@@ -290,15 +306,18 @@ export default defineConfig(() => {
         // type: 'json',
       },
       {
-        // httpRequest
-        // httpResource
         exportFromIndex: true,
+        httpRequests: {
+          asClass: true,
+        },
+        httpResources: {
+          asClass: true,
+        },
         // name: '@angular/common',
       },
       {
-        // groupByTag: true,
         // mutationOptions: '{{name}}Mutationssss',
-        name: '@pinia/colada',
+        // name: '@pinia/colada',
         // queryOptions: {
         //   name: '{{name}}Queryyyyy',
         // },

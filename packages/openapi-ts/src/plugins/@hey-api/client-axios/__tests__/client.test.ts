@@ -1,5 +1,6 @@
+import type { AxiosInstance } from 'axios';
 import axios from 'axios';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { createClient } from '../bundle/client';
 
@@ -82,4 +83,88 @@ describe('AxiosInstance', () => {
       1,
     );
   });
+});
+
+describe('unserialized request body handling', () => {
+  const client = createClient({ baseURL: 'https://example.com' });
+
+  const scenarios = [
+    { body: 0 },
+    { body: false },
+    { body: 'test string' },
+    { body: '' },
+  ];
+
+  it.each(scenarios)(
+    'handles plain text body with $body value',
+    async ({ body }) => {
+      const mockAxios = vi.fn();
+
+      await client.post({
+        axios: mockAxios as Partial<AxiosInstance> as AxiosInstance,
+        body,
+        bodySerializer: null,
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        url: '/test',
+      });
+
+      expect(mockAxios).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: body,
+        }),
+      );
+    },
+  );
+});
+
+describe('serialized request body handling', () => {
+  const client = createClient({ baseURL: 'https://example.com' });
+
+  const scenarios = [
+    {
+      body: '',
+      expectBodyValue: false,
+      serializedBody: '',
+    },
+    {
+      body: 0,
+      expectBodyValue: true,
+      serializedBody: 0,
+    },
+    {
+      body: false,
+      expectBodyValue: true,
+      serializedBody: false,
+    },
+    {
+      body: {},
+      expectBodyValue: true,
+      serializedBody: '{"key":"value"}',
+    },
+  ];
+
+  it.each(scenarios)(
+    'handles $serializedBody serializedBody value',
+    async ({ body, expectBodyValue, serializedBody }) => {
+      const mockAxios = vi.fn();
+
+      await client.post({
+        axios: mockAxios as Partial<AxiosInstance> as AxiosInstance,
+        body,
+        bodySerializer: () => serializedBody,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        url: '/test',
+      });
+
+      expect(mockAxios).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expectBodyValue ? serializedBody : null,
+        }),
+      );
+    },
+  );
 });

@@ -1,6 +1,6 @@
 import type ts from 'typescript';
 
-import { clientApi, clientModulePath } from '../../../generate/client';
+import { clientModulePath } from '../../../generate/client';
 import { GeneratedFile } from '../../../generate/file';
 import type { IR } from '../../../ir/types';
 import { isOperationParameterRequired } from '../../../openApi';
@@ -96,7 +96,7 @@ export const operationOptionsLegacyParserType = ({
   importedType?: string | false;
   throwOnError?: string;
 }) => {
-  const optionsName = clientApi.OptionsLegacyParser.name;
+  const optionsName = 'OptionsLegacyParser';
   // TODO: refactor this to be more generic, works for now
   if (throwOnError) {
     return `${optionsName}<${importedType || 'unknown'}, ${throwOnError}>`;
@@ -825,8 +825,9 @@ export const handlerLegacy: HeyApiSdkPlugin['LegacyHandler'] = ({
       name: 'createConfig',
     });
     files.sdk.import({
-      ...clientApi.OptionsLegacyParser,
+      asType: true,
       module: clientModulePath({ config, sourceOutput: sdkOutput }),
+      name: 'OptionsLegacyParser',
     });
   } else {
     const clientPlugin = getClientPlugin(config);
