@@ -1,6 +1,5 @@
 import type ts from 'typescript';
 
-import { hasOperationPathOrQueryAny } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
@@ -66,26 +65,17 @@ export const createQueryOptions = ({
     plugin,
     typeData,
   });
-  const hasAnyRequestFields = hasOperationPathOrQueryAny(operation);
-  const needsOptionsScope = hasAnyRequestFields || !!operation.body;
   const awaitSdkExpression = tsc.awaitExpression({
     expression: tsc.callExpression({
       functionName: queryFn,
       parameters: [
-        needsOptionsScope
-          ? tsc.objectExpression({
-              multiLine: true,
-              obj: [
-                ...(isRequiredOptions
-                  ? ([{ spread: optionsParamName }] as const)
-                  : []),
-                { key: 'throwOnError', value: true },
-              ],
-            })
-          : tsc.objectExpression({
-              multiLine: false,
-              obj: [{ key: 'throwOnError', value: true }],
-            }),
+        tsc.objectExpression({
+          multiLine: true,
+          obj: [
+            { spread: optionsParamName },
+            { key: 'throwOnError', value: true },
+          ],
+        }),
       ],
     }),
   });
@@ -115,7 +105,7 @@ export const createQueryOptions = ({
       key: 'key',
       value: tsc.callExpression({
         functionName: symbolQueryKey.placeholder,
-        parameters: needsOptionsScope ? [optionsParamName] : [],
+        parameters: [optionsParamName],
       }),
     },
     {
@@ -155,18 +145,16 @@ export const createQueryOptions = ({
     expression: tsc.callExpression({
       functionName: 'defineQueryOptions',
       parameters: [
-        needsOptionsScope
-          ? tsc.arrowFunction({
-              parameters: [
-                {
-                  isRequired: isRequiredOptions,
-                  name: optionsParamName,
-                  type: strippedTypeData,
-                },
-              ],
-              statements: tsc.objectExpression({ obj: queryOptionsObj }),
-            })
-          : tsc.objectExpression({ obj: queryOptionsObj }),
+        tsc.arrowFunction({
+          parameters: [
+            {
+              isRequired: isRequiredOptions,
+              name: optionsParamName,
+              type: strippedTypeData,
+            },
+          ],
+          statements: tsc.objectExpression({ obj: queryOptionsObj }),
+        }),
       ],
     }),
     name: symbolQueryOptionsFn.placeholder,
