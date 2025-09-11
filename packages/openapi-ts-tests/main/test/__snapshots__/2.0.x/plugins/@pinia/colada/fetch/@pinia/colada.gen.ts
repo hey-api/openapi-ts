@@ -36,9 +36,10 @@ export const serviceWithEmptyTagQueryKey = (options?: Options<ServiceWithEmptyTa
 
 export const serviceWithEmptyTagQuery = defineQueryOptions((options?: Options<ServiceWithEmptyTagData>) => ({
     key: serviceWithEmptyTagQueryKey(options),
-    query: async () => {
+    query: async (context) => {
         const { data } = await serviceWithEmptyTag({
             ...options,
+            ...context,
             throwOnError: true
         });
         return data;
@@ -88,9 +89,10 @@ export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<Ge
 
 export const getCallWithoutParametersAndResponseQuery = defineQueryOptions((options?: Options<GetCallWithoutParametersAndResponseData>) => ({
     key: getCallWithoutParametersAndResponseQueryKey(options),
-    query: async () => {
+    query: async (context) => {
         const { data } = await getCallWithoutParametersAndResponse({
             ...options,
+            ...context,
             throwOnError: true
         });
         return data;
@@ -179,9 +181,10 @@ export const callWithDefaultParametersQueryKey = (options: Options<CallWithDefau
 
 export const callWithDefaultParametersQuery = defineQueryOptions((options: Options<CallWithDefaultParametersData>) => ({
     key: callWithDefaultParametersQueryKey(options),
-    query: async () => {
+    query: async (context) => {
         const { data } = await callWithDefaultParameters({
             ...options,
+            ...context,
             throwOnError: true
         });
         return data;
@@ -231,9 +234,10 @@ export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) =>
 
 export const duplicateName2Query = defineQueryOptions((options?: Options<DuplicateName2Data>) => ({
     key: duplicateName2QueryKey(options),
-    query: async () => {
+    query: async (context) => {
         const { data } = await duplicateName2({
             ...options,
+            ...context,
             throwOnError: true
         });
         return data;
@@ -270,9 +274,10 @@ export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoCo
 
 export const callWithNoContentResponseQuery = defineQueryOptions((options?: Options<CallWithNoContentResponseData>) => ({
     key: callWithNoContentResponseQueryKey(options),
-    query: async () => {
+    query: async (context) => {
         const { data } = await callWithNoContentResponse({
             ...options,
+            ...context,
             throwOnError: true
         });
         return data;
@@ -283,9 +288,10 @@ export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<C
 
 export const callWithResponseAndNoContentResponseQuery = defineQueryOptions((options?: Options<CallWithResponseAndNoContentResponseData>) => ({
     key: callWithResponseAndNoContentResponseQueryKey(options),
-    query: async () => {
+    query: async (context) => {
         const { data } = await callWithResponseAndNoContentResponse({
             ...options,
+            ...context,
             throwOnError: true
         });
         return data;
@@ -296,9 +302,10 @@ export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey(
 
 export const dummyAQuery = defineQueryOptions((options?: Options<DummyAData>) => ({
     key: dummyAQueryKey(options),
-    query: async () => {
+    query: async (context) => {
         const { data } = await dummyA({
             ...options,
+            ...context,
             throwOnError: true
         });
         return data;
@@ -309,9 +316,10 @@ export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey(
 
 export const dummyBQuery = defineQueryOptions((options?: Options<DummyBData>) => ({
     key: dummyBQueryKey(options),
-    query: async () => {
+    query: async (context) => {
         const { data } = await dummyB({
             ...options,
+            ...context,
             throwOnError: true
         });
         return data;
@@ -322,9 +330,10 @@ export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>
 
 export const callWithResponseQuery = defineQueryOptions((options?: Options<CallWithResponseData>) => ({
     key: callWithResponseQueryKey(options),
-    query: async () => {
+    query: async (context) => {
         const { data } = await callWithResponse({
             ...options,
+            ...context,
             throwOnError: true
         });
         return data;
@@ -361,9 +370,10 @@ export const collectionFormatQueryKey = (options: Options<CollectionFormatData>)
 
 export const collectionFormatQuery = defineQueryOptions((options: Options<CollectionFormatData>) => ({
     key: collectionFormatQueryKey(options),
-    query: async () => {
+    query: async (context) => {
         const { data } = await collectionFormat({
             ...options,
+            ...context,
             throwOnError: true
         });
         return data;
@@ -374,9 +384,10 @@ export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('ty
 
 export const typesQuery = defineQueryOptions((options: Options<TypesData>) => ({
     key: typesQueryKey(options),
-    query: async () => {
+    query: async (context) => {
         const { data } = await types({
             ...options,
+            ...context,
             throwOnError: true
         });
         return data;
@@ -387,9 +398,10 @@ export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => crea
 
 export const complexTypesQuery = defineQueryOptions((options: Options<ComplexTypesData>) => ({
     key: complexTypesQueryKey(options),
-    query: async () => {
+    query: async (context) => {
         const { data } = await complexTypes({
             ...options,
+            ...context,
             throwOnError: true
         });
         return data;

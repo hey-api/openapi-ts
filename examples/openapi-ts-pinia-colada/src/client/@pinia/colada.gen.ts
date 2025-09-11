@@ -89,10 +89,9 @@ export const updatePetMutation = (
 })
 
 export type QueryKey<TOptions extends Options> = [
-  Pick<TOptions, 'body' | 'path'> & {
+  Pick<TOptions, 'path'> & {
     _id: string
     baseUrl?: _JSONValue
-    headers?: _JSONValue
     query?: _JSONValue
     tags?: _JSONValue
   }
@@ -109,12 +108,6 @@ const createQueryKey = <TOptions extends Options>(
   } as QueryKey<TOptions>[0]
   if (tags) {
     params.tags = tags as unknown as _JSONValue
-  }
-  if (options?.body) {
-    params.body = options.body
-  }
-  if (options?.headers) {
-    params.headers = options.headers as unknown as _JSONValue
   }
   if (options?.path) {
     params.path = options.path
@@ -135,9 +128,10 @@ export const findPetsByStatusQueryKey = (options: Options<FindPetsByStatusData>)
 export const findPetsByStatusQuery = defineQueryOptions(
   (options: Options<FindPetsByStatusData>) => ({
     key: findPetsByStatusQueryKey(options),
-    query: async () => {
+    query: async (context) => {
       const { data } = await findPetsByStatus({
         ...options,
+        ...context,
         throwOnError: true
       })
       return data
@@ -154,9 +148,10 @@ export const findPetsByTagsQueryKey = (options: Options<FindPetsByTagsData>) =>
  */
 export const findPetsByTagsQuery = defineQueryOptions((options: Options<FindPetsByTagsData>) => ({
   key: findPetsByTagsQueryKey(options),
-  query: async () => {
+  query: async (context) => {
     const { data } = await findPetsByTags({
       ...options,
+      ...context,
       throwOnError: true
     })
     return data
@@ -189,9 +184,10 @@ export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) =>
  */
 export const getPetByIdQuery = defineQueryOptions((options: Options<GetPetByIdData>) => ({
   key: getPetByIdQueryKey(options),
-  query: async () => {
+  query: async (context) => {
     const { data } = await getPetById({
       ...options,
+      ...context,
       throwOnError: true
     })
     return data
@@ -241,9 +237,10 @@ export const getInventoryQueryKey = (options?: Options<GetInventoryData>) =>
  */
 export const getInventoryQuery = defineQueryOptions((options?: Options<GetInventoryData>) => ({
   key: getInventoryQueryKey(options),
-  query: async () => {
+  query: async (context) => {
     const { data } = await getInventory({
       ...options,
+      ...context,
       throwOnError: true
     })
     return data
@@ -293,9 +290,10 @@ export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) =>
  */
 export const getOrderByIdQuery = defineQueryOptions((options: Options<GetOrderByIdData>) => ({
   key: getOrderByIdQueryKey(options),
-  query: async () => {
+  query: async (context) => {
     const { data } = await getOrderById({
       ...options,
+      ...context,
       throwOnError: true
     })
     return data
@@ -349,9 +347,10 @@ export const loginUserQueryKey = (options?: Options<LoginUserData>) =>
  */
 export const loginUserQuery = defineQueryOptions((options?: Options<LoginUserData>) => ({
   key: loginUserQueryKey(options),
-  query: async () => {
+  query: async (context) => {
     const { data } = await loginUser({
       ...options,
+      ...context,
       throwOnError: true
     })
     return data
@@ -367,9 +366,10 @@ export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
  */
 export const logoutUserQuery = defineQueryOptions((options?: Options<LogoutUserData>) => ({
   key: logoutUserQueryKey(options),
-  query: async () => {
+  query: async (context) => {
     const { data } = await logoutUser({
       ...options,
+      ...context,
       throwOnError: true
     })
     return data
@@ -402,9 +402,10 @@ export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) =>
  */
 export const getUserByNameQuery = defineQueryOptions((options: Options<GetUserByNameData>) => ({
   key: getUserByNameQueryKey(options),
-  query: async () => {
+  query: async (context) => {
     const { data } = await getUserByName({
       ...options,
+      ...context,
       throwOnError: true
     })
     return data
