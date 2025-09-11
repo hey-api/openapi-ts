@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { loadConfig } from 'c12';
+import { loadConfig } from '@hey-api/c12';
 
 import { ConfigError } from '../error';
 import type { Config, UserConfig } from '../types/config';
