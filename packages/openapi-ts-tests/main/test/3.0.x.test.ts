@@ -21,7 +21,7 @@ describe(`OpenAPI ${version}`, () => {
       version,
       typeof userConfig.input === 'string'
         ? userConfig.input
-        : Array.isArray(userConfig.input)
+        : userConfig.input instanceof Array
           ? (userConfig.input[0] as any).path || userConfig.input[0]
           : (userConfig.input as any).path,
     );
@@ -666,11 +666,11 @@ describe(`OpenAPI ${version}`, () => {
     const outputPath =
       typeof config.output === 'string'
         ? config.output
-        : Array.isArray(config.output)
+        : config.output instanceof Array
           ? typeof config.output[0] === 'string'
             ? config.output[0]
-            : (config.output[0] as any).path
-          : (config.output as any).path;
+            : config.output[0]?.path || ''
+          : config.output.path;
     const filePaths = getFilePaths(outputPath);
 
     await Promise.all(

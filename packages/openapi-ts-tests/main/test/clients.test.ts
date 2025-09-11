@@ -178,11 +178,11 @@ for (const client of clients) {
       const outputPath =
         typeof config.output === 'string'
           ? config.output
-          : Array.isArray(config.output)
+          : config.output instanceof Array
             ? typeof config.output[0] === 'string'
               ? config.output[0]
-              : (config.output[0] as any)?.path || ''
-            : (config.output as any).path;
+              : config.output[0]?.path || ''
+            : config.output.path;
       const filePaths = getFilePaths(outputPath);
 
       await Promise.all(
@@ -341,11 +341,11 @@ describe('custom-client', () => {
     const outputPath =
       typeof config.output === 'string'
         ? config.output
-        : Array.isArray(config.output)
+        : config.output instanceof Array
           ? typeof config.output[0] === 'string'
             ? config.output[0]
-            : (config.output[0] as any)?.path || ''
-          : (config.output as any).path;
+            : config.output[0]?.path || ''
+          : config.output.path;
     const filePaths = getFilePaths(outputPath);
 
     await Promise.all(
@@ -493,11 +493,11 @@ describe('my-client', () => {
     const outputPath =
       typeof config.output === 'string'
         ? config.output
-        : Array.isArray(config.output)
+        : config.output instanceof Array
           ? typeof config.output[0] === 'string'
             ? config.output[0]
-            : (config.output[0] as any)?.path || ''
-          : (config.output as any).path;
+            : config.output[0]?.path || ''
+          : config.output.path;
     const filePaths = getFilePaths(outputPath);
 
     await Promise.all(

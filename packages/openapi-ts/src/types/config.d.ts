@@ -28,7 +28,7 @@ export interface UserConfig {
    *
    * Alternatively, you can define a configuration object with more options.
    */
-  input: InputPath | Input | (InputPath | Input)[];
+  input: InputPath | Input | ReadonlyArray<InputPath | Input>;
   /**
    * Show an interactive error reporting tool when the program crashes? You
    * generally want to keep this disabled (default).
@@ -47,7 +47,7 @@ export interface UserConfig {
    * outputs to generate different versions of your SDK with different
    * configurations (e.g., different plugins, formatters, or paths).
    */
-  output: string | Output | (string | Output)[];
+  output: string | Output | ReadonlyArray<string | Output>;
   /**
    * Customize how the input is parsed and transformed before it's passed to
    * plugins.

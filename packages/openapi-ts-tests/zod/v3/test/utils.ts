@@ -24,7 +24,7 @@ export const createZodConfig =
       openApiVersion,
       typeof userConfig.input === 'string'
         ? userConfig.input
-        : Array.isArray(userConfig.input)
+        : userConfig.input instanceof Array
           ? typeof userConfig.input[0] === 'string'
             ? (userConfig.input[0] as string)
             : (userConfig.input[0] as any)?.path || ''
