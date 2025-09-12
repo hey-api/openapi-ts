@@ -24,7 +24,7 @@ describe('buildUrl', () => {
       description: 'without query params',
       expectedUrl: '/some-url',
       inputOptions: {
-        baseUrl: 'some-base-url',
+        baseURL: 'some-base-url',
         path: { param1: 'some-path-param' },
         query: undefined,
         querySerializer: (() => '') as QuerySerializer,
@@ -45,8 +45,8 @@ describe('buildUrl', () => {
 
       expect(builtUrl).toBe(expectedUrl);
 
-      // baseUrl is not included in the URL
       expect(getUrlMock).toHaveBeenCalledExactlyOnceWith({
+        baseUrl: inputOptions.baseURL,
         path: inputOptions.path,
         query: inputOptions.query,
         querySerializer: inputOptions.querySerializer,
