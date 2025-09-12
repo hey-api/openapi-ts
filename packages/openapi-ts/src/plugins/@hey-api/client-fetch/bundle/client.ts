@@ -1,3 +1,7 @@
+import {
+  toCase,
+  transformKeysDeep,
+} from '../../client-core/bundle/caseTransform';
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
 import type { HttpMethod } from '../../client-core/bundle/types';
 import { getValidRequestBody } from '../../client-core/bundle/utils';
@@ -60,12 +64,34 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     if (opts.body !== undefined && opts.bodySerializer) {
-      opts.serializedBody = opts.bodySerializer(opts.body);
+      // Transform request body keys to runtimeCase before serialization
+      const targetCase = opts.runtimeCase ?? 'preserve';
+      const bodyToSerialize =
+        targetCase === 'preserve'
+          ? opts.body
+          : transformKeysDeep(opts.body, toCase(targetCase));
+      opts.serializedBody = opts.bodySerializer(bodyToSerialize);
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
     if (opts.body === undefined || opts.serializedBody === '') {
       opts.headers.delete('Content-Type');
+    }
+
+    // Transform query param keys to runtimeCase before URL build
+    if (opts.query && opts.runtimeCase && opts.runtimeCase !== 'preserve') {
+      opts.query = transformKeysDeep(
+        opts.query,
+        toCase(opts.runtimeCase),
+      ) as Record<string, unknown>;
+    }
+
+    // Transform path param keys to runtimeCase before URL build
+    if (opts.path && opts.runtimeCase && opts.runtimeCase !== 'preserve') {
+      opts.path = transformKeysDeep(
+        opts.path,
+        toCase(opts.runtimeCase),
+      ) as Record<string, unknown>;
     }
 
     const url = buildUrl(opts);
@@ -163,6 +189,12 @@ export const createClient = (config: Config = {}): Client => {
       if (parseAs === 'json') {
         if (opts.responseValidator) {
           await opts.responseValidator(data);
+        }
+
+        // Transform response keys from runtimeCase back to client case
+        if (opts.runtimeCase && opts.runtimeCase !== 'preserve') {
+          const targetClientCase = opts.clientCase ?? 'camelCase';
+          data = transformKeysDeep(data, toCase(targetClientCase));
         }
 
         if (opts.responseTransformer) {
