@@ -144,6 +144,43 @@ const response = await getFoo({
 });
 ```
 
+### Runtime casing (optional)
+
+If your API uses a different casing on the wire (e.g., snake_case) than your app/types (e.g., camelCase), you can enable automatic key mapping at runtime.
+
+- `output.case` controls how names are generated in your code (types, helpers).
+- `runtimeCase` controls how request/response keys are mapped on the wire.
+- `clientCase` is inferred from `output.case` and used to map responses back to your app case. You rarely need to set it manually.
+
+```ts
+// openapi-ts.config.ts
+export default {
+  output: {
+    case: 'camelCase',
+  },
+  plugins: [
+    {
+      name: '@hey-api/client-fetch', // [!code ++]
+      // runtime mapping is opt-in and off by default
+      // when enabled, requests go camelCase -> runtimeCase
+      // and responses go runtimeCase -> camelCase
+      runtimeCase: 'snake_case', // [!code ++]
+    },
+  ],
+};
+```
+
+You can also set or override this at runtime:
+
+```ts
+import { client } from 'client/client.gen';
+
+client.setConfig({
+  runtimeCase: 'snake_case',
+  // clientCase defaults to output.case; set it only if you need a custom value
+});
+```
+
 ## Interceptors
 
 Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application. They can be added with `use`, removed with `eject`, and updated wth `update`. The `use` and `update` methods will return the id of the interceptor for use with `eject` and `update`. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
