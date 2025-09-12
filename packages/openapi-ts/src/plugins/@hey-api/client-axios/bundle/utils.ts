@@ -123,8 +123,16 @@ export const setAuthParams = async ({
   }
 };
 
-export const buildUrl: Client['buildUrl'] = (options) =>
-  getUrl({
+export const buildUrl: Client['buildUrl'] = (options) => {
+  const instanceBaseUrl = options.axios?.defaults?.baseURL;
+
+  const baseUrl =
+    !!options.baseURL && typeof options.baseURL === 'string'
+      ? options.baseURL
+      : instanceBaseUrl;
+
+  return getUrl({
+    baseUrl: baseUrl as string,
     path: options.path,
     // let `paramsSerializer()` handle query params if it exists
     query: !options.paramsSerializer ? options.query : undefined,
@@ -134,6 +142,7 @@ export const buildUrl: Client['buildUrl'] = (options) =>
         : createQuerySerializer(options.querySerializer),
     url: options.url,
   });
+};
 
 export const mergeConfigs = (a: Config, b: Config): Config => {
   const config = { ...a, ...b };
