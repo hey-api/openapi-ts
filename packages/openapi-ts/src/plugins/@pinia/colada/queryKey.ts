@@ -321,7 +321,7 @@ export const queryKeyStatement = ({
   const typeData = useTypeData({ operation, plugin });
   const { strippedTypeData } = getPublicTypeData({ plugin, typeData });
   const statement = tsc.constVariable({
-    exportConst: true,
+    exportConst: plugin.config.queryKeys.enabled,
     expression: tsc.arrowFunction({
       parameters: [
         {

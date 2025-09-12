@@ -48,19 +48,34 @@ export const createQueryOptions = ({
   f.addImport({ from: plugin.name, names: ['defineQueryOptions'] });
 
   state.hasUsedQueryFn = true;
+  const symbolCreateQueryKey = f.ensureSymbol({
+    selector: plugin.api.getSelector('createQueryKey'),
+  });
 
-  const symbolQueryKey = f.addSymbol({
-    name: buildName({
-      config: plugin.config.queryKeys,
-      name: operation.id,
-    }),
-  });
-  const node = queryKeyStatement({
-    operation,
-    plugin,
-    symbol: symbolQueryKey,
-  });
-  symbolQueryKey.update({ value: node });
+  let keyExpression: ts.Expression;
+  if (plugin.config.queryKeys.enabled) {
+    const symbolQueryKey = f.addSymbol({
+      name: buildName({
+        config: plugin.config.queryKeys,
+        name: operation.id,
+      }),
+    });
+    const node = queryKeyStatement({
+      operation,
+      plugin,
+      symbol: symbolQueryKey,
+    });
+    symbolQueryKey.update({ value: node });
+    keyExpression = tsc.callExpression({
+      functionName: symbolQueryKey.placeholder,
+      parameters: [optionsParamName],
+    });
+  } else {
+    keyExpression = tsc.callExpression({
+      functionName: symbolCreateQueryKey.placeholder,
+      parameters: [tsc.ots.string(operation.id), optionsParamName],
+    });
+  }
 
   const typeData = useTypeData({ operation, plugin });
   const { strippedTypeData } = getPublicTypeData({
@@ -106,10 +121,7 @@ export const createQueryOptions = ({
   const queryOptionsObj: Array<{ key: string; value: ts.Expression }> = [
     {
       key: 'key',
-      value: tsc.callExpression({
-        functionName: symbolQueryKey.placeholder,
-        parameters: [optionsParamName],
-      }),
+      value: keyExpression,
     },
     {
       key: 'query',
