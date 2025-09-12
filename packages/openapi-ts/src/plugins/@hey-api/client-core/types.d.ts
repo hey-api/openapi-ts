@@ -1,3 +1,4 @@
+import type { StringCase } from '../../../types/case';
 import type { HeyApiClientAngularPlugin } from '../client-angular';
 import type { HeyApiClientAxiosPlugin } from '../client-axios';
 import type { HeyApiClientFetchPlugin } from '../client-fetch';
@@ -39,6 +40,12 @@ export namespace Client {
      */
     bundle?: boolean;
     /**
+     * The casing used by the generated client/types in the application code.
+     * When provided, response payload keys will be converted to this case after
+     * parsing. Defaults to 'camelCase' when a transform is applied.
+     */
+    clientCase?: StringCase;
+    /**
      * Should the exports from the generated files be re-exported in the index
      * barrel file?
      *
@@ -51,6 +58,18 @@ export namespace Client {
      * @default 'client'
      */
     output?: string;
+    /**
+     * Runtime key casing for on-the-wire payloads. When set, request bodies and
+     * query parameter keys will be converted from the generated/client case to
+     * the specified case before sending; response payload keys will be converted
+     * back after parsing. Path template names and enum/string literal values are
+     * not transformed.
+     *
+     * This does not affect generated code; it only applies at runtime.
+     *
+     * @default 'preserve'
+     */
+    runtimeCase?: StringCase;
     /**
      * Relative path to the runtime configuration file. This file must export
      * a `createClientConfig()` function. The `createClientConfig()` function

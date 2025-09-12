@@ -99,6 +99,15 @@ export const createClient: PluginHandler = ({ plugin }) => {
     });
   }
 
+  // Set default clientCase from output.case so responses map to generated types
+  const clientCase = plugin.context.config.output.case;
+  if (clientCase) {
+    defaultValues.push({
+      key: 'clientCase',
+      value: clientCase,
+    });
+  }
+
   const createConfigParameters = [
     tsc.callExpression({
       functionName: symbolCreateConfig.placeholder,

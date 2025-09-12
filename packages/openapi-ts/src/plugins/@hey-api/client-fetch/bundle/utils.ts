@@ -17,8 +17,10 @@ export const createQuerySerializer = <T = unknown>({
   const querySerializer = (queryParams: T) => {
     const search: string[] = [];
     if (queryParams && typeof queryParams === 'object') {
-      for (const name in queryParams) {
-        const value = queryParams[name];
+      const params = queryParams as Record<string, unknown>;
+      const serverParams = params;
+      for (const name in serverParams) {
+        const value = serverParams[name];
 
         if (value === undefined || value === null) {
           continue;
@@ -325,5 +327,6 @@ export const createConfig = <T extends ClientOptions = ClientOptions>(
   headers: defaultHeaders,
   parseAs: 'auto',
   querySerializer: defaultQuerySerializer,
+  runtimeCase: 'preserve',
   ...override,
 });

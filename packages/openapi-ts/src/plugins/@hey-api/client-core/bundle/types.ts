@@ -1,3 +1,4 @@
+import type { StringCase } from '../../../../types/case';
 import type { Auth, AuthToken } from './auth';
 import type {
   BodySerializer,
@@ -47,6 +48,12 @@ export interface Config {
    * {@link JSON.stringify()} will be used.
    */
   bodySerializer?: BodySerializer | null;
+  /**
+   * The casing used by the generated client/types in the application code.
+   * When provided, response payload keys will be converted to this case after
+   * parsing. Defaults to 'camelCase' when a transform is applied.
+   */
+  clientCase?: StringCase;
   /**
    * An object containing any HTTP headers that you want to pre-populate your
    * `Headers` object with.
@@ -99,6 +106,18 @@ export interface Config {
    * the transformers and returned to the user.
    */
   responseValidator?: (data: unknown) => Promise<unknown>;
+  /**
+   * Runtime key casing for on-the-wire payloads. When set, request bodies and
+   * query parameter keys will be converted from the generated/client case to
+   * the specified case before sending; response payload keys will be converted
+   * back after parsing. Path template names and enum/string literal values are
+   * not transformed.
+   *
+   * This does not affect generated code; it only applies at runtime.
+   *
+   * @default 'preserve'
+   */
+  runtimeCase?: StringCase;
 }
 
 type IsExactlyNeverOrNeverUndefined<T> = [T] extends [never]
