@@ -4,12 +4,7 @@ import type { RequestOptions } from '@/client/client'
 import { PiniaColadaDevtools } from '@pinia/colada-devtools'
 import { createClient } from '@/client/client'
 import { PetSchema } from '@/client/schemas.gen'
-import {
-  addPetMutation,
-  getPetByIdQuery,
-  getPetByIdQueryKey,
-  updatePetMutation
-} from '@/client/@pinia/colada.gen'
+import { addPetMutation, getPetByIdQuery, updatePetMutation } from '@/client/@pinia/colada.gen'
 import { useQuery, useMutation, useQueryCache } from '@pinia/colada'
 import { ref, watch } from 'vue'
 
@@ -42,7 +37,11 @@ const petId = ref<number | undefined>()
 const petInput = ref({ name: '', category: '' })
 
 const { data: pet, error } = useQuery(() => ({
-  ...getPetByIdQuery(petQueryOptions()),
+  ...getPetByIdQuery({
+    path: {
+      petId: petId.value as number
+    }
+  }),
   enabled: petId.value !== undefined
 }))
 const { mutateAsync: createPet } = useMutation(addPetMutation())
@@ -50,7 +49,11 @@ const { mutateAsync: updatePet } = useMutation(updatePetMutation())
 
 const queryCache = useQueryCache()
 async function invalidateCurrentPet() {
-  const key = getPetByIdQueryKey(petQueryOptions())
+  const { key } = getPetByIdQuery({
+    path: {
+      petId: petId.value as number
+    }
+  })
   await queryCache.invalidateQueries({ key, exact: true })
 }
 
@@ -87,13 +90,6 @@ async function handleUpdatePet() {
   await updatePetIdAndInvalidate(result.id)
 }
 
-function petQueryOptions() {
-  return {
-    client: localClient,
-    path: { petId: petId.value as number }
-  }
-}
-
 function randomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -122,7 +118,7 @@ function buildPetBody(base?: Partial<Pet>) {
 }
 
 watch(error, (error) => {
-  console.log(error)
+  console.error(error)
 })
 </script>
 
