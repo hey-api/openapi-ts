@@ -168,3 +168,187 @@ describe('serialized request body handling', () => {
     },
   );
 });
+
+describe('calling axios instance', () => {
+  it.each([
+    {
+      description: 'with absolute baseURL',
+      expectedURL: 'https://api.example.com/users',
+      instanceBaseURL: 'https://api.example.com',
+      optionsURL: '/users',
+    },
+    {
+      description: 'without baseURL',
+      expectedURL: '/users',
+      instanceBaseURL: undefined,
+      optionsURL: '/users',
+    },
+    {
+      description: 'with relative baseURL',
+      expectedURL: '/some-base-url/users',
+      instanceBaseURL: '/some-base-url',
+      optionsURL: '/users',
+    },
+  ])(
+    'should call the axios instance with correct baseURL and url $description configured via createClient',
+    async ({ expectedURL, instanceBaseURL, optionsURL }) => {
+      const client = createClient({ baseURL: instanceBaseURL });
+      const mockAxios = vi.fn().mockResolvedValue({ data: { ok: true } });
+
+      const options = {
+        axios: mockAxios as Partial<AxiosInstance> as AxiosInstance,
+        headers: {},
+        url: optionsURL,
+      };
+
+      await client.get(options);
+
+      expect(mockAxios).toHaveBeenCalledWith(
+        expect.objectContaining({
+          baseURL: '',
+          url: expectedURL,
+        }),
+      );
+    },
+  );
+
+  it.each([
+    {
+      description: 'with absolute baseURL',
+      expectedURL: 'https://api.example.com/some-base-url/users',
+      optionsBaseURL: 'https://api.example.com/some-base-url',
+      optionsURL: '/users',
+    },
+    {
+      description: 'with relative baseURL',
+      expectedURL: '/some-base-url/users',
+      optionsBaseURL: '/some-base-url',
+      optionsURL: '/users',
+    },
+  ])(
+    'should call the axios instance with correct url $description configured via request options',
+    async ({ expectedURL, optionsBaseURL, optionsURL }) => {
+      const client = createClient({
+        baseURL: 'base-url-that-will-be-overridden',
+      });
+
+      const mockAxios = vi.fn().mockResolvedValue({ data: { ok: true } });
+
+      const options = {
+        axios: mockAxios as Partial<AxiosInstance> as AxiosInstance,
+        baseURL: optionsBaseURL,
+        headers: {},
+        url: optionsURL,
+      };
+
+      await client.get(options);
+
+      expect(mockAxios).toHaveBeenCalledWith(
+        expect.objectContaining({
+          baseURL: '',
+          url: expectedURL,
+        }),
+      );
+    },
+  );
+
+  it('should call the axios instance with correct url when baseURL configured via axios defaults', async () => {
+    const client = createClient();
+
+    const mockAxios = vi.fn().mockResolvedValue({
+      data: { ok: true },
+    }) as Partial<AxiosInstance> as AxiosInstance;
+    mockAxios.defaults = { baseURL: '/some-base-url', headers: {} as any };
+
+    const options = {
+      axios: mockAxios,
+      headers: {},
+      url: '/users',
+    };
+
+    await client.get(options);
+
+    expect(mockAxios).toHaveBeenCalledWith(
+      expect.objectContaining({
+        baseURL: '',
+        url: '/some-base-url/users',
+      }),
+    );
+  });
+
+  it('should prefer passed baseUrl over configs', async () => {
+    const client = createClient({ baseURL: 'base-url-from-config-1' });
+
+    const mockAxios = vi.fn().mockResolvedValue({
+      data: { ok: true },
+    }) as Partial<AxiosInstance> as AxiosInstance;
+    mockAxios.defaults = {
+      baseURL: 'base-url-from-config-2',
+      headers: {} as any,
+    };
+
+    const options = {
+      axios: mockAxios,
+      baseURL: '/some-base-url',
+      headers: {},
+      url: '/users',
+    };
+
+    await client.get(options);
+
+    expect(mockAxios).toHaveBeenCalledWith(
+      expect.objectContaining({
+        baseURL: '',
+        url: '/some-base-url/users',
+      }),
+    );
+  });
+});
+
+// TODO: remove this after confirmation
+describe('confirming axios behaviour for constructing URLs', () => {
+  it('resolves relative URLs against baseURL', async () => {
+    const client = axios.create({
+      baseURL: 'https://api.example.com',
+    });
+
+    const config = client.getUri({ url: '/users' });
+    expect(config).toBe('https://api.example.com/users');
+  });
+
+  it('resolves relative URLs against relative baseURL', async () => {
+    const client = axios.create({
+      baseURL: '/example',
+    });
+
+    const config = client.getUri({ url: '/users' });
+    expect(config).toBe('/example/users');
+  });
+
+  it('does not prepend baseURL when url is absolute', async () => {
+    const client = axios.create({
+      baseURL: 'https://api.example.com',
+    });
+
+    const config = client.getUri({ url: 'https://other.com/users' });
+    expect(config).toBe('https://other.com/users');
+  });
+
+  it('does not prepend baseURL when overriding baseURL with empty string', async () => {
+    const client = axios.create({
+      baseURL: 'https://api.example.com',
+    });
+
+    const config = client.getUri({ baseURL: '', url: '/users' });
+    expect(config).toBe('/users');
+  });
+
+  it('does prepend baseURL when overriding baseURL with undefined', async () => {
+    const client = axios.create({
+      baseURL: 'https://api.example.com',
+    });
+
+    const config = client.getUri({ baseURL: undefined, url: '/users' });
+    expect(config).toBe('https://api.example.com/users');
+  });
+});
