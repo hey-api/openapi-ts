@@ -118,16 +118,13 @@ const createQueryKey = <TOptions extends Options>(
   return [params]
 }
 
-export const findPetsByStatusQueryKey = (options: Options<FindPetsByStatusData>) =>
-  createQueryKey('findPetsByStatus', options)
-
 /**
  * Finds Pets by status.
  * Multiple status values can be provided with comma separated strings.
  */
 export const findPetsByStatusQuery = defineQueryOptions(
   (options: Options<FindPetsByStatusData>) => ({
-    key: findPetsByStatusQueryKey(options),
+    key: createQueryKey('findPetsByStatus', options),
     query: async (context) => {
       const { data } = await findPetsByStatus({
         ...options,
@@ -139,15 +136,12 @@ export const findPetsByStatusQuery = defineQueryOptions(
   })
 )
 
-export const findPetsByTagsQueryKey = (options: Options<FindPetsByTagsData>) =>
-  createQueryKey('findPetsByTags', options)
-
 /**
  * Finds Pets by tags.
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
 export const findPetsByTagsQuery = defineQueryOptions((options: Options<FindPetsByTagsData>) => ({
-  key: findPetsByTagsQueryKey(options),
+  key: createQueryKey('findPetsByTags', options),
   query: async (context) => {
     const { data } = await findPetsByTags({
       ...options,
@@ -175,15 +169,12 @@ export const deletePetMutation = (
   }
 })
 
-export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) =>
-  createQueryKey('getPetById', options)
-
 /**
  * Find pet by ID.
  * Returns a single pet.
  */
 export const getPetByIdQuery = defineQueryOptions((options: Options<GetPetByIdData>) => ({
-  key: getPetByIdQueryKey(options),
+  key: createQueryKey('getPetById', options),
   query: async (context) => {
     const { data } = await getPetById({
       ...options,
@@ -228,15 +219,12 @@ export const uploadFileMutation = (
   }
 })
 
-export const getInventoryQueryKey = (options?: Options<GetInventoryData>) =>
-  createQueryKey('getInventory', options)
-
 /**
  * Returns pet inventories by status.
  * Returns a map of status codes to quantities.
  */
 export const getInventoryQuery = defineQueryOptions((options?: Options<GetInventoryData>) => ({
-  key: getInventoryQueryKey(options),
+  key: createQueryKey('getInventory', options),
   query: async (context) => {
     const { data } = await getInventory({
       ...options,
@@ -281,15 +269,12 @@ export const deleteOrderMutation = (
   }
 })
 
-export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) =>
-  createQueryKey('getOrderById', options)
-
 /**
  * Find purchase order by ID.
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  */
 export const getOrderByIdQuery = defineQueryOptions((options: Options<GetOrderByIdData>) => ({
-  key: getOrderByIdQueryKey(options),
+  key: createQueryKey('getOrderById', options),
   query: async (context) => {
     const { data } = await getOrderById({
       ...options,
@@ -338,15 +323,12 @@ export const createUsersWithListInputMutation = (
   }
 })
 
-export const loginUserQueryKey = (options?: Options<LoginUserData>) =>
-  createQueryKey('loginUser', options)
-
 /**
  * Logs user into the system.
  * Log into the system.
  */
 export const loginUserQuery = defineQueryOptions((options?: Options<LoginUserData>) => ({
-  key: loginUserQueryKey(options),
+  key: createQueryKey('loginUser', options),
   query: async (context) => {
     const { data } = await loginUser({
       ...options,
@@ -357,15 +339,12 @@ export const loginUserQuery = defineQueryOptions((options?: Options<LoginUserDat
   }
 }))
 
-export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
-  createQueryKey('logoutUser', options)
-
 /**
  * Logs out current logged in user session.
  * Log user out of the system.
  */
 export const logoutUserQuery = defineQueryOptions((options?: Options<LogoutUserData>) => ({
-  key: logoutUserQueryKey(options),
+  key: createQueryKey('logoutUser', options),
   query: async (context) => {
     const { data } = await logoutUser({
       ...options,
@@ -393,15 +372,12 @@ export const deleteUserMutation = (
   }
 })
 
-export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) =>
-  createQueryKey('getUserByName', options)
-
 /**
  * Get user by user name.
  * Get user detail based on username.
  */
 export const getUserByNameQuery = defineQueryOptions((options: Options<GetUserByNameData>) => ({
-  key: getUserByNameQueryKey(options),
+  key: createQueryKey('getUserByName', options),
   query: async (context) => {
     const { data } = await getUserByName({
       ...options,
