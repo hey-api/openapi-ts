@@ -80,7 +80,7 @@ export const createClient = (config: Config = {}): Client => {
       const { auth, ...optsWithoutAuth } = opts;
       const response = await _axios({
         ...optsWithoutAuth,
-        baseURL: opts.baseURL as string,
+        baseURL: '', // the baseURL is already included in `url`
         data: getValidRequestBody(opts),
         headers: opts.headers as RawAxiosRequestHeaders,
         // let `paramsSerializer()` handle query params if it exists
