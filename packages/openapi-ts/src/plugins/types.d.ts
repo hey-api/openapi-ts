@@ -12,6 +12,7 @@ export type PluginClientNames =
   | '@hey-api/client-fetch'
   | '@hey-api/client-next'
   | '@hey-api/client-nuxt'
+  | '@hey-api/client-ofetch'
   | 'legacy/angular'
   | 'legacy/axios'
   | 'legacy/fetch'
