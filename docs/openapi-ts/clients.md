@@ -30,6 +30,7 @@ Hey API natively supports the following clients.
 - [Axios](/openapi-ts/clients/axios)
 - [Next.js](/openapi-ts/clients/next-js)
 - [Nuxt](/openapi-ts/clients/nuxt)
+- [ofetch](/openapi-ts/clients/ofetch)
 - [Effect](/openapi-ts/clients/effect) <span data-soon>Soon</span>
 - [Legacy](/openapi-ts/clients/legacy)
 
