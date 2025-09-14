@@ -1344,7 +1344,7 @@ importers:
         specifier: 3.14.1592
         version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@22.10.5)(db0@0.3.2)(encoding@0.1.13)(eslint@9.17.0(jiti@2.5.1))(ioredis@5.7.0)(less@4.2.2)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.50.0)(sass@1.85.0)(terser@5.43.1)(typescript@5.8.3)(vite@7.1.5(@types/node@22.10.5)(jiti@2.5.1)(less@4.2.2)(sass@1.85.0)(terser@5.43.1)(yaml@2.8.0))
       ofetch:
-        specifier: ^1.4.0
+        specifier: 1.4.1
         version: 1.4.1
       prettier:
         specifier: 3.4.2
@@ -1460,6 +1460,9 @@ importers:
       nuxt:
         specifier: 3.14.1592
         version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@22.10.5)(db0@0.3.2)(encoding@0.1.13)(eslint@9.17.0(jiti@2.5.1))(ioredis@5.7.0)(less@4.2.2)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.50.0)(sass@1.85.0)(terser@5.43.1)(typescript@5.8.3)(vite@7.1.5(@types/node@22.10.5)(jiti@2.5.1)(less@4.2.2)(sass@1.85.0)(terser@5.43.1)(yaml@2.8.0))
+      ofetch:
+        specifier: 1.4.1
+        version: 1.4.1
       prettier:
         specifier: 3.4.2
         version: 3.4.2
