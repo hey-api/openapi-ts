@@ -906,6 +906,21 @@ describe(`OpenAPI ${version}`, () => {
     {
       config: createConfig({
         input: 'opencode.yaml',
+        output: 'sse-ofetch',
+        parser: {
+          filters: {
+            operations: {
+              include: ['GET /event'],
+            },
+          },
+        },
+        plugins: ['@hey-api/client-ofetch', '@hey-api/sdk'],
+      }),
+      description: 'client with SSE (ofetch)',
+    },
+    {
+      config: createConfig({
+        input: 'opencode.yaml',
         output: 'sse-next',
         parser: {
           filters: {
