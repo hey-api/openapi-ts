@@ -318,7 +318,8 @@ export const buildOfetchOptions = (
   body: BodyInit | null | undefined,
   responseType: OfetchResponseType | undefined,
   retryOverride?: OfetchOptions['retry'],
-): OfetchOptions => ({
+): OfetchOptions =>
+  ({
     agent: opts.agent as OfetchOptions['agent'],
     body,
     dispatcher: opts.dispatcher as OfetchOptions['dispatcher'],
@@ -332,13 +333,13 @@ export const buildOfetchOptions = (
     // URL already includes query
     query: undefined,
     responseType,
-    retry: (retryOverride ?? (opts.retry as OfetchOptions['retry'])),
+    retry: retryOverride ?? (opts.retry as OfetchOptions['retry']),
     retryDelay: opts.retryDelay as OfetchOptions['retryDelay'],
     retryStatusCodes:
       opts.retryStatusCodes as OfetchOptions['retryStatusCodes'],
     signal: opts.signal,
     timeout: opts.timeout as number | undefined,
-  } as OfetchOptions);
+  }) as OfetchOptions;
 
 /**
  * Parse a successful response, handling empty bodies and stream cases.
@@ -384,10 +385,20 @@ export const parseSuccess = async (
       case 'arrayBuffer':
       case 'blob':
       case 'formData':
-      case 'json':
       case 'text':
         data = await (response as any)[inferredParseAs]();
         break;
+      case 'json': {
+        // Some servers return 200 with no Content-Length and empty body.
+        // response.json() would throw; detect empty via clone().text() first.
+        const txt = await response.clone().text();
+        if (!txt) {
+          data = {};
+        } else {
+          data = await (response as any).json();
+        }
+        break;
+      }
       case 'stream':
         return response.body;
     }
