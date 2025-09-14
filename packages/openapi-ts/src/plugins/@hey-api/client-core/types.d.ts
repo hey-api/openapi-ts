@@ -4,11 +4,13 @@ import type { HeyApiClientAxiosPlugin } from '../client-axios';
 import type { HeyApiClientFetchPlugin } from '../client-fetch';
 import type { HeyApiClientNextPlugin } from '../client-next';
 import type { HeyApiClientNuxtPlugin } from '../client-nuxt';
+import type { HeyApiClientOfetchPlugin } from '../client-ofetch';
 
 export interface PluginHandler {
   (...args: Parameters<HeyApiClientAngularPlugin['Handler']>): void;
   (...args: Parameters<HeyApiClientAxiosPlugin['Handler']>): void;
   (...args: Parameters<HeyApiClientFetchPlugin['Handler']>): void;
+  (...args: Parameters<HeyApiClientOfetchPlugin['Handler']>): void;
   (...args: Parameters<HeyApiClientNextPlugin['Handler']>): void;
   (...args: Parameters<HeyApiClientNuxtPlugin['Handler']>): void;
 }
