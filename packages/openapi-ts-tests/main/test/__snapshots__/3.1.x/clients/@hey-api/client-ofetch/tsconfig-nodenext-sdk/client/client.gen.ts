@@ -78,6 +78,38 @@ export const createClient = (config: Config = {}): Client => {
       opts.headers.delete('Content-Type');
     }
 
+    // If user provides a raw body (no serializer), adjust Content-Type sensibly.
+    // Avoid overriding explicit user-defined headers; only correct the default JSON header.
+    if (
+      opts.body !== undefined &&
+      opts.bodySerializer === null &&
+      (opts.headers.get('Content-Type') || '').toLowerCase() ===
+        'application/json'
+    ) {
+      const b: unknown = opts.body;
+      if (typeof FormData !== 'undefined' && b instanceof FormData) {
+        // Let the runtime set proper boundary
+        opts.headers.delete('Content-Type');
+      } else if (
+        typeof URLSearchParams !== 'undefined' &&
+        b instanceof URLSearchParams
+      ) {
+        // Set standard urlencoded content type with charset
+        opts.headers.set(
+          'Content-Type',
+          'application/x-www-form-urlencoded;charset=UTF-8',
+        );
+      } else if (typeof Blob !== 'undefined' && b instanceof Blob) {
+        const t = b.type?.trim();
+        if (t) {
+          opts.headers.set('Content-Type', t);
+        } else {
+          // No known type for the blob: avoid sending misleading JSON header
+          opts.headers.delete('Content-Type');
+        }
+      }
+    }
+
     // Precompute network body for retries and consistent handling
     const networkBody = getValidRequestBody(opts) as
       | RequestInit['body']
@@ -116,14 +148,18 @@ export const createClient = (config: Config = {}): Client => {
     body: BodyInit | null | undefined,
     responseType: OfetchResponseType | undefined,
   ) => {
-    const effectiveRetry = isRepeatableBody(body) ? (opts.retry as any) : (0 as any);
+    const effectiveRetry = isRepeatableBody(body)
+      ? (opts.retry as any)
+      : (0 as any);
     return buildOfetchOptions(opts, body, responseType, effectiveRetry);
   };
 
   const request: Client['request'] = async (options) => {
-    const { networkBody: initialNetworkBody, opts, url } = await resolveOptions(
-      options as any,
-    );
+    const {
+      networkBody: initialNetworkBody,
+      opts,
+      url,
+    } = await resolveOptions(options as any);
     // Compute response type mapping once
     const ofetchResponseType: OfetchResponseType | undefined =
       mapParseAsToResponseType(opts.parseAs, opts.responseType);
