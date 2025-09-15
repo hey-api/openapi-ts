@@ -35,6 +35,12 @@ The Pinia Colada plugin for Hey API generates functions and query keys from your
 
 ## Installation
 
+::: tip Nuxt
+When using this plugin in a Nuxt app, prefer the [ofetch client](/openapi-ts/clients/ofetch) for universal compatibility.
+
+The [nuxt client](/openapi-ts/clients/nuxt) is tailored for working directly with Nuxt composables (`$fetch` / `useFetch` / `useAsyncData`) and is not intended as a universal HTTP client for libraries like `@pinia/colada`.
+:::
+
 In your [configuration](/openapi-ts/get-started), add `@pinia/colada` to your plugins and you'll be ready to generate Pinia Colada artifacts. :tada:
 
 ```js
