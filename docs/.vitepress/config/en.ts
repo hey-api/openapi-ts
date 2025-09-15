@@ -105,7 +105,7 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/clients/ofetch',
-                text: 'ofetch',
+                text: 'OFetch',
               },
               {
                 link: '/openapi-ts/clients/effect',
