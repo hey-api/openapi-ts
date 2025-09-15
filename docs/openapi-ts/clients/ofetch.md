@@ -1,5 +1,5 @@
 ---
-title: ofetch Client
+title: OFetch Client
 description: Generate a type-safe ofetch client from OpenAPI with the ofetch client for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
@@ -7,7 +7,7 @@ description: Generate a type-safe ofetch client from OpenAPI with the ofetch cli
 import { embedProject } from '../../embed'
 </script>
 
-# ofetch
+# OFetch
 
 ### About
 
