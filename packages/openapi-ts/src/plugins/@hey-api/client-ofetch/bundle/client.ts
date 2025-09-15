@@ -47,7 +47,7 @@ export const createClient = (config: Config = {}): Client => {
     ResolvedRequestOptions
   >();
 
-  // Resolve final options, serialized body, network body and URL
+  // precompute serialized / network body
   const resolveOptions = async (options: RequestOptions) => {
     const opts = {
       ..._config,
@@ -71,13 +71,13 @@ export const createClient = (config: Config = {}): Client => {
       opts.serializedBody = opts.bodySerializer(opts.body);
     }
 
-    // remove Content-Type header if body is empty to avoid sending invalid requests
+    // remove Content-Type if body is empty to avoid invalid requests
     if (opts.body === undefined || opts.serializedBody === '') {
       opts.headers.delete('Content-Type');
     }
 
-    // If user provides a raw body (no serializer), adjust Content-Type sensibly.
-    // Avoid overriding explicit user-defined headers; only correct the default JSON header.
+    // if a raw body is provided (no serializer), adjust Content-Type only when it
+    // equals the default JSON value to better match the concrete body type
     if (
       opts.body !== undefined &&
       opts.bodySerializer === null &&
@@ -86,13 +86,13 @@ export const createClient = (config: Config = {}): Client => {
     ) {
       const b: unknown = opts.body;
       if (typeof FormData !== 'undefined' && b instanceof FormData) {
-        // Let the runtime set proper boundary
+        // let the runtime set the multipart boundary
         opts.headers.delete('Content-Type');
       } else if (
         typeof URLSearchParams !== 'undefined' &&
         b instanceof URLSearchParams
       ) {
-        // Set standard urlencoded content type with charset
+        // standard urlencoded content type (+ charset)
         opts.headers.set(
           'Content-Type',
           'application/x-www-form-urlencoded;charset=UTF-8',
@@ -102,13 +102,13 @@ export const createClient = (config: Config = {}): Client => {
         if (t) {
           opts.headers.set('Content-Type', t);
         } else {
-          // No known type for the blob: avoid sending misleading JSON header
+          // unknown blob type: avoid sending a misleading JSON header
           opts.headers.delete('Content-Type');
         }
       }
     }
 
-    // Precompute network body for retries and consistent handling
+    // precompute network body (stability for retries and interceptors)
     const networkBody = getValidRequestBody(opts) as
       | RequestInit['body']
       | null
@@ -119,7 +119,7 @@ export const createClient = (config: Config = {}): Client => {
     return { networkBody, opts, url };
   };
 
-  // Apply request interceptors to a Request and reflect header/method/signal
+  // apply request interceptors and mirror header/method/signal back to opts
   const applyRequestInterceptors = async (
     request: Request,
     opts: ResolvedRequestOptions,
@@ -129,18 +129,17 @@ export const createClient = (config: Config = {}): Client => {
         request = await fn(request, opts);
       }
     }
-    // Reflect any interceptor changes into opts used for network and downstream
+    // reflect interceptor changes into opts used by the network layer
     opts.headers = request.headers;
     opts.method = request.method as Uppercase<HttpMethod>;
-    // Note: we intentionally ignore request.body changes from interceptors to
-    // avoid turning serialized bodies into streams. Body is sourced solely
-    // from getValidRequestBody(options) for consistency.
-    // Attempt to reflect possible signal changes
+    // ignore request.body changes to avoid turning serialized bodies into streams
+    // body comes only from getValidRequestBody(options)
+    // reflect signal if present
     opts.signal = (request as any).signal as AbortSignal | undefined;
     return request;
   };
 
-  // Build ofetch options with stable retry logic based on body repeatability
+  // build ofetch options with stable retry logic based on body repeatability
   const buildNetworkOptions = (
     opts: ResolvedRequestOptions,
     body: BodyInit | null | undefined,
@@ -158,13 +157,13 @@ export const createClient = (config: Config = {}): Client => {
       opts,
       url,
     } = await resolveOptions(options as any);
-    // Compute response type mapping once
+    // map parseAs -> ofetch responseType once per request
     const ofetchResponseType: OfetchResponseType | undefined =
       mapParseAsToResponseType(opts.parseAs, opts.responseType);
 
     const $ofetch = opts.ofetch ?? ofetch;
 
-    // Always create Request pre-network (align with client-fetch)
+    // create Request before network to run middleware consistently
     const networkBody = initialNetworkBody;
     const requestInit: ReqInit = {
       body: networkBody,
@@ -178,7 +177,7 @@ export const createClient = (config: Config = {}): Client => {
     request = await applyRequestInterceptors(request, opts);
     const finalUrl = request.url;
 
-    // Build ofetch options and perform the request
+    // build ofetch options and perform the request (.raw keeps the Response)
     const responseOptions = buildNetworkOptions(
       opts as ResolvedRequestOptions,
       networkBody,
@@ -208,7 +207,7 @@ export const createClient = (config: Config = {}): Client => {
       }
     }
 
-    // Ensure error is never undefined after interceptors
+    // ensure error is never undefined after interceptors
     finalError = (finalError as any) || ({} as string);
 
     if (opts.throwOnError) {
@@ -226,7 +225,7 @@ export const createClient = (config: Config = {}): Client => {
     (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
       const { networkBody, opts, url } = await resolveOptions(options);
       const optsForSse: any = { ...opts };
-      delete optsForSse.body;
+      delete optsForSse.body; // body is provided via serializedBody below
       return createSseClient({
         ...optsForSse,
         fetch: opts.fetch,
