@@ -282,6 +282,22 @@ client.setConfig({
 });
 ```
 
+## SSE
+
+The ofetch client supports Server‑Sent Events (SSE) via `client.sse.<method>`. Use this for streaming endpoints.
+
+```ts
+const result = await client.sse.get({
+  url: '/events',
+  onSseEvent(event) {
+    // event.data (string) or parsed data, depending on server
+  },
+  onSseError(error) {
+    // handle stream errors
+  },
+});
+```
+
 ## Build URL
 
 If you need to access the compiled URL, you can use the `buildUrl()` method. It's loosely typed by default to accept almost any value; in practice, you will want to pass a type hint.
