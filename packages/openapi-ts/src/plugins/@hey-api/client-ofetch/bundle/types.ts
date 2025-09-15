@@ -20,14 +20,24 @@ export type ResponseStyle = 'data' | 'fields';
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
     CoreConfig {
+  /**
+   * HTTP(S) agent configuration (Node.js only). Passed through to ofetch.
+   */
   agent?: OfetchOptions['agent'];
   /**
    * Base URL for all requests made by this client.
    */
   baseUrl?: T['baseUrl'];
-  /** Node-only proxy/agent options */
+  /**
+   * Node-only proxy/agent options.
+   */
   dispatcher?: OfetchOptions['dispatcher'];
-  /** Optional fetch instance used for SSE streaming */
+  /**
+   * Fetch API implementation. Used for SSE streaming. You can use this option
+   * to provide a custom fetch instance.
+   *
+   * @default globalThis.fetch
+   */
   fetch?: typeof fetch;
   // No custom fetch option: provide custom instance via `ofetch` instead
   /**
@@ -42,10 +52,23 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * be used for requests instead of the default `ofetch` export.
    */
   ofetch?: typeof ofetch;
-  /** ofetch interceptors and runtime options */
+  /**
+   * ofetch hook called before a request is sent.
+   */
   onRequest?: OfetchOptions['onRequest'];
+  /**
+   * ofetch hook called when a request fails before receiving a response
+   * (e.g., network errors or aborted requests).
+   */
   onRequestError?: OfetchOptions['onRequestError'];
+  /**
+   * ofetch hook called after a successful response is received and parsed.
+   */
   onResponse?: OfetchOptions['onResponse'];
+  /**
+   * ofetch hook called when the response indicates an error (non-ok status)
+   * or when response parsing fails.
+   */
   onResponseError?: OfetchOptions['onResponseError'];
   /**
    * Return the response data parsed in a specified format. By default, `auto`
@@ -80,7 +103,13 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * Automatically retry failed requests.
    */
   retry?: OfetchOptions['retry'];
+  /**
+   * Delay (in ms) between retry attempts.
+   */
   retryDelay?: OfetchOptions['retryDelay'];
+  /**
+   * HTTP status codes that should trigger a retry.
+   */
   retryStatusCodes?: OfetchOptions['retryStatusCodes'];
   /**
    * Throw an error instead of returning it in the response?
