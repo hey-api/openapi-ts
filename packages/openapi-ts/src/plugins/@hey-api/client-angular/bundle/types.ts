@@ -18,6 +18,19 @@ import type {
 } from '../../client-core/bundle/types';
 import type { Middleware } from './utils';
 
+/**
+ * Compatible body type for requests that doesn't depend on DOM types.
+ * Equivalent to the standard BodyInit type but without DOM-specific types
+ * like Blob, FormData, or ReadableStream that require DOM lib in TypeScript.
+ */
+export type RequestBody =
+  | string
+  | ArrayBuffer
+  | ArrayBufferView
+  | URLSearchParams
+  | null
+  | undefined;
+
 export type ResponseStyle = 'data' | 'fields';
 
 export interface Config<T extends ClientOptions = ClientOptions>

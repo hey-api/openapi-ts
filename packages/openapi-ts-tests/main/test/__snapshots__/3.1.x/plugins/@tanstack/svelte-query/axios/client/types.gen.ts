@@ -19,6 +19,19 @@ import type {
   Config as CoreConfig,
 } from '../core/types.gen';
 
+/**
+ * Compatible body type for requests that doesn't depend on DOM types.
+ * Equivalent to the standard BodyInit type but without DOM-specific types
+ * like Blob, FormData, or ReadableStream that require DOM lib in TypeScript.
+ */
+export type RequestBody =
+  | string
+  | ArrayBuffer
+  | ArrayBufferView
+  | URLSearchParams
+  | null
+  | undefined;
+
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<CreateAxiosDefaults, 'auth' | 'baseURL' | 'headers' | 'method'>,
     CoreConfig {

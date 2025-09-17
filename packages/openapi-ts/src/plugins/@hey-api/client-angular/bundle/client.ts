@@ -20,6 +20,7 @@ import { getValidRequestBody } from '../../client-core/bundle/utils';
 import type {
   Client,
   Config,
+  RequestBody,
   RequestOptions,
   ResolvedRequestOptions,
   ResponseStyle,
@@ -209,7 +210,7 @@ export const createClient = (config: Config = {}): Client => {
       const { opts, url } = await beforeRequest(options);
       return createSseClient({
         ...opts,
-        body: opts.body as BodyInit | null | undefined,
+        body: opts.body as RequestBody,
         headers: opts.headers as unknown as Record<string, string>,
         method,
         url,
