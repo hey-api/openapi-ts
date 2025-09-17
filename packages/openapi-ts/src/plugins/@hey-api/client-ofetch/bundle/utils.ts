@@ -379,9 +379,9 @@ export const parseSuccess = async (
     }
   }
 
-  // Prefer ofetch-populated data
+  // Prefer ofetch-populated data unless we explicitly need raw `formData`
   let data: unknown = (response as any)._data;
-  if (typeof data === 'undefined') {
+  if (inferredParseAs === 'formData' || typeof data === 'undefined') {
     switch (inferredParseAs) {
       case 'arrayBuffer':
       case 'blob':
