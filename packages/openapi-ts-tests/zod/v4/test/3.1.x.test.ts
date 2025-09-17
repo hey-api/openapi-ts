@@ -138,6 +138,13 @@ for (const zodVersion of zodVersions) {
         description:
           "validator schemas with merged unions (can't use .merge())",
       },
+      {
+        config: createConfig({
+          input: 'validators-string-constraints-union.json',
+          output: 'validators-string-constraints-union',
+        }),
+        description: 'validator schemas with string constraints union',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {

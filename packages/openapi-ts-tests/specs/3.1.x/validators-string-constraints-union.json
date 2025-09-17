@@ -1,0 +1,27 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "String Constraints Union Test",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "LocaleOrLanguage": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 5,
+            "description": "Combination of ISO 639-1 and ISO 3166-1 alpha-2 separated by a hyphen."
+          },
+          {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "ISO 639-1 language code."
+          }
+        ]
+      }
+    }
+  }
+}
