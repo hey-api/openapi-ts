@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.83.2
+
+### Patch Changes
+
+- fix(parser): expand schema deduplication by including validation constraints in type ID ([#2650](https://github.com/hey-api/openapi-ts/pull/2650)) ([`31b3933`](https://github.com/hey-api/openapi-ts/commit/31b3933b2caa1085dbead1ef94695bca4b83d6ac)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.83.1
 
 ### Patch Changes
