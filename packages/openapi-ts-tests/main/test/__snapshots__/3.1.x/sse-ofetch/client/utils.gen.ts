@@ -324,6 +324,9 @@ export const buildOfetchOptions = (
     body,
     dispatcher: opts.dispatcher as OfetchOptions['dispatcher'],
     headers: opts.headers as Headers,
+    ignoreResponseError:
+      (opts.ignoreResponseError as OfetchOptions['ignoreResponseError']) ??
+      true,
     method: opts.method,
     onRequest: opts.onRequest as OfetchOptions['onRequest'],
     onRequestError: opts.onRequestError as OfetchOptions['onRequestError'],
@@ -378,9 +381,9 @@ export const parseSuccess = async (
     }
   }
 
-  // Prefer ofetch-populated data
+  // Prefer ofetch-populated data unless we explicitly need raw `formData`
   let data: unknown = (response as any)._data;
-  if (typeof data === 'undefined') {
+  if (inferredParseAs === 'formData' || typeof data === 'undefined') {
     switch (inferredParseAs) {
       case 'arrayBuffer':
       case 'blob':
@@ -532,6 +535,7 @@ export const createConfig = <T extends ClientOptions = ClientOptions>(
 ): Config<Omit<ClientOptions, keyof T> & T> => ({
   ...jsonBodySerializer,
   headers: defaultHeaders,
+  ignoreResponseError: true,
   parseAs: 'auto',
   querySerializer: defaultQuerySerializer,
   ...override,
