@@ -42,7 +42,25 @@ export const deduplicateSchema = <T extends IR.SchemaObject>({
         item.format !== undefined && detectFormat
           ? `format-${item.format}`
           : '';
-      const typeId = `${item.$ref ?? ''}${item.type ?? ''}${constant}${format}`;
+
+      // Include validation constraints in the type ID to avoid incorrect deduplication
+      const constraints = [
+        item.minLength !== undefined ? `minLength-${item.minLength}` : '',
+        item.maxLength !== undefined ? `maxLength-${item.maxLength}` : '',
+        item.minimum !== undefined ? `minimum-${item.minimum}` : '',
+        item.maximum !== undefined ? `maximum-${item.maximum}` : '',
+        item.exclusiveMinimum !== undefined
+          ? `exclusiveMinimum-${item.exclusiveMinimum}`
+          : '',
+        item.exclusiveMaximum !== undefined
+          ? `exclusiveMaximum-${item.exclusiveMaximum}`
+          : '',
+        item.minItems !== undefined ? `minItems-${item.minItems}` : '',
+        item.maxItems !== undefined ? `maxItems-${item.maxItems}` : '',
+        item.pattern !== undefined ? `pattern-${item.pattern}` : '',
+      ].join('');
+
+      const typeId = `${item.$ref ?? ''}${item.type ?? ''}${constant}${format}${constraints}`;
       if (!typeIds.includes(typeId)) {
         typeIds.push(typeId);
         uniqueItems.push(item);
