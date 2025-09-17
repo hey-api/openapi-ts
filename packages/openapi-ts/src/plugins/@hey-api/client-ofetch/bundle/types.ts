@@ -39,6 +39,12 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * @default globalThis.fetch
    */
   fetch?: typeof fetch;
+  /**
+   * Controls the native ofetch behaviour that throws `FetchError` when
+   * `response.ok === false`. We default to suppressing it to match the fetch
+   * client semantics and let `throwOnError` drive the outcome.
+   */
+  ignoreResponseError?: OfetchOptions['ignoreResponseError'];
   // No custom fetch option: provide custom instance via `ofetch` instead
   /**
    * Please don't use the Fetch client for Next.js applications. The `next`
