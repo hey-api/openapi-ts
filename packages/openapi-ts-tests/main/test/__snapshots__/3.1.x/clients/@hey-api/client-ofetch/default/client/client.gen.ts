@@ -84,7 +84,7 @@ export const createClient = (config: Config = {}): Client => {
       opts.body !== undefined &&
       opts.bodySerializer === null &&
       (opts.headers.get('Content-Type') || '').toLowerCase() ===
-      'application/json'
+        'application/json'
     ) {
       const b: unknown = opts.body;
       if (typeof FormData !== 'undefined' && b instanceof FormData) {
