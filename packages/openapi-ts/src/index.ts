@@ -14,11 +14,17 @@ import {
 } from './error';
 import type { IR } from './ir/types';
 import type { Client } from './types/client';
-import type { Config, UserConfig } from './types/config';
+import type {
+  Config,
+  UserConfig,
+  UserConfigMultiOutputs,
+} from './types/config';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { Logger } from './utils/logger';
 
-type ConfigValue = UserConfig | ReadonlyArray<UserConfig>;
+type ConfigValue =
+  | UserConfigMultiOutputs
+  | ReadonlyArray<UserConfigMultiOutputs>;
 // Generic input shape for config that may be a value or a (possibly async) factory
 type ConfigInput<T extends ConfigValue> = T | (() => T) | (() => Promise<T>);
 
@@ -27,7 +33,7 @@ colors.enabled = colorSupport().hasBasic;
 /**
  * Generate a client from the provided configuration.
  *
- * @param userConfig User provided {@link UserConfig} configuration.
+ * @param userConfig User provided {@link UserConfigMultiOutputs} configuration.
  */
 export const createClient = async (
   userConfig?: ConfigInput<ConfigValue>,
@@ -79,14 +85,15 @@ export const createClient = async (
     return result;
   } catch (error) {
     const config = configs[0] as Config | undefined;
+    // TODO: Improve error handling for multi-output configs
     const resolvedSingle = (
       Array.isArray(resolvedConfig) ? resolvedConfig[0] : resolvedConfig
-    ) as UserConfig | undefined;
+    ) as UserConfigMultiOutputs | undefined;
     const dryRun = config ? config.dryRun : resolvedSingle?.dryRun;
     const isInteractive = config
       ? config.interactive
       : resolvedSingle?.interactive;
-    const logs = config?.logs ?? getLogs(resolvedSingle);
+    const logs = config?.logs ?? getLogs(resolvedSingle as UserConfig);
 
     let logPath: string | undefined;
 

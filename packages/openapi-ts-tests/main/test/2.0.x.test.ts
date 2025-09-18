@@ -40,13 +40,7 @@ describe(`OpenAPI ${version}`, () => {
       },
       output: path.join(
         outputDir,
-        typeof userConfig.output === 'string'
-          ? userConfig.output
-          : Array.isArray(userConfig.output)
-            ? typeof userConfig.output[0] === 'string'
-              ? userConfig.output[0]
-              : (userConfig.output[0] as any).path || ''
-            : (userConfig.output as any).path || '',
+        typeof userConfig.output === 'string' ? userConfig.output : '',
       ),
     };
   };
@@ -400,13 +394,7 @@ describe(`OpenAPI ${version}`, () => {
     await createClient(config);
 
     const outputPath =
-      typeof config.output === 'string'
-        ? config.output
-        : config.output instanceof Array
-          ? typeof config.output[0] === 'string'
-            ? config.output[0]
-            : config.output[0]?.path || ''
-          : config.output.path;
+      typeof config.output === 'string' ? config.output : config.output.path;
     const filePaths = getFilePaths(outputPath);
 
     await Promise.all(
@@ -440,19 +428,11 @@ describe(`OpenAPI ${version}`, () => {
       const outputPathA =
         typeof configA.output === 'string'
           ? configA.output
-          : Array.isArray(configA.output)
-            ? typeof configA.output[0] === 'string'
-              ? configA.output[0]
-              : (configA.output[0] as any).path
-            : (configA.output as any).path;
+          : configA.output.path;
       const outputPathB =
         typeof configB.output === 'string'
           ? configB.output
-          : Array.isArray(configB.output)
-            ? typeof configB.output[0] === 'string'
-              ? configB.output[0]
-              : (configB.output[0] as any).path
-            : (configB.output as any).path;
+          : configB.output.path;
 
       const filesA = getFilePaths(outputPathA);
       const filesB = getFilePaths(outputPathB);
