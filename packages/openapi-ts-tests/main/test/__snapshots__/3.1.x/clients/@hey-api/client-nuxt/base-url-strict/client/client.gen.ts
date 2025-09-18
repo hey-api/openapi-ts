@@ -10,7 +10,7 @@ import { reactive, ref, watch } from 'vue';
 
 import { createSseClient } from '../core/serverSentEvents.gen';
 import type { HttpMethod } from '../core/types.gen';
-import type { Client, Config, RequestBody, RequestOptions } from './types.gen';
+import type { Client, Config, RequestOptions } from './types.gen';
 import {
   buildUrl,
   createConfig,
@@ -192,7 +192,7 @@ export const createClient = (config: Config = {}): Client => {
       const { opts, url } = await beforeRequest(options);
       return createSseClient({
         ...unwrapRefs(opts),
-        body: opts.body as RequestBody,
+        body: opts.body as any,
         method,
         onRequest: undefined,
         signal: unwrapRefs(opts.signal) as AbortSignal,

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
 import type { HttpMethod } from '../../client-core/bundle/types';
 import { getValidRequestBody } from '../../client-core/bundle/utils';
-import type { Client, Config, RequestBody, RequestOptions } from './types';
+import type { Client, Config, RequestOptions } from './types';
 import {
   buildUrl,
   createConfig,
@@ -122,7 +122,7 @@ export const createClient = (config: Config = {}): Client => {
       const { opts, url } = await beforeRequest(options);
       return createSseClient({
         ...opts,
-        body: opts.body as RequestBody,
+        body: opts.body as any,
         headers: opts.headers as Record<string, string>,
         method,
         // @ts-expect-error

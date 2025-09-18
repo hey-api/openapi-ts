@@ -6,7 +6,7 @@ import axios from 'axios';
 import { createSseClient } from '../core/serverSentEvents.gen';
 import type { HttpMethod } from '../core/types.gen';
 import { getValidRequestBody } from '../core/utils.gen';
-import type { Client, Config, RequestBody, RequestOptions } from './types.gen';
+import type { Client, Config, RequestOptions } from './types.gen';
 import {
   buildUrl,
   createConfig,
@@ -124,7 +124,7 @@ export const createClient = (config: Config = {}): Client => {
       const { opts, url } = await beforeRequest(options);
       return createSseClient({
         ...opts,
-        body: opts.body as RequestBody,
+        body: opts.body as any,
         headers: opts.headers as Record<string, string>,
         method,
         // @ts-expect-error
