@@ -23,6 +23,9 @@ export const createQueryKeyFunction = ({
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
   const f = plugin.gen.ensureFile(plugin.output);
+  const symbolJsonValue = f.ensureSymbol({
+    selector: plugin.api.getSelector('_JSONValue'),
+  });
 
   const symbolCreateQueryKey = f
     .ensureSymbol({ selector: plugin.api.getSelector('createQueryKey') })
@@ -49,7 +52,6 @@ export const createQueryKeyFunction = ({
   });
 
   const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
-
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.gen.selectSymbolFirstOrThrow(
     sdkPlugin.api.getSelector('Options'),
@@ -121,59 +123,9 @@ export const createQueryKeyFunction = ({
                       expression: tsc.identifier({ text: 'tags' }),
                       type: tsc.keywordTypeNode({ keyword: 'unknown' }),
                     }),
-                    type: tsc.keywordTypeNode({ keyword: 'undefined' }),
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-        tsc.ifStatement({
-          expression: tsc.propertyAccessExpression({
-            expression: optionsIdentifier,
-            isOptional: true,
-            name: tsc.identifier({ text: 'body' }),
-          }),
-          thenStatement: tsc.block({
-            statements: [
-              tsc.expressionToStatement({
-                expression: tsc.binaryExpression({
-                  left: tsc.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'body',
-                  }),
-                  right: tsc.propertyAccessExpression({
-                    expression: 'options',
-                    name: 'body',
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-        tsc.ifStatement({
-          expression: tsc.propertyAccessExpression({
-            expression: optionsIdentifier,
-            isOptional: true,
-            name: tsc.identifier({ text: 'headers' }),
-          }),
-          thenStatement: tsc.block({
-            statements: [
-              tsc.expressionToStatement({
-                expression: tsc.binaryExpression({
-                  left: tsc.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'headers',
-                  }),
-                  right: tsc.asExpression({
-                    expression: tsc.asExpression({
-                      expression: tsc.propertyAccessExpression({
-                        expression: 'options',
-                        name: 'headers',
-                      }),
-                      type: tsc.keywordTypeNode({ keyword: 'unknown' }),
+                    type: tsc.typeReferenceNode({
+                      typeName: symbolJsonValue.placeholder,
                     }),
-                    type: tsc.keywordTypeNode({ keyword: 'undefined' }),
                   }),
                 }),
               }),
@@ -225,7 +177,9 @@ export const createQueryKeyFunction = ({
                       }),
                       type: tsc.keywordTypeNode({ keyword: 'unknown' }),
                     }),
-                    type: tsc.keywordTypeNode({ keyword: 'undefined' }),
+                    type: tsc.typeReferenceNode({
+                      typeName: symbolJsonValue.placeholder,
+                    }),
                   }),
                 }),
               }),
@@ -308,11 +262,6 @@ export const createQueryKeyType = ({
     },
     {
       isRequired: false,
-      name: 'headers',
-      type: tsc.typeReferenceNode({ typeName: symbolJsonValue.placeholder }),
-    },
-    {
-      isRequired: false,
       name: 'query',
       type: tsc.typeReferenceNode({ typeName: symbolJsonValue.placeholder }),
     },
@@ -338,7 +287,7 @@ export const createQueryKeyType = ({
         tsc.typeIntersectionNode({
           types: [
             tsc.typeReferenceNode({
-              typeName: `Pick<${TOptionsType}, 'body' | 'path'>`,
+              typeName: `Pick<${TOptionsType}, 'path'>`,
             }),
             tsc.typeInterfaceNode({
               properties,
@@ -372,7 +321,7 @@ export const queryKeyStatement = ({
   const typeData = useTypeData({ operation, plugin });
   const { strippedTypeData } = getPublicTypeData({ plugin, typeData });
   const statement = tsc.constVariable({
-    exportConst: true,
+    exportConst: plugin.config.queryKeys.enabled,
     expression: tsc.arrowFunction({
       parameters: [
         {
@@ -390,4 +339,18 @@ export const queryKeyStatement = ({
     name: symbol.placeholder,
   });
   return statement;
+};
+
+export const ensureQueryKeyInfra = ({
+  plugin,
+  state,
+}: {
+  plugin: PiniaColadaPlugin['Instance'];
+  state: { hasCreateQueryKeyParamsFunction?: boolean };
+}) => {
+  if (!state.hasCreateQueryKeyParamsFunction) {
+    createQueryKeyType({ plugin });
+    createQueryKeyFunction({ plugin });
+    state.hasCreateQueryKeyParamsFunction = true;
+  }
 };
