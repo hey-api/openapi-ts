@@ -76,79 +76,86 @@ export const createClient = (config: Config = {}): Client => {
     // fetch must be assigned here, otherwise it would throw the error:
     // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
     const _fetch = opts.fetch!;
-    let response = await _fetch(request);
-
-    for (const fn of interceptors.response._fns) {
-      if (fn) {
-        response = await fn(response, request, opts);
-      }
+    let error : unknown;
+    let response
+    try {
+      response = await _fetch(request);
+    }catch (e) {
+      error = e
     }
+    if (response) {
+      for (const fn of interceptors.response._fns) {
+        if (fn) {
+          response = await fn(response, request, opts);
+        }
+      }
 
-    const result = {
-      request,
-      response,
-    };
+      const result = {
+        request,
+        response,
+      };
 
-    if (response.ok) {
-      if (
-        response.status === 204 ||
-        response.headers.get('Content-Length') === '0'
-      ) {
+      if (response.ok) {
+        if (
+          response.status === 204 ||
+          response.headers.get('Content-Length') === '0'
+        ) {
+          return opts.responseStyle === 'data'
+            ? {}
+            : {
+                data: {},
+                ...result,
+              };
+        }
+
+        const parseAs =
+          (opts.parseAs === 'auto'
+            ? getParseAs(response.headers.get('Content-Type'))
+            : opts.parseAs) ?? 'json';
+
+        let data: any;
+        switch (parseAs) {
+          case 'arrayBuffer':
+          case 'blob':
+          case 'formData':
+          case 'json':
+          case 'text':
+            data = await response[parseAs]();
+            break;
+          case 'stream':
+            return opts.responseStyle === 'data'
+              ? response.body
+              : {
+                  data: response.body,
+                  ...result,
+                };
+        }
+
+        if (parseAs === 'json') {
+          if (opts.responseValidator) {
+            await opts.responseValidator(data);
+          }
+
+          if (opts.responseTransformer) {
+            data = await opts.responseTransformer(data);
+          }
+        }
+
         return opts.responseStyle === 'data'
-          ? {}
+          ? data
           : {
-              data: {},
+              data,
               ...result,
             };
       }
 
-      const parseAs =
-        (opts.parseAs === 'auto'
-          ? getParseAs(response.headers.get('Content-Type'))
-          : opts.parseAs) ?? 'json';
+      error = await response.text();
 
-      let data: any;
-      switch (parseAs) {
-        case 'arrayBuffer':
-        case 'blob':
-        case 'formData':
-        case 'json':
-        case 'text':
-          data = await response[parseAs]();
-          break;
-        case 'stream':
-          return opts.responseStyle === 'data'
-            ? response.body
-            : {
-                data: response.body,
-                ...result,
-              };
+      try {
+        error = JSON.parse(error as string);
+      } catch {
+        // noop
       }
-
-      if (parseAs === 'json') {
-        if (opts.responseValidator) {
-          await opts.responseValidator(data);
-        }
-
-        if (opts.responseTransformer) {
-          data = await opts.responseTransformer(data);
-        }
-      }
-
-      return opts.responseStyle === 'data'
-        ? data
-        : {
-            data,
-            ...result,
-          };
-    }
-
-    let error = await response.text();
-
-    try {
-      error = JSON.parse(error);
-    } catch {
-      // noop
     }
 
     let finalError = error;
