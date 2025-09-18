@@ -3,7 +3,11 @@ import path from 'node:path';
 import { loadConfig } from '@hey-api/c12';
 
 import { ConfigError } from '../error';
-import type { Config, UserConfig } from '../types/config';
+import type {
+  Config,
+  UserConfig,
+  UserConfigMultiOutputs,
+} from '../types/config';
 import { isLegacyClient, setConfig } from '../utils/config';
 import { getInput } from './input';
 import { getLogs } from './logs';
@@ -18,7 +22,7 @@ import { getPlugins } from './plugins';
  * @internal
  */
 const expandMultiOutputConfigs = (
-  userConfigs: ReadonlyArray<UserConfig>,
+  userConfigs: ReadonlyArray<UserConfigMultiOutputs>,
 ): ReadonlyArray<UserConfig> => {
   const expandedConfigs: Array<UserConfig> = [];
 
@@ -33,7 +37,7 @@ const expandMultiOutputConfigs = (
       }
     } else {
       // Single output configuration - keep as is
-      expandedConfigs.push(userConfig);
+      expandedConfigs.push(userConfig as UserConfig);
     }
   }
 
@@ -44,7 +48,10 @@ const expandMultiOutputConfigs = (
  * @internal
  */
 export const initConfigs = async (
-  userConfig: UserConfig | ReadonlyArray<UserConfig> | undefined,
+  userConfig:
+    | UserConfigMultiOutputs
+    | ReadonlyArray<UserConfigMultiOutputs>
+    | undefined,
 ): Promise<{
   dependencies: Record<string, string>;
   results: ReadonlyArray<{
@@ -62,7 +69,7 @@ export const initConfigs = async (
   }
 
   const { config: configFromFile, configFile: loadedConfigFile } =
-    await loadConfig<UserConfig>({
+    await loadConfig<UserConfigMultiOutputs>({
       configFile: configurationFile,
       name: 'openapi-ts',
     });
@@ -70,7 +77,9 @@ export const initConfigs = async (
   const dependencies = getProjectDependencies(
     Object.keys(configFromFile).length ? loadedConfigFile : undefined,
   );
-  const baseUserConfigs: ReadonlyArray<UserConfig> = Array.isArray(userConfig)
+  const baseUserConfigs: ReadonlyArray<UserConfigMultiOutputs> = Array.isArray(
+    userConfig,
+  )
     ? userConfig
     : Array.isArray(configFromFile)
       ? configFromFile.map((config) =>

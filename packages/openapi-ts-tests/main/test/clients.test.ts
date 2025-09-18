@@ -46,14 +46,7 @@ for (const client of clients) {
           ? path.join(outputDir, userConfig.output)
           : {
               ...userConfig.output,
-              path: path.join(
-                outputDir,
-                Array.isArray(userConfig.output)
-                  ? typeof userConfig.output[0] === 'string'
-                    ? userConfig.output[0]
-                    : (userConfig.output[0] as any)?.path || ''
-                  : (userConfig.output as any).path,
-              ),
+              path: path.join(outputDir, userConfig.output.path),
             },
     });
 
@@ -176,13 +169,8 @@ for (const client of clients) {
       }
 
       const outputPath =
-        typeof config.output === 'string'
-          ? config.output
-          : config.output instanceof Array
-            ? typeof config.output[0] === 'string'
-              ? config.output[0]
-              : config.output[0]?.path || ''
-            : config.output.path;
+        typeof config.output === 'string' ? config.output : config.output.path;
+
       const filePaths = getFilePaths(outputPath);
 
       await Promise.all(
@@ -339,13 +327,8 @@ describe('custom-client', () => {
     await createClient(config);
 
     const outputPath =
-      typeof config.output === 'string'
-        ? config.output
-        : config.output instanceof Array
-          ? typeof config.output[0] === 'string'
-            ? config.output[0]
-            : config.output[0]?.path || ''
-          : config.output.path;
+      typeof config.output === 'string' ? config.output : config.output.path;
+
     const filePaths = getFilePaths(outputPath);
 
     await Promise.all(
@@ -491,13 +474,8 @@ describe('my-client', () => {
     await createClient(config);
 
     const outputPath =
-      typeof config.output === 'string'
-        ? config.output
-        : config.output instanceof Array
-          ? typeof config.output[0] === 'string'
-            ? config.output[0]
-            : config.output[0]?.path || ''
-          : config.output.path;
+      typeof config.output === 'string' ? config.output : config.output.path;
+
     const filePaths = getFilePaths(outputPath);
 
     await Promise.all(

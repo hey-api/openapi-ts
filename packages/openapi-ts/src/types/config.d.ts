@@ -5,6 +5,9 @@ import type { Logs } from './logs';
 import type { Output } from './output';
 import type { Parser, ResolvedParser } from './parser';
 
+export interface UserConfigMultiOutputs extends UserConfig {
+  output: string | Output | ReadonlyArray<string | Output>;
+}
 export interface UserConfig {
   /**
    * Path to the config file. Set this value if you don't use the default
@@ -47,7 +50,7 @@ export interface UserConfig {
    * outputs to generate different versions of your SDK with different
    * configurations (e.g., different plugins, formatters, or paths).
    */
-  output: string | Output | ReadonlyArray<string | Output>;
+  output: string | Output;
   /**
    * Customize how the input is parsed and transformed before it's passed to
    * plugins.
