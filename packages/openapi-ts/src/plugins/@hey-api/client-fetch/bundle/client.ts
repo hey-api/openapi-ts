@@ -218,9 +218,9 @@ export const createClient = (config: Config = {}): Client => {
   const makeSseFn =
     (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
       const { opts, url } = await beforeRequest(options);
+      const { body, ...sseOpts } = opts;
       return createSseClient({
-        ...opts,
-        body: opts.body as any,
+        ...sseOpts,
         headers: opts.headers as unknown as Record<string, string>,
         method,
         onRequest: async (url, init) => {

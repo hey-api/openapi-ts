@@ -190,9 +190,10 @@ export const createClient = (config: Config = {}): Client => {
   const makeSseFn =
     (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
       const { opts, url } = await beforeRequest(options);
+      const unwrappedOpts = unwrapRefs(opts);
+      const { body, ...sseOpts } = unwrappedOpts;
       return createSseClient({
-        ...unwrapRefs(opts),
-        body: opts.body as any,
+        ...sseOpts,
         method,
         onRequest: undefined,
         signal: unwrapRefs(opts.signal) as AbortSignal,
