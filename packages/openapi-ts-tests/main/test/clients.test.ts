@@ -16,6 +16,7 @@ const __dirname = path.dirname(__filename);
 const clients: ReadonlyArray<PluginClientNames> = [
   '@hey-api/client-axios',
   '@hey-api/client-fetch',
+  '@hey-api/client-ofetch',
   '@hey-api/client-next',
   '@hey-api/client-nuxt',
 ];

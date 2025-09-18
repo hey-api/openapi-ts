@@ -10,6 +10,8 @@ import type { HeyApiClientNextPlugin } from './@hey-api/client-next';
 import { defaultConfig as heyApiClientNext } from './@hey-api/client-next';
 import type { HeyApiClientNuxtPlugin } from './@hey-api/client-nuxt';
 import { defaultConfig as heyApiClientNuxt } from './@hey-api/client-nuxt';
+import type { HeyApiClientOfetchPlugin } from './@hey-api/client-ofetch';
+import { defaultConfig as heyApiClientOfetch } from './@hey-api/client-ofetch';
 import type { HeyApiClientLegacyAngularPlugin } from './@hey-api/legacy-angular';
 import { defaultConfig as heyApiLegacyAngular } from './@hey-api/legacy-angular';
 import type { HeyApiClientLegacyAxiosPlugin } from './@hey-api/legacy-axios';
@@ -55,6 +57,7 @@ export interface PluginConfigMap {
   '@hey-api/client-fetch': HeyApiClientFetchPlugin['Types'];
   '@hey-api/client-next': HeyApiClientNextPlugin['Types'];
   '@hey-api/client-nuxt': HeyApiClientNuxtPlugin['Types'];
+  '@hey-api/client-ofetch': HeyApiClientOfetchPlugin['Types'];
   '@hey-api/schemas': HeyApiSchemasPlugin['Types'];
   '@hey-api/sdk': HeyApiSdkPlugin['Types'];
   '@hey-api/transformers': HeyApiTransformersPlugin['Types'];
@@ -84,6 +87,7 @@ export const defaultPluginConfigs: {
   '@hey-api/client-fetch': heyApiClientFetch,
   '@hey-api/client-next': heyApiClientNext,
   '@hey-api/client-nuxt': heyApiClientNuxt,
+  '@hey-api/client-ofetch': heyApiClientOfetch,
   '@hey-api/schemas': heyApiSchemas,
   '@hey-api/sdk': heyApiSdk,
   '@hey-api/transformers': heyApiTransformers,
