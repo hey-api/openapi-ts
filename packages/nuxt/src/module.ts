@@ -4,12 +4,12 @@ import path from 'node:path';
 import type { UserConfig } from '@hey-api/openapi-ts';
 import { createClient } from '@hey-api/openapi-ts';
 import { addImportsSources, defineNuxtModule, useNuxt } from '@nuxt/kit';
+import { findPath } from '@nuxt/kit';
 import type {} from '@nuxt/schema';
 import { defu } from 'defu';
 import { findExports, findTypeExports } from 'mlly';
-import { findPath } from 'nuxt/kit';
 
-interface ModuleOptions {
+export interface ModuleOptions {
   /**
    * Module alias.
    *
@@ -46,7 +46,7 @@ export default defineNuxtModule<ModuleOptions>({
       output: {
         path: path.join(nuxt.options.buildDir, 'client'),
       },
-      plugins: (options.config.plugins || []).some(
+      plugins: (options.config?.plugins || []).some(
         (plugin: Required<UserConfig>['plugins'][number]) => {
           const pluginName = typeof plugin === 'string' ? plugin : plugin.name;
           return pluginName === '@hey-api/client-nuxt';
@@ -58,6 +58,10 @@ export default defineNuxtModule<ModuleOptions>({
 
     if (nuxt.options._prepare) {
       config.watch = false;
+
+      if (!config.input && options.autoImport) {
+        return;
+      }
     }
 
     const folder = path.resolve(
@@ -113,4 +117,4 @@ export default defineNuxtModule<ModuleOptions>({
       }
     }
   },
-}) as any;
+});
