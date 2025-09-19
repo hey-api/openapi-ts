@@ -4,7 +4,6 @@ import colorSupport from 'color-support';
 
 import { checkNodeVersion } from './config/engine';
 import { initConfigs } from './config/init';
-import { getLogs } from './config/logs';
 import { createClient as pCreateClient } from './createClient';
 import {
   logCrashReport,
@@ -14,21 +13,25 @@ import {
 } from './error';
 import type { IR } from './ir/types';
 import type { Client } from './types/client';
-import type { Config, UserConfig } from './types/config';
+import type { Config, UserConfigMultiOutputs } from './types/config';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { Logger } from './utils/logger';
 
-type Configs = UserConfig | (() => UserConfig) | (() => Promise<UserConfig>);
+type ConfigValue =
+  | UserConfigMultiOutputs
+  | ReadonlyArray<UserConfigMultiOutputs>;
+// Generic input shape for config that may be a value or a (possibly async) factory
+type ConfigInput<T extends ConfigValue> = T | (() => T) | (() => Promise<T>);
 
 colors.enabled = colorSupport().hasBasic;
 
 /**
  * Generate a client from the provided configuration.
  *
- * @param userConfig User provided {@link UserConfig} configuration.
+ * @param userConfig User provided {@link UserConfigMultiOutputs} configuration.
  */
 export const createClient = async (
-  userConfig?: Configs,
+  userConfig?: ConfigInput<ConfigValue>,
   logger = new Logger(),
 ): Promise<ReadonlyArray<Client | IR.Context>> => {
   const resolvedConfig =
@@ -43,6 +46,8 @@ export const createClient = async (
 
     const eventConfig = logger.timeEvent('config');
     const configResults = await initConfigs(resolvedConfig);
+
+    // Check for configuration errors and fail immediately
     for (const result of configResults.results) {
       configs.push(result.config);
       if (result.errors.length) {
@@ -76,12 +81,21 @@ export const createClient = async (
 
     return result;
   } catch (error) {
-    const config = configs[0] as Config | undefined;
-    const dryRun = config ? config.dryRun : resolvedConfig?.dryRun;
-    const isInteractive = config
-      ? config.interactive
-      : resolvedConfig?.interactive;
-    const logs = config?.logs ?? getLogs(resolvedConfig);
+    // Handle both configuration errors and runtime errors
+    // For multi-config scenarios, use first available config or reasonable defaults
+    const firstConfig = configs[0];
+    const resolvedSingle = (
+      Array.isArray(resolvedConfig) ? resolvedConfig[0] : resolvedConfig
+    ) as UserConfigMultiOutputs | undefined;
+
+    const logs = firstConfig?.logs ?? {
+      file: false,
+      level: 'warn' as const,
+      path: '',
+    };
+    const dryRun = firstConfig?.dryRun ?? resolvedSingle?.dryRun ?? false;
+    const isInteractive =
+      firstConfig?.interactive ?? resolvedSingle?.interactive ?? false;
 
     let logPath: string | undefined;
 
@@ -101,10 +115,14 @@ export const createClient = async (
 };
 
 /**
- * Type helper for openapi-ts.config.ts, returns {@link UserConfig} object
+ * Type helper for openapi-ts.config.ts, preserves input shape (object vs array)
  */
-export const defineConfig = async (config: Configs): Promise<UserConfig> =>
-  typeof config === 'function' ? await config() : config;
+export const defineConfig = async <T extends ConfigValue>(
+  config: ConfigInput<T>,
+): Promise<T> =>
+  typeof config === 'function'
+    ? await (config as () => T | Promise<T>)()
+    : (config as T);
 
 export { defaultPaginationKeywords } from './config/parser';
 export { defaultPlugins } from './config/plugins';

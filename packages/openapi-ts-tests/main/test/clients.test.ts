@@ -170,6 +170,7 @@ for (const client of clients) {
 
       const outputPath =
         typeof config.output === 'string' ? config.output : config.output.path;
+
       const filePaths = getFilePaths(outputPath);
 
       await Promise.all(
@@ -327,6 +328,7 @@ describe('custom-client', () => {
 
     const outputPath =
       typeof config.output === 'string' ? config.output : config.output.path;
+
     const filePaths = getFilePaths(outputPath);
 
     await Promise.all(
@@ -473,6 +475,7 @@ describe('my-client', () => {
 
     const outputPath =
       typeof config.output === 'string' ? config.output : config.output.path;
+
     const filePaths = getFilePaths(outputPath);
 
     await Promise.all(

@@ -38,6 +38,40 @@ export default {
 
 Alternatively, you can use `openapi-ts.config.js` and configure the export statement depending on your project setup.
 
+### Async config and factories
+
+You can also export a function (sync or async) if you need to compute configuration dynamically (e.g., read env vars):
+
+```js
+import { defineConfig } from '@hey-api/openapi-ts';
+
+export default defineConfig(async () => {
+  return {
+    input: 'hey-api/backend',
+    output: 'src/client',
+  };
+});
+```
+
+### Multiple configurations
+
+You can also export an array to run multiple configurations in a single invocation (e.g., generate multiple clients):
+
+```js
+import { defineConfig } from '@hey-api/openapi-ts';
+
+export default defineConfig([
+  {
+    input: 'path/to/openapi_one.json',
+    output: 'src/client_one',
+  },
+  {
+    input: 'path/to/openapi_two.json',
+    output: 'src/client_two',
+  },
+]);
+```
+
 <!--
 TODO: uncomment after c12 supports multiple configs
 see https://github.com/unjs/c12/issues/92
