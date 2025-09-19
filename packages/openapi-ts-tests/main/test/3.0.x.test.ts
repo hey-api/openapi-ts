@@ -40,9 +40,7 @@ describe(`OpenAPI ${version}`, () => {
       },
       output: path.join(
         outputDir,
-        typeof userConfig.output === 'string'
-          ? userConfig.output
-          : userConfig.output.path,
+        typeof userConfig.output === 'string' ? userConfig.output : '',
       ),
     };
   };

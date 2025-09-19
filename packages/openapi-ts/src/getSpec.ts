@@ -208,18 +208,6 @@ export const getSpec = async ({
       arrayBuffer,
       pathOrUrlOrSchemas: [],
       resolvedInputs,
-      // : [
-      //   {
-      //     path: 'c:/Users/olafk/DEV/openapi-ts-demo/openapi1.yaml',
-      //     schema: undefined,
-      //     type: 'file',
-      //   },
-      //   {
-      //     path: 'c:/Users/olafk/DEV/openapi-ts-demo/openapi2.yaml',
-      //     schema: undefined,
-      //     type: 'file',
-      //   },
-      // ],
     });
   }
   if (!anyChanged) {
