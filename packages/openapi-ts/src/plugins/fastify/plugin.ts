@@ -1,6 +1,5 @@
 import type ts from 'typescript';
 
-import { TypeScriptRenderer } from '../../generate/renderer';
 import { operationResponsesMap } from '../../ir/operation';
 import { hasParameterGroupObjectRequired } from '../../ir/parameter';
 import type { IR } from '../../ir/types';
@@ -14,20 +13,14 @@ const operationToRouteHandler = ({
   operation: IR.OperationObject;
   plugin: FastifyPlugin['Instance'];
 }): Property | undefined => {
-  const f = plugin.gen.ensureFile(plugin.output);
-
   const properties: Array<Property> = [];
 
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  const symbolDataType = plugin.gen.selectSymbolFirst(
+  const symbolDataType = plugin.getSymbol(
     pluginTypeScript.api.getSelector('data', operation.id),
   );
   if (symbolDataType) {
     if (operation.body) {
-      f.addImport({
-        from: symbolDataType.file,
-        typeNames: [symbolDataType.placeholder],
-      });
       properties.push({
         isRequired: operation.body.required,
         name: 'Body',
@@ -37,10 +30,6 @@ const operationToRouteHandler = ({
 
     if (operation.parameters) {
       if (operation.parameters.header) {
-        f.addImport({
-          from: symbolDataType.file,
-          typeNames: [symbolDataType.placeholder],
-        });
         properties.push({
           isRequired: hasParameterGroupObjectRequired(
             operation.parameters.header,
@@ -51,10 +40,6 @@ const operationToRouteHandler = ({
       }
 
       if (operation.parameters.path) {
-        f.addImport({
-          from: symbolDataType.file,
-          typeNames: [symbolDataType.placeholder],
-        });
         properties.push({
           isRequired: hasParameterGroupObjectRequired(
             operation.parameters.path,
@@ -65,10 +50,6 @@ const operationToRouteHandler = ({
       }
 
       if (operation.parameters.query) {
-        f.addImport({
-          from: symbolDataType.file,
-          typeNames: [symbolDataType.placeholder],
-        });
         properties.push({
           isRequired: hasParameterGroupObjectRequired(
             operation.parameters.query,
@@ -83,7 +64,7 @@ const operationToRouteHandler = ({
   const { errors, responses } = operationResponsesMap(operation);
 
   let errorsTypeReference: ts.TypeReferenceNode | undefined = undefined;
-  const symbolErrorType = plugin.gen.selectSymbolFirst(
+  const symbolErrorType = plugin.getSymbol(
     pluginTypeScript.api.getSelector('errors', operation.id),
   );
   if (symbolErrorType && errors && errors.properties) {
@@ -91,18 +72,10 @@ const operationToRouteHandler = ({
     if (keys.length) {
       const hasDefaultResponse = keys.includes('default');
       if (!hasDefaultResponse) {
-        f.addImport({
-          from: symbolErrorType.file,
-          typeNames: [symbolErrorType.placeholder],
-        });
         errorsTypeReference = tsc.typeReferenceNode({
           typeName: symbolErrorType.placeholder,
         });
       } else if (keys.length > 1) {
-        f.addImport({
-          from: symbolErrorType.file,
-          typeNames: [symbolErrorType.placeholder],
-        });
         const errorsType = tsc.typeReferenceNode({
           typeName: symbolErrorType.placeholder,
         });
@@ -118,7 +91,7 @@ const operationToRouteHandler = ({
   }
 
   let responsesTypeReference: ts.TypeReferenceNode | undefined = undefined;
-  const symbolResponseType = plugin.gen.selectSymbolFirst(
+  const symbolResponseType = plugin.getSymbol(
     pluginTypeScript.api.getSelector('responses', operation.id),
   );
   if (symbolResponseType && responses && responses.properties) {
@@ -126,18 +99,10 @@ const operationToRouteHandler = ({
     if (keys.length) {
       const hasDefaultResponse = keys.includes('default');
       if (!hasDefaultResponse) {
-        f.addImport({
-          from: symbolResponseType.file,
-          typeNames: [symbolResponseType.placeholder],
-        });
         responsesTypeReference = tsc.typeReferenceNode({
           typeName: symbolResponseType.placeholder,
         });
       } else if (keys.length > 1) {
-        f.addImport({
-          from: symbolResponseType.file,
-          typeNames: [symbolResponseType.placeholder],
-        });
         const responsesType = tsc.typeReferenceNode({
           typeName: symbolResponseType.placeholder,
         });
@@ -168,9 +133,9 @@ const operationToRouteHandler = ({
     return;
   }
 
-  const symbolRouteHandler = f.ensureSymbol({
-    selector: plugin.api.getSelector('RouteHandler'),
-  });
+  const symbolRouteHandler = plugin.referenceSymbol(
+    plugin.api.getSelector('RouteHandler'),
+  );
   const routeHandler: Property = {
     name: operation.id,
     type: tsc.typeReferenceNode({
@@ -187,10 +152,21 @@ const operationToRouteHandler = ({
 };
 
 export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
-  const f = plugin.gen.createFile(plugin.output, {
-    extension: '.ts',
-    path: '{{path}}.gen',
-    renderer: new TypeScriptRenderer(),
+  plugin.registerSymbol({
+    external: 'fastify',
+    meta: {
+      kind: 'type',
+    },
+    name: 'RouteHandler',
+    selector: plugin.api.getSelector('RouteHandler'),
+  });
+
+  const symbolRouteHandlers = plugin.registerSymbol({
+    exported: true,
+    meta: {
+      kind: 'type',
+    },
+    name: 'RouteHandlers',
   });
 
   const routeHandlers: Array<Property> = [];
@@ -202,25 +178,13 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
     }
   });
 
-  const symbolRouteHandlers = f.addSymbol({ name: 'RouteHandlers' });
-
-  if (routeHandlers.length) {
-    const symbolRouteHandler = f
-      .ensureSymbol({ selector: plugin.api.getSelector('RouteHandler') })
-      .update({ name: 'RouteHandler' });
-    f.addImport({
-      from: 'fastify',
-      typeNames: [symbolRouteHandler.name],
-    });
-  }
-
   const node = tsc.typeAliasDeclaration({
-    exportType: true,
+    exportType: symbolRouteHandlers.exported,
     name: symbolRouteHandlers.placeholder,
     type: tsc.typeInterfaceNode({
       properties: routeHandlers,
       useLegacyResolution: false,
     }),
   });
-  symbolRouteHandlers.update({ value: node });
+  plugin.setSymbolValue(symbolRouteHandlers, node);
 };

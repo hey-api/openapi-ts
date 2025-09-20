@@ -192,12 +192,6 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
           name?: StringName;
         };
     /**
-     * Name of the generated file.
-     *
-     * @default '@tanstack/solid-query'
-     */
-    output?: string;
-    /**
      * Configuration for generated query keys.
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/solid/reference/queryKey}
@@ -460,12 +454,6 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
        */
       name: StringName;
     };
-    /**
-     * Name of the generated file.
-     *
-     * @default '@tanstack/solid-query'
-     */
-    output: string;
     /**
      * Resolved configuration for generated query keys.
      *

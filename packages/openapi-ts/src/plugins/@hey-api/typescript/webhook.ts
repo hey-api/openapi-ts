@@ -3,19 +3,15 @@ import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { createSchemaComment } from '../../shared/utils/schema';
 import { schemaToType } from './plugin';
-import type { HeyApiTypeScriptPlugin, PluginState } from './types';
+import type { HeyApiTypeScriptPlugin } from './types';
 
 const operationToDataType = ({
   operation,
   plugin,
-  state,
 }: {
   operation: IR.OperationObject;
   plugin: HeyApiTypeScriptPlugin['Instance'];
-  state: PluginState;
 }): string => {
-  const f = plugin.gen.ensureFile(plugin.output);
-
   const data: IR.SchemaObject = {
     type: 'object',
   };
@@ -26,38 +22,40 @@ const operationToDataType = ({
   }
 
   if (operation.body) {
-    const symbolWebhookPayload = f
-      .ensureSymbol({
-        selector: plugin.api.getSelector('webhook-payload', operation.id),
-      })
-      .update({
-        name: buildName({
-          config: {
-            case: plugin.config.webhooks.case,
-            name: plugin.config.webhooks.payload,
-          },
-          name: operation.id,
-        }),
-      });
+    const symbolWebhookPayload = plugin.registerSymbol({
+      exported: true,
+      meta: {
+        kind: 'type',
+      },
+      name: buildName({
+        config: {
+          case: plugin.config.webhooks.case,
+          name: plugin.config.webhooks.payload,
+        },
+        name: operation.id,
+      }),
+      selector: plugin.api.getSelector('webhook-payload', operation.id),
+    });
     const type = schemaToType({
-      onRef: undefined,
       plugin,
       schema: operation.body.schema,
-      state,
     });
     const node = tsc.typeAliasDeclaration({
       comment: createSchemaComment({ schema: operation.body.schema }),
-      exportType: true,
+      exportType: symbolWebhookPayload.exported,
       name: symbolWebhookPayload.placeholder,
       type,
     });
-    symbolWebhookPayload.update({ value: node });
+    plugin.setSymbolValue(symbolWebhookPayload, node);
 
-    f.ensureSymbol({
-      selector: plugin.api.getSelector('ref', symbolWebhookPayload.placeholder),
-    }).update({
+    plugin.registerSymbol({
+      exported: true,
+      meta: {
+        kind: 'type',
+      },
       name: symbolWebhookPayload.name,
       placeholder: symbolWebhookPayload.placeholder,
+      selector: plugin.api.getSelector('ref', symbolWebhookPayload.placeholder),
     });
     data.properties.body = { $ref: symbolWebhookPayload.placeholder };
     dataRequired.push('body');
@@ -76,7 +74,11 @@ const operationToDataType = ({
 
   data.required = dataRequired;
 
-  const symbolWebhookRequest = f.addSymbol({
+  const symbolWebhookRequest = plugin.registerSymbol({
+    exported: true,
+    meta: {
+      kind: 'type',
+    },
     name: buildName({
       config: plugin.config.webhooks,
       name: operation.id,
@@ -84,17 +86,15 @@ const operationToDataType = ({
     selector: plugin.api.getSelector('webhook-request', operation.id),
   });
   const type = schemaToType({
-    onRef: undefined,
     plugin,
     schema: data,
-    state,
   });
   const node = tsc.typeAliasDeclaration({
-    exportType: true,
+    exportType: symbolWebhookRequest.exported,
     name: symbolWebhookRequest.placeholder,
     type,
   });
-  symbolWebhookRequest.update({ value: node });
+  plugin.setSymbolValue(symbolWebhookRequest, node);
 
   return symbolWebhookRequest.placeholder;
 };
@@ -102,13 +102,11 @@ const operationToDataType = ({
 export const webhookToType = ({
   operation,
   plugin,
-  state,
 }: {
   operation: IR.OperationObject;
   plugin: HeyApiTypeScriptPlugin['Instance'];
-  state: PluginState;
 }): string => {
-  const name = operationToDataType({ operation, plugin, state });
+  const name = operationToDataType({ operation, plugin });
   return name;
 
   // don't handle webhook responses for now, users only need requestBody

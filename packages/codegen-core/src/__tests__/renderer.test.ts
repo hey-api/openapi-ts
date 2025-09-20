@@ -3,11 +3,11 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { replaceWrappedIds } from '../renderers/renderer';
+import { renderIds, wrapId } from '../renderer/utils';
 
-describe('replaceWrappedIds', () => {
+describe('renderIds', () => {
   it('replaces ids with names', () => {
-    const source = fs.readFileSync(path.resolve(__dirname, 'file.ts'), {
+    const source = fs.readFileSync(path.resolve(__dirname, 'data', 'file.ts'), {
       encoding: 'utf8',
     });
 
@@ -19,7 +19,7 @@ describe('replaceWrappedIds', () => {
       5: 'Foo',
     };
 
-    const replaced = replaceWrappedIds(source, (id) => substitutions[id]);
+    const replaced = renderIds(source, (id) => substitutions[id]);
 
     expect(replaced).toEqual(`/* @ts-nocheck */
 
@@ -36,5 +36,14 @@ export class Foo {
   }
 }
 `);
+  });
+});
+
+describe('wrapId', () => {
+  it('wraps id in the expected format', () => {
+    expect(wrapId(String(42))).toBe('_heyapi_42_');
+    expect(wrapId(String(0))).toBe('_heyapi_0_');
+    expect(wrapId(String(123456))).toBe('_heyapi_123456_');
+    expect(wrapId('foo')).toBe('_heyapi_foo_');
   });
 });

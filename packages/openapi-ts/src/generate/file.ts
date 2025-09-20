@@ -3,7 +3,6 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
-import type { IR } from '../ir/types';
 import { tsc } from '../tsc';
 import { type ImportExportItemObject, tsNodeToString } from '../tsc/utils';
 import { ensureDirSync } from './utils';
@@ -16,6 +15,11 @@ type FileImportResult<
   name: Alias extends string ? Alias : Name;
 };
 
+/**
+ * TODO: remove, it's used by legacy plugins
+ *
+ * @deprecated
+ */
 export class GeneratedFile {
   /**
    * Should the exports from this file be re-exported in the index barrel file?
@@ -122,63 +126,6 @@ export class GeneratedFile {
   public nameWithoutExtension() {
     const { name } = splitNameAndExtension(this._name);
     return name;
-  }
-
-  public relativePathToFile({
-    context,
-    id,
-  }: {
-    context: IR.Context;
-    id: string;
-  }): string {
-    let filePath = '';
-
-    // relative file path
-    if (id.startsWith('.')) {
-      let configFileParts: Array<string> = [];
-      // if providing a custom configuration file, relative paths must resolve
-      // relative to the configuration file.
-      if (context.config.configFile) {
-        const cfgParts = context.config.configFile.split('/');
-        configFileParts = cfgParts.slice(0, cfgParts.length - 1);
-      }
-      filePath = path.resolve(process.cwd(), ...configFileParts, id);
-    } else {
-      const file = context.file({ id });
-      if (!file) {
-        throw new Error(`File with id ${id} does not exist`);
-      }
-      filePath = file._path;
-    }
-
-    const thisPathParts = this._path.split(path.sep);
-    const filePathParts = filePath.split(path.sep);
-
-    let index = -1;
-    let relativePath = '';
-    for (const part of thisPathParts) {
-      index += 1;
-      if (filePathParts[index] !== part) {
-        const pathArray = Array.from({
-          length: thisPathParts.length - index,
-        }).fill('');
-        const relativePathToFile = filePathParts.slice(index);
-        const relativeFolder = relativePathToFile.slice(
-          0,
-          relativePathToFile.length - 1,
-        );
-        if (relativeFolder.length) {
-          relativeFolder.push('');
-        }
-        relativePath =
-          (pathArray.join('../') || './') + relativeFolder.join('/');
-        break;
-      }
-    }
-
-    const fileName = filePathParts[filePathParts.length - 1]!;
-    // TODO: parser - cache responses
-    return `${relativePath}${splitNameAndExtension(fileName).name}`;
   }
 
   public remove(options?: Parameters<typeof fs.rmSync>[1]) {

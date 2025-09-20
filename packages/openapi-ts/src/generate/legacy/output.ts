@@ -1,5 +1,7 @@
 import path from 'node:path';
 
+import type { ProjectRenderMeta } from '@hey-api/codegen-core';
+
 import type { OpenApi } from '../../openApi';
 import { getClientPlugin } from '../../plugins/@hey-api/client-core/utils';
 import type { Client } from '../../types/client';
@@ -67,12 +69,15 @@ export const generateLegacyOutput = async ({
     'bundle' in clientPlugin.config &&
     clientPlugin.config.bundle
   ) {
+    const meta: ProjectRenderMeta = {
+      moduleResolution: tsConfig?.options.moduleResolution,
+    };
+
     generateClientBundle({
-      legacy: true,
+      meta,
       outputPath,
       // @ts-expect-error
       plugin: clientPlugin,
-      tsConfig,
     });
   }
 
@@ -88,7 +93,7 @@ export const generateLegacyOutput = async ({
 
   for (const name of config.pluginOrder) {
     const plugin = config.plugins[name]!;
-    const outputParts = (plugin.output ?? '').split('/');
+    const outputParts = ((plugin.output as string) ?? '').split('/');
     const outputDir = path.resolve(
       config.output.path,
       ...outputParts.slice(0, outputParts.length - 1),

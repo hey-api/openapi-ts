@@ -1,7 +1,6 @@
-import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+import type { Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeScriptRenderer } from '../../generate/renderer';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
 import { buildName } from '../../openApi/shared/utils/name';
@@ -44,7 +43,7 @@ const pipesToExpression = ({
     return pipes[0]!;
   }
 
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
   const expression = tsc.callExpression({
@@ -66,7 +65,7 @@ const arrayTypeToValibotSchema = ({
   schema: SchemaWithType<'array'>;
   state: State;
 }): ts.Expression => {
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
   const functionName = tsc.propertyAccessExpression({
@@ -177,7 +176,7 @@ const booleanTypeToValibotSchema = ({
   plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'boolean'>;
 }) => {
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
 
@@ -234,7 +233,7 @@ const enumTypeToValibotSchema = ({
     });
   }
 
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
 
@@ -270,7 +269,7 @@ const neverTypeToValibotSchema = ({
   plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'never'>;
 }) => {
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
   const expression = tsc.callExpression({
@@ -288,7 +287,7 @@ const nullTypeToValibotSchema = ({
   plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'null'>;
 }) => {
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
   const expression = tsc.callExpression({
@@ -312,7 +311,7 @@ const numberTypeToValibotSchema = ({
   const isBigInt = needsBigIntForFormat(format);
   const formatInfo = isIntegerFormat(format) ? INTEGER_FORMATS[format] : null;
 
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
 
@@ -597,7 +596,7 @@ const objectTypeToValibotSchema = ({
     );
   }
 
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
 
@@ -654,7 +653,7 @@ const stringTypeToValibotSchema = ({
   plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'string'>;
 }) => {
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
 
@@ -793,7 +792,7 @@ const tupleTypeToValibotSchema = ({
   schema: SchemaWithType<'tuple'>;
   state: State;
 }) => {
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
 
@@ -858,7 +857,7 @@ const undefinedTypeToValibotSchema = ({
   plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'undefined'>;
 }) => {
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
 
@@ -877,7 +876,7 @@ const unknownTypeToValibotSchema = ({
   plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'unknown'>;
 }) => {
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
 
@@ -896,7 +895,7 @@ const voidTypeToValibotSchema = ({
   plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'void'>;
 }) => {
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
 
@@ -1041,10 +1040,8 @@ export const schemaToValibotSchema = ({
   plugin: ValibotPlugin['Instance'];
   schema: IR.SchemaObject;
   state: State;
-  symbol?: ICodegenSymbolOut;
+  symbol?: Symbol;
 }): Array<ts.Expression> => {
-  const f = plugin.gen.ensureFile(plugin.output);
-
   let anyType: string | undefined;
   let pipes: Array<ts.Expression> = [];
 
@@ -1053,22 +1050,13 @@ export const schemaToValibotSchema = ({
 
     if (!symbol) {
       const selector = plugin.api.getSelector('ref', $ref);
-      if (!plugin.gen.selectSymbolFirst(selector)) {
-        symbol = f.ensureSymbol({
-          name: buildName({
-            config: {
-              case: state.nameCase,
-              name: state.nameTransformer,
-            },
-            name: refToName($ref),
-          }),
-          selector,
-        });
+      if (!plugin.getSymbol(selector)) {
+        symbol = plugin.referenceSymbol(selector);
       }
     }
   }
 
-  const vSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const vSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'valibot'),
   );
 
@@ -1079,7 +1067,7 @@ export const schemaToValibotSchema = ({
     // "Block-scoped variable used before its declaration." error
     // this could be (maybe?) fixed by reshuffling the generation order
     const selector = plugin.api.getSelector('ref', schema.$ref);
-    let refSymbol = plugin.gen.selectSymbolFirst(selector);
+    let refSymbol = plugin.getSymbol(selector);
     if (!refSymbol) {
       const ref = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
       const schemaPipes = schemaToValibotSchema({
@@ -1090,7 +1078,7 @@ export const schemaToValibotSchema = ({
       });
       pipes.push(...schemaPipes);
 
-      refSymbol = plugin.gen.selectSymbolFirst(selector);
+      refSymbol = plugin.getSymbol(selector);
     }
 
     if (refSymbol) {
@@ -1251,11 +1239,24 @@ export const schemaToValibotSchema = ({
   }
 
   if (symbol) {
+    if ($ref) {
+      symbol = plugin.registerSymbol({
+        exported: true,
+        name: buildName({
+          config: {
+            case: state.nameCase,
+            name: state.nameTransformer,
+          },
+          name: refToName($ref),
+        }),
+        selector: plugin.api.getSelector('ref', $ref),
+      });
+    }
     const statement = tsc.constVariable({
       comment: plugin.config.comments
         ? createSchemaComment({ schema })
         : undefined,
-      exportConst: true,
+      exportConst: symbol.exported,
       expression: pipesToExpression({ pipes, plugin }),
       name: symbol.placeholder,
       typeName: state.hasCircularReference
@@ -1265,7 +1266,7 @@ export const schemaToValibotSchema = ({
           }) as unknown as ts.TypeNode)
         : undefined,
     });
-    symbol.update({ value: statement });
+    plugin.setSymbolValue(symbol, statement);
     return [];
   }
 
@@ -1273,17 +1274,12 @@ export const schemaToValibotSchema = ({
 };
 
 export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
-  const f = plugin.gen.createFile(plugin.output, {
-    extension: '.ts',
-    path: '{{path}}.gen',
-    renderer: new TypeScriptRenderer(),
-  });
-
-  const vSymbol = f.ensureSymbol({
+  plugin.registerSymbol({
+    external: 'valibot',
+    meta: { importKind: 'namespace' },
     name: 'v',
     selector: plugin.api.getSelector('import', 'valibot'),
   });
-  f.addImport({ from: 'valibot', namespaceImport: vSymbol.placeholder });
 
   plugin.forEach(
     'operation',
@@ -1341,9 +1337,4 @@ export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
       }
     },
   );
-
-  if (plugin.config.exportFromIndex && f.hasContent()) {
-    const index = plugin.gen.ensureFile('index');
-    index.addExport({ from: f, namespaceImport: true });
-  }
 };

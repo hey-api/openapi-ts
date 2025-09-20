@@ -13,8 +13,6 @@ export const webhookToZodSchema = ({
   operation: IR.OperationObject;
   plugin: ZodPlugin['Instance'];
 }) => {
-  const f = plugin.gen.ensureFile(plugin.output);
-
   if (plugin.config.webhooks.enabled) {
     const requiredProperties = new Set<string>();
 
@@ -114,7 +112,8 @@ export const webhookToZodSchema = ({
     schemaData.required = [...requiredProperties];
 
     const zodSchema = getZodSchema(schemaData);
-    const symbol = f.addSymbol({
+    const symbol = plugin.registerSymbol({
+      exported: true,
       name: buildName({
         config: plugin.config.webhooks,
         name: operation.id,
@@ -122,7 +121,11 @@ export const webhookToZodSchema = ({
       selector: plugin.api.getSelector('webhook-request', operation.id),
     });
     const typeInferSymbol = plugin.config.webhooks.types.infer.enabled
-      ? f.addSymbol({
+      ? plugin.registerSymbol({
+          exported: true,
+          meta: {
+            kind: 'type',
+          },
           name: buildName({
             config: plugin.config.webhooks.types.infer,
             name: operation.id,

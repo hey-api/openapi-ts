@@ -24,7 +24,17 @@ describe('operationNameFn', () => {
       path: process.cwd(),
     },
     output: {
+      clean: false,
+      fileName: {
+        case: 'preserve',
+        name: '{{name}}',
+        suffix: '.gen',
+      },
+      format: false,
+      indexFile: true,
+      lint: false,
       path: '',
+      tsConfigPath: '',
     },
     parser: {
       hooks: {},
