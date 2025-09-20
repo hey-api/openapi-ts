@@ -16,7 +16,6 @@ export const defaultConfig: HeyApiSchemasPlugin['Config'] = {
   handler,
   handlerLegacy,
   name: '@hey-api/schemas',
-  output: 'schemas',
 };
 
 /**

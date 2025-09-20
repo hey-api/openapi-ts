@@ -1,6 +1,4 @@
-import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
-
-import { clientModulePath } from '../../../generate/client';
+import { clientFolderAbsolutePath } from '../../../generate/client';
 import { tsc } from '../../../tsc';
 import { getClientPlugin } from '../client-core/utils';
 import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
@@ -8,34 +6,46 @@ import type { HeyApiSdkPlugin } from './types';
 
 export const createTypeOptions = ({
   plugin,
-  symbolClientOptions,
 }: {
   plugin: HeyApiSdkPlugin['Instance'];
-  symbolClientOptions: ICodegenSymbolOut;
 }) => {
-  const f = plugin.gen.ensureFile(plugin.output);
+  const clientModule = clientFolderAbsolutePath(plugin.context.config);
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  const clientModule = clientModulePath({
-    config: plugin.context.config,
-    sourceOutput: f.path,
+  const symbolTDataShape = plugin.registerSymbol({
+    external: clientModule,
+    meta: {
+      kind: 'type',
+    },
+    name: 'TDataShape',
   });
-  const symbolTDataShape = f.addSymbol({ name: 'TDataShape' });
-  const symbolClient = f.ensureSymbol({
+  const symbolClient = plugin.registerSymbol({
+    external: clientModule,
+    meta: {
+      kind: 'type',
+    },
     name: 'Client',
     selector: plugin.api.getSelector('Client'),
   });
-  f.addImport({
-    from: clientModule,
-    typeNames: [symbolClient.name, symbolTDataShape.name],
+  const symbolClientOptions = plugin.registerSymbol({
+    external: clientModule,
+    meta: {
+      kind: 'type',
+    },
+    name: 'Options',
+  });
+  const symbolOptions = plugin.registerSymbol({
+    exported: true,
+    meta: {
+      kind: 'type',
+    },
+    name: 'Options',
+    selector: plugin.api.getSelector('Options'),
   });
 
-  const symbolOptions = f
-    .ensureSymbol({ selector: plugin.api.getSelector('Options') })
-    .update({ name: 'Options' });
   const typeOptions = tsc.typeAliasDeclaration({
-    exportType: true,
+    exportType: symbolOptions.exported,
     name: symbolOptions.placeholder,
     type: tsc.typeIntersectionNode({
       types: [
@@ -90,7 +100,11 @@ export const createTypeOptions = ({
     typeParameters: isNuxtClient
       ? [
           tsc.typeParameterDeclaration({
-            constraint: tsc.typeReferenceNode({ typeName: 'Composable' }),
+            constraint: tsc.typeReferenceNode({
+              typeName: plugin.referenceSymbol(
+                plugin.api.getSelector('Composable'),
+              ).placeholder,
+            }),
             defaultType: tsc.typeNode("'$fetch'"),
             name: 'TComposable',
           }),
@@ -129,5 +143,5 @@ export const createTypeOptions = ({
           }),
         ],
   });
-  symbolOptions.update({ value: typeOptions });
+  plugin.setSymbolValue(symbolOptions, typeOptions);
 };

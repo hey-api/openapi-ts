@@ -1,6 +1,5 @@
 import ts from 'typescript';
 
-import { TypeScriptRenderer } from '../../../generate/renderer';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
@@ -23,8 +22,10 @@ const arrayTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'array'>;
   state: State;
-}): ts.CallExpression => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+}): Omit<ZodSchema, 'typeName'> & {
+  anyType?: string;
+} => {
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
 
@@ -34,6 +35,7 @@ const arrayTypeToZodSchema = ({
   });
 
   let arrayExpression: ts.CallExpression | undefined;
+  let hasCircularReference = false;
 
   if (!schema.items) {
     arrayExpression = tsc.callExpression({
@@ -51,14 +53,17 @@ const arrayTypeToZodSchema = ({
     schema = deduplicateSchema({ schema });
 
     // at least one item is guaranteed
-    const itemExpressions = schema.items!.map(
-      (item) =>
-        schemaToZodSchema({
-          plugin,
-          schema: item,
-          state,
-        }).expression,
-    );
+    const itemExpressions = schema.items!.map((item) => {
+      const zodSchema = schemaToZodSchema({
+        plugin,
+        schema: item,
+        state,
+      });
+      if (zodSchema.hasCircularReference) {
+        hasCircularReference = true;
+      }
+      return zodSchema.expression;
+    });
 
     if (itemExpressions.length === 1) {
       arrayExpression = tsc.callExpression({
@@ -125,7 +130,10 @@ const arrayTypeToZodSchema = ({
     }
   }
 
-  return arrayExpression;
+  return {
+    expression: arrayExpression,
+    hasCircularReference,
+  };
 };
 
 const booleanTypeToZodSchema = ({
@@ -135,7 +143,7 @@ const booleanTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'boolean'>;
 }) => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
 
@@ -166,7 +174,7 @@ const enumTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'enum'>;
 }): ts.CallExpression => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
 
@@ -227,7 +235,7 @@ const neverTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'never'>;
 }) => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
   const expression = tsc.callExpression({
@@ -245,7 +253,7 @@ const nullTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'null'>;
 }) => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
   const expression = tsc.callExpression({
@@ -289,7 +297,7 @@ const numberTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'integer' | 'number'>;
 }) => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
 
@@ -382,13 +390,14 @@ const objectTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'object'>;
   state: State;
-}): {
-  anyType: string;
-  expression: ts.CallExpression;
+}): Omit<ZodSchema, 'typeName'> & {
+  anyType?: string;
 } => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
+
+  let hasCircularReference = false;
 
   // TODO: parser - handle constants
   const properties: Array<ts.PropertyAssignment> = [];
@@ -404,7 +413,11 @@ const objectTypeToZodSchema = ({
       plugin,
       schema: property,
       state,
-    }).expression;
+    });
+
+    if (propertyExpression.hasCircularReference) {
+      hasCircularReference = true;
+    }
 
     numberRegExp.lastIndex = 0;
     let propertyName;
@@ -427,7 +440,7 @@ const objectTypeToZodSchema = ({
     }
     properties.push(
       tsc.propertyAssignment({
-        initializer: propertyExpression,
+        initializer: propertyExpression.expression,
         name: propertyName,
       }),
     );
@@ -441,17 +454,18 @@ const objectTypeToZodSchema = ({
       plugin,
       schema: schema.additionalProperties,
       state,
-    }).expression;
+    });
     const expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
         expression: zSymbol.placeholder,
         name: identifiers.record,
       }),
-      parameters: [zodSchema],
+      parameters: [zodSchema.expression],
     });
     return {
       anyType: 'AnyZodObject',
       expression,
+      hasCircularReference: zodSchema.hasCircularReference,
     };
   }
 
@@ -465,6 +479,7 @@ const objectTypeToZodSchema = ({
   return {
     anyType: 'AnyZodObject',
     expression,
+    hasCircularReference,
   };
 };
 
@@ -475,7 +490,7 @@ const stringTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'string'>;
 }) => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
 
@@ -627,10 +642,14 @@ const tupleTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'tuple'>;
   state: State;
-}) => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+}): Omit<ZodSchema, 'typeName'> & {
+  anyType?: string;
+} => {
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
+
+  let hasCircularReference = false;
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
@@ -653,19 +672,24 @@ const tupleTypeToZodSchema = ({
         }),
       ],
     });
-    return expression;
+    return {
+      expression,
+      hasCircularReference,
+    };
   }
 
   const tupleElements: Array<ts.Expression> = [];
 
   for (const item of schema.items ?? []) {
-    tupleElements.push(
-      schemaToZodSchema({
-        plugin,
-        schema: item,
-        state,
-      }).expression,
-    );
+    const zodSchema = schemaToZodSchema({
+      plugin,
+      schema: item,
+      state,
+    });
+    if (zodSchema.hasCircularReference) {
+      hasCircularReference = true;
+    }
+    tupleElements.push(zodSchema.expression);
   }
 
   const expression = tsc.callExpression({
@@ -679,7 +703,10 @@ const tupleTypeToZodSchema = ({
       }),
     ],
   });
-  return expression;
+  return {
+    expression,
+    hasCircularReference,
+  };
 };
 
 const undefinedTypeToZodSchema = ({
@@ -688,7 +715,7 @@ const undefinedTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'undefined'>;
 }) => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
   const expression = tsc.callExpression({
@@ -706,7 +733,7 @@ const unknownTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'unknown'>;
 }) => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
   const expression = tsc.callExpression({
@@ -724,7 +751,7 @@ const voidTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'void'>;
 }) => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
   const expression = tsc.callExpression({
@@ -744,19 +771,16 @@ const schemaTypeToZodSchema = ({
   plugin: ZodPlugin['Instance'];
   schema: IR.SchemaObject;
   state: State;
-}): {
+}): Omit<ZodSchema, 'typeName'> & {
   anyType?: string;
-  expression: ts.Expression;
 } => {
   switch (schema.type as Required<IR.SchemaObject>['type']) {
     case 'array':
-      return {
-        expression: arrayTypeToZodSchema({
-          plugin,
-          schema: schema as SchemaWithType<'array'>,
-          state,
-        }),
-      };
+      return arrayTypeToZodSchema({
+        plugin,
+        schema: schema as SchemaWithType<'array'>,
+        state,
+      });
     case 'boolean':
       return {
         expression: booleanTypeToZodSchema({
@@ -807,13 +831,11 @@ const schemaTypeToZodSchema = ({
         }),
       };
     case 'tuple':
-      return {
-        expression: tupleTypeToZodSchema({
-          plugin,
-          schema: schema as SchemaWithType<'tuple'>,
-          state,
-        }),
-      };
+      return tupleTypeToZodSchema({
+        plugin,
+        schema: schema as SchemaWithType<'tuple'>,
+        state,
+      });
     case 'undefined':
       return {
         expression: undefinedTypeToZodSchema({
@@ -854,11 +876,9 @@ const schemaToZodSchema = ({
   schema: IR.SchemaObject;
   state: State;
 }): ZodSchema => {
-  const f = plugin.gen.ensureFile(plugin.output);
-
   let zodSchema: Partial<ZodSchema> = {};
 
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
 
@@ -870,11 +890,11 @@ const schemaToZodSchema = ({
     state.currentReferenceTracker.push(schema.$ref);
 
     const selector = plugin.api.getSelector('ref', schema.$ref);
-    let symbol = plugin.gen.selectSymbolFirst(selector);
+    let symbol = plugin.getSymbol(selector);
 
     if (isCircularReference) {
       if (!symbol) {
-        symbol = f.ensureSymbol({ selector });
+        symbol = plugin.referenceSymbol(selector);
       }
 
       zodSchema.expression = tsc.callExpression({
@@ -892,23 +912,28 @@ const schemaToZodSchema = ({
           }),
         ],
       });
-      state.hasCircularReference = true;
-    } else if (!symbol) {
-      // if $ref hasn't been processed yet, inline it to avoid the
-      // "Block-scoped variable used before its declaration." error
-      // this could be (maybe?) fixed by reshuffling the generation order
-      const ref = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
-      handleComponent({
-        id: schema.$ref,
-        plugin,
-        schema: ref,
-        state,
-      });
-    }
+      zodSchema.hasCircularReference = schema.circular;
+    } else {
+      if (!symbol) {
+        // if $ref hasn't been processed yet, inline it to avoid the
+        // "Block-scoped variable used before its declaration." error
+        // this could be (maybe?) fixed by reshuffling the generation order
+        const ref = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
+        handleComponent({
+          id: schema.$ref,
+          plugin,
+          schema: ref,
+          state: {
+            ...state,
+            currentReferenceTracker: [schema.$ref],
+          },
+        });
+      } else {
+        zodSchema.hasCircularReference = schema.circular;
+      }
 
-    if (!isCircularReference) {
-      const symbol = plugin.gen.selectSymbolFirstOrThrow(selector);
-      zodSchema.expression = tsc.identifier({ text: symbol.placeholder });
+      const refSymbol = plugin.referenceSymbol(selector);
+      zodSchema.expression = tsc.identifier({ text: refSymbol.placeholder });
     }
 
     state.circularReferenceTracker.pop();
@@ -916,6 +941,7 @@ const schemaToZodSchema = ({
   } else if (schema.type) {
     const zSchema = schemaTypeToZodSchema({ plugin, schema, state });
     zodSchema.expression = zSchema.expression;
+    zodSchema.hasCircularReference = zSchema.hasCircularReference;
     zodSchema.typeName = zSchema.anyType;
 
     if (plugin.config.metadata && schema.description) {
@@ -931,14 +957,17 @@ const schemaToZodSchema = ({
     schema = deduplicateSchema({ schema });
 
     if (schema.items) {
-      const itemTypes = schema.items.map(
-        (item) =>
-          schemaToZodSchema({
-            plugin,
-            schema: item,
-            state,
-          }).expression,
-      );
+      const itemTypes = schema.items.map((item) => {
+        const zSchema = schemaToZodSchema({
+          plugin,
+          schema: item,
+          state,
+        });
+        if (zSchema.hasCircularReference) {
+          zodSchema.hasCircularReference = true;
+        }
+        return zSchema.expression;
+      });
 
       if (schema.logicalOperator === 'and') {
         const firstSchema = schema.items[0]!;
@@ -994,6 +1023,7 @@ const schemaToZodSchema = ({
       state,
     });
     zodSchema.expression = zSchema.expression;
+    zodSchema.hasCircularReference = zSchema.hasCircularReference;
     zodSchema.typeName = zSchema.anyType;
   }
 
@@ -1034,11 +1064,11 @@ const schemaToZodSchema = ({
     }
   }
 
-  if (state.hasCircularReference) {
+  if (zodSchema.hasCircularReference) {
     if (!zodSchema.typeName) {
       zodSchema.typeName = 'ZodTypeAny';
     }
-  } else {
+  } else if (zodSchema.typeName) {
     zodSchema.typeName = undefined;
   }
 
@@ -1065,21 +1095,25 @@ const handleComponent = ({
   }
 
   const selector = plugin.api.getSelector('ref', id);
-  let symbol = plugin.gen.selectSymbolFirst(selector);
-  if (symbol && !symbol.headless) return;
+  let symbol = plugin.getSymbol(selector);
+  if (symbol) return;
 
   const zodSchema = schemaToZodSchema({ plugin, schema, state });
-  const f = plugin.gen.ensureFile(plugin.output);
   const baseName = refToName(id);
-  symbol = f.ensureSymbol({ selector });
-  symbol = symbol.update({
+  symbol = plugin.registerSymbol({
+    exported: true,
     name: buildName({
       config: plugin.config.definitions,
       name: baseName,
     }),
+    selector,
   });
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
-    ? f.addSymbol({
+    ? plugin.registerSymbol({
+        exported: true,
+        meta: {
+          kind: 'type',
+        },
         name: buildName({
           config: plugin.config.definitions.types.infer,
           name: baseName,
@@ -1097,22 +1131,10 @@ const handleComponent = ({
 };
 
 export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
-  const f = plugin.gen.createFile(plugin.output, {
-    extension: '.ts',
-    path: '{{path}}.gen',
-    renderer: new TypeScriptRenderer(),
-  });
-
-  const zSymbol = f.ensureSymbol({
+  plugin.registerSymbol({
+    external: getZodModule({ plugin }),
     name: 'z',
     selector: plugin.api.getSelector('import', 'zod'),
-  });
-  f.addImport({
-    aliases: {
-      [zSymbol.name]: zSymbol.placeholder,
-    },
-    from: getZodModule({ plugin }),
-    names: [zSymbol.name],
   });
 
   plugin.forEach(
@@ -1175,9 +1197,4 @@ export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
       }
     },
   );
-
-  if (plugin.config.exportFromIndex && f.hasContent()) {
-    const index = plugin.gen.ensureFile('index');
-    index.addExport({ from: f, namespaceImport: true });
-  }
 };

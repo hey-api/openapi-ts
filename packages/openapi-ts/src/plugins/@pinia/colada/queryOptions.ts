@@ -14,7 +14,6 @@ import {
   createQueryKeyType,
   queryKeyStatement,
 } from './queryKey';
-import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
 import { getPublicTypeData } from './utils';
@@ -26,45 +25,31 @@ export const createQueryOptions = ({
   operation,
   plugin,
   queryFn,
-  state,
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
   queryFn: string;
-  state: PluginState;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
   }
 
-  const f = plugin.gen.ensureFile(plugin.output);
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
     operation,
   });
 
-  if (!state.hasQueries) {
-    state.hasQueries = true;
-
-    if (!state.hasCreateQueryKeyParamsFunction) {
-      createQueryKeyType({ plugin });
-      createQueryKeyFunction({ plugin });
-      state.hasCreateQueryKeyParamsFunction = true;
-    }
+  if (!plugin.getSymbol(plugin.api.getSelector('createQueryKey'))) {
+    createQueryKeyType({ plugin });
+    createQueryKeyFunction({ plugin });
   }
 
-  const symbolUseQueryOptions = f.ensureSymbol({
-    name: 'UseQueryOptions',
-    selector: plugin.api.getSelector('UseQueryOptions'),
-  });
-  f.addImport({
-    from: plugin.name,
-    typeNames: [symbolUseQueryOptions.name],
-  });
+  const symbolUseQueryOptions = plugin.referenceSymbol(
+    plugin.api.getSelector('UseQueryOptions'),
+  );
 
-  state.hasUsedQueryFn = true;
-
-  const symbolQueryKey = f.addSymbol({
+  const symbolQueryKey = plugin.registerSymbol({
+    exported: true,
     name: buildName({
       config: plugin.config.queryKeys,
       name: operation.id,
@@ -75,7 +60,7 @@ export const createQueryOptions = ({
     plugin,
     symbol: symbolQueryKey,
   });
-  symbolQueryKey.update({ value: node });
+  plugin.setSymbolValue(symbolQueryKey, node);
 
   const typeData = useTypeData({ operation, plugin });
   const typeError = useTypeError({ operation, plugin });
@@ -164,21 +149,19 @@ export const createQueryOptions = ({
     });
   }
 
-  const symbolQueryOptionsFn = f
-    .ensureSymbol({
-      selector: plugin.api.getSelector('queryOptionsFn', operation.id),
-    })
-    .update({
-      name: buildName({
-        config: plugin.config.queryOptions,
-        name: operation.id,
-      }),
-    });
+  const symbolQueryOptionsFn = plugin.registerSymbol({
+    exported: true,
+    name: buildName({
+      config: plugin.config.queryOptions,
+      name: operation.id,
+    }),
+    selector: plugin.api.getSelector('queryOptionsFn', operation.id),
+  });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
-    exportConst: true,
+    exportConst: symbolQueryOptionsFn.exported,
     expression: tsc.arrowFunction({
       parameters: [
         {
@@ -201,5 +184,5 @@ export const createQueryOptions = ({
     }),
     name: symbolQueryOptionsFn.placeholder,
   });
-  symbolQueryOptionsFn.update({ value: statement });
+  plugin.setSymbolValue(symbolQueryOptionsFn, statement);
 };

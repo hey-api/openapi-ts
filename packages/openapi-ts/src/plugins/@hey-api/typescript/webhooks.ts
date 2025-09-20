@@ -1,12 +1,15 @@
-import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+import type { Symbol } from '@hey-api/codegen-core';
 
 import { tsc } from '../../../tsc';
+import type { HeyApiTypeScriptPlugin } from './types';
 
 export const createWebhooks = ({
+  plugin,
   symbolWebhooks,
   webhookNames,
 }: {
-  symbolWebhooks: ICodegenSymbolOut;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
+  symbolWebhooks: Symbol;
   webhookNames: ReadonlyArray<string>;
 }) => {
   if (!webhookNames.length) return;
@@ -17,9 +20,9 @@ export const createWebhooks = ({
     ),
   });
   const node = tsc.typeAliasDeclaration({
-    exportType: true,
+    exportType: symbolWebhooks.exported,
     name: symbolWebhooks.placeholder,
     type,
   });
-  symbolWebhooks.update({ value: node });
+  plugin.setSymbolValue(symbolWebhooks, node);
 };

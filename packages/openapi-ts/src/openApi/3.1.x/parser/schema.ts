@@ -270,10 +270,7 @@ const parseObject = ({
       const irPropertySchema = schemaToIrSchema({
         context,
         schema: property,
-        state: {
-          ...state,
-          isProperty: true,
-        },
+        state,
       });
       schemaProperties[name] = irPropertySchema;
     }
@@ -390,20 +387,20 @@ const parseAllOf = ({
   const compositionSchemas = schema.allOf;
 
   for (const compositionSchema of compositionSchemas) {
+    const originalInAllOf = state.inAllOf;
     // Don't propagate inAllOf flag to $ref schemas to avoid issues with reusable components
-    const isRef = '$ref' in compositionSchema;
-    const schemaState = isRef
-      ? state
-      : {
-          ...state,
-          inAllOf: true,
-        };
-
+    if (!('$ref' in compositionSchema)) {
+      state.inAllOf = true;
+    }
     const irCompositionSchema = schemaToIrSchema({
       context,
       schema: compositionSchema,
-      state: schemaState,
+      state,
     });
+    state.inAllOf = originalInAllOf;
+    if (state.inAllOf === undefined) {
+      delete state.inAllOf;
+    }
 
     if (schema.required) {
       if (irCompositionSchema.required) {
@@ -456,17 +453,6 @@ const parseAllOf = ({
           }
           schemaItems.push(irDiscriminatorSchema);
         }
-      }
-
-      if (!state.circularReferenceTracker.has(compositionSchema.$ref)) {
-        schemaToIrSchema({
-          context,
-          schema: ref,
-          state: {
-            ...state,
-            $ref: compositionSchema.$ref,
-          },
-        });
       }
     }
   }
@@ -814,16 +800,18 @@ const parseRef = ({
   const isComponentsRef = schema.$ref.startsWith('#/components/');
   if (!isComponentsRef) {
     if (!state.circularReferenceTracker.has(schema.$ref)) {
+      state.refStack.push(schema.$ref);
       const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
-      return schemaToIrSchema({
+      const originalRef = state.$ref;
+      state.$ref = schema.$ref;
+      const irSchema = schemaToIrSchema({
         context,
         schema: refSchema,
-        state: {
-          ...state,
-          $ref: schema.$ref,
-          isProperty: false,
-        },
+        state,
       });
+      state.$ref = originalRef;
+      state.refStack.pop();
+      return irSchema;
     }
     // Fallback to preserving the ref if circular
   }
@@ -836,17 +824,28 @@ const parseRef = ({
   // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
   irRefSchema.$ref = decodeURI(schema.$ref);
 
+  if (state.refStack.includes(schema.$ref)) {
+    if (state.refStack[0] === schema.$ref) {
+      state.circularRef = schema.$ref;
+    }
+    irSchema.circular = true;
+  }
+
   if (!state.circularReferenceTracker.has(schema.$ref)) {
+    state.refStack.push(schema.$ref);
     const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
+    const originalRef = state.$ref;
+    state.$ref = schema.$ref;
     schemaToIrSchema({
       context,
       schema: refSchema,
-      state: {
-        ...state,
-        $ref: schema.$ref,
-        isProperty: false,
-      },
+      state,
     });
+    if (state.circularRef && state.refStack[0] === state.circularRef) {
+      irSchema.circular = true;
+    }
+    state.$ref = originalRef;
+    state.refStack.pop();
   }
 
   const schemaItems: Array<IR.SchemaObject> = [];
@@ -1055,6 +1054,7 @@ export const schemaToIrSchema = ({
   if (!state) {
     state = {
       circularReferenceTracker: new Set(),
+      refStack: [],
     };
   }
 
@@ -1137,6 +1137,7 @@ export const parseSchema = ({
     state: {
       $ref,
       circularReferenceTracker: new Set(),
+      refStack: [$ref],
     },
   });
 };

@@ -15,7 +15,7 @@ import {
   createQueryKeyType,
   queryKeyStatement,
 } from './queryKey';
-import type { PluginInstance, PluginState } from './types';
+import type { PluginInstance } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
 
 const createInfiniteParamsFunction = ({
@@ -23,18 +23,15 @@ const createInfiniteParamsFunction = ({
 }: {
   plugin: PluginInstance;
 }) => {
-  const f = plugin.gen.ensureFile(plugin.output);
-
-  const symbolCreateInfiniteParams = f
-    .ensureSymbol({ selector: plugin.api.getSelector('createInfiniteParams') })
-    .update({
-      name: buildName({
-        config: {
-          case: plugin.config.case,
-        },
-        name: 'createInfiniteParams',
-      }),
-    });
+  const symbolCreateInfiniteParams = plugin.registerSymbol({
+    name: buildName({
+      config: {
+        case: plugin.config.case,
+      },
+      name: 'createInfiniteParams',
+    }),
+    selector: plugin.api.getSelector('createInfiniteParams'),
+  });
 
   const fn = tsc.constVariable({
     expression: tsc.arrowFunction({
@@ -218,19 +215,17 @@ const createInfiniteParamsFunction = ({
     }),
     name: symbolCreateInfiniteParams.placeholder,
   });
-  symbolCreateInfiniteParams.update({ value: fn });
+  plugin.setSymbolValue(symbolCreateInfiniteParams, fn);
 };
 
 export const createInfiniteQueryOptions = ({
   operation,
   plugin,
   queryFn,
-  state,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
   queryFn: string;
-  state: PluginState;
 }): void => {
   const pagination = operationPagination({
     context: plugin.context,
@@ -241,67 +236,50 @@ export const createInfiniteQueryOptions = ({
     return;
   }
 
-  const f = plugin.gen.ensureFile(plugin.output);
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
     operation,
   });
 
-  if (!state.hasInfiniteQueries) {
-    state.hasInfiniteQueries = true;
-
-    if (!state.hasCreateQueryKeyParamsFunction) {
-      createQueryKeyType({ plugin });
-      createQueryKeyFunction({ plugin });
-      state.hasCreateQueryKeyParamsFunction = true;
-    }
-
-    if (!state.hasCreateInfiniteParamsFunction) {
-      createInfiniteParamsFunction({ plugin });
-      state.hasCreateInfiniteParamsFunction = true;
-    }
+  if (!plugin.getSymbol(plugin.api.getSelector('createQueryKey'))) {
+    createQueryKeyType({ plugin });
+    createQueryKeyFunction({ plugin });
   }
 
-  const symbolInfiniteQueryOptions = f
-    .ensureSymbol({ selector: plugin.api.getSelector('infiniteQueryOptions') })
-    .update({ name: 'infiniteQueryOptions' });
-  const symbolInfiniteDataType = f
-    .ensureSymbol({ selector: plugin.api.getSelector('InfiniteData') })
-    .update({ name: 'InfiniteData' });
-  f.addImport({
-    from: plugin.name,
-    names: [symbolInfiniteQueryOptions.name],
-    typeNames: [symbolInfiniteDataType.name],
-  });
+  if (!plugin.getSymbol(plugin.api.getSelector('createInfiniteParams'))) {
+    createInfiniteParamsFunction({ plugin });
+  }
 
-  state.hasUsedQueryFn = true;
+  const symbolInfiniteQueryOptions = plugin.referenceSymbol(
+    plugin.api.getSelector('infiniteQueryOptions'),
+  );
+  const symbolInfiniteDataType = plugin.referenceSymbol(
+    plugin.api.getSelector('InfiniteData'),
+  );
 
   const typeData = useTypeData({ operation, plugin });
   const typeError = useTypeError({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
 
-  const symbolQueryKeyType = f.ensureSymbol({
-    selector: plugin.api.getSelector('QueryKey'),
-  });
+  const symbolQueryKeyType = plugin.referenceSymbol(
+    plugin.api.getSelector('QueryKey'),
+  );
   const typeQueryKey = `${symbolQueryKeyType.placeholder}<${typeData}>`;
   const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
   // TODO: parser - this is a bit clunky, need to compile type to string because
   // `tsc.returnFunctionCall()` accepts only strings, should be cleaned up
-  const typescriptState = {
-    usedTypeIDs: new Set<string>(),
-  };
   const type = pluginTypeScript.api.schemaToType({
     plugin: pluginTypeScript,
     schema: pagination.schema,
-    state: typescriptState,
   });
   const typePageParam = `${tsNodeToString({
     node: type,
     unescape: true,
   })} | ${typePageObjectParam}`;
 
-  const symbolInfiniteQueryKey = f.addSymbol({
+  const symbolInfiniteQueryKey = plugin.registerSymbol({
+    exported: true,
     name: buildName({
       config: plugin.config.infiniteQueryKeys,
       name: operation.id,
@@ -314,7 +292,7 @@ export const createInfiniteQueryOptions = ({
     symbol: symbolInfiniteQueryKey,
     typeQueryKey,
   });
-  symbolInfiniteQueryKey.update({ value: node });
+  plugin.setSymbolValue(symbolInfiniteQueryKey, node);
 
   const awaitSdkExpression = tsc.awaitExpression({
     expression: tsc.callExpression({
@@ -346,9 +324,9 @@ export const createInfiniteQueryOptions = ({
     }),
   });
 
-  const symbolCreateInfiniteParams = f.ensureSymbol({
-    selector: plugin.api.getSelector('createInfiniteParams'),
-  });
+  const symbolCreateInfiniteParams = plugin.referenceSymbol(
+    plugin.api.getSelector('createInfiniteParams'),
+  );
 
   const statements: Array<ts.Statement> = [
     tsc.constVariable({
@@ -463,7 +441,8 @@ export const createInfiniteQueryOptions = ({
     });
   }
 
-  const symbolInfiniteQueryOptionsFn = f.addSymbol({
+  const symbolInfiniteQueryOptionsFn = plugin.registerSymbol({
+    exported: true,
     name: buildName({
       config: plugin.config.infiniteQueryOptions,
       name: operation.id,
@@ -473,7 +452,7 @@ export const createInfiniteQueryOptions = ({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
-    exportConst: true,
+    exportConst: symbolInfiniteQueryOptionsFn.exported,
     expression: tsc.arrowFunction({
       parameters: [
         {
@@ -509,5 +488,5 @@ export const createInfiniteQueryOptions = ({
     }),
     name: symbolInfiniteQueryOptionsFn.placeholder,
   });
-  symbolInfiniteQueryOptionsFn.update({ value: statement });
+  plugin.setSymbolValue(symbolInfiniteQueryOptionsFn, statement);
 };

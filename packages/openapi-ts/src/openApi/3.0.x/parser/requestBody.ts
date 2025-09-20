@@ -5,9 +5,11 @@ import { mediaTypeObjects } from './mediaType';
 import { schemaToIrSchema } from './schema';
 
 const requestBodyToIrRequestBody = ({
+  $ref,
   context,
   requestBody,
 }: {
+  $ref: string;
   context: IR.Context;
   requestBody: RequestBodyObject;
 }): IR.RequestBodyObject => {
@@ -27,7 +29,11 @@ const requestBodyToIrRequestBody = ({
     schema: schemaToIrSchema({
       context,
       schema: finalSchema,
-      state: undefined,
+      state: {
+        $ref,
+        circularReferenceTracker: new Set(),
+        refStack: [$ref],
+      },
     }),
   };
 
@@ -61,6 +67,7 @@ export const parseRequestBody = ({
 
   context.ir.components.requestBodies[refToName($ref)] =
     requestBodyToIrRequestBody({
+      $ref,
       context,
       requestBody,
     });
