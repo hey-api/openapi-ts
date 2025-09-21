@@ -111,8 +111,8 @@ export const operationToValibotSchema = ({
 
     schemaData.required = [...requiredProperties];
 
-    const f = plugin.gen.ensureFile(plugin.output);
-    const symbol = f.addSymbol({
+    const symbol = plugin.registerSymbol({
+      exported: true,
       name: buildName({
         config: plugin.config.requests,
         name: operation.id,
@@ -120,8 +120,6 @@ export const operationToValibotSchema = ({
       selector: plugin.api.getSelector('data', operation.id),
     });
     schemaToValibotSchema({
-      // TODO: refactor for better cross-plugin compatibility
-      $ref: `#/valibot-data/${operation.id}`,
       plugin,
       schema: schemaData,
       state,
@@ -134,8 +132,8 @@ export const operationToValibotSchema = ({
       const { response } = operationResponsesMap(operation);
 
       if (response) {
-        const f = plugin.gen.ensureFile(plugin.output);
-        const symbol = f.addSymbol({
+        const symbol = plugin.registerSymbol({
+          exported: true,
           name: buildName({
             config: plugin.config.responses,
             name: operation.id,
@@ -143,8 +141,6 @@ export const operationToValibotSchema = ({
           selector: plugin.api.getSelector('responses', operation.id),
         });
         schemaToValibotSchema({
-          // TODO: refactor for better cross-plugin compatibility
-          $ref: `#/valibot-response/${operation.id}`,
           plugin,
           schema: response,
           state,

@@ -191,12 +191,6 @@ export type UserConfig = Plugin.Name<'@tanstack/angular-query-experimental'> &
           name?: StringName;
         };
     /**
-     * Name of the generated file.
-     *
-     * @default '@tanstack/angular-query-experimental'
-     */
-    output?: string;
-    /**
      * Configuration for generated query keys.
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/angular/reference/queryKey}
@@ -459,12 +453,6 @@ export type Config = Plugin.Name<'@tanstack/angular-query-experimental'> &
        */
       name: StringName;
     };
-    /**
-     * Name of the generated file.
-     *
-     * @default '@tanstack/angular-query-experimental'
-     */
-    output: string;
     /**
      * Resolved configuration for generated query keys.
      *

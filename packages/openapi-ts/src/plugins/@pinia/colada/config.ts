@@ -15,7 +15,6 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
   dependencies: ['@hey-api/typescript', '@hey-api/sdk'],
   handler: handler as PiniaColadaPlugin['Handler'],
   name: '@pinia/colada',
-  output: '@pinia/colada',
   resolveConfig: (plugin, context) => {
     plugin.config.mutationOptions = context.valueToObject({
       defaultValue: {

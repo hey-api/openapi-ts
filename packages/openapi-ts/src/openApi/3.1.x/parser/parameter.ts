@@ -81,6 +81,7 @@ export const parametersArrayToObject = ({
     // lowercase keys for case insensitive access
     parametersObject[parameter.in]![parameter.name.toLocaleLowerCase()] =
       parameterToIrParameter({
+        $ref: `#/todo/real/path/to/parameter/${parameter.name}`,
         context,
         parameter,
       });
@@ -90,9 +91,11 @@ export const parametersArrayToObject = ({
 };
 
 const parameterToIrParameter = ({
+  $ref,
   context,
   parameter,
 }: {
+  $ref: string;
   context: IR.Context;
   parameter: ParameterObject;
 }): IR.ParameterObject => {
@@ -137,7 +140,11 @@ const parameterToIrParameter = ({
     schema: schemaToIrSchema({
       context,
       schema: finalSchema,
-      state: undefined,
+      state: {
+        $ref,
+        circularReferenceTracker: new Set(),
+        refStack: [$ref],
+      },
     }),
     style,
   };
@@ -179,6 +186,7 @@ export const parseParameter = ({
   }
 
   context.ir.components.parameters[refToName($ref)] = parameterToIrParameter({
+    $ref,
     context,
     parameter,
   });

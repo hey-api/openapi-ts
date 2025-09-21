@@ -1,7 +1,4 @@
-import type {
-  ICodegenFile,
-  ICodegenSymbolSelector,
-} from '@hey-api/codegen-core';
+import type { Selector } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { IR } from '../../ir/types';
@@ -13,7 +10,6 @@ import type { ValibotPlugin } from './types';
 type SelectorType = 'data' | 'import' | 'ref' | 'responses' | 'webhook-request';
 
 type ValidatorArgs = {
-  file: ICodegenFile;
   operation: IR.OperationObject;
   plugin: ValibotPlugin['Instance'];
 };
@@ -33,32 +29,24 @@ export type IApi = {
    *  - `webhook-request`: `operation.id` string
    * @returns Selector array
    */
-  getSelector: (type: SelectorType, value?: string) => ICodegenSymbolSelector;
+  getSelector: (type: SelectorType, value?: string) => Selector;
 };
 
 export class Api implements IApi {
   constructor(public meta: Plugin.Name<'valibot'>) {}
 
   createRequestValidator({
-    file,
     operation,
     plugin,
   }: ValidatorArgs): ts.ArrowFunction | undefined {
-    const symbol = plugin.gen.selectSymbolFirst(
+    const symbol = plugin.getSymbol(
       plugin.api.getSelector('data', operation.id),
     );
     if (!symbol) return;
 
-    file.addImport({
-      from: symbol.file,
-      names: [symbol.placeholder],
-    });
-
-    const vSymbol = file.ensureSymbol({
-      name: 'v',
-      selector: plugin.api.getSelector('import', 'valibot'),
-    });
-    file.addImport({ from: 'valibot', namespaceImport: vSymbol.placeholder });
+    const vSymbol = plugin.referenceSymbol(
+      plugin.api.getSelector('import', 'valibot'),
+    );
 
     const dataParameterName = 'data';
 
@@ -89,25 +77,17 @@ export class Api implements IApi {
   }
 
   createResponseValidator({
-    file,
     operation,
     plugin,
   }: ValidatorArgs): ts.ArrowFunction | undefined {
-    const symbol = plugin.gen.selectSymbolFirst(
+    const symbol = plugin.getSymbol(
       plugin.api.getSelector('responses', operation.id),
     );
     if (!symbol) return;
 
-    file.addImport({
-      from: symbol.file,
-      names: [symbol.placeholder],
-    });
-
-    const vSymbol = file.ensureSymbol({
-      name: 'v',
-      selector: plugin.api.getSelector('import', 'valibot'),
-    });
-    file.addImport({ from: 'valibot', namespaceImport: vSymbol.placeholder });
+    const vSymbol = plugin.referenceSymbol(
+      plugin.api.getSelector('import', 'valibot'),
+    );
 
     const dataParameterName = 'data';
 
@@ -137,9 +117,7 @@ export class Api implements IApi {
     });
   }
 
-  getSelector(
-    ...args: ReadonlyArray<string | undefined>
-  ): ICodegenSymbolSelector {
-    return [this.meta.name, ...(args as ICodegenSymbolSelector)];
+  getSelector(...args: ReadonlyArray<string | undefined>): Selector {
+    return [this.meta.name, ...(args as Selector)];
   }
 }

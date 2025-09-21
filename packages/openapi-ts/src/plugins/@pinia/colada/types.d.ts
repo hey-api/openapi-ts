@@ -89,12 +89,6 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
           name?: StringName;
         };
     /**
-     * Name of the generated file.
-     *
-     * @default '@pinia/colada'
-     */
-    output?: string;
-    /**
      * Configuration for generated query keys.
      *
      * See {@link https://pinia-colada.esm.dev/guide/query-keys.html Query Keys}
@@ -267,12 +261,6 @@ export type Config = Plugin.Name<'@pinia/colada'> &
        */
       name: StringName;
     };
-    /**
-     * Name of the generated file.
-     *
-     * @default '@pinia/colada'
-     */
-    output: string;
     /**
      * Resolved configuration for generated query keys.
      *

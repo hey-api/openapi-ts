@@ -6,7 +6,7 @@
  * @template Key Type of the map keys
  * @template Value Type of the map values
  */
-export interface ICodegenBiMap<Key, Value> {
+export interface IBiMap<Key, Value> {
   /**
    * Deletes a key and its associated value from the map.
    *

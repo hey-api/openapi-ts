@@ -13,7 +13,6 @@ export const defaultConfig: FastifyPlugin['Config'] = {
   dependencies: ['@hey-api/typescript'],
   handler,
   name: 'fastify',
-  output: 'fastify',
 };
 
 /**

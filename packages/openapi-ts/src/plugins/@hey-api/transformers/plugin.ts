@@ -1,6 +1,5 @@
 import ts from 'typescript';
 
-import { TypeScriptRenderer } from '../../../generate/renderer';
 import {
   createOperationKey,
   operationResponsesMap,
@@ -60,14 +59,11 @@ const processSchemaType = ({
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
-  const f = plugin.gen.ensureFile(plugin.output);
-
   if (schema.$ref) {
     const selector = plugin.api.getSelector('response-ref', schema.$ref);
-    let symbolResponseTransformerRef = f.selectSymbolFirst(selector);
 
-    if (!symbolResponseTransformerRef) {
-      symbolResponseTransformerRef = f.addSymbol({
+    if (!plugin.getSymbol(selector)) {
+      const symbol = plugin.registerSymbol({
         name: buildName({
           config: {
             case: 'camelCase',
@@ -100,18 +96,18 @@ const processSchemaType = ({
             ],
             statements: ensureStatements(nodes),
           }),
-          name: symbolResponseTransformerRef.placeholder,
+          name: symbol.placeholder,
         });
-        symbolResponseTransformerRef.update({ value: node });
+        plugin.setSymbolValue(symbol, node);
       } else {
         // the created schema response transformer was empty, do not generate
         // it and prevent any future attempts
-        symbolResponseTransformerRef.update({ value: null });
+        plugin.setSymbolValue(symbol, null);
       }
     }
 
-    symbolResponseTransformerRef = f.selectSymbolFirst(selector);
-    if (symbolResponseTransformerRef?.value) {
+    const symbolResponseTransformerRef = plugin.referenceSymbol(selector);
+    if (plugin.getSymbolValue(symbolResponseTransformerRef) !== null) {
       const callExpression = tsc.callExpression({
         functionName: symbolResponseTransformerRef.placeholder,
         parameters: [dataExpression],
@@ -314,7 +310,6 @@ const processSchemaType = ({
     const t = transformer({
       config: plugin.config,
       dataExpression,
-      file: f,
       schema,
     });
     if (t) {
@@ -327,12 +322,6 @@ const processSchemaType = ({
 
 // handles only response transformers for now
 export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
-  const f = plugin.gen.createFile(plugin.output, {
-    extension: '.ts',
-    path: '{{path}}.gen',
-    renderer: new TypeScriptRenderer(),
-  });
-
   plugin.forEach('operation', ({ operation }) => {
     const { response } = operationResponsesMap(operation);
     if (!response) return;
@@ -347,13 +336,13 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
     }
 
     const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-    const symbolResponse = plugin.gen.selectSymbolFirst(
+    const symbolResponse = plugin.getSymbol(
       pluginTypeScript.api.getSelector('response', operation.id),
     );
-
     if (!symbolResponse) return;
 
-    const symbolResponseTransformer = f.addSymbol({
+    const symbolResponseTransformer = plugin.registerSymbol({
+      exported: true,
       name: buildName({
         config: {
           case: 'camelCase',
@@ -367,12 +356,8 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
     // TODO: parser - consider handling simple string response which is also a date
     const nodes = schemaResponseTransformerNodes({ plugin, schema: response });
     if (nodes.length) {
-      f.addImport({
-        from: symbolResponse.file,
-        typeNames: [symbolResponse.placeholder],
-      });
       const responseTransformerNode = tsc.constVariable({
-        exportConst: true,
+        exportConst: symbolResponseTransformer.exported,
         expression: tsc.arrowFunction({
           async: true,
           multiLine: true,
@@ -393,9 +378,9 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
         }),
         name: symbolResponseTransformer.placeholder,
       });
-      symbolResponseTransformer.update({ value: responseTransformerNode });
+      plugin.setSymbolValue(symbolResponseTransformer, responseTransformerNode);
     } else {
-      symbolResponseTransformer.update({ value: null });
+      plugin.setSymbolValue(symbolResponseTransformer, null);
     }
   });
 };
