@@ -25,7 +25,7 @@ export interface OpenApiV3_1_X {
   /**
    * **REQUIRED**. This string MUST be the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#versions version number} of the OpenAPI Specification that the OpenAPI document uses. The `openapi` field SHOULD be used by tooling to interpret the OpenAPI document. This is _not_ related to the API {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#infoVersion `info.version`} string.
    */
-  openapi: '3.1.0' | '3.1.1';
+  openapi: '3.1.0' | '3.1.1' | '3.1.2';
   /**
    * The available paths and operations for the API.
    */

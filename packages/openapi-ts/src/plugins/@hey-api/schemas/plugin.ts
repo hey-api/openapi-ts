@@ -1,3 +1,4 @@
+import { satisfies } from '../../../config/utils/package';
 import type { IR } from '../../../ir/types';
 import type { OpenApiV2_0_XTypes } from '../../../openApi/2.0.x';
 import type { OpenApiV3_0_XTypes } from '../../../openApi/3.0.x';
@@ -461,25 +462,21 @@ export const handler: HeyApiSchemasPlugin['Handler'] = ({ plugin }) => {
     return;
   }
 
-  switch (plugin.context.spec.openapi) {
-    case '3.0.0':
-    case '3.0.1':
-    case '3.0.2':
-    case '3.0.3':
-    case '3.0.4':
-      schemasV3_0_X({
-        context: plugin.context as IR.Context<OpenApi.V3_0_X>,
-        plugin,
-      });
-      break;
-    case '3.1.0':
-    case '3.1.1':
-      schemasV3_1_X({
-        context: plugin.context as IR.Context<OpenApi.V3_1_X>,
-        plugin,
-      });
-      break;
-    default:
-      throw new Error('Unsupported OpenAPI specification');
+  if (satisfies(plugin.context.spec.openapi, '>=3.0.0 <3.1.0')) {
+    schemasV3_0_X({
+      context: plugin.context as IR.Context<OpenApi.V3_0_X>,
+      plugin,
+    });
+    return;
   }
+
+  if (satisfies(plugin.context.spec.openapi, '>=3.1.0')) {
+    schemasV3_1_X({
+      context: plugin.context as IR.Context<OpenApi.V3_1_X>,
+      plugin,
+    });
+    return;
+  }
+
+  throw new Error('Unsupported OpenAPI specification');
 };
