@@ -1,3 +1,4 @@
+import { satisfies } from '../config/utils/package';
 import { IRContext } from '../ir/context';
 import type { IR } from '../ir/types';
 import type { Config } from '../types/config';
@@ -85,20 +86,14 @@ export const parseOpenApiSpec = ({
     return context;
   }
 
-  switch (context.spec.openapi) {
-    case '3.0.0':
-    case '3.0.1':
-    case '3.0.2':
-    case '3.0.3':
-    case '3.0.4':
-      parseV3_0_X(context as IR.Context<OpenApi.V3_0_X>);
-      return context;
-    case '3.1.0':
-    case '3.1.1':
-      parseV3_1_X(context as IR.Context<OpenApi.V3_1_X>);
-      return context;
-    default:
-      break;
+  if (satisfies(context.spec.openapi, '>=3.0.0 <3.1.0')) {
+    parseV3_0_X(context as IR.Context<OpenApi.V3_0_X>);
+    return context;
+  }
+
+  if (satisfies(context.spec.openapi, '>=3.1.0')) {
+    parseV3_1_X(context as IR.Context<OpenApi.V3_1_X>);
+    return context;
   }
 
   throw new Error('Unsupported OpenAPI specification');
