@@ -275,7 +275,7 @@ export class TypeScriptRenderer implements Renderer {
       );
 
     for (const value of sortedBindings) {
-      const specifiers: Array<ts.ImportSpecifier> = [];
+      let specifiers: Array<ts.ImportSpecifier> = [];
       let defaultBinding: ts.Identifier | undefined;
       let namespaceBinding: string | undefined;
       let isTypeOnly = false;
@@ -294,12 +294,15 @@ export class TypeScriptRenderer implements Renderer {
           isTypeOnly = true;
         }
       } else if (value.names && value.names.length > 0) {
-        if (
-          !isTypeOnly &&
-          value.names.every((name) => value.typeNames?.includes(name))
-        ) {
+        if (value.names.every((name) => value.typeNames?.includes(name))) {
           isTypeOnly = true;
         }
+
+        const namedImports: Array<{
+          isTypeOnly: boolean;
+          name: string;
+          propertyName: ts.ModuleExportName | undefined;
+        }> = [];
 
         for (const name of value.names) {
           const alias = value.aliases?.[name];
@@ -334,13 +337,26 @@ export class TypeScriptRenderer implements Renderer {
               finalAlias = undefined;
             }
           }
-          const specifier = ts.factory.createImportSpecifier(
-            isTypeOnly ? false : (value.typeNames?.includes(name) ?? false),
-            finalAlias ? tsc.identifier({ text: finalAlias }) : undefined,
-            tsc.identifier({ text: finalName }),
-          );
-          specifiers.push(specifier);
+          namedImports.push({
+            isTypeOnly: isTypeOnly
+              ? false
+              : (value.typeNames?.includes(name) ?? false),
+            name: finalName,
+            propertyName: finalAlias
+              ? tsc.identifier({ text: finalAlias })
+              : undefined,
+          });
         }
+
+        specifiers = namedImports
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map(({ isTypeOnly, name, propertyName }) =>
+            ts.factory.createImportSpecifier(
+              isTypeOnly,
+              propertyName,
+              tsc.identifier({ text: name }),
+            ),
+          );
       }
 
       const importClause = ts.factory.createImportClause(
