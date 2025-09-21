@@ -3,8 +3,8 @@
 import { queryOptions } from '@tanstack/angular-query-experimental';
 
 import { client } from '../client.gen';
-import { type Options, getFoo, getBar } from '../sdk.gen';
-import type { GetFooData, GetBarData } from '../types.gen';
+import { getBar, getFoo, type Options } from '../sdk.gen';
+import type { GetBarData, GetFooData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
