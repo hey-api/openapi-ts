@@ -1,4 +1,11 @@
-import type { CodegenProject } from '@hey-api/codegen-core';
+import path from 'node:path';
+
+import type {
+  IProject,
+  Selector,
+  Symbol,
+  SymbolIn,
+} from '@hey-api/codegen-core';
 
 import { HeyApiError } from '../../../error';
 import type { IR } from '../../../ir/types';
@@ -6,6 +13,22 @@ import type { OpenApi } from '../../../openApi/types';
 import type { PluginConfigMap } from '../../config';
 import type { Plugin } from '../../types';
 import type { WalkEvent, WalkEventType } from '../types/instance';
+
+const defaultGetFilePath = (symbol: Symbol): string | undefined => {
+  if (!symbol.meta?.pluginName) {
+    return;
+  }
+  if (symbol.meta.pluginName.startsWith('@hey-api/client-')) {
+    return 'client';
+  }
+  if (symbol.meta.pluginName === '@hey-api/typescript') {
+    return 'types';
+  }
+  if (symbol.meta.pluginName.startsWith('@hey-api/')) {
+    return symbol.meta.pluginName.split('/')[1];
+  }
+  return symbol.meta.pluginName;
+};
 
 const defaultGetKind: Required<Required<IR.Hooks>['operations']>['getKind'] = (
   operation,
@@ -19,7 +42,7 @@ const defaultGetKind: Required<Required<IR.Hooks>['operations']>['getKind'] = (
     case 'get':
       return ['query'];
     default:
-      return [];
+      return;
   }
 };
 
@@ -28,10 +51,10 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   config: Omit<T['resolvedConfig'], 'name' | 'output'>;
   context: IR.Context;
   dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
-  gen: CodegenProject;
+  gen: IProject;
   private handler: Plugin.Config<T>['handler'];
   name: T['resolvedConfig']['name'];
-  output: Required<T['config']>['output'];
+  output: string;
   /**
    * The package metadata and utilities for the current context, constructed
    * from the provided dependencies. Used for managing package-related
@@ -47,7 +70,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     > & {
       api?: T['api'];
       context: IR.Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
-      gen: CodegenProject;
+      gen: IProject;
       name: string;
       output: string;
     },
@@ -61,13 +84,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.name = props.name;
     this.output = props.output;
     this.package = props.context.package;
-  }
-
-  createFile(file: IR.ContextFile) {
-    return this.context.createFile({
-      exportFromIndex: this.config.exportFromIndex,
-      ...file,
-    });
   }
 
   /**
@@ -259,12 +275,43 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return plugin as any;
   }
 
+  getSymbol(symbolIdOrSelector: number | Selector): Symbol | undefined {
+    return this.gen.symbols.get(symbolIdOrSelector);
+  }
+
+  private getSymbolFilePath(symbol: Symbol): string | undefined {
+    const getFilePathFnPlugin = this.config['~hooks']?.symbols?.getFilePath;
+    const getFilePathFnPluginResult = getFilePathFnPlugin?.(symbol);
+    if (getFilePathFnPluginResult !== undefined) {
+      return getFilePathFnPluginResult;
+    }
+    const getFilePathFnParser =
+      this.context.config.parser.hooks.symbols?.getFilePath;
+    const getFilePathFnParserResult = getFilePathFnParser?.(symbol);
+    if (getFilePathFnParserResult !== undefined) {
+      return getFilePathFnParserResult;
+    }
+    return defaultGetFilePath(symbol);
+  }
+
+  getSymbolValue(idOrSymbol: number | Symbol): unknown {
+    return this.gen.symbols.getValue(this.symbolToId(idOrSymbol));
+  }
+
+  hasSymbolValue(idOrSymbol: number | Symbol): boolean {
+    return this.gen.symbols.hasValue(this.symbolToId(idOrSymbol));
+  }
+
   hooks = {
     operation: {
       isMutation: (operation: IR.OperationObject): boolean =>
         this.isOperationKind(operation, 'mutation'),
       isQuery: (operation: IR.OperationObject): boolean =>
         this.isOperationKind(operation, 'query'),
+    },
+    symbol: {
+      getFilePath: (symbol: Symbol): string | undefined =>
+        this.getSymbolFilePath(symbol),
     },
   };
 
@@ -295,7 +342,29 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     if (getKindFnParserResult !== undefined) {
       return getKindFnParserResult.includes(kind);
     }
-    return defaultGetKind(operation).includes(kind);
+    return (defaultGetKind(operation) ?? []).includes(kind);
+  }
+
+  referenceSymbol(symbolIdOrSelector: number | Selector): Symbol {
+    return this.gen.symbols.reference(symbolIdOrSelector);
+  }
+
+  registerSymbol(symbol: SymbolIn): Symbol {
+    return this.gen.symbols.register({
+      ...symbol,
+      exportFrom:
+        symbol.exportFrom ??
+        (!symbol.external &&
+        this.context.config.output.indexFile &&
+        this.config.exportFromIndex
+          ? ['index']
+          : undefined),
+      getFilePath: symbol.getFilePath ?? this.hooks.symbol.getFilePath,
+      meta: {
+        pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
+        ...symbol.meta,
+      },
+    });
   }
 
   /**
@@ -303,5 +372,16 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    */
   async run() {
     await this.handler({ plugin: this });
+  }
+
+  setSymbolValue(
+    idOrSymbol: number | Symbol,
+    value: unknown,
+  ): Map<number, unknown> {
+    return this.gen.symbols.setValue(this.symbolToId(idOrSymbol), value);
+  }
+
+  private symbolToId(idOrSymbol: number | Symbol): number {
+    return typeof idOrSymbol === 'number' ? idOrSymbol : idOrSymbol.id;
   }
 }

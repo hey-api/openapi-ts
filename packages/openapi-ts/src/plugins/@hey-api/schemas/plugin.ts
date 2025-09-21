@@ -1,4 +1,3 @@
-import { TypeScriptRenderer } from '../../../generate/renderer';
 import type { IR } from '../../../ir/types';
 import type { OpenApiV2_0_XTypes } from '../../../openApi/2.0.x';
 import type { OpenApiV3_0_XTypes } from '../../../openApi/3.0.x';
@@ -367,8 +366,8 @@ const schemasV2_0_X = ({
 
   for (const name in context.spec.definitions) {
     const schema = context.spec.definitions[name]!;
-    const f = plugin.gen.ensureFile(plugin.output);
-    const symbol = f.ensureSymbol({
+    const symbol = plugin.registerSymbol({
+      exported: true,
       name: schemaName({ name, plugin, schema }),
       selector: plugin.api.getSelector('ref', name),
     });
@@ -379,11 +378,11 @@ const schemasV2_0_X = ({
     });
     const statement = tsc.constVariable({
       assertion: 'const',
-      exportConst: true,
+      exportConst: symbol.exported,
       expression: tsc.objectExpression({ obj }),
       name: symbol.placeholder,
     });
-    symbol.update({ value: statement });
+    plugin.setSymbolValue(symbol, statement);
   }
 };
 
@@ -400,8 +399,8 @@ const schemasV3_0_X = ({
 
   for (const name in context.spec.components.schemas) {
     const schema = context.spec.components.schemas[name]!;
-    const f = plugin.gen.ensureFile(plugin.output);
-    const symbol = f.ensureSymbol({
+    const symbol = plugin.registerSymbol({
+      exported: true,
       name: schemaName({ name, plugin, schema }),
       selector: plugin.api.getSelector('ref', name),
     });
@@ -412,11 +411,11 @@ const schemasV3_0_X = ({
     });
     const statement = tsc.constVariable({
       assertion: 'const',
-      exportConst: true,
+      exportConst: symbol.exported,
       expression: tsc.objectExpression({ obj }),
       name: symbol.placeholder,
     });
-    symbol.update({ value: statement });
+    plugin.setSymbolValue(symbol, statement);
   }
 };
 
@@ -433,8 +432,8 @@ const schemasV3_1_X = ({
 
   for (const name in context.spec.components.schemas) {
     const schema = context.spec.components.schemas[name]!;
-    const f = plugin.gen.ensureFile(plugin.output);
-    const symbol = f.ensureSymbol({
+    const symbol = plugin.registerSymbol({
+      exported: true,
       name: schemaName({ name, plugin, schema }),
       selector: plugin.api.getSelector('ref', name),
     });
@@ -445,21 +444,15 @@ const schemasV3_1_X = ({
     });
     const statement = tsc.constVariable({
       assertion: 'const',
-      exportConst: true,
+      exportConst: symbol.exported,
       expression: tsc.objectExpression({ obj }),
       name: symbol.placeholder,
     });
-    symbol.update({ value: statement });
+    plugin.setSymbolValue(symbol, statement);
   }
 };
 
 export const handler: HeyApiSchemasPlugin['Handler'] = ({ plugin }) => {
-  plugin.gen.createFile(plugin.output, {
-    extension: '.ts',
-    path: '{{path}}.gen',
-    renderer: new TypeScriptRenderer(),
-  });
-
   if ('swagger' in plugin.context.spec) {
     schemasV2_0_X({
       context: plugin.context as IR.Context<OpenApi.V2_0_X>,

@@ -5,43 +5,21 @@ import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { createOperationComment } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
-import type { PluginInstance, PluginState } from './types';
+import type { PluginInstance } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
 
 export const createMutationOptions = ({
   operation,
   plugin,
   queryFn,
-  state,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
   queryFn: string;
-  state: PluginState;
 }): void => {
-  const mutationsType =
-    plugin.name === '@tanstack/angular-query-experimental' ||
-    plugin.name === '@tanstack/svelte-query' ||
-    plugin.name === '@tanstack/solid-query'
-      ? 'MutationOptions'
-      : 'UseMutationOptions';
-
-  const f = plugin.gen.ensureFile(plugin.output);
-
-  if (!state.hasMutations) {
-    state.hasMutations = true;
-  }
-
-  const symbolMutationOptionsType = f.ensureSymbol({
-    name: mutationsType,
-    selector: plugin.api.getSelector('MutationOptions'),
-  });
-  f.addImport({
-    from: plugin.name,
-    typeNames: [symbolMutationOptionsType.name],
-  });
-
-  state.hasUsedQueryFn = true;
+  const symbolMutationOptionsType = plugin.referenceSymbol(
+    plugin.api.getSelector('MutationOptions'),
+  );
 
   const typeData = useTypeData({ operation, plugin });
   const typeError = useTypeError({ operation, plugin });
@@ -143,7 +121,8 @@ export const createMutationOptions = ({
       }),
     ],
   });
-  const symbolMutationOptions = f.addSymbol({
+  const symbolMutationOptions = plugin.registerSymbol({
+    exported: true,
     name: buildName({
       config: plugin.config.mutationOptions,
       name: operation.id,
@@ -153,9 +132,9 @@ export const createMutationOptions = ({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
-    exportConst: true,
+    exportConst: symbolMutationOptions.exported,
     expression,
     name: symbolMutationOptions.placeholder,
   });
-  symbolMutationOptions.update({ value: statement });
+  plugin.setSymbolValue(symbolMutationOptions, statement);
 };

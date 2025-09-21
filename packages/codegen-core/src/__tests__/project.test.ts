@@ -1,135 +1,90 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { CodegenFile } from '../files/file';
-import type { ICodegenFile } from '../files/types';
-import type { ICodegenMeta } from '../meta/types';
-import { CodegenProject } from '../project/project';
-import type { ICodegenRenderer } from '../renderers/types';
+import type { IFileOut } from '../files/types';
+import { Project } from '../project/project';
+import type { IRenderer } from '../renderer/types';
 
-describe('CodegenProject', () => {
-  let project: CodegenProject;
+describe('Project', () => {
+  it('covers the full public interface', () => {
+    const renderer: IRenderer = {
+      renderFile: (content: string) => `RENDERED:${content}`,
+      renderSymbols: (file: IFileOut) => `SYMBOLS:${file.name}`,
+    };
+    const project = new Project({
+      defaultFileName: 'main',
+      renderers: { '.ts': renderer },
+      root: '/root',
+    });
 
-  beforeEach(() => {
-    project = new CodegenProject();
-  });
+    // Registries are defined
+    expect(project.files).toBeDefined();
+    expect(project.symbols).toBeDefined();
 
-  it('adds new files and preserves order', () => {
-    const file1 = project.createFile('a.ts');
-    const file2 = project.createFile('b.ts');
-
-    expect(project.files).toEqual([file1, file2]);
-  });
-
-  it('replaces existing file but keeps order', () => {
-    project.createFile('a.ts');
-    project.createFile('b.ts');
-    project.createFile('c.ts');
-    const newFile2 = project.createFile('b.ts');
-
-    expect(project.files.length).toBe(3);
-    expect(project.files[1]).toBe(newFile2);
-    expect(project.getFileByPath('b.ts')).toBe(newFile2);
-  });
-
-  it('addExport creates file if missing and adds export', () => {
-    const imp = { from: 'lib', names: ['Foo'] };
-
-    project.addExport('a.ts', imp);
-
-    const file = project.getFileByPath('a.ts')!;
-    expect(file).toBeDefined();
-    expect(file.exports.length).toBe(1);
-    expect(file.exports[0]).toEqual(imp);
-  });
-
-  it('addImport creates file if missing and adds import', () => {
-    const imp = { from: 'lib', names: ['Foo'] };
-
-    project.addImport('a.ts', imp);
-
-    const file = project.getFileByPath('a.ts')!;
-    expect(file).toBeDefined();
-    expect(file.imports.length).toBe(1);
-    expect(file.imports[0]).toEqual(imp);
-  });
-
-  it('addSymbol creates file if missing and adds symbol', () => {
-    const symbol = { name: 'MySymbol', value: {} };
-
-    project.addSymbol('a.ts', symbol);
-
-    const file = project.getFileByPath('a.ts')!;
-    expect(file).toBeDefined();
-    expect(file.symbols.length).toBe(1);
-    expect(file.symbols[0]).toMatchObject(symbol);
-  });
-
-  it('getAllSymbols returns all symbols from all files', () => {
-    const file1 = project.createFile('a.ts');
-    const file2 = project.createFile('b.ts');
-
-    file1.addSymbol({ name: 'A', value: {} });
-    file2.addSymbol({ name: 'B', value: {} });
-
-    const symbols = project.getAllSymbols().map((s) => s.name);
-    expect(symbols).toEqual(['A', 'B']);
-  });
-
-  it('getFileByPath returns undefined for unknown path', () => {
-    expect(project.getFileByPath('unknown.ts')).toBeUndefined();
-  });
-
-  it('files getter returns a copy of the files array', () => {
-    const file = project.createFile('a.ts');
-
-    const files = project.files;
-    expect(files).toEqual([file]);
-
-    // @ts-expect-error
-    // mutate returned array should not affect internal state
-    files.push(new CodegenFile('b.ts', project));
-    expect(project.files).toEqual([file]);
-  });
-
-  it('render returns output from all files', () => {
-    class Renderer implements ICodegenRenderer {
-      id = 'foo';
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      renderHeader(_file: CodegenFile, _meta?: ICodegenMeta): string {
-        return '';
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      renderSymbols(file: CodegenFile, _meta?: ICodegenMeta): string {
-        return `content ${file.path}`;
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      replacerFn(_args: {
-        file: ICodegenFile;
-        headless?: boolean;
-        scope?: 'file' | 'project';
-        symbolId: number;
-      }): string | undefined {
-        return undefined;
-      }
-    }
-    const renderer = new Renderer();
-    const meta = { foo: 42 };
-    project.createFile('a.ts', { renderer });
-    project.createFile('b.ts', { renderer });
-
-    const outputs = project.render(meta);
+    // Add a symbol and render output
+    const symbol = project.symbols.register({
+      getFilePath: () => 'foo',
+      placeholder: 'Foo',
+      selector: ['foo'],
+    });
+    // Add a renderer for .ts files
+    // Simulate a file with .ts extension
+    project.files.register({
+      extension: '.ts',
+      name: 'foo',
+      path: '/root/foo.ts',
+      selector: ['foo'],
+    });
+    // Render output
+    const outputs = project.render();
+    expect(Array.isArray(outputs)).toBe(true);
+    expect(outputs.length).toBe(1);
     expect(outputs).toEqual([
-      { content: 'content a.ts', meta: { renderer: 'foo' }, path: 'a.ts' },
-      { content: 'content b.ts', meta: { renderer: 'foo' }, path: 'b.ts' },
+      {
+        content: 'RENDERED:SYMBOLS:foo',
+        path: '/root/foo.ts',
+      },
     ]);
+
+    // symbolIdToFiles returns correct files
+    const filesForSymbol = project.symbolIdToFiles(symbol.id);
+    expect(filesForSymbol.length).toBeGreaterThan(0);
+    expect(filesForSymbol[0]?.name).toBe('foo');
   });
 
-  it('createFile adds and returns a new file with optional meta', () => {
-    const file = project.createFile('a.ts', { extension: '.ts' });
+  it('skips files with no renderer or external', () => {
+    const project = new Project({
+      defaultFileName: 'main',
+      renderers: {},
+      root: '/root',
+    });
+    // Register a file with no extension
+    project.files.register({ name: 'noext', selector: ['noext'] });
+    // Register an external file
+    project.files.register({ external: true, name: 'ext', selector: ['ext'] });
+    // Should not throw, but output should be empty
+    const outputs = project.render();
+    expect(outputs).toEqual([]);
+  });
 
-    expect(file.path).toBe('a.ts');
-    expect(file.meta).toEqual({ extension: '.ts' });
-    expect(project.getFileByPath('a.ts')).toBe(file);
-    expect(project.files).toEqual([file]);
+  it('respects fileName override', () => {
+    const renderer: IRenderer = {
+      renderFile: (content: string) => content,
+      renderSymbols: (file: IFileOut) => `SYMBOLS:${file.name}`,
+    };
+    const project = new Project({
+      defaultFileName: 'main',
+      fileName: (name) => `X_${name}`,
+      renderers: { '.ts': renderer },
+      root: '/root',
+    });
+    // Register a symbol with selector
+    project.symbols.register({
+      getFilePath: () => 'bar',
+      placeholder: 'Bar',
+      selector: ['bar'],
+    });
+    // Render output (should use fileName override)
+    const outputs = project.render();
+    expect(outputs[0]?.path).toContain('X_bar');
   });
 });

@@ -9,6 +9,10 @@ description: Learn how to create your own Hey API plugin.
 Plugin API is in development. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
+::: warning
+This page is out of date as of [v0.83.0](/openapi-ts/migrating#v0-83-0). If you have an existing custom plugin, we recommend waiting for a more stable Plugin API to avoid multiple plugin rewrites.
+:::
+
 You may need to write your own plugin if the available plugins do not suit your needs or you're working on a proprietary use case. This can be easily achieved using the Plugin API. But don't take our word for it – all Hey API plugins are written this way!
 
 ## File Structure

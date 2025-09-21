@@ -75,6 +75,7 @@
 - [carson](https://github.com/carson2222)
 - [johnny kim](https://github.com/johnny-mh)
 - [0xfurai](https://github.com/0xfurai)
+- [Copilot](https://github.com/Copilot)
 - [Mxwllas](https://github.com/Mxwllas)
 - [RndUsername](https://github.com/RndUsername)
 - [Schroedi](https://github.com/Schroedi)

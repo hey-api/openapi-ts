@@ -20,7 +20,6 @@ export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
   handler,
   handlerLegacy,
   name: '@hey-api/transformers',
-  output: 'transformers',
   resolveConfig: (plugin) => {
     if (!plugin.config.transformers) {
       plugin.config.transformers = [];
