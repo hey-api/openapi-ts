@@ -1,6 +1,4 @@
-import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
-
-import { clientModulePath } from '../../../generate/client';
+import { clientFolderAbsolutePath } from '../../../generate/client';
 import { tsc } from '../../../tsc';
 import { parseUrl } from '../../../utils/url';
 import type { PluginHandler } from './types';
@@ -29,45 +27,27 @@ const resolveBaseUrlString = ({
 };
 
 export const createClient: PluginHandler = ({ plugin }) => {
-  const f = plugin.gen.ensureFile(plugin.output);
-
-  const clientModule = clientModulePath({
-    config: plugin.context.config,
-    sourceOutput: f.path,
+  const clientModule = clientFolderAbsolutePath(plugin.context.config);
+  const symbolCreateClient = plugin.registerSymbol({
+    external: clientModule,
+    name: 'createClient',
   });
-  const symbolCreateClient = f.addSymbol({ name: 'createClient' });
-  f.addImport({
-    aliases: {
-      [symbolCreateClient.name]: symbolCreateClient.placeholder,
-    },
-    from: clientModule,
-    names: [symbolCreateClient.name],
-  });
-  const symbolCreateConfig = f.addSymbol({ name: 'createConfig' });
-  f.addImport({
-    aliases: {
-      [symbolCreateConfig.name]: symbolCreateConfig.placeholder,
-    },
-    from: clientModule,
-    names: [symbolCreateConfig.name],
+  const symbolCreateConfig = plugin.registerSymbol({
+    external: clientModule,
+    name: 'createConfig',
   });
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  const symbolClientOptions = plugin.gen.selectSymbolFirstOrThrow(
+  const symbolClientOptions = plugin.referenceSymbol(
     pluginTypeScript.api.getSelector('ClientOptions'),
   );
-  f.addImport({
-    from: symbolClientOptions.file,
-    typeNames: [symbolClientOptions.placeholder],
-  });
 
-  let symbolCreateClientConfig: ICodegenSymbolOut | undefined;
-  if (plugin.config.runtimeConfigPath) {
-    symbolCreateClientConfig = f.addSymbol({ name: 'createClientConfig' });
-    f.addImport({
-      from: f.relativePathToFile({ path: plugin.config.runtimeConfigPath }),
-      names: [symbolCreateClientConfig.placeholder],
-    });
-  }
+  const { runtimeConfigPath } = plugin.config;
+  const symbolCreateClientConfig = runtimeConfigPath
+    ? plugin.registerSymbol({
+        external: runtimeConfigPath,
+        name: 'createClientConfig',
+      })
+    : undefined;
 
   const defaultValues: Array<unknown> = [];
 
@@ -111,7 +91,7 @@ export const createClient: PluginHandler = ({ plugin }) => {
     }),
   ];
 
-  const symbolClient = f.addSymbol({
+  const symbolClient = plugin.registerSymbol({
     name: 'client',
     selector: plugin.api.getSelector('client'),
   });
@@ -130,5 +110,5 @@ export const createClient: PluginHandler = ({ plugin }) => {
     }),
     name: symbolClient.placeholder,
   });
-  symbolClient.update({ value: statement });
+  plugin.setSymbolValue(symbolClient, statement);
 };

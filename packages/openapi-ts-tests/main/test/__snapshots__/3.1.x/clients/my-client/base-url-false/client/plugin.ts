@@ -1,4 +1,4 @@
-import type { ICodegenSymbolSelector } from '@hey-api/codegen-core';
+import type { Selector } from '@hey-api/codegen-core';
 import {
   type Client,
   clientDefaultConfig,
@@ -17,16 +17,14 @@ export type IApi = {
    *  - `client`: never
    * @returns Selector array
    */
-  getSelector: (type: SelectorType, value?: string) => ICodegenSymbolSelector;
+  getSelector: (type: SelectorType, value?: string) => Selector;
 };
 
 export class Api implements IApi {
   constructor(public meta: Pick<Config, 'name'>) {}
 
-  getSelector(
-    ...args: ReadonlyArray<string | undefined>
-  ): ICodegenSymbolSelector {
-    return [this.meta.name, ...(args as ICodegenSymbolSelector)];
+  getSelector(...args: ReadonlyArray<string | undefined>): Selector {
+    return [this.meta.name, ...(args as Selector)];
   }
 }
 
@@ -45,7 +43,7 @@ export const defaultConfig: MyClientPlugin['Config'] = {
     name: __filename,
   }),
   config: clientDefaultConfig,
-  handler: clientPluginHandler as MyClientPlugin['Handler'],
+  handler: clientPluginHandler,
   name: __filename,
 };
 

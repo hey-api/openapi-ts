@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 
-import { CodegenProject } from '@hey-api/codegen-core';
+import { Project } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -36,7 +36,17 @@ describe('generateLegacySchemas', () => {
       },
       name: 'AppClient',
       output: {
+        clean: false,
+        fileName: {
+          case: 'preserve',
+          name: '{{name}}',
+          suffix: '.gen',
+        },
+        format: false,
+        indexFile: true,
+        lint: false,
         path: '',
+        tsConfigPath: '',
       },
       parser: {
         hooks: {},
@@ -141,7 +151,10 @@ describe('generateLegacySchemas', () => {
         },
         context: {} as any,
         dependencies: [],
-        gen: new CodegenProject(),
+        gen: new Project({
+          renderers: {},
+          root: '.tmp',
+        }),
         handler: () => {},
         name: '@hey-api/schemas',
         output: 'schemas',
@@ -180,7 +193,17 @@ describe('generateLegacySchemas', () => {
       },
       name: 'AppClient',
       output: {
+        clean: false,
+        fileName: {
+          case: 'preserve',
+          name: '{{name}}',
+          suffix: '.gen',
+        },
+        format: false,
+        indexFile: true,
+        lint: false,
         path: '',
+        tsConfigPath: '',
       },
       parser: {
         hooks: {},
@@ -288,7 +311,10 @@ describe('generateLegacySchemas', () => {
         },
         context: {} as any,
         dependencies: [],
-        gen: new CodegenProject(),
+        gen: new Project({
+          renderers: {},
+          root: '.tmp',
+        }),
         handler: () => {},
         name: '@hey-api/schemas',
         output: 'schemas',

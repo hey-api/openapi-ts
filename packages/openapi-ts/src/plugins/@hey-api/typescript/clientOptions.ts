@@ -1,4 +1,4 @@
-import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+import type { Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { IR } from '../../../ir/types';
@@ -36,7 +36,7 @@ export const createClientOptions = ({
 }: {
   plugin: HeyApiTypeScriptPlugin['Instance'];
   servers: ReadonlyArray<IR.ServerObject>;
-  symbolClientOptions: ICodegenSymbolOut;
+  symbolClientOptions: Symbol;
 }) => {
   const client = getClientPlugin(plugin.context.config);
 
@@ -66,9 +66,9 @@ export const createClientOptions = ({
     useLegacyResolution: false,
   });
   const node = tsc.typeAliasDeclaration({
-    exportType: true,
+    exportType: symbolClientOptions.exported,
     name: symbolClientOptions.placeholder,
     type,
   });
-  symbolClientOptions.update({ value: node });
+  plugin.setSymbolValue(symbolClientOptions, node);
 };

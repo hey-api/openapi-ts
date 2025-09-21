@@ -1,4 +1,4 @@
-import type { ICodegenSymbolSelector } from '@hey-api/codegen-core';
+import type { Selector } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { Plugin } from '../../types';
@@ -12,12 +12,10 @@ type SelectorType =
   | 'ref'
   | 'response'
   | 'responses'
+  | 'TypeID'
   | 'webhook-payload'
   | 'webhook-request'
   | 'Webhooks';
-
-type SchemaToTypeArgs = Omit<Parameters<typeof schemaToType>[0], 'onRef'> &
-  Pick<Partial<Parameters<typeof schemaToType>[0]>, 'onRef'>;
 
 export type IApi = {
   /**
@@ -30,25 +28,24 @@ export type IApi = {
    *  - `ref`: `$ref` JSON pointer
    *  - `response`: `operation.id` string
    *  - `responses`: `operation.id` string
+   *  - `TypeID`: `type` name string
    *  - `webhook-payload`: `operation.id` string
    *  - `webhook-request`: `operation.id` string
    *  - `Webhooks`: never
    * @returns Selector array
    */
-  getSelector: (type: SelectorType, value?: string) => ICodegenSymbolSelector;
-  schemaToType: (args: SchemaToTypeArgs) => ts.TypeNode;
+  getSelector: (type: SelectorType, value?: string) => Selector;
+  schemaToType: (args: Parameters<typeof schemaToType>[0]) => ts.TypeNode;
 };
 
 export class Api implements IApi {
   constructor(public meta: Plugin.Name<'@hey-api/typescript'>) {}
 
-  getSelector(
-    ...args: ReadonlyArray<string | undefined>
-  ): ICodegenSymbolSelector {
-    return [this.meta.name, ...(args as ICodegenSymbolSelector)];
+  getSelector(...args: ReadonlyArray<string | undefined>): Selector {
+    return [this.meta.name, ...(args as Selector)];
   }
 
-  schemaToType(args: SchemaToTypeArgs): ts.TypeNode {
-    return schemaToType({ onRef: undefined, ...args });
+  schemaToType(args: Parameters<typeof schemaToType>[0]): ts.TypeNode {
+    return schemaToType(args);
   }
 }

@@ -21,7 +21,6 @@ export const defaultConfig: ZodPlugin['Config'] = {
   },
   handler,
   name: 'zod',
-  output: 'zod',
   resolveConfig: (plugin, context) => {
     const packageName = 'zod';
     const version = context.package.getVersion(packageName);

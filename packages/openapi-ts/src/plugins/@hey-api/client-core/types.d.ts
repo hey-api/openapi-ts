@@ -1,3 +1,4 @@
+import type { Plugin } from '../../types';
 import type { HeyApiClientAngularPlugin } from '../client-angular';
 import type { HeyApiClientAxiosPlugin } from '../client-axios';
 import type { HeyApiClientFetchPlugin } from '../client-fetch';
@@ -16,7 +17,7 @@ export interface PluginHandler {
  * Public Client API.
  */
 export namespace Client {
-  export type Config = {
+  export type Config = Plugin.Hooks & {
     /**
      * Set a default base URL when creating the client? You can set `baseUrl`
      * to a string which will be used as the base URL. If your input defines
@@ -45,12 +46,6 @@ export namespace Client {
      * @default false
      */
     exportFromIndex?: boolean;
-    /**
-     * Name of the generated file.
-     *
-     * @default 'client'
-     */
-    output?: string;
     /**
      * Relative path to the runtime configuration file. This file must export
      * a `createClientConfig()` function. The `createClientConfig()` function

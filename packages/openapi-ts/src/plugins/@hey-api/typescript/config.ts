@@ -18,7 +18,6 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   handler,
   handlerLegacy,
   name: '@hey-api/typescript',
-  output: 'types',
   resolveConfig: (plugin, context) => {
     plugin.config.definitions = context.valueToObject({
       defaultValue: {
