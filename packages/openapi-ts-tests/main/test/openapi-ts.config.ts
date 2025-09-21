@@ -76,7 +76,7 @@ export default defineConfig(() => {
       fileName: {
         // case: 'snake_case',
         // name: '{{name}}.renamed',
-        // suffix: '.meh',
+        suffix: '.meh',
       },
       // format: 'prettier',
       // indexFile: false,
@@ -124,10 +124,9 @@ export default defineConfig(() => {
         symbols: {
           // getFilePath: (symbol) => {
           //   if (symbol.name) {
-          //     return symbol.name[0]?.toLocaleLowerCase();
+          //     return symbol.name[0]?.toLowerCase();
           //   }
           //   return;
-          //   // noop
           // },
         },
       },

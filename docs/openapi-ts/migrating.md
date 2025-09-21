@@ -7,6 +7,22 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
+## v0.84.0
+
+### Symbol API
+
+This release improves the Symbol API, which adds the capability to place symbols in arbitrary files. We preserved the previous output structure for all plugins except Angular.
+
+You can preserve the previous Angular output by writing your own [placement function](/openapi-ts/configuration/parser#hooks-symbols).
+
+### TypeScript renderer
+
+We ship a dedicated TypeScript renderer for `.ts` files. This release improves the renderer's ability to group and sort imported modules, resulting in a more polished output.
+
+### Removed `output` plugin option
+
+Due to the Symbol API release, this option has been removed from the Plugin API.
+
 ## v0.83.0
 
 ### Symbol API
