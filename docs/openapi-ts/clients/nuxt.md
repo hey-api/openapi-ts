@@ -1,6 +1,6 @@
 ---
-title: Nuxt v3 Client
-description: Generate a type-safe Nuxt v3 client from OpenAPI with the Nuxt client for openapi-ts. Fully compatible with validators, transformers, and all core features.
+title: Nuxt Client
+description: Generate a type-safe Nuxt client from OpenAPI with the Nuxt client for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
 <script setup lang="ts">
@@ -9,8 +9,7 @@ import VersionLabel from '@components/VersionLabel.vue';
 </script>
 
 <Heading>
-  <h1>Nuxt<span class="sr-only"> v3</span></h1>
-  <VersionLabel value="v3" />
+  <h1>Nuxt</h1>
 </Heading>
 
 ::: warning
@@ -25,7 +24,6 @@ The Nuxt client for Hey API generates a type-safe client from your OpenAPI spec,
 
 ## Features
 
-- Nuxt v3 support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - type-safe response data and errors
 - response data validation and transformation
@@ -36,7 +34,33 @@ The Nuxt client for Hey API generates a type-safe client from your OpenAPI spec,
 
 ## Installation
 
-Start by adding `@hey-api/nuxt` to your dependencies.
+### Automatic installation
+
+Start by installing the `@hey-api/nuxt` Nuxt module.
+
+::: code-group
+
+```sh [npm]
+npx nuxi module add @hey-api/nuxt
+```
+
+```sh [pnpm]
+pnpx nuxi module add @hey-api/nuxt
+```
+
+```sh [yarn]
+yarn dlx nuxi module @hey-api/nuxt
+```
+
+```sh [bun]
+bunx nuxi module add @hey-api/nuxt
+```
+
+:::
+
+### Manual installation
+
+Add `@hey-api/nuxt` to your dependencies.
 
 ::: code-group
 
@@ -58,50 +82,89 @@ bun add @hey-api/nuxt
 
 :::
 
-In your [configuration](/openapi-ts/get-started), add `@hey-api/client-nuxt` to your plugins and you'll be ready to generate client artifacts. :tada:
+Then, add it to the `modules` in your `nuxt.config.ts`:
 
-::: code-group
-
-```js [config]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: 'src/client',
-  plugins: ['@hey-api/client-nuxt'], // [!code ++]
-};
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@hey-api/nuxt', // [!code ++]
+  ],
+});
 ```
 
-```sh [cli]
-npx @hey-api/openapi-ts \
-  -i hey-api/backend \
-  -o src/client \
-  -c @hey-api/client-nuxt # [!code ++]
+## Getting started
+
+Set an [input](/openapi-ts/configuration/input) within `nuxt.config.ts`, then start the Nuxt dev server.
+
+```ts
+export default defineNuxtConfig({
+  heyApi: {
+    config: {
+      input: './path/to/openapi.json', // [!code ++]
+    },
+  },
+});
 ```
 
-:::
+The generated client can be accessed from `#hey-api/`.
+
+```ts
+import { client } from '#hey-api/client.gen';
+```
 
 ::: tip
 
-If you add `@hey-api/nuxt` to your Nuxt modules, this step is not needed.
+The `@hey-api/client-nuxt` plugin is automatically added.
 
 :::
 
+### Options
+
+### `alias`
+
+Configure an [alias](https://nuxt.com/docs/api/nuxt-config#alias) to access the Hey API client.
+
+Defaults to `#hey-api`
+
+### `autoImports`
+
+Adds the generated SDK items to auto imports. Defaults to `true`.
+
+#### `config`
+
+Configuration to pass to `@hey-api/openapi-ts`.
+
+- [input](/openapi-ts/configuration/input)
+- [output](/openapi-ts/configuration/output)
+  - Defaults to `.nuxt/client`
+- [parser](/openapi-ts/configuration/parser)
+- [plugins](/openapi-ts/plugins/transformers)
+
 ## Configuration
 
-The Nuxt client is built as a thin wrapper on top of Nuxt, extending its functionality to work with Hey API. If you're already familiar with Nuxt, configuring your client will feel like working directly with Nuxt.
+When we configured the Nuxt module above, it created a [`client.gen.ts`](/openapi-ts/output#client) file. You will most likely want to configure the exported `client` instance. There are two ways to do that.
 
-When we installed the client above, it created a [`client.gen.ts`](/openapi-ts/output#client) file. You will most likely want to configure the exported `client` instance. There are two ways to do that.
+The Nuxt client is built as a thin wrapper on top of Nuxt, extending its functionality to work with Hey API. If you're already familiar with Nuxt, configuring your client will feel like working directly with Nuxt.
 
 ### `setConfig()`
 
 This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Nuxt configuration option to `setConfig()`, and even your own [`$fetch`](#custom-fetch) implementation.
 
-```js
-import { client } from 'client/client.gen';
+::: code-group
 
-client.setConfig({
-  baseURL: 'https://example.com',
+```vue [app.vue]
+<script setup lang="ts">
+import { client } from '#hey-api/client.gen';
+
+await callOnce(async () => {
+  client.setConfig({
+    baseURL: 'https://example.com',
+  });
 });
+</script>
 ```
+
+:::
 
 The disadvantage of this approach is that your code may call the `client` instance before it's configured for the first time. Depending on your use case, you might need to use the second approach.
 
@@ -109,25 +172,45 @@ The disadvantage of this approach is that your code may call the `client` instan
 
 Since `client.gen.ts` is a generated file, we can't directly modify it. Instead, we can tell our configuration to use a custom file implementing the Runtime API. We do that by specifying the `runtimeConfigPath` option.
 
-```js
+::: code-group
+
+```ts [nuxt]
+export default defineNuxtConfig({
+  heyApi: {
+    config: {
+      input: 'hey-api/backend', // sign up at app.heyapi.dev
+      plugins: [
+        {
+          name: '@hey-api/client-nuxt',
+          runtimeConfigPath: './shared/lib/hey-api.ts', // [!code ++]
+        },
+      ],
+    },
+  },
+});
+```
+
+```js [standalone]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     {
       name: '@hey-api/client-nuxt',
-      runtimeConfigPath: './src/hey-api.ts', // [!code ++]
+      runtimeConfigPath: './shared/lib/hey-api.ts', // [!code ++]
     },
   ],
 };
 ```
+
+:::
 
 In our custom file, we need to export a `createClientConfig()` method. This function is a simple wrapper allowing us to override configuration values.
 
 ::: code-group
 
 ```ts [hey-api.ts]
-import type { CreateClientConfig } from './client/client.gen';
+import type { CreateClientConfig } from '#hey-api/client.gen';
 
 export const createClientConfig: CreateClientConfig = (config) => ({
   ...config,
@@ -144,7 +227,7 @@ With this approach, `client.gen.ts` will call `createClientConfig()` before init
 You can also create your own client instance. You can use it to manually send requests or point it to a different domain.
 
 ```js
-import { createClient } from './client/client';
+import { createClient } from '#hey-api/client';
 
 const myClient = createClient({
   baseURL: 'https://example.com',
@@ -180,7 +263,7 @@ If you omit `composable`, `$fetch` is used by default.
 :::
 
 ```js
-import { client } from 'client/client.gen';
+import { client } from '#hey-api/client.gen';
 
 const result = await client.get({
   composable: '$fetch',
@@ -196,7 +279,7 @@ const result = await client.get({
 The SDKs include auth mechanisms for every endpoint. You will want to configure the `auth` field to pass the right token for each request. The `auth` field can be a string or a function returning a string representing the token. The returned value will be attached only to requests that require auth.
 
 ```js
-import { client } from 'client/client.gen';
+import { client } from '#hey-api/client.gen';
 
 client.setConfig({
   auth: () => '<my_token>', // [!code ++]
@@ -207,7 +290,7 @@ client.setConfig({
 If you're not using SDKs or generating auth, using interceptors is a common approach to configuring auth for each request.
 
 ```js
-import { client } from 'client/client.gen';
+import { client } from '#hey-api/client.gen';
 
 client.setConfig({
   onRequest: ({ options }) => {
@@ -248,7 +331,7 @@ console.log(url); // prints '/foo/1?bar=baz'
 You can implement your own `$fetch` method. This is useful if you need to extend the default `$fetch` method with extra functionality, or replace it altogether.
 
 ```js
-import { client } from 'client/client.gen';
+import { client } from '#hey-api/client.gen';
 
 client.setConfig({
   $fetch: () => {
@@ -258,6 +341,31 @@ client.setConfig({
 ```
 
 You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom method to be.
+
+## Standalone usage
+
+You can generate the Hey API Nuxt client via the CLI instead of the Nuxt module.
+
+In your [configuration](/openapi-ts/get-started), add `@hey-api/client-nuxt` to your plugins and you'll be ready to generate client artifacts. :tada:
+
+::: code-group
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: ['@hey-api/client-nuxt'], // [!code ++]
+};
+```
+
+```sh [cli]
+npx @hey-api/openapi-ts \
+  -i hey-api/backend \
+  -o src/client \
+  -c @hey-api/client-nuxt # [!code ++]
+```
+
+:::
 
 ## API
 
