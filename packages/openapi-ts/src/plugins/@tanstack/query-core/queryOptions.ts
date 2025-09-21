@@ -14,7 +14,7 @@ import {
   createQueryKeyType,
   queryKeyStatement,
 } from './queryKey';
-import type { PluginInstance, PluginState } from './types';
+import type { PluginInstance } from './types';
 import { useTypeData } from './useType';
 
 const optionsParamName = 'options';
@@ -23,45 +23,31 @@ export const createQueryOptions = ({
   operation,
   plugin,
   queryFn,
-  state,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
   queryFn: string;
-  state: PluginState;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
   }
 
-  const f = plugin.gen.ensureFile(plugin.output);
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
     operation,
   });
 
-  if (!state.hasQueries) {
-    state.hasQueries = true;
-
-    if (!state.hasCreateQueryKeyParamsFunction) {
-      createQueryKeyType({ plugin });
-      createQueryKeyFunction({ plugin });
-      state.hasCreateQueryKeyParamsFunction = true;
-    }
+  if (!plugin.getSymbol(plugin.api.getSelector('createQueryKey'))) {
+    createQueryKeyType({ plugin });
+    createQueryKeyFunction({ plugin });
   }
 
-  const symbolQueryOptions = f.ensureSymbol({
-    name: 'queryOptions',
-    selector: plugin.api.getSelector('queryOptions'),
-  });
-  f.addImport({
-    from: plugin.name,
-    names: [symbolQueryOptions.name],
-  });
+  const symbolQueryOptions = plugin.referenceSymbol(
+    plugin.api.getSelector('queryOptions'),
+  );
 
-  state.hasUsedQueryFn = true;
-
-  const symbolQueryKey = f.addSymbol({
+  const symbolQueryKey = plugin.registerSymbol({
+    exported: true,
     name: buildName({
       config: plugin.config.queryKeys,
       name: operation.id,
@@ -73,7 +59,7 @@ export const createQueryOptions = ({
     plugin,
     symbol: symbolQueryKey,
   });
-  symbolQueryKey.update({ value: node });
+  plugin.setSymbolValue(symbolQueryKey, node);
 
   const typeData = useTypeData({ operation, plugin });
 
@@ -167,21 +153,19 @@ export const createQueryOptions = ({
     });
   }
 
-  const symbolQueryOptionsFn = f
-    .ensureSymbol({
-      selector: plugin.api.getSelector('queryOptionsFn', operation.id),
-    })
-    .update({
-      name: buildName({
-        config: plugin.config.queryOptions,
-        name: operation.id,
-      }),
-    });
+  const symbolQueryOptionsFn = plugin.registerSymbol({
+    exported: plugin.config.queryOptions.exported,
+    name: buildName({
+      config: plugin.config.queryOptions,
+      name: operation.id,
+    }),
+    selector: plugin.api.getSelector('queryOptionsFn', operation.id),
+  });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
-    exportConst: plugin.config.queryOptions.exported,
+    exportConst: symbolQueryOptionsFn.exported,
     expression: tsc.arrowFunction({
       parameters: [
         {
@@ -201,5 +185,5 @@ export const createQueryOptions = ({
     // TODO: add type error
     // TODO: AxiosError<PutSubmissionMetaError>
   });
-  symbolQueryOptionsFn.update({ value: statement });
+  plugin.setSymbolValue(symbolQueryOptionsFn, statement);
 };

@@ -1,4 +1,4 @@
-export interface ICodegenOutput {
+export interface IOutput {
   /**
    * The main content of the file to output.
    *
@@ -7,13 +7,6 @@ export interface ICodegenOutput {
    * @example "function foo(): void {\n  // implementation\n}\n"
    */
   content: string;
-  /**
-   * Optional metadata or hints for the emitter, such as formatting options,
-   * source maps, or language-specific flags.
-   *
-   * @example { format: "prettier", sourceMap: true }
-   */
-  meta: Record<string, unknown>;
   /**
    * Logical output path (used for writing the file).
    *

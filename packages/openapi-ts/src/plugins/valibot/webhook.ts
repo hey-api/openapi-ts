@@ -110,16 +110,15 @@ export const webhookToValibotSchema = ({
 
     schemaData.required = [...requiredProperties];
 
-    const selector = plugin.api.getSelector('webhook-request', operation.id);
-    const name = buildName({
-      config: plugin.config.webhooks,
-      name: operation.id,
+    const symbol = plugin.registerSymbol({
+      exported: true,
+      name: buildName({
+        config: plugin.config.webhooks,
+        name: operation.id,
+      }),
+      selector: plugin.api.getSelector('webhook-request', operation.id),
     });
-    const f = plugin.gen.ensureFile(plugin.output);
-    const symbol = f.addSymbol({ name, selector });
     schemaToValibotSchema({
-      // TODO: refactor for better cross-plugin compatibility
-      $ref: `#/valibot-webhook/${operation.id}`,
       plugin,
       schema: schemaData,
       state,

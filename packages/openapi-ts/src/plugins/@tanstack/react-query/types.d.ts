@@ -197,12 +197,6 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
           name?: StringName;
         };
     /**
-     * Name of the generated file.
-     *
-     * @default '@tanstack/react-query'
-     */
-    output?: string;
-    /**
      * Configuration for generated query keys.
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryKey queryKey}
@@ -508,12 +502,6 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        */
       name: StringName;
     };
-    /**
-     * Name of the generated file.
-     *
-     * @default '@tanstack/react-query'
-     */
-    output: string;
     /**
      * Resolved configuration for generated query keys.
      *

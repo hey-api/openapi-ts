@@ -191,12 +191,6 @@ export type UserConfig = Plugin.Name<'@tanstack/svelte-query'> &
           name?: StringName;
         };
     /**
-     * Name of the generated file.
-     *
-     * @default '@tanstack/svelte-query'
-     */
-    output?: string;
-    /**
      * Configuration for generated query keys.
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/react/guides/query-keys}
@@ -459,12 +453,6 @@ export type Config = Plugin.Name<'@tanstack/svelte-query'> &
        */
       name: StringName;
     };
-    /**
-     * Name of the generated file.
-     *
-     * @default '@tanstack/svelte-query'
-     */
-    output: string;
     /**
      * Resolved configuration for generated query keys.
      *

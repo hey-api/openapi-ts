@@ -1,4 +1,3 @@
-import type { ImportExportItem } from '../../../tsc/module';
 import type { TanStackAngularQueryPlugin } from '../angular-query-experimental/types';
 import type { TanStackReactQueryPlugin } from '../react-query/types';
 import type { TanStackSolidQueryPlugin } from '../solid-query/types';
@@ -19,14 +18,3 @@ export type PluginInstance =
   | TanStackSolidQueryPlugin['Instance']
   | TanStackSvelteQueryPlugin['Instance']
   | TanStackVueQueryPlugin['Instance'];
-
-export interface PluginState {
-  hasCreateInfiniteParamsFunction: boolean;
-  hasCreateQueryKeyParamsFunction: boolean;
-  hasInfiniteQueries: boolean;
-  hasMutations: boolean;
-  hasQueries: boolean;
-  hasUseQuery?: boolean;
-  hasUsedQueryFn: boolean;
-  typeInfiniteData: ImportExportItem;
-}

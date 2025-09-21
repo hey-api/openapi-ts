@@ -460,7 +460,36 @@ export default {
 
 ## Hooks
 
-Hooks affect runtime behavior but aren’t tied to any single plugin. They can be configured globally via `parser.hooks` or per plugin through the `~hooks` property.
+Hooks affect runtime behavior but aren’t tied to any single plugin. They can be configured globally via `hooks` or per plugin through the `~hooks` property.
+
+::: code-group
+
+```js [parser]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    hooks: {}, // configure global hooks here // [!code ++]
+  },
+};
+```
+
+```js [plugin]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@tanstack/react-query',
+      '~hooks': {}, // configure plugin hooks here // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
+We always use the first hook that returns a value. If a hook returns no value, we fall back to less specific hooks until one does.
 
 ### Operations {#hooks-operations}
 
@@ -478,12 +507,12 @@ By default, DELETE, PATCH, POST, and PUT operations are classified as `mutation`
 
 Imagine your API has a POST `/search` endpoint that accepts a large payload. By default, it's classified as a `mutation`, but in practice it behaves like a `query`, and your [state management](/openapi-ts/state-management) plugin should generate query hooks.
 
-You can fix this by classifying the operation as `query` in a matcher. If a matcher returns no value, we fall back to less specific matchers until one does.
+You can achieve this by classifying the operation as `query` in a matcher.
 
 ::: code-group
 
 <!-- prettier-ignore-start -->
-```js [parser]
+```js [isQuery]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
@@ -502,29 +531,56 @@ export default {
 ```
 <!-- prettier-ignore-end -->
 <!-- prettier-ignore-start -->
-```js [plugin]
+```js [getKind]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
-  plugins: [
-    {
-      name: '@tanstack/react-query',
-      '~hooks': {
-        operations: {
-          getKind: (op) => {
-            if (op.method === 'post' && op.path === '/search') { // [!code ++]
-              return ['query']; // [!code ++]
-            } // [!code ++]
-          },
+  parser: {
+    hooks: {
+      operations: {
+        getKind: (op) => {
+          if (op.method === 'post' && op.path === '/search') { // [!code ++]
+            return ['query']; // [!code ++]
+          } // [!code ++]
         },
       },
     },
-  ],
+  },
 };
 ```
 <!-- prettier-ignore-end -->
 
 :::
+
+### Symbols {#hooks-symbols}
+
+Each symbol can have a placement function deciding its output location.
+
+#### Example: Alphabetic sort
+
+While we work on a better example, let's imagine a world where it's desirable to place every symbol in a file named after its initial letter. For example, a function named `Foo` should end up in the file `f.ts`.
+
+You can achieve this by using the symbol's name.
+
+<!-- prettier-ignore-start -->
+```js [getKind]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    hooks: {
+      symbols: {
+        getFilePath: (symbol) => {
+          if (symbol.name) { // [!code ++]
+            return symbol.name[0]?.toLowerCase(); // [!code ++]
+          } // [!code ++]
+        },
+      },
+    },
+  },
+};
+```
+<!-- prettier-ignore-end -->
 
 <!--@include: ../../partials/examples.md-->
 <!--@include: ../../partials/sponsors.md-->

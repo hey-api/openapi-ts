@@ -12,12 +12,12 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
     case: 'PascalCase',
     exportFromIndex: true,
     style: 'preserve',
+    topType: 'unknown',
     tree: false,
   },
   handler,
   handlerLegacy,
   name: '@hey-api/typescript',
-  output: 'types',
   resolveConfig: (plugin, context) => {
     plugin.config.definitions = context.valueToObject({
       defaultValue: {

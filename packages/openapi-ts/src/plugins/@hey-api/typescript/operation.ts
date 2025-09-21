@@ -4,10 +4,9 @@ import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { schemaToType } from './plugin';
-import type { HeyApiTypeScriptPlugin, PluginState } from './types';
+import type { HeyApiTypeScriptPlugin } from './types';
 
-// TODO: exported just for @pinia/colada, remove export once that plugin does not depend on it
-export const irParametersToIrSchema = ({
+const irParametersToIrSchema = ({
   parameters,
 }: {
   parameters: Record<string, IR.ParameterObject>;
@@ -46,11 +45,9 @@ export const irParametersToIrSchema = ({
 const operationToDataType = ({
   operation,
   plugin,
-  state,
 }: {
   operation: IR.OperationObject;
   plugin: HeyApiTypeScriptPlugin['Instance'];
-  state: PluginState;
 }) => {
   const data: IR.SchemaObject = {
     type: 'object',
@@ -122,8 +119,11 @@ const operationToDataType = ({
 
   data.required = dataRequired;
 
-  const f = plugin.gen.ensureFile(plugin.output);
-  const symbol = f.addSymbol({
+  const symbol = plugin.registerSymbol({
+    exported: true,
+    meta: {
+      kind: 'type',
+    },
     name: buildName({
       config: plugin.config.requests,
       name: operation.id,
@@ -131,37 +131,35 @@ const operationToDataType = ({
     selector: plugin.api.getSelector('data', operation.id),
   });
   const type = schemaToType({
-    onRef: undefined,
     plugin,
     schema: data,
-    state,
   });
   const node = tsc.typeAliasDeclaration({
-    exportType: true,
+    exportType: symbol.exported,
     name: symbol.placeholder,
     type,
   });
-  symbol.update({ value: node });
+  plugin.setSymbolValue(symbol, node);
 };
 
 export const operationToType = ({
   operation,
   plugin,
-  state,
 }: {
   operation: IR.OperationObject;
   plugin: HeyApiTypeScriptPlugin['Instance'];
-  state: PluginState;
 }) => {
-  operationToDataType({ operation, plugin, state });
-
-  const f = plugin.gen.ensureFile(plugin.output);
+  operationToDataType({ operation, plugin });
 
   const { error, errors, response, responses } =
     operationResponsesMap(operation);
 
   if (errors) {
-    const symbolErrors = f.addSymbol({
+    const symbolErrors = plugin.registerSymbol({
+      exported: true,
+      meta: {
+        kind: 'type',
+      },
       name: buildName({
         config: plugin.config.errors,
         name: operation.id,
@@ -169,20 +167,22 @@ export const operationToType = ({
       selector: plugin.api.getSelector('errors', operation.id),
     });
     const type = schemaToType({
-      onRef: undefined,
       plugin,
       schema: errors,
-      state,
     });
     const node = tsc.typeAliasDeclaration({
-      exportType: true,
+      exportType: symbolErrors.exported,
       name: symbolErrors.placeholder,
       type,
     });
-    symbolErrors.update({ value: node });
+    plugin.setSymbolValue(symbolErrors, node);
 
     if (error) {
-      const symbol = f.addSymbol({
+      const symbol = plugin.registerSymbol({
+        exported: true,
+        meta: {
+          kind: 'type',
+        },
         name: buildName({
           config: {
             case: plugin.config.errors.case,
@@ -202,16 +202,20 @@ export const operationToType = ({
         }),
       });
       const node = tsc.typeAliasDeclaration({
-        exportType: true,
+        exportType: symbol.exported,
         name: symbol.placeholder,
         type,
       });
-      symbol.update({ value: node });
+      plugin.setSymbolValue(symbol, node);
     }
   }
 
   if (responses) {
-    const symbolResponses = f.addSymbol({
+    const symbolResponses = plugin.registerSymbol({
+      exported: true,
+      meta: {
+        kind: 'type',
+      },
       name: buildName({
         config: plugin.config.responses,
         name: operation.id,
@@ -219,20 +223,22 @@ export const operationToType = ({
       selector: plugin.api.getSelector('responses', operation.id),
     });
     const type = schemaToType({
-      onRef: undefined,
       plugin,
       schema: responses,
-      state,
     });
     const node = tsc.typeAliasDeclaration({
-      exportType: true,
+      exportType: symbolResponses.exported,
       name: symbolResponses.placeholder,
       type,
     });
-    symbolResponses.update({ value: node });
+    plugin.setSymbolValue(symbolResponses, node);
 
     if (response) {
-      const symbol = f.addSymbol({
+      const symbol = plugin.registerSymbol({
+        exported: true,
+        meta: {
+          kind: 'type',
+        },
         name: buildName({
           config: {
             case: plugin.config.responses.case,
@@ -254,11 +260,11 @@ export const operationToType = ({
         }),
       });
       const node = tsc.typeAliasDeclaration({
-        exportType: true,
+        exportType: symbol.exported,
         name: symbol.placeholder,
         type,
       });
-      symbol.update({ value: node });
+      plugin.setSymbolValue(symbol, node);
     }
   }
 };

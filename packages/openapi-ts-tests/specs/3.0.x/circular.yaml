@@ -1,0 +1,44 @@
+openapi: 3.0.4
+info:
+  title: OpenAPI 3.0.4 circular example
+  version: 1
+components:
+  schemas:
+    Foo:
+      type: object
+      properties:
+        quux:
+          $ref: '#/components/schemas/Quux'
+    Bar:
+      type: object
+      properties:
+        bar:
+          $ref: '#/components/schemas/Bar'
+        baz:
+          $ref: '#/components/schemas/Baz'
+    Baz:
+      type: object
+      properties:
+        quux:
+          $ref: '#/components/schemas/Quux'
+    Qux:
+      discriminator:
+        propertyName: type
+        mapping:
+          array: '#/components/schemas/Foo'
+          struct: '#/components/schemas/Corge'
+      oneOf:
+        - $ref: '#/components/schemas/Corge'
+        - $ref: '#/components/schemas/Foo'
+    Quux:
+      type: object
+      properties:
+        qux:
+          $ref: '#/components/schemas/Qux'
+    Corge:
+      type: object
+      properties:
+        baz:
+          type: array
+          items:
+            $ref: '#/components/schemas/Baz'

@@ -11,6 +11,6 @@ export const zBar: z.AnyZodObject = z.object({
     ])
 });
 
-export const zFoo: z.AnyZodObject = z.object({
+export const zFoo = z.object({
     foo: zBar
 });

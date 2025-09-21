@@ -22,8 +22,8 @@ export type ParentModelWithDates = {
     'nullable-date'?: Array<(Date | null)>;
     simpleItems?: Array<SimpleModel>;
     simpleItem?: SimpleModel;
-    dates?: Array<(Date)>;
-    strings?: Array<(string)>;
+    dates?: Array<Date>;
+    strings?: Array<string>;
 };
 
 /**
@@ -41,7 +41,7 @@ export type ModelWithDatesResponse = (ModelWithDates);
 
 export type ModelWithDatesArrayResponse = (Array<ModelWithDates>);
 
-export type ArrayOfDatesResponse = (Array<(Date)>);
+export type ArrayOfDatesResponse = (Array<Date>);
 
 export type DateResponse = (Date);
 
