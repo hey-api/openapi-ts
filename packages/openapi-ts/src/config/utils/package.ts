@@ -27,6 +27,9 @@ export type Package = {
   ) => boolean;
 };
 
+export const satisfies: typeof semver.satisfies = (...args) =>
+  semver.satisfies(...args);
+
 export const packageFactory = (
   dependencies: Record<string, string>,
 ): Package => ({
@@ -47,6 +50,6 @@ export const packageFactory = (
       typeof nameOrVersion === 'string'
         ? dependencies[nameOrVersion]
         : nameOrVersion;
-    return version ? semver.satisfies(version, range, optionsOrLoose) : false;
+    return version ? satisfies(version, range, optionsOrLoose) : false;
   },
 });
