@@ -5,8 +5,8 @@ import type { Logs } from './logs';
 import type { Output, UserOutput } from './output';
 import type { Parser, ResolvedParser } from './parser';
 
-export interface UserConfigMultiOutputs extends UserConfig {
-  output: string | Output | ReadonlyArray<string | Output>;
+export interface UserConfigMultiOutputs extends Omit<UserConfig, 'output'> {
+  output: string | UserOutput | ReadonlyArray<string | UserOutput>;
 }
 export interface UserConfig {
   /**
