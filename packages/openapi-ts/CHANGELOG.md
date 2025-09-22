@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.84.1
+
+### Patch Changes
+
+- feat: add `ofetch` client available as `@hey-api/client-ofetch` ([#2642](https://github.com/hey-api/openapi-ts/pull/2642)) ([`da9e05f`](https://github.com/hey-api/openapi-ts/commit/da9e05f38f8952aaf2868094c2c0bc32c402d55e)) by [@brolnickij](https://github.com/brolnickij)
+
+- fix(renderer): replace default import placeholder ([#2674](https://github.com/hey-api/openapi-ts/pull/2674)) ([`762b20e`](https://github.com/hey-api/openapi-ts/commit/762b20e6c8b90d7011ce24a193a66b18e4f74136)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.84.0
 
 ### Minor Changes
