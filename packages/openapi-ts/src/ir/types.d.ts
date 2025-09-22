@@ -1,3 +1,5 @@
+import type { Symbol } from '@hey-api/codegen-core';
+
 import type { JsonSchemaDraft2020_12 } from '../openApi/3.1.x/types/json-schema-draft-2020-12';
 import type {
   SecuritySchemeObject,
@@ -24,24 +26,6 @@ interface IRComponentsObject {
   schemas?: Record<string, IRSchemaObject>;
 }
 
-interface IRContextFile {
-  /**
-   * Should the exports from this file be re-exported in the index barrel file?
-   */
-  exportFromIndex?: boolean;
-  /**
-   * Unique file identifier.
-   */
-  id: string;
-  /**
-   * Relative file path to the output path.
-   *
-   * @example
-   * 'bar/foo.ts'
-   */
-  path: string;
-}
-
 interface IRHooks {
   /**
    * Hooks specifically for overriding operations behavior.
@@ -64,11 +48,18 @@ interface IRHooks {
      * 2. If `isQuery` or `isMutation` returns `undefined`, the result of `getKind` is used.
      *
      * @param operation - The operation object to classify.
-     * @returns An array containing one or more of 'query' or 'mutation'.
+     * @returns An array containing one or more of 'query' or 'mutation', or undefined to fallback to default behavior.
+     * @example
+     * getKind: (operation) => {
+     *   if (operation.method === 'get' && operation.path === '/search') {
+     *     return ['query', 'mutation'];
+     *   }
+     *   return; // fallback to default behavior
+     * }
      */
     getKind?: (
       operation: IROperationObject,
-    ) => ReadonlyArray<'mutation' | 'query'>;
+    ) => ReadonlyArray<'mutation' | 'query'> | undefined;
     /**
      * Check if the given operation should be treated as a mutation.
      *
@@ -81,6 +72,13 @@ interface IRHooks {
      *
      * @param operation - The operation object to check.
      * @returns true if the operation is a mutation, false otherwise, or undefined to fallback to `getKind`.
+     * @example
+     * isMutation: (operation) => {
+     *   if (operation.method === 'post' && operation.path === '/search') {
+     *     return true;
+     *   }
+     *   return; // fallback to default behavior
+     }
      */
     isMutation?: (operation: IROperationObject) => boolean | undefined;
     /**
@@ -95,8 +93,30 @@ interface IRHooks {
      *
      * @param operation - The operation object to check.
      * @returns true if the operation is a query, false otherwise, or undefined to fallback to `getKind`.
+     * @example
+     * isQuery: (operation) => {
+     *   if (operation.method === 'post' && operation.path === '/search') {
+     *     return true;
+     *   }
+     *   return; // fallback to default behavior
+     }
      */
     isQuery?: (operation: IROperationObject) => boolean | undefined;
+  };
+  /**
+   * Hooks specifically for overriding symbols behavior.
+   *
+   * Use these to customize file placement.
+   */
+  symbols?: {
+    /**
+     * Optional output strategy to override default plugin behavior.
+     *
+     * Use this to route generated symbols to specific files.
+     *
+     * @returns The file path to output the symbol to, or undefined to fallback to default behavior.
+     */
+    getFilePath?: (symbol: Symbol) => string | undefined;
   };
 }
 
@@ -224,17 +244,18 @@ interface IRSchemaObject
    */
   accessScope?: 'read' | 'write';
   /**
-   * Similar to `accessScope`, but tells us whether the schema as a whole
-   * contains any read-only or write-only fields. This value controls whether
-   * we split the schema into individual schemas for payloads and responses.
-   */
-  accessScopes?: ReadonlyArray<'both' | 'read' | 'write'>;
-  /**
    * If type is `object`, `additionalProperties` can be used to either define
    * a schema for properties not included in `properties` or disallow such
    * properties altogether.
    */
   additionalProperties?: IRSchemaObject | false;
+  /**
+   * If this schema is a $ref and is circular (points to itself or is in the current resolution stack),
+   * this flag is set to true.
+   *
+   * @default undefined
+   */
+  circular?: boolean;
   /**
    * Any string value is accepted as `format`.
    */
@@ -247,6 +268,7 @@ interface IRSchemaObject
   /**
    * When resolving a list of items, we need to know the relationship between
    * them. `logicalOperator` specifies this logical relationship.
+   *
    * @default 'or'
    */
   logicalOperator?: 'and' | 'or';
@@ -303,7 +325,6 @@ export namespace IR {
   export type BodyObject = IRBodyObject;
   export type ComponentsObject = IRComponentsObject;
   export type Context<Spec extends Record<string, any> = any> = IRContext<Spec>;
-  export type ContextFile = IRContextFile;
   export type Hooks = IRHooks;
   export type Model = IRModel;
   export type OperationObject = IROperationObject;

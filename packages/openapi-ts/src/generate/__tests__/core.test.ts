@@ -48,7 +48,17 @@ describe('generateLegacyCore', () => {
       },
       name: 'AppClient',
       output: {
+        clean: false,
+        fileName: {
+          case: 'preserve',
+          name: '{{name}}',
+          suffix: '.gen',
+        },
+        format: false,
+        indexFile: true,
+        lint: false,
         path: '',
+        tsConfigPath: '',
       },
       parser: {
         hooks: {},
@@ -190,7 +200,17 @@ describe('generateLegacyCore', () => {
       },
       name: 'AppClient',
       output: {
+        clean: false,
+        fileName: {
+          case: 'preserve',
+          name: '{{name}}',
+          suffix: '.gen',
+        },
+        format: false,
+        indexFile: true,
+        lint: false,
         path: '',
+        tsConfigPath: '',
       },
       parser: {
         hooks: {},
@@ -315,7 +335,17 @@ describe('generateLegacyCore', () => {
       },
       name: 'AppClient',
       output: {
+        clean: false,
+        fileName: {
+          case: 'preserve',
+          name: '{{name}}',
+          suffix: '.gen',
+        },
+        format: false,
+        indexFile: true,
+        lint: false,
         path: '',
+        tsConfigPath: '',
       },
       parser: {
         hooks: {},

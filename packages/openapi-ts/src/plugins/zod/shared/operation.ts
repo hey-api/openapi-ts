@@ -14,8 +14,6 @@ export const operationToZodSchema = ({
   operation: IR.OperationObject;
   plugin: ZodPlugin['Instance'];
 }) => {
-  const f = plugin.gen.ensureFile(plugin.output);
-
   if (plugin.config.requests.enabled) {
     const requiredProperties = new Set<string>();
 
@@ -115,7 +113,8 @@ export const operationToZodSchema = ({
     schemaData.required = [...requiredProperties];
 
     const zodSchema = getZodSchema(schemaData);
-    const symbol = f.addSymbol({
+    const symbol = plugin.registerSymbol({
+      exported: true,
       name: buildName({
         config: plugin.config.requests,
         name: operation.id,
@@ -123,7 +122,11 @@ export const operationToZodSchema = ({
       selector: plugin.api.getSelector('data', operation.id),
     });
     const typeInferSymbol = plugin.config.requests.types.infer.enabled
-      ? f.addSymbol({
+      ? plugin.registerSymbol({
+          exported: true,
+          meta: {
+            kind: 'type',
+          },
           name: buildName({
             config: plugin.config.requests.types.infer,
             name: operation.id,
@@ -146,7 +149,8 @@ export const operationToZodSchema = ({
 
       if (response) {
         const zodSchema = getZodSchema(response);
-        const symbol = f.addSymbol({
+        const symbol = plugin.registerSymbol({
+          exported: true,
           name: buildName({
             config: plugin.config.responses,
             name: operation.id,
@@ -154,7 +158,11 @@ export const operationToZodSchema = ({
           selector: plugin.api.getSelector('responses', operation.id),
         });
         const typeInferSymbol = plugin.config.responses.types.infer.enabled
-          ? f.addSymbol({
+          ? plugin.registerSymbol({
+              exported: true,
+              meta: {
+                kind: 'type',
+              },
               name: buildName({
                 config: plugin.config.responses.types.infer,
                 name: operation.id,

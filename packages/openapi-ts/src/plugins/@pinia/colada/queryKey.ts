@@ -1,4 +1,4 @@
-import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+import type { Symbol } from '@hey-api/codegen-core';
 import type { Expression } from 'typescript';
 
 import { hasOperationDataRequired } from '../../../ir/operation';
@@ -22,24 +22,18 @@ export const createQueryKeyFunction = ({
 }: {
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
-  const f = plugin.gen.ensureFile(plugin.output);
-  const symbolJsonValue = f.ensureSymbol({
-    selector: plugin.api.getSelector('_JSONValue'),
+  const symbolCreateQueryKey = plugin.registerSymbol({
+    name: buildName({
+      config: {
+        case: plugin.config.case,
+      },
+      name: 'createQueryKey',
+    }),
+    selector: plugin.api.getSelector('createQueryKey'),
   });
-
-  const symbolCreateQueryKey = f
-    .ensureSymbol({ selector: plugin.api.getSelector('createQueryKey') })
-    .update({
-      name: buildName({
-        config: {
-          case: plugin.config.case,
-        },
-        name: 'createQueryKey',
-      }),
-    });
-  const symbolQueryKeyType = f.ensureSymbol({
-    selector: plugin.api.getSelector('QueryKey'),
-  });
+  const symbolQueryKeyType = plugin.referenceSymbol(
+    plugin.api.getSelector('QueryKey'),
+  );
 
   const returnType = tsc.indexedAccessTypeNode({
     indexType: tsc.literalTypeNode({
@@ -52,18 +46,23 @@ export const createQueryKeyFunction = ({
   });
 
   const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
+
+  const client = getClientPlugin(plugin.context.config);
+  const symbolClient =
+    client.api && 'getSelector' in client.api
+      ? plugin.getSymbol(
+          // @ts-expect-error
+          client.api.getSelector('client'),
+        )
+      : undefined;
+
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.gen.selectSymbolFirstOrThrow(
+  const symbolOptions = plugin.referenceSymbol(
     sdkPlugin.api.getSelector('Options'),
   );
-  const client = getClientPlugin(plugin.context.config);
-  let symbolClient: ICodegenSymbolOut | undefined;
-  if (client.api && 'getSelector' in client.api) {
-    symbolClient = plugin.gen.selectSymbolFirst(
-      // @ts-expect-error
-      client.api.getSelector('client'),
-    );
-  }
+  const symbolJsonValue = plugin.referenceSymbol(
+    plugin.api.getSelector('_JSONValue'),
+  );
 
   const fn = tsc.constVariable({
     expression: tsc.arrowFunction({
@@ -93,10 +92,7 @@ export const createQueryKeyFunction = ({
           expression: tsc.objectExpression({
             multiLine: false,
             obj: [
-              {
-                key: '_id',
-                value: tsc.identifier({ text: 'id' }),
-              },
+              { key: '_id', value: tsc.identifier({ text: 'id' }) },
               {
                 key: baseUrlKey,
                 value: tsc.identifier({
@@ -203,7 +199,7 @@ export const createQueryKeyFunction = ({
     }),
     name: symbolCreateQueryKey.placeholder,
   });
-  symbolCreateQueryKey.update({ value: fn });
+  plugin.setSymbolValue(symbolCreateQueryKey, fn);
 };
 
 const createQueryKeyLiteral = ({
@@ -215,8 +211,6 @@ const createQueryKeyLiteral = ({
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
-  const f = plugin.gen.ensureFile(plugin.output);
-
   const config = plugin.config.queryKeys;
   let tagsExpression: Expression | undefined;
   if (config.tags && operation.tags && operation.tags.length > 0) {
@@ -225,9 +219,9 @@ const createQueryKeyLiteral = ({
     });
   }
 
-  const symbolCreateQueryKey = f.ensureSymbol({
-    selector: plugin.api.getSelector('createQueryKey'),
-  });
+  const symbolCreateQueryKey = plugin.referenceSymbol(
+    plugin.api.getSelector('createQueryKey'),
+  );
   const createQueryKeyCallExpression = tsc.callExpression({
     functionName: symbolCreateQueryKey.placeholder,
     parameters: [tsc.ots.string(id), 'options', tagsExpression],
@@ -240,21 +234,12 @@ export const createQueryKeyType = ({
 }: {
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
-  const f = plugin.gen.ensureFile(plugin.output);
-
-  const symbolJsonValue = f
-    .ensureSymbol({ selector: plugin.api.getSelector('_JSONValue') })
-    .update({ name: '_JSONValue' });
-  f.addImport({
-    from: plugin.name,
-    typeNames: [symbolJsonValue.placeholder],
-  });
+  const symbolJsonValue = plugin.referenceSymbol(
+    plugin.api.getSelector('_JSONValue'),
+  );
 
   const properties: Array<Property> = [
-    {
-      name: '_id',
-      type: tsc.keywordTypeNode({ keyword: 'string' }),
-    },
+    { name: '_id', type: tsc.keywordTypeNode({ keyword: 'string' }) },
     {
       isRequired: false,
       name: getClientBaseUrlKey(plugin.context.config),
@@ -273,14 +258,17 @@ export const createQueryKeyType = ({
   ];
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.gen.selectSymbolFirstOrThrow(
+  const symbolOptions = plugin.referenceSymbol(
     sdkPlugin.api.getSelector('Options'),
   );
-  const symbolQueryKeyType = f
-    .ensureSymbol({ selector: plugin.api.getSelector('QueryKey') })
-    .update({ name: 'QueryKey' });
+  const symbolQueryKeyType = plugin.registerSymbol({
+    exported: true,
+    meta: { kind: 'type' },
+    name: 'QueryKey',
+    selector: plugin.api.getSelector('QueryKey'),
+  });
   const queryKeyType = tsc.typeAliasDeclaration({
-    exportType: true,
+    exportType: symbolQueryKeyType.exported,
     name: symbolQueryKeyType.placeholder,
     type: tsc.typeTupleNode({
       types: [
@@ -306,7 +294,7 @@ export const createQueryKeyType = ({
       },
     ],
   });
-  symbolQueryKeyType.update({ value: queryKeyType });
+  plugin.setSymbolValue(symbolQueryKeyType, queryKeyType);
 };
 
 export const queryKeyStatement = ({
@@ -316,12 +304,12 @@ export const queryKeyStatement = ({
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
-  symbol: ICodegenSymbolOut;
+  symbol: Symbol;
 }) => {
   const typeData = useTypeData({ operation, plugin });
   const { strippedTypeData } = getPublicTypeData({ plugin, typeData });
   const statement = tsc.constVariable({
-    exportConst: plugin.config.queryKeys.enabled,
+    exportConst: symbol.exported,
     expression: tsc.arrowFunction({
       parameters: [
         {

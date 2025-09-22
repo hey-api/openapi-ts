@@ -15,7 +15,6 @@ export const defaultConfig: ValibotPlugin['Config'] = {
   },
   handler,
   name: 'valibot',
-  output: 'valibot',
   resolveConfig: (plugin, context) => {
     plugin.config.definitions = context.valueToObject({
       defaultValue: {

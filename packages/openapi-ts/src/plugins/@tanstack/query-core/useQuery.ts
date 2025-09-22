@@ -6,7 +6,7 @@ import {
   hasOperationSse,
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
-import type { PluginInstance, PluginState } from './types';
+import type { PluginInstance } from './types';
 import { useTypeData } from './useType';
 
 const optionsParamName = 'options';
@@ -14,11 +14,9 @@ const optionsParamName = 'options';
 export const createUseQuery = ({
   operation,
   plugin,
-  state,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  state: PluginState;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
@@ -28,27 +26,17 @@ export const createUseQuery = ({
     return;
   }
 
-  const f = plugin.gen.ensureFile(plugin.output);
-
-  const symbolUseQueryFn = f.addSymbol({
+  const symbolUseQueryFn = plugin.registerSymbol({
+    exported: true,
     name: buildName({
       config: plugin.config.useQuery,
       name: operation.id,
     }),
   });
 
-  if (!state.hasUseQuery) {
-    state.hasUseQuery = true;
-  }
-
-  const symbolUseQuery = f.ensureSymbol({
-    name: 'useQuery',
-    selector: plugin.api.getSelector('useQuery'),
-  });
-  f.addImport({
-    from: plugin.name,
-    names: [symbolUseQuery.name],
-  });
+  const symbolUseQuery = plugin.referenceSymbol(
+    plugin.api.getSelector('useQuery'),
+  );
 
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
@@ -56,14 +44,14 @@ export const createUseQuery = ({
   });
   const typeData = useTypeData({ operation, plugin });
 
-  const symbolQueryOptionsFn = f.ensureSymbol({
-    selector: plugin.api.getSelector('queryOptionsFn', operation.id),
-  });
+  const symbolQueryOptionsFn = plugin.referenceSymbol(
+    plugin.api.getSelector('queryOptionsFn', operation.id),
+  );
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
-    exportConst: true,
+    exportConst: symbolUseQueryFn.exported,
     expression: tsc.arrowFunction({
       parameters: [
         {
@@ -88,5 +76,5 @@ export const createUseQuery = ({
     }),
     name: symbolUseQueryFn.placeholder,
   });
-  symbolUseQueryFn.update({ value: statement });
+  plugin.setSymbolValue(symbolUseQueryFn, statement);
 };

@@ -779,7 +779,7 @@ export const zNestedAnyOfArraysNullable = z.object({
 /**
  * This is a reusable parameter
  */
-export const zSimpleParameter = z.unknown();
+export const zSimpleParameter = z.string();
 
 export const zCompositionWithOneOfAndProperties = z.intersection(z.union([
     z.object({
