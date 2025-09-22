@@ -228,6 +228,10 @@ export default defineConfig({
                 text: 'Adonis <span data-soon>soon</span>',
               },
               {
+                link: '/openapi-ts/plugins/elysia',
+                text: 'Elysia <span data-soon>soon</span>',
+              },
+              {
                 link: '/openapi-ts/plugins/express',
                 text: 'Express <span data-soon>soon</span>',
               },

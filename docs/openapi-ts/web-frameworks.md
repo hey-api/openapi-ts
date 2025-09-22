@@ -14,6 +14,7 @@ Hey API natively supports the following frameworks.
 - [Angular](/openapi-ts/plugins/angular)
 - [Fastify](/openapi-ts/plugins/fastify)
 - [Adonis](/openapi-ts/plugins/adonis) <span data-soon>Soon</span>
+- [Elysia](/openapi-ts/plugins/elysia) <span data-soon>Soon</span>
 - [Express](/openapi-ts/plugins/express) <span data-soon>Soon</span>
 - [Hono](/openapi-ts/plugins/hono) <span data-soon>Soon</span>
 - [Koa](/openapi-ts/plugins/koa) <span data-soon>Soon</span>
