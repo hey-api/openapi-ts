@@ -1,207 +1,145 @@
-import { CodegenFile } from '../files/file';
-import type { ICodegenFile } from '../files/types';
-import type { ICodegenImport } from '../imports/types';
-import type { ICodegenMeta } from '../meta/types';
-import type { ICodegenOutput } from '../output/types';
-import { replaceWrappedIds } from '../renderers/renderer';
-import type { ICodegenRenderer } from '../renderers/types';
-import type {
-  ICodegenSymbolIn,
-  ICodegenSymbolOut,
-  ICodegenSymbolSelector,
-} from '../symbols/types';
-import type { ICodegenProject } from './types';
+import path from 'node:path';
 
-export class CodegenProject implements ICodegenProject {
-  private fileId: number = 0;
-  private fileIdToFile: Map<number, ICodegenFile> = new Map();
-  private fileOrder: Array<ICodegenFile> = [];
-  private filePathToFileId: Map<string, number> = new Map();
-  private renderers: Map<string, ICodegenRenderer> = new Map();
-  private selectorToSymbolIds: Map<string, Array<number>> = new Map();
-  private symbolId: number = 0;
-  private symbolIdToFileId: Map<number, number> = new Map();
+import type { IProjectRenderMeta } from '../extensions/types';
+import { FileRegistry } from '../files/registry';
+import type { IFileOut } from '../files/types';
+import type { IOutput } from '../output/types';
+import type { IRenderer } from '../renderer/types';
+import type { ISelector } from '../selectors/types';
+import { SymbolRegistry } from '../symbols/registry';
+import type { ISymbolOut } from '../symbols/types';
+import type { IProject } from './types';
 
-  addExport(fileOrPath: ICodegenFile | string, imp: ICodegenImport): void {
-    const file = this.ensureFile(fileOrPath);
-    file.addExport(imp);
+const externalSourceSymbol = '@';
+
+export class Project implements IProject {
+  private symbolIdToFileIds: Map<number, Set<number>> = new Map();
+
+  readonly defaultFileName: string;
+  readonly files = new FileRegistry();
+  readonly fileName?: (name: string) => string;
+  readonly renderers: Record<string, IRenderer> = {};
+  readonly root: string;
+  readonly symbols = new SymbolRegistry();
+
+  constructor({
+    defaultFileName,
+    fileName,
+    renderers,
+    root,
+  }: Pick<IProject, 'defaultFileName' | 'fileName' | 'renderers' | 'root'>) {
+    this.defaultFileName = defaultFileName ?? 'main';
+    this.fileName = typeof fileName === 'string' ? () => fileName : fileName;
+    this.renderers = renderers;
+    this.root = root;
   }
 
-  addImport(fileOrPath: ICodegenFile | string, imp: ICodegenImport): void {
-    const file = this.ensureFile(fileOrPath);
-    file.addImport(imp);
+  private getRenderer(file: IFileOut): IRenderer | undefined {
+    return file.extension ? this.renderers[file.extension] : undefined;
   }
 
-  addSymbol(
-    fileOrPath: ICodegenFile | string,
-    symbol: ICodegenSymbolIn,
-  ): ICodegenSymbolOut {
-    const file = this.ensureFile(fileOrPath);
-    return file.addSymbol(symbol);
-  }
-
-  createFile(
-    path: string,
-    meta: Omit<ICodegenFile['meta'], 'renderer'> & {
-      /**
-       * Renderer to use to render this file.
-       */
-      renderer?: ICodegenRenderer;
-    } = {},
-  ): ICodegenFile {
-    const { renderer, ..._meta } = meta;
-    if (renderer) {
-      this.ensureRenderer(renderer);
-    }
-
-    const existing = this.getFileByPath(path);
-    if (existing) {
-      // Whoever is creating the file will override the renderer
-      if (renderer?.id && renderer.id !== existing.meta.renderer) {
-        existing.meta.renderer = renderer.id;
+  private prepareFiles(): void {
+    // TODO: infer extension from symbols
+    const extension = '.ts';
+    for (const symbol of this.symbols.registered()) {
+      const selector = this.symbolToFileSelector(symbol);
+      const file = this.files.reference(selector);
+      file.symbols.body.push(symbol.id);
+      // update symbol->files map
+      const symbolIdToFileIds =
+        this.symbolIdToFileIds.get(symbol.id) ?? new Set();
+      symbolIdToFileIds.add(file.id);
+      this.symbolIdToFileIds.set(symbol.id, symbolIdToFileIds);
+      // update re-exports
+      for (const exportFrom of symbol.exportFrom) {
+        const exportSelector = [exportFrom];
+        const exportFile = this.files.reference(exportSelector);
+        if (exportFile.id !== file.id) {
+          exportFile.symbols.exports.push(symbol.id);
+        }
       }
-      return existing;
+    }
+    for (const file of this.files.referenced()) {
+      if (!file.selector) continue;
+      if (file.selector[0] === externalSourceSymbol) {
+        const filePath = file.selector[1];
+        if (!filePath) {
+          this.files.register({
+            external: true,
+            selector: file.selector,
+          });
+          continue;
+        }
+        const extension = path.extname(filePath);
+        if (!extension) {
+          this.files.register({
+            external: true,
+            path: filePath,
+            selector: file.selector,
+          });
+          continue;
+        }
+        this.files.register({
+          extension,
+          external: true,
+          path: filePath,
+          selector: file.selector,
+        });
+        continue;
+      }
+      const dirs = file.selector.slice(0, -1);
+      let name = file.selector[file.selector.length - 1]!;
+      name = this.fileName?.(name) || name;
+      this.files.register({
+        extension,
+        name,
+        path: path.resolve(this.root, ...dirs, `${name}${extension}`),
+        selector: file.selector,
+      });
     }
 
-    const file = new CodegenFile(path, this, {
-      ..._meta,
-      renderer: renderer?.id,
-    });
-    this.fileOrder.push(file);
-    this.filePathToFileId.set(path, file.id);
-    this.fileIdToFile.set(file.id, file);
-    return file;
+    // TODO: track symbol dependencies and inject imports into files
+    // based on symbol references so the render step can just render
   }
 
-  ensureFile(fileOrPath: ICodegenFile | string): ICodegenFile {
-    if (typeof fileOrPath !== 'string') {
-      return fileOrPath;
+  render(meta?: IProjectRenderMeta): ReadonlyArray<IOutput> {
+    this.prepareFiles();
+    const files: Map<number, IOutput> = new Map();
+    for (const file of this.files.registered()) {
+      if (file.external || !file.path) continue;
+      const renderer = this.getRenderer(file);
+      if (!renderer) continue;
+      files.set(file.id, {
+        content: renderer.renderSymbols(file, this, meta),
+        path: file.path,
+      });
     }
-    const existingFile = this.getFileByPath(fileOrPath);
-    if (existingFile) {
-      return existingFile;
+    for (const [fileId, value] of files.entries()) {
+      const file = this.files.get(fileId)!;
+      const renderer = this.getRenderer(file)!;
+      const content = renderer.renderFile(value.content, file, this, meta);
+      if (content) {
+        files.set(file.id, { ...value, content });
+      } else {
+        files.delete(file.id);
+      }
     }
-    return this.createFile(fileOrPath);
+    return Array.from(files.values());
   }
 
-  private ensureRenderer(renderer: ICodegenRenderer): ICodegenRenderer {
-    if (!this.renderers.has(renderer.id)) {
-      this.renderers.set(renderer.id, renderer);
+  symbolIdToFiles(symbolId: number): ReadonlyArray<IFileOut> {
+    const fileIds = this.symbolIdToFileIds.get(symbolId);
+    return Array.from(fileIds ?? []).map((fileId) => this.files.get(fileId)!);
+  }
+
+  private symbolToFileSelector(symbol: ISymbolOut): ISelector {
+    if (symbol.external) {
+      return [externalSourceSymbol, symbol.external];
     }
-    return this.renderers.get(renderer.id)!;
-  }
-
-  get files(): ReadonlyArray<ICodegenFile> {
-    return [...this.fileOrder];
-  }
-
-  getAllSymbols(): ReadonlyArray<Pick<ICodegenSymbolOut, 'name'>> {
-    return this.fileOrder.flatMap((file) => file.getAllSymbols());
-  }
-
-  getFileByPath(path: string): ICodegenFile | undefined {
-    const fileId = this.filePathToFileId.get(path);
-    return fileId !== undefined ? this.fileIdToFile.get(fileId) : undefined;
-  }
-
-  getFileBySymbolId(id: number): ICodegenFile | undefined {
-    const fileId = this.symbolIdToFileId.get(id);
-    return fileId !== undefined ? this.fileIdToFile.get(fileId) : undefined;
-  }
-
-  private getFileRenderer(file: ICodegenFile): ICodegenRenderer | undefined {
-    return file.meta.renderer
-      ? this.renderers.get(file.meta.renderer)
-      : undefined;
-  }
-
-  getSymbolById(id: number): ICodegenSymbolOut | undefined {
-    const file = this.getFileBySymbolId(id);
-    return file?.getSymbolById(id);
-  }
-
-  incrementFileId(): number {
-    return this.fileId++;
-  }
-
-  incrementSymbolId(): number {
-    return this.symbolId++;
-  }
-
-  registerSymbol(symbol: ICodegenSymbolOut, file: ICodegenFile): void {
-    this.symbolIdToFileId.set(symbol.id, file.id);
-    if (symbol.selector) {
-      const selector = JSON.stringify(symbol.selector);
-      const ids = this.selectorToSymbolIds.get(selector) ?? [];
-      ids.push(symbol.id);
-      this.selectorToSymbolIds.set(selector, ids);
+    const filePath = symbol.getFilePath?.(symbol);
+    if (filePath) {
+      return filePath.split('/');
     }
-  }
-
-  render(meta?: ICodegenMeta): ReadonlyArray<ICodegenOutput> {
-    const results: Array<ICodegenOutput> = [];
-    this.fileOrder.forEach((file, index) => {
-      const renderer = this.getFileRenderer(file);
-      if (!renderer) return;
-      results[index] = {
-        content: renderer.renderSymbols(file, meta),
-        meta: file.meta,
-        path: `${file.path}${file.meta.extension ?? ''}`,
-      };
-    });
-    this.fileOrder.forEach((file, index) => {
-      const renderer = this.getFileRenderer(file);
-      if (!renderer || !results[index]) return;
-      const header = renderer.renderHeader(file, meta);
-      const content = replaceWrappedIds(results[index].content, (symbolId) =>
-        renderer.replacerFn({ file, symbolId }),
-      );
-      results[index].content = `${header}${content}`;
-    });
-    return results.filter(Boolean);
-  }
-
-  selectSymbolAll(
-    selector: ICodegenSymbolSelector,
-    file?: ICodegenFile,
-  ): ReadonlyArray<ICodegenSymbolOut> {
-    const ids = this.selectorToSymbolIds.get(JSON.stringify(selector)) ?? [];
-    const symbols: Array<ICodegenSymbolOut> = [];
-    for (const id of ids) {
-      const f = this.getFileBySymbolId(id);
-      if (!f || (file && file !== f)) continue;
-      const symbol = f.getSymbolById(id);
-      if (!symbol) continue;
-      symbols.push(symbol);
-    }
-    return symbols;
-  }
-
-  selectSymbolFirst(
-    selector: ICodegenSymbolSelector,
-    file?: ICodegenFile,
-  ): ICodegenSymbolOut | undefined {
-    const symbols = this.selectSymbolAll(selector, file);
-    return symbols[0];
-  }
-
-  selectSymbolFirstOrThrow(
-    selector: ICodegenSymbolSelector,
-    file?: ICodegenFile,
-  ): ICodegenSymbolOut {
-    const symbol = this.selectSymbolFirst(selector, file);
-    if (!symbol)
-      throw new Error(
-        `symbol for selector not found: ${JSON.stringify(selector)}`,
-      );
-    return symbol;
-  }
-
-  selectSymbolLast(
-    selector: ICodegenSymbolSelector,
-    file?: ICodegenFile,
-  ): ICodegenSymbolOut | undefined {
-    const symbols = this.selectSymbolAll(selector, file);
-    return symbols[symbols.length - 1];
+    return [this.defaultFileName];
   }
 }

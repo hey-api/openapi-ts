@@ -1,60 +1,78 @@
-import type { ICodegenFile } from '../files/types';
+import type { ISymbolMeta } from '../extensions/types';
+import type { ISelector } from '../selectors/types';
 
-/**
- * Selector array used to select symbols. It doesn't have to be
- * unique, but in practice it might be desirable.
- *
- * @example ["zod", "#/components/schemas/Foo"]
- */
-export type ICodegenSymbolSelector = ReadonlyArray<string>;
-
-export interface ICodegenSymbolIn {
+export interface ISymbolIn {
   /**
-   * Symbols can be **headed** or **headless**.
+   * Array of file names (without extensions) from which this symbol is re-exported.
    *
-   * Headless symbols never render their `value`. Headed symbols render their
-   * `value` if defined.
-   *
-   * Symbols are rendered in the order they were registered as headed.
-   *
-   * Example 1: We register headless symbol `foo`, headed `bar`, and headed
-   * `foo`. The render order is [`bar`, `foo`].
-   *
-   * Example 2: We register headed symbol `foo` and headed `bar`. The render
-   * order is [`foo`, `bar`].
-   *
-   * Headless symbols can be used to claim a symbol or to represent imports
-   * or exports.
+   * @default undefined
+   */
+  readonly exportFrom?: ReadonlyArray<string>;
+  /**
+   * Whether this symbol is exported from its own file.
    *
    * @default false
    */
-  headless?: boolean;
+  readonly exported?: boolean;
+  /**
+   * External module name if this symbol is imported from a module not managed
+   * by the project (e.g. "zod", "lodash").
+   *
+   * @default undefined
+   */
+  readonly external?: string;
+  /**
+   * Optional output strategy to override default behavior.
+   *
+   * @returns The file path to output the symbol to, or undefined to fallback to default behavior.
+   */
+  readonly getFilePath?: (symbol: ISymbolOut) => string | undefined;
+  /**
+   * Unique symbol ID. If one is not provided, it will be auto-generated.
+   */
+  readonly id?: number;
+  /**
+   * Arbitrary metadata about the symbol.
+   *
+   * @default undefined
+   */
+  readonly meta?: ISymbolMeta & {
+    /**
+     * Kind of import if this symbol represents an import.
+     */
+    importKind?: 'namespace' | 'default' | 'named';
+    /**
+     * Kind of symbol.
+     */
+    kind?: 'type';
+  };
   /**
    * The desired name for the symbol within its file. If there are multiple symbols
    * with the same desired name, this might not end up being the actual name.
    *
    * @example "UserModel"
    */
-  readonly name: string;
+  readonly name?: string;
+  /**
+   * Placeholder name for the symbol to be replaced later with the final value.
+   *
+   * @example "_heyapi_31_"
+   */
+  readonly placeholder?: string;
   /**
    * Selector array used to select this symbol. It doesn't have to be
    * unique, but in practice it might be desirable.
    *
    * @example ["zod", "#/components/schemas/Foo"]
    */
-  readonly selector?: ICodegenSymbolSelector;
-  /**
-   * Internal representation of the symbol (e.g. AST node, IR object, raw code).
-   * Used to generate output. If left undefined, this symbol becomes `headless`.
-   */
-  readonly value?: unknown;
+  readonly selector?: ISelector;
 }
 
-export interface ICodegenSymbolOut extends ICodegenSymbolIn {
+export interface ISymbolOut extends ISymbolIn {
   /**
-   * The file this symbol is located in.
+   * Array of file names (without extensions) from which this symbol is re-exported.
    */
-  readonly file: ICodegenFile;
+  readonly exportFrom: ReadonlyArray<string>;
   /**
    * Unique symbol ID.
    */
@@ -65,66 +83,64 @@ export interface ICodegenSymbolOut extends ICodegenSymbolIn {
    * @example "_heyapi_31_"
    */
   readonly placeholder: string;
-  /**
-   * Updates this symbol.
-   *
-   * @param symbol The values to update.
-   * @returns The updated symbol.
-   */
-  readonly update: (symbol: Partial<ICodegenSymbolOut>) => ICodegenSymbolOut;
 }
 
-export interface SelectorMethods {
+export interface ISymbolRegistry {
   /**
-   * Retrieves symbols matching the selector.
+   * Get a symbol by its ID.
    *
-   * @param selector The symbol selector to find.
-   * @param file Find symbols only in this file.
-   * @returns The array of all symbols matching the selector.
-   * @example
-   * const symbols = project.selectSymbolAll(["zod", "#/components/schemas/Foo"]);
+   * @param symbolIdOrSelector Symbol ID or selector to reference.
+   * @returns The symbol, or undefined if not found.
    */
-  selectSymbolAll(
-    selector: ICodegenSymbolSelector,
-    file?: ICodegenFile,
-  ): ReadonlyArray<ICodegenSymbolOut>;
+  get(symbolIdOrSelector: number | ISelector): ISymbolOut | undefined;
   /**
-   * Retrieves the first symbol from all symbols matching the selector.
+   * Returns the value associated with a symbol ID.
    *
-   * @param selector The symbol selector to find.
-   * @param file Find symbols only in this file.
-   * @returns The symbol if found, or undefined otherwise.
-   * @example
-   * const symbol = project.selectSymbolFirst(["zod", "#/components/schemas/Foo"]);
+   * @param symbolId Symbol ID.
+   * @return The value associated with the symbol ID, or undefined if not found.
    */
-  selectSymbolFirst(
-    selector: ICodegenSymbolSelector,
-    file?: ICodegenFile,
-  ): ICodegenSymbolOut | undefined;
+  getValue(symbolId: number): unknown;
   /**
-   * Retrieves the first symbol from all symbols matching the selector.
+   * Checks if the registry has a value associated with a symbol ID.
    *
-   * @param selector The symbol selector to find.
-   * @param file Find symbols only in this file.
-   * @returns The symbol if found, or throw otherwise.
-   * @example
-   * const symbol = project.selectSymbolFirstOrThrow(["zod", "#/components/schemas/Foo"]);
+   * @param symbolId Symbol ID.
+   * @returns True if the registry has a value for symbol ID, false otherwise.
    */
-  selectSymbolFirstOrThrow(
-    selector: ICodegenSymbolSelector,
-    file?: ICodegenFile,
-  ): ICodegenSymbolOut;
+  hasValue(symbolId: number): boolean;
   /**
-   * Retrieves the last symbol from all symbols matching the selector.
+   * Returns the current symbol ID and increments it.
    *
-   * @param selector The symbol selector to find.
-   * @param file Find symbols only in this file.
-   * @returns The symbol if found, or undefined otherwise.
-   * @example
-   * const symbol = project.selectSymbolLast(["zod", "#/components/schemas/Foo"]);
+   * @returns Symbol ID before being incremented.
    */
-  selectSymbolLast(
-    selector: ICodegenSymbolSelector,
-    file?: ICodegenFile,
-  ): ICodegenSymbolOut | undefined;
+  readonly id: number;
+  /**
+   * Returns a symbol by ID or selector, registering it if it doesn't exist.
+   *
+   * @param symbolIdOrSelector Symbol ID or selector to reference.
+   * @returns The referenced or newly registered symbol.
+   */
+  reference(symbolIdOrSelector: number | ISelector): ISymbolOut;
+  /**
+   * Register a symbol globally.
+   *
+   * Deduplicates identical symbols by ID.
+   *
+   * @param symbol Symbol to register.
+   * @returns The registered symbol.
+   */
+  register(symbol: ISymbolIn): ISymbolOut;
+  /**
+   * Get all symbols in the order they were registered.
+   *
+   * @returns Array of all registered symbols, in insert order.
+   */
+  registered(): IterableIterator<ISymbolOut>;
+  /**
+   * Sets a value for a symbol by its ID.
+   *
+   * @param symbolId Symbol ID.
+   * @param value The value to set.
+   * @returns void
+   */
+  setValue(symbolId: number, value: unknown): Map<number, unknown>;
 }

@@ -1,5 +1,69 @@
 # @hey-api/openapi-ts
 
+## 0.84.0
+
+### Minor Changes
+
+- feat: Symbol API
+
+### Symbol API
+
+This release improves the Symbol API, which adds the capability to place symbols in arbitrary files. We preserved the previous output structure for all plugins except Angular.
+
+You can preserve the previous Angular output by writing your own [placement function](https://heyapi.dev/openapi-ts/configuration/parser#hooks-symbols).
+
+### Removed `output` plugin option
+
+Due to the Symbol API release, this option has been removed from the Plugin API. ([#2664](https://github.com/hey-api/openapi-ts/pull/2664)) ([`e1ede9c`](https://github.com/hey-api/openapi-ts/commit/e1ede9cabf52b5bbcb9195570deff58db8f43dbb)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+- fix(plugin): every plugin extends Plugin.Hooks interface ([#2664](https://github.com/hey-api/openapi-ts/pull/2664)) ([`e1ede9c`](https://github.com/hey-api/openapi-ts/commit/e1ede9cabf52b5bbcb9195570deff58db8f43dbb)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(renderer): group and sort imported modules
+
+### TypeScript renderer
+
+We ship a dedicated TypeScript renderer for `.ts` files. This release improves the renderer's ability to group and sort imported modules, resulting in a more polished output. ([#2664](https://github.com/hey-api/openapi-ts/pull/2664)) ([`e1ede9c`](https://github.com/hey-api/openapi-ts/commit/e1ede9cabf52b5bbcb9195570deff58db8f43dbb)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(parser): expand schema deduplication by including validation constraints in type ID ([#2650](https://github.com/hey-api/openapi-ts/pull/2650)) ([`31b3933`](https://github.com/hey-api/openapi-ts/commit/31b3933b2caa1085dbead1ef94695bca4b83d6ac)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- fix(parser): bump support for OpenAPI 3.1.2 ([#2667](https://github.com/hey-api/openapi-ts/pull/2667)) ([`3511fb8`](https://github.com/hey-api/openapi-ts/commit/3511fb88cbe6b767b631af16336cb6c0722c3ff8)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(config): add `output.fileName` option
+
+## File Name
+
+You can customize the naming and casing pattern for files using the `fileName` option.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    fileName: '{{name}}',
+    path: 'src/client',
+  },
+};
+```
+
+By default, we append every file name with a `.gen` suffix to highlight it's automatically generated. You can customize or disable this suffix using the `fileName.suffix` option.
+
+````js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    fileName: {
+      suffix: '.gen',
+    },
+    path: 'src/client',
+  },
+};
+``` ([#2664](https://github.com/hey-api/openapi-ts/pull/2664)) ([`e1ede9c`](https://github.com/hey-api/openapi-ts/commit/e1ede9cabf52b5bbcb9195570deff58db8f43dbb)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(axios): remove duplicate `baseURL` when using relative values ([#2624](https://github.com/hey-api/openapi-ts/pull/2624)) ([`8ffceec`](https://github.com/hey-api/openapi-ts/commit/8ffceec89fe471d4e14df17a172f3d5a254eb819)) by [@Ben-Pfirsich](https://github.com/Ben-Pfirsich)
+### Updated Dependencies:
+  - @hey-api/codegen-core@0.2.0
+
 ## 0.83.1
 
 ### Patch Changes
@@ -104,7 +168,7 @@ This option has been removed to provide a more consistent API across plugins. We
       },
     },
   };
-  ```
+````
 
 ### Patch Changes
 
