@@ -1,5 +1,5 @@
 ---
-"@hey-api/openapi-ts": minor
+"@hey-api/openapi-ts": patch
 ---
 
-feat: init `client-ofetch`
+feat: add `ofetch` client available as `@hey-api/client-ofetch`
