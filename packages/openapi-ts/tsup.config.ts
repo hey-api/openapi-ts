@@ -41,6 +41,7 @@ export default defineConfig((options) => ({
       'client-fetch',
       'client-next',
       'client-nuxt',
+      'client-ofetch',
     ];
 
     for (const pluginName of pluginNames) {
