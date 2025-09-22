@@ -2,7 +2,7 @@
 
 import * as v from 'valibot';
 
-import type { TDataShape, Options as Options2, Client } from './client';
+import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
 import { postFooResponseTransformer } from './transformers.gen';
 import type { PostFooData, PostFooResponses } from './types.gen';
