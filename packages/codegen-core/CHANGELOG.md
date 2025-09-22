@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.2.0
+
+### Minor Changes
+
+- feat: Symbol API ([#2664](https://github.com/hey-api/openapi-ts/pull/2664)) ([`e1ede9c`](https://github.com/hey-api/openapi-ts/commit/e1ede9cabf52b5bbcb9195570deff58db8f43dbb)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.1.0
 
 ### Minor Changes
