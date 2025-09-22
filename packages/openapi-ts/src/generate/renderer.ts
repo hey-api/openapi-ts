@@ -281,7 +281,14 @@ export class TypeScriptRenderer implements Renderer {
       let isTypeOnly = false;
 
       if (value.defaultBinding) {
-        defaultBinding = tsc.identifier({ text: value.defaultBinding });
+        const processedDefaultBinding = renderIds(
+          value.defaultBinding,
+          (symbolId) => {
+            const symbol = project.symbols.get(symbolId);
+            return this.replacerFn({ file, project, symbol });
+          },
+        );
+        defaultBinding = tsc.identifier({ text: processedDefaultBinding });
         if (value.typeDefaultBinding) {
           isTypeOnly = true;
         }
