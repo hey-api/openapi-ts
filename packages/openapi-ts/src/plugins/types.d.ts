@@ -61,7 +61,6 @@ type BaseConfig = {
    */
   exportFromIndex?: boolean;
   name: AnyPluginName;
-  output?: string;
   /**
    * Optional hooks to override default plugin behavior.
    *
@@ -85,7 +84,7 @@ export namespace Plugin {
     handler: Handler<T>;
     handlerLegacy?: LegacyHandler<T>;
     name: T['config']['name'];
-    output: NonNullable<T['config']['output']>;
+    output?: NonNullable<T['config']['output']>;
     /**
      * Resolves static configuration values into their runtime equivalents. For
      * example, when `validator` is set to `true`, it figures out which plugin

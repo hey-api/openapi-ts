@@ -3,7 +3,8 @@ import path from 'node:path';
 
 // @ts-ignore
 import { customClientPlugin } from '@hey-api/custom-client/plugin';
-import { defineConfig } from '@hey-api/openapi-ts';
+// @ts-ignore
+import { defineConfig, utils } from '@hey-api/openapi-ts';
 
 import { getSpecsPath } from '../../utils';
 // @ts-ignore
@@ -34,17 +35,20 @@ export default defineConfig(() => {
       path: path.resolve(
         getSpecsPath(),
         '3.1.x',
+        // 'circular.yaml',
         // 'invalid',
         // 'openai.yaml',
-        // 'full.yaml',
+        'full.yaml',
         // 'opencode.yaml',
         // 'sdk-instance.yaml',
-        'string-with-format.yaml',
+        // 'string-with-format.yaml',
+        // 'transformers.json',
+        // 'type-format.yaml',
+        // 'validators.yaml',
         // 'validators-circular-ref-2.yaml',
         // 'zoom-video-sdk.json',
       ),
-      // https://registry.scalar.com/@lubos-heyapi-dev-team/apis/demo-api-scalar-galaxy/latest?format=json
-      // path: 'scalar:@lubos-heyapi-dev-team/demo-api-scalar-galaxy',
+      // path: 'scalar:@scalar/access-service',
       // path: 'hey-api/backend',
       // path: 'hey-api/backend?branch=main&version=1.0.0',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
@@ -69,15 +73,20 @@ export default defineConfig(() => {
     output: {
       // case: 'snake_case',
       clean: true,
+      fileName: {
+        // case: 'snake_case',
+        // name: '{{name}}.renamed',
+        suffix: '.meh',
+      },
       // format: 'prettier',
-      indexFile: false,
+      // indexFile: false,
       // lint: 'eslint',
       path: path.resolve(__dirname, 'generated', 'sample'),
-      // tsConfigPath: path.resolve(
-      //   __dirname,
-      //   'tsconfig',
-      //   'tsconfig.nodenext.json',
-      // ),
+      tsConfigPath: path.resolve(
+        __dirname,
+        'tsconfig',
+        'tsconfig.nodenext.json',
+      ),
     },
     parser: {
       filters: {
@@ -109,8 +118,16 @@ export default defineConfig(() => {
             if (op.method === 'post' && op.path === '/search') {
               return true;
             }
-            return undefined;
+            return;
           },
+        },
+        symbols: {
+          // getFilePath: (symbol) => {
+          //   if (symbol.name) {
+          //     return symbol.name[0]?.toLowerCase();
+          //   }
+          //   return;
+          // },
         },
       },
       pagination: {
@@ -146,20 +163,22 @@ export default defineConfig(() => {
       {
         // baseUrl: false,
         exportFromIndex: true,
-        // name: '@hey-api/client-fetch',
+        name: '@hey-api/client-fetch',
         // name: 'legacy/angular',
+        // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
+        runtimeConfigPath: './src/hey-api.ts',
         // strictBaseUrl: true,
         // throwOnError: true,
       },
       {
         // case: 'snake_case',
         // definitions: '你_snake_{{name}}',
-        enums: {
-          // case: 'PascalCase',
-          // constantsIgnoreNull: true,
-          // enabled: false,
-          mode: 'javascript',
-        },
+        // enums: {
+        //   // case: 'PascalCase',
+        //   // constantsIgnoreNull: true,
+        //   // enabled: false,
+        //   mode: 'javascript',
+        // },
         // errors: {
         //   error: '他們_error_{{name}}',
         //   name: '你們_errors_{{name}}',
@@ -181,21 +200,34 @@ export default defineConfig(() => {
         asClass: true,
         // auth: false,
         // classNameBuilder: '{{name}}',
+        // classNameBuilder: '{{name}}Service',
         // classStructure: 'off',
         // client: false,
         // include...
         // instance: true,
-        // name: '@hey-api/sdk',
+        name: '@hey-api/sdk',
         // operationId: false,
         // params: 'experiment',
         // responseStyle: 'data',
         // transformer: '@hey-api/transformers',
         // transformer: true,
-        // validator: 'valibot',
         // validator: {
         //   request: 'valibot',
-        //   response: 'valibot',
+        //   response: 'zod',
         // },
+        '~hooks': {
+          symbols: {
+            // getFilePath: (symbol) => {
+            //   if (symbol.name) {
+            //     return utils.stringCase({
+            //       case: 'camelCase',
+            //       value: symbol.name,
+            //     });
+            //   }
+            //   return;
+            // },
+          },
+        },
       },
       {
         // bigInt: true,
@@ -218,7 +250,7 @@ export default defineConfig(() => {
         // mutationOptions: {
         //   name: '{{name}}MO',
         // },
-        // name: '@tanstack/react-query',
+        name: '@tanstack/react-query',
         // queryKeys: {
         //   name: '{{name}}QK',
         // },
@@ -233,7 +265,7 @@ export default defineConfig(() => {
               if (op.method === 'post' && op.path === '/search') {
                 return ['query'];
               }
-              return undefined;
+              return;
             },
             isMutation() {
               // noop
@@ -248,9 +280,9 @@ export default defineConfig(() => {
         // case: 'SCREAMING_SNAKE_CASE',
         // comments: false,
         // definitions: 'z{{name}}Definition',
-        // exportFromIndex: true,
+        exportFromIndex: true,
         // metadata: true,
-        // name: 'valibot',
+        name: 'valibot',
         // requests: {
         //   case: 'PascalCase',
         //   name: '{{name}}Data',
@@ -262,6 +294,19 @@ export default defineConfig(() => {
         // webhooks: {
         //   name: 'q{{name}}CoolWebhook',
         // },
+        '~hooks': {
+          symbols: {
+            // getFilePath: (symbol) => {
+            //   if (symbol.name) {
+            //     return utils.stringCase({
+            //       case: 'camelCase',
+            //       value: symbol.name,
+            //     });
+            //   }
+            //   return;
+            // },
+          },
+        },
       },
       {
         // case: 'snake_case',
@@ -279,7 +324,7 @@ export default defineConfig(() => {
         },
         exportFromIndex: true,
         metadata: true,
-        // name: 'zod',
+        name: 'zod',
         // requests: {
         //   // case: 'SCREAMING_SNAKE_CASE',
         //   // name: 'z{{name}}TestData',
@@ -287,17 +332,32 @@ export default defineConfig(() => {
         //     infer: 'E{{name}}DataZodType',
         //   },
         // },
-        // responses: {
-        //   // case: 'snake_case',
-        //   // name: 'z{{name}}TestResponse',
-        //   types: {
-        //     infer: 'F{{name}}ResponseZodType',
-        //   },
-        // },
+        responses: {
+          // case: 'snake_case',
+          // name: (name) => {
+          //   if (name === 'complexTypes') {
+          //     return 'z';
+          //   }
+          //   return 'z{{name}}Response';
+          // },
+          // types: {
+          //   infer: 'F{{name}}ResponseZodType',
+          // },
+        },
         types: {
           // infer: {
           //   case: 'snake_case',
           // },
+        },
+        '~hooks': {
+          symbols: {
+            // getFilePath: (symbol) => {
+            //   if (symbol.name === 'z') {
+            //     return 'complexService';
+            //   }
+            //   return;
+            // },
+          },
         },
       },
       {
@@ -308,14 +368,15 @@ export default defineConfig(() => {
       {
         exportFromIndex: true,
         httpRequests: {
-          asClass: true,
+          // asClass: true,
         },
         httpResources: {
-          asClass: true,
+          // asClass: true,
         },
         // name: '@angular/common',
       },
       {
+        exportFromIndex: true,
         // mutationOptions: '{{name}}Mutationssss',
         // name: '@pinia/colada',
         // queryOptions: {
@@ -330,7 +391,7 @@ export default defineConfig(() => {
               if (op.method === 'post' && op.path === '/search') {
                 return ['query'];
               }
-              return undefined;
+              return;
             },
           },
         },

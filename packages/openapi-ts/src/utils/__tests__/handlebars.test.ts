@@ -30,8 +30,17 @@ describe('registerHandlebarHelpers', () => {
         path: process.cwd(),
       },
       output: {
+        clean: false,
+        fileName: {
+          case: 'preserve',
+          name: '{{name}}',
+          suffix: '.gen',
+        },
         format: 'prettier',
+        indexFile: true,
+        lint: false,
         path: '',
+        tsConfigPath: '',
       },
       parser: {
         hooks: {},
@@ -146,8 +155,17 @@ describe('registerHandlebarTemplates', () => {
         path: process.cwd(),
       },
       output: {
+        clean: false,
+        fileName: {
+          case: 'preserve',
+          name: '{{name}}',
+          suffix: '.gen',
+        },
         format: 'prettier',
+        indexFile: true,
+        lint: false,
         path: '',
+        tsConfigPath: '',
       },
       parser: {
         hooks: {},

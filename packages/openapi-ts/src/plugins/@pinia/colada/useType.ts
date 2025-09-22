@@ -10,13 +10,8 @@ export const useTypeData = ({
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
 }): string => {
-  const f = plugin.gen.ensureFile(plugin.output);
   const pluginSdk = plugin.getPluginOrThrow('@hey-api/sdk');
-  const typeData = operationOptionsType({
-    file: f,
-    operation,
-    plugin: pluginSdk,
-  });
+  const typeData = operationOptionsType({ operation, plugin: pluginSdk });
   return typeData;
 };
 
@@ -27,32 +22,19 @@ export const useTypeError = ({
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
 }): string => {
-  const f = plugin.gen.ensureFile(plugin.output);
   const client = getClientPlugin(plugin.context.config);
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
-  const symbolErrorType = plugin.gen.selectSymbolFirst(
+  const symbolErrorType = plugin.getSymbol(
     pluginTypeScript.api.getSelector('error', operation.id),
   );
-  if (symbolErrorType) {
-    f.addImport({
-      from: symbolErrorType.file,
-      typeNames: [symbolErrorType.placeholder],
-    });
-  }
 
   let typeErrorName: string | undefined = symbolErrorType?.placeholder;
   if (!typeErrorName) {
     typeErrorName = 'Error';
   }
   if (client.name === '@hey-api/client-axios') {
-    const symbol = f
-      .ensureSymbol({ selector: plugin.api.getSelector('AxiosError') })
-      .update({ name: 'AxiosError' });
-    f.addImport({
-      from: 'axios',
-      typeNames: [symbol.placeholder],
-    });
+    const symbol = plugin.referenceSymbol(plugin.api.getSelector('AxiosError'));
     typeErrorName = `${symbol.placeholder}<${typeErrorName}>`;
   }
   return typeErrorName;
@@ -65,16 +47,9 @@ export const useTypeResponse = ({
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
 }): string => {
-  const f = plugin.gen.ensureFile(plugin.output);
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  const symbolResponseType = plugin.gen.selectSymbolFirst(
+  const symbolResponseType = plugin.getSymbol(
     pluginTypeScript.api.getSelector('response', operation.id),
   );
-  if (symbolResponseType) {
-    f.addImport({
-      from: symbolResponseType.file,
-      typeNames: [symbolResponseType.placeholder],
-    });
-  }
   return symbolResponseType?.placeholder || 'unknown';
 };

@@ -8,7 +8,7 @@ export const zBar: z.AnyZodObject = z.object({
     })).optional()
 });
 
-export const zFoo: z.AnyZodObject = z.object({
+export const zFoo = z.object({
     foo: zBar.optional()
 });
 
@@ -19,4 +19,4 @@ export const zQux: z.ZodTypeAny = z.lazy(() => {
     return zQux;
 });
 
-export const zBaz: z.ZodTypeAny = zQux;
+export const zBaz = zQux;

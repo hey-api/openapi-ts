@@ -1,4 +1,4 @@
-import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+import type { Symbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { IR } from '../../ir/types';
@@ -17,11 +17,11 @@ export const exportZodSchema = ({
 }: {
   plugin: ZodPlugin['Instance'];
   schema: IR.SchemaObject;
-  symbol: ICodegenSymbolOut;
-  typeInferSymbol: ICodegenSymbolOut | undefined;
+  symbol: Symbol;
+  typeInferSymbol: Symbol | undefined;
   zodSchema: ZodSchema;
 }) => {
-  const zSymbol = plugin.gen.selectSymbolFirstOrThrow(
+  const zSymbol = plugin.referenceSymbol(
     plugin.api.getSelector('import', 'zod'),
   );
 
@@ -29,7 +29,7 @@ export const exportZodSchema = ({
     comment: plugin.config.comments
       ? createSchemaComment({ schema })
       : undefined,
-    exportConst: true,
+    exportConst: symbol.exported,
     expression: zodSchema.expression,
     name: symbol.placeholder,
     typeName: zodSchema.typeName
@@ -39,11 +39,11 @@ export const exportZodSchema = ({
         }) as unknown as ts.TypeNode)
       : undefined,
   });
-  symbol.update({ value: statement });
+  plugin.setSymbolValue(symbol, statement);
 
   if (typeInferSymbol) {
     const inferType = tsc.typeAliasDeclaration({
-      exportType: true,
+      exportType: typeInferSymbol.exported,
       name: typeInferSymbol.placeholder,
       type: tsc.typeReferenceNode({
         typeArguments: [
@@ -57,6 +57,6 @@ export const exportZodSchema = ({
         }) as unknown as string,
       }),
     });
-    typeInferSymbol.update({ value: inferType });
+    plugin.setSymbolValue(typeInferSymbol, inferType);
   }
 };

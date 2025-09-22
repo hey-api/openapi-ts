@@ -258,7 +258,7 @@ export default defineConfig({
             text: 'Custom',
           },
         ],
-        text: 'Guides and Concepts',
+        text: 'Plugins',
       },
       {
         items: [

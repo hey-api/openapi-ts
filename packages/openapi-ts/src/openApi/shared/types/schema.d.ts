@@ -4,6 +4,18 @@ export interface SchemaState {
    * from the OpenAPI specification.
    */
   $ref?: string;
+  /**
+   * If a reference is detected as circular, this will hold the $ref string.
+   * This is used to back-propagate circular reference information to the
+   * original schema that started the circular reference chain.
+   */
+  circularRef?: string;
+  /**
+   * Set of $refs currently being resolved that are circular. This is used to
+   * avoid infinite loops when resolving schemas with circular references.
+   *
+   * @deprecated Use `refStack` instead.
+   */
   circularReferenceTracker: Set<string>;
   /**
    * True if current schema is part of an allOf composition. This is used to
@@ -13,12 +25,10 @@ export interface SchemaState {
    */
   inAllOf?: boolean;
   /**
-   * True if current schema is an object property. This is used to mark schemas
-   * as "both" access scopes, i.e. they can be used in both payloads and
-   * responses. Without this field, we'd be overusing the "both" value which
-   * would effectively render it useless.
+   * Stack of $refs currently being resolved. This is used to detect circular
+   * references and avoid infinite loops.
    */
-  isProperty?: boolean;
+  refStack: Array<string>;
 }
 
 export type SchemaWithRequired<

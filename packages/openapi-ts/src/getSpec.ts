@@ -32,7 +32,7 @@ export const getSpec = async ({
 }: {
   fetchOptions?: RequestInit;
   inputPath: Config['input']['path'];
-  timeout: number;
+  timeout: number | undefined;
   watch: WatchValues;
 }): Promise<SpecResponse | SpecError> => {
   const refParser = new $RefParser();

@@ -1,7 +1,6 @@
-import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+import type { Symbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import { TypeScriptRenderer } from '../../../generate/renderer';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
@@ -22,15 +21,11 @@ interface AngularRequestClassEntry {
   root: boolean;
 }
 
-const pathSuffix = '/http/requests';
-
 const generateAngularClassRequests = ({
   plugin,
 }: {
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  const f = plugin.gen.ensureFile(`${plugin.output}${pathSuffix}`);
-
   const requestClasses = new Map<string, AngularRequestClassEntry>();
   const generatedClasses = new Set<string>();
 
@@ -134,16 +129,11 @@ const generateAngularClassRequests = ({
       }
     }
 
-    const symbolInjectable = f
-      .ensureSymbol({
-        selector: plugin.api.getSelector('Injectable'),
-      })
-      .update({ name: 'Injectable' });
-    f.addImport({
-      from: '@angular/core',
-      names: [symbolInjectable.placeholder],
-    });
-    const symbolClass = f.addSymbol({
+    const symbolInjectable = plugin.referenceSymbol(
+      plugin.api.getSelector('Injectable'),
+    );
+    const symbolClass = plugin.registerSymbol({
+      exported: true,
       name: buildName({
         config: {
           case: 'preserve',
@@ -160,11 +150,11 @@ const generateAngularClassRequests = ({
             name: symbolInjectable.placeholder,
           }
         : undefined,
-      exportClass: currentClass.root,
+      exportClass: symbolClass.exported,
       name: symbolClass.placeholder,
       nodes: currentClass.nodes,
     });
-    symbolClass.update({ value: node });
+    plugin.setSymbolValue(symbolClass, node);
 
     generatedClasses.add(currentClass.className);
   };
@@ -179,15 +169,14 @@ const generateAngularFunctionRequests = ({
 }: {
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  const f = plugin.gen.ensureFile(`${plugin.output}${pathSuffix}`);
-
   plugin.forEach('operation', ({ operation }) => {
     const isRequiredOptions = isOperationOptionsRequired({
       context: plugin.context,
       operation,
     });
 
-    const symbol = f.addSymbol({
+    const symbol = plugin.registerSymbol({
+      exported: true,
       name: plugin.config.httpRequests.methodNameBuilder(operation),
       selector: plugin.api.getSelector('httpRequest', operation.id),
     });
@@ -197,7 +186,7 @@ const generateAngularFunctionRequests = ({
       plugin,
       symbol,
     });
-    symbol.update({ value: node });
+    plugin.setSymbolValue(symbol, node);
   });
 };
 
@@ -208,22 +197,14 @@ const generateRequestCallExpression = ({
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  const f = plugin.gen.ensureFile(`${plugin.output}${pathSuffix}`);
-
-  let symbolClient: ICodegenSymbolOut | undefined;
   const client = getClientPlugin(plugin.context.config);
-  if (client.api && 'getSelector' in client.api) {
-    symbolClient = plugin.gen.selectSymbolFirst(
-      // @ts-expect-error
-      client.api.getSelector('client'),
-    );
-    if (symbolClient) {
-      f.addImport({
-        from: symbolClient.file,
-        names: [symbolClient.placeholder],
-      });
-    }
-  }
+  const symbolClient =
+    client.api && 'getSelector' in client.api
+      ? plugin.getSymbol(
+          // @ts-expect-error
+          client.api.getSelector('client'),
+        )
+      : undefined;
 
   const optionsClient = tsc.propertyAccessExpression({
     expression: tsc.identifier({ text: 'options' }),
@@ -284,38 +265,20 @@ const generateAngularRequestMethod = ({
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  const f = plugin.gen.ensureFile(`${plugin.output}${pathSuffix}`);
-
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
-  const symbolHttpRequest = f
-    .ensureSymbol({
-      selector: plugin.api.getSelector('HttpRequest'),
-    })
-    .update({ name: 'HttpRequest' });
-  f.addImport({
-    from: '@angular/common/http',
-    typeNames: [symbolHttpRequest.placeholder],
-  });
+  const symbolHttpRequest = plugin.referenceSymbol(
+    plugin.api.getSelector('HttpRequest'),
+  );
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.gen.selectSymbolFirstOrThrow(
+  const symbolOptions = plugin.referenceSymbol(
     sdkPlugin.api.getSelector('Options'),
   );
-  f.addImport({
-    from: symbolOptions.file,
-    typeNames: [symbolOptions.placeholder],
-  });
 
-  const symbolDataType = plugin.gen.selectSymbolFirst(
+  const symbolDataType = plugin.getSymbol(
     pluginTypeScript.api.getSelector('data', operation.id),
   );
-  if (symbolDataType) {
-    f.addImport({
-      from: symbolDataType.file,
-      typeNames: [symbolDataType.placeholder],
-    });
-  }
   const dataType = symbolDataType?.placeholder || 'unknown';
 
   return tsc.methodDeclaration({
@@ -357,45 +320,27 @@ const generateAngularRequestFunction = ({
   isRequiredOptions: boolean;
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
-  symbol: ICodegenSymbolOut;
+  symbol: Symbol;
 }) => {
-  const f = plugin.gen.ensureFile(`${plugin.output}${pathSuffix}`);
-
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
-  const symbolHttpRequest = f
-    .ensureSymbol({
-      selector: plugin.api.getSelector('HttpRequest'),
-    })
-    .update({ name: 'HttpRequest' });
-  f.addImport({
-    from: '@angular/common/http',
-    typeNames: [symbolHttpRequest.placeholder],
-  });
+  const symbolHttpRequest = plugin.referenceSymbol(
+    plugin.api.getSelector('HttpRequest'),
+  );
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.gen.selectSymbolFirstOrThrow(
+  const symbolOptions = plugin.referenceSymbol(
     sdkPlugin.api.getSelector('Options'),
   );
-  f.addImport({
-    from: symbolOptions.file,
-    typeNames: [symbolOptions.placeholder],
-  });
 
-  const symbolDataType = plugin.gen.selectSymbolFirst(
+  const symbolDataType = plugin.getSymbol(
     pluginTypeScript.api.getSelector('data', operation.id),
   );
-  if (symbolDataType) {
-    f.addImport({
-      from: symbolDataType.file,
-      typeNames: [symbolDataType.placeholder],
-    });
-  }
   const dataType = symbolDataType?.placeholder || 'unknown';
 
   return tsc.constVariable({
     comment: createOperationComment({ operation }),
-    exportConst: true,
+    exportConst: symbol.exported,
     expression: tsc.arrowFunction({
       parameters: [
         {
@@ -428,20 +373,9 @@ const generateAngularRequestFunction = ({
 export const createHttpRequests: AngularCommonPlugin['Handler'] = ({
   plugin,
 }) => {
-  const f = plugin.gen.createFile(`${plugin.output}${pathSuffix}`, {
-    extension: '.ts',
-    path: '{{path}}.gen',
-    renderer: new TypeScriptRenderer(),
-  });
-
   if (plugin.config.httpRequests.asClass) {
     generateAngularClassRequests({ plugin });
   } else {
     generateAngularFunctionRequests({ plugin });
-  }
-
-  if (plugin.config.exportFromIndex && f.hasContent()) {
-    const index = plugin.gen.ensureFile('index');
-    index.addExport({ from: f, namespaceImport: true });
   }
 };
