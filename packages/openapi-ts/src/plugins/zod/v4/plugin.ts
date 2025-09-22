@@ -410,17 +410,13 @@ const objectTypeToZodSchema = ({
     const property = schema.properties[name]!;
     const isRequired = required.includes(name);
 
-    // Check if this property contains a $ref (either directly or in an array)
-    const containsRef = property.$ref || 
-      (property.type === 'array' && property.items?.some(item => item.$ref));
-
     const propertySchema = schemaToZodSchema({
       optional: !isRequired,
       plugin,
       schema: property,
       state,
     });
-    if (propertySchema.hasCircularReference || containsRef) {
+    if (propertySchema.hasCircularReference) {
       result.hasCircularReference = true;
     }
 
@@ -444,7 +440,7 @@ const objectTypeToZodSchema = ({
       propertyName = `'${name}'`;
     }
 
-    if (propertySchema.hasCircularReference || containsRef) {
+    if (propertySchema.hasCircularReference) {
       properties.push(
         tsc.getAccessorDeclaration({
           name: propertyName,

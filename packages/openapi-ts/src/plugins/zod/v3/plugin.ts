@@ -408,10 +408,6 @@ const objectTypeToZodSchema = ({
     const property = schema.properties[name]!;
     const isRequired = required.includes(name);
 
-    // Check if this property contains a $ref (either directly or in an array)
-    const containsRef = property.$ref || 
-      (property.type === 'array' && property.items?.some(item => item.$ref));
-
     const propertyExpression = schemaToZodSchema({
       optional: !isRequired,
       plugin,
@@ -419,7 +415,7 @@ const objectTypeToZodSchema = ({
       state,
     });
 
-    if (propertyExpression.hasCircularReference || containsRef) {
+    if (propertyExpression.hasCircularReference) {
       hasCircularReference = true;
     }
 
@@ -443,8 +439,8 @@ const objectTypeToZodSchema = ({
       propertyName = `'${name}'`;
     }
 
-    // Use getter for properties containing $ref to avoid "used before declaration" errors
-    if (containsRef) {
+    // Use getter for properties with circular references to avoid "used before declaration" errors
+    if (propertyExpression.hasCircularReference) {
       properties.push(
         tsc.getAccessorDeclaration({
           name: propertyName,
