@@ -39,9 +39,9 @@ export default defineConfig((options) => ({
       'client-axios',
       'client-core',
       'client-fetch',
-      'client-ofetch',
       'client-next',
       'client-nuxt',
+      'client-ofetch',
     ];
 
     for (const pluginName of pluginNames) {

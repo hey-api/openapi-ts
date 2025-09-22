@@ -10,9 +10,9 @@ export interface PluginHandler {
   (...args: Parameters<HeyApiClientAngularPlugin['Handler']>): void;
   (...args: Parameters<HeyApiClientAxiosPlugin['Handler']>): void;
   (...args: Parameters<HeyApiClientFetchPlugin['Handler']>): void;
-  (...args: Parameters<HeyApiClientOfetchPlugin['Handler']>): void;
   (...args: Parameters<HeyApiClientNextPlugin['Handler']>): void;
   (...args: Parameters<HeyApiClientNuxtPlugin['Handler']>): void;
+  (...args: Parameters<HeyApiClientOfetchPlugin['Handler']>): void;
 }
 
 /**
