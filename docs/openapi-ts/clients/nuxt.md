@@ -243,9 +243,9 @@ const url = client.buildUrl<FooData>({
 console.log(url); // prints '/foo/1?bar=baz'
 ```
 
-## Custom `$fetch`
+## Custom Instance
 
-You can implement your own `$fetch` method. This is useful if you need to extend the default `$fetch` method with extra functionality, or replace it altogether.
+You can provide a custom `$fetch` instance. This is useful if you need to extend the default instance with extra functionality, or replace it altogether.
 
 ```js
 import { client } from 'client/client.gen';
@@ -257,7 +257,7 @@ client.setConfig({
 });
 ```
 
-You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom method to be.
+You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom instance to be.
 
 ## API
 

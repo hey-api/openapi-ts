@@ -104,6 +104,10 @@ export default defineConfig({
                 text: 'Nuxt',
               },
               {
+                link: '/openapi-ts/clients/ofetch',
+                text: 'OFetch',
+              },
+              {
                 link: '/openapi-ts/clients/effect',
                 text: 'Effect <span data-soon>soon</span>',
               },
@@ -222,6 +226,10 @@ export default defineConfig({
               {
                 link: '/openapi-ts/plugins/adonis',
                 text: 'Adonis <span data-soon>soon</span>',
+              },
+              {
+                link: '/openapi-ts/plugins/elysia',
+                text: 'Elysia <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/express',

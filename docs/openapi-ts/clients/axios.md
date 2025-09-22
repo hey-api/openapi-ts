@@ -211,9 +211,9 @@ const url = client.buildUrl<FooData>({
 console.log(url); // prints '/foo/1?bar=baz'
 ```
 
-## Custom `axios`
+## Custom Instance
 
-You can implement your own `axios` instance. This is useful if you need to extend the default `axios` instance with extra functionality, or replace it altogether.
+You can provide a custom `axios` instance. This is useful if you need to extend the default instance with extra functionality, or replace it altogether.
 
 ```js
 import axios from 'axios';
