@@ -1,6 +1,6 @@
-import type { ICodegenBiMap } from './types';
+import type { IBiMap } from './types';
 
-export class BiMap<Key, Value> implements ICodegenBiMap<Key, Value> {
+export class BiMap<Key, Value> implements IBiMap<Key, Value> {
   private map = new Map<Key, Value>();
   private reverse = new Map<Value, Key>();
 
@@ -45,6 +45,14 @@ export class BiMap<Key, Value> implements ICodegenBiMap<Key, Value> {
   }
 
   set(key: Key, value: Value): this {
+    const oldValue = this.map.get(key);
+    if (oldValue !== undefined && oldValue !== value) {
+      this.reverse.delete(oldValue);
+    }
+    const oldKey = this.reverse.get(value);
+    if (oldKey !== undefined && oldKey !== key) {
+      this.map.delete(oldKey);
+    }
     this.map.set(key, value);
     this.reverse.set(value, key);
     return this;

@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { CodegenProject } from '@hey-api/codegen-core';
+import { Project } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -38,7 +38,17 @@ describe('handlerLegacy', () => {
         path: process.cwd(),
       },
       output: {
+        clean: false,
+        fileName: {
+          case: 'preserve',
+          name: '{{name}}',
+          suffix: '.gen',
+        },
+        format: false,
+        indexFile: true,
+        lint: false,
         path: '',
+        tsConfigPath: '',
       },
       parser: {
         hooks: {},
@@ -177,7 +187,10 @@ describe('handlerLegacy', () => {
         },
         context: {} as any,
         dependencies: [],
-        gen: new CodegenProject(),
+        gen: new Project({
+          renderers: {},
+          root: '.tmp',
+        }),
         handler: () => {},
         name: '@hey-api/sdk',
         output: '',
@@ -255,7 +268,17 @@ describe('methodNameBuilder', () => {
         path: process.cwd(),
       },
       output: {
+        clean: false,
+        fileName: {
+          case: 'preserve',
+          name: '{{name}}',
+          suffix: '.gen',
+        },
+        format: false,
+        indexFile: true,
+        lint: false,
         path: '',
+        tsConfigPath: '',
       },
       parser: {
         hooks: {},
@@ -356,7 +379,10 @@ describe('methodNameBuilder', () => {
         },
         context: {} as any,
         dependencies: [],
-        gen: new CodegenProject(),
+        gen: new Project({
+          renderers: {},
+          root: '.tmp',
+        }),
         handler: () => {},
         name: '@hey-api/sdk',
         output: '',
@@ -394,7 +420,17 @@ describe('methodNameBuilder', () => {
         path: process.cwd(),
       },
       output: {
+        clean: false,
+        fileName: {
+          case: 'preserve',
+          name: '{{name}}',
+          suffix: '.gen',
+        },
+        format: false,
+        indexFile: true,
+        lint: false,
         path: '',
+        tsConfigPath: '',
       },
       parser: {
         hooks: {},
@@ -496,7 +532,10 @@ describe('methodNameBuilder', () => {
         },
         context: {} as any,
         dependencies: [],
-        gen: new CodegenProject(),
+        gen: new Project({
+          renderers: {},
+          root: '.tmp',
+        }),
         handler: () => {},
         name: '@hey-api/sdk',
         output: '',
@@ -536,7 +575,17 @@ describe('methodNameBuilder', () => {
         path: process.cwd(),
       },
       output: {
+        clean: false,
+        fileName: {
+          case: 'preserve',
+          name: '{{name}}',
+          suffix: '.gen',
+        },
+        format: false,
+        indexFile: true,
+        lint: false,
         path: '',
+        tsConfigPath: '',
       },
       parser: {
         hooks: {},
@@ -638,7 +687,10 @@ describe('methodNameBuilder', () => {
         },
         context: {} as any,
         dependencies: [],
-        gen: new CodegenProject(),
+        gen: new Project({
+          renderers: {},
+          root: '.tmp',
+        }),
         handler: () => {},
         name: '@hey-api/sdk',
         output: '',

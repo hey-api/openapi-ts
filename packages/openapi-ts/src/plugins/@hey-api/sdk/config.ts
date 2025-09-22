@@ -27,7 +27,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   handler,
   handlerLegacy,
   name: '@hey-api/sdk',
-  output: 'sdk',
   resolveConfig: (plugin, context) => {
     if (plugin.config.client) {
       if (typeof plugin.config.client === 'boolean') {

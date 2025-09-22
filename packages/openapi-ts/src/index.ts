@@ -1,3 +1,5 @@
+import './overrides.d.ts';
+
 import colors from 'ansi-colors';
 // @ts-expect-error
 import colorSupport from 'color-support';

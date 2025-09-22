@@ -48,6 +48,78 @@ export default {
 
 :::
 
+## File Name
+
+You can customize the naming and casing pattern for files using the `fileName` option.
+
+::: code-group
+
+```js [default]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    fileName: '{{name}}', // [!code ++]
+    path: 'src/client',
+  },
+};
+```
+
+```js [snake_case]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    fileName: {
+      case: 'snake_case', // [!code ++]
+    },
+    path: 'src/client',
+  },
+};
+```
+
+:::
+
+By default, we append every file name with a `.gen` suffix to highlight it's automatically generated. You can customize or disable this suffix using the `fileName.suffix` option.
+
+::: code-group
+
+```js [default]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    fileName: {
+      suffix: '.gen', // [!code ++]
+    },
+    path: 'src/client',
+  },
+};
+```
+
+```js [off]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    fileName: {
+      suffix: null, // [!code ++]
+    },
+    path: 'src/client',
+  },
+};
+```
+
+```js [custom]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    fileName: {
+      suffix: '.generated', // [!code ++]
+    },
+    path: 'src/client',
+  },
+};
+```
+
+:::
+
 ## Format
 
 To format your output folder contents, set `output.format` to a valid formatter.

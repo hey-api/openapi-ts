@@ -5,7 +5,6 @@ import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { createOperationComment } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
-import type { PluginState } from './state';
 import type { PiniaColadaPlugin } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
 import { getPublicTypeData } from './utils';
@@ -14,29 +13,14 @@ export const createMutationOptions = ({
   operation,
   plugin,
   queryFn,
-  state,
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
   queryFn: string;
-  state: PluginState;
 }): void => {
-  const f = plugin.gen.ensureFile(plugin.output);
-
-  if (!state.hasMutations) {
-    state.hasMutations = true;
-  }
-
-  const symbolMutationOptionsType = f.ensureSymbol({
-    name: 'UseMutationOptions',
-    selector: plugin.api.getSelector('UseMutationOptions'),
-  });
-  f.addImport({
-    from: plugin.name,
-    typeNames: [symbolMutationOptionsType.name],
-  });
-
-  state.hasUsedQueryFn = true;
+  const symbolMutationOptionsType = plugin.referenceSymbol(
+    plugin.api.getSelector('UseMutationOptions'),
+  );
 
   const typeData = useTypeData({ operation, plugin });
   const typeError = useTypeError({ operation, plugin });
@@ -124,7 +108,8 @@ export const createMutationOptions = ({
     });
   }
 
-  const symbolMutationOptions = f.addSymbol({
+  const symbolMutationOptions = plugin.registerSymbol({
+    exported: true,
     name: buildName({
       config: plugin.config.mutationOptions,
       name: operation.id,
@@ -134,7 +119,7 @@ export const createMutationOptions = ({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
-    exportConst: true,
+    exportConst: symbolMutationOptions.exported,
     expression: tsc.arrowFunction({
       parameters: [
         {
@@ -154,5 +139,5 @@ export const createMutationOptions = ({
     }),
     name: symbolMutationOptions.placeholder,
   });
-  symbolMutationOptions.update({ value: statement });
+  plugin.setSymbolValue(symbolMutationOptions.id, statement);
 };

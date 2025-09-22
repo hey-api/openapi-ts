@@ -1,4 +1,4 @@
-import type { ICodegenSymbolOut } from '@hey-api/codegen-core';
+import type { Symbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { IR } from '../../../ir/types';
@@ -88,7 +88,7 @@ export const exportType = ({
 }: {
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: IR.SchemaObject;
-  symbol: ICodegenSymbolOut;
+  symbol: Symbol;
   type: ts.TypeNode;
 }) => {
   // root enums have an additional export
@@ -130,8 +130,7 @@ export const exportType = ({
           objectType: typeofType,
         }),
       });
-
-      symbol.update({ value: [objectNode, node] });
+      plugin.setSymbolValue(symbol, [objectNode, node]);
       return;
     } else if (
       plugin.config.enums.mode === 'typescript' ||
@@ -148,7 +147,7 @@ export const exportType = ({
           name: symbol.placeholder,
           obj: enumObject.obj,
         });
-        symbol.update({ value: enumNode });
+        plugin.setSymbolValue(symbol, enumNode);
         return;
       }
     }
@@ -156,9 +155,9 @@ export const exportType = ({
 
   const node = tsc.typeAliasDeclaration({
     comment: createSchemaComment({ schema }),
-    exportType: true,
+    exportType: symbol.exported,
     name: symbol.placeholder,
     type,
   });
-  symbol.update({ value: node });
+  plugin.setSymbolValue(symbol, node);
 };

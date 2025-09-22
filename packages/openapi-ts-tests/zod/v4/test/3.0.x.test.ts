@@ -44,6 +44,13 @@ for (const zodVersion of zodVersions) {
       },
       {
         config: createConfig({
+          input: 'circular.yaml',
+          output: 'circular',
+        }),
+        description: 'generates circular schemas',
+      },
+      {
+        config: createConfig({
           input: 'enum-null.json',
           output: 'enum-null',
         }),

@@ -1,4 +1,3 @@
-import type { ICodegenFile } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { IR } from '../../../ir/types';
@@ -8,12 +7,10 @@ import type { UserConfig } from './types';
 export type ExpressionTransformer = ({
   config,
   dataExpression,
-  file,
   schema,
 }: {
   config: Omit<UserConfig, 'name'>;
   dataExpression?: ts.Expression | string;
-  file: ICodegenFile;
   schema: IR.SchemaObject;
 }) => Array<ts.Expression> | undefined;
 

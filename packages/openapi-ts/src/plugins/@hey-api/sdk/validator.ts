@@ -18,7 +18,6 @@ export const createRequestValidator = ({
   if (!validator.api.createRequestValidator) return;
 
   return validator.api.createRequestValidator({
-    file: plugin.gen.ensureFile(plugin.output),
     operation,
     // @ts-expect-error
     plugin: validator,
@@ -35,7 +34,6 @@ export const createResponseValidator = ({
   if (!validator.api.createResponseValidator) return;
 
   return validator.api.createResponseValidator({
-    file: plugin.gen.ensureFile(plugin.output),
     operation,
     // @ts-expect-error
     plugin: validator,

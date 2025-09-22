@@ -2,7 +2,7 @@ import type { PluginConfigMap } from '../plugins/config';
 import type { Plugin, PluginNames } from '../plugins/types';
 import type { Input, InputPath, Watch } from './input';
 import type { Logs } from './logs';
-import type { Output } from './output';
+import type { Output, UserOutput } from './output';
 import type { Parser, ResolvedParser } from './parser';
 
 export interface UserConfigMultiOutputs extends UserConfig {
@@ -50,7 +50,7 @@ export interface UserConfig {
    * outputs to generate different versions of your SDK with different
    * configurations (e.g., different plugins, formatters, or paths).
    */
-  output: string | Output;
+  output: string | UserOutput;
   /**
    * Customize how the input is parsed and transformed before it's passed to
    * plugins.
@@ -140,10 +140,8 @@ export type Config = Omit<
 > &
   Pick<UserConfig, 'base' | 'name' | 'request'> & {
     input: Omit<Input, 'path' | 'watch'> &
-      Pick<Required<Input>, 'path'> & {
-        watch: Extract<Required<Required<Input>['watch']>, object>;
-      };
-    logs: Extract<Required<UserConfig['logs']>, object>;
+      Pick<Required<Input>, 'path'> & { watch: Watch };
+    logs: Logs;
     output: Output;
     /**
      * Customize how the input is parsed and transformed before it's passed to
