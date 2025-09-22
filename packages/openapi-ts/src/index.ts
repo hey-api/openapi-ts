@@ -131,6 +131,7 @@ export type { Client } from './plugins/@hey-api/client-core/types';
 export type { FetchClient } from './plugins/@hey-api/client-fetch';
 export type { NextClient } from './plugins/@hey-api/client-next';
 export type { NuxtClient } from './plugins/@hey-api/client-nuxt';
+export type { OfetchClient } from './plugins/@hey-api/client-ofetch';
 export type { ExpressionTransformer } from './plugins/@hey-api/transformers/expressions';
 export type { TypeTransformer } from './plugins/@hey-api/transformers/types';
 export { definePluginConfig } from './plugins/shared/utils/config';
