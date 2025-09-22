@@ -10,6 +10,7 @@ export const defaultPaginationKeywords = [
   'start',
 ] as const;
 
+// TODO: use valueToObject for the whole parser config
 export const getParser = (userConfig: UserConfig): Config['parser'] => {
   const parser: Config['parser'] = {
     ...userConfig.parser,
@@ -24,6 +25,7 @@ export const getParser = (userConfig: UserConfig): Config['parser'] => {
         mode: 'root',
         name: '{{name}}Enum',
       },
+      propertiesRequiredByDefault: false,
       readWrite: {
         enabled: true,
         requests: {
@@ -61,6 +63,13 @@ export const getParser = (userConfig: UserConfig): Config['parser'] => {
           },
           value: userConfig.parser.transforms.enums,
         }) as typeof parser.transforms.enums;
+      }
+
+      if (
+        userConfig.parser.transforms.propertiesRequiredByDefault !== undefined
+      ) {
+        parser.transforms.propertiesRequiredByDefault =
+          userConfig.parser.transforms.propertiesRequiredByDefault;
       }
 
       if (userConfig.parser.transforms.readWrite !== undefined) {
