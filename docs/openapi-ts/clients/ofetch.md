@@ -3,17 +3,13 @@ title: OFetch Client
 description: Generate a type-safe ofetch client from OpenAPI with the ofetch client for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
-<script setup lang="ts">
-import { embedProject } from '../../embed'
-</script>
-
 # OFetch
 
 ### About
 
-[ofetch](https://github.com/unjs/ofetch) is a lightweight wrapper around the Fetch API that adds useful defaults and features such as automatic response parsing, request/response hooks, and Node.js support.
+[`ofetch`](https://github.com/unjs/ofetch) is a better Fetch API that adds useful defaults and features such as automatic response parsing, request/response hooks, and it works in Node, browser, and workers.
 
-The ofetch client for Hey API generates a type-safe client from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
+The `ofetch` client for Hey API generates a type-safe client from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
 
 ## Features
 
@@ -50,13 +46,13 @@ npx @hey-api/openapi-ts \
 
 ## Configuration
 
-The ofetch client is built as a thin wrapper on top of ofetch, extending its functionality to work with Hey API. If you're already familiar with ofetch, configuring your client will feel like working directly with ofetch.
+The `ofetch` client is built as a thin wrapper on top of `ofetch`, extending its functionality to work with Hey API. If you're already familiar with `ofetch`, configuring your client will feel like working directly with `ofetch`.
 
 When we installed the client above, it created a [`client.gen.ts`](/openapi-ts/output#client) file. You will most likely want to configure the exported `client` instance. There are two ways to do that.
 
 ### `setConfig()`
 
-This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any ofetch configuration option to `setConfig()` (including ofetch hooks), and even your own [ofetch](#custom-ofetch) instance.
+This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any `ofetch` configuration option to `setConfig()`, and even your own [`ofetch`](#custom-ofetch) instance.
 
 ```js
 import { client } from 'client/client.gen';
@@ -136,32 +132,33 @@ const response = await getFoo({
 
 Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application.
 
-The ofetch client supports two complementary options:
+The `ofetch` client supports two complementary options:
 
-- Built-in interceptors exposed via `client.interceptors` (request/response/error) — same API across Hey API clients.
-- Native ofetch hooks passed through config: `onRequest`, `onRequestError`, `onResponse`, `onResponseError`.
+- built-in Hey API interceptors exposed via `client.interceptors`
+- native `ofetch` hooks passed through config (e.g. `onRequest`)
 
-Below is an example request interceptor using the built-in API.
+### Example: Request interceptor
 
 ::: code-group
 
 ```js [use]
 import { client } from 'client/client.gen';
-// Supports async functions
+
 async function myInterceptor(request) {
   // do something
   return request;
 }
+
 interceptorId = client.interceptors.request.use(myInterceptor);
 ```
 
 ```js [eject]
 import { client } from 'client/client.gen';
 
-// eject interceptor by interceptor id
+// eject by ID
 client.interceptors.request.eject(interceptorId);
 
-// eject interceptor by reference to interceptor function
+// eject by reference
 client.interceptors.request.eject(myInterceptor);
 ```
 
@@ -172,36 +169,38 @@ async function myNewInterceptor(request) {
   // do something
   return request;
 }
-// update interceptor by interceptor id
+
+// update by ID
 client.interceptors.request.update(interceptorId, myNewInterceptor);
 
-// update interceptor by reference to interceptor function
+// update by reference
 client.interceptors.request.update(myInterceptor, myNewInterceptor);
 ```
 
 :::
 
-and an example response interceptor
+### Example: Response interceptor
 
 ::: code-group
 
 ```js [use]
 import { client } from 'client/client.gen';
+
 async function myInterceptor(response) {
   // do something
   return response;
 }
-// Supports async functions
+
 interceptorId = client.interceptors.response.use(myInterceptor);
 ```
 
 ```js [eject]
 import { client } from 'client/client.gen';
 
-// eject interceptor by interceptor id
+// eject by ID
 client.interceptors.response.eject(interceptorId);
 
-// eject interceptor by reference to interceptor function
+// eject by reference
 client.interceptors.response.eject(myInterceptor);
 ```
 
@@ -212,7 +211,8 @@ async function myNewInterceptor(response) {
   // do something
   return response;
 }
-// update interceptor by interceptor id
+
+// update interceptor by interceptor ID
 client.interceptors.response.update(interceptorId, myNewInterceptor);
 
 // update interceptor by reference to interceptor function
@@ -221,7 +221,11 @@ client.interceptors.response.update(myInterceptor, myNewInterceptor);
 
 :::
 
-You can also use native ofetch hooks by passing them in config:
+::: tip
+To eject, you must provide the ID or reference of the interceptor passed to `use()`, the ID is the value returned by `use()` and `update()`.
+:::
+
+### Example: `ofetch` hooks
 
 ```js
 import { client } from 'client/client.gen';
@@ -241,10 +245,6 @@ client.setConfig({
   },
 });
 ```
-
-::: tip
-To eject, you must provide the id or reference of the interceptor passed to `use()`, the id is the value returned by `use()` and `update()`.
-:::
 
 ## Auth
 
@@ -270,7 +270,7 @@ client.interceptors.request.use((request, options) => {
 });
 ```
 
-or with ofetch hooks:
+You can also use the `ofetch` hooks.
 
 ```js
 import { client } from 'client/client.gen';
@@ -278,22 +278,6 @@ import { client } from 'client/client.gen';
 client.setConfig({
   onRequest: ({ options }) => {
     options.headers.set('Authorization', 'Bearer <my_token>'); // [!code ++]
-  },
-});
-```
-
-## SSE
-
-The ofetch client supports Server‑Sent Events (SSE) via `client.sse.<method>`. Use this for streaming endpoints.
-
-```ts
-const result = await client.sse.get({
-  url: '/events',
-  onSseEvent(event) {
-    // event.data (string) or parsed data, depending on server
-  },
-  onSseError(error) {
-    // handle stream errors
   },
 });
 ```
@@ -325,15 +309,15 @@ const url = client.buildUrl<FooData>({
 console.log(url); // prints '/foo/1?bar=baz'
 ```
 
-## Custom `ofetch`
+## Custom Instance
 
-You can provide a custom ofetch instance. This is useful if you need to extend ofetch with extra functionality (hooks, retry behavior, etc.) or replace it altogether.
+You can provide a custom `ofetch` instance. This is useful if you need to extend the default instance with extra functionality, or replace it altogether.
 
 ```js
 import { ofetch } from 'ofetch';
 import { client } from 'client/client.gen';
 
-const $ofetch = ofetch.create({
+const customOFetchInstance = ofetch.create({
   onRequest: ({ options }) => {
     // customize request
   },
@@ -343,7 +327,7 @@ const $ofetch = ofetch.create({
 });
 
 client.setConfig({
-  ofetch: $ofetch,
+  ofetch: customOFetchInstance,
 });
 ```
 
