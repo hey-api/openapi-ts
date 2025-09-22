@@ -18,6 +18,7 @@ const clients: ReadonlyArray<PluginClientNames> = [
   '@hey-api/client-fetch',
   '@hey-api/client-next',
   '@hey-api/client-nuxt',
+  '@hey-api/client-ofetch',
 ];
 
 for (const client of clients) {
