@@ -3,18 +3,24 @@
 import { z } from 'zod/v3';
 
 export const zBar: z.AnyZodObject = z.object({
-    foo: z.lazy(() => {
-        return zFoo;
-    }).optional()
+    get foo(): z.ZodTypeAny {
+        return z.lazy(() => {
+            return zFoo;
+        }).optional();
+    }
 });
 
 export const zFoo: z.ZodTypeAny = z.union([
     z.object({
         foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
-        bar: zBar.optional(),
-        baz: z.array(z.lazy(() => {
-            return zFoo;
-        })).optional(),
+        get bar() {
+            return zBar.optional();
+        },
+        get baz(): z.ZodTypeAny {
+            return z.array(z.lazy(() => {
+                return zFoo;
+            })).optional();
+        },
         qux: z.number().int().gt(0).optional().default(0)
     }),
     z.null()

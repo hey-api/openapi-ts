@@ -11,7 +11,9 @@ export const zBar = z.object({
 });
 
 export const zFoo = z.object({
-    foo: z.optional(zBar)
+    get foo(): z.ZodOptional {
+        return z.optional(zBar);
+    }
 });
 
 /**

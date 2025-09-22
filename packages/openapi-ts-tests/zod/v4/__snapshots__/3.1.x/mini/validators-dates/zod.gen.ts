@@ -17,7 +17,9 @@ export const zBar = z.object({
 export const zFoo = z._default(z.union([
     z.object({
         foo: z.optional(z.string().check(z.regex(/^\d{3}-\d{2}-\d{4}$/))),
-        bar: z.optional(zBar),
+        get bar(): z.ZodMiniOptional {
+            return z.optional(zBar);
+        },
         get baz(): z.ZodMiniOptional {
             return z.optional(z.array(z.lazy((): any => {
                 return zFoo;
@@ -40,7 +42,9 @@ export const zQux = z.record(z.string(), z.object({
 export const zFoo2 = z.string();
 
 export const zFoo3 = z.object({
-    foo: z.optional(zBar)
+    get foo(): z.ZodMiniOptional {
+        return z.optional(zBar);
+    }
 });
 
 export const zPatchFooData = z.object({
@@ -48,21 +52,27 @@ export const zPatchFooData = z.object({
         foo: z.optional(z.string())
     }),
     path: z.optional(z.never()),
-    query: z.optional(z.object({
-        foo: z.optional(z.string()),
-        bar: z.optional(zBar),
-        baz: z.optional(z.object({
-            baz: z.optional(z.string())
-        })),
-        qux: z.optional(z.iso.date()),
-        quux: z.optional(z.iso.datetime({
-            offset: true
-        }))
-    }))
+    get query(): z.ZodMiniOptional {
+        return z.optional(z.object({
+            foo: z.optional(z.string()),
+            get bar(): z.ZodMiniOptional {
+                return z.optional(zBar);
+            },
+            baz: z.optional(z.object({
+                baz: z.optional(z.string())
+            })),
+            qux: z.optional(z.iso.date()),
+            quux: z.optional(z.iso.datetime({
+                offset: true
+            }))
+        }));
+    }
 });
 
 export const zPostFooData = z.object({
-    body: zFoo3,
+    get body() {
+        return zFoo3;
+    },
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });

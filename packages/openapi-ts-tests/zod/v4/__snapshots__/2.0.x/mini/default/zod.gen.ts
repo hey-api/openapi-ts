@@ -271,7 +271,9 @@ export const zModelWithProperties = z.object({
     string: z.optional(z.string()),
     number: z.optional(z.number()),
     boolean: z.optional(z.boolean()),
-    reference: z.optional(zModelWithString),
+    get reference(): z.ZodMiniOptional {
+        return z.optional(zModelWithString);
+    },
     'property with space': z.optional(z.string()),
     default: z.optional(z.string()),
     try: z.optional(z.string()),
@@ -283,14 +285,18 @@ export const zModelWithProperties = z.object({
  * This is a model with one property containing a reference
  */
 export const zModelWithReference = z.object({
-    prop: z.optional(zModelWithProperties)
+    get prop(): z.ZodMiniOptional {
+        return z.optional(zModelWithProperties);
+    }
 });
 
 /**
  * This is a model with one property containing an array
  */
 export const zModelWithArray = z.object({
-    prop: z.optional(z.array(zModelWithString)),
+    get prop(): z.ZodMiniOptional {
+        return z.optional(z.array(zModelWithString));
+    },
     propWithFile: z.optional(z.array(z.string())),
     propWithNumber: z.optional(z.array(z.number()))
 });
@@ -328,7 +334,9 @@ export const zModelWithNestedProperties = z.object({
  * This is a model with duplicated properties
  */
 export const zModelWithDuplicateProperties = z.object({
-    prop: z.optional(zModelWithString)
+    get prop(): z.ZodMiniOptional {
+        return z.optional(zModelWithString);
+    }
 });
 
 /**
@@ -344,25 +352,39 @@ export const zModelWithOrderedProperties = z.object({
  * This is a model with duplicated imports
  */
 export const zModelWithDuplicateImports = z.object({
-    propA: z.optional(zModelWithString),
-    propB: z.optional(zModelWithString),
-    propC: z.optional(zModelWithString)
+    get propA(): z.ZodMiniOptional {
+        return z.optional(zModelWithString);
+    },
+    get propB(): z.ZodMiniOptional {
+        return z.optional(zModelWithString);
+    },
+    get propC(): z.ZodMiniOptional {
+        return z.optional(zModelWithString);
+    }
 });
 
 /**
  * This is a model that extends another model
  */
-export const zModelThatExtends = z.intersection(zModelWithString, z.object({
-    propExtendsA: z.optional(z.string()),
-    propExtendsB: z.optional(zModelWithString)
+export const zModelThatExtends = z.intersection(zModelWithString, z.lazy(() => {
+    return z.object({
+        propExtendsA: z.optional(z.string()),
+        get propExtendsB(): z.ZodMiniOptional {
+            return z.optional(zModelWithString);
+        }
+    });
 }));
 
 /**
  * This is a model that extends another model
  */
-export const zModelThatExtendsExtends = z.intersection(z.intersection(zModelWithString, zModelThatExtends), z.object({
-    propExtendsC: z.optional(z.string()),
-    propExtendsD: z.optional(zModelWithString)
+export const zModelThatExtendsExtends = z.intersection(z.intersection(zModelWithString, zModelThatExtends), z.lazy(() => {
+    return z.object({
+        propExtendsC: z.optional(z.string()),
+        get propExtendsD(): z.ZodMiniOptional {
+            return z.optional(zModelWithString);
+        }
+    });
 }));
 
 export const zDefault = z.object({
@@ -414,7 +436,9 @@ export const zModelWithPropertiesWritable = z.object({
     string: z.optional(z.string()),
     number: z.optional(z.number()),
     boolean: z.optional(z.boolean()),
-    reference: z.optional(zModelWithString),
+    get reference(): z.ZodMiniOptional {
+        return z.optional(zModelWithString);
+    },
     'property with space': z.optional(z.string()),
     default: z.optional(z.string()),
     try: z.optional(z.string())
@@ -678,7 +702,9 @@ export const zCallWithResponsesResponse = z.union([
     z.object({
         '@namespace.string': z.optional(z.readonly(z.string())),
         '@namespace.integer': z.optional(z.readonly(z.int())),
-        value: z.optional(z.readonly(z.array(zModelWithString)))
+        get value(): z.ZodMiniOptional {
+            return z.optional(z.readonly(z.array(zModelWithString)));
+        }
     }),
     zModelThatExtends,
     zModelThatExtendsExtends
@@ -772,7 +798,9 @@ export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
 export const zNonAsciiæøåÆøÅöôêÊ字符串Response = zNonAsciiStringæøåÆøÅöôêÊ字符串;
 
 export const zPostApiVbyApiVersionBodyData = z.object({
-    body: zParameterActivityParams,
+    get body() {
+        return zParameterActivityParams;
+    },
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });

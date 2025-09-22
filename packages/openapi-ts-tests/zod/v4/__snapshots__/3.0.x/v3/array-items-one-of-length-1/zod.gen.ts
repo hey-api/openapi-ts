@@ -4,6 +4,8 @@ import { z } from 'zod/v3';
 
 export const zBar = z.string();
 
-export const zFoo = z.object({
-    foo: z.array(zBar).min(1).max(2147483647).optional()
+export const zFoo: z.AnyZodObject = z.object({
+    get foo() {
+        return z.array(zBar).min(1).max(2147483647).optional();
+    }
 });

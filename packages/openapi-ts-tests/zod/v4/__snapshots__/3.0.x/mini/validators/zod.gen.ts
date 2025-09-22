@@ -11,7 +11,9 @@ export const zBar = z.object({
 export const zFoo = z._default(z.union([
     z.object({
         foo: z.optional(z.string().check(z.regex(/^\d{3}-\d{2}-\d{4}$/))),
-        bar: z.optional(zBar),
+        get bar(): z.ZodMiniOptional {
+            return z.optional(zBar);
+        },
         get baz(): z.ZodMiniOptional {
             return z.optional(z.array(z.lazy((): any => {
                 return zFoo;

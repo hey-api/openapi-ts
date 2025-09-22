@@ -400,13 +400,17 @@ const objectTypeToZodSchema = ({
   let hasCircularReference = false;
 
   // TODO: parser - handle constants
-  const properties: Array<ts.PropertyAssignment> = [];
+  const properties: Array<ts.PropertyAssignment | ts.GetAccessorDeclaration> = [];
 
   const required = schema.required ?? [];
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
     const isRequired = required.includes(name);
+
+    // Check if this property contains a $ref (either directly or in an array)
+    const containsRef = property.$ref || 
+      (property.type === 'array' && property.items?.some(item => item.$ref));
 
     const propertyExpression = schemaToZodSchema({
       optional: !isRequired,
@@ -415,7 +419,7 @@ const objectTypeToZodSchema = ({
       state,
     });
 
-    if (propertyExpression.hasCircularReference) {
+    if (propertyExpression.hasCircularReference || containsRef) {
       hasCircularReference = true;
     }
 
@@ -438,12 +442,34 @@ const objectTypeToZodSchema = ({
     ) {
       propertyName = `'${name}'`;
     }
-    properties.push(
-      tsc.propertyAssignment({
-        initializer: propertyExpression.expression,
-        name: propertyName,
-      }),
-    );
+
+    // Use getter for properties containing $ref to avoid "used before declaration" errors
+    if (containsRef) {
+      properties.push(
+        tsc.getAccessorDeclaration({
+          name: propertyName,
+          // @ts-expect-error
+          returnType: propertyExpression.typeName
+            ? tsc.propertyAccessExpression({
+                expression: zSymbol.placeholder,
+                name: propertyExpression.typeName,
+              })
+            : undefined,
+          statements: [
+            tsc.returnStatement({
+              expression: propertyExpression.expression,
+            }),
+          ],
+        }),
+      );
+    } else {
+      properties.push(
+        tsc.propertyAssignment({
+          initializer: propertyExpression.expression,
+          name: propertyName,
+        }),
+      );
+    }
   }
 
   if (
@@ -897,6 +923,8 @@ const schemaToZodSchema = ({
         symbol = plugin.referenceSymbol(selector);
       }
 
+      // Always wrap circular references in z.lazy() to avoid
+      // "Block-scoped variable used before its declaration" errors
       zodSchema.expression = tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
           expression: zSymbol.placeholder,

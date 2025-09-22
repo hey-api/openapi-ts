@@ -178,7 +178,9 @@ export const zArrayWithArray = z.array(z.array(zModelWithString));
  * This is a simple array with properties
  */
 export const zArrayWithProperties = z.array(z.object({
-    '16x16': z.optional(zCamelCaseCommentWithBreaks),
+    get '16x16'(): z.ZodMiniOptional {
+        return z.optional(zCamelCaseCommentWithBreaks);
+    },
     bar: z.optional(z.string())
 }));
 
@@ -376,7 +378,9 @@ export const zModelWithProperties = z.object({
     string: z.optional(z.string()),
     number: z.optional(z.number()),
     boolean: z.optional(z.boolean()),
-    reference: z.optional(zModelWithString),
+    get reference(): z.ZodMiniOptional {
+        return z.optional(zModelWithString);
+    },
     'property with space': z.optional(z.string()),
     default: z.optional(z.string()),
     try: z.optional(z.string()),
@@ -388,7 +392,9 @@ export const zModelWithProperties = z.object({
  * This is a model with one property containing a reference
  */
 export const zModelWithReference = z.object({
-    prop: z.optional(zModelWithProperties)
+    get prop(): z.ZodMiniOptional {
+        return z.optional(zModelWithProperties);
+    }
 });
 
 export const zModelWithReadOnlyAndWriteOnly = z.object({
@@ -400,7 +406,9 @@ export const zModelWithReadOnlyAndWriteOnly = z.object({
  * This is a model with one property containing an array
  */
 export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
-    prop: z.optional(z.array(zModelWithReadOnlyAndWriteOnly)),
+    get prop(): z.ZodMiniOptional {
+        return z.optional(z.array(zModelWithReadOnlyAndWriteOnly));
+    },
     propWithFile: z.optional(z.array(z.string())),
     propWithNumber: z.optional(z.array(z.number()))
 });
@@ -409,7 +417,9 @@ export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
  * This is a model with one property containing an array
  */
 export const zModelWithArray = z.object({
-    prop: z.optional(z.array(zModelWithString)),
+    get prop(): z.ZodMiniOptional {
+        return z.optional(z.array(zModelWithString));
+    },
     propWithFile: z.optional(z.array(z.string())),
     propWithNumber: z.optional(z.array(z.number()))
 });
@@ -670,7 +680,9 @@ export const zModelWithNestedProperties = z.object({
  * This is a model with duplicated properties
  */
 export const zModelWithDuplicateProperties = z.object({
-    prop: z.optional(zModelWithString)
+    get prop(): z.ZodMiniOptional {
+        return z.optional(zModelWithString);
+    }
 });
 
 /**
@@ -686,25 +698,39 @@ export const zModelWithOrderedProperties = z.object({
  * This is a model with duplicated imports
  */
 export const zModelWithDuplicateImports = z.object({
-    propA: z.optional(zModelWithString),
-    propB: z.optional(zModelWithString),
-    propC: z.optional(zModelWithString)
+    get propA(): z.ZodMiniOptional {
+        return z.optional(zModelWithString);
+    },
+    get propB(): z.ZodMiniOptional {
+        return z.optional(zModelWithString);
+    },
+    get propC(): z.ZodMiniOptional {
+        return z.optional(zModelWithString);
+    }
 });
 
 /**
  * This is a model that extends another model
  */
-export const zModelThatExtends = z.intersection(zModelWithString, z.object({
-    propExtendsA: z.optional(z.string()),
-    propExtendsB: z.optional(zModelWithString)
+export const zModelThatExtends = z.intersection(zModelWithString, z.lazy(() => {
+    return z.object({
+        propExtendsA: z.optional(z.string()),
+        get propExtendsB(): z.ZodMiniOptional {
+            return z.optional(zModelWithString);
+        }
+    });
 }));
 
 /**
  * This is a model that extends another model
  */
-export const zModelThatExtendsExtends = z.intersection(z.intersection(zModelWithString, zModelThatExtends), z.object({
-    propExtendsC: z.optional(z.string()),
-    propExtendsD: z.optional(zModelWithString)
+export const zModelThatExtendsExtends = z.intersection(z.intersection(zModelWithString, zModelThatExtends), z.lazy(() => {
+    return z.object({
+        propExtendsC: z.optional(z.string()),
+        get propExtendsD(): z.ZodMiniOptional {
+            return z.optional(zModelWithString);
+        }
+    });
 }));
 
 /**
@@ -786,10 +812,14 @@ export const zSimpleParameter = z.string();
 
 export const zCompositionWithOneOfAndProperties = z.intersection(z.union([
     z.object({
-        foo: zSimpleParameter
+        get foo() {
+            return zSimpleParameter;
+        }
     }),
     z.object({
-        bar: zNonAsciiStringæøåÆøÅöôêÊ字符串
+        get bar() {
+            return zNonAsciiStringæøåÆøÅöôêÊ字符串;
+        }
     })
 ]), z.object({
     baz: z.union([
@@ -815,7 +845,9 @@ export const zNullableObject = z._default(z.union([
 export const zCharactersInDescription = z.string();
 
 export const zModelWithNullableObject = z.object({
-    data: z.optional(zNullableObject)
+    get data(): z.ZodMiniOptional {
+        return z.optional(zNullableObject);
+    }
 });
 
 export const zModelWithOneOfEnum = z.union([
@@ -862,17 +894,25 @@ export const zModelWithNestedArrayEnumsDataBar = z.enum([
 ]);
 
 export const zModelWithNestedArrayEnumsData = z.object({
-    foo: z.optional(z.array(zModelWithNestedArrayEnumsDataFoo)),
-    bar: z.optional(z.array(zModelWithNestedArrayEnumsDataBar))
+    get foo(): z.ZodMiniOptional {
+        return z.optional(z.array(zModelWithNestedArrayEnumsDataFoo));
+    },
+    get bar(): z.ZodMiniOptional {
+        return z.optional(z.array(zModelWithNestedArrayEnumsDataBar));
+    }
 });
 
 export const zModelWithNestedArrayEnums = z.object({
     array_strings: z.optional(z.array(z.string())),
-    data: z.optional(zModelWithNestedArrayEnumsData)
+    get data(): z.ZodMiniOptional {
+        return z.optional(zModelWithNestedArrayEnumsData);
+    }
 });
 
 export const zModelWithNestedCompositionEnums = z.object({
-    foo: z.optional(zModelWithNestedArrayEnumsDataFoo)
+    get foo(): z.ZodMiniOptional {
+        return z.optional(zModelWithNestedArrayEnumsDataFoo);
+    }
 });
 
 export const zModelWithConstantSizeArray = z.tuple([
@@ -1024,7 +1064,9 @@ export const zIoK8sApimachineryPkgApisMetaV1Preconditions = z.object({
  * This schema was giving PascalCase transformations a hard time
  */
 export const zIoK8sApimachineryPkgApisMetaV1DeleteOptions = z.object({
-    preconditions: z.optional(zIoK8sApimachineryPkgApisMetaV1Preconditions)
+    get preconditions(): z.ZodMiniOptional {
+        return z.optional(zIoK8sApimachineryPkgApisMetaV1Preconditions);
+    }
 });
 
 export const zAdditionalPropertiesUnknownIssue = z.record(z.string(), z.union([
@@ -1087,7 +1129,9 @@ export const zModelWithPropertiesWritable = z.object({
     string: z.optional(z.string()),
     number: z.optional(z.number()),
     boolean: z.optional(z.boolean()),
-    reference: z.optional(zModelWithString),
+    get reference(): z.ZodMiniOptional {
+        return z.optional(zModelWithString);
+    },
     'property with space': z.optional(z.string()),
     default: z.optional(z.string()),
     try: z.optional(z.string())
@@ -1263,9 +1307,13 @@ export const zDeleteFooData3 = z.object({
         BarParam: z.string()
     }),
     query: z.optional(z.never()),
-    headers: z.object({
-        'x-Foo-Bar': zModelWithString
-    })
+    get headers() {
+        return z.object({
+            get 'x-Foo-Bar'() {
+                return zModelWithString;
+            }
+        });
+    }
 });
 
 export const zCallWithDescriptionsData = z.object({
@@ -1308,14 +1356,20 @@ export const zCallWithParametersData = z.object({
             z.null()
         ])
     }),
-    query: z.object({
-        foo_ref_enum: z.optional(zModelWithNestedArrayEnumsDataFoo),
-        foo_all_of_enum: zModelWithNestedArrayEnumsDataFoo,
-        cursor: z.union([
-            z.string(),
-            z.null()
-        ])
-    }),
+    get query() {
+        return z.object({
+            get foo_ref_enum(): z.ZodMiniOptional {
+                return z.optional(zModelWithNestedArrayEnumsDataFoo);
+            },
+            get foo_all_of_enum() {
+                return zModelWithNestedArrayEnumsDataFoo;
+            },
+            cursor: z.union([
+                z.string(),
+                z.null()
+            ])
+        });
+    },
     headers: z.object({
         parameterHeader: z.union([
             z.string(),
@@ -1354,7 +1408,9 @@ export const zCallWithWeirdParameterNamesData = z.object({
 });
 
 export const zGetCallWithOptionalParamData = z.object({
-    body: zModelWithOneOfEnum,
+    get body() {
+        return zModelWithOneOfEnum;
+    },
     path: z.optional(z.never()),
     query: z.optional(z.object({
         page: z.optional(z.number())
@@ -1369,9 +1425,13 @@ export const zPostCallWithOptionalParamData = z.object({
         ]))
     })),
     path: z.optional(z.never()),
-    query: z.object({
-        parameter: zPageable
-    })
+    get query() {
+        return z.object({
+            get parameter() {
+                return zPageable;
+            }
+        });
+    }
 });
 
 export const zPostCallWithOptionalParamResponse = z.union([
@@ -1380,7 +1440,9 @@ export const zPostCallWithOptionalParamResponse = z.union([
 ]);
 
 export const zPostApiVbyApiVersionRequestBodyData = z.object({
-    body: z.optional(zSimpleRequestBody),
+    get body(): z.ZodMiniOptional {
+        return z.optional(zSimpleRequestBody);
+    },
     path: z.optional(z.never()),
     query: z.optional(z.object({
         parameter: z.optional(z.string())
@@ -1388,7 +1450,9 @@ export const zPostApiVbyApiVersionRequestBodyData = z.object({
 });
 
 export const zPostApiVbyApiVersionFormDataData = z.object({
-    body: z.optional(zSimpleFormData),
+    get body(): z.ZodMiniOptional {
+        return z.optional(zSimpleFormData);
+    },
     path: z.optional(z.never()),
     query: z.optional(z.object({
         parameter: z.optional(z.string())
@@ -1426,17 +1490,21 @@ export const zCallWithDefaultParametersData = z.object({
 export const zCallWithDefaultOptionalParametersData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.object({
-        parameterString: z._default(z.optional(z.string()), 'Hello World!'),
-        parameterNumber: z._default(z.optional(z.number()), 123),
-        parameterBoolean: z._default(z.optional(z.boolean()), true),
-        parameterEnum: z.optional(z.enum([
-            'Success',
-            'Warning',
-            'Error'
-        ])),
-        parameterModel: z.optional(zModelWithString)
-    }))
+    get query(): z.ZodMiniOptional {
+        return z.optional(z.object({
+            parameterString: z._default(z.optional(z.string()), 'Hello World!'),
+            parameterNumber: z._default(z.optional(z.number()), 123),
+            parameterBoolean: z._default(z.optional(z.boolean()), true),
+            parameterEnum: z.optional(z.enum([
+                'Success',
+                'Warning',
+                'Error'
+            ])),
+            get parameterModel(): z.ZodMiniOptional {
+                return z.optional(zModelWithString);
+            }
+        }));
+    }
 });
 
 export const zCallToTestOrderOfParamsData = z.object({
@@ -1554,7 +1622,9 @@ export const zCallWithResponsesResponse = z.union([
     z.object({
         '@namespace.string': z.optional(z.readonly(z.string())),
         '@namespace.integer': z.optional(z.readonly(z.int())),
-        value: z.optional(z.readonly(z.array(zModelWithString)))
+        get value(): z.ZodMiniOptional {
+            return z.optional(z.readonly(z.array(zModelWithString)));
+        }
     }),
     zModelThatExtends,
     zModelThatExtendsExtends
@@ -1660,16 +1730,20 @@ export const zFileResponseResponse = z.string();
 export const zComplexTypesData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.object({
-        parameterObject: z.object({
-            first: z.optional(z.object({
-                second: z.optional(z.object({
-                    third: z.optional(z.string())
+    get query() {
+        return z.object({
+            parameterObject: z.object({
+                first: z.optional(z.object({
+                    second: z.optional(z.object({
+                        third: z.optional(z.string())
+                    }))
                 }))
-            }))
-        }),
-        parameterReference: zModelWithString
-    })
+            }),
+            get parameterReference() {
+                return zModelWithString;
+            }
+        });
+    }
 });
 
 /**
@@ -1784,7 +1858,9 @@ export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
 export const zNonAsciiæøåÆøÅöôêÊ字符串Response = z.array(zNonAsciiStringæøåÆøÅöôêÊ字符串);
 
 export const zPutWithFormUrlEncodedData = z.object({
-    body: zArrayWithStrings,
+    get body() {
+        return zArrayWithStrings;
+    },
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });

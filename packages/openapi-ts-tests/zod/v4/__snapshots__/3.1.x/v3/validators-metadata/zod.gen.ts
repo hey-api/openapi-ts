@@ -6,9 +6,11 @@ import { z } from 'zod/v3';
  * This is Bar schema.
  */
 export const zBar: z.AnyZodObject = z.object({
-    foo: z.lazy(() => {
-        return zFoo;
-    }).optional()
+    get foo(): z.ZodTypeAny {
+        return z.lazy(() => {
+            return zFoo;
+        }).optional();
+    }
 }).describe('This is Bar schema.');
 
 /**
@@ -17,10 +19,14 @@ export const zBar: z.AnyZodObject = z.object({
 export const zFoo: z.ZodTypeAny = z.union([
     z.object({
         foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).describe('This is foo property.').optional(),
-        bar: zBar.optional(),
-        baz: z.array(z.lazy(() => {
-            return zFoo;
-        })).describe('This is baz property.').optional(),
+        get bar() {
+            return zBar.optional();
+        },
+        get baz(): z.ZodTypeAny {
+            return z.array(z.lazy(() => {
+                return zFoo;
+            })).describe('This is baz property.').optional();
+        },
         qux: z.number().int().gt(0).describe('This is qux property.').optional().default(0)
     }),
     z.null()
@@ -37,18 +43,22 @@ export const zQux = z.record(z.object({
  */
 export const zFoo2 = z.string().describe('This is Foo parameter.');
 
-export const zFoo3 = z.object({
-    foo: zBar.optional()
+export const zFoo3: z.AnyZodObject = z.object({
+    get foo() {
+        return zBar.optional();
+    }
 });
 
-export const zPatchFooData = z.object({
+export const zPatchFooData: z.AnyZodObject = z.object({
     body: z.object({
         foo: z.string().optional()
     }),
     path: z.never().optional(),
     query: z.object({
         foo: z.string().describe('This is Foo parameter.').optional(),
-        bar: zBar.optional(),
+        get bar() {
+            return zBar.optional();
+        },
         baz: z.object({
             baz: z.string().optional()
         }).optional(),
@@ -57,8 +67,10 @@ export const zPatchFooData = z.object({
     }).optional()
 });
 
-export const zPostFooData = z.object({
-    body: zFoo3,
+export const zPostFooData: z.AnyZodObject = z.object({
+    get body() {
+        return zFoo3;
+    },
     path: z.never().optional(),
     query: z.never().optional()
 });

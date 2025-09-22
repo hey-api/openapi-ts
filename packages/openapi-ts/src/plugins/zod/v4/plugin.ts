@@ -410,13 +410,17 @@ const objectTypeToZodSchema = ({
     const property = schema.properties[name]!;
     const isRequired = required.includes(name);
 
+    // Check if this property contains a $ref (either directly or in an array)
+    const containsRef = property.$ref || 
+      (property.type === 'array' && property.items?.some(item => item.$ref));
+
     const propertySchema = schemaToZodSchema({
       optional: !isRequired,
       plugin,
       schema: property,
       state,
     });
-    if (propertySchema.hasCircularReference) {
+    if (propertySchema.hasCircularReference || containsRef) {
       result.hasCircularReference = true;
     }
 
@@ -440,7 +444,7 @@ const objectTypeToZodSchema = ({
       propertyName = `'${name}'`;
     }
 
-    if (propertySchema.hasCircularReference) {
+    if (propertySchema.hasCircularReference || containsRef) {
       properties.push(
         tsc.getAccessorDeclaration({
           name: propertyName,
@@ -937,26 +941,24 @@ const schemaToZodSchema = ({
         symbol = plugin.referenceSymbol(selector);
       }
 
-      if (isSelfReference) {
-        zodSchema.expression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: zSymbol.placeholder,
-            name: identifiers.lazy,
+      // Always wrap circular references in z.lazy() to avoid
+      // "Block-scoped variable used before its declaration" errors
+      zodSchema.expression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
+          expression: zSymbol.placeholder,
+          name: identifiers.lazy,
+        }),
+        parameters: [
+          tsc.arrowFunction({
+            returnType: tsc.keywordTypeNode({ keyword: 'any' }),
+            statements: [
+              tsc.returnStatement({
+                expression: tsc.identifier({ text: symbol.placeholder }),
+              }),
+            ],
           }),
-          parameters: [
-            tsc.arrowFunction({
-              returnType: tsc.keywordTypeNode({ keyword: 'any' }),
-              statements: [
-                tsc.returnStatement({
-                  expression: tsc.identifier({ text: symbol.placeholder }),
-                }),
-              ],
-            }),
-          ],
-        });
-      } else {
-        zodSchema.expression = tsc.identifier({ text: symbol.placeholder });
-      }
+        ],
+      });
       zodSchema.hasCircularReference = schema.circular;
     } else {
       if (!symbol) {

@@ -3,13 +3,17 @@
 import { z } from 'zod/v3';
 
 export const zBaz: z.AnyZodObject = z.object({
-    quux: z.lazy(() => {
-        return zQuux;
-    }).optional()
+    get quux(): z.ZodTypeAny {
+        return z.lazy(() => {
+            return zQuux;
+        }).optional();
+    }
 });
 
-export const zCorge = z.object({
-    baz: z.array(zBaz).optional()
+export const zCorge: z.AnyZodObject = z.object({
+    get baz() {
+        return z.array(zBaz).optional();
+    }
 });
 
 export const zQux: z.ZodTypeAny = z.union([
@@ -23,17 +27,25 @@ export const zQux: z.ZodTypeAny = z.union([
     }))
 ]);
 
-export const zQuux = z.object({
-    qux: zQux.optional()
+export const zQuux: z.AnyZodObject = z.object({
+    get qux() {
+        return zQux.optional();
+    }
 });
 
-export const zFoo = z.object({
-    quux: zQuux.optional()
+export const zFoo: z.AnyZodObject = z.object({
+    get quux() {
+        return zQuux.optional();
+    }
 });
 
 export const zBar: z.AnyZodObject = z.object({
-    bar: z.lazy(() => {
-        return zBar;
-    }).optional(),
-    baz: zBaz.optional()
+    get bar(): z.ZodTypeAny {
+        return z.lazy(() => {
+            return zBar;
+        }).optional();
+    },
+    get baz(): z.ZodTypeAny {
+        return zBaz.optional();
+    }
 });

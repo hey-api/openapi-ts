@@ -21,7 +21,9 @@ export const zFoo = z._default(z.union([
         foo: z.optional(z.string().check(z.regex(/^\d{3}-\d{2}-\d{4}$/)).register(z.globalRegistry, {
             description: 'This is foo property.'
         })),
-        bar: z.optional(zBar),
+        get bar(): z.ZodMiniOptional {
+            return z.optional(zBar);
+        },
         get baz(): z.ZodMiniOptional {
             return z.optional(z.array(z.lazy((): any => {
                 return zFoo;
@@ -50,7 +52,9 @@ export const zFoo2 = z.string().register(z.globalRegistry, {
 });
 
 export const zFoo3 = z.object({
-    foo: z.optional(zBar)
+    get foo(): z.ZodMiniOptional {
+        return z.optional(zBar);
+    }
 });
 
 export const zPatchFooData = z.object({
@@ -58,21 +62,27 @@ export const zPatchFooData = z.object({
         foo: z.optional(z.string())
     }),
     path: z.optional(z.never()),
-    query: z.optional(z.object({
-        foo: z.optional(z.string().register(z.globalRegistry, {
-            description: 'This is Foo parameter.'
-        })),
-        bar: z.optional(zBar),
-        baz: z.optional(z.object({
-            baz: z.optional(z.string())
-        })),
-        qux: z.optional(z.iso.date()),
-        quux: z.optional(z.iso.datetime())
-    }))
+    get query(): z.ZodMiniOptional {
+        return z.optional(z.object({
+            foo: z.optional(z.string().register(z.globalRegistry, {
+                description: 'This is Foo parameter.'
+            })),
+            get bar(): z.ZodMiniOptional {
+                return z.optional(zBar);
+            },
+            baz: z.optional(z.object({
+                baz: z.optional(z.string())
+            })),
+            qux: z.optional(z.iso.date()),
+            quux: z.optional(z.iso.datetime())
+        }));
+    }
 });
 
 export const zPostFooData = z.object({
-    body: zFoo3,
+    get body() {
+        return zFoo3;
+    },
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });
