@@ -376,6 +376,40 @@ export default {
 
 You can customize the naming and casing pattern for `enums` schemas using the `.name` and `.case` options.
 
+### Properties required by default
+
+By default, any object schema with a missing `required` keyword is interpreted as "no properties are required." This is the correct behavior according to the OpenAPI standard. However, some specifications interpret a missing `required` keyword as "all properties should be required."
+
+This option allows you to change the default behavior so that properties are required by default unless explicitly marked as optional.
+
+::: code-group
+
+```js [default]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      propertiesRequiredByDefault: false, // [!code ++]
+    },
+  },
+};
+```
+
+```js [required]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      propertiesRequiredByDefault: true, // [!code ++]
+    },
+  },
+};
+```
+
+:::
+
 ### Read-write
 
 Your schemas might contain read-only or write-only fields. Using such schemas directly could mean asking the user to provide a read-only field in requests, or expecting a write-only field in responses. We separate schemas for requests and responses if direct usage would result in such scenarios.

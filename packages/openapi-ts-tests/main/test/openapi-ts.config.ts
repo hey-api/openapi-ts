@@ -34,11 +34,12 @@ export default defineConfig(() => {
       // },
       path: path.resolve(
         getSpecsPath(),
-        '3.1.x',
+        '3.0.x',
         // 'circular.yaml',
+        'dutchie.json',
         // 'invalid',
         // 'openai.yaml',
-        'full.yaml',
+        // 'full.yaml',
         // 'opencode.yaml',
         // 'sdk-instance.yaml',
         // 'string-with-format.yaml',
@@ -142,16 +143,17 @@ export default defineConfig(() => {
         // version: () => '3.1.1',
       },
       transforms: {
-        enums: {
-          enabled: false,
-          mode: 'root',
-          // name: '{{name}}',
-        },
-        readWrite: {
-          // enabled: false,
-          requests: '{{name}}Writable',
-          responses: '{{name}}',
-        },
+        // enums: {
+        //   enabled: false,
+        //   mode: 'root',
+        //   // name: '{{name}}',
+        // },
+        propertiesRequiredByDefault: true,
+        // readWrite: {
+        //   // enabled: false,
+        //   requests: '{{name}}Writable',
+        //   responses: '{{name}}',
+        // },
       },
       validate_EXPERIMENTAL: true,
     },

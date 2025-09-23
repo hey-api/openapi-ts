@@ -48,6 +48,7 @@ describe('operationNameFn', () => {
           mode: 'root',
           name: '',
         },
+        propertiesRequiredByDefault: false,
         readWrite: {
           enabled: false,
           requests: {
