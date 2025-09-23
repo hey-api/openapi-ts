@@ -69,6 +69,7 @@ describe('generateLegacyOutput', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {

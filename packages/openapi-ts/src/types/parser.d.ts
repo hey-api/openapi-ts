@@ -11,7 +11,7 @@ import type { StringCase, StringName } from './case';
 
 type EnumsMode = 'inline' | 'root';
 
-export type Parser = {
+export type UserParser = {
   /**
    * Filters can be used to select a subset of your input before it's passed
    * to plugins.
@@ -93,6 +93,19 @@ export type Parser = {
            */
           name?: StringName;
         };
+    /**
+     * By default, any object schema with a missing `required` keyword is
+     * interpreted as "no properties are required." This is the correct
+     * behavior according to the OpenAPI standard. However, some specifications
+     * interpret a missing `required` keyword as "all properties should be
+     * required."
+     *
+     * This option allows you to change the default behavior so that
+     * properties are required by default unless explicitly marked as optional.
+     *
+     * @default false
+     */
+    propertiesRequiredByDefault?: boolean;
     /**
      * Your schemas might contain read-only or write-only fields. Using such
      * schemas directly could mean asking the user to provide a read-only
@@ -180,7 +193,7 @@ export type Parser = {
   validate_EXPERIMENTAL?: boolean | 'strict' | 'warn';
 };
 
-export type ResolvedParser = {
+export type Parser = {
   /**
    * Filters can be used to select a subset of your input before it's passed
    * to plugins.
@@ -257,6 +270,19 @@ export type ResolvedParser = {
        */
       name: StringName;
     };
+    /**
+     * By default, any object schema with a missing `required` keyword is
+     * interpreted as "no properties are required." This is the correct
+     * behavior according to the OpenAPI standard. However, some specifications
+     * interpret a missing `required` keyword as "all properties should be
+     * required."
+     *
+     * This option allows you to change the default behavior so that
+     * properties are required by default unless explicitly marked as optional.
+     *
+     * @default false
+     */
+    propertiesRequiredByDefault: boolean;
     /**
      * Your schemas might contain read-only or write-only fields. Using such
      * schemas directly could mean asking the user to provide a read-only

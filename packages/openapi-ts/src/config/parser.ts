@@ -11,98 +11,143 @@ export const defaultPaginationKeywords = [
 ] as const;
 
 export const getParser = (userConfig: UserConfig): Config['parser'] => {
-  const parser: Config['parser'] = {
-    ...userConfig.parser,
-    hooks: {},
-    pagination: {
-      keywords: defaultPaginationKeywords,
-    },
-    transforms: {
-      enums: {
-        case: 'PascalCase',
-        enabled: false,
-        mode: 'root',
-        name: '{{name}}Enum',
+  const parser = valueToObject({
+    defaultValue: {
+      hooks: {},
+      pagination: {
+        keywords: defaultPaginationKeywords,
       },
-      readWrite: {
-        enabled: true,
-        requests: {
-          case: 'preserve',
-          name: '{{name}}Writable',
+      transforms: {
+        enums: {
+          case: 'PascalCase',
+          enabled: false,
+          mode: 'root',
+          name: '{{name}}Enum',
         },
-        responses: {
-          case: 'preserve',
-          name: '{{name}}',
+        propertiesRequiredByDefault: false,
+        readWrite: {
+          enabled: true,
+          requests: {
+            case: 'preserve',
+            name: '{{name}}Writable',
+          },
+          responses: {
+            case: 'preserve',
+            name: '{{name}}',
+          },
         },
       },
+      validate_EXPERIMENTAL: false,
     },
-    validate_EXPERIMENTAL: false,
-  };
-
-  if (userConfig.parser) {
-    if (userConfig.parser.hooks) {
-      parser.hooks = userConfig.parser.hooks;
-    }
-
-    if (userConfig.parser.pagination?.keywords) {
-      parser.pagination.keywords = userConfig.parser.pagination.keywords;
-    }
-
-    if (userConfig.parser.transforms) {
-      if (userConfig.parser.transforms.enums !== undefined) {
-        parser.transforms.enums = valueToObject({
+    mappers: {
+      object: (fields, defaultValue) => ({
+        ...fields,
+        pagination: valueToObject({
           defaultValue: {
-            ...parser.transforms.enums,
-            enabled: Boolean(userConfig.parser.transforms.enums),
+            ...(defaultValue.pagination as Extract<
+              typeof defaultValue.pagination,
+              Record<string, unknown>
+            >),
+          },
+          value: fields.pagination,
+        }),
+        transforms: valueToObject({
+          defaultValue: {
+            ...(defaultValue.transforms as Extract<
+              typeof defaultValue.transforms,
+              Record<string, unknown>
+            >),
           },
           mappers: {
-            boolean: (enabled) => ({ enabled }),
-            string: (mode) => ({ mode }),
-          },
-          value: userConfig.parser.transforms.enums,
-        }) as typeof parser.transforms.enums;
-      }
-
-      if (userConfig.parser.transforms.readWrite !== undefined) {
-        parser.transforms.readWrite = valueToObject({
-          defaultValue: {
-            ...parser.transforms.readWrite,
-            enabled: Boolean(userConfig.parser.transforms.readWrite),
-          },
-          mappers: {
-            boolean: (enabled) => ({ enabled }),
-            object: (fields) => ({
+            object: (fields, defaultValue) => ({
               ...fields,
-              requests: valueToObject({
-                defaultValue: parser.transforms.readWrite.requests,
-                mappers: {
-                  function: (name) => ({ name }),
-                  string: (name) => ({ name }),
+              enums: valueToObject({
+                defaultValue: {
+                  ...(defaultValue.enums as Extract<
+                    typeof defaultValue.enums,
+                    Record<string, unknown>
+                  >),
+                  enabled:
+                    fields.enums !== undefined
+                      ? Boolean(fields.enums)
+                      : (
+                          defaultValue.enums as Extract<
+                            typeof defaultValue.enums,
+                            Record<string, unknown>
+                          >
+                        ).enabled,
                 },
-                value: fields.requests,
+                mappers: {
+                  boolean: (enabled) => ({ enabled }),
+                  string: (mode) => ({ mode }),
+                },
+                value: fields.enums,
               }),
-              responses: valueToObject({
-                defaultValue: parser.transforms.readWrite.responses,
-                mappers: {
-                  function: (name) => ({ name }),
-                  string: (name) => ({ name }),
+              propertiesRequiredByDefault:
+                fields.propertiesRequiredByDefault !== undefined
+                  ? fields.propertiesRequiredByDefault
+                  : defaultValue.propertiesRequiredByDefault,
+              readWrite: valueToObject({
+                defaultValue: {
+                  ...(defaultValue.readWrite as Extract<
+                    typeof defaultValue.readWrite,
+                    Record<string, unknown>
+                  >),
+                  enabled:
+                    fields.readWrite !== undefined
+                      ? Boolean(fields.readWrite)
+                      : (
+                          defaultValue.readWrite as Extract<
+                            typeof defaultValue.readWrite,
+                            Record<string, unknown>
+                          >
+                        ).enabled,
                 },
-                value: fields.responses,
+                mappers: {
+                  boolean: (enabled) => ({ enabled }),
+                  object: (fields, defaultValue) => ({
+                    ...fields,
+                    requests: valueToObject({
+                      defaultValue: {
+                        ...(defaultValue.requests as Extract<
+                          typeof defaultValue.requests,
+                          Record<string, unknown>
+                        >),
+                      },
+                      mappers: {
+                        function: (name) => ({ name }),
+                        string: (name) => ({ name }),
+                      },
+                      value: fields.requests,
+                    }),
+                    responses: valueToObject({
+                      defaultValue: {
+                        ...(defaultValue.responses as Extract<
+                          typeof defaultValue.responses,
+                          Record<string, unknown>
+                        >),
+                      },
+                      mappers: {
+                        function: (name) => ({ name }),
+                        string: (name) => ({ name }),
+                      },
+                      value: fields.responses,
+                    }),
+                  }),
+                },
+                value: fields.readWrite,
               }),
             }),
           },
-          value: userConfig.parser.transforms.readWrite,
-        }) as typeof parser.transforms.readWrite;
-      }
-    }
-
-    if (userConfig.parser.validate_EXPERIMENTAL) {
-      parser.validate_EXPERIMENTAL =
-        userConfig.parser.validate_EXPERIMENTAL === true
-          ? 'warn'
-          : userConfig.parser.validate_EXPERIMENTAL;
-    }
-  }
-
-  return parser;
+          value: fields.transforms,
+        }),
+        validate_EXPERIMENTAL:
+          fields.validate_EXPERIMENTAL === true
+            ? 'warn'
+            : fields.validate_EXPERIMENTAL,
+      }),
+    },
+    value: userConfig.parser,
+  });
+  return parser as Config['parser'];
 };
