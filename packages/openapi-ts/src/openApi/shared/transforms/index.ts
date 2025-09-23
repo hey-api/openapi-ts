@@ -1,5 +1,6 @@
 import type { IR } from '../../../ir/types';
 import { enumsTransform } from './enums';
+import { propertiesRequiredByDefaultTransform } from './propertiesRequiredByDefault';
 import { readWriteTransform } from './readWrite';
 
 export const transformOpenApiSpec = ({ context }: { context: IR.Context }) => {
@@ -10,6 +11,10 @@ export const transformOpenApiSpec = ({ context }: { context: IR.Context }) => {
       config: context.config.parser.transforms.enums,
       spec: context.spec,
     });
+  }
+
+  if (context.config.parser.transforms.propertiesRequiredByDefault) {
+    propertiesRequiredByDefaultTransform({ spec: context.spec });
   }
 
   if (context.config.parser.transforms.readWrite.enabled) {

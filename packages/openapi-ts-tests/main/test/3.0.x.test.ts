@@ -637,6 +637,19 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'dutchie.json',
+        output: 'transforms-properties-required-by-default',
+        parser: {
+          transforms: {
+            propertiesRequiredByDefault: true,
+          },
+        },
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'makes all object properties required by default',
+    },
+    {
+      config: createConfig({
         input: 'type-invalid.json',
         output: 'type-invalid',
       }),

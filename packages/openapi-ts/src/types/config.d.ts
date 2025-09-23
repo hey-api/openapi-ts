@@ -3,7 +3,7 @@ import type { Plugin, PluginNames } from '../plugins/types';
 import type { Input, Watch } from './input';
 import type { Logs } from './logs';
 import type { Output, UserOutput } from './output';
-import type { Parser, ResolvedParser } from './parser';
+import type { Parser, UserParser } from './parser';
 
 export interface UserConfig {
   /**
@@ -58,7 +58,7 @@ export interface UserConfig {
    * Customize how the input is parsed and transformed before it's passed to
    * plugins.
    */
-  parser?: Parser;
+  parser?: UserParser;
   /**
    * Plugins generate artifacts from `input`. By default, we generate SDK
    * functions and TypeScript interfaces. If you manually define `plugins`,
@@ -150,7 +150,7 @@ export type Config = Omit<
      * Customize how the input is parsed and transformed before it's passed to
      * plugins.
      */
-    parser: ResolvedParser;
+    parser: Parser;
     pluginOrder: ReadonlyArray<keyof PluginConfigMap>;
     plugins: {
       [K in PluginNames]?: Plugin.ConfigWithName<PluginConfigMap[K]>;
