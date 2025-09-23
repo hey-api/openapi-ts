@@ -497,10 +497,17 @@ const handleComponent = ({
   schema: IR.SchemaObject;
 }) => {
   const type = schemaToType({ plugin, schema });
+
+  // Don't tag JavaScript enums as 'type' since they export both values and types
+  const isJavaScriptEnum =
+    schema.type === 'enum' &&
+    plugin.config.enums.enabled &&
+    plugin.config.enums.mode === 'javascript';
+
   const symbol = plugin.registerSymbol({
     exported: true,
     meta: {
-      kind: 'type',
+      kind: isJavaScriptEnum ? undefined : 'type',
     },
     name: buildName({
       config: plugin.config.definitions,
