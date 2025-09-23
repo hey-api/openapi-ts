@@ -48,6 +48,12 @@ export default {
 };
 ```
 
+::: tip
+When using this plugin in a Nuxt app, prefer the [ofetch client](/openapi-ts/clients/ofetch) for universal compatibility.
+
+The [nuxt client](/openapi-ts/clients/nuxt) is tailored for working directly with Nuxt composables (`$fetch` / `useFetch` / `useAsyncData`) and is not intended as a universal HTTP client for libraries like `@pinia/colada`.
+:::
+
 ## Output
 
 The Pinia Colada plugin will generate the following artifacts, depending on the input specification.

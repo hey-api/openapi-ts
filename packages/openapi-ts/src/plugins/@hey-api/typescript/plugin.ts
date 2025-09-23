@@ -497,10 +497,14 @@ const handleComponent = ({
   schema: IR.SchemaObject;
 }) => {
   const type = schemaToType({ plugin, schema });
+
+  // Don't tag enums as 'type' since they export runtime artifacts (values)
+  const isEnum = schema.type === 'enum' && plugin.config.enums.enabled;
+
   const symbol = plugin.registerSymbol({
     exported: true,
     meta: {
-      kind: 'type',
+      kind: isEnum ? undefined : 'type',
     },
     name: buildName({
       config: plugin.config.definitions,

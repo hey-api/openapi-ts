@@ -322,6 +322,7 @@ The following plugins are planned but not in development yet. You can help us pr
 - [Ajv](https://heyapi.dev/openapi-ts/plugins/ajv)
 - [Arktype](https://heyapi.dev/openapi-ts/plugins/arktype)
 - [Chance](https://heyapi.dev/openapi-ts/plugins/chance)
+- [Elysia](https://heyapi.dev/openapi-ts/plugins/elysia)
 - [Express](https://heyapi.dev/openapi-ts/plugins/express)
 - [Faker](https://heyapi.dev/openapi-ts/plugins/faker)
 - [Falso](https://heyapi.dev/openapi-ts/plugins/falso)
