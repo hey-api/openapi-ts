@@ -22,6 +22,7 @@
   "scripts": {
     "build": "turbo run build --filter=\"!@example/openapi-ts-sample\"",
     "changeset": "changeset",
+    "commitlint": "commitlint --edit",
     "example": "sh ./scripts/example.sh",
     "format": "prettier --write .",
     "lint:fix": "prettier --check --write . && eslint . --fix",
@@ -44,6 +45,8 @@
     "@changesets/get-github-info": "0.6.0",
     "@changesets/parse": "0.4.1",
     "@changesets/types": "6.1.0",
+    "@commitlint/cli": "19.6.0",
+    "@commitlint/config-conventional": "19.6.0",
     "@config/vite-base": "workspace:*",
     "@eslint/js": "9.32.0",
     "@hey-api/custom-client": "workspace:*",
