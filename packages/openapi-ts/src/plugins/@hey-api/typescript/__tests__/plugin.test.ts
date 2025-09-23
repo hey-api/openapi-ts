@@ -60,6 +60,7 @@ describe('generateLegacyTypes', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {

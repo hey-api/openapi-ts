@@ -54,6 +54,7 @@ describe('registerHandlebarHelpers', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {
@@ -179,6 +180,7 @@ describe('registerHandlebarTemplates', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {
