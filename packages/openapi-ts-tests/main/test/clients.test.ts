@@ -139,6 +139,61 @@ for (const client of clients) {
       {
         config: createConfig({
           output: {
+            case: 'camelCase',
+            path: 'sdk-preserve-wire-casing',
+          },
+          plugins: [
+            client,
+            {
+              name: '@hey-api/sdk',
+              preserveWireCasing: true,
+            },
+          ],
+        }),
+        description: 'SDK with preserve wire casing',
+      },
+      {
+        config: createConfig({
+          input: path.join(
+            getSpecsPath(),
+            '3.1.x',
+            'preserve-wire-casing-extreme-test.json',
+          ),
+          output: {
+            case: 'camelCase',
+            path: 'sdk-preserve-wire-casing-extreme',
+          },
+          plugins: [
+            client,
+            {
+              name: '@hey-api/sdk',
+              preserveWireCasing: true,
+            },
+          ],
+        }),
+        description: 'SDK with preserve wire casing extreme',
+      },
+      {
+        config: createConfig({
+          output: {
+            case: 'camelCase',
+            path: 'sdk-preserve-wire-casing-zod',
+          },
+          plugins: [
+            client,
+            'zod',
+            {
+              name: '@hey-api/sdk',
+              preserveWireCasing: true,
+              validator: true,
+            },
+          ],
+        }),
+        description: 'SDK with preserve wire casing and zod validator',
+      },
+      {
+        config: createConfig({
+          output: {
             path: 'tsconfig-nodenext-sdk',
             tsConfigPath: path.join(
               __dirname,

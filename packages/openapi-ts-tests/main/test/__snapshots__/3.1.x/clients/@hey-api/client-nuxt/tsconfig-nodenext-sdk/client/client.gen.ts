@@ -54,6 +54,10 @@ export const createClient = (config: Config = {}): Client => {
       await opts.requestValidator(opts);
     }
 
+    if (opts.requestKeyMapper) {
+      opts.requestKeyMapper(opts);
+    }
+
     const url = buildUrl(opts);
 
     return { opts, url };
