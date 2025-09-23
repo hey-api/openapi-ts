@@ -60,6 +60,7 @@ describe('generateLegacySchemas', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {
@@ -217,6 +218,7 @@ describe('generateLegacySchemas', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {

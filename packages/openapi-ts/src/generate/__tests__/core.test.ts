@@ -72,6 +72,7 @@ describe('generateLegacyCore', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {
@@ -224,6 +225,7 @@ describe('generateLegacyCore', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {
@@ -359,6 +361,7 @@ describe('generateLegacyCore', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {
