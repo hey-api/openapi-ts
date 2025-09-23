@@ -46,9 +46,8 @@ export interface UserConfig {
    */
   logs?: string | Logs;
   /**
-   * The relative location of the output folder. You can specify multiple
-   * outputs to generate different versions of your SDK with different
-   * configurations (e.g., different plugins, formatters, or paths).
+   * Path to the output folder. You can define an array to generate
+   * multiple outputs from your input.
    */
   output: string | UserOutput;
   /**

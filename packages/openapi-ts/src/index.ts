@@ -117,14 +117,11 @@ export const createClient = async (
 };
 
 /**
- * Type helper for openapi-ts.config.ts, preserves input shape (object vs array)
+ * Type helper for openapi-ts.config.ts, returns {@link ConfigValue} object
  */
 export const defineConfig = async <T extends ConfigValue>(
   config: ConfigInput<T>,
-): Promise<T> =>
-  typeof config === 'function'
-    ? await (config as () => T | Promise<T>)()
-    : (config as T);
+): Promise<T> => (typeof config === 'function' ? await config() : config);
 
 export { defaultPaginationKeywords } from './config/parser';
 export { defaultPlugins } from './config/plugins';
