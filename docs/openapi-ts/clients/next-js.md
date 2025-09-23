@@ -130,27 +130,32 @@ const response = await getFoo({
 
 ## Interceptors
 
-Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application. They can be added with `use`, removed with `eject`, and updated wth `update`. The `use` and `update` methods will return the id of the interceptor for use with `eject` and `update`. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
+Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application.
+
+They can be added with `use`, removed with `eject`, and updated wth `update`. The `use` and `update` methods will return the ID of the interceptor for use with `eject` and `update`. Fetch API does not have the interceptor functionality, so we implement our own.
+
+### Example: Request interceptor
 
 ::: code-group
 
 ```js [use]
 import { client } from 'client/client.gen';
-// Supports async functions
+
 async function myInterceptor(request) {
   // do something
   return request;
 }
+
 interceptorId = client.interceptors.request.use(myInterceptor);
 ```
 
 ```js [eject]
 import { client } from 'client/client.gen';
 
-// eject interceptor by interceptor id
+// eject by ID
 client.interceptors.request.eject(interceptorId);
 
-// eject interceptor by reference to interceptor function
+// eject by reference
 client.interceptors.request.eject(myInterceptor);
 ```
 
@@ -161,36 +166,38 @@ async function myNewInterceptor(request) {
   // do something
   return request;
 }
-// update interceptor by interceptor id
+
+// update by ID
 client.interceptors.request.update(interceptorId, myNewInterceptor);
 
-// update interceptor by reference to interceptor function
+// update by reference
 client.interceptors.request.update(myInterceptor, myNewInterceptor);
 ```
 
 :::
 
-and an example response interceptor
+### Example: Response interceptor
 
 ::: code-group
 
 ```js [use]
 import { client } from 'client/client.gen';
+
 async function myInterceptor(response) {
   // do something
   return response;
 }
-// Supports async functions
+
 interceptorId = client.interceptors.response.use(myInterceptor);
 ```
 
 ```js [eject]
 import { client } from 'client/client.gen';
 
-// eject interceptor by interceptor id
+// eject by ID
 client.interceptors.response.eject(interceptorId);
 
-// eject interceptor by reference to interceptor function
+// eject by reference
 client.interceptors.response.eject(myInterceptor);
 ```
 
@@ -201,17 +208,18 @@ async function myNewInterceptor(response) {
   // do something
   return response;
 }
-// update interceptor by interceptor id
+
+// update by ID
 client.interceptors.response.update(interceptorId, myNewInterceptor);
 
-// update interceptor by reference to interceptor function
+// update by reference
 client.interceptors.response.update(myInterceptor, myNewInterceptor);
 ```
 
 :::
 
 ::: tip
-To eject, you must provide the id or reference of the interceptor passed to `use()`, the id is the value returned by `use()` and `update()`.
+To eject, you must provide the ID or reference of the interceptor passed to `use()`, the ID is the value returned by `use()` and `update()`.
 :::
 
 ## Auth
@@ -264,9 +272,9 @@ const url = client.buildUrl<FooData>({
 console.log(url); // prints '/foo/1?bar=baz'
 ```
 
-## Custom `fetch`
+## Custom Instance
 
-You can implement your own `fetch` method. This is useful if you need to extend the default `fetch` method with extra functionality, or replace it altogether.
+You can provide a custom `fetch` instance. This is useful if you need to extend the default instance with extra functionality, or replace it altogether.
 
 ```js
 import { client } from 'client/client.gen';
@@ -278,7 +286,7 @@ client.setConfig({
 });
 ```
 
-You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom method to be.
+You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom instance to be.
 
 ## API
 
