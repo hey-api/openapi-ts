@@ -143,17 +143,17 @@ export default defineConfig(() => {
         // version: () => '3.1.1',
       },
       transforms: {
-        enums: {
-          enabled: false,
-          mode: 'root',
-          // name: '{{name}}',
-        },
+        // enums: {
+        //   enabled: false,
+        //   mode: 'root',
+        //   // name: '{{name}}',
+        // },
         propertiesRequiredByDefault: true,
-        readWrite: {
-          // enabled: false,
-          requests: '{{name}}Writable',
-          responses: '{{name}}',
-        },
+        // readWrite: {
+        //   // enabled: false,
+        //   requests: '{{name}}Writable',
+        //   responses: '{{name}}',
+        // },
       },
       validate_EXPERIMENTAL: true,
     },
