@@ -18,6 +18,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     instance: false,
     operationId: true,
     params_EXPERIMENTAL: 'default',
+    preserveWireCasing: false,
     response: 'body',
     responseStyle: 'fields',
     transformer: false,

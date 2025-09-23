@@ -122,6 +122,10 @@ export const createClient = (config: Config = {}): Client => {
       await opts.requestValidator(opts);
     }
 
+    if (opts.requestKeyMapper) {
+      opts.requestKeyMapper(opts as any);
+    }
+
     return { opts, req, url };
   };
 

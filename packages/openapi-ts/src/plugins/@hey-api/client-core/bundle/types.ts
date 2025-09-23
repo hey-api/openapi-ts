@@ -83,6 +83,11 @@ export interface Config {
    */
   querySerializer?: QuerySerializer | QuerySerializerOptions;
   /**
+   * Remap request option keys from SDK-facing casing to wire/spec casing.
+   * Applied after request validation and before URL build/body serialization.
+   */
+  requestKeyMapper?: (options: any) => void;
+  /**
    * A function validating request data. This is useful if you want to ensure
    * the request conforms to the desired shape, so it can be safely sent to
    * the server.

@@ -60,6 +60,10 @@ export const createClient = (config: Config = {}): Client => {
       await opts.requestValidator(opts);
     }
 
+    if (opts.requestKeyMapper) {
+      opts.requestKeyMapper(opts);
+    }
+
     if (opts.body !== undefined && opts.bodySerializer) {
       opts.body = opts.bodySerializer(opts.body);
     }

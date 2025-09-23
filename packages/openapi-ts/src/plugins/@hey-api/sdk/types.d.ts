@@ -107,6 +107,16 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> & {
    */
   responseStyle?: 'data' | 'fields';
   /**
+   * Preserve original casing from the input specification when sending over the wire.
+   *
+   * When enabled, the generated SDK can still expose frontend-friendly casing
+   * (as controlled by `output.case`), but HTTP requests will use the original
+   * field names from the spec for path/query/headers/body.
+   *
+   * @default false
+   */
+  preserveWireCasing?: boolean;
+  /**
    * Transform response data before returning. This is useful if you want to
    * convert for example ISO strings into Date objects. However, transformation
    * adds runtime overhead, so it's not recommended to use unless necessary.
@@ -281,6 +291,16 @@ export type Config = Plugin.Name<'@hey-api/sdk'> & {
    * @default 'fields'
    */
   responseStyle: 'data' | 'fields';
+  /**
+   * Preserve original casing from the input specification when sending over the wire.
+   *
+   * When enabled, the generated SDK can still expose frontend-friendly casing
+   * (as controlled by `output.case`), but HTTP requests will use the original
+   * field names from the spec for path/query/headers/body.
+   *
+   * @default false
+   */
+  preserveWireCasing: boolean;
   /**
    * Transform response data before returning. This is useful if you want to
    * convert for example ISO strings into Date objects. However, transformation

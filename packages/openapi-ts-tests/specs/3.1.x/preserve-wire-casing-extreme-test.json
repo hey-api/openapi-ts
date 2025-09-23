@@ -1,0 +1,717 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Extreme Wire Casing Test API",
+    "version": "1.0.0",
+    "description": "Comprehensive test for all possible wire casing transformation scenarios"
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Level5DeepObject": {
+        "type": "object",
+        "properties": {
+          "final_value": { "type": "string" }
+        }
+      },
+      "Level4DeepObject": {
+        "type": "object",
+        "properties": {
+          "deep_prop": { "$ref": "#/components/schemas/Level5DeepObject" }
+        }
+      },
+      "Level3DeepObject": {
+        "type": "object",
+        "properties": {
+          "another_level": { "$ref": "#/components/schemas/Level4DeepObject" }
+        }
+      },
+      "NestedArrayItem": {
+        "type": "object",
+        "properties": {
+          "item_name": { "type": "string" },
+          "item_metadata": {
+            "type": "object",
+            "properties": {
+              "creation_date": { "type": "string" },
+              "nested_config": {
+                "type": "object",
+                "properties": {
+                  "is_enabled": { "type": "boolean" },
+                  "priority_level": { "type": "integer" }
+                }
+              }
+            }
+          },
+          "sub_items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sub_name": { "type": "string" },
+                "sub_details": {
+                  "type": "object",
+                  "properties": {
+                    "category_type": { "type": "string" },
+                    "status_info": {
+                      "type": "object",
+                      "properties": {
+                        "is_active": { "type": "boolean" },
+                        "last_update": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ComplexAdditionalPropsValue": {
+        "type": "object",
+        "properties": {
+          "prop_name": { "type": "string" },
+          "prop_settings": {
+            "type": "object",
+            "properties": {
+              "config_value": { "type": "string" },
+              "nested_rules": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "rule_type": { "type": "string" },
+                    "rule_parameters": {
+                      "type": "object",
+                      "properties": {
+                        "param_name": { "type": "string" },
+                        "param_value": { "type": "any" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "MatrixCell": {
+        "type": "object",
+        "properties": {
+          "cell_value": { "type": "number" },
+          "cell_metadata": {
+            "type": "object",
+            "properties": {
+              "data_type": { "type": "string" },
+              "validation_rules": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "rule_name": { "type": "string" },
+                    "rule_config": {
+                      "type": "object",
+                      "properties": {
+                        "min_value": { "type": "number" },
+                        "max_value": { "type": "number" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ExtremeTestRequestBody": {
+        "type": "object",
+        "properties": {
+          "simple_prop": { "type": "string" },
+          "level_two": {
+            "type": "object",
+            "properties": {
+              "level_three": { "$ref": "#/components/schemas/Level3DeepObject" }
+            }
+          },
+          "six_level_deep": {
+            "type": "object",
+            "properties": {
+              "level_one": {
+                "type": "object",
+                "properties": {
+                  "level_two": {
+                    "type": "object",
+                    "properties": {
+                      "level_three": {
+                        "type": "object",
+                        "properties": {
+                          "level_four": {
+                            "type": "object",
+                            "properties": {
+                              "level_five": {
+                                "type": "object",
+                                "properties": {
+                                  "final_deep_value": { "type": "string" }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "simple_array": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/NestedArrayItem" }
+          },
+          "array_with_deep_nesting": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "item_id": { "type": "string" },
+                "deep_nested": {
+                  "type": "object",
+                  "properties": {
+                    "level_one": {
+                      "type": "object",
+                      "properties": {
+                        "level_two": {
+                          "type": "object",
+                          "properties": {
+                            "final_array_value": { "type": "string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "sub_arrays": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "sub_id": { "type": "string" },
+                      "sub_data": {
+                        "type": "object",
+                        "properties": {
+                          "data_value": { "type": "string" },
+                          "data_config": {
+                            "type": "object",
+                            "properties": {
+                              "config_name": { "type": "string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "matrix_data": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/MatrixCell" }
+            }
+          },
+          "three_level_array": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "deep_array_value": { "type": "string" },
+                    "deep_array_config": {
+                      "type": "object",
+                      "properties": {
+                        "setting_name": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "simple_additional_props": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ComplexAdditionalPropsValue"
+            }
+          },
+          "additional_props_with_deep_nesting": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "dynamic_prop": { "type": "string" },
+                "dynamic_nested": {
+                  "type": "object",
+                  "properties": {
+                    "nested_level_one": {
+                      "type": "object",
+                      "properties": {
+                        "nested_level_two": {
+                          "type": "object",
+                          "properties": {
+                            "final_dynamic_value": { "type": "string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "dynamic_arrays": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "array_item_prop": { "type": "string" },
+                      "array_item_nested": {
+                        "type": "object",
+                        "properties": {
+                          "nested_array_value": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mixed_additional_props_arrays": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "mixed_prop": { "type": "string" },
+                    "mixed_deep": {
+                      "type": "object",
+                      "properties": {
+                        "deep_mixed_value": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "pattern_properties_test": {
+            "type": "object",
+            "patternProperties": {
+              "^config_.*": {
+                "type": "object",
+                "properties": {
+                  "pattern_value": { "type": "string" },
+                  "pattern_nested": {
+                    "type": "object",
+                    "properties": {
+                      "nested_pattern_value": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "composition_test": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "base_prop": { "type": "string" }
+                }
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "extended_prop": { "type": "string" },
+                  "extended_nested": {
+                    "type": "object",
+                    "properties": {
+                      "composition_deep_value": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "one_of_test": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "option_a_prop": { "type": "string" },
+                  "option_a_nested": {
+                    "type": "object",
+                    "properties": {
+                      "option_a_deep": { "type": "string" }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "option_b_prop": { "type": "string" },
+                  "option_b_array": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "option_b_item": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "ComplexQueryParams": {
+        "type": "object",
+        "properties": {
+          "simple_filter": { "type": "string" },
+          "nested_filter": {
+            "type": "object",
+            "properties": {
+              "date_range": {
+                "type": "object",
+                "properties": {
+                  "start_date": { "type": "string" },
+                  "end_date": { "type": "string" },
+                  "time_zone": {
+                    "type": "object",
+                    "properties": {
+                      "zone_name": { "type": "string" },
+                      "zone_offset": { "type": "integer" }
+                    }
+                  }
+                }
+              },
+              "categories": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "category_id": { "type": "string" },
+                    "category_settings": {
+                      "type": "object",
+                      "properties": {
+                        "include_subcategories": { "type": "boolean" },
+                        "priority_level": { "type": "integer" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "dynamic_filters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "filter_value": { "type": "string" },
+                "filter_options": {
+                  "type": "object",
+                  "properties": {
+                    "case_sensitive": { "type": "boolean" },
+                    "match_type": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/extreme-test": {
+      "post": {
+        "summary": "Extreme test endpoint for all wire casing scenarios",
+        "description": "Tests every possible combination of nesting, arrays, additionalProperties, and composition schemas",
+        "parameters": [
+          {
+            "name": "SimpleParam",
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "ComplexQuery",
+            "in": "query",
+            "style": "deepObject",
+            "explode": true,
+            "schema": { "$ref": "#/components/schemas/ComplexQueryParams" }
+          },
+          {
+            "name": "PathParam",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "XRequestId",
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "SessionToken",
+            "in": "cookie",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtremeTestRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/matrix-test/{MatrixId}": {
+      "put": {
+        "summary": "Test multi-dimensional arrays with deep nesting",
+        "parameters": [
+          {
+            "name": "MatrixId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "XTraceId",
+            "in": "header",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "matrix_name": { "type": "string" },
+                  "matrix_data": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "cell_value": { "type": "number" },
+                            "cell_metadata": {
+                              "type": "object",
+                              "properties": {
+                                "row_index": { "type": "integer" },
+                                "col_index": { "type": "integer" },
+                                "layer_index": { "type": "integer" },
+                                "validation_info": {
+                                  "type": "object",
+                                  "properties": {
+                                    "is_valid": { "type": "boolean" },
+                                    "error_messages": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "error_code": { "type": "string" },
+                                          "error_details": {
+                                            "type": "object",
+                                            "properties": {
+                                              "message_text": {
+                                                "type": "string"
+                                              },
+                                              "severity_level": {
+                                                "type": "string"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/dynamic-config": {
+      "patch": {
+        "summary": "Test complex additionalProperties with nested arrays",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "config_name": { "type": "string" },
+                  "dynamic_settings": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "setting_value": { "type": "string" },
+                        "setting_metadata": {
+                          "type": "object",
+                          "properties": {
+                            "created_by": { "type": "string" },
+                            "created_at": { "type": "string" },
+                            "nested_config": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                  "nested_value": { "type": "string" },
+                                  "nested_arrays": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "array_item_id": { "type": "string" },
+                                        "array_item_data": {
+                                          "type": "object",
+                                          "properties": {
+                                            "data_type": { "type": "string" },
+                                            "data_value": { "type": "any" }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "rule_sets": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "rule_set_name": { "type": "string" },
+                        "rule_definitions": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "rule_type": { "type": "string" },
+                                "rule_parameters": {
+                                  "type": "object",
+                                  "additionalProperties": {
+                                    "type": "object",
+                                    "properties": {
+                                      "param_name": { "type": "string" },
+                                      "param_config": {
+                                        "type": "object",
+                                        "properties": {
+                                          "config_value": { "type": "any" },
+                                          "config_validation": {
+                                            "type": "object",
+                                            "properties": {
+                                              "validation_type": {
+                                                "type": "string"
+                                              },
+                                              "validation_rules": {
+                                                "type": "array",
+                                                "items": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "rule_name": {
+                                                      "type": "string"
+                                                    },
+                                                    "rule_expression": {
+                                                      "type": "string"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  }
+}
