@@ -62,6 +62,7 @@ describe('handlerLegacy', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {
@@ -292,6 +293,7 @@ describe('methodNameBuilder', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {
@@ -444,6 +446,7 @@ describe('methodNameBuilder', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {
@@ -599,6 +602,7 @@ describe('methodNameBuilder', () => {
             mode: 'root',
             name: '',
           },
+          propertiesRequiredByDefault: false,
           readWrite: {
             enabled: false,
             requests: {
