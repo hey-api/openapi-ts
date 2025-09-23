@@ -55,8 +55,6 @@ export const createBinding = ({
     if (symbol.meta?.kind === 'type') {
       typeNames.push(name);
     }
-    // For 'value-and-type' kind (JavaScript enums), we don't add to typeNames
-    // so they won't be exported as type-only
   }
   // cast type names to names to allow for cleaner API,
   // otherwise users would have to define the same values twice

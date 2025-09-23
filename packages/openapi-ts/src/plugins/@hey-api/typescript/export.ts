@@ -130,9 +130,6 @@ export const exportType = ({
           objectType: typeofType,
         }),
       });
-
-      // Mark this symbol as containing both value and type
-      symbol.meta = { ...symbol.meta, kind: 'value-and-type' };
       plugin.setSymbolValue(symbol, [objectNode, node]);
       return;
     } else if (
