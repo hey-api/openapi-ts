@@ -11,7 +11,7 @@ import type { StringCase, StringName } from './case';
 
 type EnumsMode = 'inline' | 'root';
 
-export type Parser = {
+export type UserParser = {
   /**
    * Filters can be used to select a subset of your input before it's passed
    * to plugins.
@@ -193,7 +193,7 @@ export type Parser = {
   validate_EXPERIMENTAL?: boolean | 'strict' | 'warn';
 };
 
-export type ResolvedParser = {
+export type Parser = {
   /**
    * Filters can be used to select a subset of your input before it's passed
    * to plugins.
