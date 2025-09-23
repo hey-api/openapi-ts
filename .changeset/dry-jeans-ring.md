@@ -1,6 +1,5 @@
 ---
-'@hey-api/openapi-ts': minor
-'@docs/openapi-ts': patch
+'@hey-api/openapi-ts': patch
 ---
 
-feat: expand configuration by allowing multiple configs, inputs and outputs
+feat: add support for array configuration, input, and output objects

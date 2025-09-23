@@ -152,7 +152,6 @@ for (const zodVersion of zodVersions) {
 
       const outputPath =
         typeof config.output === 'string' ? config.output : config.output.path;
-
       const filePaths = getFilePaths(outputPath);
 
       await Promise.all(
