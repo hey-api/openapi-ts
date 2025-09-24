@@ -328,17 +328,3 @@ export const queryKeyStatement = ({
   });
   return statement;
 };
-
-export const ensureQueryKeyInfra = ({
-  plugin,
-  state,
-}: {
-  plugin: PiniaColadaPlugin['Instance'];
-  state: { hasCreateQueryKeyParamsFunction?: boolean };
-}) => {
-  if (!state.hasCreateQueryKeyParamsFunction) {
-    createQueryKeyType({ plugin });
-    createQueryKeyFunction({ plugin });
-    state.hasCreateQueryKeyParamsFunction = true;
-  }
-};
