@@ -2,6 +2,7 @@
 
 import { type Options as ClientOptions, type Client, type TDataShape, formDataBodySerializer, urlSearchParamsBodySerializer } from './client';
 import type { ExportData, PatchApiVbyApiVersionNoTagData, PatchApiVbyApiVersionNoTagResponses, ImportData, ImportResponses, FooWowData, FooWowResponses, ApiVVersionODataControllerCountData, ApiVVersionODataControllerCountResponses, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationResponses, GetApiVbyApiVersionSimpleOperationErrors, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, HeadCallWithoutParametersAndResponseData, OptionsCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, DeleteFooData3 as DeleteFooData, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponses, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithNoContentResponseResponses, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponses, DummyAData, DummyAResponses, DummyBData, DummyBResponses, CallWithResponseData, CallWithResponseResponses, CallWithDuplicateResponsesData, CallWithDuplicateResponsesResponses, CallWithDuplicateResponsesErrors, CallWithResponsesData, CallWithResponsesResponses, CallWithResponsesErrors, CollectionFormatData, TypesData, TypesResponses, UploadFileData, UploadFileResponses, FileResponseData, FileResponseResponses, ComplexTypesData, ComplexTypesResponses, ComplexTypesErrors, MultipartResponseData, MultipartResponseResponses, MultipartRequestData, ComplexParamsData, ComplexParamsResponses, CallWithResultFromHeaderData, CallWithResultFromHeaderResponses, CallWithResultFromHeaderErrors, TestErrorCodeData, TestErrorCodeResponses, TestErrorCodeErrors, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Responses, PutWithFormUrlEncodedData } from './types.gen';
+import { exportRequestKeyMapper, patchApiVbyApiVersionNoTagRequestKeyMapper, importRequestKeyMapper, fooWowRequestKeyMapper, apiVVersionODataControllerCountRequestKeyMapper, getApiVbyApiVersionSimpleOperationRequestKeyMapper, deleteCallWithoutParametersAndResponseRequestKeyMapper, getCallWithoutParametersAndResponseRequestKeyMapper, headCallWithoutParametersAndResponseRequestKeyMapper, optionsCallWithoutParametersAndResponseRequestKeyMapper, patchCallWithoutParametersAndResponseRequestKeyMapper, postCallWithoutParametersAndResponseRequestKeyMapper, putCallWithoutParametersAndResponseRequestKeyMapper, deleteFooRequestKeyMapper, callWithDescriptionsRequestKeyMapper, deprecatedCallRequestKeyMapper, callWithParametersRequestKeyMapper, callWithWeirdParameterNamesRequestKeyMapper, getCallWithOptionalParamRequestKeyMapper, postCallWithOptionalParamRequestKeyMapper, postApiVbyApiVersionRequestBodyRequestKeyMapper, postApiVbyApiVersionFormDataRequestKeyMapper, callWithDefaultParametersRequestKeyMapper, callWithDefaultOptionalParametersRequestKeyMapper, callToTestOrderOfParamsRequestKeyMapper, duplicateNameRequestKeyMapper, duplicateName2RequestKeyMapper, duplicateName3RequestKeyMapper, duplicateName4RequestKeyMapper, callWithNoContentResponseRequestKeyMapper, callWithResponseAndNoContentResponseRequestKeyMapper, dummyARequestKeyMapper, dummyBRequestKeyMapper, callWithResponseRequestKeyMapper, callWithDuplicateResponsesRequestKeyMapper, callWithResponsesRequestKeyMapper, collectionFormatRequestKeyMapper, typesRequestKeyMapper, uploadFileRequestKeyMapper, fileResponseRequestKeyMapper, complexTypesRequestKeyMapper, multipartResponseRequestKeyMapper, multipartRequestRequestKeyMapper, complexParamsRequestKeyMapper, callWithResultFromHeaderRequestKeyMapper, testErrorCodeRequestKeyMapper, nonAsciiæøåÆøÅöôêÊ字符串RequestKeyMapper, putWithFormUrlEncodedRequestKeyMapper } from './sdkRequestMappers.gen';
 import { zExportData, zPatchApiVbyApiVersionNoTagData, zImportData, zImportResponse, zFooWowData, zApiVVersionODataControllerCountData, zApiVVersionODataControllerCountResponse, zGetApiVbyApiVersionSimpleOperationData, zGetApiVbyApiVersionSimpleOperationResponse, zDeleteCallWithoutParametersAndResponseData, zGetCallWithoutParametersAndResponseData, zHeadCallWithoutParametersAndResponseData, zOptionsCallWithoutParametersAndResponseData, zPatchCallWithoutParametersAndResponseData, zPostCallWithoutParametersAndResponseData, zPutCallWithoutParametersAndResponseData, zDeleteFooData3 as zDeleteFooData, zCallWithDescriptionsData, zDeprecatedCallData, zCallWithParametersData, zCallWithWeirdParameterNamesData, zGetCallWithOptionalParamData, zPostCallWithOptionalParamData, zPostCallWithOptionalParamResponse, zPostApiVbyApiVersionRequestBodyData, zPostApiVbyApiVersionFormDataData, zCallWithDefaultParametersData, zCallWithDefaultOptionalParametersData, zCallToTestOrderOfParamsData, zDuplicateNameData, zDuplicateName2Data, zDuplicateName3Data, zDuplicateName4Data, zCallWithNoContentResponseData, zCallWithNoContentResponseResponse, zCallWithResponseAndNoContentResponseData, zCallWithResponseAndNoContentResponseResponse, zDummyAData, zDummyAResponse, zDummyBData, zDummyBResponse, zCallWithResponseData, zCallWithResponseResponse, zCallWithDuplicateResponsesData, zCallWithDuplicateResponsesResponse, zCallWithResponsesData, zCallWithResponsesResponse, zCollectionFormatData, zTypesData, zTypesResponse, zUploadFileData, zUploadFileResponse, zFileResponseData, zFileResponseResponse, zComplexTypesData, zComplexTypesResponse, zMultipartResponseData, zMultipartResponseResponse, zMultipartRequestData, zComplexParamsData, zComplexParamsResponse, zCallWithResultFromHeaderData, zTestErrorCodeData, zNonAsciiæøåÆøÅöôêÊ字符串Data, zNonAsciiæøåÆøÅöôêÊ字符串Response, zPutWithFormUrlEncodedData } from './zod.gen';
 import { client } from './client.gen';
 
@@ -21,6 +22,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 
 export const export_ = <ThrowOnError extends boolean = false>(options?: Options<ExportData, ThrowOnError>) => {
     return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: exportRequestKeyMapper,
         requestValidator: async (data) => {
             return await zExportData.parseAsync(data);
         },
@@ -31,6 +33,7 @@ export const export_ = <ThrowOnError extends boolean = false>(options?: Options<
 
 export const patchApiVbyApiVersionNoTag = <ThrowOnError extends boolean = false>(options?: Options<PatchApiVbyApiVersionNoTagData, ThrowOnError>) => {
     return (options?.client ?? client).patch<PatchApiVbyApiVersionNoTagResponses, unknown, ThrowOnError>({
+        requestKeyMapper: patchApiVbyApiVersionNoTagRequestKeyMapper,
         requestValidator: async (data) => {
             return await zPatchApiVbyApiVersionNoTagData.parseAsync(data);
         },
@@ -41,6 +44,7 @@ export const patchApiVbyApiVersionNoTag = <ThrowOnError extends boolean = false>
 
 export const import_ = <ThrowOnError extends boolean = false>(options: Options<ImportData, ThrowOnError>) => {
     return (options.client ?? client).post<ImportResponses, unknown, ThrowOnError>({
+        requestKeyMapper: importRequestKeyMapper,
         requestValidator: async (data) => {
             return await zImportData.parseAsync(data);
         },
@@ -59,6 +63,7 @@ export const import_ = <ThrowOnError extends boolean = false>(options: Options<I
 
 export const fooWow = <ThrowOnError extends boolean = false>(options?: Options<FooWowData, ThrowOnError>) => {
     return (options?.client ?? client).put<FooWowResponses, unknown, ThrowOnError>({
+        requestKeyMapper: fooWowRequestKeyMapper,
         requestValidator: async (data) => {
             return await zFooWowData.parseAsync(data);
         },
@@ -69,6 +74,7 @@ export const fooWow = <ThrowOnError extends boolean = false>(options?: Options<F
 
 export const apiVVersionODataControllerCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionODataControllerCountData, ThrowOnError>) => {
     return (options?.client ?? client).get<ApiVVersionODataControllerCountResponses, unknown, ThrowOnError>({
+        requestKeyMapper: apiVVersionODataControllerCountRequestKeyMapper,
         requestValidator: async (data) => {
             return await zApiVVersionODataControllerCountData.parseAsync(data);
         },
@@ -83,14 +89,7 @@ export const apiVVersionODataControllerCount = <ThrowOnError extends boolean = f
 
 export const getApiVbyApiVersionSimpleOperation = <ThrowOnError extends boolean = false>(options: Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError>) => {
     return (options.client ?? client).get<GetApiVbyApiVersionSimpleOperationResponses, GetApiVbyApiVersionSimpleOperationErrors, ThrowOnError>({
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('fooParam' in options.path) {
-                    options.path.foo_param = options.path.fooParam;
-                    delete options.path.fooParam;
-                }
-            }
-        },
+        requestKeyMapper: getApiVbyApiVersionSimpleOperationRequestKeyMapper,
         requestValidator: async (data) => {
             return await zGetApiVbyApiVersionSimpleOperationData.parseAsync(data);
         },
@@ -105,6 +104,7 @@ export const getApiVbyApiVersionSimpleOperation = <ThrowOnError extends boolean 
 
 export const deleteCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(options?: Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError>) => {
     return (options?.client ?? client).delete<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: deleteCallWithoutParametersAndResponseRequestKeyMapper,
         requestValidator: async (data) => {
             return await zDeleteCallWithoutParametersAndResponseData.parseAsync(data);
         },
@@ -115,6 +115,7 @@ export const deleteCallWithoutParametersAndResponse = <ThrowOnError extends bool
 
 export const getCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(options?: Options<GetCallWithoutParametersAndResponseData, ThrowOnError>) => {
     return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: getCallWithoutParametersAndResponseRequestKeyMapper,
         requestValidator: async (data) => {
             return await zGetCallWithoutParametersAndResponseData.parseAsync(data);
         },
@@ -125,6 +126,7 @@ export const getCallWithoutParametersAndResponse = <ThrowOnError extends boolean
 
 export const headCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(options?: Options<HeadCallWithoutParametersAndResponseData, ThrowOnError>) => {
     return (options?.client ?? client).head<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: headCallWithoutParametersAndResponseRequestKeyMapper,
         requestValidator: async (data) => {
             return await zHeadCallWithoutParametersAndResponseData.parseAsync(data);
         },
@@ -135,6 +137,7 @@ export const headCallWithoutParametersAndResponse = <ThrowOnError extends boolea
 
 export const optionsCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(options?: Options<OptionsCallWithoutParametersAndResponseData, ThrowOnError>) => {
     return (options?.client ?? client).options<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: optionsCallWithoutParametersAndResponseRequestKeyMapper,
         requestValidator: async (data) => {
             return await zOptionsCallWithoutParametersAndResponseData.parseAsync(data);
         },
@@ -145,6 +148,7 @@ export const optionsCallWithoutParametersAndResponse = <ThrowOnError extends boo
 
 export const patchCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(options?: Options<PatchCallWithoutParametersAndResponseData, ThrowOnError>) => {
     return (options?.client ?? client).patch<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: patchCallWithoutParametersAndResponseRequestKeyMapper,
         requestValidator: async (data) => {
             return await zPatchCallWithoutParametersAndResponseData.parseAsync(data);
         },
@@ -155,6 +159,7 @@ export const patchCallWithoutParametersAndResponse = <ThrowOnError extends boole
 
 export const postCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(options?: Options<PostCallWithoutParametersAndResponseData, ThrowOnError>) => {
     return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: postCallWithoutParametersAndResponseRequestKeyMapper,
         requestValidator: async (data) => {
             return await zPostCallWithoutParametersAndResponseData.parseAsync(data);
         },
@@ -165,6 +170,7 @@ export const postCallWithoutParametersAndResponse = <ThrowOnError extends boolea
 
 export const putCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(options?: Options<PutCallWithoutParametersAndResponseData, ThrowOnError>) => {
     return (options?.client ?? client).put<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: putCallWithoutParametersAndResponseRequestKeyMapper,
         requestValidator: async (data) => {
             return await zPutCallWithoutParametersAndResponseData.parseAsync(data);
         },
@@ -175,41 +181,7 @@ export const putCallWithoutParametersAndResponse = <ThrowOnError extends boolean
 
 export const deleteFoo = <ThrowOnError extends boolean = false>(options: Options<DeleteFooData, ThrowOnError>) => {
     return (options.client ?? client).delete<unknown, unknown, ThrowOnError>({
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('fooParam' in options.path) {
-                    options.path.foo_param = options.path.fooParam;
-                    delete options.path.fooParam;
-                }
-                if ('barParam' in options.path) {
-                    options.path.BarParam = options.path.barParam;
-                    delete options.path.barParam;
-                }
-            }
-            if (options.headers) {
-                {
-                    if ("get" in options.headers && "set" in options.headers) {
-                        const _val = options.headers.get("xFooBar");
-                        if (_val !== null) {
-                            const _setRet = options.headers.set("x-Foo-Bar", _val as any);
-                            if (typeof _setRet !== "undefined") {
-                                options.headers = _setRet as any;
-                            }
-                            if ("delete" in options.headers) {
-                                const _delRet = options.headers.delete("xFooBar");
-                                if (typeof _delRet !== "undefined") {
-                                    options.headers = _delRet as any;
-                                }
-                            }
-                        }
-                    }
-                    else if ('xFooBar' in options.headers) {
-                        options.headers['x-Foo-Bar'] = options.headers.xFooBar;
-                        delete options.headers.xFooBar;
-                    }
-                }
-            }
-        },
+        requestKeyMapper: deleteFooRequestKeyMapper,
         requestValidator: async (data) => {
             return await zDeleteFooData.parseAsync(data);
         },
@@ -220,6 +192,7 @@ export const deleteFoo = <ThrowOnError extends boolean = false>(options: Options
 
 export const callWithDescriptions = <ThrowOnError extends boolean = false>(options?: Options<CallWithDescriptionsData, ThrowOnError>) => {
     return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: callWithDescriptionsRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCallWithDescriptionsData.parseAsync(data);
         },
@@ -233,6 +206,7 @@ export const callWithDescriptions = <ThrowOnError extends boolean = false>(optio
  */
 export const deprecatedCall = <ThrowOnError extends boolean = false>(options: Options<DeprecatedCallData, ThrowOnError>) => {
     return (options.client ?? client).post<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: deprecatedCallRequestKeyMapper,
         requestValidator: async (data) => {
             return await zDeprecatedCallData.parseAsync(data);
         },
@@ -243,24 +217,7 @@ export const deprecatedCall = <ThrowOnError extends boolean = false>(options: Op
 
 export const callWithParameters = <ThrowOnError extends boolean = false>(options: Options<CallWithParametersData, ThrowOnError>) => {
     return (options.client ?? client).post<unknown, unknown, ThrowOnError>({
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('apiVersion' in options.path) {
-                    options.path['api-version'] = options.path.apiVersion;
-                    delete options.path.apiVersion;
-                }
-            }
-            if (options.query) {
-                if ('fooRefEnum' in options.query) {
-                    options.query.foo_ref_enum = options.query.fooRefEnum;
-                    delete options.query.fooRefEnum;
-                }
-                if ('fooAllOfEnum' in options.query) {
-                    options.query.foo_all_of_enum = options.query.fooAllOfEnum;
-                    delete options.query.fooAllOfEnum;
-                }
-            }
-        },
+        requestKeyMapper: callWithParametersRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCallWithParametersData.parseAsync(data);
         },
@@ -275,61 +232,7 @@ export const callWithParameters = <ThrowOnError extends boolean = false>(options
 
 export const callWithWeirdParameterNames = <ThrowOnError extends boolean = false>(options: Options<CallWithWeirdParameterNamesData, ThrowOnError>) => {
     return (options.client ?? client).post<unknown, unknown, ThrowOnError>({
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('parameterPath1' in options.path) {
-                    options.path['parameter.path.1'] = options.path.parameterPath1;
-                    delete options.path.parameterPath1;
-                }
-                if ('parameterPath2' in options.path) {
-                    options.path['parameter-path-2'] = options.path.parameterPath2;
-                    delete options.path.parameterPath2;
-                }
-                if ('parameterPath3' in options.path) {
-                    options.path['PARAMETER-PATH-3'] = options.path.parameterPath3;
-                    delete options.path.parameterPath3;
-                }
-                if ('apiVersion' in options.path) {
-                    options.path['api-version'] = options.path.apiVersion;
-                    delete options.path.apiVersion;
-                }
-            }
-            if (options.query) {
-                if ('parameterQuery' in options.query) {
-                    options.query['parameter-query'] = options.query.parameterQuery;
-                    delete options.query.parameterQuery;
-                }
-            }
-            if (options.headers) {
-                {
-                    if ("get" in options.headers && "set" in options.headers) {
-                        const _val = options.headers.get("parameterHeader");
-                        if (_val !== null) {
-                            const _setRet = options.headers.set("parameter.header", _val as any);
-                            if (typeof _setRet !== "undefined") {
-                                options.headers = _setRet as any;
-                            }
-                            if ("delete" in options.headers) {
-                                const _delRet = options.headers.delete("parameterHeader");
-                                if (typeof _delRet !== "undefined") {
-                                    options.headers = _delRet as any;
-                                }
-                            }
-                        }
-                    }
-                    else if ('parameterHeader' in options.headers) {
-                        options.headers['parameter.header'] = options.headers.parameterHeader;
-                        delete options.headers.parameterHeader;
-                    }
-                }
-            }
-            if (options.cookie) {
-                if ('parameterCookie' in options.cookie) {
-                    options.cookie['PARAMETER-COOKIE'] = options.cookie.parameterCookie;
-                    delete options.cookie.parameterCookie;
-                }
-            }
-        },
+        requestKeyMapper: callWithWeirdParameterNamesRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCallWithWeirdParameterNamesData.parseAsync(data);
         },
@@ -344,6 +247,7 @@ export const callWithWeirdParameterNames = <ThrowOnError extends boolean = false
 
 export const getCallWithOptionalParam = <ThrowOnError extends boolean = false>(options: Options<GetCallWithOptionalParamData, ThrowOnError>) => {
     return (options.client ?? client).get<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: getCallWithOptionalParamRequestKeyMapper,
         requestValidator: async (data) => {
             return await zGetCallWithOptionalParamData.parseAsync(data);
         },
@@ -358,6 +262,7 @@ export const getCallWithOptionalParam = <ThrowOnError extends boolean = false>(o
 
 export const postCallWithOptionalParam = <ThrowOnError extends boolean = false>(options: Options<PostCallWithOptionalParamData, ThrowOnError>) => {
     return (options.client ?? client).post<PostCallWithOptionalParamResponses, unknown, ThrowOnError>({
+        requestKeyMapper: postCallWithOptionalParamRequestKeyMapper,
         requestValidator: async (data) => {
             return await zPostCallWithOptionalParamData.parseAsync(data);
         },
@@ -376,6 +281,7 @@ export const postCallWithOptionalParam = <ThrowOnError extends boolean = false>(
 
 export const postApiVbyApiVersionRequestBody = <ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError>) => {
     return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: postApiVbyApiVersionRequestBodyRequestKeyMapper,
         requestValidator: async (data) => {
             return await zPostApiVbyApiVersionRequestBodyData.parseAsync(data);
         },
@@ -391,6 +297,7 @@ export const postApiVbyApiVersionRequestBody = <ThrowOnError extends boolean = f
 export const postApiVbyApiVersionFormData = <ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionFormDataData, ThrowOnError>) => {
     return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
         ...formDataBodySerializer,
+        requestKeyMapper: postApiVbyApiVersionFormDataRequestKeyMapper,
         requestValidator: async (data) => {
             return await zPostApiVbyApiVersionFormDataData.parseAsync(data);
         },
@@ -405,6 +312,7 @@ export const postApiVbyApiVersionFormData = <ThrowOnError extends boolean = fals
 
 export const callWithDefaultParameters = <ThrowOnError extends boolean = false>(options?: Options<CallWithDefaultParametersData, ThrowOnError>) => {
     return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: callWithDefaultParametersRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCallWithDefaultParametersData.parseAsync(data);
         },
@@ -415,6 +323,7 @@ export const callWithDefaultParameters = <ThrowOnError extends boolean = false>(
 
 export const callWithDefaultOptionalParameters = <ThrowOnError extends boolean = false>(options?: Options<CallWithDefaultOptionalParametersData, ThrowOnError>) => {
     return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: callWithDefaultOptionalParametersRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCallWithDefaultOptionalParametersData.parseAsync(data);
         },
@@ -425,6 +334,7 @@ export const callWithDefaultOptionalParameters = <ThrowOnError extends boolean =
 
 export const callToTestOrderOfParams = <ThrowOnError extends boolean = false>(options: Options<CallToTestOrderOfParamsData, ThrowOnError>) => {
     return (options.client ?? client).put<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: callToTestOrderOfParamsRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCallToTestOrderOfParamsData.parseAsync(data);
         },
@@ -435,6 +345,7 @@ export const callToTestOrderOfParams = <ThrowOnError extends boolean = false>(op
 
 export const duplicateName = <ThrowOnError extends boolean = false>(options?: Options<DuplicateNameData, ThrowOnError>) => {
     return (options?.client ?? client).delete<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: duplicateNameRequestKeyMapper,
         requestValidator: async (data) => {
             return await zDuplicateNameData.parseAsync(data);
         },
@@ -445,6 +356,7 @@ export const duplicateName = <ThrowOnError extends boolean = false>(options?: Op
 
 export const duplicateName2 = <ThrowOnError extends boolean = false>(options?: Options<DuplicateName2Data, ThrowOnError>) => {
     return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: duplicateName2RequestKeyMapper,
         requestValidator: async (data) => {
             return await zDuplicateName2Data.parseAsync(data);
         },
@@ -455,6 +367,7 @@ export const duplicateName2 = <ThrowOnError extends boolean = false>(options?: O
 
 export const duplicateName3 = <ThrowOnError extends boolean = false>(options?: Options<DuplicateName3Data, ThrowOnError>) => {
     return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: duplicateName3RequestKeyMapper,
         requestValidator: async (data) => {
             return await zDuplicateName3Data.parseAsync(data);
         },
@@ -465,6 +378,7 @@ export const duplicateName3 = <ThrowOnError extends boolean = false>(options?: O
 
 export const duplicateName4 = <ThrowOnError extends boolean = false>(options?: Options<DuplicateName4Data, ThrowOnError>) => {
     return (options?.client ?? client).put<unknown, unknown, ThrowOnError>({
+        requestKeyMapper: duplicateName4RequestKeyMapper,
         requestValidator: async (data) => {
             return await zDuplicateName4Data.parseAsync(data);
         },
@@ -475,6 +389,7 @@ export const duplicateName4 = <ThrowOnError extends boolean = false>(options?: O
 
 export const callWithNoContentResponse = <ThrowOnError extends boolean = false>(options?: Options<CallWithNoContentResponseData, ThrowOnError>) => {
     return (options?.client ?? client).get<CallWithNoContentResponseResponses, unknown, ThrowOnError>({
+        requestKeyMapper: callWithNoContentResponseRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCallWithNoContentResponseData.parseAsync(data);
         },
@@ -488,6 +403,7 @@ export const callWithNoContentResponse = <ThrowOnError extends boolean = false>(
 
 export const callWithResponseAndNoContentResponse = <ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>) => {
     return (options?.client ?? client).get<CallWithResponseAndNoContentResponseResponses, unknown, ThrowOnError>({
+        requestKeyMapper: callWithResponseAndNoContentResponseRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCallWithResponseAndNoContentResponseData.parseAsync(data);
         },
@@ -502,6 +418,7 @@ export const callWithResponseAndNoContentResponse = <ThrowOnError extends boolea
 
 export const dummyA = <ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>) => {
     return (options?.client ?? client).get<DummyAResponses, unknown, ThrowOnError>({
+        requestKeyMapper: dummyARequestKeyMapper,
         requestValidator: async (data) => {
             return await zDummyAData.parseAsync(data);
         },
@@ -516,6 +433,7 @@ export const dummyA = <ThrowOnError extends boolean = false>(options?: Options<D
 
 export const dummyB = <ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>) => {
     return (options?.client ?? client).get<DummyBResponses, unknown, ThrowOnError>({
+        requestKeyMapper: dummyBRequestKeyMapper,
         requestValidator: async (data) => {
             return await zDummyBData.parseAsync(data);
         },
@@ -529,6 +447,7 @@ export const dummyB = <ThrowOnError extends boolean = false>(options?: Options<D
 
 export const callWithResponse = <ThrowOnError extends boolean = false>(options?: Options<CallWithResponseData, ThrowOnError>) => {
     return (options?.client ?? client).get<CallWithResponseResponses, unknown, ThrowOnError>({
+        requestKeyMapper: callWithResponseRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCallWithResponseData.parseAsync(data);
         },
@@ -542,6 +461,7 @@ export const callWithResponse = <ThrowOnError extends boolean = false>(options?:
 
 export const callWithDuplicateResponses = <ThrowOnError extends boolean = false>(options?: Options<CallWithDuplicateResponsesData, ThrowOnError>) => {
     return (options?.client ?? client).post<CallWithDuplicateResponsesResponses, CallWithDuplicateResponsesErrors, ThrowOnError>({
+        requestKeyMapper: callWithDuplicateResponsesRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCallWithDuplicateResponsesData.parseAsync(data);
         },
@@ -556,6 +476,7 @@ export const callWithDuplicateResponses = <ThrowOnError extends boolean = false>
 
 export const callWithResponses = <ThrowOnError extends boolean = false>(options?: Options<CallWithResponsesData, ThrowOnError>) => {
     return (options?.client ?? client).put<CallWithResponsesResponses, CallWithResponsesErrors, ThrowOnError>({
+        requestKeyMapper: callWithResponsesRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCallWithResponsesData.parseAsync(data);
         },
@@ -570,22 +491,7 @@ export const callWithResponses = <ThrowOnError extends boolean = false>(options?
 
 export const collectionFormat = <ThrowOnError extends boolean = false>(options: Options<CollectionFormatData, ThrowOnError>) => {
     return (options.client ?? client).get<unknown, unknown, ThrowOnError>({
-        requestKeyMapper: options => {
-            if (options.query) {
-                if ('parameterArrayCsv' in options.query) {
-                    options.query.parameterArrayCSV = options.query.parameterArrayCsv;
-                    delete options.query.parameterArrayCsv;
-                }
-                if ('parameterArraySsv' in options.query) {
-                    options.query.parameterArraySSV = options.query.parameterArraySsv;
-                    delete options.query.parameterArraySsv;
-                }
-                if ('parameterArrayTsv' in options.query) {
-                    options.query.parameterArrayTSV = options.query.parameterArrayTsv;
-                    delete options.query.parameterArrayTsv;
-                }
-            }
-        },
+        requestKeyMapper: collectionFormatRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCollectionFormatData.parseAsync(data);
         },
@@ -596,6 +502,7 @@ export const collectionFormat = <ThrowOnError extends boolean = false>(options: 
 
 export const types = <ThrowOnError extends boolean = false>(options: Options<TypesData, ThrowOnError>) => {
     return (options.client ?? client).get<TypesResponses, unknown, ThrowOnError>({
+        requestKeyMapper: typesRequestKeyMapper,
         requestValidator: async (data) => {
             return await zTypesData.parseAsync(data);
         },
@@ -611,14 +518,7 @@ export const types = <ThrowOnError extends boolean = false>(options: Options<Typ
 export const uploadFile = <ThrowOnError extends boolean = false>(options: Options<UploadFileData, ThrowOnError>) => {
     return (options.client ?? client).post<UploadFileResponses, unknown, ThrowOnError>({
         ...urlSearchParamsBodySerializer,
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('apiVersion' in options.path) {
-                    options.path['api-version'] = options.path.apiVersion;
-                    delete options.path.apiVersion;
-                }
-            }
-        },
+        requestKeyMapper: uploadFileRequestKeyMapper,
         requestValidator: async (data) => {
             return await zUploadFileData.parseAsync(data);
         },
@@ -637,14 +537,7 @@ export const uploadFile = <ThrowOnError extends boolean = false>(options: Option
 
 export const fileResponse = <ThrowOnError extends boolean = false>(options: Options<FileResponseData, ThrowOnError>) => {
     return (options.client ?? client).get<FileResponseResponses, unknown, ThrowOnError>({
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('apiVersion' in options.path) {
-                    options.path['api-version'] = options.path.apiVersion;
-                    delete options.path.apiVersion;
-                }
-            }
-        },
+        requestKeyMapper: fileResponseRequestKeyMapper,
         requestValidator: async (data) => {
             return await zFileResponseData.parseAsync(data);
         },
@@ -659,6 +552,7 @@ export const fileResponse = <ThrowOnError extends boolean = false>(options: Opti
 
 export const complexTypes = <ThrowOnError extends boolean = false>(options: Options<ComplexTypesData, ThrowOnError>) => {
     return (options.client ?? client).get<ComplexTypesResponses, ComplexTypesErrors, ThrowOnError>({
+        requestKeyMapper: complexTypesRequestKeyMapper,
         requestValidator: async (data) => {
             return await zComplexTypesData.parseAsync(data);
         },
@@ -673,6 +567,7 @@ export const complexTypes = <ThrowOnError extends boolean = false>(options: Opti
 
 export const multipartResponse = <ThrowOnError extends boolean = false>(options?: Options<MultipartResponseData, ThrowOnError>) => {
     return (options?.client ?? client).get<MultipartResponseResponses, unknown, ThrowOnError>({
+        requestKeyMapper: multipartResponseRequestKeyMapper,
         requestValidator: async (data) => {
             return await zMultipartResponseData.parseAsync(data);
         },
@@ -687,6 +582,7 @@ export const multipartResponse = <ThrowOnError extends boolean = false>(options?
 export const multipartRequest = <ThrowOnError extends boolean = false>(options?: Options<MultipartRequestData, ThrowOnError>) => {
     return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
         ...formDataBodySerializer,
+        requestKeyMapper: multipartRequestRequestKeyMapper,
         requestValidator: async (data) => {
             return await zMultipartRequestData.parseAsync(data);
         },
@@ -701,22 +597,7 @@ export const multipartRequest = <ThrowOnError extends boolean = false>(options?:
 
 export const complexParams = <ThrowOnError extends boolean = false>(options: Options<ComplexParamsData, ThrowOnError>) => {
     return (options.client ?? client).put<ComplexParamsResponses, unknown, ThrowOnError>({
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('apiVersion' in options.path) {
-                    options.path['api-version'] = options.path.apiVersion;
-                    delete options.path.apiVersion;
-                }
-            }
-            if (options.body) {
-                if ('parameters' in options.body && (typeof options.body.parameters === "object" && options.body.parameters !== null))
-                    if ('foo_bar-enum' in options.body.parameters)
-                        if ('fooBarEnum' in options.body.parameters['foo_bar-enum']) {
-                            options.body.parameters['foo_bar-enum']['foo_bar-enum'] = options.body.parameters['foo_bar-enum'].fooBarEnum;
-                            delete options.body.parameters['foo_bar-enum'].fooBarEnum;
-                        }
-            }
-        },
+        requestKeyMapper: complexParamsRequestKeyMapper,
         requestValidator: async (data) => {
             return await zComplexParamsData.parseAsync(data);
         },
@@ -735,6 +616,7 @@ export const complexParams = <ThrowOnError extends boolean = false>(options: Opt
 
 export const callWithResultFromHeader = <ThrowOnError extends boolean = false>(options?: Options<CallWithResultFromHeaderData, ThrowOnError>) => {
     return (options?.client ?? client).post<CallWithResultFromHeaderResponses, CallWithResultFromHeaderErrors, ThrowOnError>({
+        requestKeyMapper: callWithResultFromHeaderRequestKeyMapper,
         requestValidator: async (data) => {
             return await zCallWithResultFromHeaderData.parseAsync(data);
         },
@@ -745,6 +627,7 @@ export const callWithResultFromHeader = <ThrowOnError extends boolean = false>(o
 
 export const testErrorCode = <ThrowOnError extends boolean = false>(options: Options<TestErrorCodeData, ThrowOnError>) => {
     return (options.client ?? client).post<TestErrorCodeResponses, TestErrorCodeErrors, ThrowOnError>({
+        requestKeyMapper: testErrorCodeRequestKeyMapper,
         requestValidator: async (data) => {
             return await zTestErrorCodeData.parseAsync(data);
         },
@@ -755,14 +638,7 @@ export const testErrorCode = <ThrowOnError extends boolean = false>(options: Opt
 
 export const nonAsciiæøåÆøÅöôêÊ字符串 = <ThrowOnError extends boolean = false>(options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError>) => {
     return (options.client ?? client).post<NonAsciiæøåÆøÅöôêÊ字符串Responses, unknown, ThrowOnError>({
-        requestKeyMapper: options => {
-            if (options.query) {
-                if ('nonAsciiParamæøåÆøÅöôêÊ' in options.query) {
-                    options.query.nonAsciiParamæøåÆØÅöôêÊ = options.query.nonAsciiParamæøåÆøÅöôêÊ;
-                    delete options.query.nonAsciiParamæøåÆøÅöôêÊ;
-                }
-            }
-        },
+        requestKeyMapper: nonAsciiæøåÆøÅöôêÊ字符串RequestKeyMapper,
         requestValidator: async (data) => {
             return await zNonAsciiæøåÆøÅöôêÊ字符串Data.parseAsync(data);
         },
@@ -781,6 +657,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串 = <ThrowOnError extends boole
 export const putWithFormUrlEncoded = <ThrowOnError extends boolean = false>(options: Options<PutWithFormUrlEncodedData, ThrowOnError>) => {
     return (options.client ?? client).put<unknown, unknown, ThrowOnError>({
         ...urlSearchParamsBodySerializer,
+        requestKeyMapper: putWithFormUrlEncodedRequestKeyMapper,
         requestValidator: async (data) => {
             return await zPutWithFormUrlEncodedData.parseAsync(data);
         },

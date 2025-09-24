@@ -2,6 +2,7 @@
 
 import { type Options as ClientOptions, type Composable, type Client, type TDataShape, formDataBodySerializer, urlSearchParamsBodySerializer } from './client';
 import type { ExportData, PatchApiVbyApiVersionNoTagData, ImportResponse, ImportData, FooWowData, ApiVVersionODataControllerCountResponse, ApiVVersionODataControllerCountData, GetApiVbyApiVersionSimpleOperationResponse, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationError, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, HeadCallWithoutParametersAndResponseData, OptionsCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, DeleteFooData3 as DeleteFooData, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostCallWithOptionalParamData, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseResponse, CallWithNoContentResponseData, CallWithResponseAndNoContentResponseResponse, CallWithResponseAndNoContentResponseData, DummyAResponse, DummyAData, DummyBResponse, DummyBData, CallWithResponseResponse, CallWithResponseData, CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithResponsesResponse, CallWithResponsesData, CallWithResponsesError, CollectionFormatData, TypesResponse, TypesData, UploadFileResponse, UploadFileData, FileResponseResponse, FileResponseData, ComplexTypesResponse, ComplexTypesData, MultipartResponseResponse, MultipartResponseData, MultipartRequestData, ComplexParamsResponse, ComplexParamsData, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Response, NonAsciiæøåÆøÅöôêÊ字符串Data, PutWithFormUrlEncodedData } from './types.gen';
+import { exportRequestKeyMapper, patchApiVbyApiVersionNoTagRequestKeyMapper, importRequestKeyMapper, fooWowRequestKeyMapper, apiVVersionODataControllerCountRequestKeyMapper, getApiVbyApiVersionSimpleOperationRequestKeyMapper, deleteCallWithoutParametersAndResponseRequestKeyMapper, getCallWithoutParametersAndResponseRequestKeyMapper, headCallWithoutParametersAndResponseRequestKeyMapper, optionsCallWithoutParametersAndResponseRequestKeyMapper, patchCallWithoutParametersAndResponseRequestKeyMapper, postCallWithoutParametersAndResponseRequestKeyMapper, putCallWithoutParametersAndResponseRequestKeyMapper, deleteFooRequestKeyMapper, callWithDescriptionsRequestKeyMapper, deprecatedCallRequestKeyMapper, callWithParametersRequestKeyMapper, callWithWeirdParameterNamesRequestKeyMapper, getCallWithOptionalParamRequestKeyMapper, postCallWithOptionalParamRequestKeyMapper, postApiVbyApiVersionRequestBodyRequestKeyMapper, postApiVbyApiVersionFormDataRequestKeyMapper, callWithDefaultParametersRequestKeyMapper, callWithDefaultOptionalParametersRequestKeyMapper, callToTestOrderOfParamsRequestKeyMapper, duplicateNameRequestKeyMapper, duplicateName2RequestKeyMapper, duplicateName3RequestKeyMapper, duplicateName4RequestKeyMapper, callWithNoContentResponseRequestKeyMapper, callWithResponseAndNoContentResponseRequestKeyMapper, dummyARequestKeyMapper, dummyBRequestKeyMapper, callWithResponseRequestKeyMapper, callWithDuplicateResponsesRequestKeyMapper, callWithResponsesRequestKeyMapper, collectionFormatRequestKeyMapper, typesRequestKeyMapper, uploadFileRequestKeyMapper, fileResponseRequestKeyMapper, complexTypesRequestKeyMapper, multipartResponseRequestKeyMapper, multipartRequestRequestKeyMapper, complexParamsRequestKeyMapper, callWithResultFromHeaderRequestKeyMapper, testErrorCodeRequestKeyMapper, nonAsciiæøåÆøÅöôêÊ字符串RequestKeyMapper, putWithFormUrlEncodedRequestKeyMapper } from './sdkRequestMappers.gen';
 import { client } from './client.gen';
 
 export type Options<TComposable extends Composable = '$fetch', TData extends TDataShape = TDataShape, ResT = unknown, DefaultT = undefined> = ClientOptions<TComposable, TData, ResT, DefaultT> & {
@@ -20,6 +21,7 @@ export type Options<TComposable extends Composable = '$fetch', TData extends TDa
 
 export const export_ = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, ExportData, unknown, DefaultT>) => {
     return (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: exportRequestKeyMapper,
         url: '/api/v{api-version}/no+tag',
         ...options
     });
@@ -27,6 +29,7 @@ export const export_ = <TComposable extends Composable = '$fetch', DefaultT = un
 
 export const patchApiVbyApiVersionNoTag = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PatchApiVbyApiVersionNoTagData, unknown, DefaultT>) => {
     return (options.client ?? client).patch<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: patchApiVbyApiVersionNoTagRequestKeyMapper,
         url: '/api/v{api-version}/no+tag',
         ...options
     });
@@ -34,6 +37,7 @@ export const patchApiVbyApiVersionNoTag = <TComposable extends Composable = '$fe
 
 export const import_ = <TComposable extends Composable = '$fetch', DefaultT extends ImportResponse = ImportResponse>(options: Options<TComposable, ImportData, ImportResponse, DefaultT>) => {
     return (options.client ?? client).post<TComposable, ImportResponse | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: importRequestKeyMapper,
         url: '/api/v{api-version}/no+tag',
         ...options,
         headers: {
@@ -45,6 +49,7 @@ export const import_ = <TComposable extends Composable = '$fetch', DefaultT exte
 
 export const fooWow = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, FooWowData, unknown, DefaultT>) => {
     return (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: fooWowRequestKeyMapper,
         url: '/api/v{api-version}/no+tag',
         ...options
     });
@@ -52,6 +57,7 @@ export const fooWow = <TComposable extends Composable = '$fetch', DefaultT = und
 
 export const apiVVersionODataControllerCount = <TComposable extends Composable = '$fetch', DefaultT extends ApiVVersionODataControllerCountResponse = ApiVVersionODataControllerCountResponse>(options: Options<TComposable, ApiVVersionODataControllerCountData, ApiVVersionODataControllerCountResponse, DefaultT>) => {
     return (options.client ?? client).get<TComposable, ApiVVersionODataControllerCountResponse | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: apiVVersionODataControllerCountRequestKeyMapper,
         url: '/api/v{api-version}/simple/$count',
         ...options
     });
@@ -59,14 +65,7 @@ export const apiVVersionODataControllerCount = <TComposable extends Composable =
 
 export const getApiVbyApiVersionSimpleOperation = <TComposable extends Composable = '$fetch', DefaultT extends GetApiVbyApiVersionSimpleOperationResponse = GetApiVbyApiVersionSimpleOperationResponse>(options: Options<TComposable, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationResponse, DefaultT>) => {
     return (options.client ?? client).get<TComposable, GetApiVbyApiVersionSimpleOperationResponse | DefaultT, GetApiVbyApiVersionSimpleOperationError, DefaultT>({
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('fooParam' in options.path) {
-                    options.path.foo_param = options.path.fooParam;
-                    delete options.path.fooParam;
-                }
-            }
-        },
+        requestKeyMapper: getApiVbyApiVersionSimpleOperationRequestKeyMapper,
         url: '/api/v{api-version}/simple:operation',
         ...options
     });
@@ -74,6 +73,7 @@ export const getApiVbyApiVersionSimpleOperation = <TComposable extends Composabl
 
 export const deleteCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DeleteCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
     return (options.client ?? client).delete<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: deleteCallWithoutParametersAndResponseRequestKeyMapper,
         url: '/api/v{api-version}/simple',
         ...options
     });
@@ -81,6 +81,7 @@ export const deleteCallWithoutParametersAndResponse = <TComposable extends Compo
 
 export const getCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, GetCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
     return (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: getCallWithoutParametersAndResponseRequestKeyMapper,
         url: '/api/v{api-version}/simple',
         ...options
     });
@@ -88,6 +89,7 @@ export const getCallWithoutParametersAndResponse = <TComposable extends Composab
 
 export const headCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, HeadCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
     return (options.client ?? client).head<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: headCallWithoutParametersAndResponseRequestKeyMapper,
         url: '/api/v{api-version}/simple',
         ...options
     });
@@ -95,6 +97,7 @@ export const headCallWithoutParametersAndResponse = <TComposable extends Composa
 
 export const optionsCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, OptionsCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
     return (options.client ?? client).options<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: optionsCallWithoutParametersAndResponseRequestKeyMapper,
         url: '/api/v{api-version}/simple',
         ...options
     });
@@ -102,6 +105,7 @@ export const optionsCallWithoutParametersAndResponse = <TComposable extends Comp
 
 export const patchCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PatchCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
     return (options.client ?? client).patch<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: patchCallWithoutParametersAndResponseRequestKeyMapper,
         url: '/api/v{api-version}/simple',
         ...options
     });
@@ -109,6 +113,7 @@ export const patchCallWithoutParametersAndResponse = <TComposable extends Compos
 
 export const postCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PostCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
     return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: postCallWithoutParametersAndResponseRequestKeyMapper,
         url: '/api/v{api-version}/simple',
         ...options
     });
@@ -116,6 +121,7 @@ export const postCallWithoutParametersAndResponse = <TComposable extends Composa
 
 export const putCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PutCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
     return (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: putCallWithoutParametersAndResponseRequestKeyMapper,
         url: '/api/v{api-version}/simple',
         ...options
     });
@@ -123,41 +129,7 @@ export const putCallWithoutParametersAndResponse = <TComposable extends Composab
 
 export const deleteFoo = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DeleteFooData, unknown, DefaultT>) => {
     return (options.client ?? client).delete<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('fooParam' in options.path) {
-                    options.path.foo_param = options.path.fooParam;
-                    delete options.path.fooParam;
-                }
-                if ('barParam' in options.path) {
-                    options.path.BarParam = options.path.barParam;
-                    delete options.path.barParam;
-                }
-            }
-            if (options.headers) {
-                {
-                    if ("get" in options.headers && "set" in options.headers) {
-                        const _val = options.headers.get("xFooBar");
-                        if (_val !== null) {
-                            const _setRet = options.headers.set("x-Foo-Bar", _val as any);
-                            if (typeof _setRet !== "undefined") {
-                                options.headers = _setRet as any;
-                            }
-                            if ("delete" in options.headers) {
-                                const _delRet = options.headers.delete("xFooBar");
-                                if (typeof _delRet !== "undefined") {
-                                    options.headers = _delRet as any;
-                                }
-                            }
-                        }
-                    }
-                    else if ('xFooBar' in options.headers) {
-                        options.headers['x-Foo-Bar'] = options.headers.xFooBar;
-                        delete options.headers.xFooBar;
-                    }
-                }
-            }
-        },
+        requestKeyMapper: deleteFooRequestKeyMapper,
         url: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}',
         ...options
     });
@@ -165,6 +137,7 @@ export const deleteFoo = <TComposable extends Composable = '$fetch', DefaultT = 
 
 export const callWithDescriptions = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallWithDescriptionsData, unknown, DefaultT>) => {
     return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: callWithDescriptionsRequestKeyMapper,
         url: '/api/v{api-version}/descriptions',
         ...options
     });
@@ -175,6 +148,7 @@ export const callWithDescriptions = <TComposable extends Composable = '$fetch', 
  */
 export const deprecatedCall = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DeprecatedCallData, unknown, DefaultT>) => {
     return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: deprecatedCallRequestKeyMapper,
         url: '/api/v{api-version}/parameters/deprecated',
         ...options
     });
@@ -182,24 +156,7 @@ export const deprecatedCall = <TComposable extends Composable = '$fetch', Defaul
 
 export const callWithParameters = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallWithParametersData, unknown, DefaultT>) => {
     return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('apiVersion' in options.path) {
-                    options.path['api-version'] = options.path.apiVersion;
-                    delete options.path.apiVersion;
-                }
-            }
-            if (options.query) {
-                if ('fooRefEnum' in options.query) {
-                    options.query.foo_ref_enum = options.query.fooRefEnum;
-                    delete options.query.fooRefEnum;
-                }
-                if ('fooAllOfEnum' in options.query) {
-                    options.query.foo_all_of_enum = options.query.fooAllOfEnum;
-                    delete options.query.fooAllOfEnum;
-                }
-            }
-        },
+        requestKeyMapper: callWithParametersRequestKeyMapper,
         url: '/api/v{api-version}/parameters/{parameterPath}',
         ...options,
         headers: {
@@ -211,61 +168,7 @@ export const callWithParameters = <TComposable extends Composable = '$fetch', De
 
 export const callWithWeirdParameterNames = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallWithWeirdParameterNamesData, unknown, DefaultT>) => {
     return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('parameterPath1' in options.path) {
-                    options.path['parameter.path.1'] = options.path.parameterPath1;
-                    delete options.path.parameterPath1;
-                }
-                if ('parameterPath2' in options.path) {
-                    options.path['parameter-path-2'] = options.path.parameterPath2;
-                    delete options.path.parameterPath2;
-                }
-                if ('parameterPath3' in options.path) {
-                    options.path['PARAMETER-PATH-3'] = options.path.parameterPath3;
-                    delete options.path.parameterPath3;
-                }
-                if ('apiVersion' in options.path) {
-                    options.path['api-version'] = options.path.apiVersion;
-                    delete options.path.apiVersion;
-                }
-            }
-            if (options.query) {
-                if ('parameterQuery' in options.query) {
-                    options.query['parameter-query'] = options.query.parameterQuery;
-                    delete options.query.parameterQuery;
-                }
-            }
-            if (options.headers) {
-                {
-                    if ("get" in options.headers && "set" in options.headers) {
-                        const _val = options.headers.get("parameterHeader");
-                        if (_val !== null) {
-                            const _setRet = options.headers.set("parameter.header", _val as any);
-                            if (typeof _setRet !== "undefined") {
-                                options.headers = _setRet as any;
-                            }
-                            if ("delete" in options.headers) {
-                                const _delRet = options.headers.delete("parameterHeader");
-                                if (typeof _delRet !== "undefined") {
-                                    options.headers = _delRet as any;
-                                }
-                            }
-                        }
-                    }
-                    else if ('parameterHeader' in options.headers) {
-                        options.headers['parameter.header'] = options.headers.parameterHeader;
-                        delete options.headers.parameterHeader;
-                    }
-                }
-            }
-            if (options.cookie) {
-                if ('parameterCookie' in options.cookie) {
-                    options.cookie['PARAMETER-COOKIE'] = options.cookie.parameterCookie;
-                    delete options.cookie.parameterCookie;
-                }
-            }
-        },
+        requestKeyMapper: callWithWeirdParameterNamesRequestKeyMapper,
         url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
         ...options,
         headers: {
@@ -277,6 +180,7 @@ export const callWithWeirdParameterNames = <TComposable extends Composable = '$f
 
 export const getCallWithOptionalParam = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, GetCallWithOptionalParamData, unknown, DefaultT>) => {
     return (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: getCallWithOptionalParamRequestKeyMapper,
         url: '/api/v{api-version}/parameters',
         ...options,
         headers: {
@@ -288,6 +192,7 @@ export const getCallWithOptionalParam = <TComposable extends Composable = '$fetc
 
 export const postCallWithOptionalParam = <TComposable extends Composable = '$fetch', DefaultT extends PostCallWithOptionalParamResponse = PostCallWithOptionalParamResponse>(options: Options<TComposable, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, DefaultT>) => {
     return (options.client ?? client).post<TComposable, PostCallWithOptionalParamResponse | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: postCallWithOptionalParamRequestKeyMapper,
         url: '/api/v{api-version}/parameters',
         ...options,
         headers: {
@@ -299,6 +204,7 @@ export const postCallWithOptionalParam = <TComposable extends Composable = '$fet
 
 export const postApiVbyApiVersionRequestBody = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PostApiVbyApiVersionRequestBodyData, unknown, DefaultT>) => {
     return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: postApiVbyApiVersionRequestBodyRequestKeyMapper,
         url: '/api/v{api-version}/requestBody',
         ...options,
         headers: {
@@ -311,6 +217,7 @@ export const postApiVbyApiVersionRequestBody = <TComposable extends Composable =
 export const postApiVbyApiVersionFormData = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PostApiVbyApiVersionFormDataData, unknown, DefaultT>) => {
     return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
         ...formDataBodySerializer,
+        requestKeyMapper: postApiVbyApiVersionFormDataRequestKeyMapper,
         url: '/api/v{api-version}/formData',
         ...options,
         headers: {
@@ -322,6 +229,7 @@ export const postApiVbyApiVersionFormData = <TComposable extends Composable = '$
 
 export const callWithDefaultParameters = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallWithDefaultParametersData, unknown, DefaultT>) => {
     return (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: callWithDefaultParametersRequestKeyMapper,
         url: '/api/v{api-version}/defaults',
         ...options
     });
@@ -329,6 +237,7 @@ export const callWithDefaultParameters = <TComposable extends Composable = '$fet
 
 export const callWithDefaultOptionalParameters = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallWithDefaultOptionalParametersData, unknown, DefaultT>) => {
     return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: callWithDefaultOptionalParametersRequestKeyMapper,
         url: '/api/v{api-version}/defaults',
         ...options
     });
@@ -336,6 +245,7 @@ export const callWithDefaultOptionalParameters = <TComposable extends Composable
 
 export const callToTestOrderOfParams = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallToTestOrderOfParamsData, unknown, DefaultT>) => {
     return (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: callToTestOrderOfParamsRequestKeyMapper,
         url: '/api/v{api-version}/defaults',
         ...options
     });
@@ -343,6 +253,7 @@ export const callToTestOrderOfParams = <TComposable extends Composable = '$fetch
 
 export const duplicateName = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DuplicateNameData, unknown, DefaultT>) => {
     return (options.client ?? client).delete<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: duplicateNameRequestKeyMapper,
         url: '/api/v{api-version}/duplicate',
         ...options
     });
@@ -350,6 +261,7 @@ export const duplicateName = <TComposable extends Composable = '$fetch', Default
 
 export const duplicateName2 = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DuplicateName2Data, unknown, DefaultT>) => {
     return (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: duplicateName2RequestKeyMapper,
         url: '/api/v{api-version}/duplicate',
         ...options
     });
@@ -357,6 +269,7 @@ export const duplicateName2 = <TComposable extends Composable = '$fetch', Defaul
 
 export const duplicateName3 = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DuplicateName3Data, unknown, DefaultT>) => {
     return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: duplicateName3RequestKeyMapper,
         url: '/api/v{api-version}/duplicate',
         ...options
     });
@@ -364,6 +277,7 @@ export const duplicateName3 = <TComposable extends Composable = '$fetch', Defaul
 
 export const duplicateName4 = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DuplicateName4Data, unknown, DefaultT>) => {
     return (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: duplicateName4RequestKeyMapper,
         url: '/api/v{api-version}/duplicate',
         ...options
     });
@@ -371,6 +285,7 @@ export const duplicateName4 = <TComposable extends Composable = '$fetch', Defaul
 
 export const callWithNoContentResponse = <TComposable extends Composable = '$fetch', DefaultT extends CallWithNoContentResponseResponse = CallWithNoContentResponseResponse>(options: Options<TComposable, CallWithNoContentResponseData, CallWithNoContentResponseResponse, DefaultT>) => {
     return (options.client ?? client).get<TComposable, CallWithNoContentResponseResponse | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: callWithNoContentResponseRequestKeyMapper,
         url: '/api/v{api-version}/no-content',
         ...options
     });
@@ -378,6 +293,7 @@ export const callWithNoContentResponse = <TComposable extends Composable = '$fet
 
 export const callWithResponseAndNoContentResponse = <TComposable extends Composable = '$fetch', DefaultT extends CallWithResponseAndNoContentResponseResponse = CallWithResponseAndNoContentResponseResponse>(options: Options<TComposable, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, DefaultT>) => {
     return (options.client ?? client).get<TComposable, CallWithResponseAndNoContentResponseResponse | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: callWithResponseAndNoContentResponseRequestKeyMapper,
         url: '/api/v{api-version}/multiple-tags/response-and-no-content',
         ...options
     });
@@ -385,6 +301,7 @@ export const callWithResponseAndNoContentResponse = <TComposable extends Composa
 
 export const dummyA = <TComposable extends Composable = '$fetch', DefaultT extends DummyAResponse = DummyAResponse>(options: Options<TComposable, DummyAData, DummyAResponse, DefaultT>) => {
     return (options.client ?? client).get<TComposable, DummyAResponse | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: dummyARequestKeyMapper,
         url: '/api/v{api-version}/multiple-tags/a',
         ...options
     });
@@ -392,6 +309,7 @@ export const dummyA = <TComposable extends Composable = '$fetch', DefaultT exten
 
 export const dummyB = <TComposable extends Composable = '$fetch', DefaultT extends DummyBResponse = DummyBResponse>(options: Options<TComposable, DummyBData, DummyBResponse, DefaultT>) => {
     return (options.client ?? client).get<TComposable, DummyBResponse | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: dummyBRequestKeyMapper,
         url: '/api/v{api-version}/multiple-tags/b',
         ...options
     });
@@ -399,6 +317,7 @@ export const dummyB = <TComposable extends Composable = '$fetch', DefaultT exten
 
 export const callWithResponse = <TComposable extends Composable = '$fetch', DefaultT extends CallWithResponseResponse = CallWithResponseResponse>(options: Options<TComposable, CallWithResponseData, CallWithResponseResponse, DefaultT>) => {
     return (options.client ?? client).get<TComposable, CallWithResponseResponse | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: callWithResponseRequestKeyMapper,
         url: '/api/v{api-version}/response',
         ...options
     });
@@ -406,6 +325,7 @@ export const callWithResponse = <TComposable extends Composable = '$fetch', Defa
 
 export const callWithDuplicateResponses = <TComposable extends Composable = '$fetch', DefaultT extends CallWithDuplicateResponsesResponse = CallWithDuplicateResponsesResponse>(options: Options<TComposable, CallWithDuplicateResponsesData, CallWithDuplicateResponsesResponse, DefaultT>) => {
     return (options.client ?? client).post<TComposable, CallWithDuplicateResponsesResponse | DefaultT, CallWithDuplicateResponsesError, DefaultT>({
+        requestKeyMapper: callWithDuplicateResponsesRequestKeyMapper,
         url: '/api/v{api-version}/response',
         ...options
     });
@@ -413,6 +333,7 @@ export const callWithDuplicateResponses = <TComposable extends Composable = '$fe
 
 export const callWithResponses = <TComposable extends Composable = '$fetch', DefaultT extends CallWithResponsesResponse = CallWithResponsesResponse>(options: Options<TComposable, CallWithResponsesData, CallWithResponsesResponse, DefaultT>) => {
     return (options.client ?? client).put<TComposable, CallWithResponsesResponse | DefaultT, CallWithResponsesError, DefaultT>({
+        requestKeyMapper: callWithResponsesRequestKeyMapper,
         url: '/api/v{api-version}/response',
         ...options
     });
@@ -420,22 +341,7 @@ export const callWithResponses = <TComposable extends Composable = '$fetch', Def
 
 export const collectionFormat = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CollectionFormatData, unknown, DefaultT>) => {
     return (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        requestKeyMapper: options => {
-            if (options.query) {
-                if ('parameterArrayCsv' in options.query) {
-                    options.query.parameterArrayCSV = options.query.parameterArrayCsv;
-                    delete options.query.parameterArrayCsv;
-                }
-                if ('parameterArraySsv' in options.query) {
-                    options.query.parameterArraySSV = options.query.parameterArraySsv;
-                    delete options.query.parameterArraySsv;
-                }
-                if ('parameterArrayTsv' in options.query) {
-                    options.query.parameterArrayTSV = options.query.parameterArrayTsv;
-                    delete options.query.parameterArrayTsv;
-                }
-            }
-        },
+        requestKeyMapper: collectionFormatRequestKeyMapper,
         url: '/api/v{api-version}/collectionFormat',
         ...options
     });
@@ -443,6 +349,7 @@ export const collectionFormat = <TComposable extends Composable = '$fetch', Defa
 
 export const types = <TComposable extends Composable = '$fetch', DefaultT extends TypesResponse = TypesResponse>(options: Options<TComposable, TypesData, TypesResponse, DefaultT>) => {
     return (options.client ?? client).get<TComposable, TypesResponse | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: typesRequestKeyMapper,
         url: '/api/v{api-version}/types',
         ...options
     });
@@ -451,14 +358,7 @@ export const types = <TComposable extends Composable = '$fetch', DefaultT extend
 export const uploadFile = <TComposable extends Composable = '$fetch', DefaultT extends UploadFileResponse = UploadFileResponse>(options: Options<TComposable, UploadFileData, UploadFileResponse, DefaultT>) => {
     return (options.client ?? client).post<TComposable, UploadFileResponse | DefaultT, unknown, DefaultT>({
         ...urlSearchParamsBodySerializer,
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('apiVersion' in options.path) {
-                    options.path['api-version'] = options.path.apiVersion;
-                    delete options.path.apiVersion;
-                }
-            }
-        },
+        requestKeyMapper: uploadFileRequestKeyMapper,
         url: '/api/v{api-version}/upload',
         ...options,
         headers: {
@@ -470,14 +370,7 @@ export const uploadFile = <TComposable extends Composable = '$fetch', DefaultT e
 
 export const fileResponse = <TComposable extends Composable = '$fetch', DefaultT extends FileResponseResponse = FileResponseResponse>(options: Options<TComposable, FileResponseData, FileResponseResponse, DefaultT>) => {
     return (options.client ?? client).get<TComposable, FileResponseResponse | DefaultT, unknown, DefaultT>({
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('apiVersion' in options.path) {
-                    options.path['api-version'] = options.path.apiVersion;
-                    delete options.path.apiVersion;
-                }
-            }
-        },
+        requestKeyMapper: fileResponseRequestKeyMapper,
         url: '/api/v{api-version}/file/{id}',
         ...options
     });
@@ -485,6 +378,7 @@ export const fileResponse = <TComposable extends Composable = '$fetch', DefaultT
 
 export const complexTypes = <TComposable extends Composable = '$fetch', DefaultT extends ComplexTypesResponse = ComplexTypesResponse>(options: Options<TComposable, ComplexTypesData, ComplexTypesResponse, DefaultT>) => {
     return (options.client ?? client).get<TComposable, ComplexTypesResponse | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: complexTypesRequestKeyMapper,
         url: '/api/v{api-version}/complex',
         ...options
     });
@@ -492,6 +386,7 @@ export const complexTypes = <TComposable extends Composable = '$fetch', DefaultT
 
 export const multipartResponse = <TComposable extends Composable = '$fetch', DefaultT extends MultipartResponseResponse = MultipartResponseResponse>(options: Options<TComposable, MultipartResponseData, MultipartResponseResponse, DefaultT>) => {
     return (options.client ?? client).get<TComposable, MultipartResponseResponse | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: multipartResponseRequestKeyMapper,
         url: '/api/v{api-version}/multipart',
         ...options
     });
@@ -500,6 +395,7 @@ export const multipartResponse = <TComposable extends Composable = '$fetch', Def
 export const multipartRequest = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, MultipartRequestData, unknown, DefaultT>) => {
     return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
         ...formDataBodySerializer,
+        requestKeyMapper: multipartRequestRequestKeyMapper,
         url: '/api/v{api-version}/multipart',
         ...options,
         headers: {
@@ -511,22 +407,7 @@ export const multipartRequest = <TComposable extends Composable = '$fetch', Defa
 
 export const complexParams = <TComposable extends Composable = '$fetch', DefaultT extends ComplexParamsResponse = ComplexParamsResponse>(options: Options<TComposable, ComplexParamsData, ComplexParamsResponse, DefaultT>) => {
     return (options.client ?? client).put<TComposable, ComplexParamsResponse | DefaultT, unknown, DefaultT>({
-        requestKeyMapper: options => {
-            if (options.path) {
-                if ('apiVersion' in options.path) {
-                    options.path['api-version'] = options.path.apiVersion;
-                    delete options.path.apiVersion;
-                }
-            }
-            if (options.body) {
-                if ('parameters' in options.body && (typeof options.body.parameters === "object" && options.body.parameters !== null))
-                    if ('foo_bar-enum' in options.body.parameters)
-                        if ('fooBarEnum' in options.body.parameters['foo_bar-enum']) {
-                            options.body.parameters['foo_bar-enum']['foo_bar-enum'] = options.body.parameters['foo_bar-enum'].fooBarEnum;
-                            delete options.body.parameters['foo_bar-enum'].fooBarEnum;
-                        }
-            }
-        },
+        requestKeyMapper: complexParamsRequestKeyMapper,
         url: '/api/v{api-version}/complex/{id}',
         ...options,
         headers: {
@@ -538,6 +419,7 @@ export const complexParams = <TComposable extends Composable = '$fetch', Default
 
 export const callWithResultFromHeader = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallWithResultFromHeaderData, unknown, DefaultT>) => {
     return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: callWithResultFromHeaderRequestKeyMapper,
         url: '/api/v{api-version}/header',
         ...options
     });
@@ -545,6 +427,7 @@ export const callWithResultFromHeader = <TComposable extends Composable = '$fetc
 
 export const testErrorCode = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, TestErrorCodeData, unknown, DefaultT>) => {
     return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+        requestKeyMapper: testErrorCodeRequestKeyMapper,
         url: '/api/v{api-version}/error',
         ...options
     });
@@ -552,14 +435,7 @@ export const testErrorCode = <TComposable extends Composable = '$fetch', Default
 
 export const nonAsciiæøåÆøÅöôêÊ字符串 = <TComposable extends Composable = '$fetch', DefaultT extends NonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiæøåÆøÅöôêÊ字符串Response>(options: Options<TComposable, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultT>) => {
     return (options.client ?? client).post<TComposable, NonAsciiæøåÆøÅöôêÊ字符串Response | DefaultT, unknown, DefaultT>({
-        requestKeyMapper: options => {
-            if (options.query) {
-                if ('nonAsciiParamæøåÆøÅöôêÊ' in options.query) {
-                    options.query.nonAsciiParamæøåÆØÅöôêÊ = options.query.nonAsciiParamæøåÆøÅöôêÊ;
-                    delete options.query.nonAsciiParamæøåÆøÅöôêÊ;
-                }
-            }
-        },
+        requestKeyMapper: nonAsciiæøåÆøÅöôêÊ字符串RequestKeyMapper,
         url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
         ...options
     });
@@ -571,6 +447,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串 = <TComposable extends Compos
 export const putWithFormUrlEncoded = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PutWithFormUrlEncodedData, unknown, DefaultT>) => {
     return (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({
         ...urlSearchParamsBodySerializer,
+        requestKeyMapper: putWithFormUrlEncodedRequestKeyMapper,
         url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
         ...options,
         headers: {
