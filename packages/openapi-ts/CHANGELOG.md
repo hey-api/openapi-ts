@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.84.2
+
+### Patch Changes
+
+- fix(parser): add `propertiesRequiredByDefault` transform option ([#2678](https://github.com/hey-api/openapi-ts/pull/2678)) ([`9e59e07`](https://github.com/hey-api/openapi-ts/commit/9e59e07efa2bafec88e0af2935edac323b4e41dd)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(typescript): do not mark enums as types ([#2680](https://github.com/hey-api/openapi-ts/pull/2680)) ([`1cab011`](https://github.com/hey-api/openapi-ts/commit/1cab0115afa3a201acb4911dd552c1d5dd9ba9ac)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.84.1
 
 ### Patch Changes
