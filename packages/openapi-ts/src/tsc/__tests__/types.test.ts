@@ -63,4 +63,14 @@ describe('createRegularExpressionLiteral', () => {
 
     expect(result.text).toBe('//');
   });
+
+  it('should handle patterns with already correctly escaped slashes', () => {
+    const result = createRegularExpressionLiteral({
+      text: '^data:image\\/svg\\+xml;base64,[A-Za-z0-9+\\/]+=*$',
+    });
+
+    expect(result.text).toBe(
+      '/^data:image\\/svg\\+xml;base64,[A-Za-z0-9+\\/]+=*$/',
+    );
+  });
 });
