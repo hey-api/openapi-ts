@@ -1084,8 +1084,8 @@ export const createRegularExpressionLiteral = ({
   const patternContent =
     text.startsWith('/') && text.endsWith('/') ? text.slice(1, -1) : text;
 
-  // Escape forward slashes in the pattern content
-  const escapedPattern = patternContent.replace(/\//g, '\\/');
+  // Escape forward slashes in the pattern content, but only if they're not already escaped
+  const escapedPattern = patternContent.replace(/(?<!\\)\//g, '\\/');
 
   // Wrap with forward slashes
   const textWithSlashes = `/${escapedPattern}/`;
