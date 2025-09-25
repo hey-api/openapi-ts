@@ -3,13 +3,15 @@
 import { type _JSONValue, defineQueryOptions, type UseMutationOptions } from '@pinia/colada';
 
 import { client } from '../client.gen';
+import { serializeQueryKeyValue } from '../core/queryKeySerializer.gen';
 import { callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexTypes, deleteCallWithoutParametersAndResponse, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, fooWow, getCallWithoutParametersAndResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchApiVbyApiVersionNoTag, patchCallWithoutParametersAndResponse, postApiVbyApiVersionBody, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, serviceWithEmptyTag, testErrorCode, types } from '../sdk.gen';
 import type { CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseData, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexTypesData, DeleteCallWithoutParametersAndResponseData, DummyAData, DummyBData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, FooWowData, GetCallWithoutParametersAndResponseData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, ServiceWithEmptyTagData, TestErrorCodeData, TypesData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
-    Pick<TOptions, 'path'> & {
+    Pick<TOptions, 'baseUrl' | 'body' | 'path' | 'query'> & {
         _id: string;
         baseUrl?: _JSONValue;
+        body?: _JSONValue;
         query?: _JSONValue;
         tags?: _JSONValue;
     }
@@ -22,11 +24,20 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     if (tags) {
         params.tags = tags as unknown as _JSONValue;
     }
+    if (options?.body !== undefined) {
+        const normalizedBody = serializeQueryKeyValue(options.body);
+        if (normalizedBody !== undefined) {
+            params.body = normalizedBody;
+        }
+    }
     if (options?.path) {
         params.path = options.path;
     }
-    if (options?.query) {
-        params.query = options.query as unknown as _JSONValue;
+    if (options?.query !== undefined) {
+        const normalizedQuery = serializeQueryKeyValue(options.query);
+        if (normalizedQuery !== undefined) {
+            params.query = normalizedQuery;
+        }
     }
     return [
         params
