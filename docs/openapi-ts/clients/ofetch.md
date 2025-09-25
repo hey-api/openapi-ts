@@ -3,6 +3,11 @@ title: OFetch Client
 description: Generate a type-safe ofetch client from OpenAPI with the ofetch client for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
+<script setup lang="ts">
+import AuthorsList from '@components/AuthorsList.vue';
+import { dmitriyBrolnickij } from '@data/people.js';
+</script>
+
 # OFetch
 
 ### About
@@ -10,6 +15,10 @@ description: Generate a type-safe ofetch client from OpenAPI with the ofetch cli
 [`ofetch`](https://github.com/unjs/ofetch) is a better Fetch API that adds useful defaults and features such as automatic response parsing, request/response hooks, and it works in Node, browser, and workers.
 
 The `ofetch` client for Hey API generates a type-safe client from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
+
+### Collaborators
+
+<AuthorsList :people="[dmitriyBrolnickij]" />
 
 ## Features
 
