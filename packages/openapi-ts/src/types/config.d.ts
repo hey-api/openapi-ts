@@ -1,10 +1,13 @@
 import type { PluginConfigMap } from '../plugins/config';
 import type { Plugin, PluginNames } from '../plugins/types';
-import type { Input, Watch } from './input';
+import type { Input, InputPath, Watch } from './input';
 import type { Logs } from './logs';
 import type { Output, UserOutput } from './output';
 import type { Parser, UserParser } from './parser';
 
+export interface UserConfigMultiOutputs extends Omit<UserConfig, 'output'> {
+  output: string | UserOutput | ReadonlyArray<string | UserOutput>;
+}
 export interface UserConfig {
   /**
    * Path to the config file. Set this value if you don't use the default
@@ -28,15 +31,7 @@ export interface UserConfig {
    *
    * Alternatively, you can define a configuration object with more options.
    */
-  input:
-    | `https://get.heyapi.dev/${string}/${string}`
-    | `${string}/${string}`
-    | `readme:@${string}/${string}#${string}`
-    | `readme:${string}`
-    | `scalar:@${string}/${string}`
-    | (string & {})
-    | (Record<string, unknown> & { path?: never })
-    | Input;
+  input: InputPath | Input | ReadonlyArray<InputPath | Input>;
   /**
    * Show an interactive error reporting tool when the program crashes? You
    * generally want to keep this disabled (default).
@@ -51,7 +46,8 @@ export interface UserConfig {
    */
   logs?: string | Logs;
   /**
-   * Path to the output folder.
+   * Path to the output folder. You can define an array to generate
+   * multiple outputs from your input.
    */
   output: string | UserOutput;
   /**

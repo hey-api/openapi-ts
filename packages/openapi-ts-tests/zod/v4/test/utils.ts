@@ -24,7 +24,11 @@ export const createZodConfig =
       openApiVersion,
       typeof userConfig.input === 'string'
         ? userConfig.input
-        : (userConfig.input.path as string),
+        : userConfig.input instanceof Array
+          ? typeof userConfig.input[0] === 'string'
+            ? (userConfig.input[0] as string)
+            : (userConfig.input[0] as any)?.path || ''
+          : (userConfig.input as any).path,
     );
     return {
       plugins: [

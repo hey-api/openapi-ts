@@ -1,3 +1,12 @@
+export type InputPath =
+  | `https://get.heyapi.dev/${string}/${string}`
+  | `${string}/${string}`
+  | `readme:@${string}/${string}#${string}`
+  | `readme:${string}`
+  | `scalar:@${string}/${string}`
+  | (string & {})
+  | Record<string, unknown>;
+
 export type Input = {
   /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
@@ -44,14 +53,7 @@ export type Input = {
    * Both JSON and YAML file formats are supported. You can also pass the parsed
    * object directly if you're fetching the file yourself.
    */
-  path?:
-    | `https://get.heyapi.dev/${string}/${string}`
-    | `${string}/${string}`
-    | `readme:@${string}/${string}#${string}`
-    | `readme:${string}`
-    | `scalar:@${string}/${string}`
-    | (string & {})
-    | Record<string, unknown>;
+  path?: InputPath;
   /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
    *
