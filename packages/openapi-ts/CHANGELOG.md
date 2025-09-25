@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.84.3
+
+### Patch Changes
+
+- fix(validators): escaping slashes in regular expressions ([#2692](https://github.com/hey-api/openapi-ts/pull/2692)) ([`dba81bc`](https://github.com/hey-api/openapi-ts/commit/dba81bc23a7cb72696cd1fcf4fe1a17f00027fae)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.84.2
 
 ### Patch Changes
