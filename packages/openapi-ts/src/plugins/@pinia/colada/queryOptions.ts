@@ -15,11 +15,11 @@ import {
   queryKeyStatement,
 } from './queryKey';
 import type { PiniaColadaPlugin } from './types';
-import { useTypeData, useTypeError, useTypeResponse } from './useType';
+import { useTypeData } from './useType';
 import { getPublicTypeData } from './utils';
 
-const fnOptions = 'context';
 const optionsParamName = 'options';
+const fnOptions = 'context';
 
 export const createQueryOptions = ({
   operation,
@@ -38,38 +38,56 @@ export const createQueryOptions = ({
     context: plugin.context,
     operation,
   });
-
   if (!plugin.getSymbol(plugin.api.getSelector('createQueryKey'))) {
     createQueryKeyType({ plugin });
     createQueryKeyFunction({ plugin });
   }
 
-  const symbolUseQueryOptions = plugin.referenceSymbol(
-    plugin.api.getSelector('UseQueryOptions'),
-  );
-
-  const symbolQueryKey = plugin.registerSymbol({
-    exported: true,
-    name: buildName({
-      config: plugin.config.queryKeys,
-      name: operation.id,
-    }),
-  });
-  const node = queryKeyStatement({
-    operation,
-    plugin,
-    symbol: symbolQueryKey,
-  });
-  plugin.setSymbolValue(symbolQueryKey, node);
+  let keyExpression: ts.Expression;
+  if (plugin.config.queryKeys.enabled) {
+    const symbolQueryKey = plugin.registerSymbol({
+      exported: true,
+      name: buildName({
+        config: plugin.config.queryKeys,
+        name: operation.id,
+      }),
+    });
+    const node = queryKeyStatement({
+      operation,
+      plugin,
+      symbol: symbolQueryKey,
+    });
+    plugin.setSymbolValue(symbolQueryKey, node);
+    keyExpression = tsc.callExpression({
+      functionName: symbolQueryKey.placeholder,
+      parameters: [optionsParamName],
+    });
+  } else {
+    const symbolCreateQueryKey = plugin.referenceSymbol(
+      plugin.api.getSelector('createQueryKey'),
+    );
+    // Optionally include tags when configured
+    let tagsExpr: ts.Expression | undefined;
+    if (
+      plugin.config.queryKeys.tags &&
+      operation.tags &&
+      operation.tags.length > 0
+    ) {
+      tagsExpr = tsc.arrayLiteralExpression({
+        elements: operation.tags.map((t) => tsc.stringLiteral({ text: t })),
+      });
+    }
+    keyExpression = tsc.callExpression({
+      functionName: symbolCreateQueryKey.placeholder,
+      parameters: [tsc.ots.string(operation.id), optionsParamName, tagsExpr],
+    });
+  }
 
   const typeData = useTypeData({ operation, plugin });
-  const typeError = useTypeError({ operation, plugin });
-  const typeResponse = useTypeResponse({ operation, plugin });
-  const { isNuxtClient, strippedTypeData } = getPublicTypeData({
+  const { strippedTypeData } = getPublicTypeData({
     plugin,
     typeData,
   });
-
   const awaitSdkExpression = tsc.awaitExpression({
     expression: tsc.callExpression({
       functionName: queryFn,
@@ -77,16 +95,9 @@ export const createQueryOptions = ({
         tsc.objectExpression({
           multiLine: true,
           obj: [
-            {
-              spread: optionsParamName,
-            },
-            {
-              spread: fnOptions,
-            },
-            {
-              key: 'throwOnError',
-              value: true,
-            },
+            { spread: optionsParamName },
+            { spread: fnOptions },
+            { key: 'throwOnError', value: true },
           ],
         }),
       ],
@@ -94,7 +105,6 @@ export const createQueryOptions = ({
   });
 
   const statements: Array<ts.Statement> = [];
-
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push(
       tsc.returnVariable({
@@ -117,31 +127,20 @@ export const createQueryOptions = ({
   const queryOptionsObj: Array<{ key: string; value: ts.Expression }> = [
     {
       key: 'key',
-      value: tsc.callExpression({
-        functionName: symbolQueryKey.placeholder,
-        parameters: [optionsParamName],
-      }),
+      value: keyExpression,
     },
     {
       key: 'query',
       value: tsc.arrowFunction({
         async: true,
         multiLine: true,
-        parameters: [
-          isNuxtClient
-            ? {
-                name: fnOptions,
-                type: strippedTypeData,
-              }
-            : { name: fnOptions },
-        ],
+        parameters: [{ name: fnOptions }],
         statements,
       }),
     },
   ];
 
   const meta = handleMeta(plugin, operation, 'queryOptions');
-
   if (meta) {
     queryOptionsObj.push({
       key: 'meta',
@@ -157,28 +156,28 @@ export const createQueryOptions = ({
     }),
     selector: plugin.api.getSelector('queryOptionsFn', operation.id),
   });
+  const symbolDefineQueryOptions = plugin.registerSymbol({
+    external: plugin.name,
+    name: 'defineQueryOptions',
+    selector: plugin.api.getSelector('defineQueryOptions'),
+  });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })
       : undefined,
     exportConst: symbolQueryOptionsFn.exported,
-    expression: tsc.arrowFunction({
+    expression: tsc.callExpression({
+      functionName: symbolDefineQueryOptions.placeholder,
       parameters: [
-        {
-          isRequired: isRequiredOptions,
-          name: optionsParamName,
-          type: strippedTypeData,
-        },
-      ],
-      // TODO: better types syntax
-      returnType: isNuxtClient
-        ? `${symbolUseQueryOptions.placeholder}<${typeResponse}, ${strippedTypeData}, ${typeError}>`
-        : `${symbolUseQueryOptions.placeholder}<${typeResponse}, ${typeError}>`,
-      statements: [
-        tsc.returnStatement({
-          expression: tsc.objectExpression({
-            obj: queryOptionsObj,
-          }),
+        tsc.arrowFunction({
+          parameters: [
+            {
+              isRequired: isRequiredOptions,
+              name: optionsParamName,
+              type: strippedTypeData,
+            },
+          ],
+          statements: tsc.objectExpression({ obj: queryOptionsObj }),
         }),
       ],
     }),

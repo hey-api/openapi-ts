@@ -22,6 +22,7 @@ export const createQueryKeyFunction = ({
 }: {
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
+  const coreModule = '../core/queryKeySerializer.gen';
   const symbolCreateQueryKey = plugin.registerSymbol({
     name: buildName({
       config: {
@@ -34,6 +35,10 @@ export const createQueryKeyFunction = ({
   const symbolQueryKeyType = plugin.referenceSymbol(
     plugin.api.getSelector('QueryKey'),
   );
+  const symbolSerializeQueryValue = plugin.registerSymbol({
+    external: coreModule,
+    name: 'serializeQueryKeyValue',
+  });
 
   const returnType = tsc.indexedAccessTypeNode({
     indexType: tsc.literalTypeNode({
@@ -47,10 +52,6 @@ export const createQueryKeyFunction = ({
 
   const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
 
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.getSelector('Options'),
-  );
   const client = getClientPlugin(plugin.context.config);
   const symbolClient =
     client.api && 'getSelector' in client.api
@@ -59,6 +60,14 @@ export const createQueryKeyFunction = ({
           client.api.getSelector('client'),
         )
       : undefined;
+
+  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
+  const symbolOptions = plugin.referenceSymbol(
+    sdkPlugin.api.getSelector('Options'),
+  );
+  const symbolJsonValue = plugin.referenceSymbol(
+    plugin.api.getSelector('_JSONValue'),
+  );
 
   const fn = tsc.constVariable({
     expression: tsc.arrowFunction({
@@ -88,10 +97,7 @@ export const createQueryKeyFunction = ({
           expression: tsc.objectExpression({
             multiLine: false,
             obj: [
-              {
-                key: '_id',
-                value: tsc.identifier({ text: 'id' }),
-              },
+              { key: '_id', value: tsc.identifier({ text: 'id' }) },
               {
                 key: baseUrlKey,
                 value: tsc.identifier({
@@ -118,60 +124,57 @@ export const createQueryKeyFunction = ({
                       expression: tsc.identifier({ text: 'tags' }),
                       type: tsc.keywordTypeNode({ keyword: 'unknown' }),
                     }),
-                    type: tsc.keywordTypeNode({ keyword: 'undefined' }),
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-        tsc.ifStatement({
-          expression: tsc.propertyAccessExpression({
-            expression: optionsIdentifier,
-            isOptional: true,
-            name: tsc.identifier({ text: 'body' }),
-          }),
-          thenStatement: tsc.block({
-            statements: [
-              tsc.expressionToStatement({
-                expression: tsc.binaryExpression({
-                  left: tsc.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'body',
-                  }),
-                  right: tsc.propertyAccessExpression({
-                    expression: 'options',
-                    name: 'body',
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-        tsc.ifStatement({
-          expression: tsc.propertyAccessExpression({
-            expression: optionsIdentifier,
-            isOptional: true,
-            name: tsc.identifier({ text: 'headers' }),
-          }),
-          thenStatement: tsc.block({
-            statements: [
-              tsc.expressionToStatement({
-                expression: tsc.binaryExpression({
-                  left: tsc.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'headers',
-                  }),
-                  right: tsc.asExpression({
-                    expression: tsc.asExpression({
-                      expression: tsc.propertyAccessExpression({
-                        expression: 'options',
-                        name: 'headers',
-                      }),
-                      type: tsc.keywordTypeNode({ keyword: 'unknown' }),
+                    type: tsc.typeReferenceNode({
+                      typeName: symbolJsonValue.placeholder,
                     }),
-                    type: tsc.keywordTypeNode({ keyword: 'undefined' }),
                   }),
+                }),
+              }),
+            ],
+          }),
+        }),
+        tsc.ifStatement({
+          expression: tsc.binaryExpression({
+            left: tsc.propertyAccessExpression({
+              expression: optionsIdentifier,
+              isOptional: true,
+              name: tsc.identifier({ text: 'body' }),
+            }),
+            operator: '!==',
+            right: 'undefined',
+          }),
+          thenStatement: tsc.block({
+            statements: [
+              tsc.constVariable({
+                expression: tsc.callExpression({
+                  functionName: symbolSerializeQueryValue.placeholder,
+                  parameters: [
+                    tsc.propertyAccessExpression({
+                      expression: 'options',
+                      name: 'body',
+                    }),
+                  ],
+                }),
+                name: 'normalizedBody',
+              }),
+              tsc.ifStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.identifier({ text: 'normalizedBody' }),
+                  operator: '!==',
+                  right: 'undefined',
+                }),
+                thenStatement: tsc.block({
+                  statements: [
+                    tsc.expressionToStatement({
+                      expression: tsc.binaryExpression({
+                        left: tsc.propertyAccessExpression({
+                          expression: 'params',
+                          name: 'body',
+                        }),
+                        right: tsc.identifier({ text: 'normalizedBody' }),
+                      }),
+                    }),
+                  ],
                 }),
               }),
             ],
@@ -201,29 +204,47 @@ export const createQueryKeyFunction = ({
           }),
         }),
         tsc.ifStatement({
-          expression: tsc.propertyAccessExpression({
-            expression: optionsIdentifier,
-            isOptional: true,
-            name: tsc.identifier({ text: 'query' }),
+          expression: tsc.binaryExpression({
+            left: tsc.propertyAccessExpression({
+              expression: optionsIdentifier,
+              isOptional: true,
+              name: tsc.identifier({ text: 'query' }),
+            }),
+            operator: '!==',
+            right: 'undefined',
           }),
           thenStatement: tsc.block({
             statements: [
-              tsc.expressionToStatement({
-                expression: tsc.binaryExpression({
-                  left: tsc.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'query',
-                  }),
-                  right: tsc.asExpression({
-                    expression: tsc.asExpression({
-                      expression: tsc.propertyAccessExpression({
-                        expression: 'options',
-                        name: 'query',
-                      }),
-                      type: tsc.keywordTypeNode({ keyword: 'unknown' }),
+              tsc.constVariable({
+                expression: tsc.callExpression({
+                  functionName: symbolSerializeQueryValue.placeholder,
+                  parameters: [
+                    tsc.propertyAccessExpression({
+                      expression: 'options',
+                      name: 'query',
                     }),
-                    type: tsc.keywordTypeNode({ keyword: 'undefined' }),
-                  }),
+                  ],
+                }),
+                name: 'normalizedQuery',
+              }),
+              tsc.ifStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.identifier({ text: 'normalizedQuery' }),
+                  operator: '!==',
+                  right: 'undefined',
+                }),
+                thenStatement: tsc.block({
+                  statements: [
+                    tsc.expressionToStatement({
+                      expression: tsc.binaryExpression({
+                        left: tsc.propertyAccessExpression({
+                          expression: 'params',
+                          name: 'query',
+                        }),
+                        right: tsc.identifier({ text: 'normalizedQuery' }),
+                      }),
+                    }),
+                  ],
                 }),
               }),
             ],
@@ -286,10 +307,7 @@ export const createQueryKeyType = ({
   );
 
   const properties: Array<Property> = [
-    {
-      name: '_id',
-      type: tsc.keywordTypeNode({ keyword: 'string' }),
-    },
+    { name: '_id', type: tsc.keywordTypeNode({ keyword: 'string' }) },
     {
       isRequired: false,
       name: getClientBaseUrlKey(plugin.context.config),
@@ -297,7 +315,7 @@ export const createQueryKeyType = ({
     },
     {
       isRequired: false,
-      name: 'headers',
+      name: 'body',
       type: tsc.typeReferenceNode({ typeName: symbolJsonValue.placeholder }),
     },
     {
@@ -318,9 +336,7 @@ export const createQueryKeyType = ({
   );
   const symbolQueryKeyType = plugin.registerSymbol({
     exported: true,
-    meta: {
-      kind: 'type',
-    },
+    meta: { kind: 'type' },
     name: 'QueryKey',
     selector: plugin.api.getSelector('QueryKey'),
   });
@@ -332,7 +348,7 @@ export const createQueryKeyType = ({
         tsc.typeIntersectionNode({
           types: [
             tsc.typeReferenceNode({
-              typeName: `Pick<${TOptionsType}, 'body' | 'path'>`,
+              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(plugin.context.config)}' | 'body' | 'path' | 'query'>`,
             }),
             tsc.typeInterfaceNode({
               properties,
