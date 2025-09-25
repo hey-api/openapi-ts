@@ -2,4 +2,4 @@
 
 export * from './@pinia/colada.gen'
 export * from './sdk.gen'
-export * from './types.gen'
+export type * from './types.gen'
