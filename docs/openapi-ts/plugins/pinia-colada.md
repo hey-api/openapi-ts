@@ -7,7 +7,7 @@ description: Generate Pinia Colada v0 functions and query keys from OpenAPI with
 import AuthorsList from '@components/AuthorsList.vue';
 import Heading from '@components/Heading.vue';
 import VersionLabel from '@components/VersionLabel.vue';
-import { joshHemphill, sebastiaanWouters } from '@data/people.js';
+import { joshHemphill, sebastiaanWouters, dmitriyBrolnickij } from '@data/people.js';
 </script>
 
 <Heading>
@@ -23,7 +23,7 @@ The Pinia Colada plugin for Hey API generates functions and query keys from your
 
 ### Collaborators
 
-<AuthorsList :people="[joshHemphill, sebastiaanWouters]" />
+<AuthorsList :people="[joshHemphill, sebastiaanWouters, dmitriyBrolnickij]" />
 
 ## Features
 
