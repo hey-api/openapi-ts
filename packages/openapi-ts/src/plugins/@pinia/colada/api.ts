@@ -6,6 +6,7 @@ type SelectorType =
   | '_JSONValue'
   | 'AxiosError'
   | 'createQueryKey'
+  | 'serializeQueryKeyValue'
   | 'defineQueryOptions'
   | 'queryOptionsFn'
   | 'QueryKey'
@@ -19,6 +20,7 @@ export type IApi = {
    *  - `_JSONValue`: never
    *  - `AxiosError`: never
    *  - `createQueryKey`: never
+   *  - `serializeQueryKeyValue`: never
    *  - `defineQueryOptions`: never
    *  - `queryOptionsFn`: `operation.id` string
    *  - `QueryKey`: never

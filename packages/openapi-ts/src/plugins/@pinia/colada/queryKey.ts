@@ -22,6 +22,7 @@ export const createQueryKeyFunction = ({
 }: {
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
+  const coreModule = '../core/queryKeySerializer.gen';
   const symbolCreateQueryKey = plugin.registerSymbol({
     name: buildName({
       config: {
@@ -34,6 +35,10 @@ export const createQueryKeyFunction = ({
   const symbolQueryKeyType = plugin.referenceSymbol(
     plugin.api.getSelector('QueryKey'),
   );
+  const symbolSerializeQueryValue = plugin.registerSymbol({
+    external: coreModule,
+    name: 'serializeQueryKeyValue',
+  });
 
   const returnType = tsc.indexedAccessTypeNode({
     indexType: tsc.literalTypeNode({
@@ -129,6 +134,53 @@ export const createQueryKeyFunction = ({
           }),
         }),
         tsc.ifStatement({
+          expression: tsc.binaryExpression({
+            left: tsc.propertyAccessExpression({
+              expression: optionsIdentifier,
+              isOptional: true,
+              name: tsc.identifier({ text: 'body' }),
+            }),
+            operator: '!==',
+            right: 'undefined',
+          }),
+          thenStatement: tsc.block({
+            statements: [
+              tsc.constVariable({
+                expression: tsc.callExpression({
+                  functionName: symbolSerializeQueryValue.placeholder,
+                  parameters: [
+                    tsc.propertyAccessExpression({
+                      expression: 'options',
+                      name: 'body',
+                    }),
+                  ],
+                }),
+                name: 'normalizedBody',
+              }),
+              tsc.ifStatement({
+                expression: tsc.binaryExpression({
+                  left: tsc.identifier({ text: 'normalizedBody' }),
+                  operator: '!==',
+                  right: 'undefined',
+                }),
+                thenStatement: tsc.block({
+                  statements: [
+                    tsc.expressionToStatement({
+                      expression: tsc.binaryExpression({
+                        left: tsc.propertyAccessExpression({
+                          expression: 'params',
+                          name: 'body',
+                        }),
+                        right: tsc.identifier({ text: 'normalizedBody' }),
+                      }),
+                    }),
+                  ],
+                }),
+              }),
+            ],
+          }),
+        }),
+        tsc.ifStatement({
           expression: tsc.propertyAccessExpression({
             expression: optionsIdentifier,
             isOptional: true,
@@ -152,31 +204,47 @@ export const createQueryKeyFunction = ({
           }),
         }),
         tsc.ifStatement({
-          expression: tsc.propertyAccessExpression({
-            expression: optionsIdentifier,
-            isOptional: true,
-            name: tsc.identifier({ text: 'query' }),
+          expression: tsc.binaryExpression({
+            left: tsc.propertyAccessExpression({
+              expression: optionsIdentifier,
+              isOptional: true,
+              name: tsc.identifier({ text: 'query' }),
+            }),
+            operator: '!==',
+            right: 'undefined',
           }),
           thenStatement: tsc.block({
             statements: [
-              tsc.expressionToStatement({
+              tsc.constVariable({
+                expression: tsc.callExpression({
+                  functionName: symbolSerializeQueryValue.placeholder,
+                  parameters: [
+                    tsc.propertyAccessExpression({
+                      expression: 'options',
+                      name: 'query',
+                    }),
+                  ],
+                }),
+                name: 'normalizedQuery',
+              }),
+              tsc.ifStatement({
                 expression: tsc.binaryExpression({
-                  left: tsc.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'query',
-                  }),
-                  right: tsc.asExpression({
-                    expression: tsc.asExpression({
-                      expression: tsc.propertyAccessExpression({
-                        expression: 'options',
-                        name: 'query',
+                  left: tsc.identifier({ text: 'normalizedQuery' }),
+                  operator: '!==',
+                  right: 'undefined',
+                }),
+                thenStatement: tsc.block({
+                  statements: [
+                    tsc.expressionToStatement({
+                      expression: tsc.binaryExpression({
+                        left: tsc.propertyAccessExpression({
+                          expression: 'params',
+                          name: 'query',
+                        }),
+                        right: tsc.identifier({ text: 'normalizedQuery' }),
                       }),
-                      type: tsc.keywordTypeNode({ keyword: 'unknown' }),
                     }),
-                    type: tsc.typeReferenceNode({
-                      typeName: symbolJsonValue.placeholder,
-                    }),
-                  }),
+                  ],
                 }),
               }),
             ],
@@ -247,6 +315,11 @@ export const createQueryKeyType = ({
     },
     {
       isRequired: false,
+      name: 'body',
+      type: tsc.typeReferenceNode({ typeName: symbolJsonValue.placeholder }),
+    },
+    {
+      isRequired: false,
       name: 'query',
       type: tsc.typeReferenceNode({ typeName: symbolJsonValue.placeholder }),
     },
@@ -275,7 +348,7 @@ export const createQueryKeyType = ({
         tsc.typeIntersectionNode({
           types: [
             tsc.typeReferenceNode({
-              typeName: `Pick<${TOptionsType}, 'path'>`,
+              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(plugin.context.config)}' | 'body' | 'path' | 'query'>`,
             }),
             tsc.typeInterfaceNode({
               properties,
