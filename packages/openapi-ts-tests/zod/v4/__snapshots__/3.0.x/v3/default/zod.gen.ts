@@ -171,8 +171,10 @@ export const zArrayWithArray = z.array(z.array(zModelWithString));
 /**
  * This is a simple array with properties
  */
-export const zArrayWithProperties = z.array(z.object({
-    '16x16': zCamelCaseCommentWithBreaks.optional(),
+export const zArrayWithProperties: z.ZodTypeAny = z.array(z.object({
+    get '16x16'() {
+        return zCamelCaseCommentWithBreaks.optional();
+    },
     bar: z.string().optional()
 }));
 
@@ -357,7 +359,7 @@ export const zModelWithNestedEnums = z.object({
 /**
  * This is a model with one nested property
  */
-export const zModelWithProperties = z.object({
+export const zModelWithProperties: z.AnyZodObject = z.object({
     required: z.string(),
     requiredAndReadOnly: z.string().readonly(),
     requiredAndNullable: z.union([
@@ -367,7 +369,9 @@ export const zModelWithProperties = z.object({
     string: z.string().optional(),
     number: z.number().optional(),
     boolean: z.boolean().optional(),
-    reference: zModelWithString.optional(),
+    get reference() {
+        return zModelWithString.optional();
+    },
     'property with space': z.string().optional(),
     default: z.string().optional(),
     try: z.string().optional(),
@@ -378,8 +382,10 @@ export const zModelWithProperties = z.object({
 /**
  * This is a model with one property containing a reference
  */
-export const zModelWithReference = z.object({
-    prop: zModelWithProperties.optional()
+export const zModelWithReference: z.AnyZodObject = z.object({
+    get prop() {
+        return zModelWithProperties.optional();
+    }
 });
 
 export const zModelWithReadOnlyAndWriteOnly = z.object({
@@ -390,8 +396,10 @@ export const zModelWithReadOnlyAndWriteOnly = z.object({
 /**
  * This is a model with one property containing an array
  */
-export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
-    prop: z.array(zModelWithReadOnlyAndWriteOnly).optional(),
+export const zModelWithArrayReadOnlyAndWriteOnly: z.AnyZodObject = z.object({
+    get prop() {
+        return z.array(zModelWithReadOnlyAndWriteOnly).optional();
+    },
     propWithFile: z.array(z.string()).optional(),
     propWithNumber: z.array(z.number()).optional()
 });
@@ -399,8 +407,10 @@ export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
 /**
  * This is a model with one property containing an array
  */
-export const zModelWithArray = z.object({
-    prop: z.array(zModelWithString).optional(),
+export const zModelWithArray: z.AnyZodObject = z.object({
+    get prop() {
+        return z.array(zModelWithString).optional();
+    },
     propWithFile: z.array(z.string()).optional(),
     propWithNumber: z.array(z.number()).optional()
 });
@@ -424,9 +434,11 @@ export const zDeprecatedModel = z.object({
  * This is a model with one property containing a circular reference
  */
 export const zModelWithCircularReference: z.AnyZodObject = z.object({
-    prop: z.lazy(() => {
-        return zModelWithCircularReference;
-    }).optional()
+    get prop(): z.ZodTypeAny {
+        return z.lazy(() => {
+            return zModelWithCircularReference;
+        }).optional();
+    }
 });
 
 /**
@@ -660,8 +672,10 @@ export const zModelWithNestedProperties = z.object({
 /**
  * This is a model with duplicated properties
  */
-export const zModelWithDuplicateProperties = z.object({
-    prop: zModelWithString.optional()
+export const zModelWithDuplicateProperties: z.AnyZodObject = z.object({
+    get prop() {
+        return zModelWithString.optional();
+    }
 });
 
 /**
@@ -676,26 +690,36 @@ export const zModelWithOrderedProperties = z.object({
 /**
  * This is a model with duplicated imports
  */
-export const zModelWithDuplicateImports = z.object({
-    propA: zModelWithString.optional(),
-    propB: zModelWithString.optional(),
-    propC: zModelWithString.optional()
+export const zModelWithDuplicateImports: z.AnyZodObject = z.object({
+    get propA() {
+        return zModelWithString.optional();
+    },
+    get propB() {
+        return zModelWithString.optional();
+    },
+    get propC() {
+        return zModelWithString.optional();
+    }
 });
 
 /**
  * This is a model that extends another model
  */
-export const zModelThatExtends = zModelWithString.and(z.object({
+export const zModelThatExtends: z.ZodTypeAny = zModelWithString.and(z.object({
     propExtendsA: z.string().optional(),
-    propExtendsB: zModelWithString.optional()
+    get propExtendsB() {
+        return zModelWithString.optional();
+    }
 }));
 
 /**
  * This is a model that extends another model
  */
-export const zModelThatExtendsExtends = zModelWithString.and(zModelThatExtends).and(z.object({
+export const zModelThatExtendsExtends: z.ZodTypeAny = zModelWithString.and(zModelThatExtends).and(z.object({
     propExtendsC: z.string().optional(),
-    propExtendsD: zModelWithString.optional()
+    get propExtendsD() {
+        return zModelWithString.optional();
+    }
 }));
 
 /**
@@ -779,12 +803,16 @@ export const zNestedAnyOfArraysNullable = z.object({
  */
 export const zSimpleParameter = z.unknown();
 
-export const zCompositionWithOneOfAndProperties = z.intersection(z.union([
+export const zCompositionWithOneOfAndProperties: z.ZodTypeAny = z.intersection(z.union([
     z.object({
-        foo: zSimpleParameter
+        get foo() {
+            return zSimpleParameter;
+        }
     }),
     z.object({
-        bar: zNonAsciiStringæøåÆøÅöôêÊ字符串
+        get bar() {
+            return zNonAsciiStringæøåÆøÅöôêÊ字符串;
+        }
     })
 ]), z.object({
     baz: z.union([
@@ -809,8 +837,10 @@ export const zNullableObject = z.union([
  */
 export const zCharactersInDescription = z.string();
 
-export const zModelWithNullableObject = z.object({
-    data: zNullableObject.optional()
+export const zModelWithNullableObject: z.AnyZodObject = z.object({
+    get data() {
+        return zNullableObject.optional();
+    }
 });
 
 export const zModelWithOneOfEnum = z.union([
@@ -856,18 +886,26 @@ export const zModelWithNestedArrayEnumsDataBar = z.enum([
     'qux'
 ]);
 
-export const zModelWithNestedArrayEnumsData = z.object({
-    foo: z.array(zModelWithNestedArrayEnumsDataFoo).optional(),
-    bar: z.array(zModelWithNestedArrayEnumsDataBar).optional()
+export const zModelWithNestedArrayEnumsData: z.AnyZodObject = z.object({
+    get foo() {
+        return z.array(zModelWithNestedArrayEnumsDataFoo).optional();
+    },
+    get bar() {
+        return z.array(zModelWithNestedArrayEnumsDataBar).optional();
+    }
 });
 
-export const zModelWithNestedArrayEnums = z.object({
+export const zModelWithNestedArrayEnums: z.AnyZodObject = z.object({
     array_strings: z.array(z.string()).optional(),
-    data: zModelWithNestedArrayEnumsData.optional()
+    get data() {
+        return zModelWithNestedArrayEnumsData.optional();
+    }
 });
 
-export const zModelWithNestedCompositionEnums = z.object({
-    foo: zModelWithNestedArrayEnumsDataFoo.optional()
+export const zModelWithNestedCompositionEnums: z.AnyZodObject = z.object({
+    get foo() {
+        return zModelWithNestedArrayEnumsDataFoo.optional();
+    }
 });
 
 export const zModelWithConstantSizeArray = z.tuple([
@@ -1015,8 +1053,10 @@ export const zIoK8sApimachineryPkgApisMetaV1Preconditions = z.object({
 /**
  * This schema was giving PascalCase transformations a hard time
  */
-export const zIoK8sApimachineryPkgApisMetaV1DeleteOptions = z.object({
-    preconditions: zIoK8sApimachineryPkgApisMetaV1Preconditions.optional()
+export const zIoK8sApimachineryPkgApisMetaV1DeleteOptions: z.AnyZodObject = z.object({
+    get preconditions() {
+        return zIoK8sApimachineryPkgApisMetaV1Preconditions.optional();
+    }
 });
 
 export const zAdditionalPropertiesUnknownIssue = z.record(z.union([
@@ -1070,7 +1110,7 @@ export const zOneOfAllOfIssue = z.union([
 /**
  * This is a model with one nested property
  */
-export const zModelWithPropertiesWritable = z.object({
+export const zModelWithPropertiesWritable: z.AnyZodObject = z.object({
     required: z.string(),
     requiredAndNullable: z.union([
         z.string(),
@@ -1079,7 +1119,9 @@ export const zModelWithPropertiesWritable = z.object({
     string: z.string().optional(),
     number: z.number().optional(),
     boolean: z.boolean().optional(),
-    reference: zModelWithString.optional(),
+    get reference() {
+        return zModelWithString.optional();
+    },
     'property with space': z.string().optional(),
     default: z.string().optional(),
     try: z.string().optional()
@@ -1239,7 +1281,7 @@ export const zPutCallWithoutParametersAndResponseData = z.object({
     query: z.never().optional()
 });
 
-export const zDeleteFooData3 = z.object({
+export const zDeleteFooData3: z.AnyZodObject = z.object({
     body: z.never().optional(),
     path: z.object({
         foo_param: z.string(),
@@ -1247,7 +1289,9 @@ export const zDeleteFooData3 = z.object({
     }),
     query: z.never().optional(),
     headers: z.object({
-        'x-Foo-Bar': zModelWithString
+        get 'x-Foo-Bar'() {
+            return zModelWithString;
+        }
     })
 });
 
@@ -1276,7 +1320,7 @@ export const zDeprecatedCallData = z.object({
     })
 });
 
-export const zCallWithParametersData = z.object({
+export const zCallWithParametersData: z.AnyZodObject = z.object({
     body: z.union([
         z.record(z.unknown()),
         z.null()
@@ -1292,8 +1336,12 @@ export const zCallWithParametersData = z.object({
         ])
     }),
     query: z.object({
-        foo_ref_enum: zModelWithNestedArrayEnumsDataFoo.optional(),
-        foo_all_of_enum: zModelWithNestedArrayEnumsDataFoo,
+        get foo_ref_enum() {
+            return zModelWithNestedArrayEnumsDataFoo.optional();
+        },
+        get foo_all_of_enum() {
+            return zModelWithNestedArrayEnumsDataFoo;
+        },
         cursor: z.union([
             z.string(),
             z.null()
@@ -1336,15 +1384,17 @@ export const zCallWithWeirdParameterNamesData = z.object({
     })
 });
 
-export const zGetCallWithOptionalParamData = z.object({
-    body: zModelWithOneOfEnum,
+export const zGetCallWithOptionalParamData: z.AnyZodObject = z.object({
+    get body() {
+        return zModelWithOneOfEnum;
+    },
     path: z.never().optional(),
     query: z.object({
         page: z.number().optional()
     }).optional()
 });
 
-export const zPostCallWithOptionalParamData = z.object({
+export const zPostCallWithOptionalParamData: z.AnyZodObject = z.object({
     body: z.object({
         offset: z.union([
             z.number(),
@@ -1353,7 +1403,9 @@ export const zPostCallWithOptionalParamData = z.object({
     }).optional(),
     path: z.never().optional(),
     query: z.object({
-        parameter: zPageable
+        get parameter() {
+            return zPageable;
+        }
     })
 });
 
@@ -1362,16 +1414,20 @@ export const zPostCallWithOptionalParamResponse = z.union([
     z.void()
 ]);
 
-export const zPostApiVbyApiVersionRequestBodyData = z.object({
-    body: zSimpleRequestBody.optional(),
+export const zPostApiVbyApiVersionRequestBodyData: z.AnyZodObject = z.object({
+    get body() {
+        return zSimpleRequestBody.optional();
+    },
     path: z.never().optional(),
     query: z.object({
         parameter: z.string().optional()
     }).optional()
 });
 
-export const zPostApiVbyApiVersionFormDataData = z.object({
-    body: zSimpleFormData.optional(),
+export const zPostApiVbyApiVersionFormDataData: z.AnyZodObject = z.object({
+    get body() {
+        return zSimpleFormData.optional();
+    },
     path: z.never().optional(),
     query: z.object({
         parameter: z.string().optional()
@@ -1406,7 +1462,7 @@ export const zCallWithDefaultParametersData = z.object({
     }).optional()
 });
 
-export const zCallWithDefaultOptionalParametersData = z.object({
+export const zCallWithDefaultOptionalParametersData: z.AnyZodObject = z.object({
     body: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
@@ -1418,7 +1474,9 @@ export const zCallWithDefaultOptionalParametersData = z.object({
             'Warning',
             'Error'
         ]).optional(),
-        parameterModel: zModelWithString.optional()
+        get parameterModel() {
+            return zModelWithString.optional();
+        }
     }).optional()
 });
 
@@ -1533,11 +1591,13 @@ export const zCallWithResponsesData = z.object({
     query: z.never().optional()
 });
 
-export const zCallWithResponsesResponse = z.union([
+export const zCallWithResponsesResponse: z.ZodTypeAny = z.union([
     z.object({
         '@namespace.string': z.string().readonly().optional(),
         '@namespace.integer': z.number().int().readonly().optional(),
-        value: z.array(zModelWithString).readonly().optional()
+        get value() {
+            return z.array(zModelWithString).readonly().optional();
+        }
     }),
     zModelThatExtends,
     zModelThatExtendsExtends
@@ -1639,7 +1699,7 @@ export const zFileResponseData = z.object({
  */
 export const zFileResponseResponse = z.string();
 
-export const zComplexTypesData = z.object({
+export const zComplexTypesData: z.AnyZodObject = z.object({
     body: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
@@ -1650,7 +1710,9 @@ export const zComplexTypesData = z.object({
                 }).optional()
             }).optional()
         }),
-        parameterReference: zModelWithString
+        get parameterReference() {
+            return zModelWithString;
+        }
     })
 });
 
@@ -1765,8 +1827,10 @@ export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
  */
 export const zNonAsciiæøåÆøÅöôêÊ字符串Response = z.array(zNonAsciiStringæøåÆøÅöôêÊ字符串);
 
-export const zPutWithFormUrlEncodedData = z.object({
-    body: zArrayWithStrings,
+export const zPutWithFormUrlEncodedData: z.AnyZodObject = z.object({
+    get body() {
+        return zArrayWithStrings;
+    },
     path: z.never().optional(),
     query: z.never().optional()
 });

@@ -19,7 +19,9 @@ export type BarZodType = z.infer<typeof zBar>;
 export const zFoo = z.union([
     z.object({
         foo: z.optional(z.string().regex(/^\d{3}-\d{2}-\d{4}$/)),
-        bar: z.optional(zBar),
+        get bar(): z.ZodOptional {
+            return z.optional(zBar);
+        },
         get baz(): z.ZodOptional {
             return z.optional(z.array(z.lazy((): any => {
                 return zFoo;
@@ -50,7 +52,9 @@ export const zFoo2 = z.string();
 export type FooZodType2 = z.infer<typeof zFoo2>;
 
 export const zFoo3 = z.object({
-    foo: z.optional(zBar)
+    get foo(): z.ZodOptional {
+        return z.optional(zBar);
+    }
 });
 
 export type FooZodType3 = z.infer<typeof zFoo3>;
@@ -60,21 +64,27 @@ export const zPatchFooData = z.object({
         foo: z.optional(z.string())
     }),
     path: z.optional(z.never()),
-    query: z.optional(z.object({
-        foo: z.optional(z.string()),
-        bar: z.optional(zBar),
-        baz: z.optional(z.object({
-            baz: z.optional(z.string())
-        })),
-        qux: z.optional(z.iso.date()),
-        quux: z.optional(z.iso.datetime())
-    }))
+    get query(): z.ZodOptional {
+        return z.optional(z.object({
+            foo: z.optional(z.string()),
+            get bar(): z.ZodOptional {
+                return z.optional(zBar);
+            },
+            baz: z.optional(z.object({
+                baz: z.optional(z.string())
+            })),
+            qux: z.optional(z.iso.date()),
+            quux: z.optional(z.iso.datetime())
+        }));
+    }
 });
 
 export type PatchFooDataZodType = z.infer<typeof zPatchFooData>;
 
 export const zPostFooData = z.object({
-    body: zFoo3,
+    get body() {
+        return zFoo3;
+    },
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });
