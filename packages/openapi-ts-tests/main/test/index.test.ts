@@ -245,6 +245,11 @@ describe('OpenAPI v3', () => {
         output: {
           indexFile: false,
           path: '',
+          tsConfigPath: path.resolve(
+            __dirname,
+            'tsconfig',
+            'tsconfig.nodenext.json',
+          ),
         },
         parser: {
           transforms: {
