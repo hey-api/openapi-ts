@@ -321,6 +321,7 @@ export const buildOfetchOptions = (
     agent: opts.agent as OfetchOptions['agent'],
     body,
     dispatcher: opts.dispatcher as OfetchOptions['dispatcher'],
+    credentials: opts.credentials as OfetchOptions['credentials'],
     headers: opts.headers as Headers,
     ignoreResponseError:
       (opts.ignoreResponseError as OfetchOptions['ignoreResponseError']) ??
