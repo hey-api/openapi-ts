@@ -336,9 +336,7 @@ export const zModelWithEnum = z.object({
         '500 foo.bar',
         '600 foo&bar'
     ])),
-    bool: z.optional(z.union([
-        z.literal(true)
-    ]))
+    bool: z.optional(z.literal(true))
 });
 
 /**
@@ -779,9 +777,7 @@ export const zModelWithConst = z.object({
     String: z.optional(z.enum([
         'String'
     ])),
-    number: z.optional(z.union([
-        z.literal(0)
-    ])),
+    number: z.optional(z.literal(0)),
     null: z.optional(z.unknown()),
     withType: z.optional(z.enum([
         'Some string'

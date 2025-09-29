@@ -345,9 +345,7 @@ export const zModelWithEnum = z.object({
         '500 foo.bar',
         '600 foo&bar'
     ]).optional(),
-    bool: z.union([
-        z.literal(true)
-    ]).optional()
+    bool: z.literal(true).optional()
 });
 
 /**
