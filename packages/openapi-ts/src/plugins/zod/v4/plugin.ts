@@ -253,6 +253,9 @@ const enumTypeToZodSchema = ({
         }),
       ],
     });
+  } else if (literalMembers.length === 1) {
+    // For single-member unions, use the member directly instead of wrapping in z.union()
+    result.expression = literalMembers[0];
   } else {
     result.expression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
