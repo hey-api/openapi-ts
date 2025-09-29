@@ -172,16 +172,57 @@ const enumTypeToZodSchema = ({
 }): Omit<ZodSchema, 'typeName'> => {
   const result: Partial<Omit<ZodSchema, 'typeName'>> = {};
 
+  const zSymbol = plugin.referenceSymbol(
+    plugin.api.getSelector('import', 'zod'),
+  );
+
   const enumMembers: Array<ts.LiteralExpression> = [];
+  const literalMembers: Array<ts.CallExpression> = [];
 
   let isNullable = false;
+  let allStrings = true;
 
   for (const item of schema.items ?? []) {
-    // Zod supports only string enums
+    // Zod supports string, number, and boolean enums
     if (item.type === 'string' && typeof item.const === 'string') {
-      enumMembers.push(
-        tsc.stringLiteral({
-          text: item.const,
+      const stringLiteral = tsc.stringLiteral({
+        text: item.const,
+      });
+      enumMembers.push(stringLiteral);
+      literalMembers.push(
+        tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
+            expression: zSymbol.placeholder,
+            name: identifiers.literal,
+          }),
+          parameters: [stringLiteral],
+        }),
+      );
+    } else if (
+      (item.type === 'number' || item.type === 'integer') &&
+      typeof item.const === 'number'
+    ) {
+      allStrings = false;
+      const numberLiteral = tsc.ots.number(item.const);
+      literalMembers.push(
+        tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
+            expression: zSymbol.placeholder,
+            name: identifiers.literal,
+          }),
+          parameters: [numberLiteral],
+        }),
+      );
+    } else if (item.type === 'boolean' && typeof item.const === 'boolean') {
+      allStrings = false;
+      const booleanLiteral = tsc.ots.boolean(item.const);
+      literalMembers.push(
+        tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
+            expression: zSymbol.placeholder,
+            name: identifiers.literal,
+          }),
+          parameters: [booleanLiteral],
         }),
       );
     } else if (item.type === 'null' || item.const === null) {
@@ -189,7 +230,7 @@ const enumTypeToZodSchema = ({
     }
   }
 
-  if (!enumMembers.length) {
+  if (!literalMembers.length) {
     return unknownTypeToZodSchema({
       plugin,
       schema: {
@@ -198,22 +239,34 @@ const enumTypeToZodSchema = ({
     });
   }
 
-  const zSymbol = plugin.referenceSymbol(
-    plugin.api.getSelector('import', 'zod'),
-  );
-
-  result.expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: zSymbol.placeholder,
-      name: identifiers.enum,
-    }),
-    parameters: [
-      tsc.arrayLiteralExpression({
-        elements: enumMembers,
-        multiLine: false,
+  // Use z.enum() for pure string enums, z.union() for mixed or non-string types
+  if (allStrings && enumMembers.length > 0) {
+    result.expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
+        expression: zSymbol.placeholder,
+        name: identifiers.enum,
       }),
-    ],
-  });
+      parameters: [
+        tsc.arrayLiteralExpression({
+          elements: enumMembers,
+          multiLine: false,
+        }),
+      ],
+    });
+  } else {
+    result.expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
+        expression: zSymbol.placeholder,
+        name: identifiers.union,
+      }),
+      parameters: [
+        tsc.arrayLiteralExpression({
+          elements: literalMembers,
+          multiLine: literalMembers.length > 3,
+        }),
+      ],
+    });
+  }
 
   if (isNullable) {
     result.expression = tsc.callExpression({
