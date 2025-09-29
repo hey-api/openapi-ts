@@ -630,7 +630,21 @@ export const zSessionUserRoomSystemCalloutFailedWebhookRequest = z.object({
                 host_id: z.string(),
                 message_id: z.string(),
                 inviter_name: z.string(),
-                reason_type: z.unknown(),
+                reason_type: z.union([
+                    z.literal(0),
+                    z.literal(1),
+                    z.literal(2),
+                    z.literal(3),
+                    z.literal(4),
+                    z.literal(7),
+                    z.literal(8),
+                    z.literal(9),
+                    z.literal(10),
+                    z.literal(11),
+                    z.literal(12),
+                    z.literal(13),
+                    z.literal(14)
+                ]),
                 participant: z.object({
                     call_type: z.string(),
                     device_ip: z.string()
