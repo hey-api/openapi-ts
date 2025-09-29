@@ -258,7 +258,7 @@ const enumTypeToZodSchema = ({
     });
   } else if (literalMembers.length === 1) {
     // For single-member unions, use the member directly instead of wrapping in z.union()
-    enumExpression = literalMembers[0];
+    enumExpression = literalMembers[0]!;
   } else {
     enumExpression = tsc.callExpression({
       functionName: tsc.propertyAccessExpression({
