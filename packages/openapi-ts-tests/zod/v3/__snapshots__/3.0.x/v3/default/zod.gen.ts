@@ -119,17 +119,34 @@ export const zEnumWithStrings = z.enum([
     'Non-ascii: øæåôöØÆÅÔÖ字符串'
 ]);
 
-export const zEnumWithReplacedCharacters = z.enum([
-    "'Single Quote'",
-    '"Double Quotes"',
-    'øæåôöØÆÅÔÖ字符串',
-    ''
+export const zEnumWithReplacedCharacters = z.union([
+    z.literal("'Single Quote'"),
+    z.literal('"Double Quotes"'),
+    z.literal('øæåôöØÆÅÔÖ字符串'),
+    z.literal(3.1),
+    z.literal('')
 ]);
 
 /**
  * This is a simple enum with numbers
  */
-export const zEnumWithNumbers = z.unknown();
+export const zEnumWithNumbers = z.union([
+    z.literal(1),
+    z.literal(2),
+    z.literal(3),
+    z.literal(1.1),
+    z.literal(1.2),
+    z.literal(1.3),
+    z.literal(100),
+    z.literal(200),
+    z.literal(300),
+    z.literal(-100),
+    z.literal(-200),
+    z.literal(-300),
+    z.literal(-1.1),
+    z.literal(-1.2),
+    z.literal(-1.3)
+]);
 
 /**
  * Success=1,Warning=2,Error=3
@@ -139,9 +156,17 @@ export const zEnumFromDescription = z.number();
 /**
  * This is a simple enum with numbers
  */
-export const zEnumWithExtensions = z.unknown();
+export const zEnumWithExtensions = z.union([
+    z.literal(200),
+    z.literal(400),
+    z.literal(500)
+]);
 
-export const zEnumWithXEnumNames = z.unknown();
+export const zEnumWithXEnumNames = z.union([
+    z.literal(0),
+    z.literal(1),
+    z.literal(2)
+]);
 
 /**
  * This is a simple array with numbers
@@ -311,7 +336,9 @@ export const zModelWithEnum = z.object({
         '500 foo.bar',
         '600 foo&bar'
     ]).optional(),
-    bool: z.unknown().optional()
+    bool: z.union([
+        z.literal(true)
+    ]).optional()
 });
 
 /**
@@ -750,7 +777,9 @@ export const zModelWithConst = z.object({
     String: z.enum([
         'String'
     ]).optional(),
-    number: z.unknown().optional(),
+    number: z.union([
+        z.literal(0)
+    ]).optional(),
     null: z.unknown().optional(),
     withType: z.enum([
         'Some string'
@@ -936,7 +965,15 @@ export const zModelWithAnyOfConstantSizeArrayAndIntersect = z.tuple([
 ]);
 
 export const zModelWithNumericEnumUnion = z.object({
-    value: z.unknown().optional()
+    value: z.union([
+        z.literal(-10),
+        z.literal(-1),
+        z.literal(0),
+        z.literal(1),
+        z.literal(3),
+        z.literal(6),
+        z.literal(12)
+    ]).optional()
 });
 
 /**

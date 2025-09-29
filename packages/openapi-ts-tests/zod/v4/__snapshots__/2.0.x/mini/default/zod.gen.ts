@@ -103,7 +103,23 @@ export const zEnumWithStrings = z.enum([
 /**
  * This is a simple enum with numbers
  */
-export const zEnumWithNumbers = z.unknown();
+export const zEnumWithNumbers = z.union([
+    z.literal(1),
+    z.literal(2),
+    z.literal(3),
+    z.literal(1.1),
+    z.literal(1.2),
+    z.literal(1.3),
+    z.literal(100),
+    z.literal(200),
+    z.literal(300),
+    z.literal(-100),
+    z.literal(-200),
+    z.literal(-300),
+    z.literal(-1.1),
+    z.literal(-1.2),
+    z.literal(-1.3)
+]);
 
 /**
  * Success=1,Warning=2,Error=3
@@ -113,7 +129,11 @@ export const zEnumFromDescription = z.number();
 /**
  * This is a simple enum with numbers
  */
-export const zEnumWithExtensions = z.unknown();
+export const zEnumWithExtensions = z.union([
+    z.literal(200),
+    z.literal(400),
+    z.literal(500)
+]);
 
 /**
  * This is a simple array with numbers
@@ -234,7 +254,9 @@ export const zModelWithEnum = z.object({
         '500 foo.bar',
         '600 foo&bar'
     ])),
-    bool: z.optional(z.unknown())
+    bool: z.optional(z.union([
+        z.literal(true)
+    ]))
 });
 
 /**
