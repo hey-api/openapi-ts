@@ -1,15 +1,16 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
-import { initConfigs } from '../config/init';
+import { detectInteractiveSession, initConfigs } from '../config/init';
 import { mergeConfigs } from '../config/merge';
 
 describe('interactive config', () => {
-  it('should default to false when not provided', async () => {
+  it('should use detectInteractiveSession when not provided', async () => {
     const result = await initConfigs({
       input: 'test.json',
       output: './test',
     });
 
+    // In test environment, TTY is typically not available, so it should be false
     expect(result.results[0].config.interactive).toBe(false);
   });
 
@@ -65,5 +66,110 @@ describe('interactive config', () => {
     // Before fix: CLI's auto-detected interactive would override file config
     const mergedWithBug = mergeConfigs(fileConfig, cliConfigWithInteractiveBug);
     expect(mergedWithBug.interactive).toBe(true); // This was the bug - it overrode the file config
+  });
+});
+
+describe('detectInteractiveSession', () => {
+  const originalEnv = process.env;
+  const originalStdin = process.stdin;
+  const originalStdout = process.stdout;
+
+  afterEach(() => {
+    process.env = originalEnv;
+    Object.defineProperty(process, 'stdin', { value: originalStdin });
+    Object.defineProperty(process, 'stdout', { value: originalStdout });
+  });
+
+  it('should return false when CI environment variable is set', () => {
+    process.env = { ...originalEnv, CI: 'true' };
+    Object.defineProperty(process.stdin, 'isTTY', {
+      configurable: true,
+      value: true,
+    });
+    Object.defineProperty(process.stdout, 'isTTY', {
+      configurable: true,
+      value: true,
+    });
+
+    expect(detectInteractiveSession()).toBe(false);
+  });
+
+  it('should return false when NO_INTERACTIVE environment variable is set', () => {
+    process.env = { ...originalEnv, NO_INTERACTIVE: '1' };
+    Object.defineProperty(process.stdin, 'isTTY', {
+      configurable: true,
+      value: true,
+    });
+    Object.defineProperty(process.stdout, 'isTTY', {
+      configurable: true,
+      value: true,
+    });
+
+    expect(detectInteractiveSession()).toBe(false);
+  });
+
+  it('should return false when NO_INTERACTION environment variable is set', () => {
+    process.env = { ...originalEnv, NO_INTERACTION: '1' };
+    Object.defineProperty(process.stdin, 'isTTY', {
+      configurable: true,
+      value: true,
+    });
+    Object.defineProperty(process.stdout, 'isTTY', {
+      configurable: true,
+      value: true,
+    });
+
+    expect(detectInteractiveSession()).toBe(false);
+  });
+
+  it('should return false when stdin is not TTY', () => {
+    process.env = { ...originalEnv };
+    delete process.env.CI;
+    delete process.env.NO_INTERACTIVE;
+    delete process.env.NO_INTERACTION;
+    Object.defineProperty(process.stdin, 'isTTY', {
+      configurable: true,
+      value: false,
+    });
+    Object.defineProperty(process.stdout, 'isTTY', {
+      configurable: true,
+      value: true,
+    });
+
+    expect(detectInteractiveSession()).toBe(false);
+  });
+
+  it('should return false when stdout is not TTY', () => {
+    process.env = { ...originalEnv };
+    delete process.env.CI;
+    delete process.env.NO_INTERACTIVE;
+    delete process.env.NO_INTERACTION;
+    Object.defineProperty(process.stdin, 'isTTY', {
+      configurable: true,
+      value: true,
+    });
+    Object.defineProperty(process.stdout, 'isTTY', {
+      configurable: true,
+      value: false,
+    });
+
+    expect(detectInteractiveSession()).toBe(false);
+  });
+
+  it('should return true when TTY is available and no blocking env vars are set', () => {
+    process.env = { ...originalEnv };
+    delete process.env.CI;
+    delete process.env.NO_INTERACTIVE;
+    delete process.env.NO_INTERACTION;
+    Object.defineProperty(process.stdin, 'isTTY', {
+      configurable: true,
+      value: true,
+    });
+    Object.defineProperty(process.stdout, 'isTTY', {
+      configurable: true,
+      value: true,
+    });
+
+    expect(detectInteractiveSession()).toBe(true);
   });
 });
