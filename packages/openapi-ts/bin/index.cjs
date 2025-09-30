@@ -49,6 +49,10 @@ const params = program
     '--useOptions [value]',
     'DEPRECATED. Use options instead of arguments?',
   )
+  .option(
+    '--interactive [value]',
+    'Show an interactive error reporting tool when the program crashes? (default: false)',
+  )
   .parse(process.argv)
   .opts();
 
@@ -91,15 +95,14 @@ async function start() {
       'experimentalParser',
       'exportCore',
       'useOptions',
+      'interactive',
     ]);
 
-    const isInteractive =
-      process.stdin.isTTY &&
-      process.stdout.isTTY &&
-      !process.env.CI &&
-      !process.env.NO_INTERACTIVE &&
-      !process.env.NO_INTERACTION;
-    userConfig.interactive = isInteractive;
+    // Only set interactive automatically if not explicitly configured by user
+    // Default should be false according to documentation
+    if (userConfig.interactive === undefined) {
+      userConfig.interactive = false; // Default to false as per documentation
+    }
 
     if (params.plugins === true) {
       userConfig.plugins = [];
