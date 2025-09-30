@@ -11,7 +11,7 @@ describe('interactive config', () => {
     });
 
     // In test environment, TTY is typically not available, so it should be false
-    expect(result.results[0].config.interactive).toBe(false);
+    expect(result.results[0]?.config.interactive).toBe(false);
   });
 
   it('should respect user config when set to true', async () => {
@@ -21,7 +21,7 @@ describe('interactive config', () => {
       output: './test',
     });
 
-    expect(result.results[0].config.interactive).toBe(true);
+    expect(result.results[0]?.config.interactive).toBe(true);
   });
 
   it('should respect user config when set to false', async () => {
@@ -31,7 +31,7 @@ describe('interactive config', () => {
       output: './test',
     });
 
-    expect(result.results[0].config.interactive).toBe(false);
+    expect(result.results[0]?.config.interactive).toBe(false);
   });
 
   it('should allow file config to set interactive when CLI does not provide it', () => {
