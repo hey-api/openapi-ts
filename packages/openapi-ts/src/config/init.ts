@@ -19,7 +19,7 @@ import { getPlugins } from './plugins';
  * @internal
  */
 export const detectInteractiveSession = (): boolean =>
-  !!(
+  Boolean(
     process.stdin.isTTY &&
     process.stdout.isTTY &&
     !process.env.CI &&
@@ -78,7 +78,6 @@ export const initConfigs = async (
       useOptions = true,
     } = userConfig;
 
-    // Use environment-aware detection only when user doesn't explicitly set interactive
     const interactive =
       userConfig.interactive !== undefined
         ? userConfig.interactive
