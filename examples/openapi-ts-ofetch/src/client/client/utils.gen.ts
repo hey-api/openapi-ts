@@ -316,34 +316,34 @@ export const wrapErrorReturn = <E>(
 export const buildOfetchOptions = (
   opts: ResolvedRequestOptions,
   body: BodyInit | null | undefined,
+  responseType: OfetchResponseType | undefined,
   retryOverride?: OfetchOptions['retry'],
-): OfetchOptions => {
-  const responseType = mapParseAsToResponseType(
-    opts.parseAs,
-    opts.responseType,
-  );
-  return {
+): OfetchOptions =>
+  ({
     agent: opts.agent as OfetchOptions['agent'],
-    body: body as any,
+    body,
+    credentials: opts.credentials as OfetchOptions['credentials'],
     dispatcher: opts.dispatcher as OfetchOptions['dispatcher'],
     headers: opts.headers as Headers,
+    ignoreResponseError:
+      (opts.ignoreResponseError as OfetchOptions['ignoreResponseError']) ??
+      true,
     method: opts.method,
     onRequest: opts.onRequest as OfetchOptions['onRequest'],
     onRequestError: opts.onRequestError as OfetchOptions['onRequestError'],
     onResponse: opts.onResponse as OfetchOptions['onResponse'],
     onResponseError: opts.onResponseError as OfetchOptions['onResponseError'],
     parseResponse: opts.parseResponse as OfetchOptions['parseResponse'],
-    query: undefined, // URL already includes query
+    // URL already includes query
+    query: undefined,
     responseType,
-    retry: (retryOverride ??
-      (opts.retry as OfetchOptions['retry'])) as OfetchOptions['retry'],
+    retry: retryOverride ?? (opts.retry as OfetchOptions['retry']),
     retryDelay: opts.retryDelay as OfetchOptions['retryDelay'],
     retryStatusCodes:
       opts.retryStatusCodes as OfetchOptions['retryStatusCodes'],
     signal: opts.signal,
     timeout: opts.timeout as number | undefined,
-  } as OfetchOptions;
-};
+  }) as OfetchOptions;
 
 /**
  * Parse a successful response, handling empty bodies and stream cases.
@@ -382,17 +382,27 @@ export const parseSuccess = async (
     }
   }
 
-  // Prefer ofetch-populated data
+  // Prefer ofetch-populated data unless we explicitly need raw `formData`
   let data: unknown = (response as any)._data;
-  if (typeof data === 'undefined') {
+  if (inferredParseAs === 'formData' || typeof data === 'undefined') {
     switch (inferredParseAs) {
       case 'arrayBuffer':
       case 'blob':
       case 'formData':
-      case 'json':
       case 'text':
         data = await (response as any)[inferredParseAs]();
         break;
+      case 'json': {
+        // Some servers return 200 with no Content-Length and empty body.
+        // response.json() would throw; detect empty via clone().text() first.
+        const txt = await response.clone().text();
+        if (!txt) {
+          data = {};
+        } else {
+          data = await (response as any).json();
+        }
+        break;
+      }
       case 'stream':
         return response.body;
     }
@@ -526,6 +536,7 @@ export const createConfig = <T extends ClientOptions = ClientOptions>(
 ): Config<Omit<ClientOptions, keyof T> & T> => ({
   ...jsonBodySerializer,
   headers: defaultHeaders,
+  ignoreResponseError: true,
   parseAs: 'auto',
   querySerializer: defaultQuerySerializer,
   ...override,
