@@ -26,7 +26,7 @@ describe('shouldReportCrash', () => {
       .mockImplementation(() => true);
     const setEncodingSpy = vi
       .spyOn(process.stdin, 'setEncoding')
-      .mockImplementation(() => {});
+      .mockImplementation(() => process.stdin as any);
     const onceSpy = vi
       .spyOn(process.stdin, 'once')
       .mockImplementation(() => process.stdin);
@@ -53,10 +53,10 @@ describe('shouldReportCrash', () => {
       .mockImplementation(() => true);
     const setEncodingSpy = vi
       .spyOn(process.stdin, 'setEncoding')
-      .mockImplementation(() => {});
+      .mockImplementation(() => process.stdin as any);
     const onceSpy = vi
       .spyOn(process.stdin, 'once')
-      .mockImplementation((event, callback) => {
+      .mockImplementation((_event, callback) => {
         // Simulate user typing 'n'
         setTimeout(() => {
           (callback as any)('n');
@@ -86,10 +86,10 @@ describe('shouldReportCrash', () => {
       .mockImplementation(() => true);
     const setEncodingSpy = vi
       .spyOn(process.stdin, 'setEncoding')
-      .mockImplementation(() => {});
+      .mockImplementation(() => process.stdin as any);
     const onceSpy = vi
       .spyOn(process.stdin, 'once')
-      .mockImplementation((event, callback) => {
+      .mockImplementation((_event, callback) => {
         // Simulate user typing 'y'
         setTimeout(() => {
           (callback as any)('y');
