@@ -6,10 +6,10 @@ type SelectorType =
   | '_JSONValue'
   | 'AxiosError'
   | 'createQueryKey'
-  | 'serializeQueryKeyValue'
   | 'defineQueryOptions'
-  | 'queryOptionsFn'
   | 'QueryKey'
+  | 'queryOptionsFn'
+  | 'serializeQueryKeyValue'
   | 'UseMutationOptions'
   | 'UseQueryOptions';
 
@@ -20,10 +20,10 @@ export type IApi = {
    *  - `_JSONValue`: never
    *  - `AxiosError`: never
    *  - `createQueryKey`: never
-   *  - `serializeQueryKeyValue`: never
    *  - `defineQueryOptions`: never
-   *  - `queryOptionsFn`: `operation.id` string
    *  - `QueryKey`: never
+   *  - `queryOptionsFn`: `operation.id` string
+   *  - `serializeQueryKeyValue`: never
    *  - `UseMutationOptions`: never
    *  - `UseQueryOptions`: never
    * @returns Selector array
