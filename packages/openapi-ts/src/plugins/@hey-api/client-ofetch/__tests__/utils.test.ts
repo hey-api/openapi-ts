@@ -1,7 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Auth } from '../../client-core/bundle/auth';
-import { mergeHeaders, setAuthParams } from '../bundle/utils';
+import type { ResolvedRequestOptions } from '../bundle/types';
+import {
+  buildOfetchOptions,
+  mergeHeaders,
+  setAuthParams,
+} from '../bundle/utils';
 
 describe('mergeHeaders', () => {
   it('merges plain objects into Headers', () => {
@@ -198,5 +203,56 @@ describe('setAuthParams', () => {
     expect(headers.get('baz')).toBe('Bearer foo');
     expect(headers.get('fiz')).toBe('buz');
     expect(Object.keys(query).length).toBe(0);
+  });
+});
+
+describe('buildOfetchOptions', () => {
+  it('passes through credentials property when provided', () => {
+    const opts: ResolvedRequestOptions = {
+      baseUrl: 'https://api.example.com',
+      credentials: 'include' as const,
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+      method: 'GET',
+      url: '/test',
+    };
+
+    const result = buildOfetchOptions(opts, null, undefined);
+
+    expect(result.credentials).toBe('include');
+  });
+
+  it('passes through undefined credentials when not provided', () => {
+    const opts: ResolvedRequestOptions = {
+      baseUrl: 'https://api.example.com',
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+      method: 'GET',
+      url: '/test',
+    };
+
+    const result = buildOfetchOptions(opts, null, undefined);
+
+    expect(result.credentials).toBeUndefined();
+  });
+
+  it('passes through different credential values', () => {
+    const testCases: Array<RequestCredentials> = [
+      'omit',
+      'same-origin',
+      'include',
+    ];
+
+    testCases.forEach((credentialValue) => {
+      const opts: ResolvedRequestOptions = {
+        baseUrl: 'https://api.example.com',
+        credentials: credentialValue,
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        method: 'GET',
+        url: '/test',
+      };
+
+      const result = buildOfetchOptions(opts, null, undefined);
+
+      expect(result.credentials).toBe(credentialValue);
+    });
   });
 });

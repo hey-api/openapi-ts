@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.84.4
+
+### Patch Changes
+
+- fix(client-ofetch): add missing credentials property support ([#2710](https://github.com/hey-api/openapi-ts/pull/2710)) ([`ba7e6dc`](https://github.com/hey-api/openapi-ts/commit/ba7e6dc1af3a8e64082bd101de6c1cd6e0e8fc17)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- fix(config): do not override interactive config from CLI if defined in config file ([#2708](https://github.com/hey-api/openapi-ts/pull/2708)) ([`21e9fa0`](https://github.com/hey-api/openapi-ts/commit/21e9fa089d2305714f37c1a16cb3e6f9fedb49b9)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- fix(zod): correct schemas for numeric and boolean enums ([#2704](https://github.com/hey-api/openapi-ts/pull/2704)) ([`59ea38e`](https://github.com/hey-api/openapi-ts/commit/59ea38ea9e47b515c54e55d169591fe6188990b4)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.84.3
 
 ### Patch Changes
