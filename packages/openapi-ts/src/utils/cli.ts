@@ -2,18 +2,6 @@ import colors from 'ansi-colors';
 
 import { loadPackageJson } from '../generate/tsConfig';
 
-const logoAscii = `
-db e888888e
- d8 Y88Y  ~8b
-dY ""   ""  Yb
-8  88   88   8
-8     o     8 8
- Yb  b8d  eb ,b
-  Yb_____Y  ,b
-  8       dY
- 8  e    8
-`;
-
 const textAscii = `
 888   |                           e      888~-_   888
 888___|  e88~~8e  Y88b  /        d8b     888   \\  888
@@ -24,8 +12,17 @@ const textAscii = `
                   _/
 `;
 
-const asciiToLines = (ascii: string) => {
+const asciiToLines = (
+  ascii: string,
+  options?: {
+    padding?: number;
+  },
+) => {
   const lines: Array<string> = [];
+  const padding = Array.from<string>({ length: options?.padding ?? 0 }).fill(
+    '',
+  );
+  lines.push(...padding);
   let maxLineLength = 0;
   let line = '';
   for (const char of ascii) {
@@ -39,25 +36,16 @@ const asciiToLines = (ascii: string) => {
       line += char;
     }
   }
+  lines.push(...padding);
   return { lines, maxLineLength };
 };
 
 export function printCliIntro() {
   const packageJson = loadPackageJson();
-  const logo = asciiToLines(logoAscii);
-  const text = asciiToLines(textAscii);
-  const padding = Math.floor((logo.lines.length - text.lines.length) / 2);
-  const lines = logo.lines.map((logoLine, index) => {
-    let line = logoLine.padEnd(logo.maxLineLength);
-    if (index >= padding && logo.lines.length - index - 1 >= padding) {
-      line += `       ${text.lines[index - padding]}`;
-    }
-    return line;
-  });
-  for (const line of lines) {
+  const text = asciiToLines(textAscii, { padding: 1 });
+  for (const line of text.lines) {
     console.log(colors.cyan(line));
   }
-  console.log('');
   console.log(colors.gray(`${packageJson.name} v${packageJson.version}`));
   console.log('');
 }

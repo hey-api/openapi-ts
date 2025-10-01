@@ -7,10 +7,7 @@ import { tsc } from '../../../tsc';
 import { stringCase } from '../../../utils/stringCase';
 import { getClientPlugin } from '../../@hey-api/client-core/utils';
 import { operationClasses } from '../../@hey-api/sdk/operation';
-import {
-  createOperationComment,
-  isOperationOptionsRequired,
-} from '../../shared/utils/operation';
+import { isOperationOptionsRequired } from '../../shared/utils/operation';
 import type { AngularCommonPlugin } from './types';
 
 interface AngularRequestClassEntry {
@@ -283,7 +280,7 @@ const generateAngularRequestMethod = ({
 
   return tsc.methodDeclaration({
     accessLevel: 'public',
-    comment: createOperationComment({ operation }),
+    comment: sdkPlugin.api.createOperationComment({ operation }),
     name: methodName,
     parameters: [
       {
@@ -339,7 +336,7 @@ const generateAngularRequestFunction = ({
   const dataType = symbolDataType?.placeholder || 'unknown';
 
   return tsc.constVariable({
-    comment: createOperationComment({ operation }),
+    comment: sdkPlugin.api.createOperationComment({ operation }),
     exportConst: symbol.exported,
     expression: tsc.arrowFunction({
       parameters: [
