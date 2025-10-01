@@ -1,13 +1,16 @@
 import type { IR } from '../../ir/types';
 import { buildName } from '../../openApi/shared/utils/name';
+import { pathToSymbolResourceType } from '../shared/utils/meta';
 import { schemaToValibotSchema, type State } from './plugin';
 import type { ValibotPlugin } from './types';
 
 export const webhookToValibotSchema = ({
+  _path,
   operation,
   plugin,
   state,
 }: {
+  _path: ReadonlyArray<string | number>;
   operation: IR.OperationObject;
   plugin: ValibotPlugin['Instance'];
   state: State;
@@ -112,6 +115,9 @@ export const webhookToValibotSchema = ({
 
     const symbol = plugin.registerSymbol({
       exported: true,
+      meta: {
+        resourceType: pathToSymbolResourceType(_path),
+      },
       name: buildName({
         config: plugin.config.webhooks,
         name: operation.id,
@@ -119,6 +125,7 @@ export const webhookToValibotSchema = ({
       selector: plugin.api.getSelector('webhook-request', operation.id),
     });
     schemaToValibotSchema({
+      _path,
       plugin,
       schema: schemaData,
       state,
