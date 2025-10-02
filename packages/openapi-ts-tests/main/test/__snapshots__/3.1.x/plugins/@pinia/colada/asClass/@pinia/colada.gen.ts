@@ -2,7 +2,8 @@
 
 import { type _JSONValue, defineQueryOptions, type UseMutationOptions } from '@pinia/colada';
 
-import { client, serializeQueryKeyValue } from '../client.gen';
+import { serializeQueryKeyValue } from '../client';
+import { client } from '../client.gen';
 import { BarBazService, FooBazService, type Options } from '../sdk.gen';
 import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooData } from '../types.gen';
 

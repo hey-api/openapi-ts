@@ -17,5 +17,3 @@ export const client = createClient(createConfig<ClientOptions2>({
     baseUrl: 'http://localhost:3000/base',
     throwOnError: true
 }));
-
-export { serializeQueryKeyValue } from './core/queryKeySerializer.gen';

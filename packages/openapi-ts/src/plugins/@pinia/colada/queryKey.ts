@@ -1,6 +1,7 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { Expression } from 'typescript';
 
+import { clientFolderAbsolutePath } from '../../../generate/client';
 import { hasOperationDataRequired } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
@@ -34,6 +35,9 @@ export const createQueryKeyFunction = ({
   const symbolQueryKeyType = plugin.referenceSymbol(
     plugin.api.getSelector('QueryKey'),
   );
+  const symbolJsonValue = plugin.referenceSymbol(
+    plugin.api.getSelector('_JSONValue'),
+  );
 
   const returnType = tsc.indexedAccessTypeNode({
     indexType: tsc.literalTypeNode({
@@ -47,6 +51,10 @@ export const createQueryKeyFunction = ({
 
   const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
 
+  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
+  const symbolOptions = plugin.referenceSymbol(
+    sdkPlugin.api.getSelector('Options'),
+  );
   const client = getClientPlugin(plugin.context.config);
   const symbolClient =
     client.api && 'getSelector' in client.api
@@ -55,30 +63,12 @@ export const createQueryKeyFunction = ({
           client.api.getSelector('client'),
         )
       : undefined;
-  let symbolSerializeQueryValue;
-  if (client.api && 'getSelector' in client.api) {
-    // @ts-expect-error
-    const selector = client.api.getSelector('serializeQueryKeyValue');
-    const existingSymbol = plugin.getSymbol(selector);
-    if (existingSymbol) {
-      symbolSerializeQueryValue = plugin.referenceSymbol(selector);
-    }
-  }
 
-  if (!symbolSerializeQueryValue) {
-    symbolSerializeQueryValue = plugin.registerSymbol({
-      external: '../core/queryKeySerializer.gen',
-      name: 'serializeQueryKeyValue',
-    });
-  }
-
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.getSelector('Options'),
-  );
-  const symbolJsonValue = plugin.referenceSymbol(
-    plugin.api.getSelector('_JSONValue'),
-  );
+  const clientModule = clientFolderAbsolutePath(plugin.context.config);
+  const symbolSerializeQueryValue = plugin.registerSymbol({
+    external: clientModule,
+    name: 'serializeQueryKeyValue',
+  });
 
   const fn = tsc.constVariable({
     expression: tsc.arrowFunction({
