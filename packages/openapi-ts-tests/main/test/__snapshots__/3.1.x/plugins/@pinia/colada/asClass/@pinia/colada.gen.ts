@@ -7,7 +7,7 @@ import { BarBazService, FooBazService, type Options } from '../sdk.gen';
 import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
-    Pick<TOptions, 'baseUrl' | 'body' | 'path' | 'query'> & {
+    Pick<TOptions, 'path'> & {
         _id: string;
         baseUrl?: _JSONValue;
         body?: _JSONValue;
