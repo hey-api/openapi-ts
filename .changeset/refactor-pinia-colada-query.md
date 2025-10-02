@@ -2,4 +2,4 @@
 "@hey-api/openapi-ts": patch
 ---
 
-refactor(pinia-colada): migrate queries to `defineQueryOptions`
+feat(pinia-colada): query options use `defineQueryOptions`
