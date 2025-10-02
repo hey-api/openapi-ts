@@ -110,5 +110,21 @@ export const createClient: PluginHandler = ({ plugin }) => {
     }),
     name: symbolClient.placeholder,
   });
+
+  if (plugin.name.startsWith('@hey-api/client-')) {
+    const symbolSerializeQueryValue = plugin.registerSymbol({
+      name: 'serializeQueryKeyValue',
+      selector: plugin.api.getSelector('serializeQueryKeyValue'),
+    });
+
+    plugin.setSymbolValue(
+      symbolSerializeQueryValue,
+      tsc.exportNamedDeclaration({
+        exports: symbolSerializeQueryValue.placeholder,
+        module: './core/queryKeySerializer.gen',
+      }),
+    );
+  }
+
   plugin.setSymbolValue(symbolClient, statement);
 };
