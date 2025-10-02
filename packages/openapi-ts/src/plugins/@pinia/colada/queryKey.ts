@@ -22,7 +22,6 @@ export const createQueryKeyFunction = ({
 }: {
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
-  const coreModule = '../core/queryKeySerializer.gen';
   const symbolCreateQueryKey = plugin.registerSymbol({
     name: buildName({
       config: {
@@ -35,10 +34,6 @@ export const createQueryKeyFunction = ({
   const symbolQueryKeyType = plugin.referenceSymbol(
     plugin.api.getSelector('QueryKey'),
   );
-  const symbolSerializeQueryValue = plugin.registerSymbol({
-    external: coreModule,
-    name: 'serializeQueryKeyValue',
-  });
 
   const returnType = tsc.indexedAccessTypeNode({
     indexType: tsc.literalTypeNode({
@@ -60,6 +55,22 @@ export const createQueryKeyFunction = ({
           client.api.getSelector('client'),
         )
       : undefined;
+  let symbolSerializeQueryValue;
+  if (client.api && 'getSelector' in client.api) {
+    // @ts-expect-error
+    const selector = client.api.getSelector('serializeQueryKeyValue');
+    const existingSymbol = plugin.getSymbol(selector);
+    if (existingSymbol) {
+      symbolSerializeQueryValue = plugin.referenceSymbol(selector);
+    }
+  }
+
+  if (!symbolSerializeQueryValue) {
+    symbolSerializeQueryValue = plugin.registerSymbol({
+      external: '../core/queryKeySerializer.gen',
+      name: 'serializeQueryKeyValue',
+    });
+  }
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
