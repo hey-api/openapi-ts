@@ -23,14 +23,14 @@ The Pinia Colada plugin for Hey API generates functions and query keys from your
 
 ### Collaborators
 
-<AuthorsList :people="[joshHemphill, sebastiaanWouters, dmitriyBrolnickij]" />
+<AuthorsList :people="[dmitriyBrolnickij, joshHemphill, sebastiaanWouters]" />
 
 ## Features
 
 - Pinia Colada v0 support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - create query keys following the best practices
-- type-safe query options (using `defineQueryOptions`) and mutation options
+- type-safe query options and mutation options
 - minimal learning curve thanks to extending the underlying technology
 
 ## Installation
@@ -62,9 +62,17 @@ The Pinia Colada plugin will generate the following artifacts, depending on the 
 
 Queries are generated from [query operations](/openapi-ts/configuration/parser#hooks-query-operations). The generated query functions follow the naming convention of SDK functions and by default append `Query`, e.g. `getPetByIdQuery()`.
 
-Each generated function is a [`defineQueryOptions`](https://pinia-colada.esm.dev/api/@pinia/colada/functions/defineQueryOptions.html) factory.
+::: code-group
 
-```js
+```ts [example]
+const query = useQuery(getPetByIdQuery, () => ({
+  path: {
+    petId: 1,
+  },
+}));
+```
+
+```js [config]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
@@ -78,46 +86,9 @@ export default {
 };
 ```
 
+:::
+
 You can customize the naming and casing pattern for `queryOptions` functions using the `.name` and `.case` options.
-
-### Usage
-
-No params — pass the function directly to `useQuery`:
-
-```ts
-useQuery(getPetsQuery);
-```
-
-With parameters (constant values), use the two‑argument form:
-
-```ts
-useQuery(getPetByIdQuery, () => ({
-  path: { petId: 1 },
-}));
-```
-
-For reactive parameters, pass the generated function and compute options in the callback:
-
-```ts
-const petId = ref<number | null>(1);
-
-useQuery(getPetByIdQuery, () => ({
-  path: { petId: petId.value },
-}));
-```
-
-To pass `useQuery` [properties](https://pinia-colada.esm.dev/api/@pinia/colada/interfaces/UseQueryOptions.html#Properties):
-
-```ts
-const petId = ref<number | null>(null);
-
-useQuery(() => ({
-  ...getPetByIdQuery({
-    path: { petId: petId.value as number },
-  }),
-  enabled: () => petId.value != null,
-}));
-```
 
 ## Query Keys
 
