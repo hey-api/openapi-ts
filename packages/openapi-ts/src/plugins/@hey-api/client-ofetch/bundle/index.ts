@@ -6,6 +6,7 @@ export {
   urlSearchParamsBodySerializer,
 } from '../../client-core/bundle/bodySerializer';
 export { buildClientParams } from '../../client-core/bundle/params';
+export { serializeQueryKeyValue } from '../../client-core/bundle/queryKeySerializer';
 export { createClient } from './client';
 export type {
   Client,

@@ -93,14 +93,6 @@ async function start() {
       'useOptions',
     ]);
 
-    const isInteractive =
-      process.stdin.isTTY &&
-      process.stdout.isTTY &&
-      !process.env.CI &&
-      !process.env.NO_INTERACTIVE &&
-      !process.env.NO_INTERACTION;
-    userConfig.interactive = isInteractive;
-
     if (params.plugins === true) {
       userConfig.plugins = [];
     } else if (params.plugins) {
