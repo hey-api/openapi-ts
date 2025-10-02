@@ -16,3 +16,5 @@ export type CreateClientConfig<T extends ClientOptions = ClientOptions2> = (over
 export const client = createClient(createConfig<ClientOptions2>({
     baseUrl: 'https://foo.com/v1'
 }));
+
+export { serializeQueryKeyValue } from './core/queryKeySerializer.gen';
