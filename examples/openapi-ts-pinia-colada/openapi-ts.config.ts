@@ -18,7 +18,8 @@ export default defineConfig({
     },
     {
       exportFromIndex: true,
-      name: '@pinia/colada'
+      name: '@pinia/colada',
+      queryKeys: false
     }
   ]
 })

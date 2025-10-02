@@ -1080,8 +1080,16 @@ export const createRegularExpressionLiteral = ({
   flags?: ReadonlyArray<'g' | 'i' | 'm' | 's' | 'u' | 'y'>;
   text: string;
 }) => {
-  const textWithSlashes =
-    text.startsWith('/') && text.endsWith('/') ? text : `/${text}/`;
+  // Extract pattern content, removing outer slashes if present
+  const patternContent =
+    text.startsWith('/') && text.endsWith('/') ? text.slice(1, -1) : text;
+
+  // Escape forward slashes in the pattern content, but only if they're not already escaped
+  const escapedPattern = patternContent.replace(/(?<!\\)\//g, '\\/');
+
+  // Wrap with forward slashes
+  const textWithSlashes = `/${escapedPattern}/`;
+
   return ts.factory.createRegularExpressionLiteral(
     `${textWithSlashes}${flags.join('')}`,
   );

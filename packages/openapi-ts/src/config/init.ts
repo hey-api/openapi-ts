@@ -18,6 +18,20 @@ import { getParser } from './parser';
 import { getPlugins } from './plugins';
 
 /**
+ * Detect if the current session is interactive based on TTY status and environment variables.
+ * This is used as a fallback when the user doesn't explicitly set the interactive option.
+ * @internal
+ */
+export const detectInteractiveSession = (): boolean =>
+  Boolean(
+    process.stdin.isTTY &&
+      process.stdout.isTTY &&
+      !process.env.CI &&
+      !process.env.NO_INTERACTIVE &&
+      !process.env.NO_INTERACTION,
+  );
+
+/**
  * Expands a UserConfig with multiple outputs into multiple UserConfigs with single outputs
  * @internal
  */
@@ -107,11 +121,15 @@ export const initConfigs = async (
       dryRun = false,
       experimentalParser = true,
       exportCore = true,
-      interactive = false,
       name,
       request,
       useOptions = true,
     } = userConfig;
+
+    const interactive =
+      userConfig.interactive !== undefined
+        ? userConfig.interactive
+        : detectInteractiveSession();
 
     const errors: Array<Error> = [];
 
