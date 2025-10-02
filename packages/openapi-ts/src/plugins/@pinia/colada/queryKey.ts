@@ -359,7 +359,7 @@ export const createQueryKeyType = ({
         tsc.typeIntersectionNode({
           types: [
             tsc.typeReferenceNode({
-              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(plugin.context.config)}' | 'body' | 'path' | 'query'>`,
+              typeName: `Pick<${TOptionsType}, 'path'>`,
             }),
             tsc.typeInterfaceNode({
               properties,
