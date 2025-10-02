@@ -67,7 +67,7 @@ export const createBinaryExpression = ({
   right,
 }: {
   left: ts.Expression;
-  operator?: '=' | '===' | 'in' | '??';
+  operator?: '=' | '===' | '!==' | 'in' | '??';
   right: ts.Expression | string;
 }) => {
   const expression = ts.factory.createBinaryExpression(
@@ -77,9 +77,11 @@ export const createBinaryExpression = ({
       ? ts.SyntaxKind.EqualsToken
       : operator === '==='
         ? ts.SyntaxKind.EqualsEqualsEqualsToken
-        : operator === '??'
-          ? ts.SyntaxKind.QuestionQuestionToken
-          : ts.SyntaxKind.InKeyword,
+        : operator === '!=='
+          ? ts.SyntaxKind.ExclamationEqualsEqualsToken
+          : operator === '??'
+            ? ts.SyntaxKind.QuestionQuestionToken
+            : ts.SyntaxKind.InKeyword,
     typeof right === 'string' ? createIdentifier({ text: right }) : right,
   );
   return expression;

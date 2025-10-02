@@ -3,6 +3,11 @@ type Person = {
   name: string;
 };
 
+export const dmitriyBrolnickij: Person = {
+  github: 'https://github.com/brolnickij',
+  name: 'Dmitriy Brolnickij',
+};
+
 export const jacobCohen: Person = {
   github: 'https://github.com/jacobinu',
   name: 'Jacob Cohen',
