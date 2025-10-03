@@ -34,7 +34,9 @@ export const zQuux = z.object({
 });
 
 export const zFoo = z.object({
-    quux: z.optional(zQuux)
+    get quux(): z.ZodMiniOptional {
+        return z.optional(zQuux);
+    }
 });
 
 export const zBar = z.object({
