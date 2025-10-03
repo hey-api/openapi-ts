@@ -114,8 +114,8 @@ export class TypeScriptRenderer implements Renderer {
       if (relativePath.endsWith(symbolFile.extension)) {
         relativePath = relativePath.slice(0, -symbolFile.extension.length);
       }
-      if (meta?.moduleResolution === ts.ModuleResolutionKind.NodeNext) {
-        relativePath += '.js';
+      if (meta?.importFileExtension) {
+        relativePath += meta.importFileExtension;
       } else if (relativePath.endsWith('/index')) {
         relativePath = relativePath.slice(0, -'/index'.length);
       }
