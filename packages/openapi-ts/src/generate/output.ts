@@ -6,7 +6,6 @@ import type { ProjectRenderMeta } from '@hey-api/codegen-core';
 import type { IR } from '../ir/types';
 import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import { generateClientBundle } from './client';
-import { findTsConfigPath, loadTsConfig } from './tsConfig';
 import { removeDirSync } from './utils';
 
 export const generateOutput = async ({ context }: { context: IR.Context }) => {
@@ -16,12 +15,8 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
     removeDirSync(outputPath);
   }
 
-  const tsConfig = loadTsConfig(
-    findTsConfigPath(context.config.output.tsConfigPath),
-  );
-
   const meta: ProjectRenderMeta = {
-    moduleResolution: tsConfig?.options.moduleResolution,
+    importFileExtension: context.config.output.importFileExtension,
   };
 
   const client = getClientPlugin(context.config);

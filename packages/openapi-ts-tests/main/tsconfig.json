@@ -1,8 +1,10 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "declaration": false,
     "esModuleInterop": true,
+    "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true
   },

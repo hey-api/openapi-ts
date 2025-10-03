@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url';
 
 import ts from 'typescript';
 
+import type { UserOutput } from '../types/output';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -29,9 +31,9 @@ export const findPackageJson = (): unknown | undefined => {
 };
 
 export const findTsConfigPath = (
-  tsConfigPath?: 'off' | (string & {}),
+  tsConfigPath?: UserOutput['tsConfigPath'],
 ): string | null => {
-  if (tsConfigPath === 'off') {
+  if (tsConfigPath === null) {
     return null;
   }
 
