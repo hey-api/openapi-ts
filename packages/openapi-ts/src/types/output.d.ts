@@ -1,8 +1,12 @@
+import type ts from 'typescript';
+
 import type { StringCase, StringName } from './case';
 
 export type Formatters = 'biome' | 'prettier';
 
 export type Linters = 'biome' | 'eslint' | 'oxlint';
+
+type ImportFileExtensions = '.js' | '.ts';
 
 export type UserOutput = {
   /**
@@ -11,7 +15,7 @@ export type UserOutput = {
    *
    * @default undefined
    */
-  case?: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
+  case?: StringCase;
   /**
    * Clean the `output` folder on every run? If disabled, this folder may
    * be used to store additional files. The default option is `true` to
@@ -57,11 +61,20 @@ export type UserOutput = {
         suffix?: string | null;
       };
   /**
-   * Process output folder with formatter?
+   * Which formatter to use to process output folder?
    *
-   * @default false
+   * @default null
    */
-  format?: Formatters | false;
+  format?: Formatters | null;
+  /**
+   * If specified, this will be the file extension used when importing
+   * other modules. By default, we don't add a file extension and let the
+   * runtime resolve it. If you're using moduleResolution `nodenext`, we
+   * default to `.js`.
+   *
+   * @default undefined
+   */
+  importFileExtension?: ImportFileExtensions | (string & {}) | null;
   /**
    * Should the exports from plugin files be re-exported in the index
    * barrel file? By default, this is enabled and only default plugins
@@ -71,11 +84,11 @@ export type UserOutput = {
    */
   indexFile?: boolean;
   /**
-   * Process output folder with linter?
+   * Which linter to use to process output folder?
    *
-   * @default false
+   * @default null
    */
-  lint?: Linters | false;
+  lint?: Linters | null;
   /**
    * The absolute path to the output folder.
    */
@@ -86,9 +99,9 @@ export type UserOutput = {
    * attempt to find one starting from the location of the
    * `@hey-api/openapi-ts` configuration file and traversing up.
    *
-   * @default ''
+   * @default undefined
    */
-  tsConfigPath?: 'off' | (string & {});
+  tsConfigPath?: (string & {}) | null;
 };
 
 export type Output = {
@@ -98,7 +111,7 @@ export type Output = {
    *
    * @default undefined
    */
-  case?: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
+  case?: StringCase;
   /**
    * Clean the `output` folder on every run? If disabled, this folder may
    * be used to store additional files. The default option is `true` to
@@ -141,11 +154,20 @@ export type Output = {
     suffix: string | null;
   };
   /**
-   * Process output folder with formatter?
+   * Which formatter to use to process output folder?
    *
-   * @default false
+   * @default null
    */
-  format: Formatters | false;
+  format: Formatters | null;
+  /**
+   * If specified, this will be the file extension used when importing
+   * other modules. By default, we don't add a file extension and let the
+   * runtime resolve it. If you're using moduleResolution `nodenext`, we
+   * default to `.js`.
+   *
+   * @default undefined
+   */
+  importFileExtension: ImportFileExtensions | (string & {}) | null | undefined;
   /**
    * Should the exports from plugin files be re-exported in the index
    * barrel file? By default, this is enabled and only default plugins
@@ -155,22 +177,27 @@ export type Output = {
    */
   indexFile: boolean;
   /**
-   * Process output folder with linter?
+   * Which linter to use to process output folder?
    *
-   * @default false
+   * @default null
    */
-  lint: Linters | false;
+  lint: Linters | null;
   /**
    * The absolute path to the output folder.
    */
   path: string;
+  /**
+   * The parsed TypeScript configuration used to generate the output.
+   * If no `tsconfig` file path was provided or found, this will be `null`.
+   */
+  tsConfig: ts.ParsedCommandLine | null;
   /**
    * Relative or absolute path to the tsconfig file we should use to
    * generate the output. If a path to tsconfig file is not provided, we
    * attempt to find one starting from the location of the
    * `@hey-api/openapi-ts` configuration file and traversing up.
    *
-   * @default ''
+   * @default undefined
    */
-  tsConfigPath: 'off' | (string & {});
+  tsConfigPath: (string & {}) | null | undefined;
 };

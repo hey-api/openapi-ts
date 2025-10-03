@@ -154,6 +154,16 @@ for (const client of clients) {
       {
         config: createConfig({
           output: {
+            importFileExtension: '.ts',
+            path: 'import-file-extension-ts',
+          },
+          plugins: [client, '@hey-api/sdk'],
+        }),
+        description: 'SDK with .ts import file extensions',
+      },
+      {
+        config: createConfig({
+          output: {
             clean: false,
             path: 'clean-false',
           },

@@ -7,6 +7,68 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
+## v0.85.0
+
+### Updated `output` options
+
+We made the `output` configuration more consistent by using `null` to represent disabled options. This change does not affect boolean options.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    format: false, // [!code --]
+    format: null, // [!code ++]
+    lint: false, // [!code --]
+    lint: null, // [!code ++]
+    path: 'src/client',
+    tsConfigPath: 'off', // [!code --]
+    tsConfigPath: null, // [!code ++]
+  },
+};
+```
+
+### Updated Pinia Colada query options
+
+Pinia Colada query options now use `defineQueryOptions` to improve reactivity support. Instead of calling the query options function, you can use one of the following approaches.
+
+::: code-group
+
+```ts [no params]
+useQuery(getPetsQuery);
+```
+
+```ts [constant]
+useQuery(getPetByIdQuery, () => ({
+  path: {
+    petId: 1,
+  },
+}));
+```
+
+```ts [reactive]
+const petId = ref<number | null>(1);
+
+useQuery(getPetByIdQuery, () => ({
+  path: {
+    petId: petId.value,
+  },
+}));
+```
+
+```ts [properties]
+const petId = ref<number | null>(1);
+
+useQuery(() => ({
+  ...getPetByIdQuery({
+    path: { petId: petId.value as number },
+  }),
+  enabled: () => petId.value != null,
+}));
+```
+
+:::
+
 ## v0.84.0
 
 ### Symbol API
