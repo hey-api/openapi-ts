@@ -88,3 +88,4 @@
 - [maxdew-envelio](https://github.com/maxdew-envelio)
 - [nnzhadow](https://github.com/nnzhadow)
 - [renovate[bot]](https://github.com/renovate[bot])
+- [renovate[bot]](https://github.com/renovate[bot])
