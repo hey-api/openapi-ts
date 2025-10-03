@@ -1,5 +1,79 @@
 # @hey-api/openapi-ts
 
+## 0.85.0
+
+### Minor Changes
+
+- refactor(config): replace 'off' with null to disable options
+
+### Updated `output` options
+
+We made the `output` configuration more consistent by using `null` to represent disabled options. This change does not affect boolean options.
+
+````js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    format: null,
+    lint: null,
+    path: 'src/client',
+    tsConfigPath: null,
+  },
+};
+``` ([#2718](https://github.com/hey-api/openapi-ts/pull/2718)) ([`fcdd73b`](https://github.com/hey-api/openapi-ts/commit/fcdd73b816d74babf47e6a1f46032f5b8ebb4b48)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+
+- feat(config): add `output.importFileExtension` option ([#2718](https://github.com/hey-api/openapi-ts/pull/2718)) ([`fcdd73b`](https://github.com/hey-api/openapi-ts/commit/fcdd73b816d74babf47e6a1f46032f5b8ebb4b48)) by [@mrlubos](https://github.com/mrlubos)
+
+- feat(pinia-colada): query options use `defineQueryOptions`
+
+### Updated Pinia Colada query options
+
+Pinia Colada query options now use `defineQueryOptions` to improve reactivity support. Instead of calling the query options function, you can use one of the following approaches.
+
+#### No params
+
+```ts
+useQuery(getPetsQuery);
+````
+
+#### Constant
+
+```ts
+useQuery(getPetByIdQuery, () => ({
+  path: {
+    petId: 1,
+  },
+}));
+```
+
+#### Reactive
+
+```ts
+const petId = ref<number | null>(1);
+
+useQuery(getPetByIdQuery, () => ({
+  path: {
+    petId: petId.value,
+  },
+}));
+```
+
+#### Properties
+
+````ts
+const petId = ref<number | null>(1);
+
+useQuery(() => ({
+  ...getPetByIdQuery({
+    path: { petId: petId.value as number },
+  }),
+  enabled: () => petId.value != null,
+}));
+``` ([#2610](https://github.com/hey-api/openapi-ts/pull/2610)) ([`33e6b31`](https://github.com/hey-api/openapi-ts/commit/33e6b31fa2ab840dd4e6e2e3e0fbc6e207ccdf7e)) by [@brolnickij](https://github.com/brolnickij)
+
 ## 0.84.4
 
 ### Patch Changes
@@ -76,7 +150,7 @@ export default {
     path: 'src/client',
   },
 };
-```
+````
 
 By default, we append every file name with a `.gen` suffix to highlight it's automatically generated. You can customize or disable this suffix using the `fileName.suffix` option.
 
