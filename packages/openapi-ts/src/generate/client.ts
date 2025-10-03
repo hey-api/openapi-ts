@@ -3,7 +3,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import type { IProject, ProjectRenderMeta } from '@hey-api/codegen-core';
-import ts from 'typescript';
 
 import type { Client } from '../plugins/@hey-api/client-core/types';
 import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
@@ -132,9 +131,7 @@ const replaceImports = ({
       const importDir = path.dirname(importPath);
       const replacedName =
         (renamed.get(fileName) ?? fileName) +
-        (meta?.moduleResolution === ts.ModuleResolutionKind.NodeNext
-          ? '.js'
-          : extension);
+        (meta.importFileExtension ? meta.importFileExtension : extension);
       const replacedMatch =
         match.slice(0, importIndex) +
         [importDir, replacedName].filter(Boolean).join('/') +

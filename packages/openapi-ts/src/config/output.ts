@@ -1,3 +1,6 @@
+import ts from 'typescript';
+
+import { findTsConfigPath, loadTsConfig } from '../generate/tsConfig';
 import type { Config, UserConfig } from '../types/config';
 import { valueToObject } from './utils/config';
 
@@ -10,11 +13,10 @@ export const getOutput = (userConfig: UserConfig): Config['output'] => {
         name: '{{name}}',
         suffix: '.gen',
       },
-      format: false,
+      format: null,
       indexFile: true,
-      lint: false,
+      lint: null,
       path: '',
-      tsConfigPath: '',
     },
     mappers: {
       object: (fields, defaultValue) => ({
@@ -36,6 +38,20 @@ export const getOutput = (userConfig: UserConfig): Config['output'] => {
       string: (path) => ({ path }),
     },
     value: userConfig.output,
-  });
-  return output as Config['output'];
+  }) as Config['output'];
+  output.tsConfig = loadTsConfig(findTsConfigPath(output.tsConfigPath));
+  if (
+    output.importFileExtension === undefined &&
+    output.tsConfig?.options.moduleResolution ===
+      ts.ModuleResolutionKind.NodeNext
+  ) {
+    output.importFileExtension = '.js';
+  }
+  if (
+    output.importFileExtension &&
+    !output.importFileExtension.startsWith('.')
+  ) {
+    output.importFileExtension = `.${output.importFileExtension}`;
+  }
+  return output;
 };

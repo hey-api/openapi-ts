@@ -12,7 +12,6 @@ import { generateLegacyClientClass } from '../class';
 import { generateClientBundle } from '../client';
 import { generateLegacyCore } from '../core';
 import { GeneratedFile } from '../file';
-import { findTsConfigPath, loadTsConfig } from '../tsConfig';
 import { removeDirSync } from '../utils';
 import { generateIndexFile } from './indexFile';
 
@@ -61,8 +60,6 @@ export const generateLegacyOutput = async ({
     removeDirSync(outputPath);
   }
 
-  const tsConfig = loadTsConfig(findTsConfigPath(config.output.tsConfigPath));
-
   const clientPlugin = getClientPlugin(config);
   if (
     !isLegacyClient(config) &&
@@ -70,7 +67,7 @@ export const generateLegacyOutput = async ({
     clientPlugin.config.bundle
   ) {
     const meta: ProjectRenderMeta = {
-      moduleResolution: tsConfig?.options.moduleResolution,
+      importFileExtension: config.output.importFileExtension,
     };
 
     generateClientBundle({
@@ -120,9 +117,9 @@ export const generateLegacyOutput = async ({
     }
 
     if (name === 'index') {
-      file.write('\n', tsConfig);
+      file.write('\n', config.output.tsConfig);
     } else {
-      file.write('\n\n', tsConfig);
+      file.write('\n\n', config.output.tsConfig);
     }
   });
 };

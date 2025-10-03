@@ -80,6 +80,7 @@ export default defineConfig(() => {
         suffix: '.meh',
       },
       // format: 'prettier',
+      importFileExtension: '.ts',
       // indexFile: false,
       // lint: 'eslint',
       path: path.resolve(__dirname, 'generated', 'sample'),
