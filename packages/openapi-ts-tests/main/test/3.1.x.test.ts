@@ -21,7 +21,9 @@ describe(`OpenAPI ${version}`, () => {
       version,
       typeof userConfig.input === 'string'
         ? userConfig.input
-        : (userConfig.input.path as string),
+        : userConfig.input instanceof Array
+          ? (userConfig.input[0] as any).path || userConfig.input[0]
+          : (userConfig.input as any).path,
     );
     return {
       plugins: ['@hey-api/typescript'],
@@ -38,7 +40,9 @@ describe(`OpenAPI ${version}`, () => {
       },
       output: path.join(
         outputDir,
-        typeof userConfig.output === 'string' ? userConfig.output : '',
+        typeof userConfig.output === 'string'
+          ? userConfig.output
+          : userConfig.output.path,
       ),
     };
   };
@@ -986,5 +990,194 @@ describe(`OpenAPI ${version}`, () => {
         );
       }),
     );
+  });
+
+  describe('multi config', () => {
+    it('generates outputs for all configs', async () => {
+      const configA = createConfig({
+        input: 'external.yaml',
+        output: 'multi-external',
+      });
+      const configB = createConfig({
+        input: 'enum-inline.yaml',
+        output: 'multi-enum-inline',
+        parser: { transforms: { enums: 'root' } },
+      });
+
+      await createClient([configA, configB]);
+
+      const outputPathA =
+        typeof configA.output === 'string'
+          ? configA.output
+          : configA.output.path;
+      const outputPathB =
+        typeof configB.output === 'string'
+          ? configB.output
+          : configB.output.path;
+
+      const filesA = getFilePaths(outputPathA);
+      const filesB = getFilePaths(outputPathB);
+
+      await Promise.all(
+        filesA.map(async (filePath) => {
+          const fileContent = fs.readFileSync(filePath, 'utf-8');
+          await expect(fileContent).toMatchFileSnapshot(
+            path.join(
+              __dirname,
+              '__snapshots__',
+              version,
+              filePath.slice(outputDir.length + 1),
+            ),
+          );
+        }),
+      );
+
+      await Promise.all(
+        filesB.map(async (filePath) => {
+          const fileContent = fs.readFileSync(filePath, 'utf-8');
+          await expect(fileContent).toMatchFileSnapshot(
+            path.join(
+              __dirname,
+              '__snapshots__',
+              version,
+              filePath.slice(outputDir.length + 1),
+            ),
+          );
+        }),
+      );
+    });
+  });
+
+  describe('multi input', () => {
+    it('parses multiple inputs (object + string) without errors', async () => {
+      const specsBase = path.join(getSpecsPath(), version);
+      await expect(
+        createClient({
+          dryRun: true,
+          input: [
+            { path: path.join(specsBase, 'multi-a.yaml') },
+            path.join(specsBase, 'multi-b.yaml'),
+          ],
+          logs: { level: 'silent' },
+          output: path.join(outputDir, 'multi-input'),
+          plugins: ['@hey-api/typescript'],
+        }),
+      ).resolves.not.toThrow();
+    });
+  });
+
+  describe('multi output', () => {
+    it('generates multiple string outputs without errors', async () => {
+      const results = await createClient({
+        input: path.join(getSpecsPath(), version, 'external.yaml'),
+        logs: { level: 'silent' },
+        output: [
+          path.join(outputDir, 'multi-output-string-1'),
+          path.join(outputDir, 'multi-output-string-2'),
+        ],
+        plugins: ['@hey-api/typescript'],
+      });
+
+      expect(results).toHaveLength(2);
+
+      // Verify both output directories were created
+      expect(fs.existsSync(path.join(outputDir, 'multi-output-string-1'))).toBe(
+        true,
+      );
+      expect(fs.existsSync(path.join(outputDir, 'multi-output-string-2'))).toBe(
+        true,
+      );
+    });
+
+    it('generates multiple output objects with different configurations', async () => {
+      const results = await createClient({
+        input: path.join(getSpecsPath(), version, 'external.yaml'),
+        logs: { level: 'silent' },
+        output: [
+          {
+            clean: true,
+            indexFile: true,
+            path: path.join(outputDir, 'multi-output-config-1'),
+          },
+          {
+            clean: false,
+            indexFile: false,
+            path: path.join(outputDir, 'multi-output-config-2'),
+          },
+        ],
+        plugins: ['@hey-api/typescript'],
+      });
+
+      expect(results).toHaveLength(2);
+
+      // Verify both output directories were created
+      expect(fs.existsSync(path.join(outputDir, 'multi-output-config-1'))).toBe(
+        true,
+      );
+      expect(fs.existsSync(path.join(outputDir, 'multi-output-config-2'))).toBe(
+        true,
+      );
+
+      // Verify index files are created/not created based on configuration
+      expect(
+        fs.existsSync(
+          path.join(outputDir, 'multi-output-config-1', 'index.ts'),
+        ),
+      ).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(outputDir, 'multi-output-config-2', 'index.ts'),
+        ),
+      ).toBe(false);
+    });
+
+    it('generates mixed string and object outputs', async () => {
+      const results = await createClient({
+        input: path.join(getSpecsPath(), version, 'external.yaml'),
+        logs: { level: 'silent' },
+        output: [
+          path.join(outputDir, 'multi-output-mixed-string'),
+          {
+            indexFile: false,
+            path: path.join(outputDir, 'multi-output-mixed-object'),
+          },
+        ],
+        plugins: ['@hey-api/typescript'],
+      });
+
+      expect(results).toHaveLength(2);
+
+      // Verify both output directories were created
+      expect(
+        fs.existsSync(path.join(outputDir, 'multi-output-mixed-string')),
+      ).toBe(true);
+      expect(
+        fs.existsSync(path.join(outputDir, 'multi-output-mixed-object')),
+      ).toBe(true);
+    });
+
+    it('preserves global configuration across multiple outputs', async () => {
+      const results = await createClient({
+        experimentalParser: true,
+        input: path.join(getSpecsPath(), version, 'external.yaml'),
+        logs: { level: 'silent' },
+        output: [
+          path.join(outputDir, 'multi-output-global-1'),
+          path.join(outputDir, 'multi-output-global-2'),
+        ],
+        plugins: ['@hey-api/typescript', '@hey-api/sdk'],
+      });
+
+      expect(results).toHaveLength(2);
+
+      // Both results should have the same global configuration
+      results.forEach((result) => {
+        if ('config' in result) {
+          expect(result.config.experimentalParser).toBe(true);
+          expect(result.config.plugins['@hey-api/typescript']).toBeDefined();
+          expect(result.config.plugins['@hey-api/sdk']).toBeDefined();
+        }
+      });
+    });
   });
 });
