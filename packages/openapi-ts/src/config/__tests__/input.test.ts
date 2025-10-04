@@ -11,7 +11,7 @@ describe('input config', () => {
         output: 'src/client',
       };
 
-      const result = getInput(userConfig);
+      const result = getInput(userConfig)[0]!;
       expect(result.path).toBe('https://example.com/openapi.yaml');
     });
 
@@ -21,7 +21,7 @@ describe('input config', () => {
         output: 'src/client',
       };
 
-      const result = getInput(userConfig);
+      const result = getInput(userConfig)[0]!;
       expect(result.path).toBe(
         'https://dash.readme.com/api/v1/api-registry/abc123',
       );
@@ -33,7 +33,7 @@ describe('input config', () => {
         output: 'src/client',
       };
 
-      const result = getInput(userConfig);
+      const result = getInput(userConfig)[0]!;
       expect(result.path).toBe(
         'https://dash.readme.com/api/v1/api-registry/uuid123',
       );
@@ -45,7 +45,7 @@ describe('input config', () => {
         output: 'src/client',
       };
 
-      const result = getInput(userConfig);
+      const result = getInput(userConfig)[0]!;
       expect(result.path).toBe(
         'https://dash.readme.com/api/v1/api-registry/test-uuid-123',
       );
@@ -64,7 +64,7 @@ describe('input config', () => {
         output: 'src/client',
       };
 
-      const result = getInput(userConfig);
+      const result = getInput(userConfig)[0]!;
       expect(result.path).toBe(
         'https://dash.readme.com/api/v1/api-registry/abc123',
       );
@@ -79,7 +79,7 @@ describe('input config', () => {
         output: 'src/client',
       };
 
-      const result = getInput(userConfig);
+      const result = getInput(userConfig)[0]!;
       expect(result.path).toBe(
         'https://dash.readme.com/api/v1/api-registry/uuid',
       );
@@ -95,7 +95,7 @@ describe('input config', () => {
         output: 'src/client',
       };
 
-      const result = getInput(userConfig);
+      const result = getInput(userConfig)[0]!;
       expect(result.path).toBe('https://get.heyapi.dev/myorg/myproject');
     });
 
@@ -108,7 +108,7 @@ describe('input config', () => {
         output: 'src/client',
       };
 
-      const result = getInput(userConfig);
+      const result = getInput(userConfig)[0]!;
       expect(result.path).toEqual({
         info: { title: 'Test API', version: '1.0.0' },
         openapi: '3.0.0',
@@ -125,7 +125,7 @@ describe('input config', () => {
 
       inputs.forEach((input) => {
         const userConfig: UserConfig = { input, output: 'src/client' };
-        const result = getInput(userConfig);
+        const result = getInput(userConfig)[0]!;
         expect(result.path).toBe(input);
       });
     });
@@ -140,7 +140,7 @@ describe('input config', () => {
         },
       };
 
-      const result = getInput(userConfig);
+      const result = getInput(userConfig)[0]!;
       expect(result.path).toBe(
         'https://dash.readme.com/api/v1/api-registry/abc123',
       );
@@ -160,7 +160,7 @@ describe('input config', () => {
         output: 'src/client',
       };
 
-      const result = getInput(userConfig);
+      const result = getInput(userConfig)[0]!;
       expect(result.path).toBe(
         'https://dash.readme.com/api/v1/api-registry/test123',
       );

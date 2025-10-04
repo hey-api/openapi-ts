@@ -18,13 +18,11 @@ export default defineConfig(() => {
     // experimentalParser: false,
     input: [
       {
-        // branch: 'main',
         // fetch: {
         //   headers: {
         //     'x-foo': 'bar',
         //   },
         // },
-        // organization: 'hey-api',
         // path: {
         //   components: {},
         //   info: {
@@ -50,49 +48,60 @@ export default defineConfig(() => {
           // 'validators-circular-ref-2.yaml',
           // 'zoom-video-sdk.json',
         ),
-        // path: 'scalar:@scalar/access-service',
-        // path: 'hey-api/backend',
-        // path: 'hey-api/backend?branch=main&version=1.0.0',
         // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
         // path: 'http://localhost:4000/',
         // path: 'http://localhost:8000/openapi.json',
         // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
         // path: 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
-        // project: 'backend',
-        // project: 'upload-openapi-spec',
-        // version: '1.0.0',
         // watch: {
         //   enabled: true,
         //   interval: 500,
         //   timeout: 30_000,
         // },
       },
-      path.resolve(getSpecsPath(), '3.1.x', 'full.yaml'),
+      // path.resolve(getSpecsPath(), '3.1.x', 'full.yaml'),
+      // {
+      //   branch: 'main',
+      //   organization: 'hey-api',
+      //   path: 'hey-api/backend',
+      //   project: 'backend',
+      //   project: 'upload-openapi-spec',
+      //   version: '1.0.0',
+      // },
+      // 'hey-api/backend?branch=main&version=1.0.0',
+      // 'scalar:@scalar/access-service',
+      // 'readme:@developers/v2.0#nysezql0wwo236',
+      // 'readme:nysezql0wwo236',
+      // 'https://dash.readme.com/api/v1/api-registry/nysezql0wwo236',
+      // 'https://somefakedomain.com/openapi.yaml',
     ],
     logs: {
-      level: 'debug',
+      // level: 'debug',
       path: './logs',
     },
     // name: 'foo',
-    output: {
-      // case: 'snake_case',
-      clean: true,
-      fileName: {
+    output: [
+      {
         // case: 'snake_case',
-        // name: '{{name}}.renamed',
-        suffix: '.meh',
+        clean: true,
+        fileName: {
+          // case: 'snake_case',
+          // name: '{{name}}.renamed',
+          suffix: '.meh',
+        },
+        // format: 'prettier',
+        importFileExtension: '.ts',
+        // indexFile: false,
+        // lint: 'eslint',
+        path: path.resolve(__dirname, 'generated', 'sample'),
+        tsConfigPath: path.resolve(
+          __dirname,
+          'tsconfig',
+          'tsconfig.nodenext.json',
+        ),
       },
-      // format: 'prettier',
-      importFileExtension: '.ts',
-      // indexFile: false,
-      // lint: 'eslint',
-      path: path.resolve(__dirname, 'generated', 'sample'),
-      tsConfigPath: path.resolve(
-        __dirname,
-        'tsconfig',
-        'tsconfig.nodenext.json',
-      ),
-    },
+      // path.resolve(__dirname, 'generated', 'sample2'),
+    ],
     parser: {
       filters: {
         // deprecated: false,

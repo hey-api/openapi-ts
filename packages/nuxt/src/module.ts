@@ -60,9 +60,11 @@ export default defineNuxtModule<ModuleOptions>({
       config.watch = false;
     }
 
+    const output =
+      config.output instanceof Array ? config.output[0] : config.output;
     const folder = path.resolve(
       nuxt.options.rootDir,
-      typeof config.output === 'string' ? config.output : config.output.path,
+      typeof output === 'string' ? output : (output?.path ?? ''),
     );
 
     nuxt.options.alias[options.alias!] = folder;

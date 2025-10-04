@@ -5,6 +5,12 @@ import type { Config, UserConfig } from '../types/config';
 import { valueToObject } from './utils/config';
 
 export const getOutput = (userConfig: UserConfig): Config['output'] => {
+  if (userConfig.output instanceof Array) {
+    throw new Error(
+      'Unexpected array of outputs in user configuration. This should have been expanded already.',
+    );
+  }
+
   const output = valueToObject({
     defaultValue: {
       clean: true,

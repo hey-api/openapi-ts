@@ -1,13 +1,10 @@
 import path from 'node:path';
 
+import colors from 'ansi-colors';
 import { loadConfig } from 'c12';
 
 import { ConfigError } from '../error';
-import type {
-  Config,
-  UserConfig,
-  UserConfigMultiOutputs,
-} from '../types/config';
+import type { Config, UserConfig } from '../types/config';
 import { isLegacyClient, setConfig } from '../utils/config';
 import { getInput } from './input';
 import { getLogs } from './logs';
@@ -32,40 +29,10 @@ export const detectInteractiveSession = (): boolean =>
   );
 
 /**
- * Expands a UserConfig with multiple outputs into multiple UserConfigs with single outputs
- * @internal
- */
-const expandMultiOutputConfigs = (
-  userConfigs: ReadonlyArray<UserConfigMultiOutputs>,
-): ReadonlyArray<UserConfig> => {
-  const expandedConfigs: Array<UserConfig> = [];
-
-  for (const userConfig of userConfigs) {
-    if (Array.isArray(userConfig.output)) {
-      // Multi-output configuration - expand into multiple single-output configs
-      for (const output of userConfig.output) {
-        expandedConfigs.push({
-          ...userConfig,
-          output,
-        });
-      }
-    } else {
-      // Single output configuration - keep as is
-      expandedConfigs.push(userConfig as UserConfig);
-    }
-  }
-
-  return expandedConfigs;
-};
-
-/**
  * @internal
  */
 export const initConfigs = async (
-  userConfig:
-    | UserConfigMultiOutputs
-    | ReadonlyArray<UserConfigMultiOutputs>
-    | undefined,
+  userConfigs: ReadonlyArray<UserConfig>,
 ): Promise<{
   dependencies: Record<string, string>;
   results: ReadonlyArray<{
@@ -73,48 +40,72 @@ export const initConfigs = async (
     errors: ReadonlyArray<Error>;
   }>;
 }> => {
-  let configurationFile: string | undefined = undefined;
-  if (userConfig && !(userConfig instanceof Array)) {
-    const cf = userConfig.configFile;
-    if (cf) {
-      const parts = cf.split('.');
+  const configs: Array<UserConfig> = [];
+  let dependencies: Record<string, string> = {};
+
+  for (const userConfig of userConfigs) {
+    let configurationFile: string | undefined = undefined;
+    if (userConfig?.configFile) {
+      const parts = userConfig.configFile.split('.');
       configurationFile = parts.slice(0, parts.length - 1).join('.');
     }
+
+    const { config: configFromFile, configFile: loadedConfigFile } =
+      await loadConfig<UserConfig>({
+        configFile: configurationFile,
+        name: 'openapi-ts',
+      });
+
+    if (!Object.keys(dependencies).length) {
+      // TODO: handle dependencies for multiple configs properly?
+      dependencies = getProjectDependencies(
+        Object.keys(configFromFile).length ? loadedConfigFile : undefined,
+      );
+    }
+
+    const mergedConfigs =
+      configFromFile instanceof Array
+        ? configFromFile.map((config) => mergeConfigs(config, userConfig))
+        : [mergeConfigs(configFromFile, userConfig)];
+
+    for (const mergedConfig of mergedConfigs) {
+      const input = getInput(mergedConfig);
+
+      if (mergedConfig.output instanceof Array) {
+        const countInputs = input.length;
+        const countOutputs = mergedConfig.output.length;
+        if (countOutputs > 1) {
+          if (countInputs !== countOutputs) {
+            console.warn(
+              `⚙️ ${colors.yellow('Warning:')} You provided ${colors.cyan(String(countInputs))} ${colors.cyan(countInputs === 1 ? 'input' : 'inputs')} and ${colors.yellow(String(countOutputs))} ${colors.yellow('outputs')}. This is probably not what you want as it will produce identical output in multiple locations. You most likely want to provide a single output or the same number of outputs as inputs.`,
+            );
+            for (const output of mergedConfig.output) {
+              configs.push({ ...mergedConfig, input, output });
+            }
+          } else {
+            mergedConfig.output.forEach((output, index) => {
+              configs.push({ ...mergedConfig, input: input[index]!, output });
+            });
+          }
+        } else {
+          configs.push({
+            ...mergedConfig,
+            input,
+            output: mergedConfig.output[0] ?? '',
+          });
+        }
+      } else {
+        configs.push({ ...mergedConfig, input });
+      }
+    }
   }
-
-  const { config: configFromFile, configFile: loadedConfigFile } =
-    await loadConfig<UserConfigMultiOutputs>({
-      configFile: configurationFile,
-      name: 'openapi-ts',
-    });
-
-  const dependencies = getProjectDependencies(
-    Object.keys(configFromFile).length ? loadedConfigFile : undefined,
-  );
-  const baseUserConfigs: ReadonlyArray<UserConfigMultiOutputs> = Array.isArray(
-    userConfig,
-  )
-    ? userConfig
-    : Array.isArray(configFromFile)
-      ? configFromFile.map((config) =>
-          mergeConfigs(config, userConfig as UserConfig | undefined),
-        )
-      : [
-          mergeConfigs(
-            (configFromFile as UserConfig) ?? ({} as UserConfig),
-            userConfig as UserConfig | undefined,
-          ),
-        ];
-
-  // Expand multi-output configurations into multiple single-output configurations
-  const userConfigs = expandMultiOutputConfigs(baseUserConfigs);
 
   const results: Array<{
     config: Config;
     errors: Array<Error>;
   }> = [];
 
-  for (const userConfig of userConfigs) {
+  for (const userConfig of configs) {
     const {
       base,
       configFile = '',
@@ -143,7 +134,7 @@ export const initConfigs = async (
     const output = getOutput(userConfig);
     const parser = getParser(userConfig);
 
-    if (!input.path) {
+    if (!input.length) {
       errors.push(
         new ConfigError(
           'missing input - which OpenAPI specification should we use to generate your output?',

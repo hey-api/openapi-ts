@@ -1,3 +1,5 @@
+import type { Input } from '../../types/input';
+
 // Regular expression to match ReadMe API Registry input formats:
 //   - @{organization}/{project}#{uuid}
 //   - {uuid}
@@ -57,8 +59,12 @@ export const parseShorthand = (shorthand: string): Parsed => {
  * @param input - ReadMe format string
  * @returns The ReadMe API Registry URL
  */
-export const inputToReadmePath = (input: string): string => {
+export const inputToReadmePath = (input: string): Partial<Input> => {
   const shorthand = input.slice(`${namespace}:`.length);
   const parsed = parseShorthand(shorthand);
-  return getRegistryUrl(parsed.uuid);
+  return {
+    ...parsed,
+    path: getRegistryUrl(parsed.uuid),
+    registry: 'readme',
+  };
 };

@@ -1,3 +1,5 @@
+import type { Input } from '../../types/input';
+
 // Regular expression to match Scalar API Registry input formats:
 //   - @{organization}/{project}
 const registryRegExp = /^(@[\w-]+)\/([\w.-]+)$/;
@@ -59,8 +61,12 @@ export const parseShorthand = (shorthand: string): Parsed => {
  * @param input - Scalar format string
  * @returns The Scalar API Registry URL
  */
-export const inputToScalarPath = (input: string): string => {
+export const inputToScalarPath = (input: string): Partial<Input> => {
   const shorthand = input.slice(`${namespace}:`.length);
   const parsed = parseShorthand(shorthand);
-  return getRegistryUrl(parsed.organization, parsed.project);
+  return {
+    ...parsed,
+    path: getRegistryUrl(parsed.organization, parsed.project),
+    registry: 'scalar',
+  };
 };

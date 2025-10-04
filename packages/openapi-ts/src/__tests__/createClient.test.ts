@@ -34,6 +34,7 @@ describe('compileInputPath', () => {
   it('with platform string', () => {
     const path = compileInputPath({
       path: 'https://get.heyapi.dev/foo/bar?branch=main&commit_sha=sha&tags=a,b,c&version=1.0.0',
+      registry: 'hey-api',
     });
     expect(path).toEqual({
       branch: 'main',
@@ -41,6 +42,7 @@ describe('compileInputPath', () => {
       organization: 'foo',
       path: 'https://get.heyapi.dev/foo/bar?branch=main&commit_sha=sha&tags=a,b,c&version=1.0.0',
       project: 'bar',
+      registry: 'hey-api',
       tags: ['a', 'b', 'c'],
       version: '1.0.0',
     });
@@ -71,6 +73,7 @@ describe('compileInputPath', () => {
     process.env.HEY_API_TOKEN = 'foo';
     const path = compileInputPath({
       path: 'https://get.heyapi.dev/foo/bar',
+      registry: 'hey-api',
     });
     delete process.env.HEY_API_TOKEN;
     expect(path).toEqual({
@@ -78,6 +81,7 @@ describe('compileInputPath', () => {
       organization: 'foo',
       path: 'https://get.heyapi.dev/foo/bar?api_key=foo',
       project: 'bar',
+      registry: 'hey-api',
     });
   });
 });

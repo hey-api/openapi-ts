@@ -1,17 +1,16 @@
 import type { Config, UserConfig } from '../types/config';
-import type { Input } from '../types/input';
+import type { Input, Watch } from '../types/input';
 import { inputToApiRegistry } from '../utils/input';
 import { heyApiRegistryBaseUrl } from '../utils/input/heyApi';
 
-const defaultWatch: Config['input']['watch'] = {
+const defaultWatch: Watch = {
   enabled: false,
   interval: 1_000,
   timeout: 60_000,
 };
 
-const getWatch = (
-  input: Pick<Config['input'], 'path' | 'watch'>,
-): Config['input']['watch'] => {
+// watch only remote files
+const getWatch = (input: Pick<Input, 'path' | 'watch'>): Watch => {
   let watch = { ...defaultWatch };
 
   // we cannot watch spec passed as an object
@@ -35,53 +34,61 @@ const getWatch = (
 };
 
 export const getInput = (userConfig: UserConfig): Config['input'] => {
-  let input: Config['input'] = {
-    path: '',
-    watch: defaultWatch,
-  };
+  const userInputs =
+    userConfig.input instanceof Array ? userConfig.input : [userConfig.input];
 
-  if (typeof userConfig.input === 'string') {
-    input.path = userConfig.input;
-  } else if (
-    userConfig.input &&
-    !(userConfig.input instanceof Array) &&
-    (userConfig.input.path !== undefined ||
-      userConfig.input.organization !== undefined)
-  ) {
-    // @ts-expect-error
-    input = {
-      ...input,
-      path: heyApiRegistryBaseUrl,
-      ...userConfig.input,
+  const inputs: Array<Input> = [];
+
+  for (const userInput of userInputs) {
+    let input: Input = {
+      path: '',
+      watch: defaultWatch,
     };
 
-    // watch only remote files
-    if (input.watch !== undefined) {
-      input.watch = getWatch(input);
-    }
-  } else {
-    input = {
-      ...input,
-      path: userConfig.input as Record<string, unknown>,
-    };
-  }
-
-  if (typeof input.path === 'string') {
-    inputToApiRegistry(input as Input & { path: string });
-  }
-
-  if (
-    userConfig.watch !== undefined &&
-    input.watch.enabled === defaultWatch.enabled &&
-    input.watch.interval === defaultWatch.interval &&
-    input.watch.timeout === defaultWatch.timeout
-  ) {
-    input.watch = getWatch({
-      path: input.path,
+    if (typeof userInput === 'string') {
+      input.path = userInput;
+    } else if (
+      userInput &&
+      (userInput.path !== undefined || userInput.organization !== undefined)
+    ) {
       // @ts-expect-error
-      watch: userConfig.watch,
-    });
+      input = {
+        ...input,
+        path: heyApiRegistryBaseUrl,
+        ...userInput,
+      };
+
+      if (input.watch !== undefined) {
+        input.watch = getWatch(input);
+      }
+    } else {
+      input = {
+        ...input,
+        path: userInput,
+      };
+    }
+
+    if (typeof input.path === 'string') {
+      inputToApiRegistry(input as Input & { path: string });
+    }
+
+    if (
+      userConfig.watch !== undefined &&
+      input.watch.enabled === defaultWatch.enabled &&
+      input.watch.interval === defaultWatch.interval &&
+      input.watch.timeout === defaultWatch.timeout
+    ) {
+      input.watch = getWatch({
+        path: input.path,
+        // @ts-expect-error
+        watch: userConfig.watch,
+      });
+    }
+
+    if (input.path) {
+      inputs.push(input);
+    }
   }
 
-  return input;
+  return inputs;
 };
