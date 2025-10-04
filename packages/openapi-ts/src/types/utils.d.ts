@@ -10,3 +10,7 @@ export type DeepPartial<T> = {
 };
 
 export type Files = Record<string, GeneratedFile>;
+
+export type LazyOrAsync<T> = T | (() => T) | (() => Promise<T>);
+
+export type MaybeArray<T> = T | ReadonlyArray<T>;

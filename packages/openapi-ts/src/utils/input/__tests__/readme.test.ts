@@ -91,14 +91,22 @@ describe('readme utils', () => {
   describe('inputToReadmePath', () => {
     it('should transform simple UUID format to API URL', () => {
       const result = inputToReadmePath('readme:abc123');
-      expect(result).toBe('https://dash.readme.com/api/v1/api-registry/abc123');
+      expect(result).toEqual({
+        path: 'https://dash.readme.com/api/v1/api-registry/abc123',
+        registry: 'readme',
+        uuid: 'abc123',
+      });
     });
 
     it('should transform full format to API URL', () => {
       const result = inputToReadmePath('readme:@myorg/myproject#uuid123');
-      expect(result).toBe(
-        'https://dash.readme.com/api/v1/api-registry/uuid123',
-      );
+      expect(result).toEqual({
+        organization: 'myorg',
+        path: 'https://dash.readme.com/api/v1/api-registry/uuid123',
+        project: 'myproject',
+        registry: 'readme',
+        uuid: 'uuid123',
+      });
     });
 
     it('should throw error for invalid inputs', () => {
@@ -137,9 +145,13 @@ describe('readme utils', () => {
       'should handle $input correctly',
       ({ expected, input }) => {
         expect(parseShorthand(input)).toEqual(expected);
-        expect(inputToReadmePath(`readme:${input}`)).toBe(
-          `https://dash.readme.com/api/v1/api-registry/${expected.uuid}`,
-        );
+        expect(inputToReadmePath(`readme:${input}`)).toEqual({
+          organization: expected.organization,
+          path: `https://dash.readme.com/api/v1/api-registry/${expected.uuid}`,
+          project: expected.project,
+          registry: 'readme',
+          uuid: expected.uuid,
+        });
       },
     );
 

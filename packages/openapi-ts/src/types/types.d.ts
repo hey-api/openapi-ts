@@ -12,18 +12,6 @@ export interface WatchValues {
    */
   headers: Headers;
   /**
-   * Per-input watch state for multi-input mode. Keys should be a stable
-   * identifier for the input (typically the URL or file path).
-   */
-  inputs?: Record<
-    string,
-    {
-      headers: Headers;
-      isHeadMethodSupported?: boolean;
-      lastValue?: string;
-    }
-  >;
-  /**
    * Can we send a HEAD request instead of fetching the whole specification?
    * This value will be set after the first successful fetch.
    */

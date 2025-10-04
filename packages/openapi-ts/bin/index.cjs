@@ -36,7 +36,7 @@ const params = program
   .option('-s, --silent', 'Set log level to silent')
   .option(
     '--no-log-file',
-    'Disable writing a log file. Works like --silent but without supressing console output',
+    'Disable writing a log file. Works like --silent but without suppressing console output',
   )
   .option(
     '-w, --watch [value]',
@@ -119,6 +119,7 @@ async function start() {
     }
 
     userConfig.logs.file = userConfig.logFile;
+    delete userConfig.logFile;
 
     if (typeof params.watch === 'string') {
       userConfig.watch = Number.parseInt(params.watch, 10);
