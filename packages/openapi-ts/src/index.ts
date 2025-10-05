@@ -5,10 +5,13 @@ import colors from 'ansi-colors';
 import colorSupport from 'color-support';
 
 import { checkNodeVersion } from './config/engine';
+import type { Configs } from './config/init';
 import { initConfigs } from './config/init';
 import { getLogs } from './config/logs';
 import { createClient as pCreateClient } from './createClient';
 import {
+  ConfigValidationError,
+  JobError,
   logCrashReport,
   openGitHubIssueWithCrashReport,
   printCrashReport,
@@ -16,8 +19,9 @@ import {
 } from './error';
 import type { IR } from './ir/types';
 import type { Client } from './types/client';
-import type { Config, UserConfig } from './types/config';
+import type { UserConfig } from './types/config';
 import type { LazyOrAsync, MaybeArray } from './types/utils';
+import { printCliIntro } from './utils/cli';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { Logger } from './utils/logger';
 
@@ -32,6 +36,8 @@ export const createClient = async (
   userConfig?: LazyOrAsync<MaybeArray<UserConfig>>,
   logger = new Logger(),
 ): Promise<ReadonlyArray<Client | IR.Context>> => {
+  printCliIntro();
+
   const resolvedConfig =
     typeof userConfig === 'function' ? await userConfig() : userConfig;
   const userConfigs = resolvedConfig
@@ -40,7 +46,7 @@ export const createClient = async (
       : [resolvedConfig]
     : [];
 
-  const configs: Array<Config> = [];
+  let configs: Configs | undefined;
 
   try {
     checkNodeVersion();
@@ -48,29 +54,37 @@ export const createClient = async (
     const eventCreateClient = logger.timeEvent('createClient');
 
     const eventConfig = logger.timeEvent('config');
-    const configResults = await initConfigs(userConfigs);
-    for (const result of configResults.results) {
-      configs.push(result.config);
-      if (result.errors.length) {
-        throw result.errors[0];
-      }
-    }
+    configs = await initConfigs({ logger, userConfigs });
     eventConfig.timeEnd();
+
+    const allConfigErrors = configs.results.flatMap((result) =>
+      result.errors.map((error) => ({ error, jobIndex: result.jobIndex })),
+    );
+    if (allConfigErrors.length) {
+      throw new ConfigValidationError(allConfigErrors);
+    }
 
     const eventHandlebars = logger.timeEvent('handlebars');
     const templates = registerHandlebarTemplates();
     eventHandlebars.timeEnd();
 
     const clients = await Promise.all(
-      configs.map((config, index) =>
-        pCreateClient({
-          config,
-          configIndex: index,
-          dependencies: configResults.dependencies,
-          logger,
-          templates,
-        }),
-      ),
+      configs.results.map(async (result) => {
+        try {
+          return await pCreateClient({
+            config: result.config,
+            dependencies: configs!.dependencies,
+            jobIndex: result.jobIndex,
+            logger,
+            templates,
+          });
+        } catch (error) {
+          throw new JobError('', {
+            error,
+            jobIndex: result.jobIndex,
+          });
+        }
+      }),
     );
     const result = clients.filter((client) => Boolean(client)) as ReadonlyArray<
       Client | IR.Context
@@ -78,13 +92,15 @@ export const createClient = async (
 
     eventCreateClient.timeEnd();
 
-    const config = configs[0];
-    logger.report(config && config.logs.level === 'debug');
+    const printLogs = configs.results.some(
+      (result) => result.config.logs.level === 'debug',
+    );
+    logger.report(printLogs);
 
     return result;
   } catch (error) {
     const resolvedConfig = userConfigs[0];
-    const config = configs[0];
+    const config = configs?.results[0]?.config;
     const dryRun = config?.dryRun ?? resolvedConfig?.dryRun ?? false;
     const isInteractive =
       config?.interactive ?? resolvedConfig?.interactive ?? false;

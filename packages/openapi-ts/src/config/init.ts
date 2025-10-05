@@ -5,7 +5,9 @@ import { loadConfig } from 'c12';
 
 import { ConfigError } from '../error';
 import type { Config, UserConfig } from '../types/config';
+import type { ArrayOnly } from '../types/utils';
 import { isLegacyClient, setConfig } from '../utils/config';
+import type { Logger } from '../utils/logger';
 import { getInput } from './input';
 import { getLogs } from './logs';
 import { mergeConfigs } from './merge';
@@ -13,6 +15,17 @@ import { getOutput } from './output';
 import { getProjectDependencies } from './packages';
 import { getParser } from './parser';
 import { getPlugins } from './plugins';
+
+type ConfigResult = {
+  config: Config;
+  errors: ReadonlyArray<Error>;
+  jobIndex: number;
+};
+
+export type Configs = {
+  dependencies: Record<string, string>;
+  results: ReadonlyArray<ConfigResult>;
+};
 
 /**
  * Detect if the current session is interactive based on TTY status and environment variables.
@@ -31,18 +44,17 @@ export const detectInteractiveSession = (): boolean =>
 /**
  * @internal
  */
-export const initConfigs = async (
-  userConfigs: ReadonlyArray<UserConfig>,
-): Promise<{
-  dependencies: Record<string, string>;
-  results: ReadonlyArray<{
-    config: Config;
-    errors: ReadonlyArray<Error>;
-  }>;
-}> => {
+export const initConfigs = async ({
+  logger,
+  userConfigs,
+}: {
+  logger: Logger;
+  userConfigs: ReadonlyArray<UserConfig>;
+}): Promise<Configs> => {
   const configs: Array<UserConfig> = [];
   let dependencies: Record<string, string> = {};
 
+  const eventLoad = logger.timeEvent('load');
   for (const userConfig of userConfigs) {
     let configurationFile: string | undefined = undefined;
     if (userConfig?.configFile) {
@@ -50,11 +62,13 @@ export const initConfigs = async (
       configurationFile = parts.slice(0, parts.length - 1).join('.');
     }
 
+    const eventC12 = logger.timeEvent('c12');
     const { config: configFromFile, configFile: loadedConfigFile } =
       await loadConfig<UserConfig>({
         configFile: configurationFile,
         name: 'openapi-ts',
       });
+    eventC12.timeEnd();
 
     if (!Object.keys(dependencies).length) {
       // TODO: handle dependencies for multiple configs properly?
@@ -99,12 +113,11 @@ export const initConfigs = async (
       }
     }
   }
+  eventLoad.timeEnd();
 
-  const results: Array<{
-    config: Config;
-    errors: Array<Error>;
-  }> = [];
+  const results: Array<ArrayOnly<ConfigResult>> = [];
 
+  const eventBuild = logger.timeEvent('build');
   for (const userConfig of configs) {
     const {
       base,
@@ -122,17 +135,13 @@ export const initConfigs = async (
         ? userConfig.interactive
         : detectInteractiveSession();
 
-    const errors: Array<Error> = [];
-
     const logs = getLogs(userConfig);
-
-    if (logs.level === 'debug') {
-      console.warn('userConfig:', userConfig);
-    }
 
     const input = getInput(userConfig);
     const output = getOutput(userConfig);
     const parser = getParser(userConfig);
+
+    const errors: Array<Error> = [];
 
     if (!input.length) {
       errors.push(
@@ -188,15 +197,16 @@ export const initConfigs = async (
     });
     config.exportCore = isLegacyClient(config) ? exportCore : false;
 
+    const jobIndex = results.length;
+
     if (logs.level === 'debug') {
-      console.warn('config:', config);
+      const jobPrefix = colors.gray(`[Job ${jobIndex + 1}] `);
+      console.warn(`${jobPrefix}${colors.cyan('config:')}`, config);
     }
 
-    results.push({
-      config,
-      errors,
-    });
+    results.push({ config, errors, jobIndex });
   }
+  eventBuild.timeEnd();
 
   return { dependencies, results };
 };
