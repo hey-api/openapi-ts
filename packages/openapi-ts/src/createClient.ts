@@ -132,26 +132,24 @@ export const compileInputPath = (input: Omit<Input, 'watch'>) => {
 
 const logInputPaths = (
   inputPaths: ReadonlyArray<ReturnType<typeof compileInputPath>>,
-  configIndex: number,
+  jobIndex: number,
 ) => {
   const lines: Array<string> = [];
 
-  const jobIndexPrefix = colors.gray(`[Job ${configIndex + 1}] `);
+  const jobPrefix = colors.gray(`[Job ${jobIndex + 1}] `);
   const count = inputPaths.length;
   const baseString = colors.cyan(
     `Generating from ${count} ${count === 1 ? 'input' : 'inputs'}:`,
   );
-  lines.push(`${jobIndexPrefix}⏳ ${baseString}`);
+  lines.push(`${jobPrefix}⏳ ${baseString}`);
 
   inputPaths.forEach((inputPath, index) => {
-    const inputIndexPrefixStr = `  [${index + 1}] `;
-    const inputIndexPrefix = colors.cyan(inputIndexPrefixStr);
-    const detailIndent = ' '.repeat(inputIndexPrefixStr.length);
+    const itemPrefixStr = `  [${index + 1}] `;
+    const itemPrefix = colors.cyan(itemPrefixStr);
+    const detailIndent = ' '.repeat(itemPrefixStr.length);
 
     if (typeof inputPath.path !== 'string') {
-      lines.push(
-        `${jobIndexPrefix}${inputIndexPrefix}raw OpenAPI specification`,
-      );
+      lines.push(`${jobPrefix}${itemPrefix}raw OpenAPI specification`);
       return;
     }
 
@@ -160,37 +158,37 @@ const logInputPaths = (
         const baseInput = [inputPath.organization, inputPath.project]
           .filter(Boolean)
           .join('/');
-        lines.push(`${jobIndexPrefix}${inputIndexPrefix}${baseInput}`);
+        lines.push(`${jobPrefix}${itemPrefix}${baseInput}`);
         if (inputPath.branch) {
           lines.push(
-            `${jobIndexPrefix}${detailIndent}${colors.gray('branch:')} ${colors.green(
+            `${jobPrefix}${detailIndent}${colors.gray('branch:')} ${colors.green(
               inputPath.branch,
             )}`,
           );
         }
         if (inputPath.commit_sha) {
           lines.push(
-            `${jobIndexPrefix}${detailIndent}${colors.gray('commit:')} ${colors.green(
+            `${jobPrefix}${detailIndent}${colors.gray('commit:')} ${colors.green(
               inputPath.commit_sha,
             )}`,
           );
         }
         if (inputPath.tags?.length) {
           lines.push(
-            `${jobIndexPrefix}${detailIndent}${colors.gray('tags:')} ${colors.green(
+            `${jobPrefix}${detailIndent}${colors.gray('tags:')} ${colors.green(
               inputPath.tags.join(', '),
             )}`,
           );
         }
         if (inputPath.version) {
           lines.push(
-            `${jobIndexPrefix}${detailIndent}${colors.gray('version:')} ${colors.green(
+            `${jobPrefix}${detailIndent}${colors.gray('version:')} ${colors.green(
               inputPath.version,
             )}`,
           );
         }
         lines.push(
-          `${jobIndexPrefix}${detailIndent}${colors.gray('registry:')} ${colors.green('Hey API')}`,
+          `${jobPrefix}${detailIndent}${colors.gray('registry:')} ${colors.green('Hey API')}`,
         );
         break;
       }
@@ -199,21 +197,21 @@ const logInputPaths = (
           .filter(Boolean)
           .join('/');
         if (!baseInput) {
-          lines.push(`${jobIndexPrefix}${inputIndexPrefix}${inputPath.path}`);
+          lines.push(`${jobPrefix}${itemPrefix}${inputPath.path}`);
         } else {
-          lines.push(`${jobIndexPrefix}${inputIndexPrefix}${baseInput}`);
+          lines.push(`${jobPrefix}${itemPrefix}${baseInput}`);
         }
         // @ts-expect-error
         if (inputPath.uuid) {
           lines.push(
-            `${jobIndexPrefix}${detailIndent}${colors.gray('uuid:')} ${colors.green(
+            `${jobPrefix}${detailIndent}${colors.gray('uuid:')} ${colors.green(
               // @ts-expect-error
               inputPath.uuid,
             )}`,
           );
         }
         lines.push(
-          `${jobIndexPrefix}${detailIndent}${colors.gray('registry:')} ${colors.green('ReadMe')}`,
+          `${jobPrefix}${detailIndent}${colors.gray('registry:')} ${colors.green('ReadMe')}`,
         );
         break;
       }
@@ -221,14 +219,14 @@ const logInputPaths = (
         const baseInput = [inputPath.organization, inputPath.project]
           .filter(Boolean)
           .join('/');
-        lines.push(`${jobIndexPrefix}${inputIndexPrefix}${baseInput}`);
+        lines.push(`${jobPrefix}${itemPrefix}${baseInput}`);
         lines.push(
-          `${jobIndexPrefix}${detailIndent}${colors.gray('registry:')} ${colors.green('Scalar')}`,
+          `${jobPrefix}${detailIndent}${colors.gray('registry:')} ${colors.green('Scalar')}`,
         );
         break;
       }
       default:
-        lines.push(`${jobIndexPrefix}${inputIndexPrefix}${inputPath.path}`);
+        lines.push(`${jobPrefix}${itemPrefix}${inputPath.path}`);
         break;
     }
   });
@@ -240,15 +238,15 @@ const logInputPaths = (
 
 export const createClient = async ({
   config,
-  configIndex,
   dependencies,
+  jobIndex,
   logger,
   templates,
   watches: _watches,
 }: {
   config: Config;
-  configIndex: number;
   dependencies: Record<string, string>;
+  jobIndex: number;
   logger: Logger;
   templates: Templates;
   /**
@@ -266,7 +264,7 @@ export const createClient = async ({
 
   // on first run, print the message as soon as possible
   if (config.logs.level !== 'silent' && !_watches) {
-    logInputPaths(inputPaths, configIndex);
+    logInputPaths(inputPaths, jobIndex);
   }
 
   const getSpecData = async (input: Input, index: number) => {
@@ -318,7 +316,7 @@ export const createClient = async ({
     // generating the output
     if (config.logs.level !== 'silent' && _watches) {
       console.clear();
-      logInputPaths(inputPaths, configIndex);
+      logInputPaths(inputPaths, jobIndex);
     }
 
     const eventInputPatch = logger.timeEvent('input.patch');
@@ -357,12 +355,9 @@ export const createClient = async ({
         const outputPath = process.env.INIT_CWD
           ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
           : config.output.path;
-        const jobPrefix =
-          typeof configIndex === 'number'
-            ? colors.gray(`[Job ${configIndex + 1}] `)
-            : '';
+        const jobPrefix = colors.gray(`[Job ${jobIndex + 1}] `);
         console.log(
-          `${jobPrefix}${colors.green('🚀 Done!')} Your output is in ${colors.cyanBright(outputPath)}`,
+          `${jobPrefix}${colors.green('✅ Done!')} Your output is in ${colors.cyanBright(outputPath)}`,
         );
       }
     }
@@ -378,8 +373,8 @@ export const createClient = async ({
     setTimeout(() => {
       createClient({
         config,
-        configIndex,
         dependencies,
+        jobIndex,
         logger,
         templates,
         watches,

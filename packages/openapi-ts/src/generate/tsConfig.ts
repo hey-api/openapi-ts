@@ -30,6 +30,46 @@ export const findPackageJson = (): unknown | undefined => {
   return;
 };
 
+export const loadPackageJson = () => {
+  const packageJson = findPackageJson();
+
+  const safePackage = {
+    bugs: {
+      url: '',
+    },
+    name: '',
+    version: '',
+  };
+
+  if (packageJson && typeof packageJson === 'object') {
+    if ('name' in packageJson && typeof packageJson.name === 'string') {
+      safePackage.name = packageJson.name;
+    }
+
+    if ('version' in packageJson && typeof packageJson.version === 'string') {
+      safePackage.version = packageJson.version;
+    }
+
+    if (
+      'bugs' in packageJson &&
+      packageJson.bugs &&
+      typeof packageJson.bugs === 'object'
+    ) {
+      if (
+        'url' in packageJson.bugs &&
+        typeof packageJson.bugs.url === 'string'
+      ) {
+        safePackage.bugs.url = packageJson.bugs.url;
+        if (safePackage.bugs.url && !safePackage.bugs.url.endsWith('/')) {
+          safePackage.bugs.url += '/';
+        }
+      }
+    }
+  }
+
+  return safePackage;
+};
+
 export const findTsConfigPath = (
   tsConfigPath?: UserOutput['tsConfigPath'],
 ): string | null => {

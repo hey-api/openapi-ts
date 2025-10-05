@@ -135,11 +135,11 @@ export class Logger {
       if (severity?.type === 'percentage') {
         percentageLabel = severity.color(percentageLabel);
       }
+      const jobPrefix = colors.gray('[root] ');
       console.log(
-        colors.gray(prefix) +
-          color(
-            `${event.name.padEnd(maxLength)} ${durationLabel} (${percentageLabel})`,
-          ),
+        `${jobPrefix}${colors.gray(prefix)}${color(
+          `${event.name.padEnd(maxLength)} ${durationLabel} (${percentageLabel})`,
+        )}`,
       );
       this.reportEvent({ ...event, indent: indent + 1, measure });
     });

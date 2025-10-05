@@ -16,14 +16,14 @@ const outputDir = path.join(__dirname, 'generated', version);
 
 describe(`OpenAPI ${version}`, () => {
   const createConfig = (userConfig: UserConfig) => {
+    const input =
+      userConfig.input instanceof Array
+        ? userConfig.input[0]
+        : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
       version,
-      typeof userConfig.input === 'string'
-        ? userConfig.input
-        : userConfig.input instanceof Array
-          ? (userConfig.input[0] as any).path || userConfig.input[0]
-          : (userConfig.input as any).path,
+      typeof input === 'string' ? input : ((input?.path as string) ?? ''),
     );
     const output =
       userConfig.output instanceof Array
