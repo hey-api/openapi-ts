@@ -18,7 +18,7 @@ export const createZodConfig =
     outputDir: string;
     zodVersion: (typeof zodVersions)[number];
   }) =>
-  (userConfig: UserConfig): UserConfig => {
+  (userConfig: UserConfig) => {
     const inputPath = path.join(
       getSpecsPath(),
       openApiVersion,
@@ -52,7 +52,7 @@ export const createZodConfig =
         outputDir,
         typeof userConfig.output === 'string' ? userConfig.output : '',
       ),
-    };
+    } as const satisfies UserConfig;
   };
 
 export const getSnapshotsPath = (): string =>

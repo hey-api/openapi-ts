@@ -1,7 +1,7 @@
 import { platform } from 'os';
 import { describe, expect, it } from 'vitest';
 
-import type { UserConfig, UserConfigMultiOutputs } from '../types/config';
+import type { UserConfig } from '../types/config';
 
 describe(
   'main entry index',
@@ -33,7 +33,7 @@ describe(
       it('should handle multiple string outputs', async () => {
         const { createClient } = await import('../index');
 
-        const config: UserConfigMultiOutputs = {
+        const config: UserConfig = {
           dryRun: true,
           input: {
             info: { title: 'Test API', version: '1.0.0' },
@@ -51,7 +51,7 @@ describe(
       it('should handle multiple output objects with different configurations', async () => {
         const { createClient } = await import('../index');
 
-        const config: UserConfigMultiOutputs = {
+        const config: UserConfig = {
           dryRun: true,
           input: {
             info: { title: 'Test API', version: '1.0.0' },
@@ -80,7 +80,7 @@ describe(
       it('should handle mixed string and object outputs', async () => {
         const { createClient } = await import('../index');
 
-        const config: UserConfigMultiOutputs = {
+        const config: UserConfig = {
           dryRun: true,
           input: {
             info: { title: 'Test API', version: '1.0.0' },
@@ -105,7 +105,7 @@ describe(
       it('should preserve global config across multiple outputs', async () => {
         const { createClient } = await import('../index');
 
-        const config: UserConfigMultiOutputs = {
+        const config: UserConfig = {
           dryRun: true,
           experimentalParser: true,
           input: {

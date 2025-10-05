@@ -36,20 +36,26 @@ for (const client of clients) {
     const createConfig = (
       userConfig: Omit<UserConfig, 'input'> &
         Pick<Partial<UserConfig>, 'input'>,
-    ): UserConfig => ({
-      ...userConfig,
-      input: path.join(getSpecsPath(), '3.1.x', 'full.yaml'),
-      logs: {
-        level: 'silent',
-      },
-      output:
-        typeof userConfig.output === 'string'
-          ? path.join(outputDir, userConfig.output)
-          : {
-              ...userConfig.output,
-              path: path.join(outputDir, userConfig.output.path),
-            },
-    });
+    ) => {
+      const output =
+        userConfig.output instanceof Array
+          ? userConfig.output[0]
+          : userConfig.output;
+      return {
+        ...userConfig,
+        input: path.join(getSpecsPath(), '3.1.x', 'full.yaml'),
+        logs: {
+          level: 'silent',
+        },
+        output:
+          typeof output === 'string'
+            ? path.join(outputDir, output)
+            : {
+                ...output,
+                path: path.join(outputDir, output?.path ?? ''),
+              },
+      } as const satisfies UserConfig;
+    };
 
     const scenarios = [
       {
@@ -226,17 +232,18 @@ describe('custom-client', () => {
 
   const createConfig = (
     userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
-  ): UserConfig => ({
-    ...userConfig,
-    input: path.join(getSpecsPath(), '3.1.x', 'full.yaml'),
-    logs: {
-      level: 'silent',
-    },
-    output: path.join(
-      outputDir,
-      typeof userConfig.output === 'string' ? userConfig.output : '',
-    ),
-  });
+  ) =>
+    ({
+      ...userConfig,
+      input: path.join(getSpecsPath(), '3.1.x', 'full.yaml'),
+      logs: {
+        level: 'silent',
+      },
+      output: path.join(
+        outputDir,
+        typeof userConfig.output === 'string' ? userConfig.output : '',
+      ),
+    }) as const satisfies UserConfig;
 
   const scenarios = [
     {
@@ -336,9 +343,7 @@ describe('custom-client', () => {
   it.each(scenarios)('$description', async ({ config }) => {
     await createClient(config);
 
-    const outputPath =
-      typeof config.output === 'string' ? config.output : config.output.path;
-    const filePaths = getFilePaths(outputPath);
+    const filePaths = getFilePaths(config.output);
 
     await Promise.all(
       filePaths.map(async (filePath) => {
@@ -372,17 +377,18 @@ describe('my-client', () => {
 
   const createConfig = (
     userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
-  ): UserConfig => ({
-    ...userConfig,
-    input: path.join(getSpecsPath(), '3.1.x', 'full.yaml'),
-    logs: {
-      level: 'silent',
-    },
-    output: path.join(
-      outputDir,
-      typeof userConfig.output === 'string' ? userConfig.output : '',
-    ),
-  });
+  ) =>
+    ({
+      ...userConfig,
+      input: path.join(getSpecsPath(), '3.1.x', 'full.yaml'),
+      logs: {
+        level: 'silent',
+      },
+      output: path.join(
+        outputDir,
+        typeof userConfig.output === 'string' ? userConfig.output : '',
+      ),
+    }) as const satisfies UserConfig;
 
   const scenarios = [
     {
@@ -482,9 +488,7 @@ describe('my-client', () => {
   it.each(scenarios)('$description', async ({ config }) => {
     await createClient(config);
 
-    const outputPath =
-      typeof config.output === 'string' ? config.output : config.output.path;
-    const filePaths = getFilePaths(outputPath);
+    const filePaths = getFilePaths(config.output);
 
     await Promise.all(
       filePaths.map(async (filePath) => {

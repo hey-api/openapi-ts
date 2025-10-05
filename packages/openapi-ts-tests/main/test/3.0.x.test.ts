@@ -15,7 +15,7 @@ const version = '3.0.x';
 const outputDir = path.join(__dirname, 'generated', version);
 
 describe(`OpenAPI ${version}`, () => {
-  const createConfig = (userConfig: UserConfig): UserConfig => {
+  const createConfig = (userConfig: UserConfig) => {
     const inputPath = path.join(
       getSpecsPath(),
       version,
@@ -42,7 +42,7 @@ describe(`OpenAPI ${version}`, () => {
         outputDir,
         typeof userConfig.output === 'string' ? userConfig.output : '',
       ),
-    };
+    } as const satisfies UserConfig;
   };
 
   const scenarios = [
@@ -670,9 +670,7 @@ describe(`OpenAPI ${version}`, () => {
   it.each(scenarios)('$description', async ({ config }) => {
     await createClient(config);
 
-    const outputPath =
-      typeof config.output === 'string' ? config.output : config.output.path;
-    const filePaths = getFilePaths(outputPath);
+    const filePaths = getFilePaths(config.output);
 
     await Promise.all(
       filePaths.map(async (filePath) => {
@@ -703,17 +701,8 @@ describe(`OpenAPI ${version}`, () => {
 
       await createClient([configA, configB]);
 
-      const outputPathA =
-        typeof configA.output === 'string'
-          ? configA.output
-          : configA.output.path;
-      const outputPathB =
-        typeof configB.output === 'string'
-          ? configB.output
-          : configB.output.path;
-
-      const filesA = getFilePaths(outputPathA);
-      const filesB = getFilePaths(outputPathB);
+      const filesA = getFilePaths(configA.output);
+      const filesB = getFilePaths(configB.output);
 
       await Promise.all(
         filesA.map(async (filePath) => {
