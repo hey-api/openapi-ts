@@ -68,9 +68,7 @@ for (const zodVersion of zodVersions) {
     it.each(scenarios)('$description', async ({ config }) => {
       await createClient(config);
 
-      const outputPath =
-        typeof config.output === 'string' ? config.output : config.output.path;
-      const filePaths = getFilePaths(outputPath);
+      const filePaths = getFilePaths(config.output);
 
       await Promise.all(
         filePaths.map(async (filePath) => {

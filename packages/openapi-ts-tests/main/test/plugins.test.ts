@@ -26,25 +26,26 @@ for (const version of versions) {
       userConfig: Omit<UserConfig, 'input'> &
         Pick<Required<UserConfig>, 'plugins'> &
         Pick<Partial<UserConfig>, 'input'>,
-    ): UserConfig => ({
-      ...userConfig,
-      input: path.join(
-        getSpecsPath(),
-        version,
-        typeof userConfig.input === 'string' ? userConfig.input : 'full.yaml',
-      ),
-      logs: {
-        level: 'silent',
-      },
-      output: path.join(
-        outputDir,
-        typeof userConfig.plugins[0] === 'string'
-          ? userConfig.plugins[0]
-          : userConfig.plugins[0]!.name,
-        typeof userConfig.output === 'string' ? userConfig.output : '',
-      ),
-      plugins: userConfig.plugins ?? ['@hey-api/client-fetch'],
-    });
+    ) =>
+      ({
+        ...userConfig,
+        input: path.join(
+          getSpecsPath(),
+          version,
+          typeof userConfig.input === 'string' ? userConfig.input : 'full.yaml',
+        ),
+        logs: {
+          level: 'silent',
+        },
+        output: path.join(
+          outputDir,
+          typeof userConfig.plugins[0] === 'string'
+            ? userConfig.plugins[0]
+            : userConfig.plugins[0]!.name,
+          typeof userConfig.output === 'string' ? userConfig.output : '',
+        ),
+        plugins: userConfig.plugins ?? ['@hey-api/client-fetch'],
+      }) as const satisfies UserConfig;
 
     const scenarios = [
       {
@@ -566,9 +567,7 @@ for (const version of versions) {
     it.each(scenarios)('$description', async ({ config }) => {
       await createClient(config);
 
-      const outputPath =
-        typeof config.output === 'string' ? config.output : config.output.path;
-      const filePaths = getFilePaths(outputPath);
+      const filePaths = getFilePaths(config.output);
 
       await Promise.all(
         filePaths.map(async (filePath) => {
