@@ -112,7 +112,7 @@
     "@angular/platform-browser-dynamic": "19.2.15",
     "@angular/router": "19.2.15",
     "@config/vite-base": "workspace:*",
-    "@types/bun": "1.2.19",
+    "@types/bun": "1.2.23",
     "@types/cross-spawn": "6.0.6",
     "@types/express": "4.17.21",
     "@types/semver": "7.7.0",

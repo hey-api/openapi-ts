@@ -1314,8 +1314,8 @@ importers:
         specifier: workspace:*
         version: link:../config-vite-base
       '@types/bun':
-        specifier: 1.2.19
-        version: 1.2.19(@types/react@19.0.1)
+        specifier: 1.2.23
+        version: 1.2.23(@types/react@19.0.1)
       '@types/cross-spawn':
         specifier: 6.0.6
         version: 6.0.6
@@ -6200,8 +6200,8 @@ packages:
   '@types/bonjour@3.5.13':
     resolution: {integrity: sha512-z9fJ5Im06zvUL548KvYNecEVlA7cVDkGUi6kZusb04mpyEFKCIZJvloCcmpmLaIahDpOQGHaHmG6imtPMmPXGQ==}
 
-  '@types/bun@1.2.19':
-    resolution: {integrity: sha512-d9ZCmrH3CJ2uYKXQIUuZ/pUnTqIvLDS0SK7pFmbx8ma+ziH/FRMoAq5bYpRG7y+w1gl+HgyNZbtqgMq4W4e2Lg==}
+  '@types/bun@1.2.23':
+    resolution: {integrity: sha512-le8ueOY5b6VKYf19xT3McVbXqLqmxzPXHsQT/q9JHgikJ2X22wyTW3g3ohz2ZMnp7dod6aduIiq8A14Xyimm0A==}
 
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
@@ -7404,8 +7404,8 @@ packages:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
 
-  bun-types@1.2.19:
-    resolution: {integrity: sha512-uAOTaZSPuYsWIXRpj7o56Let0g/wjihKCkeRqUBhlLVM/Bt+Fj9xTo+LhC1OV1XDaGkz4hNC80et5xgy+9KTHQ==}
+  bun-types@1.2.23:
+    resolution: {integrity: sha512-R9f0hKAZXgFU3mlrA0YpE/fiDvwV0FT9rORApt2aQVWSuJDzZOyB5QLc0N/4HF57CS8IXJ6+L5E4W1bW6NS2Aw==}
     peerDependencies:
       '@types/react': ^19
 
@@ -20036,9 +20036,9 @@ snapshots:
     dependencies:
       '@types/node': 22.10.5
 
-  '@types/bun@1.2.19(@types/react@19.0.1)':
+  '@types/bun@1.2.23(@types/react@19.0.1)':
     dependencies:
-      bun-types: 1.2.19(@types/react@19.0.1)
+      bun-types: 1.2.23(@types/react@19.0.1)
     transitivePeerDependencies:
       - '@types/react'
 
@@ -21705,7 +21705,7 @@ snapshots:
 
   builtin-modules@3.3.0: {}
 
-  bun-types@1.2.19(@types/react@19.0.1):
+  bun-types@1.2.23(@types/react@19.0.1):
     dependencies:
       '@types/node': 22.10.5
       '@types/react': 19.0.1
