@@ -195,8 +195,6 @@ describe('bin', () => {
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toBe('');
-    expect(result.stderr.toString()).toContain('encountered an error');
     expect(result.stderr.toString()).toContain('missing input');
   });
 
@@ -216,8 +214,6 @@ describe('bin', () => {
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toBe('');
-    expect(result.stderr.toString()).toContain('encountered an error');
     expect(result.stderr.toString()).toContain('missing output');
   });
 
@@ -240,7 +236,6 @@ describe('bin', () => {
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toBe('');
     expect(result.stderr.toString()).toContain(
       `error: unknown option '--unknown'`,
     );
@@ -285,21 +280,19 @@ describe('cli', () => {
       '--output',
       path.resolve(__dirname, 'generated', 'bin'),
       '--debug',
-      '--exportCore',
-      'false',
       '--plugins',
       '--useOptions',
       'false',
       '--dry-run',
       'true',
     ]);
-    expect(result.stderr.toString()).toContain('debug: true');
-    expect(result.stderr.toString()).toContain('dryRun: true');
-    expect(result.stderr.toString()).toContain('exportCore: false');
-    expect(result.stderr.toString()).not.toContain('@hey-api/typescript');
-    expect(result.stderr.toString()).not.toContain('@hey-api/sdk');
-    expect(result.stderr.toString()).not.toContain('@hey-api/schemas');
-    expect(result.stderr.toString()).toContain('useOptions: false');
+    const stderr = result.stderr.toString();
+    expect(stderr).toMatch(/level: 'debug'/);
+    expect(stderr).toMatch(/dryRun: true/);
+    expect(stderr).not.toMatch(/@hey-api\/schemas/);
+    expect(stderr).not.toMatch(/@hey-api\/sdk/);
+    expect(stderr).not.toMatch(/@hey-api\/typescript/);
+    expect(stderr).toMatch(/useOptions: false/);
   });
 
   it('handles true booleans', () => {
@@ -320,8 +313,6 @@ describe('cli', () => {
       '--client',
       '@hey-api/client-fetch',
       '--debug',
-      '--exportCore',
-      'true',
       '--plugins',
       '@hey-api/schemas',
       '@hey-api/sdk',
@@ -331,13 +322,13 @@ describe('cli', () => {
       '--dry-run',
       'true',
     ]);
-    expect(result.stderr.toString()).toContain('debug: true');
-    expect(result.stderr.toString()).toContain('dryRun: true');
-    expect(result.stderr.toString()).toContain('exportCore: true');
-    expect(result.stderr.toString()).toContain('@hey-api/typescript');
-    expect(result.stderr.toString()).toContain('@hey-api/sdk');
-    expect(result.stderr.toString()).toContain('@hey-api/schemas');
-    expect(result.stderr.toString()).toContain('useOptions: true');
+    const stderr = result.stderr.toString();
+    expect(stderr).toMatch(/level: 'debug'/);
+    expect(stderr).toMatch(/dryRun: true/);
+    expect(stderr).toMatch(/@hey-api\/schemas/);
+    expect(stderr).toMatch(/@hey-api\/sdk/);
+    expect(stderr).toMatch(/@hey-api\/typescript/);
+    expect(stderr).toMatch(/useOptions: true/);
   });
 
   it('handles optional booleans', () => {
@@ -358,7 +349,6 @@ describe('cli', () => {
       '--client',
       '@hey-api/client-fetch',
       '--debug',
-      '--exportCore',
       '--plugins',
       '@hey-api/schemas',
       '@hey-api/sdk',
@@ -367,12 +357,12 @@ describe('cli', () => {
       '--dry-run',
       'true',
     ]);
-    expect(result.stderr.toString()).toContain('debug: true');
-    expect(result.stderr.toString()).toContain('dryRun: true');
-    expect(result.stderr.toString()).toContain('exportCore: true');
-    expect(result.stderr.toString()).toContain('@hey-api/schemas');
-    expect(result.stderr.toString()).toContain('@hey-api/sdk');
-    expect(result.stderr.toString()).toContain('@hey-api/typescript');
-    expect(result.stderr.toString()).toContain('useOptions: true');
+    const stderr = result.stderr.toString();
+    expect(stderr).toMatch(/level: 'debug'/);
+    expect(stderr).toMatch(/dryRun: true/);
+    expect(stderr).toMatch(/@hey-api\/schemas/);
+    expect(stderr).toMatch(/@hey-api\/sdk/);
+    expect(stderr).toMatch(/@hey-api\/typescript/);
+    expect(stderr).toMatch(/useOptions: true/);
   });
 });

@@ -3,15 +3,15 @@ import colors from 'ansi-colors';
 import { loadPackageJson } from '../generate/tsConfig';
 
 const logoAscii = `
-   e444444b
- e4444444444b
-4444444444444b
-4 444   444444
-444 44  4444444
-Y444 444 444 44
-  444444444444
-  444444 444
- 4  4    4
+db e888888e
+ d8 Y88Y  ~8b
+dY ""   ""  Yb
+8  88   88   8
+8    e8e    8 8
+ Yb   "   eb ,b
+  Yb_____Y  ,b
+  8       dY
+ 8  e    8
 `;
 
 const textAscii = `

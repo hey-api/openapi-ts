@@ -19,16 +19,14 @@ export const createZodConfig =
     zodVersion: (typeof zodVersions)[number];
   }) =>
   (userConfig: UserConfig) => {
+    const input =
+      userConfig.input instanceof Array
+        ? userConfig.input[0]!
+        : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
       openApiVersion,
-      typeof userConfig.input === 'string'
-        ? userConfig.input
-        : userConfig.input instanceof Array
-          ? typeof userConfig.input[0] === 'string'
-            ? (userConfig.input[0] as string)
-            : (userConfig.input[0] as any)?.path || ''
-          : (userConfig.input as any).path,
+      typeof input === 'string' ? input : (input.path as string),
     );
     return {
       plugins: [

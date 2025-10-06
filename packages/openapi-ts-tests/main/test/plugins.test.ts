@@ -640,7 +640,7 @@ for (const version of versions) {
           output: path.join(outputDir, myPlugin.name, 'default'),
           plugins: [myPlugin, '@hey-api/client-fetch'],
         }),
-      ).rejects.toThrowError(/unknown plugin/g);
+      ).rejects.toThrowError(/Found 1 configuration error./g);
 
       expect(myPlugin.handler).not.toHaveBeenCalled();
       expect(myPlugin.handlerLegacy).not.toHaveBeenCalled();

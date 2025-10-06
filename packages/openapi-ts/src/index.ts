@@ -36,8 +36,6 @@ export const createClient = async (
   userConfig?: LazyOrAsync<MaybeArray<UserConfig>>,
   logger = new Logger(),
 ): Promise<ReadonlyArray<Client | IR.Context>> => {
-  printCliIntro();
-
   const resolvedConfig =
     typeof userConfig === 'function' ? await userConfig() : userConfig;
   const userConfigs = resolvedConfig
@@ -45,6 +43,13 @@ export const createClient = async (
       ? resolvedConfig
       : [resolvedConfig]
     : [];
+
+  let rawLogs = userConfigs.find(
+    (config) => getLogs(config).level !== 'silent',
+  )?.logs;
+  if (typeof rawLogs === 'string') {
+    rawLogs = getLogs({ logs: rawLogs });
+  }
 
   let configs: Configs | undefined;
 
@@ -55,6 +60,12 @@ export const createClient = async (
 
     const eventConfig = logger.timeEvent('config');
     configs = await initConfigs({ logger, userConfigs });
+    const printIntro = configs.results.some(
+      (result) => result.config.logs.level !== 'silent',
+    );
+    if (printIntro) {
+      printCliIntro();
+    }
     eventConfig.timeEnd();
 
     const allConfigErrors = configs.results.flatMap((result) =>
@@ -99,21 +110,26 @@ export const createClient = async (
 
     return result;
   } catch (error) {
-    const resolvedConfig = userConfigs[0];
-    const config = configs?.results[0]?.config;
-    const dryRun = config?.dryRun ?? resolvedConfig?.dryRun ?? false;
-    const isInteractive =
-      config?.interactive ?? resolvedConfig?.interactive ?? false;
-    const logs = config?.logs ?? getLogs(resolvedConfig);
+    const results = configs?.results ?? [];
 
-    let logPath: string | undefined;
+    const logs =
+      results.find((result) => result.config.logs.level !== 'silent')?.config
+        .logs ?? rawLogs;
+    if (!logs || logs.level !== 'silent') {
+      const dryRun =
+        results.some((result) => result.config.dryRun) ??
+        userConfigs.some((config) => config.dryRun) ??
+        false;
+      const logPath =
+        logs?.file && !dryRun
+          ? logCrashReport(error, logs.path ?? '')
+          : undefined;
 
-    if (logs.level !== 'silent' && logs.file && !dryRun) {
-      logPath = logCrashReport(error, logs.path ?? '');
-    }
-
-    if (logs.level !== 'silent') {
       printCrashReport({ error, logPath });
+      const isInteractive =
+        results.some((result) => result.config.interactive) ??
+        userConfigs.some((config) => config.interactive) ??
+        false;
       if (await shouldReportCrash({ error, isInteractive })) {
         await openGitHubIssueWithCrashReport(error);
       }
