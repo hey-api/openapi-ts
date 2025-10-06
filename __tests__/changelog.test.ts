@@ -134,7 +134,7 @@ describe('changelog', () => {
     );
   });
 
-  it('places metadata on the first line and does not append it after code blocks', async () => {
+  it('places metadata on the first line and preserves markdown code blocks', async () => {
     const summary = [
       'refactor(config): replace `off` with null to disable options',
       '',
@@ -167,12 +167,21 @@ describe('changelog', () => {
     expect(line).toMatch(
       /^\n- refactor\(config\): replace `off` with null to disable options \(\[#1613\]\(https:\/\/github.com\/hey-api\/openapi-ts\/pull\/1613\)\) \(\[`fcdd73b`\]\(https:\/\/github.com\/hey-api\/openapi-ts\/commit\/fcdd73b816d74babf47e6a1f46032f5b8ebb4b48\)\) by \[@someone\]\(https:\/\/github.com\/someone\)/,
     );
-    // There should be no metadata at the end
-    expect(line.trim().endsWith('```')).toBe(false);
     // Should not contain quadruple backticks
     expect(line).not.toContain('````');
-    // Should contain indented code block
-    expect(line).toContain('    export default {');
+    // Should contain a markdown code block
+    expect(line).toContain('```js\nexport default {');
+    expect(line).toContain(
+      '  input: "hey-api/backend", // sign up at app.heyapi.dev',
+    );
+    expect(line).toContain('  output: {');
+    expect(line).toContain('    format: null,');
+    expect(line).toContain('    lint: null,');
+    expect(line).toContain('    path: "src/client",');
+    expect(line).toContain('    tsConfigPath: null,');
+    expect(line).toContain('  },');
+    expect(line).toContain('};');
+    expect(line).toContain('```');
   });
 
   it('converts multiple code blocks and preserves non-code content', async () => {
@@ -198,10 +207,9 @@ describe('changelog', () => {
     const line = await changelog.getReleaseLine(changeset, 'minor', {
       repo: 'hey-api/openapi-ts',
     });
-    expect(line).toContain('    console.log(1);');
-    expect(line).toContain('    console.log(2);');
+    expect(line).toContain('```js\nconsole.log(1);\n```');
+    expect(line).toContain('```ts\nconsole.log(2);\n```');
     expect(line).toContain('Some text.');
-    expect(line).not.toContain('```');
   });
 
   describe.each(['author', 'user'])(
