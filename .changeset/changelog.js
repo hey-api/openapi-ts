@@ -33,6 +33,7 @@ export default {
     /** @type string[] */
     const usersFromSummary = [];
 
+    // Remove PR, commit, author/user lines from summary
     const replacedChangelog = changeset.summary
       .replace(/^\s*(?:pr|pull|pull\s+request):\s*#?(\d+)/im, (_, pr) => {
         const num = Number(pr);
@@ -68,7 +69,12 @@ export default {
       }
       const commitToFetchFrom = commitFromSummary || changeset.commit;
       if (commitToFetchFrom) {
-        const { links } = await getInfo({ commit: commitToFetchFrom, repo });
+        let { links } = await getInfo({ commit: commitToFetchFrom, repo });
+        const shortCommitId = commitToFetchFrom.slice(0, 7);
+        links = {
+          ...links,
+          commit: `[\`${shortCommitId}\`](https://github.com/${repo}/commit/${commitToFetchFrom})`,
+        };
         return links;
       }
       return {
@@ -93,6 +99,31 @@ export default {
       users === null ? '' : ` by ${users}`,
     ].join('');
 
-    return `\n- ${replacedChangelog}${metadata}`;
+    // Split summary into first line and the rest
+    const [firstLine, ...rest] = replacedChangelog.split('\n');
+    const restSummary = rest.join('\n').trim();
+
+    // Post-process code blocks: replace triple backtick code blocks with indented code blocks
+    function convertCodeBlocks(text) {
+      // Replace ```lang\n...\n``` with indented code
+      return text.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+        const langComment = lang ? `// ${lang}\n` : '';
+        return (
+          '\n' +
+          langComment +
+          code
+            .split('\n')
+            .map((line) => '    ' + line)
+            .join('\n') +
+          '\n'
+        );
+      });
+    }
+
+    let releaseLine = `\n- ${firstLine}${metadata}`;
+    if (restSummary) {
+      releaseLine += '\n\n' + convertCodeBlocks(restSummary);
+    }
+    return releaseLine;
   },
 };
