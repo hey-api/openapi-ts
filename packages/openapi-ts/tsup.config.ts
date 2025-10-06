@@ -72,5 +72,6 @@ export default defineConfig((options) => ({
   },
   shims: false,
   sourcemap: true,
+  target: 'node18',
   treeshake: true,
 }));

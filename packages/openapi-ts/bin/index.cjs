@@ -139,7 +139,8 @@ async function start() {
     ) {
       process.exit(0);
     }
-  } catch {
+  } catch (error) {
+    console.error(error);
     process.exit(1);
   }
 }

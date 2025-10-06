@@ -21,5 +21,6 @@ export default defineConfig((options) => ({
   minify: !options.watch,
   shims: false,
   sourcemap: true,
+  target: 'node18',
   treeshake: true,
 }));
