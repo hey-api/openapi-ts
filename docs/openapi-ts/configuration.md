@@ -161,7 +161,7 @@ export default [
 ];
 ```
 
-```md [example]
+```txt [example]
 src/
 ├── foo/
 │ ├── client/
@@ -171,12 +171,12 @@ src/
 │ ├── sdk.gen.ts
 │ └── types.gen.ts
 └── bar/
-├── client/
-├── core/
-├── client.gen.ts
-├── index.ts
-├── sdk.gen.ts
-└── types.gen.ts
+  ├── client/
+  ├── core/
+  ├── client.gen.ts
+  ├── index.ts
+  ├── sdk.gen.ts
+  └── types.gen.ts
 ```
 
 :::
@@ -194,7 +194,7 @@ export default {
 };
 ```
 
-```md [example]
+```txt [example]
 src/
 ├── foo/
 │ ├── client/
@@ -204,12 +204,12 @@ src/
 │ ├── sdk.gen.ts
 │ └── types.gen.ts
 └── bar/
-├── client/
-├── core/
-├── client.gen.ts
-├── index.ts
-├── sdk.gen.ts
-└── types.gen.ts
+  ├── client/
+  ├── core/
+  ├── client.gen.ts
+  ├── index.ts
+  ├── sdk.gen.ts
+  └── types.gen.ts
 ```
 
 :::
@@ -227,15 +227,15 @@ export default {
 };
 ```
 
-```md [example]
+```txt [example]
 src/
 └── client/
-├── client/
-├── core/
-├── client.gen.ts
-├── index.ts
-├── sdk.gen.ts
-└── types.gen.ts
+  ├── client/
+  ├── core/
+  ├── client.gen.ts
+  ├── index.ts
+  ├── sdk.gen.ts
+  └── types.gen.ts
 ```
 
 :::
