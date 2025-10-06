@@ -38,31 +38,6 @@ export default {
 
 Alternatively, you can use `openapi-ts.config.js` and configure the export statement depending on your project setup.
 
-<!--
-TODO: uncomment after c12 supports multiple configs
-see https://github.com/unjs/c12/issues/92
--->
-<!-- ### Multiple Clients
-
-If you want to generate multiple clients with a single `openapi-ts` command, you can provide an array of configuration objects.
-
-```js
-import { defineConfig } from '@hey-api/openapi-ts';
-
-export default defineConfig([
-  {
-    input: 'path/to/openapi_one.json',
-    output: 'src/client_one',
-    plugins: ['legacy/fetch'],
-  },
-  {
-    input: 'path/to/openapi_two.json',
-    output: 'src/client_two',
-    plugins: ['legacy/axios'],
-  },
-])
-``` -->
-
 ## Input
 
 You must provide an input so we can load your OpenAPI specification.
@@ -162,6 +137,108 @@ You can learn more on the [Parser](/openapi-ts/configuration/parser) page.
 Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces and SDK from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
 
 You can learn more on the [Output](/openapi-ts/output) page.
+
+## Advanced
+
+More complex configuration scenarios can be handled by providing an array of inputs, outputs, or configurations.
+
+### Multiple jobs
+
+Throughout this documentation, we generally reference single job configurations. However, you can easily run multiple jobs by providing an array of configuration objects.
+
+::: code-group
+
+```js [config]
+export default [
+  {
+    input: 'foo.yaml',
+    output: 'src/foo',
+  },
+  {
+    input: 'bar.yaml',
+    output: 'src/bar',
+  },
+];
+```
+
+```md [example]
+src/
+├── foo/
+│ ├── client/
+│ ├── core/
+│ ├── client.gen.ts
+│ ├── index.ts
+│ ├── sdk.gen.ts
+│ └── types.gen.ts
+└── bar/
+├── client/
+├── core/
+├── client.gen.ts
+├── index.ts
+├── sdk.gen.ts
+└── types.gen.ts
+```
+
+:::
+
+### Job matrix
+
+Reusing configuration across multiple jobs is possible by defining a job matrix. You can create a job matrix by providing `input` and `output` arrays of matching length.
+
+::: code-group
+
+```js [config]
+export default {
+  input: ['foo.yaml', 'bar.yaml'],
+  output: ['src/foo', 'src/bar'],
+};
+```
+
+```md [example]
+src/
+├── foo/
+│ ├── client/
+│ ├── core/
+│ ├── client.gen.ts
+│ ├── index.ts
+│ ├── sdk.gen.ts
+│ └── types.gen.ts
+└── bar/
+├── client/
+├── core/
+├── client.gen.ts
+├── index.ts
+├── sdk.gen.ts
+└── types.gen.ts
+```
+
+:::
+
+### Merging inputs
+
+You can merge inputs by defining multiple inputs and a single output.
+
+::: code-group
+
+```js [config]
+export default {
+  input: ['foo.yaml', 'bar.yaml'],
+  output: 'src/client',
+};
+```
+
+```md [example]
+src/
+└── client/
+├── client/
+├── core/
+├── client.gen.ts
+├── index.ts
+├── sdk.gen.ts
+└── types.gen.ts
+```
+
+:::
 
 ## API
 

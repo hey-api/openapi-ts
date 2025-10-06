@@ -292,9 +292,9 @@ const parseObject = ({
     const isEmptyObjectInAllOf =
       state.inAllOf &&
       schema.additionalProperties === false &&
-      (!schema.properties || Object.keys(schema.properties).length === 0) &&
+      (!schema.properties || !Object.keys(schema.properties).length) &&
       (!schema.patternProperties ||
-        Object.keys(schema.patternProperties).length === 0);
+        !Object.keys(schema.patternProperties).length);
 
     if (!isEmptyObjectInAllOf) {
       irSchema.additionalProperties = {

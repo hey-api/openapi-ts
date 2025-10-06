@@ -76,9 +76,12 @@ describe('readme utils', () => {
   describe('inputToScalarPath', () => {
     it('should transform full format to API URL', () => {
       const result = inputToScalarPath('scalar:@foo/bar');
-      expect(result).toBe(
-        'https://registry.scalar.com/@foo/apis/bar/latest?format=json',
-      );
+      expect(result).toEqual({
+        organization: '@foo',
+        path: 'https://registry.scalar.com/@foo/apis/bar/latest?format=json',
+        project: 'bar',
+        registry: 'scalar',
+      });
     });
 
     it('should throw error for invalid inputs', () => {
@@ -110,9 +113,12 @@ describe('readme utils', () => {
       'should handle $input correctly',
       ({ expected, input }) => {
         expect(parseShorthand(input)).toEqual(expected);
-        expect(inputToScalarPath(`scalar:${input}`)).toBe(
-          `https://registry.scalar.com/${expected.organization}/apis/${expected.project}/latest?format=json`,
-        );
+        expect(inputToScalarPath(`scalar:${input}`)).toEqual({
+          organization: expected.organization,
+          path: `https://registry.scalar.com/${expected.organization}/apis/${expected.project}/latest?format=json`,
+          project: expected.project,
+          registry: 'scalar',
+        });
       },
     );
 

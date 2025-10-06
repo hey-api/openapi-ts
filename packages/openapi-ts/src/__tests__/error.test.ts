@@ -20,10 +20,8 @@ describe('shouldReportCrash', () => {
   });
 
   it('should not prompt when isInteractive is explicitly false', async () => {
-    // Mock stdin/stdout to ensure we don't wait for user input
-    const writeSpy = vi
-      .spyOn(process.stdout, 'write')
-      .mockImplementation(() => true);
+    // Mock stdin and console.log to ensure we don't wait for user input
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
     const setEncodingSpy = vi
       .spyOn(process.stdin, 'setEncoding')
       .mockImplementation(() => process.stdin as any);
@@ -37,20 +35,18 @@ describe('shouldReportCrash', () => {
     });
 
     expect(result).toBe(false);
-    expect(writeSpy).not.toHaveBeenCalled();
+    expect(logSpy).not.toHaveBeenCalled();
     expect(setEncodingSpy).not.toHaveBeenCalled();
     expect(onceSpy).not.toHaveBeenCalled();
 
-    writeSpy.mockRestore();
+    logSpy.mockRestore();
     setEncodingSpy.mockRestore();
     onceSpy.mockRestore();
   });
 
   it('should prompt when isInteractive is true', async () => {
-    // Mock stdin/stdout for interactive session
-    const writeSpy = vi
-      .spyOn(process.stdout, 'write')
-      .mockImplementation(() => true);
+    // Mock stdin and console.log for interactive session
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
     const setEncodingSpy = vi
       .spyOn(process.stdin, 'setEncoding')
       .mockImplementation(() => process.stdin as any);
@@ -70,20 +66,18 @@ describe('shouldReportCrash', () => {
     });
 
     expect(result).toBe(false); // User said 'n'
-    expect(writeSpy).toHaveBeenCalledWith(
+    expect(logSpy).toHaveBeenCalledWith(
       expect.stringContaining('📢 Open a GitHub issue with crash details?'),
     );
 
-    writeSpy.mockRestore();
+    logSpy.mockRestore();
     setEncodingSpy.mockRestore();
     onceSpy.mockRestore();
   });
 
   it('should handle user saying yes to crash report', async () => {
-    // Mock stdin/stdout for interactive session
-    const writeSpy = vi
-      .spyOn(process.stdout, 'write')
-      .mockImplementation(() => true);
+    // Mock stdin and console.log for interactive session
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
     const setEncodingSpy = vi
       .spyOn(process.stdin, 'setEncoding')
       .mockImplementation(() => process.stdin as any);
@@ -104,7 +98,7 @@ describe('shouldReportCrash', () => {
 
     expect(result).toBe(true); // User said 'y'
 
-    writeSpy.mockRestore();
+    logSpy.mockRestore();
     setEncodingSpy.mockRestore();
     onceSpy.mockRestore();
   });

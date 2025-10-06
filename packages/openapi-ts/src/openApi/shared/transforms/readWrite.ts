@@ -233,7 +233,7 @@ const pruneSchemaByScope = (
             (prop) => !removedProperties.has(prop),
           );
 
-          if (filteredRequired.length === 0) {
+          if (!filteredRequired.length) {
             delete (schema as Record<string, unknown>).required;
           } else {
             (schema as Record<string, unknown>).required = filteredRequired;

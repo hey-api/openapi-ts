@@ -8,10 +8,12 @@ describe('parseServers', () => {
   it('host + basePath + schemes', () => {
     const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
       config: {
-        // @ts-expect-error
-        input: {
-          path: '',
-        },
+        input: [
+          // @ts-expect-error
+          {
+            path: '',
+          },
+        ],
       },
       ir: {},
       spec: {
@@ -34,10 +36,12 @@ describe('parseServers', () => {
   it('schemes + host', () => {
     const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
       config: {
-        // @ts-expect-error
-        input: {
-          path: '',
-        },
+        input: [
+          // @ts-expect-error
+          {
+            path: '',
+          },
+        ],
       },
       ir: {},
       spec: {
@@ -56,10 +60,12 @@ describe('parseServers', () => {
   it('host + basePath', () => {
     const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
       config: {
-        // @ts-expect-error
-        input: {
-          path: '',
-        },
+        input: [
+          // @ts-expect-error
+          {
+            path: '',
+          },
+        ],
       },
       ir: {},
       spec: {
@@ -78,10 +84,12 @@ describe('parseServers', () => {
   it('host', () => {
     const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
       config: {
-        // @ts-expect-error
-        input: {
-          path: '',
-        },
+        input: [
+          // @ts-expect-error
+          {
+            path: '',
+          },
+        ],
       },
       ir: {},
       spec: {
@@ -99,10 +107,12 @@ describe('parseServers', () => {
   it('basePath', () => {
     const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
       config: {
-        // @ts-expect-error
-        input: {
-          path: '',
-        },
+        input: [
+          // @ts-expect-error
+          {
+            path: '',
+          },
+        ],
       },
       ir: {},
       spec: {

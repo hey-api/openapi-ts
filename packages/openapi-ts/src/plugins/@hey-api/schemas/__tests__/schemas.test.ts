@@ -20,14 +20,16 @@ describe('generateLegacySchemas', () => {
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
-      input: {
-        path: '',
-        watch: {
-          enabled: false,
-          interval: 1_000,
-          timeout: 60_000,
+      input: [
+        {
+          path: '',
+          watch: {
+            enabled: false,
+            interval: 1_000,
+            timeout: 60_000,
+          },
         },
-      },
+      ],
       interactive: false,
       logs: {
         file: true,
@@ -180,14 +182,16 @@ describe('generateLegacySchemas', () => {
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
-      input: {
-        path: '',
-        watch: {
-          enabled: false,
-          interval: 1_000,
-          timeout: 60_000,
+      input: [
+        {
+          path: '',
+          watch: {
+            enabled: false,
+            interval: 1_000,
+            timeout: 60_000,
+          },
         },
-      },
+      ],
       interactive: false,
       logs: {
         file: true,

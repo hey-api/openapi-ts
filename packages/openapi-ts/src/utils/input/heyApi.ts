@@ -1,7 +1,6 @@
-// Regular expression to match Hey API Registry input formats:
-
 import type { Input } from '../../types/input';
 
+// Regular expression to match Hey API Registry input formats:
 //   - {organization}/{project}?{queryParams}
 const registryRegExp = /^([\w-]+)\/([\w-]+)(?:\?([\w=&.-]*))?$/;
 
@@ -36,7 +35,7 @@ export interface Parsed {
  * @throws Error if the input format is invalid
  */
 export const parseShorthand = (
-  input: Omit<Input, 'path'> & {
+  input: Input & {
     path: string;
   },
 ): Parsed => {
@@ -82,14 +81,17 @@ export const parseShorthand = (
  * @returns The Hey API Registry URL
  */
 export const inputToHeyApiPath = (
-  input: Omit<Input, 'path'> & {
+  input: Input & {
     path: string;
   },
-): string => {
+): Partial<Input> => {
   const parsed = parseShorthand(input);
-  return getRegistryUrl(
-    parsed.organization,
-    parsed.project,
-    parsed.queryParams,
-  );
+  return {
+    path: getRegistryUrl(
+      parsed.organization,
+      parsed.project,
+      parsed.queryParams,
+    ),
+    registry: 'hey-api',
+  };
 };
