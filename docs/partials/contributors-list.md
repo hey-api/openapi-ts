@@ -76,7 +76,6 @@
 - [johnny kim](https://github.com/johnny-mh)
 - [0xfurai](https://github.com/0xfurai)
 - [Ben-Pfirsich](https://github.com/Ben-Pfirsich)
-- [Copilot](https://github.com/Copilot)
 - [Mxwllas](https://github.com/Mxwllas)
 - [RndUsername](https://github.com/RndUsername)
 - [Schroedi](https://github.com/Schroedi)
@@ -87,5 +86,3 @@
 - [hunshcn](https://github.com/hunshcn)
 - [maxdew-envelio](https://github.com/maxdew-envelio)
 - [nnzhadow](https://github.com/nnzhadow)
-- [renovate[bot]](https://github.com/renovate[bot])
-- [renovate[bot]](https://github.com/renovate[bot])
