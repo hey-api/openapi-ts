@@ -36,8 +36,8 @@ jobs:
         # prevent lockfile mismatch error
         run: pnpm install --frozen-lockfile
 
-      - name: Build
-        run: pnpm build
+      - name: Build packages
+        run: pnpm build --filter="@hey-api/**"
 
       - name: Generate GitHub App Token
         id: app-token
