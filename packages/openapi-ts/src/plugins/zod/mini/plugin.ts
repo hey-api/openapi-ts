@@ -90,7 +90,7 @@ const arrayTypeToZodSchema = ({
           for (let i = 1; i < itemExpressions.length; i++) {
             intersectionExpression = tsc.callExpression({
               functionName: tsc.propertyAccessExpression({
-                expression: intersectionExpression,
+                expression: zSymbol.placeholder,
                 name: identifiers.intersection,
               }),
               parameters: [intersectionExpression, itemExpressions[i]!],

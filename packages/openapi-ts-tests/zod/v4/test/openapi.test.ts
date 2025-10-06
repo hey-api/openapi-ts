@@ -37,6 +37,15 @@ for (const version of versions) {
       const scenarios = [
         {
           config: createConfig({
+            input:
+              'array-items-all-of.' + (version === '2.0.x' ? 'json' : 'yaml'),
+            output: 'array-items-all-of',
+          }),
+          description:
+            'generates correct array when items use allOf (intersection)',
+        },
+        {
+          config: createConfig({
             input: 'full.yaml',
             output: 'default',
           }),
