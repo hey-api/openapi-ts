@@ -37,8 +37,7 @@ for (const version of versions) {
       const scenarios = [
         {
           config: createConfig({
-            input:
-              'array-items-all-of.' + (version === '2.0.x' ? 'json' : 'yaml'),
+            input: 'array-items-all-of.yaml',
             output: 'array-items-all-of',
           }),
           description:
