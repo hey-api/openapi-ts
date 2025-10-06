@@ -35,8 +35,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build library
-        run: pnpm build
+      - name: Build packages
+        run: pnpm build --filter="@hey-api/**"
 
       - name: Run test coverage
         run: pnpm test:coverage
