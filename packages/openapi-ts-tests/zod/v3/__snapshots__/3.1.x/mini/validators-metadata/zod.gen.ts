@@ -18,7 +18,7 @@ export const zBar = z.object({
  */
 export const zFoo = z._default(z.union([
     z.object({
-        foo: z.optional(z.string().check(z.regex(/^\d{3}-\d{2}-\d{4}$/)).register(z.globalRegistry, {
+        foo: z.optional(z.string().check(z.regex(/^\\d{3}-\\d{2}-\\d{4}$/)).register(z.globalRegistry, {
             description: 'This is foo property.'
         })),
         bar: z.optional(zBar),
@@ -36,7 +36,7 @@ export const zFoo = z._default(z.union([
     z.null()
 ]), null);
 
-export const zBaz = z._default(z.readonly(z.string().check(z.regex(/foo\nbar/))), 'baz');
+export const zBaz = z._default(z.readonly(z.string().check(z.regex(/foo\\nbar/))), 'baz');
 
 export const zQux = z.record(z.string(), z.object({
     qux: z.optional(z.string())

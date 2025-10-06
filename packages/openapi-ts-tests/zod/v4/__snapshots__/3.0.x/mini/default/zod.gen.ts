@@ -733,10 +733,10 @@ export const zModelWithPattern = z.object({
     name: z.string().check(z.maxLength(255)),
     enabled: z.optional(z.readonly(z.boolean())),
     modified: z.optional(z.readonly(z.iso.datetime())),
-    id: z.optional(z.string().check(z.regex(/^\d{2}-\d{3}-\d{4}$/))),
-    text: z.optional(z.string().check(z.regex(/^\w+$/))),
-    patternWithSingleQuotes: z.optional(z.string().check(z.regex(/^[a-zA-Z0-9']*$/))),
-    patternWithNewline: z.optional(z.string().check(z.regex(/aaa\nbbb/))),
+    id: z.optional(z.string().check(z.regex(/^\\d{2}-\\d{3}-\\d{4}$/))),
+    text: z.optional(z.string().check(z.regex(/^\\w+$/))),
+    patternWithSingleQuotes: z.optional(z.string().check(z.regex(/^[a-zA-Z0-9\']*$/))),
+    patternWithNewline: z.optional(z.string().check(z.regex(/aaa\\nbbb/))),
     patternWithBacktick: z.optional(z.string().check(z.regex(/aaa`bbb/)))
 });
 
@@ -1126,10 +1126,10 @@ export const zModelWithPropertiesWritable = z.object({
 export const zModelWithPatternWritable = z.object({
     key: z.string().check(z.maxLength(64), z.regex(/^[a-zA-Z0-9_]*$/)),
     name: z.string().check(z.maxLength(255)),
-    id: z.optional(z.string().check(z.regex(/^\d{2}-\d{3}-\d{4}$/))),
-    text: z.optional(z.string().check(z.regex(/^\w+$/))),
-    patternWithSingleQuotes: z.optional(z.string().check(z.regex(/^[a-zA-Z0-9']*$/))),
-    patternWithNewline: z.optional(z.string().check(z.regex(/aaa\nbbb/))),
+    id: z.optional(z.string().check(z.regex(/^\\d{2}-\\d{3}-\\d{4}$/))),
+    text: z.optional(z.string().check(z.regex(/^\\w+$/))),
+    patternWithSingleQuotes: z.optional(z.string().check(z.regex(/^[a-zA-Z0-9\']*$/))),
+    patternWithNewline: z.optional(z.string().check(z.regex(/aaa\\nbbb/))),
     patternWithBacktick: z.optional(z.string().check(z.regex(/aaa`bbb/)))
 });
 

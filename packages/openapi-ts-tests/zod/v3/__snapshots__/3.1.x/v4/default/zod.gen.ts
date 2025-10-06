@@ -740,10 +740,10 @@ export const zModelWithPattern = z.object({
     name: z.string().max(255),
     enabled: z.optional(z.boolean().readonly()),
     modified: z.optional(z.iso.datetime().readonly()),
-    id: z.optional(z.string().regex(/^\d{2}-\d{3}-\d{4}$/)),
-    text: z.optional(z.string().regex(/^\w+$/)),
-    patternWithSingleQuotes: z.optional(z.string().regex(/^[a-zA-Z0-9']*$/)),
-    patternWithNewline: z.optional(z.string().regex(/aaa\nbbb/)),
+    id: z.optional(z.string().regex(/^\\d{2}-\\d{3}-\\d{4}$/)),
+    text: z.optional(z.string().regex(/^\\w+$/)),
+    patternWithSingleQuotes: z.optional(z.string().regex(/^[a-zA-Z0-9\']*$/)),
+    patternWithNewline: z.optional(z.string().regex(/aaa\\nbbb/)),
     patternWithBacktick: z.optional(z.string().regex(/aaa`bbb/))
 });
 
@@ -1132,10 +1132,10 @@ export const zModelWithPropertiesWritable = z.object({
 export const zModelWithPatternWritable = z.object({
     key: z.string().max(64).regex(/^[a-zA-Z0-9_]*$/),
     name: z.string().max(255),
-    id: z.optional(z.string().regex(/^\d{2}-\d{3}-\d{4}$/)),
-    text: z.optional(z.string().regex(/^\w+$/)),
-    patternWithSingleQuotes: z.optional(z.string().regex(/^[a-zA-Z0-9']*$/)),
-    patternWithNewline: z.optional(z.string().regex(/aaa\nbbb/)),
+    id: z.optional(z.string().regex(/^\\d{2}-\\d{3}-\\d{4}$/)),
+    text: z.optional(z.string().regex(/^\\w+$/)),
+    patternWithSingleQuotes: z.optional(z.string().regex(/^[a-zA-Z0-9\']*$/)),
+    patternWithNewline: z.optional(z.string().regex(/aaa\\nbbb/)),
     patternWithBacktick: z.optional(z.string().regex(/aaa`bbb/))
 });
 

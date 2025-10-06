@@ -1,6 +1,7 @@
 import type { IR } from '../../../ir/types';
 import { addItemsToSchema } from '../../../ir/utils';
 import { refToName } from '../../../utils/ref';
+import { getPattern } from '../../common/parser/getPattern';
 import type {
   SchemaState,
   SchemaType,
@@ -126,7 +127,7 @@ const parseSchemaMeta = ({
   }
 
   if (schema.pattern) {
-    irSchema.pattern = schema.pattern;
+    irSchema.pattern = getPattern(schema.pattern);
   }
 
   if (schema.readOnly) {
