@@ -2,28 +2,19 @@
 
 import { z } from 'zod/v3';
 
-export const zArrayWithAllOfObjects = z.array(z.union([
-    z.object({
-        id: z.number().int().optional()
-    }),
-    z.object({
-        name: z.string().optional()
-    })
-]));
+export const zArrayWithAllOfObjects = z.array(z.object({
+    id: z.number().int().optional()
+}).and(z.object({
+    name: z.string().optional()
+})));
 
-export const zArrayWithAllOfPrimitives = z.array(z.union([
-    z.number(),
-    z.string()
-]));
+export const zArrayWithAllOfPrimitives = z.array(z.intersection(z.number(), z.string()));
 
 export const zBaseModel = z.object({
     id: z.number().int().optional(),
     createdAt: z.string().datetime().optional()
 });
 
-export const zArrayWithAllOfRefs = z.array(z.union([
-    zBaseModel,
-    z.object({
-        extra: z.string().optional()
-    })
-]));
+export const zArrayWithAllOfRefs = z.array(zBaseModel.and(z.object({
+    extra: z.string().optional()
+})));
