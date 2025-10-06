@@ -62,7 +62,7 @@ We ship a dedicated TypeScript renderer for `.ts` files. This release improves t
 
 - fix(parser): bump support for OpenAPI 3.1.2 ([#2667](https://github.com/hey-api/openapi-ts/pull/2667)) ([`3511fb8`](https://github.com/hey-api/openapi-ts/commit/3511fb88cbe6b767b631af16336cb6c0722c3ff8)) by [@mrlubos](https://github.com/mrlubos)
 
-- fix(config): add `output.fileName` option
+- fix(config): add `output.fileName` option ([#2664](https://github.com/hey-api/openapi-ts/pull/2664)) ([`e1ede9c`](https://github.com/hey-api/openapi-ts/commit/e1ede9cabf52b5bbcb9195570deff58db8f43dbb)) by [@mrlubos](https://github.com/mrlubos)
 
 ## File Name
 
@@ -80,7 +80,7 @@ export default {
 
 By default, we append every file name with a `.gen` suffix to highlight it's automatically generated. You can customize or disable this suffix using the `fileName.suffix` option.
 
-````js
+```js
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
@@ -90,9 +90,10 @@ export default {
     path: 'src/client',
   },
 };
-``` ([#2664](https://github.com/hey-api/openapi-ts/pull/2664)) ([`e1ede9c`](https://github.com/hey-api/openapi-ts/commit/e1ede9cabf52b5bbcb9195570deff58db8f43dbb)) by [@mrlubos](https://github.com/mrlubos)
+```
 
 - fix(axios): remove duplicate `baseURL` when using relative values ([#2624](https://github.com/hey-api/openapi-ts/pull/2624)) ([`8ffceec`](https://github.com/hey-api/openapi-ts/commit/8ffceec89fe471d4e14df17a172f3d5a254eb819)) by [@Ben-Pfirsich](https://github.com/Ben-Pfirsich)
+
 ### Updated Dependencies:
   - @hey-api/codegen-core@0.2.0
 
@@ -184,23 +185,23 @@ This option has been removed to provide a more consistent API across plugins. We
 
 - [#2505](https://github.com/hey-api/openapi-ts/pull/2505) [`97c57f6`](https://github.com/hey-api/openapi-ts/commit/97c57f68af1f907f278707fb526289c73b33ea89) Thanks [@SebastiaanWouters](https://github.com/SebastiaanWouters)! - feat(parser): add Hooks API
 
-  ### Added Hooks API
+### Added Hooks API
 
-  This release adds the [Hooks API](https://heyapi.dev/openapi-ts/configuration/parser#hooks), giving you granular control over which operations generate queries and mutations. As a result, we tightened the previous behavior and POST operations no longer generate queries by default. To preserve the old behavior, add a custom matcher.
+This release adds the [Hooks API](https://heyapi.dev/openapi-ts/configuration/parser#hooks), giving you granular control over which operations generate queries and mutations. As a result, we tightened the previous behavior and POST operations no longer generate queries by default. To preserve the old behavior, add a custom matcher.
 
-  ```js
-  export default {
-    input: 'hey-api/backend', // sign up at app.heyapi.dev
-    output: 'src/client',
-    parser: {
-      hooks: {
-        operations: {
-          isQuery: (op) => (op.method === 'post' ? true : undefined),
-        },
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    hooks: {
+      operations: {
+        isQuery: (op) => (op.method === 'post' ? true : undefined),
       },
     },
-  };
-````
+  },
+};
+```
 
 ### Patch Changes
 
