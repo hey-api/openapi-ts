@@ -11,7 +11,7 @@ Every generated file in your output folder is created by a plugin. This page des
 
 If you use the default configuration, your [project](https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts) might look like this.
 
-```md
+```txt
 my-app/
 ├── node_modules/
 ├── src/
