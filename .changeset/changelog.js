@@ -103,26 +103,10 @@ export default {
     const [firstLine, ...rest] = replacedChangelog.split('\n');
     const restSummary = rest.join('\n').trim();
 
-    // Post-process code blocks: replace triple backtick code blocks with indented code blocks
-    function convertCodeBlocks(text) {
-      // Replace ```lang\n...\n``` with indented code
-      return text.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
-        const langComment = lang ? `// ${lang}\n` : '';
-        return (
-          '\n' +
-          langComment +
-          code
-            .split('\n')
-            .map((line) => '    ' + line)
-            .join('\n') +
-          '\n'
-        );
-      });
-    }
-
+    // No code block conversion: preserve original triple backtick code blocks and indentation
     let releaseLine = `\n- ${firstLine}${metadata}`;
     if (restSummary) {
-      releaseLine += '\n\n' + convertCodeBlocks(restSummary);
+      releaseLine += '\n\n' + restSummary;
     }
     return releaseLine;
   },
