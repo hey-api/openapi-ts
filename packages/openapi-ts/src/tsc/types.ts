@@ -1084,8 +1084,27 @@ export const createRegularExpressionLiteral = ({
   const patternContent =
     text.startsWith('/') && text.endsWith('/') ? text.slice(1, -1) : text;
 
-  // Escape forward slashes in the pattern content, but only if they're not already escaped
-  const escapedPattern = patternContent.replace(/(?<!\\)\//g, '\\/');
+  // Escape forward slashes in the pattern content, but only if they're not preceded by a backslash.
+  // When getPattern() doubles backslashes, a sequence like \\ (two backslashes) followed by /
+  // means a literal backslash in the regex, followed by a forward slash. In a regex literal,
+  // this can be written as \\/ (no need to escape the / because it's after a backslash).
+  // However, a standalone / needs to be escaped as \/.
+  let escapedPattern = '';
+  for (let i = 0; i < patternContent.length; i++) {
+    const char = patternContent[i];
+    if (char === '/') {
+      // Check if there's a backslash immediately before this forward slash
+      if (i > 0 && patternContent[i - 1] === '\\') {
+        // Forward slash is preceded by a backslash, no need to escape
+        escapedPattern += '/';
+      } else {
+        // Forward slash needs escaping
+        escapedPattern += '\\/';
+      }
+    } else {
+      escapedPattern += char;
+    }
+  }
 
   // Wrap with forward slashes
   const textWithSlashes = `/${escapedPattern}/`;
