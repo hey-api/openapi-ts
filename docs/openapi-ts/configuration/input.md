@@ -54,6 +54,8 @@ export default {
 
 :::
 
+You can learn more about complex use cases in the [Advanced](/openapi-ts/configuration#advanced) section.
+
 ::: info
 If you use an HTTPS URL with a self-signed certificate in development, you will need to set [`NODE_TLS_REJECT_UNAUTHORIZED=0`](https://github.com/hey-api/openapi-ts/issues/276#issuecomment-2043143501) in your environment.
 :::

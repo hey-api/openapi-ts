@@ -2,12 +2,18 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import { detectInteractiveSession, initConfigs } from '../config/init';
 import { mergeConfigs } from '../config/merge';
+import { Logger } from '../utils/logger';
 
 describe('interactive config', () => {
   it('should use detectInteractiveSession when not provided', async () => {
     const result = await initConfigs({
-      input: 'test.json',
-      output: './test',
+      logger: new Logger(),
+      userConfigs: [
+        {
+          input: 'test.json',
+          output: './test',
+        },
+      ],
     });
 
     // In test environment, TTY is typically not available, so it should be false
@@ -16,9 +22,14 @@ describe('interactive config', () => {
 
   it('should respect user config when set to true', async () => {
     const result = await initConfigs({
-      input: 'test.json',
-      interactive: true,
-      output: './test',
+      logger: new Logger(),
+      userConfigs: [
+        {
+          input: 'test.json',
+          interactive: true,
+          output: './test',
+        },
+      ],
     });
 
     expect(result.results[0]?.config.interactive).toBe(true);
@@ -26,9 +37,14 @@ describe('interactive config', () => {
 
   it('should respect user config when set to false', async () => {
     const result = await initConfigs({
-      input: 'test.json',
-      interactive: false,
-      output: './test',
+      logger: new Logger(),
+      userConfigs: [
+        {
+          input: 'test.json',
+          interactive: false,
+          output: './test',
+        },
+      ],
     });
 
     expect(result.results[0]?.config.interactive).toBe(false);

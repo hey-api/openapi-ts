@@ -18,13 +18,15 @@ export const createZodConfig =
     outputDir: string;
     zodVersion: (typeof zodVersions)[number];
   }) =>
-  (userConfig: UserConfig): UserConfig => {
+  (userConfig: UserConfig) => {
+    const input =
+      userConfig.input instanceof Array
+        ? userConfig.input[0]!
+        : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
       openApiVersion,
-      typeof userConfig.input === 'string'
-        ? userConfig.input
-        : (userConfig.input.path as string),
+      typeof input === 'string' ? input : (input.path as string),
     );
     return {
       plugins: [
@@ -48,7 +50,7 @@ export const createZodConfig =
         outputDir,
         typeof userConfig.output === 'string' ? userConfig.output : '',
       ),
-    };
+    } as const satisfies UserConfig;
   };
 
 export const getSnapshotsPath = (): string =>

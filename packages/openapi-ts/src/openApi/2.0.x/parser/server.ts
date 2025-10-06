@@ -6,17 +6,19 @@ export const parseServers = ({ context }: { context: IR.Context }) => {
   let host = context.spec.host ?? '';
   const path = context.spec.basePath ?? '';
 
-  if (typeof context.config.input.path === 'string') {
-    const url = parseUrl(context.config.input.path);
+  for (const input of context.config.input) {
+    if (typeof input.path === 'string') {
+      const url = parseUrl(input.path);
 
-    if (!schemes.length) {
-      if (url.protocol) {
-        schemes = [url.protocol] as typeof schemes;
+      if (!schemes.length) {
+        if (url.protocol) {
+          schemes = [url.protocol] as typeof schemes;
+        }
       }
-    }
 
-    if (!host) {
-      host = `${url.host}${url.port ? `:${url.port}` : ''}`;
+      if (!host) {
+        host = `${url.host}${url.port ? `:${url.port}` : ''}`;
+      }
     }
   }
 

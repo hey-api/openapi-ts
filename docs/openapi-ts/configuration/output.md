@@ -34,6 +34,8 @@ export default {
 
 :::
 
+You can learn more about complex use cases in the [Advanced](/openapi-ts/configuration#advanced) section.
+
 ## File Name
 
 You can customize the naming and casing pattern for files using the `fileName` option.

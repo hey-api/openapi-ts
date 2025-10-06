@@ -1,9 +1,10 @@
 import type { PluginConfigMap } from '../plugins/config';
 import type { Plugin, PluginNames } from '../plugins/types';
-import type { Input, Watch } from './input';
+import type { Input, UserInput, Watch } from './input';
 import type { Logs } from './logs';
 import type { Output, UserOutput } from './output';
 import type { Parser, UserParser } from './parser';
+import type { MaybeArray } from './utils';
 
 export interface UserConfig {
   /**
@@ -27,16 +28,12 @@ export interface UserConfig {
    * object directly if you're fetching the file yourself.
    *
    * Alternatively, you can define a configuration object with more options.
+   *
+   * If you define an array, we will generate a single output from multiple
+   * inputs. If you define an array of outputs with the same length, we will
+   * generate multiple outputs, one for each input.
    */
-  input:
-    | `https://get.heyapi.dev/${string}/${string}`
-    | `${string}/${string}`
-    | `readme:@${string}/${string}#${string}`
-    | `readme:${string}`
-    | `scalar:@${string}/${string}`
-    | (string & {})
-    | (Record<string, unknown> & { path?: never })
-    | Input;
+  input: MaybeArray<UserInput | Required<UserInput>['path']>;
   /**
    * Show an interactive error reporting tool when the program crashes? You
    * generally want to keep this disabled (default).
@@ -52,8 +49,11 @@ export interface UserConfig {
   logs?: string | Logs;
   /**
    * Path to the output folder.
+   *
+   * If you define an array of outputs with the same length as inputs, we will
+   * generate multiple outputs, one for each input.
    */
-  output: string | UserOutput;
+  output: MaybeArray<string | UserOutput>;
   /**
    * Customize how the input is parsed and transformed before it's passed to
    * plugins.
@@ -142,9 +142,14 @@ export type Config = Omit<
   | 'watch'
 > &
   Pick<UserConfig, 'base' | 'name' | 'request'> & {
-    input: Omit<Input, 'path' | 'watch'> &
-      Pick<Required<Input>, 'path'> & { watch: Watch };
+    /**
+     * Path to the input specification.
+     */
+    input: ReadonlyArray<Input>;
     logs: Logs;
+    /**
+     * Path to the output folder.
+     */
     output: Output;
     /**
      * Customize how the input is parsed and transformed before it's passed to

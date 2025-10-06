@@ -518,6 +518,9 @@ describe('index', () => {
       createClient({
         dryRun: true,
         input: '../specs/v2.json',
+        logs: {
+          level: 'silent',
+        },
         output: './generated/v2/',
         plugins: ['@hey-api/client-fetch'],
       }),
@@ -529,6 +532,9 @@ describe('index', () => {
       createClient({
         dryRun: true,
         input: '../specs/v3.json',
+        logs: {
+          level: 'silent',
+        },
         output: './generated/v3/',
         plugins: ['@hey-api/client-fetch'],
       }),
@@ -540,6 +546,9 @@ describe('index', () => {
       createClient({
         dryRun: true,
         input: '../specs/v3-transforms.json',
+        logs: {
+          level: 'silent',
+        },
         output: './generated/v3/',
         plugins: [
           '@hey-api/client-fetch',
@@ -561,6 +570,9 @@ describe('index', () => {
         dryRun: true,
         input:
           'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts-tests/specs/v2.json',
+        logs: {
+          level: 'silent',
+        },
         output: './generated/v2-downloaded/',
         plugins: ['@hey-api/client-fetch'],
       }),
@@ -573,6 +585,9 @@ describe('index', () => {
         dryRun: true,
         input:
           'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts-tests/specs/v3.json',
+        logs: {
+          level: 'silent',
+        },
         output: './generated/v3-downloaded/',
         plugins: ['@hey-api/client-fetch'],
       }),

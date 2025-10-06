@@ -9,12 +9,12 @@ export const inputToApiRegistry = (
   },
 ) => {
   if (input.path.startsWith('readme:')) {
-    input.path = inputToReadmePath(input.path);
+    Object.assign(input, inputToReadmePath(input.path));
     return;
   }
 
   if (input.path.startsWith('scalar:')) {
-    input.path = inputToScalarPath(input.path);
+    Object.assign(input, inputToScalarPath(input.path));
     return;
   }
 
@@ -24,13 +24,13 @@ export const inputToApiRegistry = (
 
   if (input.path.startsWith(heyApiRegistryBaseUrl)) {
     input.path = input.path.slice(heyApiRegistryBaseUrl.length + 1);
-    input.path = inputToHeyApiPath(input as Input & { path: string });
+    Object.assign(input, inputToHeyApiPath(input as Input & { path: string }));
     return;
   }
 
   const parts = input.path.split('/');
-  const cleanParts = parts.filter(Boolean);
-  if (parts.length === 2 && cleanParts.length === 2) {
-    input.path = inputToHeyApiPath(input as Input & { path: string });
+  if (parts.length === 2 && parts.filter(Boolean).length === 2) {
+    Object.assign(input, inputToHeyApiPath(input as Input & { path: string }));
+    return;
   }
 };

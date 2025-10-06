@@ -15,14 +15,20 @@ const version = '3.1.x';
 const outputDir = path.join(__dirname, 'generated', version);
 
 describe(`OpenAPI ${version}`, () => {
-  const createConfig = (userConfig: UserConfig): UserConfig => {
+  const createConfig = (userConfig: UserConfig) => {
+    const input =
+      userConfig.input instanceof Array
+        ? userConfig.input[0]
+        : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
       version,
-      typeof userConfig.input === 'string'
-        ? userConfig.input
-        : (userConfig.input.path as string),
+      typeof input === 'string' ? input : ((input?.path as string) ?? ''),
     );
+    const output =
+      userConfig.output instanceof Array
+        ? userConfig.output[0]
+        : userConfig.output;
     return {
       plugins: ['@hey-api/typescript'],
       ...userConfig,
@@ -38,9 +44,9 @@ describe(`OpenAPI ${version}`, () => {
       },
       output: path.join(
         outputDir,
-        typeof userConfig.output === 'string' ? userConfig.output : '',
+        typeof output === 'string' ? output : (output?.path ?? ''),
       ),
-    };
+    } as const satisfies UserConfig;
   };
 
   const scenarios = [
@@ -969,9 +975,7 @@ describe(`OpenAPI ${version}`, () => {
   it.each(scenarios)('$description', async ({ config }) => {
     await createClient(config);
 
-    const outputPath =
-      typeof config.output === 'string' ? config.output : config.output.path;
-    const filePaths = getFilePaths(outputPath);
+    const filePaths = getFilePaths(config.output);
 
     await Promise.all(
       filePaths.map(async (filePath) => {

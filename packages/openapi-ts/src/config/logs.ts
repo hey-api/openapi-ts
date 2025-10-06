@@ -1,6 +1,8 @@
 import type { Config, UserConfig } from '../types/config';
 
-export const getLogs = (userConfig: UserConfig | undefined): Config['logs'] => {
+export const getLogs = (
+  userConfig: Pick<UserConfig, 'logs'> | undefined,
+): Config['logs'] => {
   let logs: Config['logs'] = {
     file: true,
     level: 'info',

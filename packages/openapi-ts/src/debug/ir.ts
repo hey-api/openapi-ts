@@ -43,7 +43,7 @@ const print = (ir: IR.Model, options: PrintOptions = {}) => {
     if (verbosity === 'summary' && obj && typeof obj === 'object') {
       if (kind === 'responses') {
         const count = Object.keys(obj).length;
-        const noun = count !== 1 ? 'codes' : 'code';
+        const noun = count === 1 ? 'code' : 'codes';
         log(`responses: ${colors.yellow(`${count} ${noun}`)}`, level);
       } else if (kind === 'requestBody') {
         log(`requestBody: ${Object.keys(obj).join(', ')}`, level);

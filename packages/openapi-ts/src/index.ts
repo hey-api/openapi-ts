@@ -5,10 +5,13 @@ import colors from 'ansi-colors';
 import colorSupport from 'color-support';
 
 import { checkNodeVersion } from './config/engine';
+import type { Configs } from './config/init';
 import { initConfigs } from './config/init';
 import { getLogs } from './config/logs';
 import { createClient as pCreateClient } from './createClient';
 import {
+  ConfigValidationError,
+  JobError,
   logCrashReport,
   openGitHubIssueWithCrashReport,
   printCrashReport,
@@ -16,27 +19,39 @@ import {
 } from './error';
 import type { IR } from './ir/types';
 import type { Client } from './types/client';
-import type { Config, UserConfig } from './types/config';
+import type { UserConfig } from './types/config';
+import type { LazyOrAsync, MaybeArray } from './types/utils';
+import { printCliIntro } from './utils/cli';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { Logger } from './utils/logger';
-
-type Configs = UserConfig | (() => UserConfig) | (() => Promise<UserConfig>);
 
 colors.enabled = colorSupport().hasBasic;
 
 /**
  * Generate a client from the provided configuration.
  *
- * @param userConfig User provided {@link UserConfig} configuration.
+ * @param userConfig User provided {@link UserConfig} configuration(s).
  */
 export const createClient = async (
-  userConfig?: Configs,
+  userConfig?: LazyOrAsync<MaybeArray<UserConfig>>,
   logger = new Logger(),
 ): Promise<ReadonlyArray<Client | IR.Context>> => {
   const resolvedConfig =
     typeof userConfig === 'function' ? await userConfig() : userConfig;
+  const userConfigs = resolvedConfig
+    ? resolvedConfig instanceof Array
+      ? resolvedConfig
+      : [resolvedConfig]
+    : [];
 
-  const configs: Array<Config> = [];
+  let rawLogs = userConfigs.find(
+    (config) => getLogs(config).level !== 'silent',
+  )?.logs;
+  if (typeof rawLogs === 'string') {
+    rawLogs = getLogs({ logs: rawLogs });
+  }
+
+  let configs: Configs | undefined;
 
   try {
     checkNodeVersion();
@@ -44,28 +59,43 @@ export const createClient = async (
     const eventCreateClient = logger.timeEvent('createClient');
 
     const eventConfig = logger.timeEvent('config');
-    const configResults = await initConfigs(resolvedConfig);
-    for (const result of configResults.results) {
-      configs.push(result.config);
-      if (result.errors.length) {
-        throw result.errors[0];
-      }
+    configs = await initConfigs({ logger, userConfigs });
+    const printIntro = configs.results.some(
+      (result) => result.config.logs.level !== 'silent',
+    );
+    if (printIntro) {
+      printCliIntro();
     }
     eventConfig.timeEnd();
+
+    const allConfigErrors = configs.results.flatMap((result) =>
+      result.errors.map((error) => ({ error, jobIndex: result.jobIndex })),
+    );
+    if (allConfigErrors.length) {
+      throw new ConfigValidationError(allConfigErrors);
+    }
 
     const eventHandlebars = logger.timeEvent('handlebars');
     const templates = registerHandlebarTemplates();
     eventHandlebars.timeEnd();
 
     const clients = await Promise.all(
-      configs.map((config) =>
-        pCreateClient({
-          config,
-          dependencies: configResults.dependencies,
-          logger,
-          templates,
-        }),
-      ),
+      configs.results.map(async (result) => {
+        try {
+          return await pCreateClient({
+            config: result.config,
+            dependencies: configs!.dependencies,
+            jobIndex: result.jobIndex,
+            logger,
+            templates,
+          });
+        } catch (error) {
+          throw new JobError('', {
+            error,
+            jobIndex: result.jobIndex,
+          });
+        }
+      }),
     );
     const result = clients.filter((client) => Boolean(client)) as ReadonlyArray<
       Client | IR.Context
@@ -73,26 +103,33 @@ export const createClient = async (
 
     eventCreateClient.timeEnd();
 
-    const config = configs[0];
-    logger.report(config && config.logs.level === 'debug');
+    const printLogs = configs.results.some(
+      (result) => result.config.logs.level === 'debug',
+    );
+    logger.report(printLogs);
 
     return result;
   } catch (error) {
-    const config = configs[0] as Config | undefined;
-    const dryRun = config ? config.dryRun : resolvedConfig?.dryRun;
-    const isInteractive = config
-      ? config.interactive
-      : resolvedConfig?.interactive;
-    const logs = config?.logs ?? getLogs(resolvedConfig);
+    const results = configs?.results ?? [];
 
-    let logPath: string | undefined;
+    const logs =
+      results.find((result) => result.config.logs.level !== 'silent')?.config
+        .logs ?? rawLogs;
+    if (!logs || logs.level !== 'silent') {
+      const dryRun =
+        results.some((result) => result.config.dryRun) ??
+        userConfigs.some((config) => config.dryRun) ??
+        false;
+      const logPath =
+        logs?.file && !dryRun
+          ? logCrashReport(error, logs.path ?? '')
+          : undefined;
 
-    if (logs.level !== 'silent' && logs.file && !dryRun) {
-      logPath = logCrashReport(error, logs.path ?? '');
-    }
-
-    if (logs.level !== 'silent') {
       printCrashReport({ error, logPath });
+      const isInteractive =
+        results.some((result) => result.config.interactive) ??
+        userConfigs.some((config) => config.interactive) ??
+        false;
       if (await shouldReportCrash({ error, isInteractive })) {
         await openGitHubIssueWithCrashReport(error);
       }
@@ -103,10 +140,11 @@ export const createClient = async (
 };
 
 /**
- * Type helper for openapi-ts.config.ts, returns {@link UserConfig} object
+ * Type helper for openapi-ts.config.ts, returns {@link MaybeArray<UserConfig>} object(s)
  */
-export const defineConfig = async (config: Configs): Promise<UserConfig> =>
-  typeof config === 'function' ? await config() : config;
+export const defineConfig = async <T extends MaybeArray<UserConfig>>(
+  config: LazyOrAsync<T>,
+): Promise<T> => (typeof config === 'function' ? await config() : config);
 
 export { defaultPaginationKeywords } from './config/parser';
 export { defaultPlugins } from './config/plugins';

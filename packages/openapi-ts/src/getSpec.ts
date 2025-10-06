@@ -1,25 +1,22 @@
-import {
-  $RefParser,
-  getResolvedInput,
-  type JSONSchema,
-  sendRequest,
-} from '@hey-api/json-schema-ref-parser';
+import { getResolvedInput, sendRequest } from '@hey-api/json-schema-ref-parser';
 
 import { mergeHeaders } from './plugins/@hey-api/client-fetch/bundle';
-import type { Config } from './types/config';
+import type { Input } from './types/input';
 import type { WatchValues } from './types/types';
 
-interface SpecResponse {
-  data: JSONSchema;
-  error?: undefined;
-  response?: undefined;
-}
+type SpecResponse = {
+  arrayBuffer: ArrayBuffer | undefined;
+  error?: never;
+  resolvedInput: ReturnType<typeof getResolvedInput>;
+  response?: never;
+};
 
-interface SpecError {
-  data?: undefined;
+type SpecError = {
+  arrayBuffer?: never;
   error: 'not-modified' | 'not-ok';
+  resolvedInput?: never;
   response: Response;
-}
+};
 
 /**
  * @internal
@@ -31,11 +28,10 @@ export const getSpec = async ({
   watch,
 }: {
   fetchOptions?: RequestInit;
-  inputPath: Config['input']['path'];
+  inputPath: Input['path'];
   timeout: number | undefined;
   watch: WatchValues;
 }): Promise<SpecResponse | SpecError> => {
-  const refParser = new $RefParser();
   const resolvedInput = getResolvedInput({ pathOrUrlOrSchema: inputPath });
 
   let arrayBuffer: ArrayBuffer | undefined;
@@ -182,13 +178,8 @@ export const getSpec = async ({
     };
   }
 
-  const data = await refParser.bundle({
-    arrayBuffer,
-    pathOrUrlOrSchema: undefined,
-    resolvedInput,
-  });
-
   return {
-    data,
+    arrayBuffer,
+    resolvedInput,
   };
 };

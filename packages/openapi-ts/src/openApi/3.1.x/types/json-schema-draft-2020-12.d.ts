@@ -1,3 +1,4 @@
+import type { MaybeArray } from '../../../types/utils';
 import type { EnumExtensions } from '../../shared/types/openapi-spec-extensions';
 import type { OpenApiSchemaExtensions } from './spec-extensions';
 
@@ -144,7 +145,7 @@ export interface JsonSchemaDraft2020_12
   /**
    * If it is an array, it must be an array of strings, where each string is the name of one of the basic types, and each element is unique. In this case, the JSON snippet is valid if it matches any of the given types.
    */
-  type?: JsonSchemaTypes | ReadonlyArray<JsonSchemaTypes>;
+  type?: MaybeArray<JsonSchemaTypes>;
   /**
    * The boolean keywords `readOnly` and `writeOnly` are typically used in an API context. `readOnly` indicates that a value should not be modified. It could be used to indicate that a `PUT` request that changes a value would result in a `400 Bad Request` response. `writeOnly` indicates that a value may be set, but will remain hidden. In could be used to indicate you can set a value with a `PUT` request, but it would not be included when retrieving that record with a `GET` request.
    */

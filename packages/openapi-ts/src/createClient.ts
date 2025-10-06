@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import { $RefParser } from '@hey-api/json-schema-ref-parser';
 import colors from 'ansi-colors';
 
 import { generateLegacyOutput } from './generate/legacy/output';
@@ -11,35 +12,33 @@ import { patchOpenApiSpec } from './openApi/shared/utils/patch';
 import { processOutput } from './processOutput';
 import type { Client } from './types/client';
 import type { Config } from './types/config';
+import type { Input } from './types/input';
 import type { WatchValues } from './types/types';
 import { isLegacyClient, legacyNameFromConfig } from './utils/config';
 import type { Templates } from './utils/handlebars';
-import { heyApiRegistryBaseUrl } from './utils/input/heyApi';
 import type { Logger } from './utils/logger';
 import { postProcessClient } from './utils/postprocess';
 
-const isHeyApiRegistryPath = (path: string) =>
-  path.startsWith(heyApiRegistryBaseUrl);
-// || path.startsWith('http://localhost:4000')
-
-export const compileInputPath = (input: Omit<Config['input'], 'watch'>) => {
+export const compileInputPath = (input: Omit<Input, 'watch'>) => {
   const result: Pick<
-    Partial<Config['input']>,
+    Partial<Input>,
     | 'api_key'
     | 'branch'
     | 'commit_sha'
     | 'organization'
     | 'project'
+    | 'registry'
     | 'tags'
     | 'version'
   > &
-    Pick<Required<Config['input']>, 'path'> = {
+    Pick<Input, 'path'> = {
+    ...input,
     path: '',
   };
 
   if (
     input.path &&
-    (typeof input.path !== 'string' || !isHeyApiRegistryPath(input.path))
+    (typeof input.path !== 'string' || input.registry !== 'hey-api')
   ) {
     result.path = input.path;
     return result;
@@ -131,94 +130,193 @@ export const compileInputPath = (input: Omit<Config['input'], 'watch'>) => {
   return result;
 };
 
-const logInputPath = (inputPath: ReturnType<typeof compileInputPath>) => {
-  const baseString = colors.cyan('Generating from');
+const logInputPaths = (
+  inputPaths: ReadonlyArray<ReturnType<typeof compileInputPath>>,
+  jobIndex: number,
+) => {
+  const lines: Array<string> = [];
 
-  if (typeof inputPath.path === 'string') {
-    const baseInput = isHeyApiRegistryPath(inputPath.path)
-      ? `${inputPath.organization ?? ''}/${inputPath.project ?? ''}`
-      : inputPath.path;
-    console.log(`⏳ ${baseString} ${baseInput}`);
-    if (isHeyApiRegistryPath(inputPath.path)) {
-      if (inputPath.branch) {
-        console.log(
-          `${colors.gray('branch:')} ${colors.green(inputPath.branch)}`,
-        );
-      }
-      if (inputPath.commit_sha) {
-        console.log(
-          `${colors.gray('commit:')} ${colors.green(inputPath.commit_sha)}`,
-        );
-      }
-      if (inputPath.tags?.length) {
-        console.log(
-          `${colors.gray('tags:')} ${colors.green(inputPath.tags.join(', '))}`,
-        );
-      }
-      if (inputPath.version) {
-        console.log(
-          `${colors.gray('version:')} ${colors.green(inputPath.version)}`,
-        );
-      }
+  const jobPrefix = colors.gray(`[Job ${jobIndex + 1}] `);
+  const count = inputPaths.length;
+  const baseString = colors.cyan(
+    `Generating from ${count} ${count === 1 ? 'input' : 'inputs'}:`,
+  );
+  lines.push(`${jobPrefix}⏳ ${baseString}`);
+
+  inputPaths.forEach((inputPath, index) => {
+    const itemPrefixStr = `  [${index + 1}] `;
+    const itemPrefix = colors.cyan(itemPrefixStr);
+    const detailIndent = ' '.repeat(itemPrefixStr.length);
+
+    if (typeof inputPath.path !== 'string') {
+      lines.push(`${jobPrefix}${itemPrefix}raw OpenAPI specification`);
+      return;
     }
-  } else {
-    console.log(`⏳ ${baseString} raw OpenAPI specification`);
+
+    switch (inputPath.registry) {
+      case 'hey-api': {
+        const baseInput = [inputPath.organization, inputPath.project]
+          .filter(Boolean)
+          .join('/');
+        lines.push(`${jobPrefix}${itemPrefix}${baseInput}`);
+        if (inputPath.branch) {
+          lines.push(
+            `${jobPrefix}${detailIndent}${colors.gray('branch:')} ${colors.green(
+              inputPath.branch,
+            )}`,
+          );
+        }
+        if (inputPath.commit_sha) {
+          lines.push(
+            `${jobPrefix}${detailIndent}${colors.gray('commit:')} ${colors.green(
+              inputPath.commit_sha,
+            )}`,
+          );
+        }
+        if (inputPath.tags?.length) {
+          lines.push(
+            `${jobPrefix}${detailIndent}${colors.gray('tags:')} ${colors.green(
+              inputPath.tags.join(', '),
+            )}`,
+          );
+        }
+        if (inputPath.version) {
+          lines.push(
+            `${jobPrefix}${detailIndent}${colors.gray('version:')} ${colors.green(
+              inputPath.version,
+            )}`,
+          );
+        }
+        lines.push(
+          `${jobPrefix}${detailIndent}${colors.gray('registry:')} ${colors.green('Hey API')}`,
+        );
+        break;
+      }
+      case 'readme': {
+        const baseInput = [inputPath.organization, inputPath.project]
+          .filter(Boolean)
+          .join('/');
+        if (!baseInput) {
+          lines.push(`${jobPrefix}${itemPrefix}${inputPath.path}`);
+        } else {
+          lines.push(`${jobPrefix}${itemPrefix}${baseInput}`);
+        }
+        // @ts-expect-error
+        if (inputPath.uuid) {
+          lines.push(
+            `${jobPrefix}${detailIndent}${colors.gray('uuid:')} ${colors.green(
+              // @ts-expect-error
+              inputPath.uuid,
+            )}`,
+          );
+        }
+        lines.push(
+          `${jobPrefix}${detailIndent}${colors.gray('registry:')} ${colors.green('ReadMe')}`,
+        );
+        break;
+      }
+      case 'scalar': {
+        const baseInput = [inputPath.organization, inputPath.project]
+          .filter(Boolean)
+          .join('/');
+        lines.push(`${jobPrefix}${itemPrefix}${baseInput}`);
+        lines.push(
+          `${jobPrefix}${detailIndent}${colors.gray('registry:')} ${colors.green('Scalar')}`,
+        );
+        break;
+      }
+      default:
+        lines.push(`${jobPrefix}${itemPrefix}${inputPath.path}`);
+        break;
+    }
+  });
+
+  for (const line of lines) {
+    console.log(line);
   }
 };
 
 export const createClient = async ({
   config,
   dependencies,
+  jobIndex,
   logger,
   templates,
-  watch: _watch,
+  watches: _watches,
 }: {
   config: Config;
   dependencies: Record<string, string>;
+  jobIndex: number;
   logger: Logger;
   templates: Templates;
   /**
-   * Always falsy on the first run, truthy on subsequent runs.
+   * Always undefined on the first run, defined on subsequent runs.
    */
-  watch?: WatchValues;
-}) => {
-  const inputPath = compileInputPath(config.input);
-  const { timeout } = config.input.watch;
+  watches?: ReadonlyArray<WatchValues>;
+}): Promise<Client | undefined | IR.Context> => {
+  const watches: ReadonlyArray<WatchValues> =
+    _watches ||
+    Array.from({ length: config.input.length }, () => ({
+      headers: new Headers(),
+    }));
 
-  const watch: WatchValues = _watch || { headers: new Headers() };
+  const inputPaths = config.input.map((input) => compileInputPath(input));
 
   // on first run, print the message as soon as possible
-  if (config.logs.level !== 'silent' && !_watch) {
-    logInputPath(inputPath);
+  if (config.logs.level !== 'silent' && !_watches) {
+    logInputPaths(inputPaths, jobIndex);
   }
 
-  const eventSpec = logger.timeEvent('spec');
-  const { data, error, response } = await getSpec({
-    fetchOptions: config.input.fetch,
-    inputPath: inputPath.path,
-    timeout,
-    watch,
-  });
-  eventSpec.timeEnd();
+  const getSpecData = async (input: Input, index: number) => {
+    const eventSpec = logger.timeEvent('spec');
+    const { arrayBuffer, error, resolvedInput, response } = await getSpec({
+      fetchOptions: input.fetch,
+      inputPath: inputPaths[index]!.path,
+      timeout: input.watch.timeout,
+      watch: watches[index]!,
+    });
+    eventSpec.timeEnd();
 
-  // throw on first run if there's an error to preserve user experience
-  // if in watch mode, subsequent errors won't throw to gracefully handle
-  // cases where server might be reloading
-  if (error && !_watch) {
-    throw new Error(
-      `Request failed with status ${response.status}: ${response.statusText}`,
-    );
-  }
+    // throw on first run if there's an error to preserve user experience
+    // if in watch mode, subsequent errors won't throw to gracefully handle
+    // cases where server might be reloading
+    if (error && !_watches) {
+      throw new Error(
+        `Request failed with status ${response.status}: ${response.statusText}`,
+      );
+    }
+
+    return { arrayBuffer, resolvedInput };
+  };
+  const specData = (
+    await Promise.all(
+      config.input.map((input, index) => getSpecData(input, index)),
+    )
+  ).filter((data) => data.arrayBuffer || data.resolvedInput);
 
   let client: Client | undefined;
   let context: IR.Context | undefined;
 
-  if (data) {
-    // on subsequent runs in watch mode, print the mssage only if we know we're
+  if (specData.length) {
+    const refParser = new $RefParser();
+    const data =
+      specData.length > 1
+        ? await refParser.bundleMany({
+            arrayBuffer: specData.map((data) => data.arrayBuffer!),
+            pathOrUrlOrSchemas: [],
+            resolvedInputs: specData.map((data) => data.resolvedInput!),
+          })
+        : await refParser.bundle({
+            arrayBuffer: specData[0]!.arrayBuffer,
+            pathOrUrlOrSchema: undefined,
+            resolvedInput: specData[0]!.resolvedInput,
+          });
+
+    // on subsequent runs in watch mode, print the message only if we know we're
     // generating the output
-    if (config.logs.level !== 'silent' && _watch) {
+    if (config.logs.level !== 'silent' && _watches) {
       console.clear();
-      logInputPath(inputPath);
+      logInputPaths(inputPaths, jobIndex);
     }
 
     const eventInputPatch = logger.timeEvent('input.patch');
@@ -257,18 +355,31 @@ export const createClient = async ({
         const outputPath = process.env.INIT_CWD
           ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
           : config.output.path;
+        const jobPrefix = colors.gray(`[Job ${jobIndex + 1}] `);
         console.log(
-          `${colors.green('🚀 Done!')} Your output is in ${colors.cyanBright(outputPath)}`,
+          `${jobPrefix}${colors.green('✅ Done!')} Your output is in ${colors.cyanBright(outputPath)}`,
         );
       }
     }
     eventPostprocess.timeEnd();
   }
 
-  if (config.input.watch.enabled && typeof inputPath.path === 'string') {
+  const watchedInput = config.input.find(
+    (input, index) =>
+      input.watch.enabled && typeof inputPaths[index]!.path === 'string',
+  );
+
+  if (watchedInput) {
     setTimeout(() => {
-      createClient({ config, dependencies, logger, templates, watch });
-    }, config.input.watch.interval);
+      createClient({
+        config,
+        dependencies,
+        jobIndex,
+        logger,
+        templates,
+        watches,
+      });
+    }, watchedInput.watch.interval);
   }
 
   return context || client;
