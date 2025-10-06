@@ -134,6 +134,76 @@ describe('changelog', () => {
     );
   });
 
+  it('places metadata on the first line and does not append it after code blocks', async () => {
+    const summary = [
+      'refactor(config): replace `off` with null to disable options',
+      '',
+      '### Updated `output` options',
+      '',
+      'We made the `output` configuration more consistent by using `null` to represent disabled options. [This change](https://heyapi.dev/openapi-ts/migrating#updated-output-options) does not affect boolean options.',
+      '',
+      '```js',
+      'export default {',
+      '  input: "hey-api/backend", // sign up at app.heyapi.dev',
+      '  output: {',
+      '    format: null,',
+      '    lint: null,',
+      '    path: "src/client",',
+      '    tsConfigPath: null,',
+      '  },',
+      '};',
+      '```',
+    ].join('\n');
+    const changeset = {
+      commit: 'fcdd73b816d74babf47e6a1f46032f5b8ebb4b48',
+      id: 'fake-id',
+      releases: [],
+      summary,
+    };
+    const line = await changelog.getReleaseLine(changeset, 'minor', {
+      repo: 'hey-api/openapi-ts',
+    });
+    // Metadata should be on the first line
+    expect(line).toMatch(
+      /^\n- refactor\(config\): replace `off` with null to disable options \(\[#1613\]\(https:\/\/github.com\/hey-api\/openapi-ts\/pull\/1613\)\) \(\[`fcdd73b`\]\(https:\/\/github.com\/hey-api\/openapi-ts\/commit\/fcdd73b816d74babf47e6a1f46032f5b8ebb4b48\)\) by \[@someone\]\(https:\/\/github.com\/someone\)/,
+    );
+    // There should be no metadata at the end
+    expect(line.trim().endsWith('```')).toBe(false);
+    // Should not contain quadruple backticks
+    expect(line).not.toContain('````');
+    // Should contain indented code block
+    expect(line).toContain('    export default {');
+  });
+
+  it('converts multiple code blocks and preserves non-code content', async () => {
+    const summary = [
+      'feat: add foo',
+      '',
+      '```js',
+      'console.log(1);',
+      '```',
+      '',
+      'Some text.',
+      '',
+      '```ts',
+      'console.log(2);',
+      '```',
+    ].join('\n');
+    const changeset = {
+      commit: 'abc123',
+      id: 'fake-id',
+      releases: [],
+      summary,
+    };
+    const line = await changelog.getReleaseLine(changeset, 'minor', {
+      repo: 'hey-api/openapi-ts',
+    });
+    expect(line).toContain('    console.log(1);');
+    expect(line).toContain('    console.log(2);');
+    expect(line).toContain('Some text.');
+    expect(line).not.toContain('```');
+  });
+
   describe.each(['author', 'user'])(
     'override author with %s keyword',
     (keyword) => {
