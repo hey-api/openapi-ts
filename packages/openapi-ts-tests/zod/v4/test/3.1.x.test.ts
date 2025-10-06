@@ -36,6 +36,14 @@ for (const zodVersion of zodVersions) {
     const scenarios = [
       {
         config: createConfig({
+          input: 'array-items-all-of.yaml',
+          output: 'array-items-all-of',
+        }),
+        description:
+          'generates correct array when items use allOf (intersection)',
+      },
+      {
+        config: createConfig({
           input: 'array-items-one-of-length-1.yaml',
           output: 'array-items-one-of-length-1',
         }),
