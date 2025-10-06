@@ -32,21 +32,9 @@ export default {
 ```
 <!-- prettier-ignore-end -->
 
-```js [array]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: [
-    // [!code ++]
-    'src/client', // [!code ++]
-    { path: 'src/client-formatted', format: 'prettier' }, // [!code ++]
-    { path: 'src/client-linted', lint: 'eslint', clean: false }, // [!code ++]
-  ], // [!code ++]
-};
-```
-
-<!-- prettier-ignore-end -->
-
 :::
+
+You can learn more about complex use cases in the [Advanced](/openapi-ts/configuration#advanced) section.
 
 ## File Name
 
