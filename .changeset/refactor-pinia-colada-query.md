@@ -8,13 +8,13 @@ feat(pinia-colada): query options use `defineQueryOptions`
 
 Pinia Colada query options now use `defineQueryOptions` to improve reactivity support. Instead of calling the query options function, you can use one of the following approaches.
 
-#### No params
+### No params
 
 ```ts
 useQuery(getPetsQuery);
 ```
 
-#### Constant
+### Constant
 
 ```ts
 useQuery(getPetByIdQuery, () => ({
@@ -24,7 +24,7 @@ useQuery(getPetByIdQuery, () => ({
 }));
 ```
 
-#### Reactive
+### Reactive
 
 ```ts
 const petId = ref<number | null>(1);
@@ -36,7 +36,7 @@ useQuery(getPetByIdQuery, () => ({
 }));
 ```
 
-#### Properties
+### Properties
 
 ```ts
 const petId = ref<number | null>(1);
