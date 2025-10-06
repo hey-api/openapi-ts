@@ -1,150 +1,153 @@
-import { platform } from 'os';
 import { describe, expect, it } from 'vitest';
 
-import type { UserConfig } from '../types/config';
+import { createClient } from '../index';
 
-describe(
-  'main entry index',
-  () => {
-    describe('createClient', () => {
-      it('should be exported', async () => {
-        const { createClient } = await import('../index');
-        expect(createClient).toBeDefined();
-      });
+type Config = Parameters<typeof createClient>[0];
 
-      it('should handle single output configuration', async () => {
-        const { createClient } = await import('../index');
+describe('createClient', () => {
+  it('1 config, 1 input, 1 output', async () => {
+    const config: Config = {
+      dryRun: true,
+      input: {
+        info: { title: 'foo', version: '1.0.0' },
+        openapi: '3.0.0',
+      },
+      logs: {
+        level: 'silent',
+      },
+      output: 'output',
+      plugins: ['@hey-api/typescript'],
+    };
 
-        const config: UserConfig = {
-          dryRun: true,
-          input: {
-            info: { title: 'Test API', version: '1.0.0' },
+    const results = await createClient(config);
+    expect(results).toHaveLength(1);
+  });
+
+  it('1 config, 2 inputs, 1 output', async () => {
+    const config: Config = {
+      dryRun: true,
+      input: [
+        {
+          info: { title: 'foo', version: '1.0.0' },
+          openapi: '3.0.0',
+        },
+        {
+          info: { title: 'bar', version: '1.0.0' },
+          openapi: '3.0.0',
+          paths: {},
+        },
+      ],
+      logs: {
+        level: 'silent',
+      },
+      output: 'output',
+      plugins: ['@hey-api/typescript'],
+    };
+
+    const results = await createClient(config);
+    expect(results).toHaveLength(1);
+  });
+
+  it('1 config, 2 inputs, 2 outputs', async () => {
+    const config: Config = {
+      dryRun: true,
+      input: [
+        {
+          info: { title: 'foo', version: '1.0.0' },
+          openapi: '3.0.0',
+        },
+        {
+          info: { title: 'bar', version: '1.0.0' },
+          openapi: '3.0.0',
+          paths: {},
+        },
+      ],
+      logs: {
+        level: 'silent',
+      },
+      output: ['output', 'output2'],
+      plugins: ['@hey-api/typescript'],
+    };
+
+    const results = await createClient(config);
+    expect(results).toHaveLength(2);
+  });
+
+  it('2 configs, 1 input, 1 output', async () => {
+    const config: Config = [
+      {
+        dryRun: true,
+        input: {
+          info: { title: 'foo', version: '1.0.0' },
+          openapi: '3.0.0',
+        },
+        logs: {
+          level: 'silent',
+        },
+        output: 'output',
+        plugins: ['@hey-api/typescript'],
+      },
+      {
+        dryRun: true,
+        input: {
+          info: { title: 'bar', version: '1.0.0' },
+          openapi: '3.0.0',
+        },
+        logs: {
+          level: 'silent',
+        },
+        output: 'output2',
+        plugins: ['@hey-api/typescript'],
+      },
+    ];
+
+    const results = await createClient(config);
+    expect(results).toHaveLength(2);
+  });
+
+  it('2 configs, 2 inputs, 2 outputs', async () => {
+    const config: Config = [
+      {
+        dryRun: true,
+        input: [
+          {
+            info: { title: 'foo', version: '1.0.0' },
+            openapi: '3.0.0',
+          },
+          {
+            info: { title: 'bar', version: '1.0.0' },
             openapi: '3.0.0',
             paths: {},
           },
-          output: 'test-output',
-          plugins: ['@hey-api/typescript'],
-        };
-
-        const results = await createClient(config);
-        expect(results).toHaveLength(1);
-      });
-
-      it('should handle multiple string outputs', async () => {
-        const { createClient } = await import('../index');
-
-        const config: UserConfig = {
-          dryRun: true,
-          input: {
-            info: { title: 'Test API', version: '1.0.0' },
+        ],
+        logs: {
+          level: 'silent',
+        },
+        output: ['output', 'output2'],
+        plugins: ['@hey-api/typescript'],
+      },
+      {
+        dryRun: true,
+        input: [
+          {
+            info: { title: 'baz', version: '1.0.0' },
+            openapi: '3.0.0',
+          },
+          {
+            info: { title: 'qux', version: '1.0.0' },
             openapi: '3.0.0',
             paths: {},
           },
-          output: ['test-output-1', 'test-output-2', 'test-output-3'],
-          plugins: ['@hey-api/typescript'],
-        };
+        ],
+        logs: {
+          level: 'silent',
+        },
+        output: ['output3', 'output4'],
+        plugins: ['@hey-api/typescript'],
+      },
+    ];
 
-        const results = await createClient(config);
-        expect(results).toHaveLength(3);
-      });
-
-      it('should handle multiple output objects with different configurations', async () => {
-        const { createClient } = await import('../index');
-
-        const config: UserConfig = {
-          dryRun: true,
-          input: {
-            info: { title: 'Test API', version: '1.0.0' },
-            openapi: '3.0.0',
-            paths: {},
-          },
-          output: [
-            {
-              clean: true,
-              format: 'prettier',
-              path: 'test-output-formatted',
-            },
-            {
-              clean: false,
-              lint: 'eslint',
-              path: 'test-output-linted',
-            },
-          ],
-          plugins: ['@hey-api/typescript'],
-        };
-
-        const results = await createClient(config);
-        expect(results).toHaveLength(2);
-      });
-
-      it('should handle mixed string and object outputs', async () => {
-        const { createClient } = await import('../index');
-
-        const config: UserConfig = {
-          dryRun: true,
-          input: {
-            info: { title: 'Test API', version: '1.0.0' },
-            openapi: '3.0.0',
-            paths: {},
-          },
-          output: [
-            'test-simple-output',
-            {
-              format: 'prettier',
-              indexFile: false,
-              path: 'test-advanced-output',
-            },
-          ],
-          plugins: ['@hey-api/typescript'],
-        };
-
-        const results = await createClient(config);
-        expect(results).toHaveLength(2);
-      });
-
-      it('should preserve global config across multiple outputs', async () => {
-        const { createClient } = await import('../index');
-
-        const config: UserConfig = {
-          dryRun: true,
-          experimentalParser: true,
-          input: {
-            info: { title: 'Test API', version: '1.0.0' },
-            openapi: '3.0.0',
-            paths: {
-              '/test': {
-                get: {
-                  responses: {
-                    '200': {
-                      content: {
-                        'application/json': {
-                          schema: { type: 'string' },
-                        },
-                      },
-                      description: 'Success',
-                    },
-                  },
-                },
-              },
-            },
-          },
-          output: ['output-1', 'output-2'],
-          plugins: ['@hey-api/typescript'],
-        };
-
-        const results = await createClient(config);
-        expect(results).toHaveLength(2);
-
-        // Both results should be IR.Context objects (due to experimentalParser: true)
-        // and should have the same input specification
-        results.forEach((result) => {
-          if ('spec' in result) {
-            expect(result.spec.info.title).toBe('Test API');
-            expect(result.config.experimentalParser).toBe(true);
-          }
-        });
-      });
-    });
-  },
-  { timeout: platform() === 'win32' ? 12500 : 7500 },
-);
+    const results = await createClient(config);
+    expect(results).toHaveLength(4);
+  });
+});
