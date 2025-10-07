@@ -69,31 +69,60 @@ const arrayTypeToZodSchema = ({
       });
     } else {
       if (schema.logicalOperator === 'and') {
-        // TODO: parser - handle intersection
-        // return tsc.typeArrayNode(
-        //   tsc.typeIntersectionNode({ types: itemExpressions }),
-        // );
-      }
-
-      result.expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: zSymbol.placeholder,
-          name: identifiers.array,
-        }),
-        parameters: [
-          tsc.callExpression({
+        const firstSchema = schema.items![0]!;
+        // we want to add an intersection, but not every schema can use the same API.
+        // if the first item contains another array or not an object, we cannot use
+        // `.intersection()` as that does not exist on `.union()` and non-object schemas.
+        let intersectionExpression: ts.Expression;
+        if (
+          firstSchema.logicalOperator === 'or' ||
+          (firstSchema.type && firstSchema.type !== 'object')
+        ) {
+          intersectionExpression = tsc.callExpression({
             functionName: tsc.propertyAccessExpression({
               expression: zSymbol.placeholder,
-              name: identifiers.union,
+              name: identifiers.intersection,
             }),
-            parameters: [
-              tsc.arrayLiteralExpression({
-                elements: itemExpressions,
+            parameters: itemExpressions,
+          });
+        } else {
+          intersectionExpression = itemExpressions[0]!;
+          for (let i = 1; i < itemExpressions.length; i++) {
+            intersectionExpression = tsc.callExpression({
+              functionName: tsc.propertyAccessExpression({
+                expression: zSymbol.placeholder,
+                name: identifiers.intersection,
               }),
-            ],
+              parameters: [intersectionExpression, itemExpressions[i]!],
+            });
+          }
+        }
+
+        result.expression = tsc.callExpression({
+          functionName,
+          parameters: [intersectionExpression],
+        });
+      } else {
+        result.expression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
+            expression: zSymbol.placeholder,
+            name: identifiers.array,
           }),
-        ],
-      });
+          parameters: [
+            tsc.callExpression({
+              functionName: tsc.propertyAccessExpression({
+                expression: zSymbol.placeholder,
+                name: identifiers.union,
+              }),
+              parameters: [
+                tsc.arrayLiteralExpression({
+                  elements: itemExpressions,
+                }),
+              ],
+            }),
+          ],
+        });
+      }
     }
   }
 
