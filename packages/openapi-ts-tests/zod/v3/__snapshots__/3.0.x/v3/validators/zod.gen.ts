@@ -10,7 +10,7 @@ export const zBar: z.AnyZodObject = z.object({
 
 export const zFoo: z.ZodTypeAny = z.union([
     z.object({
-        foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
+        foo: z.string().regex(/^\\d{3}-\\d{2}-\\d{4}$/).optional(),
         bar: zBar.optional(),
         baz: z.array(z.lazy(() => {
             return zFoo;
@@ -20,4 +20,4 @@ export const zFoo: z.ZodTypeAny = z.union([
     z.null()
 ]).default(null);
 
-export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
+export const zBaz = z.string().regex(/foo\\nbar/).readonly().default('baz');

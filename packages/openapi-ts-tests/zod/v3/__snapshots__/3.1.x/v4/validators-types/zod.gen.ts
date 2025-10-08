@@ -18,7 +18,7 @@ export type BarZodType = z.infer<typeof zBar>;
  */
 export const zFoo = z.union([
     z.object({
-        foo: z.optional(z.string().regex(/^\d{3}-\d{2}-\d{4}$/)),
+        foo: z.optional(z.string().regex(/^\\d{3}-\\d{2}-\\d{4}$/)),
         bar: z.optional(zBar),
         get baz(): z.ZodOptional {
             return z.optional(z.array(z.lazy((): any => {
@@ -32,7 +32,7 @@ export const zFoo = z.union([
 
 export type FooZodType = z.infer<typeof zFoo>;
 
-export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
+export const zBaz = z.string().regex(/foo\\nbar/).readonly().default('baz');
 
 export type BazZodType = z.infer<typeof zBaz>;
 

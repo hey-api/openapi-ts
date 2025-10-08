@@ -73,4 +73,27 @@ describe('createRegularExpressionLiteral', () => {
       '/^data:image\\/svg\\+xml;base64,[A-Za-z0-9+\\/]+=*$/',
     );
   });
+
+  it('should handle patterns with backslash followed by forward slash', () => {
+    // Pattern from getPattern() which has doubled backslashes: ^[^.][^\\/:*?"<>| ]*$
+    // This represents a character class that excludes: backslash, forward slash, colon, etc.
+    // The \\ in the input string represents a single backslash in the regex
+    const result = createRegularExpressionLiteral({
+      text: '^[^.][^\\\\/:*?"<>| ]*$',
+    });
+
+    // The output should have the backslashes preserved and the forward slash not escaped
+    // (because it's already preceded by a backslash)
+    expect(result.text).toBe('/^[^.][^\\\\/:*?"<>| ]*$/');
+  });
+
+  it('should handle patterns with multiple consecutive backslashes', () => {
+    // Input: ^\d{3}-\d{2}-\d{4}$ (with doubled backslashes from getPattern)
+    const result = createRegularExpressionLiteral({
+      text: '^\\\\d{3}-\\\\d{2}-\\\\d{4}$',
+    });
+
+    // Backslashes should be preserved as-is
+    expect(result.text).toBe('/^\\\\d{3}-\\\\d{2}-\\\\d{4}$/');
+  });
 });
