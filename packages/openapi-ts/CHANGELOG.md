@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.85.1
+
+### Patch Changes
+
+- fix(zod): allOf in array items being generated as union instead of intersection ([#2736](https://github.com/hey-api/openapi-ts/pull/2736)) ([`078face`](https://github.com/hey-api/openapi-ts/commit/078face47b40462033ce557ce0048ccf88246854)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.85.0
 
 ### Minor Changes
