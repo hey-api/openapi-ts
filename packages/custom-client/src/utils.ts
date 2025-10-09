@@ -328,7 +328,7 @@ export const mergeHeaders = (
 
 type ErrInterceptor<Err, Res, Req, Options> = (
   error: Err,
-  response: Res,
+  response: Res | undefined,
   request: Req,
   options: Options,
 ) => Err | Promise<Err>;
