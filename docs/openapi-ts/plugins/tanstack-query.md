@@ -574,6 +574,59 @@ export default {
 
 :::
 
+## Reactivity
+
+For Vue applications, to ensure reactivity works correctly with generated query options, you need to wrap the options functions in `computed()`. This ensures that when your reactive dependencies change, TanStack Query will re-execute the query with the updated parameters.
+
+::: code-group
+
+```ts [example]
+import { computed, ref } from 'vue';
+import { useInfiniteQuery } from '@tanstack/vue-query';
+import { listUsersInfiniteOptions } from './client';
+
+const search = ref('');
+
+const { data, dataUpdatedAt } = useInfiniteQuery(
+  computed(() => listUsersInfiniteOptions({
+    query: {
+      search: search.value
+    }
+  }))
+);
+```
+
+```ts [without computed - won't be reactive]
+// ❌ This won't react to changes in search.value
+const { data } = useInfiniteQuery(
+  listUsersInfiniteOptions({
+    query: {
+      search: search.value // Fixed at initial value
+    }
+  })
+);
+```
+
+```ts [with computed - reactive]
+// ✅ This will re-run when search.value changes
+const { data } = useInfiniteQuery(
+  computed(() => listUsersInfiniteOptions({
+    query: {
+      search: search.value
+    }
+  }))
+);
+```
+
+:::
+
+This applies to all generated options functions:
+- `*Options()` for regular queries
+- `*InfiniteOptions()` for infinite queries
+- `*Mutation()` for mutations
+
+The generated functions are already wrapped in `queryOptions()`, `infiniteQueryOptions()`, and `mutationOptions()` respectively, which matches the official TanStack Query documentation patterns.
+
 ## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@tanstack/react-query/types.d.ts) interface.
