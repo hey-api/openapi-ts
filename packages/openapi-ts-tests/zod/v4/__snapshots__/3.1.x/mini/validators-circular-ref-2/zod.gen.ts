@@ -12,5 +12,7 @@ export const zBar = z.object({
 });
 
 export const zFoo = z.object({
-    foo: zBar
+    get foo() {
+        return zBar;
+    }
 });

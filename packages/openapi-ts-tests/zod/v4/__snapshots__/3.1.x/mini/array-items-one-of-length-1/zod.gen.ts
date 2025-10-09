@@ -5,5 +5,7 @@ import * as z from 'zod/mini';
 export const zBar = z.string();
 
 export const zFoo = z.object({
-    foo: z.optional(z.array(zBar).check(z.minLength(1), z.maxLength(2147483647)))
+    get foo(): z.ZodMiniOptional {
+        return z.optional(z.array(zBar).check(z.minLength(1), z.maxLength(2147483647)));
+    }
 });

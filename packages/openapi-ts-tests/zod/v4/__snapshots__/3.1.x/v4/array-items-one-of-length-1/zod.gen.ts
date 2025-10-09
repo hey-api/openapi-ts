@@ -5,5 +5,7 @@ import { z } from 'zod';
 export const zBar = z.string();
 
 export const zFoo = z.object({
-    foo: z.optional(z.array(zBar).min(1).max(2147483647))
+    get foo(): z.ZodOptional {
+        return z.optional(z.array(zBar).min(1).max(2147483647));
+    }
 });

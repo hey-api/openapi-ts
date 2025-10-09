@@ -486,7 +486,7 @@ const objectTypeToZodSchema = ({
   let hasCircularReference = false;
 
   // TODO: parser - handle constants
-  const properties: Array<ts.PropertyAssignment> = [];
+  const properties: Array<ts.PropertyAssignment | ts.GetAccessorDeclaration> = [];
 
   const required = schema.required ?? [];
 
@@ -524,12 +524,34 @@ const objectTypeToZodSchema = ({
     ) {
       propertyName = `'${name}'`;
     }
-    properties.push(
-      tsc.propertyAssignment({
-        initializer: propertyExpression.expression,
-        name: propertyName,
-      }),
-    );
+
+    // Use getter for properties with circular references to avoid "used before declaration" errors
+    if (propertyExpression.hasCircularReference) {
+      properties.push(
+        tsc.getAccessorDeclaration({
+          name: propertyName,
+          // @ts-expect-error
+          returnType: propertyExpression.typeName
+            ? tsc.propertyAccessExpression({
+                expression: zSymbol.placeholder,
+                name: propertyExpression.typeName,
+              })
+            : undefined,
+          statements: [
+            tsc.returnStatement({
+              expression: propertyExpression.expression,
+            }),
+          ],
+        }),
+      );
+    } else {
+      properties.push(
+        tsc.propertyAssignment({
+          initializer: propertyExpression.expression,
+          name: propertyName,
+        }),
+      );
+    }
   }
 
   if (
@@ -983,6 +1005,8 @@ const schemaToZodSchema = ({
         symbol = plugin.referenceSymbol(selector);
       }
 
+      // Always wrap circular references in z.lazy() to avoid
+      // "Block-scoped variable used before its declaration" errors
       zodSchema.expression = tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
           expression: zSymbol.placeholder,
