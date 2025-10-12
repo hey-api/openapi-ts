@@ -1,0 +1,182 @@
+openapi: 3.1.0
+info:
+  title: SDK signatures
+  version: 1.0.0
+paths:
+  /no-params:
+    get:
+      operationId: noParams
+      summary: No parameters
+      responses:
+        '200':
+          description: OK
+  /one-path/{id}:
+    get:
+      operationId: onePath
+      summary: One path parameter
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /one-query:
+    get:
+      operationId: oneQuery
+      summary: One query parameter
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /multiple-params/{id}:
+    post:
+      operationId: multipleParams
+      summary: Path, query, header, and body
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: filter
+          in: query
+          schema:
+            type: string
+        - name: X-Request-Id
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                foo:
+                  type: string
+      responses:
+        '200':
+          description: OK
+  /conflict/{foo}:
+    get:
+      operationId: conflict
+      summary: Conflicting parameter names
+      parameters:
+        - name: foo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: foo
+          in: query
+          schema:
+            type: string
+        - name: foo
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /body-only:
+    post:
+      operationId: bodyOnly
+      summary: Only body parameter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bar:
+                  type: string
+      responses:
+        '200':
+          description: OK
+  /optional-params:
+    get:
+      operationId: optionalParams
+      summary: Optional query and header
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: X-Optional
+          in: header
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /reserved-keywords/{default}:
+    get:
+      operationId: reservedKeywords
+      summary: Reserved keyword as parameter
+      parameters:
+        - name: default
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: default
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /non-ascii/{æøå}:
+    get:
+      operationId: nonAscii
+      summary: Non-ASCII parameter names
+      parameters:
+        - name: æøå
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: öôê
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /array-params:
+    get:
+      operationId: arrayParams
+      summary: Array parameters
+      parameters:
+        - name: tags
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+  /cookie-param:
+    get:
+      operationId: cookieParam
+      summary: Cookie parameter
+      parameters:
+        - name: session
+          in: cookie
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK

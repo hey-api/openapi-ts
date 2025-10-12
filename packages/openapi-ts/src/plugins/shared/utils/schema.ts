@@ -14,10 +14,16 @@ export const createSchemaComment = ({
   }
 
   if (schema.description) {
+    if (comments.length) {
+      comments.push(''); // Add an empty line between title and description
+    }
     comments.push(escapeComment(schema.description));
   }
 
   if (schema.deprecated) {
+    if (comments.length) {
+      comments.push(''); // Add an empty line before deprecated
+    }
     comments.push('@deprecated');
   }
 

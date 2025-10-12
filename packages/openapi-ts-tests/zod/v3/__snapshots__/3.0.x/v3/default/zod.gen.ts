@@ -439,6 +439,7 @@ export const zModelWithDictionary = z.object({
 
 /**
  * This is a deprecated model with a deprecated property
+ *
  * @deprecated
  */
 export const zDeprecatedModel = z.object({

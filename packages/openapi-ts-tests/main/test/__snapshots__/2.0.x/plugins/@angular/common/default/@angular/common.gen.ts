@@ -305,6 +305,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Request = <ThrowOnError extend
 
 /**
  * Body should not be unknown
+ *
  * Body should not be unknown
  */
 export const postApiVbyApiVersionBodyRequest = <ThrowOnError extends boolean = false>(options: Options<PostApiVbyApiVersionBodyData, ThrowOnError>): HttpRequest<unknown> => {
@@ -549,6 +550,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Resource = <ThrowOnError exten
 
 /**
  * Body should not be unknown
+ *
  * Body should not be unknown
  */
 export const postApiVbyApiVersionBodyResource = <ThrowOnError extends boolean = false>(options: () => Options<PostApiVbyApiVersionBodyData, ThrowOnError> | undefined) => {

@@ -101,6 +101,7 @@ describe('handlerLegacy', () => {
         },
         '@hey-api/sdk': {
           api: {
+            createOperationComment: () => undefined,
             getSelector: () => [],
           },
           config: {
@@ -336,6 +337,7 @@ describe('methodNameBuilder', () => {
         },
         '@hey-api/sdk': {
           api: {
+            createOperationComment: () => undefined,
             getSelector: () => [],
           },
           config: {
@@ -493,6 +495,7 @@ describe('methodNameBuilder', () => {
         },
         '@hey-api/sdk': {
           api: {
+            createOperationComment: () => undefined,
             getSelector: () => [],
           },
           config: {
@@ -653,6 +656,7 @@ describe('methodNameBuilder', () => {
         },
         '@hey-api/sdk': {
           api: {
+            createOperationComment: () => undefined,
             getSelector: () => [],
           },
           config: {
