@@ -6,8 +6,9 @@ import type { IR } from '../../ir/types';
 import { buildName } from '../../openApi/shared/utils/name';
 import { tsc } from '../../tsc';
 import type { StringCase, StringName } from '../../types/case';
-import { refToName } from '../../utils/ref';
+import { jsonPointerToPath, refToName } from '../../utils/ref';
 import { numberRegExp } from '../../utils/regexp';
+import { pathToSymbolResourceType } from '../shared/utils/meta';
 import { createSchemaComment } from '../shared/utils/schema';
 import { identifiers } from './constants';
 import {
@@ -31,6 +32,14 @@ export interface State {
   nameCase: StringCase;
   nameTransformer: StringName;
 }
+
+type SchemaToValibotSchemaOptions = {
+  /**
+   * Path to the schema in the intermediary representation.
+   */
+  _path: ReadonlyArray<string | number>;
+  plugin: ValibotPlugin['Instance'];
+};
 
 const pipesToExpression = ({
   pipes,
@@ -57,11 +66,11 @@ const pipesToExpression = ({
 };
 
 const arrayTypeToValibotSchema = ({
+  _path,
   plugin,
   schema,
   state,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: SchemaWithType<'array'>;
   state: State;
 }): ts.Expression => {
@@ -80,6 +89,7 @@ const arrayTypeToValibotSchema = ({
       functionName,
       parameters: [
         unknownTypeToValibotSchema({
+          _path,
           plugin,
           schema: {
             type: 'unknown',
@@ -92,8 +102,9 @@ const arrayTypeToValibotSchema = ({
     schema = deduplicateSchema({ schema });
 
     // at least one item is guaranteed
-    const itemExpressions = schema.items!.map((item) => {
+    const itemExpressions = schema.items!.map((item, index) => {
       const schemaPipes = schemaToValibotSchema({
+        _path: [..._path, 'items', index],
         plugin,
         schema: item,
         state,
@@ -122,6 +133,7 @@ const arrayTypeToValibotSchema = ({
         functionName,
         parameters: [
           unknownTypeToValibotSchema({
+            _path,
             plugin,
             schema: {
               type: 'unknown',
@@ -172,8 +184,7 @@ const arrayTypeToValibotSchema = ({
 const booleanTypeToValibotSchema = ({
   plugin,
   schema,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: SchemaWithType<'boolean'>;
 }) => {
   const vSymbol = plugin.referenceSymbol(
@@ -201,10 +212,10 @@ const booleanTypeToValibotSchema = ({
 };
 
 const enumTypeToValibotSchema = ({
+  _path,
   plugin,
   schema,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: SchemaWithType<'enum'>;
 }): ts.CallExpression => {
   const enumMembers: Array<ts.LiteralExpression> = [];
@@ -226,6 +237,7 @@ const enumTypeToValibotSchema = ({
 
   if (!enumMembers.length) {
     return unknownTypeToValibotSchema({
+      _path,
       plugin,
       schema: {
         type: 'unknown',
@@ -265,8 +277,7 @@ const enumTypeToValibotSchema = ({
 
 const neverTypeToValibotSchema = ({
   plugin,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: SchemaWithType<'never'>;
 }) => {
   const vSymbol = plugin.referenceSymbol(
@@ -283,8 +294,7 @@ const neverTypeToValibotSchema = ({
 
 const nullTypeToValibotSchema = ({
   plugin,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: SchemaWithType<'null'>;
 }) => {
   const vSymbol = plugin.referenceSymbol(
@@ -302,8 +312,7 @@ const nullTypeToValibotSchema = ({
 const numberTypeToValibotSchema = ({
   plugin,
   schema,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: SchemaWithType<'integer' | 'number'>;
 }) => {
   const format = schema.format;
@@ -542,11 +551,11 @@ const numberTypeToValibotSchema = ({
 };
 
 const objectTypeToValibotSchema = ({
+  _path,
   plugin,
   schema,
   state,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: SchemaWithType<'object'>;
   state: State;
 }): {
@@ -563,6 +572,7 @@ const objectTypeToValibotSchema = ({
     const isRequired = required.includes(name);
 
     const schemaPipes = schemaToValibotSchema({
+      _path: [..._path, 'properties', name],
       optional: !isRequired,
       plugin,
       schema: property,
@@ -606,6 +616,7 @@ const objectTypeToValibotSchema = ({
     !Object.keys(properties).length
   ) {
     const pipes = schemaToValibotSchema({
+      _path: [..._path, 'additionalProperties'],
       plugin,
       schema: schema.additionalProperties,
       state,
@@ -649,8 +660,7 @@ const objectTypeToValibotSchema = ({
 const stringTypeToValibotSchema = ({
   plugin,
   schema,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: SchemaWithType<'string'>;
 }) => {
   const vSymbol = plugin.referenceSymbol(
@@ -784,11 +794,11 @@ const stringTypeToValibotSchema = ({
 };
 
 const tupleTypeToValibotSchema = ({
+  _path,
   plugin,
   schema,
   state,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: SchemaWithType<'tuple'>;
   state: State;
 }) => {
@@ -821,8 +831,9 @@ const tupleTypeToValibotSchema = ({
   }
 
   if (schema.items) {
-    const tupleElements = schema.items.map((item) => {
+    const tupleElements = schema.items.map((item, index) => {
       const schemaPipes = schemaToValibotSchema({
+        _path: [..._path, 'items', index],
         plugin,
         schema: item,
         state,
@@ -844,6 +855,7 @@ const tupleTypeToValibotSchema = ({
   }
 
   return unknownTypeToValibotSchema({
+    _path,
     plugin,
     schema: {
       type: 'unknown',
@@ -853,8 +865,7 @@ const tupleTypeToValibotSchema = ({
 
 const undefinedTypeToValibotSchema = ({
   plugin,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: SchemaWithType<'undefined'>;
 }) => {
   const vSymbol = plugin.referenceSymbol(
@@ -872,8 +883,7 @@ const undefinedTypeToValibotSchema = ({
 
 const unknownTypeToValibotSchema = ({
   plugin,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: SchemaWithType<'unknown'>;
 }) => {
   const vSymbol = plugin.referenceSymbol(
@@ -891,8 +901,7 @@ const unknownTypeToValibotSchema = ({
 
 const voidTypeToValibotSchema = ({
   plugin,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: SchemaWithType<'void'>;
 }) => {
   const vSymbol = plugin.referenceSymbol(
@@ -909,11 +918,11 @@ const voidTypeToValibotSchema = ({
 };
 
 const schemaTypeToValibotSchema = ({
+  _path,
   plugin,
   schema,
   state,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaToValibotSchemaOptions & {
   schema: IR.SchemaObject;
   state: State;
 }): {
@@ -924,6 +933,7 @@ const schemaTypeToValibotSchema = ({
     case 'array':
       return {
         expression: arrayTypeToValibotSchema({
+          _path,
           plugin,
           schema: schema as SchemaWithType<'array'>,
           state,
@@ -932,6 +942,7 @@ const schemaTypeToValibotSchema = ({
     case 'boolean':
       return {
         expression: booleanTypeToValibotSchema({
+          _path,
           plugin,
           schema: schema as SchemaWithType<'boolean'>,
         }),
@@ -939,6 +950,7 @@ const schemaTypeToValibotSchema = ({
     case 'enum':
       return {
         expression: enumTypeToValibotSchema({
+          _path,
           plugin,
           schema: schema as SchemaWithType<'enum'>,
         }),
@@ -947,6 +959,7 @@ const schemaTypeToValibotSchema = ({
     case 'number':
       return {
         expression: numberTypeToValibotSchema({
+          _path,
           plugin,
           schema: schema as SchemaWithType<'integer' | 'number'>,
         }),
@@ -954,6 +967,7 @@ const schemaTypeToValibotSchema = ({
     case 'never':
       return {
         expression: neverTypeToValibotSchema({
+          _path,
           plugin,
           schema: schema as SchemaWithType<'never'>,
         }),
@@ -961,12 +975,14 @@ const schemaTypeToValibotSchema = ({
     case 'null':
       return {
         expression: nullTypeToValibotSchema({
+          _path,
           plugin,
           schema: schema as SchemaWithType<'null'>,
         }),
       };
     case 'object':
       return objectTypeToValibotSchema({
+        _path,
         plugin,
         schema: schema as SchemaWithType<'object'>,
         state,
@@ -976,6 +992,7 @@ const schemaTypeToValibotSchema = ({
       if (schema.format === 'int64' || schema.format === 'uint64') {
         return {
           expression: numberTypeToValibotSchema({
+            _path,
             plugin,
             schema: schema as SchemaWithType<'integer' | 'number'>,
           }),
@@ -983,6 +1000,7 @@ const schemaTypeToValibotSchema = ({
       }
       return {
         expression: stringTypeToValibotSchema({
+          _path,
           plugin,
           schema: schema as SchemaWithType<'string'>,
         }),
@@ -990,6 +1008,7 @@ const schemaTypeToValibotSchema = ({
     case 'tuple':
       return {
         expression: tupleTypeToValibotSchema({
+          _path,
           plugin,
           schema: schema as SchemaWithType<'tuple'>,
           state,
@@ -998,6 +1017,7 @@ const schemaTypeToValibotSchema = ({
     case 'undefined':
       return {
         expression: undefinedTypeToValibotSchema({
+          _path,
           plugin,
           schema: schema as SchemaWithType<'undefined'>,
         }),
@@ -1005,6 +1025,7 @@ const schemaTypeToValibotSchema = ({
     case 'unknown':
       return {
         expression: unknownTypeToValibotSchema({
+          _path,
           plugin,
           schema: schema as SchemaWithType<'unknown'>,
         }),
@@ -1012,6 +1033,7 @@ const schemaTypeToValibotSchema = ({
     case 'void':
       return {
         expression: voidTypeToValibotSchema({
+          _path,
           plugin,
           schema: schema as SchemaWithType<'void'>,
         }),
@@ -1021,12 +1043,13 @@ const schemaTypeToValibotSchema = ({
 
 export const schemaToValibotSchema = ({
   $ref,
+  _path = [],
   optional,
   plugin,
   schema,
   state,
   symbol,
-}: {
+}: SchemaToValibotSchemaOptions & {
   /**
    * When $ref is supplied, a node will be emitted to the file.
    */
@@ -1037,7 +1060,6 @@ export const schemaToValibotSchema = ({
    * `.default()` which is handled in this function.
    */
   optional?: boolean;
-  plugin: ValibotPlugin['Instance'];
   schema: IR.SchemaObject;
   state: State;
   symbol?: Symbol;
@@ -1072,6 +1094,7 @@ export const schemaToValibotSchema = ({
       const ref = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
       const schemaPipes = schemaToValibotSchema({
         $ref: schema.$ref,
+        _path: jsonPointerToPath(schema.$ref),
         plugin,
         schema: ref,
         state,
@@ -1106,7 +1129,12 @@ export const schemaToValibotSchema = ({
       }
     }
   } else if (schema.type) {
-    const valibotSchema = schemaTypeToValibotSchema({ plugin, schema, state });
+    const valibotSchema = schemaTypeToValibotSchema({
+      _path,
+      plugin,
+      schema,
+      state,
+    });
     anyType = valibotSchema.anyType;
     pipes.push(valibotSchema.expression);
 
@@ -1133,8 +1161,9 @@ export const schemaToValibotSchema = ({
     schema = deduplicateSchema({ schema });
 
     if (schema.items) {
-      const itemTypes = schema.items.map((item) => {
+      const itemTypes = schema.items.map((item, index) => {
         const schemaPipes = schemaToValibotSchema({
+          _path: [..._path, 'items', index],
           plugin,
           schema: item,
           state,
@@ -1171,6 +1200,7 @@ export const schemaToValibotSchema = ({
       }
     } else {
       const schemaPipes = schemaToValibotSchema({
+        _path,
         plugin,
         schema,
         state,
@@ -1180,6 +1210,7 @@ export const schemaToValibotSchema = ({
   } else {
     // catch-all fallback for failed schemas
     const valibotSchema = schemaTypeToValibotSchema({
+      _path,
       plugin,
       schema: {
         type: 'unknown',
@@ -1242,6 +1273,9 @@ export const schemaToValibotSchema = ({
     if ($ref) {
       symbol = plugin.registerSymbol({
         exported: true,
+        meta: {
+          resourceType: pathToSymbolResourceType(_path),
+        },
         name: buildName({
           config: {
             case: state.nameCase,
@@ -1298,6 +1332,7 @@ export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
       switch (event.type) {
         case 'operation':
           operationToValibotSchema({
+            _path: event._path,
             operation: event.operation,
             plugin,
             state,
@@ -1306,6 +1341,7 @@ export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
         case 'parameter':
           schemaToValibotSchema({
             $ref: event.$ref,
+            _path: event._path,
             plugin,
             schema: event.parameter.schema,
             state,
@@ -1314,6 +1350,7 @@ export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
         case 'requestBody':
           schemaToValibotSchema({
             $ref: event.$ref,
+            _path: event._path,
             plugin,
             schema: event.requestBody.schema,
             state,
@@ -1322,6 +1359,7 @@ export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
         case 'schema':
           schemaToValibotSchema({
             $ref: event.$ref,
+            _path: event._path,
             plugin,
             schema: event.schema,
             state,
@@ -1329,6 +1367,7 @@ export const handler: ValibotPlugin['Handler'] = ({ plugin }) => {
           break;
         case 'webhook':
           webhookToValibotSchema({
+            _path: event._path,
             operation: event.operation,
             plugin,
             state,

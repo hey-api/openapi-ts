@@ -405,6 +405,7 @@ export const vModelWithDictionary = v.object({
 
 /**
  * This is a deprecated model with a deprecated property
+ *
  * @deprecated
  */
 export const vDeprecatedModel = v.object({
