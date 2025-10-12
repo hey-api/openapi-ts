@@ -96,6 +96,7 @@ describe('generateLegacyClientClass', () => {
         },
         '@hey-api/sdk': {
           api: {
+            createOperationComment: () => undefined,
             getSelector: () => [],
           },
           config: {
