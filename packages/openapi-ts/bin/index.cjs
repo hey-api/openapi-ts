@@ -134,8 +134,9 @@ async function start() {
       !context[0] ||
       !context[0].config ||
       !context[0].config.input ||
-      !context[0].config.input.watch ||
-      !context[0].config.input.watch.enabled
+      !context[0].config.input.some(
+        (input) => input.watch && input.watch.enabled,
+      )
     ) {
       process.exit(0);
     }
