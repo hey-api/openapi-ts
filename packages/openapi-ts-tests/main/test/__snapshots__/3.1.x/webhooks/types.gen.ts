@@ -43,11 +43,13 @@ export type SessionUserPhoneCalloutRingingWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id?: number;
             /**
              * The session's universally unique identifier (UUID). Each session instance generates a session UUID.
+             *
              * @deprecated
              */
             uuid?: string;
@@ -135,11 +137,13 @@ export type SessionUserRoomSystemCalloutRingingWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id?: number;
             /**
              * The session's universally unique identifier (UUID). Each session instance generates a session UUID.
+             *
              * @deprecated
              */
             uuid?: string;
@@ -398,6 +402,7 @@ export type SessionLiveStreamingStoppedWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id: string;
@@ -582,11 +587,13 @@ export type SessionUserRoomSystemCalloutRejectedWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id?: number;
             /**
              * The session's universally unique identifier (UUID). Each session instance generates a session UUID.
+             *
              * @deprecated
              */
             uuid?: string;
@@ -751,6 +758,7 @@ export type SessionSharingEndedWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id: string;
@@ -936,6 +944,7 @@ export type SessionEndedWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id: string;
@@ -1010,6 +1019,7 @@ export type SessionStartedWebhookPayload = {
         object: {
             /**
              * The session's ID.
+             *
              * @deprecated
              */
             id: string;
@@ -1164,6 +1174,7 @@ export type SessionLiveStreamingStartedWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id: string;
@@ -1264,11 +1275,13 @@ export type SessionUserRoomSystemCalloutMissedWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id?: number;
             /**
              * The session's universally unique identifier (UUID). Each session instance generates a session UUID.
+             *
              * @deprecated
              */
             uuid?: string;
@@ -1353,11 +1366,13 @@ export type SessionUserPhoneCalloutAcceptedWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id?: number;
             /**
              * The session's universally unique identifier (UUID). Each session instance generates a session UUID.
+             *
              * @deprecated
              */
             uuid?: string;
@@ -1777,6 +1792,7 @@ export type SessionRecordingTranscriptCompletedWebhookPayload = {
             timezone: string;
             /**
              * Recording file List
+             *
              * List of recording file.
              */
             recording_files: Array<{
@@ -1986,11 +2002,13 @@ export type SessionUserRoomSystemCalloutFailedWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id?: number;
             /**
              * The session's universally unique identifier (UUID). Each session instance generates a session UUID.
+             *
              * @deprecated
              */
             uuid?: string;
@@ -2135,6 +2153,7 @@ export type SessionRecordingCompletedWebhookPayload = {
             timezone: string;
             /**
              * Recording file List
+             *
              * List of recording file.
              */
             recording_files: Array<{
@@ -2203,6 +2222,7 @@ export type SessionRecordingCompletedWebhookPayload = {
             }>;
             /**
              * Recording file List
+             *
              * List of recording file.
              */
             participant_audio_files?: Array<{
@@ -2279,6 +2299,7 @@ export type SessionRecordingCompletedWebhookPayload = {
             }>;
             /**
              * Recording file List
+             *
              * List of recording file.
              */
             participant_video_files?: Array<{
@@ -2988,11 +3009,13 @@ export type SessionUserPhoneCalloutMissedWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id?: number;
             /**
              * The session's universally unique identifier (UUID). Each session instance generates a session UUID.
+             *
              * @deprecated
              */
             uuid?: string;
@@ -3081,11 +3104,13 @@ export type SessionUserPhoneCalloutRejectedWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id?: number;
             /**
              * The session's universally unique identifier (UUID). Each session instance generates a session UUID.
+             *
              * @deprecated
              */
             uuid?: string;
@@ -3173,11 +3198,13 @@ export type SessionUserRoomSystemCalloutAcceptedWebhookPayload = {
         object: {
             /**
              * The session ID.
+             *
              * @deprecated
              */
             id?: number;
             /**
              * The session's universally unique identifier (UUID). Each session instance generates a session UUID.
+             *
              * @deprecated
              */
             uuid?: string;
