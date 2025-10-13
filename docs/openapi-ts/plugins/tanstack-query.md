@@ -574,6 +574,38 @@ export default {
 
 :::
 
+## Reactivity
+
+In Vue applications, you need to wrap the options functions in [`computed()`](https://vuejs.org/guide/essentials/computed) to make them reactive. Otherwise, TanStack Query won't know it should execute the query when its dependencies change.
+
+::: code-group
+
+```js [reactive]
+// ✅ Query will execute on `petId` change
+const query = useQuery(
+  computed(() =>
+    getPetByIdOptions({
+      path: {
+        petId: petId.value,
+      },
+    }),
+  ),
+);
+```
+
+```js [static]
+// ❌ Query will execute only once
+const query = useQuery(
+  getPetByIdOptions({
+    path: {
+      petId: petId.value,
+    },
+  }),
+);
+```
+
+:::
+
 ## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@tanstack/react-query/types.d.ts) interface.
