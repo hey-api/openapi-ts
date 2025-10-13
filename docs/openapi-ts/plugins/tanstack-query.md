@@ -576,56 +576,35 @@ export default {
 
 ## Reactivity
 
-For Vue applications, to ensure reactivity works correctly with generated query options, you need to wrap the options functions in `computed()`. This ensures that when your reactive dependencies change, TanStack Query will re-execute the query with the updated parameters.
+In Vue applications, you need to wrap the options functions in [`computed()`](https://vuejs.org/guide/essentials/computed) to make them reactive. Otherwise, TanStack Query won't know it should execute the query when its dependencies change.
 
 ::: code-group
 
-```ts [example]
-import { computed, ref } from 'vue';
-import { useInfiniteQuery } from '@tanstack/vue-query';
-import { listUsersInfiniteOptions } from './client';
-
-const search = ref('');
-
-const { data, dataUpdatedAt } = useInfiniteQuery(
-  computed(() => listUsersInfiniteOptions({
-    query: {
-      search: search.value
-    }
-  }))
+```js [reactive]
+// ✅ Query will execute on `petId` change
+const query = useQuery(
+  computed(() =>
+    getPetByIdOptions({
+      path: {
+        petId: petId.value,
+      },
+    }),
+  ),
 );
 ```
 
-```ts [without computed - won't be reactive]
-// ❌ This won't react to changes in search.value
-const { data } = useInfiniteQuery(
-  listUsersInfiniteOptions({
-    query: {
-      search: search.value // Fixed at initial value
-    }
-  })
-);
-```
-
-```ts [with computed - reactive]
-// ✅ This will re-run when search.value changes
-const { data } = useInfiniteQuery(
-  computed(() => listUsersInfiniteOptions({
-    query: {
-      search: search.value
-    }
-  }))
+```js [static]
+// ❌ Query will execute only once
+const query = useQuery(
+  getPetByIdOptions({
+    path: {
+      petId: petId.value,
+    },
+  }),
 );
 ```
 
 :::
-
-This applies to all generated options functions:
-- `*Options()` for regular queries
-- `*InfiniteOptions()` for infinite queries
-- `*Mutation()` for mutations
-
-The generated functions are already wrapped in `queryOptions()`, `infiniteQueryOptions()`, and `mutationOptions()` respectively, which matches the official TanStack Query documentation patterns.
 
 ## API
 
