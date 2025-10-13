@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.85.2
+
+### Patch Changes
+
+- fix: dynamically load c12 to work with cjs modules ([#2755](https://github.com/hey-api/openapi-ts/pull/2755)) ([`e6472cf`](https://github.com/hey-api/openapi-ts/commit/e6472cf7f69db5ff2cb2f509c1d61e5c4438871e)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(cli): detect watch mode with input array ([#2751](https://github.com/hey-api/openapi-ts/pull/2751)) ([`3293cad`](https://github.com/hey-api/openapi-ts/commit/3293cada4f089107ac183fbcd03550541d95073a)) by [@warrenseine](https://github.com/warrenseine)
+
 ## 0.85.1
 
 ### Patch Changes

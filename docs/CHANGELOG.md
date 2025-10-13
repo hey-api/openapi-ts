@@ -1,5 +1,11 @@
 # @docs/openapi-ts
 
+## 0.10.3
+
+### Patch Changes
+
+- chore: clarify TanStack Query reactivity in Vue ([#2745](https://github.com/hey-api/openapi-ts/pull/2745)) ([`5d06dbd`](https://github.com/hey-api/openapi-ts/commit/5d06dbdf8c2a834ecefdd7305b59572470f45a7e)) by [@9M6](https://github.com/9M6)
+
 ## 0.10.2
 
 ### Patch Changes
