@@ -265,6 +265,15 @@ html.dark .sponsors-list > ul li.cella svg > path:nth-child(3) {
   max-width: 100px;
 }
 
+.sponsors-list > ul.friends {
+  row-gap: 2rem;
+  column-gap: 1rem;
+}
+
+.sponsors-list > ul.friends li {
+  max-width: 70px;
+}
+
 .sponsors-list li + li {
   margin-top: 0;
 }
