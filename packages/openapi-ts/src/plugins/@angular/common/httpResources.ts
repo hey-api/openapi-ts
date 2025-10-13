@@ -6,10 +6,7 @@ import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { stringCase } from '../../../utils/stringCase';
 import { operationClasses } from '../../@hey-api/sdk/operation';
-import {
-  createOperationComment,
-  isOperationOptionsRequired,
-} from '../../shared/utils/operation';
+import { isOperationOptionsRequired } from '../../shared/utils/operation';
 import type { AngularCommonPlugin } from './types';
 
 interface AngularServiceClassEntry {
@@ -364,7 +361,7 @@ const generateAngularResourceMethod = ({
 
   return tsc.methodDeclaration({
     accessLevel: 'public',
-    comment: createOperationComment({ operation }),
+    comment: sdkPlugin.api.createOperationComment({ operation }),
     name: methodName,
     parameters: [
       {
@@ -416,7 +413,7 @@ const generateAngularResourceFunction = ({
   const dataType = symbolDataType?.placeholder || 'unknown';
 
   return tsc.constVariable({
-    comment: createOperationComment({ operation }),
+    comment: sdkPlugin.api.createOperationComment({ operation }),
     exportConst: symbol.exported,
     expression: tsc.arrowFunction({
       parameters: [

@@ -9,7 +9,7 @@ import { embedProject } from '../embed'
 
 # Get Started
 
-[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an OpenAPI to TypeScript codegen trusted over 2,500,000 times each month to generate reliable API clients and SDKs. The code is [MIT-licensed](/openapi-ts/license) and free to use. Discover available features below or view our [roadmap](https://github.com/orgs/hey-api/discussions/1495) to learn what's coming next.
+[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an OpenAPI to TypeScript codegen trusted over 3,000,000 times each month to generate reliable API clients and SDKs. The code is [MIT-licensed](/openapi-ts/license) and free to use. Discover available features below or view our [roadmap](https://github.com/orgs/hey-api/discussions/1495) to learn what's coming next.
 
 ### Demo
 
