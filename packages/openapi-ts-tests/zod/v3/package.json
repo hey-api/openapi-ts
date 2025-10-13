@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "engines": {
-    "node": "^18.18.0 || ^20.9.0 || >=22.10.0"
+    "node": ">=18.0.0"
   },
   "devDependencies": {
     "@config/vite-base": "workspace:*",
