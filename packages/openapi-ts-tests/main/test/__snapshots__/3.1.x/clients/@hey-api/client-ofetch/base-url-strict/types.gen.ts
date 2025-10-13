@@ -390,11 +390,13 @@ export type ModelWithDictionary = {
 
 /**
  * This is a deprecated model with a deprecated property
+ *
  * @deprecated
  */
 export type DeprecatedModel = {
     /**
      * This is a deprecated property
+     *
      * @deprecated
      */
     prop?: string;
@@ -1269,6 +1271,7 @@ export type DeprecatedCallData = {
     headers: {
         /**
          * This parameter is deprecated
+         *
          * @deprecated
          */
         parameter: DeprecatedModel | null;

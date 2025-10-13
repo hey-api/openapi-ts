@@ -40,6 +40,7 @@ export class DefaultServiceRequests {
     
     /**
      * Body should not be unknown
+     *
      * Body should not be unknown
      */
     public postApiVbyApiVersionBody<ThrowOnError extends boolean = false>(options: Options<PostApiVbyApiVersionBodyData, ThrowOnError>): HttpRequest<unknown> {
@@ -465,6 +466,7 @@ export class DefaultServiceResources {
     
     /**
      * Body should not be unknown
+     *
      * Body should not be unknown
      */
     public postApiVbyApiVersionBody<ThrowOnError extends boolean = false>(options: () => Options<PostApiVbyApiVersionBodyData, ThrowOnError> | undefined) {
