@@ -131,7 +131,11 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
 
     if (eventSet.has('server') && this.context.ir.servers) {
       for (const server of this.context.ir.servers) {
-        const event: WalkEvent<'server'> = { server, type: 'server' };
+        const event: WalkEvent<'server'> = {
+          _path: ['servers', String(this.context.ir.servers.indexOf(server))],
+          server,
+          type: 'server',
+        };
         try {
           callback(event as WalkEvent<T>);
         } catch (error) {
@@ -144,6 +148,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       for (const name in this.context.ir.components.schemas) {
         const event: WalkEvent<'schema'> = {
           $ref: `#/components/schemas/${name}`,
+          _path: ['components', 'schemas', name],
           name,
           schema: this.context.ir.components.schemas[name]!,
           type: 'schema',
@@ -160,6 +165,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       for (const name in this.context.ir.components.parameters) {
         const event: WalkEvent<'parameter'> = {
           $ref: `#/components/parameters/${name}`,
+          _path: ['components', 'parameters', name],
           name,
           parameter: this.context.ir.components.parameters[name]!,
           type: 'parameter',
@@ -179,6 +185,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       for (const name in this.context.ir.components.requestBodies) {
         const event: WalkEvent<'requestBody'> = {
           $ref: `#/components/requestBodies/${name}`,
+          _path: ['components', 'requestBodies', name],
           name,
           requestBody: this.context.ir.components.requestBodies[name]!,
           type: 'requestBody',
@@ -198,6 +205,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
         for (const _method in pathItem) {
           const method = _method as keyof typeof pathItem;
           const event: WalkEvent<'operation'> = {
+            _path: ['paths', path, method],
             method,
             operation: pathItem[method]!,
             path,
@@ -218,6 +226,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
         for (const _method in webhook) {
           const method = _method as keyof typeof webhook;
           const event: WalkEvent<'webhook'> = {
+            _path: ['webhooks', key, method],
             key,
             method,
             operation: webhook[method]!,

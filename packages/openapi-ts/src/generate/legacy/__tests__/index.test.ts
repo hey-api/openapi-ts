@@ -95,6 +95,7 @@ describe('generateIndexFile', () => {
         },
         '@hey-api/sdk': {
           api: {
+            createOperationComment: () => undefined,
             getSelector: () => [],
           },
           config: {

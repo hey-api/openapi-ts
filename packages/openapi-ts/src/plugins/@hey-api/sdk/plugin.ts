@@ -3,10 +3,7 @@ import type ts from 'typescript';
 import { clientFolderAbsolutePath } from '../../../generate/client';
 import { tsc } from '../../../tsc';
 import { stringCase } from '../../../utils/stringCase';
-import {
-  createOperationComment,
-  isOperationOptionsRequired,
-} from '../../shared/utils/operation';
+import { isOperationOptionsRequired } from '../../shared/utils/operation';
 import { getClientPlugin } from '../client-core/utils';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import {
@@ -213,7 +210,7 @@ const generateClassSdk = ({
         });
         const functionNode = tsc.methodDeclaration({
           accessLevel: 'public',
-          comment: createOperationComment({ operation }),
+          comment: plugin.api.createOperationComment({ operation }),
           isStatic: isAngularClient ? false : !plugin.config.instance,
           name: entry.methodName,
           parameters: opParameters.parameters,
@@ -407,7 +404,7 @@ const generateFlatSdk = ({
       selector: plugin.api.getSelector('function', operation.id),
     });
     const node = tsc.constVariable({
-      comment: createOperationComment({ operation }),
+      comment: plugin.api.createOperationComment({ operation }),
       exportConst: true,
       expression: tsc.arrowFunction({
         parameters: opParameters.parameters,

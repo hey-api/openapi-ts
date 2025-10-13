@@ -1,14 +1,17 @@
 import { operationResponsesMap } from '../../ir/operation';
 import type { IR } from '../../ir/types';
 import { buildName } from '../../openApi/shared/utils/name';
+import { pathToSymbolResourceType } from '../shared/utils/meta';
 import { schemaToValibotSchema, type State } from './plugin';
 import type { ValibotPlugin } from './types';
 
 export const operationToValibotSchema = ({
+  _path,
   operation,
   plugin,
   state,
 }: {
+  _path: ReadonlyArray<string | number>;
   operation: IR.OperationObject;
   plugin: ValibotPlugin['Instance'];
   state: State;
@@ -113,6 +116,9 @@ export const operationToValibotSchema = ({
 
     const symbol = plugin.registerSymbol({
       exported: true,
+      meta: {
+        resourceType: pathToSymbolResourceType(_path),
+      },
       name: buildName({
         config: plugin.config.requests,
         name: operation.id,
@@ -120,6 +126,7 @@ export const operationToValibotSchema = ({
       selector: plugin.api.getSelector('data', operation.id),
     });
     schemaToValibotSchema({
+      _path,
       plugin,
       schema: schemaData,
       state,
@@ -132,8 +139,12 @@ export const operationToValibotSchema = ({
       const { response } = operationResponsesMap(operation);
 
       if (response) {
+        const path = [..._path, 'responses'];
         const symbol = plugin.registerSymbol({
           exported: true,
+          meta: {
+            resourceType: pathToSymbolResourceType(path),
+          },
           name: buildName({
             config: plugin.config.responses,
             name: operation.id,
@@ -141,6 +152,7 @@ export const operationToValibotSchema = ({
           selector: plugin.api.getSelector('responses', operation.id),
         });
         schemaToValibotSchema({
+          _path: path,
           plugin,
           schema: response,
           state,

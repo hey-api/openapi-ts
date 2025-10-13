@@ -782,6 +782,7 @@ export type Customer = {
     readonly uniqueId: string | null;
     /**
      * Deprecated name field (use FirstName and LastName instead).
+     *
      * @deprecated
      */
     name: string | null;
@@ -987,6 +988,7 @@ export type CustomerSearchResult = {
     readonly uniqueId: string | null;
     /**
      * Deprecated name field (use FirstName and LastName instead).
+     *
      * @deprecated
      */
     name: string | null;
@@ -1362,6 +1364,7 @@ export type EcomCustomerEdit = {
     uniqueId?: string | null;
     /**
      * Deprecated full name field (use FirstName and LastName instead).
+     *
      * @deprecated
      */
     name?: string | null;
@@ -2292,6 +2295,7 @@ export type LocationIdentity = {
     shareCustomerProfiles: boolean;
     /**
      * Legacy global unique identifier for the location (deprecated).
+     *
      * @deprecated
      */
     globalId: string | null;
@@ -5035,6 +5039,7 @@ export type CustomerWritable = {
     customerId: number;
     /**
      * Deprecated name field (use FirstName and LastName instead).
+     *
      * @deprecated
      */
     name: string | null;
@@ -5202,6 +5207,7 @@ export type CustomerSearchResultWritable = {
     customerId: number;
     /**
      * Deprecated name field (use FirstName and LastName instead).
+     *
      * @deprecated
      */
     name: string | null;
@@ -5736,6 +5742,7 @@ export type LocationIdentityWritable = {
     shareCustomerProfiles: boolean;
     /**
      * Legacy global unique identifier for the location (deprecated).
+     *
      * @deprecated
      */
     globalId: string | null;

@@ -219,12 +219,19 @@ export default defineConfig(() => {
           // classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
           // client: false,
+          // getSignature: ({ fields, signature, operation }) => {
+          //   // ...
+          //   fields.unwrap('path')
+          // },
           // include...
           // instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
-          // params: 'experiment',
+          // params_EXPERIMENTAL: 'experiment',
           // responseStyle: 'data',
+          // signature: 'auto',
+          // signature: 'client',
+          // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
           // validator: {
