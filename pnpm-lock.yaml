@@ -1329,8 +1329,8 @@ importers:
         specifier: 1.8.2
         version: 1.8.2
       cross-spawn:
-        specifier: 7.0.5
-        version: 7.0.5
+        specifier: 7.0.6
+        version: 7.0.6
       eslint:
         specifier: 9.17.0
         version: 9.17.0(jiti@2.5.1)
@@ -1446,8 +1446,8 @@ importers:
         specifier: 1.8.2
         version: 1.8.2
       cross-spawn:
-        specifier: 7.0.5
-        version: 7.0.5
+        specifier: 7.0.6
+        version: 7.0.6
       eslint:
         specifier: 9.17.0
         version: 9.17.0(jiti@2.5.1)
@@ -23236,7 +23236,7 @@ snapshots:
 
   execa@7.2.0:
     dependencies:
-      cross-spawn: 7.0.5
+      cross-spawn: 7.0.6
       get-stream: 6.0.1
       human-signals: 4.3.1
       is-stream: 3.0.0
@@ -23248,7 +23248,7 @@ snapshots:
 
   execa@8.0.1:
     dependencies:
-      cross-spawn: 7.0.5
+      cross-spawn: 7.0.6
       get-stream: 8.0.1
       human-signals: 5.0.0
       is-stream: 3.0.0
@@ -27892,7 +27892,7 @@ snapshots:
 
   spawndamnit@3.0.1:
     dependencies:
-      cross-spawn: 7.0.5
+      cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
   spdx-correct@3.2.0:
