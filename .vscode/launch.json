@@ -14,11 +14,7 @@
       "name": "openapi-ts",
       "skipFiles": ["<node_internals>/**"],
       "runtimeExecutable": "node",
-      "runtimeArgs": [
-        "--loader",
-        "ts-node/esm",
-        "--no-warnings=ExperimentalWarning"
-      ],
+      "runtimeArgs": [],
       "program": "${workspaceFolder}/packages/openapi-ts/bin/index.cjs",
       "args": [
         "-f",
