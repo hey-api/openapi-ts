@@ -13,6 +13,7 @@ import type { Field, Fields } from '../client-core/bundle/params';
 import { getClientPlugin } from '../client-core/utils';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
+// import { getSignatureParameters } from './signature';
 import type { HeyApiSdkPlugin } from './types';
 import { createRequestValidator, createResponseValidator } from './validator';
 
@@ -199,6 +200,8 @@ export const operationParameters = ({
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
 }): OperationParameters => {
+  // getSignatureParameters({ operation });
+
   const result: OperationParameters = {
     argNames: [],
     fields: [],

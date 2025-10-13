@@ -2,7 +2,6 @@ import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import {
-  createOperationComment,
   hasOperationSse,
   isOperationOptionsRequired,
 } from '../../shared/utils/operation';
@@ -25,6 +24,8 @@ export const createUseQuery = ({
   if (!('useQuery' in plugin.config)) {
     return;
   }
+
+  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
 
   const symbolUseQueryFn = plugin.registerSymbol({
     exported: true,
@@ -49,7 +50,7 @@ export const createUseQuery = ({
   );
   const statement = tsc.constVariable({
     comment: plugin.config.comments
-      ? createOperationComment({ operation })
+      ? sdkPlugin.api.createOperationComment({ operation })
       : undefined,
     exportConst: symbolUseQueryFn.exported,
     expression: tsc.arrowFunction({

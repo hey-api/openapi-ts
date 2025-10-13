@@ -3,7 +3,6 @@ import type ts from 'typescript';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
-import { createOperationComment } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
 import type { PiniaColadaPlugin } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
@@ -108,6 +107,8 @@ export const createMutationOptions = ({
     });
   }
 
+  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
+
   const symbolMutationOptions = plugin.registerSymbol({
     exported: true,
     name: buildName({
@@ -117,7 +118,7 @@ export const createMutationOptions = ({
   });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
-      ? createOperationComment({ operation })
+      ? sdkPlugin.api.createOperationComment({ operation })
       : undefined,
     exportConst: symbolMutationOptions.exported,
     expression: tsc.arrowFunction({

@@ -5,10 +5,7 @@ import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
 import { tsNodeToString } from '../../../tsc/utils';
-import {
-  createOperationComment,
-  isOperationOptionsRequired,
-} from '../../shared/utils/operation';
+import { isOperationOptionsRequired } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
 import {
   createQueryKeyFunction,
@@ -441,6 +438,8 @@ export const createInfiniteQueryOptions = ({
     });
   }
 
+  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
+
   const symbolInfiniteQueryOptionsFn = plugin.registerSymbol({
     exported: true,
     name: buildName({
@@ -450,7 +449,7 @@ export const createInfiniteQueryOptions = ({
   });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
-      ? createOperationComment({ operation })
+      ? sdkPlugin.api.createOperationComment({ operation })
       : undefined,
     exportConst: symbolInfiniteQueryOptionsFn.exported,
     expression: tsc.arrowFunction({

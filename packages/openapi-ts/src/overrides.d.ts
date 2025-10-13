@@ -17,5 +17,15 @@ declare module '@hey-api/codegen-core' {
      * Name of the plugin that registered this symbol.
      */
     pluginName?: string;
+    /**
+     * Type of resource this symbol represents.
+     */
+    resourceType?:
+      | 'operation'
+      | 'parameter'
+      | 'requestBody'
+      | 'schema'
+      | 'server'
+      | 'webhook';
   }
 }

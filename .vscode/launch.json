@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach",
+      "port": 9229,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "openapi-ts",
+      "skipFiles": ["<node_internals>/**"],
+      "runtimeExecutable": "node",
+      "runtimeArgs": [],
+      "program": "${workspaceFolder}/packages/openapi-ts/bin/index.cjs",
+      "args": [
+        "-f",
+        "${workspaceFolder}/packages/openapi-ts-tests/main/test/openapi-ts.config.ts"
+      ]
+    }
+  ]
+}
