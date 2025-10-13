@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import sharp from 'sharp';
 
-const allowedImageExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
+const allowedImageExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.svg'];
 const images = [
   {
     sizes: [
@@ -115,6 +115,23 @@ const images = [
       },
     ],
     source: 'kinde-logo-wordmark-dark.png',
+  },
+  {
+    sizes: [
+      {
+        formats: ['jpeg', 'webp'],
+        width: 480,
+      },
+      {
+        formats: ['webp'],
+        width: 768,
+      },
+      {
+        formats: ['png', 'webp'],
+        width: 1200,
+      },
+    ],
+    source: 'openstatus-logo.svg',
   },
   {
     sizes: [
