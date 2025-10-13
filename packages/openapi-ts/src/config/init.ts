@@ -1,7 +1,6 @@
 import path from 'node:path';
 
 import colors from 'ansi-colors';
-import { loadConfig } from 'c12';
 
 import { ConfigError } from '../error';
 import type { Config, UserConfig } from '../types/config';
@@ -63,6 +62,8 @@ export const initConfigs = async ({
     }
 
     const eventC12 = logger.timeEvent('c12');
+    // c12 is ESM-only since v3
+    const { loadConfig } = await import('c12');
     const { config: configFromFile, configFile: loadedConfigFile } =
       await loadConfig<UserConfig>({
         configFile: configurationFile,
