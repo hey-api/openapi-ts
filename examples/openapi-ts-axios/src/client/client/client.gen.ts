@@ -107,9 +107,13 @@ export const createClient = (config: Config = {}): Client => {
         return error;
       }
 
-      // @ts-expect-error
-      error.error = {};
-      return error;
+      if (typeof error === 'object' && error !== null) {
+        // @ts-expect-error
+        error.error = {};
+        return error;
+      }
+
+      return { error: {} };
     }
   };
 
