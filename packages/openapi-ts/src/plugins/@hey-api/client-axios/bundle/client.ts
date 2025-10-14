@@ -1,5 +1,5 @@
-import type { AxiosError, AxiosInstance, RawAxiosRequestHeaders } from 'axios';
-import axios from 'axios';
+import type { AxiosInstance, RawAxiosRequestHeaders } from 'axios';
+import axios, { AxiosError } from 'axios';
 
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
 import type { HttpMethod } from '../../client-core/bundle/types';
@@ -85,6 +85,7 @@ export const createClient = (config: Config = {}): Client => {
         params: opts.paramsSerializer ? opts.query : undefined,
         url,
       });
+      if (response instanceof Error) throw response;
 
       let { data } = response;
 
@@ -103,13 +104,23 @@ export const createClient = (config: Config = {}): Client => {
         data: data ?? {},
       };
     } catch (error) {
-      const e = error as AxiosError;
       if (opts.throwOnError) {
-        throw e;
+        throw error;
       }
-      // @ts-expect-error
-      e.error = e.response?.data ?? {};
-      return e;
+
+      if (error instanceof AxiosError) {
+        // @ts-expect-error
+        error.error = error.response?.data ?? {};
+        return error;
+      }
+
+      if (typeof error === 'object' && error !== null) {
+        // @ts-expect-error
+        error.error = {};
+        return error;
+      }
+
+      return { error: {} };
     }
   };
 
