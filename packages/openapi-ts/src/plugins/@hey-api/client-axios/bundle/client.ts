@@ -67,7 +67,6 @@ export const createClient = (config: Config = {}): Client => {
     return { opts, url };
   };
 
-  // @ts-expect-error
   const request: Client['request'] = async (options) => {
     // @ts-expect-error
     const { opts, url } = await beforeRequest(options);
@@ -115,7 +114,6 @@ export const createClient = (config: Config = {}): Client => {
       }
 
       if (typeof error === 'object' && error !== null) {
-        // @ts-expect-error
         error.error = {};
         return error;
       }
