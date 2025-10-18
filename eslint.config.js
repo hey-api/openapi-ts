@@ -56,7 +56,7 @@ export default tseslint.config(
   configPrettier,
   {
     ignores: [
-      '**/.tsup/',
+      '**/.tsdown/',
       '**/dist/',
       '**/node_modules/',
       'temp/',

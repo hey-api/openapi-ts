@@ -75,9 +75,9 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsup && pnpm check-exports",
+    "build": "tsdown && pnpm check-exports",
     "check-exports": "attw --pack . --profile node16",
-    "dev": "tsup --watch",
+    "dev": "tsdown --watch",
     "handlebars": "node src/legacy/handlebars/handlebars.cjs",
     "prepublishOnly": "pnpm build",
     "test:coverage": "vitest run --coverage",
