@@ -3,15 +3,7 @@ import path from 'node:path';
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  input: path.resolve(
-    '..',
-    '..',
-    'packages',
-    'openapi-ts-tests',
-    'specs',
-    '3.1.x',
-    'openai.yaml',
-  ),
+  input: path.resolve('..', '..', 'specs', '3.1.x', 'openai.yaml'),
   output: {
     format: 'prettier',
     lint: 'eslint',
