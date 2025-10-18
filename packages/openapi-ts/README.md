@@ -31,7 +31,7 @@
 
 ## Features
 
-- runs in CLI, Node.js 18+, or npx
+- runs in CLI, Node.js 20+, or npx
 - works with OpenAPI 2.0, 3.0, and 3.1
 - core plugins for types, SDKs, and schemas
 - clients for your runtime (Fetch API, Angular, Axios, Next.js, Nuxt, etc.)

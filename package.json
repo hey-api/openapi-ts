@@ -36,7 +36,7 @@
     "typecheck": "turbo run typecheck --filter=\"!@example/openapi-ts-sample\""
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.19.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.17.4",
@@ -64,7 +64,7 @@
     "prettier": "3.4.2",
     "rollup": "4.31.0",
     "rollup-plugin-dts": "6.1.1",
-    "tsup": "8.4.0",
+    "tsdown": "0.15.7",
     "turbo": "2.5.8",
     "typescript": "5.8.3",
     "typescript-eslint": "8.29.1",

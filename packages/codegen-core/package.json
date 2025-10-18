@@ -47,9 +47,9 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsup && pnpm check-exports",
+    "build": "tsdown && pnpm check-exports",
     "check-exports": "attw --pack . --profile node16",
-    "dev": "tsup --watch",
+    "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
     "test:coverage": "vitest run --coverage",
     "test:update": "vitest watch --update",
@@ -58,7 +58,7 @@
     "typecheck": "tsc --noEmit"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.19.0"
   },
   "peerDependencies": {
     "typescript": ">=5.5.3"
