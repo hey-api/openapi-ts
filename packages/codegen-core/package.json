@@ -58,7 +58,7 @@
     "typecheck": "tsc --noEmit"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.19.0"
   },
   "peerDependencies": {
     "typescript": ">=5.5.3"

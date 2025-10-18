@@ -36,7 +36,7 @@
     "typecheck": "turbo run typecheck --filter=\"!@example/openapi-ts-sample\""
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.19.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.17.4",
