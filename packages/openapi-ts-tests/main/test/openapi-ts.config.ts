@@ -78,6 +78,7 @@ export default defineConfig(() => {
       ],
       logs: {
         // level: 'debug',
+        level: 'silent',
         path: './logs',
       },
       // name: 'foo',
@@ -179,7 +180,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           exportFromIndex: true,
-          name: '@hey-api/client-fetch',
+          // name: '@hey-api/client-fetch',
           // name: 'legacy/angular',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           runtimeConfigPath: './src/hey-api.ts',
@@ -225,7 +226,7 @@ export default defineConfig(() => {
           // },
           // include...
           // instance: true,
-          name: '@hey-api/sdk',
+          // name: '@hey-api/sdk',
           // operationId: false,
           // params_EXPERIMENTAL: 'experiment',
           // responseStyle: 'data',
@@ -273,7 +274,7 @@ export default defineConfig(() => {
           // mutationOptions: {
           //   name: '{{name}}MO',
           // },
-          name: '@tanstack/react-query',
+          // name: '@tanstack/react-query',
           // queryKeys: {
           //   name: '{{name}}QK',
           // },
@@ -305,7 +306,7 @@ export default defineConfig(() => {
           // definitions: 'z{{name}}Definition',
           exportFromIndex: true,
           // metadata: true,
-          name: 'valibot',
+          // name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
@@ -347,7 +348,7 @@ export default defineConfig(() => {
           },
           exportFromIndex: true,
           metadata: true,
-          name: 'zod',
+          // name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',

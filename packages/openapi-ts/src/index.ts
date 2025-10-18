@@ -114,17 +114,18 @@ export const createClient = async (
 
     const logs =
       results.find((result) => result.config.logs.level !== 'silent')?.config
-        .logs ?? rawLogs;
+        .logs ??
+      results[0]?.config.logs ??
+      rawLogs;
+    const dryRun =
+      results.some((result) => result.config.dryRun) ??
+      userConfigs.some((config) => config.dryRun) ??
+      false;
+    const logPath =
+      logs?.file && !dryRun
+        ? logCrashReport(error, logs.path ?? '')
+        : undefined;
     if (!logs || logs.level !== 'silent') {
-      const dryRun =
-        results.some((result) => result.config.dryRun) ??
-        userConfigs.some((config) => config.dryRun) ??
-        false;
-      const logPath =
-        logs?.file && !dryRun
-          ? logCrashReport(error, logs.path ?? '')
-          : undefined;
-
       printCrashReport({ error, logPath });
       const isInteractive =
         results.some((result) => result.config.interactive) ??
