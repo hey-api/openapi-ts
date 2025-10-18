@@ -63,14 +63,14 @@
 ### Friends
 
 <ul class="friends">
-  <li>
+  <li class="openstatus">
     <a href="https://kutt.it/R6UuKW" style="height: 20px;" target="_blank">
-      <picture>
-        <source srcset="/images/openstatus-logo-480w.webp" media="(max-width: 480px)" type="image/webp" />
-        <source srcset="/images/openstatus-logo-768w.webp" media="(max-width: 768px)" type="image/webp" />
-        <source srcset="/images/openstatus-logo-1200w.webp" media="(min-width: 769px)" type="image/webp" />
-        <img alt="OpenStatus logo" loading="lazy" src="/images/openstatus-logo-1200w.png" />
-      </picture>
+      <svg width="330" height="330" viewBox="0 0 330 330" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_1543_179)"><mask id="mask0_1543_179" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="330" height="330"><circle cx="165" cy="165" r="165" fill="black"/></mask><g mask="url(#mask0_1543_179)"><path d="M165 330C256.127 330 330 256.127 330 165C330 73.873 256.127 0 165 0C73.873 0 0 73.873 0 165C0 256.127 73.873 330 165 330Z" fill="currentColor"/><path d="M330 96H122V111H330V96Z" fill="white"/><path d="M208 219H0V234H208V219Z" fill="white"/></g></g><defs><clipPath id="clip0_1543_179"><rect width="330" height="330" fill="white"/></clipPath></defs></svg>
+    </a>
+  </li>
+  <li>
+    <a href="https://kutt.it/bcUF8q" style="height: 20px;" target="_blank">
+      <svg width="1155" height="1000" viewBox="0 0 1155 1000" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M577.344 0L1154.69 1000H0L577.344 0Z" fill="currentColor"/></svg>
     </a>
   </li>
 </ul>

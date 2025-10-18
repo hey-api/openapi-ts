@@ -8,7 +8,7 @@ OpenAPI TypeScript is a CLI tool and library for generating TypeScript clients, 
 
 ### Prerequisites and Setup
 
-- Install Node.js 20.19.0+ or 24.7.0+ (see `.nvmrc` for current version: 24.7.0)
+- Install Node.js (see `.nvmrc` for recommended version)
 - Install pnpm globally: `npm install -g pnpm@10.15.1`
 - Clone the repository and run setup commands
 
@@ -193,7 +193,7 @@ pnpm build --filter="@example/**"
 
 The repository uses GitHub Actions (`.github/workflows/ci.yml`):
 
-- Tests on multiple Node.js versions (20.19.0, 22.12.0, 24.7.0)
+- Tests on multiple Node.js versions
 - Tests on multiple OS (macOS, Ubuntu, Windows)
 - Runs build, lint, typecheck, and test commands
 - Publishes preview packages on PRs
