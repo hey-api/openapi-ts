@@ -15,7 +15,7 @@ import type { Plugin } from '../../types';
 import type { WalkEvent, WalkEventType } from '../types/instance';
 
 const defaultGetFilePath = (symbol: Symbol): string | undefined => {
-  if (!symbol.meta?.pluginName) {
+  if (!symbol.meta?.pluginName || typeof symbol.meta.pluginName !== 'string') {
     return;
   }
   if (symbol.meta.pluginName.startsWith('@hey-api/client-')) {
