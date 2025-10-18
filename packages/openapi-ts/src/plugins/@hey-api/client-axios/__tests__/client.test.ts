@@ -354,7 +354,7 @@ describe('confirming axios behaviour for constructing URLs', () => {
 });
 
 describe('error handling', () => {
-  it('should handle 404 response when throwOnError is false', async () => {
+  it('should handle malformed error when throwOnError is false', async () => {
     const client = createClient({ baseURL: 'https://api.example.com' });
 
     const errorData = { error: 'Resource not found' };
@@ -502,5 +502,56 @@ describe('error handling', () => {
       message: 'Error',
       name: 'AggregateError',
     });
+  });
+
+  it('should handle non-object error from responseValidator when throwOnError is false', async () => {
+    const client = createClient({ baseURL: 'https://api.example.com' });
+
+    const mockAxios = vi.fn().mockResolvedValue({
+      data: { id: 1, name: 'test' },
+      headers: {},
+      status: 200,
+      statusText: 'OK',
+    });
+
+    const result = await client.get({
+      axios: mockAxios as Partial<AxiosInstance> as AxiosInstance,
+      headers: {},
+      responseType: 'json',
+      responseValidator: vi.fn().mockRejectedValue('validation failed'),
+      throwOnError: false,
+      url: '/users/1',
+    });
+
+    expect(mockAxios).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: 'https://api.example.com/users/1',
+      }),
+    );
+    expect(result).toEqual({
+      error: {},
+    });
+  });
+
+  it('should throw non-object error from responseValidator when throwOnError is true', async () => {
+    const client = createClient({ baseURL: 'https://api.example.com' });
+
+    const mockAxios = vi.fn().mockResolvedValue({
+      data: { id: 1, name: 'test' },
+      headers: {},
+      status: 200,
+      statusText: 'OK',
+    });
+
+    await expect(
+      client.get({
+        axios: mockAxios as Partial<AxiosInstance> as AxiosInstance,
+        headers: {},
+        responseType: 'json',
+        responseValidator: vi.fn().mockRejectedValue('non-object error'),
+        throwOnError: true,
+        url: '/users/1',
+      }),
+    ).rejects.toBe('non-object error');
   });
 });
