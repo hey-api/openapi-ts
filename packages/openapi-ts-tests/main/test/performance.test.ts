@@ -31,7 +31,7 @@ describe('performance', () => {
       logger,
     );
 
-    const duration = logger.report()?.duration ?? 9999;
+    const duration = logger.report(false)?.duration ?? 9999;
     expect(duration).toBeLessThanOrEqual(1500);
   });
 
@@ -49,7 +49,7 @@ describe('performance', () => {
       logger,
     );
 
-    const duration = logger.report()?.duration ?? 9999;
+    const duration = logger.report(false)?.duration ?? 9999;
     expect(duration).toBeLessThanOrEqual(1500);
   });
 
@@ -67,7 +67,7 @@ describe('performance', () => {
       logger,
     );
 
-    const duration = logger.report()?.duration ?? 9999;
+    const duration = logger.report(false)?.duration ?? 9999;
     expect(duration).toBeLessThanOrEqual(1500);
   });
 });
