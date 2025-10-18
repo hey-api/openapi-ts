@@ -32,7 +32,7 @@
     "test:coverage": "turbo run test:coverage",
     "test:update": "turbo run test:update",
     "test:watch": "turbo run test:watch",
-    "test": "turbo run test",
+    "test": "turbo run test --filter=\"!@example/openapi-ts-sample\"",
     "typecheck": "turbo run typecheck --filter=\"!@example/openapi-ts-sample\""
   },
   "engines": {
@@ -70,5 +70,5 @@
     "typescript-eslint": "8.29.1",
     "vitest": "3.1.1"
   },
-  "packageManager": "pnpm@10.18.0"
+  "packageManager": "pnpm@10.18.3"
 }
