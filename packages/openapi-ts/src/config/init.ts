@@ -160,7 +160,7 @@ export const initConfigs = async ({
       );
     }
 
-    if (!useOptions) {
+    if (!useOptions && logs.level !== 'silent') {
       console.warn(
         '❗️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://heyapi.dev/openapi-ts/migrating.html#v0-27-38',
       );
