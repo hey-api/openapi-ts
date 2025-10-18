@@ -48,7 +48,7 @@
   ],
   "scripts": {
     "build": "nuxt-module-build build",
-    "dev": "tsup --watch",
+    "dev": "tsdown --watch",
     "prepack": "pnpm build",
     "prepublishOnly": "pnpm build"
   },
