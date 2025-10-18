@@ -52,9 +52,9 @@
     "src"
   ],
   "scripts": {
-    "build": "tsup && rollup -c && pnpm check-exports",
+    "build": "tsdown && rollup -c && pnpm check-exports",
     "check-exports": "attw --profile node16 --pack .",
-    "dev": "tsup --watch",
+    "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
     "test:coverage": "vitest run --coverage",
     "test:update": "vitest watch --update",

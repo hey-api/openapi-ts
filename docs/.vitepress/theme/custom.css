@@ -243,6 +243,11 @@ h3#demo + button {
   height: 100% !important;
 }
 
+/* Cella */
+html.dark .sponsors-list > ul li.cella svg > path:nth-child(2),
+html.dark .sponsors-list > ul li.cella svg > path:nth-child(3) {
+  filter: invert();
+}
 /* FastAPI */
 .sponsors-list > ul li.fastapi svg > g > path {
   fill: white !important;
@@ -250,10 +255,19 @@ h3#demo + button {
 html.dark .sponsors-list > ul li.fastapi svg > g > path {
   fill: var(--vp-button-brand-bg) !important;
 }
-/* Cella */
-html.dark .sponsors-list > ul li.cella svg > path:nth-child(2),
-html.dark .sponsors-list > ul li.cella svg > path:nth-child(3) {
-  filter: invert();
+/* OpenStatus */
+.sponsors-list > ul li.openstatus svg > g > g > path:not(:first-of-type) {
+  fill: white !important;
+}
+html.dark
+  .sponsors-list
+  > ul
+  li.openstatus
+  svg
+  > g
+  > g
+  > path:not(:first-of-type) {
+  fill: var(--vp-button-brand-bg) !important;
 }
 
 .sponsors-list > ul.bronze {

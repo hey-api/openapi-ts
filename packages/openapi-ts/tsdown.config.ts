@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { defineConfig } from 'tsup';
+import { defineConfig } from 'tsdown';
 
 const replaceCoreImports = (filePath: string) => {
   let content = fs.readFileSync(filePath, 'utf8');

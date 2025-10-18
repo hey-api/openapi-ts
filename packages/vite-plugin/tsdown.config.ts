@@ -1,4 +1,4 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from 'tsdown';
 
 export default defineConfig((options) => ({
   banner(ctx) {
@@ -11,8 +11,6 @@ export default defineConfig((options) => ({
         js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);",
       };
     }
-
-    return;
   },
   clean: true,
   dts: true,
