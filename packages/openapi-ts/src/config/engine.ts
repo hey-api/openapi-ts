@@ -10,9 +10,9 @@ export const checkNodeVersion = () => {
     }
   } else if (typeof process !== 'undefined' && process.versions?.node) {
     const [major] = process.versions.node.split('.').map(Number);
-    if (major! < 18) {
+    if (major! < 20) {
       throw new ConfigError(
-        `Unsupported Node version ${process.versions.node}. Please use Node 18 or newer.`,
+        `Unsupported Node version ${process.versions.node}. Please use Node 20 or newer.`,
       );
     }
   }
