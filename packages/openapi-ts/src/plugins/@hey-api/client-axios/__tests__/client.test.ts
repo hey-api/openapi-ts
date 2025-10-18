@@ -354,7 +354,7 @@ describe('confirming axios behaviour for constructing URLs', () => {
 });
 
 describe('error handling', () => {
-  it('should handle malformed error when throwOnError is false', async () => {
+  it('should handle 404 response when throwOnError is false', async () => {
     const client = createClient({ baseURL: 'https://api.example.com' });
 
     const errorData = { error: 'Resource not found' };
