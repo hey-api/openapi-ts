@@ -48,9 +48,9 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsup && pnpm check-exports",
+    "build": "tsdown && pnpm check-exports",
     "check-exports": "attw --pack .",
-    "dev": "tsup --watch",
+    "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {

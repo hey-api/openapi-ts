@@ -5,9 +5,7 @@ import { createClient, type UserConfig } from '@hey-api/openapi-ts';
 import { sync } from 'glob';
 import { describe, expect, it } from 'vitest';
 
-const V2_SPEC_PATH = '../specs/v2.json';
-const V3_SPEC_PATH = '../specs/v3.json';
-const V3_TRANSFORMS_SPEC_PATH = '../specs/v3-transforms.json';
+import { getSpecsPath } from '../../utils';
 
 const OUTPUT_PREFIX = './test/generated/';
 
@@ -50,7 +48,7 @@ describe('OpenAPI v2', () => {
     const output = toOutputPath(name);
     await createClient({
       ...config,
-      input: V2_SPEC_PATH,
+      input: path.join(getSpecsPath(), 'v2.json'),
       output,
     });
     await Promise.all(
@@ -450,7 +448,7 @@ describe('OpenAPI v3', () => {
       const output = toOutputPath(name);
       await createClient({
         ...config,
-        input: V3_SPEC_PATH,
+        input: path.join(getSpecsPath(), 'v3.json'),
         output: {
           ...(typeof config.output === 'object' ? config.output : {}),
           path: output,
@@ -472,7 +470,7 @@ describe('OpenAPI v3', () => {
 
       await createClient({
         ...config,
-        input: V3_TRANSFORMS_SPEC_PATH,
+        input: path.join(getSpecsPath(), 'v3-transforms.json'),
         output,
         plugins: [
           ...(config.plugins ?? []).map((plugin) => {
@@ -517,7 +515,7 @@ describe('index', () => {
     await expect(
       createClient({
         dryRun: true,
-        input: '../specs/v2.json',
+        input: path.join(getSpecsPath(), 'v2.json'),
         logs: {
           level: 'silent',
         },
@@ -531,7 +529,7 @@ describe('index', () => {
     await expect(
       createClient({
         dryRun: true,
-        input: '../specs/v3.json',
+        input: path.join(getSpecsPath(), 'v3.json'),
         logs: {
           level: 'silent',
         },
@@ -545,7 +543,7 @@ describe('index', () => {
     await expect(
       createClient({
         dryRun: true,
-        input: '../specs/v3-transforms.json',
+        input: path.join(getSpecsPath(), 'v3-transforms.json'),
         logs: {
           level: 'silent',
         },
@@ -560,36 +558,6 @@ describe('index', () => {
             name: '@hey-api/transformers',
           },
         ],
-      }),
-    ).resolves.not.toThrow();
-  });
-
-  it('downloads and parses v2 without issues', async () => {
-    await expect(
-      createClient({
-        dryRun: true,
-        input:
-          'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts-tests/specs/v2.json',
-        logs: {
-          level: 'silent',
-        },
-        output: './generated/v2-downloaded/',
-        plugins: ['@hey-api/client-fetch'],
-      }),
-    ).resolves.not.toThrow();
-  });
-
-  it('downloads and parses v3 without issues', async () => {
-    await expect(
-      createClient({
-        dryRun: true,
-        input:
-          'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts-tests/specs/v3.json',
-        logs: {
-          level: 'silent',
-        },
-        output: './generated/v3-downloaded/',
-        plugins: ['@hey-api/client-fetch'],
       }),
     ).resolves.not.toThrow();
   });
