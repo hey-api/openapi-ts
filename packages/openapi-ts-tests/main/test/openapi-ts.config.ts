@@ -77,8 +77,7 @@ export default defineConfig(() => {
         // 'https://somefakedomain.com/openapi.yaml',
       ],
       logs: {
-        // level: 'debug',
-        level: 'silent',
+        level: 'debug',
         path: './logs',
       },
       // name: 'foo',
