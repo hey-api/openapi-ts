@@ -39,7 +39,7 @@ jobs:
 
       - name: Build examples
         if: matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
-        run: pnpm build --filter="@examples/**"
+        run: pnpm build --filter="@example/**"
 
       - name: Run linter
         run: pnpm lint
@@ -52,7 +52,7 @@ jobs:
 
       - name: Test examples
         if: matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
-        run: pnpm test --filter="@examples/**"
+        run: pnpm test --filter="@example/**"
 
       - name: Publish preview packages
         if: github.event_name == 'pull_request' && matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
