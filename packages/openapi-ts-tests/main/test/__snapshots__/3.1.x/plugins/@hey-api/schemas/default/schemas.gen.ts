@@ -506,7 +506,7 @@ export const ModelWithArrayReadOnlyAndWriteOnlySchema = {
         prop: {
             type: 'array',
             items: {
-                '$ref': '#/components/schemas/ModelWithReadOnlyAndWriteOnly'
+                '$ref': '#/components/schemas/ModelWithReadOnlyAndWriteOnlyWritable'
             }
         },
         propWithFile: {

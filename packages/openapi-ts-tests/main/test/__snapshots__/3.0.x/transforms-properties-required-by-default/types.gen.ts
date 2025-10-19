@@ -194,7 +194,7 @@ export type BrandEditRequest = {
 };
 
 export type BroadcastedResponses = {
-    responses: Array<LocationResponse> | null;
+    responses: Array<LocationResponseWritable> | null;
 };
 
 export type BulkCreateOrUpdateHarvest = {

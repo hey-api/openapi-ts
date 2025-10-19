@@ -364,16 +364,16 @@ export const vModelWithReference = v.object({
     prop: v.optional(vModelWithProperties)
 });
 
-export const vModelWithReadOnlyAndWriteOnly = v.object({
+export const vModelWithReadOnlyAndWriteOnlyWritable = v.object({
     foo: v.string(),
-    bar: v.pipe(v.string(), v.readonly())
+    baz: v.string()
 });
 
 /**
  * This is a model with one property containing an array
  */
 export const vModelWithArrayReadOnlyAndWriteOnly = v.object({
-    prop: v.optional(v.array(vModelWithReadOnlyAndWriteOnly)),
+    prop: v.optional(v.array(vModelWithReadOnlyAndWriteOnlyWritable)),
     propWithFile: v.optional(v.array(v.string())),
     propWithNumber: v.optional(v.array(v.number()))
 });
@@ -868,6 +868,11 @@ export const vModelWithNestedCompositionEnums = v.object({
     foo: v.optional(vModelWithNestedArrayEnumsDataFoo)
 });
 
+export const vModelWithReadOnlyAndWriteOnly = v.object({
+    foo: v.string(),
+    bar: v.pipe(v.string(), v.readonly())
+});
+
 export const vModelWithConstantSizeArray = v.tuple([
     v.number(),
     v.number()
@@ -1103,11 +1108,6 @@ export const vModelWithPatternWritable = v.object({
 
 export const vFileWritable = v.object({
     mime: v.pipe(v.string(), v.minLength(1), v.maxLength(24))
-});
-
-export const vModelWithReadOnlyAndWriteOnlyWritable = v.object({
-    foo: v.string(),
-    baz: v.string()
 });
 
 export const vAdditionalPropertiesUnknownIssueWritable = v.object({});
