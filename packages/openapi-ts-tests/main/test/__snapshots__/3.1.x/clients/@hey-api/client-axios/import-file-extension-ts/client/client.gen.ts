@@ -116,6 +116,7 @@ export const createClient = (config: Config = {}): Client => {
       }
 
       if (typeof error === 'object' && error !== null) {
+        // @ts-ignore
         error.error = {};
         return error;
       }
