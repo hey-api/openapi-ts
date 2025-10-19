@@ -215,48 +215,48 @@ export type AssistantStreamEvent =
     } & ErrorEvent);
 
 export const AssistantSupportedModels = {
-  GPT_4O: 'gpt-4o',
-  GPT_4O_2024_05_13: 'gpt-4o-2024-05-13',
-  GPT_4O_2024_08_06: 'gpt-4o-2024-08-06',
-  GPT_4O_2024_11_20: 'gpt-4o-2024-11-20',
   GPT_4_1: 'gpt-4.1',
-  GPT_4O_MINI: 'gpt-4o-mini',
   GPT_4_1_2025_04_14: 'gpt-4.1-2025-04-14',
-  GPT_4O_MINI_2024_07_18: 'gpt-4o-mini-2024-07-18',
   GPT_4_1_MINI: 'gpt-4.1-mini',
-  GPT_4_0125_PREVIEW: 'gpt-4-0125-preview',
   GPT_4_1_MINI_2025_04_14: 'gpt-4.1-mini-2025-04-14',
-  GPT_4: 'gpt-4',
-  GPT_4_1_NANO: 'gpt-4.1-nano',
-  GPT_4_0314: 'gpt-4-0314',
   GPT_5: 'gpt-5',
-  GPT_4_0613: 'gpt-4-0613',
+  GPT_4_1_NANO: 'gpt-4.1-nano',
   GPT_5_2025_08_07: 'gpt-5-2025-08-07',
-  GPT_3_5_TURBO: 'gpt-3.5-turbo',
+  GPT_4O: 'gpt-4o',
   GPT_5_MINI: 'gpt-5-mini',
-  GPT_3_5_TURBO_0613: 'gpt-3.5-turbo-0613',
+  GPT_4O_2024_08_06: 'gpt-4o-2024-08-06',
   GPT_5_MINI_2025_08_07: 'gpt-5-mini-2025-08-07',
-  GPT_3_5_TURBO_0125: 'gpt-3.5-turbo-0125',
+  GPT_4O_2024_05_13: 'gpt-4o-2024-05-13',
   GPT_5_NANO: 'gpt-5-nano',
-  GPT_3_5_TURBO_1106: 'gpt-3.5-turbo-1106',
-  GPT_3_5_TURBO_16K: 'gpt-3.5-turbo-16k',
+  GPT_4O_2024_11_20: 'gpt-4o-2024-11-20',
+  GPT_4O_MINI: 'gpt-4o-mini',
   GPT_5_NANO_2025_08_07: 'gpt-5-nano-2025-08-07',
-  GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
+  GPT_4O_MINI_2024_07_18: 'gpt-4o-mini-2024-07-18',
   GPT_4_1_NANO_2025_04_14: 'gpt-4.1-nano-2025-04-14',
-  GPT_4_1106_PREVIEW: 'gpt-4-1106-preview',
+  GPT_4_0125_PREVIEW: 'gpt-4-0125-preview',
   O1: 'o1',
-  GPT_4_32K: 'gpt-4-32k',
+  GPT_4: 'gpt-4',
   O3_MINI: 'o3-mini',
-  GPT_4_32K_0314: 'gpt-4-32k-0314',
+  GPT_4_0314: 'gpt-4-0314',
   O3_MINI_2025_01_31: 'o3-mini-2025-01-31',
-  GPT_4_32K_0613: 'gpt-4-32k-0613',
+  GPT_4_0613: 'gpt-4-0613',
   O1_2024_12_17: 'o1-2024-12-17',
+  GPT_3_5_TURBO: 'gpt-3.5-turbo',
+  GPT_4_1106_PREVIEW: 'gpt-4-1106-preview',
+  GPT_3_5_TURBO_0613: 'gpt-3.5-turbo-0613',
   GPT_4_5_PREVIEW: 'gpt-4.5-preview',
+  GPT_3_5_TURBO_0125: 'gpt-3.5-turbo-0125',
   GPT_4_5_PREVIEW_2025_02_27: 'gpt-4.5-preview-2025-02-27',
+  GPT_3_5_TURBO_1106: 'gpt-3.5-turbo-1106',
   GPT_4_TURBO: 'gpt-4-turbo',
+  GPT_3_5_TURBO_16K: 'gpt-3.5-turbo-16k',
   GPT_4_TURBO_2024_04_09: 'gpt-4-turbo-2024-04-09',
+  GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
   GPT_4_TURBO_PREVIEW: 'gpt-4-turbo-preview',
+  GPT_4_32K: 'gpt-4-32k',
   GPT_4_VISION_PREVIEW: 'gpt-4-vision-preview',
+  GPT_4_32K_0314: 'gpt-4-32k-0314',
+  GPT_4_32K_0613: 'gpt-4-32k-0613',
 } as const;
 
 export type AssistantSupportedModels =
@@ -540,19 +540,6 @@ export type AuditLog = {
    */
   effective_at: number;
   /**
-   * The ID of this log.
-   */
-  id: string;
-  /**
-   * The details for events with this `type`.
-   */
-  'invite.accepted'?: {
-    /**
-     * The ID of the invite.
-     */
-    id?: string;
-  };
-  /**
    * The details for events with this `type`.
    */
   'invite.deleted'?: {
@@ -564,37 +551,11 @@ export type AuditLog = {
   /**
    * The details for events with this `type`.
    */
-  'invite.sent'?: {
-    /**
-     * The payload used to create the invite.
-     */
-    data?: {
-      /**
-       * The email invited to the organization.
-       */
-      email?: string;
-      /**
-       * The role the email was invited to be. Is either `owner` or `member`.
-       */
-      role?: string;
-    };
+  'invite.accepted'?: {
     /**
      * The ID of the invite.
      */
     id?: string;
-  };
-  /**
-   * The details for events with this `type`.
-   */
-  'login.failed'?: {
-    /**
-     * The error code of the failure.
-     */
-    error_code?: string;
-    /**
-     * The error message of the failure.
-     */
-    error_message?: string;
   };
   /**
    * The details for events with this `type`.
@@ -618,13 +579,9 @@ export type AuditLog = {
      */
     changes_requested?: {
       /**
-       * How your organization logs data from supported API calls. One of `disabled`, `enabled_per_call`, `enabled_for_all_projects`, or `enabled_for_selected_projects`
+       * The organization title.
        */
-      api_call_logging?: string;
-      /**
-       * The list of project ids if api_call_logging is set to `enabled_for_selected_projects`
-       */
-      api_call_logging_project_ids?: string;
+      title?: string;
       /**
        * The organization description.
        */
@@ -638,38 +595,20 @@ export type AuditLog = {
        */
       threads_ui_visibility?: string;
       /**
-       * The organization title.
-       */
-      title?: string;
-      /**
        * Visibility of the usage dashboard which shows activity and costs for your organization. One of `ANY_ROLE` or `OWNERS`.
        */
       usage_dashboard_visibility?: string;
+      /**
+       * How your organization logs data from supported API calls. One of `disabled`, `enabled_per_call`, `enabled_for_all_projects`, or `enabled_for_selected_projects`
+       */
+      api_call_logging?: string;
+      /**
+       * The list of project ids if api_call_logging is set to `enabled_for_selected_projects`
+       */
+      api_call_logging_project_ids?: string;
     };
     /**
      * The organization ID.
-     */
-    id?: string;
-  };
-  /**
-   * The project that the action was scoped to. Absent for actions not scoped to projects. Note that any admin actions taken via Admin API keys are associated with the default project.
-   */
-  project?: {
-    /**
-     * The project ID.
-     */
-    id?: string;
-    /**
-     * The project title.
-     */
-    name?: string;
-  };
-  /**
-   * The details for events with this `type`.
-   */
-  'project.archived'?: {
-    /**
-     * The project ID.
      */
     id?: string;
   };
@@ -725,6 +664,98 @@ export type AuditLog = {
   /**
    * The details for events with this `type`.
    */
+  'rate_limit.updated'?: {
+    /**
+     * The rate limit ID
+     */
+    id?: string;
+    /**
+     * The payload used to update the rate limits.
+     */
+    changes_requested?: {
+      /**
+       * The maximum requests per minute.
+       */
+      max_requests_per_1_minute?: number;
+      /**
+       * The maximum tokens per minute.
+       */
+      max_tokens_per_1_minute?: number;
+      /**
+       * The maximum images per minute. Only relevant for certain models.
+       */
+      max_images_per_1_minute?: number;
+      /**
+       * The maximum audio megabytes per minute. Only relevant for certain models.
+       */
+      max_audio_megabytes_per_1_minute?: number;
+      /**
+       * The maximum requests per day. Only relevant for certain models.
+       */
+      max_requests_per_1_day?: number;
+      /**
+       * The maximum batch input tokens per day. Only relevant for certain models.
+       */
+      batch_1_day_max_input_tokens?: number;
+    };
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'project.archived'?: {
+    /**
+     * The project ID.
+     */
+    id?: string;
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'service_account.created'?: {
+    /**
+     * The payload used to create the service account.
+     */
+    data?: {
+      /**
+       * The role of the service account. Is either `owner` or `member`.
+       */
+      role?: string;
+    };
+    /**
+     * The service account ID.
+     */
+    id?: string;
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'service_account.updated'?: {
+    /**
+     * The payload used to updated the service account.
+     */
+    changes_requested?: {
+      /**
+       * The role of the service account. Is either `owner` or `member`.
+       */
+      role?: string;
+    };
+    /**
+     * The service account ID.
+     */
+    id?: string;
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'user.deleted'?: {
+    /**
+     * The user ID.
+     */
+    id?: string;
+  };
+  /**
+   * The details for events with this `type`.
+   */
   'user.added'?: {
     /**
      * The user ID.
@@ -768,86 +799,55 @@ export type AuditLog = {
     id?: string;
   };
   /**
-   * The details for events with this `type`.
+   * The ID of this log.
    */
-  'service_account.updated'?: {
-    /**
-     * The payload used to updated the service account.
-     */
-    changes_requested?: {
-      /**
-       * The role of the service account. Is either `owner` or `member`.
-       */
-      role?: string;
-    };
-    /**
-     * The service account ID.
-     */
-    id?: string;
-  };
+  id: string;
   /**
-   * The details for events with this `type`.
+   * The project that the action was scoped to. Absent for actions not scoped to projects. Note that any admin actions taken via Admin API keys are associated with the default project.
    */
-  'rate_limit.updated'?: {
+  project?: {
     /**
-     * The payload used to update the rate limits.
-     */
-    changes_requested?: {
-      /**
-       * The maximum requests per minute.
-       */
-      max_requests_per_1_minute?: number;
-      /**
-       * The maximum tokens per minute.
-       */
-      max_tokens_per_1_minute?: number;
-      /**
-       * The maximum images per minute. Only relevant for certain models.
-       */
-      max_images_per_1_minute?: number;
-      /**
-       * The maximum audio megabytes per minute. Only relevant for certain models.
-       */
-      max_audio_megabytes_per_1_minute?: number;
-      /**
-       * The maximum requests per day. Only relevant for certain models.
-       */
-      max_requests_per_1_day?: number;
-      /**
-       * The maximum batch input tokens per day. Only relevant for certain models.
-       */
-      batch_1_day_max_input_tokens?: number;
-    };
-    /**
-     * The rate limit ID
+     * The project ID.
      */
     id?: string;
+    /**
+     * The project title.
+     */
+    name?: string;
   };
   type: AuditLogEventType;
   /**
    * The details for events with this `type`.
    */
-  'service_account.created'?: {
+  'login.failed'?: {
     /**
-     * The payload used to create the service account.
+     * The error code of the failure.
      */
-    data?: {
-      /**
-       * The role of the service account. Is either `owner` or `member`.
-       */
-      role?: string;
-    };
+    error_code?: string;
     /**
-     * The service account ID.
+     * The error message of the failure.
      */
-    id?: string;
+    error_message?: string;
   };
   /**
    * The details for events with this `type`.
    */
-  'user.deleted'?: {
+  'invite.sent'?: {
     /**
-     * The user ID.
+     * The payload used to create the invite.
+     */
+    data?: {
+      /**
+       * The email invited to the organization.
+       */
+      email?: string;
+      /**
+       * The role the email was invited to be. Is either `owner` or `member`.
+       */
+      role?: string;
+    };
+    /**
+     * The ID of the invite.
      */
     id?: string;
   };
@@ -1018,22 +1018,22 @@ export type Batch = {
   finalizing_at?: number;
   id: string;
   /**
+   * The ID of the file containing the outputs of successfully executed requests.
+   */
+  output_file_id?: string;
+  /**
    * The Unix timestamp (in seconds) for when the batch started processing.
    */
   in_progress_at?: number;
-  /**
-   * The ID of the input file for the batch.
-   */
-  input_file_id: string;
   metadata?: Metadata;
   /**
    * The object type, which is always `batch`.
    */
   object: 'batch';
   /**
-   * The ID of the file containing the outputs of successfully executed requests.
+   * The ID of the input file for the batch.
    */
-  output_file_id?: string;
+  input_file_id: string;
   request_counts?: BatchRequestCounts;
   /**
    * The current status of the batch.
@@ -2910,27 +2910,41 @@ export type CreateChatCompletionRequest = CreateModelResponseProperties & {
    */
   model: ModelIdsShared;
   /**
+   * Web search
+   *
+   * This tool searches the web for relevant results to use in a response.
+   * Learn more about the [web search tool](https://platform.openai.com/docs/guides/tools-web-search?api-mode=chat).
+   *
+   */
+  web_search_options?: {
+    /**
+     * Approximate location parameters for the search.
+     *
+     */
+    user_location?: {
+      /**
+       * The type of location approximation. Always `approximate`.
+       *
+       */
+      type: 'approximate';
+      approximate: WebSearchLocation;
+    };
+    search_context_size?: WebSearchContextSize;
+  };
+  parallel_tool_calls?: ParallelToolCalls;
+  /**
+   * If set to true, the model response data will be streamed to the client
+   * as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
+   * See the [Streaming section below](https://platform.openai.com/docs/api-reference/chat/streaming)
+   * for more information, along with the [streaming responses](https://platform.openai.com/docs/guides/streaming-responses)
+   * guide for more information on how to handle the streaming events.
+   *
+   */
+  stream?: boolean;
+  /**
    * How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs.
    */
   n?: number;
-  parallel_tool_calls?: ParallelToolCalls;
-  /**
-   * Configuration for a [Predicted Output](https://platform.openai.com/docs/guides/predicted-outputs),
-   * which can greatly improve response times when large parts of the model
-   * response are known ahead of time. This is most common when you are
-   * regenerating a file with only minor changes to most of the content.
-   *
-   */
-  prediction?: {
-    type?: 'PredictionContent';
-  } & PredictionContent;
-  /**
-   * Number between -2.0 and 2.0. Positive values penalize new tokens based on
-   * whether they appear in the text so far, increasing the model's likelihood
-   * to talk about new topics.
-   *
-   */
-  presence_penalty?: number;
   reasoning_effort?: ReasoningEffort;
   /**
    * An object specifying the format that the model must output.
@@ -2969,14 +2983,12 @@ export type CreateChatCompletionRequest = CreateModelResponseProperties & {
    */
   store?: boolean;
   /**
-   * If set to true, the model response data will be streamed to the client
-   * as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
-   * See the [Streaming section below](https://platform.openai.com/docs/api-reference/chat/streaming)
-   * for more information, along with the [streaming responses](https://platform.openai.com/docs/guides/streaming-responses)
-   * guide for more information on how to handle the streaming events.
+   * Number between -2.0 and 2.0. Positive values penalize new tokens based on
+   * whether they appear in the text so far, increasing the model's likelihood
+   * to talk about new topics.
    *
    */
-  stream?: boolean;
+  presence_penalty?: number;
   stream_options?: ChatCompletionStreamOptions;
   tool_choice?: ChatCompletionToolChoiceOption;
   /**
@@ -2994,6 +3006,16 @@ export type CreateChatCompletionRequest = CreateModelResponseProperties & {
       } & CustomToolChatCompletions)
   >;
   /**
+   * Configuration for a [Predicted Output](https://platform.openai.com/docs/guides/predicted-outputs),
+   * which can greatly improve response times when large parts of the model
+   * response are known ahead of time. This is most common when you are
+   * regenerating a file with only minor changes to most of the content.
+   *
+   */
+  prediction?: {
+    type?: 'PredictionContent';
+  } & PredictionContent;
+  /**
    * An integer between 0 and 20 specifying the number of most likely tokens to
    * return at each token position, each with an associated log probability.
    * `logprobs` must be set to `true` if this parameter is used.
@@ -3001,28 +3023,6 @@ export type CreateChatCompletionRequest = CreateModelResponseProperties & {
    */
   top_logprobs?: number;
   verbosity?: Verbosity;
-  /**
-   * Web search
-   *
-   * This tool searches the web for relevant results to use in a response.
-   * Learn more about the [web search tool](https://platform.openai.com/docs/guides/tools-web-search?api-mode=chat).
-   *
-   */
-  web_search_options?: {
-    search_context_size?: WebSearchContextSize;
-    /**
-     * Approximate location parameters for the search.
-     *
-     */
-    user_location?: {
-      approximate: WebSearchLocation;
-      /**
-       * The type of location approximation. Always `approximate`.
-       *
-       */
-      type: 'approximate';
-    };
-  };
 };
 
 /**
@@ -5824,21 +5824,21 @@ export type EvalRun = {
      */
     completion_tokens: number;
     /**
-     * The number of invocations.
-     */
-    invocation_count: number;
-    /**
-     * The name of the model.
-     */
-    model_name: string;
-    /**
      * The number of prompt tokens used.
      */
     prompt_tokens: number;
     /**
+     * The number of invocations.
+     */
+    invocation_count: number;
+    /**
      * The total number of tokens used.
      */
     total_tokens: number;
+    /**
+     * The name of the model.
+     */
+    model_name: string;
   }>;
   /**
    * Results per testing criteria applied during the evaluation run.
@@ -5870,6 +5870,10 @@ export type EvalRun = {
      */
     errored: number;
     /**
+     * Total number of executed output items.
+     */
+    total: number;
+    /**
      * Number of output items that failed to pass the evaluation.
      */
     failed: number;
@@ -5877,10 +5881,6 @@ export type EvalRun = {
      * Number of output items that passed the evaluation.
      */
     passed: number;
-    /**
-     * Total number of executed output items.
-     */
-    total: number;
   };
   /**
    * The status of the evaluation run.
@@ -6633,6 +6633,10 @@ export type FineTuningJob = {
    */
   result_files: Array<string>;
   /**
+   * The total number of billable tokens processed by this fine-tuning job. The value will be null if the fine-tuning job is still running.
+   */
+  trained_tokens: number;
+  /**
    * The seed used for the fine-tuning job.
    */
   seed: number;
@@ -6647,17 +6651,13 @@ export type FineTuningJob = {
     | 'failed'
     | 'cancelled';
   /**
-   * The total number of billable tokens processed by this fine-tuning job. The value will be null if the fine-tuning job is still running.
+   * The file ID used for validation. You can retrieve the validation results with the [Files API](https://platform.openai.com/docs/api-reference/files/retrieve-contents).
    */
-  trained_tokens: number;
+  validation_file: string;
   /**
    * The file ID used for training. You can retrieve the training data with the [Files API](https://platform.openai.com/docs/api-reference/files/retrieve-contents).
    */
   training_file: string;
-  /**
-   * The file ID used for validation. You can retrieve the validation results with the [Files API](https://platform.openai.com/docs/api-reference/files/retrieve-contents).
-   */
-  validation_file: string;
 };
 
 /**
@@ -10146,13 +10146,13 @@ export type RealtimeResponse = {
      */
     error?: {
       /**
-       * Error code, if any.
-       */
-      code?: string;
-      /**
        * The type of error.
        */
       type?: string;
+      /**
+       * Error code, if any.
+       */
+      code?: string;
     };
     /**
      * The reason the Response did not complete. For a `cancelled` Response,
@@ -10193,10 +10193,6 @@ export type RealtimeResponse = {
      */
     input_token_details?: {
       /**
-       * The number of audio tokens used in the Response.
-       */
-      audio_tokens?: number;
-      /**
        * The number of cached tokens used in the Response.
        */
       cached_tokens?: number;
@@ -10204,6 +10200,10 @@ export type RealtimeResponse = {
        * The number of text tokens used in the Response.
        */
       text_tokens?: number;
+      /**
+       * The number of audio tokens used in the Response.
+       */
+      audio_tokens?: number;
     };
     /**
      * The number of input tokens used in the Response, including text and
@@ -10211,6 +10211,18 @@ export type RealtimeResponse = {
      *
      */
     input_tokens?: number;
+    /**
+     * The number of output tokens sent in the Response, including text and
+     * audio tokens.
+     *
+     */
+    output_tokens?: number;
+    /**
+     * The total number of tokens in the Response including input and output
+     * text and audio tokens.
+     *
+     */
+    total_tokens?: number;
     /**
      * Details about the output tokens used in the Response.
      */
@@ -10224,18 +10236,6 @@ export type RealtimeResponse = {
        */
       text_tokens?: number;
     };
-    /**
-     * The number of output tokens sent in the Response, including text and
-     * audio tokens.
-     *
-     */
-    output_tokens?: number;
-    /**
-     * The total number of tokens in the Response including input and output
-     * text and audio tokens.
-     *
-     */
-    total_tokens?: number;
   };
   /**
    * The voice the model used to respond.
@@ -12996,24 +12996,24 @@ export type ResponseError = {
  *
  */
 export const ResponseErrorCode = {
-  EMPTY_IMAGE_FILE: 'empty_image_file',
-  FAILED_TO_DOWNLOAD_IMAGE: 'failed_to_download_image',
-  IMAGE_CONTENT_POLICY_VIOLATION: 'image_content_policy_violation',
-  IMAGE_FILE_NOT_FOUND: 'image_file_not_found',
-  IMAGE_FILE_TOO_LARGE: 'image_file_too_large',
-  IMAGE_PARSE_ERROR: 'image_parse_error',
   IMAGE_TOO_LARGE: 'image_too_large',
-  IMAGE_TOO_SMALL: 'image_too_small',
+  IMAGE_PARSE_ERROR: 'image_parse_error',
   INVALID_BASE64_IMAGE: 'invalid_base64_image',
+  IMAGE_CONTENT_POLICY_VIOLATION: 'image_content_policy_violation',
   INVALID_IMAGE: 'invalid_image',
+  IMAGE_FILE_TOO_LARGE: 'image_file_too_large',
+  INVALID_PROMPT: 'invalid_prompt',
+  EMPTY_IMAGE_FILE: 'empty_image_file',
+  RATE_LIMIT_EXCEEDED: 'rate_limit_exceeded',
+  FAILED_TO_DOWNLOAD_IMAGE: 'failed_to_download_image',
+  SERVER_ERROR: 'server_error',
+  IMAGE_FILE_NOT_FOUND: 'image_file_not_found',
+  IMAGE_TOO_SMALL: 'image_too_small',
+  VECTOR_STORE_TIMEOUT: 'vector_store_timeout',
   INVALID_IMAGE_FORMAT: 'invalid_image_format',
   INVALID_IMAGE_MODE: 'invalid_image_mode',
   INVALID_IMAGE_URL: 'invalid_image_url',
-  INVALID_PROMPT: 'invalid_prompt',
-  RATE_LIMIT_EXCEEDED: 'rate_limit_exceeded',
-  SERVER_ERROR: 'server_error',
   UNSUPPORTED_IMAGE_MEDIA_TYPE: 'unsupported_image_media_type',
-  VECTOR_STORE_TIMEOUT: 'vector_store_timeout',
 } as const;
 
 /**
@@ -14719,10 +14719,10 @@ export type RunGraderResponse = {
       python_grader_runtime_error: boolean;
       python_grader_runtime_error_details: string;
       python_grader_server_error: boolean;
-      python_grader_server_error_type: string;
       sample_parse_error: boolean;
-      truncated_observation_error: boolean;
       unresponsive_reward_error: boolean;
+      truncated_observation_error: boolean;
+      python_grader_server_error_type: string;
     };
     execution_time: number;
     name: string;
@@ -14803,10 +14803,9 @@ export type RunObject = {
     message: string;
   };
   /**
-   * The maximum number of completion tokens specified to have been used over the course of the run.
-   *
+   * The Unix timestamp (in seconds) for when the run was started.
    */
-  max_completion_tokens: number;
+  started_at: number;
   /**
    * The maximum number of prompt tokens specified to have been used over the course of the run.
    *
@@ -14841,30 +14840,31 @@ export type RunObject = {
     type: 'submit_tool_outputs';
   };
   response_format: AssistantsApiResponseFormatOption;
-  /**
-   * The Unix timestamp (in seconds) for when the run was started.
-   */
-  started_at: number;
+  usage: RunCompletionUsage;
   status: RunStatus;
   /**
    * The sampling temperature used for this run. If not set, defaults to 1.
    */
   temperature?: number;
   /**
-   * The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was executed on as a part of this run.
+   * The maximum number of completion tokens specified to have been used over the course of the run.
+   *
    */
-  thread_id: string;
+  max_completion_tokens: number;
   tool_choice: AssistantsApiToolChoiceOption & unknown;
+  truncation_strategy: TruncationObject & unknown;
+  /**
+   * The nucleus sampling value used for this run. If not set, defaults to 1.
+   */
+  top_p?: number;
   /**
    * The list of tools that the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for this run.
    */
   tools: Array<AssistantTool>;
   /**
-   * The nucleus sampling value used for this run. If not set, defaults to 1.
+   * The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was executed on as a part of this run.
    */
-  top_p?: number;
-  truncation_strategy: TruncationObject & unknown;
-  usage: RunCompletionUsage;
+  thread_id: string;
 };
 
 /**
@@ -15353,13 +15353,13 @@ export type RunStepObject = {
         type?: 'RunStepDetailsToolCallsObject';
       } & RunStepDetailsToolCallsObject);
   /**
-   * The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was run.
-   */
-  thread_id: string;
-  /**
    * The type of run step, which can be either `message_creation` or `tool_calls`.
    */
   type: 'message_creation' | 'tool_calls';
+  /**
+   * The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was run.
+   */
+  thread_id: string;
   usage: RunStepCompletionUsage;
 };
 
@@ -18393,67 +18393,67 @@ export type MessageContentDelta =
 export const ChatModel = {
   GPT_4_1: 'gpt-4.1',
   GPT_4_1_2025_04_14: 'gpt-4.1-2025-04-14',
-  GPT_4_1_MINI: 'gpt-4.1-mini',
-  GPT_4_1_MINI_2025_04_14: 'gpt-4.1-mini-2025-04-14',
-  GPT_4_1_NANO: 'gpt-4.1-nano',
-  GPT_4O: 'gpt-4o',
-  GPT_4_1_NANO_2025_04_14: 'gpt-4.1-nano-2025-04-14',
-  GPT_4O_2024_08_06: 'gpt-4o-2024-08-06',
   GPT_5: 'gpt-5',
-  GPT_4O_2024_05_13: 'gpt-4o-2024-05-13',
+  GPT_4_1_MINI: 'gpt-4.1-mini',
   GPT_5_2025_08_07: 'gpt-5-2025-08-07',
-  GPT_4O_2024_11_20: 'gpt-4o-2024-11-20',
+  GPT_4_1_MINI_2025_04_14: 'gpt-4.1-mini-2025-04-14',
   GPT_5_CHAT_LATEST: 'gpt-5-chat-latest',
-  GPT_4O_AUDIO_PREVIEW: 'gpt-4o-audio-preview',
+  GPT_4_1_NANO: 'gpt-4.1-nano',
   GPT_5_MINI: 'gpt-5-mini',
-  GPT_4O_AUDIO_PREVIEW_2024_10_01: 'gpt-4o-audio-preview-2024-10-01',
+  GPT_4_1_NANO_2025_04_14: 'gpt-4.1-nano-2025-04-14',
   GPT_5_MINI_2025_08_07: 'gpt-5-mini-2025-08-07',
-  GPT_4O_AUDIO_PREVIEW_2024_12_17: 'gpt-4o-audio-preview-2024-12-17',
   GPT_5_NANO: 'gpt-5-nano',
-  GPT_4O_AUDIO_PREVIEW_2025_06_03: 'gpt-4o-audio-preview-2025-06-03',
   GPT_5_NANO_2025_08_07: 'gpt-5-nano-2025-08-07',
-  CHATGPT_4O_LATEST: 'chatgpt-4o-latest',
   O1: 'o1',
-  CODEX_MINI_LATEST: 'codex-mini-latest',
   O1_2024_12_17: 'o1-2024-12-17',
-  GPT_4O_MINI: 'gpt-4o-mini',
+  GPT_4O: 'gpt-4o',
   O1_MINI: 'o1-mini',
-  GPT_4O_MINI_2024_07_18: 'gpt-4o-mini-2024-07-18',
+  GPT_4O_2024_08_06: 'gpt-4o-2024-08-06',
   O3: 'o3',
-  GPT_4: 'gpt-4',
+  GPT_4O_2024_05_13: 'gpt-4o-2024-05-13',
   O3_2025_04_16: 'o3-2025-04-16',
-  GPT_4O_MINI_AUDIO_PREVIEW: 'gpt-4o-mini-audio-preview',
+  GPT_4O_2024_11_20: 'gpt-4o-2024-11-20',
   O4_MINI: 'o4-mini',
-  GPT_4O_MINI_AUDIO_PREVIEW_2024_12_17: 'gpt-4o-mini-audio-preview-2024-12-17',
+  GPT_4O_AUDIO_PREVIEW: 'gpt-4o-audio-preview',
   O4_MINI_2025_04_16: 'o4-mini-2025-04-16',
-  GPT_3_5_TURBO: 'gpt-3.5-turbo',
+  GPT_4O_AUDIO_PREVIEW_2024_10_01: 'gpt-4o-audio-preview-2024-10-01',
   O3_MINI: 'o3-mini',
-  GPT_3_5_TURBO_0301: 'gpt-3.5-turbo-0301',
+  GPT_4O_AUDIO_PREVIEW_2024_12_17: 'gpt-4o-audio-preview-2024-12-17',
   O3_MINI_2025_01_31: 'o3-mini-2025-01-31',
-  GPT_3_5_TURBO_0613: 'gpt-3.5-turbo-0613',
+  GPT_4O_AUDIO_PREVIEW_2025_06_03: 'gpt-4o-audio-preview-2025-06-03',
   O1_PREVIEW: 'o1-preview',
-  GPT_3_5_TURBO_0125: 'gpt-3.5-turbo-0125',
+  CHATGPT_4O_LATEST: 'chatgpt-4o-latest',
   O1_PREVIEW_2024_09_12: 'o1-preview-2024-09-12',
-  GPT_3_5_TURBO_1106: 'gpt-3.5-turbo-1106',
+  CODEX_MINI_LATEST: 'codex-mini-latest',
   O1_MINI_2024_09_12: 'o1-mini-2024-09-12',
-  GPT_3_5_TURBO_16K: 'gpt-3.5-turbo-16k',
+  GPT_4O_MINI: 'gpt-4o-mini',
+  GPT_4O_MINI_2024_07_18: 'gpt-4o-mini-2024-07-18',
+  GPT_4O_MINI_AUDIO_PREVIEW: 'gpt-4o-mini-audio-preview',
+  GPT_4O_MINI_AUDIO_PREVIEW_2024_12_17: 'gpt-4o-mini-audio-preview-2024-12-17',
+  GPT_4: 'gpt-4',
   GPT_4O_MINI_SEARCH_PREVIEW: 'gpt-4o-mini-search-preview',
-  GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
   GPT_4O_MINI_SEARCH_PREVIEW_2025_03_11:
     'gpt-4o-mini-search-preview-2025-03-11',
   GPT_4O_SEARCH_PREVIEW: 'gpt-4o-search-preview',
   GPT_4O_SEARCH_PREVIEW_2025_03_11: 'gpt-4o-search-preview-2025-03-11',
   GPT_4_0125_PREVIEW: 'gpt-4-0125-preview',
+  GPT_3_5_TURBO: 'gpt-3.5-turbo',
   GPT_4_0314: 'gpt-4-0314',
+  GPT_3_5_TURBO_0301: 'gpt-3.5-turbo-0301',
   GPT_4_0613: 'gpt-4-0613',
+  GPT_3_5_TURBO_0613: 'gpt-3.5-turbo-0613',
   GPT_4_1106_PREVIEW: 'gpt-4-1106-preview',
+  GPT_3_5_TURBO_0125: 'gpt-3.5-turbo-0125',
+  GPT_4_TURBO: 'gpt-4-turbo',
+  GPT_3_5_TURBO_1106: 'gpt-3.5-turbo-1106',
+  GPT_4_TURBO_2024_04_09: 'gpt-4-turbo-2024-04-09',
+  GPT_3_5_TURBO_16K: 'gpt-3.5-turbo-16k',
+  GPT_4_TURBO_PREVIEW: 'gpt-4-turbo-preview',
+  GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
+  GPT_4_VISION_PREVIEW: 'gpt-4-vision-preview',
   GPT_4_32K: 'gpt-4-32k',
   GPT_4_32K_0314: 'gpt-4-32k-0314',
   GPT_4_32K_0613: 'gpt-4-32k-0613',
-  GPT_4_TURBO: 'gpt-4-turbo',
-  GPT_4_TURBO_2024_04_09: 'gpt-4-turbo-2024-04-09',
-  GPT_4_TURBO_PREVIEW: 'gpt-4-turbo-preview',
-  GPT_4_VISION_PREVIEW: 'gpt-4-vision-preview',
 } as const;
 
 export type ChatModel = (typeof ChatModel)[keyof typeof ChatModel];
