@@ -23,11 +23,11 @@ jobs:
         os: [ubuntu-latest]
         node-version: ['24.10.0']
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
 
       - uses: pnpm/action-setup@v4.1.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
