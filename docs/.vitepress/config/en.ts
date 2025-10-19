@@ -112,6 +112,14 @@ export default defineConfig({
                 text: 'Effect <span data-soon>soon</span>',
               },
               {
+                link: '/openapi-ts/clients/got',
+                text: 'Got <span data-soon>soon</span>',
+              },
+              {
+                link: '/openapi-ts/clients/ky',
+                text: 'Ky <span data-soon>soon</span>',
+              },
+              {
                 link: '/openapi-ts/clients/legacy',
                 text: 'Legacy',
               },
