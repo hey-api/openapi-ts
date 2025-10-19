@@ -1503,7 +1503,7 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
       zod:
-        specifier: ^3
+        specifier: ^3.25.0
         version: 3.25.3
 
   packages/openapi-ts-tests/zod/v4:
