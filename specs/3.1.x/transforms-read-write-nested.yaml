@@ -1,0 +1,39 @@
+openapi: 3.0.3
+info:
+  title: writeOnly repro
+  version: 1.0.0
+paths:
+  /items:
+    post:
+      operationId: item_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateItemRequest'
+      responses:
+        '201':
+          description: Created
+components:
+  schemas:
+    CreateItemRequest:
+      type: object
+      required:
+        - payload
+      properties:
+        payload:
+          $ref: '#/components/schemas/Payload'
+    Payload:
+      type: object
+      required:
+        - kind
+        - encoded
+      properties:
+        kind:
+          type: string
+          enum: [jpeg]
+        encoded:
+          type: string
+          writeOnly: true
+          description: Data required on write

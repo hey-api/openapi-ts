@@ -630,6 +630,29 @@ export const updateRefsInSpec = ({
             } else if (map.write && (!nextContext || nextContext === 'write')) {
               (node as Record<string, unknown>)[key] = map.write;
             }
+          } else if (
+            inSchema &&
+            nextContext &&
+            value.startsWith(schemasPointerNamespace)
+          ) {
+            // If we're in a schema with a defined context (read/write), follow the $ref
+            // to update nested $refs within the referenced schema
+            const schemasObj = getSchemasObject(spec);
+            if (schemasObj) {
+              const schemaName = value.substring(
+                schemasPointerNamespace.length,
+              );
+              const referencedSchema = schemasObj[schemaName];
+              if (referencedSchema) {
+                walk({
+                  context: nextContext,
+                  currentPointer: value,
+                  inSchema: true,
+                  node: referencedSchema,
+                  path: value.split('/').filter(Boolean),
+                });
+              }
+            }
           }
         } else {
           walk({
