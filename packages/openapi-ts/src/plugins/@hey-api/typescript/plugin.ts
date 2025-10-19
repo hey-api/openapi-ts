@@ -9,17 +9,13 @@ import { refToName } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
 import { fieldName } from '../../shared/utils/case';
 import { createSchemaComment } from '../../shared/utils/schema';
+import type { SchemaWithType } from '../../zod/shared/types';
 import { createClientOptions } from './clientOptions';
 import { exportType } from './export';
 import { operationToType } from './operation';
 import type { HeyApiTypeScriptPlugin } from './types';
 import { webhookToType } from './webhook';
 import { createWebhooks } from './webhooks';
-
-interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
-  extends Omit<IR.SchemaObject, 'type'> {
-  type: Extract<Required<IR.SchemaObject>['type'], T>;
-}
 
 const arrayTypeToIdentifier = ({
   plugin,
