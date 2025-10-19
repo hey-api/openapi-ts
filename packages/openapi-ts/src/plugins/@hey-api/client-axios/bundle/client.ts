@@ -110,16 +110,20 @@ export const createClient = (config: Config = {}): Client => {
       if (error instanceof AxiosError) {
         // @ts-expect-error
         error.error = error.response?.data ?? {};
+        // @ts-expect-error
+        error.data = undefined;
         return error;
       }
 
       if (typeof error === 'object' && error !== null) {
         // @ts-ignore
         error.error = {};
+        // @ts-ignore
+        error.data = undefined;
         return error;
       }
 
-      return { error: {} };
+      return { data: undefined, error: {} };
     }
   };
 
