@@ -1,5 +1,21 @@
 # @hey-api/openapi-ts
 
+## 0.86.0
+
+### Minor Changes
+
+- feat: bump minimum Node version to 20.19.0 ([#2775](https://github.com/hey-api/openapi-ts/pull/2775)) ([`7c7702a`](https://github.com/hey-api/openapi-ts/commit/7c7702a9ed3bda0d75ef28d35d4284e3b6318b26)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+- fix: do not print error details if logs are set to silent ([#2776](https://github.com/hey-api/openapi-ts/pull/2776)) ([`2274344`](https://github.com/hey-api/openapi-ts/commit/227434440bc2d00f9336041d3b083fc9374f3639)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(client-axios): return error when axios request fails ([#2763](https://github.com/hey-api/openapi-ts/pull/2763)) ([`122a292`](https://github.com/hey-api/openapi-ts/commit/122a292e3a0293098e5c5e222e5dcf8e99639ba8)) by [@mauriciabad](https://github.com/mauriciabad)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.3.0
+
 ## 0.85.2
 
 ### Patch Changes
