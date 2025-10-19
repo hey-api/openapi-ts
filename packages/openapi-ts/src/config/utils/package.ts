@@ -35,10 +35,16 @@ export const packageFactory = (
 ): Package => ({
   getVersion: (name) => {
     const version = dependencies[name];
+    if (!version) return;
     try {
-      if (version) {
-        return semver.parse(version) || undefined;
-      }
+      let parsed = semver.parse(version);
+      if (parsed) return parsed;
+
+      const min = semver.minVersion(version);
+      if (min) return min;
+
+      parsed = semver.coerce(version);
+      if (parsed) return parsed;
     } catch {
       // noop
     }
