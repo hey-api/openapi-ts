@@ -32,6 +32,8 @@ Hey API natively supports the following clients.
 - [Nuxt](/openapi-ts/clients/nuxt)
 - [OFetch](/openapi-ts/clients/ofetch)
 - [Effect](/openapi-ts/clients/effect) <span data-soon>Soon</span>
+- [Got](/openapi-ts/clients/got) <span data-soon>Soon</span>
+- [Ky](/openapi-ts/clients/ky) <span data-soon>Soon</span>
 - [Legacy](/openapi-ts/clients/legacy)
 
 Don't see your client? [Build your own](/openapi-ts/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
