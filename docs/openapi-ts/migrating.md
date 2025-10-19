@@ -7,6 +7,12 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
+## v0.86.0
+
+### Removed Node 18 support
+
+This release bumps the minimum required Node version to 20.19.
+
 ## v0.85.0
 
 ### Updated `output` options
