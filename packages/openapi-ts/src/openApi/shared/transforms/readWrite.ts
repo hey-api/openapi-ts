@@ -483,6 +483,7 @@ export const updateRefsInSpec = ({
 }): void => {
   const event = logger.timeEvent('update-refs-in-spec');
   const schemasPointerNamespace = specToSchemasPointerNamespace(spec);
+  const globalVisited = new Set<string>(); // Track globally visited schemas to prevent multiple walks
 
   const walk = ({
     context,
@@ -634,21 +635,25 @@ export const updateRefsInSpec = ({
         } else if (key === '$ref' && typeof value === 'string') {
           // Prefer exact match first
           const map = split.mapping[value];
-          if (map) {
-            if (map.read && (!nextContext || nextContext === 'read')) {
+          if (map && nextContext) {
+            // Only update $refs when we have a clear read/write context
+            // This avoids defaulting to read variant when context is null
+            if (map.read && nextContext === 'read') {
               (node as Record<string, unknown>)[key] = map.read;
-            } else if (map.write && (!nextContext || nextContext === 'write')) {
+            } else if (map.write && nextContext === 'write') {
               (node as Record<string, unknown>)[key] = map.write;
             }
           } else if (
             inSchema &&
             nextContext &&
             value.startsWith(schemasPointerNamespace) &&
-            !visited.has(value)
+            !visited.has(value) &&
+            !globalVisited.has(value) // Prevent walking the same schema multiple times
           ) {
             // If we're in a schema with a defined context (read/write), follow the $ref
             // to update nested $refs within the referenced schema
-            // Use visited set to avoid infinite recursion on circular references
+            // Use visited set to avoid circular references, and global visited to prevent
+            // multiple walks of the same schema from different paths
             const schemasObj = getSchemasObject(spec);
             if (schemasObj) {
               const schemaName = value.substring(
@@ -658,6 +663,7 @@ export const updateRefsInSpec = ({
               if (referencedSchema) {
                 const newVisited = new Set(visited);
                 newVisited.add(value);
+                globalVisited.add(value); // Mark as globally visited
                 walk({
                   context: nextContext,
                   currentPointer: value,
