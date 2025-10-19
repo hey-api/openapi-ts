@@ -649,6 +649,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transforms-read-write-nested.yaml',
+        output: 'transforms-read-write-nested',
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'handles write-only types in nested schemas',
+    },
+    {
+      config: createConfig({
         input: 'ref-type.json',
         output: 'ref-type',
       }),
