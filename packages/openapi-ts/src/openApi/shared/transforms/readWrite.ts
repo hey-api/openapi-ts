@@ -462,6 +462,7 @@ type WalkArgs = {
   inSchema: boolean;
   node: unknown;
   path: ReadonlyArray<string | number>;
+  visited?: Set<string>;
 };
 
 /**
@@ -489,6 +490,7 @@ export const updateRefsInSpec = ({
     inSchema,
     node,
     path,
+    visited = new Set(),
   }: WalkArgs): void => {
     if (node instanceof Array) {
       node.forEach((item, index) =>
@@ -498,6 +500,7 @@ export const updateRefsInSpec = ({
           inSchema,
           node: item,
           path: [...path, index],
+          visited,
         }),
       );
     } else if (node && typeof node === 'object') {
@@ -533,6 +536,7 @@ export const updateRefsInSpec = ({
             inSchema: false,
             node: (node as Record<string, unknown>)[key],
             path: [...path, key],
+            visited,
           });
         }
         return;
@@ -553,6 +557,7 @@ export const updateRefsInSpec = ({
               inSchema: false,
               node: value,
               path: [...path, key],
+              visited,
             });
             continue;
           }
@@ -563,6 +568,7 @@ export const updateRefsInSpec = ({
               inSchema: false,
               node: value,
               path: [...path, key],
+              visited,
             });
             continue;
           }
@@ -575,6 +581,7 @@ export const updateRefsInSpec = ({
                   inSchema: true,
                   node: param.schema,
                   path: [...path, key, index, 'schema'],
+                  visited,
                 });
               }
               // Also handle content (OpenAPI 3.x)
@@ -585,6 +592,7 @@ export const updateRefsInSpec = ({
                   inSchema: false,
                   node: param.content,
                   path: [...path, key, index, 'content'],
+                  visited,
                 });
               }
             });
@@ -606,6 +614,7 @@ export const updateRefsInSpec = ({
                 inSchema: false,
                 node: (value as Record<string, unknown>)[headerKey],
                 path: [...path, key, headerKey],
+                visited,
               });
             }
             continue;
@@ -620,6 +629,7 @@ export const updateRefsInSpec = ({
             inSchema: true,
             node: value,
             path: [...path, key],
+            visited,
           });
         } else if (key === '$ref' && typeof value === 'string') {
           // Prefer exact match first
@@ -633,10 +643,12 @@ export const updateRefsInSpec = ({
           } else if (
             inSchema &&
             nextContext &&
-            value.startsWith(schemasPointerNamespace)
+            value.startsWith(schemasPointerNamespace) &&
+            !visited.has(value)
           ) {
             // If we're in a schema with a defined context (read/write), follow the $ref
             // to update nested $refs within the referenced schema
+            // Use visited set to avoid infinite recursion on circular references
             const schemasObj = getSchemasObject(spec);
             if (schemasObj) {
               const schemaName = value.substring(
@@ -644,12 +656,15 @@ export const updateRefsInSpec = ({
               );
               const referencedSchema = schemasObj[schemaName];
               if (referencedSchema) {
+                const newVisited = new Set(visited);
+                newVisited.add(value);
                 walk({
                   context: nextContext,
                   currentPointer: value,
                   inSchema: true,
                   node: referencedSchema,
                   path: value.split('/').filter(Boolean),
+                  visited: newVisited,
                 });
               }
             }
@@ -661,6 +676,7 @@ export const updateRefsInSpec = ({
             inSchema,
             node: value,
             path: [...path, key],
+            visited,
           });
         }
       }
