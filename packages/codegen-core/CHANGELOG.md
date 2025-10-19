@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.3.0
+
+### Minor Changes
+
+- feat: bump minimum Node version to 20.19.0 ([#2775](https://github.com/hey-api/openapi-ts/pull/2775)) ([`7c7702a`](https://github.com/hey-api/openapi-ts/commit/7c7702a9ed3bda0d75ef28d35d4284e3b6318b26)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.2.0
 
 ### Minor Changes
