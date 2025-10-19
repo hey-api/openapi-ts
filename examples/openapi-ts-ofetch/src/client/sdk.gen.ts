@@ -81,6 +81,7 @@ export type Options<
 
 /**
  * Add a new pet to the store.
+ *
  * Add a new pet to the store.
  */
 export const addPet = <ThrowOnError extends boolean = false>(
@@ -103,6 +104,7 @@ export const addPet = <ThrowOnError extends boolean = false>(
 
 /**
  * Update an existing pet.
+ *
  * Update an existing pet by Id.
  */
 export const updatePet = <ThrowOnError extends boolean = false>(
@@ -129,6 +131,7 @@ export const updatePet = <ThrowOnError extends boolean = false>(
 
 /**
  * Finds Pets by status.
+ *
  * Multiple status values can be provided with comma separated strings.
  */
 export const findPetsByStatus = <ThrowOnError extends boolean = false>(
@@ -151,6 +154,7 @@ export const findPetsByStatus = <ThrowOnError extends boolean = false>(
 
 /**
  * Finds Pets by tags.
+ *
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
 export const findPetsByTags = <ThrowOnError extends boolean = false>(
@@ -173,6 +177,7 @@ export const findPetsByTags = <ThrowOnError extends boolean = false>(
 
 /**
  * Deletes a pet.
+ *
  * Delete a pet.
  */
 export const deletePet = <ThrowOnError extends boolean = false>(
@@ -195,6 +200,7 @@ export const deletePet = <ThrowOnError extends boolean = false>(
 
 /**
  * Find pet by ID.
+ *
  * Returns a single pet.
  */
 export const getPetById = <ThrowOnError extends boolean = false>(
@@ -221,6 +227,7 @@ export const getPetById = <ThrowOnError extends boolean = false>(
 
 /**
  * Updates a pet in the store with form data.
+ *
  * Updates a pet resource based on the form data.
  */
 export const updatePetWithForm = <ThrowOnError extends boolean = false>(
@@ -243,6 +250,7 @@ export const updatePetWithForm = <ThrowOnError extends boolean = false>(
 
 /**
  * Uploads an image.
+ *
  * Upload image of the pet.
  */
 export const uploadFile = <ThrowOnError extends boolean = false>(
@@ -270,6 +278,7 @@ export const uploadFile = <ThrowOnError extends boolean = false>(
 
 /**
  * Returns pet inventories by status.
+ *
  * Returns a map of status codes to quantities.
  */
 export const getInventory = <ThrowOnError extends boolean = false>(
@@ -292,6 +301,7 @@ export const getInventory = <ThrowOnError extends boolean = false>(
 
 /**
  * Place an order for a pet.
+ *
  * Place a new order in the store.
  */
 export const placeOrder = <ThrowOnError extends boolean = false>(
@@ -312,6 +322,7 @@ export const placeOrder = <ThrowOnError extends boolean = false>(
 
 /**
  * Delete purchase order by identifier.
+ *
  * For valid response try integer IDs with value < 1000. Anything above 1000 or non-integers will generate API errors.
  */
 export const deleteOrder = <ThrowOnError extends boolean = false>(
@@ -328,6 +339,7 @@ export const deleteOrder = <ThrowOnError extends boolean = false>(
 
 /**
  * Find purchase order by ID.
+ *
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  */
 export const getOrderById = <ThrowOnError extends boolean = false>(
@@ -344,6 +356,7 @@ export const getOrderById = <ThrowOnError extends boolean = false>(
 
 /**
  * Create user.
+ *
  * This can only be done by the logged in user.
  */
 export const createUser = <ThrowOnError extends boolean = false>(
@@ -364,6 +377,7 @@ export const createUser = <ThrowOnError extends boolean = false>(
 
 /**
  * Creates list of users with given input array.
+ *
  * Creates list of users with given input array.
  */
 export const createUsersWithListInput = <ThrowOnError extends boolean = false>(
@@ -384,6 +398,7 @@ export const createUsersWithListInput = <ThrowOnError extends boolean = false>(
 
 /**
  * Logs user into the system.
+ *
  * Log into the system.
  */
 export const loginUser = <ThrowOnError extends boolean = false>(
@@ -400,6 +415,7 @@ export const loginUser = <ThrowOnError extends boolean = false>(
 
 /**
  * Logs out current logged in user session.
+ *
  * Log user out of the system.
  */
 export const logoutUser = <ThrowOnError extends boolean = false>(
@@ -416,6 +432,7 @@ export const logoutUser = <ThrowOnError extends boolean = false>(
 
 /**
  * Delete user resource.
+ *
  * This can only be done by the logged in user.
  */
 export const deleteUser = <ThrowOnError extends boolean = false>(
@@ -432,6 +449,7 @@ export const deleteUser = <ThrowOnError extends boolean = false>(
 
 /**
  * Get user by user name.
+ *
  * Get user detail based on username.
  */
 export const getUserByName = <ThrowOnError extends boolean = false>(
@@ -448,6 +466,7 @@ export const getUserByName = <ThrowOnError extends boolean = false>(
 
 /**
  * Update user resource.
+ *
  * This can only be done by the logged in user.
  */
 export const updateUser = <ThrowOnError extends boolean = false>(

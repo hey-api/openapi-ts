@@ -2,8 +2,8 @@
 
 import { type _JSONValue, defineQueryOptions, type UseMutationOptions } from '@pinia/colada'
 
+import { serializeQueryKeyValue } from '../client'
 import { client } from '../client.gen'
-import { serializeQueryKeyValue } from '../core/queryKeySerializer.gen'
 import {
   addPet,
   createUser,
@@ -57,6 +57,7 @@ import type {
 
 /**
  * Add a new pet to the store.
+ *
  * Add a new pet to the store.
  */
 export const addPetMutation = (
@@ -74,6 +75,7 @@ export const addPetMutation = (
 
 /**
  * Update an existing pet.
+ *
  * Update an existing pet by Id.
  */
 export const updatePetMutation = (
@@ -90,7 +92,7 @@ export const updatePetMutation = (
 })
 
 export type QueryKey<TOptions extends Options> = [
-  Pick<TOptions, 'baseUrl' | 'body' | 'path' | 'query'> & {
+  Pick<TOptions, 'path'> & {
     _id: string
     baseUrl?: _JSONValue
     body?: _JSONValue
@@ -131,6 +133,7 @@ const createQueryKey = <TOptions extends Options>(
 
 /**
  * Finds Pets by status.
+ *
  * Multiple status values can be provided with comma separated strings.
  */
 export const findPetsByStatusQuery = defineQueryOptions(
@@ -149,6 +152,7 @@ export const findPetsByStatusQuery = defineQueryOptions(
 
 /**
  * Finds Pets by tags.
+ *
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
 export const findPetsByTagsQuery = defineQueryOptions((options: Options<FindPetsByTagsData>) => ({
@@ -165,6 +169,7 @@ export const findPetsByTagsQuery = defineQueryOptions((options: Options<FindPets
 
 /**
  * Deletes a pet.
+ *
  * Delete a pet.
  */
 export const deletePetMutation = (
@@ -182,6 +187,7 @@ export const deletePetMutation = (
 
 /**
  * Find pet by ID.
+ *
  * Returns a single pet.
  */
 export const getPetByIdQuery = defineQueryOptions((options: Options<GetPetByIdData>) => ({
@@ -198,6 +204,7 @@ export const getPetByIdQuery = defineQueryOptions((options: Options<GetPetByIdDa
 
 /**
  * Updates a pet in the store with form data.
+ *
  * Updates a pet resource based on the form data.
  */
 export const updatePetWithFormMutation = (
@@ -215,6 +222,7 @@ export const updatePetWithFormMutation = (
 
 /**
  * Uploads an image.
+ *
  * Upload image of the pet.
  */
 export const uploadFileMutation = (
@@ -232,6 +240,7 @@ export const uploadFileMutation = (
 
 /**
  * Returns pet inventories by status.
+ *
  * Returns a map of status codes to quantities.
  */
 export const getInventoryQuery = defineQueryOptions((options?: Options<GetInventoryData>) => ({
@@ -248,6 +257,7 @@ export const getInventoryQuery = defineQueryOptions((options?: Options<GetInvent
 
 /**
  * Place an order for a pet.
+ *
  * Place a new order in the store.
  */
 export const placeOrderMutation = (
@@ -265,6 +275,7 @@ export const placeOrderMutation = (
 
 /**
  * Delete purchase order by identifier.
+ *
  * For valid response try integer IDs with value < 1000. Anything above 1000 or non-integers will generate API errors.
  */
 export const deleteOrderMutation = (
@@ -282,6 +293,7 @@ export const deleteOrderMutation = (
 
 /**
  * Find purchase order by ID.
+ *
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  */
 export const getOrderByIdQuery = defineQueryOptions((options: Options<GetOrderByIdData>) => ({
@@ -298,6 +310,7 @@ export const getOrderByIdQuery = defineQueryOptions((options: Options<GetOrderBy
 
 /**
  * Create user.
+ *
  * This can only be done by the logged in user.
  */
 export const createUserMutation = (
@@ -315,6 +328,7 @@ export const createUserMutation = (
 
 /**
  * Creates list of users with given input array.
+ *
  * Creates list of users with given input array.
  */
 export const createUsersWithListInputMutation = (
@@ -336,6 +350,7 @@ export const createUsersWithListInputMutation = (
 
 /**
  * Logs user into the system.
+ *
  * Log into the system.
  */
 export const loginUserQuery = defineQueryOptions((options?: Options<LoginUserData>) => ({
@@ -352,6 +367,7 @@ export const loginUserQuery = defineQueryOptions((options?: Options<LoginUserDat
 
 /**
  * Logs out current logged in user session.
+ *
  * Log user out of the system.
  */
 export const logoutUserQuery = defineQueryOptions((options?: Options<LogoutUserData>) => ({
@@ -368,6 +384,7 @@ export const logoutUserQuery = defineQueryOptions((options?: Options<LogoutUserD
 
 /**
  * Delete user resource.
+ *
  * This can only be done by the logged in user.
  */
 export const deleteUserMutation = (
@@ -385,6 +402,7 @@ export const deleteUserMutation = (
 
 /**
  * Get user by user name.
+ *
  * Get user detail based on username.
  */
 export const getUserByNameQuery = defineQueryOptions((options: Options<GetUserByNameData>) => ({
@@ -401,6 +419,7 @@ export const getUserByNameQuery = defineQueryOptions((options: Options<GetUserBy
 
 /**
  * Update user resource.
+ *
  * This can only be done by the logged in user.
  */
 export const updateUserMutation = (
