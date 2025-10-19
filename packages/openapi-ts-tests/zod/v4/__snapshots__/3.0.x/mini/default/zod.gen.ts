@@ -407,16 +407,16 @@ export const zModelWithReference = z.object({
     prop: z.optional(zModelWithProperties)
 });
 
-export const zModelWithReadOnlyAndWriteOnly = z.object({
+export const zModelWithReadOnlyAndWriteOnlyWritable = z.object({
     foo: z.string(),
-    bar: z.readonly(z.string())
+    baz: z.string()
 });
 
 /**
  * This is a model with one property containing an array
  */
 export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
-    prop: z.optional(z.array(zModelWithReadOnlyAndWriteOnly)),
+    prop: z.optional(z.array(zModelWithReadOnlyAndWriteOnlyWritable)),
     propWithFile: z.optional(z.array(z.string())),
     propWithNumber: z.optional(z.array(z.number()))
 });
@@ -898,6 +898,11 @@ export const zModelWithNestedCompositionEnums = z.object({
     foo: z.optional(zModelWithNestedArrayEnumsDataFoo)
 });
 
+export const zModelWithReadOnlyAndWriteOnly = z.object({
+    foo: z.string(),
+    bar: z.readonly(z.string())
+});
+
 export const zModelWithConstantSizeArray = z.tuple([
     z.number(),
     z.number()
@@ -1136,11 +1141,6 @@ export const zModelWithPatternWritable = z.object({
 
 export const zFileWritable = z.object({
     mime: z.string().check(z.minLength(1), z.maxLength(24))
-});
-
-export const zModelWithReadOnlyAndWriteOnlyWritable = z.object({
-    foo: z.string(),
-    baz: z.string()
 });
 
 export const zAdditionalPropertiesUnknownIssueWritable = z.record(z.string(), z.union([
