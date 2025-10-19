@@ -12,7 +12,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y jq curl
