@@ -47,7 +47,9 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
         style = 'matrix';
       }
 
-      const value = toValue(toValue(path)[name]);
+      const value = toValue(
+        (toValue(path) as Record<string, unknown> | undefined)?.[name],
+      );
 
       if (value === undefined || value === null) {
         continue;
@@ -157,7 +159,7 @@ const checkForExistence = (
   }
   if (
     options.headers.has(name) ||
-    toValue(options.query)?.[name] ||
+    (toValue(options.query) as Record<string, unknown> | undefined)?.[name] ||
     options.headers.get('Cookie')?.includes(`${name}=`)
   ) {
     return true;
@@ -185,12 +187,18 @@ export const setAuthParams = async ({
     const name = auth.name ?? 'Authorization';
 
     switch (auth.in) {
-      case 'query':
+      case 'query': {
         if (!options.query) {
           options.query = {};
         }
-        toValue(options.query)[name] = token;
+        const queryValue = toValue(options.query) as
+          | Record<string, unknown>
+          | undefined;
+        if (queryValue) {
+          queryValue[name] = token;
+        }
         break;
+      }
       case 'cookie':
         options.headers.append('Cookie', `${name}=${token}`);
         break;
