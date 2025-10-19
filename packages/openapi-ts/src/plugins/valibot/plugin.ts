@@ -10,6 +10,7 @@ import { jsonPointerToPath, refToName } from '../../utils/ref';
 import { numberRegExp } from '../../utils/regexp';
 import { pathToSymbolResourceType } from '../shared/utils/meta';
 import { createSchemaComment } from '../shared/utils/schema';
+import type { SchemaWithType } from '../zod/shared/types';
 import { identifiers } from './constants';
 import {
   INTEGER_FORMATS,
@@ -20,11 +21,6 @@ import {
 import { operationToValibotSchema } from './operation';
 import type { ValibotPlugin } from './types';
 import { webhookToValibotSchema } from './webhook';
-
-interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
-  extends Omit<IR.SchemaObject, 'type'> {
-  type: Extract<Required<IR.SchemaObject>['type'], T>;
-}
 
 export interface State {
   circularReferenceTracker: Set<string>;
