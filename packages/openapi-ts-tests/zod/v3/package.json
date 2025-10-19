@@ -17,6 +17,6 @@
     "@config/vite-base": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "typescript": "5.9.3",
-    "zod": "4.1.12"
+    "zod": "^3"
   }
 }
