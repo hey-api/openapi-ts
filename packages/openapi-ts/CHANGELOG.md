@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.86.1
+
+### Patch Changes
+
+- fix(client-axios): revert return error when axios request fails ([#2804](https://github.com/hey-api/openapi-ts/pull/2804)) ([`5bba86e`](https://github.com/hey-api/openapi-ts/commit/5bba86e742c48f575f96f55f7d7ea3d636102ebe)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.86.0
 
 ### Minor Changes
