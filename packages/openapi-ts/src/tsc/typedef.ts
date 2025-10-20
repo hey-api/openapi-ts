@@ -5,6 +5,7 @@ import {
   createKeywordTypeNode,
   createMappedTypeNode,
   createParameterDeclaration,
+  createRestTypeNode,
   createStringLiteral,
   createTypeNode,
   createTypeParameterDeclaration,
@@ -295,5 +296,35 @@ export const createTypeArrayNode = (
     ],
     typeName: 'Array',
   });
+  return maybeNullable({ isNullable, node });
+};
+
+/**
+ * Create non-empty array tuple type node. Example `[number, ...number[]]` for minItems=1
+ * @param itemType - the item type
+ * @param minItems - minimum number of items (must be >= 1)
+ * @param isNullable - if the whole type can be null
+ * @returns ts.TupleTypeNode | ts.UnionTypeNode
+ */
+export const createNonEmptyArrayTupleNode = (
+  itemType: any | ts.TypeNode,
+  minItems: number,
+  isNullable: boolean = false,
+) => {
+  const typeNode = createTypeNode(itemType);
+  const arrayType = createTypeReferenceNode({
+    typeArguments: [typeNode],
+    typeName: 'Array',
+  });
+  const restElement = createRestTypeNode({ type: arrayType });
+
+  // Create the required elements: [T, T, ..., ...T[]]
+  const elements: Array<ts.TypeNode> = [];
+  for (let i = 0; i < minItems; i++) {
+    elements.push(typeNode);
+  }
+  elements.push(restElement);
+
+  const node = ts.factory.createTupleTypeNode(elements);
   return maybeNullable({ isNullable, node });
 };
