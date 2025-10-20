@@ -216,47 +216,47 @@ export type AssistantStreamEvent =
 
 export const AssistantSupportedModels = {
   GPT_4O: 'gpt-4o',
-  GPT_4: 'gpt-4',
   GPT_4O_2024_05_13: 'gpt-4o-2024-05-13',
   GPT_4O_2024_08_06: 'gpt-4o-2024-08-06',
   GPT_4O_2024_11_20: 'gpt-4o-2024-11-20',
-  GPT_4O_MINI: 'gpt-4o-mini',
-  GPT_4O_MINI_2024_07_18: 'gpt-4o-mini-2024-07-18',
-  GPT_3_5_TURBO: 'gpt-3.5-turbo',
-  GPT_4_0125_PREVIEW: 'gpt-4-0125-preview',
-  GPT_3_5_TURBO_0613: 'gpt-3.5-turbo-0613',
-  GPT_4_0314: 'gpt-4-0314',
-  GPT_3_5_TURBO_0125: 'gpt-3.5-turbo-0125',
-  GPT_4_0613: 'gpt-4-0613',
-  GPT_3_5_TURBO_1106: 'gpt-3.5-turbo-1106',
   GPT_4_1: 'gpt-4.1',
-  GPT_3_5_TURBO_16K: 'gpt-3.5-turbo-16k',
+  GPT_4O_MINI: 'gpt-4o-mini',
   GPT_4_1_2025_04_14: 'gpt-4.1-2025-04-14',
-  GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
+  GPT_4O_MINI_2024_07_18: 'gpt-4o-mini-2024-07-18',
   GPT_4_1_MINI: 'gpt-4.1-mini',
-  GPT_4_1106_PREVIEW: 'gpt-4-1106-preview',
+  GPT_4_0125_PREVIEW: 'gpt-4-0125-preview',
   GPT_4_1_MINI_2025_04_14: 'gpt-4.1-mini-2025-04-14',
+  GPT_4: 'gpt-4',
   GPT_4_1_NANO: 'gpt-4.1-nano',
-  GPT_4_1_NANO_2025_04_14: 'gpt-4.1-nano-2025-04-14',
-  GPT_4_32K: 'gpt-4-32k',
+  GPT_4_0314: 'gpt-4-0314',
   GPT_5: 'gpt-5',
-  GPT_4_32K_0314: 'gpt-4-32k-0314',
+  GPT_4_0613: 'gpt-4-0613',
   GPT_5_2025_08_07: 'gpt-5-2025-08-07',
-  GPT_4_32K_0613: 'gpt-4-32k-0613',
+  GPT_3_5_TURBO: 'gpt-3.5-turbo',
   GPT_5_MINI: 'gpt-5-mini',
-  GPT_4_5_PREVIEW: 'gpt-4.5-preview',
+  GPT_3_5_TURBO_0613: 'gpt-3.5-turbo-0613',
   GPT_5_MINI_2025_08_07: 'gpt-5-mini-2025-08-07',
-  GPT_4_5_PREVIEW_2025_02_27: 'gpt-4.5-preview-2025-02-27',
+  GPT_3_5_TURBO_0125: 'gpt-3.5-turbo-0125',
   GPT_5_NANO: 'gpt-5-nano',
+  GPT_3_5_TURBO_1106: 'gpt-3.5-turbo-1106',
+  GPT_3_5_TURBO_16K: 'gpt-3.5-turbo-16k',
+  GPT_5_NANO_2025_08_07: 'gpt-5-nano-2025-08-07',
+  GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
+  GPT_4_1_NANO_2025_04_14: 'gpt-4.1-nano-2025-04-14',
+  GPT_4_1106_PREVIEW: 'gpt-4-1106-preview',
+  O1: 'o1',
+  GPT_4_32K: 'gpt-4-32k',
+  O3_MINI: 'o3-mini',
+  GPT_4_32K_0314: 'gpt-4-32k-0314',
+  O3_MINI_2025_01_31: 'o3-mini-2025-01-31',
+  GPT_4_32K_0613: 'gpt-4-32k-0613',
+  O1_2024_12_17: 'o1-2024-12-17',
+  GPT_4_5_PREVIEW: 'gpt-4.5-preview',
+  GPT_4_5_PREVIEW_2025_02_27: 'gpt-4.5-preview-2025-02-27',
   GPT_4_TURBO: 'gpt-4-turbo',
   GPT_4_TURBO_2024_04_09: 'gpt-4-turbo-2024-04-09',
-  GPT_5_NANO_2025_08_07: 'gpt-5-nano-2025-08-07',
   GPT_4_TURBO_PREVIEW: 'gpt-4-turbo-preview',
   GPT_4_VISION_PREVIEW: 'gpt-4-vision-preview',
-  O1: 'o1',
-  O1_2024_12_17: 'o1-2024-12-17',
-  O3_MINI: 'o3-mini',
-  O3_MINI_2025_01_31: 'o3-mini-2025-01-31',
 } as const;
 
 export type AssistantSupportedModels =
@@ -725,58 +725,38 @@ export type AuditLog = {
   /**
    * The details for events with this `type`.
    */
-  'rate_limit.updated'?: {
+  'user.added'?: {
     /**
-     * The payload used to update the rate limits.
-     */
-    changes_requested?: {
-      /**
-       * The maximum batch input tokens per day. Only relevant for certain models.
-       */
-      batch_1_day_max_input_tokens?: number;
-      /**
-       * The maximum audio megabytes per minute. Only relevant for certain models.
-       */
-      max_audio_megabytes_per_1_minute?: number;
-      /**
-       * The maximum images per minute. Only relevant for certain models.
-       */
-      max_images_per_1_minute?: number;
-      /**
-       * The maximum requests per day. Only relevant for certain models.
-       */
-      max_requests_per_1_day?: number;
-      /**
-       * The maximum requests per minute.
-       */
-      max_requests_per_1_minute?: number;
-      /**
-       * The maximum tokens per minute.
-       */
-      max_tokens_per_1_minute?: number;
-    };
-    /**
-     * The rate limit ID
+     * The user ID.
      */
     id?: string;
+    /**
+     * The payload used to add the user to the project.
+     */
+    data?: {
+      /**
+       * The role of the user. Is either `owner` or `member`.
+       */
+      role?: string;
+    };
   };
   /**
    * The details for events with this `type`.
    */
-  'service_account.created'?: {
+  'user.updated'?: {
     /**
-     * The payload used to create the service account.
+     * The project ID.
      */
-    data?: {
+    id?: string;
+    /**
+     * The payload used to update the user.
+     */
+    changes_requested?: {
       /**
-       * The role of the service account. Is either `owner` or `member`.
+       * The role of the user. Is either `owner` or `member`.
        */
       role?: string;
     };
-    /**
-     * The service account ID.
-     */
-    id?: string;
   };
   /**
    * The details for events with this `type`.
@@ -805,22 +785,60 @@ export type AuditLog = {
      */
     id?: string;
   };
+  /**
+   * The details for events with this `type`.
+   */
+  'rate_limit.updated'?: {
+    /**
+     * The payload used to update the rate limits.
+     */
+    changes_requested?: {
+      /**
+       * The maximum requests per minute.
+       */
+      max_requests_per_1_minute?: number;
+      /**
+       * The maximum tokens per minute.
+       */
+      max_tokens_per_1_minute?: number;
+      /**
+       * The maximum images per minute. Only relevant for certain models.
+       */
+      max_images_per_1_minute?: number;
+      /**
+       * The maximum audio megabytes per minute. Only relevant for certain models.
+       */
+      max_audio_megabytes_per_1_minute?: number;
+      /**
+       * The maximum requests per day. Only relevant for certain models.
+       */
+      max_requests_per_1_day?: number;
+      /**
+       * The maximum batch input tokens per day. Only relevant for certain models.
+       */
+      batch_1_day_max_input_tokens?: number;
+    };
+    /**
+     * The rate limit ID
+     */
+    id?: string;
+  };
   type: AuditLogEventType;
   /**
    * The details for events with this `type`.
    */
-  'user.added'?: {
+  'service_account.created'?: {
     /**
-     * The payload used to add the user to the project.
+     * The payload used to create the service account.
      */
     data?: {
       /**
-       * The role of the user. Is either `owner` or `member`.
+       * The role of the service account. Is either `owner` or `member`.
        */
       role?: string;
     };
     /**
-     * The user ID.
+     * The service account ID.
      */
     id?: string;
   };
@@ -830,24 +848,6 @@ export type AuditLog = {
   'user.deleted'?: {
     /**
      * The user ID.
-     */
-    id?: string;
-  };
-  /**
-   * The details for events with this `type`.
-   */
-  'user.updated'?: {
-    /**
-     * The payload used to update the user.
-     */
-    changes_requested?: {
-      /**
-       * The role of the user. Is either `owner` or `member`.
-       */
-      role?: string;
-    };
-    /**
-     * The project ID.
      */
     id?: string;
   };
@@ -18391,62 +18391,62 @@ export type MessageContentDelta =
     } & MessageDeltaContentImageUrlObject);
 
 export const ChatModel = {
-  GPT_4O: 'gpt-4o',
-  GPT_4O_2024_05_13: 'gpt-4o-2024-05-13',
-  GPT_4O_2024_08_06: 'gpt-4o-2024-08-06',
-  GPT_4O_2024_11_20: 'gpt-4o-2024-11-20',
-  GPT_4O_AUDIO_PREVIEW: 'gpt-4o-audio-preview',
-  GPT_4O_AUDIO_PREVIEW_2024_10_01: 'gpt-4o-audio-preview-2024-10-01',
   GPT_4_1: 'gpt-4.1',
-  GPT_4O_AUDIO_PREVIEW_2024_12_17: 'gpt-4o-audio-preview-2024-12-17',
   GPT_4_1_2025_04_14: 'gpt-4.1-2025-04-14',
-  GPT_4O_AUDIO_PREVIEW_2025_06_03: 'gpt-4o-audio-preview-2025-06-03',
   GPT_4_1_MINI: 'gpt-4.1-mini',
-  CHATGPT_4O_LATEST: 'chatgpt-4o-latest',
   GPT_4_1_MINI_2025_04_14: 'gpt-4.1-mini-2025-04-14',
-  CODEX_MINI_LATEST: 'codex-mini-latest',
   GPT_4_1_NANO: 'gpt-4.1-nano',
-  GPT_4O_MINI: 'gpt-4o-mini',
+  GPT_4O: 'gpt-4o',
   GPT_4_1_NANO_2025_04_14: 'gpt-4.1-nano-2025-04-14',
-  GPT_4O_MINI_2024_07_18: 'gpt-4o-mini-2024-07-18',
+  GPT_4O_2024_08_06: 'gpt-4o-2024-08-06',
   GPT_5: 'gpt-5',
-  GPT_4: 'gpt-4',
+  GPT_4O_2024_05_13: 'gpt-4o-2024-05-13',
   GPT_5_2025_08_07: 'gpt-5-2025-08-07',
-  GPT_4O_MINI_AUDIO_PREVIEW: 'gpt-4o-mini-audio-preview',
+  GPT_4O_2024_11_20: 'gpt-4o-2024-11-20',
   GPT_5_CHAT_LATEST: 'gpt-5-chat-latest',
-  GPT_4O_MINI_AUDIO_PREVIEW_2024_12_17: 'gpt-4o-mini-audio-preview-2024-12-17',
+  GPT_4O_AUDIO_PREVIEW: 'gpt-4o-audio-preview',
   GPT_5_MINI: 'gpt-5-mini',
-  GPT_3_5_TURBO: 'gpt-3.5-turbo',
+  GPT_4O_AUDIO_PREVIEW_2024_10_01: 'gpt-4o-audio-preview-2024-10-01',
   GPT_5_MINI_2025_08_07: 'gpt-5-mini-2025-08-07',
-  GPT_3_5_TURBO_0301: 'gpt-3.5-turbo-0301',
+  GPT_4O_AUDIO_PREVIEW_2024_12_17: 'gpt-4o-audio-preview-2024-12-17',
   GPT_5_NANO: 'gpt-5-nano',
-  GPT_3_5_TURBO_0613: 'gpt-3.5-turbo-0613',
+  GPT_4O_AUDIO_PREVIEW_2025_06_03: 'gpt-4o-audio-preview-2025-06-03',
   GPT_5_NANO_2025_08_07: 'gpt-5-nano-2025-08-07',
-  GPT_3_5_TURBO_0125: 'gpt-3.5-turbo-0125',
+  CHATGPT_4O_LATEST: 'chatgpt-4o-latest',
   O1: 'o1',
-  GPT_3_5_TURBO_1106: 'gpt-3.5-turbo-1106',
+  CODEX_MINI_LATEST: 'codex-mini-latest',
   O1_2024_12_17: 'o1-2024-12-17',
-  GPT_3_5_TURBO_16K: 'gpt-3.5-turbo-16k',
+  GPT_4O_MINI: 'gpt-4o-mini',
   O1_MINI: 'o1-mini',
-  GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
+  GPT_4O_MINI_2024_07_18: 'gpt-4o-mini-2024-07-18',
   O3: 'o3',
-  GPT_4O_MINI_SEARCH_PREVIEW: 'gpt-4o-mini-search-preview',
+  GPT_4: 'gpt-4',
   O3_2025_04_16: 'o3-2025-04-16',
+  GPT_4O_MINI_AUDIO_PREVIEW: 'gpt-4o-mini-audio-preview',
+  O4_MINI: 'o4-mini',
+  GPT_4O_MINI_AUDIO_PREVIEW_2024_12_17: 'gpt-4o-mini-audio-preview-2024-12-17',
+  O4_MINI_2025_04_16: 'o4-mini-2025-04-16',
+  GPT_3_5_TURBO: 'gpt-3.5-turbo',
+  O3_MINI: 'o3-mini',
+  GPT_3_5_TURBO_0301: 'gpt-3.5-turbo-0301',
+  O3_MINI_2025_01_31: 'o3-mini-2025-01-31',
+  GPT_3_5_TURBO_0613: 'gpt-3.5-turbo-0613',
+  O1_PREVIEW: 'o1-preview',
+  GPT_3_5_TURBO_0125: 'gpt-3.5-turbo-0125',
+  O1_PREVIEW_2024_09_12: 'o1-preview-2024-09-12',
+  GPT_3_5_TURBO_1106: 'gpt-3.5-turbo-1106',
+  O1_MINI_2024_09_12: 'o1-mini-2024-09-12',
+  GPT_3_5_TURBO_16K: 'gpt-3.5-turbo-16k',
+  GPT_4O_MINI_SEARCH_PREVIEW: 'gpt-4o-mini-search-preview',
+  GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
   GPT_4O_MINI_SEARCH_PREVIEW_2025_03_11:
     'gpt-4o-mini-search-preview-2025-03-11',
-  O4_MINI: 'o4-mini',
   GPT_4O_SEARCH_PREVIEW: 'gpt-4o-search-preview',
-  O4_MINI_2025_04_16: 'o4-mini-2025-04-16',
   GPT_4O_SEARCH_PREVIEW_2025_03_11: 'gpt-4o-search-preview-2025-03-11',
-  O3_MINI: 'o3-mini',
   GPT_4_0125_PREVIEW: 'gpt-4-0125-preview',
-  O3_MINI_2025_01_31: 'o3-mini-2025-01-31',
   GPT_4_0314: 'gpt-4-0314',
-  O1_PREVIEW: 'o1-preview',
   GPT_4_0613: 'gpt-4-0613',
-  O1_PREVIEW_2024_09_12: 'o1-preview-2024-09-12',
   GPT_4_1106_PREVIEW: 'gpt-4-1106-preview',
-  O1_MINI_2024_09_12: 'o1-mini-2024-09-12',
   GPT_4_32K: 'gpt-4-32k',
   GPT_4_32K_0314: 'gpt-4-32k-0314',
   GPT_4_32K_0613: 'gpt-4-32k-0613',
