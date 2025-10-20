@@ -36,8 +36,7 @@ export type Options<
  */
 export const listPets = <ThrowOnError extends boolean = false>(
   options?: Options<ListPetsData, ThrowOnError>,
-) =>
-  (options?.client ?? client).get<
+) => (options?.client ?? client).get<
     ListPetsResponses,
     ListPetsErrors,
     ThrowOnError
@@ -51,8 +50,7 @@ export const listPets = <ThrowOnError extends boolean = false>(
  */
 export const createPets = <ThrowOnError extends boolean = false>(
   options?: Options<CreatePetsData, ThrowOnError>,
-) =>
-  (options?.client ?? client).post<
+) => (options?.client ?? client).post<
     CreatePetsResponses,
     CreatePetsErrors,
     ThrowOnError
@@ -66,8 +64,7 @@ export const createPets = <ThrowOnError extends boolean = false>(
  */
 export const showPetById = <ThrowOnError extends boolean = false>(
   options: Options<ShowPetByIdData, ThrowOnError>,
-) =>
-  (options.client ?? client).get<
+) => (options.client ?? client).get<
     ShowPetByIdResponses,
     ShowPetByIdErrors,
     ThrowOnError

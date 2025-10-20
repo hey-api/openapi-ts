@@ -63,15 +63,15 @@ import type {
 export const addPetMutation = (
   options?: Partial<Options<AddPetData>>
 ): UseMutationOptions<AddPetResponse, Options<AddPetData>, Error> => ({
-  mutation: async (fnOptions) => {
-    const { data } = await addPet({
-      ...options,
-      ...fnOptions,
-      throwOnError: true
-    })
-    return data
-  }
-})
+    mutation: async (fnOptions) => {
+      const { data } = await addPet({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+      })
+      return data
+    }
+  })
 
 /**
  * Update an existing pet.
@@ -81,15 +81,15 @@ export const addPetMutation = (
 export const updatePetMutation = (
   options?: Partial<Options<UpdatePetData>>
 ): UseMutationOptions<UpdatePetResponse, Options<UpdatePetData>, Error> => ({
-  mutation: async (fnOptions) => {
-    const { data } = await updatePet({
-      ...options,
-      ...fnOptions,
-      throwOnError: true
-    })
-    return data
-  }
-})
+    mutation: async (fnOptions) => {
+      const { data } = await updatePet({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+      })
+      return data
+    }
+  })
 
 export type QueryKey<TOptions extends Options> = [
   Pick<TOptions, 'path'> & {
@@ -175,15 +175,15 @@ export const findPetsByTagsQuery = defineQueryOptions((options: Options<FindPets
 export const deletePetMutation = (
   options?: Partial<Options<DeletePetData>>
 ): UseMutationOptions<unknown, Options<DeletePetData>, Error> => ({
-  mutation: async (fnOptions) => {
-    const { data } = await deletePet({
-      ...options,
-      ...fnOptions,
-      throwOnError: true
-    })
-    return data
-  }
-})
+    mutation: async (fnOptions) => {
+      const { data } = await deletePet({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+      })
+      return data
+    }
+  })
 
 /**
  * Find pet by ID.
@@ -210,15 +210,15 @@ export const getPetByIdQuery = defineQueryOptions((options: Options<GetPetByIdDa
 export const updatePetWithFormMutation = (
   options?: Partial<Options<UpdatePetWithFormData>>
 ): UseMutationOptions<UpdatePetWithFormResponse, Options<UpdatePetWithFormData>, Error> => ({
-  mutation: async (fnOptions) => {
-    const { data } = await updatePetWithForm({
-      ...options,
-      ...fnOptions,
-      throwOnError: true
-    })
-    return data
-  }
-})
+    mutation: async (fnOptions) => {
+      const { data } = await updatePetWithForm({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+      })
+      return data
+    }
+  })
 
 /**
  * Uploads an image.
@@ -228,15 +228,15 @@ export const updatePetWithFormMutation = (
 export const uploadFileMutation = (
   options?: Partial<Options<UploadFileData>>
 ): UseMutationOptions<UploadFileResponse, Options<UploadFileData>, Error> => ({
-  mutation: async (fnOptions) => {
-    const { data } = await uploadFile({
-      ...options,
-      ...fnOptions,
-      throwOnError: true
-    })
-    return data
-  }
-})
+    mutation: async (fnOptions) => {
+      const { data } = await uploadFile({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+      })
+      return data
+    }
+  })
 
 /**
  * Returns pet inventories by status.
@@ -263,15 +263,15 @@ export const getInventoryQuery = defineQueryOptions((options?: Options<GetInvent
 export const placeOrderMutation = (
   options?: Partial<Options<PlaceOrderData>>
 ): UseMutationOptions<PlaceOrderResponse, Options<PlaceOrderData>, Error> => ({
-  mutation: async (fnOptions) => {
-    const { data } = await placeOrder({
-      ...options,
-      ...fnOptions,
-      throwOnError: true
-    })
-    return data
-  }
-})
+    mutation: async (fnOptions) => {
+      const { data } = await placeOrder({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+      })
+      return data
+    }
+  })
 
 /**
  * Delete purchase order by identifier.
@@ -281,15 +281,15 @@ export const placeOrderMutation = (
 export const deleteOrderMutation = (
   options?: Partial<Options<DeleteOrderData>>
 ): UseMutationOptions<unknown, Options<DeleteOrderData>, Error> => ({
-  mutation: async (fnOptions) => {
-    const { data } = await deleteOrder({
-      ...options,
-      ...fnOptions,
-      throwOnError: true
-    })
-    return data
-  }
-})
+    mutation: async (fnOptions) => {
+      const { data } = await deleteOrder({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+      })
+      return data
+    }
+  })
 
 /**
  * Find purchase order by ID.
@@ -316,15 +316,15 @@ export const getOrderByIdQuery = defineQueryOptions((options: Options<GetOrderBy
 export const createUserMutation = (
   options?: Partial<Options<CreateUserData>>
 ): UseMutationOptions<CreateUserResponse, Options<CreateUserData>, Error> => ({
-  mutation: async (fnOptions) => {
-    const { data } = await createUser({
-      ...options,
-      ...fnOptions,
-      throwOnError: true
-    })
-    return data
-  }
-})
+    mutation: async (fnOptions) => {
+      const { data } = await createUser({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+      })
+      return data
+    }
+  })
 
 /**
  * Creates list of users with given input array.
@@ -338,15 +338,15 @@ export const createUsersWithListInputMutation = (
   Options<CreateUsersWithListInputData>,
   Error
 > => ({
-  mutation: async (fnOptions) => {
-    const { data } = await createUsersWithListInput({
-      ...options,
-      ...fnOptions,
-      throwOnError: true
-    })
-    return data
-  }
-})
+    mutation: async (fnOptions) => {
+      const { data } = await createUsersWithListInput({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+      })
+      return data
+    }
+  })
 
 /**
  * Logs user into the system.
@@ -390,15 +390,15 @@ export const logoutUserQuery = defineQueryOptions((options?: Options<LogoutUserD
 export const deleteUserMutation = (
   options?: Partial<Options<DeleteUserData>>
 ): UseMutationOptions<unknown, Options<DeleteUserData>, Error> => ({
-  mutation: async (fnOptions) => {
-    const { data } = await deleteUser({
-      ...options,
-      ...fnOptions,
-      throwOnError: true
-    })
-    return data
-  }
-})
+    mutation: async (fnOptions) => {
+      const { data } = await deleteUser({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+      })
+      return data
+    }
+  })
 
 /**
  * Get user by user name.
@@ -425,12 +425,12 @@ export const getUserByNameQuery = defineQueryOptions((options: Options<GetUserBy
 export const updateUserMutation = (
   options?: Partial<Options<UpdateUserData>>
 ): UseMutationOptions<unknown, Options<UpdateUserData>, Error> => ({
-  mutation: async (fnOptions) => {
-    const { data } = await updateUser({
-      ...options,
-      ...fnOptions,
-      throwOnError: true
-    })
-    return data
-  }
-})
+    mutation: async (fnOptions) => {
+      const { data } = await updateUser({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+      })
+      return data
+    }
+  })
