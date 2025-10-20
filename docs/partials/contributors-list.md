@@ -51,6 +51,7 @@
 - [Marcel Richter](https://github.com/mrclrchtr)
 - [Marek Lukáš](https://github.com/tajnymag)
 - [Matsu](https://github.com/Matsuuu)
+- [Maurici Abad Gutierrez](https://github.com/mauriciabad)
 - [Max Scopp](https://github.com/max-scopp)
 - [Maximilian Dewald](https://github.com/maxdewald)
 - [Michał Grezel](https://github.com/dracomithril)
