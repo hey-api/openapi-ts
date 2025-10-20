@@ -970,6 +970,14 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'anyOf string and binary string',
     },
+    {
+      config: createConfig({
+        input: 'min-items-array.yaml',
+        output: 'min-items-array',
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'generates non-empty array types with minItems constraint',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
