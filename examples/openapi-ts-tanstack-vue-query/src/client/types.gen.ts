@@ -5,11 +5,11 @@ export type ClientOptions = {
 }
 
 export type Order = {
-  complete?: boolean,
-  id?: number,
-  petId?: number,
-  quantity?: number,
-  shipDate?: string,
+  complete?: boolean
+  id?: number
+  petId?: number
+  quantity?: number
+  shipDate?: string
   /**
    * Order Status
    */
@@ -22,16 +22,16 @@ export type Category = {
 }
 
 export type User = {
-  email?: string,
-  firstName?: string,
-  id?: number,
+  email?: string
+  firstName?: string
+  id?: number
   lastName?: string
-  password?: string,
-  phone?: string,
+  password?: string
+  phone?: string
   /**
    * User Status
    */
-  userStatus?: number,
+  userStatus?: number
   username?: string
 }
 
@@ -41,20 +41,20 @@ export type Tag = {
 }
 
 export type Pet = {
-  category?: Category,
-  id?: number,
-  name: string,
+  category?: Category
+  id?: number
+  name: string
   photoUrls: Array<string>
   /**
    * pet status in the store
    */
-  status?: 'available' | 'pending' | 'sold',
+  status?: 'available' | 'pending' | 'sold'
   tags?: Array<Tag>
 }
 
 export type ApiResponse = {
   code?: number
-  message?: string,
+  message?: string
   type?: string
 }
 
@@ -535,7 +535,7 @@ export type LoginUserData = {
     /**
      * The password for login in clear text
      */
-    password?: string,
+    password?: string
     /**
      * The user name for login
      */
