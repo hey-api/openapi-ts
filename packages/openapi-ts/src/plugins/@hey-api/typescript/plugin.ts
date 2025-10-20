@@ -42,6 +42,17 @@ const arrayTypeToIdentifier = ({
     itemTypes.push(type);
   }
 
+  // Handle non-empty arrays with minItems >= 1 and no maxItems
+  if (
+    schema.minItems &&
+    schema.minItems >= 1 &&
+    !schema.maxItems &&
+    schema.minItems <= 100 &&
+    itemTypes.length === 1
+  ) {
+    return tsc.nonEmptyArrayTupleNode(itemTypes[0]!, schema.minItems);
+  }
+
   if (itemTypes.length === 1) {
     return tsc.typeArrayNode(itemTypes[0]!);
   }

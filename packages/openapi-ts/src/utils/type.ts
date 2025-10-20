@@ -86,6 +86,21 @@ const typeArray = (model: Model) => {
       return tuple;
     }
 
+    // Special case for non-empty arrays with minItems >= 1 and no maxItems
+    if (
+      model.export === 'array' &&
+      model.minItems &&
+      model.minItems >= 1 &&
+      !model.maxItems &&
+      model.minItems <= 100
+    ) {
+      return tsc.nonEmptyArrayTupleNode(
+        toType(model.link),
+        model.minItems,
+        model.isNullable,
+      );
+    }
+
     return tsc.typeArrayNode([toType(model.link)], model.isNullable);
   }
 

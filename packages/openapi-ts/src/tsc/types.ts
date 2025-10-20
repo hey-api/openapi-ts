@@ -1130,3 +1130,6 @@ export const createTemplateLiteralType = ({
   );
   return templateLiteralType;
 };
+
+export const createRestTypeNode = ({ type }: { type: ts.TypeNode }) =>
+  ts.factory.createRestTypeNode(type);
