@@ -1,0 +1,58 @@
+openapi: 3.1.0
+info:
+  title: MinItems Array Test
+  version: 1.0.0
+paths:
+  /items:
+    get:
+      operationId: getItems
+      parameters:
+        - name: nodeIds
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            title: Non-empty array with minItems=1
+            minItems: 1
+        - name: tags
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+            title: Non-empty array with minItems=3
+            minItems: 3
+        - name: categories
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+            title: Normal array without minItems
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  requiredItems:
+                    type: array
+                    items:
+                      type: string
+                    minItems: 1
+                  optionalItems:
+                    type: array
+                    items:
+                      type: number
+                  fixedItems:
+                    type: array
+                    items:
+                      type: boolean
+                    minItems: 2
+                    maxItems: 2
