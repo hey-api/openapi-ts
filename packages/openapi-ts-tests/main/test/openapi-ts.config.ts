@@ -300,12 +300,18 @@ export default defineConfig(() => {
           },
         },
         {
+          name: 'arktype',
+          types: {
+            infer: true,
+          },
+        },
+        {
           // case: 'SCREAMING_SNAKE_CASE',
           // comments: false,
           // definitions: 'z{{name}}Definition',
           exportFromIndex: true,
           // metadata: true,
-          // name: 'valibot',
+          name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
@@ -347,7 +353,7 @@ export default defineConfig(() => {
           },
           exportFromIndex: true,
           metadata: true,
-          // name: 'zod',
+          name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',

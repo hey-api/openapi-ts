@@ -1,17 +1,21 @@
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
-import { exportZodSchema } from '../export';
-import type { ZodPlugin } from '../types';
-import type { ZodSchema } from './types';
+import { pathToSymbolResourceType } from '../../shared/utils/meta';
+import { exportAst } from './export';
+import type { Ast, IrSchemaToAstOptions } from './types';
 
-export const webhookToZodSchema = ({
-  getZodSchema,
+export const irWebhookToAst = ({
+  getAst,
   operation,
   plugin,
-}: {
-  getZodSchema: (schema: IR.SchemaObject) => ZodSchema;
+  state,
+}: Omit<IrSchemaToAstOptions, 'state'> & {
+  getAst: (
+    schema: IR.SchemaObject,
+    path: ReadonlyArray<string | number>,
+  ) => Ast;
   operation: IR.OperationObject;
-  plugin: ZodPlugin['Instance'];
+  state: Partial<IrSchemaToAstOptions['state']>;
 }) => {
   if (plugin.config.webhooks.enabled) {
     const requiredProperties = new Set<string>();
@@ -111,9 +115,14 @@ export const webhookToZodSchema = ({
 
     schemaData.required = [...requiredProperties];
 
-    const zodSchema = getZodSchema(schemaData);
+    const path = state._path || [];
+    const ast = getAst(schemaData, path);
+    const resourceType = pathToSymbolResourceType(path);
     const symbol = plugin.registerSymbol({
       exported: true,
+      meta: {
+        resourceType,
+      },
       name: buildName({
         config: plugin.config.webhooks,
         name: operation.id,
@@ -125,6 +134,7 @@ export const webhookToZodSchema = ({
           exported: true,
           meta: {
             kind: 'type',
+            resourceType,
           },
           name: buildName({
             config: plugin.config.webhooks.types.infer,
@@ -136,12 +146,12 @@ export const webhookToZodSchema = ({
           ),
         })
       : undefined;
-    exportZodSchema({
+    exportAst({
+      ast,
       plugin,
       schema: schemaData,
       symbol,
       typeInferSymbol,
-      zodSchema,
     });
   }
 };

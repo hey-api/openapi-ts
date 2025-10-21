@@ -8,10 +8,9 @@ export const handler: ZodPlugin['Handler'] = (args) => {
   switch (plugin.config.compatibilityVersion) {
     case 3:
       return handlerV3(args);
-    case 4:
-      return handlerV4(args);
     case 'mini':
       return handlerMini(args);
+    case 4:
     default:
       return handlerV4(args);
   }

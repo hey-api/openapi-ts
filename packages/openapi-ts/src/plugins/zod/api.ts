@@ -1,15 +1,18 @@
 import type { Selector } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { IR } from '../../ir/types';
-import { tsc } from '../../tsc';
 import type { Plugin } from '../types';
-import { identifiers } from './constants';
-import type { ZodPlugin } from './types';
+import {
+  createRequestValidatorMini,
+  createResponseValidatorMini,
+} from './mini/api';
+import type { ValidatorArgs } from './shared/types';
+import { createRequestValidatorV3, createResponseValidatorV3 } from './v3/api';
+import { createRequestValidatorV4, createResponseValidatorV4 } from './v4/api';
 
 type SelectorType =
   | 'data'
-  | 'import'
+  | 'external'
   | 'ref'
   | 'responses'
   | 'type-infer-data'
@@ -17,11 +20,6 @@ type SelectorType =
   | 'type-infer-responses'
   | 'type-infer-webhook-request'
   | 'webhook-request';
-
-type ValidatorArgs = {
-  operation: IR.OperationObject;
-  plugin: ZodPlugin['Instance'];
-};
 
 export type IApi = {
   createRequestValidator: (args: ValidatorArgs) => ts.ArrowFunction | undefined;
@@ -32,7 +30,7 @@ export type IApi = {
    * @param type Selector type.
    * @param value Depends on `type`:
    *  - `data`: `operation.id` string
-   *  - `import`: headless symbols representing module imports
+   *  - `external`: external modules
    *  - `ref`: `$ref` JSON pointer
    *  - `responses`: `operation.id` string
    *  - `type-infer-data`: `operation.id` string
@@ -48,72 +46,30 @@ export type IApi = {
 export class Api implements IApi {
   constructor(public meta: Plugin.Name<'zod'>) {}
 
-  createRequestValidator({
-    operation,
-    plugin,
-  }: ValidatorArgs): ts.ArrowFunction | undefined {
-    const symbol = plugin.getSymbol(
-      plugin.api.getSelector('data', operation.id),
-    );
-    if (!symbol) return;
-
-    const dataParameterName = 'data';
-
-    return tsc.arrowFunction({
-      async: true,
-      parameters: [
-        {
-          name: dataParameterName,
-        },
-      ],
-      statements: [
-        tsc.returnStatement({
-          expression: tsc.awaitExpression({
-            expression: tsc.callExpression({
-              functionName: tsc.propertyAccessExpression({
-                expression: symbol.placeholder,
-                name: identifiers.parseAsync,
-              }),
-              parameters: [tsc.identifier({ text: dataParameterName })],
-            }),
-          }),
-        }),
-      ],
-    });
+  createRequestValidator(args: ValidatorArgs): ts.ArrowFunction | undefined {
+    const { plugin } = args;
+    switch (plugin.config.compatibilityVersion) {
+      case 3:
+        return createRequestValidatorV3(args);
+      case 'mini':
+        return createRequestValidatorMini(args);
+      case 4:
+      default:
+        return createRequestValidatorV4(args);
+    }
   }
 
-  createResponseValidator({
-    operation,
-    plugin,
-  }: ValidatorArgs): ts.ArrowFunction | undefined {
-    const symbol = plugin.getSymbol(
-      plugin.api.getSelector('responses', operation.id),
-    );
-    if (!symbol) return;
-
-    const dataParameterName = 'data';
-
-    return tsc.arrowFunction({
-      async: true,
-      parameters: [
-        {
-          name: dataParameterName,
-        },
-      ],
-      statements: [
-        tsc.returnStatement({
-          expression: tsc.awaitExpression({
-            expression: tsc.callExpression({
-              functionName: tsc.propertyAccessExpression({
-                expression: symbol.placeholder,
-                name: identifiers.parseAsync,
-              }),
-              parameters: [tsc.identifier({ text: dataParameterName })],
-            }),
-          }),
-        }),
-      ],
-    });
+  createResponseValidator(args: ValidatorArgs): ts.ArrowFunction | undefined {
+    const { plugin } = args;
+    switch (plugin.config.compatibilityVersion) {
+      case 3:
+        return createResponseValidatorV3(args);
+      case 'mini':
+        return createResponseValidatorMini(args);
+      case 4:
+      default:
+        return createResponseValidatorV4(args);
+    }
   }
 
   getSelector(...args: ReadonlyArray<string | undefined>): Selector {

@@ -1,13 +1,24 @@
 import type ts from 'typescript';
 
 import type { IR } from '../../../ir/types';
+import type { ZodPlugin } from '../types';
 
-export interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
-  extends Omit<IR.SchemaObject, 'type'> {
-  type: Extract<Required<IR.SchemaObject>['type'], T>;
-}
+export type Ast = {
+  expression: ts.Expression;
+  hasCircularReference?: boolean;
+  typeName?: string | ts.Identifier;
+};
+
+export type IrSchemaToAstOptions = {
+  plugin: ZodPlugin['Instance'];
+  state: State;
+};
 
 export type State = {
+  /**
+   * Path to the schema in the intermediary representation.
+   */
+  _path: ReadonlyArray<string | number>;
   circularReferenceTracker: Array<string>;
   /**
    * Works the same as `circularReferenceTracker`, but it resets whenever we
@@ -18,8 +29,7 @@ export type State = {
   hasCircularReference: boolean;
 };
 
-export type ZodSchema = {
-  expression: ts.Expression;
-  hasCircularReference?: boolean;
-  typeName?: string | ts.Identifier;
+export type ValidatorArgs = {
+  operation: IR.OperationObject;
+  plugin: ZodPlugin['Instance'];
 };

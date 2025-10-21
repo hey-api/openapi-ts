@@ -42,6 +42,8 @@ import type { TanStackSvelteQueryPlugin } from './@tanstack/svelte-query';
 import { defaultConfig as tanStackSvelteQuery } from './@tanstack/svelte-query';
 import type { TanStackVueQueryPlugin } from './@tanstack/vue-query';
 import { defaultConfig as tanStackVueQuery } from './@tanstack/vue-query';
+import type { ArktypePlugin } from './arktype';
+import { defaultConfig as arktype } from './arktype';
 import type { FastifyPlugin } from './fastify';
 import { defaultConfig as fastify } from './fastify';
 import type { Plugin, PluginNames } from './types';
@@ -68,6 +70,7 @@ export interface PluginConfigMap {
   '@tanstack/solid-query': TanStackSolidQueryPlugin['Types'];
   '@tanstack/svelte-query': TanStackSvelteQueryPlugin['Types'];
   '@tanstack/vue-query': TanStackVueQueryPlugin['Types'];
+  arktype: ArktypePlugin['Types'];
   fastify: FastifyPlugin['Types'];
   'legacy/angular': HeyApiClientLegacyAngularPlugin['Types'];
   'legacy/axios': HeyApiClientLegacyAxiosPlugin['Types'];
@@ -98,6 +101,7 @@ export const defaultPluginConfigs: {
   '@tanstack/solid-query': tanStackSolidQuery,
   '@tanstack/svelte-query': tanStackSvelteQuery,
   '@tanstack/vue-query': tanStackVueQuery,
+  arktype,
   fastify,
   'legacy/angular': heyApiLegacyAngular,
   'legacy/axios': heyApiLegacyAxios,
