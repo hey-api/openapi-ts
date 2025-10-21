@@ -1,20 +1,16 @@
-import { operationResponsesMap } from '../../ir/operation';
-import type { IR } from '../../ir/types';
-import { buildName } from '../../openApi/shared/utils/name';
-import { pathToSymbolResourceType } from '../shared/utils/meta';
-import { schemaToValibotSchema, type State } from './plugin';
-import type { ValibotPlugin } from './types';
+import { operationResponsesMap } from '../../../ir/operation';
+import type { IR } from '../../../ir/types';
+import { buildName } from '../../../openApi/shared/utils/name';
+import { pathToSymbolResourceType } from '../../shared/utils/meta';
+import type { IrSchemaToAstOptions } from '../shared/types';
+import { irSchemaToAst } from './plugin';
 
-export const operationToValibotSchema = ({
-  _path,
+export const irOperationToAst = ({
   operation,
   plugin,
   state,
-}: {
-  _path: ReadonlyArray<string | number>;
+}: IrSchemaToAstOptions & {
   operation: IR.OperationObject;
-  plugin: ValibotPlugin['Instance'];
-  state: State;
 }) => {
   if (plugin.config.requests.enabled) {
     const requiredProperties = new Set<string>();
@@ -117,7 +113,7 @@ export const operationToValibotSchema = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
-        resourceType: pathToSymbolResourceType(_path),
+        resourceType: pathToSymbolResourceType(state._path),
       },
       name: buildName({
         config: plugin.config.requests,
@@ -125,8 +121,7 @@ export const operationToValibotSchema = ({
       }),
       selector: plugin.api.getSelector('data', operation.id),
     });
-    schemaToValibotSchema({
-      _path,
+    irSchemaToAst({
       plugin,
       schema: schemaData,
       state,
@@ -139,7 +134,7 @@ export const operationToValibotSchema = ({
       const { response } = operationResponsesMap(operation);
 
       if (response) {
-        const path = [..._path, 'responses'];
+        const path = [...state._path, 'responses'];
         const symbol = plugin.registerSymbol({
           exported: true,
           meta: {
@@ -151,11 +146,13 @@ export const operationToValibotSchema = ({
           }),
           selector: plugin.api.getSelector('responses', operation.id),
         });
-        schemaToValibotSchema({
-          _path: path,
+        irSchemaToAst({
           plugin,
           schema: response,
-          state,
+          state: {
+            ...state,
+            _path: path,
+          },
           symbol,
         });
       }

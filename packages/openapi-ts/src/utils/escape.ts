@@ -1,4 +1,4 @@
-import { EOL } from 'os';
+import { EOL } from 'node:os';
 
 import { validTypescriptIdentifierRegExp } from './regexp';
 

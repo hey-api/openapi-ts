@@ -1,41 +1,39 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { IR } from '../../ir/types';
-import { tsc } from '../../tsc';
-import { createSchemaComment } from '../shared/utils/schema';
-import { identifiers } from './constants';
-import type { ZodSchema } from './shared/types';
-import type { ZodPlugin } from './types';
+import type { IR } from '../../../ir/types';
+import { tsc } from '../../../tsc';
+import { createSchemaComment } from '../../shared/utils/schema';
+import { identifiers } from '../constants';
+import type { ZodPlugin } from '../types';
+import type { Ast } from './types';
 
-export const exportZodSchema = ({
+export const exportAst = ({
+  ast,
   plugin,
   schema,
   symbol,
   typeInferSymbol,
-  zodSchema,
 }: {
+  ast: Ast;
   plugin: ZodPlugin['Instance'];
   schema: IR.SchemaObject;
   symbol: Symbol;
   typeInferSymbol: Symbol | undefined;
-  zodSchema: ZodSchema;
-}) => {
-  const zSymbol = plugin.referenceSymbol(
-    plugin.api.getSelector('import', 'zod'),
-  );
+}): void => {
+  const z = plugin.referenceSymbol(plugin.api.getSelector('external', 'zod.z'));
 
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createSchemaComment({ schema })
       : undefined,
     exportConst: symbol.exported,
-    expression: zodSchema.expression,
+    expression: ast.expression,
     name: symbol.placeholder,
-    typeName: zodSchema.typeName
+    typeName: ast.typeName
       ? (tsc.propertyAccessExpression({
-          expression: zSymbol.placeholder,
-          name: zodSchema.typeName,
+          expression: z.placeholder,
+          name: ast.typeName,
         }) as unknown as ts.TypeNode)
       : undefined,
   });
@@ -52,7 +50,7 @@ export const exportZodSchema = ({
           }) as unknown as ts.TypeNode,
         ],
         typeName: tsc.propertyAccessExpression({
-          expression: zSymbol.placeholder,
+          expression: z.placeholder,
           name: identifiers.infer,
         }) as unknown as string,
       }),
