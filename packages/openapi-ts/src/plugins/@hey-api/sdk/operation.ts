@@ -130,15 +130,29 @@ export const operationClasses = ({
       }
     }
 
+    // Map path to PascalCase class names
+    const transformedPath = path.map((value) =>
+      operationClassName({
+        context,
+        value,
+      }),
+    );
+
+    // Remove duplicate class names to prevent circular references
+    // Keep only the first occurrence of each class name
+    const uniquePath: Array<string> = [];
+    const seen = new Set<string>();
+    for (const name of transformedPath) {
+      if (!seen.has(name)) {
+        seen.add(name);
+        uniquePath.push(name);
+      }
+    }
+
     classNames.set(rootClass, {
       className: finalClassName,
       methodName: methodName || getOperationMethodName({ operation, plugin }),
-      path: path.map((value) =>
-        operationClassName({
-          context,
-          value,
-        }),
-      ),
+      path: uniquePath,
     });
   }
 
