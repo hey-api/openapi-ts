@@ -179,8 +179,29 @@ const generateClassSdk = ({
             symbolParentClass.placeholder !== symbolCurrentClass.placeholder
           ) {
             const parentClass = sdkClasses.get(symbolParentClass.id)!;
-            parentClass.classes.add(symbolCurrentClass.id);
-            sdkClasses.set(symbolParentClass.id, parentClass);
+            // Check if adding this child would create a cycle
+            // A cycle exists if the current class is an ancestor of the parent class
+            const wouldCreateCycle = (
+              childId: number,
+              ancestorId: number,
+            ): boolean => {
+              const child = sdkClasses.get(childId);
+              if (!child) return false;
+              if (child.id === ancestorId) return true;
+              for (const grandchildId of child.classes) {
+                if (wouldCreateCycle(grandchildId, ancestorId)) {
+                  return true;
+                }
+              }
+              return false;
+            };
+
+            if (
+              !wouldCreateCycle(symbolCurrentClass.id, symbolParentClass.id)
+            ) {
+              parentClass.classes.add(symbolCurrentClass.id);
+              sdkClasses.set(symbolParentClass.id, parentClass);
+            }
           }
         }
 
