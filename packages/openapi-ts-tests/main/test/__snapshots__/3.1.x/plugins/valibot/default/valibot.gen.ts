@@ -705,10 +705,10 @@ export const vModelWithPattern = v.object({
     name: v.pipe(v.string(), v.maxLength(255)),
     enabled: v.optional(v.pipe(v.boolean(), v.readonly())),
     modified: v.optional(v.pipe(v.pipe(v.string(), v.isoTimestamp()), v.readonly())),
-    id: v.optional(v.pipe(v.string(), v.regex(/^\d{2}-\d{3}-\d{4}$/))),
-    text: v.optional(v.pipe(v.string(), v.regex(/^\w+$/))),
-    patternWithSingleQuotes: v.optional(v.pipe(v.string(), v.regex(/^[a-zA-Z0-9']*$/))),
-    patternWithNewline: v.optional(v.pipe(v.string(), v.regex(/aaa\nbbb/))),
+    id: v.optional(v.pipe(v.string(), v.regex(/^\\d{2}-\\d{3}-\\d{4}$/))),
+    text: v.optional(v.pipe(v.string(), v.regex(/^\\w+$/))),
+    patternWithSingleQuotes: v.optional(v.pipe(v.string(), v.regex(/^[a-zA-Z0-9\']*$/))),
+    patternWithNewline: v.optional(v.pipe(v.string(), v.regex(/aaa\\nbbb/))),
     patternWithBacktick: v.optional(v.pipe(v.string(), v.regex(/aaa`bbb/)))
 });
 
@@ -1098,10 +1098,10 @@ export const vModelWithPropertiesWritable = v.object({
 export const vModelWithPatternWritable = v.object({
     key: v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)),
     name: v.pipe(v.string(), v.maxLength(255)),
-    id: v.optional(v.pipe(v.string(), v.regex(/^\d{2}-\d{3}-\d{4}$/))),
-    text: v.optional(v.pipe(v.string(), v.regex(/^\w+$/))),
-    patternWithSingleQuotes: v.optional(v.pipe(v.string(), v.regex(/^[a-zA-Z0-9']*$/))),
-    patternWithNewline: v.optional(v.pipe(v.string(), v.regex(/aaa\nbbb/))),
+    id: v.optional(v.pipe(v.string(), v.regex(/^\\d{2}-\\d{3}-\\d{4}$/))),
+    text: v.optional(v.pipe(v.string(), v.regex(/^\\w+$/))),
+    patternWithSingleQuotes: v.optional(v.pipe(v.string(), v.regex(/^[a-zA-Z0-9\']*$/))),
+    patternWithNewline: v.optional(v.pipe(v.string(), v.regex(/aaa\\nbbb/))),
     patternWithBacktick: v.optional(v.pipe(v.string(), v.regex(/aaa`bbb/)))
 });
 
