@@ -56,12 +56,11 @@ export const irSchemaToAst = ({
 
   if (schema.$ref) {
     const selector = plugin.api.selector('ref', schema.$ref);
-    let refSymbol = plugin.getSymbol(selector);
-    if (refSymbol && !plugin.isSelfReference(schema.$ref, state._path.value)) {
+    const refSymbol = plugin.referenceSymbol(selector);
+    if (plugin.isSymbolRegistered(selector)) {
       const ref = tsc.identifier({ text: refSymbol.placeholder });
       pipes.push(ref);
     } else {
-      refSymbol = plugin.referenceSymbol(selector);
       const lazyExpression = tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
           expression: v.placeholder,

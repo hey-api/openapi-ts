@@ -2,105 +2,6 @@
 
 import * as v from 'valibot';
 
-export const vExternalSharedExternalSharedModel = v.object({
-    id: v.string(),
-    name: v.optional(v.string())
-});
-
-/**
- * This is a model with one string property
- */
-export const vModelWithString = v.object({
-    prop: v.optional(v.string())
-});
-
-/**
- * This is a model with one nested property
- */
-export const vModelWithProperties = v.object({
-    required: v.string(),
-    requiredAndReadOnly: v.pipe(v.string(), v.readonly()),
-    string: v.optional(v.string()),
-    number: v.optional(v.number()),
-    boolean: v.optional(v.boolean()),
-    reference: v.optional(vModelWithString),
-    'property with space': v.optional(v.string()),
-    default: v.optional(v.string()),
-    try: v.optional(v.string()),
-    '@namespace.string': v.optional(v.pipe(v.string(), v.readonly())),
-    '@namespace.integer': v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly()))
-});
-
-/**
- * This is a model with one property containing a circular reference
- */
-export const vModelWithCircularReference: v.GenericSchema = v.object({
-    prop: v.optional(v.lazy(() => {
-        return vModelWithCircularReference;
-    }))
-});
-
-/**
- * This is a model that extends another model
- */
-export const vModelThatExtends = v.intersect([
-    vModelWithString,
-    v.object({
-        propExtendsA: v.optional(v.string()),
-        propExtendsB: v.optional(vModelWithString)
-    })
-]);
-
-/**
- * This is a model with one string property
- */
-export const vModelWithStringError = v.object({
-    prop: v.optional(v.string())
-});
-
-/**
- * This is a model that extends another model
- */
-export const vModelThatExtendsExtends = v.intersect([
-    vModelWithString,
-    vModelThatExtends,
-    v.object({
-        propExtendsC: v.optional(v.string()),
-        propExtendsD: v.optional(vModelWithString)
-    })
-]);
-
-/**
- * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
- */
-export const vNonAsciiStringæøåÆøÅöôêÊ字符串 = v.string();
-
-export const vParameterActivityParams = v.object({
-    description: v.optional(v.string()),
-    graduate_id: v.optional(v.pipe(v.number(), v.integer())),
-    organization_id: v.optional(v.pipe(v.number(), v.integer())),
-    parent_activity: v.optional(v.pipe(v.number(), v.integer())),
-    post_id: v.optional(v.pipe(v.number(), v.integer()))
-});
-
-export const vResponsePostActivityResponse = v.object({
-    description: v.optional(v.string()),
-    graduate_id: v.optional(v.pipe(v.number(), v.integer())),
-    organization_id: v.optional(v.pipe(v.number(), v.integer())),
-    parent_activity_id: v.optional(v.pipe(v.number(), v.integer())),
-    post_id: v.optional(v.pipe(v.number(), v.integer()))
-});
-
-export const vFailureFailure = v.object({
-    error: v.optional(v.string()),
-    message: v.optional(v.string()),
-    reference_code: v.optional(v.string())
-});
-
-export const vExternalRefA = vExternalSharedExternalSharedModel;
-
-export const vExternalRefB = vExternalSharedExternalSharedModel;
-
 /**
  * Testing multiline comments in string: First line
  * Second line
@@ -155,11 +56,14 @@ export const vSimpleBoolean = v.boolean();
 export const vSimpleString = v.string();
 
 /**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
+export const vNonAsciiStringæøåÆøÅöôêÊ字符串 = v.string();
+
+/**
  * This is a simple file
  */
 export const vSimpleFile = v.string();
-
-export const vSimpleReference = vModelWithString;
 
 /**
  * This is a simple string
@@ -209,16 +113,6 @@ export const vArrayWithBooleans = v.array(v.boolean());
 export const vArrayWithStrings = v.array(v.string());
 
 /**
- * This is a simple array with references
- */
-export const vArrayWithReferences = v.array(vModelWithString);
-
-/**
- * This is a simple array containing an array
- */
-export const vArrayWithArray = v.array(v.array(vModelWithString));
-
-/**
  * This is a simple array with properties
  */
 export const vArrayWithProperties = v.array(v.object({
@@ -230,16 +124,6 @@ export const vArrayWithProperties = v.array(v.object({
  * This is a string dictionary
  */
 export const vDictionaryWithString = v.object({});
-
-/**
- * This is a string reference
- */
-export const vDictionaryWithReference = v.object({});
-
-/**
- * This is a complex dictionary
- */
-export const vDictionaryWithArray = v.object({});
 
 /**
  * This is a string dictionary
@@ -271,6 +155,42 @@ export const vModelWithInteger = v.object({
  */
 export const vModelWithBoolean = v.object({
     prop: v.optional(v.boolean())
+});
+
+/**
+ * This is a model with one string property
+ */
+export const vModelWithString = v.object({
+    prop: v.optional(v.string())
+});
+
+export const vSimpleReference = vModelWithString;
+
+/**
+ * This is a simple array with references
+ */
+export const vArrayWithReferences = v.array(vModelWithString);
+
+/**
+ * This is a simple array containing an array
+ */
+export const vArrayWithArray = v.array(v.array(vModelWithString));
+
+/**
+ * This is a string reference
+ */
+export const vDictionaryWithReference = v.object({});
+
+/**
+ * This is a complex dictionary
+ */
+export const vDictionaryWithArray = v.object({});
+
+/**
+ * This is a model with one string property
+ */
+export const vModelWithStringError = v.object({
+    prop: v.optional(v.string())
 });
 
 /**
@@ -330,13 +250,6 @@ export const vModelWithNestedEnums = v.object({
 });
 
 /**
- * This is a model with one property containing a reference
- */
-export const vModelWithReference = v.object({
-    prop: v.optional(vModelWithProperties)
-});
-
-/**
  * This is a model with one property containing an array
  */
 export const vModelWithArray = v.object({
@@ -350,6 +263,39 @@ export const vModelWithArray = v.object({
  */
 export const vModelWithDictionary = v.object({
     prop: v.optional(v.object({}))
+});
+
+/**
+ * This is a model with one property containing a circular reference
+ */
+export const vModelWithCircularReference: v.GenericSchema = v.object({
+    prop: v.optional(v.lazy(() => {
+        return vModelWithCircularReference;
+    }))
+});
+
+/**
+ * This is a model with one nested property
+ */
+export const vModelWithProperties = v.object({
+    required: v.string(),
+    requiredAndReadOnly: v.pipe(v.string(), v.readonly()),
+    string: v.optional(v.string()),
+    number: v.optional(v.number()),
+    boolean: v.optional(v.boolean()),
+    reference: v.optional(vModelWithString),
+    'property with space': v.optional(v.string()),
+    default: v.optional(v.string()),
+    try: v.optional(v.string()),
+    '@namespace.string': v.optional(v.pipe(v.string(), v.readonly())),
+    '@namespace.integer': v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly()))
+});
+
+/**
+ * This is a model with one property containing a reference
+ */
+export const vModelWithReference = v.object({
+    prop: v.optional(vModelWithProperties)
 });
 
 /**
@@ -388,6 +334,29 @@ export const vModelWithDuplicateImports = v.object({
     propC: v.optional(vModelWithString)
 });
 
+/**
+ * This is a model that extends another model
+ */
+export const vModelThatExtends = v.intersect([
+    vModelWithString,
+    v.object({
+        propExtendsA: v.optional(v.string()),
+        propExtendsB: v.optional(vModelWithString)
+    })
+]);
+
+/**
+ * This is a model that extends another model
+ */
+export const vModelThatExtendsExtends = v.intersect([
+    vModelWithString,
+    vModelThatExtends,
+    v.object({
+        propExtendsC: v.optional(v.string()),
+        propExtendsD: v.optional(vModelWithString)
+    })
+]);
+
 export const vDefault = v.object({
     name: v.optional(v.string())
 });
@@ -406,6 +375,37 @@ export const vModelWithPattern = v.object({
     patternWithNewline: v.optional(v.pipe(v.string(), v.regex(/aaa\nbbb/))),
     patternWithBacktick: v.optional(v.pipe(v.string(), v.regex(/aaa`bbb/)))
 });
+
+export const vParameterActivityParams = v.object({
+    description: v.optional(v.string()),
+    graduate_id: v.optional(v.pipe(v.number(), v.integer())),
+    organization_id: v.optional(v.pipe(v.number(), v.integer())),
+    parent_activity: v.optional(v.pipe(v.number(), v.integer())),
+    post_id: v.optional(v.pipe(v.number(), v.integer()))
+});
+
+export const vResponsePostActivityResponse = v.object({
+    description: v.optional(v.string()),
+    graduate_id: v.optional(v.pipe(v.number(), v.integer())),
+    organization_id: v.optional(v.pipe(v.number(), v.integer())),
+    parent_activity_id: v.optional(v.pipe(v.number(), v.integer())),
+    post_id: v.optional(v.pipe(v.number(), v.integer()))
+});
+
+export const vFailureFailure = v.object({
+    error: v.optional(v.string()),
+    message: v.optional(v.string()),
+    reference_code: v.optional(v.string())
+});
+
+export const vExternalSharedExternalSharedModel = v.object({
+    id: v.string(),
+    name: v.optional(v.string())
+});
+
+export const vExternalRefA = vExternalSharedExternalSharedModel;
+
+export const vExternalRefB = vExternalSharedExternalSharedModel;
 
 /**
  * This is a model with one nested property

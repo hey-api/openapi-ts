@@ -2,6 +2,12 @@
 
 import * as v from 'valibot';
 
+export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), 'baz');
+
+export const vQux = v.record(v.string(), v.object({
+    qux: v.optional(v.string())
+}));
+
 /**
  * This is Foo schema.
  */
@@ -26,20 +32,14 @@ export const vBar = v.object({
     foo: v.optional(vFoo)
 });
 
-export const vFoo2 = v.object({
-    foo: v.optional(vBar)
-});
-
 /**
  * This is Foo parameter.
  */
-export const vFoo3 = v.string();
+export const vFoo2 = v.string();
 
-export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), 'baz');
-
-export const vQux = v.record(v.string(), v.object({
-    qux: v.optional(v.string())
-}));
+export const vFoo3 = v.object({
+    foo: v.optional(vBar)
+});
 
 export const vPatchFooData = v.object({
     body: v.object({
@@ -58,7 +58,7 @@ export const vPatchFooData = v.object({
 });
 
 export const vPostFooData = v.object({
-    body: vFoo2,
+    body: vFoo3,
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });

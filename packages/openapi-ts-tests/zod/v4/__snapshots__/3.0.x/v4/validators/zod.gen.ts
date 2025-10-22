@@ -2,6 +2,8 @@
 
 import { z } from 'zod';
 
+export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
+
 export const zFoo = z.union([
     z.object({
         foo: z.optional(z.string().regex(/^\d{3}-\d{2}-\d{4}$/)),
@@ -23,5 +25,3 @@ export const zFoo = z.union([
 export const zBar = z.object({
     foo: z.optional(zFoo)
 });
-
-export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');

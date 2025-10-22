@@ -2,6 +2,8 @@
 
 import { z } from 'zod/v3';
 
+export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
+
 export const zFoo: z.ZodTypeAny = z.union([
     z.object({
         foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
@@ -19,5 +21,3 @@ export const zFoo: z.ZodTypeAny = z.union([
 export const zBar = z.object({
     foo: zFoo.optional()
 });
-
-export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');

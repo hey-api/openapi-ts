@@ -28,6 +28,10 @@ describe('FileRegistry', () => {
     expect(registry.get(file1.id)).toEqual(file1);
     expect(registry.get(['foo'])).toEqual(file1);
 
+    // isRegistered should be true for explicitly registered files
+    expect(registry.isRegistered(file1.id)).toBe(true);
+    expect(registry.isRegistered(['foo'])).toBe(true);
+
     // Registering again with same selector returns same file
     const file1b = registry.register({ selector: ['foo'] });
     expect(file1b).toEqual(file1);
@@ -76,6 +80,17 @@ describe('FileRegistry', () => {
     expect(referenced).toContainEqual(file3);
     // Once registered, file1 is not in referenced set
     expect(referenced).not.toContainEqual(file1);
+
+    // Referenced-only file should not be considered registered
+    expect(registry.isRegistered(file3.id)).toBe(false);
+    // Once registered, file3 becomes registered and no longer appears in referenced()
+    const file3Registered = registry.register({
+      name: 'Baz',
+      selector: ['baz'],
+    });
+    expect(registry.isRegistered(file3Registered.id)).toBe(true);
+    const referencedAfter = Array.from(registry.referenced());
+    expect(referencedAfter).not.toContainEqual(file3Registered);
   });
 
   it('throws on invalid register or reference', () => {
