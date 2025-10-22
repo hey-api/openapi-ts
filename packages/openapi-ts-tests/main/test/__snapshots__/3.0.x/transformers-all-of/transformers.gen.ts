@@ -8,22 +8,28 @@ export const getFooResponseTransformer = async (data: any): Promise<GetFooRespon
 };
 
 const fooSchemaResponseTransformer = (data: any) => {
-    data.foo = data.foo.map((item: any) => {
-        return barSchemaResponseTransformer(item);
-    });
+    if (data.foo) {
+        data.foo = data.foo.map((item: any) => {
+            return barSchemaResponseTransformer(item);
+        });
+    }
     return data;
 };
 
 const barSchemaResponseTransformer = (data: any) => {
-    data.foo = data.foo.map((item: any) => {
-        return bazSchemaResponseTransformer(item);
-    });
+    if (data.foo) {
+        data.foo = data.foo.map((item: any) => {
+            return bazSchemaResponseTransformer(item);
+        });
+    }
     return data;
 };
 
 const bazSchemaResponseTransformer = (data: any) => {
     data = quxSchemaResponseTransformer(data);
-    data.bar = new Date(data.bar);
+    if (data.bar) {
+        data.bar = new Date(data.bar);
+    }
     return data;
 };
 

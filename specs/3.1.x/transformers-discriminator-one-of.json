@@ -1,0 +1,81 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1.0 transformers discriminator oneOf example",
+    "version": "1"
+  },
+  "paths": {
+    "/api/pets/{id}": {
+      "get": {
+        "operationId": "getPetById",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Animal"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Animal": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Dog"
+          },
+          {
+            "$ref": "#/components/schemas/Cat"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "dog": "#/components/schemas/Dog",
+            "cat": "#/components/schemas/Cat"
+          }
+        }
+      },
+      "Dog": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["dog"]
+          },
+          "barkVolume": {
+            "type": "integer"
+          },
+          "firstBark": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["type", "firstBark"]
+      },
+      "Cat": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["cat"]
+          },
+          "whiskerLength": {
+            "type": "integer"
+          },
+          "firstMeow": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["type", "firstMeow"]
+      }
+    }
+  }
+}

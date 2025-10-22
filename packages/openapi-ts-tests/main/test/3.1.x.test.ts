@@ -789,6 +789,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-discriminator-one-of.json',
+        output: 'transformers-discriminator-one-of',
+        plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
+      }),
+      description: 'transforms discriminated union with oneOf',
+    },
+    {
+      config: createConfig({
         input: 'type-invalid.json',
         output: 'type-invalid',
       }),
