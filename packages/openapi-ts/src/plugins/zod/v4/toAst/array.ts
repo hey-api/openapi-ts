@@ -17,7 +17,7 @@ export const arrayToAst = ({
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
-  const z = plugin.referenceSymbol(plugin.api.getSelector('external', 'zod.z'));
+  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
 
   const functionName = tsc.propertyAccessExpression({
     expression: z.placeholder,
@@ -42,7 +42,7 @@ export const arrayToAst = ({
 
     // at least one item is guaranteed
     const itemExpressions = schema.items!.map((item, index) => {
-      const zodSchema = irSchemaToAst({
+      const itemAst = irSchemaToAst({
         plugin,
         schema: item,
         state: {
@@ -50,10 +50,10 @@ export const arrayToAst = ({
           _path: [...state._path, 'items', index],
         },
       });
-      if (zodSchema.hasCircularReference) {
+      if (itemAst.hasCircularReference) {
         result.hasCircularReference = true;
       }
-      return zodSchema.expression;
+      return itemAst.expression;
     });
 
     if (itemExpressions.length === 1) {

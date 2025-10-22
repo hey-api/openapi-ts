@@ -127,7 +127,7 @@ const generateAngularClassRequests = ({
     }
 
     const symbolInjectable = plugin.referenceSymbol(
-      plugin.api.getSelector('Injectable'),
+      plugin.api.selector('Injectable'),
     );
     const symbolClass = plugin.registerSymbol({
       exported: true,
@@ -138,7 +138,7 @@ const generateAngularClassRequests = ({
         },
         name: currentClass.className,
       }),
-      selector: plugin.api.getSelector('class', currentClass.className),
+      selector: plugin.api.selector('class', currentClass.className),
     });
     const node = tsc.classDeclaration({
       decorator: currentClass.root
@@ -175,7 +175,7 @@ const generateAngularFunctionRequests = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       name: plugin.config.httpRequests.methodNameBuilder(operation),
-      selector: plugin.api.getSelector('httpRequest', operation.id),
+      selector: plugin.api.selector('httpRequest', operation.id),
     });
     const node = generateAngularRequestFunction({
       isRequiredOptions,
@@ -196,10 +196,10 @@ const generateRequestCallExpression = ({
 }) => {
   const client = getClientPlugin(plugin.context.config);
   const symbolClient =
-    client.api && 'getSelector' in client.api
+    client.api && 'selector' in client.api
       ? plugin.getSymbol(
           // @ts-expect-error
-          client.api.getSelector('client'),
+          client.api.selector('client'),
         )
       : undefined;
 
@@ -265,16 +265,16 @@ const generateAngularRequestMethod = ({
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
   const symbolHttpRequest = plugin.referenceSymbol(
-    plugin.api.getSelector('HttpRequest'),
+    plugin.api.selector('HttpRequest'),
   );
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.getSelector('Options'),
+    sdkPlugin.api.selector('Options'),
   );
 
   const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('data', operation.id),
+    pluginTypeScript.api.selector('data', operation.id),
   );
   const dataType = symbolDataType?.placeholder || 'unknown';
 
@@ -322,16 +322,16 @@ const generateAngularRequestFunction = ({
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
   const symbolHttpRequest = plugin.referenceSymbol(
-    plugin.api.getSelector('HttpRequest'),
+    plugin.api.selector('HttpRequest'),
   );
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.getSelector('Options'),
+    sdkPlugin.api.selector('Options'),
   );
 
   const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('data', operation.id),
+    pluginTypeScript.api.selector('data', operation.id),
   );
   const dataType = symbolDataType?.placeholder || 'unknown';
 

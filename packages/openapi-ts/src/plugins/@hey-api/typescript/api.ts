@@ -18,6 +18,7 @@ type SelectorType =
   | 'Webhooks';
 
 export type IApi = {
+  schemaToType: (args: Parameters<typeof schemaToType>[0]) => ts.TypeNode;
   /**
    * @param type Selector type.
    * @param value Depends on `type`:
@@ -34,14 +35,13 @@ export type IApi = {
    *  - `Webhooks`: never
    * @returns Selector array
    */
-  getSelector: (type: SelectorType, value?: string) => Selector;
-  schemaToType: (args: Parameters<typeof schemaToType>[0]) => ts.TypeNode;
+  selector: (type: SelectorType, value?: string) => Selector;
 };
 
 export class Api implements IApi {
   constructor(public meta: Plugin.Name<'@hey-api/typescript'>) {}
 
-  getSelector(...args: ReadonlyArray<string | undefined>): Selector {
+  selector(...args: ReadonlyArray<string | undefined>): Selector {
     return [this.meta.name, ...(args as Selector)];
   }
 

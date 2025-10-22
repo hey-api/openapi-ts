@@ -13,7 +13,7 @@ export const handler: PluginHandler = ({ plugin }) => {
       kind: 'type',
     },
     name: 'DefaultError',
-    selector: plugin.api.getSelector('DefaultError'),
+    selector: plugin.api.selector('DefaultError'),
   });
   plugin.registerSymbol({
     external: plugin.name,
@@ -21,7 +21,7 @@ export const handler: PluginHandler = ({ plugin }) => {
       kind: 'type',
     },
     name: 'InfiniteData',
-    selector: plugin.api.getSelector('InfiniteData'),
+    selector: plugin.api.selector('InfiniteData'),
   });
   const mutationsType =
     plugin.name === '@tanstack/angular-query-experimental' ||
@@ -35,22 +35,22 @@ export const handler: PluginHandler = ({ plugin }) => {
       kind: 'type',
     },
     name: mutationsType,
-    selector: plugin.api.getSelector('MutationOptions'),
+    selector: plugin.api.selector('MutationOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
     name: 'infiniteQueryOptions',
-    selector: plugin.api.getSelector('infiniteQueryOptions'),
+    selector: plugin.api.selector('infiniteQueryOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
     name: 'queryOptions',
-    selector: plugin.api.getSelector('queryOptions'),
+    selector: plugin.api.selector('queryOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
     name: 'useQuery',
-    selector: plugin.api.getSelector('useQuery'),
+    selector: plugin.api.selector('useQuery'),
   });
   plugin.registerSymbol({
     external: 'axios',
@@ -58,7 +58,7 @@ export const handler: PluginHandler = ({ plugin }) => {
       kind: 'type',
     },
     name: 'AxiosError',
-    selector: plugin.api.getSelector('AxiosError'),
+    selector: plugin.api.selector('AxiosError'),
   });
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
@@ -78,7 +78,7 @@ export const handler: PluginHandler = ({ plugin }) => {
       entry
         ? [
             plugin.referenceSymbol(
-              sdkPlugin.api.getSelector('class', entry.path[0]),
+              sdkPlugin.api.selector('class', entry.path[0]),
             ).placeholder,
             ...entry.path.slice(1).map((className) =>
               stringCase({
@@ -91,7 +91,7 @@ export const handler: PluginHandler = ({ plugin }) => {
             .filter(Boolean)
             .join('.')
         : plugin.referenceSymbol(
-            sdkPlugin.api.getSelector('function', operation.id),
+            sdkPlugin.api.selector('function', operation.id),
           ).placeholder;
 
     if (plugin.hooks.operation.isQuery(operation)) {

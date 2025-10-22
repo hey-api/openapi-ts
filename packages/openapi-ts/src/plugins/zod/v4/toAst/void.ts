@@ -9,7 +9,7 @@ export const voidToAst = ({
   schema: SchemaWithType<'void'>;
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
-  const z = plugin.referenceSymbol(plugin.api.getSelector('external', 'zod.z'));
+  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
       expression: z.placeholder,

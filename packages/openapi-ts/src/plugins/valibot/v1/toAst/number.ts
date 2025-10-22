@@ -24,7 +24,7 @@ export const numberToAst = ({
   const formatInfo = isIntegerFormat(format) ? INTEGER_FORMATS[format] : null;
 
   const v = plugin.referenceSymbol(
-    plugin.api.getSelector('external', 'valibot.v'),
+    plugin.api.selector('external', 'valibot.v'),
   );
 
   // Return early if const is defined since we can create a literal type directly without additional validation

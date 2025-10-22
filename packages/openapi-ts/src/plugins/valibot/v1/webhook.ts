@@ -112,13 +112,13 @@ export const irWebhookToAst = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
-        resourceType: pathToSymbolResourceType(state._path),
+        resourceType: pathToSymbolResourceType(state._path.value),
       },
       name: buildName({
         config: plugin.config.webhooks,
         name: operation.id,
       }),
-      selector: plugin.api.getSelector('webhook-request', operation.id),
+      selector: plugin.api.selector('webhook-request', operation.id),
     });
     irSchemaToAst({
       plugin,

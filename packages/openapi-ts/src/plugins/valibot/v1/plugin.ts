@@ -8,9 +8,10 @@ import { tsc } from '../../../tsc';
 import { jsonPointerToPath, refToName } from '../../../utils/ref';
 import type { SchemaWithType } from '../../shared/types/schema';
 import { pathToSymbolResourceType } from '../../shared/utils/meta';
+import { toRef, toRefs } from '../../shared/utils/refs';
 import { createSchemaComment } from '../../shared/utils/schema';
 import { numberParameter } from '../shared/numbers';
-import type { IrSchemaToAstOptions } from '../shared/types';
+import type { IrSchemaToAstOptions, PluginState } from '../shared/types';
 import type { ValibotPlugin } from '../types';
 import { identifiers } from './constants';
 import { irOperationToAst } from './operation';
@@ -43,10 +44,10 @@ export const irSchemaToAst = ({
   let pipes: Array<ts.Expression> = [];
 
   if ($ref) {
-    state.circularReferenceTracker.add($ref);
+    state.circularReferenceTracker.value.add($ref);
 
     if (!symbol) {
-      const selector = plugin.api.getSelector('ref', $ref);
+      const selector = plugin.api.selector('ref', $ref);
       if (!plugin.getSymbol(selector)) {
         symbol = plugin.referenceSymbol(selector);
       }
@@ -54,16 +55,18 @@ export const irSchemaToAst = ({
   }
 
   const v = plugin.referenceSymbol(
-    plugin.api.getSelector('external', 'valibot.v'),
+    plugin.api.selector('external', 'valibot.v'),
   );
 
   if (schema.$ref) {
-    const isCircularReference = state.circularReferenceTracker.has(schema.$ref);
+    const isCircularReference = state.circularReferenceTracker.value.has(
+      schema.$ref,
+    );
 
     // if $ref hasn't been processed yet, inline it to avoid the
     // "Block-scoped variable used before its declaration." error
     // this could be (maybe?) fixed by reshuffling the generation order
-    const selector = plugin.api.getSelector('ref', schema.$ref);
+    const selector = plugin.api.selector('ref', schema.$ref);
     let refSymbol = plugin.getSymbol(selector);
     if (!refSymbol) {
       const ref = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
@@ -73,7 +76,7 @@ export const irSchemaToAst = ({
         schema: ref,
         state: {
           ...state,
-          _path: jsonPointerToPath(schema.$ref),
+          _path: toRef(jsonPointerToPath(schema.$ref)),
         },
       });
       pipes.push(...schemaPipes);
@@ -100,7 +103,7 @@ export const irSchemaToAst = ({
           ],
         });
         pipes.push(lazyExpression);
-        state.hasCircularReference = true;
+        state.hasCircularReference.value = true;
       } else {
         pipes.push(refIdentifier);
       }
@@ -143,7 +146,7 @@ export const irSchemaToAst = ({
           schema: item,
           state: {
             ...state,
-            _path: [...state._path, 'items', index],
+            _path: toRef([...state._path.value, 'items', index]),
           },
         });
         return pipesToAst({ pipes: schemaPipes, plugin });
@@ -198,7 +201,7 @@ export const irSchemaToAst = ({
   }
 
   if ($ref) {
-    state.circularReferenceTracker.delete($ref);
+    state.circularReferenceTracker.value.delete($ref);
   }
 
   if (pipes.length) {
@@ -248,16 +251,16 @@ export const irSchemaToAst = ({
       symbol = plugin.registerSymbol({
         exported: true,
         meta: {
-          resourceType: pathToSymbolResourceType(state._path),
+          resourceType: pathToSymbolResourceType(state._path.value),
         },
         name: buildName({
           config: {
-            case: state.nameCase,
-            name: state.nameTransformer,
+            case: state.nameCase.value,
+            name: state.nameTransformer.value,
           },
           name: refToName($ref),
         }),
-        selector: plugin.api.getSelector('ref', $ref),
+        selector: plugin.api.selector('ref', $ref),
       });
     }
     const statement = tsc.constVariable({
@@ -286,7 +289,7 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
     external: 'valibot',
     meta: { importKind: 'namespace' },
     name: 'v',
-    selector: plugin.api.getSelector('external', 'valibot.v'),
+    selector: plugin.api.selector('external', 'valibot.v'),
   });
 
   plugin.forEach(
@@ -296,12 +299,12 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
     'schema',
     'webhook',
     (event) => {
-      const state: Omit<IrSchemaToAstOptions['state'], '_path'> = {
+      const state = toRefs<Omit<PluginState, '_path'>>({
         circularReferenceTracker: new Set(),
         hasCircularReference: false,
         nameCase: plugin.config.definitions.case,
         nameTransformer: plugin.config.definitions.name,
-      };
+      });
 
       switch (event.type) {
         case 'operation':
@@ -310,7 +313,7 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
             plugin,
             state: {
               ...state,
-              _path: event._path,
+              _path: toRef(event._path),
             },
           });
           break;
@@ -321,7 +324,7 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
             schema: event.parameter.schema,
             state: {
               ...state,
-              _path: event._path,
+              _path: toRef(event._path),
             },
           });
           break;
@@ -332,7 +335,7 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
             schema: event.requestBody.schema,
             state: {
               ...state,
-              _path: event._path,
+              _path: toRef(event._path),
             },
           });
           break;
@@ -343,7 +346,7 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
             schema: event.schema,
             state: {
               ...state,
-              _path: event._path,
+              _path: toRef(event._path),
             },
           });
           break;
@@ -353,7 +356,7 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
             plugin,
             state: {
               ...state,
-              _path: event._path,
+              _path: toRef(event._path),
             },
           });
           break;

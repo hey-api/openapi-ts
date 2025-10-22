@@ -13,7 +13,7 @@ export const enumToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'enum'>;
 }): Omit<Ast, 'typeName'> => {
-  const z = plugin.referenceSymbol(plugin.api.getSelector('external', 'zod.z'));
+  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
 
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 

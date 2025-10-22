@@ -31,7 +31,7 @@ export const irSchemaToAst = ({
 }): Ast => {
   let ast: Partial<Ast> = {};
 
-  const z = plugin.referenceSymbol(plugin.api.getSelector('external', 'zod.z'));
+  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
 
   if (schema.$ref) {
     const isCircularReference = state.circularReferenceTracker.includes(
@@ -41,7 +41,7 @@ export const irSchemaToAst = ({
     state.circularReferenceTracker.push(schema.$ref);
     state.currentReferenceTracker.push(schema.$ref);
 
-    const selector = plugin.api.getSelector('ref', schema.$ref);
+    const selector = plugin.api.selector('ref', schema.$ref);
     let symbol = plugin.getSymbol(selector);
 
     if (isCircularReference) {
@@ -96,13 +96,13 @@ export const irSchemaToAst = ({
     state.circularReferenceTracker.pop();
     state.currentReferenceTracker.pop();
   } else if (schema.type) {
-    const zSchema = irSchemaWithTypeToAst({
+    const typeAst = irSchemaWithTypeToAst({
       plugin,
       schema: schema as SchemaWithType,
       state,
     });
-    ast.expression = zSchema.expression;
-    ast.hasCircularReference = zSchema.hasCircularReference;
+    ast.expression = typeAst.expression;
+    ast.hasCircularReference = typeAst.hasCircularReference;
 
     if (plugin.config.metadata && schema.description) {
       ast.expression = tsc.callExpression({
@@ -206,14 +206,14 @@ export const irSchemaToAst = ({
     }
   } else {
     // catch-all fallback for failed schemas
-    const zSchema = irSchemaWithTypeToAst({
+    const typeAst = irSchemaWithTypeToAst({
       plugin,
       schema: {
         type: 'unknown',
       },
       state,
     });
-    ast.expression = zSchema.expression;
+    ast.expression = typeAst.expression;
   }
 
   if (ast.expression) {
@@ -276,7 +276,7 @@ const handleComponent = ({
     hasCircularReference: _state?.hasCircularReference ?? false,
   };
 
-  const selector = plugin.api.getSelector('ref', id);
+  const selector = plugin.api.selector('ref', id);
   let symbol = plugin.getSymbol(selector);
   if (symbol && !plugin.getSymbolValue(symbol)) return;
 
@@ -305,7 +305,7 @@ const handleComponent = ({
           config: plugin.config.definitions.types.infer,
           name: baseName,
         }),
-        selector: plugin.api.getSelector('type-infer-ref', id),
+        selector: plugin.api.selector('type-infer-ref', id),
       })
     : undefined;
   exportAst({
@@ -322,7 +322,7 @@ export const handlerMini: ZodPlugin['Handler'] = ({ plugin }) => {
     external: getZodModule({ plugin }),
     meta: { importKind: 'namespace' },
     name: 'z',
-    selector: plugin.api.getSelector('external', 'zod.z'),
+    selector: plugin.api.selector('external', 'zod.z'),
   });
 
   plugin.forEach(
