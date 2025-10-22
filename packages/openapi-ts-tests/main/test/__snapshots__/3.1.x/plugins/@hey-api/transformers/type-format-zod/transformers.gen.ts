@@ -8,6 +8,8 @@ export const postFooResponseTransformer = async (data: any): Promise<PostFooResp
 };
 
 const fooSchemaResponseTransformer = (data: any) => {
-    data.foo = BigInt(data.foo.toString());
+    if (data.foo) {
+        data.foo = BigInt(data.foo.toString());
+    }
     return data;
 };
