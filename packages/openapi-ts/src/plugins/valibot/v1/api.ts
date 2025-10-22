@@ -8,11 +8,11 @@ export const createRequestValidatorV1 = ({
   operation,
   plugin,
 }: ValidatorArgs): ts.ArrowFunction | undefined => {
-  const symbol = plugin.getSymbol(plugin.api.getSelector('data', operation.id));
+  const symbol = plugin.getSymbol(plugin.api.selector('data', operation.id));
   if (!symbol) return;
 
   const v = plugin.referenceSymbol(
-    plugin.api.getSelector('external', 'valibot.v'),
+    plugin.api.selector('external', 'valibot.v'),
   );
 
   const dataParameterName = 'data';
@@ -48,12 +48,12 @@ export const createResponseValidatorV1 = ({
   plugin,
 }: ValidatorArgs): ts.ArrowFunction | undefined => {
   const symbol = plugin.getSymbol(
-    plugin.api.getSelector('responses', operation.id),
+    plugin.api.selector('responses', operation.id),
   );
   if (!symbol) return;
 
   const v = plugin.referenceSymbol(
-    plugin.api.getSelector('external', 'valibot.v'),
+    plugin.api.selector('external', 'valibot.v'),
   );
 
   const dataParameterName = 'data';

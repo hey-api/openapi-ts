@@ -60,7 +60,7 @@ const processSchemaType = ({
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   if (schema.$ref) {
-    const selector = plugin.api.getSelector('response-ref', schema.$ref);
+    const selector = plugin.api.selector('response-ref', schema.$ref);
 
     if (!plugin.getSymbol(selector)) {
       const symbol = plugin.registerSymbol({
@@ -337,7 +337,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
 
     const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
     const symbolResponse = plugin.getSymbol(
-      pluginTypeScript.api.getSelector('response', operation.id),
+      pluginTypeScript.api.selector('response', operation.id),
     );
     if (!symbolResponse) return;
 
@@ -350,7 +350,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
         },
         name: operation.id,
       }),
-      selector: plugin.api.getSelector('response', operation.id),
+      selector: plugin.api.selector('response', operation.id),
     });
 
     // TODO: parser - consider handling simple string response which is also a date

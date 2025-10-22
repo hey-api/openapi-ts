@@ -16,7 +16,7 @@ export const objectToAst = ({
 }): Omit<Ast, 'typeName'> & {
   anyType?: string;
 } => {
-  const z = plugin.referenceSymbol(plugin.api.getSelector('external', 'zod.z'));
+  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
 
   let hasCircularReference = false;
 
@@ -74,7 +74,7 @@ export const objectToAst = ({
     schema.additionalProperties &&
     (!schema.properties || !Object.keys(schema.properties).length)
   ) {
-    const zodSchema = irSchemaToAst({
+    const additionalAst = irSchemaToAst({
       plugin,
       schema: schema.additionalProperties,
       state: {
@@ -87,12 +87,12 @@ export const objectToAst = ({
         expression: z.placeholder,
         name: identifiers.record,
       }),
-      parameters: [zodSchema.expression],
+      parameters: [additionalAst.expression],
     });
     return {
       anyType: 'AnyZodObject',
       expression,
-      hasCircularReference: zodSchema.hasCircularReference,
+      hasCircularReference: additionalAst.hasCircularReference,
     };
   }
 

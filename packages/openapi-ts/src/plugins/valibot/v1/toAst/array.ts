@@ -3,6 +3,7 @@ import type ts from 'typescript';
 import { deduplicateSchema } from '../../../../ir/schema';
 import { tsc } from '../../../../tsc';
 import type { SchemaWithType } from '../../../shared/types/schema';
+import { toRef } from '../../../shared/utils/refs';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 import { pipesToAst } from '../pipesToAst';
@@ -17,7 +18,7 @@ export const arrayToAst = ({
   schema: SchemaWithType<'array'>;
 }): ts.Expression => {
   const v = plugin.referenceSymbol(
-    plugin.api.getSelector('external', 'valibot.v'),
+    plugin.api.selector('external', 'valibot.v'),
   );
   const functionName = tsc.propertyAccessExpression({
     expression: v.placeholder,
@@ -50,7 +51,7 @@ export const arrayToAst = ({
         schema: item,
         state: {
           ...state,
-          _path: [...state._path, 'items', index],
+          _path: toRef([...state._path.value, 'items', index]),
         },
       });
       return pipesToAst({ pipes: schemaPipes, plugin });

@@ -21,12 +21,21 @@ export const exportAst = ({
   symbol: Symbol;
   typeInferSymbol: Symbol | undefined;
 }): void => {
+  const type = plugin.referenceSymbol(
+    plugin.api.selector('external', 'arktype.type'),
+  );
+
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createSchemaComment({ schema })
       : undefined,
     exportConst: symbol.exported,
-    expression: ast.expression,
+    expression: tsc.callExpression({
+      functionName: type.placeholder,
+      parameters: [
+        ast.def ? tsc.stringLiteral({ text: ast.def }) : ast.expression,
+      ],
+    }),
     name: symbol.placeholder,
     // typeName: ast.typeName
     //   ? (tsc.propertyAccessExpression({

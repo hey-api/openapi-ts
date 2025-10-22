@@ -4,6 +4,7 @@ import type { IR } from '../../../ir/types';
 import type { ArktypePlugin } from '../types';
 
 export type Ast = {
+  def: string;
   expression: ts.Expression;
   hasCircularReference?: boolean;
   typeName?: string | ts.Identifier;

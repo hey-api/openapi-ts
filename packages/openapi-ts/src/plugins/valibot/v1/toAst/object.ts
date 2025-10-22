@@ -3,6 +3,7 @@ import ts from 'typescript';
 import { tsc } from '../../../../tsc';
 import { numberRegExp } from '../../../../utils/regexp';
 import type { SchemaWithType } from '../../../shared/types/schema';
+import { toRef } from '../../../shared/utils/refs';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 import { pipesToAst } from '../pipesToAst';
@@ -33,7 +34,7 @@ export const objectToAst = ({
       schema: property,
       state: {
         ...state,
-        _path: [...state._path, 'properties', name],
+        _path: toRef([...state._path.value, 'properties', name]),
       },
     });
 
@@ -65,7 +66,7 @@ export const objectToAst = ({
   }
 
   const v = plugin.referenceSymbol(
-    plugin.api.getSelector('external', 'valibot.v'),
+    plugin.api.selector('external', 'valibot.v'),
   );
 
   if (
@@ -78,7 +79,7 @@ export const objectToAst = ({
       schema: schema.additionalProperties,
       state: {
         ...state,
-        _path: [...state._path, 'additionalProperties'],
+        _path: toRef([...state._path.value, 'additionalProperties']),
       },
     });
     const expression = tsc.callExpression({

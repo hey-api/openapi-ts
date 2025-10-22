@@ -22,13 +22,13 @@ export const objectToAst = ({
 
   const required = schema.required ?? [];
 
-  const z = plugin.referenceSymbol(plugin.api.getSelector('external', 'zod.z'));
+  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
     const isRequired = required.includes(name);
 
-    const propertySchema = irSchemaToAst({
+    const propertyAst = irSchemaToAst({
       optional: !isRequired,
       plugin,
       schema: property,
@@ -37,7 +37,7 @@ export const objectToAst = ({
         _path: [...state._path, 'properties', name],
       },
     });
-    if (propertySchema.hasCircularReference) {
+    if (propertyAst.hasCircularReference) {
       result.hasCircularReference = true;
     }
 
@@ -61,20 +61,20 @@ export const objectToAst = ({
       propertyName = `'${name}'`;
     }
 
-    if (propertySchema.hasCircularReference) {
+    if (propertyAst.hasCircularReference) {
       properties.push(
         tsc.getAccessorDeclaration({
           name: propertyName,
           // @ts-expect-error
-          returnType: propertySchema.typeName
+          returnType: propertyAst.typeName
             ? tsc.propertyAccessExpression({
                 expression: z.placeholder,
-                name: propertySchema.typeName,
+                name: propertyAst.typeName,
               })
             : undefined,
           statements: [
             tsc.returnStatement({
-              expression: propertySchema.expression,
+              expression: propertyAst.expression,
             }),
           ],
         }),
@@ -82,7 +82,7 @@ export const objectToAst = ({
     } else {
       properties.push(
         tsc.propertyAssignment({
-          initializer: propertySchema.expression,
+          initializer: propertyAst.expression,
           name: propertyName,
         }),
       );
@@ -93,7 +93,7 @@ export const objectToAst = ({
     schema.additionalProperties &&
     (!schema.properties || !Object.keys(schema.properties).length)
   ) {
-    const zodSchema = irSchemaToAst({
+    const additionalAst = irSchemaToAst({
       plugin,
       schema: schema.additionalProperties,
       state: {
@@ -114,10 +114,10 @@ export const objectToAst = ({
           }),
           parameters: [],
         }),
-        zodSchema.expression,
+        additionalAst.expression,
       ],
     });
-    if (zodSchema.hasCircularReference) {
+    if (additionalAst.hasCircularReference) {
       result.hasCircularReference = true;
     }
 

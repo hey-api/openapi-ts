@@ -10,7 +10,7 @@ export const booleanToAst = ({
   schema: SchemaWithType<'boolean'>;
 }) => {
   const v = plugin.referenceSymbol(
-    plugin.api.getSelector('external', 'valibot.v'),
+    plugin.api.selector('external', 'valibot.v'),
   );
 
   if (typeof schema.const === 'boolean') {

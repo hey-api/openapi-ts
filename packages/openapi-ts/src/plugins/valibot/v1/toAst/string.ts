@@ -13,7 +13,7 @@ export const stringToAst = ({
   schema: SchemaWithType<'string'>;
 }) => {
   const v = plugin.referenceSymbol(
-    plugin.api.getSelector('external', 'valibot.v'),
+    plugin.api.selector('external', 'valibot.v'),
   );
 
   if (typeof schema.const === 'string') {

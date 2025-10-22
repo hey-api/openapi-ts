@@ -88,7 +88,7 @@ describe('generateLegacySchemas', () => {
       plugins: {
         '@hey-api/schemas': {
           api: {
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/schemas',
@@ -100,7 +100,7 @@ describe('generateLegacySchemas', () => {
         '@hey-api/sdk': {
           api: {
             createOperationComment: () => undefined,
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/sdk',
@@ -111,8 +111,8 @@ describe('generateLegacySchemas', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
+            selector: () => [],
           },
           config: {
             enums: 'javascript',
@@ -251,7 +251,7 @@ describe('generateLegacySchemas', () => {
       plugins: {
         '@hey-api/schemas': {
           api: {
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/schemas',
@@ -264,7 +264,7 @@ describe('generateLegacySchemas', () => {
         '@hey-api/sdk': {
           api: {
             createOperationComment: () => undefined,
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/sdk',
@@ -275,8 +275,8 @@ describe('generateLegacySchemas', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
+            selector: () => [],
           },
           config: {
             enums: 'javascript',

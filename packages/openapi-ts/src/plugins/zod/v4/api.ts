@@ -8,7 +8,7 @@ export const createRequestValidatorV4 = ({
   operation,
   plugin,
 }: ValidatorArgs): ts.ArrowFunction | undefined => {
-  const symbol = plugin.getSymbol(plugin.api.getSelector('data', operation.id));
+  const symbol = plugin.getSymbol(plugin.api.selector('data', operation.id));
   if (!symbol) return;
 
   const dataParameterName = 'data';
@@ -41,7 +41,7 @@ export const createResponseValidatorV4 = ({
   plugin,
 }: ValidatorArgs): ts.ArrowFunction | undefined => {
   const symbol = plugin.getSymbol(
-    plugin.api.getSelector('responses', operation.id),
+    plugin.api.selector('responses', operation.id),
   );
   if (!symbol) return;
 

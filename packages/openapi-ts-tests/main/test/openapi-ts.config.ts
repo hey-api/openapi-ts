@@ -34,9 +34,10 @@ export default defineConfig(() => {
           // },
           path: path.resolve(
             getSpecsPath(),
-            '3.0.x',
+            // '3.0.x',
+            '3.1.x',
             // 'circular.yaml',
-            'dutchie.json',
+            // 'dutchie.json',
             // 'invalid',
             // 'openai.yaml',
             // 'full.yaml',
@@ -46,6 +47,7 @@ export default defineConfig(() => {
             // 'transformers.json',
             // 'type-format.yaml',
             // 'validators.yaml',
+            'validators-circular-ref.json',
             // 'validators-circular-ref-2.yaml',
             // 'zoom-video-sdk.json',
           ),
@@ -213,7 +215,7 @@ export default defineConfig(() => {
           // },
         },
         {
-          asClass: true,
+          // asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}',
           // classNameBuilder: '{{name}}Service',
@@ -234,10 +236,10 @@ export default defineConfig(() => {
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          // validator: {
-          //   request: 'valibot',
-          //   response: 'zod',
-          // },
+          validator: {
+            request: 'arktype',
+            response: 'arktype',
+          },
           '~hooks': {
             symbols: {
               // getFilePath: (symbol) => {
@@ -300,10 +302,10 @@ export default defineConfig(() => {
           },
         },
         {
-          name: 'arktype',
-          types: {
-            infer: true,
-          },
+          // name: 'arktype',
+          // types: {
+          //   infer: true,
+          // },
         },
         {
           // case: 'SCREAMING_SNAKE_CASE',
@@ -353,7 +355,7 @@ export default defineConfig(() => {
           },
           exportFromIndex: true,
           metadata: true,
-          name: 'zod',
+          // name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',

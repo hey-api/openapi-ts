@@ -1,6 +1,77 @@
 import { tsc } from '../../tsc';
 
 export const identifiers = {
+  keywords: {
+    false: tsc.identifier({ text: 'false' }),
+    true: tsc.identifier({ text: 'true' }),
+  },
+  /**
+   * {@link https://arktype.io/docs/primitives#number Number}
+   */
+  number: {
+    Infinity: tsc.identifier({ text: 'Infinity' }),
+    NaN: tsc.identifier({ text: 'NaN' }),
+    NegativeInfinity: tsc.identifier({ text: 'NegativeInfinity' }),
+    epoch: tsc.identifier({ text: 'epoch' }),
+    integer: tsc.identifier({ text: 'integer' }),
+    safe: tsc.identifier({ text: 'safe' }),
+  },
+  /**
+   * {@link https://arktype.io/docs/primitives Primitives}
+   */
+  primitives: {
+    bigint: tsc.identifier({ text: 'bigint' }),
+    boolean: tsc.identifier({ text: 'boolean' }),
+    keywords: tsc.identifier({ text: 'keywords' }),
+    null: 'null',
+    number: tsc.identifier({ text: 'number' }),
+    string: 'string',
+    symbol: tsc.identifier({ text: 'symbol' }),
+    undefined: tsc.identifier({ text: 'undefined' }),
+    unit: tsc.identifier({ text: 'unit' }),
+  },
+  /**
+   * {@link https://arktype.io/docs/primitives#string String}
+   */
+  string: {
+    NFC: tsc.identifier({ text: 'NFC' }),
+    NFD: tsc.identifier({ text: 'NFD' }),
+    NFKC: tsc.identifier({ text: 'NFKC' }),
+    NFKD: tsc.identifier({ text: 'NFKD' }),
+    alpha: tsc.identifier({ text: 'alpha' }),
+    alphanumeric: tsc.identifier({ text: 'alphanumeric' }),
+    base64: tsc.identifier({ text: 'base64' }),
+    capitalize: tsc.identifier({ text: 'capitalize' }),
+    creditCard: tsc.identifier({ text: 'creditCard' }),
+    date: 'date',
+    digits: tsc.identifier({ text: 'digits' }),
+    email: 'email',
+    epoch: tsc.identifier({ text: 'epoch' }),
+    hex: tsc.identifier({ text: 'hex' }),
+    integer: tsc.identifier({ text: 'integer' }),
+    ip: 'ip',
+    iso: 'iso',
+    json: tsc.identifier({ text: 'json' }),
+    lower: tsc.identifier({ text: 'lower' }),
+    normalize: tsc.identifier({ text: 'normalize' }),
+    numeric: tsc.identifier({ text: 'numeric' }),
+    parse: tsc.identifier({ text: 'parse' }),
+    preformatted: tsc.identifier({ text: 'preformatted' }),
+    regex: tsc.identifier({ text: 'regex' }),
+    semver: tsc.identifier({ text: 'semver' }),
+    trim: tsc.identifier({ text: 'trim' }),
+    upper: tsc.identifier({ text: 'upper' }),
+    url: 'url',
+    uuid: 'uuid',
+    v1: 'v1',
+    v2: 'v2',
+    v3: 'v3',
+    v4: 'v4',
+    v5: 'v5',
+    v6: 'v6',
+    v7: 'v7',
+    v8: 'v8',
+  },
   /**
    * {@link https://arktype.io/docs/type-api Type API}
    */

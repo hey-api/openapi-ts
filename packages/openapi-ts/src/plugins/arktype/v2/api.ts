@@ -8,9 +8,23 @@ export const createRequestValidatorV2 = ({
   operation,
   plugin,
 }: ValidatorArgs): ts.ArrowFunction | undefined => {
-  const symbol = plugin.getSymbol(plugin.api.getSelector('data', operation.id));
+  const symbol = plugin.getSymbol(plugin.api.selector('data', operation.id));
   if (!symbol) return;
 
+  // const out = User({
+  //   name: "Alan Turing",
+  //   device: {
+  //     platform: "enigma",
+  //     versions: [0, "1", 0n]
+  //   }
+  // })
+  // if (out instanceof type.errors) {
+  //   // hover out.summary to see validation errors
+  //   console.error(out.summary)
+  // } else {
+  //   // hover out to see your validated data
+  //   console.log(`Hello, ${out.name}`)
+  // }
   const dataParameterName = 'data';
 
   return tsc.arrowFunction({
@@ -42,7 +56,7 @@ export const createResponseValidatorV2 = ({
   plugin,
 }: ValidatorArgs): ts.ArrowFunction | undefined => {
   const symbol = plugin.getSymbol(
-    plugin.api.getSelector('responses', operation.id),
+    plugin.api.selector('responses', operation.id),
   );
   if (!symbol) return;
 

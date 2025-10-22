@@ -18,7 +18,7 @@ export const createMutationOptions = ({
   queryFn: string;
 }): void => {
   const symbolMutationOptionsType = plugin.referenceSymbol(
-    plugin.api.getSelector('UseMutationOptions'),
+    plugin.api.selector('UseMutationOptions'),
   );
 
   const typeData = useTypeData({ operation, plugin });

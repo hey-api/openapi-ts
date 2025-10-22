@@ -1,8 +1,9 @@
-import ts from 'typescript';
-
+import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
-import { refToName } from '../../../utils/ref';
+import { tsc } from '../../../tsc';
+import { jsonPointerToPath, refToName } from '../../../utils/ref';
+import type { SchemaWithType } from '../../shared/types/schema';
 import { pathToSymbolResourceType } from '../../shared/utils/meta';
 import { exportAst } from '../shared/export';
 import type { Ast, IrSchemaToAstOptions } from '../shared/types';
@@ -26,98 +27,103 @@ export const irSchemaToAst = ({
   let ast: Partial<Ast> = {};
 
   // const z = plugin.referenceSymbol(
-  //   plugin.api.getSelector('external', 'zod.z'),
+  //   plugin.api.selector('external', 'zod.z'),
   // );
 
   if (schema.$ref) {
-    //   const isCircularReference = state.circularReferenceTracker.includes(
-    //     schema.$ref,
-    //   );
-    //   const isSelfReference = state.currentReferenceTracker.includes(schema.$ref);
-    //   state.circularReferenceTracker.push(schema.$ref);
-    //   state.currentReferenceTracker.push(schema.$ref);
-    //   const selector = plugin.api.getSelector('ref', schema.$ref);
-    //   let symbol = plugin.getSymbol(selector);
-    //   if (isCircularReference) {
-    //     if (!symbol) {
-    //       symbol = plugin.referenceSymbol(selector);
-    //     }
-    //     if (isSelfReference) {
-    //       ast.expression = tsc.callExpression({
-    //         functionName: tsc.propertyAccessExpression({
-    //           expression: z.placeholder,
-    //           name: identifiers.lazy,
-    //         }),
-    //         parameters: [
-    //           tsc.arrowFunction({
-    //             returnType: tsc.keywordTypeNode({ keyword: 'any' }),
-    //             statements: [
-    //               tsc.returnStatement({
-    //                 expression: tsc.identifier({ text: symbol.placeholder }),
-    //               }),
-    //             ],
-    //           }),
-    //         ],
-    //       });
-    //     } else {
-    //       ast.expression = tsc.identifier({ text: symbol.placeholder });
-    //     }
-    //     ast.hasCircularReference = schema.circular;
-    //   } else {
-    //     if (!symbol) {
-    //       // if $ref hasn't been processed yet, inline it to avoid the
-    //       // "Block-scoped variable used before its declaration." error
-    //       // this could be (maybe?) fixed by reshuffling the generation order
-    //       const ref = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
-    //       handleComponent({
-    //         id: schema.$ref,
-    //         plugin,
-    //         schema: ref,
-    //         state: {
-    //           ...state,
-    //           _path: jsonPointerToPath(schema.$ref),
-    //         },
-    //       });
-    //     } else {
-    //       ast.hasCircularReference = schema.circular;
-    //     }
-    //     const refSymbol = plugin.referenceSymbol(selector);
-    //     ast.expression = tsc.identifier({ text: refSymbol.placeholder });
-    //   }
-    //   state.circularReferenceTracker.pop();
-    //   state.currentReferenceTracker.pop();
+    const isCircularReference = state.circularReferenceTracker.includes(
+      schema.$ref,
+    );
+    const isSelfReference = state.currentReferenceTracker.includes(schema.$ref);
+    state.circularReferenceTracker.push(schema.$ref);
+    state.currentReferenceTracker.push(schema.$ref);
+    const selector = plugin.api.selector('ref', schema.$ref);
+    let symbol = plugin.getSymbol(selector);
+    if (isCircularReference) {
+      if (!symbol) {
+        symbol = plugin.referenceSymbol(selector);
+      }
+      if (isSelfReference) {
+        ast.expression = tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
+            // expression: z.placeholder,
+            expression: 'TODO',
+            name: 'TODO',
+            // name: identifiers.lazy,
+          }),
+          parameters: [
+            tsc.arrowFunction({
+              returnType: tsc.keywordTypeNode({ keyword: 'any' }),
+              statements: [
+                tsc.returnStatement({
+                  expression: tsc.identifier({ text: symbol.placeholder }),
+                }),
+              ],
+            }),
+          ],
+        });
+      } else {
+        ast.expression = tsc.identifier({ text: symbol.placeholder });
+      }
+      ast.hasCircularReference = schema.circular;
+    } else {
+      if (!symbol) {
+        // if $ref hasn't been processed yet, inline it to avoid the
+        // "Block-scoped variable used before its declaration." error
+        // this could be (maybe?) fixed by reshuffling the generation order
+        const ref = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
+        handleComponent({
+          id: schema.$ref,
+          plugin,
+          schema: ref,
+          state: {
+            ...state,
+            _path: jsonPointerToPath(schema.$ref),
+          },
+        });
+      } else {
+        ast.hasCircularReference = schema.circular;
+      }
+      const refSymbol = plugin.referenceSymbol(selector);
+      ast.expression = tsc.identifier({ text: refSymbol.placeholder });
+    }
+    state.circularReferenceTracker.pop();
+    state.currentReferenceTracker.pop();
   } else if (schema.type) {
-    //   const zSchema = irSchemaWithTypeToAst({
-    //     plugin,
-    //     schema: schema as SchemaWithType,
-    //     state,
-    //   });
-    //   ast.expression = zSchema.expression;
-    //   ast.hasCircularReference = zSchema.hasCircularReference;
-    //   if (plugin.config.metadata && schema.description) {
-    //     ast.expression = tsc.callExpression({
-    //       functionName: tsc.propertyAccessExpression({
-    //         expression: ast.expression,
-    //         name: identifiers.register,
-    //       }),
-    //       parameters: [
-    //         tsc.propertyAccessExpression({
-    //           expression: z.placeholder,
-    //           name: identifiers.globalRegistry,
-    //         }),
-    //         tsc.objectExpression({
-    //           obj: [
-    //             {
-    //               key: 'description',
-    //               value: tsc.stringLiteral({ text: schema.description }),
-    //             },
-    //           ],
-    //         }),
-    //       ],
-    //     });
-    //   }
+    const typeAst = irSchemaWithTypeToAst({
+      plugin,
+      schema: schema as SchemaWithType,
+      state,
+    });
+    ast.def = typeAst.def;
+    ast.expression = typeAst.expression;
+    ast.hasCircularReference = typeAst.hasCircularReference;
+
+    if (plugin.config.metadata && schema.description) {
+      // TODO: add description
+      // ast.expression = tsc.callExpression({
+      //   functionName: tsc.propertyAccessExpression({
+      //     expression: ast.expression,
+      //     name: identifiers.register,
+      //   }),
+      //   parameters: [
+      //     tsc.propertyAccessExpression({
+      //       expression: z.placeholder,
+      //       name: identifiers.globalRegistry,
+      //     }),
+      //     tsc.objectExpression({
+      //       obj: [
+      //         {
+      //           key: 'description',
+      //           value: tsc.stringLiteral({ text: schema.description }),
+      //         },
+      //       ],
+      //     }),
+      //   ],
+      // });
+    }
   } else if (schema.items) {
-    //   schema = deduplicateSchema({ schema });
+    schema = deduplicateSchema({ schema });
 
     if (schema.items) {
       //     const itemSchemas = schema.items.map((item, index) =>
@@ -190,33 +196,32 @@ export const irSchemaToAst = ({
       //       });
       //     }
     } else {
-      ast = irSchemaToAst({
-        plugin,
-        schema,
-        state,
-      });
+      ast = irSchemaToAst({ plugin, schema, state });
     }
   } else {
-    //   // catch-all fallback for failed schemas
-    //   const zSchema = irSchemaWithTypeToAst({
-    //     plugin,
-    //     schema: {
-    //       type: 'unknown',
-    //     },
-    //     state,
-    //   });
-    //   ast.expression = zSchema.expression;
+    // catch-all fallback for failed schemas
+    const typeAst = irSchemaWithTypeToAst({
+      plugin,
+      schema: {
+        type: 'unknown',
+      },
+      state,
+    });
+    ast.def = typeAst.def;
+    ast.expression = typeAst.expression;
   }
 
   // TODO: remove later
-  const zSchema = irSchemaWithTypeToAst({
-    plugin,
-    schema: {
-      type: 'unknown',
-    },
-    state,
-  });
-  ast.expression = zSchema.expression;
+  if (!ast.expression) {
+    const typeAst = irSchemaWithTypeToAst({
+      plugin,
+      schema: {
+        type: 'unknown',
+      },
+      state,
+    });
+    ast.expression = typeAst.expression;
+  }
   // END TODO: remove later
 
   // if (ast.expression) {
@@ -278,7 +283,7 @@ const handleComponent = ({
     hasCircularReference: _state?.hasCircularReference ?? false,
   };
 
-  const selector = plugin.api.getSelector('ref', id);
+  const selector = plugin.api.selector('ref', id);
   let symbol = plugin.getSymbol(selector);
   if (symbol && !plugin.getSymbolValue(symbol)) return;
 
@@ -307,7 +312,7 @@ const handleComponent = ({
           config: plugin.config.definitions.types.infer,
           name: baseName,
         }),
-        selector: plugin.api.getSelector('type-infer-ref', id),
+        selector: plugin.api.selector('type-infer-ref', id),
       })
     : undefined;
   exportAst({
@@ -320,10 +325,10 @@ const handleComponent = ({
 };
 
 export const handlerV2: ArktypePlugin['Handler'] = ({ plugin }) => {
-  const typeSymbol = plugin.registerSymbol({
+  plugin.registerSymbol({
     external: 'arktype',
     name: 'type',
-    selector: plugin.api.getSelector('external', 'arktype.type'),
+    selector: plugin.api.selector('external', 'arktype.type'),
   });
 
   plugin.forEach(
@@ -333,62 +338,6 @@ export const handlerV2: ArktypePlugin['Handler'] = ({ plugin }) => {
     'schema',
     'webhook',
     (event) => {
-      if (event.type === 'schema') {
-        const symbol = plugin.registerSymbol({
-          exported: true,
-          meta: {
-            resourceType: pathToSymbolResourceType([
-              'components',
-              'schemas',
-              event.name,
-            ]),
-          },
-          name: event.name,
-          selector: plugin.api.getSelector('ref', event.$ref),
-        });
-
-        const userNode = ts.factory.createVariableStatement(
-          [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-          ts.factory.createVariableDeclarationList(
-            [
-              ts.factory.createVariableDeclaration(
-                symbol.placeholder,
-                undefined,
-                undefined,
-                ts.factory.createCallExpression(
-                  ts.factory.createIdentifier(typeSymbol.placeholder),
-                  undefined,
-                  [
-                    ts.factory.createObjectLiteralExpression(
-                      [
-                        ts.factory.createPropertyAssignment(
-                          'name',
-                          ts.factory.createStringLiteral('string'),
-                        ),
-                        ts.factory.createPropertyAssignment(
-                          'platform',
-                          ts.factory.createStringLiteral("'android' | 'ios'"),
-                        ),
-                        ts.factory.createPropertyAssignment(
-                          ts.factory.createComputedPropertyName(
-                            ts.factory.createStringLiteral('versions?'),
-                          ),
-                          ts.factory.createStringLiteral('(number | string)[]'),
-                        ),
-                      ],
-                      true,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            ts.NodeFlags.Const,
-          ),
-        );
-
-        plugin.setSymbolValue(symbol, userNode);
-      }
-
       switch (event.type) {
         //   case 'operation':
         //     operationToZodSchema({

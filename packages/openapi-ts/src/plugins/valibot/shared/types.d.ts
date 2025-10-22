@@ -1,13 +1,14 @@
 import type { IR } from '../../../ir/types';
 import type { StringCase, StringName } from '../../../types/case';
+import type { ToRefs } from '../../shared/types/refs';
 import type { ValibotPlugin } from '../types';
 
 export type IrSchemaToAstOptions = {
   plugin: ValibotPlugin['Instance'];
-  state: State;
+  state: ToRefs<PluginState>;
 };
 
-export type State = {
+export type PluginState = {
   /**
    * Path to the schema in the intermediary representation.
    */

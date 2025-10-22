@@ -9,7 +9,7 @@ export const booleanToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'boolean'>;
 }) => {
-  const z = plugin.referenceSymbol(plugin.api.getSelector('external', 'zod.z'));
+  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
 
   if (typeof schema.const === 'boolean') {
     const expression = tsc.callExpression({

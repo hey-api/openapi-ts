@@ -35,7 +35,7 @@ export type IApi = {
    *  - `webhook-request`: `operation.id` string
    * @returns Selector array
    */
-  getSelector: (type: SelectorType, value?: string) => Selector;
+  selector: (type: SelectorType, value?: string) => Selector;
 };
 
 export class Api implements IApi {
@@ -49,7 +49,7 @@ export class Api implements IApi {
     return createResponseValidatorV2(args);
   }
 
-  getSelector(...args: ReadonlyArray<string | undefined>): Selector {
+  selector(...args: ReadonlyArray<string | undefined>): Selector {
     return [this.meta.name, ...(args as Selector)];
   }
 }

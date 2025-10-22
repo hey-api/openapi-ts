@@ -9,7 +9,7 @@ export const neverToAst = ({
   schema: SchemaWithType<'never'>;
 }) => {
   const v = plugin.referenceSymbol(
-    plugin.api.getSelector('external', 'valibot.v'),
+    plugin.api.selector('external', 'valibot.v'),
   );
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({

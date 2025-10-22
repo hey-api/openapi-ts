@@ -2,6 +2,7 @@ import { operationResponsesMap } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { pathToSymbolResourceType } from '../../shared/utils/meta';
+import { toRef } from '../../shared/utils/refs';
 import type { IrSchemaToAstOptions } from '../shared/types';
 import { irSchemaToAst } from './plugin';
 
@@ -113,13 +114,13 @@ export const irOperationToAst = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
-        resourceType: pathToSymbolResourceType(state._path),
+        resourceType: pathToSymbolResourceType(state._path.value),
       },
       name: buildName({
         config: plugin.config.requests,
         name: operation.id,
       }),
-      selector: plugin.api.getSelector('data', operation.id),
+      selector: plugin.api.selector('data', operation.id),
     });
     irSchemaToAst({
       plugin,
@@ -134,7 +135,7 @@ export const irOperationToAst = ({
       const { response } = operationResponsesMap(operation);
 
       if (response) {
-        const path = [...state._path, 'responses'];
+        const path = [...state._path.value, 'responses'];
         const symbol = plugin.registerSymbol({
           exported: true,
           meta: {
@@ -144,14 +145,14 @@ export const irOperationToAst = ({
             config: plugin.config.responses,
             name: operation.id,
           }),
-          selector: plugin.api.getSelector('responses', operation.id),
+          selector: plugin.api.selector('responses', operation.id),
         });
         irSchemaToAst({
           plugin,
           schema: response,
           state: {
             ...state,
-            _path: path,
+            _path: toRef(path),
           },
           symbol,
         });

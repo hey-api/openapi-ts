@@ -127,7 +127,7 @@ export const irWebhookToAst = ({
         config: plugin.config.webhooks,
         name: operation.id,
       }),
-      selector: plugin.api.getSelector('webhook-request', operation.id),
+      selector: plugin.api.selector('webhook-request', operation.id),
     });
     const typeInferSymbol = plugin.config.webhooks.types.infer.enabled
       ? plugin.registerSymbol({
@@ -140,7 +140,7 @@ export const irWebhookToAst = ({
             config: plugin.config.webhooks.types.infer,
             name: operation.id,
           }),
-          selector: plugin.api.getSelector(
+          selector: plugin.api.selector(
             'type-infer-webhook-request',
             operation.id,
           ),

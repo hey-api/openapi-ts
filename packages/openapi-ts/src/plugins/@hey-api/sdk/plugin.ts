@@ -34,13 +34,13 @@ const createClientClassNodes = ({
     }),
   });
 
-  const symbolClient = plugin.referenceSymbol(plugin.api.getSelector('Client'));
+  const symbolClient = plugin.referenceSymbol(plugin.api.selector('Client'));
   const client = getClientPlugin(plugin.context.config);
   const symClient =
-    client.api && 'getSelector' in client.api
+    client.api && 'selector' in client.api
       ? plugin.getSymbol(
           // @ts-expect-error
-          client.api.getSelector('client'),
+          client.api.selector('client'),
         )
       : undefined;
 
@@ -144,7 +144,7 @@ const generateClassSdk = ({
     const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
     const symbolResponse = isNuxtClient
       ? plugin.getSymbol(
-          pluginTypeScript.api.getSelector('response', operation.id),
+          pluginTypeScript.api.selector('response', operation.id),
         )
       : undefined;
 
@@ -157,7 +157,7 @@ const generateClassSdk = ({
     for (const entry of classes.values()) {
       entry.path.forEach((currentClassName, index) => {
         const symbolCurrentClass = plugin.referenceSymbol(
-          plugin.api.getSelector('class', currentClassName),
+          plugin.api.selector('class', currentClassName),
         );
         if (!sdkClasses.has(symbolCurrentClass.id)) {
           sdkClasses.set(symbolCurrentClass.id, {
@@ -173,7 +173,7 @@ const generateClassSdk = ({
         const parentClassName = entry.path[index - 1];
         if (parentClassName) {
           const symbolParentClass = plugin.referenceSymbol(
-            plugin.api.getSelector('class', parentClassName),
+            plugin.api.selector('class', parentClassName),
           );
           if (
             symbolParentClass.placeholder !== symbolCurrentClass.placeholder
@@ -221,7 +221,7 @@ const generateClassSdk = ({
                 {
                   default: tsc.ots.string('$fetch'),
                   extends: tsc.typeNode(
-                    plugin.referenceSymbol(plugin.api.getSelector('Composable'))
+                    plugin.referenceSymbol(plugin.api.selector('Composable'))
                       .placeholder,
                   ),
                   name: nuxtTypeComposable,
@@ -324,7 +324,7 @@ const generateClassSdk = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       name: currentClass.className,
-      selector: plugin.api.getSelector('class', currentClass.className),
+      selector: plugin.api.selector('class', currentClass.className),
     });
     const node = tsc.classDeclaration({
       decorator:
@@ -335,7 +335,7 @@ const generateClassSdk = ({
                   providedIn: 'root',
                 },
               ],
-              name: plugin.referenceSymbol(plugin.api.getSelector('Injectable'))
+              name: plugin.referenceSymbol(plugin.api.selector('Injectable'))
                 .placeholder,
             }
           : undefined,
@@ -380,7 +380,7 @@ const generateFlatSdk = ({
     const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
     const symbolResponse = isNuxtClient
       ? plugin.getSymbol(
-          pluginTypeScript.api.getSelector('response', operation.id),
+          pluginTypeScript.api.selector('response', operation.id),
         )
       : undefined;
     const opParameters = operationParameters({
@@ -401,7 +401,7 @@ const generateFlatSdk = ({
         id: operation.id,
         operation,
       }),
-      selector: plugin.api.getSelector('function', operation.id),
+      selector: plugin.api.selector('function', operation.id),
     });
     const node = tsc.constVariable({
       comment: plugin.api.createOperationComment({ operation }),
@@ -415,7 +415,7 @@ const generateFlatSdk = ({
               {
                 default: tsc.ots.string('$fetch'),
                 extends: tsc.typeNode(
-                  plugin.referenceSymbol(plugin.api.getSelector('Composable'))
+                  plugin.referenceSymbol(plugin.api.selector('Composable'))
                     .placeholder,
                 ),
                 name: nuxtTypeComposable,
@@ -456,17 +456,17 @@ export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: clientModule,
     name: 'formDataBodySerializer',
-    selector: plugin.api.getSelector('formDataBodySerializer'),
+    selector: plugin.api.selector('formDataBodySerializer'),
   });
   plugin.registerSymbol({
     external: clientModule,
     name: 'urlSearchParamsBodySerializer',
-    selector: plugin.api.getSelector('urlSearchParamsBodySerializer'),
+    selector: plugin.api.selector('urlSearchParamsBodySerializer'),
   });
   plugin.registerSymbol({
     external: clientModule,
     name: 'buildClientParams',
-    selector: plugin.api.getSelector('buildClientParams'),
+    selector: plugin.api.selector('buildClientParams'),
   });
 
   const client = getClientPlugin(plugin.context.config);
@@ -479,7 +479,7 @@ export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
         kind: 'type',
       },
       name: 'Composable',
-      selector: plugin.api.getSelector('Composable'),
+      selector: plugin.api.selector('Composable'),
     });
   }
 
@@ -487,7 +487,7 @@ export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
     plugin.registerSymbol({
       external: '@angular/core',
       name: 'Injectable',
-      selector: plugin.api.getSelector('Injectable'),
+      selector: plugin.api.selector('Injectable'),
     });
   }
 

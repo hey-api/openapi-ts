@@ -128,7 +128,7 @@ export const irOperationToAst = ({
         config: plugin.config.requests,
         name: operation.id,
       }),
-      selector: plugin.api.getSelector('data', operation.id),
+      selector: plugin.api.selector('data', operation.id),
     });
     const typeInferSymbol = plugin.config.requests.types.infer.enabled
       ? plugin.registerSymbol({
@@ -141,7 +141,7 @@ export const irOperationToAst = ({
             config: plugin.config.requests.types.infer,
             name: operation.id,
           }),
-          selector: plugin.api.getSelector('type-infer-data', operation.id),
+          selector: plugin.api.selector('type-infer-data', operation.id),
         })
       : undefined;
     exportAst({
@@ -170,7 +170,7 @@ export const irOperationToAst = ({
             config: plugin.config.responses,
             name: operation.id,
           }),
-          selector: plugin.api.getSelector('responses', operation.id),
+          selector: plugin.api.selector('responses', operation.id),
         });
         const typeInferSymbol = plugin.config.responses.types.infer.enabled
           ? plugin.registerSymbol({
@@ -183,7 +183,7 @@ export const irOperationToAst = ({
                 config: plugin.config.responses.types.infer,
                 name: operation.id,
               }),
-              selector: plugin.api.getSelector(
+              selector: plugin.api.selector(
                 'type-infer-responses',
                 operation.id,
               ),

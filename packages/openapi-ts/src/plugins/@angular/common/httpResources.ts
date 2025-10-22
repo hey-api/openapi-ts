@@ -126,7 +126,7 @@ const generateAngularClassServices = ({
     }
 
     const symbolInjectable = plugin.referenceSymbol(
-      plugin.api.getSelector('Injectable'),
+      plugin.api.selector('Injectable'),
     );
     const symbolClass = plugin.registerSymbol({
       exported: true,
@@ -195,11 +195,11 @@ const generateResourceCallExpression = ({
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
   const symbolHttpResource = plugin.referenceSymbol(
-    plugin.api.getSelector('httpResource'),
+    plugin.api.selector('httpResource'),
   );
 
   const symbolResponseType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('response', operation.id),
+    pluginTypeScript.api.selector('response', operation.id),
   );
   const responseType = symbolResponseType?.placeholder || 'unknown';
 
@@ -216,12 +216,12 @@ const generateResourceCallExpression = ({
       // Import the root class from HTTP requests
       const rootClassName = firstEntry.path[0]!;
       const symbolClass = plugin.referenceSymbol(
-        plugin.api.getSelector('class', rootClassName),
+        plugin.api.selector('class', rootClassName),
       );
 
       // Build the method access path using inject
       const symbolInject = plugin.referenceSymbol(
-        plugin.api.getSelector('inject'),
+        plugin.api.selector('inject'),
       );
       let methodAccess: ts.Expression = tsc.callExpression({
         functionName: symbolInject.placeholder,
@@ -282,7 +282,7 @@ const generateResourceCallExpression = ({
     }
   } else {
     const symbolHttpRequest = plugin.referenceSymbol(
-      plugin.api.getSelector('httpRequest', operation.id),
+      plugin.api.selector('httpRequest', operation.id),
     );
 
     return tsc.callExpression({
@@ -351,11 +351,11 @@ const generateAngularResourceMethod = ({
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.getSelector('Options'),
+    sdkPlugin.api.selector('Options'),
   );
 
   const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('data', operation.id),
+    pluginTypeScript.api.selector('data', operation.id),
   );
   const dataType = symbolDataType?.placeholder || 'unknown';
 
@@ -404,11 +404,11 @@ const generateAngularResourceFunction = ({
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.getSelector('Options'),
+    sdkPlugin.api.selector('Options'),
   );
 
   const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('data', operation.id),
+    pluginTypeScript.api.selector('data', operation.id),
   );
   const dataType = symbolDataType?.placeholder || 'unknown';
 

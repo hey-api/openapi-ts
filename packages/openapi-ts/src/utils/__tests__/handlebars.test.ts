@@ -82,7 +82,7 @@ describe('registerHandlebarHelpers', () => {
       plugins: {
         '@hey-api/schemas': {
           api: {
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/schemas',
@@ -94,7 +94,7 @@ describe('registerHandlebarHelpers', () => {
         '@hey-api/sdk': {
           api: {
             createOperationComment: () => undefined,
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/sdk',
@@ -105,8 +105,8 @@ describe('registerHandlebarHelpers', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
+            selector: () => [],
           },
           config: {
             enums: 'javascript',
@@ -213,7 +213,7 @@ describe('registerHandlebarTemplates', () => {
       plugins: {
         '@hey-api/schemas': {
           api: {
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/schemas',
@@ -225,7 +225,7 @@ describe('registerHandlebarTemplates', () => {
         '@hey-api/sdk': {
           api: {
             createOperationComment: () => undefined,
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/sdk',
@@ -236,8 +236,8 @@ describe('registerHandlebarTemplates', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
+            selector: () => [],
           },
           config: {
             enums: 'javascript',

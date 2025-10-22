@@ -11,7 +11,7 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
       kind: 'type',
     },
     name: 'UseMutationOptions',
-    selector: plugin.api.getSelector('UseMutationOptions'),
+    selector: plugin.api.selector('UseMutationOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
@@ -19,7 +19,7 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
       kind: 'type',
     },
     name: 'UseQueryOptions',
-    selector: plugin.api.getSelector('UseQueryOptions'),
+    selector: plugin.api.selector('UseQueryOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
@@ -27,7 +27,7 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
       kind: 'type',
     },
     name: '_JSONValue',
-    selector: plugin.api.getSelector('_JSONValue'),
+    selector: plugin.api.selector('_JSONValue'),
   });
   plugin.registerSymbol({
     external: 'axios',
@@ -35,7 +35,7 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
       kind: 'type',
     },
     name: 'AxiosError',
-    selector: plugin.api.getSelector('AxiosError'),
+    selector: plugin.api.selector('AxiosError'),
   });
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
@@ -55,7 +55,7 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
       entry
         ? [
             plugin.referenceSymbol(
-              sdkPlugin.api.getSelector('class', entry.path[0]),
+              sdkPlugin.api.selector('class', entry.path[0]),
             ).placeholder,
             ...entry.path.slice(1).map((className: string) =>
               stringCase({
@@ -68,7 +68,7 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
             .filter(Boolean)
             .join('.')
         : plugin.referenceSymbol(
-            sdkPlugin.api.getSelector('function', operation.id),
+            sdkPlugin.api.selector('function', operation.id),
           ).placeholder;
 
     if (plugin.hooks.operation.isQuery(operation)) {
