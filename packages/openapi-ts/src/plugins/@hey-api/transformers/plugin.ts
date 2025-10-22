@@ -200,8 +200,7 @@ const processSchemaType = ({
   }
 
   if (schema.type === 'object') {
-    let nodes: Array<ts.Expression | ts.Statement> = [];
-    const required = schema.required ?? [];
+    const nodes: Array<ts.Expression | ts.Statement> = [];
 
     for (const name in schema.properties) {
       const property = schema.properties[name]!;
@@ -217,27 +216,19 @@ const processSchemaType = ({
       if (!propertyNodes.length) {
         continue;
       }
-      const noNullableTypesInSchema = !property.items?.find(
-        (x) => x.type === 'null',
-      );
-      const requiredField = required.includes(name);
-      // Cannot fully rely on required fields
-      // Such value has to be present, but it doesn't guarantee that this value is not nullish
-      if (requiredField && noNullableTypesInSchema) {
-        nodes = nodes.concat(propertyNodes);
-      } else {
-        nodes.push(
-          // todo: Probably, it would make more sense to go with if(x !== undefined && x !== null) instead of if(x)
-          // this place influences all underlying transformers, while it's not exactly transformer itself
-          // Keep in mind that !!0 === false, so it already makes output for Bigint undesirable
-          tsc.ifStatement({
-            expression: propertyAccessExpression,
-            thenStatement: tsc.block({
-              statements: ensureStatements(propertyNodes),
-            }),
+      // Always add safety checks for transformations to handle discriminated unions
+      // and other cases where the property might not exist on the data
+      nodes.push(
+        // todo: Probably, it would make more sense to go with if(x !== undefined && x !== null) instead of if(x)
+        // this place influences all underlying transformers, while it's not exactly transformer itself
+        // Keep in mind that !!0 === false, so it already makes output for Bigint undesirable
+        tsc.ifStatement({
+          expression: propertyAccessExpression,
+          thenStatement: tsc.block({
+            statements: ensureStatements(propertyNodes),
           }),
-        );
-      }
+        }),
+      );
     }
 
     return nodes;
@@ -286,6 +277,42 @@ const processSchemaType = ({
         }
       }
       return arrayNodes;
+    }
+
+    // Handle discriminated unions (oneOf with discriminator)
+    // For discriminated unions with logicalOperator 'or', we process each variant
+    // and collect all transformations since at runtime only one variant will be present
+    if (schema.logicalOperator === 'or') {
+      // Try to process each variant and collect transformations
+      const allVariantNodes: Array<ts.Expression | ts.Statement> = [];
+      for (const item of schema.items) {
+        const nodes = processSchemaType({
+          dataExpression: dataExpression || 'item',
+          plugin,
+          schema: item,
+        });
+        if (nodes.length) {
+          allVariantNodes.push(...nodes);
+        }
+      }
+
+      // If we found transformations for any variant, return them
+      if (allVariantNodes.length > 0) {
+        if (dataExpression) {
+          return allVariantNodes;
+        } else {
+          const identifierItem = tsc.identifier({ text: 'item' });
+          return [
+            tsc.ifStatement({
+              expression: identifierItem,
+              thenStatement: tsc.block({
+                statements: ensureStatements(allVariantNodes),
+              }),
+            }),
+            tsc.returnStatement({ expression: identifierItem }),
+          ];
+        }
+      }
     }
 
     // assume enums do not contain transformable values
