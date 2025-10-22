@@ -3,18 +3,16 @@
 import { z } from 'zod';
 
 /**
- * Model with number-only name
+ * This is a model with one string property
  */
-export const z400 = z.string();
+export const zModelWithString = z.object({
+    prop: z.optional(z.string())
+});
 
 export const zExternalSharedExternalSharedModel = z.object({
     id: z.string(),
     name: z.optional(z.string())
 });
-
-export const zExternalRefA = zExternalSharedExternalSharedModel;
-
-export const zExternalRefB = zExternalSharedExternalSharedModel;
 
 /**
  * Testing multiline comments in string: First line
@@ -23,6 +21,320 @@ export const zExternalRefB = zExternalSharedExternalSharedModel;
  * Fourth line
  */
 export const zCamelCaseCommentWithBreaks = z.int();
+
+/**
+ * This is a model with one nested property
+ */
+export const zModelWithProperties = z.object({
+    required: z.string(),
+    requiredAndReadOnly: z.string().readonly(),
+    requiredAndNullable: z.union([
+        z.string(),
+        z.null()
+    ]),
+    string: z.optional(z.string()),
+    number: z.optional(z.number()),
+    boolean: z.optional(z.boolean()),
+    reference: z.optional(zModelWithString),
+    'property with space': z.optional(z.string()),
+    default: z.optional(z.string()),
+    try: z.optional(z.string()),
+    '@namespace.string': z.optional(z.string().readonly()),
+    '@namespace.integer': z.optional(z.int().readonly())
+});
+
+export const zModelWithReadOnlyAndWriteOnly = z.object({
+    foo: z.string(),
+    bar: z.string().readonly()
+});
+
+/**
+ * This is a model with one property containing a circular reference
+ */
+export const zModelWithCircularReference = z.object({
+    get prop() {
+        return z.optional(z.lazy((): any => {
+            return zModelWithCircularReference;
+        }));
+    }
+});
+
+/**
+ * This is a model with one enum
+ */
+export const zModelWithEnum = z.object({
+    'foo_bar-enum': z.optional(z.enum([
+        'Success',
+        'Warning',
+        'Error',
+        'ØÆÅ字符串'
+    ])),
+    statusCode: z.optional(z.enum([
+        '100',
+        '200 FOO',
+        '300 FOO_BAR',
+        '400 foo-bar',
+        '500 foo.bar',
+        '600 foo&bar'
+    ])),
+    bool: z.optional(z.literal(true))
+});
+
+/**
+ * This is a model with one property containing an array
+ */
+export const zModelWithArray = z.object({
+    prop: z.optional(z.array(zModelWithString)),
+    propWithFile: z.optional(z.array(z.string())),
+    propWithNumber: z.optional(z.array(z.number()))
+});
+
+/**
+ * This is a model with one property containing a dictionary
+ */
+export const zModelWithDictionary = z.object({
+    prop: z.optional(z.record(z.string(), z.string()))
+});
+
+/**
+ * Circle
+ */
+export const zModelCircle = z.object({
+    kind: z.string(),
+    radius: z.optional(z.number())
+});
+
+/**
+ * Square
+ */
+export const zModelSquare = z.object({
+    kind: z.string(),
+    sideLength: z.optional(z.number())
+});
+
+export const z3eNum1Период = z.enum([
+    'Bird',
+    'Dog'
+]);
+
+export const zConstValue = z.enum([
+    'ConstValue'
+]);
+
+/**
+ * This is a base model with two simple optional properties
+ */
+export const zCompositionBaseModel = z.object({
+    firstName: z.optional(z.string()),
+    lastname: z.optional(z.string())
+});
+
+/**
+ * This is a model that extends another model
+ */
+export const zModelThatExtends = zModelWithString.and(z.object({
+    propExtendsA: z.optional(z.string()),
+    propExtendsB: z.optional(zModelWithString)
+}));
+
+/**
+ * This is a reusable parameter
+ */
+export const zSimpleParameter = z.string();
+
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
+export const zNonAsciiStringæøåÆøÅöôêÊ字符串 = z.string();
+
+/**
+ * An object that can be null
+ */
+export const zNullableObject = z.union([
+    z.object({
+        foo: z.optional(z.string())
+    }),
+    z.null()
+]).default(null);
+
+export const zModelWithNestedArrayEnumsDataFoo = z.enum([
+    'foo',
+    'bar'
+]);
+
+export const zModelWithNestedArrayEnumsDataBar = z.enum([
+    'baz',
+    'qux'
+]);
+
+export const zModelWithNestedArrayEnumsData = z.object({
+    foo: z.optional(z.array(zModelWithNestedArrayEnumsDataFoo)),
+    bar: z.optional(z.array(zModelWithNestedArrayEnumsDataBar))
+});
+
+/**
+ * This is a model with one number property
+ */
+export const zModelWithInteger = z.object({
+    prop: z.optional(z.int())
+});
+
+/**
+ * Model with restricted keyword name
+ */
+export const zImport = z.string();
+
+/**
+ * This schema was giving PascalCase transformations a hard time
+ */
+export const zIoK8sApimachineryPkgApisMetaV1Preconditions = z.object({
+    resourceVersion: z.optional(z.string()),
+    uid: z.optional(z.string())
+});
+
+export const zAdditionalPropertiesUnknownIssue = z.record(z.string(), z.union([
+    z.string(),
+    z.number()
+]));
+
+export const zGenericSchemaDuplicateIssue1SystemBoolean = z.object({
+    item: z.optional(z.boolean()),
+    error: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    hasError: z.optional(z.boolean().readonly()),
+    data: z.optional(z.record(z.string(), z.never()))
+});
+
+export const zGenericSchemaDuplicateIssue1SystemString = z.object({
+    item: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    error: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    hasError: z.optional(z.boolean().readonly())
+});
+
+export const zModelWithReadOnlyAndWriteOnlyWritable = z.object({
+    foo: z.string(),
+    baz: z.string()
+});
+
+/**
+ * This is a model with one property containing an array
+ */
+export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
+    prop: z.optional(z.array(zModelWithReadOnlyAndWriteOnly)),
+    propWithFile: z.optional(z.array(z.string())),
+    propWithNumber: z.optional(z.array(z.number()))
+});
+
+/**
+ * `Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)
+ */
+export const zModelFromZendesk = z.string();
+
+/**
+ * This is a model with one boolean property
+ */
+export const zModelWithBoolean = z.object({
+    prop: z.optional(z.boolean())
+});
+
+/**
+ * This is a deprecated model with a deprecated property
+ *
+ * @deprecated
+ */
+export const zDeprecatedModel = z.object({
+    prop: z.optional(z.string())
+});
+
+export const zModelWithOneOfEnum = z.union([
+    z.object({
+        foo: z.enum([
+            'Bar'
+        ])
+    }),
+    z.object({
+        foo: z.enum([
+            'Baz'
+        ])
+    }),
+    z.object({
+        foo: z.enum([
+            'Qux'
+        ])
+    }),
+    z.object({
+        content: z.iso.datetime(),
+        foo: z.enum([
+            'Quux'
+        ])
+    }),
+    z.object({
+        content: z.tuple([
+            z.iso.datetime(),
+            z.iso.datetime()
+        ]),
+        foo: z.enum([
+            'Corge'
+        ])
+    })
+]);
+
+export const zPageable = z.object({
+    page: z.optional(z.int().gte(0)).default(0),
+    size: z.optional(z.int().gte(1)),
+    sort: z.optional(z.array(z.string()))
+});
+
+export const zSimpleRequestBody = zModelWithString;
+
+export const zSimpleFormData = zModelWithString;
+
+/**
+ * Model with number-only name
+ */
+export const z400 = z.string();
+
+/**
+ * This is a model with one string property
+ */
+export const zModelWithStringError = z.object({
+    prop: z.optional(z.string())
+});
+
+/**
+ * This is a complex dictionary
+ */
+export const zDictionaryWithArray = z.record(z.string(), z.array(zModelWithString));
+
+/**
+ * This is a model that extends another model
+ */
+export const zModelThatExtendsExtends = zModelWithString.and(zModelThatExtends).and(z.object({
+    propExtendsC: z.optional(z.string()),
+    propExtendsD: z.optional(zModelWithString)
+}));
+
+/**
+ * This is a simple array with strings
+ */
+export const zArrayWithStrings = z.array(z.string()).default(['test']);
+
+/**
+ * Parameter with illegal characters
+ */
+export const zXFooBar = zModelWithString;
+
+export const zExternalRefA = zExternalSharedExternalSharedModel;
+
+export const zExternalRefB = zExternalSharedExternalSharedModel;
 
 /**
  * Testing multiline comments in string: First line
@@ -78,21 +390,9 @@ export const zSimpleBoolean = z.boolean();
 export const zSimpleString = z.string();
 
 /**
- * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
- */
-export const zNonAsciiStringæøåÆøÅöôêÊ字符串 = z.string();
-
-/**
  * This is a simple file
  */
 export const zSimpleFile = z.string();
-
-/**
- * This is a model with one string property
- */
-export const zModelWithString = z.object({
-    prop: z.optional(z.string())
-});
 
 /**
  * This is a simple reference
@@ -179,11 +479,6 @@ export const zArrayWithNumbers = z.array(z.int());
 export const zArrayWithBooleans = z.array(z.boolean());
 
 /**
- * This is a simple array with strings
- */
-export const zArrayWithStrings = z.array(z.string()).default(['test']);
-
-/**
  * This is a simple array with references
  */
 export const zArrayWithReferences = z.array(zModelWithString);
@@ -247,11 +542,6 @@ export const zDictionaryWithPropertiesAndAdditionalProperties = z.object({
 export const zDictionaryWithReference = z.record(z.string(), zModelWithString);
 
 /**
- * This is a complex dictionary
- */
-export const zDictionaryWithArray = z.record(z.string(), z.array(zModelWithString));
-
-/**
  * This is a string dictionary
  */
 export const zDictionaryWithDictionary = z.record(z.string(), z.record(z.string(), z.string()));
@@ -263,32 +553,6 @@ export const zDictionaryWithProperties = z.record(z.string(), z.object({
     foo: z.optional(z.string()),
     bar: z.optional(z.string())
 }));
-
-/**
- * This is a model with one number property
- */
-export const zModelWithInteger = z.object({
-    prop: z.optional(z.int())
-});
-
-/**
- * This is a model with one boolean property
- */
-export const zModelWithBoolean = z.object({
-    prop: z.optional(z.boolean())
-});
-
-/**
- * This is a model with one string property
- */
-export const zModelWithStringError = z.object({
-    prop: z.optional(z.string())
-});
-
-/**
- * `Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)
- */
-export const zModelFromZendesk = z.string();
 
 /**
  * This is a model with one string property
@@ -316,27 +580,6 @@ export const zModelWithNullableString = z.object({
         'Error',
         'ØÆÅ字符串'
     ]))
-});
-
-/**
- * This is a model with one enum
- */
-export const zModelWithEnum = z.object({
-    'foo_bar-enum': z.optional(z.enum([
-        'Success',
-        'Warning',
-        'Error',
-        'ØÆÅ字符串'
-    ])),
-    statusCode: z.optional(z.enum([
-        '100',
-        '200 FOO',
-        '300 FOO_BAR',
-        '400 foo-bar',
-        '500 foo.bar',
-        '600 foo&bar'
-    ])),
-    bool: z.optional(z.literal(true))
 });
 
 /**
@@ -380,81 +623,10 @@ export const zModelWithNestedEnums = z.object({
 });
 
 /**
- * This is a model with one nested property
- */
-export const zModelWithProperties = z.object({
-    required: z.string(),
-    requiredAndReadOnly: z.string().readonly(),
-    requiredAndNullable: z.union([
-        z.string(),
-        z.null()
-    ]),
-    string: z.optional(z.string()),
-    number: z.optional(z.number()),
-    boolean: z.optional(z.boolean()),
-    reference: z.optional(zModelWithString),
-    'property with space': z.optional(z.string()),
-    default: z.optional(z.string()),
-    try: z.optional(z.string()),
-    '@namespace.string': z.optional(z.string().readonly()),
-    '@namespace.integer': z.optional(z.int().readonly())
-});
-
-/**
  * This is a model with one property containing a reference
  */
 export const zModelWithReference = z.object({
     prop: z.optional(zModelWithProperties)
-});
-
-export const zModelWithReadOnlyAndWriteOnly = z.object({
-    foo: z.string(),
-    bar: z.string().readonly()
-});
-
-/**
- * This is a model with one property containing an array
- */
-export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
-    prop: z.optional(z.array(zModelWithReadOnlyAndWriteOnly)),
-    propWithFile: z.optional(z.array(z.string())),
-    propWithNumber: z.optional(z.array(z.number()))
-});
-
-/**
- * This is a model with one property containing an array
- */
-export const zModelWithArray = z.object({
-    prop: z.optional(z.array(zModelWithString)),
-    propWithFile: z.optional(z.array(z.string())),
-    propWithNumber: z.optional(z.array(z.number()))
-});
-
-/**
- * This is a model with one property containing a dictionary
- */
-export const zModelWithDictionary = z.object({
-    prop: z.optional(z.record(z.string(), z.string()))
-});
-
-/**
- * This is a deprecated model with a deprecated property
- *
- * @deprecated
- */
-export const zDeprecatedModel = z.object({
-    prop: z.optional(z.string())
-});
-
-/**
- * This is a model with one property containing a circular reference
- */
-export const zModelWithCircularReference = z.object({
-    get prop(): z.ZodOptional {
-        return z.optional(z.lazy((): any => {
-            return zModelWithCircularReference;
-        }));
-    }
 });
 
 /**
@@ -480,22 +652,6 @@ export const zCompositionWithOneOfAnonymous = z.object({
         z.string(),
         z.int()
     ]))
-});
-
-/**
- * Circle
- */
-export const zModelCircle = z.object({
-    kind: z.string(),
-    radius: z.optional(z.number())
-});
-
-/**
- * Square
- */
-export const zModelSquare = z.object({
-    kind: z.string(),
-    sideLength: z.optional(z.number())
 });
 
 /**
@@ -550,15 +706,6 @@ export const zCompositionWithNestedAnyAndTypeNull = z.object({
         ]))
     ]))
 });
-
-export const z3eNum1Период = z.enum([
-    'Bird',
-    'Dog'
-]);
-
-export const zConstValue = z.enum([
-    'ConstValue'
-]);
 
 /**
  * This is a model with one property with a 'any of' relationship where the options are not $ref
@@ -649,14 +796,6 @@ export const zCompositionWithAnyOfAndNullable = z.object({
 });
 
 /**
- * This is a base model with two simple optional properties
- */
-export const zCompositionBaseModel = z.object({
-    firstName: z.optional(z.string()),
-    lastname: z.optional(z.string())
-});
-
-/**
  * This is a model that extends the base model
  */
 export const zCompositionExtendedModel = zCompositionBaseModel.and(z.object({
@@ -711,22 +850,6 @@ export const zModelWithDuplicateImports = z.object({
 });
 
 /**
- * This is a model that extends another model
- */
-export const zModelThatExtends = zModelWithString.and(z.object({
-    propExtendsA: z.optional(z.string()),
-    propExtendsB: z.optional(zModelWithString)
-}));
-
-/**
- * This is a model that extends another model
- */
-export const zModelThatExtendsExtends = zModelWithString.and(zModelThatExtends).and(z.object({
-    propExtendsC: z.optional(z.string()),
-    propExtendsD: z.optional(zModelWithString)
-}));
-
-/**
  * This is a model that contains a some patterns
  */
 export const zModelWithPattern = z.object({
@@ -751,12 +874,6 @@ export const zFile = z.object({
 
 export const zDefault = z.object({
     name: z.optional(z.string())
-});
-
-export const zPageable = z.object({
-    page: z.optional(z.int().gte(0)).default(0),
-    size: z.optional(z.int().gte(1)),
-    sort: z.optional(z.array(z.string()))
 });
 
 /**
@@ -802,11 +919,6 @@ export const zNestedAnyOfArraysNullable = z.object({
     ]))
 });
 
-/**
- * This is a reusable parameter
- */
-export const zSimpleParameter = z.string();
-
 export const zCompositionWithOneOfAndProperties = z.intersection(z.union([
     z.object({
         foo: zSimpleParameter
@@ -823,70 +935,12 @@ export const zCompositionWithOneOfAndProperties = z.intersection(z.union([
 }));
 
 /**
- * An object that can be null
- */
-export const zNullableObject = z.union([
-    z.object({
-        foo: z.optional(z.string())
-    }),
-    z.null()
-]).default(null);
-
-/**
  * Some % character
  */
 export const zCharactersInDescription = z.string();
 
 export const zModelWithNullableObject = z.object({
     data: z.optional(zNullableObject)
-});
-
-export const zModelWithOneOfEnum = z.union([
-    z.object({
-        foo: z.enum([
-            'Bar'
-        ])
-    }),
-    z.object({
-        foo: z.enum([
-            'Baz'
-        ])
-    }),
-    z.object({
-        foo: z.enum([
-            'Qux'
-        ])
-    }),
-    z.object({
-        content: z.iso.datetime(),
-        foo: z.enum([
-            'Quux'
-        ])
-    }),
-    z.object({
-        content: z.tuple([
-            z.iso.datetime(),
-            z.iso.datetime()
-        ]),
-        foo: z.enum([
-            'Corge'
-        ])
-    })
-]);
-
-export const zModelWithNestedArrayEnumsDataFoo = z.enum([
-    'foo',
-    'bar'
-]);
-
-export const zModelWithNestedArrayEnumsDataBar = z.enum([
-    'baz',
-    'qux'
-]);
-
-export const zModelWithNestedArrayEnumsData = z.object({
-    foo: z.optional(z.array(zModelWithNestedArrayEnumsDataFoo)),
-    bar: z.optional(z.array(zModelWithNestedArrayEnumsDataBar))
 });
 
 export const zModelWithNestedArrayEnums = z.object({
@@ -941,11 +995,6 @@ export const zModelWithAnyOfConstantSizeArrayNullable = z.tuple([
         z.string()
     ])
 ]);
-
-/**
- * Model with restricted keyword name
- */
-export const zImport = z.string();
 
 export const zModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = z.tuple([
     z.union([
@@ -1043,22 +1092,9 @@ export const zSchemaWithFormRestrictedKeys = z.object({
 /**
  * This schema was giving PascalCase transformations a hard time
  */
-export const zIoK8sApimachineryPkgApisMetaV1Preconditions = z.object({
-    resourceVersion: z.optional(z.string()),
-    uid: z.optional(z.string())
-});
-
-/**
- * This schema was giving PascalCase transformations a hard time
- */
 export const zIoK8sApimachineryPkgApisMetaV1DeleteOptions = z.object({
     preconditions: z.optional(zIoK8sApimachineryPkgApisMetaV1Preconditions)
 });
-
-export const zAdditionalPropertiesUnknownIssue = z.record(z.string(), z.union([
-    z.string(),
-    z.number()
-]));
 
 export const zAdditionalPropertiesUnknownIssue2 = z.record(z.string(), z.union([
     z.string(),
@@ -1071,28 +1107,6 @@ export const zAdditionalPropertiesUnknownIssue3 = z.intersection(z.string(), z.o
 
 export const zAdditionalPropertiesIntegerIssue = z.object({
     value: z.int()
-});
-
-export const zGenericSchemaDuplicateIssue1SystemBoolean = z.object({
-    item: z.optional(z.boolean()),
-    error: z.optional(z.union([
-        z.string(),
-        z.null()
-    ])),
-    hasError: z.optional(z.boolean().readonly()),
-    data: z.optional(z.record(z.string(), z.never()))
-});
-
-export const zGenericSchemaDuplicateIssue1SystemString = z.object({
-    item: z.optional(z.union([
-        z.string(),
-        z.null()
-    ])),
-    error: z.optional(z.union([
-        z.string(),
-        z.null()
-    ])),
-    hasError: z.optional(z.boolean().readonly())
 });
 
 export const zOneOfAllOfIssue = z.union([
@@ -1138,11 +1152,6 @@ export const zFileWritable = z.object({
     mime: z.string().min(1).max(24)
 });
 
-export const zModelWithReadOnlyAndWriteOnlyWritable = z.object({
-    foo: z.string(),
-    baz: z.string()
-});
-
 export const zAdditionalPropertiesUnknownIssueWritable = z.record(z.string(), z.union([
     z.string(),
     z.number()
@@ -1167,15 +1176,6 @@ export const zGenericSchemaDuplicateIssue1SystemStringWritable = z.object({
         z.null()
     ]))
 });
-
-/**
- * Parameter with illegal characters
- */
-export const zXFooBar = zModelWithString;
-
-export const zSimpleRequestBody = zModelWithString;
-
-export const zSimpleFormData = zModelWithString;
 
 export const zExportData = z.object({
     body: z.optional(z.never()),

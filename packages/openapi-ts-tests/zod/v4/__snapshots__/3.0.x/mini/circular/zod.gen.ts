@@ -3,47 +3,39 @@
 import * as z from 'zod/mini';
 
 export const zBaz = z.object({
-    get quux(): z.ZodMiniOptional {
-        return z.optional(zQuux);
+    get quux() {
+        return z.optional(z.lazy((): any => {
+            return zQuux;
+        }));
     }
 });
 
 export const zCorge = z.object({
-    get baz(): z.ZodMiniOptional {
-        return z.optional(z.array(zBaz));
-    }
-});
-
-export const zQux = z.union([
-    z.intersection(z.object({
-        type: z.literal('struct')
-    }), z.lazy(() => {
-        return zCorge;
-    })),
-    z.intersection(z.object({
-        type: z.literal('array')
-    }), z.lazy(() => {
-        return zFoo;
-    }))
-]);
-
-export const zQuux = z.object({
-    get qux(): z.ZodMiniOptional {
-        return z.optional(zQux);
-    }
+    baz: z.optional(z.array(zBaz))
 });
 
 export const zFoo = z.object({
     quux: z.optional(zQuux)
 });
 
+export const zQux = z.union([
+    z.intersection(z.object({
+        type: z.literal('struct')
+    }), zCorge),
+    z.intersection(z.object({
+        type: z.literal('array')
+    }), zFoo)
+]);
+
+export const zQuux = z.object({
+    qux: z.optional(zQux)
+});
+
 export const zBar = z.object({
-    get bar(): z.ZodMiniOptional {
+    get bar() {
         return z.optional(z.lazy((): any => {
             return zBar;
         }));
     },
-    get baz(): z.ZodMiniOptional {
-        return z.optional(zBaz);
-    }
+    baz: z.optional(zBaz)
 });

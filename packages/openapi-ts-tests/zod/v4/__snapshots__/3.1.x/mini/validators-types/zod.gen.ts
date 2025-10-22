@@ -3,24 +3,17 @@
 import * as z from 'zod/mini';
 
 /**
- * This is Bar schema.
- */
-export const zBar = z.object({
-    get foo(): z.ZodMiniOptional {
-        return z.optional(zFoo);
-    }
-});
-
-export type BarZodType = z.infer<typeof zBar>;
-
-/**
  * This is Foo schema.
  */
 export const zFoo = z._default(z.union([
     z.object({
         foo: z.optional(z.string().check(z.regex(/^\d{3}-\d{2}-\d{4}$/))),
-        bar: z.optional(zBar),
-        get baz(): z.ZodMiniOptional {
+        get bar() {
+            return z.optional(z.lazy((): any => {
+                return zBar;
+            }));
+        },
+        get baz() {
             return z.optional(z.array(z.lazy((): any => {
                 return zFoo;
             })));
@@ -32,6 +25,28 @@ export const zFoo = z._default(z.union([
 
 export type FooZodType = z.infer<typeof zFoo>;
 
+/**
+ * This is Bar schema.
+ */
+export const zBar = z.object({
+    foo: z.optional(zFoo)
+});
+
+export type BarZodType = z.infer<typeof zBar>;
+
+export const zFoo2 = z.object({
+    foo: z.optional(zBar)
+});
+
+export type FooZodType2 = z.infer<typeof zFoo2>;
+
+/**
+ * This is Foo parameter.
+ */
+export const zFoo3 = z.string();
+
+export type FooZodType3 = z.infer<typeof zFoo3>;
+
 export const zBaz = z._default(z.readonly(z.string().check(z.regex(/foo\nbar/))), 'baz');
 
 export type BazZodType = z.infer<typeof zBaz>;
@@ -41,19 +56,6 @@ export const zQux = z.record(z.string(), z.object({
 }));
 
 export type QuxZodType = z.infer<typeof zQux>;
-
-/**
- * This is Foo parameter.
- */
-export const zFoo2 = z.string();
-
-export type FooZodType2 = z.infer<typeof zFoo2>;
-
-export const zFoo3 = z.object({
-    foo: z.optional(zBar)
-});
-
-export type FooZodType3 = z.infer<typeof zFoo3>;
 
 export const zPatchFooData = z.object({
     body: z.object({
@@ -74,7 +76,7 @@ export const zPatchFooData = z.object({
 export type PatchFooDataZodType = z.infer<typeof zPatchFooData>;
 
 export const zPostFooData = z.object({
-    body: zFoo3,
+    body: zFoo2,
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });

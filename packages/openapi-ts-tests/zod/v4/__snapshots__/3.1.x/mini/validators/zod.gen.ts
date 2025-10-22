@@ -3,22 +3,17 @@
 import * as z from 'zod/mini';
 
 /**
- * This is Bar schema.
- */
-export const zBar = z.object({
-    get foo(): z.ZodMiniOptional {
-        return z.optional(zFoo);
-    }
-});
-
-/**
  * This is Foo schema.
  */
 export const zFoo = z._default(z.union([
     z.object({
         foo: z.optional(z.string().check(z.regex(/^\d{3}-\d{2}-\d{4}$/))),
-        bar: z.optional(zBar),
-        get baz(): z.ZodMiniOptional {
+        get bar() {
+            return z.optional(z.lazy((): any => {
+                return zBar;
+            }));
+        },
+        get baz() {
             return z.optional(z.array(z.lazy((): any => {
                 return zFoo;
             })));
@@ -28,20 +23,27 @@ export const zFoo = z._default(z.union([
     z.null()
 ]), null);
 
+/**
+ * This is Bar schema.
+ */
+export const zBar = z.object({
+    foo: z.optional(zFoo)
+});
+
+export const zFoo2 = z.object({
+    foo: z.optional(zBar)
+});
+
+/**
+ * This is Foo parameter.
+ */
+export const zFoo3 = z.string();
+
 export const zBaz = z._default(z.readonly(z.string().check(z.regex(/foo\nbar/))), 'baz');
 
 export const zQux = z.record(z.string(), z.object({
     qux: z.optional(z.string())
 }));
-
-/**
- * This is Foo parameter.
- */
-export const zFoo2 = z.string();
-
-export const zFoo3 = z.object({
-    foo: z.optional(zBar)
-});
 
 export const zPatchFooData = z.object({
     body: z.object({
@@ -60,7 +62,7 @@ export const zPatchFooData = z.object({
 });
 
 export const zPostFooData = z.object({
-    body: zFoo3,
+    body: zFoo2,
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });

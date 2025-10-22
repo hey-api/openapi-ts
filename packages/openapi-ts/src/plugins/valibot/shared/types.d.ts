@@ -13,8 +13,7 @@ export type PluginState = {
    * Path to the schema in the intermediary representation.
    */
   _path: ReadonlyArray<string | number>;
-  circularReferenceTracker: Set<string>;
-  hasCircularReference: boolean;
+  hasLazyExpression: boolean;
   nameCase: StringCase;
   nameTransformer: StringName;
 };

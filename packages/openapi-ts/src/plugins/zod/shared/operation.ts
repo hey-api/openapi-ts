@@ -116,7 +116,7 @@ export const irOperationToAst = ({
 
     schemaData.required = [...requiredProperties];
 
-    const path = state._path || [];
+    const path = state._path?.value || [];
     const ast = getAst(schemaData, path);
     const resourceType = pathToSymbolResourceType(path);
     const symbol = plugin.registerSymbol({
@@ -158,7 +158,7 @@ export const irOperationToAst = ({
       const { response } = operationResponsesMap(operation);
 
       if (response) {
-        const path = [...(state._path || []), 'responses'];
+        const path = [...(state._path?.value || []), 'responses'];
         const ast = getAst(response, path);
         const resourceType = pathToSymbolResourceType(path);
         const symbol = plugin.registerSymbol({

@@ -2,6 +2,7 @@ import type ts from 'typescript';
 
 import { tsc } from '../../../../tsc';
 import type { SchemaWithType } from '../../../shared/types/schema';
+import { toRef } from '../../../shared/utils/refs';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -50,12 +51,12 @@ export const tupleToAst = ({
         schema: item,
         state: {
           ...state,
-          _path: [...state._path, 'items', index],
+          _path: toRef([...state._path.value, 'items', index]),
         },
       });
       tupleElements.push(itemSchema.expression);
-      if (itemSchema.hasCircularReference) {
-        result.hasCircularReference = true;
+      if (itemSchema.hasLazyExpression) {
+        result.hasLazyExpression = true;
       }
     });
   }

@@ -11,13 +11,6 @@ export const vContact = v.union([
     })
 ]);
 
-export const vUser = v.intersect([
-    vContact,
-    v.object({
-        username: v.string()
-    })
-]);
-
 export const vDogDetails = v.object({
     breed: v.string(),
     barkVolume: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(10))
@@ -31,6 +24,13 @@ export const vCatDetails = v.object({
     ]),
     purrs: v.boolean()
 });
+
+export const vUser = v.intersect([
+    vContact,
+    v.object({
+        username: v.string()
+    })
+]);
 
 export const vPetStore = v.object({
     animals: v.array(v.object({

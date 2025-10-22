@@ -3,21 +3,14 @@
 import { z } from 'zod';
 
 /**
- * This is Bar schema.
- */
-export const zBar: z.AnyZodObject = z.object({
-    foo: z.lazy(() => {
-        return zFoo;
-    }).optional()
-});
-
-/**
  * This is Foo schema.
  */
 export const zFoo: z.ZodTypeAny = z.union([
     z.object({
         foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
-        bar: zBar.optional(),
+        bar: z.lazy(() => {
+            return zBar;
+        }).optional(),
         baz: z.array(z.lazy(() => {
             return zFoo;
         })).optional(),
@@ -26,20 +19,27 @@ export const zFoo: z.ZodTypeAny = z.union([
     z.null()
 ]).default(null);
 
+/**
+ * This is Bar schema.
+ */
+export const zBar = z.object({
+    foo: zFoo.optional()
+});
+
+export const zFoo2 = z.object({
+    foo: zBar.optional()
+});
+
+/**
+ * This is Foo parameter.
+ */
+export const zFoo3 = z.string();
+
 export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
 
 export const zQux = z.record(z.object({
     qux: z.string().optional()
 }));
-
-/**
- * This is Foo parameter.
- */
-export const zFoo2 = z.string();
-
-export const zFoo3 = z.object({
-    foo: zBar.optional()
-});
 
 export const zPatchFooData = z.object({
     body: z.object({
@@ -58,7 +58,7 @@ export const zPatchFooData = z.object({
 });
 
 export const zPostFooData = z.object({
-    body: zFoo3,
+    body: zFoo2,
     path: z.never().optional(),
     query: z.never().optional()
 });

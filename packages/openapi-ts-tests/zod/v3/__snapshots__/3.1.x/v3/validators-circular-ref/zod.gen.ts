@@ -8,15 +8,15 @@ export const zBar: z.AnyZodObject = z.object({
     })).optional()
 });
 
-export const zFoo = z.object({
-    foo: zBar.optional()
+export const zBaz: z.ZodTypeAny = z.lazy(() => {
+    return zQux;
 });
 
 /**
  * description caused circular reference error
  */
-export const zQux: z.ZodTypeAny = z.lazy(() => {
-    return zQux;
-});
+export const zQux = zBaz;
 
-export const zBaz = zQux;
+export const zFoo = z.object({
+    foo: zBar.optional()
+});

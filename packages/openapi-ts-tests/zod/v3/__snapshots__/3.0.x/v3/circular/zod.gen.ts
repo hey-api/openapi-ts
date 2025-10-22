@@ -12,23 +12,21 @@ export const zCorge = z.object({
     baz: z.array(zBaz).optional()
 });
 
-export const zQux: z.ZodTypeAny = z.union([
+export const zFoo = z.object({
+    quux: zQuux.optional()
+});
+
+export const zQux = z.union([
     z.object({
         type: z.literal('struct')
     }).and(zCorge),
     z.object({
         type: z.literal('array')
-    }).and(z.lazy(() => {
-        return zFoo;
-    }))
+    }).and(zFoo)
 ]);
 
 export const zQuux = z.object({
     qux: zQux.optional()
-});
-
-export const zFoo = z.object({
-    quux: zQuux.optional()
 });
 
 export const zBar: z.AnyZodObject = z.object({

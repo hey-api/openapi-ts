@@ -8,15 +8,15 @@ export const vBar: v.GenericSchema = v.object({
     })))
 });
 
-export const vFoo: v.GenericSchema = v.object({
-    foo: v.optional(vBar)
+export const vBaz: v.GenericSchema = v.lazy(() => {
+    return vQux;
 });
 
 /**
  * description caused circular reference error
  */
-export const vQux: v.GenericSchema = v.lazy(() => {
-    return vQux;
-});
+export const vQux = vBaz;
 
-export const vBaz: v.GenericSchema = vQux;
+export const vFoo = v.object({
+    foo: v.optional(vBar)
+});

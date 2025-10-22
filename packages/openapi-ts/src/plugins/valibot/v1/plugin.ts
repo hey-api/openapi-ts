@@ -5,7 +5,7 @@ import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
-import { jsonPointerToPath, refToName } from '../../../utils/ref';
+import { refToName } from '../../../utils/ref';
 import type { SchemaWithType } from '../../shared/types/schema';
 import { pathToSymbolResourceType } from '../../shared/utils/meta';
 import { toRef, toRefs } from '../../shared/utils/refs';
@@ -38,84 +38,56 @@ export const irSchemaToAst = ({
    */
   optional?: boolean;
   schema: IR.SchemaObject;
+  /**
+   * When symbol is supplied, the AST node will be set as its value.
+   */
   symbol?: Symbol;
 }): Array<ts.Expression> => {
-  let anyType: string | undefined;
-  let pipes: Array<ts.Expression> = [];
-
-  if ($ref) {
-    state.circularReferenceTracker.value.add($ref);
-
-    if (!symbol) {
-      const selector = plugin.api.selector('ref', $ref);
-      if (!plugin.getSymbol(selector)) {
-        symbol = plugin.referenceSymbol(selector);
-      }
-    }
+  if ($ref && !symbol) {
+    const selector = plugin.api.selector('ref', $ref);
+    symbol = plugin.getSymbol(selector) || plugin.referenceSymbol(selector);
   }
 
   const v = plugin.referenceSymbol(
     plugin.api.selector('external', 'valibot.v'),
   );
+  let anyType: string | undefined;
+  let pipes: Array<ts.Expression> = [];
 
   if (schema.$ref) {
-    const isCircularReference = state.circularReferenceTracker.value.has(
-      schema.$ref,
-    );
-
-    // if $ref hasn't been processed yet, inline it to avoid the
-    // "Block-scoped variable used before its declaration." error
-    // this could be (maybe?) fixed by reshuffling the generation order
     const selector = plugin.api.selector('ref', schema.$ref);
     let refSymbol = plugin.getSymbol(selector);
-    if (!refSymbol) {
-      const ref = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
-      const schemaPipes = irSchemaToAst({
-        $ref: schema.$ref,
-        plugin,
-        schema: ref,
-        state: {
-          ...state,
-          _path: toRef(jsonPointerToPath(schema.$ref)),
-        },
-      });
-      pipes.push(...schemaPipes);
-
-      refSymbol = plugin.getSymbol(selector);
-    }
-
-    if (refSymbol) {
-      const refIdentifier = tsc.identifier({ text: refSymbol.placeholder });
-      if (isCircularReference) {
-        const lazyExpression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: v.placeholder,
-            name: identifiers.schemas.lazy,
+    if (refSymbol && !plugin.isSelfReference(schema.$ref, state._path.value)) {
+      const ref = tsc.identifier({ text: refSymbol.placeholder });
+      pipes.push(ref);
+    } else {
+      refSymbol = plugin.referenceSymbol(selector);
+      const lazyExpression = tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
+          expression: v.placeholder,
+          name: identifiers.schemas.lazy,
+        }),
+        parameters: [
+          tsc.arrowFunction({
+            statements: [
+              tsc.returnStatement({
+                expression: tsc.identifier({ text: refSymbol.placeholder }),
+              }),
+            ],
           }),
-          parameters: [
-            tsc.arrowFunction({
-              statements: [
-                tsc.returnStatement({
-                  expression: refIdentifier,
-                }),
-              ],
-            }),
-          ],
-        });
-        pipes.push(lazyExpression);
-        state.hasCircularReference.value = true;
-      } else {
-        pipes.push(refIdentifier);
-      }
+        ],
+      });
+      pipes.push(lazyExpression);
+      state.hasLazyExpression.value = true;
     }
   } else if (schema.type) {
-    const valibotSchema = irSchemaWithTypeToAst({
+    const ast = irSchemaWithTypeToAst({
       plugin,
       schema: schema as SchemaWithType,
       state,
     });
-    anyType = valibotSchema.anyType;
-    pipes.push(valibotSchema.expression);
+    anyType = ast.anyType;
+    pipes.push(ast.expression);
 
     if (plugin.config.metadata && schema.description) {
       const expression = tsc.callExpression({
@@ -140,8 +112,8 @@ export const irSchemaToAst = ({
     schema = deduplicateSchema({ schema });
 
     if (schema.items) {
-      const itemTypes = schema.items.map((item, index) => {
-        const schemaPipes = irSchemaToAst({
+      const itemsAst = schema.items.map((item, index) => {
+        const itemAst = irSchemaToAst({
           plugin,
           schema: item,
           state: {
@@ -149,7 +121,7 @@ export const irSchemaToAst = ({
             _path: toRef([...state._path.value, 'items', index]),
           },
         });
-        return pipesToAst({ pipes: schemaPipes, plugin });
+        return pipesToAst({ pipes: itemAst, plugin });
       });
 
       if (schema.logicalOperator === 'and') {
@@ -160,7 +132,7 @@ export const irSchemaToAst = ({
           }),
           parameters: [
             tsc.arrayLiteralExpression({
-              elements: itemTypes,
+              elements: itemsAst,
             }),
           ],
         });
@@ -173,35 +145,27 @@ export const irSchemaToAst = ({
           }),
           parameters: [
             tsc.arrayLiteralExpression({
-              elements: itemTypes,
+              elements: itemsAst,
             }),
           ],
         });
         pipes.push(unionExpression);
       }
     } else {
-      const schemaPipes = irSchemaToAst({
-        plugin,
-        schema,
-        state,
-      });
+      const schemaPipes = irSchemaToAst({ plugin, schema, state });
       pipes.push(...schemaPipes);
     }
   } else {
     // catch-all fallback for failed schemas
-    const valibotSchema = irSchemaWithTypeToAst({
+    const ast = irSchemaWithTypeToAst({
       plugin,
       schema: {
         type: 'unknown',
       },
       state,
     });
-    anyType = valibotSchema.anyType;
-    pipes.push(valibotSchema.expression);
-  }
-
-  if ($ref) {
-    state.circularReferenceTracker.value.delete($ref);
+    anyType = ast.anyType;
+    pipes.push(ast.expression);
   }
 
   if (pipes.length) {
@@ -270,7 +234,7 @@ export const irSchemaToAst = ({
       exportConst: symbol.exported,
       expression: pipesToAst({ pipes, plugin }),
       name: symbol.placeholder,
-      typeName: state.hasCircularReference
+      typeName: state.hasLazyExpression.value
         ? (tsc.propertyAccessExpression({
             expression: v.placeholder,
             name: anyType || identifiers.types.GenericSchema.text,
@@ -299,9 +263,9 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
     'schema',
     'webhook',
     (event) => {
-      const state = toRefs<Omit<PluginState, '_path'>>({
-        circularReferenceTracker: new Set(),
-        hasCircularReference: false,
+      const state = toRefs<PluginState>({
+        _path: event._path,
+        hasLazyExpression: false,
         nameCase: plugin.config.definitions.case,
         nameTransformer: plugin.config.definitions.name,
       });
@@ -311,10 +275,7 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
           irOperationToAst({
             operation: event.operation,
             plugin,
-            state: {
-              ...state,
-              _path: toRef(event._path),
-            },
+            state,
           });
           break;
         case 'parameter':
@@ -322,10 +283,7 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
             $ref: event.$ref,
             plugin,
             schema: event.parameter.schema,
-            state: {
-              ...state,
-              _path: toRef(event._path),
-            },
+            state,
           });
           break;
         case 'requestBody':
@@ -333,10 +291,7 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
             $ref: event.$ref,
             plugin,
             schema: event.requestBody.schema,
-            state: {
-              ...state,
-              _path: toRef(event._path),
-            },
+            state,
           });
           break;
         case 'schema':
@@ -344,20 +299,14 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
             $ref: event.$ref,
             plugin,
             schema: event.schema,
-            state: {
-              ...state,
-              _path: toRef(event._path),
-            },
+            state,
           });
           break;
         case 'webhook':
           irWebhookToAst({
             operation: event.operation,
             plugin,
-            state: {
-              ...state,
-              _path: toRef(event._path),
-            },
+            state,
           });
           break;
       }

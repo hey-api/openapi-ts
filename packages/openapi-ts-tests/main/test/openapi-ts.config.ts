@@ -46,8 +46,8 @@ export default defineConfig(() => {
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'type-format.yaml',
-            // 'validators.yaml',
-            'validators-circular-ref.json',
+            'validators.yaml',
+            // 'validators-circular-ref.json',
             // 'validators-circular-ref-2.yaml',
             // 'zoom-video-sdk.json',
           ),
@@ -342,7 +342,7 @@ export default defineConfig(() => {
         {
           // case: 'snake_case',
           // comments: false,
-          compatibilityVersion: 'mini',
+          compatibilityVersion: 4,
           dates: {
             local: true,
             // offset: true,
@@ -354,8 +354,8 @@ export default defineConfig(() => {
             //   },
           },
           exportFromIndex: true,
-          metadata: true,
-          // name: 'zod',
+          // metadata: true,
+          name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',

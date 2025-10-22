@@ -40,47 +40,53 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
 
-  plugin.forEach('operation', ({ operation }) => {
-    const classes = sdkPlugin.config.asClass
-      ? operationClasses({
-          context: plugin.context,
-          operation,
-          plugin: sdkPlugin,
-        })
-      : undefined;
-    const entry = classes ? classes.values().next().value : undefined;
-    const queryFn =
-      // TODO: this should use class graph to determine correct path string
-      // as it's really easy to break once we change the class casing
-      entry
-        ? [
-            plugin.referenceSymbol(
-              sdkPlugin.api.selector('class', entry.path[0]),
-            ).placeholder,
-            ...entry.path.slice(1).map((className: string) =>
-              stringCase({
-                case: 'camelCase',
-                value: className,
-              }),
-            ),
-            entry.methodName,
-          ]
-            .filter(Boolean)
-            .join('.')
-        : plugin.referenceSymbol(
-            sdkPlugin.api.selector('function', operation.id),
-          ).placeholder;
+  plugin.forEach(
+    'operation',
+    ({ operation }) => {
+      const classes = sdkPlugin.config.asClass
+        ? operationClasses({
+            context: plugin.context,
+            operation,
+            plugin: sdkPlugin,
+          })
+        : undefined;
+      const entry = classes ? classes.values().next().value : undefined;
+      const queryFn =
+        // TODO: this should use class graph to determine correct path string
+        // as it's really easy to break once we change the class casing
+        entry
+          ? [
+              plugin.referenceSymbol(
+                sdkPlugin.api.selector('class', entry.path[0]),
+              ).placeholder,
+              ...entry.path.slice(1).map((className: string) =>
+                stringCase({
+                  case: 'camelCase',
+                  value: className,
+                }),
+              ),
+              entry.methodName,
+            ]
+              .filter(Boolean)
+              .join('.')
+          : plugin.referenceSymbol(
+              sdkPlugin.api.selector('function', operation.id),
+            ).placeholder;
 
-    if (plugin.hooks.operation.isQuery(operation)) {
-      if (plugin.config.queryOptions.enabled) {
-        createQueryOptions({ operation, plugin, queryFn });
+      if (plugin.hooks.operation.isQuery(operation)) {
+        if (plugin.config.queryOptions.enabled) {
+          createQueryOptions({ operation, plugin, queryFn });
+        }
       }
-    }
 
-    if (plugin.hooks.operation.isMutation(operation)) {
-      if (plugin.config.mutationOptions.enabled) {
-        createMutationOptions({ operation, plugin, queryFn });
+      if (plugin.hooks.operation.isMutation(operation)) {
+        if (plugin.config.mutationOptions.enabled) {
+          createMutationOptions({ operation, plugin, queryFn });
+        }
       }
-    }
-  });
+    },
+    {
+      order: 'declarations',
+    },
+  );
 };

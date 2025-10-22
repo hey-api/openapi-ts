@@ -3,17 +3,6 @@
 import * as v from 'valibot';
 
 /**
- * This is Bar schema.
- */
-export const vBar: v.GenericSchema = v.pipe(v.object({
-    foo: v.optional(v.lazy(() => {
-        return vFoo;
-    }))
-}), v.metadata({
-    description: 'This is Bar schema.'
-}));
-
-/**
  * This is Foo schema.
  */
 export const vFoo: v.GenericSchema = v.optional(v.union([
@@ -21,7 +10,9 @@ export const vFoo: v.GenericSchema = v.optional(v.union([
         foo: v.optional(v.pipe(v.pipe(v.string(), v.regex(/^\d{3}-\d{2}-\d{4}$/)), v.metadata({
             description: 'This is foo property.'
         }))),
-        bar: v.optional(vBar),
+        bar: v.optional(v.lazy(() => {
+            return vBar;
+        })),
         baz: v.optional(v.pipe(v.array(v.lazy(() => {
             return vFoo;
         })), v.metadata({
@@ -34,22 +25,31 @@ export const vFoo: v.GenericSchema = v.optional(v.union([
     v.null()
 ]), null);
 
+/**
+ * This is Bar schema.
+ */
+export const vBar = v.pipe(v.object({
+    foo: v.optional(vFoo)
+}), v.metadata({
+    description: 'This is Bar schema.'
+}));
+
+export const vFoo2 = v.object({
+    foo: v.optional(vBar)
+});
+
+/**
+ * This is Foo parameter.
+ */
+export const vFoo3 = v.pipe(v.string(), v.metadata({
+    description: 'This is Foo parameter.'
+}));
+
 export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), 'baz');
 
 export const vQux = v.record(v.string(), v.object({
     qux: v.optional(v.string())
 }));
-
-/**
- * This is Foo parameter.
- */
-export const vFoo2 = v.pipe(v.string(), v.metadata({
-    description: 'This is Foo parameter.'
-}));
-
-export const vFoo3 = v.object({
-    foo: v.optional(vBar)
-});
 
 export const vPatchFooData = v.object({
     body: v.object({
@@ -70,7 +70,7 @@ export const vPatchFooData = v.object({
 });
 
 export const vPostFooData = v.object({
-    body: vFoo3,
+    body: vFoo2,
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });

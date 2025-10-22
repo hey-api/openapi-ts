@@ -2,6 +2,11 @@
 
 import * as z from 'zod/mini';
 
+export const zBaseModel = z.object({
+    id: z.optional(z.int()),
+    createdAt: z.optional(z.iso.datetime())
+});
+
 export const zArrayWithAllOfObjects = z.array(z.intersection(z.object({
     id: z.optional(z.int())
 }), z.object({
@@ -9,11 +14,6 @@ export const zArrayWithAllOfObjects = z.array(z.intersection(z.object({
 })));
 
 export const zArrayWithAllOfPrimitives = z.array(z.intersection(z.number(), z.string()));
-
-export const zBaseModel = z.object({
-    id: z.optional(z.int()),
-    createdAt: z.optional(z.iso.datetime())
-});
 
 export const zArrayWithAllOfRefs = z.array(z.intersection(zBaseModel, z.object({
     extra: z.optional(z.string())
