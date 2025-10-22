@@ -20,7 +20,7 @@ export type Scope = 'normal' | 'read' | 'write';
  * @property scopes - The set of access scopes for this node, if any. Optional.
  * @property tags - The set of tags for this node, if any. Optional.
  */
-type NodeInfo = {
+export type NodeInfo = {
   /** Whether the node is deprecated. Optional. */
   deprecated?: boolean;
   /** The property name or array index in the parent, or null for root. */
@@ -38,22 +38,37 @@ type NodeInfo = {
 /**
  * The main graph structure for OpenAPI node analysis.
  *
- * @property dependencies - For each node, the set of normalized JSON Pointers it references via $ref.
+ * @property nodeDependencies - For each node with at least one dependency, the set of normalized JSON Pointers it references via $ref. Nodes with no dependencies are omitted.
  * @property nodes - Map from normalized JSON Pointer to NodeInfo for every node in the spec.
- * @property reverseDependencies - For each node, the set of nodes that reference it via $ref.
+ * @property reverseNodeDependencies - For each node with at least one dependent, the set of nodes that reference it via $ref. Nodes with no dependents are omitted.
  */
 export type Graph = {
+  /**
+   * For each node with at least one dependency, the set of normalized JSON Pointers it references via $ref.
+   * Nodes with no dependencies are omitted from this map.
+   */
+  nodeDependencies: Map<string, Set<string>>;
+  /**
+   * Map from normalized JSON Pointer to NodeInfo for every node in the spec.
+   */
+  nodes: Map<string, NodeInfo>;
+  /**
+   * For each node with at least one dependent, the set of nodes that reference it via $ref.
+   * Nodes with no dependents are omitted from this map.
+   */
+  reverseNodeDependencies: Map<string, Set<string>>;
+  /**
+   * For each node, the set of direct $ref targets that appear anywhere inside the node's
+   * subtree (the node itself and its children). This is populated during graph construction
+   * and is used to compute top-level dependency relationships where $ref may be attached to
+   * child pointers instead of the parent.
+   */
+  subtreeDependencies: Map<string, Set<string>>;
   /**
    * For each node, the set of all (transitive) normalized JSON Pointers it references via $ref anywhere in its subtree.
    * This includes both direct and indirect dependencies, making it useful for filtering, codegen, and tree-shaking.
    */
-  allDependencies: Map<string, Set<string>>;
-  /** For each node, the set of normalized JSON Pointers it references via $ref. */
-  dependencies: Map<string, Set<string>>;
-  /** Map from normalized JSON Pointer to NodeInfo for every node in the spec. */
-  nodes: Map<string, NodeInfo>;
-  /** For each node, the set of nodes that reference it via $ref. */
-  reverseDependencies: Map<string, Set<string>>;
+  transitiveDependencies: Map<string, Set<string>>;
 };
 
 /**
@@ -76,15 +91,20 @@ export const annotateChildScopes = (nodes: Graph['nodes']): void => {
 };
 
 interface Cache {
-  allDependencies: Map<string, Set<string>>;
-  childDependencies: Map<string, Set<string>>;
   parentToChildren: Map<string, Array<string>>;
+  subtreeDependencies: Map<string, Set<string>>;
+  transitiveDependencies: Map<string, Set<string>>;
 }
+
+type PointerDependenciesResult = {
+  subtreeDependencies: Set<string>;
+  transitiveDependencies: Set<string>;
+};
 
 /**
  * Recursively collects all $ref dependencies in the subtree rooted at `pointer`.
  */
-const collectAllDependenciesForPointer = ({
+const collectPointerDependencies = ({
   cache,
   graph,
   pointer,
@@ -94,67 +114,94 @@ const collectAllDependenciesForPointer = ({
   graph: Graph;
   pointer: string;
   visited: Set<string>;
-}): Set<string> => {
-  const cached = cache.allDependencies.get(pointer);
+}): PointerDependenciesResult => {
+  const cached = cache.transitiveDependencies.get(pointer);
   if (cached) {
-    return cached;
+    return {
+      subtreeDependencies: cache.subtreeDependencies.get(pointer)!,
+      transitiveDependencies: cached,
+    };
   }
 
   if (visited.has(pointer)) {
-    return new Set();
+    return {
+      subtreeDependencies: new Set(),
+      transitiveDependencies: new Set(),
+    };
   }
-
   visited.add(pointer);
 
   const nodeInfo = graph.nodes.get(pointer);
   if (!nodeInfo) {
-    return new Set();
+    return {
+      subtreeDependencies: new Set(),
+      transitiveDependencies: new Set(),
+    };
   }
 
-  const allDependencies = new Set<string>();
+  const transitiveDependencies = new Set<string>();
+  const subtreeDependencies = new Set<string>();
 
   // Add direct $ref dependencies for this node
   // (from the dependencies map, or by checking nodeInfo.node directly)
   // We'll use the dependencies map for consistency:
-  const dependencies = graph.dependencies.get(pointer);
-  if (dependencies) {
-    for (const depPointer of dependencies) {
-      allDependencies.add(depPointer);
+  const nodeDependencies = graph.nodeDependencies.get(pointer);
+  if (nodeDependencies) {
+    for (const depPointer of nodeDependencies) {
+      transitiveDependencies.add(depPointer);
+      subtreeDependencies.add(depPointer);
       // Recursively collect dependencies of the referenced node
-      const transitiveDependencies = collectAllDependenciesForPointer({
+      const depResult = collectPointerDependencies({
         cache,
         graph,
         pointer: depPointer,
         visited,
       });
-      for (const dep of transitiveDependencies) {
-        allDependencies.add(dep);
+      for (const dependency of depResult.transitiveDependencies) {
+        transitiveDependencies.add(dependency);
       }
     }
   }
 
-  // Recursively collect dependencies of all children
-  const children = cache.parentToChildren.get(pointer);
-  if (children) {
-    for (const childPointer of children) {
-      let transitiveDependencies = cache.childDependencies.get(childPointer);
-      if (!transitiveDependencies) {
-        transitiveDependencies = collectAllDependenciesForPointer({
-          cache,
-          graph,
-          pointer: childPointer,
-          visited,
-        });
-        cache.childDependencies.set(childPointer, transitiveDependencies);
-      }
-      for (const dep of transitiveDependencies) {
-        allDependencies.add(dep);
-      }
+  const children = cache.parentToChildren.get(pointer) ?? [];
+  for (const childPointer of children) {
+    let childResult: Partial<PointerDependenciesResult> = {
+      subtreeDependencies: cache.subtreeDependencies.get(childPointer),
+      transitiveDependencies: cache.transitiveDependencies.get(childPointer),
+    };
+    if (
+      !childResult.subtreeDependencies ||
+      !childResult.transitiveDependencies
+    ) {
+      childResult = collectPointerDependencies({
+        cache,
+        graph,
+        pointer: childPointer,
+        visited,
+      });
+      cache.transitiveDependencies.set(
+        childPointer,
+        childResult.transitiveDependencies!,
+      );
+      cache.subtreeDependencies.set(
+        childPointer,
+        childResult.subtreeDependencies!,
+      );
+    }
+    for (const dependency of childResult.transitiveDependencies!) {
+      transitiveDependencies.add(dependency);
+    }
+    for (const dependency of childResult.subtreeDependencies!) {
+      subtreeDependencies.add(dependency);
     }
   }
 
-  cache.allDependencies.set(pointer, allDependencies);
-  return allDependencies;
+  cache.transitiveDependencies.set(pointer, transitiveDependencies);
+  cache.subtreeDependencies.set(pointer, subtreeDependencies);
+  return {
+    subtreeDependencies,
+    transitiveDependencies,
+  };
 };
 
 /**
@@ -167,7 +214,7 @@ const collectAllDependenciesForPointer = ({
  *   - All nodes that reference it via $ref (reverse dependencies)
  *   - Combinator parents (allOf/anyOf/oneOf) if applicable
  *
- * @param graph - The Graph structure containing nodes, dependencies, and reverseDependencies.
+ * @param graph - The Graph structure containing nodes, dependencies, and reverseNodeDependencies.
  */
 export const propagateScopes = (graph: Graph): void => {
   const worklist: Set<string> = new Set(
@@ -195,9 +242,9 @@ export const propagateScopes = (graph: Graph): void => {
     if (nodeInfo.parentPointer) {
       worklist.add(nodeInfo.parentPointer);
     }
-    const reverseDependencies = graph.reverseDependencies.get(pointer);
-    if (reverseDependencies) {
-      for (const dependentPointer of reverseDependencies) {
+    const reverseNodeDependencies = graph.reverseNodeDependencies.get(pointer);
+    if (reverseNodeDependencies) {
+      for (const dependentPointer of reverseNodeDependencies) {
         worklist.add(dependentPointer);
       }
     }
@@ -290,9 +337,9 @@ export const propagateScopes = (graph: Graph): void => {
     }
 
     // Propagate scopes from $ref dependencies
-    const dependencies = graph.dependencies.get(pointer);
-    if (dependencies) {
-      for (const depPointer of dependencies) {
+    const nodeDependencies = graph.nodeDependencies.get(pointer);
+    if (nodeDependencies) {
+      for (const depPointer of nodeDependencies) {
         const depNode = graph.nodes.get(depPointer);
         if (depNode?.scopes) {
           const changed = propagateScopesToNode(depNode, nodeInfo);
@@ -384,14 +431,14 @@ export const seedLocalScopes = (nodes: Graph['nodes']): void => {
  * - All keys in the returned maps are normalized JSON Pointers (RFC 6901, always starting with '#').
  * - The `nodes` map allows fast lookup of any node and its parent/key context.
  * - The `dependencies` map records, for each node, the set of normalized pointers it references via $ref.
- * - The `reverseDependencies` map records, for each node, the set of nodes that reference it via $ref.
+ * - The `reverseNodeDependencies` map records, for each node, the set of nodes that reference it via $ref.
  * - After construction, all nodes will have their local and propagated scopes annotated.
  *
  * @param root The root object (e.g., the OpenAPI spec)
  * @returns An object with:
  *   - nodes: Map from normalized JSON Pointer string to NodeInfo
  *   - dependencies: Map from normalized JSON Pointer string to Set of referenced normalized JSON Pointers
- *   - reverseDependencies: Map from normalized JSON Pointer string to Set of referencing normalized JSON Pointers
+ *   - reverseNodeDependencies: Map from normalized JSON Pointer string to Set of referencing normalized JSON Pointers
  */
 export const buildGraph = (
   root: unknown,
@@ -401,10 +448,11 @@ export const buildGraph = (
 } => {
   const eventBuildGraph = logger.timeEvent('build-graph');
   const graph: Graph = {
-    allDependencies: new Map(),
-    dependencies: new Map(),
+    nodeDependencies: new Map(),
     nodes: new Map(),
-    reverseDependencies: new Map(),
+    reverseNodeDependencies: new Map(),
+    subtreeDependencies: new Map(),
+    transitiveDependencies: new Map(),
   };
 
   const walk = ({
@@ -432,10 +480,10 @@ export const buildGraph = (
       // If this node has a $ref, record the dependency
       if ('$ref' in node && typeof node.$ref === 'string') {
         const refPointer = normalizeJsonPointer(node.$ref);
-        if (!graph.dependencies.has(pointer)) {
-          graph.dependencies.set(pointer, new Set());
+        if (!graph.nodeDependencies.has(pointer)) {
+          graph.nodeDependencies.set(pointer, new Set());
         }
-        graph.dependencies.get(pointer)!.add(refPointer);
+        graph.nodeDependencies.get(pointer)!.add(refPointer);
       }
       // Check for tags property (should be an array of strings)
       if ('tags' in node && node.tags instanceof Array) {
@@ -474,9 +522,9 @@ export const buildGraph = (
   });
 
   const cache: Cache = {
-    allDependencies: new Map(),
-    childDependencies: new Map(),
     parentToChildren: new Map(),
+    subtreeDependencies: new Map(),
+    transitiveDependencies: new Map(),
   };
 
   for (const [pointer, nodeInfo] of graph.nodes) {
@@ -488,12 +536,12 @@ export const buildGraph = (
     cache.parentToChildren.get(parent)!.push(pointer);
   }
 
-  for (const [pointerFrom, pointers] of graph.dependencies) {
+  for (const [pointerFrom, pointers] of graph.nodeDependencies) {
     for (const pointerTo of pointers) {
-      if (!graph.reverseDependencies.has(pointerTo)) {
-        graph.reverseDependencies.set(pointerTo, new Set());
+      if (!graph.reverseNodeDependencies.has(pointerTo)) {
+        graph.reverseNodeDependencies.set(pointerTo, new Set());
       }
-      graph.reverseDependencies.get(pointerTo)!.add(pointerFrom);
+      graph.reverseNodeDependencies.get(pointerTo)!.add(pointerFrom);
     }
   }
 
@@ -502,13 +550,14 @@ export const buildGraph = (
   annotateChildScopes(graph.nodes);
 
   for (const pointer of graph.nodes.keys()) {
-    const allDependencies = collectAllDependenciesForPointer({
+    const result = collectPointerDependencies({
       cache,
       graph,
       pointer,
       visited: new Set(),
     });
-    graph.allDependencies.set(pointer, allDependencies);
+    graph.transitiveDependencies.set(pointer, result.transitiveDependencies);
+    graph.subtreeDependencies.set(pointer, result.subtreeDependencies);
   }
 
   eventBuildGraph.timeEnd();

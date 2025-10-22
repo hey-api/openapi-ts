@@ -115,7 +115,7 @@ export const irWebhookToAst = ({
 
     schemaData.required = [...requiredProperties];
 
-    const path = state._path || [];
+    const path = state._path?.value || [];
     const ast = getAst(schemaData, path);
     const resourceType = pathToSymbolResourceType(path);
     const symbol = plugin.registerSymbol({

@@ -3,6 +3,7 @@ import ts from 'typescript';
 import { tsc } from '../../../../tsc';
 import { numberRegExp } from '../../../../utils/regexp';
 import type { SchemaWithType } from '../../../shared/types/schema';
+import { toRef } from '../../../shared/utils/refs';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -34,11 +35,11 @@ export const objectToAst = ({
       schema: property,
       state: {
         ...state,
-        _path: [...state._path, 'properties', name],
+        _path: toRef([...state._path.value, 'properties', name]),
       },
     });
-    if (propertyAst.hasCircularReference) {
-      result.hasCircularReference = true;
+    if (propertyAst.hasLazyExpression) {
+      result.hasLazyExpression = true;
     }
 
     numberRegExp.lastIndex = 0;
@@ -61,17 +62,10 @@ export const objectToAst = ({
       propertyName = `'${name}'`;
     }
 
-    if (propertyAst.hasCircularReference) {
+    if (propertyAst.hasLazyExpression) {
       properties.push(
         tsc.getAccessorDeclaration({
           name: propertyName,
-          // @ts-expect-error
-          returnType: propertyAst.typeName
-            ? tsc.propertyAccessExpression({
-                expression: z.placeholder,
-                name: propertyAst.typeName,
-              })
-            : undefined,
           statements: [
             tsc.returnStatement({
               expression: propertyAst.expression,
@@ -98,7 +92,7 @@ export const objectToAst = ({
       schema: schema.additionalProperties,
       state: {
         ...state,
-        _path: [...state._path, 'additionalProperties'],
+        _path: toRef([...state._path.value, 'additionalProperties']),
       },
     });
     result.expression = tsc.callExpression({
@@ -117,8 +111,8 @@ export const objectToAst = ({
         additionalAst.expression,
       ],
     });
-    if (additionalAst.hasCircularReference) {
-      result.hasCircularReference = true;
+    if (additionalAst.hasLazyExpression) {
+      result.hasLazyExpression = true;
     }
     return result as Omit<Ast, 'typeName'>;
   }

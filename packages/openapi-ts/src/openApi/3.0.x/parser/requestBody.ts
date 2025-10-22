@@ -32,7 +32,6 @@ const requestBodyToIrRequestBody = ({
       state: {
         $ref,
         circularReferenceTracker: new Set(),
-        refStack: [$ref],
       },
     }),
   };

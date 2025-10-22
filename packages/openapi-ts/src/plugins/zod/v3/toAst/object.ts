@@ -3,6 +3,7 @@ import ts from 'typescript';
 import { tsc } from '../../../../tsc';
 import { numberRegExp } from '../../../../utils/regexp';
 import type { SchemaWithType } from '../../../shared/types/schema';
+import { toRef } from '../../../shared/utils/refs';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -18,7 +19,7 @@ export const objectToAst = ({
 } => {
   const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
 
-  let hasCircularReference = false;
+  let hasLazyExpression = false;
 
   // TODO: parser - handle constants
   const properties: Array<ts.PropertyAssignment> = [];
@@ -35,12 +36,12 @@ export const objectToAst = ({
       schema: property,
       state: {
         ...state,
-        _path: [...state._path, 'properties', name],
+        _path: toRef([...state._path.value, 'properties', name]),
       },
     });
 
-    if (propertyExpression.hasCircularReference) {
-      hasCircularReference = true;
+    if (propertyExpression.hasLazyExpression) {
+      hasLazyExpression = true;
     }
 
     numberRegExp.lastIndex = 0;
@@ -79,7 +80,7 @@ export const objectToAst = ({
       schema: schema.additionalProperties,
       state: {
         ...state,
-        _path: [...state._path, 'additionalProperties'],
+        _path: toRef([...state._path.value, 'additionalProperties']),
       },
     });
     const expression = tsc.callExpression({
@@ -92,7 +93,7 @@ export const objectToAst = ({
     return {
       anyType: 'AnyZodObject',
       expression,
-      hasCircularReference: additionalAst.hasCircularReference,
+      hasLazyExpression: additionalAst.hasLazyExpression,
     };
   }
 
@@ -106,6 +107,6 @@ export const objectToAst = ({
   return {
     anyType: 'AnyZodObject',
     expression,
-    hasCircularReference,
+    hasLazyExpression,
   };
 };

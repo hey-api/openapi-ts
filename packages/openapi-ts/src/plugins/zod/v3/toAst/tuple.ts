@@ -2,6 +2,7 @@ import type ts from 'typescript';
 
 import { tsc } from '../../../../tsc';
 import type { SchemaWithType } from '../../../shared/types/schema';
+import { toRef } from '../../../shared/utils/refs';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -17,7 +18,7 @@ export const tupleToAst = ({
 } => {
   const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
 
-  let hasCircularReference = false;
+  let hasLazyExpression = false;
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
@@ -42,7 +43,7 @@ export const tupleToAst = ({
     });
     return {
       expression,
-      hasCircularReference,
+      hasLazyExpression,
     };
   }
 
@@ -55,12 +56,12 @@ export const tupleToAst = ({
         schema: item,
         state: {
           ...state,
-          _path: [...state._path, 'items', index],
+          _path: toRef([...state._path.value, 'items', index]),
         },
       });
       tupleElements.push(itemSchema.expression);
-      if (itemSchema.hasCircularReference) {
-        hasCircularReference = true;
+      if (itemSchema.hasLazyExpression) {
+        hasLazyExpression = true;
       }
     });
   }
@@ -78,6 +79,6 @@ export const tupleToAst = ({
   });
   return {
     expression,
-    hasCircularReference,
+    hasLazyExpression,
   };
 };

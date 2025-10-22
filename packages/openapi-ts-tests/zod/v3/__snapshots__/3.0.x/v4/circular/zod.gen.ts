@@ -3,47 +3,39 @@
 import { z } from 'zod/v4';
 
 export const zBaz = z.object({
-    get quux(): z.ZodOptional {
-        return z.optional(zQuux);
+    get quux() {
+        return z.optional(z.lazy((): any => {
+            return zQuux;
+        }));
     }
 });
 
 export const zCorge = z.object({
-    get baz(): z.ZodOptional {
-        return z.optional(z.array(zBaz));
-    }
-});
-
-export const zQux = z.union([
-    z.object({
-        type: z.literal('struct')
-    }).and(z.lazy(() => {
-        return zCorge;
-    })),
-    z.object({
-        type: z.literal('array')
-    }).and(z.lazy(() => {
-        return zFoo;
-    }))
-]);
-
-export const zQuux = z.object({
-    get qux(): z.ZodOptional {
-        return z.optional(zQux);
-    }
+    baz: z.optional(z.array(zBaz))
 });
 
 export const zFoo = z.object({
     quux: z.optional(zQuux)
 });
 
+export const zQux = z.union([
+    z.object({
+        type: z.literal('struct')
+    }).and(zCorge),
+    z.object({
+        type: z.literal('array')
+    }).and(zFoo)
+]);
+
+export const zQuux = z.object({
+    qux: z.optional(zQux)
+});
+
 export const zBar = z.object({
-    get bar(): z.ZodOptional {
+    get bar() {
         return z.optional(z.lazy((): any => {
             return zBar;
         }));
     },
-    get baz(): z.ZodOptional {
-        return z.optional(zBaz);
-    }
+    baz: z.optional(zBaz)
 });

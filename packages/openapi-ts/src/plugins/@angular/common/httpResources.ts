@@ -27,70 +27,76 @@ const generateAngularClassServices = ({
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
 
-  plugin.forEach('operation', ({ operation }) => {
-    const isRequiredOptions = isOperationOptionsRequired({
-      context: plugin.context,
-      operation,
-    });
-
-    const classes = operationClasses({
-      context: plugin.context,
-      operation,
-      plugin: sdkPlugin,
-    });
-
-    for (const entry of classes.values()) {
-      entry.path.forEach((currentClassName, index) => {
-        if (!serviceClasses.has(currentClassName)) {
-          serviceClasses.set(currentClassName, {
-            className: currentClassName,
-            classes: new Set(),
-            methods: new Set(),
-            nodes: [],
-            root: !index,
-          });
-        }
-
-        const parentClassName = entry.path[index - 1];
-        if (parentClassName && parentClassName !== currentClassName) {
-          const parentClass = serviceClasses.get(parentClassName)!;
-          parentClass.classes.add(currentClassName);
-          serviceClasses.set(parentClassName, parentClass);
-        }
-
-        const isLast = entry.path.length === index + 1;
-        if (!isLast) {
-          return;
-        }
-
-        const currentClass = serviceClasses.get(currentClassName)!;
-
-        const resourceMethodName =
-          plugin.config.httpResources.methodNameBuilder(operation);
-
-        if (currentClass.methods.has(resourceMethodName)) {
-          return;
-        }
-
-        const methodNode = generateAngularResourceMethod({
-          isRequiredOptions,
-          methodName: resourceMethodName,
-          operation,
-          plugin,
-        });
-
-        if (!currentClass.nodes.length) {
-          currentClass.nodes.push(methodNode);
-        } else {
-          // @ts-expect-error
-          currentClass.nodes.push(tsc.identifier({ text: '\n' }), methodNode);
-        }
-
-        currentClass.methods.add(resourceMethodName);
-        serviceClasses.set(currentClassName, currentClass);
+  plugin.forEach(
+    'operation',
+    ({ operation }) => {
+      const isRequiredOptions = isOperationOptionsRequired({
+        context: plugin.context,
+        operation,
       });
-    }
-  });
+
+      const classes = operationClasses({
+        context: plugin.context,
+        operation,
+        plugin: sdkPlugin,
+      });
+
+      for (const entry of classes.values()) {
+        entry.path.forEach((currentClassName, index) => {
+          if (!serviceClasses.has(currentClassName)) {
+            serviceClasses.set(currentClassName, {
+              className: currentClassName,
+              classes: new Set(),
+              methods: new Set(),
+              nodes: [],
+              root: !index,
+            });
+          }
+
+          const parentClassName = entry.path[index - 1];
+          if (parentClassName && parentClassName !== currentClassName) {
+            const parentClass = serviceClasses.get(parentClassName)!;
+            parentClass.classes.add(currentClassName);
+            serviceClasses.set(parentClassName, parentClass);
+          }
+
+          const isLast = entry.path.length === index + 1;
+          if (!isLast) {
+            return;
+          }
+
+          const currentClass = serviceClasses.get(currentClassName)!;
+
+          const resourceMethodName =
+            plugin.config.httpResources.methodNameBuilder(operation);
+
+          if (currentClass.methods.has(resourceMethodName)) {
+            return;
+          }
+
+          const methodNode = generateAngularResourceMethod({
+            isRequiredOptions,
+            methodName: resourceMethodName,
+            operation,
+            plugin,
+          });
+
+          if (!currentClass.nodes.length) {
+            currentClass.nodes.push(methodNode);
+          } else {
+            // @ts-expect-error
+            currentClass.nodes.push(tsc.identifier({ text: '\n' }), methodNode);
+          }
+
+          currentClass.methods.add(resourceMethodName);
+          serviceClasses.set(currentClassName, currentClass);
+        });
+      }
+    },
+    {
+      order: 'declarations',
+    },
+  );
 
   const generateClass = (currentClass: AngularServiceClassEntry) => {
     if (generatedClasses.has(currentClass.className)) {
@@ -164,24 +170,30 @@ const generateAngularFunctionServices = ({
 }: {
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  plugin.forEach('operation', ({ operation }) => {
-    const isRequiredOptions = isOperationOptionsRequired({
-      context: plugin.context,
-      operation,
-    });
+  plugin.forEach(
+    'operation',
+    ({ operation }) => {
+      const isRequiredOptions = isOperationOptionsRequired({
+        context: plugin.context,
+        operation,
+      });
 
-    const symbol = plugin.registerSymbol({
-      exported: true,
-      name: plugin.config.httpResources.methodNameBuilder(operation),
-    });
-    const node = generateAngularResourceFunction({
-      isRequiredOptions,
-      operation,
-      plugin,
-      symbol,
-    });
-    plugin.setSymbolValue(symbol, node);
-  });
+      const symbol = plugin.registerSymbol({
+        exported: true,
+        name: plugin.config.httpResources.methodNameBuilder(operation),
+      });
+      const node = generateAngularResourceFunction({
+        isRequiredOptions,
+        operation,
+        plugin,
+        symbol,
+      });
+      plugin.setSymbolValue(symbol, node);
+    },
+    {
+      order: 'declarations',
+    },
+  );
 };
 
 const generateResourceCallExpression = ({

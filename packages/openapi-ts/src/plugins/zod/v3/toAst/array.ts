@@ -3,6 +3,7 @@ import type ts from 'typescript';
 import { deduplicateSchema } from '../../../../ir/schema';
 import { tsc } from '../../../../tsc';
 import type { SchemaWithType } from '../../../shared/types/schema';
+import { toRef } from '../../../shared/utils/refs';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -25,7 +26,7 @@ export const arrayToAst = ({
   });
 
   let arrayExpression: ts.CallExpression | undefined;
-  let hasCircularReference = false;
+  let hasLazyExpression = false;
 
   if (!schema.items) {
     arrayExpression = tsc.callExpression({
@@ -50,11 +51,11 @@ export const arrayToAst = ({
         schema: item,
         state: {
           ...state,
-          _path: [...state._path, 'items', index],
+          _path: toRef([...state._path.value, 'items', index]),
         },
       });
-      if (itemAst.hasCircularReference) {
-        hasCircularReference = true;
+      if (itemAst.hasLazyExpression) {
+        hasLazyExpression = true;
       }
       return itemAst.expression;
     });
@@ -155,6 +156,6 @@ export const arrayToAst = ({
 
   return {
     expression: arrayExpression,
-    hasCircularReference,
+    hasLazyExpression,
   };
 };

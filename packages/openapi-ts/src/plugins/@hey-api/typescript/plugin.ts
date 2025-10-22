@@ -595,6 +595,9 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
           break;
       }
     },
+    {
+      order: 'declarations',
+    },
   );
 
   createClientOptions({ plugin, servers, symbolClientOptions });

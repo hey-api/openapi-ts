@@ -171,12 +171,18 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
 
   const routeHandlers: Array<Property> = [];
 
-  plugin.forEach('operation', ({ operation }) => {
-    const routeHandler = operationToRouteHandler({ operation, plugin });
-    if (routeHandler) {
-      routeHandlers.push(routeHandler);
-    }
-  });
+  plugin.forEach(
+    'operation',
+    ({ operation }) => {
+      const routeHandler = operationToRouteHandler({ operation, plugin });
+      if (routeHandler) {
+        routeHandlers.push(routeHandler);
+      }
+    },
+    {
+      order: 'declarations',
+    },
+  );
 
   const node = tsc.typeAliasDeclaration({
     exportType: symbolRouteHandlers.exported,

@@ -11,6 +11,6 @@ export const vBar: v.GenericSchema = v.object({
     ])
 });
 
-export const vFoo: v.GenericSchema = v.object({
+export const vFoo = v.object({
     foo: vBar
 });

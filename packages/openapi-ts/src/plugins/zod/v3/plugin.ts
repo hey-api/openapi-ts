@@ -2,15 +2,16 @@ import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { buildName } from '../../../openApi/shared/utils/name';
 import { tsc } from '../../../tsc';
-import { jsonPointerToPath, refToName } from '../../../utils/ref';
+import { refToName } from '../../../utils/ref';
 import type { SchemaWithType } from '../../shared/types/schema';
 import { pathToSymbolResourceType } from '../../shared/utils/meta';
+import { toRef, toRefs } from '../../shared/utils/refs';
 import { identifiers } from '../constants';
 import { exportAst } from '../shared/export';
 import { getZodModule } from '../shared/module';
 import { numberParameter } from '../shared/numbers';
 import { irOperationToAst } from '../shared/operation';
-import type { Ast, IrSchemaToAstOptions } from '../shared/types';
+import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
 import { irWebhookToAst } from '../shared/webhook';
 import type { ZodPlugin } from '../types';
 import { irSchemaWithTypeToAst } from './toAst';
@@ -34,21 +35,14 @@ export const irSchemaToAst = ({
   const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
 
   if (schema.$ref) {
-    const isCircularReference = state.circularReferenceTracker.includes(
-      schema.$ref,
-    );
-    state.circularReferenceTracker.push(schema.$ref);
-    state.currentReferenceTracker.push(schema.$ref);
-
     const selector = plugin.api.selector('ref', schema.$ref);
-    let symbol = plugin.getSymbol(selector);
-
-    if (isCircularReference) {
-      if (!symbol) {
-        symbol = plugin.referenceSymbol(selector);
-      }
-
-      ast.expression = tsc.callExpression({
+    let refSymbol = plugin.getSymbol(selector);
+    if (refSymbol && !plugin.isSelfReference(schema.$ref, state._path.value)) {
+      const ref = tsc.identifier({ text: refSymbol.placeholder });
+      ast.expression = ref;
+    } else {
+      refSymbol = plugin.referenceSymbol(selector);
+      const lazyExpression = tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
           expression: z.placeholder,
           name: identifiers.lazy,
@@ -57,39 +51,16 @@ export const irSchemaToAst = ({
           tsc.arrowFunction({
             statements: [
               tsc.returnStatement({
-                expression: tsc.identifier({ text: symbol.placeholder }),
+                expression: tsc.identifier({ text: refSymbol.placeholder }),
               }),
             ],
           }),
         ],
       });
-      ast.hasCircularReference = schema.circular;
-    } else {
-      if (!symbol) {
-        // if $ref hasn't been processed yet, inline it to avoid the
-        // "Block-scoped variable used before its declaration." error
-        // this could be (maybe?) fixed by reshuffling the generation order
-        const ref = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
-        handleComponent({
-          id: schema.$ref,
-          plugin,
-          schema: ref,
-          state: {
-            ...state,
-            _path: jsonPointerToPath(schema.$ref),
-            currentReferenceTracker: [schema.$ref],
-          },
-        });
-      } else {
-        ast.hasCircularReference = schema.circular;
-      }
-
-      const refSymbol = plugin.referenceSymbol(selector);
-      ast.expression = tsc.identifier({ text: refSymbol.placeholder });
+      ast.expression = lazyExpression;
+      ast.hasLazyExpression = true;
+      state.hasLazyExpression.value = true;
     }
-
-    state.circularReferenceTracker.pop();
-    state.currentReferenceTracker.pop();
   } else if (schema.type) {
     const typeAst = irSchemaWithTypeToAst({
       plugin,
@@ -97,7 +68,6 @@ export const irSchemaToAst = ({
       state,
     });
     ast.expression = typeAst.expression;
-    ast.hasCircularReference = typeAst.hasCircularReference;
     ast.typeName = typeAst.anyType;
 
     if (plugin.config.metadata && schema.description) {
@@ -119,12 +89,9 @@ export const irSchemaToAst = ({
           schema: item,
           state: {
             ...state,
-            _path: [...state._path, 'items', index],
+            _path: toRef([...state._path.value, 'items', index]),
           },
         });
-        if (typeAst.hasCircularReference) {
-          ast.hasCircularReference = true;
-        }
         return typeAst.expression;
       });
 
@@ -182,7 +149,6 @@ export const irSchemaToAst = ({
       state,
     });
     ast.expression = typeAst.expression;
-    ast.hasCircularReference = typeAst.hasCircularReference;
     ast.typeName = typeAst.anyType;
   }
 
@@ -223,7 +189,7 @@ export const irSchemaToAst = ({
     }
   }
 
-  if (ast.hasCircularReference) {
+  if (state.hasLazyExpression.value) {
     if (!ast.typeName) {
       ast.typeName = 'ZodTypeAny';
     }
@@ -235,30 +201,18 @@ export const irSchemaToAst = ({
 };
 
 const handleComponent = ({
-  id,
+  $ref,
   plugin,
   schema,
-  state: _state,
-}: Omit<IrSchemaToAstOptions, 'state'> & {
-  id: string;
+  state,
+}: IrSchemaToAstOptions & {
+  $ref: string;
   schema: IR.SchemaObject;
-  state?: Partial<IrSchemaToAstOptions['state']>;
 }): void => {
-  const state: IrSchemaToAstOptions['state'] = {
-    _path: _state?._path ?? [],
-    circularReferenceTracker: _state?.circularReferenceTracker ?? [id],
-    currentReferenceTracker: _state?.currentReferenceTracker ?? [id],
-    hasCircularReference: _state?.hasCircularReference ?? false,
-  };
-
-  const selector = plugin.api.selector('ref', id);
-  let symbol = plugin.getSymbol(selector);
-  if (symbol) return;
-
   const ast = irSchemaToAst({ plugin, schema, state });
-  const baseName = refToName(id);
-  const resourceType = pathToSymbolResourceType(state._path);
-  symbol = plugin.registerSymbol({
+  const baseName = refToName($ref);
+  const resourceType = pathToSymbolResourceType(state._path.value);
+  const symbol = plugin.registerSymbol({
     exported: true,
     meta: {
       resourceType,
@@ -267,7 +221,7 @@ const handleComponent = ({
       config: plugin.config.definitions,
       name: baseName,
     }),
-    selector,
+    selector: plugin.api.selector('ref', $ref),
   });
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
     ? plugin.registerSymbol({
@@ -280,7 +234,7 @@ const handleComponent = ({
           config: plugin.config.definitions.types.infer,
           name: baseName,
         }),
-        selector: plugin.api.selector('type-infer-ref', id),
+        selector: plugin.api.selector('type-infer-ref', $ref),
       })
     : undefined;
   exportAst({
@@ -310,67 +264,66 @@ export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
         case 'operation':
           irOperationToAst({
             getAst: (schema, path) => {
-              const state: IrSchemaToAstOptions['state'] = {
+              const state = toRefs<PluginState>({
                 _path: path,
-                circularReferenceTracker: [],
-                currentReferenceTracker: [],
-                hasCircularReference: false,
-              };
+                hasLazyExpression: false,
+              });
               return irSchemaToAst({ plugin, schema, state });
             },
             operation: event.operation,
             plugin,
-            state: {
+            state: toRefs({
               _path: event._path,
-            },
+            }),
           });
           break;
         case 'parameter':
           handleComponent({
-            id: event.$ref,
+            $ref: event.$ref,
             plugin,
             schema: event.parameter.schema,
-            state: {
+            state: toRefs({
               _path: event._path,
-            },
+              hasLazyExpression: false,
+            }),
           });
           break;
         case 'requestBody':
           handleComponent({
-            id: event.$ref,
+            $ref: event.$ref,
             plugin,
             schema: event.requestBody.schema,
-            state: {
+            state: toRefs({
               _path: event._path,
-            },
+              hasLazyExpression: false,
+            }),
           });
           break;
         case 'schema':
           handleComponent({
-            id: event.$ref,
+            $ref: event.$ref,
             plugin,
             schema: event.schema,
-            state: {
+            state: toRefs({
               _path: event._path,
-            },
+              hasLazyExpression: false,
+            }),
           });
           break;
         case 'webhook':
           irWebhookToAst({
             getAst: (schema, path) => {
-              const state: IrSchemaToAstOptions['state'] = {
+              const state = toRefs<PluginState>({
                 _path: path,
-                circularReferenceTracker: [],
-                currentReferenceTracker: [],
-                hasCircularReference: false,
-              };
+                hasLazyExpression: false,
+              });
               return irSchemaToAst({ plugin, schema, state });
             },
             operation: event.operation,
             plugin,
-            state: {
+            state: toRefs({
               _path: event._path,
-            },
+            }),
           });
           break;
       }
