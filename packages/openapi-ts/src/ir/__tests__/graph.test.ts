@@ -67,7 +67,10 @@ describe('matchIrTopLevelPointer', () => {
 });
 
 describe('walkTopological', () => {
-  const makeGraph = (deps: Array<[string, string[]]>, nodes: string[]) => {
+  const makeGraph = (
+    deps: Array<[string, Array<string>]>,
+    nodes: Array<string>,
+  ) => {
     const nodeDependencies = new Map<string, Set<string>>();
     const subtreeDependencies = new Map<string, Set<string>>();
     const reverseNodeDependencies = new Map<string, Set<string>>();
@@ -106,7 +109,7 @@ describe('walkTopological', () => {
       ],
       ['A', 'B', 'C'],
     );
-    const order: string[] = [];
+    const order: Array<string> = [];
     walkTopological(graph, (pointer) => order.push(pointer));
     expect(order.indexOf('C')).toBeLessThan(order.indexOf('B'));
     expect(order.indexOf('B')).toBeLessThan(order.indexOf('A'));
@@ -122,7 +125,7 @@ describe('walkTopological', () => {
       ],
       ['A', 'B', 'C', 'D'],
     );
-    const order: string[] = [];
+    const order: Array<string> = [];
     walkTopological(graph, (pointer) => order.push(pointer));
     expect(order.indexOf('B')).toBeLessThan(order.indexOf('A'));
     expect(order.indexOf('D')).toBeLessThan(order.indexOf('C'));
@@ -132,7 +135,7 @@ describe('walkTopological', () => {
   it('walks nodes in topological order for a disconnected graph', () => {
     // Graph: A -> B, C (no deps), D (no deps)
     const graph = makeGraph([['A', ['B']]], ['A', 'B', 'C', 'D']);
-    const order: string[] = [];
+    const order: Array<string> = [];
     walkTopological(graph, (pointer) => order.push(pointer));
     expect(order.indexOf('B')).toBeLessThan(order.indexOf('A'));
     expect(order).toHaveLength(4);
@@ -154,7 +157,7 @@ describe('walkTopological', () => {
       ],
       ['A', 'B', 'C', 'D'],
     );
-    const order: string[] = [];
+    const order: Array<string> = [];
     walkTopological(graph, (pointer) => order.push(pointer));
     expect(order.indexOf('D')).toBeLessThan(order.indexOf('B'));
     expect(order.indexOf('D')).toBeLessThan(order.indexOf('C'));
@@ -174,7 +177,7 @@ describe('walkTopological', () => {
       ],
       ['A', 'B', 'C', 'D', 'E'],
     );
-    const order: string[] = [];
+    const order: Array<string> = [];
     walkTopological(graph, (pointer) => order.push(pointer));
     expect(order.indexOf('E')).toBeLessThan(order.indexOf('D'));
     expect(order.indexOf('D')).toBeLessThan(order.indexOf('C'));
@@ -192,7 +195,7 @@ describe('walkTopological', () => {
       ],
       ['A', 'B', 'C'],
     );
-    const order: string[] = [];
+    const order: Array<string> = [];
     walkTopological(graph, (pointer) => order.push(pointer));
     expect(order.sort()).toEqual(['A', 'B', 'C']);
   });
@@ -204,7 +207,7 @@ describe('walkTopological', () => {
     const spec = specModule.default ?? specModule;
     const { graph } = buildGraph(spec, loggerStub);
 
-    const order: string[] = [];
+    const order: Array<string> = [];
     walkTopological(graph, (pointer) => order.push(pointer));
 
     const foo = '#/components/schemas/Foo';
@@ -218,5 +221,106 @@ describe('walkTopological', () => {
     // Baz and Qux form a mutual $ref cycle; both must be present
     expect(order).toContain(baz);
     expect(order).toContain(qux);
+  });
+
+  it('prefers schema group before parameter when safe (default)', () => {
+    // parameter then schema in declaration order, no deps -> schema should move before parameter
+    const param = '#/components/parameters/P';
+    const schema = '#/components/schemas/A';
+    const nodes = [param, schema];
+    const graph = makeGraph([], nodes);
+
+    const order: Array<string> = [];
+    walkTopological(graph, (p) => order.push(p));
+    expect(order.indexOf(schema)).toBeLessThan(order.indexOf(param));
+  });
+
+  it('does not apply preferGroups when it would violate dependencies (fallback)', () => {
+    // declaration order: param, schema; schema depends on param -> cannot move before param
+    const param = '#/components/parameters/P';
+    const schema = '#/components/schemas/S';
+    const nodes = [param, schema];
+    const nodeDependencies = new Map<string, Set<string>>();
+    nodeDependencies.set(schema, new Set([param]));
+    const subtreeDependencies = new Map<string, Set<string>>();
+    const reverseNodeDependencies = new Map<string, Set<string>>();
+    const nodesMap = new Map<string, any>();
+    for (const n of nodes)
+      nodesMap.set(n, { key: null, node: {}, parentPointer: null });
+    const graph = {
+      nodeDependencies,
+      nodes: nodesMap,
+      reverseNodeDependencies,
+      subtreeDependencies,
+      transitiveDependencies: new Map<string, Set<string>>(),
+    } as unknown as Graph;
+
+    const order: Array<string> = [];
+    walkTopological(graph, (p) => order.push(p));
+    // schema depends on param so param must remain before schema
+    expect(order.indexOf(param)).toBeLessThan(order.indexOf(schema));
+  });
+
+  it('ignores self-dependencies when ordering', () => {
+    // Foo has self-ref only, Bar references Foo -> Foo should come before Bar
+    const foo = '#/components/schemas/Foo';
+    const bar = '#/components/schemas/Bar';
+    const nodes = [foo, bar];
+    const nodeDependencies = new Map<string, Set<string>>();
+    nodeDependencies.set(foo, new Set([foo]));
+    nodeDependencies.set(bar, new Set([foo]));
+
+    const nodesMap = new Map<string, any>();
+    for (const n of nodes)
+      nodesMap.set(n, { key: null, node: {}, parentPointer: null });
+
+    const graph = {
+      nodeDependencies,
+      nodes: nodesMap,
+      reverseNodeDependencies: new Map<string, Set<string>>(),
+      subtreeDependencies: new Map<string, Set<string>>(),
+      transitiveDependencies: new Map<string, Set<string>>(),
+    } as unknown as Graph;
+
+    const order: Array<string> = [];
+    walkTopological(graph, (p) => order.push(p));
+    // Foo is a dependency of Bar, so Foo should come before Bar
+    expect(order.indexOf(foo)).toBeLessThan(order.indexOf(bar));
+  });
+
+  it('uses subtreeDependencies when nodeDependencies are absent', () => {
+    const parent = '#/components/schemas/Parent';
+    const child = '#/components/schemas/Child';
+    const nodes = [parent, child];
+    const nodeDependencies = new Map<string, Set<string>>();
+    const subtreeDependencies = new Map<string, Set<string>>();
+    subtreeDependencies.set(parent, new Set([child]));
+
+    const nodesMap = new Map<string, any>();
+    for (const n of nodes)
+      nodesMap.set(n, { key: null, node: {}, parentPointer: null });
+
+    const graph = {
+      nodeDependencies,
+      nodes: nodesMap,
+      reverseNodeDependencies: new Map<string, Set<string>>(),
+      subtreeDependencies,
+      transitiveDependencies: new Map<string, Set<string>>(),
+    } as unknown as Graph;
+
+    const order: Array<string> = [];
+    walkTopological(graph, (p) => order.push(p));
+    expect(order.indexOf(child)).toBeLessThan(order.indexOf(parent));
+  });
+
+  it('preserves declaration order for equal-priority items (stability)', () => {
+    const a = '#/components/schemas/A';
+    const b = '#/components/schemas/B';
+    const c = '#/components/schemas/C';
+    const nodes = [a, b, c];
+    const graph = makeGraph([], nodes);
+    const order: Array<string> = [];
+    walkTopological(graph, (p) => order.push(p));
+    expect(order).toEqual(nodes);
   });
 });

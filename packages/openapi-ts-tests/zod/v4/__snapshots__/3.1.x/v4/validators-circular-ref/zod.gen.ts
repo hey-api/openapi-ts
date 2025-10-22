@@ -10,6 +10,10 @@ export const zBar = z.object({
     }
 });
 
+export const zFoo = z.object({
+    foo: z.optional(zBar)
+});
+
 export const zBaz = z.lazy((): any => {
     return zQux;
 });
@@ -18,7 +22,3 @@ export const zBaz = z.lazy((): any => {
  * description caused circular reference error
  */
 export const zQux = zBaz;
-
-export const zFoo = z.object({
-    foo: z.optional(zBar)
-});

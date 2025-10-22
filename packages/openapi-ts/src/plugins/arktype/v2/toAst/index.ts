@@ -118,6 +118,6 @@ export const irSchemaWithTypeToAst = ({
   return {
     def: '',
     expression,
-    hasCircularReference: false,
+    hasLazyExpression: false,
   };
 };

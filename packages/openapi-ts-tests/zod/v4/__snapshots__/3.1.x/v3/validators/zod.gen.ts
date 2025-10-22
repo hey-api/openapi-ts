@@ -2,6 +2,12 @@
 
 import { z } from 'zod/v3';
 
+export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
+
+export const zQux = z.record(z.object({
+    qux: z.string().optional()
+}));
+
 /**
  * This is Foo schema.
  */
@@ -26,20 +32,14 @@ export const zBar = z.object({
     foo: zFoo.optional()
 });
 
-export const zFoo2 = z.object({
-    foo: zBar.optional()
-});
-
 /**
  * This is Foo parameter.
  */
-export const zFoo3 = z.string();
+export const zFoo2 = z.string();
 
-export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
-
-export const zQux = z.record(z.object({
-    qux: z.string().optional()
-}));
+export const zFoo3 = z.object({
+    foo: zBar.optional()
+});
 
 export const zPatchFooData = z.object({
     body: z.object({
@@ -58,7 +58,7 @@ export const zPatchFooData = z.object({
 });
 
 export const zPostFooData = z.object({
-    body: zFoo2,
+    body: zFoo3,
     path: z.never().optional(),
     query: z.never().optional()
 });

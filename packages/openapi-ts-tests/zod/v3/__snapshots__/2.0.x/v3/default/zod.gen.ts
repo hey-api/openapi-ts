@@ -2,98 +2,6 @@
 
 import { z } from 'zod';
 
-export const zExternalSharedExternalSharedModel = z.object({
-    id: z.string(),
-    name: z.string().optional()
-});
-
-/**
- * This is a model with one string property
- */
-export const zModelWithString = z.object({
-    prop: z.string().optional()
-});
-
-/**
- * This is a model with one nested property
- */
-export const zModelWithProperties = z.object({
-    required: z.string(),
-    requiredAndReadOnly: z.string().readonly(),
-    string: z.string().optional(),
-    number: z.number().optional(),
-    boolean: z.boolean().optional(),
-    reference: zModelWithString.optional(),
-    'property with space': z.string().optional(),
-    default: z.string().optional(),
-    try: z.string().optional(),
-    '@namespace.string': z.string().readonly().optional(),
-    '@namespace.integer': z.number().int().readonly().optional()
-});
-
-/**
- * This is a model with one property containing a circular reference
- */
-export const zModelWithCircularReference: z.AnyZodObject = z.object({
-    prop: z.lazy(() => {
-        return zModelWithCircularReference;
-    }).optional()
-});
-
-/**
- * This is a model that extends another model
- */
-export const zModelThatExtends = zModelWithString.and(z.object({
-    propExtendsA: z.string().optional(),
-    propExtendsB: zModelWithString.optional()
-}));
-
-/**
- * This is a model with one string property
- */
-export const zModelWithStringError = z.object({
-    prop: z.string().optional()
-});
-
-/**
- * This is a model that extends another model
- */
-export const zModelThatExtendsExtends = zModelWithString.and(zModelThatExtends).and(z.object({
-    propExtendsC: z.string().optional(),
-    propExtendsD: zModelWithString.optional()
-}));
-
-/**
- * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
- */
-export const zNonAsciiStringæøåÆøÅöôêÊ字符串 = z.string();
-
-export const zParameterActivityParams = z.object({
-    description: z.string().optional(),
-    graduate_id: z.number().int().optional(),
-    organization_id: z.number().int().optional(),
-    parent_activity: z.number().int().optional(),
-    post_id: z.number().int().optional()
-});
-
-export const zResponsePostActivityResponse = z.object({
-    description: z.string().optional(),
-    graduate_id: z.number().int().optional(),
-    organization_id: z.number().int().optional(),
-    parent_activity_id: z.number().int().optional(),
-    post_id: z.number().int().optional()
-});
-
-export const zFailureFailure = z.object({
-    error: z.string().optional(),
-    message: z.string().optional(),
-    reference_code: z.string().optional()
-});
-
-export const zExternalRefA = zExternalSharedExternalSharedModel;
-
-export const zExternalRefB = zExternalSharedExternalSharedModel;
-
 /**
  * Testing multiline comments in string: First line
  * Second line
@@ -148,11 +56,14 @@ export const zSimpleBoolean = z.boolean();
 export const zSimpleString = z.string();
 
 /**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
+export const zNonAsciiStringæøåÆøÅöôêÊ字符串 = z.string();
+
+/**
  * This is a simple file
  */
 export const zSimpleFile = z.string();
-
-export const zSimpleReference = zModelWithString;
 
 /**
  * This is a simple string
@@ -222,16 +133,6 @@ export const zArrayWithBooleans = z.array(z.boolean());
 export const zArrayWithStrings = z.array(z.string());
 
 /**
- * This is a simple array with references
- */
-export const zArrayWithReferences = z.array(zModelWithString);
-
-/**
- * This is a simple array containing an array
- */
-export const zArrayWithArray = z.array(z.array(zModelWithString));
-
-/**
  * This is a simple array with properties
  */
 export const zArrayWithProperties = z.array(z.object({
@@ -243,16 +144,6 @@ export const zArrayWithProperties = z.array(z.object({
  * This is a string dictionary
  */
 export const zDictionaryWithString = z.record(z.string());
-
-/**
- * This is a string reference
- */
-export const zDictionaryWithReference = z.record(zModelWithString);
-
-/**
- * This is a complex dictionary
- */
-export const zDictionaryWithArray = z.record(z.array(zModelWithString));
 
 /**
  * This is a string dictionary
@@ -284,6 +175,42 @@ export const zModelWithInteger = z.object({
  */
 export const zModelWithBoolean = z.object({
     prop: z.boolean().optional()
+});
+
+/**
+ * This is a model with one string property
+ */
+export const zModelWithString = z.object({
+    prop: z.string().optional()
+});
+
+export const zSimpleReference = zModelWithString;
+
+/**
+ * This is a simple array with references
+ */
+export const zArrayWithReferences = z.array(zModelWithString);
+
+/**
+ * This is a simple array containing an array
+ */
+export const zArrayWithArray = z.array(z.array(zModelWithString));
+
+/**
+ * This is a string reference
+ */
+export const zDictionaryWithReference = z.record(zModelWithString);
+
+/**
+ * This is a complex dictionary
+ */
+export const zDictionaryWithArray = z.record(z.array(zModelWithString));
+
+/**
+ * This is a model with one string property
+ */
+export const zModelWithStringError = z.object({
+    prop: z.string().optional()
 });
 
 /**
@@ -347,13 +274,6 @@ export const zModelWithNestedEnums = z.object({
 });
 
 /**
- * This is a model with one property containing a reference
- */
-export const zModelWithReference = z.object({
-    prop: zModelWithProperties.optional()
-});
-
-/**
  * This is a model with one property containing an array
  */
 export const zModelWithArray = z.object({
@@ -367,6 +287,39 @@ export const zModelWithArray = z.object({
  */
 export const zModelWithDictionary = z.object({
     prop: z.record(z.string()).optional()
+});
+
+/**
+ * This is a model with one property containing a circular reference
+ */
+export const zModelWithCircularReference: z.AnyZodObject = z.object({
+    prop: z.lazy(() => {
+        return zModelWithCircularReference;
+    }).optional()
+});
+
+/**
+ * This is a model with one nested property
+ */
+export const zModelWithProperties = z.object({
+    required: z.string(),
+    requiredAndReadOnly: z.string().readonly(),
+    string: z.string().optional(),
+    number: z.number().optional(),
+    boolean: z.boolean().optional(),
+    reference: zModelWithString.optional(),
+    'property with space': z.string().optional(),
+    default: z.string().optional(),
+    try: z.string().optional(),
+    '@namespace.string': z.string().readonly().optional(),
+    '@namespace.integer': z.number().int().readonly().optional()
+});
+
+/**
+ * This is a model with one property containing a reference
+ */
+export const zModelWithReference = z.object({
+    prop: zModelWithProperties.optional()
 });
 
 /**
@@ -405,6 +358,22 @@ export const zModelWithDuplicateImports = z.object({
     propC: zModelWithString.optional()
 });
 
+/**
+ * This is a model that extends another model
+ */
+export const zModelThatExtends = zModelWithString.and(z.object({
+    propExtendsA: z.string().optional(),
+    propExtendsB: zModelWithString.optional()
+}));
+
+/**
+ * This is a model that extends another model
+ */
+export const zModelThatExtendsExtends = zModelWithString.and(zModelThatExtends).and(z.object({
+    propExtendsC: z.string().optional(),
+    propExtendsD: zModelWithString.optional()
+}));
+
 export const zDefault = z.object({
     name: z.string().optional()
 });
@@ -423,6 +392,37 @@ export const zModelWithPattern = z.object({
     patternWithNewline: z.string().regex(/aaa\nbbb/).optional(),
     patternWithBacktick: z.string().regex(/aaa`bbb/).optional()
 });
+
+export const zParameterActivityParams = z.object({
+    description: z.string().optional(),
+    graduate_id: z.number().int().optional(),
+    organization_id: z.number().int().optional(),
+    parent_activity: z.number().int().optional(),
+    post_id: z.number().int().optional()
+});
+
+export const zResponsePostActivityResponse = z.object({
+    description: z.string().optional(),
+    graduate_id: z.number().int().optional(),
+    organization_id: z.number().int().optional(),
+    parent_activity_id: z.number().int().optional(),
+    post_id: z.number().int().optional()
+});
+
+export const zFailureFailure = z.object({
+    error: z.string().optional(),
+    message: z.string().optional(),
+    reference_code: z.string().optional()
+});
+
+export const zExternalSharedExternalSharedModel = z.object({
+    id: z.string(),
+    name: z.string().optional()
+});
+
+export const zExternalRefA = zExternalSharedExternalSharedModel;
+
+export const zExternalRefB = zExternalSharedExternalSharedModel;
 
 /**
  * This is a model with one nested property

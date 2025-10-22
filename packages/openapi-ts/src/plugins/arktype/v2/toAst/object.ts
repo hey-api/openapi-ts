@@ -3,6 +3,7 @@ import ts from 'typescript';
 import { tsc } from '../../../../tsc';
 import { numberRegExp } from '../../../../utils/regexp';
 import type { SchemaWithType } from '../../../shared/types/schema';
+import { toRef } from '../../../shared/utils/refs';
 // import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -32,11 +33,11 @@ export const objectToAst = ({
       schema: property,
       state: {
         ...state,
-        _path: [...state._path, 'properties', name],
+        _path: toRef([...state._path.value, 'properties', name]),
       },
     });
-    if (propertyAst.hasCircularReference) {
-      result.hasCircularReference = true;
+    if (propertyAst.hasLazyExpression) {
+      result.hasLazyExpression = true;
     }
 
     let propertyName:
@@ -117,7 +118,7 @@ export const objectToAst = ({
       schema: schema.additionalProperties,
       state: {
         ...state,
-        _path: [...state._path, 'additionalProperties'],
+        _path: toRef([...state._path.value, 'additionalProperties']),
       },
     });
     result.expression = tsc.callExpression({
@@ -138,12 +139,12 @@ export const objectToAst = ({
         additionalAst.expression,
       ],
     });
-    if (additionalAst.hasCircularReference) {
-      result.hasCircularReference = true;
+    if (additionalAst.hasLazyExpression) {
+      result.hasLazyExpression = true;
     }
 
     // Return with typeName for circular references
-    if (result.hasCircularReference) {
+    if (result.hasLazyExpression) {
       return {
         ...result,
         typeName: 'TODO',
@@ -159,7 +160,7 @@ export const objectToAst = ({
   );
 
   // return with typeName for circular references
-  if (result.hasCircularReference) {
+  if (result.hasLazyExpression) {
     return {
       ...result,
       typeName: 'TODO',

@@ -114,6 +114,13 @@ export interface ISymbolRegistry {
    */
   readonly id: number;
   /**
+   * Returns whether a symbol is registered in the registry.
+   *
+   * @param symbolIdOrSelector Symbol ID or selector to check.
+   * @returns True if the symbol is registered, false otherwise.
+   */
+  isRegistered(symbolIdOrSelector: number | ISelector): boolean;
+  /**
    * Returns a symbol by ID or selector, registering it if it doesn't exist.
    *
    * @param symbolIdOrSelector Symbol ID or selector to reference.

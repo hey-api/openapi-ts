@@ -2,11 +2,6 @@
 
 import { z } from 'zod/v4';
 
-export const zBaseModel = z.object({
-    id: z.optional(z.int()),
-    createdAt: z.optional(z.iso.datetime())
-});
-
 export const zArrayWithAllOfObjects = z.array(z.object({
     id: z.optional(z.int())
 }).and(z.object({
@@ -14,6 +9,11 @@ export const zArrayWithAllOfObjects = z.array(z.object({
 })));
 
 export const zArrayWithAllOfPrimitives = z.array(z.intersection(z.number(), z.string()));
+
+export const zBaseModel = z.object({
+    id: z.optional(z.int()),
+    createdAt: z.optional(z.iso.datetime())
+});
 
 export const zArrayWithAllOfRefs = z.array(zBaseModel.and(z.object({
     extra: z.optional(z.string())

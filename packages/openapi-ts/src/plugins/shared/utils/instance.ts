@@ -16,7 +16,7 @@ import {
 } from '../../../ir/graph';
 import type { IR } from '../../../ir/types';
 import type { OpenApi } from '../../../openApi/types';
-import { jsonPointerToPath, pathToJsonPointer } from '../../../utils/ref';
+import { jsonPointerToPath } from '../../../utils/ref';
 import type { PluginConfigMap } from '../../config';
 import type { Plugin } from '../../types';
 import type { WalkEvent, WalkOptions } from '../types/instance';
@@ -447,12 +447,8 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return (defaultGetKind(operation) ?? []).includes(kind);
   }
 
-  isSelfReference(
-    pointer: string,
-    path: ReadonlyArray<string | number>,
-  ): boolean {
-    const pathPointer = pathToJsonPointer(path);
-    return pathPointer === pointer || pathPointer.startsWith(`${pointer}/`);
+  isSymbolRegistered(symbolIdOrSelector: number | Selector): boolean {
+    return this.gen.symbols.isRegistered(symbolIdOrSelector);
   }
 
   referenceSymbol(symbolIdOrSelector: number | Selector): Symbol {

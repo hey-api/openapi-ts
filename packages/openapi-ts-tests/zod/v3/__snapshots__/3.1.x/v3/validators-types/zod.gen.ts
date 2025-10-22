@@ -2,6 +2,16 @@
 
 import { z } from 'zod';
 
+export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
+
+export type BazZodType = z.infer<typeof zBaz>;
+
+export const zQux = z.record(z.object({
+    qux: z.string().optional()
+}));
+
+export type QuxZodType = z.infer<typeof zQux>;
+
 /**
  * This is Foo schema.
  */
@@ -30,28 +40,18 @@ export const zBar = z.object({
 
 export type BarZodType = z.infer<typeof zBar>;
 
-export const zFoo2 = z.object({
-    foo: zBar.optional()
-});
-
-export type FooZodType2 = z.infer<typeof zFoo2>;
-
 /**
  * This is Foo parameter.
  */
-export const zFoo3 = z.string();
+export const zFoo2 = z.string();
+
+export type FooZodType2 = z.infer<typeof zFoo2>;
+
+export const zFoo3 = z.object({
+    foo: zBar.optional()
+});
 
 export type FooZodType3 = z.infer<typeof zFoo3>;
-
-export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
-
-export type BazZodType = z.infer<typeof zBaz>;
-
-export const zQux = z.record(z.object({
-    qux: z.string().optional()
-}));
-
-export type QuxZodType = z.infer<typeof zQux>;
 
 export const zPatchFooData = z.object({
     body: z.object({
@@ -72,7 +72,7 @@ export const zPatchFooData = z.object({
 export type PatchFooDataZodType = z.infer<typeof zPatchFooData>;
 
 export const zPostFooData = z.object({
-    body: zFoo2,
+    body: zFoo3,
     path: z.never().optional(),
     query: z.never().optional()
 });

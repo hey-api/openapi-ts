@@ -2,6 +2,27 @@
 
 import { z } from 'zod';
 
+export const zFoo = z.object({
+    get quux() {
+        return z.optional(z.lazy((): any => {
+            return zQuux;
+        }));
+    }
+});
+
+export const zBar = z.object({
+    get bar() {
+        return z.optional(z.lazy((): any => {
+            return zBar;
+        }));
+    },
+    get baz() {
+        return z.optional(z.lazy((): any => {
+            return zBaz;
+        }));
+    }
+});
+
 export const zBaz = z.object({
     get quux() {
         return z.optional(z.lazy((): any => {
@@ -10,18 +31,14 @@ export const zBaz = z.object({
     }
 });
 
-export const zCorge = z.object({
-    baz: z.optional(z.array(zBaz))
-});
-
-export const zFoo = z.object({
-    quux: z.optional(zQuux)
-});
-
 export const zQux = z.union([
     z.object({
         type: z.literal('struct')
-    }).and(zCorge),
+    }).and(z.lazy(() => {
+        return z.lazy((): any => {
+            return zCorge;
+        });
+    })),
     z.object({
         type: z.literal('array')
     }).and(zFoo)
@@ -31,11 +48,6 @@ export const zQuux = z.object({
     qux: z.optional(zQux)
 });
 
-export const zBar = z.object({
-    get bar() {
-        return z.optional(z.lazy((): any => {
-            return zBar;
-        }));
-    },
-    baz: z.optional(zBaz)
+export const zCorge = z.object({
+    baz: z.optional(z.array(zBaz))
 });
