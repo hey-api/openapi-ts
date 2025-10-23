@@ -3,10 +3,10 @@
 import {
   type Client,
   formDataBodySerializer,
-  type Options as ClientOptions,
+  type Options as Options2,
   type TDataShape,
 } from './client';
-import { client as _heyApiClient } from './client.gen';
+import { client } from './client.gen';
 import type {
   ActivateOrganizationCertificatesData,
   ActivateOrganizationCertificatesResponses,
@@ -351,7 +351,7 @@ import type {
 export type Options<
   TData extends TDataShape = TDataShape,
   ThrowOnError extends boolean = boolean,
-> = ClientOptions<TData, ThrowOnError> & {
+> = Options2<TData, ThrowOnError> & {
   /**
    * You can provide a client instance returned by `createClient()` instead of
    * individual options. This might be also useful if you want to implement a
@@ -366,7 +366,7 @@ export type Options<
 };
 
 class _HeyApiClient {
-  protected _client: Client = _heyApiClient;
+  protected _client: Client = client;
 
   constructor(args?: { client?: Client }) {
     if (args?.client) {
@@ -378,6 +378,7 @@ class _HeyApiClient {
 export class OpenAi extends _HeyApiClient {
   /**
    * List assistants
+   *
    * Returns a list of assistants.
    */
   public listAssistants<ThrowOnError extends boolean = false>(
@@ -401,6 +402,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create assistant
+   *
    * Create an assistant with a model and instructions.
    */
   public createAssistant<ThrowOnError extends boolean = false>(
@@ -428,6 +430,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete assistant
+   *
    * Delete an assistant.
    */
   public deleteAssistant<ThrowOnError extends boolean = false>(
@@ -451,6 +454,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve assistant
+   *
    * Retrieves an assistant.
    */
   public getAssistant<ThrowOnError extends boolean = false>(
@@ -474,6 +478,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Modify assistant
+   *
    * Modifies an assistant.
    */
   public modifyAssistant<ThrowOnError extends boolean = false>(
@@ -501,6 +506,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create speech
+   *
    * Generates audio from the input text.
    */
   public createSpeech<ThrowOnError extends boolean = false>(
@@ -528,6 +534,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create transcription
+   *
    * Transcribes audio into the input language.
    */
   public createTranscription<ThrowOnError extends boolean = false>(
@@ -556,6 +563,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create translation
+   *
    * Translates audio into English.
    */
   public createTranslation<ThrowOnError extends boolean = false>(
@@ -584,6 +592,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List batch
+   *
    * List your organization's batches.
    */
   public listBatches<ThrowOnError extends boolean = false>(
@@ -607,6 +616,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create batch
+   *
    * Creates and executes a batch from an uploaded file of requests
    */
   public createBatch<ThrowOnError extends boolean = false>(
@@ -634,6 +644,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve batch
+   *
    * Retrieves a batch.
    */
   public retrieveBatch<ThrowOnError extends boolean = false>(
@@ -657,6 +668,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Cancel batch
+   *
    * Cancels an in-progress batch. The batch will be in status `cancelling` for up to 10 minutes, before changing to `cancelled`, where it will have partial results (if any) available in the output file.
    */
   public cancelBatch<ThrowOnError extends boolean = false>(
@@ -680,6 +692,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List Chat Completions
+   *
    * List stored Chat Completions. Only Chat Completions that have been stored
    * with the `store` parameter set to `true` will be returned.
    *
@@ -705,6 +718,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create chat completion
+   *
    * **Starting a new project?** We recommend trying [Responses](https://platform.openai.com/docs/api-reference/responses)
    * to take advantage of the latest OpenAI platform features. Compare
    * [Chat Completions with Responses](https://platform.openai.com/docs/guides/responses-vs-chat-completions?api-mode=responses).
@@ -747,6 +761,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete chat completion
+   *
    * Delete a stored chat completion. Only Chat Completions that have been
    * created with the `store` parameter set to `true` can be deleted.
    *
@@ -772,6 +787,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Get chat completion
+   *
    * Get a stored chat completion. Only Chat Completions that have been created
    * with the `store` parameter set to `true` will be returned.
    *
@@ -797,6 +813,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Update chat completion
+   *
    * Modify a stored chat completion. Only Chat Completions that have been
    * created with the `store` parameter set to `true` can be modified. Currently,
    * the only supported modification is to update the `metadata` field.
@@ -827,6 +844,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Get chat messages
+   *
    * Get the messages in a stored chat completion. Only Chat Completions that
    * have been created with the `store` parameter set to `true` will be
    * returned.
@@ -853,6 +871,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create completion
+   *
    * Creates a completion for the provided prompt and parameters.
    */
   public createCompletion<ThrowOnError extends boolean = false>(
@@ -880,6 +899,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List containers
+   *
    * List Containers
    */
   public listContainers<ThrowOnError extends boolean = false>(
@@ -903,6 +923,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create container
+   *
    * Create Container
    */
   public createContainer<ThrowOnError extends boolean = false>(
@@ -930,6 +951,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete a container
+   *
    * Delete Container
    */
   public deleteContainer<ThrowOnError extends boolean = false>(
@@ -953,6 +975,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve container
+   *
    * Retrieve Container
    */
   public retrieveContainer<ThrowOnError extends boolean = false>(
@@ -976,6 +999,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List container files
+   *
    * List Container files
    */
   public listContainerFiles<ThrowOnError extends boolean = false>(
@@ -999,6 +1023,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create container file
+   *
    * Create a Container File
    *
    * You can send either a multipart/form-data request with the raw file content, or a JSON request with a file ID.
@@ -1030,6 +1055,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete a container file
+   *
    * Delete Container File
    */
   public deleteContainerFile<ThrowOnError extends boolean = false>(
@@ -1053,6 +1079,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve container file
+   *
    * Retrieve Container File
    */
   public retrieveContainerFile<ThrowOnError extends boolean = false>(
@@ -1076,6 +1103,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve container file content
+   *
    * Retrieve Container File Content
    */
   public retrieveContainerFileContent<ThrowOnError extends boolean = false>(
@@ -1099,6 +1127,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create embeddings
+   *
    * Creates an embedding vector representing the input text.
    */
   public createEmbedding<ThrowOnError extends boolean = false>(
@@ -1126,6 +1155,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List evals
+   *
    * List evaluations for a project.
    *
    */
@@ -1150,6 +1180,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create eval
+   *
    * Create the structure of an evaluation that can be used to test a model's performance.
    * An evaluation is a set of testing criteria and the config for a data source, which dictates the schema of the data used in the evaluation. After creating an evaluation, you can run it on different models and model parameters. We support several types of graders and datasources.
    * For more information, see the [Evals guide](https://platform.openai.com/docs/guides/evals).
@@ -1180,6 +1211,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete an eval
+   *
    * Delete an evaluation.
    *
    */
@@ -1204,6 +1236,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Get an eval
+   *
    * Get an evaluation by ID.
    *
    */
@@ -1228,6 +1261,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Update an eval
+   *
    * Update certain properties of an evaluation.
    *
    */
@@ -1256,6 +1290,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Get eval runs
+   *
    * Get a list of runs for an evaluation.
    *
    */
@@ -1280,6 +1315,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create eval run
+   *
    * Kicks off a new run for a given evaluation, specifying the data source, and what model configuration to use to test. The datasource will be validated against the schema specified in the config of the evaluation.
    *
    */
@@ -1308,6 +1344,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete eval run
+   *
    * Delete an eval run.
    *
    */
@@ -1332,6 +1369,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Get an eval run
+   *
    * Get an evaluation run by ID.
    *
    */
@@ -1356,6 +1394,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Cancel eval run
+   *
    * Cancel an ongoing evaluation run.
    *
    */
@@ -1380,6 +1419,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Get eval run output items
+   *
    * Get a list of output items for an evaluation run.
    *
    */
@@ -1404,6 +1444,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Get an output item of an eval run
+   *
    * Get an evaluation run output item by ID.
    *
    */
@@ -1428,6 +1469,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List files
+   *
    * Returns a list of files.
    */
   public listFiles<ThrowOnError extends boolean = false>(
@@ -1451,6 +1493,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Upload file
+   *
    * Upload a file that can be used across various endpoints. Individual files can be up to 512 MB, and the size of all files uploaded by one organization can be up to 1 TB.
    *
    * The Assistants API supports files up to 2 million tokens and of specific file types. See the [Assistants Tools guide](https://platform.openai.com/docs/assistants/tools) for details.
@@ -1488,6 +1531,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete file
+   *
    * Delete a file.
    */
   public deleteFile<ThrowOnError extends boolean = false>(
@@ -1511,6 +1555,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve file
+   *
    * Returns information about a specific file.
    */
   public retrieveFile<ThrowOnError extends boolean = false>(
@@ -1534,6 +1579,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve file content
+   *
    * Returns the contents of the specified file.
    */
   public downloadFile<ThrowOnError extends boolean = false>(
@@ -1557,6 +1603,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Run grader
+   *
    * Run a grader.
    *
    */
@@ -1585,6 +1632,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Validate grader
+   *
    * Validate a grader.
    *
    */
@@ -1613,6 +1661,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List checkpoint permissions
+   *
    * **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
    *
    * Organization owners can use this endpoint to view all permissions for a fine-tuned model checkpoint.
@@ -1639,6 +1688,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create checkpoint permissions
+   *
    * **NOTE:** Calling this endpoint requires an [admin API key](../admin-api-keys).
    *
    * This enables organization owners to share fine-tuned models with other projects in their organization.
@@ -1669,6 +1719,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete checkpoint permission
+   *
    * **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
    *
    * Organization owners can use this endpoint to delete a permission for a fine-tuned model checkpoint.
@@ -1695,6 +1746,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List fine-tuning jobs
+   *
    * List your organization's fine-tuning jobs
    *
    */
@@ -1719,6 +1771,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create fine-tuning job
+   *
    * Creates a fine-tuning job which begins the process of creating a new model from a given dataset.
    *
    * Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.
@@ -1751,6 +1804,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve fine-tuning job
+   *
    * Get info about a fine-tuning job.
    *
    * [Learn more about fine-tuning](https://platform.openai.com/docs/guides/model-optimization)
@@ -1777,6 +1831,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Cancel fine-tuning
+   *
    * Immediately cancel a fine-tune job.
    *
    */
@@ -1801,6 +1856,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List fine-tuning checkpoints
+   *
    * List checkpoints for a fine-tuning job.
    *
    */
@@ -1825,6 +1881,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List fine-tuning events
+   *
    * Get status updates for a fine-tuning job.
    *
    */
@@ -1849,6 +1906,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Pause fine-tuning
+   *
    * Pause a fine-tune job.
    *
    */
@@ -1873,6 +1931,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Resume fine-tuning
+   *
    * Resume a fine-tune job.
    *
    */
@@ -1897,6 +1956,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create image edit
+   *
    * Creates an edited or extended image given one or more source images and a prompt. This endpoint only supports `gpt-image-1` and `dall-e-2`.
    */
   public createImageEdit<ThrowOnError extends boolean = false>(
@@ -1925,6 +1985,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create image
+   *
    * Creates an image given a prompt. [Learn more](https://platform.openai.com/docs/guides/images).
    *
    */
@@ -1953,6 +2014,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create image variation
+   *
    * Creates a variation of a given image. This endpoint only supports `dall-e-2`.
    */
   public createImageVariation<ThrowOnError extends boolean = false>(
@@ -1981,6 +2043,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List models
+   *
    * Lists the currently available models, and provides basic information about each one such as the owner and availability.
    */
   public listModels<ThrowOnError extends boolean = false>(
@@ -2004,6 +2067,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete a fine-tuned model
+   *
    * Delete a fine-tuned model. You must have the Owner role in your organization to delete a model.
    */
   public deleteModel<ThrowOnError extends boolean = false>(
@@ -2027,6 +2091,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve model
+   *
    * Retrieves a model instance, providing basic information about the model such as the owner and permissioning.
    */
   public retrieveModel<ThrowOnError extends boolean = false>(
@@ -2050,6 +2115,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create moderation
+   *
    * Classifies if text and/or image inputs are potentially harmful. Learn
    * more in the [moderation guide](https://platform.openai.com/docs/guides/moderation).
    *
@@ -2079,6 +2145,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List all organization and project API keys.
+   *
    * List organization API keys
    */
   public adminApiKeysList<ThrowOnError extends boolean = false>(
@@ -2102,6 +2169,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create admin API key
+   *
    * Create an organization admin API key
    */
   public adminApiKeysCreate<ThrowOnError extends boolean = false>(
@@ -2129,6 +2197,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete admin API key
+   *
    * Delete an organization admin API key
    */
   public adminApiKeysDelete<ThrowOnError extends boolean = false>(
@@ -2152,6 +2221,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve admin API key
+   *
    * Retrieve a single organization API key
    */
   public adminApiKeysGet<ThrowOnError extends boolean = false>(
@@ -2175,6 +2245,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List audit logs
+   *
    * List user actions and configuration changes within this organization.
    */
   public listAuditLogs<ThrowOnError extends boolean = false>(
@@ -2198,6 +2269,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List organization certificates
+   *
    * List uploaded certificates for this organization.
    */
   public listOrganizationCertificates<ThrowOnError extends boolean = false>(
@@ -2221,6 +2293,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Upload certificate
+   *
    * Upload a certificate to the organization. This does **not** automatically activate the certificate.
    *
    * Organizations can upload up to 50 certificates.
@@ -2251,6 +2324,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Activate certificates for organization
+   *
    * Activate certificates at the organization level.
    *
    * You can atomically and idempotently activate up to 10 certificates at a time.
@@ -2281,6 +2355,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Deactivate certificates for organization
+   *
    * Deactivate certificates at the organization level.
    *
    * You can atomically and idempotently deactivate up to 10 certificates at a time.
@@ -2311,6 +2386,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete certificate
+   *
    * Delete a certificate from the organization.
    *
    * The certificate must be inactive for the organization and all projects.
@@ -2337,6 +2413,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Get certificate
+   *
    * Get a certificate that has been uploaded to the organization.
    *
    * You can get a certificate regardless of whether it is active or not.
@@ -2363,6 +2440,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Modify certificate
+   *
    * Modify a certificate. Note that only the name can be modified.
    *
    */
@@ -2391,6 +2469,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Costs
+   *
    * Get costs details for the organization.
    */
   public usageCosts<ThrowOnError extends boolean = false>(
@@ -2414,6 +2493,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List invites
+   *
    * Returns a list of invites in the organization.
    */
   public listInvites<ThrowOnError extends boolean = false>(
@@ -2437,6 +2517,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create invite
+   *
    * Create an invite for a user to the organization. The invite must be accepted by the user before they have access to the organization.
    */
   public inviteUser<ThrowOnError extends boolean = false>(
@@ -2464,6 +2545,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete invite
+   *
    * Delete an invite. If the invite has already been accepted, it cannot be deleted.
    */
   public deleteInvite<ThrowOnError extends boolean = false>(
@@ -2487,6 +2569,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve invite
+   *
    * Retrieves an invite.
    */
   public retrieveInvite<ThrowOnError extends boolean = false>(
@@ -2510,6 +2593,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List projects
+   *
    * Returns a list of projects.
    */
   public listProjects<ThrowOnError extends boolean = false>(
@@ -2533,6 +2617,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create project
+   *
    * Create a new project in the organization. Projects can be created and archived, but cannot be deleted.
    */
   public createProject<ThrowOnError extends boolean = false>(
@@ -2560,6 +2645,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve project
+   *
    * Retrieves a project.
    */
   public retrieveProject<ThrowOnError extends boolean = false>(
@@ -2583,6 +2669,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Modify project
+   *
    * Modifies a project in the organization.
    */
   public modifyProject<ThrowOnError extends boolean = false>(
@@ -2610,6 +2697,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List project API keys
+   *
    * Returns a list of API keys in the project.
    */
   public listProjectApiKeys<ThrowOnError extends boolean = false>(
@@ -2633,6 +2721,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete project API key
+   *
    * Deletes an API key from the project.
    */
   public deleteProjectApiKey<ThrowOnError extends boolean = false>(
@@ -2656,6 +2745,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve project API key
+   *
    * Retrieves an API key in the project.
    */
   public retrieveProjectApiKey<ThrowOnError extends boolean = false>(
@@ -2679,6 +2769,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Archive project
+   *
    * Archives a project in the organization. Archived projects cannot be used or updated.
    */
   public archiveProject<ThrowOnError extends boolean = false>(
@@ -2702,6 +2793,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List project certificates
+   *
    * List certificates for this project.
    */
   public listProjectCertificates<ThrowOnError extends boolean = false>(
@@ -2725,6 +2817,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Activate certificates for project
+   *
    * Activate certificates at the project level.
    *
    * You can atomically and idempotently activate up to 10 certificates at a time.
@@ -2755,6 +2848,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Deactivate certificates for project
+   *
    * Deactivate certificates at the project level. You can atomically and
    * idempotently deactivate up to 10 certificates at a time.
    *
@@ -2784,6 +2878,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List project rate limits
+   *
    * Returns the rate limits per model for a project.
    */
   public listProjectRateLimits<ThrowOnError extends boolean = false>(
@@ -2807,6 +2902,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Modify project rate limit
+   *
    * Updates a project rate limit.
    */
   public updateProjectRateLimits<ThrowOnError extends boolean = false>(
@@ -2834,6 +2930,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List project service accounts
+   *
    * Returns a list of service accounts in the project.
    */
   public listProjectServiceAccounts<ThrowOnError extends boolean = false>(
@@ -2857,6 +2954,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create project service account
+   *
    * Creates a new service account in the project. This also returns an unredacted API key for the service account.
    */
   public createProjectServiceAccount<ThrowOnError extends boolean = false>(
@@ -2884,6 +2982,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete project service account
+   *
    * Deletes a service account from the project.
    */
   public deleteProjectServiceAccount<ThrowOnError extends boolean = false>(
@@ -2907,6 +3006,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve project service account
+   *
    * Retrieves a service account in the project.
    */
   public retrieveProjectServiceAccount<ThrowOnError extends boolean = false>(
@@ -2930,6 +3030,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List project users
+   *
    * Returns a list of users in the project.
    */
   public listProjectUsers<ThrowOnError extends boolean = false>(
@@ -2953,6 +3054,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create project user
+   *
    * Adds a user to the project. Users must already be members of the organization to be added to a project.
    */
   public createProjectUser<ThrowOnError extends boolean = false>(
@@ -2980,6 +3082,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete project user
+   *
    * Deletes a user from the project.
    */
   public deleteProjectUser<ThrowOnError extends boolean = false>(
@@ -3003,6 +3106,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve project user
+   *
    * Retrieves a user in the project.
    */
   public retrieveProjectUser<ThrowOnError extends boolean = false>(
@@ -3026,6 +3130,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Modify project user
+   *
    * Modifies a user's role in the project.
    */
   public modifyProjectUser<ThrowOnError extends boolean = false>(
@@ -3053,6 +3158,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Audio speeches
+   *
    * Get audio speeches usage details for the organization.
    */
   public usageAudioSpeeches<ThrowOnError extends boolean = false>(
@@ -3076,6 +3182,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Audio transcriptions
+   *
    * Get audio transcriptions usage details for the organization.
    */
   public usageAudioTranscriptions<ThrowOnError extends boolean = false>(
@@ -3099,6 +3206,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Code interpreter sessions
+   *
    * Get code interpreter sessions usage details for the organization.
    */
   public usageCodeInterpreterSessions<ThrowOnError extends boolean = false>(
@@ -3122,6 +3230,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Completions
+   *
    * Get completions usage details for the organization.
    */
   public usageCompletions<ThrowOnError extends boolean = false>(
@@ -3145,6 +3254,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Embeddings
+   *
    * Get embeddings usage details for the organization.
    */
   public usageEmbeddings<ThrowOnError extends boolean = false>(
@@ -3168,6 +3278,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Images
+   *
    * Get images usage details for the organization.
    */
   public usageImages<ThrowOnError extends boolean = false>(
@@ -3191,6 +3302,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Moderations
+   *
    * Get moderations usage details for the organization.
    */
   public usageModerations<ThrowOnError extends boolean = false>(
@@ -3214,6 +3326,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Vector stores
+   *
    * Get vector stores usage details for the organization.
    */
   public usageVectorStores<ThrowOnError extends boolean = false>(
@@ -3237,6 +3350,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List users
+   *
    * Lists all of the users in the organization.
    */
   public listUsers<ThrowOnError extends boolean = false>(
@@ -3260,6 +3374,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete user
+   *
    * Deletes a user from the organization.
    */
   public deleteUser<ThrowOnError extends boolean = false>(
@@ -3283,6 +3398,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve user
+   *
    * Retrieves a user by their identifier.
    */
   public retrieveUser<ThrowOnError extends boolean = false>(
@@ -3306,6 +3422,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Modify user
+   *
    * Modifies a user's role in the organization.
    */
   public modifyUser<ThrowOnError extends boolean = false>(
@@ -3333,6 +3450,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create session
+   *
    * Create an ephemeral API token for use in client-side applications with the
    * Realtime API. Can be configured with the same session parameters as the
    * `session.update` client event.
@@ -3367,6 +3485,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create transcription session
+   *
    * Create an ephemeral API token for use in client-side applications with the
    * Realtime API specifically for realtime transcriptions.
    * Can be configured with the same session parameters as the `transcription_session.update` client event.
@@ -3401,6 +3520,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create a model response
+   *
    * Creates a model response. Provide [text](https://platform.openai.com/docs/guides/text) or
    * [image](https://platform.openai.com/docs/guides/images) inputs to generate [text](https://platform.openai.com/docs/guides/text)
    * or [JSON](https://platform.openai.com/docs/guides/structured-outputs) outputs. Have the model call
@@ -3435,6 +3555,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete a model response
+   *
    * Deletes a model response with the given ID.
    *
    */
@@ -3459,6 +3580,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Get a model response
+   *
    * Retrieves a model response with the given ID.
    *
    */
@@ -3483,6 +3605,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Cancel a response
+   *
    * Cancels a model response with the given ID. Only responses created with
    * the `background` parameter set to `true` can be cancelled.
    * [Learn more](https://platform.openai.com/docs/guides/background).
@@ -3509,6 +3632,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List input items
+   *
    * Returns a list of input items for a given response.
    */
   public listInputItems<ThrowOnError extends boolean = false>(
@@ -3532,6 +3656,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create thread
+   *
    * Create a thread.
    */
   public createThread<ThrowOnError extends boolean = false>(
@@ -3559,6 +3684,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create thread and run
+   *
    * Create a thread and run it in one request.
    */
   public createThreadAndRun<ThrowOnError extends boolean = false>(
@@ -3586,6 +3712,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete thread
+   *
    * Delete a thread.
    */
   public deleteThread<ThrowOnError extends boolean = false>(
@@ -3609,6 +3736,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve thread
+   *
    * Retrieves a thread.
    */
   public getThread<ThrowOnError extends boolean = false>(
@@ -3632,6 +3760,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Modify thread
+   *
    * Modifies a thread.
    */
   public modifyThread<ThrowOnError extends boolean = false>(
@@ -3659,6 +3788,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List messages
+   *
    * Returns a list of messages for a given thread.
    */
   public listMessages<ThrowOnError extends boolean = false>(
@@ -3682,6 +3812,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create message
+   *
    * Create a message.
    */
   public createMessage<ThrowOnError extends boolean = false>(
@@ -3709,6 +3840,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete message
+   *
    * Deletes a message.
    */
   public deleteMessage<ThrowOnError extends boolean = false>(
@@ -3732,6 +3864,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve message
+   *
    * Retrieve a message.
    */
   public getMessage<ThrowOnError extends boolean = false>(
@@ -3755,6 +3888,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Modify message
+   *
    * Modifies a message.
    */
   public modifyMessage<ThrowOnError extends boolean = false>(
@@ -3782,6 +3916,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List runs
+   *
    * Returns a list of runs belonging to a thread.
    */
   public listRuns<ThrowOnError extends boolean = false>(
@@ -3805,6 +3940,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create run
+   *
    * Create a run.
    */
   public createRun<ThrowOnError extends boolean = false>(
@@ -3832,6 +3968,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve run
+   *
    * Retrieves a run.
    */
   public getRun<ThrowOnError extends boolean = false>(
@@ -3855,6 +3992,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Modify run
+   *
    * Modifies a run.
    */
   public modifyRun<ThrowOnError extends boolean = false>(
@@ -3882,6 +4020,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Cancel a run
+   *
    * Cancels a run that is `in_progress`.
    */
   public cancelRun<ThrowOnError extends boolean = false>(
@@ -3905,6 +4044,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List run steps
+   *
    * Returns a list of run steps belonging to a run.
    */
   public listRunSteps<ThrowOnError extends boolean = false>(
@@ -3928,6 +4068,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve run step
+   *
    * Retrieves a run step.
    */
   public getRunStep<ThrowOnError extends boolean = false>(
@@ -3951,6 +4092,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Submit tool outputs to run
+   *
    * When a run has the `status: "requires_action"` and `required_action.type` is `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once they're all completed. All outputs must be submitted in a single request.
    *
    */
@@ -3979,6 +4121,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create upload
+   *
    * Creates an intermediate [Upload](https://platform.openai.com/docs/api-reference/uploads/object) object
    * that you can add [Parts](https://platform.openai.com/docs/api-reference/uploads/part-object) to.
    * Currently, an Upload can accept at most 8 GB in total and expires after an
@@ -4023,6 +4166,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Cancel upload
+   *
    * Cancels the Upload. No Parts may be added after an Upload is cancelled.
    *
    */
@@ -4047,6 +4191,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Complete upload
+   *
    * Completes the [Upload](https://platform.openai.com/docs/api-reference/uploads/object).
    *
    * Within the returned Upload object, there is a nested [File](https://platform.openai.com/docs/api-reference/files/object) object that is ready to use in the rest of the platform.
@@ -4081,6 +4226,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Add upload part
+   *
    * Adds a [Part](https://platform.openai.com/docs/api-reference/uploads/part-object) to an [Upload](https://platform.openai.com/docs/api-reference/uploads/object) object. A Part represents a chunk of bytes from the file you are trying to upload.
    *
    * Each Part can be at most 64 MB, and you can add Parts until you hit the Upload maximum of 8 GB.
@@ -4114,6 +4260,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List vector stores
+   *
    * Returns a list of vector stores.
    */
   public listVectorStores<ThrowOnError extends boolean = false>(
@@ -4137,6 +4284,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create vector store
+   *
    * Create a vector store.
    */
   public createVectorStore<ThrowOnError extends boolean = false>(
@@ -4164,6 +4312,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete vector store
+   *
    * Delete a vector store.
    */
   public deleteVectorStore<ThrowOnError extends boolean = false>(
@@ -4187,6 +4336,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve vector store
+   *
    * Retrieves a vector store.
    */
   public getVectorStore<ThrowOnError extends boolean = false>(
@@ -4210,6 +4360,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Modify vector store
+   *
    * Modifies a vector store.
    */
   public modifyVectorStore<ThrowOnError extends boolean = false>(
@@ -4237,6 +4388,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create vector store file batch
+   *
    * Create a vector store file batch.
    */
   public createVectorStoreFileBatch<ThrowOnError extends boolean = false>(
@@ -4264,6 +4416,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve vector store file batch
+   *
    * Retrieves a vector store file batch.
    */
   public getVectorStoreFileBatch<ThrowOnError extends boolean = false>(
@@ -4287,6 +4440,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Cancel vector store file batch
+   *
    * Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible.
    */
   public cancelVectorStoreFileBatch<ThrowOnError extends boolean = false>(
@@ -4310,6 +4464,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List vector store files in a batch
+   *
    * Returns a list of vector store files in a batch.
    */
   public listFilesInVectorStoreBatch<ThrowOnError extends boolean = false>(
@@ -4333,6 +4488,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * List vector store files
+   *
    * Returns a list of vector store files.
    */
   public listVectorStoreFiles<ThrowOnError extends boolean = false>(
@@ -4356,6 +4512,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Create vector store file
+   *
    * Create a vector store file by attaching a [File](https://platform.openai.com/docs/api-reference/files) to a [vector store](https://platform.openai.com/docs/api-reference/vector-stores/object).
    */
   public createVectorStoreFile<ThrowOnError extends boolean = false>(
@@ -4383,6 +4540,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Delete vector store file
+   *
    * Delete a vector store file. This will remove the file from the vector store but the file itself will not be deleted. To delete the file, use the [delete file](https://platform.openai.com/docs/api-reference/files/delete) endpoint.
    */
   public deleteVectorStoreFile<ThrowOnError extends boolean = false>(
@@ -4406,6 +4564,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve vector store file
+   *
    * Retrieves a vector store file.
    */
   public getVectorStoreFile<ThrowOnError extends boolean = false>(
@@ -4429,6 +4588,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Update vector store file attributes
+   *
    * Update attributes on a vector store file.
    */
   public updateVectorStoreFileAttributes<ThrowOnError extends boolean = false>(
@@ -4456,6 +4616,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Retrieve vector store file content
+   *
    * Retrieve the parsed contents of a vector store file.
    */
   public retrieveVectorStoreFileContent<ThrowOnError extends boolean = false>(
@@ -4479,6 +4640,7 @@ export class OpenAi extends _HeyApiClient {
 
   /**
    * Search vector store
+   *
    * Search a vector store for relevant chunks based on a query and file attributes filter.
    */
   public searchVectorStore<ThrowOnError extends boolean = false>(

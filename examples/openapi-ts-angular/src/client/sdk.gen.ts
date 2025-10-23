@@ -2,8 +2,8 @@
 
 import { Injectable } from '@angular/core';
 
-import type { Client, Options as ClientOptions, TDataShape } from './client';
-import { client as _heyApiClient } from './client.gen';
+import type { Client, Options as Options2, TDataShape } from './client';
+import { client } from './client.gen';
 import type {
   AddPetData,
   AddPetErrors,
@@ -67,7 +67,7 @@ import type {
 export type Options<
   TData extends TDataShape = TDataShape,
   ThrowOnError extends boolean = boolean,
-> = ClientOptions<TData, ThrowOnError> & {
+> = Options2<TData, ThrowOnError> & {
   /**
    * You can provide a client instance returned by `createClient()` instead of
    * individual options. This might be also useful if you want to implement a
@@ -87,12 +87,13 @@ export type Options<
 export class PetService {
   /**
    * Add a new pet to the store.
+   *
    * Add a new pet to the store.
    */
   public addPet<ThrowOnError extends boolean = false>(
     options: Options<AddPetData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).post<
+    return (options.client ?? client).post<
       AddPetResponses,
       AddPetErrors,
       ThrowOnError
@@ -114,12 +115,13 @@ export class PetService {
 
   /**
    * Update an existing pet.
+   *
    * Update an existing pet by Id.
    */
   public updatePet<ThrowOnError extends boolean = false>(
     options: Options<UpdatePetData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).put<
+    return (options.client ?? client).put<
       UpdatePetResponses,
       UpdatePetErrors,
       ThrowOnError
@@ -141,12 +143,13 @@ export class PetService {
 
   /**
    * Finds Pets by status.
+   *
    * Multiple status values can be provided with comma separated strings.
    */
   public findPetsByStatus<ThrowOnError extends boolean = false>(
     options: Options<FindPetsByStatusData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).get<
+    return (options.client ?? client).get<
       FindPetsByStatusResponses,
       FindPetsByStatusErrors,
       ThrowOnError
@@ -164,12 +167,13 @@ export class PetService {
 
   /**
    * Finds Pets by tags.
+   *
    * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
    */
   public findPetsByTags<ThrowOnError extends boolean = false>(
     options: Options<FindPetsByTagsData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).get<
+    return (options.client ?? client).get<
       FindPetsByTagsResponses,
       FindPetsByTagsErrors,
       ThrowOnError
@@ -187,12 +191,13 @@ export class PetService {
 
   /**
    * Deletes a pet.
+   *
    * Delete a pet.
    */
   public deletePet<ThrowOnError extends boolean = false>(
     options: Options<DeletePetData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).delete<
+    return (options.client ?? client).delete<
       DeletePetResponses,
       DeletePetErrors,
       ThrowOnError
@@ -210,12 +215,13 @@ export class PetService {
 
   /**
    * Find pet by ID.
+   *
    * Returns a single pet.
    */
   public getPetById<ThrowOnError extends boolean = false>(
     options: Options<GetPetByIdData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).get<
+    return (options.client ?? client).get<
       GetPetByIdResponses,
       GetPetByIdErrors,
       ThrowOnError
@@ -237,12 +243,13 @@ export class PetService {
 
   /**
    * Updates a pet in the store with form data.
+   *
    * Updates a pet resource based on the form data.
    */
   public updatePetWithForm<ThrowOnError extends boolean = false>(
     options: Options<UpdatePetWithFormData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).post<
+    return (options.client ?? client).post<
       UpdatePetWithFormResponses,
       UpdatePetWithFormErrors,
       ThrowOnError
@@ -260,12 +267,13 @@ export class PetService {
 
   /**
    * Uploads an image.
+   *
    * Upload image of the pet.
    */
   public uploadFile<ThrowOnError extends boolean = false>(
     options: Options<UploadFileData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).post<
+    return (options.client ?? client).post<
       UploadFileResponses,
       UploadFileErrors,
       ThrowOnError
@@ -293,12 +301,13 @@ export class PetService {
 export class StoreService {
   /**
    * Returns pet inventories by status.
+   *
    * Returns a map of status codes to quantities.
    */
   public getInventory<ThrowOnError extends boolean = false>(
     options?: Options<GetInventoryData, ThrowOnError>,
   ) {
-    return (options?.client ?? _heyApiClient).get<
+    return (options?.client ?? client).get<
       GetInventoryResponses,
       GetInventoryErrors,
       ThrowOnError
@@ -316,12 +325,13 @@ export class StoreService {
 
   /**
    * Place an order for a pet.
+   *
    * Place a new order in the store.
    */
   public placeOrder<ThrowOnError extends boolean = false>(
     options?: Options<PlaceOrderData, ThrowOnError>,
   ) {
-    return (options?.client ?? _heyApiClient).post<
+    return (options?.client ?? client).post<
       PlaceOrderResponses,
       PlaceOrderErrors,
       ThrowOnError
@@ -337,12 +347,13 @@ export class StoreService {
 
   /**
    * Delete purchase order by identifier.
+   *
    * For valid response try integer IDs with value < 1000. Anything above 1000 or non-integers will generate API errors.
    */
   public deleteOrder<ThrowOnError extends boolean = false>(
     options: Options<DeleteOrderData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).delete<
+    return (options.client ?? client).delete<
       DeleteOrderResponses,
       DeleteOrderErrors,
       ThrowOnError
@@ -354,12 +365,13 @@ export class StoreService {
 
   /**
    * Find purchase order by ID.
+   *
    * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
    */
   public getOrderById<ThrowOnError extends boolean = false>(
     options: Options<GetOrderByIdData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).get<
+    return (options.client ?? client).get<
       GetOrderByIdResponses,
       GetOrderByIdErrors,
       ThrowOnError
@@ -376,12 +388,13 @@ export class StoreService {
 export class UserService {
   /**
    * Create user.
+   *
    * This can only be done by the logged in user.
    */
   public createUser<ThrowOnError extends boolean = false>(
     options?: Options<CreateUserData, ThrowOnError>,
   ) {
-    return (options?.client ?? _heyApiClient).post<
+    return (options?.client ?? client).post<
       CreateUserResponses,
       CreateUserErrors,
       ThrowOnError
@@ -397,12 +410,13 @@ export class UserService {
 
   /**
    * Creates list of users with given input array.
+   *
    * Creates list of users with given input array.
    */
   public createUsersWithListInput<ThrowOnError extends boolean = false>(
     options?: Options<CreateUsersWithListInputData, ThrowOnError>,
   ) {
-    return (options?.client ?? _heyApiClient).post<
+    return (options?.client ?? client).post<
       CreateUsersWithListInputResponses,
       CreateUsersWithListInputErrors,
       ThrowOnError
@@ -418,12 +432,13 @@ export class UserService {
 
   /**
    * Logs user into the system.
+   *
    * Log into the system.
    */
   public loginUser<ThrowOnError extends boolean = false>(
     options?: Options<LoginUserData, ThrowOnError>,
   ) {
-    return (options?.client ?? _heyApiClient).get<
+    return (options?.client ?? client).get<
       LoginUserResponses,
       LoginUserErrors,
       ThrowOnError
@@ -435,12 +450,13 @@ export class UserService {
 
   /**
    * Logs out current logged in user session.
+   *
    * Log user out of the system.
    */
   public logoutUser<ThrowOnError extends boolean = false>(
     options?: Options<LogoutUserData, ThrowOnError>,
   ) {
-    return (options?.client ?? _heyApiClient).get<
+    return (options?.client ?? client).get<
       LogoutUserResponses,
       LogoutUserErrors,
       ThrowOnError
@@ -452,12 +468,13 @@ export class UserService {
 
   /**
    * Delete user resource.
+   *
    * This can only be done by the logged in user.
    */
   public deleteUser<ThrowOnError extends boolean = false>(
     options: Options<DeleteUserData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).delete<
+    return (options.client ?? client).delete<
       DeleteUserResponses,
       DeleteUserErrors,
       ThrowOnError
@@ -469,12 +486,13 @@ export class UserService {
 
   /**
    * Get user by user name.
+   *
    * Get user detail based on username.
    */
   public getUserByName<ThrowOnError extends boolean = false>(
     options: Options<GetUserByNameData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).get<
+    return (options.client ?? client).get<
       GetUserByNameResponses,
       GetUserByNameErrors,
       ThrowOnError
@@ -486,12 +504,13 @@ export class UserService {
 
   /**
    * Update user resource.
+   *
    * This can only be done by the logged in user.
    */
   public updateUser<ThrowOnError extends boolean = false>(
     options: Options<UpdateUserData, ThrowOnError>,
   ) {
-    return (options.client ?? _heyApiClient).put<
+    return (options.client ?? client).put<
       UpdateUserResponses,
       UpdateUserErrors,
       ThrowOnError

@@ -6,7 +6,7 @@ import {
   queryOptions,
 } from '@tanstack/svelte-query';
 
-import { client as _heyApiClient } from '../client.gen';
+import { client } from '../client.gen';
 import {
   addPet,
   createUser,
@@ -58,10 +58,61 @@ import type {
   UploadFileResponse,
 } from '../types.gen';
 
+/**
+ * Add a new pet to the store.
+ *
+ * Add a new pet to the store.
+ */
+export const addPetMutation = (
+  options?: Partial<Options<AddPetData>>,
+): MutationOptions<AddPetResponse, DefaultError, Options<AddPetData>> => {
+  const mutationOptions: MutationOptions<
+    AddPetResponse,
+    DefaultError,
+    Options<AddPetData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await addPet({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+/**
+ * Update an existing pet.
+ *
+ * Update an existing pet by Id.
+ */
+export const updatePetMutation = (
+  options?: Partial<Options<UpdatePetData>>,
+): MutationOptions<UpdatePetResponse, DefaultError, Options<UpdatePetData>> => {
+  const mutationOptions: MutationOptions<
+    UpdatePetResponse,
+    DefaultError,
+    Options<UpdatePetData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await updatePet({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
 export type QueryKey<TOptions extends Options> = [
   Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
     _id: string;
     _infinite?: boolean;
+    tags?: ReadonlyArray<string>;
   },
 ];
 
@@ -69,13 +120,18 @@ const createQueryKey = <TOptions extends Options>(
   id: string,
   options?: TOptions,
   infinite?: boolean,
+  tags?: ReadonlyArray<string>,
 ): [QueryKey<TOptions>[0]] => {
   const params: QueryKey<TOptions>[0] = {
     _id: id,
-    baseUrl: (options?.client ?? _heyApiClient).getConfig().baseUrl,
+    baseUrl:
+      options?.baseUrl || (options?.client ?? client).getConfig().baseUrl,
   } as QueryKey<TOptions>[0];
   if (infinite) {
     params._infinite = infinite;
+  }
+  if (tags) {
+    params.tags = tags;
   }
   if (options?.body) {
     params.body = options.body;
@@ -92,85 +148,17 @@ const createQueryKey = <TOptions extends Options>(
   return [params];
 };
 
-export const addPetQueryKey = (options: Options<AddPetData>) =>
-  createQueryKey('addPet', options);
-
-/**
- * Add a new pet to the store.
- * Add a new pet to the store.
- */
-export const addPetOptions = (options: Options<AddPetData>) =>
-  queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await addPet({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      });
-      return data;
-    },
-    queryKey: addPetQueryKey(options),
-  });
-
-/**
- * Add a new pet to the store.
- * Add a new pet to the store.
- */
-export const addPetMutation = (
-  options?: Partial<Options<AddPetData>>,
-): MutationOptions<AddPetResponse, DefaultError, Options<AddPetData>> => {
-  const mutationOptions: MutationOptions<
-    AddPetResponse,
-    DefaultError,
-    Options<AddPetData>
-  > = {
-    mutationFn: async (localOptions) => {
-      const { data } = await addPet({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      });
-      return data;
-    },
-  };
-  return mutationOptions;
-};
-
-/**
- * Update an existing pet.
- * Update an existing pet by Id.
- */
-export const updatePetMutation = (
-  options?: Partial<Options<UpdatePetData>>,
-): MutationOptions<UpdatePetResponse, DefaultError, Options<UpdatePetData>> => {
-  const mutationOptions: MutationOptions<
-    UpdatePetResponse,
-    DefaultError,
-    Options<UpdatePetData>
-  > = {
-    mutationFn: async (localOptions) => {
-      const { data } = await updatePet({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      });
-      return data;
-    },
-  };
-  return mutationOptions;
-};
-
 export const findPetsByStatusQueryKey = (
-  options?: Options<FindPetsByStatusData>,
+  options: Options<FindPetsByStatusData>,
 ) => createQueryKey('findPetsByStatus', options);
 
 /**
  * Finds Pets by status.
+ *
  * Multiple status values can be provided with comma separated strings.
  */
 export const findPetsByStatusOptions = (
-  options?: Options<FindPetsByStatusData>,
+  options: Options<FindPetsByStatusData>,
 ) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
@@ -185,14 +173,15 @@ export const findPetsByStatusOptions = (
     queryKey: findPetsByStatusQueryKey(options),
   });
 
-export const findPetsByTagsQueryKey = (options?: Options<FindPetsByTagsData>) =>
+export const findPetsByTagsQueryKey = (options: Options<FindPetsByTagsData>) =>
   createQueryKey('findPetsByTags', options);
 
 /**
  * Finds Pets by tags.
+ *
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
-export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
+export const findPetsByTagsOptions = (options: Options<FindPetsByTagsData>) =>
   queryOptions({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await findPetsByTags({
@@ -208,6 +197,7 @@ export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
 
 /**
  * Deletes a pet.
+ *
  * Delete a pet.
  */
 export const deletePetMutation = (
@@ -218,10 +208,10 @@ export const deletePetMutation = (
     DefaultError,
     Options<DeletePetData>
   > = {
-    mutationFn: async (localOptions) => {
+    mutationFn: async (fnOptions) => {
       const { data } = await deletePet({
         ...options,
-        ...localOptions,
+        ...fnOptions,
         throwOnError: true,
       });
       return data;
@@ -235,6 +225,7 @@ export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) =>
 
 /**
  * Find pet by ID.
+ *
  * Returns a single pet.
  */
 export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
@@ -251,32 +242,9 @@ export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
     queryKey: getPetByIdQueryKey(options),
   });
 
-export const updatePetWithFormQueryKey = (
-  options: Options<UpdatePetWithFormData>,
-) => createQueryKey('updatePetWithForm', options);
-
 /**
  * Updates a pet in the store with form data.
- * Updates a pet resource based on the form data.
- */
-export const updatePetWithFormOptions = (
-  options: Options<UpdatePetWithFormData>,
-) =>
-  queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await updatePetWithForm({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      });
-      return data;
-    },
-    queryKey: updatePetWithFormQueryKey(options),
-  });
-
-/**
- * Updates a pet in the store with form data.
+ *
  * Updates a pet resource based on the form data.
  */
 export const updatePetWithFormMutation = (
@@ -291,10 +259,10 @@ export const updatePetWithFormMutation = (
     DefaultError,
     Options<UpdatePetWithFormData>
   > = {
-    mutationFn: async (localOptions) => {
+    mutationFn: async (fnOptions) => {
       const { data } = await updatePetWithForm({
         ...options,
-        ...localOptions,
+        ...fnOptions,
         throwOnError: true,
       });
       return data;
@@ -303,29 +271,9 @@ export const updatePetWithFormMutation = (
   return mutationOptions;
 };
 
-export const uploadFileQueryKey = (options: Options<UploadFileData>) =>
-  createQueryKey('uploadFile', options);
-
 /**
  * Uploads an image.
- * Upload image of the pet.
- */
-export const uploadFileOptions = (options: Options<UploadFileData>) =>
-  queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await uploadFile({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      });
-      return data;
-    },
-    queryKey: uploadFileQueryKey(options),
-  });
-
-/**
- * Uploads an image.
+ *
  * Upload image of the pet.
  */
 export const uploadFileMutation = (
@@ -340,10 +288,10 @@ export const uploadFileMutation = (
     DefaultError,
     Options<UploadFileData>
   > = {
-    mutationFn: async (localOptions) => {
+    mutationFn: async (fnOptions) => {
       const { data } = await uploadFile({
         ...options,
-        ...localOptions,
+        ...fnOptions,
         throwOnError: true,
       });
       return data;
@@ -357,6 +305,7 @@ export const getInventoryQueryKey = (options?: Options<GetInventoryData>) =>
 
 /**
  * Returns pet inventories by status.
+ *
  * Returns a map of status codes to quantities.
  */
 export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
@@ -373,29 +322,9 @@ export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
     queryKey: getInventoryQueryKey(options),
   });
 
-export const placeOrderQueryKey = (options?: Options<PlaceOrderData>) =>
-  createQueryKey('placeOrder', options);
-
 /**
  * Place an order for a pet.
- * Place a new order in the store.
- */
-export const placeOrderOptions = (options?: Options<PlaceOrderData>) =>
-  queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await placeOrder({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      });
-      return data;
-    },
-    queryKey: placeOrderQueryKey(options),
-  });
-
-/**
- * Place an order for a pet.
+ *
  * Place a new order in the store.
  */
 export const placeOrderMutation = (
@@ -410,10 +339,10 @@ export const placeOrderMutation = (
     DefaultError,
     Options<PlaceOrderData>
   > = {
-    mutationFn: async (localOptions) => {
+    mutationFn: async (fnOptions) => {
       const { data } = await placeOrder({
         ...options,
-        ...localOptions,
+        ...fnOptions,
         throwOnError: true,
       });
       return data;
@@ -424,6 +353,7 @@ export const placeOrderMutation = (
 
 /**
  * Delete purchase order by identifier.
+ *
  * For valid response try integer IDs with value < 1000. Anything above 1000 or non-integers will generate API errors.
  */
 export const deleteOrderMutation = (
@@ -434,10 +364,10 @@ export const deleteOrderMutation = (
     DefaultError,
     Options<DeleteOrderData>
   > = {
-    mutationFn: async (localOptions) => {
+    mutationFn: async (fnOptions) => {
       const { data } = await deleteOrder({
         ...options,
-        ...localOptions,
+        ...fnOptions,
         throwOnError: true,
       });
       return data;
@@ -451,6 +381,7 @@ export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) =>
 
 /**
  * Find purchase order by ID.
+ *
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  */
 export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
@@ -467,29 +398,9 @@ export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
     queryKey: getOrderByIdQueryKey(options),
   });
 
-export const createUserQueryKey = (options?: Options<CreateUserData>) =>
-  createQueryKey('createUser', options);
-
 /**
  * Create user.
- * This can only be done by the logged in user.
- */
-export const createUserOptions = (options?: Options<CreateUserData>) =>
-  queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await createUser({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      });
-      return data;
-    },
-    queryKey: createUserQueryKey(options),
-  });
-
-/**
- * Create user.
+ *
  * This can only be done by the logged in user.
  */
 export const createUserMutation = (
@@ -504,10 +415,10 @@ export const createUserMutation = (
     DefaultError,
     Options<CreateUserData>
   > = {
-    mutationFn: async (localOptions) => {
+    mutationFn: async (fnOptions) => {
       const { data } = await createUser({
         ...options,
-        ...localOptions,
+        ...fnOptions,
         throwOnError: true,
       });
       return data;
@@ -516,32 +427,9 @@ export const createUserMutation = (
   return mutationOptions;
 };
 
-export const createUsersWithListInputQueryKey = (
-  options?: Options<CreateUsersWithListInputData>,
-) => createQueryKey('createUsersWithListInput', options);
-
 /**
  * Creates list of users with given input array.
- * Creates list of users with given input array.
- */
-export const createUsersWithListInputOptions = (
-  options?: Options<CreateUsersWithListInputData>,
-) =>
-  queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await createUsersWithListInput({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      });
-      return data;
-    },
-    queryKey: createUsersWithListInputQueryKey(options),
-  });
-
-/**
- * Creates list of users with given input array.
+ *
  * Creates list of users with given input array.
  */
 export const createUsersWithListInputMutation = (
@@ -556,10 +444,10 @@ export const createUsersWithListInputMutation = (
     DefaultError,
     Options<CreateUsersWithListInputData>
   > = {
-    mutationFn: async (localOptions) => {
+    mutationFn: async (fnOptions) => {
       const { data } = await createUsersWithListInput({
         ...options,
-        ...localOptions,
+        ...fnOptions,
         throwOnError: true,
       });
       return data;
@@ -573,6 +461,7 @@ export const loginUserQueryKey = (options?: Options<LoginUserData>) =>
 
 /**
  * Logs user into the system.
+ *
  * Log into the system.
  */
 export const loginUserOptions = (options?: Options<LoginUserData>) =>
@@ -594,6 +483,7 @@ export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
 
 /**
  * Logs out current logged in user session.
+ *
  * Log user out of the system.
  */
 export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
@@ -612,6 +502,7 @@ export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
 
 /**
  * Delete user resource.
+ *
  * This can only be done by the logged in user.
  */
 export const deleteUserMutation = (
@@ -622,10 +513,10 @@ export const deleteUserMutation = (
     DefaultError,
     Options<DeleteUserData>
   > = {
-    mutationFn: async (localOptions) => {
+    mutationFn: async (fnOptions) => {
       const { data } = await deleteUser({
         ...options,
-        ...localOptions,
+        ...fnOptions,
         throwOnError: true,
       });
       return data;
@@ -639,6 +530,7 @@ export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) =>
 
 /**
  * Get user by user name.
+ *
  * Get user detail based on username.
  */
 export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
@@ -657,6 +549,7 @@ export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
 
 /**
  * Update user resource.
+ *
  * This can only be done by the logged in user.
  */
 export const updateUserMutation = (
@@ -667,10 +560,10 @@ export const updateUserMutation = (
     DefaultError,
     Options<UpdateUserData>
   > = {
-    mutationFn: async (localOptions) => {
+    mutationFn: async (fnOptions) => {
       const { data } = await updateUser({
         ...options,
-        ...localOptions,
+        ...fnOptions,
         throwOnError: true,
       });
       return data;
