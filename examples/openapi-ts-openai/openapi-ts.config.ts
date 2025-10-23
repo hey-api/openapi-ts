@@ -6,7 +6,6 @@ export default defineConfig({
   input: path.resolve('..', '..', 'specs', '3.1.x', 'openai.yaml'),
   output: {
     format: 'prettier',
-    lint: 'eslint',
     path: './src/client',
   },
   plugins: [
