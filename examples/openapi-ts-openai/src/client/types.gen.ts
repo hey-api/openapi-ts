@@ -33,30 +33,42 @@ export type AddUploadPartRequest = {
  */
 export type AdminApiKey = {
   /**
-   * The Unix timestamp (in seconds) of when the API key was created
+   * The object type, which is always `organization.admin_api_key`
    */
-  created_at: number;
+  object: string;
   /**
    * The identifier, which can be referenced in API endpoints
    */
   id: string;
   /**
-   * The Unix timestamp (in seconds) of when the API key was last used
-   */
-  last_used_at: number;
-  /**
    * The name of the API key
    */
   name: string;
   /**
-   * The object type, which is always `organization.admin_api_key`
+   * The redacted value of the API key
    */
-  object: string;
+  redacted_value: string;
+  /**
+   * The value of the API key. Only shown on create.
+   */
+  value?: string;
+  /**
+   * The Unix timestamp (in seconds) of when the API key was created
+   */
+  created_at: number;
+  /**
+   * The Unix timestamp (in seconds) of when the API key was last used
+   */
+  last_used_at: number;
   owner: {
     /**
-     * The Unix timestamp (in seconds) of when the user was created
+     * Always `user`
      */
-    created_at?: number;
+    type?: string;
+    /**
+     * The object type, which is always organization.user
+     */
+    object?: string;
     /**
      * The identifier, which can be referenced in API endpoints
      */
@@ -66,34 +78,22 @@ export type AdminApiKey = {
      */
     name?: string;
     /**
-     * The object type, which is always organization.user
+     * The Unix timestamp (in seconds) of when the user was created
      */
-    object?: string;
+    created_at?: number;
     /**
      * Always `owner`
      */
     role?: string;
-    /**
-     * Always `user`
-     */
-    type?: string;
   };
-  /**
-   * The redacted value of the API key
-   */
-  redacted_value: string;
-  /**
-   * The value of the API key. Only shown on create.
-   */
-  value?: string;
 };
 
 export type ApiKeyList = {
-  data?: Array<AdminApiKey>;
-  first_id?: string;
-  has_more?: boolean;
-  last_id?: string;
   object?: string;
+  data?: Array<AdminApiKey>;
+  has_more?: boolean;
+  first_id?: string;
+  last_id?: string;
 };
 
 /**
@@ -103,44 +103,42 @@ export type ApiKeyList = {
  */
 export type AssistantObject = {
   /**
-   * The Unix timestamp (in seconds) for when the assistant was created.
-   */
-  created_at: number;
-  /**
-   * The description of the assistant. The maximum length is 512 characters.
-   *
-   */
-  description: string;
-  /**
    * The identifier, which can be referenced in API endpoints.
    */
   id: string;
   /**
-   * The system instructions that the assistant uses. The maximum length is 256,000 characters.
-   *
+   * The object type, which is always `assistant`.
    */
-  instructions: string;
-  metadata: Metadata;
+  object: 'assistant';
   /**
-   * ID of the model to use. You can use the [List models](https://platform.openai.com/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](https://platform.openai.com/docs/models) for descriptions of them.
-   *
+   * The Unix timestamp (in seconds) for when the assistant was created.
    */
-  model: string;
+  created_at: number;
   /**
    * The name of the assistant. The maximum length is 256 characters.
    *
    */
   name: string;
   /**
-   * The object type, which is always `assistant`.
-   */
-  object: 'assistant';
-  response_format?: AssistantsApiResponseFormatOption;
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+   * The description of the assistant. The maximum length is 512 characters.
    *
    */
-  temperature?: number;
+  description: string;
+  /**
+   * ID of the model to use. You can use the [List models](https://platform.openai.com/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](https://platform.openai.com/docs/models) for descriptions of them.
+   *
+   */
+  model: string;
+  /**
+   * The system instructions that the assistant uses. The maximum length is 256,000 characters.
+   *
+   */
+  instructions: string;
+  /**
+   * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+   *
+   */
+  tools: Array<AssistantTool>;
   /**
    * A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
    *
@@ -161,11 +159,12 @@ export type AssistantObject = {
       vector_store_ids?: Array<string>;
     };
   };
+  metadata: Metadata;
   /**
-   * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
    *
    */
-  tools: Array<AssistantTool>;
+  temperature?: number;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
    *
@@ -173,6 +172,7 @@ export type AssistantObject = {
    *
    */
   top_p?: number;
+  response_format?: AssistantsApiResponseFormatOption;
 };
 
 /**
@@ -215,48 +215,48 @@ export type AssistantStreamEvent =
     } & ErrorEvent);
 
 export const AssistantSupportedModels = {
-  GPT_3_5_TURBO: 'gpt-3.5-turbo',
-  GPT_3_5_TURBO_0125: 'gpt-3.5-turbo-0125',
-  GPT_3_5_TURBO_0613: 'gpt-3.5-turbo-0613',
-  GPT_3_5_TURBO_1106: 'gpt-3.5-turbo-1106',
-  GPT_3_5_TURBO_16K: 'gpt-3.5-turbo-16k',
-  GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
-  GPT_4: 'gpt-4',
+  GPT_5: 'gpt-5',
+  GPT_5_MINI: 'gpt-5-mini',
+  GPT_5_NANO: 'gpt-5-nano',
+  GPT_5_2025_08_07: 'gpt-5-2025-08-07',
+  GPT_5_MINI_2025_08_07: 'gpt-5-mini-2025-08-07',
+  GPT_5_NANO_2025_08_07: 'gpt-5-nano-2025-08-07',
+  GPT_4_1: 'gpt-4.1',
+  GPT_4_1_MINI: 'gpt-4.1-mini',
+  GPT_4_1_NANO: 'gpt-4.1-nano',
+  GPT_4_1_2025_04_14: 'gpt-4.1-2025-04-14',
+  GPT_4_1_MINI_2025_04_14: 'gpt-4.1-mini-2025-04-14',
+  GPT_4_1_NANO_2025_04_14: 'gpt-4.1-nano-2025-04-14',
+  O3_MINI: 'o3-mini',
+  O3_MINI_2025_01_31: 'o3-mini-2025-01-31',
+  O1: 'o1',
+  O1_2024_12_17: 'o1-2024-12-17',
   GPT_4O: 'gpt-4o',
-  GPT_4O_2024_05_13: 'gpt-4o-2024-05-13',
-  GPT_4O_2024_08_06: 'gpt-4o-2024-08-06',
   GPT_4O_2024_11_20: 'gpt-4o-2024-11-20',
+  GPT_4O_2024_08_06: 'gpt-4o-2024-08-06',
+  GPT_4O_2024_05_13: 'gpt-4o-2024-05-13',
   GPT_4O_MINI: 'gpt-4o-mini',
   GPT_4O_MINI_2024_07_18: 'gpt-4o-mini-2024-07-18',
-  GPT_4_0125_PREVIEW: 'gpt-4-0125-preview',
-  GPT_4_0314: 'gpt-4-0314',
-  GPT_4_0613: 'gpt-4-0613',
-  GPT_4_1: 'gpt-4.1',
-  GPT_4_1106_PREVIEW: 'gpt-4-1106-preview',
-  GPT_4_1_2025_04_14: 'gpt-4.1-2025-04-14',
-  GPT_4_1_MINI: 'gpt-4.1-mini',
-  GPT_4_1_MINI_2025_04_14: 'gpt-4.1-mini-2025-04-14',
-  GPT_4_1_NANO: 'gpt-4.1-nano',
-  GPT_4_1_NANO_2025_04_14: 'gpt-4.1-nano-2025-04-14',
-  GPT_4_32K: 'gpt-4-32k',
-  GPT_4_32K_0314: 'gpt-4-32k-0314',
-  GPT_4_32K_0613: 'gpt-4-32k-0613',
   GPT_4_5_PREVIEW: 'gpt-4.5-preview',
   GPT_4_5_PREVIEW_2025_02_27: 'gpt-4.5-preview-2025-02-27',
   GPT_4_TURBO: 'gpt-4-turbo',
   GPT_4_TURBO_2024_04_09: 'gpt-4-turbo-2024-04-09',
+  GPT_4_0125_PREVIEW: 'gpt-4-0125-preview',
   GPT_4_TURBO_PREVIEW: 'gpt-4-turbo-preview',
+  GPT_4_1106_PREVIEW: 'gpt-4-1106-preview',
   GPT_4_VISION_PREVIEW: 'gpt-4-vision-preview',
-  GPT_5: 'gpt-5',
-  GPT_5_2025_08_07: 'gpt-5-2025-08-07',
-  GPT_5_MINI: 'gpt-5-mini',
-  GPT_5_MINI_2025_08_07: 'gpt-5-mini-2025-08-07',
-  GPT_5_NANO: 'gpt-5-nano',
-  GPT_5_NANO_2025_08_07: 'gpt-5-nano-2025-08-07',
-  O1: 'o1',
-  O1_2024_12_17: 'o1-2024-12-17',
-  O3_MINI: 'o3-mini',
-  O3_MINI_2025_01_31: 'o3-mini-2025-01-31',
+  GPT_4: 'gpt-4',
+  GPT_4_0314: 'gpt-4-0314',
+  GPT_4_0613: 'gpt-4-0613',
+  GPT_4_32K: 'gpt-4-32k',
+  GPT_4_32K_0314: 'gpt-4-32k-0314',
+  GPT_4_32K_0613: 'gpt-4-32k-0613',
+  GPT_3_5_TURBO: 'gpt-3.5-turbo',
+  GPT_3_5_TURBO_16K: 'gpt-3.5-turbo-16k',
+  GPT_3_5_TURBO_0613: 'gpt-3.5-turbo-0613',
+  GPT_3_5_TURBO_1106: 'gpt-3.5-turbo-1106',
+  GPT_3_5_TURBO_0125: 'gpt-3.5-turbo-0125',
+  GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
 } as const;
 
 export type AssistantSupportedModels =
@@ -277,6 +277,10 @@ export type AssistantToolsCode = {
  */
 export type AssistantToolsFileSearch = {
   /**
+   * The type of tool being defined: `file_search`
+   */
+  type: 'file_search';
+  /**
    * Overrides for the file search tool.
    */
   file_search?: {
@@ -289,10 +293,6 @@ export type AssistantToolsFileSearch = {
     max_num_results?: number;
     ranking_options?: FileSearchRankingOptions;
   };
-  /**
-   * The type of tool being defined: `file_search`
-   */
-  type: 'file_search';
 };
 
 /**
@@ -309,11 +309,11 @@ export type AssistantToolsFileSearchTypeOnly = {
  * Function tool
  */
 export type AssistantToolsFunction = {
-  function: FunctionObject;
   /**
    * The type of tool being defined: `function`
    */
   type: 'function';
+  function: FunctionObject;
 };
 
 /**
@@ -350,16 +350,16 @@ export type AssistantsApiToolChoiceOption =
  * Specifies a tool the model should use. Use to force the model to call a specific tool.
  */
 export type AssistantsNamedToolChoice = {
+  /**
+   * The type of the tool. If type is `function`, the function name must be set
+   */
+  type: 'function' | 'code_interpreter' | 'file_search';
   function?: {
     /**
      * The name of the function to call.
      */
     name: string;
   };
-  /**
-   * The type of the tool. If type is `function`, the function name must be set
-   */
-  type: 'function' | 'code_interpreter' | 'file_search';
 };
 
 /**
@@ -368,8 +368,8 @@ export type AssistantsNamedToolChoice = {
  */
 export const AudioResponseFormat = {
   JSON: 'json',
-  SRT: 'srt',
   TEXT: 'text',
+  SRT: 'srt',
   VERBOSE_JSON: 'verbose_json',
   VTT: 'vtt',
 } as const;
@@ -385,11 +385,37 @@ export type AudioResponseFormat =
  * A log of a user action or configuration change within this organization.
  */
 export type AuditLog = {
+  /**
+   * The ID of this log.
+   */
+  id: string;
+  type: AuditLogEventType;
+  /**
+   * The Unix timestamp (in seconds) of the event.
+   */
+  effective_at: number;
+  /**
+   * The project that the action was scoped to. Absent for actions not scoped to projects. Note that any admin actions taken via Admin API keys are associated with the default project.
+   */
+  project?: {
+    /**
+     * The project ID.
+     */
+    id?: string;
+    /**
+     * The project title.
+     */
+    name?: string;
+  };
   actor: AuditLogActor;
   /**
    * The details for events with this `type`.
    */
   'api_key.created'?: {
+    /**
+     * The tracking ID of the API key.
+     */
+    id?: string;
     /**
      * The payload used to create the API key.
      */
@@ -399,10 +425,24 @@ export type AuditLog = {
        */
       scopes?: Array<string>;
     };
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'api_key.updated'?: {
     /**
      * The tracking ID of the API key.
      */
     id?: string;
+    /**
+     * The payload used to update the API key.
+     */
+    changes_requested?: {
+      /**
+       * A list of scopes allowed for the API key, e.g. `["api.model.request"]`
+       */
+      scopes?: Array<string>;
+    };
   };
   /**
    * The details for events with this `type`.
@@ -414,117 +454,26 @@ export type AuditLog = {
     id?: string;
   };
   /**
-   * The details for events with this `type`.
-   */
-  'api_key.updated'?: {
-    /**
-     * The payload used to update the API key.
-     */
-    changes_requested?: {
-      /**
-       * A list of scopes allowed for the API key, e.g. `["api.model.request"]`
-       */
-      scopes?: Array<string>;
-    };
-    /**
-     * The tracking ID of the API key.
-     */
-    id?: string;
-  };
-  /**
-   * The details for events with this `type`.
-   */
-  'certificate.created'?: {
-    /**
-     * The certificate ID.
-     */
-    id?: string;
-    /**
-     * The name of the certificate.
-     */
-    name?: string;
-  };
-  /**
-   * The details for events with this `type`.
-   */
-  'certificate.deleted'?: {
-    /**
-     * The certificate content in PEM format.
-     */
-    certificate?: string;
-    /**
-     * The certificate ID.
-     */
-    id?: string;
-    /**
-     * The name of the certificate.
-     */
-    name?: string;
-  };
-  /**
-   * The details for events with this `type`.
-   */
-  'certificate.updated'?: {
-    /**
-     * The certificate ID.
-     */
-    id?: string;
-    /**
-     * The name of the certificate.
-     */
-    name?: string;
-  };
-  /**
-   * The details for events with this `type`.
-   */
-  'certificates.activated'?: {
-    certificates?: Array<{
-      /**
-       * The certificate ID.
-       */
-      id?: string;
-      /**
-       * The name of the certificate.
-       */
-      name?: string;
-    }>;
-  };
-  /**
-   * The details for events with this `type`.
-   */
-  'certificates.deactivated'?: {
-    certificates?: Array<{
-      /**
-       * The certificate ID.
-       */
-      id?: string;
-      /**
-       * The name of the certificate.
-       */
-      name?: string;
-    }>;
-  };
-  /**
    * The project and fine-tuned model checkpoint that the checkpoint permission was created for.
    */
   'checkpoint_permission.created'?: {
+    /**
+     * The ID of the checkpoint permission.
+     */
+    id?: string;
     /**
      * The payload used to create the checkpoint permission.
      */
     data?: {
       /**
-       * The ID of the fine-tuned model checkpoint.
-       */
-      fine_tuned_model_checkpoint?: string;
-      /**
        * The ID of the project that the checkpoint permission was created for.
        */
       project_id?: string;
+      /**
+       * The ID of the fine-tuned model checkpoint.
+       */
+      fine_tuned_model_checkpoint?: string;
     };
-    /**
-     * The ID of the checkpoint permission.
-     */
-    id?: string;
   };
   /**
    * The details for events with this `type`.
@@ -536,35 +485,13 @@ export type AuditLog = {
     id?: string;
   };
   /**
-   * The Unix timestamp (in seconds) of the event.
-   */
-  effective_at: number;
-  /**
-   * The ID of this log.
-   */
-  id: string;
-  /**
-   * The details for events with this `type`.
-   */
-  'invite.accepted'?: {
-    /**
-     * The ID of the invite.
-     */
-    id?: string;
-  };
-  /**
-   * The details for events with this `type`.
-   */
-  'invite.deleted'?: {
-    /**
-     * The ID of the invite.
-     */
-    id?: string;
-  };
-  /**
    * The details for events with this `type`.
    */
   'invite.sent'?: {
+    /**
+     * The ID of the invite.
+     */
+    id?: string;
     /**
      * The payload used to create the invite.
      */
@@ -578,6 +505,20 @@ export type AuditLog = {
        */
       role?: string;
     };
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'invite.accepted'?: {
+    /**
+     * The ID of the invite.
+     */
+    id?: string;
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'invite.deleted'?: {
     /**
      * The ID of the invite.
      */
@@ -614,17 +555,17 @@ export type AuditLog = {
    */
   'organization.updated'?: {
     /**
+     * The organization ID.
+     */
+    id?: string;
+    /**
      * The payload used to update the organization settings.
      */
     changes_requested?: {
       /**
-       * How your organization logs data from supported API calls. One of `disabled`, `enabled_per_call`, `enabled_for_all_projects`, or `enabled_for_selected_projects`
+       * The organization title.
        */
-      api_call_logging?: string;
-      /**
-       * The list of project ids if api_call_logging is set to `enabled_for_selected_projects`
-       */
-      api_call_logging_project_ids?: string;
+      title?: string;
       /**
        * The organization description.
        */
@@ -638,45 +579,27 @@ export type AuditLog = {
        */
       threads_ui_visibility?: string;
       /**
-       * The organization title.
-       */
-      title?: string;
-      /**
        * Visibility of the usage dashboard which shows activity and costs for your organization. One of `ANY_ROLE` or `OWNERS`.
        */
       usage_dashboard_visibility?: string;
+      /**
+       * How your organization logs data from supported API calls. One of `disabled`, `enabled_per_call`, `enabled_for_all_projects`, or `enabled_for_selected_projects`
+       */
+      api_call_logging?: string;
+      /**
+       * The list of project ids if api_call_logging is set to `enabled_for_selected_projects`
+       */
+      api_call_logging_project_ids?: string;
     };
-    /**
-     * The organization ID.
-     */
-    id?: string;
-  };
-  /**
-   * The project that the action was scoped to. Absent for actions not scoped to projects. Note that any admin actions taken via Admin API keys are associated with the default project.
-   */
-  project?: {
-    /**
-     * The project ID.
-     */
-    id?: string;
-    /**
-     * The project title.
-     */
-    name?: string;
-  };
-  /**
-   * The details for events with this `type`.
-   */
-  'project.archived'?: {
-    /**
-     * The project ID.
-     */
-    id?: string;
   };
   /**
    * The details for events with this `type`.
    */
   'project.created'?: {
+    /**
+     * The project ID.
+     */
+    id?: string;
     /**
      * The payload used to create the project.
      */
@@ -690,15 +613,15 @@ export type AuditLog = {
        */
       title?: string;
     };
-    /**
-     * The project ID.
-     */
-    id?: string;
   };
   /**
    * The details for events with this `type`.
    */
   'project.updated'?: {
+    /**
+     * The project ID.
+     */
+    id?: string;
     /**
      * The payload used to update the project.
      */
@@ -708,10 +631,53 @@ export type AuditLog = {
        */
       title?: string;
     };
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'project.archived'?: {
     /**
      * The project ID.
      */
     id?: string;
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'rate_limit.updated'?: {
+    /**
+     * The rate limit ID
+     */
+    id?: string;
+    /**
+     * The payload used to update the rate limits.
+     */
+    changes_requested?: {
+      /**
+       * The maximum requests per minute.
+       */
+      max_requests_per_1_minute?: number;
+      /**
+       * The maximum tokens per minute.
+       */
+      max_tokens_per_1_minute?: number;
+      /**
+       * The maximum images per minute. Only relevant for certain models.
+       */
+      max_images_per_1_minute?: number;
+      /**
+       * The maximum audio megabytes per minute. Only relevant for certain models.
+       */
+      max_audio_megabytes_per_1_minute?: number;
+      /**
+       * The maximum requests per day. Only relevant for certain models.
+       */
+      max_requests_per_1_day?: number;
+      /**
+       * The maximum batch input tokens per day. Only relevant for certain models.
+       */
+      batch_1_day_max_input_tokens?: number;
+    };
   };
   /**
    * The details for events with this `type`.
@@ -725,45 +691,11 @@ export type AuditLog = {
   /**
    * The details for events with this `type`.
    */
-  'rate_limit.updated'?: {
+  'service_account.created'?: {
     /**
-     * The payload used to update the rate limits.
-     */
-    changes_requested?: {
-      /**
-       * The maximum batch input tokens per day. Only relevant for certain models.
-       */
-      batch_1_day_max_input_tokens?: number;
-      /**
-       * The maximum audio megabytes per minute. Only relevant for certain models.
-       */
-      max_audio_megabytes_per_1_minute?: number;
-      /**
-       * The maximum images per minute. Only relevant for certain models.
-       */
-      max_images_per_1_minute?: number;
-      /**
-       * The maximum requests per day. Only relevant for certain models.
-       */
-      max_requests_per_1_day?: number;
-      /**
-       * The maximum requests per minute.
-       */
-      max_requests_per_1_minute?: number;
-      /**
-       * The maximum tokens per minute.
-       */
-      max_tokens_per_1_minute?: number;
-    };
-    /**
-     * The rate limit ID
+     * The service account ID.
      */
     id?: string;
-  };
-  /**
-   * The details for events with this `type`.
-   */
-  'service_account.created'?: {
     /**
      * The payload used to create the service account.
      */
@@ -773,10 +705,24 @@ export type AuditLog = {
        */
       role?: string;
     };
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'service_account.updated'?: {
     /**
      * The service account ID.
      */
     id?: string;
+    /**
+     * The payload used to updated the service account.
+     */
+    changes_requested?: {
+      /**
+       * The role of the service account. Is either `owner` or `member`.
+       */
+      role?: string;
+    };
   };
   /**
    * The details for events with this `type`.
@@ -790,26 +736,11 @@ export type AuditLog = {
   /**
    * The details for events with this `type`.
    */
-  'service_account.updated'?: {
+  'user.added'?: {
     /**
-     * The payload used to updated the service account.
-     */
-    changes_requested?: {
-      /**
-       * The role of the service account. Is either `owner` or `member`.
-       */
-      role?: string;
-    };
-    /**
-     * The service account ID.
+     * The user ID.
      */
     id?: string;
-  };
-  type: AuditLogEventType;
-  /**
-   * The details for events with this `type`.
-   */
-  'user.added'?: {
     /**
      * The payload used to add the user to the project.
      */
@@ -819,10 +750,24 @@ export type AuditLog = {
        */
       role?: string;
     };
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'user.updated'?: {
     /**
-     * The user ID.
+     * The project ID.
      */
     id?: string;
+    /**
+     * The payload used to update the user.
+     */
+    changes_requested?: {
+      /**
+       * The role of the user. Is either `owner` or `member`.
+       */
+      role?: string;
+    };
   };
   /**
    * The details for events with this `type`.
@@ -836,20 +781,75 @@ export type AuditLog = {
   /**
    * The details for events with this `type`.
    */
-  'user.updated'?: {
+  'certificate.created'?: {
     /**
-     * The payload used to update the user.
-     */
-    changes_requested?: {
-      /**
-       * The role of the user. Is either `owner` or `member`.
-       */
-      role?: string;
-    };
-    /**
-     * The project ID.
+     * The certificate ID.
      */
     id?: string;
+    /**
+     * The name of the certificate.
+     */
+    name?: string;
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'certificate.updated'?: {
+    /**
+     * The certificate ID.
+     */
+    id?: string;
+    /**
+     * The name of the certificate.
+     */
+    name?: string;
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'certificate.deleted'?: {
+    /**
+     * The certificate ID.
+     */
+    id?: string;
+    /**
+     * The name of the certificate.
+     */
+    name?: string;
+    /**
+     * The certificate content in PEM format.
+     */
+    certificate?: string;
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'certificates.activated'?: {
+    certificates?: Array<{
+      /**
+       * The certificate ID.
+       */
+      id?: string;
+      /**
+       * The name of the certificate.
+       */
+      name?: string;
+    }>;
+  };
+  /**
+   * The details for events with this `type`.
+   */
+  'certificates.deactivated'?: {
+    certificates?: Array<{
+      /**
+       * The certificate ID.
+       */
+      id?: string;
+      /**
+       * The name of the certificate.
+       */
+      name?: string;
+    }>;
   };
 };
 
@@ -857,12 +857,12 @@ export type AuditLog = {
  * The actor who performed the audit logged action.
  */
 export type AuditLogActor = {
-  api_key?: AuditLogActorApiKey;
-  session?: AuditLogActorSession;
   /**
    * The type of actor. Is either `session` or `api_key`.
    */
   type?: 'session' | 'api_key';
+  session?: AuditLogActorSession;
+  api_key?: AuditLogActorApiKey;
 };
 
 /**
@@ -873,12 +873,12 @@ export type AuditLogActorApiKey = {
    * The tracking id of the API key.
    */
   id?: string;
-  service_account?: AuditLogActorServiceAccount;
   /**
    * The type of API key. Can be either `user` or `service_account`.
    */
   type?: 'user' | 'service_account';
   user?: AuditLogActorUser;
+  service_account?: AuditLogActorServiceAccount;
 };
 
 /**
@@ -895,11 +895,11 @@ export type AuditLogActorServiceAccount = {
  * The session in which the audit logged action was performed.
  */
 export type AuditLogActorSession = {
+  user?: AuditLogActorUser;
   /**
    * The IP address from which the action was performed.
    */
   ip_address?: string;
-  user?: AuditLogActorUser;
 };
 
 /**
@@ -907,13 +907,13 @@ export type AuditLogActorSession = {
  */
 export type AuditLogActorUser = {
   /**
-   * The user email.
-   */
-  email?: string;
-  /**
    * The user id.
    */
   id?: string;
+  /**
+   * The user email.
+   */
+  email?: string;
 };
 
 /**
@@ -921,29 +921,29 @@ export type AuditLogActorUser = {
  */
 export const AuditLogEventType = {
   API_KEY_CREATED: 'api_key.created',
-  API_KEY_DELETED: 'api_key.deleted',
   API_KEY_UPDATED: 'api_key.updated',
+  API_KEY_DELETED: 'api_key.deleted',
   CHECKPOINT_PERMISSION_CREATED: 'checkpoint_permission.created',
   CHECKPOINT_PERMISSION_DELETED: 'checkpoint_permission.deleted',
+  INVITE_SENT: 'invite.sent',
   INVITE_ACCEPTED: 'invite.accepted',
   INVITE_DELETED: 'invite.deleted',
-  INVITE_SENT: 'invite.sent',
-  LOGIN_FAILED: 'login.failed',
   LOGIN_SUCCEEDED: 'login.succeeded',
-  LOGOUT_FAILED: 'logout.failed',
+  LOGIN_FAILED: 'login.failed',
   LOGOUT_SUCCEEDED: 'logout.succeeded',
+  LOGOUT_FAILED: 'logout.failed',
   ORGANIZATION_UPDATED: 'organization.updated',
-  PROJECT_ARCHIVED: 'project.archived',
   PROJECT_CREATED: 'project.created',
   PROJECT_UPDATED: 'project.updated',
-  RATE_LIMIT_DELETED: 'rate_limit.deleted',
-  RATE_LIMIT_UPDATED: 'rate_limit.updated',
+  PROJECT_ARCHIVED: 'project.archived',
   SERVICE_ACCOUNT_CREATED: 'service_account.created',
-  SERVICE_ACCOUNT_DELETED: 'service_account.deleted',
   SERVICE_ACCOUNT_UPDATED: 'service_account.updated',
+  SERVICE_ACCOUNT_DELETED: 'service_account.deleted',
+  RATE_LIMIT_UPDATED: 'rate_limit.updated',
+  RATE_LIMIT_DELETED: 'rate_limit.deleted',
   USER_ADDED: 'user.added',
-  USER_DELETED: 'user.deleted',
   USER_UPDATED: 'user.updated',
+  USER_DELETED: 'user.deleted',
 } as const;
 
 /**
@@ -965,76 +965,30 @@ export type AutoChunkingStrategyRequestParam = {
 };
 
 export type Batch = {
-  /**
-   * The Unix timestamp (in seconds) for when the batch was cancelled.
-   */
-  cancelled_at?: number;
-  /**
-   * The Unix timestamp (in seconds) for when the batch started cancelling.
-   */
-  cancelling_at?: number;
-  /**
-   * The Unix timestamp (in seconds) for when the batch was completed.
-   */
-  completed_at?: number;
-  /**
-   * The time frame within which the batch should be processed.
-   */
-  completion_window: string;
-  /**
-   * The Unix timestamp (in seconds) for when the batch was created.
-   */
-  created_at: number;
-  /**
-   * The OpenAI API endpoint used by the batch.
-   */
-  endpoint: string;
-  /**
-   * The ID of the file containing the outputs of requests with errors.
-   */
-  error_file_id?: string;
-  errors?: {
-    data?: Array<BatchError>;
-    /**
-     * The object type, which is always `list`.
-     */
-    object?: string;
-  };
-  /**
-   * The Unix timestamp (in seconds) for when the batch expired.
-   */
-  expired_at?: number;
-  /**
-   * The Unix timestamp (in seconds) for when the batch will expire.
-   */
-  expires_at?: number;
-  /**
-   * The Unix timestamp (in seconds) for when the batch failed.
-   */
-  failed_at?: number;
-  /**
-   * The Unix timestamp (in seconds) for when the batch started finalizing.
-   */
-  finalizing_at?: number;
   id: string;
-  /**
-   * The Unix timestamp (in seconds) for when the batch started processing.
-   */
-  in_progress_at?: number;
-  /**
-   * The ID of the input file for the batch.
-   */
-  input_file_id: string;
-  metadata?: Metadata;
   /**
    * The object type, which is always `batch`.
    */
   object: 'batch';
   /**
-   * The ID of the file containing the outputs of successfully executed requests.
+   * The OpenAI API endpoint used by the batch.
    */
-  output_file_id?: string;
-  request_counts?: BatchRequestCounts;
+  endpoint: string;
+  errors?: {
+    /**
+     * The object type, which is always `list`.
+     */
+    object?: string;
+    data?: Array<BatchError>;
+  };
+  /**
+   * The ID of the input file for the batch.
+   */
+  input_file_id: string;
+  /**
+   * The time frame within which the batch should be processed.
+   */
+  completion_window: string;
   /**
    * The current status of the batch.
    */
@@ -1047,6 +1001,52 @@ export type Batch = {
     | 'expired'
     | 'cancelling'
     | 'cancelled';
+  /**
+   * The ID of the file containing the outputs of successfully executed requests.
+   */
+  output_file_id?: string;
+  /**
+   * The ID of the file containing the outputs of requests with errors.
+   */
+  error_file_id?: string;
+  /**
+   * The Unix timestamp (in seconds) for when the batch was created.
+   */
+  created_at: number;
+  /**
+   * The Unix timestamp (in seconds) for when the batch started processing.
+   */
+  in_progress_at?: number;
+  /**
+   * The Unix timestamp (in seconds) for when the batch will expire.
+   */
+  expires_at?: number;
+  /**
+   * The Unix timestamp (in seconds) for when the batch started finalizing.
+   */
+  finalizing_at?: number;
+  /**
+   * The Unix timestamp (in seconds) for when the batch was completed.
+   */
+  completed_at?: number;
+  /**
+   * The Unix timestamp (in seconds) for when the batch failed.
+   */
+  failed_at?: number;
+  /**
+   * The Unix timestamp (in seconds) for when the batch expired.
+   */
+  expired_at?: number;
+  /**
+   * The Unix timestamp (in seconds) for when the batch started cancelling.
+   */
+  cancelling_at?: number;
+  /**
+   * The Unix timestamp (in seconds) for when the batch was cancelled.
+   */
+  cancelled_at?: number;
+  request_counts?: BatchRequestCounts;
+  metadata?: Metadata;
 };
 
 /**
@@ -1087,10 +1087,27 @@ export type BatchRequestInput = {
  * The per-line object of the batch output and error files
  */
 export type BatchRequestOutput = {
+  id?: string;
   /**
    * A developer-provided per-request id that will be used to match outputs to inputs.
    */
   custom_id?: string;
+  response?: {
+    /**
+     * The HTTP status code of the response
+     */
+    status_code?: number;
+    /**
+     * An unique identifier for the OpenAI API request. Please include this request ID when contacting support.
+     */
+    request_id?: string;
+    /**
+     * The JSON body of the response
+     */
+    body?: {
+      [key: string]: unknown;
+    };
+  };
   /**
    * For requests that failed with a non-HTTP error, this will contain more information on the cause of the failure.
    */
@@ -1104,59 +1121,12 @@ export type BatchRequestOutput = {
      */
     message?: string;
   };
-  id?: string;
-  response?: {
-    /**
-     * The JSON body of the response
-     */
-    body?: {
-      [key: string]: unknown;
-    };
-    /**
-     * An unique identifier for the OpenAI API request. Please include this request ID when contacting support.
-     */
-    request_id?: string;
-    /**
-     * The HTTP status code of the response
-     */
-    status_code?: number;
-  };
 };
 
 /**
  * Represents an individual `certificate` uploaded to the organization.
  */
 export type Certificate = {
-  /**
-   * Whether the certificate is currently active at the specified scope. Not returned when getting details for a specific certificate.
-   */
-  active?: boolean;
-  certificate_details: {
-    /**
-     * The content of the certificate in PEM format.
-     */
-    content?: string;
-    /**
-     * The Unix timestamp (in seconds) of when the certificate expires.
-     */
-    expires_at?: number;
-    /**
-     * The Unix timestamp (in seconds) of when the certificate becomes valid.
-     */
-    valid_at?: number;
-  };
-  /**
-   * The Unix timestamp (in seconds) of when the certificate was uploaded.
-   */
-  created_at: number;
-  /**
-   * The identifier, which can be referenced in API endpoints
-   */
-  id: string;
-  /**
-   * The name of the certificate.
-   */
-  name: string;
   /**
    * The object type.
    *
@@ -1169,6 +1139,36 @@ export type Certificate = {
     | 'certificate'
     | 'organization.certificate'
     | 'organization.project.certificate';
+  /**
+   * The identifier, which can be referenced in API endpoints
+   */
+  id: string;
+  /**
+   * The name of the certificate.
+   */
+  name: string;
+  /**
+   * The Unix timestamp (in seconds) of when the certificate was uploaded.
+   */
+  created_at: number;
+  certificate_details: {
+    /**
+     * The Unix timestamp (in seconds) of when the certificate becomes valid.
+     */
+    valid_at?: number;
+    /**
+     * The Unix timestamp (in seconds) of when the certificate expires.
+     */
+    expires_at?: number;
+    /**
+     * The content of the certificate in PEM format.
+     */
+    content?: string;
+  };
+  /**
+   * Whether the certificate is currently active at the specified scope. Not returned when getting details for a specific certificate.
+   */
+  active?: boolean;
 };
 
 /**
@@ -1212,26 +1212,26 @@ export type ChatCompletionAllowedTools = {
  *
  */
 export type ChatCompletionAllowedToolsChoice = {
-  allowed_tools: ChatCompletionAllowedTools;
   /**
    * Allowed tool configuration type. Always `allowed_tools`.
    */
   type: 'allowed_tools';
+  allowed_tools: ChatCompletionAllowedTools;
 };
 
 export type ChatCompletionDeleted = {
   /**
-   * Whether the chat completion was deleted.
+   * The type of object being deleted.
    */
-  deleted: boolean;
+  object: 'chat.completion.deleted';
   /**
    * The ID of the chat completion that was deleted.
    */
   id: string;
   /**
-   * The type of object being deleted.
+   * Whether the chat completion was deleted.
    */
-  object: 'chat.completion.deleted';
+  deleted: boolean;
 };
 
 /**
@@ -1268,6 +1268,11 @@ export type ChatCompletionFunctions = {
  */
 export type ChatCompletionList = {
   /**
+   * The type of this object. It is always set to "list".
+   *
+   */
+  object: 'list';
+  /**
    * An array of chat completion objects.
    *
    */
@@ -1277,18 +1282,13 @@ export type ChatCompletionList = {
    */
   first_id: string;
   /**
-   * Indicates whether there are more Chat Completions available.
-   */
-  has_more: boolean;
-  /**
    * The identifier of the last chat completion in the data array.
    */
   last_id: string;
   /**
-   * The type of this object. It is always set to "list".
-   *
+   * Indicates whether there are more Chat Completions available.
    */
-  object: 'list';
+  has_more: boolean;
 };
 
 /**
@@ -1299,19 +1299,6 @@ export type ChatCompletionList = {
  */
 export type ChatCompletionMessageCustomToolCall = {
   /**
-   * The custom tool that the model called.
-   */
-  custom: {
-    /**
-     * The input for the custom tool call generated by the model.
-     */
-    input: string;
-    /**
-     * The name of the custom tool to call.
-     */
-    name: string;
-  };
-  /**
    * The ID of the tool call.
    */
   id: string;
@@ -1319,6 +1306,19 @@ export type ChatCompletionMessageCustomToolCall = {
    * The type of the tool. Always `custom`.
    */
   type: 'custom';
+  /**
+   * The custom tool that the model called.
+   */
+  custom: {
+    /**
+     * The name of the custom tool to call.
+     */
+    name: string;
+    /**
+     * The input for the custom tool call generated by the model.
+     */
+    input: string;
+  };
 };
 
 /**
@@ -1329,11 +1329,20 @@ export type ChatCompletionMessageCustomToolCall = {
  */
 export type ChatCompletionMessageList = {
   /**
+   * The type of this object. It is always set to "list".
+   *
+   */
+  object: 'list';
+  /**
    * An array of chat completion message objects.
    *
    */
   data: Array<
     ChatCompletionResponseMessage & {
+      /**
+       * The identifier of the chat message.
+       */
+      id: string;
       /**
        * If a content parts array was provided, this is an array of `text` and `image_url` parts.
        * Otherwise, null.
@@ -1343,10 +1352,6 @@ export type ChatCompletionMessageList = {
         | ChatCompletionRequestMessageContentPartText
         | ChatCompletionRequestMessageContentPartImage
       >;
-      /**
-       * The identifier of the chat message.
-       */
-      id: string;
     }
   >;
   /**
@@ -1354,18 +1359,13 @@ export type ChatCompletionMessageList = {
    */
   first_id: string;
   /**
-   * Indicates whether there are more chat messages available.
-   */
-  has_more: boolean;
-  /**
    * The identifier of the last chat message in the data array.
    */
   last_id: string;
   /**
-   * The type of this object. It is always set to "list".
-   *
+   * Indicates whether there are more chat messages available.
    */
-  object: 'list';
+  has_more: boolean;
 };
 
 /**
@@ -1376,19 +1376,6 @@ export type ChatCompletionMessageList = {
  */
 export type ChatCompletionMessageToolCall = {
   /**
-   * The function that the model called.
-   */
-  function: {
-    /**
-     * The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
-     */
-    arguments: string;
-    /**
-     * The name of the function to call.
-     */
-    name: string;
-  };
-  /**
    * The ID of the tool call.
    */
   id: string;
@@ -1396,28 +1383,41 @@ export type ChatCompletionMessageToolCall = {
    * The type of the tool. Currently, only `function` is supported.
    */
   type: 'function';
-};
-
-export type ChatCompletionMessageToolCallChunk = {
-  function?: {
-    /**
-     * The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
-     */
-    arguments?: string;
+  /**
+   * The function that the model called.
+   */
+  function: {
     /**
      * The name of the function to call.
      */
-    name?: string;
+    name: string;
+    /**
+     * The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
+     */
+    arguments: string;
   };
+};
+
+export type ChatCompletionMessageToolCallChunk = {
+  index: number;
   /**
    * The ID of the tool call.
    */
   id?: string;
-  index: number;
   /**
    * The type of the tool. Currently, only `function` is supported.
    */
   type?: 'function';
+  function?: {
+    /**
+     * The name of the function to call.
+     */
+    name?: string;
+    /**
+     * The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
+     */
+    arguments?: string;
+  };
 };
 
 /**
@@ -1453,16 +1453,16 @@ export type ChatCompletionModalities = Array<'text' | 'audio'>;
  * Specifies a tool the model should use. Use to force the model to call a specific function.
  */
 export type ChatCompletionNamedToolChoice = {
+  /**
+   * For function calling, the type is always `function`.
+   */
+  type: 'function';
   function: {
     /**
      * The name of the function to call.
      */
     name: string;
   };
-  /**
-   * For function calling, the type is always `function`.
-   */
-  type: 'function';
 };
 
 /**
@@ -1471,16 +1471,16 @@ export type ChatCompletionNamedToolChoice = {
  * Specifies a tool the model should use. Use to force the model to call a specific custom tool.
  */
 export type ChatCompletionNamedToolChoiceCustom = {
+  /**
+   * For custom tool calling, the type is always `custom`.
+   */
+  type: 'custom';
   custom: {
     /**
      * The name of the custom tool to call.
      */
     name: string;
   };
-  /**
-   * For custom tool calling, the type is always `custom`.
-   */
-  type: 'custom';
 };
 
 /**
@@ -1490,6 +1490,23 @@ export type ChatCompletionNamedToolChoiceCustom = {
  *
  */
 export type ChatCompletionRequestAssistantMessage = {
+  /**
+   * The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
+   *
+   */
+  content?: string | Array<ChatCompletionRequestAssistantMessageContentPart>;
+  /**
+   * The refusal message by the assistant.
+   */
+  refusal?: string;
+  /**
+   * The role of the messages author, in this case `assistant`.
+   */
+  role: 'assistant';
+  /**
+   * An optional name for the participant. Provides the model information to differentiate between participants of the same role.
+   */
+  name?: string;
   /**
    * Data about a previous audio response from the model.
    * [Learn more](https://platform.openai.com/docs/guides/audio).
@@ -1502,11 +1519,7 @@ export type ChatCompletionRequestAssistantMessage = {
      */
     id: string;
   };
-  /**
-   * The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
-   *
-   */
-  content?: string | Array<ChatCompletionRequestAssistantMessageContentPart>;
+  tool_calls?: ChatCompletionMessageToolCalls;
   /**
    * Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
    *
@@ -1522,19 +1535,6 @@ export type ChatCompletionRequestAssistantMessage = {
      */
     name: string;
   };
-  /**
-   * An optional name for the participant. Provides the model information to differentiate between participants of the same role.
-   */
-  name?: string;
-  /**
-   * The refusal message by the assistant.
-   */
-  refusal?: string;
-  /**
-   * The role of the messages author, in this case `assistant`.
-   */
-  role: 'assistant';
-  tool_calls?: ChatCompletionMessageToolCalls;
 };
 
 export type ChatCompletionRequestAssistantMessageContentPart =
@@ -1559,13 +1559,13 @@ export type ChatCompletionRequestDeveloperMessage = {
    */
   content: string | Array<ChatCompletionRequestMessageContentPartText>;
   /**
-   * An optional name for the participant. Provides the model information to differentiate between participants of the same role.
-   */
-  name?: string;
-  /**
    * The role of the messages author, in this case `developer`.
    */
   role: 'developer';
+  /**
+   * An optional name for the participant. Provides the model information to differentiate between participants of the same role.
+   */
+  name?: string;
 };
 
 /**
@@ -1575,6 +1575,10 @@ export type ChatCompletionRequestDeveloperMessage = {
  */
 export type ChatCompletionRequestFunctionMessage = {
   /**
+   * The role of the messages author, in this case `function`.
+   */
+  role: 'function';
+  /**
    * The contents of the function message.
    */
   content: string;
@@ -1582,10 +1586,6 @@ export type ChatCompletionRequestFunctionMessage = {
    * The name of the function to call.
    */
   name: string;
-  /**
-   * The role of the messages author, in this case `function`.
-   */
-  role: 'function';
 };
 
 export type ChatCompletionRequestMessage =
@@ -1615,6 +1615,10 @@ export type ChatCompletionRequestMessage =
  *
  */
 export type ChatCompletionRequestMessageContentPartAudio = {
+  /**
+   * The type of the content part. Always `input_audio`.
+   */
+  type: 'input_audio';
   input_audio: {
     /**
      * Base64 encoded audio data.
@@ -1626,10 +1630,6 @@ export type ChatCompletionRequestMessageContentPartAudio = {
      */
     format: 'wav' | 'mp3';
   };
-  /**
-   * The type of the content part. Always `input_audio`.
-   */
-  type: 'input_audio';
 };
 
 /**
@@ -1639,7 +1639,17 @@ export type ChatCompletionRequestMessageContentPartAudio = {
  *
  */
 export type ChatCompletionRequestMessageContentPartFile = {
+  /**
+   * The type of the content part. Always `file`.
+   */
+  type: 'file';
   file: {
+    /**
+     * The name of the file, used when passing the file to the model as a
+     * string.
+     *
+     */
+    filename?: string;
     /**
      * The base64 encoded file data, used when passing the file to the model
      * as a string.
@@ -1651,17 +1661,7 @@ export type ChatCompletionRequestMessageContentPartFile = {
      *
      */
     file_id?: string;
-    /**
-     * The name of the file, used when passing the file to the model as a
-     * string.
-     *
-     */
-    filename?: string;
   };
-  /**
-   * The type of the content part. Always `file`.
-   */
-  type: 'file';
 };
 
 /**
@@ -1671,20 +1671,20 @@ export type ChatCompletionRequestMessageContentPartFile = {
  *
  */
 export type ChatCompletionRequestMessageContentPartImage = {
-  image_url: {
-    /**
-     * Specifies the detail level of the image. Learn more in the [Vision guide](https://platform.openai.com/docs/guides/vision#low-or-high-fidelity-image-understanding).
-     */
-    detail?: 'auto' | 'low' | 'high';
-    /**
-     * Either a URL of the image or the base64 encoded image data.
-     */
-    url: string;
-  };
   /**
    * The type of the content part.
    */
   type: 'image_url';
+  image_url: {
+    /**
+     * Either a URL of the image or the base64 encoded image data.
+     */
+    url: string;
+    /**
+     * Specifies the detail level of the image. Learn more in the [Vision guide](https://platform.openai.com/docs/guides/vision#low-or-high-fidelity-image-understanding).
+     */
+    detail?: 'auto' | 'low' | 'high';
+  };
 };
 
 /**
@@ -1692,13 +1692,13 @@ export type ChatCompletionRequestMessageContentPartImage = {
  */
 export type ChatCompletionRequestMessageContentPartRefusal = {
   /**
-   * The refusal message generated by the model.
-   */
-  refusal: string;
-  /**
    * The type of the content part.
    */
   type: 'refusal';
+  /**
+   * The refusal message generated by the model.
+   */
+  refusal: string;
 };
 
 /**
@@ -1709,13 +1709,13 @@ export type ChatCompletionRequestMessageContentPartRefusal = {
  */
 export type ChatCompletionRequestMessageContentPartText = {
   /**
-   * The text content.
-   */
-  text: string;
-  /**
    * The type of the content part.
    */
   type: 'text';
+  /**
+   * The text content.
+   */
+  text: string;
 };
 
 /**
@@ -1732,13 +1732,13 @@ export type ChatCompletionRequestSystemMessage = {
    */
   content: string | Array<ChatCompletionRequestSystemMessageContentPart>;
   /**
-   * An optional name for the participant. Provides the model information to differentiate between participants of the same role.
-   */
-  name?: string;
-  /**
    * The role of the messages author, in this case `system`.
    */
   role: 'system';
+  /**
+   * An optional name for the participant. Provides the model information to differentiate between participants of the same role.
+   */
+  name?: string;
 };
 
 export type ChatCompletionRequestSystemMessageContentPart =
@@ -1749,13 +1749,13 @@ export type ChatCompletionRequestSystemMessageContentPart =
  */
 export type ChatCompletionRequestToolMessage = {
   /**
-   * The contents of the tool message.
-   */
-  content: string | Array<ChatCompletionRequestToolMessageContentPart>;
-  /**
    * The role of the messages author, in this case `tool`.
    */
   role: 'tool';
+  /**
+   * The contents of the tool message.
+   */
+  content: string | Array<ChatCompletionRequestToolMessageContentPart>;
   /**
    * Tool call that this message is responding to.
    */
@@ -1779,13 +1779,13 @@ export type ChatCompletionRequestUserMessage = {
    */
   content: string | Array<ChatCompletionRequestUserMessageContentPart>;
   /**
-   * An optional name for the participant. Provides the model information to differentiate between participants of the same role.
-   */
-  name?: string;
-  /**
    * The role of the messages author, in this case `user`.
    */
   role: 'user';
+  /**
+   * An optional name for the participant. Provides the model information to differentiate between participants of the same role.
+   */
+  name?: string;
 };
 
 export type ChatCompletionRequestUserMessageContentPart =
@@ -1806,6 +1806,15 @@ export type ChatCompletionRequestUserMessageContentPart =
  * A chat completion message generated by the model.
  */
 export type ChatCompletionResponseMessage = {
+  /**
+   * The contents of the message.
+   */
+  content: string;
+  /**
+   * The refusal message generated by the model.
+   */
+  refusal: string;
+  tool_calls?: ChatCompletionMessageToolCalls;
   /**
    * Annotations for the message, when applicable, as when using the
    * [web search tool](https://platform.openai.com/docs/guides/tools-web-search?api-mode=chat).
@@ -1829,47 +1838,19 @@ export type ChatCompletionResponseMessage = {
        */
       start_index: number;
       /**
-       * The title of the web resource.
-       */
-      title: string;
-      /**
        * The URL of the web resource.
        */
       url: string;
+      /**
+       * The title of the web resource.
+       */
+      title: string;
     };
   }>;
   /**
-   * If the audio output modality is requested, this object contains data
-   * about the audio response from the model. [Learn more](https://platform.openai.com/docs/guides/audio).
-   *
+   * The role of the author of this message.
    */
-  audio?: {
-    /**
-     * Base64 encoded audio bytes generated by the model, in the format
-     * specified in the request.
-     *
-     */
-    data: string;
-    /**
-     * The Unix timestamp (in seconds) for when this audio response will
-     * no longer be accessible on the server for use in multi-turn
-     * conversations.
-     *
-     */
-    expires_at: number;
-    /**
-     * Unique identifier for this audio response.
-     */
-    id: string;
-    /**
-     * Transcript of the audio generated by the model.
-     */
-    transcript: string;
-  };
-  /**
-   * The contents of the message.
-   */
-  content: string;
+  role: 'assistant';
   /**
    * Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
    *
@@ -1886,26 +1867,45 @@ export type ChatCompletionResponseMessage = {
     name: string;
   };
   /**
-   * The refusal message generated by the model.
+   * If the audio output modality is requested, this object contains data
+   * about the audio response from the model. [Learn more](https://platform.openai.com/docs/guides/audio).
+   *
    */
-  refusal: string;
-  /**
-   * The role of the author of this message.
-   */
-  role: 'assistant';
-  tool_calls?: ChatCompletionMessageToolCalls;
+  audio?: {
+    /**
+     * Unique identifier for this audio response.
+     */
+    id: string;
+    /**
+     * The Unix timestamp (in seconds) for when this audio response will
+     * no longer be accessible on the server for use in multi-turn
+     * conversations.
+     *
+     */
+    expires_at: number;
+    /**
+     * Base64 encoded audio bytes generated by the model, in the format
+     * specified in the request.
+     *
+     */
+    data: string;
+    /**
+     * Transcript of the audio generated by the model.
+     */
+    transcript: string;
+  };
 };
 
 /**
  * The role of the author of a message
  */
 export const ChatCompletionRole = {
-  ASSISTANT: 'assistant',
   DEVELOPER: 'developer',
-  FUNCTION: 'function',
   SYSTEM: 'system',
-  TOOL: 'tool',
   USER: 'user',
+  ASSISTANT: 'assistant',
+  TOOL: 'tool',
+  FUNCTION: 'function',
 } as const;
 
 /**
@@ -1920,17 +1920,6 @@ export type ChatCompletionRole =
  */
 export type ChatCompletionStreamOptions = {
   /**
-   * When true, stream obfuscation will be enabled. Stream obfuscation adds
-   * random characters to an `obfuscation` field on streaming delta events to
-   * normalize payload sizes as a mitigation to certain side-channel attacks.
-   * These obfuscation fields are included by default, but add a small amount
-   * of overhead to the data stream. You can set `include_obfuscation` to
-   * false to optimize for bandwidth if you trust the network links between
-   * your application and the OpenAI API.
-   *
-   */
-  include_obfuscation?: boolean;
-  /**
    * If set, an additional chunk will be streamed before the `data: [DONE]`
    * message. The `usage` field on this chunk shows the token usage statistics
    * for the entire request, and the `choices` field will always be an empty
@@ -1942,6 +1931,17 @@ export type ChatCompletionStreamOptions = {
    *
    */
   include_usage?: boolean;
+  /**
+   * When true, stream obfuscation will be enabled. Stream obfuscation adds
+   * random characters to an `obfuscation` field on streaming delta events to
+   * normalize payload sizes as a mitigation to certain side-channel attacks.
+   * These obfuscation fields are included by default, but add a small amount
+   * of overhead to the data stream. You can set `include_obfuscation` to
+   * false to optimize for bandwidth if you trust the network links between
+   * your application and the OpenAI API.
+   *
+   */
+  include_obfuscation?: boolean;
 };
 
 /**
@@ -1967,46 +1967,46 @@ export type ChatCompletionStreamResponseDelta = {
      */
     name?: string;
   };
-  /**
-   * The refusal message generated by the model.
-   */
-  refusal?: string;
+  tool_calls?: Array<ChatCompletionMessageToolCallChunk>;
   /**
    * The role of the author of this message.
    */
   role?: 'developer' | 'system' | 'user' | 'assistant' | 'tool';
-  tool_calls?: Array<ChatCompletionMessageToolCallChunk>;
+  /**
+   * The refusal message generated by the model.
+   */
+  refusal?: string;
 };
 
 export type ChatCompletionTokenLogprob = {
-  /**
-   * A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
-   */
-  bytes: Array<number>;
-  /**
-   * The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
-   */
-  logprob: number;
   /**
    * The token.
    */
   token: string;
   /**
+   * The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
+   */
+  logprob: number;
+  /**
+   * A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
+   */
+  bytes: Array<number>;
+  /**
    * List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned.
    */
   top_logprobs: Array<{
     /**
-     * A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
+     * The token.
      */
-    bytes: Array<number>;
+    token: string;
     /**
      * The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
      */
     logprob: number;
     /**
-     * The token.
+     * A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
      */
-    token: string;
+    bytes: Array<number>;
   }>;
 };
 
@@ -2017,11 +2017,11 @@ export type ChatCompletionTokenLogprob = {
  *
  */
 export type ChatCompletionTool = {
-  function: FunctionObject;
   /**
    * The type of the tool. Currently, only `function` is supported.
    */
   type: 'function';
+  function: FunctionObject;
 };
 
 /**
@@ -2061,16 +2061,16 @@ export type ChunkingStrategyRequestParam =
  */
 export type Click = {
   /**
-   * Indicates which mouse button was pressed during the click. One of `left`, `right`, `wheel`, `back`, or `forward`.
-   *
-   */
-  button: 'left' | 'right' | 'wheel' | 'back' | 'forward';
-  /**
    * Specifies the event type. For a click action, this property is
    * always set to `click`.
    *
    */
   type: 'click';
+  /**
+   * Indicates which mouse button was pressed during the click. One of `left`, `right`, `wheel`, `back`, or `forward`.
+   *
+   */
+  button: 'left' | 'right' | 'wheel' | 'back' | 'forward';
   /**
    * The x-coordinate where the click occurred.
    *
@@ -2090,23 +2090,23 @@ export type Click = {
  *
  */
 export type CodeInterpreterFileOutput = {
-  files: Array<{
-    /**
-     * The ID of the file.
-     *
-     */
-    file_id: string;
-    /**
-     * The MIME type of the file.
-     *
-     */
-    mime_type: string;
-  }>;
   /**
    * The type of the code interpreter file output. Always `files`.
    *
    */
   type: 'files';
+  files: Array<{
+    /**
+     * The MIME type of the file.
+     *
+     */
+    mime_type: string;
+    /**
+     * The ID of the file.
+     *
+     */
+    file_id: string;
+  }>;
 };
 
 /**
@@ -2134,13 +2134,13 @@ export type CodeInterpreterOutputImage = {
  */
 export type CodeInterpreterOutputLogs = {
   /**
-   * The logs output from the code interpreter.
-   */
-  logs: string;
-  /**
    * The type of the output. Always 'logs'.
    */
   type: 'logs';
+  /**
+   * The logs output from the code interpreter.
+   */
+  logs: string;
 };
 
 /**
@@ -2151,15 +2151,15 @@ export type CodeInterpreterOutputLogs = {
  */
 export type CodeInterpreterTextOutput = {
   /**
-   * The logs of the code interpreter tool call.
-   *
-   */
-  logs: string;
-  /**
    * The type of the code interpreter text output. Always `logs`.
    *
    */
   type: 'logs';
+  /**
+   * The logs of the code interpreter tool call.
+   *
+   */
+  logs: string;
 };
 
 /**
@@ -2170,16 +2170,16 @@ export type CodeInterpreterTextOutput = {
  */
 export type CodeInterpreterTool = {
   /**
+   * The type of the code interpreter tool. Always `code_interpreter`.
+   *
+   */
+  type: 'code_interpreter';
+  /**
    * The code interpreter container. Can be a container ID or an object that
    * specifies uploaded file IDs to make available to your code.
    *
    */
   container: string | CodeInterpreterToolAuto;
-  /**
-   * The type of the code interpreter tool. Always `code_interpreter`.
-   *
-   */
-  type: 'code_interpreter';
 };
 
 /**
@@ -2191,14 +2191,14 @@ export type CodeInterpreterTool = {
  */
 export type CodeInterpreterToolAuto = {
   /**
+   * Always `auto`.
+   */
+  type: 'auto';
+  /**
    * An optional list of uploaded files to make available to your code.
    *
    */
   file_ids?: Array<string>;
-  /**
-   * Always `auto`.
-   */
-  type: 'auto';
 };
 
 /**
@@ -2209,20 +2209,35 @@ export type CodeInterpreterToolAuto = {
  */
 export type CodeInterpreterToolCall = {
   /**
-   * The code to run, or null if not available.
+   * The type of the code interpreter tool call. Always `code_interpreter_call`.
    *
    */
-  code: string;
+  type: 'code_interpreter_call';
+  /**
+   * The unique ID of the code interpreter tool call.
+   *
+   */
+  id: string;
+  /**
+   * The status of the code interpreter tool call. Valid values are `in_progress`, `completed`, `incomplete`, `interpreting`, and `failed`.
+   *
+   */
+  status:
+    | 'in_progress'
+    | 'completed'
+    | 'incomplete'
+    | 'interpreting'
+    | 'failed';
   /**
    * The ID of the container used to run the code.
    *
    */
   container_id: string;
   /**
-   * The unique ID of the code interpreter tool call.
+   * The code to run, or null if not available.
    *
    */
-  id: string;
+  code: string;
   /**
    * The outputs generated by the code interpreter, such as logs or images.
    * Can be null if no outputs are available.
@@ -2236,21 +2251,6 @@ export type CodeInterpreterToolCall = {
         type?: 'CodeInterpreterOutputImage';
       } & CodeInterpreterOutputImage)
   >;
-  /**
-   * The status of the code interpreter tool call. Valid values are `in_progress`, `completed`, `incomplete`, `interpreting`, and `failed`.
-   *
-   */
-  status:
-    | 'in_progress'
-    | 'completed'
-    | 'incomplete'
-    | 'interpreting'
-    | 'failed';
-  /**
-   * The type of the code interpreter tool call. Always `code_interpreter_call`.
-   *
-   */
-  type: 'code_interpreter_call';
 };
 
 /**
@@ -2260,10 +2260,6 @@ export type CodeInterpreterToolCall = {
  *
  */
 export type ComparisonFilter = {
-  /**
-   * The key to compare against the value.
-   */
-  key: string;
   /**
    * Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`.
    * - `eq`: equals
@@ -2276,6 +2272,10 @@ export type ComparisonFilter = {
    */
   type: 'eq' | 'ne' | 'gt' | 'gte' | 'lt' | 'lte';
   /**
+   * The key to compare against the value.
+   */
+  key: string;
+  /**
    * The value to compare against the attribute key; supports string, number, or boolean types.
    */
   value: string | number | boolean;
@@ -2283,15 +2283,15 @@ export type ComparisonFilter = {
 
 export type CompleteUploadRequest = {
   /**
-   * The optional md5 checksum for the file contents to verify if the bytes uploaded matches what you expect.
-   *
-   */
-  md5?: string;
-  /**
    * The ordered list of Part IDs.
    *
    */
   part_ids: Array<string>;
+  /**
+   * The optional md5 checksum for the file contents to verify if the bytes uploaded matches what you expect.
+   *
+   */
+  md5?: string;
 };
 
 /**
@@ -2302,6 +2302,14 @@ export type CompletionUsage = {
    * Number of tokens in the generated completion.
    */
   completion_tokens: number;
+  /**
+   * Number of tokens in the prompt.
+   */
+  prompt_tokens: number;
+  /**
+   * Total number of tokens used in the request (prompt + completion).
+   */
+  total_tokens: number;
   /**
    * Breakdown of tokens used in a completion.
    */
@@ -2331,10 +2339,6 @@ export type CompletionUsage = {
     rejected_prediction_tokens?: number;
   };
   /**
-   * Number of tokens in the prompt.
-   */
-  prompt_tokens: number;
-  /**
    * Breakdown of tokens used in the prompt.
    */
   prompt_tokens_details?: {
@@ -2347,10 +2351,6 @@ export type CompletionUsage = {
      */
     cached_tokens?: number;
   };
-  /**
-   * Total number of tokens used in the request (prompt + completion).
-   */
-  total_tokens: number;
 };
 
 /**
@@ -2360,13 +2360,13 @@ export type CompletionUsage = {
  */
 export type CompoundFilter = {
   /**
-   * Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.
-   */
-  filters: Array<ComparisonFilter | unknown>;
-  /**
    * Type of operation: `and` or `or`.
    */
   type: 'and' | 'or';
+  /**
+   * Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.
+   */
+  filters: Array<ComparisonFilter | unknown>;
 };
 
 export type ComputerAction =
@@ -2404,19 +2404,19 @@ export type ComputerAction =
  */
 export type ComputerScreenshotImage = {
   /**
-   * The identifier of an uploaded file that contains the screenshot.
-   */
-  file_id?: string;
-  /**
-   * The URL of the screenshot image.
-   */
-  image_url?: string;
-  /**
    * Specifies the event type. For a computer screenshot, this property is
    * always set to `computer_screenshot`.
    *
    */
   type: 'computer_screenshot';
+  /**
+   * The URL of the screenshot image.
+   */
+  image_url?: string;
+  /**
+   * The identifier of an uploaded file that contains the screenshot.
+   */
+  file_id?: string;
 };
 
 /**
@@ -2427,16 +2427,20 @@ export type ComputerScreenshotImage = {
  *
  */
 export type ComputerToolCall = {
-  action: ComputerAction;
+  /**
+   * The type of the computer call. Always `computer_call`.
+   */
+  type: 'computer_call';
+  /**
+   * The unique ID of the computer call.
+   */
+  id: string;
   /**
    * An identifier used when responding to the tool call with output.
    *
    */
   call_id: string;
-  /**
-   * The unique ID of the computer call.
-   */
-  id: string;
+  action: ComputerAction;
   /**
    * The pending safety checks for the computer call.
    *
@@ -2448,10 +2452,6 @@ export type ComputerToolCall = {
    *
    */
   status: 'in_progress' | 'completed' | 'incomplete';
-  /**
-   * The type of the computer call. Always `computer_call`.
-   */
-  type: 'computer_call';
 };
 
 /**
@@ -2462,21 +2462,26 @@ export type ComputerToolCall = {
  */
 export type ComputerToolCallOutput = {
   /**
-   * The safety checks reported by the API that have been acknowledged by the
-   * developer.
+   * The type of the computer tool call output. Always `computer_call_output`.
    *
    */
-  acknowledged_safety_checks?: Array<ComputerToolCallSafetyCheck>;
+  type: 'computer_call_output';
+  /**
+   * The ID of the computer tool call output.
+   *
+   */
+  id?: string;
   /**
    * The ID of the computer tool call that produced the output.
    *
    */
   call_id: string;
   /**
-   * The ID of the computer tool call output.
+   * The safety checks reported by the API that have been acknowledged by the
+   * developer.
    *
    */
-  id?: string;
+  acknowledged_safety_checks?: Array<ComputerToolCallSafetyCheck>;
   output: ComputerScreenshotImage;
   /**
    * The status of the message input. One of `in_progress`, `completed`, or
@@ -2484,11 +2489,6 @@ export type ComputerToolCallOutput = {
    *
    */
   status?: 'in_progress' | 'completed' | 'incomplete';
-  /**
-   * The type of the computer tool call output. Always `computer_call_output`.
-   *
-   */
-  type: 'computer_call_output';
 };
 
 export type ComputerToolCallOutputResource = ComputerToolCallOutput & {
@@ -2505,13 +2505,13 @@ export type ComputerToolCallOutputResource = ComputerToolCallOutput & {
  */
 export type ComputerToolCallSafetyCheck = {
   /**
-   * The type of the pending safety check.
-   */
-  code: string;
-  /**
    * The ID of the pending safety check.
    */
   id: string;
+  /**
+   * The type of the pending safety check.
+   */
+  code: string;
   /**
    * Details about the pending safety check.
    */
@@ -2519,6 +2519,10 @@ export type ComputerToolCallSafetyCheck = {
 };
 
 export type ContainerFileListResource = {
+  /**
+   * The type of object returned, must be 'list'.
+   */
+  object: 'list';
   /**
    * A list of container files.
    */
@@ -2528,17 +2532,13 @@ export type ContainerFileListResource = {
    */
   first_id: string;
   /**
-   * Whether there are more files available.
-   */
-  has_more: boolean;
-  /**
    * The ID of the last file in the list.
    */
   last_id: string;
   /**
-   * The type of object returned, must be 'list'.
+   * Whether there are more files available.
    */
-  object: 'list';
+  has_more: boolean;
 };
 
 /**
@@ -2546,9 +2546,13 @@ export type ContainerFileListResource = {
  */
 export type ContainerFileResource = {
   /**
-   * Size of the file in bytes.
+   * Unique identifier for the file.
    */
-  bytes: number;
+  id: string;
+  /**
+   * The type of this object (`container.file`).
+   */
+  object: 'container.file';
   /**
    * The container this file belongs to.
    */
@@ -2558,13 +2562,9 @@ export type ContainerFileResource = {
    */
   created_at: number;
   /**
-   * Unique identifier for the file.
+   * Size of the file in bytes.
    */
-  id: string;
-  /**
-   * The type of this object (`container.file`).
-   */
-  object: 'container.file';
+  bytes: number;
   /**
    * Path of the file in the container.
    */
@@ -2577,6 +2577,10 @@ export type ContainerFileResource = {
 
 export type ContainerListResource = {
   /**
+   * The type of object returned, must be 'list'.
+   */
+  object: 'list';
+  /**
    * A list of containers.
    */
   data: Array<ContainerResource>;
@@ -2585,17 +2589,13 @@ export type ContainerListResource = {
    */
   first_id: string;
   /**
-   * Whether there are more containers available.
-   */
-  has_more: boolean;
-  /**
    * The ID of the last container in the list.
    */
   last_id: string;
   /**
-   * The type of object returned, must be 'list'.
+   * Whether there are more containers available.
    */
-  object: 'list';
+  has_more: boolean;
 };
 
 /**
@@ -2603,9 +2603,25 @@ export type ContainerListResource = {
  */
 export type ContainerResource = {
   /**
+   * Unique identifier for the container.
+   */
+  id: string;
+  /**
+   * The type of this object.
+   */
+  object: string;
+  /**
+   * Name of the container.
+   */
+  name: string;
+  /**
    * Unix timestamp (in seconds) when the container was created.
    */
   created_at: number;
+  /**
+   * Status of the container (e.g., active, deleted).
+   */
+  status: string;
   /**
    * The container will expire after this time period.
    * The anchor is the reference point for the expiration.
@@ -2622,22 +2638,6 @@ export type ContainerResource = {
      */
     minutes?: number;
   };
-  /**
-   * Unique identifier for the container.
-   */
-  id: string;
-  /**
-   * Name of the container.
-   */
-  name: string;
-  /**
-   * The type of this object.
-   */
-  object: string;
-  /**
-   * Status of the container (e.g., active, deleted).
-   */
-  status: string;
 };
 
 /**
@@ -2669,24 +2669,24 @@ export type Coordinate = {
  * The aggregated costs details of the specific time bucket.
  */
 export type CostsResult = {
+  object: 'organization.costs.result';
   /**
    * The monetary value in its associated currency.
    */
   amount?: {
     /**
-     * Lowercase ISO-4217 currency e.g. "usd"
-     */
-    currency?: string;
-    /**
      * The numeric value of the cost.
      */
     value?: number;
+    /**
+     * Lowercase ISO-4217 currency e.g. "usd"
+     */
+    currency?: string;
   };
   /**
    * When `group_by=line_item`, this field provides the line item of the grouped costs result.
    */
   line_item?: string;
-  object: 'organization.costs.result';
   /**
    * When `group_by=project_id`, this field provides the project ID of the grouped costs result.
    */
@@ -2694,17 +2694,6 @@ export type CostsResult = {
 };
 
 export type CreateAssistantRequest = {
-  /**
-   * The description of the assistant. The maximum length is 512 characters.
-   *
-   */
-  description?: string;
-  /**
-   * The system instructions that the assistant uses. The maximum length is 256,000 characters.
-   *
-   */
-  instructions?: string;
-  metadata?: Metadata;
   /**
    * ID of the model to use. You can use the [List models](https://platform.openai.com/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](https://platform.openai.com/docs/models) for descriptions of them.
    *
@@ -2715,13 +2704,22 @@ export type CreateAssistantRequest = {
    *
    */
   name?: string;
-  reasoning_effort?: ReasoningEffort;
-  response_format?: AssistantsApiResponseFormatOption;
   /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+   * The description of the assistant. The maximum length is 512 characters.
    *
    */
-  temperature?: number;
+  description?: string;
+  /**
+   * The system instructions that the assistant uses. The maximum length is 256,000 characters.
+   *
+   */
+  instructions?: string;
+  reasoning_effort?: ReasoningEffort;
+  /**
+   * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+   *
+   */
+  tools?: Array<AssistantTool>;
   /**
    * A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
    *
@@ -2746,6 +2744,11 @@ export type CreateAssistantRequest = {
        */
       vector_stores?: Array<{
         /**
+         * A list of [file](https://platform.openai.com/docs/api-reference/files) IDs to add to the vector store. There can be a maximum of 10000 files in a vector store.
+         *
+         */
+        file_ids?: Array<string>;
+        /**
          * The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
          */
         chunking_strategy?:
@@ -2756,7 +2759,15 @@ export type CreateAssistantRequest = {
               type: 'auto';
             }
           | {
+              /**
+               * Always `static`.
+               */
+              type: 'static';
               static: {
+                /**
+                 * The maximum number of tokens in each chunk. The default value is `800`. The minimum value is `100` and the maximum value is `4096`.
+                 */
+                max_chunk_size_tokens: number;
                 /**
                  * The number of tokens that overlap between chunks. The default value is `400`.
                  *
@@ -2764,30 +2775,18 @@ export type CreateAssistantRequest = {
                  *
                  */
                 chunk_overlap_tokens: number;
-                /**
-                 * The maximum number of tokens in each chunk. The default value is `800`. The minimum value is `100` and the maximum value is `4096`.
-                 */
-                max_chunk_size_tokens: number;
               };
-              /**
-               * Always `static`.
-               */
-              type: 'static';
             };
-        /**
-         * A list of [file](https://platform.openai.com/docs/api-reference/files) IDs to add to the vector store. There can be a maximum of 10000 files in a vector store.
-         *
-         */
-        file_ids?: Array<string>;
         metadata?: Metadata;
       }>;
     };
   };
+  metadata?: Metadata;
   /**
-   * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
    *
    */
-  tools?: Array<AssistantTool>;
+  temperature?: number;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
    *
@@ -2795,28 +2794,34 @@ export type CreateAssistantRequest = {
    *
    */
   top_p?: number;
+  response_format?: AssistantsApiResponseFormatOption;
 };
 
 export type CreateChatCompletionRequest = CreateModelResponseProperties & {
   /**
-   * Parameters for audio output. Required when audio output is requested with
-   * `modalities: ["audio"]`. [Learn more](https://platform.openai.com/docs/guides/audio).
+   * A list of messages comprising the conversation so far. Depending on the
+   * [model](https://platform.openai.com/docs/models) you use, different message types (modalities) are
+   * supported, like [text](https://platform.openai.com/docs/guides/text-generation),
+   * [images](https://platform.openai.com/docs/guides/vision), and [audio](https://platform.openai.com/docs/guides/audio).
    *
    */
-  audio?: {
-    /**
-     * Specifies the output audio format. Must be one of `wav`, `mp3`, `flac`,
-     * `opus`, or `pcm16`.
-     *
-     */
-    format: 'wav' | 'aac' | 'mp3' | 'flac' | 'opus' | 'pcm16';
-    /**
-     * The voice the model uses to respond. Supported voices are
-     * `alloy`, `ash`, `ballad`, `coral`, `echo`, `fable`, `nova`, `onyx`, `sage`, and `shimmer`.
-     *
-     */
-    voice: VoiceIdsShared;
-  };
+  messages: Array<ChatCompletionRequestMessage>;
+  /**
+   * Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI
+   * offers a wide range of models with different capabilities, performance
+   * characteristics, and price points. Refer to the [model guide](https://platform.openai.com/docs/models)
+   * to browse and compare available models.
+   *
+   */
+  model: ModelIdsShared;
+  modalities?: ResponseModalities;
+  verbosity?: Verbosity;
+  reasoning_effort?: ReasoningEffort;
+  /**
+   * An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and [reasoning tokens](https://platform.openai.com/docs/guides/reasoning).
+   *
+   */
+  max_completion_tokens?: number;
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on
    * their existing frequency in the text so far, decreasing the model's
@@ -2824,6 +2829,170 @@ export type CreateChatCompletionRequest = CreateModelResponseProperties & {
    *
    */
   frequency_penalty?: number;
+  /**
+   * Number between -2.0 and 2.0. Positive values penalize new tokens based on
+   * whether they appear in the text so far, increasing the model's likelihood
+   * to talk about new topics.
+   *
+   */
+  presence_penalty?: number;
+  /**
+   * Web search
+   *
+   * This tool searches the web for relevant results to use in a response.
+   * Learn more about the [web search tool](https://platform.openai.com/docs/guides/tools-web-search?api-mode=chat).
+   *
+   */
+  web_search_options?: {
+    /**
+     * Approximate location parameters for the search.
+     *
+     */
+    user_location?: {
+      /**
+       * The type of location approximation. Always `approximate`.
+       *
+       */
+      type: 'approximate';
+      approximate: WebSearchLocation;
+    };
+    search_context_size?: WebSearchContextSize;
+  };
+  /**
+   * An integer between 0 and 20 specifying the number of most likely tokens to
+   * return at each token position, each with an associated log probability.
+   * `logprobs` must be set to `true` if this parameter is used.
+   *
+   */
+  top_logprobs?: number;
+  /**
+   * An object specifying the format that the model must output.
+   *
+   * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+   * Structured Outputs which ensures the model will match your supplied JSON
+   * schema. Learn more in the [Structured Outputs
+   * guide](https://platform.openai.com/docs/guides/structured-outputs).
+   *
+   * Setting to `{ "type": "json_object" }` enables the older JSON mode, which
+   * ensures the message the model generates is valid JSON. Using `json_schema`
+   * is preferred for models that support it.
+   *
+   */
+  response_format?:
+    | ResponseFormatText
+    | ResponseFormatJsonSchema
+    | ResponseFormatJsonObject;
+  /**
+   * Parameters for audio output. Required when audio output is requested with
+   * `modalities: ["audio"]`. [Learn more](https://platform.openai.com/docs/guides/audio).
+   *
+   */
+  audio?: {
+    /**
+     * The voice the model uses to respond. Supported voices are
+     * `alloy`, `ash`, `ballad`, `coral`, `echo`, `fable`, `nova`, `onyx`, `sage`, and `shimmer`.
+     *
+     */
+    voice: VoiceIdsShared;
+    /**
+     * Specifies the output audio format. Must be one of `wav`, `mp3`, `flac`,
+     * `opus`, or `pcm16`.
+     *
+     */
+    format: 'wav' | 'aac' | 'mp3' | 'flac' | 'opus' | 'pcm16';
+  };
+  /**
+   * Whether or not to store the output of this chat completion request for
+   * use in our [model distillation](https://platform.openai.com/docs/guides/distillation) or
+   * [evals](https://platform.openai.com/docs/guides/evals) products.
+   *
+   * Supports text and image inputs. Note: image inputs over 8MB will be dropped.
+   *
+   */
+  store?: boolean;
+  /**
+   * If set to true, the model response data will be streamed to the client
+   * as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
+   * See the [Streaming section below](https://platform.openai.com/docs/api-reference/chat/streaming)
+   * for more information, along with the [streaming responses](https://platform.openai.com/docs/guides/streaming-responses)
+   * guide for more information on how to handle the streaming events.
+   *
+   */
+  stream?: boolean;
+  stop?: StopConfiguration;
+  /**
+   * Modify the likelihood of specified tokens appearing in the completion.
+   *
+   * Accepts a JSON object that maps tokens (specified by their token ID in the
+   * tokenizer) to an associated bias value from -100 to 100. Mathematically,
+   * the bias is added to the logits generated by the model prior to sampling.
+   * The exact effect will vary per model, but values between -1 and 1 should
+   * decrease or increase likelihood of selection; values like -100 or 100
+   * should result in a ban or exclusive selection of the relevant token.
+   *
+   */
+  logit_bias?: {
+    [key: string]: number;
+  };
+  /**
+   * Whether to return log probabilities of the output tokens or not. If true,
+   * returns the log probabilities of each output token returned in the
+   * `content` of `message`.
+   *
+   */
+  logprobs?: boolean;
+  /**
+   * The maximum number of [tokens](/tokenizer) that can be generated in the
+   * chat completion. This value can be used to control
+   * [costs](https://openai.com/api/pricing/) for text generated via API.
+   *
+   * This value is now deprecated in favor of `max_completion_tokens`, and is
+   * not compatible with [o-series models](https://platform.openai.com/docs/guides/reasoning).
+   *
+   *
+   * @deprecated
+   */
+  max_tokens?: number;
+  /**
+   * How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs.
+   */
+  n?: number;
+  /**
+   * Configuration for a [Predicted Output](https://platform.openai.com/docs/guides/predicted-outputs),
+   * which can greatly improve response times when large parts of the model
+   * response are known ahead of time. This is most common when you are
+   * regenerating a file with only minor changes to most of the content.
+   *
+   */
+  prediction?: {
+    type?: 'PredictionContent';
+  } & PredictionContent;
+  /**
+   * This feature is in Beta.
+   * If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
+   * Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
+   *
+   *
+   * @deprecated
+   */
+  seed?: number;
+  stream_options?: ChatCompletionStreamOptions;
+  /**
+   * A list of tools the model may call. You can provide either
+   * [custom tools](https://platform.openai.com/docs/guides/function-calling#custom-tools) or
+   * [function tools](https://platform.openai.com/docs/guides/function-calling).
+   *
+   */
+  tools?: Array<
+    | ({
+        type?: 'ChatCompletionTool';
+      } & ChatCompletionTool)
+    | ({
+        type?: 'CustomToolChatCompletions';
+      } & CustomToolChatCompletions)
+  >;
+  tool_choice?: ChatCompletionToolChoiceOption;
+  parallel_tool_calls?: ParallelToolCalls;
   /**
    * Deprecated in favor of `tool_choice`.
    *
@@ -2854,181 +3023,16 @@ export type CreateChatCompletionRequest = CreateModelResponseProperties & {
    * @deprecated
    */
   functions?: Array<ChatCompletionFunctions>;
-  /**
-   * Modify the likelihood of specified tokens appearing in the completion.
-   *
-   * Accepts a JSON object that maps tokens (specified by their token ID in the
-   * tokenizer) to an associated bias value from -100 to 100. Mathematically,
-   * the bias is added to the logits generated by the model prior to sampling.
-   * The exact effect will vary per model, but values between -1 and 1 should
-   * decrease or increase likelihood of selection; values like -100 or 100
-   * should result in a ban or exclusive selection of the relevant token.
-   *
-   */
-  logit_bias?: {
-    [key: string]: number;
-  };
-  /**
-   * Whether to return log probabilities of the output tokens or not. If true,
-   * returns the log probabilities of each output token returned in the
-   * `content` of `message`.
-   *
-   */
-  logprobs?: boolean;
-  /**
-   * An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and [reasoning tokens](https://platform.openai.com/docs/guides/reasoning).
-   *
-   */
-  max_completion_tokens?: number;
-  /**
-   * The maximum number of [tokens](/tokenizer) that can be generated in the
-   * chat completion. This value can be used to control
-   * [costs](https://openai.com/api/pricing/) for text generated via API.
-   *
-   * This value is now deprecated in favor of `max_completion_tokens`, and is
-   * not compatible with [o-series models](https://platform.openai.com/docs/guides/reasoning).
-   *
-   *
-   * @deprecated
-   */
-  max_tokens?: number;
-  /**
-   * A list of messages comprising the conversation so far. Depending on the
-   * [model](https://platform.openai.com/docs/models) you use, different message types (modalities) are
-   * supported, like [text](https://platform.openai.com/docs/guides/text-generation),
-   * [images](https://platform.openai.com/docs/guides/vision), and [audio](https://platform.openai.com/docs/guides/audio).
-   *
-   */
-  messages: Array<ChatCompletionRequestMessage>;
-  modalities?: ResponseModalities;
-  /**
-   * Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI
-   * offers a wide range of models with different capabilities, performance
-   * characteristics, and price points. Refer to the [model guide](https://platform.openai.com/docs/models)
-   * to browse and compare available models.
-   *
-   */
-  model: ModelIdsShared;
-  /**
-   * How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs.
-   */
-  n?: number;
-  parallel_tool_calls?: ParallelToolCalls;
-  /**
-   * Configuration for a [Predicted Output](https://platform.openai.com/docs/guides/predicted-outputs),
-   * which can greatly improve response times when large parts of the model
-   * response are known ahead of time. This is most common when you are
-   * regenerating a file with only minor changes to most of the content.
-   *
-   */
-  prediction?: {
-    type?: 'PredictionContent';
-  } & PredictionContent;
-  /**
-   * Number between -2.0 and 2.0. Positive values penalize new tokens based on
-   * whether they appear in the text so far, increasing the model's likelihood
-   * to talk about new topics.
-   *
-   */
-  presence_penalty?: number;
-  reasoning_effort?: ReasoningEffort;
-  /**
-   * An object specifying the format that the model must output.
-   *
-   * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
-   * Structured Outputs which ensures the model will match your supplied JSON
-   * schema. Learn more in the [Structured Outputs
-   * guide](https://platform.openai.com/docs/guides/structured-outputs).
-   *
-   * Setting to `{ "type": "json_object" }` enables the older JSON mode, which
-   * ensures the message the model generates is valid JSON. Using `json_schema`
-   * is preferred for models that support it.
-   *
-   */
-  response_format?:
-    | ResponseFormatText
-    | ResponseFormatJsonSchema
-    | ResponseFormatJsonObject;
-  /**
-   * This feature is in Beta.
-   * If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
-   * Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
-   *
-   *
-   * @deprecated
-   */
-  seed?: number;
-  stop?: StopConfiguration;
-  /**
-   * Whether or not to store the output of this chat completion request for
-   * use in our [model distillation](https://platform.openai.com/docs/guides/distillation) or
-   * [evals](https://platform.openai.com/docs/guides/evals) products.
-   *
-   * Supports text and image inputs. Note: image inputs over 8MB will be dropped.
-   *
-   */
-  store?: boolean;
-  /**
-   * If set to true, the model response data will be streamed to the client
-   * as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
-   * See the [Streaming section below](https://platform.openai.com/docs/api-reference/chat/streaming)
-   * for more information, along with the [streaming responses](https://platform.openai.com/docs/guides/streaming-responses)
-   * guide for more information on how to handle the streaming events.
-   *
-   */
-  stream?: boolean;
-  stream_options?: ChatCompletionStreamOptions;
-  tool_choice?: ChatCompletionToolChoiceOption;
-  /**
-   * A list of tools the model may call. You can provide either
-   * [custom tools](https://platform.openai.com/docs/guides/function-calling#custom-tools) or
-   * [function tools](https://platform.openai.com/docs/guides/function-calling).
-   *
-   */
-  tools?: Array<
-    | ({
-        type?: 'ChatCompletionTool';
-      } & ChatCompletionTool)
-    | ({
-        type?: 'CustomToolChatCompletions';
-      } & CustomToolChatCompletions)
-  >;
-  /**
-   * An integer between 0 and 20 specifying the number of most likely tokens to
-   * return at each token position, each with an associated log probability.
-   * `logprobs` must be set to `true` if this parameter is used.
-   *
-   */
-  top_logprobs?: number;
-  verbosity?: Verbosity;
-  /**
-   * Web search
-   *
-   * This tool searches the web for relevant results to use in a response.
-   * Learn more about the [web search tool](https://platform.openai.com/docs/guides/tools-web-search?api-mode=chat).
-   *
-   */
-  web_search_options?: {
-    search_context_size?: WebSearchContextSize;
-    /**
-     * Approximate location parameters for the search.
-     *
-     */
-    user_location?: {
-      approximate: WebSearchLocation;
-      /**
-       * The type of location approximation. Always `approximate`.
-       *
-       */
-      type: 'approximate';
-    };
-  };
 };
 
 /**
  * Represents a chat completion response returned by model, based on the provided input.
  */
 export type CreateChatCompletionResponse = {
+  /**
+   * A unique identifier for the chat completion.
+   */
+  id: string;
   /**
    * A list of chat completion choices. Can be more than one if `n` is greater than 1.
    */
@@ -3050,6 +3054,7 @@ export type CreateChatCompletionResponse = {
      * The index of the choice in the list of choices.
      */
     index: number;
+    message: ChatCompletionResponseMessage;
     /**
      * Log probability information for the choice.
      */
@@ -3063,24 +3068,15 @@ export type CreateChatCompletionResponse = {
        */
       refusal: Array<ChatCompletionTokenLogprob>;
     };
-    message: ChatCompletionResponseMessage;
   }>;
   /**
    * The Unix timestamp (in seconds) of when the chat completion was created.
    */
   created: number;
   /**
-   * A unique identifier for the chat completion.
-   */
-  id: string;
-  /**
    * The model used for the chat completion.
    */
   model: string;
-  /**
-   * The object type, which is always `chat.completion`.
-   */
-  object: 'chat.completion';
   service_tier?: ServiceTier;
   /**
    * This fingerprint represents the backend configuration that the model runs with.
@@ -3091,6 +3087,10 @@ export type CreateChatCompletionResponse = {
    * @deprecated
    */
   system_fingerprint?: string;
+  /**
+   * The object type, which is always `chat.completion`.
+   */
+  object: 'chat.completion';
   usage?: CompletionUsage;
 };
 
@@ -3102,12 +3102,29 @@ export type CreateChatCompletionResponse = {
  */
 export type CreateChatCompletionStreamResponse = {
   /**
+   * A unique identifier for the chat completion. Each chunk has the same ID.
+   */
+  id: string;
+  /**
    * A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
    * last chunk if you set `stream_options: {"include_usage": true}`.
    *
    */
   choices: Array<{
     delta: ChatCompletionStreamResponseDelta;
+    /**
+     * Log probability information for the choice.
+     */
+    logprobs?: {
+      /**
+       * A list of message content tokens with log probability information.
+       */
+      content: Array<ChatCompletionTokenLogprob>;
+      /**
+       * A list of message refusal tokens with log probability information.
+       */
+      refusal: Array<ChatCompletionTokenLogprob>;
+    };
     /**
      * The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
      * `length` if the maximum number of tokens specified in the request was reached,
@@ -3125,36 +3142,15 @@ export type CreateChatCompletionStreamResponse = {
      * The index of the choice in the list of choices.
      */
     index: number;
-    /**
-     * Log probability information for the choice.
-     */
-    logprobs?: {
-      /**
-       * A list of message content tokens with log probability information.
-       */
-      content: Array<ChatCompletionTokenLogprob>;
-      /**
-       * A list of message refusal tokens with log probability information.
-       */
-      refusal: Array<ChatCompletionTokenLogprob>;
-    };
   }>;
   /**
    * The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp.
    */
   created: number;
   /**
-   * A unique identifier for the chat completion. Each chunk has the same ID.
-   */
-  id: string;
-  /**
    * The model to generate the completion.
    */
   model: string;
-  /**
-   * The object type, which is always `chat.completion.chunk`.
-   */
-  object: 'chat.completion.chunk';
   service_tier?: ServiceTier;
   /**
    * This fingerprint represents the backend configuration that the model runs with.
@@ -3164,6 +3160,10 @@ export type CreateChatCompletionStreamResponse = {
    * @deprecated
    */
   system_fingerprint?: string;
+  /**
+   * The object type, which is always `chat.completion.chunk`.
+   */
+  object: 'chat.completion.chunk';
   /**
    * An optional field that will only be present when you set
    * `stream_options: {"include_usage": true}` in your request. When present, it
@@ -3179,6 +3179,18 @@ export type CreateChatCompletionStreamResponse = {
 };
 
 export type CreateCompletionRequest = {
+  /**
+   * ID of the model to use. You can use the [List models](https://platform.openai.com/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](https://platform.openai.com/docs/models) for descriptions of them.
+   *
+   */
+  model: string | 'gpt-3.5-turbo-instruct' | 'davinci-002' | 'babbage-002';
+  /**
+   * The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
+   *
+   * Note that <|endoftext|> is the document separator that the model sees during training, so if a prompt is not specified the model will generate as if from the beginning of a new document.
+   *
+   */
+  prompt: string | Array<string> | Array<number> | Array<Array<number>>;
   /**
    * Generates `best_of` completions server-side and returns the "best" (the one with the highest log probability per token). Results cannot be streamed.
    *
@@ -3226,11 +3238,6 @@ export type CreateCompletionRequest = {
    */
   max_tokens?: number;
   /**
-   * ID of the model to use. You can use the [List models](https://platform.openai.com/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](https://platform.openai.com/docs/models) for descriptions of them.
-   *
-   */
-  model: string | 'gpt-3.5-turbo-instruct' | 'davinci-002' | 'babbage-002';
-  /**
    * How many completions to generate for each prompt.
    *
    * **Note:** Because this parameter generates many completions, it can quickly consume your token quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`.
@@ -3244,13 +3251,6 @@ export type CreateCompletionRequest = {
    *
    */
   presence_penalty?: number;
-  /**
-   * The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
-   *
-   * Note that <|endoftext|> is the document separator that the model sees during training, so if a prompt is not specified the model will generate as if from the beginning of a new document.
-   *
-   */
-  prompt: string | Array<string> | Array<number> | Array<Array<number>>;
   /**
    * If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
    *
@@ -3299,6 +3299,10 @@ export type CreateCompletionRequest = {
  */
 export type CreateCompletionResponse = {
   /**
+   * A unique identifier for the completion.
+   */
+  id: string;
+  /**
    * The list of completion choices the model generated for the input prompt.
    */
   choices: Array<{
@@ -3325,17 +3329,9 @@ export type CreateCompletionResponse = {
    */
   created: number;
   /**
-   * A unique identifier for the completion.
-   */
-  id: string;
-  /**
    * The model used for completion.
    */
   model: string;
-  /**
-   * The object type, which is always "text_completion"
-   */
-  object: 'text_completion';
   /**
    * This fingerprint represents the backend configuration that the model runs with.
    *
@@ -3343,10 +3339,22 @@ export type CreateCompletionResponse = {
    *
    */
   system_fingerprint?: string;
+  /**
+   * The object type, which is always "text_completion"
+   */
+  object: 'text_completion';
   usage?: CompletionUsage;
 };
 
 export type CreateContainerBody = {
+  /**
+   * Name of the container to create.
+   */
+  name: string;
+  /**
+   * IDs of files to copy to the container.
+   */
+  file_ids?: Array<string>;
   /**
    * Container expiration time in seconds relative to the 'anchor' time.
    */
@@ -3357,38 +3365,21 @@ export type CreateContainerBody = {
     anchor: 'last_active_at';
     minutes: number;
   };
-  /**
-   * IDs of files to copy to the container.
-   */
-  file_ids?: Array<string>;
-  /**
-   * Name of the container to create.
-   */
-  name: string;
 };
 
 export type CreateContainerFileBody = {
+  /**
+   * Name of the file to create.
+   */
+  file_id?: string;
   /**
    * The File object (not file name) to be uploaded.
    *
    */
   file?: Blob | File;
-  /**
-   * Name of the file to create.
-   */
-  file_id?: string;
 };
 
 export type CreateEmbeddingRequest = {
-  /**
-   * The number of dimensions the resulting output embeddings should have. Only supported in `text-embedding-3` and later models.
-   *
-   */
-  dimensions?: number;
-  /**
-   * The format to return the embeddings in. Can be either `float` or [`base64`](https://pypi.org/project/pybase64/).
-   */
-  encoding_format?: 'float' | 'base64';
   /**
    * Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for all embedding models), cannot be an empty string, and any array must be 2048 dimensions or less. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens. In addition to the per-input token limit, all embedding  models enforce a maximum of 300,000 tokens summed across all inputs in a  single request.
    *
@@ -3403,6 +3394,15 @@ export type CreateEmbeddingRequest = {
     | 'text-embedding-ada-002'
     | 'text-embedding-3-small'
     | 'text-embedding-3-large';
+  /**
+   * The format to return the embeddings in. Can be either `float` or [`base64`](https://pypi.org/project/pybase64/).
+   */
+  encoding_format?: 'float' | 'base64';
+  /**
+   * The number of dimensions the resulting output embeddings should have. Only supported in `text-embedding-3` and later models.
+   *
+   */
+  dimensions?: number;
   /**
    * A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](https://platform.openai.com/docs/guides/safety-best-practices#end-user-ids).
    *
@@ -3446,10 +3446,18 @@ export type CreateEmbeddingResponse = {
  */
 export type CreateEvalCompletionsRunDataSource = {
   /**
+   * The type of run data source. Always `completions`.
+   */
+  type: 'completions';
+  /**
    * Used when sampling from a model. Dictates the structure of the messages passed into the model. Can either be a reference to a prebuilt trajectory (ie, `item.input_trajectory`), or a template with variable references to the `item` namespace.
    */
   input_messages?:
     | {
+        /**
+         * The type of input messages. Always `template`.
+         */
+        type: 'template';
         /**
          * A list of chat messages forming the prompt or context. May include variable references to the `item` namespace, ie {{item.name}}.
          */
@@ -3461,30 +3469,34 @@ export type CreateEvalCompletionsRunDataSource = {
               type?: 'EvalItem';
             } & EvalItem)
         >;
-        /**
-         * The type of input messages. Always `template`.
-         */
-        type: 'template';
       }
     | {
-        /**
-         * A reference to a variable in the `item` namespace. Ie, "item.input_trajectory"
-         */
-        item_reference: string;
         /**
          * The type of input messages. Always `item_reference`.
          */
         type: 'item_reference';
+        /**
+         * A reference to a variable in the `item` namespace. Ie, "item.input_trajectory"
+         */
+        item_reference: string;
       };
-  /**
-   * The name of the model to use for generating completions (e.g. "o3-mini").
-   */
-  model?: string;
   sampling_params?: {
+    /**
+     * A higher temperature increases randomness in the outputs.
+     */
+    temperature?: number;
     /**
      * The maximum number of tokens in the generated output.
      */
     max_completion_tokens?: number;
+    /**
+     * An alternative to temperature for nucleus sampling; 1.0 includes all tokens.
+     */
+    top_p?: number;
+    /**
+     * A seed value to initialize the randomness, during sampling.
+     */
+    seed?: number;
     /**
      * An object specifying the format that the model must output.
      *
@@ -3503,23 +3515,15 @@ export type CreateEvalCompletionsRunDataSource = {
       | ResponseFormatJsonSchema
       | ResponseFormatJsonObject;
     /**
-     * A seed value to initialize the randomness, during sampling.
-     */
-    seed?: number;
-    /**
-     * A higher temperature increases randomness in the outputs.
-     */
-    temperature?: number;
-    /**
      * A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. A max of 128 functions are supported.
      *
      */
     tools?: Array<ChatCompletionTool>;
-    /**
-     * An alternative to temperature for nucleus sampling; 1.0 includes all tokens.
-     */
-    top_p?: number;
   };
+  /**
+   * The name of the model to use for generating completions (e.g. "o3-mini").
+   */
+  model?: string;
   /**
    * Determines what populates the `item` namespace in this run's data source.
    */
@@ -3533,10 +3537,6 @@ export type CreateEvalCompletionsRunDataSource = {
     | ({
         type?: 'EvalStoredCompletionsSource';
       } & EvalStoredCompletionsSource);
-  /**
-   * The type of run data source. Always `completions`.
-   */
-  type: 'completions';
 };
 
 /**
@@ -3550,9 +3550,9 @@ export type CreateEvalCompletionsRunDataSource = {
  */
 export type CreateEvalCustomDataSourceConfig = {
   /**
-   * Whether the eval should expect you to populate the sample namespace (ie, by generating responses off of your data source)
+   * The type of data source. Always `custom`.
    */
-  include_sample_schema?: boolean;
+  type: 'custom';
   /**
    * The json schema for each row in the data source.
    */
@@ -3560,9 +3560,9 @@ export type CreateEvalCustomDataSourceConfig = {
     [key: string]: unknown;
   };
   /**
-   * The type of data source. Always `custom`.
+   * Whether the eval should expect you to populate the sample namespace (ie, by generating responses off of your data source)
    */
-  type: 'custom';
+  include_sample_schema?: boolean;
 };
 
 /**
@@ -3573,13 +3573,13 @@ export type CreateEvalCustomDataSourceConfig = {
 export type CreateEvalItem =
   | {
       /**
-       * The content of the message.
-       */
-      content: string;
-      /**
        * The role of the message (e.g. "system", "assistant", "user").
        */
       role: string;
+      /**
+       * The content of the message.
+       */
+      content: string;
     }
   | EvalItem;
 
@@ -3591,6 +3591,10 @@ export type CreateEvalItem =
  */
 export type CreateEvalJsonlRunDataSource = {
   /**
+   * The type of data source. Always `jsonl`.
+   */
+  type: 'jsonl';
+  /**
    * Determines what populates the `item` namespace in the data source.
    */
   source:
@@ -3600,10 +3604,6 @@ export type CreateEvalJsonlRunDataSource = {
     | ({
         type?: 'EvalJsonlFileIdSource';
       } & EvalJsonlFileIdSource);
-  /**
-   * The type of data source. Always `jsonl`.
-   */
-  type: 'jsonl';
 };
 
 /**
@@ -3615,6 +3615,18 @@ export type CreateEvalJsonlRunDataSource = {
  */
 export type CreateEvalLabelModelGrader = {
   /**
+   * The object type, which is always `label_model`.
+   */
+  type: 'label_model';
+  /**
+   * The name of the grader.
+   */
+  name: string;
+  /**
+   * The model to use for the evaluation. Must support structured outputs.
+   */
+  model: string;
+  /**
    * A list of chat messages forming the prompt or context. May include variable references to the `item` namespace, ie {{item.name}}.
    */
   input: Array<CreateEvalItem>;
@@ -3623,21 +3635,9 @@ export type CreateEvalLabelModelGrader = {
    */
   labels: Array<string>;
   /**
-   * The model to use for the evaluation. Must support structured outputs.
-   */
-  model: string;
-  /**
-   * The name of the grader.
-   */
-  name: string;
-  /**
    * The labels that indicate a passing result. Must be a subset of labels.
    */
   passing_labels: Array<string>;
-  /**
-   * The object type, which is always `label_model`.
-   */
-  type: 'label_model';
 };
 
 /**
@@ -3649,21 +3649,26 @@ export type CreateEvalLabelModelGrader = {
  */
 export type CreateEvalLogsDataSourceConfig = {
   /**
+   * The type of data source. Always `logs`.
+   */
+  type: 'logs';
+  /**
    * Metadata filters for the logs data source.
    */
   metadata?: {
     [key: string]: unknown;
   };
-  /**
-   * The type of data source. Always `logs`.
-   */
-  type: 'logs';
 };
 
 /**
  * CreateEvalRequest
  */
 export type CreateEvalRequest = {
+  /**
+   * The name of the evaluation.
+   */
+  name?: string;
+  metadata?: Metadata;
   /**
    * The configuration for the data source used for the evaluation runs. Dictates the schema of the data used in the evaluation.
    */
@@ -3677,11 +3682,6 @@ export type CreateEvalRequest = {
     | ({
         type?: 'CreateEvalStoredCompletionsDataSourceConfig';
       } & CreateEvalStoredCompletionsDataSourceConfig);
-  metadata?: Metadata;
-  /**
-   * The name of the evaluation.
-   */
-  name?: string;
   /**
    * A list of graders for all eval runs in this group. Graders can reference variables in the data source using double curly braces notation, like `{{item.variable_name}}`. To reference the model's output, use the `sample` namespace (ie, `{{sample.output_text}}`).
    */
@@ -3712,68 +3712,62 @@ export type CreateEvalRequest = {
  */
 export type CreateEvalResponsesRunDataSource = {
   /**
+   * The type of run data source. Always `responses`.
+   */
+  type: 'responses';
+  /**
    * Used when sampling from a model. Dictates the structure of the messages passed into the model. Can either be a reference to a prebuilt trajectory (ie, `item.input_trajectory`), or a template with variable references to the `item` namespace.
    */
   input_messages?:
     | {
+        /**
+         * The type of input messages. Always `template`.
+         */
+        type: 'template';
         /**
          * A list of chat messages forming the prompt or context. May include variable references to the `item` namespace, ie {{item.name}}.
          */
         template: Array<
           | {
               /**
-               * The content of the message.
-               */
-              content: string;
-              /**
                * The role of the message (e.g. "system", "assistant", "user").
                */
               role: string;
+              /**
+               * The content of the message.
+               */
+              content: string;
             }
           | EvalItem
         >;
-        /**
-         * The type of input messages. Always `template`.
-         */
-        type: 'template';
       }
     | {
-        /**
-         * A reference to a variable in the `item` namespace. Ie, "item.name"
-         */
-        item_reference: string;
         /**
          * The type of input messages. Always `item_reference`.
          */
         type: 'item_reference';
+        /**
+         * A reference to a variable in the `item` namespace. Ie, "item.name"
+         */
+        item_reference: string;
       };
-  /**
-   * The name of the model to use for generating completions (e.g. "o3-mini").
-   */
-  model?: string;
   sampling_params?: {
-    /**
-     * The maximum number of tokens in the generated output.
-     */
-    max_completion_tokens?: number;
-    /**
-     * A seed value to initialize the randomness, during sampling.
-     */
-    seed?: number;
     /**
      * A higher temperature increases randomness in the outputs.
      */
     temperature?: number;
     /**
-     * Configuration options for a text response from the model. Can be plain
-     * text or structured JSON data. Learn more:
-     * - [Text inputs and outputs](https://platform.openai.com/docs/guides/text)
-     * - [Structured Outputs](https://platform.openai.com/docs/guides/structured-outputs)
-     *
+     * The maximum number of tokens in the generated output.
      */
-    text?: {
-      format?: TextResponseFormatConfiguration;
-    };
+    max_completion_tokens?: number;
+    /**
+     * An alternative to temperature for nucleus sampling; 1.0 includes all tokens.
+     */
+    top_p?: number;
+    /**
+     * A seed value to initialize the randomness, during sampling.
+     */
+    seed?: number;
     /**
      * An array of tools the model may call while generating a response. You
      * can specify which tool to use by setting the `tool_choice` parameter.
@@ -3791,10 +3785,20 @@ export type CreateEvalResponsesRunDataSource = {
      */
     tools?: Array<Tool>;
     /**
-     * An alternative to temperature for nucleus sampling; 1.0 includes all tokens.
+     * Configuration options for a text response from the model. Can be plain
+     * text or structured JSON data. Learn more:
+     * - [Text inputs and outputs](https://platform.openai.com/docs/guides/text)
+     * - [Structured Outputs](https://platform.openai.com/docs/guides/structured-outputs)
+     *
      */
-    top_p?: number;
+    text?: {
+      format?: TextResponseFormatConfiguration;
+    };
   };
+  /**
+   * The name of the model to use for generating completions (e.g. "o3-mini").
+   */
+  model?: string;
   /**
    * Determines what populates the `item` namespace in this run's data source.
    */
@@ -3808,10 +3812,6 @@ export type CreateEvalResponsesRunDataSource = {
     | ({
         type?: 'EvalResponsesSource';
       } & EvalResponsesSource);
-  /**
-   * The type of run data source. Always `responses`.
-   */
-  type: 'responses';
 };
 
 /**
@@ -3819,17 +3819,17 @@ export type CreateEvalResponsesRunDataSource = {
  */
 export type CreateEvalRunRequest = {
   /**
+   * The name of the run.
+   */
+  name?: string;
+  metadata?: Metadata;
+  /**
    * Details about the run's data source.
    */
   data_source:
     | CreateEvalJsonlRunDataSource
     | CreateEvalCompletionsRunDataSource
     | CreateEvalResponsesRunDataSource;
-  metadata?: Metadata;
-  /**
-   * The name of the run.
-   */
-  name?: string;
 };
 
 /**
@@ -3842,25 +3842,25 @@ export type CreateEvalRunRequest = {
  */
 export type CreateEvalStoredCompletionsDataSourceConfig = {
   /**
+   * The type of data source. Always `stored_completions`.
+   */
+  type: 'stored_completions';
+  /**
    * Metadata filters for the stored completions data source.
    */
   metadata?: {
     [key: string]: unknown;
   };
-  /**
-   * The type of data source. Always `stored_completions`.
-   */
-  type: 'stored_completions';
 };
 
 export type CreateFileRequest = {
-  expires_after?: FileExpirationAfter;
   /**
    * The File object (not file name) to be uploaded.
    *
    */
   file: Blob | File;
   purpose: FilePurpose;
+  expires_after?: FileExpirationAfter;
 };
 
 export type CreateFineTuningCheckpointPermissionRequest = {
@@ -3871,6 +3871,30 @@ export type CreateFineTuningCheckpointPermissionRequest = {
 };
 
 export type CreateFineTuningJobRequest = {
+  /**
+   * The name of the model to fine-tune. You can select one of the
+   * [supported models](https://platform.openai.com/docs/guides/fine-tuning#which-models-can-be-fine-tuned).
+   *
+   */
+  model:
+    | string
+    | 'babbage-002'
+    | 'davinci-002'
+    | 'gpt-3.5-turbo'
+    | 'gpt-4o-mini';
+  /**
+   * The ID of an uploaded file that contains training data.
+   *
+   * See [upload file](https://platform.openai.com/docs/api-reference/files/create) for how to upload a file.
+   *
+   * Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
+   *
+   * The contents of the file should differ depending on if the model uses the [chat](https://platform.openai.com/docs/api-reference/fine-tuning/chat-input), [completions](https://platform.openai.com/docs/api-reference/fine-tuning/completions-input) format, or if the fine-tuning method uses the [preference](https://platform.openai.com/docs/api-reference/fine-tuning/preference-input) format.
+   *
+   * See the [fine-tuning guide](https://platform.openai.com/docs/guides/model-optimization) for more details.
+   *
+   */
+  training_file: string;
   /**
    * The hyperparameters used for the fine-tuning job.
    * This value is now deprecated in favor of `method`, and should be passed in under the `method` parameter.
@@ -3899,6 +3923,27 @@ export type CreateFineTuningJobRequest = {
     n_epochs?: 'auto' | number;
   };
   /**
+   * A string of up to 64 characters that will be added to your fine-tuned model name.
+   *
+   * For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-4o-mini:openai:custom-model-name:7p4lURel`.
+   *
+   */
+  suffix?: string;
+  /**
+   * The ID of an uploaded file that contains validation data.
+   *
+   * If you provide this file, the data is used to generate validation
+   * metrics periodically during fine-tuning. These metrics can be viewed in
+   * the fine-tuning results file.
+   * The same data should not be present in both train and validation files.
+   *
+   * Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
+   *
+   * See the [fine-tuning guide](https://platform.openai.com/docs/guides/model-optimization) for more details.
+   *
+   */
+  validation_file?: string;
+  /**
    * A list of integrations to enable for your fine-tuning job.
    */
   integrations?: Array<{
@@ -3915,21 +3960,21 @@ export type CreateFineTuningJobRequest = {
      */
     wandb: {
       /**
-       * The entity to use for the run. This allows you to set the team or username of the WandB user that you would
-       * like associated with the run. If not set, the default entity for the registered WandB API key is used.
+       * The name of the project that the new run will be created under.
        *
        */
-      entity?: string;
+      project: string;
       /**
        * A display name to set for the run. If not set, we will use the Job ID as the name.
        *
        */
       name?: string;
       /**
-       * The name of the project that the new run will be created under.
+       * The entity to use for the run. This allows you to set the team or username of the WandB user that you would
+       * like associated with the run. If not set, the default entity for the registered WandB API key is used.
        *
        */
-      project: string;
+      entity?: string;
       /**
        * A list of tags to be attached to the newly created run. These tags are passed through directly to WandB. Some
        * default tags are generated by OpenAI: "openai/finetune", "openai/{base-model}", "openai/{ftjob-abcdef}".
@@ -3938,73 +3983,17 @@ export type CreateFineTuningJobRequest = {
       tags?: Array<string>;
     };
   }>;
-  metadata?: Metadata;
-  method?: FineTuneMethod;
-  /**
-   * The name of the model to fine-tune. You can select one of the
-   * [supported models](https://platform.openai.com/docs/guides/fine-tuning#which-models-can-be-fine-tuned).
-   *
-   */
-  model:
-    | string
-    | 'babbage-002'
-    | 'davinci-002'
-    | 'gpt-3.5-turbo'
-    | 'gpt-4o-mini';
   /**
    * The seed controls the reproducibility of the job. Passing in the same seed and job parameters should produce the same results, but may differ in rare cases.
    * If a seed is not specified, one will be generated for you.
    *
    */
   seed?: number;
-  /**
-   * A string of up to 64 characters that will be added to your fine-tuned model name.
-   *
-   * For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-4o-mini:openai:custom-model-name:7p4lURel`.
-   *
-   */
-  suffix?: string;
-  /**
-   * The ID of an uploaded file that contains training data.
-   *
-   * See [upload file](https://platform.openai.com/docs/api-reference/files/create) for how to upload a file.
-   *
-   * Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
-   *
-   * The contents of the file should differ depending on if the model uses the [chat](https://platform.openai.com/docs/api-reference/fine-tuning/chat-input), [completions](https://platform.openai.com/docs/api-reference/fine-tuning/completions-input) format, or if the fine-tuning method uses the [preference](https://platform.openai.com/docs/api-reference/fine-tuning/preference-input) format.
-   *
-   * See the [fine-tuning guide](https://platform.openai.com/docs/guides/model-optimization) for more details.
-   *
-   */
-  training_file: string;
-  /**
-   * The ID of an uploaded file that contains validation data.
-   *
-   * If you provide this file, the data is used to generate validation
-   * metrics periodically during fine-tuning. These metrics can be viewed in
-   * the fine-tuning results file.
-   * The same data should not be present in both train and validation files.
-   *
-   * Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
-   *
-   * See the [fine-tuning guide](https://platform.openai.com/docs/guides/model-optimization) for more details.
-   *
-   */
-  validation_file?: string;
+  method?: FineTuneMethod;
+  metadata?: Metadata;
 };
 
 export type CreateImageEditRequest = {
-  /**
-   * Allows to set transparency for the background of the generated image(s).
-   * This parameter is only supported for `gpt-image-1`. Must be one of
-   * `transparent`, `opaque` or `auto` (default value). When `auto` is used, the
-   * model will automatically determine the best background for the image.
-   *
-   * If `transparent`, the output format needs to support transparency, so it
-   * should be set to either `png` (default value) or `webp`.
-   *
-   */
-  background?: 'transparent' | 'opaque' | 'auto';
   /**
    * The image(s) to edit. Must be a supported image file or an array of images.
    *
@@ -4016,71 +4005,14 @@ export type CreateImageEditRequest = {
    *
    */
   image: Blob | File | Array<Blob | File>;
-  input_fidelity?: ImageInputFidelity;
-  /**
-   * An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where `image` should be edited. If there are multiple images provided, the mask will be applied on the first image. Must be a valid PNG file, less than 4MB, and have the same dimensions as `image`.
-   */
-  mask?: Blob | File;
-  /**
-   * The model to use for image generation. Only `dall-e-2` and `gpt-image-1` are supported. Defaults to `dall-e-2` unless a parameter specific to `gpt-image-1` is used.
-   */
-  model?: string | 'dall-e-2' | 'gpt-image-1';
-  /**
-   * The number of images to generate. Must be between 1 and 10.
-   */
-  n?: number;
-  /**
-   * The compression level (0-100%) for the generated images. This parameter
-   * is only supported for `gpt-image-1` with the `webp` or `jpeg` output
-   * formats, and defaults to 100.
-   *
-   */
-  output_compression?: number;
-  /**
-   * The format in which the generated images are returned. This parameter is
-   * only supported for `gpt-image-1`. Must be one of `png`, `jpeg`, or `webp`.
-   * The default value is `png`.
-   *
-   */
-  output_format?: 'png' | 'jpeg' | 'webp';
-  partial_images?: PartialImages;
   /**
    * A text description of the desired image(s). The maximum length is 1000 characters for `dall-e-2`, and 32000 characters for `gpt-image-1`.
    */
   prompt: string;
   /**
-   * The quality of the image that will be generated. `high`, `medium` and `low` are only supported for `gpt-image-1`. `dall-e-2` only supports `standard` quality. Defaults to `auto`.
-   *
+   * An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where `image` should be edited. If there are multiple images provided, the mask will be applied on the first image. Must be a valid PNG file, less than 4MB, and have the same dimensions as `image`.
    */
-  quality?: 'standard' | 'low' | 'medium' | 'high' | 'auto';
-  /**
-   * The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs are only valid for 60 minutes after the image has been generated. This parameter is only supported for `dall-e-2`, as `gpt-image-1` will always return base64-encoded images.
-   */
-  response_format?: 'url' | 'b64_json';
-  /**
-   * The size of the generated images. Must be one of `1024x1024`, `1536x1024` (landscape), `1024x1536` (portrait), or `auto` (default value) for `gpt-image-1`, and one of `256x256`, `512x512`, or `1024x1024` for `dall-e-2`.
-   */
-  size?:
-    | '256x256'
-    | '512x512'
-    | '1024x1024'
-    | '1536x1024'
-    | '1024x1536'
-    | 'auto';
-  /**
-   * Edit the image in streaming mode. Defaults to `false`. See the
-   * [Image generation guide](https://platform.openai.com/docs/guides/image-generation) for more information.
-   *
-   */
-  stream?: boolean;
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](https://platform.openai.com/docs/guides/safety-best-practices#end-user-ids).
-   *
-   */
-  user?: string;
-};
-
-export type CreateImageRequest = {
+  mask?: Blob | File;
   /**
    * Allows to set transparency for the background of the generated image(s).
    * This parameter is only supported for `gpt-image-1`. Must be one of
@@ -4093,30 +4025,74 @@ export type CreateImageRequest = {
    */
   background?: 'transparent' | 'opaque' | 'auto';
   /**
-   * The model to use for image generation. One of `dall-e-2`, `dall-e-3`, or `gpt-image-1`. Defaults to `dall-e-2` unless a parameter specific to `gpt-image-1` is used.
+   * The model to use for image generation. Only `dall-e-2` and `gpt-image-1` are supported. Defaults to `dall-e-2` unless a parameter specific to `gpt-image-1` is used.
    */
-  model?: string | 'dall-e-2' | 'dall-e-3' | 'gpt-image-1';
+  model?: string | 'dall-e-2' | 'gpt-image-1';
   /**
-   * Control the content-moderation level for images generated by `gpt-image-1`. Must be either `low` for less restrictive filtering or `auto` (default value).
-   */
-  moderation?: 'low' | 'auto';
-  /**
-   * The number of images to generate. Must be between 1 and 10. For `dall-e-3`, only `n=1` is supported.
+   * The number of images to generate. Must be between 1 and 10.
    */
   n?: number;
   /**
-   * The compression level (0-100%) for the generated images. This parameter is only supported for `gpt-image-1` with the `webp` or `jpeg` output formats, and defaults to 100.
+   * The size of the generated images. Must be one of `1024x1024`, `1536x1024` (landscape), `1024x1536` (portrait), or `auto` (default value) for `gpt-image-1`, and one of `256x256`, `512x512`, or `1024x1024` for `dall-e-2`.
+   */
+  size?:
+    | '256x256'
+    | '512x512'
+    | '1024x1024'
+    | '1536x1024'
+    | '1024x1536'
+    | 'auto';
+  /**
+   * The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs are only valid for 60 minutes after the image has been generated. This parameter is only supported for `dall-e-2`, as `gpt-image-1` will always return base64-encoded images.
+   */
+  response_format?: 'url' | 'b64_json';
+  /**
+   * The format in which the generated images are returned. This parameter is
+   * only supported for `gpt-image-1`. Must be one of `png`, `jpeg`, or `webp`.
+   * The default value is `png`.
+   *
+   */
+  output_format?: 'png' | 'jpeg' | 'webp';
+  /**
+   * The compression level (0-100%) for the generated images. This parameter
+   * is only supported for `gpt-image-1` with the `webp` or `jpeg` output
+   * formats, and defaults to 100.
+   *
    */
   output_compression?: number;
   /**
-   * The format in which the generated images are returned. This parameter is only supported for `gpt-image-1`. Must be one of `png`, `jpeg`, or `webp`.
+   * A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](https://platform.openai.com/docs/guides/safety-best-practices#end-user-ids).
+   *
    */
-  output_format?: 'png' | 'jpeg' | 'webp';
+  user?: string;
+  input_fidelity?: ImageInputFidelity;
+  /**
+   * Edit the image in streaming mode. Defaults to `false`. See the
+   * [Image generation guide](https://platform.openai.com/docs/guides/image-generation) for more information.
+   *
+   */
+  stream?: boolean;
   partial_images?: PartialImages;
+  /**
+   * The quality of the image that will be generated. `high`, `medium` and `low` are only supported for `gpt-image-1`. `dall-e-2` only supports `standard` quality. Defaults to `auto`.
+   *
+   */
+  quality?: 'standard' | 'low' | 'medium' | 'high' | 'auto';
+};
+
+export type CreateImageRequest = {
   /**
    * A text description of the desired image(s). The maximum length is 32000 characters for `gpt-image-1`, 1000 characters for `dall-e-2` and 4000 characters for `dall-e-3`.
    */
   prompt: string;
+  /**
+   * The model to use for image generation. One of `dall-e-2`, `dall-e-3`, or `gpt-image-1`. Defaults to `dall-e-2` unless a parameter specific to `gpt-image-1` is used.
+   */
+  model?: string | 'dall-e-2' | 'dall-e-3' | 'gpt-image-1';
+  /**
+   * The number of images to generate. Must be between 1 and 10. For `dall-e-3`, only `n=1` is supported.
+   */
+  n?: number;
   /**
    * The quality of the image that will be generated.
    *
@@ -4132,6 +4108,22 @@ export type CreateImageRequest = {
    */
   response_format?: 'url' | 'b64_json';
   /**
+   * The format in which the generated images are returned. This parameter is only supported for `gpt-image-1`. Must be one of `png`, `jpeg`, or `webp`.
+   */
+  output_format?: 'png' | 'jpeg' | 'webp';
+  /**
+   * The compression level (0-100%) for the generated images. This parameter is only supported for `gpt-image-1` with the `webp` or `jpeg` output formats, and defaults to 100.
+   */
+  output_compression?: number;
+  /**
+   * Generate the image in streaming mode. Defaults to `false`. See the
+   * [Image generation guide](https://platform.openai.com/docs/guides/image-generation) for more information.
+   * This parameter is only supported for `gpt-image-1`.
+   *
+   */
+  stream?: boolean;
+  partial_images?: PartialImages;
+  /**
    * The size of the generated images. Must be one of `1024x1024`, `1536x1024` (landscape), `1024x1536` (portrait), or `auto` (default value) for `gpt-image-1`, one of `256x256`, `512x512`, or `1024x1024` for `dall-e-2`, and one of `1024x1024`, `1792x1024`, or `1024x1792` for `dall-e-3`.
    */
   size?:
@@ -4144,12 +4136,20 @@ export type CreateImageRequest = {
     | '1792x1024'
     | '1024x1792';
   /**
-   * Generate the image in streaming mode. Defaults to `false`. See the
-   * [Image generation guide](https://platform.openai.com/docs/guides/image-generation) for more information.
-   * This parameter is only supported for `gpt-image-1`.
+   * Control the content-moderation level for images generated by `gpt-image-1`. Must be either `low` for less restrictive filtering or `auto` (default value).
+   */
+  moderation?: 'low' | 'auto';
+  /**
+   * Allows to set transparency for the background of the generated image(s).
+   * This parameter is only supported for `gpt-image-1`. Must be one of
+   * `transparent`, `opaque` or `auto` (default value). When `auto` is used, the
+   * model will automatically determine the best background for the image.
+   *
+   * If `transparent`, the output format needs to support transparency, so it
+   * should be set to either `png` (default value) or `webp`.
    *
    */
-  stream?: boolean;
+  background?: 'transparent' | 'opaque' | 'auto';
   /**
    * The style of the generated images. This parameter is only supported for `dall-e-3`. Must be one of `vivid` or `natural`. Vivid causes the model to lean towards generating hyper-real and dramatic images. Natural causes the model to produce more natural, less hyper-real looking images.
    */
@@ -4191,6 +4191,26 @@ export type CreateImageVariationRequest = {
 
 export type CreateMessageRequest = {
   /**
+   * The role of the entity that is creating the message. Allowed values include:
+   * - `user`: Indicates the message is sent by an actual user and should be used in most cases to represent user-generated messages.
+   * - `assistant`: Indicates the message is generated by the assistant. Use this value to insert messages from the assistant into the conversation.
+   *
+   */
+  role: 'user' | 'assistant';
+  content:
+    | string
+    | Array<
+        | ({
+            type?: 'MessageContentImageFileObject';
+          } & MessageContentImageFileObject)
+        | ({
+            type?: 'MessageContentImageUrlObject';
+          } & MessageContentImageUrlObject)
+        | ({
+            type?: 'MessageRequestContentTextObject';
+          } & MessageRequestContentTextObject)
+      >;
+  /**
    * A list of files attached to the message, and the tools they should be added to.
    */
   attachments?: Array<{
@@ -4210,27 +4230,7 @@ export type CreateMessageRequest = {
         } & AssistantToolsFileSearchTypeOnly)
     >;
   }>;
-  content:
-    | string
-    | Array<
-        | ({
-            type?: 'MessageContentImageFileObject';
-          } & MessageContentImageFileObject)
-        | ({
-            type?: 'MessageContentImageUrlObject';
-          } & MessageContentImageUrlObject)
-        | ({
-            type?: 'MessageRequestContentTextObject';
-          } & MessageRequestContentTextObject)
-      >;
   metadata?: Metadata;
-  /**
-   * The role of the entity that is creating the message. Allowed values include:
-   * - `user`: Indicates the message is sent by an actual user and should be used in most cases to represent user-generated messages.
-   * - `assistant`: Indicates the message is generated by the assistant. Use this value to insert messages from the assistant into the conversation.
-   *
-   */
-  role: 'user' | 'assistant';
 };
 
 export type CreateModelResponseProperties = ModelResponseProperties & {
@@ -4290,17 +4290,13 @@ export type CreateModerationResponse = {
    */
   results: Array<{
     /**
+     * Whether any of the below categories are flagged.
+     */
+    flagged: boolean;
+    /**
      * A list of the categories, and whether they are flagged or not.
      */
     categories: {
-      /**
-       * Content that expresses, incites, or promotes harassing language towards any target.
-       */
-      harassment: boolean;
-      /**
-       * Harassment content that also includes violence or serious harm towards any target.
-       */
-      'harassment/threatening': boolean;
       /**
        * Content that expresses, incites, or promotes hate based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. Hateful content aimed at non-protected groups (e.g., chess players) is harassment.
        */
@@ -4309,6 +4305,14 @@ export type CreateModerationResponse = {
        * Hateful content that also includes violence or serious harm towards the targeted group based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste.
        */
       'hate/threatening': boolean;
+      /**
+       * Content that expresses, incites, or promotes harassing language towards any target.
+       */
+      harassment: boolean;
+      /**
+       * Harassment content that also includes violence or serious harm towards any target.
+       */
+      'harassment/threatening': boolean;
       /**
        * Content that includes instructions or advice that facilitate the planning or execution of wrongdoing, or that gives advice or instruction on how to commit illicit acts. For example, "how to shoplift" would fit this category.
        */
@@ -4322,13 +4326,13 @@ export type CreateModerationResponse = {
        */
       'self-harm': boolean;
       /**
-       * Content that encourages performing acts of self-harm, such as suicide, cutting, and eating disorders, or that gives instructions or advice on how to commit such acts.
-       */
-      'self-harm/instructions': boolean;
-      /**
        * Content where the speaker expresses that they are engaging or intend to engage in acts of self-harm, such as suicide, cutting, and eating disorders.
        */
       'self-harm/intent': boolean;
+      /**
+       * Content that encourages performing acts of self-harm, such as suicide, cutting, and eating disorders, or that gives instructions or advice on how to commit such acts.
+       */
+      'self-harm/instructions': boolean;
       /**
        * Content meant to arouse sexual excitement, such as the description of sexual activity, or that promotes sexual services (excluding sex education and wellness).
        */
@@ -4347,74 +4351,9 @@ export type CreateModerationResponse = {
       'violence/graphic': boolean;
     };
     /**
-     * A list of the categories along with the input type(s) that the score applies to.
-     */
-    category_applied_input_types: {
-      /**
-       * The applied input type(s) for the category 'harassment'.
-       */
-      harassment: Array<'text'>;
-      /**
-       * The applied input type(s) for the category 'harassment/threatening'.
-       */
-      'harassment/threatening': Array<'text'>;
-      /**
-       * The applied input type(s) for the category 'hate'.
-       */
-      hate: Array<'text'>;
-      /**
-       * The applied input type(s) for the category 'hate/threatening'.
-       */
-      'hate/threatening': Array<'text'>;
-      /**
-       * The applied input type(s) for the category 'illicit'.
-       */
-      illicit: Array<'text'>;
-      /**
-       * The applied input type(s) for the category 'illicit/violent'.
-       */
-      'illicit/violent': Array<'text'>;
-      /**
-       * The applied input type(s) for the category 'self-harm'.
-       */
-      'self-harm': Array<'text' | 'image'>;
-      /**
-       * The applied input type(s) for the category 'self-harm/instructions'.
-       */
-      'self-harm/instructions': Array<'text' | 'image'>;
-      /**
-       * The applied input type(s) for the category 'self-harm/intent'.
-       */
-      'self-harm/intent': Array<'text' | 'image'>;
-      /**
-       * The applied input type(s) for the category 'sexual'.
-       */
-      sexual: Array<'text' | 'image'>;
-      /**
-       * The applied input type(s) for the category 'sexual/minors'.
-       */
-      'sexual/minors': Array<'text'>;
-      /**
-       * The applied input type(s) for the category 'violence'.
-       */
-      violence: Array<'text' | 'image'>;
-      /**
-       * The applied input type(s) for the category 'violence/graphic'.
-       */
-      'violence/graphic': Array<'text' | 'image'>;
-    };
-    /**
      * A list of the categories along with their scores as predicted by model.
      */
     category_scores: {
-      /**
-       * The score for the category 'harassment'.
-       */
-      harassment: number;
-      /**
-       * The score for the category 'harassment/threatening'.
-       */
-      'harassment/threatening': number;
       /**
        * The score for the category 'hate'.
        */
@@ -4423,6 +4362,14 @@ export type CreateModerationResponse = {
        * The score for the category 'hate/threatening'.
        */
       'hate/threatening': number;
+      /**
+       * The score for the category 'harassment'.
+       */
+      harassment: number;
+      /**
+       * The score for the category 'harassment/threatening'.
+       */
+      'harassment/threatening': number;
       /**
        * The score for the category 'illicit'.
        */
@@ -4436,13 +4383,13 @@ export type CreateModerationResponse = {
        */
       'self-harm': number;
       /**
-       * The score for the category 'self-harm/instructions'.
-       */
-      'self-harm/instructions': number;
-      /**
        * The score for the category 'self-harm/intent'.
        */
       'self-harm/intent': number;
+      /**
+       * The score for the category 'self-harm/instructions'.
+       */
+      'self-harm/instructions': number;
       /**
        * The score for the category 'sexual'.
        */
@@ -4461,14 +4408,79 @@ export type CreateModerationResponse = {
       'violence/graphic': number;
     };
     /**
-     * Whether any of the below categories are flagged.
+     * A list of the categories along with the input type(s) that the score applies to.
      */
-    flagged: boolean;
+    category_applied_input_types: {
+      /**
+       * The applied input type(s) for the category 'hate'.
+       */
+      hate: Array<'text'>;
+      /**
+       * The applied input type(s) for the category 'hate/threatening'.
+       */
+      'hate/threatening': Array<'text'>;
+      /**
+       * The applied input type(s) for the category 'harassment'.
+       */
+      harassment: Array<'text'>;
+      /**
+       * The applied input type(s) for the category 'harassment/threatening'.
+       */
+      'harassment/threatening': Array<'text'>;
+      /**
+       * The applied input type(s) for the category 'illicit'.
+       */
+      illicit: Array<'text'>;
+      /**
+       * The applied input type(s) for the category 'illicit/violent'.
+       */
+      'illicit/violent': Array<'text'>;
+      /**
+       * The applied input type(s) for the category 'self-harm'.
+       */
+      'self-harm': Array<'text' | 'image'>;
+      /**
+       * The applied input type(s) for the category 'self-harm/intent'.
+       */
+      'self-harm/intent': Array<'text' | 'image'>;
+      /**
+       * The applied input type(s) for the category 'self-harm/instructions'.
+       */
+      'self-harm/instructions': Array<'text' | 'image'>;
+      /**
+       * The applied input type(s) for the category 'sexual'.
+       */
+      sexual: Array<'text' | 'image'>;
+      /**
+       * The applied input type(s) for the category 'sexual/minors'.
+       */
+      'sexual/minors': Array<'text'>;
+      /**
+       * The applied input type(s) for the category 'violence'.
+       */
+      violence: Array<'text' | 'image'>;
+      /**
+       * The applied input type(s) for the category 'violence/graphic'.
+       */
+      'violence/graphic': Array<'text' | 'image'>;
+    };
   }>;
 };
 
 export type CreateResponse = CreateModelResponseProperties &
   ResponseProperties & {
+    /**
+     * Text, image, or file inputs to the model, used to generate a response.
+     *
+     * Learn more:
+     * - [Text inputs and outputs](https://platform.openai.com/docs/guides/text)
+     * - [Image inputs](https://platform.openai.com/docs/guides/images)
+     * - [File inputs](https://platform.openai.com/docs/guides/pdf-files)
+     * - [Conversation state](https://platform.openai.com/docs/guides/conversation-state)
+     * - [Function calling](https://platform.openai.com/docs/guides/function-calling)
+     *
+     */
+    input?: string | Array<InputItem>;
     /**
      * Specify additional output data to include in the model response. Currently
      * supported values are:
@@ -4488,27 +4500,6 @@ export type CreateResponse = CreateModelResponseProperties &
      */
     include?: Array<Includable>;
     /**
-     * Text, image, or file inputs to the model, used to generate a response.
-     *
-     * Learn more:
-     * - [Text inputs and outputs](https://platform.openai.com/docs/guides/text)
-     * - [Image inputs](https://platform.openai.com/docs/guides/images)
-     * - [File inputs](https://platform.openai.com/docs/guides/pdf-files)
-     * - [Conversation state](https://platform.openai.com/docs/guides/conversation-state)
-     * - [Function calling](https://platform.openai.com/docs/guides/function-calling)
-     *
-     */
-    input?: string | Array<InputItem>;
-    /**
-     * A system (or developer) message inserted into the model's context.
-     *
-     * When using along with `previous_response_id`, the instructions from a previous
-     * response will not be carried over to the next response. This makes it simple
-     * to swap out system (or developer) messages in new responses.
-     *
-     */
-    instructions?: string;
-    /**
      * Whether to allow the model to run tool calls in parallel.
      *
      */
@@ -4519,6 +4510,15 @@ export type CreateResponse = CreateModelResponseProperties &
      *
      */
     store?: boolean;
+    /**
+     * A system (or developer) message inserted into the model's context.
+     *
+     * When using along with `previous_response_id`, the instructions from a previous
+     * response will not be carried over to the next response. This makes it simple
+     * to swap out system (or developer) messages in new responses.
+     *
+     */
+    instructions?: string;
     /**
      * If set to true, the model response data will be streamed to the client
      * as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
@@ -4532,6 +4532,19 @@ export type CreateResponse = CreateModelResponseProperties &
 
 export type CreateRunRequest = {
   /**
+   * The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) to use to execute this run.
+   */
+  assistant_id: string;
+  /**
+   * The ID of the [Model](https://platform.openai.com/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
+   */
+  model?: string | AssistantSupportedModels;
+  reasoning_effort?: ReasoningEffort;
+  /**
+   * Overrides the [instructions](https://platform.openai.com/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis.
+   */
+  instructions?: string;
+  /**
    * Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions.
    */
   additional_instructions?: string;
@@ -4540,46 +4553,15 @@ export type CreateRunRequest = {
    */
   additional_messages?: Array<CreateMessageRequest>;
   /**
-   * The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) to use to execute this run.
+   * Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
    */
-  assistant_id: string;
-  /**
-   * Overrides the [instructions](https://platform.openai.com/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis.
-   */
-  instructions?: string;
-  /**
-   * The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-   *
-   */
-  max_completion_tokens?: number;
-  /**
-   * The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-   *
-   */
-  max_prompt_tokens?: number;
+  tools?: Array<AssistantTool>;
   metadata?: Metadata;
-  /**
-   * The ID of the [Model](https://platform.openai.com/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
-   */
-  model?: string | AssistantSupportedModels;
-  parallel_tool_calls?: ParallelToolCalls;
-  reasoning_effort?: ReasoningEffort;
-  response_format?: AssistantsApiResponseFormatOption;
-  /**
-   * If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
-   *
-   */
-  stream?: boolean;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
    *
    */
   temperature?: number;
-  tool_choice?: AssistantsApiToolChoiceOption & unknown;
-  /**
-   * Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
-   */
-  tools?: Array<AssistantTool>;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
    *
@@ -4587,10 +4569,33 @@ export type CreateRunRequest = {
    *
    */
   top_p?: number;
+  /**
+   * If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
+   *
+   */
+  stream?: boolean;
+  /**
+   * The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+   *
+   */
+  max_prompt_tokens?: number;
+  /**
+   * The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+   *
+   */
+  max_completion_tokens?: number;
   truncation_strategy?: TruncationObject & unknown;
+  tool_choice?: AssistantsApiToolChoiceOption & unknown;
+  parallel_tool_calls?: ParallelToolCalls;
+  response_format?: AssistantsApiResponseFormatOption;
 };
 
 export type CreateSpeechRequest = {
+  /**
+   * One of the available [TTS models](https://platform.openai.com/docs/models#tts): `tts-1`, `tts-1-hd` or `gpt-4o-mini-tts`.
+   *
+   */
+  model: string | 'tts-1' | 'tts-1-hd' | 'gpt-4o-mini-tts';
   /**
    * The text to generate audio for. The maximum length is 4096 characters.
    */
@@ -4600,10 +4605,9 @@ export type CreateSpeechRequest = {
    */
   instructions?: string;
   /**
-   * One of the available [TTS models](https://platform.openai.com/docs/models#tts): `tts-1`, `tts-1-hd` or `gpt-4o-mini-tts`.
-   *
+   * The voice to use when generating the audio. Supported voices are `alloy`, `ash`, `ballad`, `coral`, `echo`, `fable`, `onyx`, `nova`, `sage`, `shimmer`, and `verse`. Previews of the voices are available in the [Text to speech guide](https://platform.openai.com/docs/guides/text-to-speech#voice-options).
    */
-  model: string | 'tts-1' | 'tts-1-hd' | 'gpt-4o-mini-tts';
+  voice: VoiceIdsShared;
   /**
    * The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`.
    */
@@ -4616,10 +4620,6 @@ export type CreateSpeechRequest = {
    * The format to stream the audio in. Supported formats are `sse` and `audio`. `sse` is not supported for `tts-1` or `tts-1-hd`.
    */
   stream_format?: 'sse' | 'audio';
-  /**
-   * The voice to use when generating the audio. Supported voices are `alloy`, `ash`, `ballad`, `coral`, `echo`, `fable`, `onyx`, `nova`, `sage`, `shimmer`, and `verse`. Previews of the voices are available in the [Text to speech guide](https://platform.openai.com/docs/guides/text-to-speech#voice-options).
-   */
-  voice: VoiceIdsShared;
 };
 
 export type CreateSpeechResponseStreamEvent =
@@ -4635,21 +4635,7 @@ export type CreateThreadAndRunRequest = {
    * The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) to use to execute this run.
    */
   assistant_id: string;
-  /**
-   * Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis.
-   */
-  instructions?: string;
-  /**
-   * The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-   *
-   */
-  max_completion_tokens?: number;
-  /**
-   * The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-   *
-   */
-  max_prompt_tokens?: number;
-  metadata?: Metadata;
+  thread?: CreateThreadRequest;
   /**
    * The ID of the [Model](https://platform.openai.com/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
    */
@@ -4693,20 +4679,14 @@ export type CreateThreadAndRunRequest = {
     | 'gpt-3.5-turbo-1106'
     | 'gpt-3.5-turbo-0125'
     | 'gpt-3.5-turbo-16k-0613';
-  parallel_tool_calls?: ParallelToolCalls;
-  response_format?: AssistantsApiResponseFormatOption;
   /**
-   * If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
-   *
+   * Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis.
    */
-  stream?: boolean;
+  instructions?: string;
   /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
-   *
+   * Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
    */
-  temperature?: number;
-  thread?: CreateThreadRequest;
-  tool_choice?: AssistantsApiToolChoiceOption & unknown;
+  tools?: Array<AssistantTool>;
   /**
    * A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
    *
@@ -4727,10 +4707,12 @@ export type CreateThreadAndRunRequest = {
       vector_store_ids?: Array<string>;
     };
   };
+  metadata?: Metadata;
   /**
-   * Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
+   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+   *
    */
-  tools?: Array<AssistantTool>;
+  temperature?: number;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
    *
@@ -4738,7 +4720,25 @@ export type CreateThreadAndRunRequest = {
    *
    */
   top_p?: number;
+  /**
+   * If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
+   *
+   */
+  stream?: boolean;
+  /**
+   * The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+   *
+   */
+  max_prompt_tokens?: number;
+  /**
+   * The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+   *
+   */
+  max_completion_tokens?: number;
   truncation_strategy?: TruncationObject & unknown;
+  tool_choice?: AssistantsApiToolChoiceOption & unknown;
+  parallel_tool_calls?: ParallelToolCalls;
+  response_format?: AssistantsApiResponseFormatOption;
 };
 
 /**
@@ -4751,7 +4751,6 @@ export type CreateThreadRequest = {
    * A list of [messages](https://platform.openai.com/docs/api-reference/messages) to start the thread with.
    */
   messages?: Array<CreateMessageRequest>;
-  metadata?: Metadata;
   /**
    * A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
    *
@@ -4776,6 +4775,11 @@ export type CreateThreadRequest = {
        */
       vector_stores?: Array<{
         /**
+         * A list of [file](https://platform.openai.com/docs/api-reference/files) IDs to add to the vector store. There can be a maximum of 10000 files in a vector store.
+         *
+         */
+        file_ids?: Array<string>;
+        /**
          * The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
          */
         chunking_strategy?:
@@ -4786,7 +4790,15 @@ export type CreateThreadRequest = {
               type: 'auto';
             }
           | {
+              /**
+               * Always `static`.
+               */
+              type: 'static';
               static: {
+                /**
+                 * The maximum number of tokens in each chunk. The default value is `800`. The minimum value is `100` and the maximum value is `4096`.
+                 */
+                max_chunk_size_tokens: number;
                 /**
                  * The number of tokens that overlap between chunks. The default value is `400`.
                  *
@@ -4794,59 +4806,42 @@ export type CreateThreadRequest = {
                  *
                  */
                 chunk_overlap_tokens: number;
-                /**
-                 * The maximum number of tokens in each chunk. The default value is `800`. The minimum value is `100` and the maximum value is `4096`.
-                 */
-                max_chunk_size_tokens: number;
               };
-              /**
-               * Always `static`.
-               */
-              type: 'static';
             };
-        /**
-         * A list of [file](https://platform.openai.com/docs/api-reference/files) IDs to add to the vector store. There can be a maximum of 10000 files in a vector store.
-         *
-         */
-        file_ids?: Array<string>;
         metadata?: Metadata;
       }>;
     };
   };
+  metadata?: Metadata;
 };
 
 export type CreateTranscriptionRequest = {
-  chunking_strategy?: TranscriptionChunkingStrategy;
   /**
    * The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.
    *
    */
   file: Blob | File;
   /**
-   * Additional information to include in the transcription response.
-   * `logprobs` will return the log probabilities of the tokens in the
-   * response to understand the model's confidence in the transcription.
-   * `logprobs` only works with response_format set to `json` and only with
-   * the models `gpt-4o-transcribe` and `gpt-4o-mini-transcribe`.
+   * ID of the model to use. The options are `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `whisper-1` (which is powered by our open source Whisper V2 model).
    *
    */
-  include?: Array<TranscriptionInclude>;
+  model: string | 'whisper-1' | 'gpt-4o-transcribe' | 'gpt-4o-mini-transcribe';
   /**
    * The language of the input audio. Supplying the input language in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format will improve accuracy and latency.
    *
    */
   language?: string;
   /**
-   * ID of the model to use. The options are `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `whisper-1` (which is powered by our open source Whisper V2 model).
-   *
-   */
-  model: string | 'whisper-1' | 'gpt-4o-transcribe' | 'gpt-4o-mini-transcribe';
-  /**
    * An optional text to guide the model's style or continue a previous audio segment. The [prompt](https://platform.openai.com/docs/guides/speech-to-text#prompting) should match the audio language.
    *
    */
   prompt?: string;
   response_format?: AudioResponseFormat;
+  /**
+   * The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.
+   *
+   */
+  temperature?: number;
   /**
    * If set to true, the model response data will be streamed to the client
    * as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
@@ -4857,16 +4852,21 @@ export type CreateTranscriptionRequest = {
    *
    */
   stream?: boolean;
-  /**
-   * The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.
-   *
-   */
-  temperature?: number;
+  chunking_strategy?: TranscriptionChunkingStrategy;
   /**
    * The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.
    *
    */
   timestamp_granularities?: Array<'word' | 'segment'>;
+  /**
+   * Additional information to include in the transcription response.
+   * `logprobs` will return the log probabilities of the tokens in the
+   * response to understand the model's confidence in the transcription.
+   * `logprobs` only works with response_format set to `json` and only with
+   * the models `gpt-4o-transcribe` and `gpt-4o-mini-transcribe`.
+   *
+   */
+  include?: Array<TranscriptionInclude>;
 };
 
 /**
@@ -4874,27 +4874,27 @@ export type CreateTranscriptionRequest = {
  */
 export type CreateTranscriptionResponseJson = {
   /**
+   * The transcribed text.
+   */
+  text: string;
+  /**
    * The log probabilities of the tokens in the transcription. Only returned with the models `gpt-4o-transcribe` and `gpt-4o-mini-transcribe` if `logprobs` is added to the `include` array.
    *
    */
   logprobs?: Array<{
     /**
-     * The bytes of the token.
+     * The token in the transcription.
      */
-    bytes?: Array<number>;
+    token?: string;
     /**
      * The log probability of the token.
      */
     logprob?: number;
     /**
-     * The token in the transcription.
+     * The bytes of the token.
      */
-    token?: string;
+    bytes?: Array<number>;
   }>;
-  /**
-   * The transcribed text.
-   */
-  text: string;
   /**
    * Token usage statistics for the request.
    */
@@ -4920,26 +4920,26 @@ export type CreateTranscriptionResponseStreamEvent =
  */
 export type CreateTranscriptionResponseVerboseJson = {
   /**
-   * The duration of the input audio.
-   */
-  duration: number;
-  /**
    * The language of the input audio.
    */
   language: string;
   /**
-   * Segments of the transcribed text and their corresponding details.
+   * The duration of the input audio.
    */
-  segments?: Array<TranscriptionSegment>;
+  duration: number;
   /**
    * The transcribed text.
    */
   text: string;
-  usage?: TranscriptTextUsageDuration;
   /**
    * Extracted words and their corresponding timestamps.
    */
   words?: Array<TranscriptionWord>;
+  /**
+   * Segments of the transcribed text and their corresponding details.
+   */
+  segments?: Array<TranscriptionSegment>;
+  usage?: TranscriptTextUsageDuration;
 };
 
 export type CreateTranslationRequest = {
@@ -4976,42 +4976,29 @@ export type CreateTranslationResponseJson = {
 
 export type CreateTranslationResponseVerboseJson = {
   /**
-   * The duration of the input audio.
-   */
-  duration: number;
-  /**
    * The language of the output translation (always `english`).
    */
   language: string;
   /**
-   * Segments of the translated text and their corresponding details.
+   * The duration of the input audio.
    */
-  segments?: Array<TranscriptionSegment>;
+  duration: number;
   /**
    * The translated text.
    */
   text: string;
+  /**
+   * Segments of the translated text and their corresponding details.
+   */
+  segments?: Array<TranscriptionSegment>;
 };
 
 export type CreateUploadRequest = {
-  /**
-   * The number of bytes in the file you are uploading.
-   *
-   */
-  bytes: number;
-  expires_after?: FileExpirationAfter;
   /**
    * The name of the file to upload.
    *
    */
   filename: string;
-  /**
-   * The MIME type of the file.
-   *
-   * This must fall within the supported MIME types for your file purpose. See the supported MIME types for assistants and vision.
-   *
-   */
-  mime_type: string;
   /**
    * The intended purpose of the uploaded file.
    *
@@ -5019,38 +5006,51 @@ export type CreateUploadRequest = {
    *
    */
   purpose: 'assistants' | 'batch' | 'fine-tune' | 'vision';
+  /**
+   * The number of bytes in the file you are uploading.
+   *
+   */
+  bytes: number;
+  /**
+   * The MIME type of the file.
+   *
+   * This must fall within the supported MIME types for your file purpose. See the supported MIME types for assistants and vision.
+   *
+   */
+  mime_type: string;
+  expires_after?: FileExpirationAfter;
 };
 
 export type CreateVectorStoreFileBatchRequest = {
-  attributes?: VectorStoreFileAttributes;
-  chunking_strategy?: ChunkingStrategyRequestParam;
   /**
    * A list of [File](https://platform.openai.com/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
    */
   file_ids: Array<string>;
+  chunking_strategy?: ChunkingStrategyRequestParam;
+  attributes?: VectorStoreFileAttributes;
 };
 
 export type CreateVectorStoreFileRequest = {
-  attributes?: VectorStoreFileAttributes;
-  chunking_strategy?: ChunkingStrategyRequestParam;
   /**
    * A [File](https://platform.openai.com/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files.
    */
   file_id: string;
+  chunking_strategy?: ChunkingStrategyRequestParam;
+  attributes?: VectorStoreFileAttributes;
 };
 
 export type CreateVectorStoreRequest = {
-  chunking_strategy?: ChunkingStrategyRequestParam;
-  expires_after?: VectorStoreExpirationAfter;
   /**
    * A list of [File](https://platform.openai.com/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
    */
   file_ids?: Array<string>;
-  metadata?: Metadata;
   /**
    * The name of the vector store.
    */
   name?: string;
+  expires_after?: VectorStoreExpirationAfter;
+  chunking_strategy?: ChunkingStrategyRequestParam;
+  metadata?: Metadata;
 };
 
 /**
@@ -5061,6 +5061,14 @@ export type CreateVectorStoreRequest = {
  *
  */
 export type CustomTool = {
+  /**
+   * The type of the custom tool. Always `custom`.
+   */
+  type: 'custom';
+  /**
+   * The name of the custom tool, used to identify it in tool calls.
+   */
+  name: string;
   /**
    * Optional description of the custom tool, used to provide more context.
    *
@@ -5079,6 +5087,10 @@ export type CustomTool = {
       }
     | {
         /**
+         * Grammar format. Always `grammar`.
+         */
+        type: 'grammar';
+        /**
          * The grammar definition.
          */
         definition: string;
@@ -5086,19 +5098,7 @@ export type CustomTool = {
          * The syntax of the grammar definition. One of `lark` or `regex`.
          */
         syntax: 'lark' | 'regex';
-        /**
-         * Grammar format. Always `grammar`.
-         */
-        type: 'grammar';
       };
-  /**
-   * The name of the custom tool, used to identify it in tool calls.
-   */
-  name: string;
-  /**
-   * The type of the custom tool. Always `custom`.
-   */
-  type: 'custom';
 };
 
 /**
@@ -5109,30 +5109,30 @@ export type CustomTool = {
  */
 export type CustomToolCall = {
   /**
-   * An identifier used to map this custom tool call to a tool call output.
+   * The type of the custom tool call. Always `custom_tool_call`.
    *
    */
-  call_id: string;
+  type: 'custom_tool_call';
   /**
    * The unique ID of the custom tool call in the OpenAI platform.
    *
    */
   id?: string;
   /**
-   * The input for the custom tool call generated by the model.
+   * An identifier used to map this custom tool call to a tool call output.
    *
    */
-  input: string;
+  call_id: string;
   /**
    * The name of the custom tool being called.
    *
    */
   name: string;
   /**
-   * The type of the custom tool call. Always `custom_tool_call`.
+   * The input for the custom tool call generated by the model.
    *
    */
-  type: 'custom_tool_call';
+  input: string;
 };
 
 /**
@@ -5143,25 +5143,25 @@ export type CustomToolCall = {
  */
 export type CustomToolCallOutput = {
   /**
-   * The call ID, used to map this custom tool call output to a custom tool call.
+   * The type of the custom tool call output. Always `custom_tool_call_output`.
    *
    */
-  call_id: string;
+  type: 'custom_tool_call_output';
   /**
    * The unique ID of the custom tool call output in the OpenAI platform.
    *
    */
   id?: string;
   /**
+   * The call ID, used to map this custom tool call output to a custom tool call.
+   *
+   */
+  call_id: string;
+  /**
    * The output from the custom tool call generated by your code.
    *
    */
   output: string;
-  /**
-   * The type of the custom tool call output. Always `custom_tool_call_output`.
-   *
-   */
-  type: 'custom_tool_call_output';
 };
 
 /**
@@ -5172,12 +5172,20 @@ export type CustomToolCallOutput = {
  */
 export type CustomToolChatCompletions = {
   /**
+   * The type of the custom tool. Always `custom`.
+   */
+  type: 'custom';
+  /**
    * Custom tool properties
    *
    * Properties of the custom tool.
    *
    */
   custom: {
+    /**
+     * The name of the custom tool, used to identify it in tool calls.
+     */
+    name: string;
     /**
      * Optional description of the custom tool, used to provide more context.
      *
@@ -5196,6 +5204,10 @@ export type CustomToolChatCompletions = {
         }
       | {
           /**
+           * Grammar format. Always `grammar`.
+           */
+          type: 'grammar';
+          /**
            * Grammar format
            *
            * Your chosen grammar.
@@ -5210,50 +5222,34 @@ export type CustomToolChatCompletions = {
              */
             syntax: 'lark' | 'regex';
           };
-          /**
-           * Grammar format. Always `grammar`.
-           */
-          type: 'grammar';
         };
-    /**
-     * The name of the custom tool, used to identify it in tool calls.
-     */
-    name: string;
   };
-  /**
-   * The type of the custom tool. Always `custom`.
-   */
-  type: 'custom';
 };
 
 export type DeleteAssistantResponse = {
-  deleted: boolean;
   id: string;
+  deleted: boolean;
   object: 'assistant.deleted';
 };
 
 export type DeleteCertificateResponse = {
   /**
-   * The ID of the certificate that was deleted.
-   */
-  id: string;
-  /**
    * The object type, must be `certificate.deleted`.
    */
   object: 'certificate.deleted';
+  /**
+   * The ID of the certificate that was deleted.
+   */
+  id: string;
 };
 
 export type DeleteFileResponse = {
-  deleted: boolean;
   id: string;
   object: 'file';
+  deleted: boolean;
 };
 
 export type DeleteFineTuningCheckpointPermissionResponse = {
-  /**
-   * Whether the fine-tuned model checkpoint permission was successfully deleted.
-   */
-  deleted: boolean;
   /**
    * The ID of the fine-tuned model checkpoint permission that was deleted.
    */
@@ -5262,35 +5258,39 @@ export type DeleteFineTuningCheckpointPermissionResponse = {
    * The object type, which is always "checkpoint.permission".
    */
   object: 'checkpoint.permission';
+  /**
+   * Whether the fine-tuned model checkpoint permission was successfully deleted.
+   */
+  deleted: boolean;
 };
 
 export type DeleteMessageResponse = {
-  deleted: boolean;
   id: string;
+  deleted: boolean;
   object: 'thread.message.deleted';
 };
 
 export type DeleteModelResponse = {
-  deleted: boolean;
   id: string;
+  deleted: boolean;
   object: string;
 };
 
 export type DeleteThreadResponse = {
-  deleted: boolean;
   id: string;
+  deleted: boolean;
   object: 'thread.deleted';
 };
 
 export type DeleteVectorStoreFileResponse = {
-  deleted: boolean;
   id: string;
+  deleted: boolean;
   object: 'vector_store.file.deleted';
 };
 
 export type DeleteVectorStoreResponse = {
-  deleted: boolean;
   id: string;
+  deleted: boolean;
   object: 'vector_store.deleted';
 };
 
@@ -5298,8 +5298,8 @@ export type DeleteVectorStoreResponse = {
  * Occurs when a stream ends.
  */
 export type DoneEvent = {
-  data: '[DONE]';
   event: 'done';
+  data: '[DONE]';
 };
 
 /**
@@ -5335,6 +5335,12 @@ export type DoubleClick = {
  */
 export type Drag = {
   /**
+   * Specifies the event type. For a drag action, this property is
+   * always set to `drag`.
+   *
+   */
+  type: 'drag';
+  /**
    * An array of coordinates representing the path of the drag action. Coordinates will appear as an array
    * of objects, eg
    * ```
@@ -5346,12 +5352,6 @@ export type Drag = {
    *
    */
   path: Array<Coordinate>;
-  /**
-   * Specifies the event type. For a drag action, this property is
-   * always set to `drag`.
-   *
-   */
-  type: 'drag';
 };
 
 /**
@@ -5366,17 +5366,17 @@ export type Drag = {
  */
 export type EasyInputMessage = {
   /**
-   * Text, image, or audio input to the model, used to generate a response.
-   * Can also contain previous assistant responses.
-   *
-   */
-  content: string | InputMessageContentList;
-  /**
    * The role of the message input. One of `user`, `assistant`, `system`, or
    * `developer`.
    *
    */
   role: 'user' | 'assistant' | 'system' | 'developer';
+  /**
+   * Text, image, or audio input to the model, used to generate a response.
+   * Can also contain previous assistant responses.
+   *
+   */
+  content: string | InputMessageContentList;
   /**
    * The type of the message input. Always `message`.
    *
@@ -5390,14 +5390,14 @@ export type EasyInputMessage = {
  */
 export type Embedding = {
   /**
+   * The index of the embedding in the list of embeddings.
+   */
+  index: number;
+  /**
    * The embedding vector, which is a list of floats. The length of vector depends on the model as listed in the [embedding guide](https://platform.openai.com/docs/guides/embeddings).
    *
    */
   embedding: Array<number>;
-  /**
-   * The index of the embedding in the list of embeddings.
-   */
-  index: number;
   /**
    * The object type, which is always "embedding".
    */
@@ -5415,8 +5415,8 @@ export type _Error = {
  * Occurs when an [error](https://platform.openai.com/docs/guides/error-codes#api-errors) occurs. This can happen due to an internal server error or a timeout.
  */
 export type ErrorEvent = {
-  data: _Error;
   event: 'error';
+  data: _Error;
 };
 
 export type ErrorResponse = {
@@ -5436,9 +5436,17 @@ export type ErrorResponse = {
  */
 export type Eval = {
   /**
-   * The Unix timestamp (in seconds) for when the eval was created.
+   * The object type.
    */
-  created_at: number;
+  object: 'eval';
+  /**
+   * Unique identifier for the evaluation.
+   */
+  id: string;
+  /**
+   * The name of the evaluation.
+   */
+  name: string;
   /**
    * Configuration of data sources used in runs of the evaluation.
    */
@@ -5453,19 +5461,6 @@ export type Eval = {
         type?: 'EvalStoredCompletionsDataSourceConfig';
       } & EvalStoredCompletionsDataSourceConfig);
   /**
-   * Unique identifier for the evaluation.
-   */
-  id: string;
-  metadata: Metadata;
-  /**
-   * The name of the evaluation.
-   */
-  name: string;
-  /**
-   * The object type.
-   */
-  object: 'eval';
-  /**
    * A list of testing criteria.
    */
   testing_criteria: Array<
@@ -5475,6 +5470,11 @@ export type Eval = {
     | EvalGraderPython
     | EvalGraderScoreModel
   >;
+  /**
+   * The Unix timestamp (in seconds) for when the eval was created.
+   */
+  created_at: number;
+  metadata: Metadata;
 };
 
 /**
@@ -5505,6 +5505,10 @@ export type EvalApiError = {
  */
 export type EvalCustomDataSourceConfig = {
   /**
+   * The type of data source. Always `custom`.
+   */
+  type: 'custom';
+  /**
    * The json schema for the run data source items.
    * Learn how to build JSON schemas [here](https://json-schema.org/).
    *
@@ -5512,10 +5516,6 @@ export type EvalCustomDataSourceConfig = {
   schema: {
     [key: string]: unknown;
   };
-  /**
-   * The type of data source. Always `custom`.
-   */
-  type: 'custom';
 };
 
 /**
@@ -5570,6 +5570,12 @@ export type EvalGraderTextSimilarity = GraderTextSimilarity & {
  */
 export type EvalItem = {
   /**
+   * The role of the message input. One of `user`, `assistant`, `system`, or
+   * `developer`.
+   *
+   */
+  role: 'user' | 'assistant' | 'system' | 'developer';
+  /**
    * Inputs to the model - can contain template strings.
    *
    */
@@ -5578,40 +5584,34 @@ export type EvalItem = {
     | InputTextContent
     | {
         /**
-         * The text output from the model.
-         *
-         */
-        text: string;
-        /**
          * The type of the output text. Always `output_text`.
          *
          */
         type: 'output_text';
+        /**
+         * The text output from the model.
+         *
+         */
+        text: string;
       }
     | {
         /**
-         * The detail level of the image to be sent to the model. One of `high`, `low`, or `auto`. Defaults to `auto`.
+         * The type of the image input. Always `input_image`.
          *
          */
-        detail?: string;
+        type: 'input_image';
         /**
          * The URL of the image input.
          *
          */
         image_url: string;
         /**
-         * The type of the image input. Always `input_image`.
+         * The detail level of the image to be sent to the model. One of `high`, `low`, or `auto`. Defaults to `auto`.
          *
          */
-        type: 'input_image';
+        detail?: string;
       }
     | Array<unknown>;
-  /**
-   * The role of the message input. One of `user`, `assistant`, `system`, or
-   * `developer`.
-   *
-   */
-  role: 'user' | 'assistant' | 'system' | 'developer';
   /**
    * The type of the message input. Always `message`.
    *
@@ -5624,6 +5624,10 @@ export type EvalItem = {
  */
 export type EvalJsonlFileContentSource = {
   /**
+   * The type of jsonl source. Always `file_content`.
+   */
+  type: 'file_content';
+  /**
    * The content of the jsonl file.
    */
   content: Array<{
@@ -5634,10 +5638,6 @@ export type EvalJsonlFileContentSource = {
       [key: string]: unknown;
     };
   }>;
-  /**
-   * The type of jsonl source. Always `file_content`.
-   */
-  type: 'file_content';
 };
 
 /**
@@ -5645,13 +5645,13 @@ export type EvalJsonlFileContentSource = {
  */
 export type EvalJsonlFileIdSource = {
   /**
-   * The identifier of the file.
-   */
-  id: string;
-  /**
    * The type of jsonl source. Always `file_id`.
    */
   type: 'file_id';
+  /**
+   * The identifier of the file.
+   */
+  id: string;
 };
 
 /**
@@ -5662,6 +5662,11 @@ export type EvalJsonlFileIdSource = {
  */
 export type EvalList = {
   /**
+   * The type of this object. It is always set to "list".
+   *
+   */
+  object: 'list';
+  /**
    * An array of eval objects.
    *
    */
@@ -5671,18 +5676,13 @@ export type EvalList = {
    */
   first_id: string;
   /**
-   * Indicates whether there are more evals available.
-   */
-  has_more: boolean;
-  /**
    * The identifier of the last eval in the data array.
    */
   last_id: string;
   /**
-   * The type of this object. It is always set to "list".
-   *
+   * Indicates whether there are more evals available.
    */
-  object: 'list';
+  has_more: boolean;
 };
 
 /**
@@ -5695,6 +5695,10 @@ export type EvalList = {
  *
  */
 export type EvalLogsDataSourceConfig = {
+  /**
+   * The type of data source. Always `logs`.
+   */
+  type: 'logs';
   metadata?: Metadata;
   /**
    * The json schema for the run data source items.
@@ -5704,10 +5708,6 @@ export type EvalLogsDataSourceConfig = {
   schema: {
     [key: string]: unknown;
   };
-  /**
-   * The type of data source. Always `logs`.
-   */
-  type: 'logs';
 };
 
 /**
@@ -5718,17 +5718,9 @@ export type EvalLogsDataSourceConfig = {
  */
 export type EvalResponsesSource = {
   /**
-   * Only include items created after this timestamp (inclusive). This is a query parameter used to select responses.
+   * The type of run data source. Always `responses`.
    */
-  created_after?: number;
-  /**
-   * Only include items created before this timestamp (inclusive). This is a query parameter used to select responses.
-   */
-  created_before?: number;
-  /**
-   * Optional string to search the 'instructions' field. This is a query parameter used to select responses.
-   */
-  instructions_search?: string;
+  type: 'responses';
   /**
    * Metadata filter for the responses. This is a query parameter used to select responses.
    */
@@ -5740,6 +5732,18 @@ export type EvalResponsesSource = {
    */
   model?: string;
   /**
+   * Optional string to search the 'instructions' field. This is a query parameter used to select responses.
+   */
+  instructions_search?: string;
+  /**
+   * Only include items created after this timestamp (inclusive). This is a query parameter used to select responses.
+   */
+  created_after?: number;
+  /**
+   * Only include items created before this timestamp (inclusive). This is a query parameter used to select responses.
+   */
+  created_before?: number;
+  /**
    * Optional reasoning effort parameter. This is a query parameter used to select responses.
    */
   reasoning_effort?: ReasoningEffort;
@@ -5748,21 +5752,17 @@ export type EvalResponsesSource = {
    */
   temperature?: number;
   /**
-   * List of tool names. This is a query parameter used to select responses.
-   */
-  tools?: Array<string>;
-  /**
    * Nucleus sampling parameter. This is a query parameter used to select responses.
    */
   top_p?: number;
   /**
-   * The type of run data source. Always `responses`.
-   */
-  type: 'responses';
-  /**
    * List of user identifiers. This is a query parameter used to select responses.
    */
   users?: Array<string>;
+  /**
+   * List of tool names. This is a query parameter used to select responses.
+   */
+  tools?: Array<string>;
 };
 
 /**
@@ -5773,9 +5773,104 @@ export type EvalResponsesSource = {
  */
 export type EvalRun = {
   /**
+   * The type of the object. Always "eval.run".
+   */
+  object: 'eval.run';
+  /**
+   * Unique identifier for the evaluation run.
+   */
+  id: string;
+  /**
+   * The identifier of the associated evaluation.
+   */
+  eval_id: string;
+  /**
+   * The status of the evaluation run.
+   */
+  status: string;
+  /**
+   * The model that is evaluated, if applicable.
+   */
+  model: string;
+  /**
+   * The name of the evaluation run.
+   */
+  name: string;
+  /**
    * Unix timestamp (in seconds) when the evaluation run was created.
    */
   created_at: number;
+  /**
+   * The URL to the rendered evaluation run report on the UI dashboard.
+   */
+  report_url: string;
+  /**
+   * Counters summarizing the outcomes of the evaluation run.
+   */
+  result_counts: {
+    /**
+     * Total number of executed output items.
+     */
+    total: number;
+    /**
+     * Number of output items that resulted in an error.
+     */
+    errored: number;
+    /**
+     * Number of output items that failed to pass the evaluation.
+     */
+    failed: number;
+    /**
+     * Number of output items that passed the evaluation.
+     */
+    passed: number;
+  };
+  /**
+   * Usage statistics for each model during the evaluation run.
+   */
+  per_model_usage: Array<{
+    /**
+     * The name of the model.
+     */
+    model_name: string;
+    /**
+     * The number of invocations.
+     */
+    invocation_count: number;
+    /**
+     * The number of prompt tokens used.
+     */
+    prompt_tokens: number;
+    /**
+     * The number of completion tokens generated.
+     */
+    completion_tokens: number;
+    /**
+     * The total number of tokens used.
+     */
+    total_tokens: number;
+    /**
+     * The number of tokens retrieved from cache.
+     */
+    cached_tokens: number;
+  }>;
+  /**
+   * Results per testing criteria applied during the evaluation run.
+   */
+  per_testing_criteria_results: Array<{
+    /**
+     * A description of the testing criteria.
+     */
+    testing_criteria: string;
+    /**
+     * Number of tests passed for this criteria.
+     */
+    passed: number;
+    /**
+     * Number of tests failed for this criteria.
+     */
+    failed: number;
+  }>;
   /**
    * Information about the run's data source.
    */
@@ -5789,103 +5884,8 @@ export type EvalRun = {
     | ({
         type?: 'CreateEvalResponsesRunDataSource';
       } & CreateEvalResponsesRunDataSource);
-  error: EvalApiError;
-  /**
-   * The identifier of the associated evaluation.
-   */
-  eval_id: string;
-  /**
-   * Unique identifier for the evaluation run.
-   */
-  id: string;
   metadata: Metadata;
-  /**
-   * The model that is evaluated, if applicable.
-   */
-  model: string;
-  /**
-   * The name of the evaluation run.
-   */
-  name: string;
-  /**
-   * The type of the object. Always "eval.run".
-   */
-  object: 'eval.run';
-  /**
-   * Usage statistics for each model during the evaluation run.
-   */
-  per_model_usage: Array<{
-    /**
-     * The number of tokens retrieved from cache.
-     */
-    cached_tokens: number;
-    /**
-     * The number of completion tokens generated.
-     */
-    completion_tokens: number;
-    /**
-     * The number of invocations.
-     */
-    invocation_count: number;
-    /**
-     * The name of the model.
-     */
-    model_name: string;
-    /**
-     * The number of prompt tokens used.
-     */
-    prompt_tokens: number;
-    /**
-     * The total number of tokens used.
-     */
-    total_tokens: number;
-  }>;
-  /**
-   * Results per testing criteria applied during the evaluation run.
-   */
-  per_testing_criteria_results: Array<{
-    /**
-     * Number of tests failed for this criteria.
-     */
-    failed: number;
-    /**
-     * Number of tests passed for this criteria.
-     */
-    passed: number;
-    /**
-     * A description of the testing criteria.
-     */
-    testing_criteria: string;
-  }>;
-  /**
-   * The URL to the rendered evaluation run report on the UI dashboard.
-   */
-  report_url: string;
-  /**
-   * Counters summarizing the outcomes of the evaluation run.
-   */
-  result_counts: {
-    /**
-     * Number of output items that resulted in an error.
-     */
-    errored: number;
-    /**
-     * Number of output items that failed to pass the evaluation.
-     */
-    failed: number;
-    /**
-     * Number of output items that passed the evaluation.
-     */
-    passed: number;
-    /**
-     * Total number of executed output items.
-     */
-    total: number;
-  };
-  /**
-   * The status of the evaluation run.
-   */
-  status: string;
+  error: EvalApiError;
 };
 
 /**
@@ -5896,6 +5896,11 @@ export type EvalRun = {
  */
 export type EvalRunList = {
   /**
+   * The type of this object. It is always set to "list".
+   *
+   */
+  object: 'list';
+  /**
    * An array of eval run objects.
    *
    */
@@ -5905,18 +5910,13 @@ export type EvalRunList = {
    */
   first_id: string;
   /**
-   * Indicates whether there are more evals available.
-   */
-  has_more: boolean;
-  /**
    * The identifier of the last eval run in the data array.
    */
   last_id: string;
   /**
-   * The type of this object. It is always set to "list".
-   *
+   * Indicates whether there are more evals available.
    */
-  object: 'list';
+  has_more: boolean;
 };
 
 /**
@@ -5927,9 +5927,33 @@ export type EvalRunList = {
  */
 export type EvalRunOutputItem = {
   /**
+   * The type of the object. Always "eval.run.output_item".
+   */
+  object: 'eval.run.output_item';
+  /**
+   * Unique identifier for the evaluation run output item.
+   */
+  id: string;
+  /**
+   * The identifier of the evaluation run associated with this output item.
+   */
+  run_id: string;
+  /**
+   * The identifier of the evaluation group.
+   */
+  eval_id: string;
+  /**
    * Unix timestamp (in seconds) when the evaluation run was created.
    */
   created_at: number;
+  /**
+   * The status of the evaluation run.
+   */
+  status: string;
+  /**
+   * The identifier for the data source item.
+   */
+  datasource_item_id: number;
   /**
    * Details of the input data source item.
    */
@@ -5937,94 +5961,57 @@ export type EvalRunOutputItem = {
     [key: string]: unknown;
   };
   /**
-   * The identifier for the data source item.
-   */
-  datasource_item_id: number;
-  /**
-   * The identifier of the evaluation group.
-   */
-  eval_id: string;
-  /**
-   * Unique identifier for the evaluation run output item.
-   */
-  id: string;
-  /**
-   * The type of the object. Always "eval.run.output_item".
-   */
-  object: 'eval.run.output_item';
-  /**
    * A list of results from the evaluation run.
    */
   results: Array<{
     [key: string]: unknown;
   }>;
   /**
-   * The identifier of the evaluation run associated with this output item.
-   */
-  run_id: string;
-  /**
    * A sample containing the input and output of the evaluation run.
    */
   sample: {
-    error: EvalApiError;
-    /**
-     * The reason why the sample generation was finished.
-     */
-    finish_reason: string;
     /**
      * An array of input messages.
      */
     input: Array<{
       /**
-       * The content of the message.
-       */
-      content: string;
-      /**
        * The role of the message sender (e.g., system, user, developer).
        */
       role: string;
+      /**
+       * The content of the message.
+       */
+      content: string;
     }>;
-    /**
-     * The maximum number of tokens allowed for completion.
-     */
-    max_completion_tokens: number;
-    /**
-     * The model used for generating the sample.
-     */
-    model: string;
     /**
      * An array of output messages.
      */
     output: Array<{
       /**
-       * The content of the message.
-       */
-      content?: string;
-      /**
        * The role of the message (e.g. "system", "assistant", "user").
        */
       role?: string;
+      /**
+       * The content of the message.
+       */
+      content?: string;
     }>;
     /**
-     * The seed used for generating the sample.
+     * The reason why the sample generation was finished.
      */
-    seed: number;
+    finish_reason: string;
     /**
-     * The sampling temperature used.
+     * The model used for generating the sample.
      */
-    temperature: number;
-    /**
-     * The top_p value used for sampling.
-     */
-    top_p: number;
+    model: string;
     /**
      * Token usage details for the sample.
      */
     usage: {
       /**
-       * The number of tokens retrieved from cache.
+       * The total number of tokens used.
        */
-      cached_tokens: number;
+      total_tokens: number;
       /**
        * The number of completion tokens generated.
        */
@@ -6034,15 +6021,28 @@ export type EvalRunOutputItem = {
        */
       prompt_tokens: number;
       /**
-       * The total number of tokens used.
+       * The number of tokens retrieved from cache.
        */
-      total_tokens: number;
+      cached_tokens: number;
     };
+    error: EvalApiError;
+    /**
+     * The sampling temperature used.
+     */
+    temperature: number;
+    /**
+     * The maximum number of tokens allowed for completion.
+     */
+    max_completion_tokens: number;
+    /**
+     * The top_p value used for sampling.
+     */
+    top_p: number;
+    /**
+     * The seed used for generating the sample.
+     */
+    seed: number;
   };
-  /**
-   * The status of the evaluation run.
-   */
-  status: string;
 };
 
 /**
@@ -6053,6 +6053,11 @@ export type EvalRunOutputItem = {
  */
 export type EvalRunOutputItemList = {
   /**
+   * The type of this object. It is always set to "list".
+   *
+   */
+  object: 'list';
+  /**
    * An array of eval run output item objects.
    *
    */
@@ -6062,18 +6067,13 @@ export type EvalRunOutputItemList = {
    */
   first_id: string;
   /**
-   * Indicates whether there are more eval run output items available.
-   */
-  has_more: boolean;
-  /**
    * The identifier of the last eval run output item in the data array.
    */
   last_id: string;
   /**
-   * The type of this object. It is always set to "list".
-   *
+   * Indicates whether there are more eval run output items available.
    */
-  object: 'list';
+  has_more: boolean;
 };
 
 /**
@@ -6085,6 +6085,10 @@ export type EvalRunOutputItemList = {
  * @deprecated
  */
 export type EvalStoredCompletionsDataSourceConfig = {
+  /**
+   * The type of data source. Always `stored_completions`.
+   */
+  type: 'stored_completions';
   metadata?: Metadata;
   /**
    * The json schema for the run data source items.
@@ -6094,10 +6098,6 @@ export type EvalStoredCompletionsDataSourceConfig = {
   schema: {
     [key: string]: unknown;
   };
-  /**
-   * The type of data source. Always `stored_completions`.
-   */
-  type: 'stored_completions';
 };
 
 /**
@@ -6107,6 +6107,15 @@ export type EvalStoredCompletionsDataSourceConfig = {
  *
  */
 export type EvalStoredCompletionsSource = {
+  /**
+   * The type of source. Always `stored_completions`.
+   */
+  type: 'stored_completions';
+  metadata?: Metadata;
+  /**
+   * An optional model to filter by (e.g., 'gpt-4o').
+   */
+  model?: string;
   /**
    * An optional Unix timestamp to filter items created after this time.
    */
@@ -6119,15 +6128,6 @@ export type EvalStoredCompletionsSource = {
    * An optional maximum number of items to return.
    */
   limit?: number;
-  metadata?: Metadata;
-  /**
-   * An optional model to filter by (e.g., 'gpt-4o').
-   */
-  model?: string;
-  /**
-   * The type of source. Always `stored_completions`.
-   */
-  type: 'stored_completions';
 };
 
 /**
@@ -6154,6 +6154,11 @@ export type FileExpirationAfter = {
  */
 export type FilePath = {
   /**
+   * The type of the file path. Always `file_path`.
+   *
+   */
+  type: 'file_path';
+  /**
    * The ID of the file.
    *
    */
@@ -6163,11 +6168,6 @@ export type FilePath = {
    *
    */
   index: number;
-  /**
-   * The type of the file path. Always `file_path`.
-   *
-   */
-  type: 'file_path';
 };
 
 /**
@@ -6214,6 +6214,17 @@ export type FileSearchToolCall = {
    */
   id: string;
   /**
+   * The type of the file search tool call. Always `file_search_call`.
+   *
+   */
+  type: 'file_search_call';
+  /**
+   * The status of the file search tool call. One of `in_progress`,
+   * `searching`, `incomplete` or `failed`,
+   *
+   */
+  status: 'in_progress' | 'searching' | 'completed' | 'incomplete' | 'failed';
+  /**
    * The queries used to search for files.
    *
    */
@@ -6223,39 +6234,28 @@ export type FileSearchToolCall = {
    *
    */
   results?: Array<{
-    attributes?: VectorStoreFileAttributes;
     /**
      * The unique ID of the file.
      *
      */
     file_id?: string;
     /**
+     * The text that was retrieved from the file.
+     *
+     */
+    text?: string;
+    /**
      * The name of the file.
      *
      */
     filename?: string;
+    attributes?: VectorStoreFileAttributes;
     /**
      * The relevance score of the file - a value between 0 and 1.
      *
      */
     score?: number;
-    /**
-     * The text that was retrieved from the file.
-     *
-     */
-    text?: string;
   }>;
-  /**
-   * The status of the file search tool call. One of `in_progress`,
-   * `searching`, `incomplete` or `failed`,
-   *
-   */
-  status: 'in_progress' | 'searching' | 'completed' | 'incomplete' | 'failed';
-  /**
-   * The type of the file search tool call. Always `file_search_call`.
-   *
-   */
-  type: 'file_search_call';
 };
 
 export type FineTuneChatCompletionRequestAssistantMessage = {
@@ -6272,12 +6272,6 @@ export type FineTuneChatCompletionRequestAssistantMessage = {
  *
  */
 export type FineTuneChatRequestInput = {
-  /**
-   * A list of functions the model may generate JSON inputs for.
-   *
-   * @deprecated
-   */
-  functions?: Array<ChatCompletionFunctions>;
   messages?: Array<
     | ChatCompletionRequestSystemMessage
     | ChatCompletionRequestUserMessage
@@ -6285,11 +6279,17 @@ export type FineTuneChatRequestInput = {
     | ChatCompletionRequestToolMessage
     | ChatCompletionRequestFunctionMessage
   >;
-  parallel_tool_calls?: ParallelToolCalls;
   /**
    * A list of tools the model may generate JSON inputs for.
    */
   tools?: Array<ChatCompletionTool>;
+  parallel_tool_calls?: ParallelToolCalls;
+  /**
+   * A list of functions the model may generate JSON inputs for.
+   *
+   * @deprecated
+   */
+  functions?: Array<ChatCompletionFunctions>;
 };
 
 /**
@@ -6297,15 +6297,15 @@ export type FineTuneChatRequestInput = {
  */
 export type FineTuneDpoHyperparameters = {
   /**
-   * Number of examples in each batch. A larger batch size means that model parameters are updated less frequently, but with lower variance.
-   *
-   */
-  batch_size?: 'auto' | number;
-  /**
    * The beta value for the DPO method. A higher beta value will increase the weight of the penalty between the policy and reference model.
    *
    */
   beta?: 'auto' | number;
+  /**
+   * Number of examples in each batch. A larger batch size means that model parameters are updated less frequently, but with lower variance.
+   *
+   */
+  batch_size?: 'auto' | number;
   /**
    * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid overfitting.
    *
@@ -6329,13 +6329,13 @@ export type FineTuneDpoMethod = {
  * The method used for fine-tuning.
  */
 export type FineTuneMethod = {
-  dpo?: FineTuneDpoMethod;
-  reinforcement?: FineTuneReinforcementMethod;
-  supervised?: FineTuneSupervisedMethod;
   /**
    * The type of method. Is either `supervised`, `dpo`, or `reinforcement`.
    */
   type: 'supervised' | 'dpo' | 'reinforcement';
+  supervised?: FineTuneSupervisedMethod;
+  dpo?: FineTuneDpoMethod;
+  reinforcement?: FineTuneReinforcementMethod;
 };
 
 /**
@@ -6353,20 +6353,20 @@ export type FineTunePreferenceRequestInput = {
       | ChatCompletionRequestToolMessage
       | ChatCompletionRequestFunctionMessage
     >;
-    parallel_tool_calls?: ParallelToolCalls;
     /**
      * A list of tools the model may generate JSON inputs for.
      */
     tools?: Array<ChatCompletionTool>;
+    parallel_tool_calls?: ParallelToolCalls;
   };
-  /**
-   * The non-preferred completion message for the output.
-   */
-  non_preferred_output?: Array<ChatCompletionRequestAssistantMessage>;
   /**
    * The preferred completion message for the output.
    */
   preferred_output?: Array<ChatCompletionRequestAssistantMessage>;
+  /**
+   * The non-preferred completion message for the output.
+   */
+  non_preferred_output?: Array<ChatCompletionRequestAssistantMessage>;
 };
 
 /**
@@ -6378,21 +6378,6 @@ export type FineTuneReinforcementHyperparameters = {
    *
    */
   batch_size?: 'auto' | number;
-  /**
-   * Multiplier on amount of compute used for exploring search space during training.
-   *
-   */
-  compute_multiplier?: 'auto' | number;
-  /**
-   * The number of training steps between evaluation runs.
-   *
-   */
-  eval_interval?: 'auto' | number;
-  /**
-   * Number of evaluation samples to generate per training step.
-   *
-   */
-  eval_samples?: 'auto' | number;
   /**
    * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid overfitting.
    *
@@ -6408,6 +6393,21 @@ export type FineTuneReinforcementHyperparameters = {
    *
    */
   reasoning_effort?: 'default' | 'low' | 'medium' | 'high';
+  /**
+   * Multiplier on amount of compute used for exploring search space during training.
+   *
+   */
+  compute_multiplier?: 'auto' | number;
+  /**
+   * The number of training steps between evaluation runs.
+   *
+   */
+  eval_interval?: 'auto' | number;
+  /**
+   * Number of evaluation samples to generate per training step.
+   *
+   */
+  eval_samples?: 'auto' | number;
 };
 
 /**
@@ -6482,21 +6482,21 @@ export type FineTuneSupervisedMethod = {
  */
 export type FineTuningCheckpointPermission = {
   /**
-   * The Unix timestamp (in seconds) for when the permission was created.
-   */
-  created_at: number;
-  /**
    * The permission identifier, which can be referenced in the API endpoints.
    */
   id: string;
   /**
-   * The object type, which is always "checkpoint.permission".
+   * The Unix timestamp (in seconds) for when the permission was created.
    */
-  object: 'checkpoint.permission';
+  created_at: number;
   /**
    * The project identifier that the permission is for.
    */
   project_id: string;
+  /**
+   * The object type, which is always "checkpoint.permission".
+   */
+  object: 'checkpoint.permission';
 };
 
 /**
@@ -6515,21 +6515,21 @@ export type FineTuningIntegration = {
    */
   wandb: {
     /**
-     * The entity to use for the run. This allows you to set the team or username of the WandB user that you would
-     * like associated with the run. If not set, the default entity for the registered WandB API key is used.
+     * The name of the project that the new run will be created under.
      *
      */
-    entity?: string;
+    project: string;
     /**
      * A display name to set for the run. If not set, we will use the Job ID as the name.
      *
      */
     name?: string;
     /**
-     * The name of the project that the new run will be created under.
+     * The entity to use for the run. This allows you to set the team or username of the WandB user that you would
+     * like associated with the run. If not set, the default entity for the registered WandB API key is used.
      *
      */
-    project: string;
+    entity?: string;
     /**
      * A list of tags to be attached to the newly created run. These tags are passed through directly to WandB. Some
      * default tags are generated by OpenAI: "openai/finetune", "openai/{base-model}", "openai/{ftjob-abcdef}".
@@ -6546,6 +6546,10 @@ export type FineTuningIntegration = {
  *
  */
 export type FineTuningJob = {
+  /**
+   * The object identifier, which can be referenced in the API endpoints.
+   */
+  id: string;
   /**
    * The Unix timestamp (in seconds) for when the fine-tuning job was created.
    */
@@ -6567,10 +6571,6 @@ export type FineTuningJob = {
      */
     param: string;
   };
-  /**
-   * The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value will be null if the fine-tuning job is not running.
-   */
-  estimated_finish?: number;
   /**
    * The name of the fine-tuned model that is being created. The value will be null if the fine-tuning job is still running.
    */
@@ -6603,20 +6603,6 @@ export type FineTuningJob = {
     n_epochs?: 'auto' | number;
   };
   /**
-   * The object identifier, which can be referenced in the API endpoints.
-   */
-  id: string;
-  /**
-   * A list of integrations to enable for this fine-tuning job.
-   */
-  integrations?: Array<
-    {
-      type?: 'FineTuningIntegration';
-    } & FineTuningIntegration
-  >;
-  metadata?: Metadata;
-  method?: FineTuneMethod;
-  /**
    * The base model that is being fine-tuned.
    */
   model: string;
@@ -6632,10 +6618,6 @@ export type FineTuningJob = {
    * The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the [Files API](https://platform.openai.com/docs/api-reference/files/retrieve-contents).
    */
   result_files: Array<string>;
-  /**
-   * The seed used for the fine-tuning job.
-   */
-  seed: number;
   /**
    * The current status of the fine-tuning job, which can be either `validating_files`, `queued`, `running`, `succeeded`, `failed`, or `cancelled`.
    */
@@ -6658,6 +6640,24 @@ export type FineTuningJob = {
    * The file ID used for validation. You can retrieve the validation results with the [Files API](https://platform.openai.com/docs/api-reference/files/retrieve-contents).
    */
   validation_file: string;
+  /**
+   * A list of integrations to enable for this fine-tuning job.
+   */
+  integrations?: Array<
+    {
+      type?: 'FineTuningIntegration';
+    } & FineTuningIntegration
+  >;
+  /**
+   * The seed used for the fine-tuning job.
+   */
+  seed: number;
+  /**
+   * The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value will be null if the fine-tuning job is not running.
+   */
+  estimated_finish?: number;
+  method?: FineTuneMethod;
+  metadata?: Metadata;
 };
 
 /**
@@ -6668,6 +6668,10 @@ export type FineTuningJob = {
  */
 export type FineTuningJobCheckpoint = {
   /**
+   * The checkpoint identifier, which can be referenced in the API endpoints.
+   */
+  id: string;
+  /**
    * The Unix timestamp (in seconds) for when the checkpoint was created.
    */
   created_at: number;
@@ -6676,33 +6680,29 @@ export type FineTuningJobCheckpoint = {
    */
   fine_tuned_model_checkpoint: string;
   /**
-   * The name of the fine-tuning job that this checkpoint was created from.
+   * The step number that the checkpoint was created at.
    */
-  fine_tuning_job_id: string;
-  /**
-   * The checkpoint identifier, which can be referenced in the API endpoints.
-   */
-  id: string;
+  step_number: number;
   /**
    * Metrics at the step number during the fine-tuning job.
    */
   metrics: {
-    full_valid_loss?: number;
-    full_valid_mean_token_accuracy?: number;
     step?: number;
     train_loss?: number;
     train_mean_token_accuracy?: number;
     valid_loss?: number;
     valid_mean_token_accuracy?: number;
+    full_valid_loss?: number;
+    full_valid_mean_token_accuracy?: number;
   };
+  /**
+   * The name of the fine-tuning job that this checkpoint was created from.
+   */
+  fine_tuning_job_id: string;
   /**
    * The object type, which is always "fine_tuning.job.checkpoint".
    */
   object: 'fine_tuning.job.checkpoint';
-  /**
-   * The step number that the checkpoint was created at.
-   */
-  step_number: number;
 };
 
 /**
@@ -6710,19 +6710,17 @@ export type FineTuningJobCheckpoint = {
  */
 export type FineTuningJobEvent = {
   /**
-   * The Unix timestamp (in seconds) for when the fine-tuning job was created.
+   * The object type, which is always "fine_tuning.job.event".
    */
-  created_at: number;
-  /**
-   * The data associated with the event.
-   */
-  data?: {
-    [key: string]: unknown;
-  };
+  object: 'fine_tuning.job.event';
   /**
    * The object identifier.
    */
   id: string;
+  /**
+   * The Unix timestamp (in seconds) for when the fine-tuning job was created.
+   */
+  created_at: number;
   /**
    * The log level of the event.
    */
@@ -6732,13 +6730,15 @@ export type FineTuningJobEvent = {
    */
   message: string;
   /**
-   * The object type, which is always "fine_tuning.job.event".
-   */
-  object: 'fine_tuning.job.event';
-  /**
    * The type of event.
    */
   type?: 'message' | 'metrics';
+  /**
+   * The data associated with the event.
+   */
+  data?: {
+    [key: string]: unknown;
+  };
 };
 
 export type FunctionObject = {
@@ -6775,36 +6775,36 @@ export type FunctionParameters = {
  */
 export type FunctionToolCall = {
   /**
-   * A JSON string of the arguments to pass to the function.
+   * The unique ID of the function tool call.
    *
    */
-  arguments: string;
+  id?: string;
+  /**
+   * The type of the function tool call. Always `function_call`.
+   *
+   */
+  type: 'function_call';
   /**
    * The unique ID of the function tool call generated by the model.
    *
    */
   call_id: string;
   /**
-   * The unique ID of the function tool call.
-   *
-   */
-  id?: string;
-  /**
    * The name of the function to run.
    *
    */
   name: string;
+  /**
+   * A JSON string of the arguments to pass to the function.
+   *
+   */
+  arguments: string;
   /**
    * The status of the item. One of `in_progress`, `completed`, or
    * `incomplete`. Populated when items are returned via API.
    *
    */
   status?: 'in_progress' | 'completed' | 'incomplete';
-  /**
-   * The type of the function tool call. Always `function_call`.
-   *
-   */
-  type: 'function_call';
 };
 
 /**
@@ -6815,16 +6815,21 @@ export type FunctionToolCall = {
  */
 export type FunctionToolCallOutput = {
   /**
-   * The unique ID of the function tool call generated by the model.
-   *
-   */
-  call_id: string;
-  /**
    * The unique ID of the function tool call output. Populated when this item
    * is returned via API.
    *
    */
   id?: string;
+  /**
+   * The type of the function tool call output. Always `function_call_output`.
+   *
+   */
+  type: 'function_call_output';
+  /**
+   * The unique ID of the function tool call generated by the model.
+   *
+   */
+  call_id: string;
   /**
    * A JSON string of the output of the function tool call.
    *
@@ -6836,11 +6841,6 @@ export type FunctionToolCallOutput = {
    *
    */
   status?: 'in_progress' | 'completed' | 'incomplete';
-  /**
-   * The type of the function tool call output. Always `function_call_output`.
-   *
-   */
-  type: 'function_call_output';
 };
 
 export type FunctionToolCallOutputResource = FunctionToolCallOutput & {
@@ -6867,27 +6867,27 @@ export type FunctionToolCallResource = FunctionToolCall & {
  *
  */
 export type GraderLabelModel = {
+  /**
+   * The object type, which is always `label_model`.
+   */
+  type: 'label_model';
+  /**
+   * The name of the grader.
+   */
+  name: string;
+  /**
+   * The model to use for the evaluation. Must support structured outputs.
+   */
+  model: string;
   input: Array<EvalItem>;
   /**
    * The labels to assign to each item in the evaluation.
    */
   labels: Array<string>;
   /**
-   * The model to use for the evaluation. Must support structured outputs.
-   */
-  model: string;
-  /**
-   * The name of the grader.
-   */
-  name: string;
-  /**
    * The labels that indicate a passing result. Must be a subset of labels.
    */
   passing_labels: Array<string>;
-  /**
-   * The object type, which is always `label_model`.
-   */
-  type: 'label_model';
 };
 
 /**
@@ -6897,9 +6897,13 @@ export type GraderLabelModel = {
  */
 export type GraderMulti = {
   /**
-   * A formula to calculate the output based on grader results.
+   * The object type, which is always `multi`.
    */
-  calculate_output: string;
+  type: 'multi';
+  /**
+   * The name of the grader.
+   */
+  name: string;
   graders:
     | GraderStringCheck
     | GraderTextSimilarity
@@ -6907,13 +6911,9 @@ export type GraderMulti = {
     | GraderScoreModel
     | GraderLabelModel;
   /**
-   * The name of the grader.
+   * A formula to calculate the output based on grader results.
    */
-  name: string;
-  /**
-   * The object type, which is always `multi`.
-   */
-  type: 'multi';
+  calculate_output: string;
 };
 
 /**
@@ -6924,9 +6924,9 @@ export type GraderMulti = {
  */
 export type GraderPython = {
   /**
-   * The image tag to use for the python script.
+   * The object type, which is always `python`.
    */
-  image_tag?: string;
+  type: 'python';
   /**
    * The name of the grader.
    */
@@ -6936,9 +6936,9 @@ export type GraderPython = {
    */
   source: string;
   /**
-   * The object type, which is always `python`.
+   * The image tag to use for the python script.
    */
-  type: 'python';
+  image_tag?: string;
 };
 
 /**
@@ -6949,21 +6949,17 @@ export type GraderPython = {
  */
 export type GraderScoreModel = {
   /**
-   * The input text. This may include template strings.
+   * The object type, which is always `score_model`.
    */
-  input: Array<EvalItem>;
-  /**
-   * The model to use for the evaluation.
-   */
-  model: string;
+  type: 'score_model';
   /**
    * The name of the grader.
    */
   name: string;
   /**
-   * The range of the score. Defaults to `[0, 1]`.
+   * The model to use for the evaluation.
    */
-  range?: Array<number>;
+  model: string;
   /**
    * The sampling parameters for the model.
    */
@@ -6971,9 +6967,13 @@ export type GraderScoreModel = {
     [key: string]: unknown;
   };
   /**
-   * The object type, which is always `score_model`.
+   * The input text. This may include template strings.
    */
-  type: 'score_model';
+  input: Array<EvalItem>;
+  /**
+   * The range of the score. Defaults to `[0, 1]`.
+   */
+  range?: Array<number>;
 };
 
 /**
@@ -6984,25 +6984,25 @@ export type GraderScoreModel = {
  */
 export type GraderStringCheck = {
   /**
-   * The input text. This may include template strings.
+   * The object type, which is always `string_check`.
    */
-  input: string;
+  type: 'string_check';
   /**
    * The name of the grader.
    */
   name: string;
   /**
-   * The string check operation to perform. One of `eq`, `ne`, `like`, or `ilike`.
+   * The input text. This may include template strings.
    */
-  operation: 'eq' | 'ne' | 'like' | 'ilike';
+  input: string;
   /**
    * The reference text. This may include template strings.
    */
   reference: string;
   /**
-   * The object type, which is always `string_check`.
+   * The string check operation to perform. One of `eq`, `ne`, `like`, or `ilike`.
    */
-  type: 'string_check';
+  operation: 'eq' | 'ne' | 'like' | 'ilike';
 };
 
 /**
@@ -7012,6 +7012,22 @@ export type GraderStringCheck = {
  *
  */
 export type GraderTextSimilarity = {
+  /**
+   * The type of grader.
+   */
+  type: 'text_similarity';
+  /**
+   * The name of the grader.
+   */
+  name: string;
+  /**
+   * The text being graded.
+   */
+  input: string;
+  /**
+   * The text being graded against.
+   */
+  reference: string;
   /**
    * The evaluation metric to use. One of `cosine`, `fuzzy_match`, `bleu`,
    * `gleu`, `meteor`, `rouge_1`, `rouge_2`, `rouge_3`, `rouge_4`, `rouge_5`,
@@ -7030,22 +7046,6 @@ export type GraderTextSimilarity = {
     | 'rouge_4'
     | 'rouge_5'
     | 'rouge_l';
-  /**
-   * The text being graded.
-   */
-  input: string;
-  /**
-   * The name of the grader.
-   */
-  name: string;
-  /**
-   * The text being graded against.
-   */
-  reference: string;
-  /**
-   * The type of grader.
-   */
-  type: 'text_similarity';
 };
 
 /**
@@ -7057,13 +7057,13 @@ export type Image = {
    */
   b64_json?: string;
   /**
-   * For `dall-e-3` only, the revised prompt that was used to generate the image.
-   */
-  revised_prompt?: string;
-  /**
    * When using `dall-e-2` or `dall-e-3`, the URL of the generated image if `response_format` is set to `url` (default value). Unsupported for `gpt-image-1`.
    */
   url?: string;
+  /**
+   * For `dall-e-3` only, the revised prompt that was used to generate the image.
+   */
+  revised_prompt?: string;
 };
 
 /**
@@ -7072,40 +7072,40 @@ export type Image = {
  */
 export type ImageEditCompletedEvent = {
   /**
+   * The type of the event. Always `image_edit.completed`.
+   *
+   */
+  type: 'image_edit.completed';
+  /**
    * Base64-encoded final edited image data, suitable for rendering as an image.
    *
    */
   b64_json: string;
-  /**
-   * The background setting for the edited image.
-   *
-   */
-  background: 'transparent' | 'opaque' | 'auto';
   /**
    * The Unix timestamp when the event was created.
    *
    */
   created_at: number;
   /**
-   * The output format for the edited image.
+   * The size of the edited image.
    *
    */
-  output_format: 'png' | 'webp' | 'jpeg';
+  size: '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
   /**
    * The quality setting for the edited image.
    *
    */
   quality: 'low' | 'medium' | 'high' | 'auto';
   /**
-   * The size of the edited image.
+   * The background setting for the edited image.
    *
    */
-  size: '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
+  background: 'transparent' | 'opaque' | 'auto';
   /**
-   * The type of the event. Always `image_edit.completed`.
+   * The output format for the edited image.
    *
    */
-  type: 'image_edit.completed';
+  output_format: 'png' | 'webp' | 'jpeg';
   usage: ImagesUsage;
 };
 
@@ -7115,20 +7115,35 @@ export type ImageEditCompletedEvent = {
  */
 export type ImageEditPartialImageEvent = {
   /**
+   * The type of the event. Always `image_edit.partial_image`.
+   *
+   */
+  type: 'image_edit.partial_image';
+  /**
    * Base64-encoded partial image data, suitable for rendering as an image.
    *
    */
   b64_json: string;
   /**
-   * The background setting for the requested edited image.
-   *
-   */
-  background: 'transparent' | 'opaque' | 'auto';
-  /**
    * The Unix timestamp when the event was created.
    *
    */
   created_at: number;
+  /**
+   * The size of the requested edited image.
+   *
+   */
+  size: '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
+  /**
+   * The quality setting for the requested edited image.
+   *
+   */
+  quality: 'low' | 'medium' | 'high' | 'auto';
+  /**
+   * The background setting for the requested edited image.
+   *
+   */
+  background: 'transparent' | 'opaque' | 'auto';
   /**
    * The output format for the requested edited image.
    *
@@ -7139,21 +7154,6 @@ export type ImageEditPartialImageEvent = {
    *
    */
   partial_image_index: number;
-  /**
-   * The quality setting for the requested edited image.
-   *
-   */
-  quality: 'low' | 'medium' | 'high' | 'auto';
-  /**
-   * The size of the requested edited image.
-   *
-   */
-  size: '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
-  /**
-   * The type of the event. Always `image_edit.partial_image`.
-   *
-   */
-  type: 'image_edit.partial_image';
 };
 
 export type ImageEditStreamEvent =
@@ -7170,40 +7170,40 @@ export type ImageEditStreamEvent =
  */
 export type ImageGenCompletedEvent = {
   /**
+   * The type of the event. Always `image_generation.completed`.
+   *
+   */
+  type: 'image_generation.completed';
+  /**
    * Base64-encoded image data, suitable for rendering as an image.
    *
    */
   b64_json: string;
-  /**
-   * The background setting for the generated image.
-   *
-   */
-  background: 'transparent' | 'opaque' | 'auto';
   /**
    * The Unix timestamp when the event was created.
    *
    */
   created_at: number;
   /**
-   * The output format for the generated image.
+   * The size of the generated image.
    *
    */
-  output_format: 'png' | 'webp' | 'jpeg';
+  size: '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
   /**
    * The quality setting for the generated image.
    *
    */
   quality: 'low' | 'medium' | 'high' | 'auto';
   /**
-   * The size of the generated image.
+   * The background setting for the generated image.
    *
    */
-  size: '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
+  background: 'transparent' | 'opaque' | 'auto';
   /**
-   * The type of the event. Always `image_generation.completed`.
+   * The output format for the generated image.
    *
    */
-  type: 'image_generation.completed';
+  output_format: 'png' | 'webp' | 'jpeg';
   usage: ImagesUsage;
 };
 
@@ -7213,20 +7213,35 @@ export type ImageGenCompletedEvent = {
  */
 export type ImageGenPartialImageEvent = {
   /**
+   * The type of the event. Always `image_generation.partial_image`.
+   *
+   */
+  type: 'image_generation.partial_image';
+  /**
    * Base64-encoded partial image data, suitable for rendering as an image.
    *
    */
   b64_json: string;
   /**
-   * The background setting for the requested image.
-   *
-   */
-  background: 'transparent' | 'opaque' | 'auto';
-  /**
    * The Unix timestamp when the event was created.
    *
    */
   created_at: number;
+  /**
+   * The size of the requested image.
+   *
+   */
+  size: '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
+  /**
+   * The quality setting for the requested image.
+   *
+   */
+  quality: 'low' | 'medium' | 'high' | 'auto';
+  /**
+   * The background setting for the requested image.
+   *
+   */
+  background: 'transparent' | 'opaque' | 'auto';
   /**
    * The output format for the requested image.
    *
@@ -7237,21 +7252,6 @@ export type ImageGenPartialImageEvent = {
    *
    */
   partial_image_index: number;
-  /**
-   * The quality setting for the requested image.
-   *
-   */
-  quality: 'low' | 'medium' | 'high' | 'auto';
-  /**
-   * The size of the requested image.
-   *
-   */
-  size: '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
-  /**
-   * The type of the event. Always `image_generation.partial_image`.
-   *
-   */
-  type: 'image_generation.partial_image';
 };
 
 export type ImageGenStreamEvent =
@@ -7270,55 +7270,15 @@ export type ImageGenStreamEvent =
  */
 export type ImageGenTool = {
   /**
-   * Background type for the generated image. One of `transparent`,
-   * `opaque`, or `auto`. Default: `auto`.
+   * The type of the image generation tool. Always `image_generation`.
    *
    */
-  background?: 'transparent' | 'opaque' | 'auto';
-  input_fidelity?: ImageInputFidelity;
-  /**
-   * Optional mask for inpainting. Contains `image_url`
-   * (string, optional) and `file_id` (string, optional).
-   *
-   */
-  input_image_mask?: {
-    /**
-     * File ID for the mask image.
-     *
-     */
-    file_id?: string;
-    /**
-     * Base64-encoded mask image.
-     *
-     */
-    image_url?: string;
-  };
+  type: 'image_generation';
   /**
    * The image generation model to use. Default: `gpt-image-1`.
    *
    */
   model?: 'gpt-image-1';
-  /**
-   * Moderation level for the generated image. Default: `auto`.
-   *
-   */
-  moderation?: 'auto' | 'low';
-  /**
-   * Compression level for the output image. Default: 100.
-   *
-   */
-  output_compression?: number;
-  /**
-   * The output format of the generated image. One of `png`, `webp`, or
-   * `jpeg`. Default: `png`.
-   *
-   */
-  output_format?: 'png' | 'webp' | 'jpeg';
-  /**
-   * Number of partial images to generate in streaming mode, from 0 (default value) to 3.
-   *
-   */
-  partial_images?: number;
   /**
    * The quality of the generated image. One of `low`, `medium`, `high`,
    * or `auto`. Default: `auto`.
@@ -7332,10 +7292,50 @@ export type ImageGenTool = {
    */
   size?: '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
   /**
-   * The type of the image generation tool. Always `image_generation`.
+   * The output format of the generated image. One of `png`, `webp`, or
+   * `jpeg`. Default: `png`.
    *
    */
-  type: 'image_generation';
+  output_format?: 'png' | 'webp' | 'jpeg';
+  /**
+   * Compression level for the output image. Default: 100.
+   *
+   */
+  output_compression?: number;
+  /**
+   * Moderation level for the generated image. Default: `auto`.
+   *
+   */
+  moderation?: 'auto' | 'low';
+  /**
+   * Background type for the generated image. One of `transparent`,
+   * `opaque`, or `auto`. Default: `auto`.
+   *
+   */
+  background?: 'transparent' | 'opaque' | 'auto';
+  input_fidelity?: ImageInputFidelity;
+  /**
+   * Optional mask for inpainting. Contains `image_url`
+   * (string, optional) and `file_id` (string, optional).
+   *
+   */
+  input_image_mask?: {
+    /**
+     * Base64-encoded mask image.
+     *
+     */
+    image_url?: string;
+    /**
+     * File ID for the mask image.
+     *
+     */
+    file_id?: string;
+  };
+  /**
+   * Number of partial images to generate in streaming mode, from 0 (default value) to 3.
+   *
+   */
+  partial_images?: number;
 };
 
 /**
@@ -7346,25 +7346,25 @@ export type ImageGenTool = {
  */
 export type ImageGenToolCall = {
   /**
+   * The type of the image generation call. Always `image_generation_call`.
+   *
+   */
+  type: 'image_generation_call';
+  /**
    * The unique ID of the image generation call.
    *
    */
   id: string;
-  /**
-   * The generated image encoded in base64.
-   *
-   */
-  result: string;
   /**
    * The status of the image generation call.
    *
    */
   status: 'in_progress' | 'completed' | 'generating' | 'failed';
   /**
-   * The type of the image generation call. Always `image_generation_call`.
+   * The generated image encoded in base64.
    *
    */
-  type: 'image_generation_call';
+  result: string;
 };
 
 /**
@@ -7394,10 +7394,6 @@ export type ImageInputFidelity =
  */
 export type ImagesResponse = {
   /**
-   * The background parameter used for the image generation. Either `transparent` or `opaque`.
-   */
-  background?: 'transparent' | 'opaque';
-  /**
    * The Unix timestamp (in seconds) of when the image was created.
    */
   created: number;
@@ -7406,17 +7402,21 @@ export type ImagesResponse = {
    */
   data?: Array<Image>;
   /**
+   * The background parameter used for the image generation. Either `transparent` or `opaque`.
+   */
+  background?: 'transparent' | 'opaque';
+  /**
    * The output format of the image generation. Either `png`, `webp`, or `jpeg`.
    */
   output_format?: 'png' | 'webp' | 'jpeg';
   /**
-   * The quality of the image generated. Either `low`, `medium`, or `high`.
-   */
-  quality?: 'low' | 'medium' | 'high';
-  /**
    * The size of the image generated. Either `1024x1024`, `1024x1536`, or `1536x1024`.
    */
   size?: '1024x1024' | '1024x1536' | '1536x1024';
+  /**
+   * The quality of the image generated. Either `low`, `medium`, or `high`.
+   */
+  quality?: 'low' | 'medium' | 'high';
   usage?: ImageGenUsage;
 };
 
@@ -7426,31 +7426,31 @@ export type ImagesResponse = {
  */
 export type ImagesUsage = {
   /**
+   * The total number of tokens (images and text) used for the image generation.
+   *
+   */
+  total_tokens: number;
+  /**
    * The number of tokens (images and text) in the input prompt.
    */
   input_tokens: number;
-  /**
-   * The input tokens detailed information for the image generation.
-   */
-  input_tokens_details: {
-    /**
-     * The number of image tokens in the input prompt.
-     */
-    image_tokens: number;
-    /**
-     * The number of text tokens in the input prompt.
-     */
-    text_tokens: number;
-  };
   /**
    * The number of image tokens in the output image.
    */
   output_tokens: number;
   /**
-   * The total number of tokens (images and text) used for the image generation.
-   *
+   * The input tokens detailed information for the image generation.
    */
-  total_tokens: number;
+  input_tokens_details: {
+    /**
+     * The number of text tokens in the input prompt.
+     */
+    text_tokens: number;
+    /**
+     * The number of image tokens in the input prompt.
+     */
+    image_tokens: number;
+  };
 };
 
 /**
@@ -7507,6 +7507,11 @@ export type Includable = (typeof Includable)[keyof typeof Includable];
  */
 export type InputAudio = {
   /**
+   * The type of the input item. Always `input_audio`.
+   *
+   */
+  type: 'input_audio';
+  /**
    * Base64-encoded audio data.
    *
    */
@@ -7517,11 +7522,6 @@ export type InputAudio = {
    *
    */
   format: 'mp3' | 'wav';
-  /**
-   * The type of the input item. Always `input_audio`.
-   *
-   */
-  type: 'input_audio';
 };
 
 export type InputContent =
@@ -7555,7 +7555,11 @@ export type InputItem =
  *
  */
 export type InputMessage = {
-  content: InputMessageContentList;
+  /**
+   * The type of the message input. Always set to `message`.
+   *
+   */
+  type?: 'message';
   /**
    * The role of the message input. One of `user`, `system`, or `developer`.
    *
@@ -7567,11 +7571,7 @@ export type InputMessage = {
    *
    */
   status?: 'in_progress' | 'completed' | 'incomplete';
-  /**
-   * The type of the message input. Always set to `message`.
-   *
-   */
-  type?: 'message';
+  content: InputMessageContentList;
 };
 
 /**
@@ -7596,29 +7596,37 @@ export type InputMessageResource = InputMessage & {
  */
 export type Invite = {
   /**
-   * The Unix timestamp (in seconds) of when the invite was accepted.
+   * The object type, which is always `organization.invite`
    */
-  accepted_at?: number;
-  /**
-   * The email address of the individual to whom the invite was sent
-   */
-  email: string;
-  /**
-   * The Unix timestamp (in seconds) of when the invite expires.
-   */
-  expires_at: number;
+  object: 'organization.invite';
   /**
    * The identifier, which can be referenced in API endpoints
    */
   id: string;
   /**
+   * The email address of the individual to whom the invite was sent
+   */
+  email: string;
+  /**
+   * `owner` or `reader`
+   */
+  role: 'owner' | 'reader';
+  /**
+   * `accepted`,`expired`, or `pending`
+   */
+  status: 'accepted' | 'expired' | 'pending';
+  /**
    * The Unix timestamp (in seconds) of when the invite was sent.
    */
   invited_at: number;
   /**
-   * The object type, which is always `organization.invite`
+   * The Unix timestamp (in seconds) of when the invite expires.
    */
-  object: 'organization.invite';
+  expires_at: number;
+  /**
+   * The Unix timestamp (in seconds) of when the invite was accepted.
+   */
+  accepted_at?: number;
   /**
    * The projects that were granted membership upon acceptance of the invite.
    */
@@ -7632,43 +7640,35 @@ export type Invite = {
      */
     role?: 'member' | 'owner';
   }>;
-  /**
-   * `owner` or `reader`
-   */
-  role: 'owner' | 'reader';
-  /**
-   * `accepted`,`expired`, or `pending`
-   */
-  status: 'accepted' | 'expired' | 'pending';
 };
 
 export type InviteDeleteResponse = {
-  deleted: boolean;
-  id: string;
   /**
    * The object type, which is always `organization.invite.deleted`
    */
   object: 'organization.invite.deleted';
+  id: string;
+  deleted: boolean;
 };
 
 export type InviteListResponse = {
+  /**
+   * The object type, which is always `list`
+   */
+  object: 'list';
   data: Array<Invite>;
   /**
    * The first `invite_id` in the retrieved `list`
    */
   first_id?: string;
   /**
-   * The `has_more` property is used for pagination to indicate there are additional results.
-   */
-  has_more?: boolean;
-  /**
    * The last `invite_id` in the retrieved `list`
    */
   last_id?: string;
   /**
-   * The object type, which is always `list`
+   * The `has_more` property is used for pagination to indicate there are additional results.
    */
-  object: 'list';
+  has_more?: boolean;
 };
 
 export type InviteRequest = {
@@ -7676,6 +7676,10 @@ export type InviteRequest = {
    * Send an email to this address
    */
   email: string;
+  /**
+   * `owner` or `reader`
+   */
+  role: 'reader' | 'owner';
   /**
    * An array of projects to which membership is granted at the same time the org invite is accepted. If omitted, the user will be invited to the default project for compatibility with legacy behavior.
    */
@@ -7689,10 +7693,6 @@ export type InviteRequest = {
      */
     role: 'member' | 'owner';
   }>;
-  /**
-   * `owner` or `reader`
-   */
-  role: 'reader' | 'owner';
 };
 
 /**
@@ -7820,92 +7820,92 @@ export type ItemResource =
  */
 export type KeyPress = {
   /**
-   * The combination of keys the model is requesting to be pressed. This is an
-   * array of strings, each representing a key.
-   *
-   */
-  keys: Array<string>;
-  /**
    * Specifies the event type. For a keypress action, this property is
    * always set to `keypress`.
    *
    */
   type: 'keypress';
+  /**
+   * The combination of keys the model is requesting to be pressed. This is an
+   * array of strings, each representing a key.
+   *
+   */
+  keys: Array<string>;
 };
 
 export type ListAssistantsResponse = {
+  object: string;
   data: Array<AssistantObject>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: string;
+  has_more: boolean;
 };
 
 export type ListAuditLogsResponse = {
+  object: 'list';
   data: Array<AuditLog>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: 'list';
+  has_more: boolean;
 };
 
 export type ListBatchesResponse = {
   data: Array<Batch>;
   first_id?: string;
-  has_more: boolean;
   last_id?: string;
+  has_more: boolean;
   object: 'list';
 };
 
 export type ListCertificatesResponse = {
   data: Array<Certificate>;
   first_id?: string;
-  has_more: boolean;
   last_id?: string;
+  has_more: boolean;
   object: 'list';
 };
 
 export type ListFilesResponse = {
+  object: string;
   data: Array<OpenAiFile>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: string;
+  has_more: boolean;
 };
 
 export type ListFineTuningCheckpointPermissionResponse = {
   data: Array<FineTuningCheckpointPermission>;
-  first_id?: string;
-  has_more: boolean;
-  last_id?: string;
   object: 'list';
+  first_id?: string;
+  last_id?: string;
+  has_more: boolean;
 };
 
 export type ListFineTuningJobCheckpointsResponse = {
   data: Array<FineTuningJobCheckpoint>;
-  first_id?: string;
-  has_more: boolean;
-  last_id?: string;
   object: 'list';
+  first_id?: string;
+  last_id?: string;
+  has_more: boolean;
 };
 
 export type ListFineTuningJobEventsResponse = {
   data: Array<FineTuningJobEvent>;
-  has_more: boolean;
   object: 'list';
+  has_more: boolean;
 };
 
 export type ListMessagesResponse = {
+  object: string;
   data: Array<MessageObject>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: string;
+  has_more: boolean;
 };
 
 export type ListModelsResponse = {
-  data: Array<Model>;
   object: 'list';
+  data: Array<Model>;
 };
 
 export type ListPaginatedFineTuningJobsResponse = {
@@ -7915,35 +7915,35 @@ export type ListPaginatedFineTuningJobsResponse = {
 };
 
 export type ListRunStepsResponse = {
+  object: string;
   data: Array<RunStepObject>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: string;
+  has_more: boolean;
 };
 
 export type ListRunsResponse = {
+  object: string;
   data: Array<RunObject>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: string;
+  has_more: boolean;
 };
 
 export type ListVectorStoreFilesResponse = {
+  object: string;
   data: Array<VectorStoreFileObject>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: string;
+  has_more: boolean;
 };
 
 export type ListVectorStoresResponse = {
+  object: string;
   data: Array<VectorStoreObject>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: string;
+  has_more: boolean;
 };
 
 /**
@@ -7954,10 +7954,25 @@ export type ListVectorStoresResponse = {
  */
 export type LocalShellExecAction = {
   /**
+   * The type of the local shell action. Always `exec`.
+   *
+   */
+  type: 'exec';
+  /**
    * The command to run.
    *
    */
   command: Array<string>;
+  /**
+   * Optional timeout in milliseconds for the command.
+   *
+   */
+  timeout_ms?: number;
+  /**
+   * Optional working directory to run the command in.
+   *
+   */
+  working_directory?: string;
   /**
    * Environment variables to set for the command.
    *
@@ -7966,25 +7981,10 @@ export type LocalShellExecAction = {
     [key: string]: string;
   };
   /**
-   * Optional timeout in milliseconds for the command.
-   *
-   */
-  timeout_ms?: number;
-  /**
-   * The type of the local shell action. Always `exec`.
-   *
-   */
-  type: 'exec';
-  /**
    * Optional user to run the command as.
    *
    */
   user?: string;
-  /**
-   * Optional working directory to run the command in.
-   *
-   */
-  working_directory?: string;
 };
 
 /**
@@ -8007,27 +8007,27 @@ export type LocalShellTool = {
  *
  */
 export type LocalShellToolCall = {
-  action: LocalShellExecAction;
   /**
-   * The unique ID of the local shell tool call generated by the model.
+   * The type of the local shell call. Always `local_shell_call`.
    *
    */
-  call_id: string;
+  type: 'local_shell_call';
   /**
    * The unique ID of the local shell call.
    *
    */
   id: string;
   /**
+   * The unique ID of the local shell tool call generated by the model.
+   *
+   */
+  call_id: string;
+  action: LocalShellExecAction;
+  /**
    * The status of the local shell call.
    *
    */
   status: 'in_progress' | 'completed' | 'incomplete';
-  /**
-   * The type of the local shell call. Always `local_shell_call`.
-   *
-   */
-  type: 'local_shell_call';
 };
 
 /**
@@ -8037,6 +8037,11 @@ export type LocalShellToolCall = {
  *
  */
 export type LocalShellToolCallOutput = {
+  /**
+   * The type of the local shell tool call output. Always `local_shell_call_output`.
+   *
+   */
+  type: 'local_shell_call_output';
   /**
    * The unique ID of the local shell tool call generated by the model.
    *
@@ -8052,11 +8057,6 @@ export type LocalShellToolCallOutput = {
    *
    */
   status?: 'in_progress' | 'completed' | 'incomplete';
-  /**
-   * The type of the local shell tool call output. Always `local_shell_call_output`.
-   *
-   */
-  type: 'local_shell_call_output';
 };
 
 /**
@@ -8065,20 +8065,20 @@ export type LocalShellToolCallOutput = {
  */
 export type LogProbProperties = {
   /**
-   * The bytes that were used to generate the log probability.
+   * The token that was used to generate the log probability.
    *
    */
-  bytes: Array<number>;
+  token: string;
   /**
    * The log probability of the token.
    *
    */
   logprob: number;
   /**
-   * The token that was used to generate the log probability.
+   * The bytes that were used to generate the log probability.
    *
    */
-  token: string;
+  bytes: Array<number>;
 };
 
 /**
@@ -8089,30 +8089,30 @@ export type LogProbProperties = {
  */
 export type McpApprovalRequest = {
   /**
-   * A JSON string of arguments for the tool.
+   * The type of the item. Always `mcp_approval_request`.
    *
    */
-  arguments: string;
+  type: 'mcp_approval_request';
   /**
    * The unique ID of the approval request.
    *
    */
   id: string;
   /**
-   * The name of the tool to run.
-   *
-   */
-  name: string;
-  /**
    * The label of the MCP server making the request.
    *
    */
   server_label: string;
   /**
-   * The type of the item. Always `mcp_approval_request`.
+   * The name of the tool to run.
    *
    */
-  type: 'mcp_approval_request';
+  name: string;
+  /**
+   * A JSON string of arguments for the tool.
+   *
+   */
+  arguments: string;
 };
 
 /**
@@ -8123,6 +8123,16 @@ export type McpApprovalRequest = {
  */
 export type McpApprovalResponse = {
   /**
+   * The type of the item. Always `mcp_approval_response`.
+   *
+   */
+  type: 'mcp_approval_response';
+  /**
+   * The unique ID of the approval response
+   *
+   */
+  id?: string;
+  /**
    * The ID of the approval request being answered.
    *
    */
@@ -8133,20 +8143,10 @@ export type McpApprovalResponse = {
    */
   approve: boolean;
   /**
-   * The unique ID of the approval response
-   *
-   */
-  id?: string;
-  /**
    * Optional reason for the decision.
    *
    */
   reason?: string;
-  /**
-   * The type of the item. Always `mcp_approval_response`.
-   *
-   */
-  type: 'mcp_approval_response';
 };
 
 /**
@@ -8157,6 +8157,16 @@ export type McpApprovalResponse = {
  */
 export type McpApprovalResponseResource = {
   /**
+   * The type of the item. Always `mcp_approval_response`.
+   *
+   */
+  type: 'mcp_approval_response';
+  /**
+   * The unique ID of the approval response
+   *
+   */
+  id: string;
+  /**
    * The ID of the approval request being answered.
    *
    */
@@ -8167,20 +8177,10 @@ export type McpApprovalResponseResource = {
    */
   approve: boolean;
   /**
-   * The unique ID of the approval response
-   *
-   */
-  id: string;
-  /**
    * Optional reason for the decision.
    *
    */
   reason?: string;
-  /**
-   * The type of the item. Always `mcp_approval_response`.
-   *
-   */
-  type: 'mcp_approval_response';
 };
 
 /**
@@ -8191,10 +8191,10 @@ export type McpApprovalResponseResource = {
  */
 export type McpListTools = {
   /**
-   * Error message if the server could not list tools.
+   * The type of the item. Always `mcp_list_tools`.
    *
    */
-  error?: string;
+  type: 'mcp_list_tools';
   /**
    * The unique ID of the list.
    *
@@ -8211,10 +8211,10 @@ export type McpListTools = {
    */
   tools: Array<McpListToolsTool>;
   /**
-   * The type of the item. Always `mcp_list_tools`.
+   * Error message if the server could not list tools.
    *
    */
-  type: 'mcp_list_tools';
+  error?: string;
 };
 
 /**
@@ -8225,12 +8225,10 @@ export type McpListTools = {
  */
 export type McpListToolsTool = {
   /**
-   * Additional annotations about the tool.
+   * The name of the tool.
    *
    */
-  annotations?: {
-    [key: string]: unknown;
-  };
+  name: string;
   /**
    * The description of the tool.
    *
@@ -8244,10 +8242,12 @@ export type McpListToolsTool = {
     [key: string]: unknown;
   };
   /**
-   * The name of the tool.
+   * Additional annotations about the tool.
    *
    */
-  name: string;
+  annotations?: {
+    [key: string]: unknown;
+  };
 };
 
 /**
@@ -8258,6 +8258,33 @@ export type McpListToolsTool = {
  *
  */
 export type McpTool = {
+  /**
+   * The type of the MCP tool. Always `mcp`.
+   */
+  type: 'mcp';
+  /**
+   * A label for this MCP server, used to identify it in tool calls.
+   *
+   */
+  server_label: string;
+  /**
+   * The URL for the MCP server.
+   *
+   */
+  server_url: string;
+  /**
+   * Optional description of the MCP server, used to provide more context.
+   *
+   */
+  server_description?: string;
+  /**
+   * Optional HTTP headers to send to the MCP server. Use for authentication
+   * or other purposes.
+   *
+   */
+  headers?: {
+    [key: string]: string;
+  };
   /**
    * List of allowed tool names or a filter object.
    *
@@ -8272,14 +8299,6 @@ export type McpTool = {
          */
         tool_names?: Array<string>;
       };
-  /**
-   * Optional HTTP headers to send to the MCP server. Use for authentication
-   * or other purposes.
-   *
-   */
-  headers?: {
-    [key: string]: string;
-  };
   /**
    * Specify which of the MCP server's tools require approval.
    */
@@ -8308,25 +8327,6 @@ export type McpTool = {
       }
     | 'always'
     | 'never';
-  /**
-   * Optional description of the MCP server, used to provide more context.
-   *
-   */
-  server_description?: string;
-  /**
-   * A label for this MCP server, used to identify it in tool calls.
-   *
-   */
-  server_label: string;
-  /**
-   * The URL for the MCP server.
-   *
-   */
-  server_url: string;
-  /**
-   * The type of the MCP tool. Always `mcp`.
-   */
-  type: 'mcp';
 };
 
 /**
@@ -8337,40 +8337,40 @@ export type McpTool = {
  */
 export type McpToolCall = {
   /**
-   * A JSON string of the arguments passed to the tool.
+   * The type of the item. Always `mcp_call`.
    *
    */
-  arguments: string;
-  /**
-   * The error from the tool call, if any.
-   *
-   */
-  error?: string;
+  type: 'mcp_call';
   /**
    * The unique ID of the tool call.
    *
    */
   id: string;
   /**
+   * The label of the MCP server running the tool.
+   *
+   */
+  server_label: string;
+  /**
    * The name of the tool that was run.
    *
    */
   name: string;
+  /**
+   * A JSON string of the arguments passed to the tool.
+   *
+   */
+  arguments: string;
   /**
    * The output from the tool call.
    *
    */
   output?: string;
   /**
-   * The label of the MCP server running the tool.
+   * The error from the tool call, if any.
    *
    */
-  server_label: string;
-  /**
-   * The type of the item. Always `mcp_call`.
-   *
-   */
-  type: 'mcp_call';
+  error?: string;
 };
 
 /**
@@ -8379,20 +8379,20 @@ export type McpToolCall = {
  * References an image [File](https://platform.openai.com/docs/api-reference/files) in the content of a message.
  */
 export type MessageContentImageFileObject = {
-  image_file: {
-    /**
-     * Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
-     */
-    detail?: 'auto' | 'low' | 'high';
-    /**
-     * The [File](https://platform.openai.com/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content.
-     */
-    file_id: string;
-  };
   /**
    * Always `image_file`.
    */
   type: 'image_file';
+  image_file: {
+    /**
+     * The [File](https://platform.openai.com/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content.
+     */
+    file_id: string;
+    /**
+     * Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
+     */
+    detail?: 'auto' | 'low' | 'high';
+  };
 };
 
 /**
@@ -8401,20 +8401,20 @@ export type MessageContentImageFileObject = {
  * References an image URL in the content of a message.
  */
 export type MessageContentImageUrlObject = {
-  image_url: {
-    /**
-     * Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. Default value is `auto`
-     */
-    detail?: 'auto' | 'low' | 'high';
-    /**
-     * The external URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp.
-     */
-    url: string;
-  };
   /**
    * The type of the content part.
    */
   type: 'image_url';
+  image_url: {
+    /**
+     * The external URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp.
+     */
+    url: string;
+    /**
+     * Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. Default value is `auto`
+     */
+    detail?: 'auto' | 'low' | 'high';
+  };
 };
 
 /**
@@ -8423,11 +8423,11 @@ export type MessageContentImageUrlObject = {
  * The refusal content generated by the assistant.
  */
 export type MessageContentRefusalObject = {
-  refusal: string;
   /**
    * Always `refusal`.
    */
   type: 'refusal';
+  refusal: string;
 };
 
 /**
@@ -8436,7 +8436,14 @@ export type MessageContentRefusalObject = {
  * A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files.
  */
 export type MessageContentTextAnnotationsFileCitationObject = {
-  end_index: number;
+  /**
+   * Always `file_citation`.
+   */
+  type: 'file_citation';
+  /**
+   * The text in the message content that needs to be replaced.
+   */
+  text: string;
   file_citation: {
     /**
      * The ID of the specific File the citation is from.
@@ -8444,14 +8451,7 @@ export type MessageContentTextAnnotationsFileCitationObject = {
     file_id: string;
   };
   start_index: number;
-  /**
-   * The text in the message content that needs to be replaced.
-   */
-  text: string;
-  /**
-   * Always `file_citation`.
-   */
-  type: 'file_citation';
+  end_index: number;
 };
 
 /**
@@ -8460,7 +8460,14 @@ export type MessageContentTextAnnotationsFileCitationObject = {
  * A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
  */
 export type MessageContentTextAnnotationsFilePathObject = {
-  end_index: number;
+  /**
+   * Always `file_path`.
+   */
+  type: 'file_path';
+  /**
+   * The text in the message content that needs to be replaced.
+   */
+  text: string;
   file_path: {
     /**
      * The ID of the file that was generated.
@@ -8468,14 +8475,7 @@ export type MessageContentTextAnnotationsFilePathObject = {
     file_id: string;
   };
   start_index: number;
-  /**
-   * The text in the message content that needs to be replaced.
-   */
-  text: string;
-  /**
-   * Always `file_path`.
-   */
-  type: 'file_path';
+  end_index: number;
 };
 
 /**
@@ -8484,17 +8484,17 @@ export type MessageContentTextAnnotationsFilePathObject = {
  * The text content that is part of a message.
  */
 export type MessageContentTextObject = {
-  text: {
-    annotations: Array<TextAnnotation>;
-    /**
-     * The data that makes up the text.
-     */
-    value: string;
-  };
   /**
    * Always `text`.
    */
   type: 'text';
+  text: {
+    /**
+     * The data that makes up the text.
+     */
+    value: string;
+    annotations: Array<TextAnnotation>;
+  };
 };
 
 /**
@@ -8503,16 +8503,6 @@ export type MessageContentTextObject = {
  * References an image [File](https://platform.openai.com/docs/api-reference/files) in the content of a message.
  */
 export type MessageDeltaContentImageFileObject = {
-  image_file?: {
-    /**
-     * Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
-     */
-    detail?: 'auto' | 'low' | 'high';
-    /**
-     * The [File](https://platform.openai.com/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content.
-     */
-    file_id?: string;
-  };
   /**
    * The index of the content part in the message.
    */
@@ -8521,6 +8511,16 @@ export type MessageDeltaContentImageFileObject = {
    * Always `image_file`.
    */
   type: 'image_file';
+  image_file?: {
+    /**
+     * The [File](https://platform.openai.com/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content.
+     */
+    file_id?: string;
+    /**
+     * Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
+     */
+    detail?: 'auto' | 'low' | 'high';
+  };
 };
 
 /**
@@ -8529,16 +8529,6 @@ export type MessageDeltaContentImageFileObject = {
  * References an image URL in the content of a message.
  */
 export type MessageDeltaContentImageUrlObject = {
-  image_url?: {
-    /**
-     * Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`.
-     */
-    detail?: 'auto' | 'low' | 'high';
-    /**
-     * The URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp.
-     */
-    url?: string;
-  };
   /**
    * The index of the content part in the message.
    */
@@ -8547,6 +8537,16 @@ export type MessageDeltaContentImageUrlObject = {
    * Always `image_url`.
    */
   type: 'image_url';
+  image_url?: {
+    /**
+     * The URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp.
+     */
+    url?: string;
+    /**
+     * Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`.
+     */
+    detail?: 'auto' | 'low' | 'high';
+  };
 };
 
 /**
@@ -8559,11 +8559,11 @@ export type MessageDeltaContentRefusalObject = {
    * The index of the refusal part in the message.
    */
   index: number;
-  refusal?: string;
   /**
    * Always `refusal`.
    */
   type: 'refusal';
+  refusal?: string;
 };
 
 /**
@@ -8572,7 +8572,18 @@ export type MessageDeltaContentRefusalObject = {
  * A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files.
  */
 export type MessageDeltaContentTextAnnotationsFileCitationObject = {
-  end_index?: number;
+  /**
+   * The index of the annotation in the text content part.
+   */
+  index: number;
+  /**
+   * Always `file_citation`.
+   */
+  type: 'file_citation';
+  /**
+   * The text in the message content that needs to be replaced.
+   */
+  text?: string;
   file_citation?: {
     /**
      * The ID of the specific File the citation is from.
@@ -8583,19 +8594,8 @@ export type MessageDeltaContentTextAnnotationsFileCitationObject = {
      */
     quote?: string;
   };
-  /**
-   * The index of the annotation in the text content part.
-   */
-  index: number;
   start_index?: number;
-  /**
-   * The text in the message content that needs to be replaced.
-   */
-  text?: string;
-  /**
-   * Always `file_citation`.
-   */
-  type: 'file_citation';
+  end_index?: number;
 };
 
 /**
@@ -8604,26 +8604,26 @@ export type MessageDeltaContentTextAnnotationsFileCitationObject = {
  * A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
  */
 export type MessageDeltaContentTextAnnotationsFilePathObject = {
-  end_index?: number;
+  /**
+   * The index of the annotation in the text content part.
+   */
+  index: number;
+  /**
+   * Always `file_path`.
+   */
+  type: 'file_path';
+  /**
+   * The text in the message content that needs to be replaced.
+   */
+  text?: string;
   file_path?: {
     /**
      * The ID of the file that was generated.
      */
     file_id?: string;
   };
-  /**
-   * The index of the annotation in the text content part.
-   */
-  index: number;
   start_index?: number;
-  /**
-   * The text in the message content that needs to be replaced.
-   */
-  text?: string;
-  /**
-   * Always `file_path`.
-   */
-  type: 'file_path';
+  end_index?: number;
 };
 
 /**
@@ -8636,17 +8636,17 @@ export type MessageDeltaContentTextObject = {
    * The index of the content part in the message.
    */
   index: number;
-  text?: {
-    annotations?: Array<TextAnnotationDelta>;
-    /**
-     * The data that makes up the text.
-     */
-    value?: string;
-  };
   /**
    * Always `text`.
    */
   type: 'text';
+  text?: {
+    /**
+     * The data that makes up the text.
+     */
+    value?: string;
+    annotations?: Array<TextAnnotationDelta>;
+  };
 };
 
 /**
@@ -8657,19 +8657,6 @@ export type MessageDeltaContentTextObject = {
  */
 export type MessageDeltaObject = {
   /**
-   * The delta containing the fields that have changed on the Message.
-   */
-  delta: {
-    /**
-     * The content of the message in array of text and/or images.
-     */
-    content?: Array<MessageContentDelta>;
-    /**
-     * The entity that produced the message. One of `user` or `assistant`.
-     */
-    role?: 'user' | 'assistant';
-  };
-  /**
    * The identifier of the message, which can be referenced in API endpoints.
    */
   id: string;
@@ -8677,6 +8664,19 @@ export type MessageDeltaObject = {
    * The object type, which is always `thread.message.delta`.
    */
   object: 'thread.message.delta';
+  /**
+   * The delta containing the fields that have changed on the Message.
+   */
+  delta: {
+    /**
+     * The entity that produced the message. One of `user` or `assistant`.
+     */
+    role?: 'user' | 'assistant';
+    /**
+     * The content of the message in array of text and/or images.
+     */
+    content?: Array<MessageContentDelta>;
+  };
 };
 
 /**
@@ -8686,42 +8686,25 @@ export type MessageDeltaObject = {
  */
 export type MessageObject = {
   /**
-   * If applicable, the ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) that authored this message.
+   * The identifier, which can be referenced in API endpoints.
    */
-  assistant_id: string;
+  id: string;
   /**
-   * A list of files attached to the message, and the tools they were added to.
+   * The object type, which is always `thread.message`.
    */
-  attachments: Array<{
-    /**
-     * The ID of the file to attach to the message.
-     */
-    file_id?: string;
-    /**
-     * The tools to add this file to.
-     */
-    tools?: Array<AssistantToolsCode | AssistantToolsFileSearchTypeOnly>;
-  }>;
-  /**
-   * The Unix timestamp (in seconds) for when the message was completed.
-   */
-  completed_at: number;
-  /**
-   * The content of the message in array of text and/or images.
-   */
-  content: Array<MessageContent>;
+  object: 'thread.message';
   /**
    * The Unix timestamp (in seconds) for when the message was created.
    */
   created_at: number;
   /**
-   * The identifier, which can be referenced in API endpoints.
+   * The [thread](https://platform.openai.com/docs/api-reference/threads) ID that this message belongs to.
    */
-  id: string;
+  thread_id: string;
   /**
-   * The Unix timestamp (in seconds) for when the message was marked as incomplete.
+   * The status of the message, which can be either `in_progress`, `incomplete`, or `completed`.
    */
-  incomplete_at: number;
+  status: 'in_progress' | 'incomplete' | 'completed';
   /**
    * On an incomplete message, details about why the message is incomplete.
    */
@@ -8736,27 +8719,44 @@ export type MessageObject = {
       | 'run_expired'
       | 'run_failed';
   };
-  metadata: Metadata;
   /**
-   * The object type, which is always `thread.message`.
+   * The Unix timestamp (in seconds) for when the message was completed.
    */
-  object: 'thread.message';
+  completed_at: number;
+  /**
+   * The Unix timestamp (in seconds) for when the message was marked as incomplete.
+   */
+  incomplete_at: number;
   /**
    * The entity that produced the message. One of `user` or `assistant`.
    */
   role: 'user' | 'assistant';
   /**
+   * The content of the message in array of text and/or images.
+   */
+  content: Array<MessageContent>;
+  /**
+   * If applicable, the ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) that authored this message.
+   */
+  assistant_id: string;
+  /**
    * The ID of the [run](https://platform.openai.com/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.
    */
   run_id: string;
   /**
-   * The status of the message, which can be either `in_progress`, `incomplete`, or `completed`.
+   * A list of files attached to the message, and the tools they were added to.
    */
-  status: 'in_progress' | 'incomplete' | 'completed';
-  /**
-   * The [thread](https://platform.openai.com/docs/api-reference/threads) ID that this message belongs to.
-   */
-  thread_id: string;
+  attachments: Array<{
+    /**
+     * The ID of the file to attach to the message.
+     */
+    file_id?: string;
+    /**
+     * The tools to add this file to.
+     */
+    tools?: Array<AssistantToolsCode | AssistantToolsFileSearchTypeOnly>;
+  }>;
+  metadata: Metadata;
 };
 
 /**
@@ -8766,35 +8766,35 @@ export type MessageObject = {
  */
 export type MessageRequestContentTextObject = {
   /**
-   * Text content to be sent to the model
-   */
-  text: string;
-  /**
    * Always `text`.
    */
   type: 'text';
+  /**
+   * Text content to be sent to the model
+   */
+  text: string;
 };
 
 export type MessageStreamEvent =
   | {
-      data: MessageObject;
       event: 'thread.message.created';
+      data: MessageObject;
     }
   | {
-      data: MessageObject;
       event: 'thread.message.in_progress';
+      data: MessageObject;
     }
   | {
-      data: MessageDeltaObject;
       event: 'thread.message.delta';
+      data: MessageDeltaObject;
     }
   | {
-      data: MessageObject;
       event: 'thread.message.completed';
+      data: MessageObject;
     }
   | {
-      data: MessageObject;
       event: 'thread.message.incomplete';
+      data: MessageObject;
     };
 
 /**
@@ -8817,13 +8817,13 @@ export type Metadata = {
  */
 export type Model = {
   /**
-   * The Unix timestamp (in seconds) when the model was created.
-   */
-  created: number;
-  /**
    * The model identifier, which can be referenced in the API endpoints.
    */
   id: string;
+  /**
+   * The Unix timestamp (in seconds) when the model was created.
+   */
+  created: number;
   /**
    * The object type, which is always "model".
    */
@@ -8854,29 +8854,17 @@ export type ModelIdsShared = string | ChatModel;
 export type ModelResponseProperties = {
   metadata?: Metadata;
   /**
-   * Used by OpenAI to cache responses for similar requests to optimize your cache hit rates. Replaces the `user` field. [Learn more](https://platform.openai.com/docs/guides/prompt-caching).
+   * An integer between 0 and 20 specifying the number of most likely tokens to
+   * return at each token position, each with an associated log probability.
    *
    */
-  prompt_cache_key?: string;
-  /**
-   * A stable identifier used to help detect users of your application that may be violating OpenAI's usage policies.
-   * The IDs should be a string that uniquely identifies each user. We recommend hashing their username or email address, in order to avoid sending us any identifying information. [Learn more](https://platform.openai.com/docs/guides/safety-best-practices#safety-identifiers).
-   *
-   */
-  safety_identifier?: string;
-  service_tier?: ServiceTier;
+  top_logprobs?: number;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
    * We generally recommend altering this or `top_p` but not both.
    *
    */
   temperature?: number;
-  /**
-   * An integer between 0 and 20 specifying the number of most likely tokens to
-   * return at each token position, each with an associated log probability.
-   *
-   */
-  top_logprobs?: number;
   /**
    * An alternative to sampling with temperature, called nucleus sampling,
    * where the model considers the results of the tokens with top_p probability
@@ -8896,9 +8884,32 @@ export type ModelResponseProperties = {
    * @deprecated
    */
   user?: string;
+  /**
+   * A stable identifier used to help detect users of your application that may be violating OpenAI's usage policies.
+   * The IDs should be a string that uniquely identifies each user. We recommend hashing their username or email address, in order to avoid sending us any identifying information. [Learn more](https://platform.openai.com/docs/guides/safety-best-practices#safety-identifiers).
+   *
+   */
+  safety_identifier?: string;
+  /**
+   * Used by OpenAI to cache responses for similar requests to optimize your cache hit rates. Replaces the `user` field. [Learn more](https://platform.openai.com/docs/guides/prompt-caching).
+   *
+   */
+  prompt_cache_key?: string;
+  service_tier?: ServiceTier;
 };
 
 export type ModifyAssistantRequest = {
+  /**
+   * ID of the model to use. You can use the [List models](https://platform.openai.com/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](https://platform.openai.com/docs/models) for descriptions of them.
+   *
+   */
+  model?: string | AssistantSupportedModels;
+  reasoning_effort?: ReasoningEffort;
+  /**
+   * The name of the assistant. The maximum length is 256 characters.
+   *
+   */
+  name?: string;
   /**
    * The description of the assistant. The maximum length is 512 characters.
    *
@@ -8909,24 +8920,11 @@ export type ModifyAssistantRequest = {
    *
    */
   instructions?: string;
-  metadata?: Metadata;
   /**
-   * ID of the model to use. You can use the [List models](https://platform.openai.com/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](https://platform.openai.com/docs/models) for descriptions of them.
+   * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
    *
    */
-  model?: string | AssistantSupportedModels;
-  /**
-   * The name of the assistant. The maximum length is 256 characters.
-   *
-   */
-  name?: string;
-  reasoning_effort?: ReasoningEffort;
-  response_format?: AssistantsApiResponseFormatOption;
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
-   *
-   */
-  temperature?: number;
+  tools?: Array<AssistantTool>;
   /**
    * A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
    *
@@ -8947,11 +8945,12 @@ export type ModifyAssistantRequest = {
       vector_store_ids?: Array<string>;
     };
   };
+  metadata?: Metadata;
   /**
-   * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
    *
    */
-  tools?: Array<AssistantTool>;
+  temperature?: number;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
    *
@@ -8959,6 +8958,7 @@ export type ModifyAssistantRequest = {
    *
    */
   top_p?: number;
+  response_format?: AssistantsApiResponseFormatOption;
 };
 
 export type ModifyCertificateRequest = {
@@ -8977,7 +8977,6 @@ export type ModifyRunRequest = {
 };
 
 export type ModifyThreadRequest = {
-  metadata?: Metadata;
   /**
    * A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
    *
@@ -8998,6 +8997,7 @@ export type ModifyThreadRequest = {
       vector_store_ids?: Array<string>;
     };
   };
+  metadata?: Metadata;
 };
 
 /**
@@ -9032,6 +9032,10 @@ export type Move = {
  */
 export type OpenAiFile = {
   /**
+   * The file identifier, which can be referenced in the API endpoints.
+   */
+  id: string;
+  /**
    * The size of the file, in bytes.
    */
   bytes: number;
@@ -9047,10 +9051,6 @@ export type OpenAiFile = {
    * The name of the file.
    */
   filename: string;
-  /**
-   * The file identifier, which can be referenced in the API endpoints.
-   */
-  id: string;
   /**
    * The object type, which is always `file`.
    */
@@ -9101,6 +9101,11 @@ export type OtherChunkingStrategyResponseParam = {
  */
 export type OutputAudio = {
   /**
+   * The type of the output audio. Always `output_audio`.
+   *
+   */
+  type: 'output_audio';
+  /**
    * Base64-encoded audio data from the model.
    *
    */
@@ -9110,11 +9115,6 @@ export type OutputAudio = {
    *
    */
   transcript: string;
-  /**
-   * The type of the output audio. Always `output_audio`.
-   *
-   */
-  type: 'output_audio';
 };
 
 export type OutputContent =
@@ -9174,31 +9174,31 @@ export type OutputItem =
  */
 export type OutputMessage = {
   /**
-   * The content of the output message.
-   *
-   */
-  content: Array<OutputContent>;
-  /**
    * The unique ID of the output message.
    *
    */
   id: string;
+  /**
+   * The type of the output message. Always `message`.
+   *
+   */
+  type: 'message';
   /**
    * The role of the output message. Always `assistant`.
    *
    */
   role: 'assistant';
   /**
+   * The content of the output message.
+   *
+   */
+  content: Array<OutputContent>;
+  /**
    * The status of the message input. One of `in_progress`, `completed`, or
    * `incomplete`. Populated when input items are returned via API.
    *
    */
   status: 'in_progress' | 'completed' | 'incomplete';
-  /**
-   * The type of the output message. Always `message`.
-   *
-   */
-  type: 'message';
 };
 
 /**
@@ -9226,18 +9226,18 @@ export type PartialImages = number;
  */
 export type PredictionContent = {
   /**
+   * The type of the predicted content you want to provide. This type is
+   * currently always `content`.
+   *
+   */
+  type: 'content';
+  /**
    * The content that should be matched when generating a model response.
    * If generated tokens would match this content, the entire model response
    * can be returned much more quickly.
    *
    */
   content: string | Array<ChatCompletionRequestMessageContentPartText>;
-  /**
-   * The type of the predicted content you want to provide. This type is
-   * currently always `content`.
-   *
-   */
-  type: 'content';
 };
 
 /**
@@ -9245,25 +9245,25 @@ export type PredictionContent = {
  */
 export type Project = {
   /**
-   * The Unix timestamp (in seconds) of when the project was archived or `null`.
-   */
-  archived_at?: number;
-  /**
-   * The Unix timestamp (in seconds) of when the project was created.
-   */
-  created_at: number;
-  /**
    * The identifier, which can be referenced in API endpoints
    */
   id: string;
+  /**
+   * The object type, which is always `organization.project`
+   */
+  object: 'organization.project';
   /**
    * The name of the project. This appears in reporting.
    */
   name: string;
   /**
-   * The object type, which is always `organization.project`
+   * The Unix timestamp (in seconds) of when the project was created.
    */
-  object: 'organization.project';
+  created_at: number;
+  /**
+   * The Unix timestamp (in seconds) of when the project was archived or `null`.
+   */
+  archived_at?: number;
   /**
    * `active` or `archived`
    */
@@ -9275,51 +9275,51 @@ export type Project = {
  */
 export type ProjectApiKey = {
   /**
-   * The Unix timestamp (in seconds) of when the API key was created
+   * The object type, which is always `organization.project.api_key`
    */
-  created_at: number;
+  object: 'organization.project.api_key';
   /**
-   * The identifier, which can be referenced in API endpoints
+   * The redacted value of the API key
    */
-  id: string;
-  /**
-   * The Unix timestamp (in seconds) of when the API key was last used.
-   */
-  last_used_at: number;
+  redacted_value: string;
   /**
    * The name of the API key
    */
   name: string;
   /**
-   * The object type, which is always `organization.project.api_key`
+   * The Unix timestamp (in seconds) of when the API key was created
    */
-  object: 'organization.project.api_key';
+  created_at: number;
+  /**
+   * The Unix timestamp (in seconds) of when the API key was last used.
+   */
+  last_used_at: number;
+  /**
+   * The identifier, which can be referenced in API endpoints
+   */
+  id: string;
   owner: {
-    service_account?: ProjectServiceAccount;
     /**
      * `user` or `service_account`
      */
     type?: 'user' | 'service_account';
     user?: ProjectUser;
+    service_account?: ProjectServiceAccount;
   };
-  /**
-   * The redacted value of the API key
-   */
-  redacted_value: string;
 };
 
 export type ProjectApiKeyDeleteResponse = {
-  deleted: boolean;
-  id: string;
   object: 'organization.project.api_key.deleted';
+  id: string;
+  deleted: boolean;
 };
 
 export type ProjectApiKeyListResponse = {
+  object: 'list';
   data: Array<ProjectApiKey>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: 'list';
+  has_more: boolean;
 };
 
 export type ProjectCreateRequest = {
@@ -9330,11 +9330,11 @@ export type ProjectCreateRequest = {
 };
 
 export type ProjectListResponse = {
+  object: 'list';
   data: Array<Project>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: 'list';
+  has_more: boolean;
 };
 
 /**
@@ -9342,25 +9342,17 @@ export type ProjectListResponse = {
  */
 export type ProjectRateLimit = {
   /**
-   * The maximum batch input tokens per day. Only present for relevant models.
+   * The object type, which is always `project.rate_limit`
    */
-  batch_1_day_max_input_tokens?: number;
+  object: 'project.rate_limit';
   /**
    * The identifier, which can be referenced in API endpoints.
    */
   id: string;
   /**
-   * The maximum audio megabytes per minute. Only present for relevant models.
+   * The model this rate limit applies to.
    */
-  max_audio_megabytes_per_1_minute?: number;
-  /**
-   * The maximum images per minute. Only present for relevant models.
-   */
-  max_images_per_1_minute?: number;
-  /**
-   * The maximum requests per day. Only present for relevant models.
-   */
-  max_requests_per_1_day?: number;
+  model: string;
   /**
    * The maximum requests per minute.
    */
@@ -9370,40 +9362,32 @@ export type ProjectRateLimit = {
    */
   max_tokens_per_1_minute: number;
   /**
-   * The model this rate limit applies to.
-   */
-  model: string;
-  /**
-   * The object type, which is always `project.rate_limit`
-   */
-  object: 'project.rate_limit';
-};
-
-export type ProjectRateLimitListResponse = {
-  data: Array<ProjectRateLimit>;
-  first_id: string;
-  has_more: boolean;
-  last_id: string;
-  object: 'list';
-};
-
-export type ProjectRateLimitUpdateRequest = {
-  /**
-   * The maximum batch input tokens per day. Only relevant for certain models.
-   */
-  batch_1_day_max_input_tokens?: number;
-  /**
-   * The maximum audio megabytes per minute. Only relevant for certain models.
-   */
-  max_audio_megabytes_per_1_minute?: number;
-  /**
-   * The maximum images per minute. Only relevant for certain models.
+   * The maximum images per minute. Only present for relevant models.
    */
   max_images_per_1_minute?: number;
   /**
-   * The maximum requests per day. Only relevant for certain models.
+   * The maximum audio megabytes per minute. Only present for relevant models.
+   */
+  max_audio_megabytes_per_1_minute?: number;
+  /**
+   * The maximum requests per day. Only present for relevant models.
    */
   max_requests_per_1_day?: number;
+  /**
+   * The maximum batch input tokens per day. Only present for relevant models.
+   */
+  batch_1_day_max_input_tokens?: number;
+};
+
+export type ProjectRateLimitListResponse = {
+  object: 'list';
+  data: Array<ProjectRateLimit>;
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
+};
+
+export type ProjectRateLimitUpdateRequest = {
   /**
    * The maximum requests per minute.
    */
@@ -9412,6 +9396,22 @@ export type ProjectRateLimitUpdateRequest = {
    * The maximum tokens per minute.
    */
   max_tokens_per_1_minute?: number;
+  /**
+   * The maximum images per minute. Only relevant for certain models.
+   */
+  max_images_per_1_minute?: number;
+  /**
+   * The maximum audio megabytes per minute. Only relevant for certain models.
+   */
+  max_audio_megabytes_per_1_minute?: number;
+  /**
+   * The maximum requests per day. Only relevant for certain models.
+   */
+  max_requests_per_1_day?: number;
+  /**
+   * The maximum batch input tokens per day. Only relevant for certain models.
+   */
+  batch_1_day_max_input_tokens?: number;
 };
 
 /**
@@ -9419,9 +9419,9 @@ export type ProjectRateLimitUpdateRequest = {
  */
 export type ProjectServiceAccount = {
   /**
-   * The Unix timestamp (in seconds) of when the service account was created
+   * The object type, which is always `organization.project.service_account`
    */
-  created_at: number;
+  object: 'organization.project.service_account';
   /**
    * The identifier, which can be referenced in API endpoints
    */
@@ -9431,24 +9431,24 @@ export type ProjectServiceAccount = {
    */
   name: string;
   /**
-   * The object type, which is always `organization.project.service_account`
-   */
-  object: 'organization.project.service_account';
-  /**
    * `owner` or `member`
    */
   role: 'owner' | 'member';
+  /**
+   * The Unix timestamp (in seconds) of when the service account was created
+   */
+  created_at: number;
 };
 
 export type ProjectServiceAccountApiKey = {
-  created_at: number;
-  id: string;
-  name: string;
   /**
    * The object type, which is always `organization.project.service_account.api_key`
    */
   object: 'organization.project.service_account.api_key';
   value: string;
+  name: string;
+  created_at: number;
+  id: string;
 };
 
 export type ProjectServiceAccountCreateRequest = {
@@ -9459,29 +9459,29 @@ export type ProjectServiceAccountCreateRequest = {
 };
 
 export type ProjectServiceAccountCreateResponse = {
-  api_key: ProjectServiceAccountApiKey;
-  created_at: number;
+  object: 'organization.project.service_account';
   id: string;
   name: string;
-  object: 'organization.project.service_account';
   /**
    * Service accounts can only have one role of type `member`
    */
   role: 'member';
+  created_at: number;
+  api_key: ProjectServiceAccountApiKey;
 };
 
 export type ProjectServiceAccountDeleteResponse = {
-  deleted: boolean;
-  id: string;
   object: 'organization.project.service_account.deleted';
+  id: string;
+  deleted: boolean;
 };
 
 export type ProjectServiceAccountListResponse = {
+  object: 'list';
   data: Array<ProjectServiceAccount>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: 'list';
+  has_more: boolean;
 };
 
 export type ProjectUpdateRequest = {
@@ -9496,13 +9496,9 @@ export type ProjectUpdateRequest = {
  */
 export type ProjectUser = {
   /**
-   * The Unix timestamp (in seconds) of when the project was added.
+   * The object type, which is always `organization.project.user`
    */
-  added_at: number;
-  /**
-   * The email address of the user
-   */
-  email: string;
+  object: 'organization.project.user';
   /**
    * The identifier, which can be referenced in API endpoints
    */
@@ -9512,38 +9508,42 @@ export type ProjectUser = {
    */
   name: string;
   /**
-   * The object type, which is always `organization.project.user`
+   * The email address of the user
    */
-  object: 'organization.project.user';
+  email: string;
   /**
    * `owner` or `member`
    */
   role: 'owner' | 'member';
+  /**
+   * The Unix timestamp (in seconds) of when the project was added.
+   */
+  added_at: number;
 };
 
 export type ProjectUserCreateRequest = {
   /**
-   * `owner` or `member`
-   */
-  role: 'owner' | 'member';
-  /**
    * The ID of the user.
    */
   user_id: string;
+  /**
+   * `owner` or `member`
+   */
+  role: 'owner' | 'member';
 };
 
 export type ProjectUserDeleteResponse = {
-  deleted: boolean;
-  id: string;
   object: 'organization.project.user.deleted';
+  id: string;
+  deleted: boolean;
 };
 
 export type ProjectUserListResponse = {
+  object: string;
   data: Array<ProjectUser>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: string;
+  has_more: boolean;
 };
 
 export type ProjectUserUpdateRequest = {
@@ -9563,11 +9563,11 @@ export type Prompt = {
    * The unique identifier of the prompt template to use.
    */
   id: string;
-  variables?: ResponsePromptVariables;
   /**
    * Optional version of the prompt template.
    */
   version?: string;
+  variables?: ResponsePromptVariables;
 };
 
 /**
@@ -9627,7 +9627,10 @@ export type RealtimeClientEventConversationItemCreate = {
    * Optional client-generated ID used to identify this event.
    */
   event_id?: string;
-  item: RealtimeConversationItem;
+  /**
+   * The event type, must be `conversation.item.create`.
+   */
+  type: 'conversation.item.create';
   /**
    * The ID of the preceding item after which the new item will be inserted.
    * If not set, the new item will be appended to the end of the conversation.
@@ -9637,10 +9640,7 @@ export type RealtimeClientEventConversationItemCreate = {
    *
    */
   previous_item_id?: string;
-  /**
-   * The event type, must be `conversation.item.create`.
-   */
-  type: 'conversation.item.create';
+  item: RealtimeConversationItem;
 };
 
 /**
@@ -9656,13 +9656,13 @@ export type RealtimeClientEventConversationItemDelete = {
    */
   event_id?: string;
   /**
-   * The ID of the item to delete.
-   */
-  item_id: string;
-  /**
    * The event type, must be `conversation.item.delete`.
    */
   type: 'conversation.item.delete';
+  /**
+   * The ID of the item to delete.
+   */
+  item_id: string;
 };
 
 /**
@@ -9678,13 +9678,13 @@ export type RealtimeClientEventConversationItemRetrieve = {
    */
   event_id?: string;
   /**
-   * The ID of the item to retrieve.
-   */
-  item_id: string;
-  /**
    * The event type, must be `conversation.item.retrieve`.
    */
   type: 'conversation.item.retrieve';
+  /**
+   * The ID of the item to retrieve.
+   */
+  item_id: string;
 };
 
 /**
@@ -9703,20 +9703,13 @@ export type RealtimeClientEventConversationItemRetrieve = {
  */
 export type RealtimeClientEventConversationItemTruncate = {
   /**
-   * Inclusive duration up to which audio is truncated, in milliseconds. If
-   * the audio_end_ms is greater than the actual audio duration, the server
-   * will respond with an error.
-   *
-   */
-  audio_end_ms: number;
-  /**
-   * The index of the content part to truncate. Set this to 0.
-   */
-  content_index: number;
-  /**
    * Optional client-generated ID used to identify this event.
    */
   event_id?: string;
+  /**
+   * The event type, must be `conversation.item.truncate`.
+   */
+  type: 'conversation.item.truncate';
   /**
    * The ID of the assistant message item to truncate. Only assistant message
    * items can be truncated.
@@ -9724,9 +9717,16 @@ export type RealtimeClientEventConversationItemTruncate = {
    */
   item_id: string;
   /**
-   * The event type, must be `conversation.item.truncate`.
+   * The index of the content part to truncate. Set this to 0.
    */
-  type: 'conversation.item.truncate';
+  content_index: number;
+  /**
+   * Inclusive duration up to which audio is truncated, in milliseconds. If
+   * the audio_end_ms is greater than the actual audio duration, the server
+   * will respond with an error.
+   *
+   */
+  audio_end_ms: number;
 };
 
 /**
@@ -9744,12 +9744,6 @@ export type RealtimeClientEventConversationItemTruncate = {
  */
 export type RealtimeClientEventInputAudioBufferAppend = {
   /**
-   * Base64-encoded audio bytes. This must be in the format specified by the
-   * `input_audio_format` field in the session configuration.
-   *
-   */
-  audio: string;
-  /**
    * Optional client-generated ID used to identify this event.
    */
   event_id?: string;
@@ -9757,6 +9751,12 @@ export type RealtimeClientEventInputAudioBufferAppend = {
    * The event type, must be `input_audio_buffer.append`.
    */
   type: 'input_audio_buffer.append';
+  /**
+   * Base64-encoded audio bytes. This must be in the format specified by the
+   * `input_audio_format` field in the session configuration.
+   *
+   */
+  audio: string;
 };
 
 /**
@@ -9830,15 +9830,15 @@ export type RealtimeClientEventResponseCancel = {
    */
   event_id?: string;
   /**
+   * The event type, must be `response.cancel`.
+   */
+  type: 'response.cancel';
+  /**
    * A specific response ID to cancel - if not provided, will cancel an
    * in-progress response in the default conversation.
    *
    */
   response_id?: string;
-  /**
-   * The event type, must be `response.cancel`.
-   */
-  type: 'response.cancel';
 };
 
 /**
@@ -9864,11 +9864,11 @@ export type RealtimeClientEventResponseCreate = {
    * Optional client-generated ID used to identify this event.
    */
   event_id?: string;
-  response?: RealtimeResponseCreateParams;
   /**
    * The event type, must be `response.create`.
    */
   type: 'response.create';
+  response?: RealtimeResponseCreateParams;
 };
 
 /**
@@ -9889,11 +9889,11 @@ export type RealtimeClientEventSessionUpdate = {
    * Optional client-generated ID used to identify this event.
    */
   event_id?: string;
-  session: RealtimeSessionCreateRequest;
   /**
    * The event type, must be `session.update`.
    */
   type: 'session.update';
+  session: RealtimeSessionCreateRequest;
 };
 
 /**
@@ -9905,11 +9905,11 @@ export type RealtimeClientEventTranscriptionSessionUpdate = {
    * Optional client-generated ID used to identify this event.
    */
   event_id?: string;
-  session: RealtimeTranscriptionSessionCreateRequest;
   /**
    * The event type, must be `transcription_session.update`.
    */
   type: 'transcription_session.update';
+  session: RealtimeTranscriptionSessionCreateRequest;
 };
 
 /**
@@ -9917,18 +9917,35 @@ export type RealtimeClientEventTranscriptionSessionUpdate = {
  */
 export type RealtimeConversationItem = {
   /**
-   * The arguments of the function call (for `function_call` items).
+   * The unique ID of the item, this can be generated by the client to help
+   * manage server-side context, but is not required because the server will
+   * generate one if not provided.
    *
    */
-  arguments?: string;
+  id?: string;
   /**
-   * The ID of the function call (for `function_call` and
-   * `function_call_output` items). If passed on a `function_call_output`
-   * item, the server will check that a `function_call` item with the same
-   * ID exists in the conversation history.
+   * The type of the item (`message`, `function_call`, `function_call_output`).
    *
    */
-  call_id?: string;
+  type?: 'message' | 'function_call' | 'function_call_output';
+  /**
+   * Identifier for the API object being returned - always `realtime.item`.
+   *
+   */
+  object?: 'realtime.item';
+  /**
+   * The status of the item (`completed`, `incomplete`, `in_progress`). These have no effect
+   * on the conversation, but are accepted for consistency with the
+   * `conversation.item.created` event.
+   *
+   */
+  status?: 'completed' | 'incomplete' | 'in_progress';
+  /**
+   * The role of the message sender (`user`, `assistant`, `system`), only
+   * applicable for `message` items.
+   *
+   */
+  role?: 'user' | 'assistant' | 'system';
   /**
    * The content of the message, applicable for `message` items.
    * - Message items of role `system` support only `input_text` content
@@ -9939,57 +9956,6 @@ export type RealtimeConversationItem = {
    */
   content?: Array<RealtimeConversationItemContent>;
   /**
-   * The unique ID of the item, this can be generated by the client to help
-   * manage server-side context, but is not required because the server will
-   * generate one if not provided.
-   *
-   */
-  id?: string;
-  /**
-   * The name of the function being called (for `function_call` items).
-   *
-   */
-  name?: string;
-  /**
-   * Identifier for the API object being returned - always `realtime.item`.
-   *
-   */
-  object?: 'realtime.item';
-  /**
-   * The output of the function call (for `function_call_output` items).
-   *
-   */
-  output?: string;
-  /**
-   * The role of the message sender (`user`, `assistant`, `system`), only
-   * applicable for `message` items.
-   *
-   */
-  role?: 'user' | 'assistant' | 'system';
-  /**
-   * The status of the item (`completed`, `incomplete`, `in_progress`). These have no effect
-   * on the conversation, but are accepted for consistency with the
-   * `conversation.item.created` event.
-   *
-   */
-  status?: 'completed' | 'incomplete' | 'in_progress';
-  /**
-   * The type of the item (`message`, `function_call`, `function_call_output`).
-   *
-   */
-  type?: 'message' | 'function_call' | 'function_call_output';
-};
-
-/**
- * The item to add to the conversation.
- */
-export type RealtimeConversationItemWithReference = {
-  /**
-   * The arguments of the function call (for `function_call` items).
-   *
-   */
-  arguments?: string;
-  /**
    * The ID of the function call (for `function_call` and
    * `function_call_output` items). If passed on a `function_call_output`
    * item, the server will check that a `function_call` item with the same
@@ -9998,42 +9964,26 @@ export type RealtimeConversationItemWithReference = {
    */
   call_id?: string;
   /**
-   * The content of the message, applicable for `message` items.
-   * - Message items of role `system` support only `input_text` content
-   * - Message items of role `user` support `input_text` and `input_audio`
-   * content
-   * - Message items of role `assistant` support `text` content.
+   * The name of the function being called (for `function_call` items).
    *
    */
-  content?: Array<{
-    /**
-     * Base64-encoded audio bytes, used for `input_audio` content type.
-     *
-     */
-    audio?: string;
-    /**
-     * ID of a previous conversation item to reference (for `item_reference`
-     * content types in `response.create` events). These can reference both
-     * client and server created items.
-     *
-     */
-    id?: string;
-    /**
-     * The text content, used for `input_text` and `text` content types.
-     *
-     */
-    text?: string;
-    /**
-     * The transcript of the audio, used for `input_audio` content type.
-     *
-     */
-    transcript?: string;
-    /**
-     * The content type (`input_text`, `input_audio`, `item_reference`, `text`).
-     *
-     */
-    type?: 'input_text' | 'input_audio' | 'item_reference' | 'text';
-  }>;
+  name?: string;
+  /**
+   * The arguments of the function call (for `function_call` items).
+   *
+   */
+  arguments?: string;
+  /**
+   * The output of the function call (for `function_call_output` items).
+   *
+   */
+  output?: string;
+};
+
+/**
+ * The item to add to the conversation.
+ */
+export type RealtimeConversationItemWithReference = {
   /**
    * For an item of type (`message` | `function_call` | `function_call_output`)
    * this field allows the client to assign the unique ID of the item. It is
@@ -10045,34 +9995,6 @@ export type RealtimeConversationItemWithReference = {
    */
   id?: string;
   /**
-   * The name of the function being called (for `function_call` items).
-   *
-   */
-  name?: string;
-  /**
-   * Identifier for the API object being returned - always `realtime.item`.
-   *
-   */
-  object?: 'realtime.item';
-  /**
-   * The output of the function call (for `function_call_output` items).
-   *
-   */
-  output?: string;
-  /**
-   * The role of the message sender (`user`, `assistant`, `system`), only
-   * applicable for `message` items.
-   *
-   */
-  role?: 'user' | 'assistant' | 'system';
-  /**
-   * The status of the item (`completed`, `incomplete`, `in_progress`). These have no effect
-   * on the conversation, but are accepted for consistency with the
-   * `conversation.item.created` event.
-   *
-   */
-  status?: 'completed' | 'incomplete' | 'in_progress';
-  /**
    * The type of the item (`message`, `function_call`, `function_call_output`, `item_reference`).
    *
    */
@@ -10081,6 +10003,84 @@ export type RealtimeConversationItemWithReference = {
     | 'function_call'
     | 'function_call_output'
     | 'item_reference';
+  /**
+   * Identifier for the API object being returned - always `realtime.item`.
+   *
+   */
+  object?: 'realtime.item';
+  /**
+   * The status of the item (`completed`, `incomplete`, `in_progress`). These have no effect
+   * on the conversation, but are accepted for consistency with the
+   * `conversation.item.created` event.
+   *
+   */
+  status?: 'completed' | 'incomplete' | 'in_progress';
+  /**
+   * The role of the message sender (`user`, `assistant`, `system`), only
+   * applicable for `message` items.
+   *
+   */
+  role?: 'user' | 'assistant' | 'system';
+  /**
+   * The content of the message, applicable for `message` items.
+   * - Message items of role `system` support only `input_text` content
+   * - Message items of role `user` support `input_text` and `input_audio`
+   * content
+   * - Message items of role `assistant` support `text` content.
+   *
+   */
+  content?: Array<{
+    /**
+     * The content type (`input_text`, `input_audio`, `item_reference`, `text`).
+     *
+     */
+    type?: 'input_text' | 'input_audio' | 'item_reference' | 'text';
+    /**
+     * The text content, used for `input_text` and `text` content types.
+     *
+     */
+    text?: string;
+    /**
+     * ID of a previous conversation item to reference (for `item_reference`
+     * content types in `response.create` events). These can reference both
+     * client and server created items.
+     *
+     */
+    id?: string;
+    /**
+     * Base64-encoded audio bytes, used for `input_audio` content type.
+     *
+     */
+    audio?: string;
+    /**
+     * The transcript of the audio, used for `input_audio` content type.
+     *
+     */
+    transcript?: string;
+  }>;
+  /**
+   * The ID of the function call (for `function_call` and
+   * `function_call_output` items). If passed on a `function_call_output`
+   * item, the server will check that a `function_call` item with the same
+   * ID exists in the conversation history.
+   *
+   */
+  call_id?: string;
+  /**
+   * The name of the function being called (for `function_call` items).
+   *
+   */
+  name?: string;
+  /**
+   * The arguments of the function call (for `function_call` items).
+   *
+   */
+  arguments?: string;
+  /**
+   * The output of the function call (for `function_call_output` items).
+   *
+   */
+  output?: string;
 };
 
 /**
@@ -10088,47 +10088,13 @@ export type RealtimeConversationItemWithReference = {
  */
 export type RealtimeResponse = {
   /**
-   * Which conversation the response is added to, determined by the `conversation`
-   * field in the `response.create` event. If `auto`, the response will be added to
-   * the default conversation and the value of `conversation_id` will be an id like
-   * `conv_1234`. If `none`, the response will not be added to any conversation and
-   * the value of `conversation_id` will be `null`. If responses are being triggered
-   * by server VAD, the response will be added to the default conversation, thus
-   * the `conversation_id` will be an id like `conv_1234`.
-   *
-   */
-  conversation_id?: string;
-  /**
    * The unique ID of the response.
    */
   id?: string;
   /**
-   * Maximum number of output tokens for a single assistant response,
-   * inclusive of tool calls, that was used in this response.
-   *
-   */
-  max_output_tokens?: number | 'inf';
-  metadata?: Metadata;
-  /**
-   * The set of modalities the model used to respond. If there are multiple modalities,
-   * the model will pick one, for example if `modalities` is `["text", "audio"]`, the model
-   * could be responding in either text or audio.
-   *
-   */
-  modalities?: Array<'text' | 'audio'>;
-  /**
    * The object type, must be `realtime.response`.
    */
   object?: 'realtime.response';
-  /**
-   * The list of output items generated by the response.
-   */
-  output?: Array<RealtimeConversationItem>;
-  /**
-   * The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
-   *
-   */
-  output_audio_format?: 'pcm16' | 'g711_ulaw' | 'g711_alaw';
   /**
    * The final status of the response (`completed`, `cancelled`, `failed`, or
    * `incomplete`, `in_progress`).
@@ -10140,20 +10106,12 @@ export type RealtimeResponse = {
    */
   status_details?: {
     /**
-     * A description of the error that caused the response to fail,
-     * populated when the `status` is `failed`.
+     * The type of error that caused the response to fail, corresponding
+     * with the `status` field (`completed`, `cancelled`, `incomplete`,
+     * `failed`).
      *
      */
-    error?: {
-      /**
-       * Error code, if any.
-       */
-      code?: string;
-      /**
-       * The type of error.
-       */
-      type?: string;
-    };
+    type?: 'completed' | 'cancelled' | 'incomplete' | 'failed';
     /**
      * The reason the Response did not complete. For a `cancelled` Response,
      * one of `turn_detected` (the server VAD detected a new start of speech)
@@ -10168,18 +10126,26 @@ export type RealtimeResponse = {
       | 'max_output_tokens'
       | 'content_filter';
     /**
-     * The type of error that caused the response to fail, corresponding
-     * with the `status` field (`completed`, `cancelled`, `incomplete`,
-     * `failed`).
+     * A description of the error that caused the response to fail,
+     * populated when the `status` is `failed`.
      *
      */
-    type?: 'completed' | 'cancelled' | 'incomplete' | 'failed';
+    error?: {
+      /**
+       * The type of error.
+       */
+      type?: string;
+      /**
+       * Error code, if any.
+       */
+      code?: string;
+    };
   };
   /**
-   * Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8.
-   *
+   * The list of output items generated by the response.
    */
-  temperature?: number;
+  output?: Array<RealtimeConversationItem>;
+  metadata?: Metadata;
   /**
    * Usage statistics for the Response, this will correspond to billing. A
    * Realtime API session will maintain a conversation context and append new
@@ -10189,13 +10155,27 @@ export type RealtimeResponse = {
    */
   usage?: {
     /**
+     * The total number of tokens in the Response including input and output
+     * text and audio tokens.
+     *
+     */
+    total_tokens?: number;
+    /**
+     * The number of input tokens used in the Response, including text and
+     * audio tokens.
+     *
+     */
+    input_tokens?: number;
+    /**
+     * The number of output tokens sent in the Response, including text and
+     * audio tokens.
+     *
+     */
+    output_tokens?: number;
+    /**
      * Details about the input tokens used in the Response.
      */
     input_token_details?: {
-      /**
-       * The number of audio tokens used in the Response.
-       */
-      audio_tokens?: number;
       /**
        * The number of cached tokens used in the Response.
        */
@@ -10204,39 +10184,36 @@ export type RealtimeResponse = {
        * The number of text tokens used in the Response.
        */
       text_tokens?: number;
+      /**
+       * The number of audio tokens used in the Response.
+       */
+      audio_tokens?: number;
     };
-    /**
-     * The number of input tokens used in the Response, including text and
-     * audio tokens.
-     *
-     */
-    input_tokens?: number;
     /**
      * Details about the output tokens used in the Response.
      */
     output_token_details?: {
       /**
-       * The number of audio tokens used in the Response.
-       */
-      audio_tokens?: number;
-      /**
        * The number of text tokens used in the Response.
        */
       text_tokens?: number;
+      /**
+       * The number of audio tokens used in the Response.
+       */
+      audio_tokens?: number;
     };
-    /**
-     * The number of output tokens sent in the Response, including text and
-     * audio tokens.
-     *
-     */
-    output_tokens?: number;
-    /**
-     * The total number of tokens in the Response including input and output
-     * text and audio tokens.
-     *
-     */
-    total_tokens?: number;
   };
+  /**
+   * Which conversation the response is added to, determined by the `conversation`
+   * field in the `response.create` event. If `auto`, the response will be added to
+   * the default conversation and the value of `conversation_id` will be an id like
+   * `conv_1234`. If `none`, the response will not be added to any conversation and
+   * the value of `conversation_id` will be `null`. If responses are being triggered
+   * by server VAD, the response will be added to the default conversation, thus
+   * the `conversation_id` will be an id like `conv_1234`.
+   *
+   */
+  conversation_id?: string;
   /**
    * The voice the model used to respond.
    * Current voice options are `alloy`, `ash`, `ballad`, `coral`, `echo`, `sage`,
@@ -10244,6 +10221,29 @@ export type RealtimeResponse = {
    *
    */
   voice?: VoiceIdsShared;
+  /**
+   * The set of modalities the model used to respond. If there are multiple modalities,
+   * the model will pick one, for example if `modalities` is `["text", "audio"]`, the model
+   * could be responding in either text or audio.
+   *
+   */
+  modalities?: Array<'text' | 'audio'>;
+  /**
+   * The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+   *
+   */
+  output_audio_format?: 'pcm16' | 'g711_ulaw' | 'g711_alaw';
+  /**
+   * Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8.
+   *
+   */
+  temperature?: number;
+  /**
+   * Maximum number of output tokens for a single assistant response,
+   * inclusive of tool calls, that was used in this response.
+   *
+   */
+  max_output_tokens?: number | 'inf';
 };
 
 /**
@@ -10251,22 +10251,11 @@ export type RealtimeResponse = {
  */
 export type RealtimeResponseCreateParams = {
   /**
-   * Controls which conversation the response is added to. Currently supports
-   * `auto` and `none`, with `auto` as the default value. The `auto` value
-   * means that the contents of the response will be added to the default
-   * conversation. Set this to `none` to create an out-of-band response which
-   * will not add items to default conversation.
+   * The set of modalities the model can respond with. To disable audio,
+   * set this to ["text"].
    *
    */
-  conversation?: string | 'auto' | 'none';
-  /**
-   * Input items to include in the prompt for the model. Using this field
-   * creates a new context for this Response instead of using the default
-   * conversation. An empty array `[]` will clear the context for this Response.
-   * Note that this can include references to items from the default conversation.
-   *
-   */
-  input?: Array<RealtimeConversationItemWithReference>;
+  modalities?: Array<'text' | 'audio'>;
   /**
    * The default system instructions (i.e. system message) prepended to model
    * calls. This field allows the client to guide the model on desired
@@ -10284,40 +10273,30 @@ export type RealtimeResponseCreateParams = {
    */
   instructions?: string;
   /**
-   * Maximum number of output tokens for a single assistant response,
-   * inclusive of tool calls. Provide an integer between 1 and 4096 to
-   * limit output tokens, or `inf` for the maximum available tokens for a
-   * given model. Defaults to `inf`.
+   * The voice the model uses to respond. Voice cannot be changed during the
+   * session once the model has responded with audio at least once. Current
+   * voice options are `alloy`, `ash`, `ballad`, `coral`, `echo`, `sage`,
+   * `shimmer`, and `verse`.
    *
    */
-  max_response_output_tokens?: number | 'inf';
-  metadata?: Metadata;
-  /**
-   * The set of modalities the model can respond with. To disable audio,
-   * set this to ["text"].
-   *
-   */
-  modalities?: Array<'text' | 'audio'>;
+  voice?: VoiceIdsShared;
   /**
    * The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
    *
    */
   output_audio_format?: 'pcm16' | 'g711_ulaw' | 'g711_alaw';
   /**
-   * Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8.
-   *
-   */
-  temperature?: number;
-  /**
-   * How the model chooses tools. Options are `auto`, `none`, `required`, or
-   * specify a function, like `{"type": "function", "function": {"name": "my_function"}}`.
-   *
-   */
-  tool_choice?: string;
-  /**
    * Tools (functions) available to the model.
    */
   tools?: Array<{
+    /**
+     * The type of the tool, i.e. `function`.
+     */
+    type?: 'function';
+    /**
+     * The name of the function.
+     */
+    name?: string;
     /**
      * The description of the function, including guidance on when and how
      * to call it, and guidance about what to tell the user when calling
@@ -10326,28 +10305,49 @@ export type RealtimeResponseCreateParams = {
      */
     description?: string;
     /**
-     * The name of the function.
-     */
-    name?: string;
-    /**
      * Parameters of the function in JSON Schema.
      */
     parameters?: {
       [key: string]: unknown;
     };
-    /**
-     * The type of the tool, i.e. `function`.
-     */
-    type?: 'function';
   }>;
   /**
-   * The voice the model uses to respond. Voice cannot be changed during the
-   * session once the model has responded with audio at least once. Current
-   * voice options are `alloy`, `ash`, `ballad`, `coral`, `echo`, `sage`,
-   * `shimmer`, and `verse`.
+   * How the model chooses tools. Options are `auto`, `none`, `required`, or
+   * specify a function, like `{"type": "function", "function": {"name": "my_function"}}`.
    *
    */
-  voice?: VoiceIdsShared;
+  tool_choice?: string;
+  /**
+   * Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8.
+   *
+   */
+  temperature?: number;
+  /**
+   * Maximum number of output tokens for a single assistant response,
+   * inclusive of tool calls. Provide an integer between 1 and 4096 to
+   * limit output tokens, or `inf` for the maximum available tokens for a
+   * given model. Defaults to `inf`.
+   *
+   */
+  max_response_output_tokens?: number | 'inf';
+  /**
+   * Controls which conversation the response is added to. Currently supports
+   * `auto` and `none`, with `auto` as the default value. The `auto` value
+   * means that the contents of the response will be added to the default
+   * conversation. Set this to `none` to create an out-of-band response which
+   * will not add items to default conversation.
+   *
+   */
+  conversation?: string | 'auto' | 'none';
+  metadata?: Metadata;
+  /**
+   * Input items to include in the prompt for the model. Using this field
+   * creates a new context for this Response instead of using the default
+   * conversation. An empty array `[]` will clear the context for this Response.
+   * Note that this can include references to items from the default conversation.
+   *
+   */
+  input?: Array<RealtimeConversationItemWithReference>;
 };
 
 /**
@@ -10464,6 +10464,14 @@ export type RealtimeServerEvent =
  */
 export type RealtimeServerEventConversationCreated = {
   /**
+   * The unique ID of the server event.
+   */
+  event_id: string;
+  /**
+   * The event type, must be `conversation.created`.
+   */
+  type: 'conversation.created';
+  /**
    * The conversation resource.
    */
   conversation: {
@@ -10476,14 +10484,6 @@ export type RealtimeServerEventConversationCreated = {
      */
     object?: 'realtime.conversation';
   };
-  /**
-   * The unique ID of the server event.
-   */
-  event_id: string;
-  /**
-   * The event type, must be `conversation.created`.
-   */
-  type: 'conversation.created';
 };
 
 /**
@@ -10503,7 +10503,10 @@ export type RealtimeServerEventConversationItemCreated = {
    * The unique ID of the server event.
    */
   event_id: string;
-  item: RealtimeConversationItem;
+  /**
+   * The event type, must be `conversation.item.created`.
+   */
+  type: 'conversation.item.created';
   /**
    * The ID of the preceding item in the Conversation context, allows the
    * client to understand the order of the conversation. Can be `null` if the
@@ -10511,10 +10514,7 @@ export type RealtimeServerEventConversationItemCreated = {
    *
    */
   previous_item_id?: string;
-  /**
-   * The event type, must be `conversation.item.created`.
-   */
-  type: 'conversation.item.created';
+  item: RealtimeConversationItem;
 };
 
 /**
@@ -10529,13 +10529,13 @@ export type RealtimeServerEventConversationItemDeleted = {
    */
   event_id: string;
   /**
-   * The ID of the item that was deleted.
-   */
-  item_id: string;
-  /**
    * The event type, must be `conversation.item.deleted`.
    */
   type: 'conversation.item.deleted';
+  /**
+   * The ID of the item that was deleted.
+   */
+  item_id: string;
 };
 
 /**
@@ -10554,31 +10554,31 @@ export type RealtimeServerEventConversationItemDeleted = {
 export type RealtimeServerEventConversationItemInputAudioTranscriptionCompleted =
   {
     /**
-     * The index of the content part containing the audio.
-     */
-    content_index: number;
-    /**
      * The unique ID of the server event.
      */
     event_id: string;
-    /**
-     * The ID of the user message item containing the audio.
-     */
-    item_id: string;
-    /**
-     * The log probabilities of the transcription.
-     */
-    logprobs?: Array<LogProbProperties>;
-    /**
-     * The transcribed text.
-     */
-    transcript: string;
     /**
      * The event type, must be
      * `conversation.item.input_audio_transcription.completed`.
      *
      */
     type: 'conversation.item.input_audio_transcription.completed';
+    /**
+     * The ID of the user message item containing the audio.
+     */
+    item_id: string;
+    /**
+     * The index of the content part containing the audio.
+     */
+    content_index: number;
+    /**
+     * The transcribed text.
+     */
+    transcript: string;
+    /**
+     * The log probabilities of the transcription.
+     */
+    logprobs?: Array<LogProbProperties>;
     /**
      * Usage statistics for the transcription.
      */
@@ -10591,6 +10591,18 @@ export type RealtimeServerEventConversationItemInputAudioTranscriptionCompleted 
  */
 export type RealtimeServerEventConversationItemInputAudioTranscriptionDelta = {
   /**
+   * The unique ID of the server event.
+   */
+  event_id: string;
+  /**
+   * The event type, must be `conversation.item.input_audio_transcription.delta`.
+   */
+  type: 'conversation.item.input_audio_transcription.delta';
+  /**
+   * The ID of the item.
+   */
+  item_id: string;
+  /**
    * The index of the content part in the item's content array.
    */
   content_index?: number;
@@ -10599,21 +10611,9 @@ export type RealtimeServerEventConversationItemInputAudioTranscriptionDelta = {
    */
   delta?: string;
   /**
-   * The unique ID of the server event.
-   */
-  event_id: string;
-  /**
-   * The ID of the item.
-   */
-  item_id: string;
-  /**
    * The log probabilities of the transcription.
    */
   logprobs?: Array<LogProbProperties>;
-  /**
-   * The event type, must be `conversation.item.input_audio_transcription.delta`.
-   */
-  type: 'conversation.item.input_audio_transcription.delta';
 };
 
 /**
@@ -10624,6 +10624,20 @@ export type RealtimeServerEventConversationItemInputAudioTranscriptionDelta = {
  */
 export type RealtimeServerEventConversationItemInputAudioTranscriptionFailed = {
   /**
+   * The unique ID of the server event.
+   */
+  event_id: string;
+  /**
+   * The event type, must be
+   * `conversation.item.input_audio_transcription.failed`.
+   *
+   */
+  type: 'conversation.item.input_audio_transcription.failed';
+  /**
+   * The ID of the user message item.
+   */
+  item_id: string;
+  /**
    * The index of the content part containing the audio.
    */
   content_index: number;
@@ -10631,6 +10645,10 @@ export type RealtimeServerEventConversationItemInputAudioTranscriptionFailed = {
    * Details of the transcription error.
    */
   error: {
+    /**
+     * The type of error.
+     */
+    type?: string;
     /**
      * Error code, if any.
      */
@@ -10643,25 +10661,7 @@ export type RealtimeServerEventConversationItemInputAudioTranscriptionFailed = {
      * Parameter related to the error, if any.
      */
     param?: string;
-    /**
-     * The type of error.
-     */
-    type?: string;
   };
-  /**
-   * The unique ID of the server event.
-   */
-  event_id: string;
-  /**
-   * The ID of the user message item.
-   */
-  item_id: string;
-  /**
-   * The event type, must be
-   * `conversation.item.input_audio_transcription.failed`.
-   *
-   */
-  type: 'conversation.item.input_audio_transcription.failed';
 };
 
 /**
@@ -10673,11 +10673,11 @@ export type RealtimeServerEventConversationItemRetrieved = {
    * The unique ID of the server event.
    */
   event_id: string;
-  item: RealtimeConversationItem;
   /**
    * The event type, must be `conversation.item.retrieved`.
    */
   type: 'conversation.item.retrieved';
+  item: RealtimeConversationItem;
 };
 
 /**
@@ -10691,26 +10691,26 @@ export type RealtimeServerEventConversationItemRetrieved = {
  */
 export type RealtimeServerEventConversationItemTruncated = {
   /**
-   * The duration up to which the audio was truncated, in milliseconds.
-   *
-   */
-  audio_end_ms: number;
-  /**
-   * The index of the content part that was truncated.
-   */
-  content_index: number;
-  /**
    * The unique ID of the server event.
    */
   event_id: string;
+  /**
+   * The event type, must be `conversation.item.truncated`.
+   */
+  type: 'conversation.item.truncated';
   /**
    * The ID of the assistant message item that was truncated.
    */
   item_id: string;
   /**
-   * The event type, must be `conversation.item.truncated`.
+   * The index of the content part that was truncated.
    */
-  type: 'conversation.item.truncated';
+  content_index: number;
+  /**
+   * The duration up to which the audio was truncated, in milliseconds.
+   *
+   */
+  audio_end_ms: number;
 };
 
 /**
@@ -10721,18 +10721,26 @@ export type RealtimeServerEventConversationItemTruncated = {
  */
 export type RealtimeServerEventError = {
   /**
+   * The unique ID of the server event.
+   */
+  event_id: string;
+  /**
+   * The event type, must be `error`.
+   */
+  type: 'error';
+  /**
    * Details of the error.
    */
   error: {
     /**
+     * The type of error (e.g., "invalid_request_error", "server_error").
+     *
+     */
+    type: string;
+    /**
      * Error code, if any.
      */
     code?: string;
-    /**
-     * The event_id of the client event that caused the error, if applicable.
-     *
-     */
-    event_id?: string;
     /**
      * A human-readable error message.
      */
@@ -10742,19 +10750,11 @@ export type RealtimeServerEventError = {
      */
     param?: string;
     /**
-     * The type of error (e.g., "invalid_request_error", "server_error").
+     * The event_id of the client event that caused the error, if applicable.
      *
      */
-    type: string;
+    event_id?: string;
   };
-  /**
-   * The unique ID of the server event.
-   */
-  event_id: string;
-  /**
-   * The event type, must be `error`.
-   */
-  type: 'error';
 };
 
 /**
@@ -10786,9 +10786,9 @@ export type RealtimeServerEventInputAudioBufferCommitted = {
    */
   event_id: string;
   /**
-   * The ID of the user message item that will be created.
+   * The event type, must be `input_audio_buffer.committed`.
    */
-  item_id: string;
+  type: 'input_audio_buffer.committed';
   /**
    * The ID of the preceding item after which the new item will be inserted.
    * Can be `null` if the item has no predecessor.
@@ -10796,9 +10796,9 @@ export type RealtimeServerEventInputAudioBufferCommitted = {
    */
   previous_item_id?: string;
   /**
-   * The event type, must be `input_audio_buffer.committed`.
+   * The ID of the user message item that will be created.
    */
-  type: 'input_audio_buffer.committed';
+  item_id: string;
 };
 
 /**
@@ -10816,6 +10816,14 @@ export type RealtimeServerEventInputAudioBufferCommitted = {
  */
 export type RealtimeServerEventInputAudioBufferSpeechStarted = {
   /**
+   * The unique ID of the server event.
+   */
+  event_id: string;
+  /**
+   * The event type, must be `input_audio_buffer.speech_started`.
+   */
+  type: 'input_audio_buffer.speech_started';
+  /**
    * Milliseconds from the start of all audio written to the buffer during the
    * session when speech was first detected. This will correspond to the
    * beginning of audio sent to the model, and thus includes the
@@ -10824,18 +10832,10 @@ export type RealtimeServerEventInputAudioBufferSpeechStarted = {
    */
   audio_start_ms: number;
   /**
-   * The unique ID of the server event.
-   */
-  event_id: string;
-  /**
    * The ID of the user message item that will be created when speech stops.
    *
    */
   item_id: string;
-  /**
-   * The event type, must be `input_audio_buffer.speech_started`.
-   */
-  type: 'input_audio_buffer.speech_started';
 };
 
 /**
@@ -10846,6 +10846,14 @@ export type RealtimeServerEventInputAudioBufferSpeechStarted = {
  */
 export type RealtimeServerEventInputAudioBufferSpeechStopped = {
   /**
+   * The unique ID of the server event.
+   */
+  event_id: string;
+  /**
+   * The event type, must be `input_audio_buffer.speech_stopped`.
+   */
+  type: 'input_audio_buffer.speech_stopped';
+  /**
    * Milliseconds since the session started when speech stopped. This will
    * correspond to the end of audio sent to the model, and thus includes the
    * `min_silence_duration_ms` configured in the Session.
@@ -10853,17 +10861,9 @@ export type RealtimeServerEventInputAudioBufferSpeechStopped = {
    */
   audio_end_ms: number;
   /**
-   * The unique ID of the server event.
-   */
-  event_id: string;
-  /**
    * The ID of the user message item that will be created.
    */
   item_id: string;
-  /**
-   * The event type, must be `input_audio_buffer.speech_stopped`.
-   */
-  type: 'input_audio_buffer.speech_stopped';
 };
 
 /**
@@ -10880,13 +10880,13 @@ export type RealtimeServerEventOutputAudioBufferCleared = {
    */
   event_id: string;
   /**
-   * The unique ID of the response that produced the audio.
-   */
-  response_id: string;
-  /**
    * The event type, must be `output_audio_buffer.cleared`.
    */
   type: 'output_audio_buffer.cleared';
+  /**
+   * The unique ID of the response that produced the audio.
+   */
+  response_id: string;
 };
 
 /**
@@ -10902,13 +10902,13 @@ export type RealtimeServerEventOutputAudioBufferStarted = {
    */
   event_id: string;
   /**
-   * The unique ID of the response that produced the audio.
-   */
-  response_id: string;
-  /**
    * The event type, must be `output_audio_buffer.started`.
    */
   type: 'output_audio_buffer.started';
+  /**
+   * The unique ID of the response that produced the audio.
+   */
+  response_id: string;
 };
 
 /**
@@ -10924,13 +10924,13 @@ export type RealtimeServerEventOutputAudioBufferStopped = {
    */
   event_id: string;
   /**
-   * The unique ID of the response that produced the audio.
-   */
-  response_id: string;
-  /**
    * The event type, must be `output_audio_buffer.stopped`.
    */
   type: 'output_audio_buffer.stopped';
+  /**
+   * The unique ID of the response that produced the audio.
+   */
+  response_id: string;
 };
 
 /**
@@ -10946,18 +10946,22 @@ export type RealtimeServerEventRateLimitsUpdated = {
    */
   event_id: string;
   /**
+   * The event type, must be `rate_limits.updated`.
+   */
+  type: 'rate_limits.updated';
+  /**
    * List of rate limit information.
    */
   rate_limits: Array<{
-    /**
-     * The maximum allowed value for the rate limit.
-     */
-    limit?: number;
     /**
      * The name of the rate limit (`requests`, `tokens`).
      *
      */
     name?: 'requests' | 'tokens';
+    /**
+     * The maximum allowed value for the rate limit.
+     */
+    limit?: number;
     /**
      * The remaining value before the limit is reached.
      */
@@ -10967,10 +10971,6 @@ export type RealtimeServerEventRateLimitsUpdated = {
      */
     reset_seconds?: number;
   }>;
-  /**
-   * The event type, must be `rate_limits.updated`.
-   */
-  type: 'rate_limits.updated';
 };
 
 /**
@@ -10978,17 +10978,17 @@ export type RealtimeServerEventRateLimitsUpdated = {
  */
 export type RealtimeServerEventResponseAudioDelta = {
   /**
-   * The index of the content part in the item's content array.
-   */
-  content_index: number;
-  /**
-   * Base64-encoded audio data delta.
-   */
-  delta: string;
-  /**
    * The unique ID of the server event.
    */
   event_id: string;
+  /**
+   * The event type, must be `response.audio.delta`.
+   */
+  type: 'response.audio.delta';
+  /**
+   * The ID of the response.
+   */
+  response_id: string;
   /**
    * The ID of the item.
    */
@@ -10998,13 +10998,13 @@ export type RealtimeServerEventResponseAudioDelta = {
    */
   output_index: number;
   /**
-   * The ID of the response.
+   * The index of the content part in the item's content array.
    */
-  response_id: string;
+  content_index: number;
   /**
-   * The event type, must be `response.audio.delta`.
+   * Base64-encoded audio data delta.
    */
-  type: 'response.audio.delta';
+  delta: string;
 };
 
 /**
@@ -11014,13 +11014,17 @@ export type RealtimeServerEventResponseAudioDelta = {
  */
 export type RealtimeServerEventResponseAudioDone = {
   /**
-   * The index of the content part in the item's content array.
-   */
-  content_index: number;
-  /**
    * The unique ID of the server event.
    */
   event_id: string;
+  /**
+   * The event type, must be `response.audio.done`.
+   */
+  type: 'response.audio.done';
+  /**
+   * The ID of the response.
+   */
+  response_id: string;
   /**
    * The ID of the item.
    */
@@ -11030,13 +11034,9 @@ export type RealtimeServerEventResponseAudioDone = {
    */
   output_index: number;
   /**
-   * The ID of the response.
+   * The index of the content part in the item's content array.
    */
-  response_id: string;
-  /**
-   * The event type, must be `response.audio.done`.
-   */
-  type: 'response.audio.done';
+  content_index: number;
 };
 
 /**
@@ -11045,17 +11045,17 @@ export type RealtimeServerEventResponseAudioDone = {
  */
 export type RealtimeServerEventResponseAudioTranscriptDelta = {
   /**
-   * The index of the content part in the item's content array.
-   */
-  content_index: number;
-  /**
-   * The transcript delta.
-   */
-  delta: string;
-  /**
    * The unique ID of the server event.
    */
   event_id: string;
+  /**
+   * The event type, must be `response.audio_transcript.delta`.
+   */
+  type: 'response.audio_transcript.delta';
+  /**
+   * The ID of the response.
+   */
+  response_id: string;
   /**
    * The ID of the item.
    */
@@ -11065,13 +11065,13 @@ export type RealtimeServerEventResponseAudioTranscriptDelta = {
    */
   output_index: number;
   /**
-   * The ID of the response.
+   * The index of the content part in the item's content array.
    */
-  response_id: string;
+  content_index: number;
   /**
-   * The event type, must be `response.audio_transcript.delta`.
+   * The transcript delta.
    */
-  type: 'response.audio_transcript.delta';
+  delta: string;
 };
 
 /**
@@ -11082,13 +11082,17 @@ export type RealtimeServerEventResponseAudioTranscriptDelta = {
  */
 export type RealtimeServerEventResponseAudioTranscriptDone = {
   /**
-   * The index of the content part in the item's content array.
-   */
-  content_index: number;
-  /**
    * The unique ID of the server event.
    */
   event_id: string;
+  /**
+   * The event type, must be `response.audio_transcript.done`.
+   */
+  type: 'response.audio_transcript.done';
+  /**
+   * The ID of the response.
+   */
+  response_id: string;
   /**
    * The ID of the item.
    */
@@ -11098,17 +11102,13 @@ export type RealtimeServerEventResponseAudioTranscriptDone = {
    */
   output_index: number;
   /**
-   * The ID of the response.
+   * The index of the content part in the item's content array.
    */
-  response_id: string;
+  content_index: number;
   /**
    * The final transcript of the audio.
    */
   transcript: string;
-  /**
-   * The event type, must be `response.audio_transcript.done`.
-   */
-  type: 'response.audio_transcript.done';
 };
 
 /**
@@ -11118,13 +11118,17 @@ export type RealtimeServerEventResponseAudioTranscriptDone = {
  */
 export type RealtimeServerEventResponseContentPartAdded = {
   /**
-   * The index of the content part in the item's content array.
-   */
-  content_index: number;
-  /**
    * The unique ID of the server event.
    */
   event_id: string;
+  /**
+   * The event type, must be `response.content_part.added`.
+   */
+  type: 'response.content_part.added';
+  /**
+   * The ID of the response.
+   */
+  response_id: string;
   /**
    * The ID of the item to which the content part was added.
    */
@@ -11134,34 +11138,30 @@ export type RealtimeServerEventResponseContentPartAdded = {
    */
   output_index: number;
   /**
+   * The index of the content part in the item's content array.
+   */
+  content_index: number;
+  /**
    * The content part that was added.
    */
   part: {
     /**
-     * Base64-encoded audio data (if type is "audio").
+     * The content type ("text", "audio").
      */
-    audio?: string;
+    type?: 'text' | 'audio';
     /**
      * The text content (if type is "text").
      */
     text?: string;
     /**
+     * Base64-encoded audio data (if type is "audio").
+     */
+    audio?: string;
+    /**
      * The transcript of the audio (if type is "audio").
      */
     transcript?: string;
-    /**
-     * The content type ("text", "audio").
-     */
-    type?: 'text' | 'audio';
   };
-  /**
-   * The ID of the response.
-   */
-  response_id: string;
-  /**
-   * The event type, must be `response.content_part.added`.
-   */
-  type: 'response.content_part.added';
 };
 
 /**
@@ -11171,13 +11171,17 @@ export type RealtimeServerEventResponseContentPartAdded = {
  */
 export type RealtimeServerEventResponseContentPartDone = {
   /**
-   * The index of the content part in the item's content array.
-   */
-  content_index: number;
-  /**
    * The unique ID of the server event.
    */
   event_id: string;
+  /**
+   * The event type, must be `response.content_part.done`.
+   */
+  type: 'response.content_part.done';
+  /**
+   * The ID of the response.
+   */
+  response_id: string;
   /**
    * The ID of the item.
    */
@@ -11187,34 +11191,30 @@ export type RealtimeServerEventResponseContentPartDone = {
    */
   output_index: number;
   /**
+   * The index of the content part in the item's content array.
+   */
+  content_index: number;
+  /**
    * The content part that is done.
    */
   part: {
     /**
-     * Base64-encoded audio data (if type is "audio").
+     * The content type ("text", "audio").
      */
-    audio?: string;
+    type?: 'text' | 'audio';
     /**
      * The text content (if type is "text").
      */
     text?: string;
     /**
+     * Base64-encoded audio data (if type is "audio").
+     */
+    audio?: string;
+    /**
      * The transcript of the audio (if type is "audio").
      */
     transcript?: string;
-    /**
-     * The content type ("text", "audio").
-     */
-    type?: 'text' | 'audio';
   };
-  /**
-   * The ID of the response.
-   */
-  response_id: string;
-  /**
-   * The event type, must be `response.content_part.done`.
-   */
-  type: 'response.content_part.done';
 };
 
 /**
@@ -11227,11 +11227,11 @@ export type RealtimeServerEventResponseCreated = {
    * The unique ID of the server event.
    */
   event_id: string;
-  response: RealtimeResponse;
   /**
    * The event type, must be `response.created`.
    */
   type: 'response.created';
+  response: RealtimeResponse;
 };
 
 /**
@@ -11245,11 +11245,11 @@ export type RealtimeServerEventResponseDone = {
    * The unique ID of the server event.
    */
   event_id: string;
-  response: RealtimeResponse;
   /**
    * The event type, must be `response.done`.
    */
   type: 'response.done';
+  response: RealtimeResponse;
 };
 
 /**
@@ -11258,17 +11258,18 @@ export type RealtimeServerEventResponseDone = {
  */
 export type RealtimeServerEventResponseFunctionCallArgumentsDelta = {
   /**
-   * The ID of the function call.
-   */
-  call_id: string;
-  /**
-   * The arguments delta as a JSON string.
-   */
-  delta: string;
-  /**
    * The unique ID of the server event.
    */
   event_id: string;
+  /**
+   * The event type, must be `response.function_call_arguments.delta`.
+   *
+   */
+  type: 'response.function_call_arguments.delta';
+  /**
+   * The ID of the response.
+   */
+  response_id: string;
   /**
    * The ID of the function call item.
    */
@@ -11278,14 +11279,13 @@ export type RealtimeServerEventResponseFunctionCallArgumentsDelta = {
    */
   output_index: number;
   /**
-   * The ID of the response.
+   * The ID of the function call.
    */
-  response_id: string;
+  call_id: string;
   /**
-   * The event type, must be `response.function_call_arguments.delta`.
-   *
+   * The arguments delta as a JSON string.
    */
-  type: 'response.function_call_arguments.delta';
+  delta: string;
 };
 
 /**
@@ -11295,17 +11295,18 @@ export type RealtimeServerEventResponseFunctionCallArgumentsDelta = {
  */
 export type RealtimeServerEventResponseFunctionCallArgumentsDone = {
   /**
-   * The final arguments as a JSON string.
-   */
-  arguments: string;
-  /**
-   * The ID of the function call.
-   */
-  call_id: string;
-  /**
    * The unique ID of the server event.
    */
   event_id: string;
+  /**
+   * The event type, must be `response.function_call_arguments.done`.
+   *
+   */
+  type: 'response.function_call_arguments.done';
+  /**
+   * The ID of the response.
+   */
+  response_id: string;
   /**
    * The ID of the function call item.
    */
@@ -11315,14 +11316,13 @@ export type RealtimeServerEventResponseFunctionCallArgumentsDone = {
    */
   output_index: number;
   /**
-   * The ID of the response.
+   * The ID of the function call.
    */
-  response_id: string;
+  call_id: string;
   /**
-   * The event type, must be `response.function_call_arguments.done`.
-   *
+   * The final arguments as a JSON string.
    */
-  type: 'response.function_call_arguments.done';
+  arguments: string;
 };
 
 /**
@@ -11333,19 +11333,19 @@ export type RealtimeServerEventResponseOutputItemAdded = {
    * The unique ID of the server event.
    */
   event_id: string;
-  item: RealtimeConversationItem;
   /**
-   * The index of the output item in the Response.
+   * The event type, must be `response.output_item.added`.
    */
-  output_index: number;
+  type: 'response.output_item.added';
   /**
    * The ID of the Response to which the item belongs.
    */
   response_id: string;
   /**
-   * The event type, must be `response.output_item.added`.
+   * The index of the output item in the Response.
    */
-  type: 'response.output_item.added';
+  output_index: number;
+  item: RealtimeConversationItem;
 };
 
 /**
@@ -11358,19 +11358,19 @@ export type RealtimeServerEventResponseOutputItemDone = {
    * The unique ID of the server event.
    */
   event_id: string;
-  item: RealtimeConversationItem;
   /**
-   * The index of the output item in the Response.
+   * The event type, must be `response.output_item.done`.
    */
-  output_index: number;
+  type: 'response.output_item.done';
   /**
    * The ID of the Response to which the item belongs.
    */
   response_id: string;
   /**
-   * The event type, must be `response.output_item.done`.
+   * The index of the output item in the Response.
    */
-  type: 'response.output_item.done';
+  output_index: number;
+  item: RealtimeConversationItem;
 };
 
 /**
@@ -11378,17 +11378,17 @@ export type RealtimeServerEventResponseOutputItemDone = {
  */
 export type RealtimeServerEventResponseTextDelta = {
   /**
-   * The index of the content part in the item's content array.
-   */
-  content_index: number;
-  /**
-   * The text delta.
-   */
-  delta: string;
-  /**
    * The unique ID of the server event.
    */
   event_id: string;
+  /**
+   * The event type, must be `response.text.delta`.
+   */
+  type: 'response.text.delta';
+  /**
+   * The ID of the response.
+   */
+  response_id: string;
   /**
    * The ID of the item.
    */
@@ -11398,13 +11398,13 @@ export type RealtimeServerEventResponseTextDelta = {
    */
   output_index: number;
   /**
-   * The ID of the response.
+   * The index of the content part in the item's content array.
    */
-  response_id: string;
+  content_index: number;
   /**
-   * The event type, must be `response.text.delta`.
+   * The text delta.
    */
-  type: 'response.text.delta';
+  delta: string;
 };
 
 /**
@@ -11414,13 +11414,17 @@ export type RealtimeServerEventResponseTextDelta = {
  */
 export type RealtimeServerEventResponseTextDone = {
   /**
-   * The index of the content part in the item's content array.
-   */
-  content_index: number;
-  /**
    * The unique ID of the server event.
    */
   event_id: string;
+  /**
+   * The event type, must be `response.text.done`.
+   */
+  type: 'response.text.done';
+  /**
+   * The ID of the response.
+   */
+  response_id: string;
   /**
    * The ID of the item.
    */
@@ -11430,17 +11434,13 @@ export type RealtimeServerEventResponseTextDone = {
    */
   output_index: number;
   /**
-   * The ID of the response.
+   * The index of the content part in the item's content array.
    */
-  response_id: string;
+  content_index: number;
   /**
    * The final text content.
    */
   text: string;
-  /**
-   * The event type, must be `response.text.done`.
-   */
-  type: 'response.text.done';
 };
 
 /**
@@ -11454,11 +11454,11 @@ export type RealtimeServerEventSessionCreated = {
    * The unique ID of the server event.
    */
   event_id: string;
-  session: RealtimeSession;
   /**
    * The event type, must be `session.created`.
    */
   type: 'session.created';
+  session: RealtimeSession;
 };
 
 /**
@@ -11471,11 +11471,11 @@ export type RealtimeServerEventSessionUpdated = {
    * The unique ID of the server event.
    */
   event_id: string;
-  session: RealtimeSession;
   /**
    * The event type, must be `session.updated`.
    */
   type: 'session.updated';
+  session: RealtimeSession;
 };
 
 /**
@@ -11488,11 +11488,11 @@ export type RealtimeServerEventTranscriptionSessionUpdated = {
    * The unique ID of the server event.
    */
   event_id: string;
-  session: RealtimeTranscriptionSessionCreateResponse;
   /**
    * The event type, must be `transcription_session.updated`.
    */
   type: 'transcription_session.updated';
+  session: RealtimeTranscriptionSessionCreateResponse;
 };
 
 /**
@@ -11504,77 +11504,6 @@ export type RealtimeSession = {
    *
    */
   id?: string;
-  /**
-   * The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
-   * For `pcm16`, input audio must be 16-bit PCM at a 24kHz sample rate,
-   * single channel (mono), and little-endian byte order.
-   *
-   */
-  input_audio_format?: 'pcm16' | 'g711_ulaw' | 'g711_alaw';
-  /**
-   * Configuration for input audio noise reduction. This can be set to `null` to turn off.
-   * Noise reduction filters audio added to the input audio buffer before it is sent to VAD and the model.
-   * Filtering the audio can improve VAD and turn detection accuracy (reducing false positives) and model performance by improving perception of the input audio.
-   *
-   */
-  input_audio_noise_reduction?: {
-    /**
-     * Type of noise reduction. `near_field` is for close-talking microphones such as headphones, `far_field` is for far-field microphones such as laptop or conference room microphones.
-     *
-     */
-    type?: 'near_field' | 'far_field';
-  };
-  /**
-   * Configuration for input audio transcription, defaults to off and can be set to `null` to turn off once on. Input audio transcription is not native to the model, since the model consumes audio directly. Transcription runs asynchronously through [the /audio/transcriptions endpoint](https://platform.openai.com/docs/api-reference/audio/createTranscription) and should be treated as guidance of input audio content rather than precisely what the model heard. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.
-   *
-   */
-  input_audio_transcription?: {
-    /**
-     * The language of the input audio. Supplying the input language in
-     * [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format
-     * will improve accuracy and latency.
-     *
-     */
-    language?: string;
-    /**
-     * The model to use for transcription, current options are `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `whisper-1`.
-     *
-     */
-    model?: string;
-    /**
-     * An optional text to guide the model's style or continue a previous audio
-     * segment.
-     * For `whisper-1`, the [prompt is a list of keywords](https://platform.openai.com/docs/guides/speech-to-text#prompting).
-     * For `gpt-4o-transcribe` models, the prompt is a free text string, for example "expect words related to technology".
-     *
-     */
-    prompt?: string;
-  };
-  /**
-   * The default system instructions (i.e. system message) prepended to model
-   * calls. This field allows the client to guide the model on desired
-   * responses. The model can be instructed on response content and format,
-   * (e.g. "be extremely succinct", "act friendly", "here are examples of good
-   * responses") and on audio behavior (e.g. "talk quickly", "inject emotion
-   * into your voice", "laugh frequently"). The instructions are not
-   * guaranteed to be followed by the model, but they provide guidance to the
-   * model on the desired behavior.
-   *
-   *
-   * Note that the server sets default instructions which will be used if this
-   * field is not set and are visible in the `session.created` event at the
-   * start of the session.
-   *
-   */
-  instructions?: string;
-  /**
-   * Maximum number of output tokens for a single assistant response,
-   * inclusive of tool calls. Provide an integer between 1 and 4096 to
-   * limit output tokens, or `inf` for the maximum available tokens for a
-   * given model. Defaults to `inf`.
-   *
-   */
-  max_response_output_tokens?: number | 'inf';
   /**
    * The set of modalities the model can respond with. To disable audio,
    * set this to ["text"].
@@ -11593,89 +11522,69 @@ export type RealtimeSession = {
     | 'gpt-4o-mini-realtime-preview'
     | 'gpt-4o-mini-realtime-preview-2024-12-17';
   /**
+   * The default system instructions (i.e. system message) prepended to model
+   * calls. This field allows the client to guide the model on desired
+   * responses. The model can be instructed on response content and format,
+   * (e.g. "be extremely succinct", "act friendly", "here are examples of good
+   * responses") and on audio behavior (e.g. "talk quickly", "inject emotion
+   * into your voice", "laugh frequently"). The instructions are not
+   * guaranteed to be followed by the model, but they provide guidance to the
+   * model on the desired behavior.
+   *
+   *
+   * Note that the server sets default instructions which will be used if this
+   * field is not set and are visible in the `session.created` event at the
+   * start of the session.
+   *
+   */
+  instructions?: string;
+  /**
+   * The voice the model uses to respond. Voice cannot be changed during the
+   * session once the model has responded with audio at least once. Current
+   * voice options are `alloy`, `ash`, `ballad`, `coral`, `echo`, `sage`,
+   * `shimmer`, and `verse`.
+   *
+   */
+  voice?: VoiceIdsShared;
+  /**
+   * The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+   * For `pcm16`, input audio must be 16-bit PCM at a 24kHz sample rate,
+   * single channel (mono), and little-endian byte order.
+   *
+   */
+  input_audio_format?: 'pcm16' | 'g711_ulaw' | 'g711_alaw';
+  /**
    * The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
    * For `pcm16`, output audio is sampled at a rate of 24kHz.
    *
    */
   output_audio_format?: 'pcm16' | 'g711_ulaw' | 'g711_alaw';
   /**
-   * The speed of the model's spoken response. 1.0 is the default speed. 0.25 is
-   * the minimum speed. 1.5 is the maximum speed. This value can only be changed
-   * in between model turns, not while a response is in progress.
+   * Configuration for input audio transcription, defaults to off and can be set to `null` to turn off once on. Input audio transcription is not native to the model, since the model consumes audio directly. Transcription runs asynchronously through [the /audio/transcriptions endpoint](https://platform.openai.com/docs/api-reference/audio/createTranscription) and should be treated as guidance of input audio content rather than precisely what the model heard. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.
    *
    */
-  speed?: number;
-  /**
-   * Sampling temperature for the model, limited to [0.6, 1.2]. For audio models a temperature of 0.8 is highly recommended for best performance.
-   *
-   */
-  temperature?: number;
-  /**
-   * How the model chooses tools. Options are `auto`, `none`, `required`, or
-   * specify a function.
-   *
-   */
-  tool_choice?: string;
-  /**
-   * Tools (functions) available to the model.
-   */
-  tools?: Array<{
+  input_audio_transcription?: {
     /**
-     * The description of the function, including guidance on when and how
-     * to call it, and guidance about what to tell the user when calling
-     * (if anything).
+     * The model to use for transcription, current options are `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `whisper-1`.
      *
      */
-    description?: string;
+    model?: string;
     /**
-     * The name of the function.
+     * The language of the input audio. Supplying the input language in
+     * [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format
+     * will improve accuracy and latency.
+     *
      */
-    name?: string;
+    language?: string;
     /**
-     * Parameters of the function in JSON Schema.
+     * An optional text to guide the model's style or continue a previous audio
+     * segment.
+     * For `whisper-1`, the [prompt is a list of keywords](https://platform.openai.com/docs/guides/speech-to-text#prompting).
+     * For `gpt-4o-transcribe` models, the prompt is a free text string, for example "expect words related to technology".
+     *
      */
-    parameters?: {
-      [key: string]: unknown;
-    };
-    /**
-     * The type of the tool, i.e. `function`.
-     */
-    type?: 'function';
-  }>;
-  /**
-   * Tracing Configuration
-   *
-   * Configuration options for tracing. Set to null to disable tracing. Once
-   * tracing is enabled for a session, the configuration cannot be modified.
-   *
-   * `auto` will create a trace for the session with default values for the
-   * workflow name, group id, and metadata.
-   *
-   */
-  tracing?:
-    | 'auto'
-    | {
-        /**
-         * The group id to attach to this trace to enable filtering and
-         * grouping in the traces dashboard.
-         *
-         */
-        group_id?: string;
-        /**
-         * The arbitrary metadata to attach to this trace to enable
-         * filtering in the traces dashboard.
-         *
-         */
-        metadata?: {
-          [key: string]: unknown;
-        };
-        /**
-         * The name of the workflow to attach to this trace. This is used to
-         * name the trace in the traces dashboard.
-         *
-         */
-        workflow_name?: string;
-      };
+    prompt?: string;
+  };
   /**
    * Configuration for turn detection, ether Server VAD or Semantic VAD. This can be set to `null` to turn off, in which case the client must manually trigger model response.
    * Server VAD means that the model will detect the start and end of speech based on audio volume and respond at the end of user speech.
@@ -11684,21 +11593,22 @@ export type RealtimeSession = {
    */
   turn_detection?: {
     /**
-     * Whether or not to automatically generate a response when a VAD stop event occurs.
+     * Type of turn detection.
      *
      */
-    create_response?: boolean;
+    type?: 'server_vad' | 'semantic_vad';
     /**
      * Used only for `semantic_vad` mode. The eagerness of the model to respond. `low` will wait longer for the user to continue speaking, `high` will respond more quickly. `auto` is the default and is equivalent to `medium`.
      *
      */
     eagerness?: 'low' | 'medium' | 'high' | 'auto';
     /**
-     * Whether or not to automatically interrupt any ongoing response with output to the default
-     * conversation (i.e. `conversation` of `auto`) when a VAD start event occurs.
+     * Used only for `server_vad` mode. Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
+     * higher threshold will require louder audio to activate the model, and
+     * thus might perform better in noisy environments.
      *
      */
-    interrupt_response?: boolean;
+    threshold?: number;
     /**
      * Used only for `server_vad` mode. Amount of audio to include before the VAD detected speech (in
      * milliseconds). Defaults to 300ms.
@@ -11713,18 +11623,146 @@ export type RealtimeSession = {
      */
     silence_duration_ms?: number;
     /**
-     * Used only for `server_vad` mode. Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
-     * higher threshold will require louder audio to activate the model, and
-     * thus might perform better in noisy environments.
+     * Whether or not to automatically generate a response when a VAD stop event occurs.
      *
      */
-    threshold?: number;
+    create_response?: boolean;
     /**
-     * Type of turn detection.
+     * Whether or not to automatically interrupt any ongoing response with output to the default
+     * conversation (i.e. `conversation` of `auto`) when a VAD start event occurs.
      *
      */
-    type?: 'server_vad' | 'semantic_vad';
+    interrupt_response?: boolean;
   };
+  /**
+   * Configuration for input audio noise reduction. This can be set to `null` to turn off.
+   * Noise reduction filters audio added to the input audio buffer before it is sent to VAD and the model.
+   * Filtering the audio can improve VAD and turn detection accuracy (reducing false positives) and model performance by improving perception of the input audio.
+   *
+   */
+  input_audio_noise_reduction?: {
+    /**
+     * Type of noise reduction. `near_field` is for close-talking microphones such as headphones, `far_field` is for far-field microphones such as laptop or conference room microphones.
+     *
+     */
+    type?: 'near_field' | 'far_field';
+  };
+  /**
+   * The speed of the model's spoken response. 1.0 is the default speed. 0.25 is
+   * the minimum speed. 1.5 is the maximum speed. This value can only be changed
+   * in between model turns, not while a response is in progress.
+   *
+   */
+  speed?: number;
+  /**
+   * Tracing Configuration
+   *
+   * Configuration options for tracing. Set to null to disable tracing. Once
+   * tracing is enabled for a session, the configuration cannot be modified.
+   *
+   * `auto` will create a trace for the session with default values for the
+   * workflow name, group id, and metadata.
+   *
+   */
+  tracing?:
+    | 'auto'
+    | {
+        /**
+         * The name of the workflow to attach to this trace. This is used to
+         * name the trace in the traces dashboard.
+         *
+         */
+        workflow_name?: string;
+        /**
+         * The group id to attach to this trace to enable filtering and
+         * grouping in the traces dashboard.
+         *
+         */
+        group_id?: string;
+        /**
+         * The arbitrary metadata to attach to this trace to enable
+         * filtering in the traces dashboard.
+         *
+         */
+        metadata?: {
+          [key: string]: unknown;
+        };
+      };
+  /**
+   * Tools (functions) available to the model.
+   */
+  tools?: Array<{
+    /**
+     * The type of the tool, i.e. `function`.
+     */
+    type?: 'function';
+    /**
+     * The name of the function.
+     */
+    name?: string;
+    /**
+     * The description of the function, including guidance on when and how
+     * to call it, and guidance about what to tell the user when calling
+     * (if anything).
+     *
+     */
+    description?: string;
+    /**
+     * Parameters of the function in JSON Schema.
+     */
+    parameters?: {
+      [key: string]: unknown;
+    };
+  }>;
+  /**
+   * How the model chooses tools. Options are `auto`, `none`, `required`, or
+   * specify a function.
+   *
+   */
+  tool_choice?: string;
+  /**
+   * Sampling temperature for the model, limited to [0.6, 1.2]. For audio models a temperature of 0.8 is highly recommended for best performance.
+   *
+   */
+  temperature?: number;
+  /**
+   * Maximum number of output tokens for a single assistant response,
+   * inclusive of tool calls. Provide an integer between 1 and 4096 to
+   * limit output tokens, or `inf` for the maximum available tokens for a
+   * given model. Defaults to `inf`.
+   *
+   */
+  max_response_output_tokens?: number | 'inf';
+};
+
+/**
+ * Realtime session object configuration.
+ */
+export type RealtimeSessionCreateRequest = {
+  /**
+   * The set of modalities the model can respond with. To disable audio,
+   * set this to ["text"].
+   *
+   */
+  modalities?: unknown;
+  /**
+   * The Realtime model used for this session.
+   *
+   */
+  model?:
+    | 'gpt-4o-realtime-preview'
+    | 'gpt-4o-realtime-preview-2024-10-01'
+    | 'gpt-4o-realtime-preview-2024-12-17'
+    | 'gpt-4o-realtime-preview-2025-06-03'
+    | 'gpt-4o-mini-realtime-preview'
+    | 'gpt-4o-mini-realtime-preview-2024-12-17';
+  /**
+   * The default system instructions (i.e. system message) prepended to model calls. This field allows the client to guide the model on desired responses. The model can be instructed on response content and format, (e.g. "be extremely succinct", "act friendly", "here are examples of good responses") and on audio behavior (e.g. "talk quickly", "inject emotion into your voice", "laugh frequently"). The instructions are not guaranteed to be followed by the model, but they provide guidance to the model on the desired behavior.
+   *
+   * Note that the server sets default instructions which will be used if this field is not set and are visible in the `session.created` event at the start of the session.
+   *
+   */
+  instructions?: string;
   /**
    * The voice the model uses to respond. Voice cannot be changed during the
    * session once the model has responded with audio at least once. Current
@@ -11733,12 +11771,193 @@ export type RealtimeSession = {
    *
    */
   voice?: VoiceIdsShared;
-};
-
-/**
- * Realtime session object configuration.
- */
-export type RealtimeSessionCreateRequest = {
+  /**
+   * The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+   * For `pcm16`, input audio must be 16-bit PCM at a 24kHz sample rate,
+   * single channel (mono), and little-endian byte order.
+   *
+   */
+  input_audio_format?: 'pcm16' | 'g711_ulaw' | 'g711_alaw';
+  /**
+   * The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+   * For `pcm16`, output audio is sampled at a rate of 24kHz.
+   *
+   */
+  output_audio_format?: 'pcm16' | 'g711_ulaw' | 'g711_alaw';
+  /**
+   * Configuration for input audio transcription, defaults to off and can be set to `null` to turn off once on. Input audio transcription is not native to the model, since the model consumes audio directly. Transcription runs asynchronously through [the /audio/transcriptions endpoint](https://platform.openai.com/docs/api-reference/audio/createTranscription) and should be treated as guidance of input audio content rather than precisely what the model heard. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.
+   *
+   */
+  input_audio_transcription?: {
+    /**
+     * The model to use for transcription, current options are `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `whisper-1`.
+     *
+     */
+    model?: string;
+    /**
+     * The language of the input audio. Supplying the input language in
+     * [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format
+     * will improve accuracy and latency.
+     *
+     */
+    language?: string;
+    /**
+     * An optional text to guide the model's style or continue a previous audio
+     * segment.
+     * For `whisper-1`, the [prompt is a list of keywords](https://platform.openai.com/docs/guides/speech-to-text#prompting).
+     * For `gpt-4o-transcribe` models, the prompt is a free text string, for example "expect words related to technology".
+     *
+     */
+    prompt?: string;
+  };
+  /**
+   * Configuration for turn detection, ether Server VAD or Semantic VAD. This can be set to `null` to turn off, in which case the client must manually trigger model response.
+   * Server VAD means that the model will detect the start and end of speech based on audio volume and respond at the end of user speech.
+   * Semantic VAD is more advanced and uses a turn detection model (in conjunction with VAD) to semantically estimate whether the user has finished speaking, then dynamically sets a timeout based on this probability. For example, if user audio trails off with "uhhm", the model will score a low probability of turn end and wait longer for the user to continue speaking. This can be useful for more natural conversations, but may have a higher latency.
+   *
+   */
+  turn_detection?: {
+    /**
+     * Type of turn detection.
+     *
+     */
+    type?: 'server_vad' | 'semantic_vad';
+    /**
+     * Used only for `semantic_vad` mode. The eagerness of the model to respond. `low` will wait longer for the user to continue speaking, `high` will respond more quickly. `auto` is the default and is equivalent to `medium`.
+     *
+     */
+    eagerness?: 'low' | 'medium' | 'high' | 'auto';
+    /**
+     * Used only for `server_vad` mode. Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
+     * higher threshold will require louder audio to activate the model, and
+     * thus might perform better in noisy environments.
+     *
+     */
+    threshold?: number;
+    /**
+     * Used only for `server_vad` mode. Amount of audio to include before the VAD detected speech (in
+     * milliseconds). Defaults to 300ms.
+     *
+     */
+    prefix_padding_ms?: number;
+    /**
+     * Used only for `server_vad` mode. Duration of silence to detect speech stop (in milliseconds). Defaults
+     * to 500ms. With shorter values the model will respond more quickly,
+     * but may jump in on short pauses from the user.
+     *
+     */
+    silence_duration_ms?: number;
+    /**
+     * Whether or not to automatically generate a response when a VAD stop event occurs.
+     *
+     */
+    create_response?: boolean;
+    /**
+     * Whether or not to automatically interrupt any ongoing response with output to the default
+     * conversation (i.e. `conversation` of `auto`) when a VAD start event occurs.
+     *
+     */
+    interrupt_response?: boolean;
+  };
+  /**
+   * Configuration for input audio noise reduction. This can be set to `null` to turn off.
+   * Noise reduction filters audio added to the input audio buffer before it is sent to VAD and the model.
+   * Filtering the audio can improve VAD and turn detection accuracy (reducing false positives) and model performance by improving perception of the input audio.
+   *
+   */
+  input_audio_noise_reduction?: {
+    /**
+     * Type of noise reduction. `near_field` is for close-talking microphones such as headphones, `far_field` is for far-field microphones such as laptop or conference room microphones.
+     *
+     */
+    type?: 'near_field' | 'far_field';
+  };
+  /**
+   * The speed of the model's spoken response. 1.0 is the default speed. 0.25 is
+   * the minimum speed. 1.5 is the maximum speed. This value can only be changed
+   * in between model turns, not while a response is in progress.
+   *
+   */
+  speed?: number;
+  /**
+   * Tracing Configuration
+   *
+   * Configuration options for tracing. Set to null to disable tracing. Once
+   * tracing is enabled for a session, the configuration cannot be modified.
+   *
+   * `auto` will create a trace for the session with default values for the
+   * workflow name, group id, and metadata.
+   *
+   */
+  tracing?:
+    | 'auto'
+    | {
+        /**
+         * The name of the workflow to attach to this trace. This is used to
+         * name the trace in the traces dashboard.
+         *
+         */
+        workflow_name?: string;
+        /**
+         * The group id to attach to this trace to enable filtering and
+         * grouping in the traces dashboard.
+         *
+         */
+        group_id?: string;
+        /**
+         * The arbitrary metadata to attach to this trace to enable
+         * filtering in the traces dashboard.
+         *
+         */
+        metadata?: {
+          [key: string]: unknown;
+        };
+      };
+  /**
+   * Tools (functions) available to the model.
+   */
+  tools?: Array<{
+    /**
+     * The type of the tool, i.e. `function`.
+     */
+    type?: 'function';
+    /**
+     * The name of the function.
+     */
+    name?: string;
+    /**
+     * The description of the function, including guidance on when and how
+     * to call it, and guidance about what to tell the user when calling
+     * (if anything).
+     *
+     */
+    description?: string;
+    /**
+     * Parameters of the function in JSON Schema.
+     */
+    parameters?: {
+      [key: string]: unknown;
+    };
+  }>;
+  /**
+   * How the model chooses tools. Options are `auto`, `none`, `required`, or
+   * specify a function.
+   *
+   */
+  tool_choice?: string;
+  /**
+   * Sampling temperature for the model, limited to [0.6, 1.2]. For audio models a temperature of 0.8 is highly recommended for best performance.
+   *
+   */
+  temperature?: number;
+  /**
+   * Maximum number of output tokens for a single assistant response,
+   * inclusive of tool calls. Provide an integer between 1 and 4096 to
+   * limit output tokens, or `inf` for the maximum available tokens for a
+   * given model. Defaults to `inf`.
+   *
+   */
+  max_response_output_tokens?: number | 'inf';
   /**
    * Configuration options for the generated client secret.
    *
@@ -11761,225 +11980,6 @@ export type RealtimeSessionCreateRequest = {
       seconds?: number;
     };
   };
-  /**
-   * The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
-   * For `pcm16`, input audio must be 16-bit PCM at a 24kHz sample rate,
-   * single channel (mono), and little-endian byte order.
-   *
-   */
-  input_audio_format?: 'pcm16' | 'g711_ulaw' | 'g711_alaw';
-  /**
-   * Configuration for input audio noise reduction. This can be set to `null` to turn off.
-   * Noise reduction filters audio added to the input audio buffer before it is sent to VAD and the model.
-   * Filtering the audio can improve VAD and turn detection accuracy (reducing false positives) and model performance by improving perception of the input audio.
-   *
-   */
-  input_audio_noise_reduction?: {
-    /**
-     * Type of noise reduction. `near_field` is for close-talking microphones such as headphones, `far_field` is for far-field microphones such as laptop or conference room microphones.
-     *
-     */
-    type?: 'near_field' | 'far_field';
-  };
-  /**
-   * Configuration for input audio transcription, defaults to off and can be set to `null` to turn off once on. Input audio transcription is not native to the model, since the model consumes audio directly. Transcription runs asynchronously through [the /audio/transcriptions endpoint](https://platform.openai.com/docs/api-reference/audio/createTranscription) and should be treated as guidance of input audio content rather than precisely what the model heard. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.
-   *
-   */
-  input_audio_transcription?: {
-    /**
-     * The language of the input audio. Supplying the input language in
-     * [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format
-     * will improve accuracy and latency.
-     *
-     */
-    language?: string;
-    /**
-     * The model to use for transcription, current options are `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `whisper-1`.
-     *
-     */
-    model?: string;
-    /**
-     * An optional text to guide the model's style or continue a previous audio
-     * segment.
-     * For `whisper-1`, the [prompt is a list of keywords](https://platform.openai.com/docs/guides/speech-to-text#prompting).
-     * For `gpt-4o-transcribe` models, the prompt is a free text string, for example "expect words related to technology".
-     *
-     */
-    prompt?: string;
-  };
-  /**
-   * The default system instructions (i.e. system message) prepended to model calls. This field allows the client to guide the model on desired responses. The model can be instructed on response content and format, (e.g. "be extremely succinct", "act friendly", "here are examples of good responses") and on audio behavior (e.g. "talk quickly", "inject emotion into your voice", "laugh frequently"). The instructions are not guaranteed to be followed by the model, but they provide guidance to the model on the desired behavior.
-   *
-   * Note that the server sets default instructions which will be used if this field is not set and are visible in the `session.created` event at the start of the session.
-   *
-   */
-  instructions?: string;
-  /**
-   * Maximum number of output tokens for a single assistant response,
-   * inclusive of tool calls. Provide an integer between 1 and 4096 to
-   * limit output tokens, or `inf` for the maximum available tokens for a
-   * given model. Defaults to `inf`.
-   *
-   */
-  max_response_output_tokens?: number | 'inf';
-  /**
-   * The set of modalities the model can respond with. To disable audio,
-   * set this to ["text"].
-   *
-   */
-  modalities?: unknown;
-  /**
-   * The Realtime model used for this session.
-   *
-   */
-  model?:
-    | 'gpt-4o-realtime-preview'
-    | 'gpt-4o-realtime-preview-2024-10-01'
-    | 'gpt-4o-realtime-preview-2024-12-17'
-    | 'gpt-4o-realtime-preview-2025-06-03'
-    | 'gpt-4o-mini-realtime-preview'
-    | 'gpt-4o-mini-realtime-preview-2024-12-17';
-  /**
-   * The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
-   * For `pcm16`, output audio is sampled at a rate of 24kHz.
-   *
-   */
-  output_audio_format?: 'pcm16' | 'g711_ulaw' | 'g711_alaw';
-  /**
-   * The speed of the model's spoken response. 1.0 is the default speed. 0.25 is
-   * the minimum speed. 1.5 is the maximum speed. This value can only be changed
-   * in between model turns, not while a response is in progress.
-   *
-   */
-  speed?: number;
-  /**
-   * Sampling temperature for the model, limited to [0.6, 1.2]. For audio models a temperature of 0.8 is highly recommended for best performance.
-   *
-   */
-  temperature?: number;
-  /**
-   * How the model chooses tools. Options are `auto`, `none`, `required`, or
-   * specify a function.
-   *
-   */
-  tool_choice?: string;
-  /**
-   * Tools (functions) available to the model.
-   */
-  tools?: Array<{
-    /**
-     * The description of the function, including guidance on when and how
-     * to call it, and guidance about what to tell the user when calling
-     * (if anything).
-     *
-     */
-    description?: string;
-    /**
-     * The name of the function.
-     */
-    name?: string;
-    /**
-     * Parameters of the function in JSON Schema.
-     */
-    parameters?: {
-      [key: string]: unknown;
-    };
-    /**
-     * The type of the tool, i.e. `function`.
-     */
-    type?: 'function';
-  }>;
-  /**
-   * Tracing Configuration
-   *
-   * Configuration options for tracing. Set to null to disable tracing. Once
-   * tracing is enabled for a session, the configuration cannot be modified.
-   *
-   * `auto` will create a trace for the session with default values for the
-   * workflow name, group id, and metadata.
-   *
-   */
-  tracing?:
-    | 'auto'
-    | {
-        /**
-         * The group id to attach to this trace to enable filtering and
-         * grouping in the traces dashboard.
-         *
-         */
-        group_id?: string;
-        /**
-         * The arbitrary metadata to attach to this trace to enable
-         * filtering in the traces dashboard.
-         *
-         */
-        metadata?: {
-          [key: string]: unknown;
-        };
-        /**
-         * The name of the workflow to attach to this trace. This is used to
-         * name the trace in the traces dashboard.
-         *
-         */
-        workflow_name?: string;
-      };
-  /**
-   * Configuration for turn detection, ether Server VAD or Semantic VAD. This can be set to `null` to turn off, in which case the client must manually trigger model response.
-   * Server VAD means that the model will detect the start and end of speech based on audio volume and respond at the end of user speech.
-   * Semantic VAD is more advanced and uses a turn detection model (in conjunction with VAD) to semantically estimate whether the user has finished speaking, then dynamically sets a timeout based on this probability. For example, if user audio trails off with "uhhm", the model will score a low probability of turn end and wait longer for the user to continue speaking. This can be useful for more natural conversations, but may have a higher latency.
-   *
-   */
-  turn_detection?: {
-    /**
-     * Whether or not to automatically generate a response when a VAD stop event occurs.
-     *
-     */
-    create_response?: boolean;
-    /**
-     * Used only for `semantic_vad` mode. The eagerness of the model to respond. `low` will wait longer for the user to continue speaking, `high` will respond more quickly. `auto` is the default and is equivalent to `medium`.
-     *
-     */
-    eagerness?: 'low' | 'medium' | 'high' | 'auto';
-    /**
-     * Whether or not to automatically interrupt any ongoing response with output to the default
-     * conversation (i.e. `conversation` of `auto`) when a VAD start event occurs.
-     *
-     */
-    interrupt_response?: boolean;
-    /**
-     * Used only for `server_vad` mode. Amount of audio to include before the VAD detected speech (in
-     * milliseconds). Defaults to 300ms.
-     *
-     */
-    prefix_padding_ms?: number;
-    /**
-     * Used only for `server_vad` mode. Duration of silence to detect speech stop (in milliseconds). Defaults
-     * to 500ms. With shorter values the model will respond more quickly,
-     * but may jump in on short pauses from the user.
-     *
-     */
-    silence_duration_ms?: number;
-    /**
-     * Used only for `server_vad` mode. Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
-     * higher threshold will require louder audio to activate the model, and
-     * thus might perform better in noisy environments.
-     *
-     */
-    threshold?: number;
-    /**
-     * Type of turn detection.
-     *
-     */
-    type?: 'server_vad' | 'semantic_vad';
-  };
-  /**
-   * The voice the model uses to respond. Voice cannot be changed during the
-   * session once the model has responded with audio at least once. Current
-   * voice options are `alloy`, `ash`, `ballad`, `coral`, `echo`, `sage`,
-   * `shimmer`, and `verse`.
-   *
-   */
-  voice?: VoiceIdsShared;
 };
 
 /**
@@ -11993,39 +11993,25 @@ export type RealtimeSessionCreateResponse = {
    */
   client_secret: {
     /**
-     * Timestamp for when the token expires. Currently, all tokens expire
-     * after one minute.
-     *
-     */
-    expires_at: number;
-    /**
      * Ephemeral key usable in client environments to authenticate connections
      * to the Realtime API. Use this in client-side environments rather than
      * a standard API token, which should only be used server-side.
      *
      */
     value: string;
-  };
-  /**
-   * The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
-   *
-   */
-  input_audio_format?: string;
-  /**
-   * Configuration for input audio transcription, defaults to off and can be
-   * set to `null` to turn off once on. Input audio transcription is not native
-   * to the model, since the model consumes audio directly. Transcription runs
-   * asynchronously and should be treated as rough guidance
-   * rather than the representation understood by the model.
-   *
-   */
-  input_audio_transcription?: {
     /**
-     * The model to use for transcription.
+     * Timestamp for when the token expires. Currently, all tokens expire
+     * after one minute.
      *
      */
-    model?: string;
+    expires_at: number;
   };
+  /**
+   * The set of modalities the model can respond with. To disable audio,
+   * set this to ["text"].
+   *
+   */
+  modalities?: unknown;
   /**
    * The default system instructions (i.e. system message) prepended to model
    * calls. This field allows the client to guide the model on desired
@@ -12043,24 +12029,38 @@ export type RealtimeSessionCreateResponse = {
    */
   instructions?: string;
   /**
-   * Maximum number of output tokens for a single assistant response,
-   * inclusive of tool calls. Provide an integer between 1 and 4096 to
-   * limit output tokens, or `inf` for the maximum available tokens for a
-   * given model. Defaults to `inf`.
+   * The voice the model uses to respond. Voice cannot be changed during the
+   * session once the model has responded with audio at least once. Current
+   * voice options are `alloy`, `ash`, `ballad`, `coral`, `echo`, `sage`,
+   * `shimmer`, and `verse`.
    *
    */
-  max_response_output_tokens?: number | 'inf';
+  voice?: VoiceIdsShared;
   /**
-   * The set of modalities the model can respond with. To disable audio,
-   * set this to ["text"].
+   * The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
    *
    */
-  modalities?: unknown;
+  input_audio_format?: string;
   /**
    * The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
    *
    */
   output_audio_format?: string;
+  /**
+   * Configuration for input audio transcription, defaults to off and can be
+   * set to `null` to turn off once on. Input audio transcription is not native
+   * to the model, since the model consumes audio directly. Transcription runs
+   * asynchronously and should be treated as rough guidance
+   * rather than the representation understood by the model.
+   *
+   */
+  input_audio_transcription?: {
+    /**
+     * The model to use for transcription.
+     *
+     */
+    model?: string;
+  };
   /**
    * The speed of the model's spoken response. 1.0 is the default speed. 0.25 is
    * the minimum speed. 1.5 is the maximum speed. This value can only be changed
@@ -12068,43 +12068,6 @@ export type RealtimeSessionCreateResponse = {
    *
    */
   speed?: number;
-  /**
-   * Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8.
-   *
-   */
-  temperature?: number;
-  /**
-   * How the model chooses tools. Options are `auto`, `none`, `required`, or
-   * specify a function.
-   *
-   */
-  tool_choice?: string;
-  /**
-   * Tools (functions) available to the model.
-   */
-  tools?: Array<{
-    /**
-     * The description of the function, including guidance on when and how
-     * to call it, and guidance about what to tell the user when calling
-     * (if anything).
-     *
-     */
-    description?: string;
-    /**
-     * The name of the function.
-     */
-    name?: string;
-    /**
-     * Parameters of the function in JSON Schema.
-     */
-    parameters?: {
-      [key: string]: unknown;
-    };
-    /**
-     * The type of the tool, i.e. `function`.
-     */
-    type?: 'function';
-  }>;
   /**
    * Tracing Configuration
    *
@@ -12119,6 +12082,12 @@ export type RealtimeSessionCreateResponse = {
     | 'auto'
     | {
         /**
+         * The name of the workflow to attach to this trace. This is used to
+         * name the trace in the traces dashboard.
+         *
+         */
+        workflow_name?: string;
+        /**
          * The group id to attach to this trace to enable filtering and
          * grouping in the traces dashboard.
          *
@@ -12132,12 +12101,6 @@ export type RealtimeSessionCreateResponse = {
         metadata?: {
           [key: string]: unknown;
         };
-        /**
-         * The name of the workflow to attach to this trace. This is used to
-         * name the trace in the traces dashboard.
-         *
-         */
-        workflow_name?: string;
       };
   /**
    * Configuration for turn detection. Can be set to `null` to turn off. Server
@@ -12146,6 +12109,18 @@ export type RealtimeSessionCreateResponse = {
    *
    */
   turn_detection?: {
+    /**
+     * Type of turn detection, only `server_vad` is currently supported.
+     *
+     */
+    type?: string;
+    /**
+     * Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
+     * higher threshold will require louder audio to activate the model, and
+     * thus might perform better in noisy environments.
+     *
+     */
+    threshold?: number;
     /**
      * Amount of audio to include before the VAD detected speech (in
      * milliseconds). Defaults to 300ms.
@@ -12159,33 +12134,165 @@ export type RealtimeSessionCreateResponse = {
      *
      */
     silence_duration_ms?: number;
-    /**
-     * Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
-     * higher threshold will require louder audio to activate the model, and
-     * thus might perform better in noisy environments.
-     *
-     */
-    threshold?: number;
-    /**
-     * Type of turn detection, only `server_vad` is currently supported.
-     *
-     */
-    type?: string;
   };
   /**
-   * The voice the model uses to respond. Voice cannot be changed during the
-   * session once the model has responded with audio at least once. Current
-   * voice options are `alloy`, `ash`, `ballad`, `coral`, `echo`, `sage`,
-   * `shimmer`, and `verse`.
+   * Tools (functions) available to the model.
+   */
+  tools?: Array<{
+    /**
+     * The type of the tool, i.e. `function`.
+     */
+    type?: 'function';
+    /**
+     * The name of the function.
+     */
+    name?: string;
+    /**
+     * The description of the function, including guidance on when and how
+     * to call it, and guidance about what to tell the user when calling
+     * (if anything).
+     *
+     */
+    description?: string;
+    /**
+     * Parameters of the function in JSON Schema.
+     */
+    parameters?: {
+      [key: string]: unknown;
+    };
+  }>;
+  /**
+   * How the model chooses tools. Options are `auto`, `none`, `required`, or
+   * specify a function.
    *
    */
-  voice?: VoiceIdsShared;
+  tool_choice?: string;
+  /**
+   * Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8.
+   *
+   */
+  temperature?: number;
+  /**
+   * Maximum number of output tokens for a single assistant response,
+   * inclusive of tool calls. Provide an integer between 1 and 4096 to
+   * limit output tokens, or `inf` for the maximum available tokens for a
+   * given model. Defaults to `inf`.
+   *
+   */
+  max_response_output_tokens?: number | 'inf';
 };
 
 /**
  * Realtime transcription session object configuration.
  */
 export type RealtimeTranscriptionSessionCreateRequest = {
+  /**
+   * The set of modalities the model can respond with. To disable audio,
+   * set this to ["text"].
+   *
+   */
+  modalities?: unknown;
+  /**
+   * The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+   * For `pcm16`, input audio must be 16-bit PCM at a 24kHz sample rate,
+   * single channel (mono), and little-endian byte order.
+   *
+   */
+  input_audio_format?: 'pcm16' | 'g711_ulaw' | 'g711_alaw';
+  /**
+   * Configuration for input audio transcription. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.
+   *
+   */
+  input_audio_transcription?: {
+    /**
+     * The model to use for transcription, current options are `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `whisper-1`.
+     *
+     */
+    model?: 'gpt-4o-transcribe' | 'gpt-4o-mini-transcribe' | 'whisper-1';
+    /**
+     * The language of the input audio. Supplying the input language in
+     * [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format
+     * will improve accuracy and latency.
+     *
+     */
+    language?: string;
+    /**
+     * An optional text to guide the model's style or continue a previous audio
+     * segment.
+     * For `whisper-1`, the [prompt is a list of keywords](https://platform.openai.com/docs/guides/speech-to-text#prompting).
+     * For `gpt-4o-transcribe` models, the prompt is a free text string, for example "expect words related to technology".
+     *
+     */
+    prompt?: string;
+  };
+  /**
+   * Configuration for turn detection, ether Server VAD or Semantic VAD. This can be set to `null` to turn off, in which case the client must manually trigger model response.
+   * Server VAD means that the model will detect the start and end of speech based on audio volume and respond at the end of user speech.
+   * Semantic VAD is more advanced and uses a turn detection model (in conjunction with VAD) to semantically estimate whether the user has finished speaking, then dynamically sets a timeout based on this probability. For example, if user audio trails off with "uhhm", the model will score a low probability of turn end and wait longer for the user to continue speaking. This can be useful for more natural conversations, but may have a higher latency.
+   *
+   */
+  turn_detection?: {
+    /**
+     * Type of turn detection.
+     *
+     */
+    type?: 'server_vad' | 'semantic_vad';
+    /**
+     * Used only for `semantic_vad` mode. The eagerness of the model to respond. `low` will wait longer for the user to continue speaking, `high` will respond more quickly. `auto` is the default and is equivalent to `medium`.
+     *
+     */
+    eagerness?: 'low' | 'medium' | 'high' | 'auto';
+    /**
+     * Used only for `server_vad` mode. Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
+     * higher threshold will require louder audio to activate the model, and
+     * thus might perform better in noisy environments.
+     *
+     */
+    threshold?: number;
+    /**
+     * Used only for `server_vad` mode. Amount of audio to include before the VAD detected speech (in
+     * milliseconds). Defaults to 300ms.
+     *
+     */
+    prefix_padding_ms?: number;
+    /**
+     * Used only for `server_vad` mode. Duration of silence to detect speech stop (in milliseconds). Defaults
+     * to 500ms. With shorter values the model will respond more quickly,
+     * but may jump in on short pauses from the user.
+     *
+     */
+    silence_duration_ms?: number;
+    /**
+     * Whether or not to automatically generate a response when a VAD stop event occurs. Not available for transcription sessions.
+     *
+     */
+    create_response?: boolean;
+    /**
+     * Whether or not to automatically interrupt any ongoing response with output to the default
+     * conversation (i.e. `conversation` of `auto`) when a VAD start event occurs. Not available for transcription sessions.
+     *
+     */
+    interrupt_response?: boolean;
+  };
+  /**
+   * Configuration for input audio noise reduction. This can be set to `null` to turn off.
+   * Noise reduction filters audio added to the input audio buffer before it is sent to VAD and the model.
+   * Filtering the audio can improve VAD and turn detection accuracy (reducing false positives) and model performance by improving perception of the input audio.
+   *
+   */
+  input_audio_noise_reduction?: {
+    /**
+     * Type of noise reduction. `near_field` is for close-talking microphones such as headphones, `far_field` is for far-field microphones such as laptop or conference room microphones.
+     *
+     */
+    type?: 'near_field' | 'far_field';
+  };
+  /**
+   * The set of items to include in the transcription. Current available items are:
+   * - `item.input_audio_transcription.logprobs`
+   *
+   */
+  include?: Array<string>;
   /**
    * Configuration options for the generated client secret.
    *
@@ -12208,113 +12315,6 @@ export type RealtimeTranscriptionSessionCreateRequest = {
       seconds?: number;
     };
   };
-  /**
-   * The set of items to include in the transcription. Current available items are:
-   * - `item.input_audio_transcription.logprobs`
-   *
-   */
-  include?: Array<string>;
-  /**
-   * The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
-   * For `pcm16`, input audio must be 16-bit PCM at a 24kHz sample rate,
-   * single channel (mono), and little-endian byte order.
-   *
-   */
-  input_audio_format?: 'pcm16' | 'g711_ulaw' | 'g711_alaw';
-  /**
-   * Configuration for input audio noise reduction. This can be set to `null` to turn off.
-   * Noise reduction filters audio added to the input audio buffer before it is sent to VAD and the model.
-   * Filtering the audio can improve VAD and turn detection accuracy (reducing false positives) and model performance by improving perception of the input audio.
-   *
-   */
-  input_audio_noise_reduction?: {
-    /**
-     * Type of noise reduction. `near_field` is for close-talking microphones such as headphones, `far_field` is for far-field microphones such as laptop or conference room microphones.
-     *
-     */
-    type?: 'near_field' | 'far_field';
-  };
-  /**
-   * Configuration for input audio transcription. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.
-   *
-   */
-  input_audio_transcription?: {
-    /**
-     * The language of the input audio. Supplying the input language in
-     * [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format
-     * will improve accuracy and latency.
-     *
-     */
-    language?: string;
-    /**
-     * The model to use for transcription, current options are `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `whisper-1`.
-     *
-     */
-    model?: 'gpt-4o-transcribe' | 'gpt-4o-mini-transcribe' | 'whisper-1';
-    /**
-     * An optional text to guide the model's style or continue a previous audio
-     * segment.
-     * For `whisper-1`, the [prompt is a list of keywords](https://platform.openai.com/docs/guides/speech-to-text#prompting).
-     * For `gpt-4o-transcribe` models, the prompt is a free text string, for example "expect words related to technology".
-     *
-     */
-    prompt?: string;
-  };
-  /**
-   * The set of modalities the model can respond with. To disable audio,
-   * set this to ["text"].
-   *
-   */
-  modalities?: unknown;
-  /**
-   * Configuration for turn detection, ether Server VAD or Semantic VAD. This can be set to `null` to turn off, in which case the client must manually trigger model response.
-   * Server VAD means that the model will detect the start and end of speech based on audio volume and respond at the end of user speech.
-   * Semantic VAD is more advanced and uses a turn detection model (in conjunction with VAD) to semantically estimate whether the user has finished speaking, then dynamically sets a timeout based on this probability. For example, if user audio trails off with "uhhm", the model will score a low probability of turn end and wait longer for the user to continue speaking. This can be useful for more natural conversations, but may have a higher latency.
-   *
-   */
-  turn_detection?: {
-    /**
-     * Whether or not to automatically generate a response when a VAD stop event occurs. Not available for transcription sessions.
-     *
-     */
-    create_response?: boolean;
-    /**
-     * Used only for `semantic_vad` mode. The eagerness of the model to respond. `low` will wait longer for the user to continue speaking, `high` will respond more quickly. `auto` is the default and is equivalent to `medium`.
-     *
-     */
-    eagerness?: 'low' | 'medium' | 'high' | 'auto';
-    /**
-     * Whether or not to automatically interrupt any ongoing response with output to the default
-     * conversation (i.e. `conversation` of `auto`) when a VAD start event occurs. Not available for transcription sessions.
-     *
-     */
-    interrupt_response?: boolean;
-    /**
-     * Used only for `server_vad` mode. Amount of audio to include before the VAD detected speech (in
-     * milliseconds). Defaults to 300ms.
-     *
-     */
-    prefix_padding_ms?: number;
-    /**
-     * Used only for `server_vad` mode. Duration of silence to detect speech stop (in milliseconds). Defaults
-     * to 500ms. With shorter values the model will respond more quickly,
-     * but may jump in on short pauses from the user.
-     *
-     */
-    silence_duration_ms?: number;
-    /**
-     * Used only for `server_vad` mode. Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
-     * higher threshold will require louder audio to activate the model, and
-     * thus might perform better in noisy environments.
-     *
-     */
-    threshold?: number;
-    /**
-     * Type of turn detection.
-     *
-     */
-    type?: 'server_vad' | 'semantic_vad';
-  };
 };
 
 /**
@@ -12333,19 +12333,25 @@ export type RealtimeTranscriptionSessionCreateResponse = {
    */
   client_secret: {
     /**
-     * Timestamp for when the token expires. Currently, all tokens expire
-     * after one minute.
-     *
-     */
-    expires_at: number;
-    /**
      * Ephemeral key usable in client environments to authenticate connections
      * to the Realtime API. Use this in client-side environments rather than
      * a standard API token, which should only be used server-side.
      *
      */
     value: string;
+    /**
+     * Timestamp for when the token expires. Currently, all tokens expire
+     * after one minute.
+     *
+     */
+    expires_at: number;
   };
+  /**
+   * The set of modalities the model can respond with. To disable audio,
+   * set this to ["text"].
+   *
+   */
+  modalities?: unknown;
   /**
    * The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
    *
@@ -12357,17 +12363,17 @@ export type RealtimeTranscriptionSessionCreateResponse = {
    */
   input_audio_transcription?: {
     /**
+     * The model to use for transcription. Can be `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, or `whisper-1`.
+     *
+     */
+    model?: 'gpt-4o-transcribe' | 'gpt-4o-mini-transcribe' | 'whisper-1';
+    /**
      * The language of the input audio. Supplying the input language in
      * [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format
      * will improve accuracy and latency.
      *
      */
     language?: string;
-    /**
-     * The model to use for transcription. Can be `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, or `whisper-1`.
-     *
-     */
-    model?: 'gpt-4o-transcribe' | 'gpt-4o-mini-transcribe' | 'whisper-1';
     /**
      * An optional text to guide the model's style or continue a previous audio
      * segment. The [prompt](https://platform.openai.com/docs/guides/speech-to-text#prompting) should match
@@ -12377,18 +12383,24 @@ export type RealtimeTranscriptionSessionCreateResponse = {
     prompt?: string;
   };
   /**
-   * The set of modalities the model can respond with. To disable audio,
-   * set this to ["text"].
-   *
-   */
-  modalities?: unknown;
-  /**
    * Configuration for turn detection. Can be set to `null` to turn off. Server
    * VAD means that the model will detect the start and end of speech based on
    * audio volume and respond at the end of user speech.
    *
    */
   turn_detection?: {
+    /**
+     * Type of turn detection, only `server_vad` is currently supported.
+     *
+     */
+    type?: string;
+    /**
+     * Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
+     * higher threshold will require louder audio to activate the model, and
+     * thus might perform better in noisy environments.
+     *
+     */
+    threshold?: number;
     /**
      * Amount of audio to include before the VAD detected speech (in
      * milliseconds). Defaults to 300ms.
@@ -12402,18 +12414,6 @@ export type RealtimeTranscriptionSessionCreateResponse = {
      *
      */
     silence_duration_ms?: number;
-    /**
-     * Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
-     * higher threshold will require louder audio to activate the model, and
-     * thus might perform better in noisy environments.
-     *
-     */
-    threshold?: number;
-    /**
-     * Type of turn detection, only `server_vad` is currently supported.
-     *
-     */
-    type?: string;
   };
 };
 
@@ -12429,6 +12429,13 @@ export type RealtimeTranscriptionSessionCreateResponse = {
 export type Reasoning = {
   effort?: ReasoningEffort;
   /**
+   * A summary of the reasoning performed by the model. This can be
+   * useful for debugging and understanding the model's reasoning process.
+   * One of `auto`, `concise`, or `detailed`.
+   *
+   */
+  summary?: 'auto' | 'concise' | 'detailed';
+  /**
    * **Deprecated:** use `summary` instead.
    *
    * A summary of the reasoning performed by the model. This can be
@@ -12439,13 +12446,6 @@ export type Reasoning = {
    * @deprecated
    */
   generate_summary?: 'auto' | 'concise' | 'detailed';
-  /**
-   * A summary of the reasoning performed by the model. This can be
-   * useful for debugging and understanding the model's reasoning process.
-   * One of `auto`, `concise`, or `detailed`.
-   *
-   */
-  summary?: 'auto' | 'concise' | 'detailed';
 };
 
 /**
@@ -12457,10 +12457,10 @@ export type Reasoning = {
  *
  */
 export const ReasoningEffort = {
-  HIGH: 'high',
+  MINIMAL: 'minimal',
   LOW: 'low',
   MEDIUM: 'medium',
-  MINIMAL: 'minimal',
+  HIGH: 'high',
 } as const;
 
 /**
@@ -12485,21 +12485,15 @@ export type ReasoningEffort =
  */
 export type ReasoningItem = {
   /**
-   * Reasoning text content.
+   * The type of the object. Always `reasoning`.
    *
    */
-  content?: Array<{
-    /**
-     * Reasoning text output from the model.
-     *
-     */
-    text: string;
-    /**
-     * The type of the object. Always `reasoning_text`.
-     *
-     */
-    type: 'reasoning_text';
-  }>;
+  type: 'reasoning';
+  /**
+   * The unique identifier of the reasoning content.
+   *
+   */
+  id: string;
   /**
    * The encrypted content of the reasoning item - populated when a response is
    * generated with `reasoning.encrypted_content` in the `include` parameter.
@@ -12507,37 +12501,43 @@ export type ReasoningItem = {
    */
   encrypted_content?: string;
   /**
-   * The unique identifier of the reasoning content.
+   * Reasoning summary content.
    *
    */
-  id: string;
+  summary: Array<{
+    /**
+     * The type of the object. Always `summary_text`.
+     *
+     */
+    type: 'summary_text';
+    /**
+     * A summary of the reasoning output from the model so far.
+     *
+     */
+    text: string;
+  }>;
+  /**
+   * Reasoning text content.
+   *
+   */
+  content?: Array<{
+    /**
+     * The type of the object. Always `reasoning_text`.
+     *
+     */
+    type: 'reasoning_text';
+    /**
+     * Reasoning text output from the model.
+     *
+     */
+    text: string;
+  }>;
   /**
    * The status of the item. One of `in_progress`, `completed`, or
    * `incomplete`. Populated when items are returned via API.
    *
    */
   status?: 'in_progress' | 'completed' | 'incomplete';
-  /**
-   * Reasoning summary content.
-   *
-   */
-  summary: Array<{
-    /**
-     * A summary of the reasoning output from the model so far.
-     *
-     */
-    text: string;
-    /**
-     * The type of the object. Always `summary_text`.
-     *
-     */
-    type: 'summary_text';
-  }>;
-  /**
-   * The type of the object. Always `reasoning`.
-   *
-   */
-  type: 'reasoning';
 };
 
 /**
@@ -12546,16 +12546,33 @@ export type ReasoningItem = {
 export type Response = ModelResponseProperties &
   ResponseProperties & {
     /**
+     * Unique identifier for this Response.
+     *
+     */
+    id: string;
+    /**
+     * The object type of this resource - always set to `response`.
+     *
+     */
+    object: 'response';
+    /**
+     * The status of the response generation. One of `completed`, `failed`,
+     * `in_progress`, `cancelled`, `queued`, or `incomplete`.
+     *
+     */
+    status?:
+      | 'completed'
+      | 'failed'
+      | 'in_progress'
+      | 'cancelled'
+      | 'queued'
+      | 'incomplete';
+    /**
      * Unix timestamp (in seconds) of when this Response was created.
      *
      */
     created_at: number;
     error: ResponseError;
-    /**
-     * Unique identifier for this Response.
-     *
-     */
-    id: string;
     /**
      * Details about why the response is incomplete.
      *
@@ -12566,20 +12583,6 @@ export type Response = ModelResponseProperties &
        */
       reason?: 'max_output_tokens' | 'content_filter';
     };
-    /**
-     * A system (or developer) message inserted into the model's context.
-     *
-     * When using along with `previous_response_id`, the instructions from a previous
-     * response will not be carried over to the next response. This makes it simple
-     * to swap out system (or developer) messages in new responses.
-     *
-     */
-    instructions: string | Array<InputItem>;
-    /**
-     * The object type of this resource - always set to `response`.
-     *
-     */
-    object: 'response';
     /**
      * An array of content items generated by the model.
      *
@@ -12593,30 +12596,27 @@ export type Response = ModelResponseProperties &
      */
     output: Array<OutputItem>;
     /**
+     * A system (or developer) message inserted into the model's context.
+     *
+     * When using along with `previous_response_id`, the instructions from a previous
+     * response will not be carried over to the next response. This makes it simple
+     * to swap out system (or developer) messages in new responses.
+     *
+     */
+    instructions: string | Array<InputItem>;
+    /**
      * SDK-only convenience property that contains the aggregated text output
      * from all `output_text` items in the `output` array, if any are present.
      * Supported in the Python and JavaScript SDKs.
      *
      */
     output_text?: string;
+    usage?: ResponseUsage;
     /**
      * Whether to allow the model to run tool calls in parallel.
      *
      */
     parallel_tool_calls: boolean;
-    /**
-     * The status of the response generation. One of `completed`, `failed`,
-     * `in_progress`, `cancelled`, `queued`, or `incomplete`.
-     *
-     */
-    status?:
-      | 'completed'
-      | 'failed'
-      | 'in_progress'
-      | 'cancelled'
-      | 'queued'
-      | 'incomplete';
-    usage?: ResponseUsage;
   };
 
 /**
@@ -12624,20 +12624,20 @@ export type Response = ModelResponseProperties &
  */
 export type ResponseAudioDeltaEvent = {
   /**
-   * A chunk of Base64 encoded response audio bytes.
+   * The type of the event. Always `response.audio.delta`.
    *
    */
-  delta: string;
+  type: 'response.audio.delta';
   /**
    * A sequence number for this chunk of the stream response.
    *
    */
   sequence_number: number;
   /**
-   * The type of the event. Always `response.audio.delta`.
+   * A chunk of Base64 encoded response audio bytes.
    *
    */
-  type: 'response.audio.delta';
+  delta: string;
 };
 
 /**
@@ -12645,21 +12645,26 @@ export type ResponseAudioDeltaEvent = {
  */
 export type ResponseAudioDoneEvent = {
   /**
-   * The sequence number of the delta.
-   *
-   */
-  sequence_number: number;
-  /**
    * The type of the event. Always `response.audio.done`.
    *
    */
   type: 'response.audio.done';
+  /**
+   * The sequence number of the delta.
+   *
+   */
+  sequence_number: number;
 };
 
 /**
  * Emitted when there is a partial transcript of audio.
  */
 export type ResponseAudioTranscriptDeltaEvent = {
+  /**
+   * The type of the event. Always `response.audio.transcript.delta`.
+   *
+   */
+  type: 'response.audio.transcript.delta';
   /**
    * The partial transcript of the audio response.
    *
@@ -12669,11 +12674,6 @@ export type ResponseAudioTranscriptDeltaEvent = {
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.audio.transcript.delta`.
-   *
-   */
-  type: 'response.audio.transcript.delta';
 };
 
 /**
@@ -12681,14 +12681,14 @@ export type ResponseAudioTranscriptDeltaEvent = {
  */
 export type ResponseAudioTranscriptDoneEvent = {
   /**
-   * The sequence number of this event.
-   */
-  sequence_number: number;
-  /**
    * The type of the event. Always `response.audio.transcript.done`.
    *
    */
   type: 'response.audio.transcript.done';
+  /**
+   * The sequence number of this event.
+   */
+  sequence_number: number;
 };
 
 /**
@@ -12696,25 +12696,25 @@ export type ResponseAudioTranscriptDoneEvent = {
  */
 export type ResponseCodeInterpreterCallCodeDeltaEvent = {
   /**
-   * The partial code snippet being streamed by the code interpreter.
+   * The type of the event. Always `response.code_interpreter_call_code.delta`.
    */
-  delta: string;
-  /**
-   * The unique identifier of the code interpreter tool call item.
-   */
-  item_id: string;
+  type: 'response.code_interpreter_call_code.delta';
   /**
    * The index of the output item in the response for which the code is being streamed.
    */
   output_index: number;
   /**
+   * The unique identifier of the code interpreter tool call item.
+   */
+  item_id: string;
+  /**
+   * The partial code snippet being streamed by the code interpreter.
+   */
+  delta: string;
+  /**
    * The sequence number of this event, used to order streaming events.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.code_interpreter_call_code.delta`.
-   */
-  type: 'response.code_interpreter_call_code.delta';
 };
 
 /**
@@ -12722,25 +12722,25 @@ export type ResponseCodeInterpreterCallCodeDeltaEvent = {
  */
 export type ResponseCodeInterpreterCallCodeDoneEvent = {
   /**
-   * The final code snippet output by the code interpreter.
+   * The type of the event. Always `response.code_interpreter_call_code.done`.
    */
-  code: string;
-  /**
-   * The unique identifier of the code interpreter tool call item.
-   */
-  item_id: string;
+  type: 'response.code_interpreter_call_code.done';
   /**
    * The index of the output item in the response for which the code is finalized.
    */
   output_index: number;
   /**
+   * The unique identifier of the code interpreter tool call item.
+   */
+  item_id: string;
+  /**
+   * The final code snippet output by the code interpreter.
+   */
+  code: string;
+  /**
    * The sequence number of this event, used to order streaming events.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.code_interpreter_call_code.done`.
-   */
-  type: 'response.code_interpreter_call_code.done';
 };
 
 /**
@@ -12748,21 +12748,21 @@ export type ResponseCodeInterpreterCallCodeDoneEvent = {
  */
 export type ResponseCodeInterpreterCallCompletedEvent = {
   /**
-   * The unique identifier of the code interpreter tool call item.
+   * The type of the event. Always `response.code_interpreter_call.completed`.
    */
-  item_id: string;
+  type: 'response.code_interpreter_call.completed';
   /**
    * The index of the output item in the response for which the code interpreter call is completed.
    */
   output_index: number;
   /**
+   * The unique identifier of the code interpreter tool call item.
+   */
+  item_id: string;
+  /**
    * The sequence number of this event, used to order streaming events.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.code_interpreter_call.completed`.
-   */
-  type: 'response.code_interpreter_call.completed';
 };
 
 /**
@@ -12770,21 +12770,21 @@ export type ResponseCodeInterpreterCallCompletedEvent = {
  */
 export type ResponseCodeInterpreterCallInProgressEvent = {
   /**
-   * The unique identifier of the code interpreter tool call item.
+   * The type of the event. Always `response.code_interpreter_call.in_progress`.
    */
-  item_id: string;
+  type: 'response.code_interpreter_call.in_progress';
   /**
    * The index of the output item in the response for which the code interpreter call is in progress.
    */
   output_index: number;
   /**
+   * The unique identifier of the code interpreter tool call item.
+   */
+  item_id: string;
+  /**
    * The sequence number of this event, used to order streaming events.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.code_interpreter_call.in_progress`.
-   */
-  type: 'response.code_interpreter_call.in_progress';
 };
 
 /**
@@ -12792,27 +12792,32 @@ export type ResponseCodeInterpreterCallInProgressEvent = {
  */
 export type ResponseCodeInterpreterCallInterpretingEvent = {
   /**
-   * The unique identifier of the code interpreter tool call item.
+   * The type of the event. Always `response.code_interpreter_call.interpreting`.
    */
-  item_id: string;
+  type: 'response.code_interpreter_call.interpreting';
   /**
    * The index of the output item in the response for which the code interpreter is interpreting code.
    */
   output_index: number;
   /**
+   * The unique identifier of the code interpreter tool call item.
+   */
+  item_id: string;
+  /**
    * The sequence number of this event, used to order streaming events.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.code_interpreter_call.interpreting`.
-   */
-  type: 'response.code_interpreter_call.interpreting';
 };
 
 /**
  * Emitted when the model response is complete.
  */
 export type ResponseCompletedEvent = {
+  /**
+   * The type of the event. Always `response.completed`.
+   *
+   */
+  type: 'response.completed';
   /**
    * Properties of the completed response.
    *
@@ -12822,11 +12827,6 @@ export type ResponseCompletedEvent = {
    * The sequence number for this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.completed`.
-   *
-   */
-  type: 'response.completed';
 };
 
 /**
@@ -12834,10 +12834,10 @@ export type ResponseCompletedEvent = {
  */
 export type ResponseContentPartAddedEvent = {
   /**
-   * The index of the content part that was added.
+   * The type of the event. Always `response.content_part.added`.
    *
    */
-  content_index: number;
+  type: 'response.content_part.added';
   /**
    * The ID of the output item that the content part was added to.
    *
@@ -12848,6 +12848,11 @@ export type ResponseContentPartAddedEvent = {
    *
    */
   output_index: number;
+  /**
+   * The index of the content part that was added.
+   *
+   */
+  content_index: number;
   /**
    * The content part that was added.
    *
@@ -12857,11 +12862,6 @@ export type ResponseContentPartAddedEvent = {
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.content_part.added`.
-   *
-   */
-  type: 'response.content_part.added';
 };
 
 /**
@@ -12869,10 +12869,10 @@ export type ResponseContentPartAddedEvent = {
  */
 export type ResponseContentPartDoneEvent = {
   /**
-   * The index of the content part that is done.
+   * The type of the event. Always `response.content_part.done`.
    *
    */
-  content_index: number;
+  type: 'response.content_part.done';
   /**
    * The ID of the output item that the content part was added to.
    *
@@ -12884,19 +12884,19 @@ export type ResponseContentPartDoneEvent = {
    */
   output_index: number;
   /**
-   * The content part that is done.
+   * The index of the content part that is done.
    *
    */
-  part: OutputContent;
+  content_index: number;
   /**
    * The sequence number of this event.
    */
   sequence_number: number;
   /**
-   * The type of the event. Always `response.content_part.done`.
+   * The content part that is done.
    *
    */
-  type: 'response.content_part.done';
+  part: OutputContent;
 };
 
 /**
@@ -12904,6 +12904,11 @@ export type ResponseContentPartDoneEvent = {
  *
  */
 export type ResponseCreatedEvent = {
+  /**
+   * The type of the event. Always `response.created`.
+   *
+   */
+  type: 'response.created';
   /**
    * The response that was created.
    *
@@ -12913,11 +12918,6 @@ export type ResponseCreatedEvent = {
    * The sequence number for this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.created`.
-   *
-   */
-  type: 'response.created';
 };
 
 /**
@@ -12928,25 +12928,25 @@ export type ResponseCreatedEvent = {
  */
 export type ResponseCustomToolCallInputDeltaEvent = {
   /**
-   * The incremental input data (delta) for the custom tool call.
+   * The event type identifier.
    */
-  delta: string;
-  /**
-   * Unique identifier for the API item associated with this event.
-   */
-  item_id: string;
-  /**
-   * The index of the output this delta applies to.
-   */
-  output_index: number;
+  type: 'response.custom_tool_call_input.delta';
   /**
    * The sequence number of this event.
    */
   sequence_number: number;
   /**
-   * The event type identifier.
+   * The index of the output this delta applies to.
    */
-  type: 'response.custom_tool_call_input.delta';
+  output_index: number;
+  /**
+   * Unique identifier for the API item associated with this event.
+   */
+  item_id: string;
+  /**
+   * The incremental input data (delta) for the custom tool call.
+   */
+  delta: string;
 };
 
 /**
@@ -12957,25 +12957,25 @@ export type ResponseCustomToolCallInputDeltaEvent = {
  */
 export type ResponseCustomToolCallInputDoneEvent = {
   /**
-   * The complete input data for the custom tool call.
+   * The event type identifier.
    */
-  input: string;
-  /**
-   * Unique identifier for the API item associated with this event.
-   */
-  item_id: string;
-  /**
-   * The index of the output this event applies to.
-   */
-  output_index: number;
+  type: 'response.custom_tool_call_input.done';
   /**
    * The sequence number of this event.
    */
   sequence_number: number;
   /**
-   * The event type identifier.
+   * The index of the output this event applies to.
    */
-  type: 'response.custom_tool_call_input.done';
+  output_index: number;
+  /**
+   * Unique identifier for the API item associated with this event.
+   */
+  item_id: string;
+  /**
+   * The complete input data for the custom tool call.
+   */
+  input: string;
 };
 
 /**
@@ -12996,24 +12996,24 @@ export type ResponseError = {
  *
  */
 export const ResponseErrorCode = {
-  EMPTY_IMAGE_FILE: 'empty_image_file',
-  FAILED_TO_DOWNLOAD_IMAGE: 'failed_to_download_image',
-  IMAGE_CONTENT_POLICY_VIOLATION: 'image_content_policy_violation',
-  IMAGE_FILE_NOT_FOUND: 'image_file_not_found',
-  IMAGE_FILE_TOO_LARGE: 'image_file_too_large',
-  IMAGE_PARSE_ERROR: 'image_parse_error',
-  IMAGE_TOO_LARGE: 'image_too_large',
-  IMAGE_TOO_SMALL: 'image_too_small',
-  INVALID_BASE64_IMAGE: 'invalid_base64_image',
+  SERVER_ERROR: 'server_error',
+  RATE_LIMIT_EXCEEDED: 'rate_limit_exceeded',
+  INVALID_PROMPT: 'invalid_prompt',
+  VECTOR_STORE_TIMEOUT: 'vector_store_timeout',
   INVALID_IMAGE: 'invalid_image',
   INVALID_IMAGE_FORMAT: 'invalid_image_format',
-  INVALID_IMAGE_MODE: 'invalid_image_mode',
+  INVALID_BASE64_IMAGE: 'invalid_base64_image',
   INVALID_IMAGE_URL: 'invalid_image_url',
-  INVALID_PROMPT: 'invalid_prompt',
-  RATE_LIMIT_EXCEEDED: 'rate_limit_exceeded',
-  SERVER_ERROR: 'server_error',
+  IMAGE_TOO_LARGE: 'image_too_large',
+  IMAGE_TOO_SMALL: 'image_too_small',
+  IMAGE_PARSE_ERROR: 'image_parse_error',
+  IMAGE_CONTENT_POLICY_VIOLATION: 'image_content_policy_violation',
+  INVALID_IMAGE_MODE: 'invalid_image_mode',
+  IMAGE_FILE_TOO_LARGE: 'image_file_too_large',
   UNSUPPORTED_IMAGE_MEDIA_TYPE: 'unsupported_image_media_type',
-  VECTOR_STORE_TIMEOUT: 'vector_store_timeout',
+  EMPTY_IMAGE_FILE: 'empty_image_file',
+  FAILED_TO_DOWNLOAD_IMAGE: 'failed_to_download_image',
+  IMAGE_FILE_NOT_FOUND: 'image_file_not_found',
 } as const;
 
 /**
@@ -13027,6 +13027,11 @@ export type ResponseErrorCode =
  * Emitted when an error occurs.
  */
 export type ResponseErrorEvent = {
+  /**
+   * The type of the event. Always `error`.
+   *
+   */
+  type: 'error';
   /**
    * The error code.
    *
@@ -13046,11 +13051,6 @@ export type ResponseErrorEvent = {
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `error`.
-   *
-   */
-  type: 'error';
 };
 
 /**
@@ -13059,19 +13059,19 @@ export type ResponseErrorEvent = {
  */
 export type ResponseFailedEvent = {
   /**
-   * The response that failed.
+   * The type of the event. Always `response.failed`.
    *
    */
-  response: Response;
+  type: 'response.failed';
   /**
    * The sequence number of this event.
    */
   sequence_number: number;
   /**
-   * The type of the event. Always `response.failed`.
+   * The response that failed.
    *
    */
-  type: 'response.failed';
+  response: Response;
 };
 
 /**
@@ -13079,24 +13079,24 @@ export type ResponseFailedEvent = {
  */
 export type ResponseFileSearchCallCompletedEvent = {
   /**
-   * The ID of the output item that the file search call is initiated.
+   * The type of the event. Always `response.file_search_call.completed`.
    *
    */
-  item_id: string;
+  type: 'response.file_search_call.completed';
   /**
    * The index of the output item that the file search call is initiated.
    *
    */
   output_index: number;
   /**
+   * The ID of the output item that the file search call is initiated.
+   *
+   */
+  item_id: string;
+  /**
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.file_search_call.completed`.
-   *
-   */
-  type: 'response.file_search_call.completed';
 };
 
 /**
@@ -13104,24 +13104,24 @@ export type ResponseFileSearchCallCompletedEvent = {
  */
 export type ResponseFileSearchCallInProgressEvent = {
   /**
-   * The ID of the output item that the file search call is initiated.
+   * The type of the event. Always `response.file_search_call.in_progress`.
    *
    */
-  item_id: string;
+  type: 'response.file_search_call.in_progress';
   /**
    * The index of the output item that the file search call is initiated.
    *
    */
   output_index: number;
   /**
+   * The ID of the output item that the file search call is initiated.
+   *
+   */
+  item_id: string;
+  /**
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.file_search_call.in_progress`.
-   *
-   */
-  type: 'response.file_search_call.in_progress';
 };
 
 /**
@@ -13129,24 +13129,24 @@ export type ResponseFileSearchCallInProgressEvent = {
  */
 export type ResponseFileSearchCallSearchingEvent = {
   /**
-   * The ID of the output item that the file search call is initiated.
+   * The type of the event. Always `response.file_search_call.searching`.
    *
    */
-  item_id: string;
+  type: 'response.file_search_call.searching';
   /**
    * The index of the output item that the file search call is searching.
    *
    */
   output_index: number;
   /**
+   * The ID of the output item that the file search call is initiated.
+   *
+   */
+  item_id: string;
+  /**
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.file_search_call.searching`.
-   *
-   */
-  type: 'response.file_search_call.searching';
 };
 
 /**
@@ -13173,6 +13173,10 @@ export type ResponseFormatJsonObject = {
  *
  */
 export type ResponseFormatJsonSchema = {
+  /**
+   * The type of response format being defined. Always `json_schema`.
+   */
+  type: 'json_schema';
   /**
    * JSON schema
    *
@@ -13203,10 +13207,6 @@ export type ResponseFormatJsonSchema = {
      */
     strict?: boolean;
   };
-  /**
-   * The type of response format being defined. Always `json_schema`.
-   */
-  type: 'json_schema';
 };
 
 /**
@@ -13242,13 +13242,13 @@ export type ResponseFormatText = {
  */
 export type ResponseFormatTextGrammar = {
   /**
-   * The custom grammar for the model to follow.
-   */
-  grammar: string;
-  /**
    * The type of response format being defined. Always `grammar`.
    */
   type: 'grammar';
+  /**
+   * The custom grammar for the model to follow.
+   */
+  grammar: string;
 };
 
 /**
@@ -13270,10 +13270,10 @@ export type ResponseFormatTextPython = {
  */
 export type ResponseFunctionCallArgumentsDeltaEvent = {
   /**
-   * The function-call arguments delta that is added.
+   * The type of the event. Always `response.function_call_arguments.delta`.
    *
    */
-  delta: string;
+  type: 'response.function_call_arguments.delta';
   /**
    * The ID of the output item that the function-call arguments delta is added to.
    *
@@ -13289,20 +13289,17 @@ export type ResponseFunctionCallArgumentsDeltaEvent = {
    */
   sequence_number: number;
   /**
-   * The type of the event. Always `response.function_call_arguments.delta`.
+   * The function-call arguments delta that is added.
    *
    */
-  type: 'response.function_call_arguments.delta';
+  delta: string;
 };
 
 /**
  * Emitted when function-call arguments are finalized.
  */
 export type ResponseFunctionCallArgumentsDoneEvent = {
-  /**
-   * The function-call arguments.
-   */
-  arguments: string;
+  type: 'response.function_call_arguments.done';
   /**
    * The ID of the item.
    */
@@ -13315,7 +13312,10 @@ export type ResponseFunctionCallArgumentsDoneEvent = {
    * The sequence number of this event.
    */
   sequence_number: number;
-  type: 'response.function_call_arguments.done';
+  /**
+   * The function-call arguments.
+   */
+  arguments: string;
 };
 
 /**
@@ -13326,9 +13326,9 @@ export type ResponseFunctionCallArgumentsDoneEvent = {
  */
 export type ResponseImageGenCallCompletedEvent = {
   /**
-   * The unique identifier of the image generation item being processed.
+   * The type of the event. Always 'response.image_generation_call.completed'.
    */
-  item_id: string;
+  type: 'response.image_generation_call.completed';
   /**
    * The index of the output item in the response's output array.
    */
@@ -13338,9 +13338,9 @@ export type ResponseImageGenCallCompletedEvent = {
    */
   sequence_number: number;
   /**
-   * The type of the event. Always 'response.image_generation_call.completed'.
+   * The unique identifier of the image generation item being processed.
    */
-  type: 'response.image_generation_call.completed';
+  item_id: string;
 };
 
 /**
@@ -13351,21 +13351,21 @@ export type ResponseImageGenCallCompletedEvent = {
  */
 export type ResponseImageGenCallGeneratingEvent = {
   /**
-   * The unique identifier of the image generation item being processed.
+   * The type of the event. Always 'response.image_generation_call.generating'.
    */
-  item_id: string;
+  type: 'response.image_generation_call.generating';
   /**
    * The index of the output item in the response's output array.
    */
   output_index: number;
   /**
+   * The unique identifier of the image generation item being processed.
+   */
+  item_id: string;
+  /**
    * The sequence number of the image generation item being processed.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always 'response.image_generation_call.generating'.
-   */
-  type: 'response.image_generation_call.generating';
 };
 
 /**
@@ -13376,21 +13376,21 @@ export type ResponseImageGenCallGeneratingEvent = {
  */
 export type ResponseImageGenCallInProgressEvent = {
   /**
-   * The unique identifier of the image generation item being processed.
+   * The type of the event. Always 'response.image_generation_call.in_progress'.
    */
-  item_id: string;
+  type: 'response.image_generation_call.in_progress';
   /**
    * The index of the output item in the response's output array.
    */
   output_index: number;
   /**
+   * The unique identifier of the image generation item being processed.
+   */
+  item_id: string;
+  /**
    * The sequence number of the image generation item being processed.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always 'response.image_generation_call.in_progress'.
-   */
-  type: 'response.image_generation_call.in_progress';
 };
 
 /**
@@ -13401,35 +13401,40 @@ export type ResponseImageGenCallInProgressEvent = {
  */
 export type ResponseImageGenCallPartialImageEvent = {
   /**
-   * The unique identifier of the image generation item being processed.
+   * The type of the event. Always 'response.image_generation_call.partial_image'.
    */
-  item_id: string;
+  type: 'response.image_generation_call.partial_image';
   /**
    * The index of the output item in the response's output array.
    */
   output_index: number;
   /**
-   * Base64-encoded partial image data, suitable for rendering as an image.
+   * The unique identifier of the image generation item being processed.
    */
-  partial_image_b64: string;
-  /**
-   * 0-based index for the partial image (backend is 1-based, but this is 0-based for the user).
-   */
-  partial_image_index: number;
+  item_id: string;
   /**
    * The sequence number of the image generation item being processed.
    */
   sequence_number: number;
   /**
-   * The type of the event. Always 'response.image_generation_call.partial_image'.
+   * 0-based index for the partial image (backend is 1-based, but this is 0-based for the user).
    */
-  type: 'response.image_generation_call.partial_image';
+  partial_image_index: number;
+  /**
+   * Base64-encoded partial image data, suitable for rendering as an image.
+   */
+  partial_image_b64: string;
 };
 
 /**
  * Emitted when the response is in progress.
  */
 export type ResponseInProgressEvent = {
+  /**
+   * The type of the event. Always `response.in_progress`.
+   *
+   */
+  type: 'response.in_progress';
   /**
    * The response that is in progress.
    *
@@ -13439,11 +13444,6 @@ export type ResponseInProgressEvent = {
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.in_progress`.
-   *
-   */
-  type: 'response.in_progress';
 };
 
 /**
@@ -13451,6 +13451,11 @@ export type ResponseInProgressEvent = {
  *
  */
 export type ResponseIncompleteEvent = {
+  /**
+   * The type of the event. Always `response.incomplete`.
+   *
+   */
+  type: 'response.incomplete';
   /**
    * The response that was incomplete.
    *
@@ -13460,11 +13465,6 @@ export type ResponseIncompleteEvent = {
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.incomplete`.
-   *
-   */
-  type: 'response.incomplete';
 };
 
 /**
@@ -13472,25 +13472,25 @@ export type ResponseIncompleteEvent = {
  */
 export type ResponseItemList = {
   /**
+   * The type of object returned, must be `list`.
+   */
+  object: 'list';
+  /**
    * A list of items used to generate this response.
    */
   data: Array<ItemResource>;
-  /**
-   * The ID of the first item in the list.
-   */
-  first_id: string;
   /**
    * Whether there are more items available.
    */
   has_more: boolean;
   /**
+   * The ID of the first item in the list.
+   */
+  first_id: string;
+  /**
    * The ID of the last item in the list.
    */
   last_id: string;
-  /**
-   * The type of object returned, must be `list`.
-   */
-  object: 'list';
 };
 
 /**
@@ -13501,27 +13501,27 @@ export type ResponseItemList = {
  */
 export type ResponseLogProb = {
   /**
+   * A possible text token.
+   */
+  token: string;
+  /**
    * The log probability of this token.
    *
    */
   logprob: number;
-  /**
-   * A possible text token.
-   */
-  token: string;
   /**
    * The log probability of the top 20 most likely tokens.
    *
    */
   top_logprobs?: Array<{
     /**
-     * The log probability of this token.
-     */
-    logprob?: number;
-    /**
      * A possible text token.
      */
     token?: string;
+    /**
+     * The log probability of this token.
+     */
+    logprob?: number;
   }>;
 };
 
@@ -13533,26 +13533,26 @@ export type ResponseLogProb = {
  */
 export type ResponseMcpCallArgumentsDeltaEvent = {
   /**
-   * A JSON string containing the partial update to the arguments for the MCP tool call.
-   *
+   * The type of the event. Always 'response.mcp_call_arguments.delta'.
    */
-  delta: string;
-  /**
-   * The unique identifier of the MCP tool call item being processed.
-   */
-  item_id: string;
+  type: 'response.mcp_call_arguments.delta';
   /**
    * The index of the output item in the response's output array.
    */
   output_index: number;
   /**
+   * The unique identifier of the MCP tool call item being processed.
+   */
+  item_id: string;
+  /**
+   * A JSON string containing the partial update to the arguments for the MCP tool call.
+   *
+   */
+  delta: string;
+  /**
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always 'response.mcp_call_arguments.delta'.
-   */
-  type: 'response.mcp_call_arguments.delta';
 };
 
 /**
@@ -13563,26 +13563,26 @@ export type ResponseMcpCallArgumentsDeltaEvent = {
  */
 export type ResponseMcpCallArgumentsDoneEvent = {
   /**
-   * A JSON string containing the finalized arguments for the MCP tool call.
-   *
+   * The type of the event. Always 'response.mcp_call_arguments.done'.
    */
-  arguments: string;
-  /**
-   * The unique identifier of the MCP tool call item being processed.
-   */
-  item_id: string;
+  type: 'response.mcp_call_arguments.done';
   /**
    * The index of the output item in the response's output array.
    */
   output_index: number;
   /**
+   * The unique identifier of the MCP tool call item being processed.
+   */
+  item_id: string;
+  /**
+   * A JSON string containing the finalized arguments for the MCP tool call.
+   *
+   */
+  arguments: string;
+  /**
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always 'response.mcp_call_arguments.done'.
-   */
-  type: 'response.mcp_call_arguments.done';
 };
 
 /**
@@ -13592,6 +13592,10 @@ export type ResponseMcpCallArgumentsDoneEvent = {
  *
  */
 export type ResponseMcpCallCompletedEvent = {
+  /**
+   * The type of the event. Always 'response.mcp_call.completed'.
+   */
+  type: 'response.mcp_call.completed';
   /**
    * The ID of the MCP tool call item that completed.
    */
@@ -13604,10 +13608,6 @@ export type ResponseMcpCallCompletedEvent = {
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always 'response.mcp_call.completed'.
-   */
-  type: 'response.mcp_call.completed';
 };
 
 /**
@@ -13617,6 +13617,10 @@ export type ResponseMcpCallCompletedEvent = {
  *
  */
 export type ResponseMcpCallFailedEvent = {
+  /**
+   * The type of the event. Always 'response.mcp_call.failed'.
+   */
+  type: 'response.mcp_call.failed';
   /**
    * The ID of the MCP tool call item that failed.
    */
@@ -13629,10 +13633,6 @@ export type ResponseMcpCallFailedEvent = {
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always 'response.mcp_call.failed'.
-   */
-  type: 'response.mcp_call.failed';
 };
 
 /**
@@ -13643,21 +13643,21 @@ export type ResponseMcpCallFailedEvent = {
  */
 export type ResponseMcpCallInProgressEvent = {
   /**
-   * The unique identifier of the MCP tool call item being processed.
+   * The type of the event. Always 'response.mcp_call.in_progress'.
    */
-  item_id: string;
-  /**
-   * The index of the output item in the response's output array.
-   */
-  output_index: number;
+  type: 'response.mcp_call.in_progress';
   /**
    * The sequence number of this event.
    */
   sequence_number: number;
   /**
-   * The type of the event. Always 'response.mcp_call.in_progress'.
+   * The index of the output item in the response's output array.
    */
-  type: 'response.mcp_call.in_progress';
+  output_index: number;
+  /**
+   * The unique identifier of the MCP tool call item being processed.
+   */
+  item_id: string;
 };
 
 /**
@@ -13667,6 +13667,10 @@ export type ResponseMcpCallInProgressEvent = {
  *
  */
 export type ResponseMcpListToolsCompletedEvent = {
+  /**
+   * The type of the event. Always 'response.mcp_list_tools.completed'.
+   */
+  type: 'response.mcp_list_tools.completed';
   /**
    * The ID of the MCP tool call item that produced this output.
    */
@@ -13679,10 +13683,6 @@ export type ResponseMcpListToolsCompletedEvent = {
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always 'response.mcp_list_tools.completed'.
-   */
-  type: 'response.mcp_list_tools.completed';
 };
 
 /**
@@ -13692,6 +13692,10 @@ export type ResponseMcpListToolsCompletedEvent = {
  *
  */
 export type ResponseMcpListToolsFailedEvent = {
+  /**
+   * The type of the event. Always 'response.mcp_list_tools.failed'.
+   */
+  type: 'response.mcp_list_tools.failed';
   /**
    * The ID of the MCP tool call item that failed.
    */
@@ -13704,10 +13708,6 @@ export type ResponseMcpListToolsFailedEvent = {
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always 'response.mcp_list_tools.failed'.
-   */
-  type: 'response.mcp_list_tools.failed';
 };
 
 /**
@@ -13717,6 +13717,10 @@ export type ResponseMcpListToolsFailedEvent = {
  *
  */
 export type ResponseMcpListToolsInProgressEvent = {
+  /**
+   * The type of the event. Always 'response.mcp_list_tools.in_progress'.
+   */
+  type: 'response.mcp_list_tools.in_progress';
   /**
    * The ID of the MCP tool call item that is being processed.
    */
@@ -13729,10 +13733,6 @@ export type ResponseMcpListToolsInProgressEvent = {
    * The sequence number of this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always 'response.mcp_list_tools.in_progress'.
-   */
-  type: 'response.mcp_list_tools.in_progress';
 };
 
 /**
@@ -13755,10 +13755,10 @@ export type ResponseModalities = Array<'text' | 'audio'>;
  */
 export type ResponseOutputItemAddedEvent = {
   /**
-   * The output item that was added.
+   * The type of the event. Always `response.output_item.added`.
    *
    */
-  item: OutputItem;
+  type: 'response.output_item.added';
   /**
    * The index of the output item that was added.
    *
@@ -13770,10 +13770,10 @@ export type ResponseOutputItemAddedEvent = {
    */
   sequence_number: number;
   /**
-   * The type of the event. Always `response.output_item.added`.
+   * The output item that was added.
    *
    */
-  type: 'response.output_item.added';
+  item: OutputItem;
 };
 
 /**
@@ -13781,10 +13781,10 @@ export type ResponseOutputItemAddedEvent = {
  */
 export type ResponseOutputItemDoneEvent = {
   /**
-   * The output item that was marked done.
+   * The type of the event. Always `response.output_item.done`.
    *
    */
-  item: OutputItem;
+  type: 'response.output_item.done';
   /**
    * The index of the output item that was marked done.
    *
@@ -13796,10 +13796,10 @@ export type ResponseOutputItemDoneEvent = {
    */
   sequence_number: number;
   /**
-   * The type of the event. Always `response.output_item.done`.
+   * The output item that was marked done.
    *
    */
-  type: 'response.output_item.done';
+  item: OutputItem;
 };
 
 /**
@@ -13810,19 +13810,9 @@ export type ResponseOutputItemDoneEvent = {
  */
 export type ResponseOutputTextAnnotationAddedEvent = {
   /**
-   * The annotation object being added. (See annotation schema for details.)
+   * The type of the event. Always 'response.output_text.annotation.added'.
    */
-  annotation: {
-    [key: string]: unknown;
-  };
-  /**
-   * The index of the annotation within the content part.
-   */
-  annotation_index: number;
-  /**
-   * The index of the content part within the output item.
-   */
-  content_index: number;
+  type: 'response.output_text.annotation.added';
   /**
    * The unique identifier of the item to which the annotation is being added.
    */
@@ -13832,13 +13822,23 @@ export type ResponseOutputTextAnnotationAddedEvent = {
    */
   output_index: number;
   /**
+   * The index of the content part within the output item.
+   */
+  content_index: number;
+  /**
+   * The index of the annotation within the content part.
+   */
+  annotation_index: number;
+  /**
    * The sequence number of this event.
    */
   sequence_number: number;
   /**
-   * The type of the event. Always 'response.output_text.annotation.added'.
+   * The annotation object being added. (See annotation schema for details.)
    */
-  type: 'response.output_text.annotation.added';
+  annotation: {
+    [key: string]: unknown;
+  };
 };
 
 /**
@@ -13859,6 +13859,22 @@ export type ResponsePromptVariables = {
 
 export type ResponseProperties = {
   /**
+   * The unique ID of the previous response to the model. Use this to
+   * create multi-turn conversations. Learn more about
+   * [conversation state](https://platform.openai.com/docs/guides/conversation-state).
+   *
+   */
+  previous_response_id?: string;
+  /**
+   * Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI
+   * offers a wide range of models with different capabilities, performance
+   * characteristics, and price points. Refer to the [model guide](https://platform.openai.com/docs/models)
+   * to browse and compare available models.
+   *
+   */
+  model?: ModelIdsResponses;
+  reasoning?: Reasoning;
+  /**
    * Whether to run the model response in the background.
    * [Learn more](https://platform.openai.com/docs/guides/background).
    *
@@ -13875,23 +13891,6 @@ export type ResponseProperties = {
    */
   max_tool_calls?: number;
   /**
-   * Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI
-   * offers a wide range of models with different capabilities, performance
-   * characteristics, and price points. Refer to the [model guide](https://platform.openai.com/docs/models)
-   * to browse and compare available models.
-   *
-   */
-  model?: ModelIdsResponses;
-  /**
-   * The unique ID of the previous response to the model. Use this to
-   * create multi-turn conversations. Learn more about
-   * [conversation state](https://platform.openai.com/docs/guides/conversation-state).
-   *
-   */
-  previous_response_id?: string;
-  prompt?: Prompt;
-  reasoning?: Reasoning;
-  /**
    * Configuration options for a text response from the model. Can be plain
    * text or structured JSON data. Learn more:
    * - [Text inputs and outputs](https://platform.openai.com/docs/guides/text)
@@ -13902,19 +13901,6 @@ export type ResponseProperties = {
     format?: TextResponseFormatConfiguration;
     verbosity?: Verbosity;
   };
-  /**
-   * How the model should select which tool (or tools) to use when generating
-   * a response. See the `tools` parameter to see how to specify which tools
-   * the model can call.
-   *
-   */
-  tool_choice?:
-    | ToolChoiceOptions
-    | ToolChoiceAllowed
-    | ToolChoiceTypes
-    | ToolChoiceFunction
-    | ToolChoiceMcp
-    | ToolChoiceCustom;
   /**
    * An array of tools the model may call while generating a response. You
    * can specify which tool to use by setting the `tool_choice` parameter.
@@ -13933,6 +13919,20 @@ export type ResponseProperties = {
    *
    */
   tools?: Array<Tool>;
+  /**
+   * How the model should select which tool (or tools) to use when generating
+   * a response. See the `tools` parameter to see how to specify which tools
+   * the model can call.
+   *
+   */
+  tool_choice?:
+    | ToolChoiceOptions
+    | ToolChoiceAllowed
+    | ToolChoiceTypes
+    | ToolChoiceFunction
+    | ToolChoiceMcp
+    | ToolChoiceCustom;
+  prompt?: Prompt;
   /**
    * The truncation strategy to use for the model response.
    * - `auto`: If the context of this response and previous ones exceeds
@@ -13954,6 +13954,10 @@ export type ResponseProperties = {
  */
 export type ResponseQueuedEvent = {
   /**
+   * The type of the event. Always 'response.queued'.
+   */
+  type: 'response.queued';
+  /**
    * The full response object that is queued.
    */
   response: Response;
@@ -13961,10 +13965,6 @@ export type ResponseQueuedEvent = {
    * The sequence number for this event.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always 'response.queued'.
-   */
-  type: 'response.queued';
 };
 
 /**
@@ -13972,6 +13972,11 @@ export type ResponseQueuedEvent = {
  */
 export type ResponseReasoningSummaryPartAddedEvent = {
   /**
+   * The type of the event. Always `response.reasoning_summary_part.added`.
+   *
+   */
+  type: 'response.reasoning_summary_part.added';
+  /**
    * The ID of the item this summary part is associated with.
    *
    */
@@ -13982,34 +13987,29 @@ export type ResponseReasoningSummaryPartAddedEvent = {
    */
   output_index: number;
   /**
-   * The summary part that was added.
+   * The index of the summary part within the reasoning summary.
    *
    */
-  part: {
-    /**
-     * The text of the summary part.
-     */
-    text: string;
-    /**
-     * The type of the summary part. Always `summary_text`.
-     */
-    type: 'summary_text';
-  };
+  summary_index: number;
   /**
    * The sequence number of this event.
    *
    */
   sequence_number: number;
   /**
-   * The index of the summary part within the reasoning summary.
+   * The summary part that was added.
    *
    */
-  summary_index: number;
-  /**
-   * The type of the event. Always `response.reasoning_summary_part.added`.
-   *
-   */
-  type: 'response.reasoning_summary_part.added';
+  part: {
+    /**
+     * The type of the summary part. Always `summary_text`.
+     */
+    type: 'summary_text';
+    /**
+     * The text of the summary part.
+     */
+    text: string;
+  };
 };
 
 /**
@@ -14017,6 +14017,11 @@ export type ResponseReasoningSummaryPartAddedEvent = {
  */
 export type ResponseReasoningSummaryPartDoneEvent = {
   /**
+   * The type of the event. Always `response.reasoning_summary_part.done`.
+   *
+   */
+  type: 'response.reasoning_summary_part.done';
+  /**
    * The ID of the item this summary part is associated with.
    *
    */
@@ -14027,34 +14032,29 @@ export type ResponseReasoningSummaryPartDoneEvent = {
    */
   output_index: number;
   /**
-   * The completed summary part.
+   * The index of the summary part within the reasoning summary.
    *
    */
-  part: {
-    /**
-     * The text of the summary part.
-     */
-    text: string;
-    /**
-     * The type of the summary part. Always `summary_text`.
-     */
-    type: 'summary_text';
-  };
+  summary_index: number;
   /**
    * The sequence number of this event.
    *
    */
   sequence_number: number;
   /**
-   * The index of the summary part within the reasoning summary.
+   * The completed summary part.
    *
    */
-  summary_index: number;
-  /**
-   * The type of the event. Always `response.reasoning_summary_part.done`.
-   *
-   */
-  type: 'response.reasoning_summary_part.done';
+  part: {
+    /**
+     * The type of the summary part. Always `summary_text`.
+     */
+    type: 'summary_text';
+    /**
+     * The text of the summary part.
+     */
+    text: string;
+  };
 };
 
 /**
@@ -14062,10 +14062,10 @@ export type ResponseReasoningSummaryPartDoneEvent = {
  */
 export type ResponseReasoningSummaryTextDeltaEvent = {
   /**
-   * The text delta that was added to the summary.
+   * The type of the event. Always `response.reasoning_summary_text.delta`.
    *
    */
-  delta: string;
+  type: 'response.reasoning_summary_text.delta';
   /**
    * The ID of the item this summary text delta is associated with.
    *
@@ -14077,26 +14077,31 @@ export type ResponseReasoningSummaryTextDeltaEvent = {
    */
   output_index: number;
   /**
-   * The sequence number of this event.
-   *
-   */
-  sequence_number: number;
-  /**
    * The index of the summary part within the reasoning summary.
    *
    */
   summary_index: number;
   /**
-   * The type of the event. Always `response.reasoning_summary_text.delta`.
+   * The text delta that was added to the summary.
    *
    */
-  type: 'response.reasoning_summary_text.delta';
+  delta: string;
+  /**
+   * The sequence number of this event.
+   *
+   */
+  sequence_number: number;
 };
 
 /**
  * Emitted when a reasoning summary text is completed.
  */
 export type ResponseReasoningSummaryTextDoneEvent = {
+  /**
+   * The type of the event. Always `response.reasoning_summary_text.done`.
+   *
+   */
+  type: 'response.reasoning_summary_text.done';
   /**
    * The ID of the item this summary text is associated with.
    *
@@ -14108,11 +14113,6 @@ export type ResponseReasoningSummaryTextDoneEvent = {
    */
   output_index: number;
   /**
-   * The sequence number of this event.
-   *
-   */
-  sequence_number: number;
-  /**
    * The index of the summary part within the reasoning summary.
    *
    */
@@ -14123,10 +14123,10 @@ export type ResponseReasoningSummaryTextDoneEvent = {
    */
   text: string;
   /**
-   * The type of the event. Always `response.reasoning_summary_text.done`.
+   * The sequence number of this event.
    *
    */
-  type: 'response.reasoning_summary_text.done';
+  sequence_number: number;
 };
 
 /**
@@ -14134,15 +14134,10 @@ export type ResponseReasoningSummaryTextDoneEvent = {
  */
 export type ResponseReasoningTextDeltaEvent = {
   /**
-   * The index of the reasoning content part this delta is associated with.
+   * The type of the event. Always `response.reasoning_text.delta`.
    *
    */
-  content_index: number;
-  /**
-   * The text delta that was added to the reasoning content.
-   *
-   */
-  delta: string;
+  type: 'response.reasoning_text.delta';
   /**
    * The ID of the item this reasoning text delta is associated with.
    *
@@ -14154,15 +14149,20 @@ export type ResponseReasoningTextDeltaEvent = {
    */
   output_index: number;
   /**
+   * The index of the reasoning content part this delta is associated with.
+   *
+   */
+  content_index: number;
+  /**
+   * The text delta that was added to the reasoning content.
+   *
+   */
+  delta: string;
+  /**
    * The sequence number of this event.
    *
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.reasoning_text.delta`.
-   *
-   */
-  type: 'response.reasoning_text.delta';
 };
 
 /**
@@ -14170,10 +14170,10 @@ export type ResponseReasoningTextDeltaEvent = {
  */
 export type ResponseReasoningTextDoneEvent = {
   /**
-   * The index of the reasoning content part.
+   * The type of the event. Always `response.reasoning_text.done`.
    *
    */
-  content_index: number;
+  type: 'response.reasoning_text.done';
   /**
    * The ID of the item this reasoning text is associated with.
    *
@@ -14185,20 +14185,20 @@ export type ResponseReasoningTextDoneEvent = {
    */
   output_index: number;
   /**
-   * The sequence number of this event.
+   * The index of the reasoning content part.
    *
    */
-  sequence_number: number;
+  content_index: number;
   /**
    * The full text of the completed reasoning content.
    *
    */
   text: string;
   /**
-   * The type of the event. Always `response.reasoning_text.done`.
+   * The sequence number of this event.
    *
    */
-  type: 'response.reasoning_text.done';
+  sequence_number: number;
 };
 
 /**
@@ -14206,15 +14206,10 @@ export type ResponseReasoningTextDoneEvent = {
  */
 export type ResponseRefusalDeltaEvent = {
   /**
-   * The index of the content part that the refusal text is added to.
+   * The type of the event. Always `response.refusal.delta`.
    *
    */
-  content_index: number;
-  /**
-   * The refusal text that is added.
-   *
-   */
-  delta: string;
+  type: 'response.refusal.delta';
   /**
    * The ID of the output item that the refusal text is added to.
    *
@@ -14226,15 +14221,20 @@ export type ResponseRefusalDeltaEvent = {
    */
   output_index: number;
   /**
+   * The index of the content part that the refusal text is added to.
+   *
+   */
+  content_index: number;
+  /**
+   * The refusal text that is added.
+   *
+   */
+  delta: string;
+  /**
    * The sequence number of this event.
    *
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.refusal.delta`.
-   *
-   */
-  type: 'response.refusal.delta';
 };
 
 /**
@@ -14242,10 +14242,10 @@ export type ResponseRefusalDeltaEvent = {
  */
 export type ResponseRefusalDoneEvent = {
   /**
-   * The index of the content part that the refusal text is finalized.
+   * The type of the event. Always `response.refusal.done`.
    *
    */
-  content_index: number;
+  type: 'response.refusal.done';
   /**
    * The ID of the output item that the refusal text is finalized.
    *
@@ -14257,6 +14257,11 @@ export type ResponseRefusalDoneEvent = {
    */
   output_index: number;
   /**
+   * The index of the content part that the refusal text is finalized.
+   *
+   */
+  content_index: number;
+  /**
    * The refusal text that is finalized.
    *
    */
@@ -14266,11 +14271,6 @@ export type ResponseRefusalDoneEvent = {
    *
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.refusal.done`.
-   *
-   */
-  type: 'response.refusal.done';
 };
 
 export type ResponseStreamEvent =
@@ -14457,6 +14457,21 @@ export type ResponseStreamOptions = {
  */
 export type ResponseTextDeltaEvent = {
   /**
+   * The type of the event. Always `response.output_text.delta`.
+   *
+   */
+  type: 'response.output_text.delta';
+  /**
+   * The ID of the output item that the text delta was added to.
+   *
+   */
+  item_id: string;
+  /**
+   * The index of the output item that the text delta was added to.
+   *
+   */
+  output_index: number;
+  /**
    * The index of the content part that the text delta was added to.
    *
    */
@@ -14467,29 +14482,14 @@ export type ResponseTextDeltaEvent = {
    */
   delta: string;
   /**
-   * The ID of the output item that the text delta was added to.
-   *
+   * The sequence number for this event.
    */
-  item_id: string;
+  sequence_number: number;
   /**
    * The log probabilities of the tokens in the delta.
    *
    */
   logprobs: Array<ResponseLogProb>;
-  /**
-   * The index of the output item that the text delta was added to.
-   *
-   */
-  output_index: number;
-  /**
-   * The sequence number for this event.
-   */
-  sequence_number: number;
-  /**
-   * The type of the event. Always `response.output_text.delta`.
-   *
-   */
-  type: 'response.output_text.delta';
 };
 
 /**
@@ -14497,39 +14497,39 @@ export type ResponseTextDeltaEvent = {
  */
 export type ResponseTextDoneEvent = {
   /**
-   * The index of the content part that the text content is finalized.
+   * The type of the event. Always `response.output_text.done`.
    *
    */
-  content_index: number;
+  type: 'response.output_text.done';
   /**
    * The ID of the output item that the text content is finalized.
    *
    */
   item_id: string;
   /**
-   * The log probabilities of the tokens in the delta.
-   *
-   */
-  logprobs: Array<ResponseLogProb>;
-  /**
    * The index of the output item that the text content is finalized.
    *
    */
   output_index: number;
   /**
-   * The sequence number for this event.
+   * The index of the content part that the text content is finalized.
+   *
    */
-  sequence_number: number;
+  content_index: number;
   /**
    * The text content that is finalized.
    *
    */
   text: string;
   /**
-   * The type of the event. Always `response.output_text.done`.
+   * The sequence number for this event.
+   */
+  sequence_number: number;
+  /**
+   * The log probabilities of the tokens in the delta.
    *
    */
-  type: 'response.output_text.done';
+  logprobs: Array<ResponseLogProb>;
 };
 
 /**
@@ -14577,24 +14577,24 @@ export type ResponseUsage = {
  */
 export type ResponseWebSearchCallCompletedEvent = {
   /**
-   * Unique ID for the output item associated with the web search call.
+   * The type of the event. Always `response.web_search_call.completed`.
    *
    */
-  item_id: string;
+  type: 'response.web_search_call.completed';
   /**
    * The index of the output item that the web search call is associated with.
    *
    */
   output_index: number;
   /**
+   * Unique ID for the output item associated with the web search call.
+   *
+   */
+  item_id: string;
+  /**
    * The sequence number of the web search call being processed.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.web_search_call.completed`.
-   *
-   */
-  type: 'response.web_search_call.completed';
 };
 
 /**
@@ -14602,24 +14602,24 @@ export type ResponseWebSearchCallCompletedEvent = {
  */
 export type ResponseWebSearchCallInProgressEvent = {
   /**
-   * Unique ID for the output item associated with the web search call.
+   * The type of the event. Always `response.web_search_call.in_progress`.
    *
    */
-  item_id: string;
+  type: 'response.web_search_call.in_progress';
   /**
    * The index of the output item that the web search call is associated with.
    *
    */
   output_index: number;
   /**
+   * Unique ID for the output item associated with the web search call.
+   *
+   */
+  item_id: string;
+  /**
    * The sequence number of the web search call being processed.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.web_search_call.in_progress`.
-   *
-   */
-  type: 'response.web_search_call.in_progress';
 };
 
 /**
@@ -14627,24 +14627,24 @@ export type ResponseWebSearchCallInProgressEvent = {
  */
 export type ResponseWebSearchCallSearchingEvent = {
   /**
-   * Unique ID for the output item associated with the web search call.
+   * The type of the event. Always `response.web_search_call.searching`.
    *
    */
-  item_id: string;
+  type: 'response.web_search_call.searching';
   /**
    * The index of the output item that the web search call is associated with.
    *
    */
   output_index: number;
   /**
+   * Unique ID for the output item associated with the web search call.
+   *
+   */
+  item_id: string;
+  /**
    * The sequence number of the web search call being processed.
    */
   sequence_number: number;
-  /**
-   * The type of the event. Always `response.web_search_call.searching`.
-   *
-   */
-  type: 'response.web_search_call.searching';
 };
 
 /**
@@ -14707,37 +14707,37 @@ export type RunGraderRequest = {
 };
 
 export type RunGraderResponse = {
+  reward: number;
   metadata: {
+    name: string;
+    type: string;
     errors: {
       formula_parse_error: boolean;
-      invalid_variable_error: boolean;
-      model_grader_parse_error: boolean;
-      model_grader_refusal_error: boolean;
-      model_grader_server_error: boolean;
-      model_grader_server_error_details: string;
-      other_error: boolean;
-      python_grader_runtime_error: boolean;
-      python_grader_runtime_error_details: string;
-      python_grader_server_error: boolean;
-      python_grader_server_error_type: string;
       sample_parse_error: boolean;
       truncated_observation_error: boolean;
       unresponsive_reward_error: boolean;
+      invalid_variable_error: boolean;
+      other_error: boolean;
+      python_grader_server_error: boolean;
+      python_grader_server_error_type: string;
+      python_grader_runtime_error: boolean;
+      python_grader_runtime_error_details: string;
+      model_grader_server_error: boolean;
+      model_grader_refusal_error: boolean;
+      model_grader_parse_error: boolean;
+      model_grader_server_error_details: string;
     };
     execution_time: number;
-    name: string;
-    sampled_model_name: string;
     scores: {
       [key: string]: unknown;
     };
     token_usage: number;
-    type: string;
+    sampled_model_name: string;
   };
-  model_grader_token_usage_per_model: {
+  sub_rewards: {
     [key: string]: unknown;
   };
-  reward: number;
-  sub_rewards: {
+  model_grader_token_usage_per_model: {
     [key: string]: unknown;
   };
 };
@@ -14749,46 +14749,44 @@ export type RunGraderResponse = {
  */
 export type RunObject = {
   /**
-   * The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for execution of this run.
+   * The identifier, which can be referenced in API endpoints.
    */
-  assistant_id: string;
+  id: string;
   /**
-   * The Unix timestamp (in seconds) for when the run was cancelled.
+   * The object type, which is always `thread.run`.
    */
-  cancelled_at: number;
-  /**
-   * The Unix timestamp (in seconds) for when the run was completed.
-   */
-  completed_at: number;
+  object: 'thread.run';
   /**
    * The Unix timestamp (in seconds) for when the run was created.
    */
   created_at: number;
   /**
-   * The Unix timestamp (in seconds) for when the run will expire.
+   * The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was executed on as a part of this run.
    */
-  expires_at: number;
+  thread_id: string;
   /**
-   * The Unix timestamp (in seconds) for when the run failed.
+   * The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for execution of this run.
    */
-  failed_at: number;
+  assistant_id: string;
+  status: RunStatus;
   /**
-   * The identifier, which can be referenced in API endpoints.
+   * Details on the action required to continue the run. Will be `null` if no action is required.
    */
-  id: string;
-  /**
-   * Details on why the run is incomplete. Will be `null` if the run is not incomplete.
-   */
-  incomplete_details: {
+  required_action: {
     /**
-     * The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
+     * For now, this is always `submit_tool_outputs`.
      */
-    reason?: 'max_completion_tokens' | 'max_prompt_tokens';
+    type: 'submit_tool_outputs';
+    /**
+     * Details on the tool outputs needed for this run to continue.
+     */
+    submit_tool_outputs: {
+      /**
+       * A list of the relevant tool calls.
+       */
+      tool_calls: Array<RunToolCallObject>;
+    };
   };
-  /**
-   * The instructions that the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for this run.
-   */
-  instructions: string;
   /**
    * The last error associated with this run. Will be `null` if there are no errors.
    */
@@ -14803,68 +14801,70 @@ export type RunObject = {
     message: string;
   };
   /**
-   * The maximum number of completion tokens specified to have been used over the course of the run.
-   *
+   * The Unix timestamp (in seconds) for when the run will expire.
    */
-  max_completion_tokens: number;
+  expires_at: number;
   /**
-   * The maximum number of prompt tokens specified to have been used over the course of the run.
-   *
+   * The Unix timestamp (in seconds) for when the run was started.
    */
-  max_prompt_tokens: number;
-  metadata: Metadata;
+  started_at: number;
+  /**
+   * The Unix timestamp (in seconds) for when the run was cancelled.
+   */
+  cancelled_at: number;
+  /**
+   * The Unix timestamp (in seconds) for when the run failed.
+   */
+  failed_at: number;
+  /**
+   * The Unix timestamp (in seconds) for when the run was completed.
+   */
+  completed_at: number;
+  /**
+   * Details on why the run is incomplete. Will be `null` if the run is not incomplete.
+   */
+  incomplete_details: {
+    /**
+     * The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
+     */
+    reason?: 'max_completion_tokens' | 'max_prompt_tokens';
+  };
   /**
    * The model that the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for this run.
    */
   model: string;
   /**
-   * The object type, which is always `thread.run`.
+   * The instructions that the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for this run.
    */
-  object: 'thread.run';
-  parallel_tool_calls: ParallelToolCalls;
+  instructions: string;
   /**
-   * Details on the action required to continue the run. Will be `null` if no action is required.
+   * The list of tools that the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for this run.
    */
-  required_action: {
-    /**
-     * Details on the tool outputs needed for this run to continue.
-     */
-    submit_tool_outputs: {
-      /**
-       * A list of the relevant tool calls.
-       */
-      tool_calls: Array<RunToolCallObject>;
-    };
-    /**
-     * For now, this is always `submit_tool_outputs`.
-     */
-    type: 'submit_tool_outputs';
-  };
-  response_format: AssistantsApiResponseFormatOption;
-  /**
-   * The Unix timestamp (in seconds) for when the run was started.
-   */
-  started_at: number;
-  status: RunStatus;
+  tools: Array<AssistantTool>;
+  metadata: Metadata;
+  usage: RunCompletionUsage;
   /**
    * The sampling temperature used for this run. If not set, defaults to 1.
    */
   temperature?: number;
   /**
-   * The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was executed on as a part of this run.
-   */
-  thread_id: string;
-  tool_choice: AssistantsApiToolChoiceOption & unknown;
-  /**
-   * The list of tools that the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for this run.
-   */
-  tools: Array<AssistantTool>;
-  /**
    * The nucleus sampling value used for this run. If not set, defaults to 1.
    */
   top_p?: number;
+  /**
+   * The maximum number of prompt tokens specified to have been used over the course of the run.
+   *
+   */
+  max_prompt_tokens: number;
+  /**
+   * The maximum number of completion tokens specified to have been used over the course of the run.
+   *
+   */
+  max_completion_tokens: number;
   truncation_strategy: TruncationObject & unknown;
-  usage: RunCompletionUsage;
+  tool_choice: AssistantsApiToolChoiceOption & unknown;
+  parallel_tool_calls: ParallelToolCalls;
+  response_format: AssistantsApiResponseFormatOption;
 };
 
 /**
@@ -14892,7 +14892,6 @@ export type RunStepCompletionUsage = {
  *
  */
 export type RunStepDeltaObject = {
-  delta: RunStepDeltaObjectDelta;
   /**
    * The identifier of the run step, which can be referenced in API endpoints.
    */
@@ -14901,6 +14900,7 @@ export type RunStepDeltaObject = {
    * The object type, which is always `thread.run.step.delta`.
    */
   object: 'thread.run.step.delta';
+  delta: RunStepDeltaObjectDelta;
 };
 
 /**
@@ -14909,16 +14909,16 @@ export type RunStepDeltaObject = {
  * Details of the message creation by the run step.
  */
 export type RunStepDeltaStepDetailsMessageCreationObject = {
+  /**
+   * Always `message_creation`.
+   */
+  type: 'message_creation';
   message_creation?: {
     /**
      * The ID of the message that was created by this run step.
      */
     message_id?: string;
   };
-  /**
-   * Always `message_creation`.
-   */
-  type: 'message_creation';
 };
 
 /**
@@ -14927,6 +14927,18 @@ export type RunStepDeltaStepDetailsMessageCreationObject = {
  * Details of the Code Interpreter tool call the run step was involved in.
  */
 export type RunStepDeltaStepDetailsToolCallsCodeObject = {
+  /**
+   * The index of the tool call in the tool calls array.
+   */
+  index: number;
+  /**
+   * The ID of the tool call.
+   */
+  id?: string;
+  /**
+   * The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+   */
+  type: 'code_interpreter';
   /**
    * The Code Interpreter tool call definition.
    */
@@ -14947,30 +14959,12 @@ export type RunStepDeltaStepDetailsToolCallsCodeObject = {
         } & RunStepDeltaStepDetailsToolCallsCodeOutputImageObject)
     >;
   };
-  /**
-   * The ID of the tool call.
-   */
-  id?: string;
-  /**
-   * The index of the tool call in the tool calls array.
-   */
-  index: number;
-  /**
-   * The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
-   */
-  type: 'code_interpreter';
 };
 
 /**
  * Code interpreter image output
  */
 export type RunStepDeltaStepDetailsToolCallsCodeOutputImageObject = {
-  image?: {
-    /**
-     * The [file](https://platform.openai.com/docs/api-reference/files) ID of the image.
-     */
-    file_id?: string;
-  };
   /**
    * The index of the output in the outputs array.
    */
@@ -14979,6 +14973,12 @@ export type RunStepDeltaStepDetailsToolCallsCodeOutputImageObject = {
    * Always `image`.
    */
   type: 'image';
+  image?: {
+    /**
+     * The [file](https://platform.openai.com/docs/api-reference/files) ID of the image.
+     */
+    file_id?: string;
+  };
 };
 
 /**
@@ -14992,13 +14992,13 @@ export type RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject = {
    */
   index: number;
   /**
-   * The text output from the Code Interpreter tool call.
-   */
-  logs?: string;
-  /**
    * Always `logs`.
    */
   type: 'logs';
+  /**
+   * The text output from the Code Interpreter tool call.
+   */
+  logs?: string;
 };
 
 /**
@@ -15006,23 +15006,23 @@ export type RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject = {
  */
 export type RunStepDeltaStepDetailsToolCallsFileSearchObject = {
   /**
-   * For now, this is always going to be an empty object.
+   * The index of the tool call in the tool calls array.
    */
-  file_search: {
-    [key: string]: unknown;
-  };
+  index: number;
   /**
    * The ID of the tool call object.
    */
   id?: string;
   /**
-   * The index of the tool call in the tool calls array.
-   */
-  index: number;
-  /**
    * The type of tool call. This is always going to be `file_search` for this type of tool call.
    */
   type: 'file_search';
+  /**
+   * For now, this is always going to be an empty object.
+   */
+  file_search: {
+    [key: string]: unknown;
+  };
 };
 
 /**
@@ -15030,34 +15030,34 @@ export type RunStepDeltaStepDetailsToolCallsFileSearchObject = {
  */
 export type RunStepDeltaStepDetailsToolCallsFunctionObject = {
   /**
-   * The definition of the function that was called.
+   * The index of the tool call in the tool calls array.
    */
-  function?: {
-    /**
-     * The arguments passed to the function.
-     */
-    arguments?: string;
-    /**
-     * The name of the function.
-     */
-    name?: string;
-    /**
-     * The output of the function. This will be `null` if the outputs have not been [submitted](https://platform.openai.com/docs/api-reference/runs/submitToolOutputs) yet.
-     */
-    output?: string;
-  };
+  index: number;
   /**
    * The ID of the tool call object.
    */
   id?: string;
   /**
-   * The index of the tool call in the tool calls array.
-   */
-  index: number;
-  /**
    * The type of tool call. This is always going to be `function` for this type of tool call.
    */
   type: 'function';
+  /**
+   * The definition of the function that was called.
+   */
+  function?: {
+    /**
+     * The name of the function.
+     */
+    name?: string;
+    /**
+     * The arguments passed to the function.
+     */
+    arguments?: string;
+    /**
+     * The output of the function. This will be `null` if the outputs have not been [submitted](https://platform.openai.com/docs/api-reference/runs/submitToolOutputs) yet.
+     */
+    output?: string;
+  };
 };
 
 /**
@@ -15067,14 +15067,14 @@ export type RunStepDeltaStepDetailsToolCallsFunctionObject = {
  */
 export type RunStepDeltaStepDetailsToolCallsObject = {
   /**
+   * Always `tool_calls`.
+   */
+  type: 'tool_calls';
+  /**
    * An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
    *
    */
   tool_calls?: Array<RunStepDeltaStepDetailsToolCall>;
-  /**
-   * Always `tool_calls`.
-   */
-  type: 'tool_calls';
 };
 
 /**
@@ -15083,16 +15083,16 @@ export type RunStepDeltaStepDetailsToolCallsObject = {
  * Details of the message creation by the run step.
  */
 export type RunStepDetailsMessageCreationObject = {
+  /**
+   * Always `message_creation`.
+   */
+  type: 'message_creation';
   message_creation: {
     /**
      * The ID of the message that was created by this run step.
      */
     message_id: string;
   };
-  /**
-   * Always `message_creation`.
-   */
-  type: 'message_creation';
 };
 
 /**
@@ -15101,6 +15101,14 @@ export type RunStepDetailsMessageCreationObject = {
  * Details of the Code Interpreter tool call the run step was involved in.
  */
 export type RunStepDetailsToolCallsCodeObject = {
+  /**
+   * The ID of the tool call.
+   */
+  id: string;
+  /**
+   * The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+   */
+  type: 'code_interpreter';
   /**
    * The Code Interpreter tool call definition.
    */
@@ -15121,30 +15129,22 @@ export type RunStepDetailsToolCallsCodeObject = {
         } & RunStepDetailsToolCallsCodeOutputImageObject)
     >;
   };
-  /**
-   * The ID of the tool call.
-   */
-  id: string;
-  /**
-   * The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
-   */
-  type: 'code_interpreter';
 };
 
 /**
  * Code Interpreter image output
  */
 export type RunStepDetailsToolCallsCodeOutputImageObject = {
+  /**
+   * Always `image`.
+   */
+  type: 'image';
   image: {
     /**
      * The [file](https://platform.openai.com/docs/api-reference/files) ID of the image.
      */
     file_id: string;
   };
-  /**
-   * Always `image`.
-   */
-  type: 'image';
 };
 
 /**
@@ -15154,19 +15154,27 @@ export type RunStepDetailsToolCallsCodeOutputImageObject = {
  */
 export type RunStepDetailsToolCallsCodeOutputLogsObject = {
   /**
-   * The text output from the Code Interpreter tool call.
-   */
-  logs: string;
-  /**
    * Always `logs`.
    */
   type: 'logs';
+  /**
+   * The text output from the Code Interpreter tool call.
+   */
+  logs: string;
 };
 
 /**
  * File search tool call
  */
 export type RunStepDetailsToolCallsFileSearchObject = {
+  /**
+   * The ID of the tool call object.
+   */
+  id: string;
+  /**
+   * The type of tool call. This is always going to be `file_search` for this type of tool call.
+   */
+  type: 'file_search';
   /**
    * For now, this is always going to be an empty object.
    */
@@ -15177,14 +15185,6 @@ export type RunStepDetailsToolCallsFileSearchObject = {
      */
     results?: Array<RunStepDetailsToolCallsFileSearchResultObject>;
   };
-  /**
-   * The ID of the tool call object.
-   */
-  id: string;
-  /**
-   * The type of tool call. This is always going to be `file_search` for this type of tool call.
-   */
-  type: 'file_search';
 };
 
 /**
@@ -15207,19 +15207,6 @@ export type RunStepDetailsToolCallsFileSearchRankingOptionsObject = {
  */
 export type RunStepDetailsToolCallsFileSearchResultObject = {
   /**
-   * The content of the result that was found. The content is only included if requested via the include query parameter.
-   */
-  content?: Array<{
-    /**
-     * The text content of the file.
-     */
-    text?: string;
-    /**
-     * The type of the content.
-     */
-    type?: 'text';
-  }>;
-  /**
    * The ID of the file that result was found in.
    */
   file_id: string;
@@ -15231,29 +15218,25 @@ export type RunStepDetailsToolCallsFileSearchResultObject = {
    * The score of the result. All values must be a floating point number between 0 and 1.
    */
   score: number;
+  /**
+   * The content of the result that was found. The content is only included if requested via the include query parameter.
+   */
+  content?: Array<{
+    /**
+     * The type of the content.
+     */
+    type?: 'text';
+    /**
+     * The text content of the file.
+     */
+    text?: string;
+  }>;
 };
 
 /**
  * Function tool call
  */
 export type RunStepDetailsToolCallsFunctionObject = {
-  /**
-   * The definition of the function that was called.
-   */
-  function: {
-    /**
-     * The arguments passed to the function.
-     */
-    arguments: string;
-    /**
-     * The name of the function.
-     */
-    name: string;
-    /**
-     * The output of the function. This will be `null` if the outputs have not been [submitted](https://platform.openai.com/docs/api-reference/runs/submitToolOutputs) yet.
-     */
-    output: string;
-  };
   /**
    * The ID of the tool call object.
    */
@@ -15262,6 +15245,23 @@ export type RunStepDetailsToolCallsFunctionObject = {
    * The type of tool call. This is always going to be `function` for this type of tool call.
    */
   type: 'function';
+  /**
+   * The definition of the function that was called.
+   */
+  function: {
+    /**
+     * The name of the function.
+     */
+    name: string;
+    /**
+     * The arguments passed to the function.
+     */
+    arguments: string;
+    /**
+     * The output of the function. This will be `null` if the outputs have not been [submitted](https://platform.openai.com/docs/api-reference/runs/submitToolOutputs) yet.
+     */
+    output: string;
+  };
 };
 
 /**
@@ -15271,14 +15271,14 @@ export type RunStepDetailsToolCallsFunctionObject = {
  */
 export type RunStepDetailsToolCallsObject = {
   /**
+   * Always `tool_calls`.
+   */
+  type: 'tool_calls';
+  /**
    * An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
    *
    */
   tool_calls: Array<RunStepDetailsToolCall>;
-  /**
-   * Always `tool_calls`.
-   */
-  type: 'tool_calls';
 };
 
 /**
@@ -15289,55 +15289,33 @@ export type RunStepDetailsToolCallsObject = {
  */
 export type RunStepObject = {
   /**
-   * The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) associated with the run step.
-   */
-  assistant_id: string;
-  /**
-   * The Unix timestamp (in seconds) for when the run step was cancelled.
-   */
-  cancelled_at: number;
-  /**
-   * The Unix timestamp (in seconds) for when the run step completed.
-   */
-  completed_at: number;
-  /**
-   * The Unix timestamp (in seconds) for when the run step was created.
-   */
-  created_at: number;
-  /**
-   * The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
-   */
-  expired_at: number;
-  /**
-   * The Unix timestamp (in seconds) for when the run step failed.
-   */
-  failed_at: number;
-  /**
    * The identifier of the run step, which can be referenced in API endpoints.
    */
   id: string;
-  /**
-   * The last error associated with this run step. Will be `null` if there are no errors.
-   */
-  last_error: {
-    /**
-     * One of `server_error` or `rate_limit_exceeded`.
-     */
-    code: 'server_error' | 'rate_limit_exceeded';
-    /**
-     * A human-readable description of the error.
-     */
-    message: string;
-  };
-  metadata: Metadata;
   /**
    * The object type, which is always `thread.run.step`.
    */
   object: 'thread.run.step';
   /**
+   * The Unix timestamp (in seconds) for when the run step was created.
+   */
+  created_at: number;
+  /**
+   * The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) associated with the run step.
+   */
+  assistant_id: string;
+  /**
+   * The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was run.
+   */
+  thread_id: string;
+  /**
    * The ID of the [run](https://platform.openai.com/docs/api-reference/runs) that this run step is a part of.
    */
   run_id: string;
+  /**
+   * The type of run step, which can be either `message_creation` or `tool_calls`.
+   */
+  type: 'message_creation' | 'tool_calls';
   /**
    * The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
    */
@@ -15353,105 +15331,114 @@ export type RunStepObject = {
         type?: 'RunStepDetailsToolCallsObject';
       } & RunStepDetailsToolCallsObject);
   /**
-   * The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was run.
+   * The last error associated with this run step. Will be `null` if there are no errors.
    */
-  thread_id: string;
+  last_error: {
+    /**
+     * One of `server_error` or `rate_limit_exceeded`.
+     */
+    code: 'server_error' | 'rate_limit_exceeded';
+    /**
+     * A human-readable description of the error.
+     */
+    message: string;
+  };
   /**
-   * The type of run step, which can be either `message_creation` or `tool_calls`.
+   * The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
    */
-  type: 'message_creation' | 'tool_calls';
+  expired_at: number;
+  /**
+   * The Unix timestamp (in seconds) for when the run step was cancelled.
+   */
+  cancelled_at: number;
+  /**
+   * The Unix timestamp (in seconds) for when the run step failed.
+   */
+  failed_at: number;
+  /**
+   * The Unix timestamp (in seconds) for when the run step completed.
+   */
+  completed_at: number;
+  metadata: Metadata;
   usage: RunStepCompletionUsage;
 };
 
 export type RunStepStreamEvent =
   | {
-      data: RunStepObject;
       event: 'thread.run.step.created';
+      data: RunStepObject;
     }
   | {
-      data: RunStepObject;
       event: 'thread.run.step.in_progress';
+      data: RunStepObject;
     }
   | {
-      data: RunStepDeltaObject;
       event: 'thread.run.step.delta';
+      data: RunStepDeltaObject;
     }
   | {
-      data: RunStepObject;
       event: 'thread.run.step.completed';
+      data: RunStepObject;
     }
   | {
-      data: RunStepObject;
       event: 'thread.run.step.failed';
+      data: RunStepObject;
     }
   | {
-      data: RunStepObject;
       event: 'thread.run.step.cancelled';
+      data: RunStepObject;
     }
   | {
-      data: RunStepObject;
       event: 'thread.run.step.expired';
+      data: RunStepObject;
     };
 
 export type RunStreamEvent =
   | {
-      data: RunObject;
       event: 'thread.run.created';
+      data: RunObject;
     }
   | {
-      data: RunObject;
       event: 'thread.run.queued';
+      data: RunObject;
     }
   | {
-      data: RunObject;
       event: 'thread.run.in_progress';
+      data: RunObject;
     }
   | {
-      data: RunObject;
       event: 'thread.run.requires_action';
+      data: RunObject;
     }
   | {
-      data: RunObject;
       event: 'thread.run.completed';
+      data: RunObject;
     }
   | {
-      data: RunObject;
       event: 'thread.run.incomplete';
+      data: RunObject;
     }
   | {
-      data: RunObject;
       event: 'thread.run.failed';
+      data: RunObject;
     }
   | {
-      data: RunObject;
       event: 'thread.run.cancelling';
+      data: RunObject;
     }
   | {
-      data: RunObject;
       event: 'thread.run.cancelled';
+      data: RunObject;
     }
   | {
-      data: RunObject;
       event: 'thread.run.expired';
+      data: RunObject;
     };
 
 /**
  * Tool call objects
  */
 export type RunToolCallObject = {
-  /**
-   * The function definition.
-   */
-  function: {
-    /**
-     * The arguments that the model expects you to pass to the function.
-     */
-    arguments: string;
-    /**
-     * The name of the function.
-     */
-    name: string;
-  };
   /**
    * The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](https://platform.openai.com/docs/api-reference/runs/submitToolOutputs) endpoint.
    */
@@ -15460,6 +15447,19 @@ export type RunToolCallObject = {
    * The type of tool call the output is required for. For now, this is always `function`.
    */
   type: 'function';
+  /**
+   * The function definition.
+   */
+  function: {
+    /**
+     * The name of the function.
+     */
+    name: string;
+    /**
+     * The arguments that the model expects you to pass to the function.
+     */
+    arguments: string;
+  };
 };
 
 /**
@@ -15485,16 +15485,6 @@ export type Screenshot = {
  */
 export type Scroll = {
   /**
-   * The horizontal scroll distance.
-   *
-   */
-  scroll_x: number;
-  /**
-   * The vertical scroll distance.
-   *
-   */
-  scroll_y: number;
-  /**
    * Specifies the event type. For a scroll action, this property is
    * always set to `scroll`.
    *
@@ -15510,6 +15500,16 @@ export type Scroll = {
    *
    */
   y: number;
+  /**
+   * The horizontal scroll distance.
+   *
+   */
+  scroll_x: number;
+  /**
+   * The vertical scroll distance.
+   *
+   */
+  scroll_y: number;
 };
 
 /**
@@ -15526,8 +15526,8 @@ export const ServiceTier = {
   AUTO: 'auto',
   DEFAULT: 'default',
   FLEX: 'flex',
-  PRIORITY: 'priority',
   SCALE: 'scale',
+  PRIORITY: 'priority',
 } as const;
 
 /**
@@ -15547,15 +15547,15 @@ export type ServiceTier = (typeof ServiceTier)[keyof typeof ServiceTier];
  */
 export type SpeechAudioDeltaEvent = {
   /**
-   * A chunk of Base64-encoded audio data.
-   *
-   */
-  audio: string;
-  /**
    * The type of the event. Always `speech.audio.delta`.
    *
    */
   type: 'speech.audio.delta';
+  /**
+   * A chunk of Base64-encoded audio data.
+   *
+   */
+  audio: string;
 };
 
 /**
@@ -15589,16 +15589,16 @@ export type SpeechAudioDoneEvent = {
 
 export type StaticChunkingStrategy = {
   /**
+   * The maximum number of tokens in each chunk. The default value is `800`. The minimum value is `100` and the maximum value is `4096`.
+   */
+  max_chunk_size_tokens: number;
+  /**
    * The number of tokens that overlap between chunks. The default value is `400`.
    *
    * Note that the overlap must not exceed half of `max_chunk_size_tokens`.
    *
    */
   chunk_overlap_tokens: number;
-  /**
-   * The maximum number of tokens in each chunk. The default value is `800`. The minimum value is `100` and the maximum value is `4096`.
-   */
-  max_chunk_size_tokens: number;
 };
 
 /**
@@ -15607,22 +15607,22 @@ export type StaticChunkingStrategy = {
  * Customize your own chunking strategy by setting chunk size and chunk overlap.
  */
 export type StaticChunkingStrategyRequestParam = {
-  static: StaticChunkingStrategy;
   /**
    * Always `static`.
    */
   type: 'static';
+  static: StaticChunkingStrategy;
 };
 
 /**
  * Static Chunking Strategy
  */
 export type StaticChunkingStrategyResponseParam = {
-  static: StaticChunkingStrategy;
   /**
    * Always `static`.
    */
   type: 'static';
+  static: StaticChunkingStrategy;
 };
 
 /**
@@ -15636,23 +15636,23 @@ export type StopConfiguration = string | Array<string>;
 
 export type SubmitToolOutputsRunRequest = {
   /**
-   * If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
-   *
-   */
-  stream?: boolean;
-  /**
    * A list of tools for which the outputs are being submitted.
    */
   tool_outputs: Array<{
     /**
-     * The output of the tool call to be submitted to continue the run.
-     */
-    output?: string;
-    /**
      * The ID of the tool call in the `required_action` object within the run object the output is being submitted for.
      */
     tool_call_id?: string;
+    /**
+     * The output of the tool call to be submitted to continue the run.
+     */
+    output?: string;
   }>;
+  /**
+   * If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
+   *
+   */
+  stream?: boolean;
 };
 
 /**
@@ -15691,6 +15691,10 @@ export type TextResponseFormatConfiguration =
  */
 export type TextResponseFormatJsonSchema = {
   /**
+   * The type of response format being defined. Always `json_schema`.
+   */
+  type: 'json_schema';
+  /**
    * A description of what the response format is for, used by the model to
    * determine how to respond in the format.
    *
@@ -15712,10 +15716,6 @@ export type TextResponseFormatJsonSchema = {
    *
    */
   strict?: boolean;
-  /**
-   * The type of response format being defined. Always `json_schema`.
-   */
-  type: 'json_schema';
 };
 
 /**
@@ -15725,18 +15725,17 @@ export type TextResponseFormatJsonSchema = {
  */
 export type ThreadObject = {
   /**
-   * The Unix timestamp (in seconds) for when the thread was created.
-   */
-  created_at: number;
-  /**
    * The identifier, which can be referenced in API endpoints.
    */
   id: string;
-  metadata: Metadata;
   /**
    * The object type, which is always `thread`.
    */
   object: 'thread';
+  /**
+   * The Unix timestamp (in seconds) for when the thread was created.
+   */
+  created_at: number;
   /**
    * A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
    *
@@ -15757,18 +15756,19 @@ export type ThreadObject = {
       vector_store_ids?: Array<string>;
     };
   };
+  metadata: Metadata;
 };
 
 /**
  * Occurs when a new [thread](https://platform.openai.com/docs/api-reference/threads/object) is created.
  */
 export type ThreadStreamEvent = {
-  data: ThreadObject;
   /**
    * Whether to enable input audio transcription.
    */
   enabled?: boolean;
   event: 'thread.created';
+  data: ThreadObject;
 };
 
 export type ToggleCertificatesRequest = {
@@ -15816,6 +15816,10 @@ export type Tool =
  */
 export type ToolChoiceAllowed = {
   /**
+   * Allowed tool configuration type. Always `allowed_tools`.
+   */
+  type: 'allowed_tools';
+  /**
    * Constrains the tools available to the model to a pre-defined set.
    *
    * `auto` allows the model to pick from among the allowed tools and generate a
@@ -15841,10 +15845,6 @@ export type ToolChoiceAllowed = {
   tools: Array<{
     [key: string]: unknown;
   }>;
-  /**
-   * Allowed tool configuration type. Always `allowed_tools`.
-   */
-  type: 'allowed_tools';
 };
 
 /**
@@ -15855,13 +15855,13 @@ export type ToolChoiceAllowed = {
  */
 export type ToolChoiceCustom = {
   /**
-   * The name of the custom tool to call.
-   */
-  name: string;
-  /**
    * For custom tool calling, the type is always `custom`.
    */
   type: 'custom';
+  /**
+   * The name of the custom tool to call.
+   */
+  name: string;
 };
 
 /**
@@ -15872,13 +15872,13 @@ export type ToolChoiceCustom = {
  */
 export type ToolChoiceFunction = {
   /**
-   * The name of the function to call.
-   */
-  name: string;
-  /**
    * For function calling, the type is always `function`.
    */
   type: 'function';
+  /**
+   * The name of the function to call.
+   */
+  name: string;
 };
 
 /**
@@ -15889,19 +15889,19 @@ export type ToolChoiceFunction = {
  */
 export type ToolChoiceMcp = {
   /**
-   * The name of the tool to call on the server.
-   *
+   * For MCP tools, the type is always `mcp`.
    */
-  name?: string;
+  type: 'mcp';
   /**
    * The label of the MCP server to use.
    *
    */
   server_label: string;
   /**
-   * For MCP tools, the type is always `mcp`.
+   * The name of the tool to call on the server.
+   *
    */
-  type: 'mcp';
+  name?: string;
 };
 
 /**
@@ -15918,8 +15918,8 @@ export type ToolChoiceMcp = {
  *
  */
 export const ToolChoiceOptions = {
-  AUTO: 'auto',
   NONE: 'none',
+  AUTO: 'auto',
   REQUIRED: 'required',
 } as const;
 
@@ -15973,6 +15973,11 @@ export type ToolChoiceTypes = {
  */
 export type TranscriptTextDeltaEvent = {
   /**
+   * The type of the event. Always `transcript.text.delta`.
+   *
+   */
+  type: 'transcript.text.delta';
+  /**
    * The text delta that was additionally transcribed.
    *
    */
@@ -15983,26 +15988,21 @@ export type TranscriptTextDeltaEvent = {
    */
   logprobs?: Array<{
     /**
-     * The bytes that were used to generate the log probability.
+     * The token that was used to generate the log probability.
      *
      */
-    bytes?: Array<number>;
+    token?: string;
     /**
      * The log probability of the token.
      *
      */
     logprob?: number;
     /**
-     * The token that was used to generate the log probability.
+     * The bytes that were used to generate the log probability.
      *
      */
-    token?: string;
+    bytes?: Array<number>;
   }>;
-  /**
-   * The type of the event. Always `transcript.text.delta`.
-   *
-   */
-  type: 'transcript.text.delta';
 };
 
 /**
@@ -16010,36 +16010,36 @@ export type TranscriptTextDeltaEvent = {
  */
 export type TranscriptTextDoneEvent = {
   /**
-   * The log probabilities of the individual tokens in the transcription. Only included if you [create a transcription](https://platform.openai.com/docs/api-reference/audio/create-transcription) with the `include[]` parameter set to `logprobs`.
+   * The type of the event. Always `transcript.text.done`.
    *
    */
-  logprobs?: Array<{
-    /**
-     * The bytes that were used to generate the log probability.
-     *
-     */
-    bytes?: Array<number>;
-    /**
-     * The log probability of the token.
-     *
-     */
-    logprob?: number;
-    /**
-     * The token that was used to generate the log probability.
-     *
-     */
-    token?: string;
-  }>;
+  type: 'transcript.text.done';
   /**
    * The text that was transcribed.
    *
    */
   text: string;
   /**
-   * The type of the event. Always `transcript.text.done`.
+   * The log probabilities of the individual tokens in the transcription. Only included if you [create a transcription](https://platform.openai.com/docs/api-reference/audio/create-transcription) with the `include[]` parameter set to `logprobs`.
    *
    */
-  type: 'transcript.text.done';
+  logprobs?: Array<{
+    /**
+     * The token that was used to generate the log probability.
+     *
+     */
+    token?: string;
+    /**
+     * The log probability of the token.
+     *
+     */
+    logprob?: number;
+    /**
+     * The bytes that were used to generate the log probability.
+     *
+     */
+    bytes?: Array<number>;
+  }>;
   usage?: TranscriptTextUsageTokens;
 };
 
@@ -16050,13 +16050,13 @@ export type TranscriptTextDoneEvent = {
  */
 export type TranscriptTextUsageDuration = {
   /**
-   * Duration of the input audio in seconds.
-   */
-  seconds: number;
-  /**
    * The type of the usage object. Always `duration` for this variant.
    */
   type: 'duration';
+  /**
+   * Duration of the input audio in seconds.
+   */
+  seconds: number;
 };
 
 /**
@@ -16066,22 +16066,26 @@ export type TranscriptTextUsageDuration = {
  */
 export type TranscriptTextUsageTokens = {
   /**
-   * Details about the input tokens billed for this request.
+   * The type of the usage object. Always `tokens` for this variant.
    */
-  input_token_details?: {
-    /**
-     * Number of audio tokens billed for this request.
-     */
-    audio_tokens?: number;
-    /**
-     * Number of text tokens billed for this request.
-     */
-    text_tokens?: number;
-  };
+  type: 'tokens';
   /**
    * Number of input tokens billed for this request.
    */
   input_tokens: number;
+  /**
+   * Details about the input tokens billed for this request.
+   */
+  input_token_details?: {
+    /**
+     * Number of text tokens billed for this request.
+     */
+    text_tokens?: number;
+    /**
+     * Number of audio tokens billed for this request.
+     */
+    audio_tokens?: number;
+  };
   /**
    * Number of output tokens generated.
    */
@@ -16090,10 +16094,6 @@ export type TranscriptTextUsageTokens = {
    * Total number of tokens used (input + output).
    */
   total_tokens: number;
-  /**
-   * The type of the usage object. Always `tokens` for this variant.
-   */
-  type: 'tokens';
 };
 
 /**
@@ -16110,25 +16110,9 @@ export type TranscriptionInclude =
 
 export type TranscriptionSegment = {
   /**
-   * Average logprob of the segment. If the value is lower than -1, consider the logprobs failed.
-   */
-  avg_logprob: number;
-  /**
-   * Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed.
-   */
-  compression_ratio: number;
-  /**
-   * End time of the segment in seconds.
-   */
-  end: number;
-  /**
    * Unique identifier of the segment.
    */
   id: number;
-  /**
-   * Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent.
-   */
-  no_speech_prob: number;
   /**
    * Seek offset of the segment.
    */
@@ -16138,9 +16122,9 @@ export type TranscriptionSegment = {
    */
   start: number;
   /**
-   * Temperature parameter used for generating the segment.
+   * End time of the segment in seconds.
    */
-  temperature: number;
+  end: number;
   /**
    * Text content of the segment.
    */
@@ -16149,21 +16133,37 @@ export type TranscriptionSegment = {
    * Array of token IDs for the text content.
    */
   tokens: Array<number>;
+  /**
+   * Temperature parameter used for generating the segment.
+   */
+  temperature: number;
+  /**
+   * Average logprob of the segment. If the value is lower than -1, consider the logprobs failed.
+   */
+  avg_logprob: number;
+  /**
+   * Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed.
+   */
+  compression_ratio: number;
+  /**
+   * Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent.
+   */
+  no_speech_prob: number;
 };
 
 export type TranscriptionWord = {
   /**
-   * End time of the word in seconds.
+   * The text content of the word.
    */
-  end: number;
+  word: string;
   /**
    * Start time of the word in seconds.
    */
   start: number;
   /**
-   * The text content of the word.
+   * End time of the word in seconds.
    */
-  word: string;
+  end: number;
 };
 
 /**
@@ -16173,13 +16173,13 @@ export type TranscriptionWord = {
  */
 export type TruncationObject = {
   /**
-   * The number of most recent messages from the thread when constructing the context for the run.
-   */
-  last_messages?: number;
-  /**
    * The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
    */
   type: 'auto' | 'last_messages';
+  /**
+   * The number of most recent messages from the thread when constructing the context for the run.
+   */
+  last_messages?: number;
 };
 
 /**
@@ -16190,16 +16190,16 @@ export type TruncationObject = {
  */
 export type Type = {
   /**
-   * The text to type.
-   *
-   */
-  text: string;
-  /**
    * Specifies the event type. For a type action, this property is
    * always set to `type`.
    *
    */
   type: 'type';
+  /**
+   * The text to type.
+   *
+   */
+  text: string;
 };
 
 export type UpdateVectorStoreFileAttributesRequest = {
@@ -16207,12 +16207,12 @@ export type UpdateVectorStoreFileAttributesRequest = {
 };
 
 export type UpdateVectorStoreRequest = {
-  expires_after?: VectorStoreExpirationAfter & unknown;
-  metadata?: Metadata;
   /**
    * The name of the vector store.
    */
   name?: string;
+  expires_after?: VectorStoreExpirationAfter & unknown;
+  metadata?: Metadata;
 };
 
 /**
@@ -16223,30 +16223,21 @@ export type UpdateVectorStoreRequest = {
  */
 export type Upload = {
   /**
-   * The intended number of bytes to be uploaded.
+   * The Upload unique identifier, which can be referenced in API endpoints.
    */
-  bytes: number;
+  id: string;
   /**
    * The Unix timestamp (in seconds) for when the Upload was created.
    */
   created_at: number;
   /**
-   * The Unix timestamp (in seconds) for when the Upload will expire.
-   */
-  expires_at: number;
-  file?: OpenAiFile & unknown;
-  /**
    * The name of the file to be uploaded.
    */
   filename: string;
   /**
-   * The Upload unique identifier, which can be referenced in API endpoints.
+   * The intended number of bytes to be uploaded.
    */
-  id: string;
-  /**
-   * The object type, which is always "upload".
-   */
-  object: 'upload';
+  bytes: number;
   /**
    * The intended purpose of the file. [Please refer here](https://platform.openai.com/docs/api-reference/files/object#files/object-purpose) for acceptable values.
    */
@@ -16255,17 +16246,26 @@ export type Upload = {
    * The status of the Upload.
    */
   status: 'pending' | 'completed' | 'cancelled' | 'expired';
+  /**
+   * The Unix timestamp (in seconds) for when the Upload will expire.
+   */
+  expires_at: number;
+  /**
+   * The object type, which is always "upload".
+   */
+  object: 'upload';
+  file?: OpenAiFile & unknown;
 };
 
 export type UploadCertificateRequest = {
   /**
-   * The certificate content in PEM format
-   */
-  content: string;
-  /**
    * An optional name for the certificate
    */
   name?: string;
+  /**
+   * The certificate content in PEM format
+   */
+  content: string;
 };
 
 /**
@@ -16276,44 +16276,36 @@ export type UploadCertificateRequest = {
  */
 export type UploadPart = {
   /**
-   * The Unix timestamp (in seconds) for when the Part was created.
-   */
-  created_at: number;
-  /**
    * The upload Part unique identifier, which can be referenced in API endpoints.
    */
   id: string;
   /**
-   * The object type, which is always `upload.part`.
+   * The Unix timestamp (in seconds) for when the Part was created.
    */
-  object: 'upload.part';
+  created_at: number;
   /**
    * The ID of the Upload object that this Part was added to.
    */
   upload_id: string;
+  /**
+   * The object type, which is always `upload.part`.
+   */
+  object: 'upload.part';
 };
 
 /**
  * The aggregated audio speeches usage details of the specific time bucket.
  */
 export type UsageAudioSpeechesResult = {
-  /**
-   * When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
-   */
-  api_key_id?: string;
+  object: 'organization.usage.audio_speeches.result';
   /**
    * The number of characters processed.
    */
   characters: number;
   /**
-   * When `group_by=model`, this field provides the model name of the grouped usage result.
-   */
-  model?: string;
-  /**
    * The count of requests made to the model.
    */
   num_model_requests: number;
-  object: 'organization.usage.audio_speeches.result';
   /**
    * When `group_by=project_id`, this field provides the project ID of the grouped usage result.
    */
@@ -16322,12 +16314,37 @@ export type UsageAudioSpeechesResult = {
    * When `group_by=user_id`, this field provides the user ID of the grouped usage result.
    */
   user_id?: string;
+  /**
+   * When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
+   */
+  api_key_id?: string;
+  /**
+   * When `group_by=model`, this field provides the model name of the grouped usage result.
+   */
+  model?: string;
 };
 
 /**
  * The aggregated audio transcriptions usage details of the specific time bucket.
  */
 export type UsageAudioTranscriptionsResult = {
+  object: 'organization.usage.audio_transcriptions.result';
+  /**
+   * The number of seconds processed.
+   */
+  seconds: number;
+  /**
+   * The count of requests made to the model.
+   */
+  num_model_requests: number;
+  /**
+   * When `group_by=project_id`, this field provides the project ID of the grouped usage result.
+   */
+  project_id?: string;
+  /**
+   * When `group_by=user_id`, this field provides the user ID of the grouped usage result.
+   */
+  user_id?: string;
   /**
    * When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
    */
@@ -16336,34 +16353,17 @@ export type UsageAudioTranscriptionsResult = {
    * When `group_by=model`, this field provides the model name of the grouped usage result.
    */
   model?: string;
-  /**
-   * The count of requests made to the model.
-   */
-  num_model_requests: number;
-  object: 'organization.usage.audio_transcriptions.result';
-  /**
-   * When `group_by=project_id`, this field provides the project ID of the grouped usage result.
-   */
-  project_id?: string;
-  /**
-   * The number of seconds processed.
-   */
-  seconds: number;
-  /**
-   * When `group_by=user_id`, this field provides the user ID of the grouped usage result.
-   */
-  user_id?: string;
 };
 
 /**
  * The aggregated code interpreter sessions usage details of the specific time bucket.
  */
 export type UsageCodeInterpreterSessionsResult = {
+  object: 'organization.usage.code_interpreter_sessions.result';
   /**
    * The number of code interpreter sessions.
    */
   num_sessions?: number;
-  object: 'organization.usage.code_interpreter_sessions.result';
   /**
    * When `group_by=project_id`, this field provides the project ID of the grouped usage result.
    */
@@ -16374,43 +16374,31 @@ export type UsageCodeInterpreterSessionsResult = {
  * The aggregated completions usage details of the specific time bucket.
  */
 export type UsageCompletionsResult = {
-  /**
-   * When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
-   */
-  api_key_id?: string;
-  /**
-   * When `group_by=batch`, this field tells whether the grouped usage result is batch or not.
-   */
-  batch?: boolean;
-  /**
-   * The aggregated number of audio input tokens used, including cached tokens.
-   */
-  input_audio_tokens?: number;
-  /**
-   * The aggregated number of text input tokens that has been cached from previous requests. For customers subscribe to scale tier, this includes scale tier tokens.
-   */
-  input_cached_tokens?: number;
+  object: 'organization.usage.completions.result';
   /**
    * The aggregated number of text input tokens used, including cached tokens. For customers subscribe to scale tier, this includes scale tier tokens.
    */
   input_tokens: number;
   /**
-   * When `group_by=model`, this field provides the model name of the grouped usage result.
+   * The aggregated number of text input tokens that has been cached from previous requests. For customers subscribe to scale tier, this includes scale tier tokens.
    */
-  model?: string;
+  input_cached_tokens?: number;
   /**
-   * The count of requests made to the model.
+   * The aggregated number of text output tokens used. For customers subscribe to scale tier, this includes scale tier tokens.
    */
-  num_model_requests: number;
-  object: 'organization.usage.completions.result';
+  output_tokens: number;
+  /**
+   * The aggregated number of audio input tokens used, including cached tokens.
+   */
+  input_audio_tokens?: number;
   /**
    * The aggregated number of audio output tokens used.
    */
   output_audio_tokens?: number;
   /**
-   * The aggregated number of text output tokens used. For customers subscribe to scale tier, this includes scale tier tokens.
+   * The count of requests made to the model.
    */
-  output_tokens: number;
+  num_model_requests: number;
   /**
    * When `group_by=project_id`, this field provides the project ID of the grouped usage result.
    */
@@ -16419,29 +16407,33 @@ export type UsageCompletionsResult = {
    * When `group_by=user_id`, this field provides the user ID of the grouped usage result.
    */
   user_id?: string;
+  /**
+   * When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
+   */
+  api_key_id?: string;
+  /**
+   * When `group_by=model`, this field provides the model name of the grouped usage result.
+   */
+  model?: string;
+  /**
+   * When `group_by=batch`, this field tells whether the grouped usage result is batch or not.
+   */
+  batch?: boolean;
 };
 
 /**
  * The aggregated embeddings usage details of the specific time bucket.
  */
 export type UsageEmbeddingsResult = {
-  /**
-   * When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
-   */
-  api_key_id?: string;
+  object: 'organization.usage.embeddings.result';
   /**
    * The aggregated number of input tokens used.
    */
   input_tokens: number;
   /**
-   * When `group_by=model`, this field provides the model name of the grouped usage result.
-   */
-  model?: string;
-  /**
    * The count of requests made to the model.
    */
   num_model_requests: number;
-  object: 'organization.usage.embeddings.result';
   /**
    * When `group_by=project_id`, this field provides the project ID of the grouped usage result.
    */
@@ -16450,68 +16442,68 @@ export type UsageEmbeddingsResult = {
    * When `group_by=user_id`, this field provides the user ID of the grouped usage result.
    */
   user_id?: string;
+  /**
+   * When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
+   */
+  api_key_id?: string;
+  /**
+   * When `group_by=model`, this field provides the model name of the grouped usage result.
+   */
+  model?: string;
 };
 
 /**
  * The aggregated images usage details of the specific time bucket.
  */
 export type UsageImagesResult = {
-  /**
-   * When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
-   */
-  api_key_id?: string;
+  object: 'organization.usage.images.result';
   /**
    * The number of images processed.
    */
   images: number;
   /**
-   * When `group_by=model`, this field provides the model name of the grouped usage result.
-   */
-  model?: string;
-  /**
    * The count of requests made to the model.
    */
   num_model_requests: number;
-  object: 'organization.usage.images.result';
-  /**
-   * When `group_by=project_id`, this field provides the project ID of the grouped usage result.
-   */
-  project_id?: string;
-  /**
-   * When `group_by=size`, this field provides the image size of the grouped usage result.
-   */
-  size?: string;
   /**
    * When `group_by=source`, this field provides the source of the grouped usage result, possible values are `image.generation`, `image.edit`, `image.variation`.
    */
   source?: string;
   /**
+   * When `group_by=size`, this field provides the image size of the grouped usage result.
+   */
+  size?: string;
+  /**
+   * When `group_by=project_id`, this field provides the project ID of the grouped usage result.
+   */
+  project_id?: string;
+  /**
    * When `group_by=user_id`, this field provides the user ID of the grouped usage result.
    */
   user_id?: string;
+  /**
+   * When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
+   */
+  api_key_id?: string;
+  /**
+   * When `group_by=model`, this field provides the model name of the grouped usage result.
+   */
+  model?: string;
 };
 
 /**
  * The aggregated moderations usage details of the specific time bucket.
  */
 export type UsageModerationsResult = {
-  /**
-   * When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
-   */
-  api_key_id?: string;
+  object: 'organization.usage.moderations.result';
   /**
    * The aggregated number of input tokens used.
    */
   input_tokens: number;
   /**
-   * When `group_by=model`, this field provides the model name of the grouped usage result.
-   */
-  model?: string;
-  /**
    * The count of requests made to the model.
    */
   num_model_requests: number;
-  object: 'organization.usage.moderations.result';
   /**
    * When `group_by=project_id`, this field provides the project ID of the grouped usage result.
    */
@@ -16520,18 +16512,27 @@ export type UsageModerationsResult = {
    * When `group_by=user_id`, this field provides the user ID of the grouped usage result.
    */
   user_id?: string;
+  /**
+   * When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
+   */
+  api_key_id?: string;
+  /**
+   * When `group_by=model`, this field provides the model name of the grouped usage result.
+   */
+  model?: string;
 };
 
 export type UsageResponse = {
+  object: 'page';
   data: Array<UsageTimeBucket>;
   has_more: boolean;
   next_page: string;
-  object: 'page';
 };
 
 export type UsageTimeBucket = {
-  end_time: number;
   object: 'bucket';
+  start_time: number;
+  end_time: number;
   result: Array<
     | ({
         object?: 'UsageCompletionsResult';
@@ -16561,7 +16562,6 @@ export type UsageTimeBucket = {
         object?: 'CostsResult';
       } & CostsResult)
   >;
-  start_time: number;
 };
 
 /**
@@ -16570,13 +16570,13 @@ export type UsageTimeBucket = {
 export type UsageVectorStoresResult = {
   object: 'organization.usage.vector_stores.result';
   /**
-   * When `group_by=project_id`, this field provides the project ID of the grouped usage result.
-   */
-  project_id?: string;
-  /**
    * The vector stores usage in bytes.
    */
   usage_bytes: number;
+  /**
+   * When `group_by=project_id`, this field provides the project ID of the grouped usage result.
+   */
+  project_id?: string;
 };
 
 /**
@@ -16584,13 +16584,9 @@ export type UsageVectorStoresResult = {
  */
 export type User = {
   /**
-   * The Unix timestamp (in seconds) of when the user was added.
+   * The object type, which is always `organization.user`
    */
-  added_at: number;
-  /**
-   * The email address of the user
-   */
-  email: string;
+  object: 'organization.user';
   /**
    * The identifier, which can be referenced in API endpoints
    */
@@ -16600,27 +16596,31 @@ export type User = {
    */
   name: string;
   /**
-   * The object type, which is always `organization.user`
+   * The email address of the user
    */
-  object: 'organization.user';
+  email: string;
   /**
    * `owner` or `reader`
    */
   role: 'owner' | 'reader';
+  /**
+   * The Unix timestamp (in seconds) of when the user was added.
+   */
+  added_at: number;
 };
 
 export type UserDeleteResponse = {
-  deleted: boolean;
-  id: string;
   object: 'organization.user.deleted';
+  id: string;
+  deleted: boolean;
 };
 
 export type UserListResponse = {
+  object: 'list';
   data: Array<User>;
   first_id: string;
-  has_more: boolean;
   last_id: string;
-  object: 'list';
+  has_more: boolean;
 };
 
 export type UserRoleUpdateRequest = {
@@ -16631,6 +16631,10 @@ export type UserRoleUpdateRequest = {
 };
 
 export type VadConfig = {
+  /**
+   * Must be set to `server_vad` to enable manual chunking using server side VAD.
+   */
+  type: 'server_vad';
   /**
    * Amount of audio to include before the VAD detected speech (in
    * milliseconds).
@@ -16651,10 +16655,6 @@ export type VadConfig = {
    *
    */
   threshold?: number;
-  /**
-   * Must be set to `server_vad` to enable manual chunking using server side VAD.
-   */
-  type: 'server_vad';
 };
 
 /**
@@ -16722,14 +16722,30 @@ export type VectorStoreFileAttributes = {
  */
 export type VectorStoreFileBatchObject = {
   /**
+   * The identifier, which can be referenced in API endpoints.
+   */
+  id: string;
+  /**
+   * The object type, which is always `vector_store.file_batch`.
+   */
+  object: 'vector_store.files_batch';
+  /**
    * The Unix timestamp (in seconds) for when the vector store files batch was created.
    */
   created_at: number;
+  /**
+   * The ID of the [vector store](https://platform.openai.com/docs/api-reference/vector-stores/object) that the [File](https://platform.openai.com/docs/api-reference/files) is attached to.
+   */
+  vector_store_id: string;
+  /**
+   * The status of the vector store files batch, which can be either `in_progress`, `completed`, `cancelled` or `failed`.
+   */
+  status: 'in_progress' | 'completed' | 'cancelled' | 'failed';
   file_counts: {
     /**
-     * The number of files that where cancelled.
+     * The number of files that are currently being processed.
      */
-    cancelled: number;
+    in_progress: number;
     /**
      * The number of files that have been processed.
      */
@@ -16739,30 +16755,14 @@ export type VectorStoreFileBatchObject = {
      */
     failed: number;
     /**
-     * The number of files that are currently being processed.
+     * The number of files that where cancelled.
      */
-    in_progress: number;
+    cancelled: number;
     /**
      * The total number of files.
      */
     total: number;
   };
-  /**
-   * The identifier, which can be referenced in API endpoints.
-   */
-  id: string;
-  /**
-   * The object type, which is always `vector_store.file_batch`.
-   */
-  object: 'vector_store.files_batch';
-  /**
-   * The status of the vector store files batch, which can be either `in_progress`, `completed`, `cancelled` or `failed`.
-   */
-  status: 'in_progress' | 'completed' | 'cancelled' | 'failed';
-  /**
-   * The ID of the [vector store](https://platform.openai.com/docs/api-reference/vector-stores/object) that the [File](https://platform.openai.com/docs/api-reference/files) is attached to.
-   */
-  vector_store_id: string;
 };
 
 /**
@@ -16770,17 +16770,21 @@ export type VectorStoreFileBatchObject = {
  */
 export type VectorStoreFileContentResponse = {
   /**
+   * The object type, which is always `vector_store.file_content.page`
+   */
+  object: 'vector_store.file_content.page';
+  /**
    * Parsed content of the file.
    */
   data: Array<{
     /**
-     * The text content
-     */
-    text?: string;
-    /**
      * The content type (currently only `"text"`)
      */
     type?: string;
+    /**
+     * The text content
+     */
+    text?: string;
   }>;
   /**
    * Indicates if there are more content pages to fetch.
@@ -16790,10 +16794,6 @@ export type VectorStoreFileContentResponse = {
    * The token for the next page, if any.
    */
   next_page: string;
-  /**
-   * The object type, which is always `vector_store.file_content.page`
-   */
-  object: 'vector_store.file_content.page';
 };
 
 /**
@@ -16802,16 +16802,30 @@ export type VectorStoreFileContentResponse = {
  * A list of files attached to a vector store.
  */
 export type VectorStoreFileObject = {
-  attributes?: VectorStoreFileAttributes;
-  chunking_strategy?: ChunkingStrategyResponse;
+  /**
+   * The identifier, which can be referenced in API endpoints.
+   */
+  id: string;
+  /**
+   * The object type, which is always `vector_store.file`.
+   */
+  object: 'vector_store.file';
+  /**
+   * The total vector store usage in bytes. Note that this may be different from the original file size.
+   */
+  usage_bytes: number;
   /**
    * The Unix timestamp (in seconds) for when the vector store file was created.
    */
   created_at: number;
   /**
-   * The identifier, which can be referenced in API endpoints.
+   * The ID of the [vector store](https://platform.openai.com/docs/api-reference/vector-stores/object) that the [File](https://platform.openai.com/docs/api-reference/files) is attached to.
    */
-  id: string;
+  vector_store_id: string;
+  /**
+   * The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use.
+   */
+  status: 'in_progress' | 'completed' | 'cancelled' | 'failed';
   /**
    * The last error associated with this vector store file. Will be `null` if there are no errors.
    */
@@ -16825,22 +16839,8 @@ export type VectorStoreFileObject = {
      */
     message: string;
   };
-  /**
-   * The object type, which is always `vector_store.file`.
-   */
-  object: 'vector_store.file';
-  /**
-   * The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use.
-   */
-  status: 'in_progress' | 'completed' | 'cancelled' | 'failed';
-  /**
-   * The total vector store usage in bytes. Note that this may be different from the original file size.
-   */
-  usage_bytes: number;
-  /**
-   * The ID of the [vector store](https://platform.openai.com/docs/api-reference/vector-stores/object) that the [File](https://platform.openai.com/docs/api-reference/files) is attached to.
-   */
-  vector_store_id: string;
+  chunking_strategy?: ChunkingStrategyResponse;
+  attributes?: VectorStoreFileAttributes;
 };
 
 /**
@@ -16850,19 +16850,30 @@ export type VectorStoreFileObject = {
  */
 export type VectorStoreObject = {
   /**
+   * The identifier, which can be referenced in API endpoints.
+   */
+  id: string;
+  /**
+   * The object type, which is always `vector_store`.
+   */
+  object: 'vector_store';
+  /**
    * The Unix timestamp (in seconds) for when the vector store was created.
    */
   created_at: number;
-  expires_after?: VectorStoreExpirationAfter;
   /**
-   * The Unix timestamp (in seconds) for when the vector store will expire.
+   * The name of the vector store.
    */
-  expires_at?: number;
+  name: string;
+  /**
+   * The total number of bytes used by the files in the vector store.
+   */
+  usage_bytes: number;
   file_counts: {
     /**
-     * The number of files that were cancelled.
+     * The number of files that are currently being processed.
      */
-    cancelled: number;
+    in_progress: number;
     /**
      * The number of files that have been successfully processed.
      */
@@ -16872,54 +16883,47 @@ export type VectorStoreObject = {
      */
     failed: number;
     /**
-     * The number of files that are currently being processed.
+     * The number of files that were cancelled.
      */
-    in_progress: number;
+    cancelled: number;
     /**
      * The total number of files.
      */
     total: number;
   };
   /**
-   * The identifier, which can be referenced in API endpoints.
+   * The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use.
    */
-  id: string;
+  status: 'expired' | 'in_progress' | 'completed';
+  expires_after?: VectorStoreExpirationAfter;
+  /**
+   * The Unix timestamp (in seconds) for when the vector store will expire.
+   */
+  expires_at?: number;
   /**
    * The Unix timestamp (in seconds) for when the vector store was last active.
    */
   last_active_at: number;
   metadata: Metadata;
-  /**
-   * The name of the vector store.
-   */
-  name: string;
-  /**
-   * The object type, which is always `vector_store`.
-   */
-  object: 'vector_store';
-  /**
-   * The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use.
-   */
-  status: 'expired' | 'in_progress' | 'completed';
-  /**
-   * The total number of bytes used by the files in the vector store.
-   */
-  usage_bytes: number;
 };
 
 export type VectorStoreSearchRequest = {
   /**
-   * A filter to apply based on file attributes.
+   * A query string for a search
    */
-  filters?: ComparisonFilter | CompoundFilter;
+  query: string | Array<string>;
+  /**
+   * Whether to rewrite the natural language query for vector search.
+   */
+  rewrite_query?: boolean;
   /**
    * The maximum number of results to return. This number should be between 1 and 50 inclusive.
    */
   max_num_results?: number;
   /**
-   * A query string for a search
+   * A filter to apply based on file attributes.
    */
-  query: string | Array<string>;
+  filters?: ComparisonFilter | CompoundFilter;
   /**
    * Ranking options for search.
    */
@@ -16930,29 +16934,20 @@ export type VectorStoreSearchRequest = {
     ranker?: 'none' | 'auto' | 'default-2024-11-15';
     score_threshold?: number;
   };
-  /**
-   * Whether to rewrite the natural language query for vector search.
-   */
-  rewrite_query?: boolean;
 };
 
 export type VectorStoreSearchResultContentObject = {
   /**
-   * The text content returned from search.
-   */
-  text: string;
-  /**
    * The type of content.
    */
   type: 'text';
+  /**
+   * The text content returned from search.
+   */
+  text: string;
 };
 
 export type VectorStoreSearchResultItem = {
-  attributes: VectorStoreFileAttributes;
-  /**
-   * Content chunks from the file.
-   */
-  content: Array<VectorStoreSearchResultContentObject>;
   /**
    * The ID of the vector store file.
    */
@@ -16965,9 +16960,19 @@ export type VectorStoreSearchResultItem = {
    * The similarity score for the result.
    */
   score: number;
+  attributes: VectorStoreFileAttributes;
+  /**
+   * Content chunks from the file.
+   */
+  content: Array<VectorStoreSearchResultContentObject>;
 };
 
 export type VectorStoreSearchResultsPage = {
+  /**
+   * The object type, which is always `vector_store.search_results.page`
+   */
+  object: 'vector_store.search_results.page';
+  search_query: Array<string>;
   /**
    * The list of search result items.
    */
@@ -16980,11 +16985,6 @@ export type VectorStoreSearchResultsPage = {
    * The token for the next page, if any.
    */
   next_page: string;
-  /**
-   * The object type, which is always `vector_store.search_results.page`
-   */
-  object: 'vector_store.search_results.page';
-  search_query: Array<string>;
 };
 
 /**
@@ -16994,9 +16994,9 @@ export type VectorStoreSearchResultsPage = {
  *
  */
 export const Verbosity = {
-  HIGH: 'high',
   LOW: 'low',
   MEDIUM: 'medium',
+  HIGH: 'high',
 } as const;
 
 /**
@@ -17041,11 +17041,6 @@ export type Wait = {
  */
 export type WebSearchActionFind = {
   /**
-   * The pattern or text to search for within the page.
-   *
-   */
-  pattern: string;
-  /**
    * The action type.
    *
    */
@@ -17055,6 +17050,11 @@ export type WebSearchActionFind = {
    *
    */
   url: string;
+  /**
+   * The pattern or text to search for within the page.
+   *
+   */
+  pattern: string;
 };
 
 /**
@@ -17084,15 +17084,15 @@ export type WebSearchActionOpenPage = {
  */
 export type WebSearchActionSearch = {
   /**
-   * The search query.
-   *
-   */
-  query: string;
-  /**
    * The action type.
    *
    */
   type: 'search';
+  /**
+   * The search query.
+   *
+   */
+  query: string;
 };
 
 /**
@@ -17101,9 +17101,9 @@ export type WebSearchActionSearch = {
  *
  */
 export const WebSearchContextSize = {
-  HIGH: 'high',
   LOW: 'low',
   MEDIUM: 'medium',
+  HIGH: 'high',
 } as const;
 
 /**
@@ -17121,11 +17121,6 @@ export type WebSearchContextSize =
  */
 export type WebSearchLocation = {
   /**
-   * Free text input for the city of the user, e.g. `San Francisco`.
-   *
-   */
-  city?: string;
-  /**
    * The two-letter
    * [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user,
    * e.g. `US`.
@@ -17137,6 +17132,11 @@ export type WebSearchLocation = {
    *
    */
   region?: string;
+  /**
+   * Free text input for the city of the user, e.g. `San Francisco`.
+   *
+   */
+  city?: string;
   /**
    * The [IANA timezone](https://timeapi.io/documentation/iana-timezones)
    * of the user, e.g. `America/Los_Angeles`.
@@ -17154,6 +17154,21 @@ export type WebSearchLocation = {
  */
 export type WebSearchToolCall = {
   /**
+   * The unique ID of the web search tool call.
+   *
+   */
+  id: string;
+  /**
+   * The type of the web search tool call. Always `web_search_call`.
+   *
+   */
+  type: 'web_search_call';
+  /**
+   * The status of the web search tool call.
+   *
+   */
+  status: 'in_progress' | 'searching' | 'completed' | 'failed';
+  /**
    * An object describing the specific action taken in this web search call.
    * Includes details on how the model used the web (search, open_page, find).
    *
@@ -17168,21 +17183,6 @@ export type WebSearchToolCall = {
     | ({
         type?: 'WebSearchActionFind';
       } & WebSearchActionFind);
-  /**
-   * The unique ID of the web search tool call.
-   *
-   */
-  id: string;
-  /**
-   * The status of the web search tool call.
-   *
-   */
-  status: 'in_progress' | 'searching' | 'completed' | 'failed';
-  /**
-   * The type of the web search tool call. Always `web_search_call`.
-   *
-   */
-  type: 'web_search_call';
 };
 
 /**
@@ -17198,6 +17198,11 @@ export type WebhookBatchCancelled = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17208,11 +17213,6 @@ export type WebhookBatchCancelled = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17238,6 +17238,11 @@ export type WebhookBatchCompleted = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17248,11 +17253,6 @@ export type WebhookBatchCompleted = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17278,6 +17278,11 @@ export type WebhookBatchExpired = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17288,11 +17293,6 @@ export type WebhookBatchExpired = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17318,6 +17318,11 @@ export type WebhookBatchFailed = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17328,11 +17333,6 @@ export type WebhookBatchFailed = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17358,6 +17358,11 @@ export type WebhookEvalRunCanceled = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17368,11 +17373,6 @@ export type WebhookEvalRunCanceled = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17398,6 +17398,11 @@ export type WebhookEvalRunFailed = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17408,11 +17413,6 @@ export type WebhookEvalRunFailed = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17438,6 +17438,11 @@ export type WebhookEvalRunSucceeded = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17448,11 +17453,6 @@ export type WebhookEvalRunSucceeded = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17478,6 +17478,11 @@ export type WebhookFineTuningJobCancelled = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17488,11 +17493,6 @@ export type WebhookFineTuningJobCancelled = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17518,6 +17518,11 @@ export type WebhookFineTuningJobFailed = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17528,11 +17533,6 @@ export type WebhookFineTuningJobFailed = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17558,6 +17558,11 @@ export type WebhookFineTuningJobSucceeded = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17568,11 +17573,6 @@ export type WebhookFineTuningJobSucceeded = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17598,6 +17598,11 @@ export type WebhookResponseCancelled = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17608,11 +17613,6 @@ export type WebhookResponseCancelled = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17638,6 +17638,11 @@ export type WebhookResponseCompleted = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17648,11 +17653,6 @@ export type WebhookResponseCompleted = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17678,6 +17678,11 @@ export type WebhookResponseFailed = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17688,11 +17693,6 @@ export type WebhookResponseFailed = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17718,6 +17718,11 @@ export type WebhookResponseIncomplete = {
    */
   created_at: number;
   /**
+   * The unique ID of the event.
+   *
+   */
+  id: string;
+  /**
    * Event data payload.
    *
    */
@@ -17728,11 +17733,6 @@ export type WebhookResponseIncomplete = {
      */
     id: string;
   };
-  /**
-   * The unique ID of the event.
-   *
-   */
-  id: string;
   /**
    * The object of the event. Always `event`.
    *
@@ -17752,13 +17752,13 @@ export type WebhookResponseIncomplete = {
  */
 export type InputTextContent = {
   /**
-   * The text input to the model.
-   */
-  text: string;
-  /**
    * The type of the input item. Always `input_text`.
    */
   type: 'input_text';
+  /**
+   * The text input to the model.
+   */
+  text: string;
 };
 
 /**
@@ -17768,15 +17768,15 @@ export type InputTextContent = {
  */
 export type InputImageContent = {
   /**
-   * The detail level of the image to be sent to the model. One of `high`, `low`, or `auto`. Defaults to `auto`.
-   */
-  detail: 'low' | 'high' | 'auto';
-  file_id?: string | null;
-  image_url?: string | null;
-  /**
    * The type of the input item. Always `input_image`.
    */
   type: 'input_image';
+  image_url?: string | null;
+  file_id?: string | null;
+  /**
+   * The detail level of the image to be sent to the model. One of `high`, `low`, or `auto`. Defaults to `auto`.
+   */
+  detail: 'low' | 'high' | 'auto';
 };
 
 /**
@@ -17786,23 +17786,23 @@ export type InputImageContent = {
  */
 export type InputFileContent = {
   /**
-   * The content of the file to be sent to the model.
-   *
+   * The type of the input item. Always `input_file`.
    */
-  file_data?: string;
+  type: 'input_file';
   file_id?: string | null;
-  /**
-   * The URL of the file to be sent to the model.
-   */
-  file_url?: string;
   /**
    * The name of the file to be sent to the model.
    */
   filename?: string;
   /**
-   * The type of the input item. Always `input_file`.
+   * The URL of the file to be sent to the model.
    */
-  type: 'input_file';
+  file_url?: string;
+  /**
+   * The content of the file to be sent to the model.
+   *
+   */
+  file_data?: string;
 };
 
 /**
@@ -17811,19 +17811,19 @@ export type InputFileContent = {
  * Defines a function in your own code the model can choose to call. Learn more about [function calling](https://platform.openai.com/docs/guides/function-calling).
  */
 export type FunctionTool = {
-  description?: string | null;
-  /**
-   * The name of the function to call.
-   */
-  name: string;
-  parameters: {
-    [key: string]: unknown;
-  } | null;
-  strict: boolean | null;
   /**
    * The type of the function tool. Always `function`.
    */
   type: 'function';
+  /**
+   * The name of the function to call.
+   */
+  name: string;
+  description?: string | null;
+  parameters: {
+    [key: string]: unknown;
+  } | null;
+  strict: boolean | null;
 };
 
 export type RankingOptions = {
@@ -17845,15 +17845,6 @@ export type Filters = ComparisonFilter | CompoundFilter;
  * A tool that searches for relevant content from uploaded files. Learn more about the [file search tool](https://platform.openai.com/docs/guides/tools-file-search).
  */
 export type FileSearchTool = {
-  filters?: Filters | null;
-  /**
-   * The maximum number of results to return. This number should be between 1 and 50 inclusive.
-   */
-  max_num_results?: number;
-  /**
-   * Ranking options for search.
-   */
-  ranking_options?: RankingOptions;
   /**
    * The type of the file search tool. Always `file_search`.
    */
@@ -17862,17 +17853,26 @@ export type FileSearchTool = {
    * The IDs of the vector stores to search.
    */
   vector_store_ids: Array<string>;
+  /**
+   * The maximum number of results to return. This number should be between 1 and 50 inclusive.
+   */
+  max_num_results?: number;
+  /**
+   * Ranking options for search.
+   */
+  ranking_options?: RankingOptions;
+  filters?: Filters | null;
 };
 
 export type ApproximateLocation = {
-  city?: string | null;
-  country?: string | null;
-  region?: string | null;
-  timezone?: string | null;
   /**
    * The type of location approximation. Always `approximate`.
    */
   type: 'approximate';
+  country?: string | null;
+  region?: string | null;
+  city?: string | null;
+  timezone?: string | null;
 };
 
 /**
@@ -17882,14 +17882,14 @@ export type ApproximateLocation = {
  */
 export type WebSearchPreviewTool = {
   /**
-   * High level guidance for the amount of context window space to use for the search. One of `low`, `medium`, or `high`. `medium` is the default.
-   */
-  search_context_size?: 'low' | 'medium' | 'high';
-  /**
    * The type of the web search tool. One of `web_search_preview` or `web_search_preview_2025_03_11`.
    */
   type: 'web_search_preview' | 'web_search_preview_2025_03_11';
   user_location?: ApproximateLocation | null;
+  /**
+   * High level guidance for the amount of context window space to use for the search. One of `low`, `medium`, or `high`. `medium` is the default.
+   */
+  search_context_size?: 'low' | 'medium' | 'high';
 };
 
 /**
@@ -17899,21 +17899,21 @@ export type WebSearchPreviewTool = {
  */
 export type ComputerUsePreviewTool = {
   /**
-   * The height of the computer display.
+   * The type of the computer use tool. Always `computer_use_preview`.
    */
-  display_height: number;
-  /**
-   * The width of the computer display.
-   */
-  display_width: number;
+  type: 'computer_use_preview';
   /**
    * The type of computer environment to control.
    */
   environment: 'windows' | 'mac' | 'linux' | 'ubuntu' | 'browser';
   /**
-   * The type of the computer use tool. Always `computer_use_preview`.
+   * The width of the computer display.
    */
-  type: 'computer_use_preview';
+  display_width: number;
+  /**
+   * The height of the computer display.
+   */
+  display_height: number;
 };
 
 /**
@@ -17923,13 +17923,13 @@ export type ComputerUsePreviewTool = {
  */
 export type ImageGenInputUsageDetails = {
   /**
-   * The number of image tokens in the input prompt.
-   */
-  image_tokens: number;
-  /**
    * The number of text tokens in the input prompt.
    */
   text_tokens: number;
+  /**
+   * The number of image tokens in the input prompt.
+   */
+  image_tokens: number;
 };
 
 /**
@@ -17942,15 +17942,15 @@ export type ImageGenUsage = {
    * The number of tokens (images and text) in the input prompt.
    */
   input_tokens: number;
-  input_tokens_details: ImageGenInputUsageDetails;
-  /**
-   * The number of output tokens generated by the model.
-   */
-  output_tokens: number;
   /**
    * The total number of tokens (images and text) used for the image generation.
    */
   total_tokens: number;
+  /**
+   * The number of output tokens generated by the model.
+   */
+  output_tokens: number;
+  input_tokens_details: ImageGenInputUsageDetails;
 };
 
 /**
@@ -17960,21 +17960,21 @@ export type ImageGenUsage = {
  */
 export type FileCitationBody = {
   /**
+   * The type of the file citation. Always `file_citation`.
+   */
+  type: 'file_citation';
+  /**
    * The ID of the file.
    */
   file_id: string;
-  /**
-   * The filename of the file cited.
-   */
-  filename: string;
   /**
    * The index of the file in the list of files.
    */
   index: number;
   /**
-   * The type of the file citation. Always `file_citation`.
+   * The filename of the file cited.
    */
-  type: 'file_citation';
+  filename: string;
 };
 
 /**
@@ -17984,18 +17984,6 @@ export type FileCitationBody = {
  */
 export type UrlCitationBody = {
   /**
-   * The index of the last character of the URL citation in the message.
-   */
-  end_index: number;
-  /**
-   * The index of the first character of the URL citation in the message.
-   */
-  start_index: number;
-  /**
-   * The title of the web resource.
-   */
-  title: string;
-  /**
    * The type of the URL citation. Always `url_citation`.
    */
   type: 'url_citation';
@@ -18003,6 +17991,18 @@ export type UrlCitationBody = {
    * The URL of the web resource.
    */
   url: string;
+  /**
+   * The index of the first character of the URL citation in the message.
+   */
+  start_index: number;
+  /**
+   * The index of the last character of the URL citation in the message.
+   */
+  end_index: number;
+  /**
+   * The title of the web resource.
+   */
+  title: string;
 };
 
 /**
@@ -18012,29 +18012,29 @@ export type UrlCitationBody = {
  */
 export type ContainerFileCitationBody = {
   /**
+   * The type of the container file citation. Always `container_file_citation`.
+   */
+  type: 'container_file_citation';
+  /**
    * The ID of the container file.
    */
   container_id: string;
-  /**
-   * The index of the last character of the container file citation in the message.
-   */
-  end_index: number;
   /**
    * The ID of the file.
    */
   file_id: string;
   /**
-   * The filename of the container file cited.
-   */
-  filename: string;
-  /**
    * The index of the first character of the container file citation in the message.
    */
   start_index: number;
   /**
-   * The type of the container file citation. Always `container_file_citation`.
+   * The index of the last character of the container file citation in the message.
    */
-  type: 'container_file_citation';
+  end_index: number;
+  /**
+   * The filename of the container file cited.
+   */
+  filename: string;
 };
 
 export type Annotation =
@@ -18057,9 +18057,9 @@ export type Annotation =
  * The top log probability of a token.
  */
 export type TopLogProb = {
-  bytes: Array<number>;
-  logprob: number;
   token: string;
+  logprob: number;
+  bytes: Array<number>;
 };
 
 /**
@@ -18068,9 +18068,9 @@ export type TopLogProb = {
  * The log probability of a token.
  */
 export type LogProb = {
-  bytes: Array<number>;
-  logprob: number;
   token: string;
+  logprob: number;
+  bytes: Array<number>;
   top_logprobs: Array<TopLogProb>;
 };
 
@@ -18081,18 +18081,18 @@ export type LogProb = {
  */
 export type OutputTextContent = {
   /**
-   * The annotations of the text output.
+   * The type of the output text. Always `output_text`.
    */
-  annotations: Array<Annotation>;
-  logprobs?: Array<LogProb>;
+  type: 'output_text';
   /**
    * The text output from the model.
    */
   text: string;
   /**
-   * The type of the output text. Always `output_text`.
+   * The annotations of the text output.
    */
-  type: 'output_text';
+  annotations: Array<Annotation>;
+  logprobs?: Array<LogProb>;
 };
 
 /**
@@ -18102,24 +18102,24 @@ export type OutputTextContent = {
  */
 export type RefusalContent = {
   /**
-   * The refusal explanation from the model.
-   */
-  refusal: string;
-  /**
    * The type of the refusal. Always `refusal`.
    */
   type: 'refusal';
+  /**
+   * The refusal explanation from the model.
+   */
+  refusal: string;
 };
 
 /**
  * A pending safety check for the computer call.
  */
 export type ComputerCallSafetyCheckParam = {
-  code?: string | null;
   /**
    * The ID of the pending safety check.
    */
   id: string;
+  code?: string | null;
   message?: string | null;
 };
 
@@ -18129,18 +18129,18 @@ export type ComputerCallSafetyCheckParam = {
  * The output of a computer tool call.
  */
 export type ComputerCallOutputItemParam = {
-  acknowledged_safety_checks?: Array<ComputerCallSafetyCheckParam> | null;
+  id?: string | null;
   /**
    * The ID of the computer tool call that produced the output.
    */
   call_id: string;
-  id?: string | null;
-  output: ComputerScreenshotImage;
-  status?: 'in_progress' | 'completed' | 'incomplete' | null;
   /**
    * The type of the computer tool call output. Always `computer_call_output`.
    */
   type: 'computer_call_output';
+  output: ComputerScreenshotImage;
+  acknowledged_safety_checks?: Array<ComputerCallSafetyCheckParam> | null;
+  status?: 'in_progress' | 'completed' | 'incomplete' | null;
 };
 
 /**
@@ -18149,20 +18149,20 @@ export type ComputerCallOutputItemParam = {
  * The output of a function tool call.
  */
 export type FunctionCallOutputItemParam = {
+  id?: string | null;
   /**
    * The unique ID of the function tool call generated by the model.
    */
   call_id: string;
-  id?: string | null;
+  /**
+   * The type of the function tool call output. Always `function_call_output`.
+   */
+  type: 'function_call_output';
   /**
    * A JSON string of the output of the function tool call.
    */
   output: string;
   status?: 'in_progress' | 'completed' | 'incomplete' | null;
-  /**
-   * The type of the function tool call output. Always `function_call_output`.
-   */
-  type: 'function_call_output';
 };
 
 /**
@@ -18171,19 +18171,24 @@ export type FunctionCallOutputItemParam = {
  * An internal identifier for an item to reference.
  */
 export type ItemReferenceParam = {
+  type?: 'item_reference' | null;
   /**
    * The ID of the item to reference.
    */
   id: string;
-  type?: 'item_reference' | null;
 };
 
 export type RealtimeConversationItemContent = {
   /**
-   * Base64-encoded audio bytes, used for `input_audio` content type.
+   * The content type (`input_text`, `input_audio`, `item_reference`, `text`, `audio`).
    *
    */
-  audio?: string;
+  type?: 'input_text' | 'input_audio' | 'item_reference' | 'text' | 'audio';
+  /**
+   * The text content, used for `input_text` and `text` content types.
+   *
+   */
+  text?: string;
   /**
    * ID of a previous conversation item to reference (for `item_reference`
    * content types in `response.create` events). These can reference both
@@ -18192,21 +18197,16 @@ export type RealtimeConversationItemContent = {
    */
   id?: string;
   /**
-   * The text content, used for `input_text` and `text` content types.
+   * Base64-encoded audio bytes, used for `input_audio` content type.
    *
    */
-  text?: string;
+  audio?: string;
   /**
    * The transcript of the audio, used for `input_audio` and `audio`
    * content types.
    *
    */
   transcript?: string;
-  /**
-   * The content type (`input_text`, `input_audio`, `item_reference`, `text`, `audio`).
-   *
-   */
-  type?: 'input_text' | 'input_audio' | 'item_reference' | 'text' | 'audio';
 };
 
 export type RealtimeConnectParams = {
@@ -18218,6 +18218,10 @@ export type RealtimeConnectParams = {
  */
 export type ModerationImageUrlInput = {
   /**
+   * Always `image_url`.
+   */
+  type: 'image_url';
+  /**
    * Contains either an image URL or a data URL for a base64 encoded image.
    */
   image_url: {
@@ -18226,10 +18230,6 @@ export type ModerationImageUrlInput = {
      */
     url: string;
   };
-  /**
-   * Always `image_url`.
-   */
-  type: 'image_url';
 };
 
 /**
@@ -18237,13 +18237,13 @@ export type ModerationImageUrlInput = {
  */
 export type ModerationTextInput = {
   /**
-   * A string of text to classify.
-   */
-  text: string;
-  /**
    * Always `text`.
    */
   type: 'text';
+  /**
+   * A string of text to classify.
+   */
+  text: string;
 };
 
 /**
@@ -18264,10 +18264,10 @@ export type ChunkingStrategyResponse =
 export const FilePurpose = {
   ASSISTANTS: 'assistants',
   BATCH: 'batch',
-  EVALS: 'evals',
   FINE_TUNE: 'fine-tune',
-  USER_DATA: 'user_data',
   VISION: 'vision',
+  USER_DATA: 'user_data',
+  EVALS: 'evals',
 } as const;
 
 /**
@@ -18282,10 +18282,6 @@ export type BatchError = {
    */
   code?: string;
   /**
-   * The line number of the input file where the error occurred, if applicable.
-   */
-  line?: number;
-  /**
    * A human-readable message providing more details about the error.
    */
   message?: string;
@@ -18293,12 +18289,20 @@ export type BatchError = {
    * The name of the parameter that caused the error, if applicable.
    */
   param?: string;
+  /**
+   * The line number of the input file where the error occurred, if applicable.
+   */
+  line?: number;
 };
 
 /**
  * The request counts for different statuses within the batch.
  */
 export type BatchRequestCounts = {
+  /**
+   * Total number of requests in the batch.
+   */
+  total: number;
   /**
    * Number of requests that have been completed successfully.
    */
@@ -18307,10 +18311,6 @@ export type BatchRequestCounts = {
    * Number of requests that have failed.
    */
   failed: number;
-  /**
-   * Total number of requests in the batch.
-   */
-  total: number;
 };
 
 export type AssistantTool =
@@ -18391,69 +18391,69 @@ export type MessageContentDelta =
     } & MessageDeltaContentImageUrlObject);
 
 export const ChatModel = {
-  CHATGPT_4O_LATEST: 'chatgpt-4o-latest',
-  CODEX_MINI_LATEST: 'codex-mini-latest',
-  GPT_3_5_TURBO: 'gpt-3.5-turbo',
-  GPT_3_5_TURBO_0125: 'gpt-3.5-turbo-0125',
-  GPT_3_5_TURBO_0301: 'gpt-3.5-turbo-0301',
-  GPT_3_5_TURBO_0613: 'gpt-3.5-turbo-0613',
-  GPT_3_5_TURBO_1106: 'gpt-3.5-turbo-1106',
-  GPT_3_5_TURBO_16K: 'gpt-3.5-turbo-16k',
-  GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
-  GPT_4: 'gpt-4',
-  GPT_4O: 'gpt-4o',
-  GPT_4O_2024_05_13: 'gpt-4o-2024-05-13',
-  GPT_4O_2024_08_06: 'gpt-4o-2024-08-06',
-  GPT_4O_2024_11_20: 'gpt-4o-2024-11-20',
-  GPT_4O_AUDIO_PREVIEW: 'gpt-4o-audio-preview',
-  GPT_4O_AUDIO_PREVIEW_2024_10_01: 'gpt-4o-audio-preview-2024-10-01',
-  GPT_4O_AUDIO_PREVIEW_2024_12_17: 'gpt-4o-audio-preview-2024-12-17',
-  GPT_4O_AUDIO_PREVIEW_2025_06_03: 'gpt-4o-audio-preview-2025-06-03',
-  GPT_4O_MINI: 'gpt-4o-mini',
-  GPT_4O_MINI_2024_07_18: 'gpt-4o-mini-2024-07-18',
-  GPT_4O_MINI_AUDIO_PREVIEW: 'gpt-4o-mini-audio-preview',
-  GPT_4O_MINI_AUDIO_PREVIEW_2024_12_17: 'gpt-4o-mini-audio-preview-2024-12-17',
-  GPT_4O_MINI_SEARCH_PREVIEW: 'gpt-4o-mini-search-preview',
-  GPT_4O_MINI_SEARCH_PREVIEW_2025_03_11:
-    'gpt-4o-mini-search-preview-2025-03-11',
-  GPT_4O_SEARCH_PREVIEW: 'gpt-4o-search-preview',
-  GPT_4O_SEARCH_PREVIEW_2025_03_11: 'gpt-4o-search-preview-2025-03-11',
-  GPT_4_0125_PREVIEW: 'gpt-4-0125-preview',
-  GPT_4_0314: 'gpt-4-0314',
-  GPT_4_0613: 'gpt-4-0613',
-  GPT_4_1: 'gpt-4.1',
-  GPT_4_1106_PREVIEW: 'gpt-4-1106-preview',
-  GPT_4_1_2025_04_14: 'gpt-4.1-2025-04-14',
-  GPT_4_1_MINI: 'gpt-4.1-mini',
-  GPT_4_1_MINI_2025_04_14: 'gpt-4.1-mini-2025-04-14',
-  GPT_4_1_NANO: 'gpt-4.1-nano',
-  GPT_4_1_NANO_2025_04_14: 'gpt-4.1-nano-2025-04-14',
-  GPT_4_32K: 'gpt-4-32k',
-  GPT_4_32K_0314: 'gpt-4-32k-0314',
-  GPT_4_32K_0613: 'gpt-4-32k-0613',
-  GPT_4_TURBO: 'gpt-4-turbo',
-  GPT_4_TURBO_2024_04_09: 'gpt-4-turbo-2024-04-09',
-  GPT_4_TURBO_PREVIEW: 'gpt-4-turbo-preview',
-  GPT_4_VISION_PREVIEW: 'gpt-4-vision-preview',
   GPT_5: 'gpt-5',
-  GPT_5_2025_08_07: 'gpt-5-2025-08-07',
-  GPT_5_CHAT_LATEST: 'gpt-5-chat-latest',
   GPT_5_MINI: 'gpt-5-mini',
-  GPT_5_MINI_2025_08_07: 'gpt-5-mini-2025-08-07',
   GPT_5_NANO: 'gpt-5-nano',
+  GPT_5_2025_08_07: 'gpt-5-2025-08-07',
+  GPT_5_MINI_2025_08_07: 'gpt-5-mini-2025-08-07',
   GPT_5_NANO_2025_08_07: 'gpt-5-nano-2025-08-07',
-  O1: 'o1',
-  O1_2024_12_17: 'o1-2024-12-17',
-  O1_MINI: 'o1-mini',
-  O1_MINI_2024_09_12: 'o1-mini-2024-09-12',
-  O1_PREVIEW: 'o1-preview',
-  O1_PREVIEW_2024_09_12: 'o1-preview-2024-09-12',
+  GPT_5_CHAT_LATEST: 'gpt-5-chat-latest',
+  GPT_4_1: 'gpt-4.1',
+  GPT_4_1_MINI: 'gpt-4.1-mini',
+  GPT_4_1_NANO: 'gpt-4.1-nano',
+  GPT_4_1_2025_04_14: 'gpt-4.1-2025-04-14',
+  GPT_4_1_MINI_2025_04_14: 'gpt-4.1-mini-2025-04-14',
+  GPT_4_1_NANO_2025_04_14: 'gpt-4.1-nano-2025-04-14',
+  O4_MINI: 'o4-mini',
+  O4_MINI_2025_04_16: 'o4-mini-2025-04-16',
   O3: 'o3',
   O3_2025_04_16: 'o3-2025-04-16',
   O3_MINI: 'o3-mini',
   O3_MINI_2025_01_31: 'o3-mini-2025-01-31',
-  O4_MINI: 'o4-mini',
-  O4_MINI_2025_04_16: 'o4-mini-2025-04-16',
+  O1: 'o1',
+  O1_2024_12_17: 'o1-2024-12-17',
+  O1_PREVIEW: 'o1-preview',
+  O1_PREVIEW_2024_09_12: 'o1-preview-2024-09-12',
+  O1_MINI: 'o1-mini',
+  O1_MINI_2024_09_12: 'o1-mini-2024-09-12',
+  GPT_4O: 'gpt-4o',
+  GPT_4O_2024_11_20: 'gpt-4o-2024-11-20',
+  GPT_4O_2024_08_06: 'gpt-4o-2024-08-06',
+  GPT_4O_2024_05_13: 'gpt-4o-2024-05-13',
+  GPT_4O_AUDIO_PREVIEW: 'gpt-4o-audio-preview',
+  GPT_4O_AUDIO_PREVIEW_2024_10_01: 'gpt-4o-audio-preview-2024-10-01',
+  GPT_4O_AUDIO_PREVIEW_2024_12_17: 'gpt-4o-audio-preview-2024-12-17',
+  GPT_4O_AUDIO_PREVIEW_2025_06_03: 'gpt-4o-audio-preview-2025-06-03',
+  GPT_4O_MINI_AUDIO_PREVIEW: 'gpt-4o-mini-audio-preview',
+  GPT_4O_MINI_AUDIO_PREVIEW_2024_12_17: 'gpt-4o-mini-audio-preview-2024-12-17',
+  GPT_4O_SEARCH_PREVIEW: 'gpt-4o-search-preview',
+  GPT_4O_MINI_SEARCH_PREVIEW: 'gpt-4o-mini-search-preview',
+  GPT_4O_SEARCH_PREVIEW_2025_03_11: 'gpt-4o-search-preview-2025-03-11',
+  GPT_4O_MINI_SEARCH_PREVIEW_2025_03_11:
+    'gpt-4o-mini-search-preview-2025-03-11',
+  CHATGPT_4O_LATEST: 'chatgpt-4o-latest',
+  CODEX_MINI_LATEST: 'codex-mini-latest',
+  GPT_4O_MINI: 'gpt-4o-mini',
+  GPT_4O_MINI_2024_07_18: 'gpt-4o-mini-2024-07-18',
+  GPT_4_TURBO: 'gpt-4-turbo',
+  GPT_4_TURBO_2024_04_09: 'gpt-4-turbo-2024-04-09',
+  GPT_4_0125_PREVIEW: 'gpt-4-0125-preview',
+  GPT_4_TURBO_PREVIEW: 'gpt-4-turbo-preview',
+  GPT_4_1106_PREVIEW: 'gpt-4-1106-preview',
+  GPT_4_VISION_PREVIEW: 'gpt-4-vision-preview',
+  GPT_4: 'gpt-4',
+  GPT_4_0314: 'gpt-4-0314',
+  GPT_4_0613: 'gpt-4-0613',
+  GPT_4_32K: 'gpt-4-32k',
+  GPT_4_32K_0314: 'gpt-4-32k-0314',
+  GPT_4_32K_0613: 'gpt-4-32k-0613',
+  GPT_3_5_TURBO: 'gpt-3.5-turbo',
+  GPT_3_5_TURBO_16K: 'gpt-3.5-turbo-16k',
+  GPT_3_5_TURBO_0301: 'gpt-3.5-turbo-0301',
+  GPT_3_5_TURBO_0613: 'gpt-3.5-turbo-0613',
+  GPT_3_5_TURBO_1106: 'gpt-3.5-turbo-1106',
+  GPT_3_5_TURBO_0125: 'gpt-3.5-turbo-0125',
+  GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
 } as const;
 
 export type ChatModel = (typeof ChatModel)[keyof typeof ChatModel];
@@ -18463,21 +18463,7 @@ export type CreateThreadAndRunRequestWithoutStream = {
    * The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) to use to execute this run.
    */
   assistant_id: string;
-  /**
-   * Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis.
-   */
-  instructions?: string;
-  /**
-   * The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-   *
-   */
-  max_completion_tokens?: number;
-  /**
-   * The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-   *
-   */
-  max_prompt_tokens?: number;
-  metadata?: Metadata;
+  thread?: CreateThreadRequest;
   /**
    * The ID of the [Model](https://platform.openai.com/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
    */
@@ -18521,15 +18507,14 @@ export type CreateThreadAndRunRequestWithoutStream = {
     | 'gpt-3.5-turbo-1106'
     | 'gpt-3.5-turbo-0125'
     | 'gpt-3.5-turbo-16k-0613';
-  parallel_tool_calls?: ParallelToolCalls;
-  response_format?: AssistantsApiResponseFormatOption;
   /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
-   *
+   * Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis.
    */
-  temperature?: number;
-  thread?: CreateThreadRequest;
-  tool_choice?: AssistantsApiToolChoiceOption & unknown;
+  instructions?: string;
+  /**
+   * Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
+   */
+  tools?: Array<AssistantTool>;
   /**
    * A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
    *
@@ -18550,10 +18535,12 @@ export type CreateThreadAndRunRequestWithoutStream = {
       vector_store_ids?: Array<string>;
     };
   };
+  metadata?: Metadata;
   /**
-   * Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
+   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+   *
    */
-  tools?: Array<AssistantTool>;
+  temperature?: number;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
    *
@@ -18561,10 +18548,36 @@ export type CreateThreadAndRunRequestWithoutStream = {
    *
    */
   top_p?: number;
+  /**
+   * The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+   *
+   */
+  max_prompt_tokens?: number;
+  /**
+   * The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+   *
+   */
+  max_completion_tokens?: number;
   truncation_strategy?: TruncationObject & unknown;
+  tool_choice?: AssistantsApiToolChoiceOption & unknown;
+  parallel_tool_calls?: ParallelToolCalls;
+  response_format?: AssistantsApiResponseFormatOption;
 };
 
 export type CreateRunRequestWithoutStream = {
+  /**
+   * The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) to use to execute this run.
+   */
+  assistant_id: string;
+  /**
+   * The ID of the [Model](https://platform.openai.com/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
+   */
+  model?: string | AssistantSupportedModels;
+  reasoning_effort?: ReasoningEffort;
+  /**
+   * Overrides the [instructions](https://platform.openai.com/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis.
+   */
+  instructions?: string;
   /**
    * Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions.
    */
@@ -18574,41 +18587,15 @@ export type CreateRunRequestWithoutStream = {
    */
   additional_messages?: Array<CreateMessageRequest>;
   /**
-   * The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) to use to execute this run.
+   * Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
    */
-  assistant_id: string;
-  /**
-   * Overrides the [instructions](https://platform.openai.com/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis.
-   */
-  instructions?: string;
-  /**
-   * The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-   *
-   */
-  max_completion_tokens?: number;
-  /**
-   * The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-   *
-   */
-  max_prompt_tokens?: number;
+  tools?: Array<AssistantTool>;
   metadata?: Metadata;
-  /**
-   * The ID of the [Model](https://platform.openai.com/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
-   */
-  model?: string | AssistantSupportedModels;
-  parallel_tool_calls?: ParallelToolCalls;
-  reasoning_effort?: ReasoningEffort;
-  response_format?: AssistantsApiResponseFormatOption;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
    *
    */
   temperature?: number;
-  tool_choice?: AssistantsApiToolChoiceOption & unknown;
-  /**
-   * Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
-   */
-  tools?: Array<AssistantTool>;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
    *
@@ -18616,7 +18603,20 @@ export type CreateRunRequestWithoutStream = {
    *
    */
   top_p?: number;
+  /**
+   * The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+   *
+   */
+  max_prompt_tokens?: number;
+  /**
+   * The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+   *
+   */
+  max_completion_tokens?: number;
   truncation_strategy?: TruncationObject & unknown;
+  tool_choice?: AssistantsApiToolChoiceOption & unknown;
+  parallel_tool_calls?: ParallelToolCalls;
+  response_format?: AssistantsApiResponseFormatOption;
 };
 
 export type SubmitToolOutputsRunRequestWithoutStream = {
@@ -18625,13 +18625,13 @@ export type SubmitToolOutputsRunRequestWithoutStream = {
    */
   tool_outputs: Array<{
     /**
-     * The output of the tool call to be submitted to continue the run.
-     */
-    output?: string;
-    /**
      * The ID of the tool call in the `required_action` object within the run object the output is being submitted for.
      */
     tool_call_id?: string;
+    /**
+     * The output of the tool call to be submitted to continue the run.
+     */
+    output?: string;
   }>;
 };
 
@@ -18639,15 +18639,15 @@ export type SubmitToolOutputsRunRequestWithoutStream = {
  * The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
  */
 export const RunStatus = {
-  CANCELLED: 'cancelled',
-  CANCELLING: 'cancelling',
-  COMPLETED: 'completed',
-  EXPIRED: 'expired',
-  FAILED: 'failed',
-  INCOMPLETE: 'incomplete',
-  IN_PROGRESS: 'in_progress',
   QUEUED: 'queued',
+  IN_PROGRESS: 'in_progress',
   REQUIRES_ACTION: 'requires_action',
+  CANCELLING: 'cancelling',
+  CANCELLED: 'cancelled',
+  FAILED: 'failed',
+  COMPLETED: 'completed',
+  INCOMPLETE: 'incomplete',
+  EXPIRED: 'expired',
 } as const;
 
 /**
@@ -18676,16 +18676,6 @@ export type ListAssistantsData = {
   path?: never;
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
-     * A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-     *
-     */
-    before?: string;
-    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
@@ -18695,6 +18685,16 @@ export type ListAssistantsData = {
      *
      */
     order?: 'asc' | 'desc';
+    /**
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
+     */
+    after?: string;
+    /**
+     * A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
+     *
+     */
+    before?: string;
   };
   url: '/assistants';
 };
@@ -18874,9 +18874,14 @@ export type ListBatchesResponse2 =
 export type CreateBatchData = {
   body: {
     /**
-     * The time frame within which the batch should be processed. Currently only `24h` is supported.
+     * The ID of an uploaded file that contains requests for the new batch.
+     *
+     * See [upload file](https://platform.openai.com/docs/api-reference/files/create) for how to upload a file.
+     *
+     * Your input file must be formatted as a [JSONL file](https://platform.openai.com/docs/api-reference/batch/request-input), and must be uploaded with the purpose `batch`. The file can contain up to 50,000 requests, and can be up to 200 MB in size.
+     *
      */
-    completion_window: '24h';
+    input_file_id: string;
     /**
      * The endpoint to be used for all requests in the batch. Currently `/v1/responses`, `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are supported. Note that `/v1/embeddings` batches are also restricted to a maximum of 50,000 embedding inputs across all requests in the batch.
      */
@@ -18886,14 +18891,9 @@ export type CreateBatchData = {
       | '/v1/embeddings'
       | '/v1/completions';
     /**
-     * The ID of an uploaded file that contains requests for the new batch.
-     *
-     * See [upload file](https://platform.openai.com/docs/api-reference/files/create) for how to upload a file.
-     *
-     * Your input file must be formatted as a [JSONL file](https://platform.openai.com/docs/api-reference/batch/request-input), and must be uploaded with the purpose `batch`. The file can contain up to 50,000 requests, and can be up to 200 MB in size.
-     *
+     * The time frame within which the batch should be processed. Currently only `24h` is supported.
      */
-    input_file_id: string;
+    completion_window: '24h';
     metadata?: Metadata;
     output_expires_after?: BatchFileExpirationAfter;
   };
@@ -18961,13 +18961,9 @@ export type ListChatCompletionsData = {
   path?: never;
   query?: {
     /**
-     * Identifier for the last chat completion from the previous pagination request.
+     * The model used to generate the Chat Completions.
      */
-    after?: string;
-    /**
-     * Number of Chat Completions to retrieve.
-     */
-    limit?: number;
+    model?: string;
     /**
      * A list of metadata keys to filter the Chat Completions by. Example:
      *
@@ -18976,9 +18972,13 @@ export type ListChatCompletionsData = {
      */
     metadata?: Metadata;
     /**
-     * The model used to generate the Chat Completions.
+     * Identifier for the last chat completion from the previous pagination request.
      */
-    model?: string;
+    after?: string;
+    /**
+     * Number of Chat Completions to retrieve.
+     */
+    limit?: number;
     /**
      * Sort order for Chat Completions by timestamp. Use `asc` for ascending order or `desc` for descending order. Defaults to `asc`.
      */
@@ -19139,11 +19139,6 @@ export type ListContainersData = {
   path?: never;
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
@@ -19153,6 +19148,11 @@ export type ListContainersData = {
      *
      */
     order?: 'asc' | 'desc';
+    /**
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
+     */
+    after?: string;
   };
   url: '/containers';
 };
@@ -19229,11 +19229,6 @@ export type ListContainerFilesData = {
   };
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
@@ -19243,6 +19238,11 @@ export type ListContainerFilesData = {
      *
      */
     order?: 'asc' | 'desc';
+    /**
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
+     */
+    after?: string;
   };
   url: '/containers/{container_id}/files';
 };
@@ -19424,9 +19424,9 @@ export type DeleteEvalResponses = {
    * Successfully deleted the evaluation.
    */
   200: {
+    object: string;
     deleted: boolean;
     eval_id: string;
-    object: string;
   };
 };
 
@@ -19458,11 +19458,11 @@ export type UpdateEvalData = {
    * Request to update an evaluation
    */
   body: {
-    metadata?: Metadata;
     /**
      * Rename the evaluation.
      */
     name?: string;
+    metadata?: Metadata;
   };
   path: {
     /**
@@ -19583,8 +19583,8 @@ export type DeleteEvalRunResponses = {
    * Successfully deleted the eval run
    */
   200: {
-    deleted?: boolean;
     object?: string;
+    deleted?: boolean;
     run_id?: string;
   };
 };
@@ -19665,15 +19665,15 @@ export type GetEvalRunOutputItemsData = {
      */
     limit?: number;
     /**
-     * Sort order for output items by timestamp. Use `asc` for ascending order or `desc` for descending order. Defaults to `asc`.
-     */
-    order?: 'asc' | 'desc';
-    /**
      * Filter output items by status. Use `failed` to filter by failed output
      * items or `pass` to filter by passed output items.
      *
      */
     status?: 'fail' | 'pass';
+    /**
+     * Sort order for output items by timestamp. Use `asc` for ascending order or `desc` for descending order. Defaults to `asc`.
+     */
+    order?: 'asc' | 'desc';
   };
   url: '/evals/{eval_id}/runs/{run_id}/output_items';
 };
@@ -19696,13 +19696,13 @@ export type GetEvalRunOutputItemData = {
      */
     eval_id: string;
     /**
-     * The ID of the output item to retrieve.
-     */
-    output_item_id: string;
-    /**
      * The ID of the run to retrieve.
      */
     run_id: string;
+    /**
+     * The ID of the output item to retrieve.
+     */
+    output_item_id: string;
   };
   query?: never;
   url: '/evals/{eval_id}/runs/{run_id}/output_items/{output_item_id}';
@@ -19723,10 +19723,9 @@ export type ListFilesData = {
   path?: never;
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
+     * Only return files with the given purpose.
      */
-    after?: string;
+    purpose?: string;
     /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 10,000, and the default is 10,000.
      *
@@ -19738,9 +19737,10 @@ export type ListFilesData = {
      */
     order?: 'asc' | 'desc';
     /**
-     * Only return files with the given purpose.
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
      */
-    purpose?: string;
+    after?: string;
   };
   url: '/files';
 };
@@ -19880,6 +19880,10 @@ export type ListFineTuningCheckpointPermissionsData = {
   };
   query?: {
     /**
+     * The ID of the project to get permissions for.
+     */
+    project_id?: string;
+    /**
      * Identifier for the last permission ID from the previous pagination request.
      */
     after?: string;
@@ -19891,10 +19895,6 @@ export type ListFineTuningCheckpointPermissionsData = {
      * The order in which to retrieve permissions.
      */
     order?: 'ascending' | 'descending';
-    /**
-     * The ID of the project to get permissions for.
-     */
-    project_id?: string;
   };
   url: '/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions';
 };
@@ -20304,13 +20304,13 @@ export type AdminApiKeysListData = {
      */
     after?: string;
     /**
-     * Maximum number of keys to return.
-     */
-    limit?: number;
-    /**
      * Order results by creation time, ascending or descending.
      */
     order?: 'asc' | 'desc';
+    /**
+     * Maximum number of keys to return.
+     */
+    limit?: number;
   };
   url: '/organization/admin_api_keys';
 };
@@ -20361,9 +20361,9 @@ export type AdminApiKeysDeleteResponses = {
    * Confirmation that the API key was deleted.
    */
   200: {
-    deleted?: boolean;
     id?: string;
     object?: string;
+    deleted?: boolean;
   };
 };
 
@@ -20397,24 +20397,6 @@ export type ListAuditLogsData = {
   path?: never;
   query?: {
     /**
-     * Return only events performed by users with these emails.
-     */
-    'actor_emails[]'?: Array<string>;
-    /**
-     * Return only events performed by these actors. Can be a user ID, a service account ID, or an api key tracking ID.
-     */
-    'actor_ids[]'?: Array<string>;
-    /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
-     * A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-     *
-     */
-    before?: string;
-    /**
      * Return only events whose `effective_at` (Unix seconds) is in this range.
      */
     effective_at?: {
@@ -20436,22 +20418,40 @@ export type ListAuditLogsData = {
       lte?: number;
     };
     /**
+     * Return only events for these projects.
+     */
+    'project_ids[]'?: Array<string>;
+    /**
      * Return only events with a `type` in one of these values. For example, `project.created`. For all options, see the documentation for the [audit log object](https://platform.openai.com/docs/api-reference/audit-logs/object).
      */
     'event_types[]'?: Array<AuditLogEventType>;
+    /**
+     * Return only events performed by these actors. Can be a user ID, a service account ID, or an api key tracking ID.
+     */
+    'actor_ids[]'?: Array<string>;
+    /**
+     * Return only events performed by users with these emails.
+     */
+    'actor_emails[]'?: Array<string>;
+    /**
+     * Return only events performed on these targets. For example, a project ID updated.
+     */
+    'resource_ids[]'?: Array<string>;
     /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
     limit?: number;
     /**
-     * Return only events for these projects.
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
      */
-    'project_ids[]'?: Array<string>;
+    after?: string;
     /**
-     * Return only events performed on these targets. For example, a project ID updated.
+     * A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
+     *
      */
-    'resource_ids[]'?: Array<string>;
+    before?: string;
   };
   url: '/organization/audit_logs';
 };
@@ -20471,15 +20471,15 @@ export type ListOrganizationCertificatesData = {
   path?: never;
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
     limit?: number;
+    /**
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
+     */
+    after?: string;
     /**
      * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
      *
@@ -20628,13 +20628,21 @@ export type UsageCostsData = {
   path?: never;
   query: {
     /**
-     * Width of each time bucket in response. Currently only `1d` is supported, default to `1d`.
+     * Start time (Unix seconds) of the query time range, inclusive.
      */
-    bucket_width?: '1d';
+    start_time: number;
     /**
      * End time (Unix seconds) of the query time range, exclusive.
      */
     end_time?: number;
+    /**
+     * Width of each time bucket in response. Currently only `1d` is supported, default to `1d`.
+     */
+    bucket_width?: '1d';
+    /**
+     * Return only costs for these projects.
+     */
+    project_ids?: Array<string>;
     /**
      * Group the costs by the specified fields. Support fields include `project_id`, `line_item` and any combination of them.
      */
@@ -20648,14 +20656,6 @@ export type UsageCostsData = {
      * A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.
      */
     page?: string;
-    /**
-     * Return only costs for these projects.
-     */
-    project_ids?: Array<string>;
-    /**
-     * Start time (Unix seconds) of the query time range, inclusive.
-     */
-    start_time: number;
   };
   url: '/organization/costs';
 };
@@ -20674,15 +20674,15 @@ export type ListInvitesData = {
   path?: never;
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
     limit?: number;
+    /**
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
+     */
+    after?: string;
   };
   url: '/organization/invites';
 };
@@ -20765,6 +20765,11 @@ export type ListProjectsData = {
   path?: never;
   query?: {
     /**
+     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+     *
+     */
+    limit?: number;
+    /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
      *
      */
@@ -20773,11 +20778,6 @@ export type ListProjectsData = {
      * If `true` returns all projects including those that have been `archived`. Archived projects are not included by default.
      */
     include_archived?: boolean;
-    /**
-     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
-     *
-     */
-    limit?: number;
   };
   url: '/organization/projects';
 };
@@ -20878,15 +20878,15 @@ export type ListProjectApiKeysData = {
   };
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
     limit?: number;
+    /**
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
+     */
+    after?: string;
   };
   url: '/organization/projects/{project_id}/api_keys';
 };
@@ -20905,13 +20905,13 @@ export type DeleteProjectApiKeyData = {
   body?: never;
   path: {
     /**
-     * The ID of the API key.
-     */
-    key_id: string;
-    /**
      * The ID of the project.
      */
     project_id: string;
+    /**
+     * The ID of the API key.
+     */
+    key_id: string;
   };
   query?: never;
   url: '/organization/projects/{project_id}/api_keys/{key_id}';
@@ -20941,13 +20941,13 @@ export type RetrieveProjectApiKeyData = {
   body?: never;
   path: {
     /**
-     * The ID of the API key.
-     */
-    key_id: string;
-    /**
      * The ID of the project.
      */
     project_id: string;
+    /**
+     * The ID of the API key.
+     */
+    key_id: string;
   };
   query?: never;
   url: '/organization/projects/{project_id}/api_keys/{key_id}';
@@ -20995,15 +20995,15 @@ export type ListProjectCertificatesData = {
   };
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
     limit?: number;
+    /**
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
+     */
+    after?: string;
     /**
      * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
      *
@@ -21083,6 +21083,11 @@ export type ListProjectRateLimitsData = {
   };
   query?: {
     /**
+     * A limit on the number of objects to be returned. The default is 100.
+     *
+     */
+    limit?: number;
+    /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
      *
      */
@@ -21092,11 +21097,6 @@ export type ListProjectRateLimitsData = {
      *
      */
     before?: string;
-    /**
-     * A limit on the number of objects to be returned. The default is 100.
-     *
-     */
-    limit?: number;
   };
   url: '/organization/projects/{project_id}/rate_limits';
 };
@@ -21160,15 +21160,15 @@ export type ListProjectServiceAccountsData = {
   };
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
     limit?: number;
+    /**
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
+     */
+    after?: string;
   };
   url: '/organization/projects/{project_id}/service_accounts';
 };
@@ -21290,15 +21290,15 @@ export type ListProjectUsersData = {
   };
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
     limit?: number;
+    /**
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
+     */
+    after?: string;
   };
   url: '/organization/projects/{project_id}/users';
 };
@@ -21464,17 +21464,33 @@ export type UsageAudioSpeechesData = {
   path?: never;
   query: {
     /**
-     * Return only usage for these API keys.
+     * Start time (Unix seconds) of the query time range, inclusive.
      */
-    api_key_ids?: Array<string>;
+    start_time: number;
+    /**
+     * End time (Unix seconds) of the query time range, exclusive.
+     */
+    end_time?: number;
     /**
      * Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.
      */
     bucket_width?: '1m' | '1h' | '1d';
     /**
-     * End time (Unix seconds) of the query time range, exclusive.
+     * Return only usage for these projects.
      */
-    end_time?: number;
+    project_ids?: Array<string>;
+    /**
+     * Return only usage for these users.
+     */
+    user_ids?: Array<string>;
+    /**
+     * Return only usage for these API keys.
+     */
+    api_key_ids?: Array<string>;
+    /**
+     * Return only usage for these models.
+     */
+    models?: Array<string>;
     /**
      * Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model` or any combination of them.
      */
@@ -21488,25 +21504,9 @@ export type UsageAudioSpeechesData = {
      */
     limit?: number;
     /**
-     * Return only usage for these models.
-     */
-    models?: Array<string>;
-    /**
      * A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.
      */
     page?: string;
-    /**
-     * Return only usage for these projects.
-     */
-    project_ids?: Array<string>;
-    /**
-     * Start time (Unix seconds) of the query time range, inclusive.
-     */
-    start_time: number;
-    /**
-     * Return only usage for these users.
-     */
-    user_ids?: Array<string>;
   };
   url: '/organization/usage/audio_speeches';
 };
@@ -21526,17 +21526,33 @@ export type UsageAudioTranscriptionsData = {
   path?: never;
   query: {
     /**
-     * Return only usage for these API keys.
+     * Start time (Unix seconds) of the query time range, inclusive.
      */
-    api_key_ids?: Array<string>;
+    start_time: number;
+    /**
+     * End time (Unix seconds) of the query time range, exclusive.
+     */
+    end_time?: number;
     /**
      * Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.
      */
     bucket_width?: '1m' | '1h' | '1d';
     /**
-     * End time (Unix seconds) of the query time range, exclusive.
+     * Return only usage for these projects.
      */
-    end_time?: number;
+    project_ids?: Array<string>;
+    /**
+     * Return only usage for these users.
+     */
+    user_ids?: Array<string>;
+    /**
+     * Return only usage for these API keys.
+     */
+    api_key_ids?: Array<string>;
+    /**
+     * Return only usage for these models.
+     */
+    models?: Array<string>;
     /**
      * Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model` or any combination of them.
      */
@@ -21550,25 +21566,9 @@ export type UsageAudioTranscriptionsData = {
      */
     limit?: number;
     /**
-     * Return only usage for these models.
-     */
-    models?: Array<string>;
-    /**
      * A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.
      */
     page?: string;
-    /**
-     * Return only usage for these projects.
-     */
-    project_ids?: Array<string>;
-    /**
-     * Start time (Unix seconds) of the query time range, inclusive.
-     */
-    start_time: number;
-    /**
-     * Return only usage for these users.
-     */
-    user_ids?: Array<string>;
   };
   url: '/organization/usage/audio_transcriptions';
 };
@@ -21588,13 +21588,21 @@ export type UsageCodeInterpreterSessionsData = {
   path?: never;
   query: {
     /**
-     * Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.
+     * Start time (Unix seconds) of the query time range, inclusive.
      */
-    bucket_width?: '1m' | '1h' | '1d';
+    start_time: number;
     /**
      * End time (Unix seconds) of the query time range, exclusive.
      */
     end_time?: number;
+    /**
+     * Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.
+     */
+    bucket_width?: '1m' | '1h' | '1d';
+    /**
+     * Return only usage for these projects.
+     */
+    project_ids?: Array<string>;
     /**
      * Group the usage data by the specified fields. Support fields include `project_id`.
      */
@@ -21611,14 +21619,6 @@ export type UsageCodeInterpreterSessionsData = {
      * A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.
      */
     page?: string;
-    /**
-     * Return only usage for these projects.
-     */
-    project_ids?: Array<string>;
-    /**
-     * Start time (Unix seconds) of the query time range, inclusive.
-     */
-    start_time: number;
   };
   url: '/organization/usage/code_interpreter_sessions';
 };
@@ -21638,22 +21638,38 @@ export type UsageCompletionsData = {
   path?: never;
   query: {
     /**
-     * Return only usage for these API keys.
+     * Start time (Unix seconds) of the query time range, inclusive.
      */
-    api_key_ids?: Array<string>;
+    start_time: number;
     /**
-     * If `true`, return batch jobs only. If `false`, return non-batch jobs only. By default, return both.
-     *
+     * End time (Unix seconds) of the query time range, exclusive.
      */
-    batch?: boolean;
+    end_time?: number;
     /**
      * Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.
      */
     bucket_width?: '1m' | '1h' | '1d';
     /**
-     * End time (Unix seconds) of the query time range, exclusive.
+     * Return only usage for these projects.
      */
-    end_time?: number;
+    project_ids?: Array<string>;
+    /**
+     * Return only usage for these users.
+     */
+    user_ids?: Array<string>;
+    /**
+     * Return only usage for these API keys.
+     */
+    api_key_ids?: Array<string>;
+    /**
+     * Return only usage for these models.
+     */
+    models?: Array<string>;
+    /**
+     * If `true`, return batch jobs only. If `false`, return non-batch jobs only. By default, return both.
+     *
+     */
+    batch?: boolean;
     /**
      * Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model`, `batch` or any combination of them.
      */
@@ -21669,25 +21685,9 @@ export type UsageCompletionsData = {
      */
     limit?: number;
     /**
-     * Return only usage for these models.
-     */
-    models?: Array<string>;
-    /**
      * A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.
      */
     page?: string;
-    /**
-     * Return only usage for these projects.
-     */
-    project_ids?: Array<string>;
-    /**
-     * Start time (Unix seconds) of the query time range, inclusive.
-     */
-    start_time: number;
-    /**
-     * Return only usage for these users.
-     */
-    user_ids?: Array<string>;
   };
   url: '/organization/usage/completions';
 };
@@ -21707,17 +21707,33 @@ export type UsageEmbeddingsData = {
   path?: never;
   query: {
     /**
-     * Return only usage for these API keys.
+     * Start time (Unix seconds) of the query time range, inclusive.
      */
-    api_key_ids?: Array<string>;
+    start_time: number;
+    /**
+     * End time (Unix seconds) of the query time range, exclusive.
+     */
+    end_time?: number;
     /**
      * Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.
      */
     bucket_width?: '1m' | '1h' | '1d';
     /**
-     * End time (Unix seconds) of the query time range, exclusive.
+     * Return only usage for these projects.
      */
-    end_time?: number;
+    project_ids?: Array<string>;
+    /**
+     * Return only usage for these users.
+     */
+    user_ids?: Array<string>;
+    /**
+     * Return only usage for these API keys.
+     */
+    api_key_ids?: Array<string>;
+    /**
+     * Return only usage for these models.
+     */
+    models?: Array<string>;
     /**
      * Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model` or any combination of them.
      */
@@ -21731,25 +21747,9 @@ export type UsageEmbeddingsData = {
      */
     limit?: number;
     /**
-     * Return only usage for these models.
-     */
-    models?: Array<string>;
-    /**
      * A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.
      */
     page?: string;
-    /**
-     * Return only usage for these projects.
-     */
-    project_ids?: Array<string>;
-    /**
-     * Start time (Unix seconds) of the query time range, inclusive.
-     */
-    start_time: number;
-    /**
-     * Return only usage for these users.
-     */
-    user_ids?: Array<string>;
   };
   url: '/organization/usage/embeddings';
 };
@@ -21769,17 +21769,43 @@ export type UsageImagesData = {
   path?: never;
   query: {
     /**
-     * Return only usage for these API keys.
+     * Start time (Unix seconds) of the query time range, inclusive.
      */
-    api_key_ids?: Array<string>;
+    start_time: number;
+    /**
+     * End time (Unix seconds) of the query time range, exclusive.
+     */
+    end_time?: number;
     /**
      * Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.
      */
     bucket_width?: '1m' | '1h' | '1d';
     /**
-     * End time (Unix seconds) of the query time range, exclusive.
+     * Return only usages for these sources. Possible values are `image.generation`, `image.edit`, `image.variation` or any combination of them.
      */
-    end_time?: number;
+    sources?: Array<'image.generation' | 'image.edit' | 'image.variation'>;
+    /**
+     * Return only usages for these image sizes. Possible values are `256x256`, `512x512`, `1024x1024`, `1792x1792`, `1024x1792` or any combination of them.
+     */
+    sizes?: Array<
+      '256x256' | '512x512' | '1024x1024' | '1792x1792' | '1024x1792'
+    >;
+    /**
+     * Return only usage for these projects.
+     */
+    project_ids?: Array<string>;
+    /**
+     * Return only usage for these users.
+     */
+    user_ids?: Array<string>;
+    /**
+     * Return only usage for these API keys.
+     */
+    api_key_ids?: Array<string>;
+    /**
+     * Return only usage for these models.
+     */
+    models?: Array<string>;
     /**
      * Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model`, `size`, `source` or any combination of them.
      */
@@ -21795,35 +21821,9 @@ export type UsageImagesData = {
      */
     limit?: number;
     /**
-     * Return only usage for these models.
-     */
-    models?: Array<string>;
-    /**
      * A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.
      */
     page?: string;
-    /**
-     * Return only usage for these projects.
-     */
-    project_ids?: Array<string>;
-    /**
-     * Return only usages for these image sizes. Possible values are `256x256`, `512x512`, `1024x1024`, `1792x1792`, `1024x1792` or any combination of them.
-     */
-    sizes?: Array<
-      '256x256' | '512x512' | '1024x1024' | '1792x1792' | '1024x1792'
-    >;
-    /**
-     * Return only usages for these sources. Possible values are `image.generation`, `image.edit`, `image.variation` or any combination of them.
-     */
-    sources?: Array<'image.generation' | 'image.edit' | 'image.variation'>;
-    /**
-     * Start time (Unix seconds) of the query time range, inclusive.
-     */
-    start_time: number;
-    /**
-     * Return only usage for these users.
-     */
-    user_ids?: Array<string>;
   };
   url: '/organization/usage/images';
 };
@@ -21843,17 +21843,33 @@ export type UsageModerationsData = {
   path?: never;
   query: {
     /**
-     * Return only usage for these API keys.
+     * Start time (Unix seconds) of the query time range, inclusive.
      */
-    api_key_ids?: Array<string>;
+    start_time: number;
+    /**
+     * End time (Unix seconds) of the query time range, exclusive.
+     */
+    end_time?: number;
     /**
      * Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.
      */
     bucket_width?: '1m' | '1h' | '1d';
     /**
-     * End time (Unix seconds) of the query time range, exclusive.
+     * Return only usage for these projects.
      */
-    end_time?: number;
+    project_ids?: Array<string>;
+    /**
+     * Return only usage for these users.
+     */
+    user_ids?: Array<string>;
+    /**
+     * Return only usage for these API keys.
+     */
+    api_key_ids?: Array<string>;
+    /**
+     * Return only usage for these models.
+     */
+    models?: Array<string>;
     /**
      * Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model` or any combination of them.
      */
@@ -21867,25 +21883,9 @@ export type UsageModerationsData = {
      */
     limit?: number;
     /**
-     * Return only usage for these models.
-     */
-    models?: Array<string>;
-    /**
      * A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.
      */
     page?: string;
-    /**
-     * Return only usage for these projects.
-     */
-    project_ids?: Array<string>;
-    /**
-     * Start time (Unix seconds) of the query time range, inclusive.
-     */
-    start_time: number;
-    /**
-     * Return only usage for these users.
-     */
-    user_ids?: Array<string>;
   };
   url: '/organization/usage/moderations';
 };
@@ -21905,13 +21905,21 @@ export type UsageVectorStoresData = {
   path?: never;
   query: {
     /**
-     * Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.
+     * Start time (Unix seconds) of the query time range, inclusive.
      */
-    bucket_width?: '1m' | '1h' | '1d';
+    start_time: number;
     /**
      * End time (Unix seconds) of the query time range, exclusive.
      */
     end_time?: number;
+    /**
+     * Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.
+     */
+    bucket_width?: '1m' | '1h' | '1d';
+    /**
+     * Return only usage for these projects.
+     */
+    project_ids?: Array<string>;
     /**
      * Group the usage data by the specified fields. Support fields include `project_id`.
      */
@@ -21928,14 +21936,6 @@ export type UsageVectorStoresData = {
      * A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.
      */
     page?: string;
-    /**
-     * Return only usage for these projects.
-     */
-    project_ids?: Array<string>;
-    /**
-     * Start time (Unix seconds) of the query time range, inclusive.
-     */
-    start_time: number;
   };
   url: '/organization/usage/vector_stores';
 };
@@ -21955,6 +21955,11 @@ export type ListUsersData = {
   path?: never;
   query?: {
     /**
+     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+     *
+     */
+    limit?: number;
+    /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
      *
      */
@@ -21963,11 +21968,6 @@ export type ListUsersData = {
      * Filter by the email address of users.
      */
     emails?: Array<string>;
-    /**
-     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
-     *
-     */
-    limit?: number;
   };
   url: '/organization/users';
 };
@@ -22150,6 +22150,19 @@ export type GetResponseData = {
      */
     include?: Array<Includable>;
     /**
+     * If set to true, the model response data will be streamed to the client
+     * as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
+     * See the [Streaming section below](https://platform.openai.com/docs/api-reference/responses-streaming)
+     * for more information.
+     *
+     */
+    stream?: boolean;
+    /**
+     * The sequence number of the event after which to start streaming.
+     *
+     */
+    starting_after?: number;
+    /**
      * When true, stream obfuscation will be enabled. Stream obfuscation adds
      * random characters to an `obfuscation` field on streaming delta events
      * to normalize payload sizes as a mitigation to certain side-channel
@@ -22160,19 +22173,6 @@ export type GetResponseData = {
      *
      */
     include_obfuscation?: boolean;
-    /**
-     * The sequence number of the event after which to start streaming.
-     *
-     */
-    starting_after?: number;
-    /**
-     * If set to true, the model response data will be streamed to the client
-     * as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
-     * See the [Streaming section below](https://platform.openai.com/docs/api-reference/responses-streaming)
-     * for more information.
-     *
-     */
-    stream?: boolean;
   };
   url: '/responses/{response_id}';
 };
@@ -22229,6 +22229,19 @@ export type ListInputItemsData = {
   };
   query?: {
     /**
+     * A limit on the number of objects to be returned. Limit can range between
+     * 1 and 100, and the default is 20.
+     *
+     */
+    limit?: number;
+    /**
+     * The order to return the input items in. Default is `desc`.
+     * - `asc`: Return the input items in ascending order.
+     * - `desc`: Return the input items in descending order.
+     *
+     */
+    order?: 'asc' | 'desc';
+    /**
      * An item ID to list items after, used in pagination.
      *
      */
@@ -22244,19 +22257,6 @@ export type ListInputItemsData = {
      *
      */
     include?: Array<Includable>;
-    /**
-     * A limit on the number of objects to be returned. Limit can range between
-     * 1 and 100, and the default is 20.
-     *
-     */
-    limit?: number;
-    /**
-     * The order to return the input items in. Default is `desc`.
-     * - `asc`: Return the input items in ascending order.
-     * - `desc`: Return the input items in descending order.
-     *
-     */
-    order?: 'asc' | 'desc';
   };
   url: '/responses/{response_id}/input_items';
 };
@@ -22380,16 +22380,6 @@ export type ListMessagesData = {
   };
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
-     * A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-     *
-     */
-    before?: string;
-    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
@@ -22399,6 +22389,16 @@ export type ListMessagesData = {
      *
      */
     order?: 'asc' | 'desc';
+    /**
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
+     */
+    after?: string;
+    /**
+     * A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
+     *
+     */
+    before?: string;
     /**
      * Filter messages by the run ID that generated them.
      *
@@ -22444,13 +22444,13 @@ export type DeleteMessageData = {
   body?: never;
   path: {
     /**
-     * The ID of the message to delete.
-     */
-    message_id: string;
-    /**
      * The ID of the thread to which this message belongs.
      */
     thread_id: string;
+    /**
+     * The ID of the message to delete.
+     */
+    message_id: string;
   };
   query?: never;
   url: '/threads/{thread_id}/messages/{message_id}';
@@ -22470,13 +22470,13 @@ export type GetMessageData = {
   body?: never;
   path: {
     /**
-     * The ID of the message to retrieve.
-     */
-    message_id: string;
-    /**
      * The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) to which this message belongs.
      */
     thread_id: string;
+    /**
+     * The ID of the message to retrieve.
+     */
+    message_id: string;
   };
   query?: never;
   url: '/threads/{thread_id}/messages/{message_id}';
@@ -22495,13 +22495,13 @@ export type ModifyMessageData = {
   body: ModifyMessageRequest;
   path: {
     /**
-     * The ID of the message to modify.
-     */
-    message_id: string;
-    /**
      * The ID of the thread to which this message belongs.
      */
     thread_id: string;
+    /**
+     * The ID of the message to modify.
+     */
+    message_id: string;
   };
   query?: never;
   url: '/threads/{thread_id}/messages/{message_id}';
@@ -22527,16 +22527,6 @@ export type ListRunsData = {
   };
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
-     * A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-     *
-     */
-    before?: string;
-    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
@@ -22546,6 +22536,16 @@ export type ListRunsData = {
      *
      */
     order?: 'asc' | 'desc';
+    /**
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
+     */
+    after?: string;
+    /**
+     * A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
+     *
+     */
+    before?: string;
   };
   url: '/threads/{thread_id}/runs';
 };
@@ -22592,13 +22592,13 @@ export type GetRunData = {
   body?: never;
   path: {
     /**
-     * The ID of the run to retrieve.
-     */
-    run_id: string;
-    /**
      * The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was run.
      */
     thread_id: string;
+    /**
+     * The ID of the run to retrieve.
+     */
+    run_id: string;
   };
   query?: never;
   url: '/threads/{thread_id}/runs/{run_id}';
@@ -22617,13 +22617,13 @@ export type ModifyRunData = {
   body: ModifyRunRequest;
   path: {
     /**
-     * The ID of the run to modify.
-     */
-    run_id: string;
-    /**
      * The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was run.
      */
     thread_id: string;
+    /**
+     * The ID of the run to modify.
+     */
+    run_id: string;
   };
   query?: never;
   url: '/threads/{thread_id}/runs/{run_id}';
@@ -22642,13 +22642,13 @@ export type CancelRunData = {
   body?: never;
   path: {
     /**
-     * The ID of the run to cancel.
-     */
-    run_id: string;
-    /**
      * The ID of the thread to which this run belongs.
      */
     thread_id: string;
+    /**
+     * The ID of the run to cancel.
+     */
+    run_id: string;
   };
   query?: never;
   url: '/threads/{thread_id}/runs/{run_id}/cancel';
@@ -22667,15 +22667,25 @@ export type ListRunStepsData = {
   body?: never;
   path: {
     /**
-     * The ID of the run the run steps belong to.
-     */
-    run_id: string;
-    /**
      * The ID of the thread the run and run steps belong to.
      */
     thread_id: string;
+    /**
+     * The ID of the run the run steps belong to.
+     */
+    run_id: string;
   };
   query?: {
+    /**
+     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+     *
+     */
+    limit?: number;
+    /**
+     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
+     *
+     */
+    order?: 'asc' | 'desc';
     /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
      *
@@ -22693,16 +22703,6 @@ export type ListRunStepsData = {
      *
      */
     'include[]'?: Array<'step_details.tool_calls[*].file_search.results[*].content'>;
-    /**
-     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
-     *
-     */
-    limit?: number;
-    /**
-     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
-     *
-     */
-    order?: 'asc' | 'desc';
   };
   url: '/threads/{thread_id}/runs/{run_id}/steps';
 };
@@ -22721,6 +22721,10 @@ export type GetRunStepData = {
   body?: never;
   path: {
     /**
+     * The ID of the thread to which the run and run step belongs.
+     */
+    thread_id: string;
+    /**
      * The ID of the run to which the run step belongs.
      */
     run_id: string;
@@ -22728,10 +22732,6 @@ export type GetRunStepData = {
      * The ID of the run step to retrieve.
      */
     step_id: string;
-    /**
-     * The ID of the thread to which the run and run step belongs.
-     */
-    thread_id: string;
   };
   query?: {
     /**
@@ -22758,13 +22758,13 @@ export type SubmitToolOuputsToRunData = {
   body: SubmitToolOutputsRunRequest;
   path: {
     /**
-     * The ID of the run that requires the tool output submission.
-     */
-    run_id: string;
-    /**
      * The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) to which this run belongs.
      */
     thread_id: string;
+    /**
+     * The ID of the run that requires the tool output submission.
+     */
+    run_id: string;
   };
   query?: never;
   url: '/threads/{thread_id}/runs/{run_id}/submit_tool_outputs';
@@ -22871,16 +22871,6 @@ export type ListVectorStoresData = {
   path?: never;
   query?: {
     /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     *
-     */
-    after?: string;
-    /**
-     * A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-     *
-     */
-    before?: string;
-    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
      *
      */
@@ -22890,6 +22880,16 @@ export type ListVectorStoresData = {
      *
      */
     order?: 'asc' | 'desc';
+    /**
+     * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+     *
+     */
+    after?: string;
+    /**
+     * A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
+     *
+     */
+    before?: string;
   };
   url: '/vector_stores';
 };
@@ -23014,13 +23014,13 @@ export type GetVectorStoreFileBatchData = {
   body?: never;
   path: {
     /**
-     * The ID of the file batch being retrieved.
-     */
-    batch_id: string;
-    /**
      * The ID of the vector store that the file batch belongs to.
      */
     vector_store_id: string;
+    /**
+     * The ID of the file batch being retrieved.
+     */
+    batch_id: string;
   };
   query?: never;
   url: '/vector_stores/{vector_store_id}/file_batches/{batch_id}';
@@ -23040,13 +23040,13 @@ export type CancelVectorStoreFileBatchData = {
   body?: never;
   path: {
     /**
-     * The ID of the file batch to cancel.
-     */
-    batch_id: string;
-    /**
      * The ID of the vector store that the file batch belongs to.
      */
     vector_store_id: string;
+    /**
+     * The ID of the file batch to cancel.
+     */
+    batch_id: string;
   };
   query?: never;
   url: '/vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel';
@@ -23066,15 +23066,25 @@ export type ListFilesInVectorStoreBatchData = {
   body?: never;
   path: {
     /**
-     * The ID of the file batch that the files belong to.
-     */
-    batch_id: string;
-    /**
      * The ID of the vector store that the files belong to.
      */
     vector_store_id: string;
+    /**
+     * The ID of the file batch that the files belong to.
+     */
+    batch_id: string;
   };
   query?: {
+    /**
+     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+     *
+     */
+    limit?: number;
+    /**
+     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
+     *
+     */
+    order?: 'asc' | 'desc';
     /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
      *
@@ -23089,16 +23099,6 @@ export type ListFilesInVectorStoreBatchData = {
      * Filter by file status. One of `in_progress`, `completed`, `failed`, `cancelled`.
      */
     filter?: 'in_progress' | 'completed' | 'failed' | 'cancelled';
-    /**
-     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
-     *
-     */
-    limit?: number;
-    /**
-     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
-     *
-     */
-    order?: 'asc' | 'desc';
   };
   url: '/vector_stores/{vector_store_id}/file_batches/{batch_id}/files';
 };
@@ -23123,6 +23123,16 @@ export type ListVectorStoreFilesData = {
   };
   query?: {
     /**
+     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+     *
+     */
+    limit?: number;
+    /**
+     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
+     *
+     */
+    order?: 'asc' | 'desc';
+    /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
      *
      */
@@ -23136,16 +23146,6 @@ export type ListVectorStoreFilesData = {
      * Filter by file status. One of `in_progress`, `completed`, `failed`, `cancelled`.
      */
     filter?: 'in_progress' | 'completed' | 'failed' | 'cancelled';
-    /**
-     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
-     *
-     */
-    limit?: number;
-    /**
-     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
-     *
-     */
-    order?: 'asc' | 'desc';
   };
   url: '/vector_stores/{vector_store_id}/files';
 };
@@ -23187,13 +23187,13 @@ export type DeleteVectorStoreFileData = {
   body?: never;
   path: {
     /**
-     * The ID of the file to delete.
-     */
-    file_id: string;
-    /**
      * The ID of the vector store that the file belongs to.
      */
     vector_store_id: string;
+    /**
+     * The ID of the file to delete.
+     */
+    file_id: string;
   };
   query?: never;
   url: '/vector_stores/{vector_store_id}/files/{file_id}';
@@ -23213,13 +23213,13 @@ export type GetVectorStoreFileData = {
   body?: never;
   path: {
     /**
-     * The ID of the file being retrieved.
-     */
-    file_id: string;
-    /**
      * The ID of the vector store that the file belongs to.
      */
     vector_store_id: string;
+    /**
+     * The ID of the file being retrieved.
+     */
+    file_id: string;
   };
   query?: never;
   url: '/vector_stores/{vector_store_id}/files/{file_id}';
@@ -23239,13 +23239,13 @@ export type UpdateVectorStoreFileAttributesData = {
   body: UpdateVectorStoreFileAttributesRequest;
   path: {
     /**
-     * The ID of the file to update attributes.
-     */
-    file_id: string;
-    /**
      * The ID of the vector store the file belongs to.
      */
     vector_store_id: string;
+    /**
+     * The ID of the file to update attributes.
+     */
+    file_id: string;
   };
   query?: never;
   url: '/vector_stores/{vector_store_id}/files/{file_id}';
@@ -23265,13 +23265,13 @@ export type RetrieveVectorStoreFileContentData = {
   body?: never;
   path: {
     /**
-     * The ID of the file within the vector store.
-     */
-    file_id: string;
-    /**
      * The ID of the vector store.
      */
     vector_store_id: string;
+    /**
+     * The ID of the file within the vector store.
+     */
+    file_id: string;
   };
   query?: never;
   url: '/vector_stores/{vector_store_id}/files/{file_id}/content';

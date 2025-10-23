@@ -64,6 +64,7 @@ export default tseslint.config(
       '**/dist/',
       '**/node_modules/',
       'temp/',
+      'examples/openapi-ts-openai/src/client/**/*.ts',
       'packages/openapi-ts/src/legacy/handlebars/compiled/**/*.js',
       'packages/openapi-ts/src/legacy/handlebars/templates/**/*.hbs',
       '**/test/generated/',
