@@ -1,4 +1,3 @@
-import type { IR } from '~/ir/types';
 import type {
   OpenApiMetaObject,
   OpenApiOperationObject,
@@ -7,6 +6,7 @@ import type {
   OpenApiResponseObject,
   OpenApiSchemaObject,
 } from '~/openApi/types';
+import type { Hooks } from '~/parser/types/hooks';
 
 import type { StringCase, StringName } from './case';
 
@@ -24,7 +24,7 @@ export type UserParser = {
    * Use these to classify resources, control which outputs are generated,
    * or provide custom behavior for specific resources.
    */
-  hooks?: IR.Hooks;
+  hooks?: Hooks;
   /**
    * Pagination configuration.
    */
@@ -206,7 +206,7 @@ export type Parser = {
    * Use these to classify resources, control which outputs are generated,
    * or provide custom behavior for specific resources.
    */
-  hooks: IR.Hooks;
+  hooks: Hooks;
   /**
    * Pagination configuration.
    */
