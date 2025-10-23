@@ -3,8 +3,9 @@ import fs from 'node:fs';
 import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { Config } from '../../types/config';
-import { setConfig } from '../../utils/config';
+import type { Config } from '~/types/config';
+import { setConfig } from '~/utils/config';
+
 import { generateLegacyClientClass } from '../class';
 import { mockTemplates, openApi } from './mocks';
 
@@ -85,7 +86,7 @@ describe('generateLegacyClientClass', () => {
       plugins: {
         '@hey-api/schemas': {
           api: {
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/schemas',
@@ -97,7 +98,7 @@ describe('generateLegacyClientClass', () => {
         '@hey-api/sdk': {
           api: {
             createOperationComment: () => undefined,
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/sdk',
@@ -108,8 +109,8 @@ describe('generateLegacyClientClass', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
+            selector: () => [],
           },
           config: {
             enums: 'javascript',

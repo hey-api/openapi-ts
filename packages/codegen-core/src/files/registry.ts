@@ -43,6 +43,11 @@ export class FileRegistry implements IFileRegistry {
       : { selector: symbolIdOrSelector };
   }
 
+  isRegistered(fileIdOrSelector: number | ISelector): boolean {
+    const file = this.get(fileIdOrSelector);
+    return file ? this.registerOrder.has(file.id) : false;
+  }
+
   reference(fileIdOrSelector: number | ISelector): IFileOut {
     const file = this.idOrSelector(fileIdOrSelector);
     return this.register(file);
@@ -104,6 +109,9 @@ export class FileRegistry implements IFileRegistry {
 
     if (hasOtherKeys) {
       this.registerOrder.add(id);
+      if (this.referenceOrder.has(id)) {
+        this.referenceOrder.delete(id);
+      }
     } else {
       this.referenceOrder.add(id);
     }

@@ -1,4 +1,5 @@
-import { platform } from 'os';
+import { platform } from 'node:os';
+
 import type { ViteUserConfig } from 'vitest/config';
 import { configDefaults, defineConfig, mergeConfig } from 'vitest/config';
 

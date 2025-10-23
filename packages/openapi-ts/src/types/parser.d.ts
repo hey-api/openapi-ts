@@ -1,4 +1,4 @@
-import type { IR } from '../ir/types';
+import type { IR } from '~/ir/types';
 import type {
   OpenApiMetaObject,
   OpenApiOperationObject,
@@ -6,7 +6,8 @@ import type {
   OpenApiRequestBodyObject,
   OpenApiResponseObject,
   OpenApiSchemaObject,
-} from '../openApi/types';
+} from '~/openApi/types';
+
 import type { StringCase, StringName } from './case';
 
 type EnumsMode = 'inline' | 'root';

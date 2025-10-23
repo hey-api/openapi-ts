@@ -1,4 +1,5 @@
-import { getType } from '../openApi';
+import { getType } from '~/openApi';
+
 import { refParametersPartial, refSchemasPartial } from './const';
 import { reservedJavaScriptKeywordsRegExp } from './regexp';
 import { cleanAndTransformTypeName } from './transform';

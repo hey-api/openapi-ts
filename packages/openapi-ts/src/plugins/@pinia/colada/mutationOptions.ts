@@ -1,8 +1,9 @@
 import type ts from 'typescript';
 
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import { tsc } from '~/tsc';
+
 import { handleMeta } from './meta';
 import type { PiniaColadaPlugin } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';
@@ -18,7 +19,7 @@ export const createMutationOptions = ({
   queryFn: string;
 }): void => {
   const symbolMutationOptionsType = plugin.referenceSymbol(
-    plugin.api.getSelector('UseMutationOptions'),
+    plugin.api.selector('UseMutationOptions'),
   );
 
   const typeData = useTypeData({ operation, plugin });

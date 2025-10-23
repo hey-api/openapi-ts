@@ -3,8 +3,9 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
-import { tsc } from '../tsc';
-import { type ImportExportItemObject, tsNodeToString } from '../tsc/utils';
+import { tsc } from '~/tsc';
+import { type ImportExportItemObject, tsNodeToString } from '~/tsc/utils';
+
 import { ensureDirSync } from './utils';
 
 type FileImportResult<

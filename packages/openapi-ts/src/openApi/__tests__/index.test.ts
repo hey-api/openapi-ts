@@ -1,13 +1,14 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import type { OpenApiV3_0_X } from '~/openApi/3.0.x';
+import { parseV3_0_X } from '~/openApi/3.0.x';
+import type { OpenApiV3_1_X } from '~/openApi/3.1.x';
+import { parseV3_1_X } from '~/openApi/3.1.x';
+import * as parseV2 from '~/openApi/v2';
+import * as parseV3 from '~/openApi/v3';
+
 import type { Config } from '../../types/config';
 import { type OpenApi, parseLegacy, parseOpenApiSpec } from '..';
-import type { OpenApiV3_0_X } from '../3.0.x';
-import { parseV3_0_X } from '../3.0.x';
-import type { OpenApiV3_1_X } from '../3.1.x';
-import { parseV3_1_X } from '../3.1.x';
-import * as parseV2 from '../v2';
-import * as parseV3 from '../v3';
 
 vi.mock('../3.0.x', () => ({
   parseV3_0_X: vi.fn(),

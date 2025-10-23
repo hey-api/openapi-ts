@@ -1,7 +1,8 @@
+import type { OpenApiParameter } from '~/openApi/v2/interfaces/OpenApiParameter';
+import type { OpenApiSchema } from '~/openApi/v3/interfaces/OpenApiSchema';
+import { getDefinitionTypes } from '~/openApi/v3/parser/inferType';
+
 import type { Model } from '../../common/interfaces/client';
-import type { OpenApiParameter } from '../../v2/interfaces/OpenApiParameter';
-import type { OpenApiSchema } from '../../v3/interfaces/OpenApiSchema';
-import { getDefinitionTypes } from '../../v3/parser/inferType';
 import type { OperationParameter } from '../interfaces/client';
 
 export const getDefault = (

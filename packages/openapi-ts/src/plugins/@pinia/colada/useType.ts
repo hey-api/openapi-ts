@@ -1,6 +1,7 @@
-import type { IR } from '../../../ir/types';
-import { getClientPlugin } from '../../@hey-api/client-core/utils';
-import { operationOptionsType } from '../../@hey-api/sdk/operation';
+import type { IR } from '~/ir/types';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { operationOptionsType } from '~/plugins/@hey-api/sdk/operation';
+
 import type { PiniaColadaPlugin } from './types';
 
 export const useTypeData = ({
@@ -26,7 +27,7 @@ export const useTypeError = ({
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
   const symbolErrorType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('error', operation.id),
+    pluginTypeScript.api.selector('error', operation.id),
   );
 
   let typeErrorName: string | undefined = symbolErrorType?.placeholder;
@@ -34,7 +35,7 @@ export const useTypeError = ({
     typeErrorName = 'Error';
   }
   if (client.name === '@hey-api/client-axios') {
-    const symbol = plugin.referenceSymbol(plugin.api.getSelector('AxiosError'));
+    const symbol = plugin.referenceSymbol(plugin.api.selector('AxiosError'));
     typeErrorName = `${symbol.placeholder}<${typeErrorName}>`;
   }
   return typeErrorName;
@@ -49,7 +50,7 @@ export const useTypeResponse = ({
 }): string => {
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
   const symbolResponseType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('response', operation.id),
+    pluginTypeScript.api.selector('response', operation.id),
   );
   return symbolResponseType?.placeholder || 'unknown';
 };

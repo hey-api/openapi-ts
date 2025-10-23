@@ -7,12 +7,20 @@ import type {
   SymbolIn,
 } from '@hey-api/codegen-core';
 
-import { HeyApiError } from '../../../error';
-import type { IR } from '../../../ir/types';
-import type { OpenApi } from '../../../openApi/types';
-import type { PluginConfigMap } from '../../config';
-import type { Plugin } from '../../types';
-import type { WalkEvent, WalkEventType } from '../types/instance';
+import { HeyApiError } from '~/error';
+import type { IrTopLevelKind } from '~/ir/graph';
+import {
+  irTopLevelKinds,
+  matchIrTopLevelPointer,
+  walkTopological,
+} from '~/ir/graph';
+import type { IR } from '~/ir/types';
+import type { OpenApi } from '~/openApi/types';
+import type { PluginConfigMap } from '~/plugins/config';
+import type { Plugin } from '~/plugins/types';
+import { jsonPointerToPath } from '~/utils/ref';
+
+import type { WalkEvent, WalkOptions } from '../types/instance';
 
 const defaultGetFilePath = (symbol: Symbol): string | undefined => {
   if (!symbol.meta?.pluginName || typeof symbol.meta.pluginName !== 'string') {
@@ -108,108 +116,51 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    *   }
    * });
    */
-  forEach<T extends WalkEventType = WalkEventType>(
+  forEach<T extends IrTopLevelKind = IrTopLevelKind>(
     ...args: [
       ...events: ReadonlyArray<T>,
       callback: (event: WalkEvent<T>) => void,
     ]
+  ): void;
+  forEach<T extends IrTopLevelKind = IrTopLevelKind>(
+    ...args: [
+      ...events: ReadonlyArray<T>,
+      callback: (event: WalkEvent<T>) => void,
+      options: WalkOptions,
+    ]
+  ): void;
+  forEach<T extends IrTopLevelKind = IrTopLevelKind>(
+    ...args: [
+      ...events: ReadonlyArray<T>,
+      callback: (event: WalkEvent<T>) => void,
+      options: any,
+    ]
   ): void {
-    const events = args.slice(0, -1) as ReadonlyArray<T>;
-    const callback = args[args.length - 1] as (event: WalkEvent<T>) => void;
-    const eventSet = new Set(
-      events.length
-        ? events
-        : ([
-            'operation',
-            'parameter',
-            'requestBody',
-            'schema',
-            'server',
-            'webhook',
-          ] as ReadonlyArray<WalkEventType>),
-    );
-
-    if (eventSet.has('server') && this.context.ir.servers) {
-      for (const server of this.context.ir.servers) {
-        const event: WalkEvent<'server'> = {
-          _path: ['servers', String(this.context.ir.servers.indexOf(server))],
-          server,
-          type: 'server',
-        };
-        try {
-          callback(event as WalkEvent<T>);
-        } catch (error) {
-          this.forEachError(error, event);
-        }
-      }
+    let callback: (event: WalkEvent<T>) => void;
+    let events: ReadonlyArray<T>;
+    let options: Required<WalkOptions> = {
+      order: 'topological',
+    };
+    if (typeof args[args.length - 1] === 'function') {
+      events = args.slice(0, -1);
+      callback = args[args.length - 1];
+    } else {
+      events = args.slice(0, -2);
+      callback = args[args.length - 2];
+      options = {
+        ...options,
+        ...args[args.length - 1],
+      };
     }
+    const eventSet = new Set(events.length ? events : irTopLevelKinds);
 
-    if (eventSet.has('schema') && this.context.ir.components?.schemas) {
-      for (const name in this.context.ir.components.schemas) {
-        const event: WalkEvent<'schema'> = {
-          $ref: `#/components/schemas/${name}`,
-          _path: ['components', 'schemas', name],
-          name,
-          schema: this.context.ir.components.schemas[name]!,
-          type: 'schema',
-        };
-        try {
-          callback(event as WalkEvent<T>);
-        } catch (error) {
-          this.forEachError(error, event);
-        }
-      }
-    }
-
-    if (eventSet.has('parameter') && this.context.ir.components?.parameters) {
-      for (const name in this.context.ir.components.parameters) {
-        const event: WalkEvent<'parameter'> = {
-          $ref: `#/components/parameters/${name}`,
-          _path: ['components', 'parameters', name],
-          name,
-          parameter: this.context.ir.components.parameters[name]!,
-          type: 'parameter',
-        };
-        try {
-          callback(event as WalkEvent<T>);
-        } catch (error) {
-          this.forEachError(error, event);
-        }
-      }
-    }
-
-    if (
-      eventSet.has('requestBody') &&
-      this.context.ir.components?.requestBodies
-    ) {
-      for (const name in this.context.ir.components.requestBodies) {
-        const event: WalkEvent<'requestBody'> = {
-          $ref: `#/components/requestBodies/${name}`,
-          _path: ['components', 'requestBodies', name],
-          name,
-          requestBody: this.context.ir.components.requestBodies[name]!,
-          type: 'requestBody',
-        };
-        try {
-          callback(event as WalkEvent<T>);
-        } catch (error) {
-          this.forEachError(error, event);
-        }
-      }
-    }
-
-    if (eventSet.has('operation') && this.context.ir.paths) {
-      for (const path in this.context.ir.paths) {
-        const pathItem =
-          this.context.ir.paths[path as keyof typeof this.context.ir.paths];
-        for (const _method in pathItem) {
-          const method = _method as keyof typeof pathItem;
-          const event: WalkEvent<'operation'> = {
-            _path: ['paths', path, method],
-            method,
-            operation: pathItem[method]!,
-            path,
-            type: 'operation',
+    if (options.order === 'declarations') {
+      if (eventSet.has('server') && this.context.ir.servers) {
+        for (const server of this.context.ir.servers) {
+          const event: WalkEvent<'server'> = {
+            _path: ['servers', String(this.context.ir.servers.indexOf(server))],
+            server,
+            type: 'server',
           };
           try {
             callback(event as WalkEvent<T>);
@@ -218,19 +169,15 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
           }
         }
       }
-    }
 
-    if (eventSet.has('webhook') && this.context.ir.webhooks) {
-      for (const key in this.context.ir.webhooks) {
-        const webhook = this.context.ir.webhooks[key];
-        for (const _method in webhook) {
-          const method = _method as keyof typeof webhook;
-          const event: WalkEvent<'webhook'> = {
-            _path: ['webhooks', key, method],
-            key,
-            method,
-            operation: webhook[method]!,
-            type: 'webhook',
+      if (eventSet.has('schema') && this.context.ir.components?.schemas) {
+        for (const name in this.context.ir.components.schemas) {
+          const event: WalkEvent<'schema'> = {
+            $ref: `#/components/schemas/${name}`,
+            _path: ['components', 'schemas', name],
+            name,
+            schema: this.context.ir.components.schemas[name]!,
+            type: 'schema',
           };
           try {
             callback(event as WalkEvent<T>);
@@ -239,6 +186,153 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
           }
         }
       }
+
+      if (eventSet.has('parameter') && this.context.ir.components?.parameters) {
+        for (const name in this.context.ir.components.parameters) {
+          const event: WalkEvent<'parameter'> = {
+            $ref: `#/components/parameters/${name}`,
+            _path: ['components', 'parameters', name],
+            name,
+            parameter: this.context.ir.components.parameters[name]!,
+            type: 'parameter',
+          };
+          try {
+            callback(event as WalkEvent<T>);
+          } catch (error) {
+            this.forEachError(error, event);
+          }
+        }
+      }
+
+      if (
+        eventSet.has('requestBody') &&
+        this.context.ir.components?.requestBodies
+      ) {
+        for (const name in this.context.ir.components.requestBodies) {
+          const event: WalkEvent<'requestBody'> = {
+            $ref: `#/components/requestBodies/${name}`,
+            _path: ['components', 'requestBodies', name],
+            name,
+            requestBody: this.context.ir.components.requestBodies[name]!,
+            type: 'requestBody',
+          };
+          try {
+            callback(event as WalkEvent<T>);
+          } catch (error) {
+            this.forEachError(error, event);
+          }
+        }
+      }
+
+      if (eventSet.has('operation') && this.context.ir.paths) {
+        for (const path in this.context.ir.paths) {
+          const pathItem =
+            this.context.ir.paths[path as keyof typeof this.context.ir.paths];
+          for (const _method in pathItem) {
+            const method = _method as keyof typeof pathItem;
+            const event: WalkEvent<'operation'> = {
+              _path: ['paths', path, method],
+              method,
+              operation: pathItem[method]!,
+              path,
+              type: 'operation',
+            };
+            try {
+              callback(event as WalkEvent<T>);
+            } catch (error) {
+              this.forEachError(error, event);
+            }
+          }
+        }
+      }
+
+      if (eventSet.has('webhook') && this.context.ir.webhooks) {
+        for (const key in this.context.ir.webhooks) {
+          const webhook = this.context.ir.webhooks[key];
+          for (const _method in webhook) {
+            const method = _method as keyof typeof webhook;
+            const event: WalkEvent<'webhook'> = {
+              _path: ['webhooks', key, method],
+              key,
+              method,
+              operation: webhook[method]!,
+              type: 'webhook',
+            };
+            try {
+              callback(event as WalkEvent<T>);
+            } catch (error) {
+              this.forEachError(error, event);
+            }
+          }
+        }
+      }
+    } else if (options.order === 'topological' && this.context.graph) {
+      walkTopological(this.context.graph, (pointer, nodeInfo) => {
+        const result = matchIrTopLevelPointer(pointer);
+        if (!result.matched || !eventSet.has(result.kind)) return;
+        let event: WalkEvent | undefined;
+        switch (result.kind) {
+          case 'operation':
+            event = {
+              _path: jsonPointerToPath(pointer),
+              method: nodeInfo.key as keyof IR.PathItemObject,
+              operation: nodeInfo.node as IR.OperationObject,
+              path: jsonPointerToPath(pointer)[1]!,
+              type: result.kind,
+            } satisfies WalkEvent<'operation'>;
+            break;
+          case 'parameter':
+            event = {
+              $ref: pointer,
+              _path: jsonPointerToPath(pointer),
+              name: nodeInfo.key as string,
+              parameter: nodeInfo.node as IR.ParameterObject,
+              type: result.kind,
+            } satisfies WalkEvent<'parameter'>;
+            break;
+          case 'requestBody':
+            event = {
+              $ref: pointer,
+              _path: jsonPointerToPath(pointer),
+              name: nodeInfo.key as string,
+              requestBody: nodeInfo.node as IR.RequestBodyObject,
+              type: result.kind,
+            } satisfies WalkEvent<'requestBody'>;
+            break;
+          case 'schema':
+            event = {
+              $ref: pointer,
+              _path: jsonPointerToPath(pointer),
+              name: nodeInfo.key as string,
+              schema: nodeInfo.node as IR.SchemaObject,
+              type: result.kind,
+            } satisfies WalkEvent<'schema'>;
+            break;
+          case 'server':
+            event = {
+              _path: jsonPointerToPath(pointer),
+              server: nodeInfo.node as IR.ServerObject,
+              type: result.kind,
+            } satisfies WalkEvent<'server'>;
+            break;
+          case 'webhook':
+            event = {
+              _path: jsonPointerToPath(pointer),
+              key: jsonPointerToPath(pointer)[1]!,
+              method: nodeInfo.key as keyof IR.PathItemObject,
+              operation: nodeInfo.node as IR.OperationObject,
+              type: result.kind,
+            } satisfies WalkEvent<'webhook'>;
+            break;
+        }
+        if (event) {
+          try {
+            callback(event as WalkEvent<T>);
+          } catch (error) {
+            this.forEachError(error, event);
+          }
+        }
+      });
     }
   }
 
@@ -352,6 +446,10 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       return getKindFnParserResult.includes(kind);
     }
     return (defaultGetKind(operation) ?? []).includes(kind);
+  }
+
+  isSymbolRegistered(symbolIdOrSelector: number | Selector): boolean {
+    return this.gen.symbols.isRegistered(symbolIdOrSelector);
   }
 
   referenceSymbol(symbolIdOrSelector: number | Selector): Symbol {

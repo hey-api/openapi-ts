@@ -1,4 +1,4 @@
-import type { IR } from '../../../ir/types';
+import type { IR } from '~/ir/types';
 
 export const mergeParametersObjects = ({
   source,

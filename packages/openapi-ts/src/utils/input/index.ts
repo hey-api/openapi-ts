@@ -1,4 +1,5 @@
-import type { Input } from '../../types/input';
+import type { Input } from '~/types/input';
+
 import { heyApiRegistryBaseUrl, inputToHeyApiPath } from './heyApi';
 import { inputToReadmePath } from './readme';
 import { inputToScalarPath } from './scalar';

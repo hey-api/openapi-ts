@@ -1,19 +1,16 @@
-import type { IR } from '../../ir/types';
-import { buildName } from '../../openApi/shared/utils/name';
-import { pathToSymbolResourceType } from '../shared/utils/meta';
-import { schemaToValibotSchema, type State } from './plugin';
-import type { ValibotPlugin } from './types';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import { pathToSymbolResourceType } from '~/plugins/shared/utils/meta';
 
-export const webhookToValibotSchema = ({
-  _path,
+import type { IrSchemaToAstOptions } from '../shared/types';
+import { irSchemaToAst } from './plugin';
+
+export const irWebhookToAst = ({
   operation,
   plugin,
   state,
-}: {
-  _path: ReadonlyArray<string | number>;
+}: IrSchemaToAstOptions & {
   operation: IR.OperationObject;
-  plugin: ValibotPlugin['Instance'];
-  state: State;
 }) => {
   if (plugin.config.webhooks.enabled) {
     const requiredProperties = new Set<string>();
@@ -116,16 +113,15 @@ export const webhookToValibotSchema = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
-        resourceType: pathToSymbolResourceType(_path),
+        resourceType: pathToSymbolResourceType(state._path.value),
       },
       name: buildName({
         config: plugin.config.webhooks,
         name: operation.id,
       }),
-      selector: plugin.api.getSelector('webhook-request', operation.id),
+      selector: plugin.api.selector('webhook-request', operation.id),
     });
-    schemaToValibotSchema({
-      _path,
+    irSchemaToAst({
       plugin,
       schema: schemaData,
       state,

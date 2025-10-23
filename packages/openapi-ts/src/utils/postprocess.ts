@@ -1,7 +1,8 @@
-import type { Client as ParserClient, Model } from '../openApi';
-import { sanitizeNamespaceIdentifier } from '../openApi';
-import type { Client, Operation, Service } from '../types/client';
-import type { Config } from '../types/config';
+import type { Client as ParserClient, Model } from '~/openApi';
+import { sanitizeNamespaceIdentifier } from '~/openApi';
+import type { Client, Operation, Service } from '~/types/client';
+import type { Config } from '~/types/config';
+
 import { getConfig, legacyNameFromConfig } from './config';
 import { sort } from './sort';
 import { stringCase } from './stringCase';

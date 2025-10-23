@@ -1,10 +1,11 @@
 import type ts from 'typescript';
 
-import { clientFolderAbsolutePath } from '../../../generate/client';
-import { tsc } from '../../../tsc';
-import { stringCase } from '../../../utils/stringCase';
-import { isOperationOptionsRequired } from '../../shared/utils/operation';
-import { getClientPlugin } from '../client-core/utils';
+import { clientFolderAbsolutePath } from '~/generate/client';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { isOperationOptionsRequired } from '~/plugins/shared/utils/operation';
+import { tsc } from '~/tsc';
+import { stringCase } from '~/utils/stringCase';
+
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import {
   operationClasses,
@@ -34,13 +35,13 @@ const createClientClassNodes = ({
     }),
   });
 
-  const symbolClient = plugin.referenceSymbol(plugin.api.getSelector('Client'));
+  const symbolClient = plugin.referenceSymbol(plugin.api.selector('Client'));
   const client = getClientPlugin(plugin.context.config);
   const symClient =
-    client.api && 'getSelector' in client.api
+    client.api && 'selector' in client.api
       ? plugin.getSymbol(
           // @ts-expect-error
-          client.api.getSelector('client'),
+          client.api.selector('client'),
         )
       : undefined;
 
@@ -136,138 +137,144 @@ const generateClassSdk = ({
     ? createClientClassNodes({ plugin })
     : [];
 
-  plugin.forEach('operation', ({ operation }) => {
-    const isRequiredOptions = isOperationOptionsRequired({
-      context: plugin.context,
-      operation,
-    });
-    const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-    const symbolResponse = isNuxtClient
-      ? plugin.getSymbol(
-          pluginTypeScript.api.getSelector('response', operation.id),
-        )
-      : undefined;
-
-    const classes = operationClasses({
-      context: plugin.context,
-      operation,
-      plugin,
-    });
-
-    for (const entry of classes.values()) {
-      entry.path.forEach((currentClassName, index) => {
-        const symbolCurrentClass = plugin.referenceSymbol(
-          plugin.api.getSelector('class', currentClassName),
-        );
-        if (!sdkClasses.has(symbolCurrentClass.id)) {
-          sdkClasses.set(symbolCurrentClass.id, {
-            className: currentClassName,
-            classes: new Set(),
-            id: symbolCurrentClass.id,
-            methods: new Set(),
-            nodes: [],
-            root: !index,
-          });
-        }
-
-        const parentClassName = entry.path[index - 1];
-        if (parentClassName) {
-          const symbolParentClass = plugin.referenceSymbol(
-            plugin.api.getSelector('class', parentClassName),
-          );
-          if (
-            symbolParentClass.placeholder !== symbolCurrentClass.placeholder
-          ) {
-            const parentClass = sdkClasses.get(symbolParentClass.id)!;
-            parentClass.classes.add(symbolCurrentClass.id);
-            sdkClasses.set(symbolParentClass.id, parentClass);
-          }
-        }
-
-        const isLast = entry.path.length === index + 1;
-        // add methods only to the last class
-        if (!isLast) {
-          return;
-        }
-
-        const currentClass = sdkClasses.get(symbolCurrentClass.id)!;
-
-        // avoid duplicate methods
-        if (currentClass.methods.has(entry.methodName)) {
-          return;
-        }
-
-        const opParameters = operationParameters({
-          isRequiredOptions,
-          operation,
-          plugin,
-        });
-        const statements = operationStatements({
-          isRequiredOptions,
-          opParameters,
-          operation,
-          plugin,
-        });
-        const functionNode = tsc.methodDeclaration({
-          accessLevel: 'public',
-          comment: plugin.api.createOperationComment({ operation }),
-          isStatic: isAngularClient ? false : !plugin.config.instance,
-          name: entry.methodName,
-          parameters: opParameters.parameters,
-          returnType: undefined,
-          statements,
-          types: isNuxtClient
-            ? [
-                {
-                  default: tsc.ots.string('$fetch'),
-                  extends: tsc.typeNode(
-                    plugin.referenceSymbol(plugin.api.getSelector('Composable'))
-                      .placeholder,
-                  ),
-                  name: nuxtTypeComposable,
-                },
-                {
-                  default: symbolResponse
-                    ? tsc.typeReferenceNode({
-                        typeName: symbolResponse.placeholder,
-                      })
-                    : tsc.typeNode('undefined'),
-                  extends: symbolResponse
-                    ? tsc.typeReferenceNode({
-                        typeName: symbolResponse.placeholder,
-                      })
-                    : undefined,
-                  name: nuxtTypeDefault,
-                },
-              ]
-            : [
-                {
-                  default:
-                    ('throwOnError' in client.config
-                      ? client.config.throwOnError
-                      : false) ?? false,
-                  extends: 'boolean',
-                  name: 'ThrowOnError',
-                },
-              ],
-        });
-
-        if (!currentClass.nodes.length) {
-          currentClass.nodes.push(functionNode);
-        } else {
-          currentClass.nodes.push(
-            // @ts-expect-error
-            tsc.identifier({ text: '\n' }),
-            functionNode,
-          );
-        }
-
-        currentClass.methods.add(entry.methodName);
-
-        sdkClasses.set(symbolCurrentClass.id, currentClass);
+  plugin.forEach(
+    'operation',
+    ({ operation }) => {
+      const isRequiredOptions = isOperationOptionsRequired({
+        context: plugin.context,
+        operation,
       });
-    }
-  });
+      const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+      const symbolResponse = isNuxtClient
+        ? plugin.getSymbol(
+            pluginTypeScript.api.selector('response', operation.id),
+          )
+        : undefined;
+
+      const classes = operationClasses({
+        context: plugin.context,
+        operation,
+        plugin,
+      });
+
+      for (const entry of classes.values()) {
+        entry.path.forEach((currentClassName, index) => {
+          const symbolCurrentClass = plugin.referenceSymbol(
+            plugin.api.selector('class', currentClassName),
+          );
+          if (!sdkClasses.has(symbolCurrentClass.id)) {
+            sdkClasses.set(symbolCurrentClass.id, {
+              className: currentClassName,
+              classes: new Set(),
+              id: symbolCurrentClass.id,
+              methods: new Set(),
+              nodes: [],
+              root: !index,
+            });
+          }
+
+          const parentClassName = entry.path[index - 1];
+          if (parentClassName) {
+            const symbolParentClass = plugin.referenceSymbol(
+              plugin.api.selector('class', parentClassName),
+            );
+            if (
+              symbolParentClass.placeholder !== symbolCurrentClass.placeholder
+            ) {
+              const parentClass = sdkClasses.get(symbolParentClass.id)!;
+              parentClass.classes.add(symbolCurrentClass.id);
+              sdkClasses.set(symbolParentClass.id, parentClass);
+            }
+          }
+
+          const isLast = entry.path.length === index + 1;
+          // add methods only to the last class
+          if (!isLast) {
+            return;
+          }
+
+          const currentClass = sdkClasses.get(symbolCurrentClass.id)!;
+
+          // avoid duplicate methods
+          if (currentClass.methods.has(entry.methodName)) {
+            return;
+          }
+
+          const opParameters = operationParameters({
+            isRequiredOptions,
+            operation,
+            plugin,
+          });
+          const statements = operationStatements({
+            isRequiredOptions,
+            opParameters,
+            operation,
+            plugin,
+          });
+          const functionNode = tsc.methodDeclaration({
+            accessLevel: 'public',
+            comment: plugin.api.createOperationComment({ operation }),
+            isStatic: isAngularClient ? false : !plugin.config.instance,
+            name: entry.methodName,
+            parameters: opParameters.parameters,
+            returnType: undefined,
+            statements,
+            types: isNuxtClient
+              ? [
+                  {
+                    default: tsc.ots.string('$fetch'),
+                    extends: tsc.typeNode(
+                      plugin.referenceSymbol(plugin.api.selector('Composable'))
+                        .placeholder,
+                    ),
+                    name: nuxtTypeComposable,
+                  },
+                  {
+                    default: symbolResponse
+                      ? tsc.typeReferenceNode({
+                          typeName: symbolResponse.placeholder,
+                        })
+                      : tsc.typeNode('undefined'),
+                    extends: symbolResponse
+                      ? tsc.typeReferenceNode({
+                          typeName: symbolResponse.placeholder,
+                        })
+                      : undefined,
+                    name: nuxtTypeDefault,
+                  },
+                ]
+              : [
+                  {
+                    default:
+                      ('throwOnError' in client.config
+                        ? client.config.throwOnError
+                        : false) ?? false,
+                    extends: 'boolean',
+                    name: 'ThrowOnError',
+                  },
+                ],
+          });
+
+          if (!currentClass.nodes.length) {
+            currentClass.nodes.push(functionNode);
+          } else {
+            currentClass.nodes.push(
+              // @ts-expect-error
+              tsc.identifier({ text: '\n' }),
+              functionNode,
+            );
+          }
+
+          currentClass.methods.add(entry.methodName);
+
+          sdkClasses.set(symbolCurrentClass.id, currentClass);
+        });
+      }
+    },
+    {
+      order: 'declarations',
+    },
+  );
 
   const symbolHeyApiClient = plugin.registerSymbol({
     exported: false,
@@ -324,7 +331,7 @@ const generateClassSdk = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       name: currentClass.className,
-      selector: plugin.api.getSelector('class', currentClass.className),
+      selector: plugin.api.selector('class', currentClass.className),
     });
     const node = tsc.classDeclaration({
       decorator:
@@ -335,7 +342,7 @@ const generateClassSdk = ({
                   providedIn: 'root',
                 },
               ],
-              name: plugin.referenceSymbol(plugin.api.getSelector('Injectable'))
+              name: plugin.referenceSymbol(plugin.api.selector('Injectable'))
                 .placeholder,
             }
           : undefined,
@@ -372,83 +379,89 @@ const generateFlatSdk = ({
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  plugin.forEach('operation', ({ operation }) => {
-    const isRequiredOptions = isOperationOptionsRequired({
-      context: plugin.context,
-      operation,
-    });
-    const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-    const symbolResponse = isNuxtClient
-      ? plugin.getSymbol(
-          pluginTypeScript.api.getSelector('response', operation.id),
-        )
-      : undefined;
-    const opParameters = operationParameters({
-      isRequiredOptions,
-      operation,
-      plugin,
-    });
-    const statements = operationStatements({
-      isRequiredOptions,
-      opParameters,
-      operation,
-      plugin,
-    });
-    const symbol = plugin.registerSymbol({
-      name: serviceFunctionIdentifier({
-        config: plugin.context.config,
-        handleIllegal: true,
-        id: operation.id,
+  plugin.forEach(
+    'operation',
+    ({ operation }) => {
+      const isRequiredOptions = isOperationOptionsRequired({
+        context: plugin.context,
         operation,
-      }),
-      selector: plugin.api.getSelector('function', operation.id),
-    });
-    const node = tsc.constVariable({
-      comment: plugin.api.createOperationComment({ operation }),
-      exportConst: true,
-      expression: tsc.arrowFunction({
-        parameters: opParameters.parameters,
-        returnType: undefined,
-        statements,
-        types: isNuxtClient
-          ? [
-              {
-                default: tsc.ots.string('$fetch'),
-                extends: tsc.typeNode(
-                  plugin.referenceSymbol(plugin.api.getSelector('Composable'))
-                    .placeholder,
-                ),
-                name: nuxtTypeComposable,
-              },
-              {
-                default: symbolResponse
-                  ? tsc.typeReferenceNode({
-                      typeName: symbolResponse.placeholder,
-                    })
-                  : tsc.typeNode('undefined'),
-                extends: symbolResponse
-                  ? tsc.typeReferenceNode({
-                      typeName: symbolResponse.placeholder,
-                    })
-                  : undefined,
-                name: nuxtTypeDefault,
-              },
-            ]
-          : [
-              {
-                default:
-                  ('throwOnError' in client.config
-                    ? client.config.throwOnError
-                    : false) ?? false,
-                extends: 'boolean',
-                name: 'ThrowOnError',
-              },
-            ],
-      }),
-      name: symbol.placeholder,
-    });
-    plugin.setSymbolValue(symbol, node);
-  });
+      });
+      const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+      const symbolResponse = isNuxtClient
+        ? plugin.getSymbol(
+            pluginTypeScript.api.selector('response', operation.id),
+          )
+        : undefined;
+      const opParameters = operationParameters({
+        isRequiredOptions,
+        operation,
+        plugin,
+      });
+      const statements = operationStatements({
+        isRequiredOptions,
+        opParameters,
+        operation,
+        plugin,
+      });
+      const symbol = plugin.registerSymbol({
+        name: serviceFunctionIdentifier({
+          config: plugin.context.config,
+          handleIllegal: true,
+          id: operation.id,
+          operation,
+        }),
+        selector: plugin.api.selector('function', operation.id),
+      });
+      const node = tsc.constVariable({
+        comment: plugin.api.createOperationComment({ operation }),
+        exportConst: true,
+        expression: tsc.arrowFunction({
+          parameters: opParameters.parameters,
+          returnType: undefined,
+          statements,
+          types: isNuxtClient
+            ? [
+                {
+                  default: tsc.ots.string('$fetch'),
+                  extends: tsc.typeNode(
+                    plugin.referenceSymbol(plugin.api.selector('Composable'))
+                      .placeholder,
+                  ),
+                  name: nuxtTypeComposable,
+                },
+                {
+                  default: symbolResponse
+                    ? tsc.typeReferenceNode({
+                        typeName: symbolResponse.placeholder,
+                      })
+                    : tsc.typeNode('undefined'),
+                  extends: symbolResponse
+                    ? tsc.typeReferenceNode({
+                        typeName: symbolResponse.placeholder,
+                      })
+                    : undefined,
+                  name: nuxtTypeDefault,
+                },
+              ]
+            : [
+                {
+                  default:
+                    ('throwOnError' in client.config
+                      ? client.config.throwOnError
+                      : false) ?? false,
+                  extends: 'boolean',
+                  name: 'ThrowOnError',
+                },
+              ],
+        }),
+        name: symbol.placeholder,
+      });
+      plugin.setSymbolValue(symbol, node);
+    },
+    {
+      order: 'declarations',
+    },
+  );
 };
 
 export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
@@ -456,17 +469,17 @@ export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: clientModule,
     name: 'formDataBodySerializer',
-    selector: plugin.api.getSelector('formDataBodySerializer'),
+    selector: plugin.api.selector('formDataBodySerializer'),
   });
   plugin.registerSymbol({
     external: clientModule,
     name: 'urlSearchParamsBodySerializer',
-    selector: plugin.api.getSelector('urlSearchParamsBodySerializer'),
+    selector: plugin.api.selector('urlSearchParamsBodySerializer'),
   });
   plugin.registerSymbol({
     external: clientModule,
     name: 'buildClientParams',
-    selector: plugin.api.getSelector('buildClientParams'),
+    selector: plugin.api.selector('buildClientParams'),
   });
 
   const client = getClientPlugin(plugin.context.config);
@@ -479,7 +492,7 @@ export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
         kind: 'type',
       },
       name: 'Composable',
-      selector: plugin.api.getSelector('Composable'),
+      selector: plugin.api.selector('Composable'),
     });
   }
 
@@ -487,7 +500,7 @@ export const handler: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
     plugin.registerSymbol({
       external: '@angular/core',
       name: 'Injectable',
-      selector: plugin.api.getSelector('Injectable'),
+      selector: plugin.api.selector('Injectable'),
     });
   }
 

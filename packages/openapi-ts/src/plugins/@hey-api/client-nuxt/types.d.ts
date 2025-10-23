@@ -1,5 +1,6 @@
-import type { DefinePlugin, Plugin } from '../../types';
-import type { Client } from '../client-core/types';
+import type { Client } from '~/plugins/@hey-api/client-core/types';
+import type { DefinePlugin, Plugin } from '~/plugins/types';
+
 import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'@hey-api/client-nuxt'> & Client.Config;

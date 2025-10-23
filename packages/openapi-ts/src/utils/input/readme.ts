@@ -1,4 +1,4 @@
-import type { Input } from '../../types/input';
+import type { Input } from '~/types/input';
 
 // Regular expression to match ReadMe API Registry input formats:
 //   - @{organization}/{project}#{uuid}

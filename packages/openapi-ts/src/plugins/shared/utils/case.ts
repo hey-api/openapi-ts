@@ -1,8 +1,8 @@
 import ts from 'typescript';
 
-import type { IR } from '../../../ir/types';
-import { numberRegExp } from '../../../utils/regexp';
-import { stringCase } from '../../../utils/stringCase';
+import type { IR } from '~/ir/types';
+import { numberRegExp } from '~/utils/regexp';
+import { stringCase } from '~/utils/stringCase';
 
 /**
  * Returns final field name for object properties. This might differ from the

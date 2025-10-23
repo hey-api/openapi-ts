@@ -3,8 +3,9 @@ import path from 'node:path';
 
 import type { ProjectRenderMeta } from '@hey-api/codegen-core';
 
-import type { IR } from '../ir/types';
-import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
+import type { IR } from '~/ir/types';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+
 import { generateClientBundle } from './client';
 import { removeDirSync } from './utils';
 

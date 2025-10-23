@@ -1,54 +1,56 @@
-import type { AngularCommonPlugin } from './@angular/common';
-import { defaultConfig as angularCommon } from './@angular/common';
-import type { HeyApiClientAngularPlugin } from './@hey-api/client-angular';
-import { defaultConfig as heyApiClientAngular } from './@hey-api/client-angular';
-import type { HeyApiClientAxiosPlugin } from './@hey-api/client-axios';
-import { defaultConfig as heyApiClientAxios } from './@hey-api/client-axios';
-import type { HeyApiClientFetchPlugin } from './@hey-api/client-fetch';
-import { defaultConfig as heyApiClientFetch } from './@hey-api/client-fetch';
-import type { HeyApiClientNextPlugin } from './@hey-api/client-next';
-import { defaultConfig as heyApiClientNext } from './@hey-api/client-next';
-import type { HeyApiClientNuxtPlugin } from './@hey-api/client-nuxt';
-import { defaultConfig as heyApiClientNuxt } from './@hey-api/client-nuxt';
-import type { HeyApiClientOfetchPlugin } from './@hey-api/client-ofetch';
-import { defaultConfig as heyApiClientOfetch } from './@hey-api/client-ofetch';
-import type { HeyApiClientLegacyAngularPlugin } from './@hey-api/legacy-angular';
-import { defaultConfig as heyApiLegacyAngular } from './@hey-api/legacy-angular';
-import type { HeyApiClientLegacyAxiosPlugin } from './@hey-api/legacy-axios';
-import { defaultConfig as heyApiLegacyAxios } from './@hey-api/legacy-axios';
-import type { HeyApiClientLegacyFetchPlugin } from './@hey-api/legacy-fetch';
-import { defaultConfig as heyApiLegacyFetch } from './@hey-api/legacy-fetch';
-import type { HeyApiClientLegacyNodePlugin } from './@hey-api/legacy-node';
-import { defaultConfig as heyApiLegacyNode } from './@hey-api/legacy-node';
-import type { HeyApiClientLegacyXhrPlugin } from './@hey-api/legacy-xhr';
-import { defaultConfig as heyApiLegacyXhr } from './@hey-api/legacy-xhr';
-import type { HeyApiSchemasPlugin } from './@hey-api/schemas';
-import { defaultConfig as heyApiSchemas } from './@hey-api/schemas';
-import type { HeyApiSdkPlugin } from './@hey-api/sdk';
-import { defaultConfig as heyApiSdk } from './@hey-api/sdk';
-import type { HeyApiTransformersPlugin } from './@hey-api/transformers';
-import { defaultConfig as heyApiTransformers } from './@hey-api/transformers';
-import type { HeyApiTypeScriptPlugin } from './@hey-api/typescript';
-import { defaultConfig as heyApiTypeScript } from './@hey-api/typescript';
-import type { PiniaColadaPlugin } from './@pinia/colada';
-import { defaultConfig as piniaColada } from './@pinia/colada';
-import type { TanStackAngularQueryPlugin } from './@tanstack/angular-query-experimental';
-import { defaultConfig as tanStackAngularQuery } from './@tanstack/angular-query-experimental';
-import type { TanStackReactQueryPlugin } from './@tanstack/react-query';
-import { defaultConfig as tanStackReactQuery } from './@tanstack/react-query';
-import type { TanStackSolidQueryPlugin } from './@tanstack/solid-query';
-import { defaultConfig as tanStackSolidQuery } from './@tanstack/solid-query';
-import type { TanStackSvelteQueryPlugin } from './@tanstack/svelte-query';
-import { defaultConfig as tanStackSvelteQuery } from './@tanstack/svelte-query';
-import type { TanStackVueQueryPlugin } from './@tanstack/vue-query';
-import { defaultConfig as tanStackVueQuery } from './@tanstack/vue-query';
-import type { FastifyPlugin } from './fastify';
-import { defaultConfig as fastify } from './fastify';
-import type { Plugin, PluginNames } from './types';
-import type { ValibotPlugin } from './valibot';
-import { defaultConfig as valibot } from './valibot';
-import type { ZodPlugin } from './zod';
-import { defaultConfig as zod } from './zod';
+import type { AngularCommonPlugin } from '~/plugins/@angular/common';
+import { defaultConfig as angularCommon } from '~/plugins/@angular/common';
+import type { HeyApiClientAngularPlugin } from '~/plugins/@hey-api/client-angular';
+import { defaultConfig as heyApiClientAngular } from '~/plugins/@hey-api/client-angular';
+import type { HeyApiClientAxiosPlugin } from '~/plugins/@hey-api/client-axios';
+import { defaultConfig as heyApiClientAxios } from '~/plugins/@hey-api/client-axios';
+import type { HeyApiClientFetchPlugin } from '~/plugins/@hey-api/client-fetch';
+import { defaultConfig as heyApiClientFetch } from '~/plugins/@hey-api/client-fetch';
+import type { HeyApiClientNextPlugin } from '~/plugins/@hey-api/client-next';
+import { defaultConfig as heyApiClientNext } from '~/plugins/@hey-api/client-next';
+import type { HeyApiClientNuxtPlugin } from '~/plugins/@hey-api/client-nuxt';
+import { defaultConfig as heyApiClientNuxt } from '~/plugins/@hey-api/client-nuxt';
+import type { HeyApiClientOfetchPlugin } from '~/plugins/@hey-api/client-ofetch';
+import { defaultConfig as heyApiClientOfetch } from '~/plugins/@hey-api/client-ofetch';
+import type { HeyApiClientLegacyAngularPlugin } from '~/plugins/@hey-api/legacy-angular';
+import { defaultConfig as heyApiLegacyAngular } from '~/plugins/@hey-api/legacy-angular';
+import type { HeyApiClientLegacyAxiosPlugin } from '~/plugins/@hey-api/legacy-axios';
+import { defaultConfig as heyApiLegacyAxios } from '~/plugins/@hey-api/legacy-axios';
+import type { HeyApiClientLegacyFetchPlugin } from '~/plugins/@hey-api/legacy-fetch';
+import { defaultConfig as heyApiLegacyFetch } from '~/plugins/@hey-api/legacy-fetch';
+import type { HeyApiClientLegacyNodePlugin } from '~/plugins/@hey-api/legacy-node';
+import { defaultConfig as heyApiLegacyNode } from '~/plugins/@hey-api/legacy-node';
+import type { HeyApiClientLegacyXhrPlugin } from '~/plugins/@hey-api/legacy-xhr';
+import { defaultConfig as heyApiLegacyXhr } from '~/plugins/@hey-api/legacy-xhr';
+import type { HeyApiSchemasPlugin } from '~/plugins/@hey-api/schemas';
+import { defaultConfig as heyApiSchemas } from '~/plugins/@hey-api/schemas';
+import type { HeyApiSdkPlugin } from '~/plugins/@hey-api/sdk';
+import { defaultConfig as heyApiSdk } from '~/plugins/@hey-api/sdk';
+import type { HeyApiTransformersPlugin } from '~/plugins/@hey-api/transformers';
+import { defaultConfig as heyApiTransformers } from '~/plugins/@hey-api/transformers';
+import type { HeyApiTypeScriptPlugin } from '~/plugins/@hey-api/typescript';
+import { defaultConfig as heyApiTypeScript } from '~/plugins/@hey-api/typescript';
+import type { PiniaColadaPlugin } from '~/plugins/@pinia/colada';
+import { defaultConfig as piniaColada } from '~/plugins/@pinia/colada';
+import type { TanStackAngularQueryPlugin } from '~/plugins/@tanstack/angular-query-experimental';
+import { defaultConfig as tanStackAngularQuery } from '~/plugins/@tanstack/angular-query-experimental';
+import type { TanStackReactQueryPlugin } from '~/plugins/@tanstack/react-query';
+import { defaultConfig as tanStackReactQuery } from '~/plugins/@tanstack/react-query';
+import type { TanStackSolidQueryPlugin } from '~/plugins/@tanstack/solid-query';
+import { defaultConfig as tanStackSolidQuery } from '~/plugins/@tanstack/solid-query';
+import type { TanStackSvelteQueryPlugin } from '~/plugins/@tanstack/svelte-query';
+import { defaultConfig as tanStackSvelteQuery } from '~/plugins/@tanstack/svelte-query';
+import type { TanStackVueQueryPlugin } from '~/plugins/@tanstack/vue-query';
+import { defaultConfig as tanStackVueQuery } from '~/plugins/@tanstack/vue-query';
+import type { ArktypePlugin } from '~/plugins/arktype';
+import { defaultConfig as arktype } from '~/plugins/arktype';
+import type { FastifyPlugin } from '~/plugins/fastify';
+import { defaultConfig as fastify } from '~/plugins/fastify';
+import type { Plugin, PluginNames } from '~/plugins/types';
+import type { ValibotPlugin } from '~/plugins/valibot';
+import { defaultConfig as valibot } from '~/plugins/valibot';
+import type { ZodPlugin } from '~/plugins/zod';
+import { defaultConfig as zod } from '~/plugins/zod';
 
 export interface PluginConfigMap {
   '@angular/common': AngularCommonPlugin['Types'];
@@ -68,6 +70,7 @@ export interface PluginConfigMap {
   '@tanstack/solid-query': TanStackSolidQueryPlugin['Types'];
   '@tanstack/svelte-query': TanStackSvelteQueryPlugin['Types'];
   '@tanstack/vue-query': TanStackVueQueryPlugin['Types'];
+  arktype: ArktypePlugin['Types'];
   fastify: FastifyPlugin['Types'];
   'legacy/angular': HeyApiClientLegacyAngularPlugin['Types'];
   'legacy/axios': HeyApiClientLegacyAxiosPlugin['Types'];
@@ -98,6 +101,7 @@ export const defaultPluginConfigs: {
   '@tanstack/solid-query': tanStackSolidQuery,
   '@tanstack/svelte-query': tanStackSvelteQuery,
   '@tanstack/vue-query': tanStackVueQuery,
+  arktype,
   fastify,
   'legacy/angular': heyApiLegacyAngular,
   'legacy/axios': heyApiLegacyAxios,

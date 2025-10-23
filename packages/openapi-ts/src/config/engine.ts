@@ -1,4 +1,4 @@
-import { ConfigError } from '../error';
+import { ConfigError } from '~/error';
 
 export const checkNodeVersion = () => {
   if (typeof Bun !== 'undefined') {
