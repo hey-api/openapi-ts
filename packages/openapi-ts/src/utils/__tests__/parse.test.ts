@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { operationNameFn } from '../../openApi/common/parser/operation';
+import { operationNameFn } from '~/openApi/common/parser/operation';
+
 import { setConfig } from '../config';
 
 describe('operationNameFn', () => {
@@ -72,7 +73,7 @@ describe('operationNameFn', () => {
       '@hey-api/sdk': {
         api: {
           createOperationComment: () => undefined,
-          getSelector: () => [],
+          selector: () => [],
         },
         config: {
           name: '@hey-api/sdk',
@@ -103,7 +104,7 @@ describe('operationNameFn', () => {
       '@hey-api/sdk': {
         api: {
           createOperationComment: () => undefined,
-          getSelector: () => [],
+          selector: () => [],
         },
         config: {
           name: '@hey-api/sdk',
@@ -124,7 +125,7 @@ describe('operationNameFn', () => {
       '@hey-api/sdk': {
         api: {
           createOperationComment: () => undefined,
-          getSelector: () => [],
+          selector: () => [],
         },
         config: {
           name: '@hey-api/sdk',
@@ -144,7 +145,7 @@ describe('operationNameFn', () => {
     plugins: {
       '@hey-api/client-fetch': {
         api: {
-          getSelector: () => [],
+          selector: () => [],
         },
         config: {
           name: '@hey-api/client-fetch',
@@ -157,7 +158,7 @@ describe('operationNameFn', () => {
       '@hey-api/sdk': {
         api: {
           createOperationComment: () => undefined,
-          getSelector: () => [],
+          selector: () => [],
         },
         config: {
           name: '@hey-api/sdk',
@@ -177,7 +178,7 @@ describe('operationNameFn', () => {
     plugins: {
       '@hey-api/client-fetch': {
         api: {
-          getSelector: () => [],
+          selector: () => [],
         },
         config: {
           name: '@hey-api/client-fetch',
@@ -190,7 +191,7 @@ describe('operationNameFn', () => {
       '@hey-api/sdk': {
         api: {
           createOperationComment: () => undefined,
-          getSelector: () => [],
+          selector: () => [],
         },
         config: {
           name: '@hey-api/sdk',

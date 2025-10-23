@@ -1,5 +1,6 @@
-import type { StringCase, StringName } from '../../types/case';
-import type { DefinePlugin, Plugin } from '../types';
+import type { DefinePlugin, Plugin } from '~/plugins/types';
+import type { StringCase, StringName } from '~/types/case';
+
 import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'zod'> &
@@ -96,7 +97,7 @@ export type UserConfig = Plugin.Name<'zod'> &
            */
           types?: {
             /**
-             * Configuration for `z.infer` types.
+             * Configuration for `infer` types.
              *
              * Can be:
              * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -189,7 +190,7 @@ export type UserConfig = Plugin.Name<'zod'> &
            */
           types?: {
             /**
-             * Configuration for `z.infer` types.
+             * Configuration for `infer` types.
              *
              * Can be:
              * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -267,7 +268,7 @@ export type UserConfig = Plugin.Name<'zod'> &
            */
           types?: {
             /**
-             * Configuration for `z.infer` types.
+             * Configuration for `infer` types.
              *
              * Can be:
              * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -309,7 +310,7 @@ export type UserConfig = Plugin.Name<'zod'> &
      */
     types?: {
       /**
-       * Configuration for `z.infer` types.
+       * Configuration for `infer` types.
        *
        * Can be:
        * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -378,7 +379,7 @@ export type UserConfig = Plugin.Name<'zod'> &
            */
           types?: {
             /**
-             * Configuration for `z.infer` types.
+             * Configuration for `infer` types.
              *
              * Can be:
              * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -499,7 +500,7 @@ export type Config = Plugin.Name<'zod'> &
        */
       types: {
         /**
-         * Configuration for `z.infer` types.
+         * Configuration for `infer` types.
          */
         infer: {
           /**
@@ -572,7 +573,7 @@ export type Config = Plugin.Name<'zod'> &
        */
       types: {
         /**
-         * Configuration for `z.infer` types.
+         * Configuration for `infer` types.
          */
         infer: {
           /**
@@ -630,7 +631,7 @@ export type Config = Plugin.Name<'zod'> &
        */
       types: {
         /**
-         * Configuration for `z.infer` types.
+         * Configuration for `infer` types.
          */
         infer: {
           /**
@@ -662,7 +663,7 @@ export type Config = Plugin.Name<'zod'> &
      */
     types: {
       /**
-       * Configuration for `z.infer` types.
+       * Configuration for `infer` types.
        */
       infer: {
         /**
@@ -711,7 +712,7 @@ export type Config = Plugin.Name<'zod'> &
        */
       types: {
         /**
-         * Configuration for `z.infer` types.
+         * Configuration for `infer` types.
          */
         infer: {
           /**

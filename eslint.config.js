@@ -8,9 +8,12 @@ import pluginTypeScriptSortKeys from 'eslint-plugin-typescript-sort-keys';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+import pluginLocalPaths from './eslint-rules/local-paths.js';
+
 export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
+  pluginLocalPaths.configs.recommended,
   {
     languageOptions: {
       ecmaVersion: 'latest',
@@ -19,6 +22,7 @@ export default tseslint.config(
       },
     },
     plugins: {
+      'local-paths': pluginLocalPaths,
       'simple-import-sort': pluginSimpleImportSort,
       'sort-destructure-keys': pluginSortDestructureKeys,
       'sort-keys-fix': pluginSortKeysFix,

@@ -1,10 +1,14 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { IR } from '../../../ir/types';
-import { tsc } from '../../../tsc';
-import { parseUrl } from '../../../utils/url';
-import { getClientBaseUrlKey, getClientPlugin } from '../client-core/utils';
+import type { IR } from '~/ir/types';
+import {
+  getClientBaseUrlKey,
+  getClientPlugin,
+} from '~/plugins/@hey-api/client-core/utils';
+import { tsc } from '~/tsc';
+import { parseUrl } from '~/utils/url';
+
 import type { HeyApiTypeScriptPlugin } from './types';
 
 const stringType = tsc.keywordTypeNode({ keyword: 'string' });

@@ -1,12 +1,13 @@
-import type { IR } from '../../../ir/types';
-import type { StringName } from '../../../types/case';
-import type { Operation } from '../../../types/client';
+import type { IR } from '~/ir/types';
 import type {
   DefinePlugin,
   Plugin,
   PluginClientNames,
   PluginValidatorNames,
-} from '../../types';
+} from '~/plugins/types';
+import type { StringName } from '~/types/case';
+import type { Operation } from '~/types/client';
+
 import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> &

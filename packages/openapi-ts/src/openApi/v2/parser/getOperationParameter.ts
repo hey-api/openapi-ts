@@ -1,11 +1,12 @@
+import type { OperationParameter } from '~/openApi/common/interfaces/client';
+import { getDefault } from '~/openApi/common/parser/getDefault';
+import { getEnums } from '~/openApi/common/parser/getEnums';
+import { getPattern } from '~/openApi/common/parser/getPattern';
+import { getRef } from '~/openApi/common/parser/getRef';
+import { operationParameterNameFn } from '~/openApi/common/parser/operation';
+import { getType } from '~/openApi/common/parser/type';
+
 import type { Client } from '../../../types/client';
-import type { OperationParameter } from '../../common/interfaces/client';
-import { getDefault } from '../../common/parser/getDefault';
-import { getEnums } from '../../common/parser/getEnums';
-import { getPattern } from '../../common/parser/getPattern';
-import { getRef } from '../../common/parser/getRef';
-import { operationParameterNameFn } from '../../common/parser/operation';
-import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';

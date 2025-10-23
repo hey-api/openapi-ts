@@ -1,5 +1,6 @@
+import type { Model, ModelMeta } from '~/openApi/common/interfaces/client';
+
 import type { Client } from '../../../types/client';
-import type { Model, ModelMeta } from '../../common/interfaces/client';
 import type { OpenApi } from './OpenApi';
 import type { OpenApiSchema } from './OpenApiSchema';
 

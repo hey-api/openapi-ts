@@ -1,4 +1,5 @@
-import { definePluginConfig } from '../../shared/utils/config';
+import { definePluginConfig } from '~/plugins/shared/utils/config';
+
 import type { HeyApiClientLegacyFetchPlugin } from './types';
 
 export const defaultConfig: HeyApiClientLegacyFetchPlugin['Config'] = {

@@ -1,6 +1,7 @@
-import { definePluginConfig } from '../../shared/utils/config';
-import { handler } from '../query-core/plugin';
-import { handlerLegacy } from '../query-core/plugin-legacy';
+import { handler } from '~/plugins/@tanstack/query-core/plugin';
+import { handlerLegacy } from '~/plugins/@tanstack/query-core/plugin-legacy';
+import { definePluginConfig } from '~/plugins/shared/utils/config';
+
 import { Api } from './api';
 import type { TanStackReactQueryPlugin } from './types';
 

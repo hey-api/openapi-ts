@@ -34,18 +34,20 @@ export default defineConfig(() => {
           // },
           path: path.resolve(
             getSpecsPath(),
-            '3.0.x',
+            // '3.0.x',
+            '3.1.x',
             // 'circular.yaml',
-            'dutchie.json',
+            // 'dutchie.json',
             // 'invalid',
             // 'openai.yaml',
-            // 'full.yaml',
+            'full.yaml',
             // 'opencode.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'type-format.yaml',
             // 'validators.yaml',
+            // 'validators-circular-ref.json',
             // 'validators-circular-ref-2.yaml',
             // 'zoom-video-sdk.json',
           ),
@@ -213,7 +215,7 @@ export default defineConfig(() => {
           // },
         },
         {
-          asClass: true,
+          // asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}',
           // classNameBuilder: '{{name}}Service',
@@ -234,10 +236,10 @@ export default defineConfig(() => {
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          // validator: {
-          //   request: 'valibot',
-          //   response: 'zod',
-          // },
+          validator: {
+            request: 'arktype',
+            response: 'arktype',
+          },
           '~hooks': {
             symbols: {
               // getFilePath: (symbol) => {
@@ -273,7 +275,7 @@ export default defineConfig(() => {
           // mutationOptions: {
           //   name: '{{name}}MO',
           // },
-          // name: '@tanstack/react-query',
+          name: '@tanstack/react-query',
           // queryKeys: {
           //   name: '{{name}}QK',
           // },
@@ -300,12 +302,18 @@ export default defineConfig(() => {
           },
         },
         {
+          // name: 'arktype',
+          // types: {
+          //   infer: true,
+          // },
+        },
+        {
           // case: 'SCREAMING_SNAKE_CASE',
           // comments: false,
           // definitions: 'z{{name}}Definition',
           exportFromIndex: true,
           // metadata: true,
-          // name: 'valibot',
+          name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
@@ -334,7 +342,7 @@ export default defineConfig(() => {
         {
           // case: 'snake_case',
           // comments: false,
-          compatibilityVersion: 'mini',
+          compatibilityVersion: 4,
           dates: {
             local: true,
             // offset: true,
@@ -346,8 +354,8 @@ export default defineConfig(() => {
             //   },
           },
           exportFromIndex: true,
-          metadata: true,
-          // name: 'zod',
+          // metadata: true,
+          name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',

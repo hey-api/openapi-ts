@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { UserConfig } from '../../types/config';
+import type { UserConfig } from '~/types/config';
+
 import { getInput } from '../input';
 
 describe('input config', () => {

@@ -1,6 +1,7 @@
-import { getPaginationKeywordsRegExp } from '../../../ir/pagination';
-import type { IR } from '../../../ir/types';
-import type { SchemaType } from '../../shared/types/schema';
+import { getPaginationKeywordsRegExp } from '~/ir/pagination';
+import type { IR } from '~/ir/types';
+import type { SchemaType } from '~/openApi/shared/types/schema';
+
 import type {
   ParameterObject,
   ReferenceObject,

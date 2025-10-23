@@ -1,10 +1,10 @@
-import type { Plugin } from '../../types';
-import type { HeyApiClientAngularPlugin } from '../client-angular';
-import type { HeyApiClientAxiosPlugin } from '../client-axios';
-import type { HeyApiClientFetchPlugin } from '../client-fetch';
-import type { HeyApiClientNextPlugin } from '../client-next';
-import type { HeyApiClientNuxtPlugin } from '../client-nuxt';
-import type { HeyApiClientOfetchPlugin } from '../client-ofetch';
+import type { HeyApiClientAngularPlugin } from '~/plugins/@hey-api/client-angular';
+import type { HeyApiClientAxiosPlugin } from '~/plugins/@hey-api/client-axios';
+import type { HeyApiClientFetchPlugin } from '~/plugins/@hey-api/client-fetch';
+import type { HeyApiClientNextPlugin } from '~/plugins/@hey-api/client-next';
+import type { HeyApiClientNuxtPlugin } from '~/plugins/@hey-api/client-nuxt';
+import type { HeyApiClientOfetchPlugin } from '~/plugins/@hey-api/client-ofetch';
+import type { Plugin } from '~/plugins/types';
 
 export interface PluginHandler {
   (...args: Parameters<HeyApiClientAngularPlugin['Handler']>): void;

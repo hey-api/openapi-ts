@@ -1,6 +1,6 @@
-import { hasOperationDataRequired } from '../../../ir/operation';
-import type { IR } from '../../../ir/types';
-import { getClientPlugin } from '../../@hey-api/client-core/utils';
+import { hasOperationDataRequired } from '~/ir/operation';
+import type { IR } from '~/ir/types';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 
 export const isOperationOptionsRequired = ({
   context,

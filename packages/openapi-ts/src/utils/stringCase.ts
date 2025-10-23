@@ -1,4 +1,4 @@
-import type { StringCase } from '../types/case';
+import type { StringCase } from '~/types/case';
 
 const uppercaseRegExp = /[\p{Lu}]/u;
 const lowercaseRegExp = /[\p{Ll}]/u;

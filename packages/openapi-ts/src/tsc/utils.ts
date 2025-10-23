@@ -1,7 +1,8 @@
 import ts from 'typescript';
 
-import { getConfig } from '../utils/config';
-import { unescapeName } from '../utils/escape';
+import { getConfig } from '~/utils/config';
+import { unescapeName } from '~/utils/escape';
+
 import type { AccessLevel } from './types';
 import { createStringLiteral, syntaxKindKeyword } from './types';
 

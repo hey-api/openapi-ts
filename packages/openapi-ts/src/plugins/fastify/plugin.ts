@@ -1,9 +1,10 @@
 import type ts from 'typescript';
 
-import { operationResponsesMap } from '../../ir/operation';
-import { hasParameterGroupObjectRequired } from '../../ir/parameter';
-import type { IR } from '../../ir/types';
-import { type Property, tsc } from '../../tsc';
+import { operationResponsesMap } from '~/ir/operation';
+import { hasParameterGroupObjectRequired } from '~/ir/parameter';
+import type { IR } from '~/ir/types';
+import { type Property, tsc } from '~/tsc';
+
 import type { FastifyPlugin } from './types';
 
 const operationToRouteHandler = ({
@@ -17,7 +18,7 @@ const operationToRouteHandler = ({
 
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
   const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('data', operation.id),
+    pluginTypeScript.api.selector('data', operation.id),
   );
   if (symbolDataType) {
     if (operation.body) {
@@ -65,7 +66,7 @@ const operationToRouteHandler = ({
 
   let errorsTypeReference: ts.TypeReferenceNode | undefined = undefined;
   const symbolErrorType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('errors', operation.id),
+    pluginTypeScript.api.selector('errors', operation.id),
   );
   if (symbolErrorType && errors && errors.properties) {
     const keys = Object.keys(errors.properties);
@@ -92,7 +93,7 @@ const operationToRouteHandler = ({
 
   let responsesTypeReference: ts.TypeReferenceNode | undefined = undefined;
   const symbolResponseType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('responses', operation.id),
+    pluginTypeScript.api.selector('responses', operation.id),
   );
   if (symbolResponseType && responses && responses.properties) {
     const keys = Object.keys(responses.properties);
@@ -134,7 +135,7 @@ const operationToRouteHandler = ({
   }
 
   const symbolRouteHandler = plugin.referenceSymbol(
-    plugin.api.getSelector('RouteHandler'),
+    plugin.api.selector('RouteHandler'),
   );
   const routeHandler: Property = {
     name: operation.id,
@@ -158,7 +159,7 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
       kind: 'type',
     },
     name: 'RouteHandler',
-    selector: plugin.api.getSelector('RouteHandler'),
+    selector: plugin.api.selector('RouteHandler'),
   });
 
   const symbolRouteHandlers = plugin.registerSymbol({
@@ -171,12 +172,18 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
 
   const routeHandlers: Array<Property> = [];
 
-  plugin.forEach('operation', ({ operation }) => {
-    const routeHandler = operationToRouteHandler({ operation, plugin });
-    if (routeHandler) {
-      routeHandlers.push(routeHandler);
-    }
-  });
+  plugin.forEach(
+    'operation',
+    ({ operation }) => {
+      const routeHandler = operationToRouteHandler({ operation, plugin });
+      if (routeHandler) {
+        routeHandlers.push(routeHandler);
+      }
+    },
+    {
+      order: 'declarations',
+    },
+  );
 
   const node = tsc.typeAliasDeclaration({
     exportType: symbolRouteHandlers.exported,

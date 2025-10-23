@@ -2,16 +2,11 @@
 
 import * as z from 'zod/mini';
 
-/**
- * This is Bar schema.
- */
-export const zBar = z.object({
-    get foo(): z.ZodMiniOptional {
-        return z.optional(zFoo);
-    }
-}).register(z.globalRegistry, {
-    description: 'This is Bar schema.'
-});
+export const zBaz = z._default(z.readonly(z.string().check(z.regex(/foo\nbar/))), 'baz');
+
+export const zQux = z.record(z.string(), z.object({
+    qux: z.optional(z.string())
+}));
 
 /**
  * This is Foo schema.
@@ -21,8 +16,12 @@ export const zFoo = z._default(z.union([
         foo: z.optional(z.string().check(z.regex(/^\d{3}-\d{2}-\d{4}$/)).register(z.globalRegistry, {
             description: 'This is foo property.'
         })),
-        bar: z.optional(zBar),
-        get baz(): z.ZodMiniOptional {
+        get bar() {
+            return z.optional(z.lazy((): any => {
+                return zBar;
+            }));
+        },
+        get baz() {
             return z.optional(z.array(z.lazy((): any => {
                 return zFoo;
             })).register(z.globalRegistry, {
@@ -36,11 +35,14 @@ export const zFoo = z._default(z.union([
     z.null()
 ]), null);
 
-export const zBaz = z._default(z.readonly(z.string().check(z.regex(/foo\nbar/))), 'baz');
-
-export const zQux = z.record(z.string(), z.object({
-    qux: z.optional(z.string())
-}));
+/**
+ * This is Bar schema.
+ */
+export const zBar = z.object({
+    foo: z.optional(zFoo)
+}).register(z.globalRegistry, {
+    description: 'This is Bar schema.'
+});
 
 /**
  * This is Foo parameter.

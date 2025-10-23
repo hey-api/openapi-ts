@@ -1,12 +1,13 @@
-import type { IR } from '../../../ir/types';
-import { addItemsToSchema } from '../../../ir/utils';
-import { refToName } from '../../../utils/ref';
+import type { IR } from '~/ir/types';
+import { addItemsToSchema } from '~/ir/utils';
 import type {
   SchemaState,
   SchemaType,
   SchemaWithRequired,
-} from '../../shared/types/schema';
-import { discriminatorValues } from '../../shared/utils/discriminator';
+} from '~/openApi/shared/types/schema';
+import { discriminatorValues } from '~/openApi/shared/utils/discriminator';
+import { refToName } from '~/utils/ref';
+
 import type { SchemaObject } from '../types/spec';
 
 export const getSchemaTypes = ({
@@ -800,7 +801,6 @@ const parseRef = ({
   const isComponentsRef = schema.$ref.startsWith('#/components/');
   if (!isComponentsRef) {
     if (!state.circularReferenceTracker.has(schema.$ref)) {
-      state.refStack.push(schema.$ref);
       const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
       const originalRef = state.$ref;
       state.$ref = schema.$ref;
@@ -810,7 +810,6 @@ const parseRef = ({
         state,
       });
       state.$ref = originalRef;
-      state.refStack.pop();
       return irSchema;
     }
     // Fallback to preserving the ref if circular
@@ -824,15 +823,7 @@ const parseRef = ({
   // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
   irRefSchema.$ref = decodeURI(schema.$ref);
 
-  if (state.refStack.includes(schema.$ref)) {
-    if (state.refStack[0] === schema.$ref) {
-      state.circularRef = schema.$ref;
-    }
-    irSchema.circular = true;
-  }
-
   if (!state.circularReferenceTracker.has(schema.$ref)) {
-    state.refStack.push(schema.$ref);
     const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
     const originalRef = state.$ref;
     state.$ref = schema.$ref;
@@ -841,11 +832,7 @@ const parseRef = ({
       schema: refSchema,
       state,
     });
-    if (state.circularRef && state.refStack[0] === state.circularRef) {
-      irSchema.circular = true;
-    }
     state.$ref = originalRef;
-    state.refStack.pop();
   }
 
   const schemaItems: Array<IR.SchemaObject> = [];
@@ -1054,7 +1041,6 @@ export const schemaToIrSchema = ({
   if (!state) {
     state = {
       circularReferenceTracker: new Set(),
-      refStack: [],
     };
   }
 
@@ -1137,7 +1123,6 @@ export const parseSchema = ({
     state: {
       $ref,
       circularReferenceTracker: new Set(),
-      refStack: [$ref],
     },
   });
 };

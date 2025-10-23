@@ -1,5 +1,23 @@
 # @hey-api/openapi-ts
 
+## 0.86.2
+
+### Patch Changes
+
+- fix(validators): do not reference variables before they are declared ([#2812](https://github.com/hey-api/openapi-ts/pull/2812)) ([`69783d1`](https://github.com/hey-api/openapi-ts/commit/69783d19be37014b5116a2ede5bb74adadbb8110)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(renderer): allow duplicate names when one symbol is a type ([#2812](https://github.com/hey-api/openapi-ts/pull/2812)) ([`523038e`](https://github.com/hey-api/openapi-ts/commit/523038e82c949a436a467486a26333d50ce0e7cd)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.3.1
+
+## 0.86.1
+
+### Patch Changes
+
+- fix(client-axios): revert return error when axios request fails ([#2804](https://github.com/hey-api/openapi-ts/pull/2804)) ([`5bba86e`](https://github.com/hey-api/openapi-ts/commit/5bba86e742c48f575f96f55f7d7ea3d636102ebe)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.86.0
 
 ### Minor Changes

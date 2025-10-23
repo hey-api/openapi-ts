@@ -1,4 +1,4 @@
-import type { WithEnumExtension } from '../../common/interfaces/WithEnumExtension';
+import type { WithEnumExtension } from '~/openApi/common/interfaces/WithEnumExtension';
 
 /**
  * {@link} https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#items-object)

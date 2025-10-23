@@ -79,11 +79,9 @@ export const zUpdatePetResponse = zPet;
 export const zFindPetsByStatusData = z.object({
   body: z.optional(z.never()),
   path: z.optional(z.never()),
-  query: z.optional(
-    z.object({
-      status: z.optional(z.enum(['available', 'pending', 'sold'])),
-    }),
-  ),
+  query: z.object({
+    status: z.enum(['available', 'pending', 'sold']),
+  }),
 });
 
 /**
@@ -94,11 +92,9 @@ export const zFindPetsByStatusResponse = z.array(zPet);
 export const zFindPetsByTagsData = z.object({
   body: z.optional(z.never()),
   path: z.optional(z.never()),
-  query: z.optional(
-    z.object({
-      tags: z.optional(z.array(z.string())),
-    }),
-  ),
+  query: z.object({
+    tags: z.array(z.string()),
+  }),
 });
 
 /**
@@ -176,7 +172,7 @@ export const zGetInventoryData = z.object({
 /**
  * successful operation
  */
-export const zGetInventoryResponse = z.object({});
+export const zGetInventoryResponse = z.record(z.string(), z.int());
 
 export const zPlaceOrderData = z.object({
   body: z.optional(zOrder),

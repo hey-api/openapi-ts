@@ -1,16 +1,17 @@
 import type ts from 'typescript';
 
-import { statusCodeToGroup } from '../../../ir/operation';
-import type { IR } from '../../../ir/types';
-import { sanitizeNamespaceIdentifier } from '../../../openApi';
-import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
-import { tsc } from '../../../tsc';
-import type { FunctionParameter, ObjectValue } from '../../../tsc/types';
-import { reservedJavaScriptKeywordsRegExp } from '../../../utils/regexp';
-import { stringCase } from '../../../utils/stringCase';
-import { transformClassName } from '../../../utils/transform';
+import { statusCodeToGroup } from '~/ir/operation';
+import type { IR } from '~/ir/types';
+import { sanitizeNamespaceIdentifier } from '~/openApi';
+import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { tsc } from '~/tsc';
+import type { FunctionParameter, ObjectValue } from '~/tsc/types';
+import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
+import { stringCase } from '~/utils/stringCase';
+import { transformClassName } from '~/utils/transform';
+
 import type { Field, Fields } from '../client-core/bundle/params';
-import { getClientPlugin } from '../client-core/utils';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 // import { getSignatureParameters } from './signature';
@@ -160,17 +161,15 @@ export const operationOptionsType = ({
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
   const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('data', operation.id),
+    pluginTypeScript.api.selector('data', operation.id),
   );
   const dataType = symbolDataType?.placeholder || 'unknown';
 
-  const symbolOptions = plugin.referenceSymbol(
-    plugin.api.getSelector('Options'),
-  );
+  const symbolOptions = plugin.referenceSymbol(plugin.api.selector('Options'));
 
   if (isNuxtClient) {
     const symbolResponseType = plugin.getSymbol(
-      pluginTypeScript.api.getSelector('response', operation.id),
+      pluginTypeScript.api.selector('response', operation.id),
     );
     const responseType = symbolResponseType?.placeholder || 'unknown';
     return `${symbolOptions.placeholder}<${nuxtTypeComposable}, ${dataType}, ${responseType}, ${nuxtTypeDefault}>`;
@@ -358,7 +357,7 @@ export const operationStatements = ({
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
   const symbolResponseType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector(
+    pluginTypeScript.api.selector(
       isNuxtClient ? 'response' : 'responses',
       operation.id,
     ),
@@ -366,7 +365,7 @@ export const operationStatements = ({
   const responseType = symbolResponseType?.placeholder || 'unknown';
 
   const symbolErrorType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector(
+    pluginTypeScript.api.selector(
       isNuxtClient ? 'error' : 'errors',
       operation.id,
     ),
@@ -395,7 +394,7 @@ export const operationStatements = ({
     switch (operation.body.type) {
       case 'form-data': {
         const symbol = plugin.referenceSymbol(
-          plugin.api.getSelector('formDataBodySerializer'),
+          plugin.api.selector('formDataBodySerializer'),
         );
         requestOptions.push({ spread: symbol.placeholder });
         break;
@@ -413,7 +412,7 @@ export const operationStatements = ({
         break;
       case 'url-search-params': {
         const symbol = plugin.referenceSymbol(
-          plugin.api.getSelector('urlSearchParamsBodySerializer'),
+          plugin.api.selector('urlSearchParamsBodySerializer'),
         );
         requestOptions.push({ spread: symbol.placeholder });
         break;
@@ -468,7 +467,7 @@ export const operationStatements = ({
       plugin.config.transformer,
     );
     const symbolResponseTransformer = plugin.getSymbol(
-      pluginTransformers.api.getSelector('response', operation.id),
+      pluginTransformers.api.selector('response', operation.id),
     );
     if (
       symbolResponseTransformer &&
@@ -571,7 +570,7 @@ export const operationStatements = ({
       config.push(tsc.objectExpression({ obj }));
     }
     const symbol = plugin.referenceSymbol(
-      plugin.api.getSelector('buildClientParams'),
+      plugin.api.selector('buildClientParams'),
     );
     statements.push(
       tsc.constVariable({
@@ -626,10 +625,10 @@ export const operationStatements = ({
   }
 
   const symbolClient =
-    plugin.config.client && client.api && 'getSelector' in client.api
+    plugin.config.client && client.api && 'selector' in client.api
       ? plugin.getSymbol(
           // @ts-expect-error
-          client.api.getSelector('client'),
+          client.api.selector('client'),
         )
       : undefined;
 

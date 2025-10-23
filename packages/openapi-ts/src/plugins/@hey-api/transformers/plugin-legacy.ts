@@ -1,16 +1,20 @@
 import type ts from 'typescript';
 
-import { createOperationKey } from '../../../ir/operation';
-import { tsc } from '../../../tsc';
-import type { ModelMeta, OperationResponse } from '../../../types/client';
-import { getConfig } from '../../../utils/config';
-import { isModelDate, unsetUniqueTypeName } from '../../../utils/type';
+import { createOperationKey } from '~/ir/operation';
 import {
   modelResponseTransformerTypeName,
   operationResponseTransformerTypeName,
   operationResponseTypeName,
-} from '../sdk/plugin-legacy';
-import { generateType, type TypesProps } from '../typescript/plugin-legacy';
+} from '~/plugins/@hey-api/sdk/plugin-legacy';
+import {
+  generateType,
+  type TypesProps,
+} from '~/plugins/@hey-api/typescript/plugin-legacy';
+import { tsc } from '~/tsc';
+import type { ModelMeta, OperationResponse } from '~/types/client';
+import { getConfig } from '~/utils/config';
+import { isModelDate, unsetUniqueTypeName } from '~/utils/type';
+
 import type { HeyApiTransformersPlugin } from './types';
 
 interface ModelProps extends TypesProps {

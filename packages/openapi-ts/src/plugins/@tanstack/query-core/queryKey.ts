@@ -1,14 +1,15 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { Expression } from 'typescript';
 
-import { hasOperationDataRequired } from '../../../ir/operation';
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { type Property, tsc } from '../../../tsc';
+import { hasOperationDataRequired } from '~/ir/operation';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
-} from '../../@hey-api/client-core/utils';
+} from '~/plugins/@hey-api/client-core/utils';
+import { type Property, tsc } from '~/tsc';
+
 import type { PluginInstance } from './types';
 import { useTypeData } from './useType';
 
@@ -29,10 +30,10 @@ export const createQueryKeyFunction = ({
       },
       name: 'createQueryKey',
     }),
-    selector: plugin.api.getSelector('createQueryKey'),
+    selector: plugin.api.selector('createQueryKey'),
   });
   const symbolQueryKeyType = plugin.referenceSymbol(
-    plugin.api.getSelector('QueryKey'),
+    plugin.api.selector('QueryKey'),
   );
 
   const returnType = tsc.indexedAccessTypeNode({
@@ -49,16 +50,16 @@ export const createQueryKeyFunction = ({
 
   const client = getClientPlugin(plugin.context.config);
   const symbolClient =
-    client.api && 'getSelector' in client.api
+    client.api && 'selector' in client.api
       ? plugin.getSymbol(
           // @ts-expect-error
-          client.api.getSelector('client'),
+          client.api.selector('client'),
         )
       : undefined;
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.getSelector('Options'),
+    sdkPlugin.api.selector('Options'),
   );
 
   const fn = tsc.constVariable({
@@ -275,7 +276,7 @@ const createQueryKeyLiteral = ({
   }
 
   const symbolCreateQueryKey = plugin.referenceSymbol(
-    plugin.api.getSelector('createQueryKey'),
+    plugin.api.selector('createQueryKey'),
   );
   const createQueryKeyCallExpression = tsc.callExpression({
     functionName: symbolCreateQueryKey.placeholder,
@@ -311,7 +312,7 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.getSelector('Options'),
+    sdkPlugin.api.selector('Options'),
   );
   const symbolQueryKeyType = plugin.registerSymbol({
     exported: true,
@@ -319,7 +320,7 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
       kind: 'type',
     },
     name: 'QueryKey',
-    selector: plugin.api.getSelector('QueryKey'),
+    selector: plugin.api.selector('QueryKey'),
   });
   const queryKeyType = tsc.typeAliasDeclaration({
     exportType: symbolQueryKeyType.exported,

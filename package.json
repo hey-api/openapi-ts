@@ -22,7 +22,8 @@
   "scripts": {
     "build": "turbo run build --filter=\"!@example/openapi-ts-sample\"",
     "changeset": "changeset",
-    "example": "sh ./scripts/example.sh",
+    "examples:check": "sh ./scripts/examples-check.sh",
+    "examples:generate": "sh ./scripts/examples-generate.sh",
     "format": "prettier --write .",
     "lint:fix": "prettier --check --write . && eslint . --fix",
     "lint": "prettier --check . && eslint .",
@@ -52,7 +53,7 @@
     "@vitest/coverage-v8": "3.1.1",
     "dotenv": "17.2.3",
     "eslint": "9.17.0",
-    "eslint-config-prettier": "9.1.0",
+    "eslint-config-prettier": "9.1.2",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "eslint-plugin-sort-destructure-keys": "2.0.0",
     "eslint-plugin-sort-keys-fix": "1.1.2",
