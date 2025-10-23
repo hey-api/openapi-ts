@@ -55,7 +55,7 @@
   "dependencies": {
     "@nuxt/kit": "3.15.4",
     "defu": "6.1.4",
-    "mlly": "1.7.4"
+    "mlly": "1.8.0"
   },
   "peerDependencies": {
     "@hey-api/openapi-ts": "<2",
