@@ -124,6 +124,26 @@ export default defineConfig(() => {
           // },
         },
         hooks: {
+          events: {
+            // 'plugin:handler:after': ({ plugin }) => {
+            //   console.log(`(${plugin.name}): handler finished`);
+            // },
+            // 'plugin:handler:before': ({ plugin }) => {
+            //   console.log(`(${plugin.name}): handler starting`);
+            // },
+            // 'symbol:register:after': ({ plugin, symbol }) => {
+            //   console.log(`(global, ${plugin.name}) registered:`, symbol.id);
+            // },
+            // 'symbol:register:before': ({ plugin, symbol }) => {
+            //   console.log(`(global, ${plugin.name}):`, symbol.name);
+            // },
+            // 'symbol:setValue:after': ({ plugin, symbol }) => {
+            //   console.log(`(${plugin.name}) set value:`, symbol.id);
+            // },
+            // 'symbol:setValue:before': ({ plugin, symbol }) => {
+            //   console.log(`(${plugin.name}) setting value:`, symbol.id);
+            // },
+          },
           operations: {
             getKind() {
               // noop
@@ -237,8 +257,8 @@ export default defineConfig(() => {
           // transformer: '@hey-api/transformers',
           // transformer: true,
           validator: {
-            request: 'arktype',
-            response: 'arktype',
+            request: 'zod',
+            response: 'zod',
           },
           '~hooks': {
             symbols: {
@@ -326,6 +346,14 @@ export default defineConfig(() => {
           //   name: 'q{{name}}CoolWebhook',
           // },
           '~hooks': {
+            events: {
+              // 'symbol:register:after': ({ plugin, symbol }) => {
+              //   console.log(`(${plugin.name}) registered:`, symbol.id);
+              // },
+              // 'symbol:register:before': ({ plugin, symbol }) => {
+              //   console.log(`(${plugin.name}):`, symbol.name);
+              // },
+            },
             symbols: {
               // getFilePath: (symbol) => {
               //   if (symbol.name) {

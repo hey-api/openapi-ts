@@ -8,19 +8,23 @@ import type {
 } from '@hey-api/codegen-core';
 
 import { HeyApiError } from '~/error';
+import type { WalkOptions } from '~/graph';
+import { walk } from '~/graph';
 import type { IrTopLevelKind } from '~/ir/graph';
 import {
+  getIrPointerPriority,
   irTopLevelKinds,
-  matchIrTopLevelPointer,
-  walkTopological,
+  matchIrPointerToGroup,
+  preferGroups,
 } from '~/ir/graph';
 import type { IR } from '~/ir/types';
 import type { OpenApi } from '~/openApi/types';
+import type { Hooks } from '~/parser/types/hooks';
 import type { PluginConfigMap } from '~/plugins/config';
 import type { Plugin } from '~/plugins/types';
 import { jsonPointerToPath } from '~/utils/ref';
 
-import type { WalkEvent, WalkOptions } from '../types/instance';
+import type { WalkEvent } from '../types/instance';
 
 const defaultGetFilePath = (symbol: Symbol): string | undefined => {
   if (!symbol.meta?.pluginName || typeof symbol.meta.pluginName !== 'string') {
@@ -38,7 +42,7 @@ const defaultGetFilePath = (symbol: Symbol): string | undefined => {
   return symbol.meta.pluginName;
 };
 
-const defaultGetKind: Required<Required<IR.Hooks>['operations']>['getKind'] = (
+const defaultGetKind: Required<Required<Hooks>['operations']>['getKind'] = (
   operation,
 ) => {
   switch (operation.method) {
@@ -54,11 +58,18 @@ const defaultGetKind: Required<Required<IR.Hooks>['operations']>['getKind'] = (
   }
 };
 
+type EventHooks = {
+  [K in keyof Required<NonNullable<Hooks['events']>>]: Array<
+    NonNullable<NonNullable<Hooks['events']>[K]>
+  >;
+};
+
 export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   api: T['api'];
   config: Omit<T['resolvedConfig'], 'name' | 'output'>;
   context: IR.Context;
   dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
+  private eventHooks: EventHooks;
   gen: IProject;
   private handler: Plugin.Config<T>['handler'];
   name: T['resolvedConfig']['name'];
@@ -87,6 +98,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.config = props.config;
     this.context = props.context;
     this.dependencies = props.dependencies;
+    this.eventHooks = this.buildEventHooks();
     this.gen = props.gen;
     this.handler = props.handler;
     this.name = props.name;
@@ -136,9 +148,13 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       options: any,
     ]
   ): void {
+    if (!this.context.graph) {
+      throw new Error('No graph available in context');
+    }
+
     let callback: (event: WalkEvent<T>) => void;
     let events: ReadonlyArray<T>;
-    let options: Required<WalkOptions> = {
+    let options: WalkOptions = {
       order: 'topological',
     };
     if (typeof args[args.length - 1] === 'function') {
@@ -154,121 +170,10 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     }
     const eventSet = new Set(events.length ? events : irTopLevelKinds);
 
-    if (options.order === 'declarations') {
-      if (eventSet.has('server') && this.context.ir.servers) {
-        for (const server of this.context.ir.servers) {
-          const event: WalkEvent<'server'> = {
-            _path: ['servers', String(this.context.ir.servers.indexOf(server))],
-            server,
-            type: 'server',
-          };
-          try {
-            callback(event as WalkEvent<T>);
-          } catch (error) {
-            this.forEachError(error, event);
-          }
-        }
-      }
-
-      if (eventSet.has('schema') && this.context.ir.components?.schemas) {
-        for (const name in this.context.ir.components.schemas) {
-          const event: WalkEvent<'schema'> = {
-            $ref: `#/components/schemas/${name}`,
-            _path: ['components', 'schemas', name],
-            name,
-            schema: this.context.ir.components.schemas[name]!,
-            type: 'schema',
-          };
-          try {
-            callback(event as WalkEvent<T>);
-          } catch (error) {
-            this.forEachError(error, event);
-          }
-        }
-      }
-
-      if (eventSet.has('parameter') && this.context.ir.components?.parameters) {
-        for (const name in this.context.ir.components.parameters) {
-          const event: WalkEvent<'parameter'> = {
-            $ref: `#/components/parameters/${name}`,
-            _path: ['components', 'parameters', name],
-            name,
-            parameter: this.context.ir.components.parameters[name]!,
-            type: 'parameter',
-          };
-          try {
-            callback(event as WalkEvent<T>);
-          } catch (error) {
-            this.forEachError(error, event);
-          }
-        }
-      }
-
-      if (
-        eventSet.has('requestBody') &&
-        this.context.ir.components?.requestBodies
-      ) {
-        for (const name in this.context.ir.components.requestBodies) {
-          const event: WalkEvent<'requestBody'> = {
-            $ref: `#/components/requestBodies/${name}`,
-            _path: ['components', 'requestBodies', name],
-            name,
-            requestBody: this.context.ir.components.requestBodies[name]!,
-            type: 'requestBody',
-          };
-          try {
-            callback(event as WalkEvent<T>);
-          } catch (error) {
-            this.forEachError(error, event);
-          }
-        }
-      }
-
-      if (eventSet.has('operation') && this.context.ir.paths) {
-        for (const path in this.context.ir.paths) {
-          const pathItem =
-            this.context.ir.paths[path as keyof typeof this.context.ir.paths];
-          for (const _method in pathItem) {
-            const method = _method as keyof typeof pathItem;
-            const event: WalkEvent<'operation'> = {
-              _path: ['paths', path, method],
-              method,
-              operation: pathItem[method]!,
-              path,
-              type: 'operation',
-            };
-            try {
-              callback(event as WalkEvent<T>);
-            } catch (error) {
-              this.forEachError(error, event);
-            }
-          }
-        }
-      }
-
-      if (eventSet.has('webhook') && this.context.ir.webhooks) {
-        for (const key in this.context.ir.webhooks) {
-          const webhook = this.context.ir.webhooks[key];
-          for (const _method in webhook) {
-            const method = _method as keyof typeof webhook;
-            const event: WalkEvent<'webhook'> = {
-              _path: ['webhooks', key, method],
-              key,
-              method,
-              operation: webhook[method]!,
-              type: 'webhook',
-            };
-            try {
-              callback(event as WalkEvent<T>);
-            } catch (error) {
-              this.forEachError(error, event);
-            }
-          }
-        }
-      }
-    } else if (options.order === 'topological' && this.context.graph) {
-      walkTopological(this.context.graph, (pointer, nodeInfo) => {
-        const result = matchIrTopLevelPointer(pointer);
+    walk(
+      this.context.graph,
+      (pointer, nodeInfo) => {
+        const result = matchIrPointerToGroup(pointer);
         if (!result.matched || !eventSet.has(result.kind)) return;
         let event: WalkEvent | undefined;
         switch (result.kind) {
@@ -332,20 +237,14 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
             this.forEachError(error, event);
           }
         }
-      });
-    }
-  }
-
-  private forEachError(error: unknown, event: WalkEvent) {
-    const originalError =
-      error instanceof Error ? error : new Error(String(error));
-    throw new HeyApiError({
-      args: [event],
-      error: originalError,
-      event: event.type,
-      name: 'Error',
-      pluginName: this.name,
-    });
+      },
+      {
+        getPointerPriority: getIrPointerPriority,
+        matchPointerToGroup: matchIrPointerToGroup,
+        order: options.order,
+        preferGroups,
+      },
+    );
   }
 
   /**
@@ -382,29 +281,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return this.gen.symbols.get(symbolIdOrSelector);
   }
 
-  private getSymbolFilePath(symbol: Symbol): string | undefined {
-    const getFilePathFnPlugin = this.config['~hooks']?.symbols?.getFilePath;
-    const getFilePathFnPluginResult = getFilePathFnPlugin?.(symbol);
-    if (getFilePathFnPluginResult !== undefined) {
-      return getFilePathFnPluginResult;
-    }
-    const getFilePathFnParser =
-      this.context.config.parser.hooks.symbols?.getFilePath;
-    const getFilePathFnParserResult = getFilePathFnParser?.(symbol);
-    if (getFilePathFnParserResult !== undefined) {
-      return getFilePathFnParserResult;
-    }
-    return defaultGetFilePath(symbol);
-  }
-
-  getSymbolValue(idOrSymbol: number | Symbol): unknown {
-    return this.gen.symbols.getValue(this.symbolToId(idOrSymbol));
-  }
-
-  hasSymbolValue(idOrSymbol: number | Symbol): boolean {
-    return this.gen.symbols.hasValue(this.symbolToId(idOrSymbol));
-  }
-
   hooks = {
     operation: {
       isMutation: (operation: IR.OperationObject): boolean =>
@@ -412,41 +288,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       isQuery: (operation: IR.OperationObject): boolean =>
         this.isOperationKind(operation, 'query'),
     },
-    symbol: {
-      getFilePath: (symbol: Symbol): string | undefined =>
-        this.getSymbolFilePath(symbol),
-    },
   };
-
-  private isOperationKind(
-    operation: IR.OperationObject,
-    kind: 'mutation' | 'query',
-  ): boolean {
-    const methodName = kind === 'query' ? 'isQuery' : 'isMutation';
-    const isFnPlugin = this.config['~hooks']?.operations?.[methodName];
-    const isFnPluginResult = isFnPlugin?.(operation);
-    if (isFnPluginResult !== undefined) {
-      return isFnPluginResult;
-    }
-    const getKindFnPlugin = this.config['~hooks']?.operations?.getKind;
-    const getKindFnPluginResult = getKindFnPlugin?.(operation);
-    if (getKindFnPluginResult !== undefined) {
-      return getKindFnPluginResult.includes(kind);
-    }
-    const isFnParser =
-      this.context.config.parser.hooks.operations?.[methodName];
-    const isFnParserResult = isFnParser?.(operation);
-    if (isFnParserResult !== undefined) {
-      return isFnParserResult;
-    }
-    const getKindFnParser =
-      this.context.config.parser.hooks.operations?.getKind;
-    const getKindFnParserResult = getKindFnParser?.(operation);
-    if (getKindFnParserResult !== undefined) {
-      return getKindFnParserResult.includes(kind);
-    }
-    return (defaultGetKind(operation) ?? []).includes(kind);
-  }
 
   isSymbolRegistered(symbolIdOrSelector: number | Selector): boolean {
     return this.gen.symbols.isRegistered(symbolIdOrSelector);
@@ -457,7 +299,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   registerSymbol(symbol: SymbolIn): Symbol {
-    return this.gen.symbols.register({
+    const symbolIn: SymbolIn = {
       ...symbol,
       exportFrom:
         symbol.exportFrom ??
@@ -466,29 +308,113 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
         this.config.exportFromIndex
           ? ['index']
           : undefined),
-      getFilePath: symbol.getFilePath ?? this.hooks.symbol.getFilePath,
+      getFilePath: symbol.getFilePath ?? this.getSymbolFilePath.bind(this),
       meta: {
         pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
         ...symbol.meta,
       },
-    });
+    };
+    for (const hook of this.eventHooks['symbol:register:before']) {
+      hook({ plugin: this, symbol: symbolIn });
+    }
+    const symbolOut = this.gen.symbols.register(symbolIn);
+    for (const hook of this.eventHooks['symbol:register:after']) {
+      hook({ plugin: this, symbol: symbolOut });
+    }
+    return symbolOut;
   }
 
   /**
    * Executes plugin's handler function.
    */
-  async run() {
+  async run(): Promise<void> {
+    for (const hook of this.eventHooks['plugin:handler:before']) {
+      hook({ plugin: this });
+    }
     await this.handler({ plugin: this });
+    for (const hook of this.eventHooks['plugin:handler:after']) {
+      hook({ plugin: this });
+    }
   }
 
-  setSymbolValue(
-    idOrSymbol: number | Symbol,
-    value: unknown,
-  ): Map<number, unknown> {
-    return this.gen.symbols.setValue(this.symbolToId(idOrSymbol), value);
+  setSymbolValue(symbol: Symbol, value: unknown): void {
+    for (const hook of this.eventHooks['symbol:setValue:before']) {
+      hook({ plugin: this, symbol, value });
+    }
+    this.gen.symbols.setValue(symbol.id, value);
+    for (const hook of this.eventHooks['symbol:setValue:after']) {
+      hook({ plugin: this, symbol, value });
+    }
   }
 
-  private symbolToId(idOrSymbol: number | Symbol): number {
-    return typeof idOrSymbol === 'number' ? idOrSymbol : idOrSymbol.id;
+  private buildEventHooks(): EventHooks {
+    const result: EventHooks = {
+      'plugin:handler:after': [],
+      'plugin:handler:before': [],
+      'symbol:register:after': [],
+      'symbol:register:before': [],
+      'symbol:setValue:after': [],
+      'symbol:setValue:before': [],
+    };
+    const scopes = [
+      this.config['~hooks']?.events,
+      this.context.config.parser.hooks.events,
+    ];
+    for (const scope of scopes) {
+      if (!scope) continue;
+      for (const [key, value] of Object.entries(scope)) {
+        if (value) {
+          result[key as keyof typeof result].push(value.bind(scope) as any);
+        }
+      }
+    }
+    return result;
+  }
+
+  private forEachError(error: unknown, event: WalkEvent) {
+    const originalError =
+      error instanceof Error ? error : new Error(String(error));
+    throw new HeyApiError({
+      args: [event],
+      error: originalError,
+      event: event.type,
+      name: 'Error',
+      pluginName: this.name,
+    });
+  }
+
+  private getSymbolFilePath(symbol: Symbol): string | undefined {
+    const hooks = [
+      this.config['~hooks']?.symbols,
+      this.context.config.parser.hooks.symbols,
+    ];
+    for (const hook of hooks) {
+      const result = hook?.getFilePath?.(symbol);
+      if (result !== undefined) return result;
+    }
+    return defaultGetFilePath(symbol);
+  }
+
+  private isOperationKind(
+    operation: IR.OperationObject,
+    kind: 'mutation' | 'query',
+  ): boolean {
+    const method = kind === 'query' ? 'isQuery' : 'isMutation';
+    const hooks = [
+      this.config['~hooks']?.operations?.[method],
+      this.config['~hooks']?.operations?.getKind,
+      this.context.config.parser.hooks.operations?.[method],
+      this.context.config.parser.hooks.operations?.getKind,
+      defaultGetKind,
+    ];
+    for (const hook of hooks) {
+      if (hook) {
+        const result = hook(operation);
+        if (result !== undefined) {
+          return typeof result === 'boolean' ? result : result.includes(kind);
+        }
+      }
+    }
+    return false;
   }
 }
