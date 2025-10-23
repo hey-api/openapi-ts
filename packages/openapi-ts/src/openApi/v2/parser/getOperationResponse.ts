@@ -1,8 +1,9 @@
+import type { OperationResponse } from '~/openApi/common/interfaces/client';
+import { getPattern } from '~/openApi/common/parser/getPattern';
+import { getRef } from '~/openApi/common/parser/getRef';
+import { getType } from '~/openApi/common/parser/type';
+
 import type { Client } from '../../../types/client';
-import type { OperationResponse } from '../../common/interfaces/client';
-import { getPattern } from '../../common/parser/getPattern';
-import { getRef } from '../../common/parser/getRef';
-import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiResponse } from '../interfaces/OpenApiResponse';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';

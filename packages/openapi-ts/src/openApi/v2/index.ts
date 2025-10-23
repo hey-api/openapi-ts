@@ -1,5 +1,6 @@
-import type { Client } from '../common/interfaces/client';
-import { getServiceVersion } from '../common/parser/service';
+import type { Client } from '~/openApi/common/interfaces/client';
+import { getServiceVersion } from '~/openApi/common/parser/service';
+
 import type { OpenApi } from './interfaces/OpenApi';
 import { getModels } from './parser/getModels';
 import { getOperations } from './parser/getOperations';

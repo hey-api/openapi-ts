@@ -1,7 +1,8 @@
 import type ts from 'typescript';
 
-import type { IR } from '../../../ir/types';
-import type { DefinePlugin, Plugin } from '../../types';
+import type { IR } from '~/ir/types';
+import type { DefinePlugin, Plugin } from '~/plugins/types';
+
 import type { IApi } from './api';
 import type { ExpressionTransformer } from './expressions';
 

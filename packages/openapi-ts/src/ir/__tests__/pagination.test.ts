@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { defaultPaginationKeywords } from '../../config/parser';
-import type { Config } from '../../types/config';
+import { defaultPaginationKeywords } from '~/config/parser';
+import type { Config } from '~/types/config';
+
 import { operationPagination } from '../operation';
 import { getPaginationKeywordsRegExp } from '../pagination';
 import type { IR } from '../types';

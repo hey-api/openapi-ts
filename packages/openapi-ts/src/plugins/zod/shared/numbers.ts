@@ -1,6 +1,6 @@
 import type ts from 'typescript';
 
-import { tsc } from '../../../tsc';
+import { tsc } from '~/tsc';
 
 export const numberParameter = ({
   isBigInt,

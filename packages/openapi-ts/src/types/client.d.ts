@@ -6,7 +6,7 @@ import type {
   Operation as ParserOperation,
   OperationParameter,
   OperationResponse,
-} from '../openApi';
+} from '~/openApi';
 
 export type { Method, Model, ModelMeta, OperationParameter, OperationResponse };
 

@@ -1,8 +1,9 @@
-import { createOperationKey } from '../../../ir/operation';
+import { createOperationKey } from '~/ir/operation';
+import type { PathItemObject, PathsObject } from '~/openApi/3.1.x/types/spec';
+import type { OpenApi } from '~/openApi/types';
+import type { Logger } from '~/utils/logger';
+
 import type { Config } from '../../../types/config';
-import type { Logger } from '../../../utils/logger';
-import type { PathItemObject, PathsObject } from '../../3.1.x/types/spec';
-import type { OpenApi } from '../../types';
 import type { ResourceMetadata } from '../graph/meta';
 import { httpMethods } from './operation';
 

@@ -1,8 +1,8 @@
 import { getResolvedInput, sendRequest } from '@hey-api/json-schema-ref-parser';
 
-import { mergeHeaders } from './plugins/@hey-api/client-fetch/bundle';
-import type { Input } from './types/input';
-import type { WatchValues } from './types/types';
+import { mergeHeaders } from '~/plugins/@hey-api/client-fetch/bundle';
+import type { Input } from '~/types/input';
+import type { WatchValues } from '~/types/types';
 
 type SpecResponse = {
   arrayBuffer: ArrayBuffer | undefined;

@@ -1,4 +1,5 @@
-import { getClientPlugin } from '../../@hey-api/client-core/utils';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+
 import type { PiniaColadaPlugin } from './types';
 
 export const getPublicTypeData = ({

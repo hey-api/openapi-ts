@@ -1,6 +1,7 @@
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { pathToSymbolResourceType } from '../../shared/utils/meta';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import { pathToSymbolResourceType } from '~/plugins/shared/utils/meta';
+
 import { exportAst } from './export';
 import type { Ast, IrSchemaToAstOptions } from './types';
 

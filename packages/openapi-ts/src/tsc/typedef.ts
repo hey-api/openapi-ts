@@ -1,6 +1,7 @@
 import ts from 'typescript';
 
-import { validTypescriptIdentifierRegExp } from '../utils/regexp';
+import { validTypescriptIdentifierRegExp } from '~/utils/regexp';
+
 import {
   createKeywordTypeNode,
   createMappedTypeNode,

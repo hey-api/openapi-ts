@@ -1,4 +1,4 @@
-import type { EnumExtensions } from '../../shared/types/openapi-spec-extensions';
+import type { EnumExtensions } from '~/openApi/shared/types/openapi-spec-extensions';
 
 /**
  * This is the root object of the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#openapi-description OpenAPI Description}.

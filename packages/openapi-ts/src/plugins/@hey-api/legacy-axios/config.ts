@@ -1,4 +1,5 @@
-import { definePluginConfig } from '../../shared/utils/config';
+import { definePluginConfig } from '~/plugins/shared/utils/config';
+
 import type { HeyApiClientLegacyAxiosPlugin } from './types';
 
 export const defaultConfig: HeyApiClientLegacyAxiosPlugin['Config'] = {

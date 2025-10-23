@@ -7,18 +7,19 @@ import type {
   SymbolIn,
 } from '@hey-api/codegen-core';
 
-import { HeyApiError } from '../../../error';
-import type { IrTopLevelKind } from '../../../ir/graph';
+import { HeyApiError } from '~/error';
+import type { IrTopLevelKind } from '~/ir/graph';
 import {
   irTopLevelKinds,
   matchIrTopLevelPointer,
   walkTopological,
-} from '../../../ir/graph';
-import type { IR } from '../../../ir/types';
-import type { OpenApi } from '../../../openApi/types';
-import { jsonPointerToPath } from '../../../utils/ref';
-import type { PluginConfigMap } from '../../config';
-import type { Plugin } from '../../types';
+} from '~/ir/graph';
+import type { IR } from '~/ir/types';
+import type { OpenApi } from '~/openApi/types';
+import type { PluginConfigMap } from '~/plugins/config';
+import type { Plugin } from '~/plugins/types';
+import { jsonPointerToPath } from '~/utils/ref';
+
 import type { WalkEvent, WalkOptions } from '../types/instance';
 
 const defaultGetFilePath = (symbol: Symbol): string | undefined => {

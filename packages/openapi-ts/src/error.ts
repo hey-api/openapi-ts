@@ -3,8 +3,8 @@ import path from 'node:path';
 
 import colors from 'ansi-colors';
 
-import { loadPackageJson } from './generate/tsConfig';
-import { ensureDirSync } from './generate/utils';
+import { loadPackageJson } from '~/generate/tsConfig';
+import { ensureDirSync } from '~/generate/utils';
 
 type IJobError = {
   error: Error;

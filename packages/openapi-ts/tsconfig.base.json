@@ -11,6 +11,10 @@
     "noUnusedParameters": true,
     "strict": true,
     "target": "ES2022",
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["src/*"]
+    }
   }
 }

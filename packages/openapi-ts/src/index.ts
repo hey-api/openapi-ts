@@ -5,11 +5,11 @@ import colors from 'ansi-colors';
 // @ts-expect-error
 import colorSupport from 'color-support';
 
-import { checkNodeVersion } from './config/engine';
-import type { Configs } from './config/init';
-import { initConfigs } from './config/init';
-import { getLogs } from './config/logs';
-import { createClient as pCreateClient } from './createClient';
+import { checkNodeVersion } from '~/config/engine';
+import type { Configs } from '~/config/init';
+import { initConfigs } from '~/config/init';
+import { getLogs } from '~/config/logs';
+import { createClient as pCreateClient } from '~/createClient';
 import {
   ConfigValidationError,
   JobError,
@@ -17,14 +17,14 @@ import {
   openGitHubIssueWithCrashReport,
   printCrashReport,
   shouldReportCrash,
-} from './error';
-import type { IR } from './ir/types';
-import type { Client } from './types/client';
-import type { UserConfig } from './types/config';
-import type { LazyOrAsync, MaybeArray } from './types/utils';
-import { printCliIntro } from './utils/cli';
-import { registerHandlebarTemplates } from './utils/handlebars';
-import { Logger } from './utils/logger';
+} from '~/error';
+import type { IR } from '~/ir/types';
+import type { Client } from '~/types/client';
+import type { UserConfig } from '~/types/config';
+import type { LazyOrAsync, MaybeArray } from '~/types/utils';
+import { printCliIntro } from '~/utils/cli';
+import { registerHandlebarTemplates } from '~/utils/handlebars';
+import { Logger } from '~/utils/logger';
 
 colors.enabled = colorSupport().hasBasic;
 

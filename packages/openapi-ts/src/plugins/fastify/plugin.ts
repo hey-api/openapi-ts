@@ -1,9 +1,10 @@
 import type ts from 'typescript';
 
-import { operationResponsesMap } from '../../ir/operation';
-import { hasParameterGroupObjectRequired } from '../../ir/parameter';
-import type { IR } from '../../ir/types';
-import { type Property, tsc } from '../../tsc';
+import { operationResponsesMap } from '~/ir/operation';
+import { hasParameterGroupObjectRequired } from '~/ir/parameter';
+import type { IR } from '~/ir/types';
+import { type Property, tsc } from '~/tsc';
+
 import type { FastifyPlugin } from './types';
 
 const operationToRouteHandler = ({

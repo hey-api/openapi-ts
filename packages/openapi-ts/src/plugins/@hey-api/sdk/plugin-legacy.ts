@@ -1,32 +1,33 @@
 import type ts from 'typescript';
 
-import { clientModulePath } from '../../../generate/client';
-import { GeneratedFile } from '../../../generate/file';
-import type { IR } from '../../../ir/types';
-import { isOperationParameterRequired } from '../../../openApi';
-import type { Comments, FunctionParameter } from '../../../tsc';
-import { tsc } from '../../../tsc';
-import type { FunctionTypeParameter, ObjectValue } from '../../../tsc/types';
+import { clientModulePath } from '~/generate/client';
+import { GeneratedFile } from '~/generate/file';
+import type { IR } from '~/ir/types';
+import { isOperationParameterRequired } from '~/openApi';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import type { Comments, FunctionParameter } from '~/tsc';
+import { tsc } from '~/tsc';
+import type { FunctionTypeParameter, ObjectValue } from '~/tsc/types';
 import type {
   Client,
   Model,
   Operation,
   OperationParameter,
   Service,
-} from '../../../types/client';
-import type { Config as ClientConfig } from '../../../types/config';
+} from '~/types/client';
+import type { Config as ClientConfig } from '~/types/config';
 import {
   getConfig,
   isLegacyClient,
   legacyNameFromConfig,
-} from '../../../utils/config';
-import { escapeComment, escapeName } from '../../../utils/escape';
-import { reservedJavaScriptKeywordsRegExp } from '../../../utils/regexp';
-import { stringCase } from '../../../utils/stringCase';
-import { transformClassName } from '../../../utils/transform';
-import { setUniqueTypeName } from '../../../utils/type';
-import { unique } from '../../../utils/unique';
-import { getClientPlugin } from '../client-core/utils';
+} from '~/utils/config';
+import { escapeComment, escapeName } from '~/utils/escape';
+import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
+import { stringCase } from '~/utils/stringCase';
+import { transformClassName } from '~/utils/transform';
+import { setUniqueTypeName } from '~/utils/type';
+import { unique } from '~/utils/unique';
+
 import type { HeyApiSdkPlugin } from './types';
 
 type OnNode = (node: ts.Node) => void;

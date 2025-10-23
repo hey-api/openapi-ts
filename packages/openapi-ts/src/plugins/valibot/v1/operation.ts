@@ -1,8 +1,9 @@
-import { operationResponsesMap } from '../../../ir/operation';
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { pathToSymbolResourceType } from '../../shared/utils/meta';
-import { toRef } from '../../shared/utils/refs';
+import { operationResponsesMap } from '~/ir/operation';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import { pathToSymbolResourceType } from '~/plugins/shared/utils/meta';
+import { toRef } from '~/plugins/shared/utils/refs';
+
 import type { IrSchemaToAstOptions } from '../shared/types';
 import { irSchemaToAst } from './plugin';
 

@@ -1,4 +1,4 @@
-import { illegalStartCharactersRegExp } from '../../../utils/regexp';
+import { illegalStartCharactersRegExp } from '~/utils/regexp';
 
 export const ensureValidTypeScriptJavaScriptIdentifier = (name: string) => {
   const replaced = name.replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '_');

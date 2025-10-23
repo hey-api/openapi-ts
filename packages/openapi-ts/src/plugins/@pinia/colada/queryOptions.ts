@@ -1,12 +1,13 @@
 import type ts from 'typescript';
 
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
 import {
   hasOperationSse,
   isOperationOptionsRequired,
-} from '../../shared/utils/operation';
+} from '~/plugins/shared/utils/operation';
+import { tsc } from '~/tsc';
+
 import { handleMeta } from './meta';
 import {
   createQueryKeyFunction,

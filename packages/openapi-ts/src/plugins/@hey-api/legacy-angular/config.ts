@@ -1,4 +1,5 @@
-import { definePluginConfig } from '../../shared/utils/config';
+import { definePluginConfig } from '~/plugins/shared/utils/config';
+
 import type { HeyApiClientLegacyAngularPlugin } from './types';
 
 export const defaultConfig: HeyApiClientLegacyAngularPlugin['Config'] = {

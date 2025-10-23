@@ -5,7 +5,7 @@ import {
   reservedJavaScriptKeywordsRegExp,
   reservedNodeGlobalsRegExp,
   reservedTypeScriptKeywordsRegExp,
-} from '../../../utils/regexp';
+} from '~/utils/regexp';
 
 const regexps = [
   reservedJavaScriptKeywordsRegExp,

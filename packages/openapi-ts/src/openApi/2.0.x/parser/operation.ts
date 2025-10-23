@@ -1,6 +1,7 @@
-import type { IR, IRBodyObject } from '../../../ir/types';
-import type { State } from '../../shared/types/state';
-import { operationToId } from '../../shared/utils/operation';
+import type { IR, IRBodyObject } from '~/ir/types';
+import type { State } from '~/openApi/shared/types/state';
+import { operationToId } from '~/openApi/shared/utils/operation';
+
 import type {
   OperationObject,
   ParameterObject,

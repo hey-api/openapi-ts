@@ -1,6 +1,7 @@
-import type { Model } from '../../common/interfaces/client';
-import type { Dictionary } from '../../common/interfaces/Dictionary';
-import { stripNamespace } from '../../common/parser/stripNamespace';
+import type { Model } from '~/openApi/common/interfaces/client';
+import type { Dictionary } from '~/openApi/common/interfaces/Dictionary';
+import { stripNamespace } from '~/openApi/common/parser/stripNamespace';
+
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiDiscriminator } from '../interfaces/OpenApiDiscriminator';
 

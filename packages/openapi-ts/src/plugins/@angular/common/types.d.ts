@@ -1,5 +1,6 @@
-import type { StringName } from '../../../types/case';
-import type { DefinePlugin, Plugin } from '../../types';
+import type { DefinePlugin, Plugin } from '~/plugins/types';
+import type { StringName } from '~/types/case';
+
 import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'@angular/common'> &
