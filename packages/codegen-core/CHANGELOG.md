@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.3.1
+
+### Patch Changes
+
+- feat: add `isRegistered()` method to file and symbol registry ([#2812](https://github.com/hey-api/openapi-ts/pull/2812)) ([`022f7dd`](https://github.com/hey-api/openapi-ts/commit/022f7dd0bcb74d2da855f393e2175645aa670351)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.3.0
 
 ### Minor Changes
