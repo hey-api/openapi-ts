@@ -1,6 +1,6 @@
 import colors from 'ansi-colors';
 
-import { loadPackageJson } from '../generate/tsConfig';
+import { loadPackageJson } from '~/generate/tsConfig';
 
 const textAscii = `
 888   |                           e      888~-_   888

@@ -1,93 +1,94 @@
 import Handlebars from 'handlebars';
 
 // @ts-expect-error
-import templateClient from '../legacy/handlebars/compiled/client.js';
+import templateClient from '~/legacy/handlebars/compiled/client';
 // @ts-expect-error
-import angularGetHeaders from '../legacy/handlebars/compiled/core/angular/getHeaders.js';
+import angularGetHeaders from '~/legacy/handlebars/compiled/core/angular/getHeaders';
 // @ts-expect-error
-import angularGetRequestBody from '../legacy/handlebars/compiled/core/angular/getRequestBody.js';
+import angularGetRequestBody from '~/legacy/handlebars/compiled/core/angular/getRequestBody';
 // @ts-expect-error
-import angularGetResponseBody from '../legacy/handlebars/compiled/core/angular/getResponseBody.js';
+import angularGetResponseBody from '~/legacy/handlebars/compiled/core/angular/getResponseBody';
 // @ts-expect-error
-import angularGetResponseHeader from '../legacy/handlebars/compiled/core/angular/getResponseHeader.js';
+import angularGetResponseHeader from '~/legacy/handlebars/compiled/core/angular/getResponseHeader';
 // @ts-expect-error
-import angularRequest from '../legacy/handlebars/compiled/core/angular/request.js';
+import angularRequest from '~/legacy/handlebars/compiled/core/angular/request';
 // @ts-expect-error
-import angularSendRequest from '../legacy/handlebars/compiled/core/angular/sendRequest.js';
+import angularSendRequest from '~/legacy/handlebars/compiled/core/angular/sendRequest';
 // @ts-expect-error
-import templateCoreApiError from '../legacy/handlebars/compiled/core/ApiError.js';
+import templateCoreApiError from '~/legacy/handlebars/compiled/core/ApiError';
 // @ts-expect-error
-import templateCoreApiRequestOptions from '../legacy/handlebars/compiled/core/ApiRequestOptions.js';
+import templateCoreApiRequestOptions from '~/legacy/handlebars/compiled/core/ApiRequestOptions';
 // @ts-expect-error
-import templateCoreApiResult from '../legacy/handlebars/compiled/core/ApiResult.js';
+import templateCoreApiResult from '~/legacy/handlebars/compiled/core/ApiResult';
 // @ts-expect-error
-import axiosGetHeaders from '../legacy/handlebars/compiled/core/axios/getHeaders.js';
+import axiosGetHeaders from '~/legacy/handlebars/compiled/core/axios/getHeaders';
 // @ts-expect-error
-import axiosGetRequestBody from '../legacy/handlebars/compiled/core/axios/getRequestBody.js';
+import axiosGetRequestBody from '~/legacy/handlebars/compiled/core/axios/getRequestBody';
 // @ts-expect-error
-import axiosGetResponseBody from '../legacy/handlebars/compiled/core/axios/getResponseBody.js';
+import axiosGetResponseBody from '~/legacy/handlebars/compiled/core/axios/getResponseBody';
 // @ts-expect-error
-import axiosGetResponseHeader from '../legacy/handlebars/compiled/core/axios/getResponseHeader.js';
+import axiosGetResponseHeader from '~/legacy/handlebars/compiled/core/axios/getResponseHeader';
 // @ts-expect-error
-import axiosRequest from '../legacy/handlebars/compiled/core/axios/request.js';
+import axiosRequest from '~/legacy/handlebars/compiled/core/axios/request';
 // @ts-expect-error
-import axiosSendRequest from '../legacy/handlebars/compiled/core/axios/sendRequest.js';
+import axiosSendRequest from '~/legacy/handlebars/compiled/core/axios/sendRequest';
 // @ts-expect-error
-import templateCoreBaseHttpRequest from '../legacy/handlebars/compiled/core/BaseHttpRequest.js';
+import templateCoreBaseHttpRequest from '~/legacy/handlebars/compiled/core/BaseHttpRequest';
 // @ts-expect-error
-import templateCancelablePromise from '../legacy/handlebars/compiled/core/CancelablePromise.js';
+import templateCancelablePromise from '~/legacy/handlebars/compiled/core/CancelablePromise';
 // @ts-expect-error
-import fetchGetHeaders from '../legacy/handlebars/compiled/core/fetch/getHeaders.js';
+import fetchGetHeaders from '~/legacy/handlebars/compiled/core/fetch/getHeaders';
 // @ts-expect-error
-import fetchGetRequestBody from '../legacy/handlebars/compiled/core/fetch/getRequestBody.js';
+import fetchGetRequestBody from '~/legacy/handlebars/compiled/core/fetch/getRequestBody';
 // @ts-expect-error
-import fetchGetResponseBody from '../legacy/handlebars/compiled/core/fetch/getResponseBody.js';
+import fetchGetResponseBody from '~/legacy/handlebars/compiled/core/fetch/getResponseBody';
 // @ts-expect-error
-import fetchGetResponseHeader from '../legacy/handlebars/compiled/core/fetch/getResponseHeader.js';
+import fetchGetResponseHeader from '~/legacy/handlebars/compiled/core/fetch/getResponseHeader';
 // @ts-expect-error
-import fetchRequest from '../legacy/handlebars/compiled/core/fetch/request.js';
+import fetchRequest from '~/legacy/handlebars/compiled/core/fetch/request';
 // @ts-expect-error
-import fetchSendRequest from '../legacy/handlebars/compiled/core/fetch/sendRequest.js';
+import fetchSendRequest from '~/legacy/handlebars/compiled/core/fetch/sendRequest';
 // @ts-expect-error
-import functionBase64 from '../legacy/handlebars/compiled/core/functions/base64.js';
+import functionBase64 from '~/legacy/handlebars/compiled/core/functions/base64';
 // @ts-expect-error
-import functionCatchErrorCodes from '../legacy/handlebars/compiled/core/functions/catchErrorCodes.js';
+import functionCatchErrorCodes from '~/legacy/handlebars/compiled/core/functions/catchErrorCodes';
 // @ts-expect-error
-import functionGetFormData from '../legacy/handlebars/compiled/core/functions/getFormData.js';
+import functionGetFormData from '~/legacy/handlebars/compiled/core/functions/getFormData';
 // @ts-expect-error
-import functionGetQueryString from '../legacy/handlebars/compiled/core/functions/getQueryString.js';
+import functionGetQueryString from '~/legacy/handlebars/compiled/core/functions/getQueryString';
 // @ts-expect-error
-import functionGetUrl from '../legacy/handlebars/compiled/core/functions/getUrl.js';
+import functionGetUrl from '~/legacy/handlebars/compiled/core/functions/getUrl';
 // @ts-expect-error
-import functionIsBlob from '../legacy/handlebars/compiled/core/functions/isBlob.js';
+import functionIsBlob from '~/legacy/handlebars/compiled/core/functions/isBlob';
 // @ts-expect-error
-import functionIsFormData from '../legacy/handlebars/compiled/core/functions/isFormData.js';
+import functionIsFormData from '~/legacy/handlebars/compiled/core/functions/isFormData';
 // @ts-expect-error
-import functionIsString from '../legacy/handlebars/compiled/core/functions/isString.js';
+import functionIsString from '~/legacy/handlebars/compiled/core/functions/isString';
 // @ts-expect-error
-import functionIsStringWithValue from '../legacy/handlebars/compiled/core/functions/isStringWithValue.js';
+import functionIsStringWithValue from '~/legacy/handlebars/compiled/core/functions/isStringWithValue';
 // @ts-expect-error
-import functionIsSuccess from '../legacy/handlebars/compiled/core/functions/isSuccess.js';
+import functionIsSuccess from '~/legacy/handlebars/compiled/core/functions/isSuccess';
 // @ts-expect-error
-import functionResolve from '../legacy/handlebars/compiled/core/functions/resolve.js';
+import functionResolve from '~/legacy/handlebars/compiled/core/functions/resolve';
 // @ts-expect-error
-import templateCoreHttpRequest from '../legacy/handlebars/compiled/core/HttpRequest.js';
+import templateCoreHttpRequest from '~/legacy/handlebars/compiled/core/HttpRequest';
 // @ts-expect-error
-import templateCoreSettings from '../legacy/handlebars/compiled/core/OpenAPI.js';
+import templateCoreSettings from '~/legacy/handlebars/compiled/core/OpenAPI';
 // @ts-expect-error
-import templateCoreRequest from '../legacy/handlebars/compiled/core/request.js';
+import templateCoreRequest from '~/legacy/handlebars/compiled/core/request';
 // @ts-expect-error
-import xhrGetHeaders from '../legacy/handlebars/compiled/core/xhr/getHeaders.js';
+import xhrGetHeaders from '~/legacy/handlebars/compiled/core/xhr/getHeaders';
 // @ts-expect-error
-import xhrGetRequestBody from '../legacy/handlebars/compiled/core/xhr/getRequestBody.js';
+import xhrGetRequestBody from '~/legacy/handlebars/compiled/core/xhr/getRequestBody';
 // @ts-expect-error
-import xhrGetResponseBody from '../legacy/handlebars/compiled/core/xhr/getResponseBody.js';
+import xhrGetResponseBody from '~/legacy/handlebars/compiled/core/xhr/getResponseBody';
 // @ts-expect-error
-import xhrGetResponseHeader from '../legacy/handlebars/compiled/core/xhr/getResponseHeader.js';
+import xhrGetResponseHeader from '~/legacy/handlebars/compiled/core/xhr/getResponseHeader';
 // @ts-expect-error
-import xhrRequest from '../legacy/handlebars/compiled/core/xhr/request.js';
+import xhrRequest from '~/legacy/handlebars/compiled/core/xhr/request';
 // @ts-expect-error
-import xhrSendRequest from '../legacy/handlebars/compiled/core/xhr/sendRequest.js';
+import xhrSendRequest from '~/legacy/handlebars/compiled/core/xhr/sendRequest';
+
 import { getConfig } from './config';
 import { stringCase } from './stringCase';
 import { transformClassName } from './transform';

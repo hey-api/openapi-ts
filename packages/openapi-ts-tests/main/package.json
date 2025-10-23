@@ -15,9 +15,9 @@
     "node": ">=20.19.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "19.2.17",
+    "@angular-devkit/build-angular": "19.2.18",
     "@angular/animations": "19.2.15",
-    "@angular/cli": "19.2.17",
+    "@angular/cli": "19.2.18",
     "@angular/common": "19.2.15",
     "@angular/compiler": "19.2.15",
     "@angular/compiler-cli": "19.2.15",
@@ -37,6 +37,7 @@
     "@tanstack/svelte-query": "5.73.3",
     "@tanstack/vue-query": "5.73.3",
     "@types/cross-spawn": "6.0.6",
+    "arktype": "2.1.23",
     "axios": "1.8.2",
     "cross-spawn": "7.0.6",
     "eslint": "9.17.0",

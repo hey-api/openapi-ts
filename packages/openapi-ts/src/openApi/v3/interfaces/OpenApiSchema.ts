@@ -1,5 +1,6 @@
-import type { Dictionary } from '../../common/interfaces/Dictionary';
-import type { WithEnumExtension } from '../../common/interfaces/WithEnumExtension';
+import type { Dictionary } from '~/openApi/common/interfaces/Dictionary';
+import type { WithEnumExtension } from '~/openApi/common/interfaces/WithEnumExtension';
+
 import type { OpenApiDiscriminator } from './OpenApiDiscriminator';
 import type { OpenApiExternalDocs } from './OpenApiExternalDocs';
 import type { OpenApiReference } from './OpenApiReference';

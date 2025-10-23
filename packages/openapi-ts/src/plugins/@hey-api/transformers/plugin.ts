@@ -1,13 +1,11 @@
 import ts from 'typescript';
 
-import {
-  createOperationKey,
-  operationResponsesMap,
-} from '../../../ir/operation';
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
-import { refToName } from '../../../utils/ref';
+import { createOperationKey, operationResponsesMap } from '~/ir/operation';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import { tsc } from '~/tsc';
+import { refToName } from '~/utils/ref';
+
 import type { HeyApiTransformersPlugin } from './types';
 
 const dataVariableName = 'data';
@@ -60,7 +58,7 @@ const processSchemaType = ({
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   if (schema.$ref) {
-    const selector = plugin.api.getSelector('response-ref', schema.$ref);
+    const selector = plugin.api.selector('response-ref', schema.$ref);
 
     if (!plugin.getSymbol(selector)) {
       const symbol = plugin.registerSymbol({
@@ -322,65 +320,77 @@ const processSchemaType = ({
 
 // handles only response transformers for now
 export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
-  plugin.forEach('operation', ({ operation }) => {
-    const { response } = operationResponsesMap(operation);
-    if (!response) return;
+  plugin.forEach(
+    'operation',
+    ({ operation }) => {
+      const { response } = operationResponsesMap(operation);
+      if (!response) return;
 
-    if (response.items && response.items.length > 1) {
-      if (plugin.context.config.logs.level === 'debug') {
-        console.warn(
-          `❗️ Transformers warning: route ${createOperationKey(operation)} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
-        );
+      if (response.items && response.items.length > 1) {
+        if (plugin.context.config.logs.level === 'debug') {
+          console.warn(
+            `❗️ Transformers warning: route ${createOperationKey(operation)} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
+          );
+        }
+        return;
       }
-      return;
-    }
 
-    const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-    const symbolResponse = plugin.getSymbol(
-      pluginTypeScript.api.getSelector('response', operation.id),
-    );
-    if (!symbolResponse) return;
+      const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
+      const symbolResponse = plugin.getSymbol(
+        pluginTypeScript.api.selector('response', operation.id),
+      );
+      if (!symbolResponse) return;
 
-    const symbolResponseTransformer = plugin.registerSymbol({
-      exported: true,
-      name: buildName({
-        config: {
-          case: 'camelCase',
-          name: '{{name}}ResponseTransformer',
-        },
-        name: operation.id,
-      }),
-      selector: plugin.api.getSelector('response', operation.id),
-    });
-
-    // TODO: parser - consider handling simple string response which is also a date
-    const nodes = schemaResponseTransformerNodes({ plugin, schema: response });
-    if (nodes.length) {
-      const responseTransformerNode = tsc.constVariable({
-        exportConst: symbolResponseTransformer.exported,
-        expression: tsc.arrowFunction({
-          async: true,
-          multiLine: true,
-          parameters: [
-            {
-              name: dataVariableName,
-              // TODO: parser - add types, generate types without transforms
-              type: tsc.keywordTypeNode({ keyword: 'any' }),
-            },
-          ],
-          returnType: tsc.typeReferenceNode({
-            typeArguments: [
-              tsc.typeReferenceNode({ typeName: symbolResponse.placeholder }),
-            ],
-            typeName: 'Promise',
-          }),
-          statements: ensureStatements(nodes),
+      const symbolResponseTransformer = plugin.registerSymbol({
+        exported: true,
+        name: buildName({
+          config: {
+            case: 'camelCase',
+            name: '{{name}}ResponseTransformer',
+          },
+          name: operation.id,
         }),
-        name: symbolResponseTransformer.placeholder,
+        selector: plugin.api.selector('response', operation.id),
       });
-      plugin.setSymbolValue(symbolResponseTransformer, responseTransformerNode);
-    } else {
-      plugin.setSymbolValue(symbolResponseTransformer, null);
-    }
-  });
+
+      // TODO: parser - consider handling simple string response which is also a date
+      const nodes = schemaResponseTransformerNodes({
+        plugin,
+        schema: response,
+      });
+      if (nodes.length) {
+        const responseTransformerNode = tsc.constVariable({
+          exportConst: symbolResponseTransformer.exported,
+          expression: tsc.arrowFunction({
+            async: true,
+            multiLine: true,
+            parameters: [
+              {
+                name: dataVariableName,
+                // TODO: parser - add types, generate types without transforms
+                type: tsc.keywordTypeNode({ keyword: 'any' }),
+              },
+            ],
+            returnType: tsc.typeReferenceNode({
+              typeArguments: [
+                tsc.typeReferenceNode({ typeName: symbolResponse.placeholder }),
+              ],
+              typeName: 'Promise',
+            }),
+            statements: ensureStatements(nodes),
+          }),
+          name: symbolResponseTransformer.placeholder,
+        });
+        plugin.setSymbolValue(
+          symbolResponseTransformer,
+          responseTransformerNode,
+        );
+      } else {
+        plugin.setSymbolValue(symbolResponseTransformer, null);
+      }
+    },
+    {
+      order: 'declarations',
+    },
+  );
 };

@@ -1,7 +1,7 @@
 import { sync } from 'cross-spawn';
 
-import type { Config } from './types/config';
-import type { Formatters, Linters } from './types/output';
+import type { Config } from '~/types/config';
+import type { Formatters, Linters } from '~/types/output';
 
 type OutputProcessor = {
   args: (path: string) => ReadonlyArray<string>;

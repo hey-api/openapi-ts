@@ -1,6 +1,7 @@
-import { createOperationKey } from '../../../ir/operation';
-import type { Logger } from '../../../utils/logger';
-import { jsonPointerToPath } from '../../../utils/ref';
+import { createOperationKey } from '~/ir/operation';
+import type { Logger } from '~/utils/logger';
+import { jsonPointerToPath } from '~/utils/ref';
+
 import { addNamespace, stringToNamespace } from '../utils/filter';
 import type { Graph } from '../utils/graph';
 import { httpMethods } from '../utils/operation';
@@ -67,10 +68,10 @@ export const buildResourceMetadata = (
 
   const getDependencies = (pointer: string): Set<string> => {
     const dependencies = new Set<string>();
-    const nodeDeps = graph.allDependencies.get(pointer);
-    if (nodeDeps?.size) {
-      for (const dep of nodeDeps) {
-        const path = jsonPointerToPath(dep);
+    const nodeDependencies = graph.transitiveDependencies.get(pointer);
+    if (nodeDependencies?.size) {
+      for (const dependency of nodeDependencies) {
+        const path = jsonPointerToPath(dependency);
         const type = path[path.length - 2];
         const name = path[path.length - 1];
         if (type && name) {

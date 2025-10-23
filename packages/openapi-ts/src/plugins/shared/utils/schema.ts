@@ -1,6 +1,6 @@
-import type { IR } from '../../../ir/types';
-import type { Comments } from '../../../tsc';
-import { escapeComment } from '../../../utils/escape';
+import type { IR } from '~/ir/types';
+import type { Comments } from '~/tsc';
+import { escapeComment } from '~/utils/escape';
 
 export const createSchemaComment = ({
   schema,

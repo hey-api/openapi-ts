@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { compileInputPath } from '../createClient';
+import { compileInputPath } from '~/createClient';
 
 describe('compileInputPath', () => {
   it('with raw OpenAPI specification', () => {

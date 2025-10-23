@@ -1,6 +1,7 @@
-import { refParametersPartial } from '../../../utils/const';
-import { transformTypeName } from '../../../utils/transform';
-import { isDefinitionTypeNullable } from '../../v3/parser/inferType';
+import { isDefinitionTypeNullable } from '~/openApi/v3/parser/inferType';
+import { refParametersPartial } from '~/utils/const';
+import { transformTypeName } from '~/utils/transform';
+
 import type { Type } from '../interfaces/Type';
 import { ensureValidTypeScriptJavaScriptIdentifier } from './sanitize';
 import { stripNamespace } from './stripNamespace';

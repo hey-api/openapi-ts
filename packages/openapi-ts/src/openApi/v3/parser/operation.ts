@@ -1,16 +1,17 @@
-import type { Client } from '../../../types/client';
-import { getConfig } from '../../../utils/config';
 import type {
   Operation,
   OperationParameter,
   OperationParameters,
-} from '../../common/interfaces/client';
-import { getRef } from '../../common/parser/getRef';
+} from '~/openApi/common/interfaces/client';
+import { getRef } from '~/openApi/common/parser/getRef';
 import {
   getOperationResponseHeader,
   operationNameFn,
-} from '../../common/parser/operation';
-import { toSortedByRequired } from '../../common/parser/sort';
+} from '~/openApi/common/parser/operation';
+import { toSortedByRequired } from '~/openApi/common/parser/sort';
+import { getConfig } from '~/utils/config';
+
+import type { Client } from '../../../types/client';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';

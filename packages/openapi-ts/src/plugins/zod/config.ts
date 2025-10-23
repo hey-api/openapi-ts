@@ -1,6 +1,7 @@
 import colors from 'ansi-colors';
 
-import { definePluginConfig, mappers } from '../shared/utils/config';
+import { definePluginConfig, mappers } from '~/plugins/shared/utils/config';
+
 import { Api } from './api';
 import { handler } from './plugin';
 import type { ZodPlugin } from './types';

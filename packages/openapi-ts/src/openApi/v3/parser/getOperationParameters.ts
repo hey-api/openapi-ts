@@ -1,7 +1,8 @@
+import type { OperationParameters } from '~/openApi/common/interfaces/client';
+import { getRef } from '~/openApi/common/parser/getRef';
+import { operationParameterFilterFn } from '~/openApi/common/parser/operation';
+
 import type { Client } from '../../../types/client';
-import type { OperationParameters } from '../../common/interfaces/client';
-import { getRef } from '../../common/parser/getRef';
-import { operationParameterFilterFn } from '../../common/parser/operation';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import { getOperationParameter } from './getOperationParameter';

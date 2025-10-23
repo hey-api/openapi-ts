@@ -1,4 +1,5 @@
-import type { EnumExtensions } from '../../shared/types/openapi-spec-extensions';
+import type { EnumExtensions } from '~/openApi/shared/types/openapi-spec-extensions';
+
 import type { JsonSchemaDraft4 } from './json-schema-draft-4';
 import type { OpenApiV2_0_X_Nullable_Extensions } from './openapi-spec-extensions';
 

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { OpenApi } from '../../../../openApi/types';
+import type { OpenApi } from '~/openApi/types';
+
 import { patchOpenApiSpec } from '../patch';
 
 const specMetadataV2: Pick<OpenApi.V2_0_X, 'info' | 'paths' | 'swagger'> = {

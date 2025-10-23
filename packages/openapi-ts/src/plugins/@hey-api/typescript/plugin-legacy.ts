@@ -1,28 +1,24 @@
 import type ts from 'typescript';
 
-import { GeneratedFile } from '../../../generate/file';
-import { isOperationParameterRequired } from '../../../openApi';
-import { type Comments, tsc } from '../../../tsc';
-import type {
-  Client,
-  Method,
-  Model,
-  OperationParameter,
-} from '../../../types/client';
-import { getConfig, isLegacyClient } from '../../../utils/config';
-import { enumEntry, enumUnionType } from '../../../utils/enum';
-import { escapeComment } from '../../../utils/escape';
-import { sortByName, sorterByName } from '../../../utils/sort';
-import {
-  setUniqueTypeName,
-  type SetUniqueTypeNameResult,
-  toType,
-} from '../../../utils/type';
+import { GeneratedFile } from '~/generate/file';
+import { isOperationParameterRequired } from '~/openApi';
 import {
   operationDataTypeName,
   operationErrorTypeName,
   operationResponseTypeName,
-} from '../sdk/plugin-legacy';
+} from '~/plugins/@hey-api/sdk/plugin-legacy';
+import { type Comments, tsc } from '~/tsc';
+import type { Client, Method, Model, OperationParameter } from '~/types/client';
+import { getConfig, isLegacyClient } from '~/utils/config';
+import { enumEntry, enumUnionType } from '~/utils/enum';
+import { escapeComment } from '~/utils/escape';
+import { sortByName, sorterByName } from '~/utils/sort';
+import {
+  setUniqueTypeName,
+  type SetUniqueTypeNameResult,
+  toType,
+} from '~/utils/type';
+
 import type { HeyApiTypeScriptPlugin } from './types';
 
 export interface TypesProps {

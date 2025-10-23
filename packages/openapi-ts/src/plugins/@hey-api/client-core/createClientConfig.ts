@@ -1,5 +1,6 @@
-import { clientFolderAbsolutePath } from '../../../generate/client';
-import { tsc } from '../../../tsc';
+import { clientFolderAbsolutePath } from '~/generate/client';
+import { tsc } from '~/tsc';
+
 import type { PluginHandler } from './types';
 
 export const createClientConfigType = ({
@@ -8,7 +9,7 @@ export const createClientConfigType = ({
   const clientModule = clientFolderAbsolutePath(plugin.context.config);
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
   const symbolClientOptions = plugin.referenceSymbol(
-    pluginTypeScript.api.getSelector('ClientOptions'),
+    pluginTypeScript.api.selector('ClientOptions'),
   );
   const symbolConfig = plugin.registerSymbol({
     external: clientModule,

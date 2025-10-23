@@ -2,9 +2,10 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { getSpecsPath, specFileToJson } from '~/openApi/__tests__/utils';
+import type { ValidatorResult } from '~/openApi/shared/utils/validator';
+
 import { Logger } from '../../../../utils/logger';
-import { getSpecsPath, specFileToJson } from '../../../__tests__/utils';
-import type { ValidatorResult } from '../../../shared/utils/validator';
 import { validateOpenApiSpec } from '../validate';
 
 const specsFolder = path.join(getSpecsPath(), '3.0.x', 'invalid');

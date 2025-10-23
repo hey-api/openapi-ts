@@ -4,7 +4,8 @@ import path from 'node:path';
 import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
-import { setConfig } from '../../../utils/config';
+import { setConfig } from '~/utils/config';
+
 import { GeneratedFile } from '../../file';
 import { generateIndexFile } from '../indexFile';
 
@@ -84,7 +85,7 @@ describe('generateIndexFile', () => {
       plugins: {
         '@hey-api/schemas': {
           api: {
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/schemas',
@@ -96,7 +97,7 @@ describe('generateIndexFile', () => {
         '@hey-api/sdk': {
           api: {
             createOperationComment: () => undefined,
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/sdk',
@@ -107,8 +108,8 @@ describe('generateIndexFile', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
+            selector: () => [],
           },
           config: {
             enums: 'javascript',

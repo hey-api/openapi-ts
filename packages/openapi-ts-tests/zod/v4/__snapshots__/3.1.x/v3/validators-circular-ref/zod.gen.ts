@@ -12,11 +12,11 @@ export const zFoo = z.object({
     foo: zBar.optional()
 });
 
-/**
- * description caused circular reference error
- */
-export const zQux: z.ZodTypeAny = z.lazy(() => {
+export const zBaz: z.ZodTypeAny = z.lazy(() => {
     return zQux;
 });
 
-export const zBaz = zQux;
+/**
+ * description caused circular reference error
+ */
+export const zQux = zBaz;

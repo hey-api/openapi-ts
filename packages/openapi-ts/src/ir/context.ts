@@ -1,15 +1,17 @@
 import { Project } from '@hey-api/codegen-core';
 
-import type { Package } from '../config/utils/package';
-import { packageFactory } from '../config/utils/package';
-import { TypeScriptRenderer } from '../generate/renderer';
-import { buildName } from '../openApi/shared/utils/name';
-import type { PluginConfigMap } from '../plugins/config';
-import { PluginInstance } from '../plugins/shared/utils/instance';
-import type { PluginNames } from '../plugins/types';
-import type { Config } from '../types/config';
-import type { Logger } from '../utils/logger';
-import { resolveRef } from '../utils/ref';
+import type { Package } from '~/config/utils/package';
+import { packageFactory } from '~/config/utils/package';
+import { TypeScriptRenderer } from '~/generate/renderer';
+import type { Graph } from '~/openApi/shared/utils/graph';
+import { buildName } from '~/openApi/shared/utils/name';
+import type { PluginConfigMap } from '~/plugins/config';
+import { PluginInstance } from '~/plugins/shared/utils/instance';
+import type { PluginNames } from '~/plugins/types';
+import type { Config } from '~/types/config';
+import type { Logger } from '~/utils/logger';
+import { resolveRef } from '~/utils/ref';
+
 import type { IR } from './types';
 
 export class IRContext<Spec extends Record<string, any> = any> {
@@ -22,6 +24,10 @@ export class IRContext<Spec extends Record<string, any> = any> {
    * The code generation project instance used to manage files, symbols,
    */
   gen: Project;
+  /**
+   * The dependency graph built from the intermediate representation.
+   */
+  graph: Graph | undefined;
   /**
    * Intermediate representation model obtained from `spec`.
    */

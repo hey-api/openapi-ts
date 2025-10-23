@@ -1,6 +1,6 @@
 import colors from 'ansi-colors';
 
-import type { IR } from '../../../ir/types';
+import type { IR } from '~/ir/types';
 
 export interface ValidatorIssue {
   /**

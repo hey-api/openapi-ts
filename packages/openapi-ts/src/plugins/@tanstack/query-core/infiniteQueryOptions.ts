@@ -1,11 +1,12 @@
 import ts from 'typescript';
 
-import { operationPagination } from '../../../ir/operation';
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
-import { tsNodeToString } from '../../../tsc/utils';
-import { isOperationOptionsRequired } from '../../shared/utils/operation';
+import { operationPagination } from '~/ir/operation';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import { isOperationOptionsRequired } from '~/plugins/shared/utils/operation';
+import { tsc } from '~/tsc';
+import { tsNodeToString } from '~/tsc/utils';
+
 import { handleMeta } from './meta';
 import {
   createQueryKeyFunction,
@@ -27,7 +28,7 @@ const createInfiniteParamsFunction = ({
       },
       name: 'createInfiniteParams',
     }),
-    selector: plugin.api.getSelector('createInfiniteParams'),
+    selector: plugin.api.selector('createInfiniteParams'),
   });
 
   const fn = tsc.constVariable({
@@ -238,20 +239,20 @@ export const createInfiniteQueryOptions = ({
     operation,
   });
 
-  if (!plugin.getSymbol(plugin.api.getSelector('createQueryKey'))) {
+  if (!plugin.getSymbol(plugin.api.selector('createQueryKey'))) {
     createQueryKeyType({ plugin });
     createQueryKeyFunction({ plugin });
   }
 
-  if (!plugin.getSymbol(plugin.api.getSelector('createInfiniteParams'))) {
+  if (!plugin.getSymbol(plugin.api.selector('createInfiniteParams'))) {
     createInfiniteParamsFunction({ plugin });
   }
 
   const symbolInfiniteQueryOptions = plugin.referenceSymbol(
-    plugin.api.getSelector('infiniteQueryOptions'),
+    plugin.api.selector('infiniteQueryOptions'),
   );
   const symbolInfiniteDataType = plugin.referenceSymbol(
-    plugin.api.getSelector('InfiniteData'),
+    plugin.api.selector('InfiniteData'),
   );
 
   const typeData = useTypeData({ operation, plugin });
@@ -259,7 +260,7 @@ export const createInfiniteQueryOptions = ({
   const typeResponse = useTypeResponse({ operation, plugin });
 
   const symbolQueryKeyType = plugin.referenceSymbol(
-    plugin.api.getSelector('QueryKey'),
+    plugin.api.selector('QueryKey'),
   );
   const typeQueryKey = `${symbolQueryKeyType.placeholder}<${typeData}>`;
   const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
@@ -322,7 +323,7 @@ export const createInfiniteQueryOptions = ({
   });
 
   const symbolCreateInfiniteParams = plugin.referenceSymbol(
-    plugin.api.getSelector('createInfiniteParams'),
+    plugin.api.selector('createInfiniteParams'),
   );
 
   const statements: Array<ts.Statement> = [

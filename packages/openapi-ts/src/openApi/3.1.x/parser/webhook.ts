@@ -1,5 +1,6 @@
-import type { IR } from '../../../ir/types';
-import { mergeParametersObjects } from '../../shared/utils/parameter';
+import type { IR } from '~/ir/types';
+import { mergeParametersObjects } from '~/openApi/shared/utils/parameter';
+
 import type { OpenApiV3_1_X, PathItemObject } from '../types/spec';
 import { parseWebhookOperation } from './operation';
 import { parametersArrayToObject } from './parameter';

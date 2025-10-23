@@ -2,15 +2,10 @@
 
 import * as v from 'valibot';
 
-/**
- * This is Bar schema.
- */
-export const vBar: v.GenericSchema = v.pipe(v.object({
-    foo: v.optional(v.lazy(() => {
-        return vFoo;
-    }))
-}), v.metadata({
-    description: 'This is Bar schema.'
+export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), 'baz');
+
+export const vQux = v.record(v.string(), v.object({
+    qux: v.optional(v.string())
 }));
 
 /**
@@ -21,7 +16,9 @@ export const vFoo: v.GenericSchema = v.optional(v.union([
         foo: v.optional(v.pipe(v.pipe(v.string(), v.regex(/^\d{3}-\d{2}-\d{4}$/)), v.metadata({
             description: 'This is foo property.'
         }))),
-        bar: v.optional(vBar),
+        bar: v.optional(v.lazy(() => {
+            return vBar;
+        })),
         baz: v.optional(v.pipe(v.array(v.lazy(() => {
             return vFoo;
         })), v.metadata({
@@ -34,10 +31,13 @@ export const vFoo: v.GenericSchema = v.optional(v.union([
     v.null()
 ]), null);
 
-export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), 'baz');
-
-export const vQux = v.record(v.string(), v.object({
-    qux: v.optional(v.string())
+/**
+ * This is Bar schema.
+ */
+export const vBar = v.pipe(v.object({
+    foo: v.optional(vFoo)
+}), v.metadata({
+    description: 'This is Bar schema.'
 }));
 
 /**

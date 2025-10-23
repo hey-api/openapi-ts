@@ -41,6 +41,10 @@ jobs:
         if: matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
         run: pnpm build --filter="@example/**"
 
+      - name: Check examples generated code
+        if: matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
+        run: pnpm examples:check
+
       - name: Run linter
         run: pnpm lint
 

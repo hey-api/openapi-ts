@@ -1,5 +1,6 @@
+import { stringCase } from '~/utils/stringCase';
+
 import type { StringCase, StringName } from '../../../types/case';
-import { stringCase } from '../../../utils/stringCase';
 
 export const buildName = ({
   config,

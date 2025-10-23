@@ -1,5 +1,6 @@
-import type { IR } from '../../../ir/types';
-import { refToName } from '../../../utils/ref';
+import type { IR } from '~/ir/types';
+import { refToName } from '~/utils/ref';
+
 import type { RequestBodyObject, SchemaObject } from '../types/spec';
 import { mediaTypeObjects } from './mediaType';
 import { schemaToIrSchema } from './schema';
@@ -32,7 +33,6 @@ const requestBodyToIrRequestBody = ({
       state: {
         $ref,
         circularReferenceTracker: new Set(),
-        refStack: [$ref],
       },
     }),
   };

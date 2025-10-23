@@ -1,8 +1,9 @@
+import type { Model } from '~/openApi/common/interfaces/client';
+import { getPattern } from '~/openApi/common/parser/getPattern';
+import { getType } from '~/openApi/common/parser/type';
+import { escapeName } from '~/utils/escape';
+
 import type { Client } from '../../../types/client';
-import { escapeName } from '../../../utils/escape';
-import type { Model } from '../../common/interfaces/client';
-import { getPattern } from '../../common/parser/getPattern';
-import { getType } from '../../common/parser/type';
 import type { GetModelFn } from '../interfaces/Model';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';

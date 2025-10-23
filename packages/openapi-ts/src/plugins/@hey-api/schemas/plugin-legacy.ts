@@ -1,8 +1,9 @@
-import { GeneratedFile } from '../../../generate/file';
-import type { OpenApiV2Schema, OpenApiV3Schema } from '../../../openApi';
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
-import { tsc } from '../../../tsc';
-import { getConfig } from '../../../utils/config';
+import { GeneratedFile } from '~/generate/file';
+import type { OpenApiV2Schema, OpenApiV3Schema } from '~/openApi';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '~/openApi';
+import { tsc } from '~/tsc';
+import { getConfig } from '~/utils/config';
+
 import type { HeyApiSchemasPlugin } from './types';
 
 const ensureValidSchemaOutput = (

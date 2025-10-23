@@ -5,16 +5,8 @@ export interface SchemaState {
    */
   $ref?: string;
   /**
-   * If a reference is detected as circular, this will hold the $ref string.
-   * This is used to back-propagate circular reference information to the
-   * original schema that started the circular reference chain.
-   */
-  circularRef?: string;
-  /**
    * Set of $refs currently being resolved that are circular. This is used to
    * avoid infinite loops when resolving schemas with circular references.
-   *
-   * @deprecated Use `refStack` instead.
    */
   circularReferenceTracker: Set<string>;
   /**
@@ -24,11 +16,6 @@ export interface SchemaState {
    * properties from other schemas in the composition.
    */
   inAllOf?: boolean;
-  /**
-   * Stack of $refs currently being resolved. This is used to detect circular
-   * references and avoid infinite loops.
-   */
-  refStack: Array<string>;
 }
 
 export type SchemaWithRequired<
