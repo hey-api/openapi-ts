@@ -1,9 +1,10 @@
+import type { Graph } from '~/graph';
 import type { Logger } from '~/utils/logger';
 import { jsonPointerToPath } from '~/utils/ref';
 
 import type { Config } from '../../../types/config';
 import deepEqual from '../utils/deepEqual';
-import { buildGraph, type Graph, type Scope } from '../utils/graph';
+import { buildGraph, type Scope } from '../utils/graph';
 import { buildName } from '../utils/name';
 import { deepClone } from '../utils/schema';
 import { childSchemaRelationships } from '../utils/schemaChildRelationships';
