@@ -365,7 +365,7 @@ export type ModelWithReference = {
  * This is a model with one property containing an array
  */
 export type ModelWithArrayReadOnlyAndWriteOnly = {
-    prop?: Array<ModelWithReadOnlyAndWriteOnlyWritable>;
+    prop?: Array<ModelWithReadOnlyAndWriteOnly>;
     propWithFile?: Array<Blob | File>;
     propWithNumber?: Array<number>;
 };
