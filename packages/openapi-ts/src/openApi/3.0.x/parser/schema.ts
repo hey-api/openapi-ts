@@ -1,12 +1,13 @@
-import type { IR } from '../../../ir/types';
-import { addItemsToSchema } from '../../../ir/utils';
-import { refToName } from '../../../utils/ref';
+import type { IR } from '~/ir/types';
+import { addItemsToSchema } from '~/ir/utils';
 import type {
   SchemaState,
   SchemaType,
   SchemaWithRequired,
-} from '../../shared/types/schema';
-import { discriminatorValues } from '../../shared/utils/discriminator';
+} from '~/openApi/shared/types/schema';
+import { discriminatorValues } from '~/openApi/shared/utils/discriminator';
+import { refToName } from '~/utils/ref';
+
 import type { ReferenceObject, SchemaObject } from '../types/spec';
 
 export const getSchemaType = ({

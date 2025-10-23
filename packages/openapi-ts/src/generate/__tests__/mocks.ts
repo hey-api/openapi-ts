@@ -1,9 +1,9 @@
 import { vi } from 'vitest';
 
-import type { OpenApi } from '../../openApi';
-import type { Client } from '../../types/client';
-import type { Config } from '../../types/config';
-import type { Templates } from '../../utils/handlebars';
+import type { OpenApi } from '~/openApi';
+import type { Client } from '~/types/client';
+import type { Config } from '~/types/config';
+import type { Templates } from '~/utils/handlebars';
 
 export const client: Client = {
   config: {} as Config,

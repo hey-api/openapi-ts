@@ -1,5 +1,6 @@
-import { stringCase } from '../../../utils/stringCase';
-import { operationClasses } from '../../@hey-api/sdk/operation';
+import { operationClasses } from '~/plugins/@hey-api/sdk/operation';
+import { stringCase } from '~/utils/stringCase';
+
 import { createInfiniteQueryOptions } from './infiniteQueryOptions';
 import { createMutationOptions } from './mutationOptions';
 import { createQueryOptions } from './queryOptions';

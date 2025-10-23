@@ -1,7 +1,8 @@
+import type { Model } from '~/openApi/common/interfaces/client';
+import { getRef } from '~/openApi/common/parser/getRef';
+import { getType } from '~/openApi/common/parser/type';
+
 import type { Client } from '../../../types/client';
-import type { Model } from '../../common/interfaces/client';
-import { getRef } from '../../common/parser/getRef';
-import { getType } from '../../common/parser/type';
 import type { GetModelFn } from '../interfaces/Model';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';

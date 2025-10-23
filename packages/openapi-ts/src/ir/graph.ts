@@ -1,5 +1,5 @@
-import type { Graph, NodeInfo } from '../openApi/shared/utils/graph';
-import { MinHeap } from '../utils/minHeap';
+import type { Graph, NodeInfo } from '~/openApi/shared/utils/graph';
+import { MinHeap } from '~/utils/minHeap';
 
 type KindPriority = Record<IrTopLevelKind, number>;
 type PreferGroups = ReadonlyArray<IrTopLevelKind>;

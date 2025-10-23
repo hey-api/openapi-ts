@@ -1,4 +1,4 @@
-import { tsc } from '../../tsc';
+import { tsc } from '~/tsc';
 
 // TODO: this is inaccurate, it combines identifiers for all supported versions
 export const identifiers = {

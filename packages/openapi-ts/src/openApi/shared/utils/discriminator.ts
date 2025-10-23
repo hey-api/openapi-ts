@@ -1,4 +1,4 @@
-import { refToName } from '../../../utils/ref';
+import { refToName } from '~/utils/ref';
 
 export const discriminatorValues = (
   $ref: string,

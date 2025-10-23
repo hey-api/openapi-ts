@@ -4,7 +4,8 @@ import path from 'node:path';
 import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
-import { setConfig } from '../../../utils/config';
+import { setConfig } from '~/utils/config';
+
 import { GeneratedFile } from '../../file';
 import { generateIndexFile } from '../indexFile';
 

@@ -1,29 +1,15 @@
 import ts from 'typescript';
 
-import { clientModulePath } from '../../../generate/client';
-import { relativeModulePath } from '../../../generate/utils';
-import { createOperationKey } from '../../../ir/operation';
-import { getPaginationKeywordsRegExp } from '../../../ir/pagination';
-import type { IR } from '../../../ir/types';
-import { isOperationParameterRequired } from '../../../openApi';
-import { type Property, tsc } from '../../../tsc';
-import type { ImportExportItem } from '../../../tsc/module';
-import type { ImportExportItemObject } from '../../../tsc/utils';
-import type {
-  Client,
-  Method,
-  Model,
-  Operation,
-  OperationParameter,
-} from '../../../types/client';
-import type { Config } from '../../../types/config';
-import type { Files } from '../../../types/utils';
-import { getConfig, isLegacyClient } from '../../../utils/config';
-import { transformClassName } from '../../../utils/transform';
+import { clientModulePath } from '~/generate/client';
+import { relativeModulePath } from '~/generate/utils';
+import { createOperationKey } from '~/ir/operation';
+import { getPaginationKeywordsRegExp } from '~/ir/pagination';
+import type { IR } from '~/ir/types';
+import { isOperationParameterRequired } from '~/openApi';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
-} from '../../@hey-api/client-core/utils';
+} from '~/plugins/@hey-api/client-core/utils';
 import {
   generateImport,
   operationDataTypeName,
@@ -31,12 +17,26 @@ import {
   operationOptionsLegacyParserType,
   operationResponseTypeName,
   serviceFunctionIdentifier,
-} from '../../@hey-api/sdk/plugin-legacy';
-import type { TanStackAngularQueryPlugin } from '../angular-query-experimental';
-import type { TanStackReactQueryPlugin } from '../react-query';
-import type { TanStackSolidQueryPlugin } from '../solid-query';
-import type { TanStackSvelteQueryPlugin } from '../svelte-query';
-import type { TanStackVueQueryPlugin } from '../vue-query';
+} from '~/plugins/@hey-api/sdk/plugin-legacy';
+import type { TanStackAngularQueryPlugin } from '~/plugins/@tanstack/angular-query-experimental';
+import type { TanStackReactQueryPlugin } from '~/plugins/@tanstack/react-query';
+import type { TanStackSolidQueryPlugin } from '~/plugins/@tanstack/solid-query';
+import type { TanStackSvelteQueryPlugin } from '~/plugins/@tanstack/svelte-query';
+import type { TanStackVueQueryPlugin } from '~/plugins/@tanstack/vue-query';
+import { type Property, tsc } from '~/tsc';
+import type { ImportExportItem } from '~/tsc/module';
+import type { ImportExportItemObject } from '~/tsc/utils';
+import type {
+  Client,
+  Method,
+  Model,
+  Operation,
+  OperationParameter,
+} from '~/types/client';
+import type { Config } from '~/types/config';
+import type { Files } from '~/types/utils';
+import { getConfig, isLegacyClient } from '~/utils/config';
+import { transformClassName } from '~/utils/transform';
 
 const toInfiniteQueryOptionsName = (operation: Operation) =>
   `${serviceFunctionIdentifier({

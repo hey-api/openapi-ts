@@ -1,4 +1,4 @@
-import type { Dictionary } from '../../common/interfaces/Dictionary';
+import type { Dictionary } from '~/openApi/common/interfaces/Dictionary';
 
 /**
  * {@link} https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#security-scheme-object

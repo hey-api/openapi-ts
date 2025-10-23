@@ -1,7 +1,8 @@
 import ts from 'typescript';
 
-import { escapeName } from '../utils/escape';
-import { validTypescriptIdentifierRegExp } from '../utils/regexp';
+import { escapeName } from '~/utils/escape';
+import { validTypescriptIdentifierRegExp } from '~/utils/regexp';
+
 import {
   addLeadingComments,
   type Comments,

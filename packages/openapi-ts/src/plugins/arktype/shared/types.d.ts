@@ -1,7 +1,8 @@
 import type ts from 'typescript';
 
-import type { IR } from '../../../ir/types';
-import type { ToRefs } from '../../shared/types/refs';
+import type { IR } from '~/ir/types';
+import type { ToRefs } from '~/plugins/shared/types/refs';
+
 import type { ArktypePlugin } from '../types';
 
 export type Ast = {

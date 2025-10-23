@@ -1,4 +1,4 @@
-import type { Graph } from '../openApi/shared/utils/graph';
+import type { Graph } from '~/openApi/shared/utils/graph';
 
 const analyzeStructure = (graph: Graph) => {
   let maxDepth = 0;

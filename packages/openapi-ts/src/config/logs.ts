@@ -1,4 +1,4 @@
-import type { Config, UserConfig } from '../types/config';
+import type { Config, UserConfig } from '~/types/config';
 
 export const getLogs = (
   userConfig: Pick<UserConfig, 'logs'> | undefined,

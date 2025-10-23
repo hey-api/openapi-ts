@@ -1,7 +1,8 @@
 import type ts from 'typescript';
 
-import { tsc } from '../../../../tsc';
-import type { SchemaWithType } from '../../../shared/types/schema';
+import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import { tsc } from '~/tsc';
+
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 import { unknownToAst } from './unknown';

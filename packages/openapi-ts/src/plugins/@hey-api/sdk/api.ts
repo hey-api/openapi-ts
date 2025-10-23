@@ -1,6 +1,7 @@
 import type { Selector } from '@hey-api/codegen-core';
 
-import type { Plugin } from '../../types';
+import type { Plugin } from '~/plugins/types';
+
 import { createOperationComment } from './comment';
 
 type SelectorType =

@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Graph } from '../../openApi/shared/utils/graph';
-import { buildGraph } from '../../openApi/shared/utils/graph';
+import type { Graph } from '~/openApi/shared/utils/graph';
+import { buildGraph } from '~/openApi/shared/utils/graph';
+
 import type { IrTopLevelKind } from '../graph';
 import { matchIrTopLevelPointer, walkTopological } from '../graph';
 

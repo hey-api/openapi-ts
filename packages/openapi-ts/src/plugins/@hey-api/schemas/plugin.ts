@@ -1,11 +1,12 @@
-import { satisfies } from '../../../config/utils/package';
-import type { IR } from '../../../ir/types';
-import type { OpenApiV2_0_XTypes } from '../../../openApi/2.0.x';
-import type { OpenApiV3_0_XTypes } from '../../../openApi/3.0.x';
-import type { OpenApiV3_1_XTypes } from '../../../openApi/3.1.x';
-import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
-import type { OpenApi } from '../../../openApi/types';
-import { tsc } from '../../../tsc';
+import { satisfies } from '~/config/utils/package';
+import type { IR } from '~/ir/types';
+import type { OpenApiV2_0_XTypes } from '~/openApi/2.0.x';
+import type { OpenApiV3_0_XTypes } from '~/openApi/3.0.x';
+import type { OpenApiV3_1_XTypes } from '~/openApi/3.1.x';
+import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
+import type { OpenApi } from '~/openApi/types';
+import { tsc } from '~/tsc';
+
 import type { HeyApiSchemasPlugin } from './types';
 
 const stripSchema = ({

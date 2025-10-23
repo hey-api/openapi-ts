@@ -1,6 +1,7 @@
-import type { IR } from '../../../ir/types';
-import { getClientPlugin } from '../../@hey-api/client-core/utils';
-import { operationOptionsType } from '../../@hey-api/sdk/operation';
+import type { IR } from '~/ir/types';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { operationOptionsType } from '~/plugins/@hey-api/sdk/operation';
+
 import type { PluginInstance } from './types';
 
 export const useTypeData = ({

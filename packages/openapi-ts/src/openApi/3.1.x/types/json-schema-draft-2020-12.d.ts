@@ -1,5 +1,6 @@
+import type { EnumExtensions } from '~/openApi/shared/types/openapi-spec-extensions';
+
 import type { MaybeArray } from '../../../types/utils';
-import type { EnumExtensions } from '../../shared/types/openapi-spec-extensions';
 import type { OpenApiSchemaExtensions } from './spec-extensions';
 
 // TODO: left out some keywords related to structuring a complex schema and declaring a dialect

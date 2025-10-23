@@ -1,13 +1,11 @@
 import ts from 'typescript';
 
-import {
-  createOperationKey,
-  operationResponsesMap,
-} from '../../../ir/operation';
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
-import { refToName } from '../../../utils/ref';
+import { createOperationKey, operationResponsesMap } from '~/ir/operation';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import { tsc } from '~/tsc';
+import { refToName } from '~/utils/ref';
+
 import type { HeyApiTransformersPlugin } from './types';
 
 const dataVariableName = 'data';

@@ -1,4 +1,5 @@
-import type { Config } from '../types/config';
+import type { Config } from '~/types/config';
+
 import type { IR } from './types';
 
 export function getPaginationKeywordsRegExp(

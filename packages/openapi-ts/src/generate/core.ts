@@ -1,11 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
-import type { Client } from '../types/client';
-import { getConfig, legacyNameFromConfig } from '../utils/config';
-import { getHttpRequestName } from '../utils/getHttpRequestName';
-import type { Templates } from '../utils/handlebars';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import type { Client } from '~/types/client';
+import { getConfig, legacyNameFromConfig } from '~/utils/config';
+import { getHttpRequestName } from '~/utils/getHttpRequestName';
+import type { Templates } from '~/utils/handlebars';
 
 /**
  * Generate OpenAPI core files, this includes the basic boilerplate code to handle requests.

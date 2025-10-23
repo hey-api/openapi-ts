@@ -1,6 +1,7 @@
 import type ts from 'typescript';
 
-import { tsc } from '../../../tsc';
+import { tsc } from '~/tsc';
+
 import type { ValidatorArgs } from '../shared/types';
 import { identifiers } from './constants';
 

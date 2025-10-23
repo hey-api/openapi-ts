@@ -1,10 +1,11 @@
 import type ts from 'typescript';
 
-import { clientFolderAbsolutePath } from '../../../generate/client';
-import { tsc } from '../../../tsc';
-import { stringCase } from '../../../utils/stringCase';
-import { isOperationOptionsRequired } from '../../shared/utils/operation';
-import { getClientPlugin } from '../client-core/utils';
+import { clientFolderAbsolutePath } from '~/generate/client';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { isOperationOptionsRequired } from '~/plugins/shared/utils/operation';
+import { tsc } from '~/tsc';
+import { stringCase } from '~/utils/stringCase';
+
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import {
   operationClasses,

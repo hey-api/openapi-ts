@@ -1,5 +1,6 @@
-import type { OpenApiReference as OpenApiReferenceV2 } from '../../v2/interfaces/OpenApiReference';
-import type { OpenApiReference as OpenApiReferenceV3 } from '../../v3/interfaces/OpenApiReference';
+import type { OpenApiReference as OpenApiReferenceV2 } from '~/openApi/v2/interfaces/OpenApiReference';
+import type { OpenApiReference as OpenApiReferenceV3 } from '~/openApi/v3/interfaces/OpenApiReference';
+
 import type { OpenApi } from '../interfaces/OpenApi';
 
 const ESCAPED_REF_SLASH = /~1/g;

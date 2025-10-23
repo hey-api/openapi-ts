@@ -1,14 +1,15 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { Expression } from 'typescript';
 
-import { hasOperationDataRequired } from '../../../ir/operation';
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { type Property, tsc } from '../../../tsc';
+import { hasOperationDataRequired } from '~/ir/operation';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
-} from '../../@hey-api/client-core/utils';
+} from '~/plugins/@hey-api/client-core/utils';
+import { type Property, tsc } from '~/tsc';
+
 import type { PluginInstance } from './types';
 import { useTypeData } from './useType';
 

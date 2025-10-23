@@ -1,9 +1,10 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { IR } from '../../../ir/types';
-import { tsc } from '../../../tsc';
-import { createSchemaComment } from '../../shared/utils/schema';
+import type { IR } from '~/ir/types';
+import { createSchemaComment } from '~/plugins/shared/utils/schema';
+import { tsc } from '~/tsc';
+
 import { identifiers } from '../constants';
 import type { ArktypePlugin } from '../types';
 import type { Ast } from './types';

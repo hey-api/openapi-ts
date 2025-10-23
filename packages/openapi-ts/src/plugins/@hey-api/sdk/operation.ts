@@ -1,16 +1,17 @@
 import type ts from 'typescript';
 
-import { statusCodeToGroup } from '../../../ir/operation';
-import type { IR } from '../../../ir/types';
-import { sanitizeNamespaceIdentifier } from '../../../openApi';
-import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
-import { tsc } from '../../../tsc';
-import type { FunctionParameter, ObjectValue } from '../../../tsc/types';
-import { reservedJavaScriptKeywordsRegExp } from '../../../utils/regexp';
-import { stringCase } from '../../../utils/stringCase';
-import { transformClassName } from '../../../utils/transform';
+import { statusCodeToGroup } from '~/ir/operation';
+import type { IR } from '~/ir/types';
+import { sanitizeNamespaceIdentifier } from '~/openApi';
+import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { tsc } from '~/tsc';
+import type { FunctionParameter, ObjectValue } from '~/tsc/types';
+import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
+import { stringCase } from '~/utils/stringCase';
+import { transformClassName } from '~/utils/transform';
+
 import type { Field, Fields } from '../client-core/bundle/params';
-import { getClientPlugin } from '../client-core/utils';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 // import { getSignatureParameters } from './signature';

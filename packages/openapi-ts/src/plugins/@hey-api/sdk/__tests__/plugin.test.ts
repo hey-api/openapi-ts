@@ -5,13 +5,14 @@ import { Project } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
-import { openApi } from '../../../../generate/__tests__/mocks';
-import { GeneratedFile } from '../../../../generate/file';
-import type { Operation } from '../../../../types/client';
-import type { Config } from '../../../../types/config';
-import type { Files } from '../../../../types/utils';
-import { setConfig } from '../../../../utils/config';
-import { PluginInstance } from '../../../shared/utils/instance';
+import { openApi } from '~/generate/__tests__/mocks';
+import { GeneratedFile } from '~/generate/file';
+import { PluginInstance } from '~/plugins/shared/utils/instance';
+import type { Operation } from '~/types/client';
+import type { Config } from '~/types/config';
+import type { Files } from '~/types/utils';
+import { setConfig } from '~/utils/config';
+
 import { handlerLegacy } from '../plugin-legacy';
 
 vi.mock('node:fs');

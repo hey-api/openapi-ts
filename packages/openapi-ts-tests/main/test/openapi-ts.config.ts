@@ -275,7 +275,7 @@ export default defineConfig(() => {
           // mutationOptions: {
           //   name: '{{name}}MO',
           // },
-          // name: '@tanstack/react-query',
+          name: '@tanstack/react-query',
           // queryKeys: {
           //   name: '{{name}}QK',
           // },

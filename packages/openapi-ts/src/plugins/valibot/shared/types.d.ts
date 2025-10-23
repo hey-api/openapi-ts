@@ -1,6 +1,7 @@
-import type { IR } from '../../../ir/types';
-import type { StringCase, StringName } from '../../../types/case';
-import type { ToRefs } from '../../shared/types/refs';
+import type { IR } from '~/ir/types';
+import type { ToRefs } from '~/plugins/shared/types/refs';
+import type { StringCase, StringName } from '~/types/case';
+
 import type { ValibotPlugin } from '../types';
 
 export type IrSchemaToAstOptions = {

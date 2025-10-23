@@ -4,8 +4,9 @@ import path from 'node:path';
 import type ts from 'typescript';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { Config } from '../../types/config';
-import { setConfig } from '../../utils/config';
+import type { Config } from '~/types/config';
+import { setConfig } from '~/utils/config';
+
 import { generateLegacyCore } from '../core';
 import { mockTemplates } from './mocks';
 

@@ -1,4 +1,5 @@
-import type { WithEnumExtension } from '../../common/interfaces/WithEnumExtension';
+import type { WithEnumExtension } from '~/openApi/common/interfaces/WithEnumExtension';
+
 import type { WithNullableExtension } from './Extensions/WithNullableExtension';
 import type { OpenApiItems } from './OpenApiItems';
 import type { OpenApiReference } from './OpenApiReference';
