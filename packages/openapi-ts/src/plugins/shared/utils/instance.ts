@@ -8,7 +8,7 @@ import type {
 } from '@hey-api/codegen-core';
 
 import { HeyApiError } from '~/error';
-import type { WalkOptions } from '~/graph';
+import type { MatchPointerToGroupFn, WalkOptions } from '~/graph';
 import { walk } from '~/graph';
 import type { IrTopLevelKind } from '~/ir/graph';
 import {
@@ -138,7 +138,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     ...args: [
       ...events: ReadonlyArray<T>,
       callback: (event: WalkEvent<T>) => void,
-      options: WalkOptions,
+      options: WalkOptions<T>,
     ]
   ): void;
   forEach<T extends IrTopLevelKind = IrTopLevelKind>(
@@ -154,8 +154,14 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
 
     let callback: (event: WalkEvent<T>) => void;
     let events: ReadonlyArray<T>;
-    let options: WalkOptions = {
+    let options: WalkOptions<T> = {
+      getPointerPriority: getIrPointerPriority,
+      // default functions operate on the full union of kinds; cast them
+      // to the WalkOptions generic to keep strict typing for callers.
+      matchPointerToGroup:
+        matchIrPointerToGroup as unknown as MatchPointerToGroupFn<T>,
       order: 'topological',
+      preferGroups: preferGroups as unknown as ReadonlyArray<T>,
     };
     if (typeof args[args.length - 1] === 'function') {
       events = args.slice(0, -1);
@@ -238,12 +244,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
           }
         }
       },
-      {
-        getPointerPriority: getIrPointerPriority,
-        matchPointerToGroup: matchIrPointerToGroup,
-        order: options.order,
-        preferGroups,
-      },
+      options,
     );
   }
 
