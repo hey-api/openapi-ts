@@ -38,7 +38,7 @@ export const createClient: PluginHandler = ({ plugin }) => {
   });
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
   const symbolClientOptions = plugin.referenceSymbol(
-    pluginTypeScript.api.getSelector('ClientOptions'),
+    pluginTypeScript.api.selector('ClientOptions'),
   );
 
   const { runtimeConfigPath } = plugin.config;
@@ -93,7 +93,7 @@ export const createClient: PluginHandler = ({ plugin }) => {
 
   const symbolClient = plugin.registerSymbol({
     name: 'client',
-    selector: plugin.api.getSelector('client'),
+    selector: plugin.api.selector('client'),
   });
   const statement = tsc.constVariable({
     exportConst: true,

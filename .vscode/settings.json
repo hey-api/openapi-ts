@@ -3,11 +3,12 @@
     "source.fixAll.eslint": "explicit"
   },
   "editor.quickSuggestions": {
-    "strings": true
+    "strings": "on"
   },
   "eslint.format.enable": true,
   "eslint.nodePath": "./node_modules",
   "eslint.workingDirectories": [{ "pattern": "./packages/*/" }],
   "typescript.preferences.autoImportFileExcludePatterns": ["dist/**"],
+  "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^(node:)?os$"],
   "typescript.tsdk": "node_modules/typescript/lib"
 }

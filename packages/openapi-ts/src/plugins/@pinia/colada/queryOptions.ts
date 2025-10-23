@@ -37,7 +37,7 @@ export const createQueryOptions = ({
     context: plugin.context,
     operation,
   });
-  if (!plugin.getSymbol(plugin.api.getSelector('createQueryKey'))) {
+  if (!plugin.getSymbol(plugin.api.selector('createQueryKey'))) {
     createQueryKeyType({ plugin });
     createQueryKeyFunction({ plugin });
   }
@@ -63,7 +63,7 @@ export const createQueryOptions = ({
     });
   } else {
     const symbolCreateQueryKey = plugin.referenceSymbol(
-      plugin.api.getSelector('createQueryKey'),
+      plugin.api.selector('createQueryKey'),
     );
     // Optionally include tags when configured
     let tagsExpr: ts.Expression | undefined;
@@ -155,12 +155,12 @@ export const createQueryOptions = ({
       config: plugin.config.queryOptions,
       name: operation.id,
     }),
-    selector: plugin.api.getSelector('queryOptionsFn', operation.id),
+    selector: plugin.api.selector('queryOptionsFn', operation.id),
   });
   const symbolDefineQueryOptions = plugin.registerSymbol({
     external: plugin.name,
     name: 'defineQueryOptions',
-    selector: plugin.api.getSelector('defineQueryOptions'),
+    selector: plugin.api.selector('defineQueryOptions'),
   });
   const statement = tsc.constVariable({
     comment: plugin.config.comments

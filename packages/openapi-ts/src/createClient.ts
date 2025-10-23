@@ -8,6 +8,7 @@ import { generateOutput } from './generate/output';
 import { getSpec } from './getSpec';
 import type { IR } from './ir/types';
 import { parseLegacy, parseOpenApiSpec } from './openApi';
+import { buildGraph } from './openApi/shared/utils/graph';
 import { patchOpenApiSpec } from './openApi/shared/utils/patch';
 import { processOutput } from './processOutput';
 import type { Client } from './types/client';
@@ -332,8 +333,10 @@ export const createClient = async ({
       context = parseOpenApiSpec({ config, dependencies, logger, spec: data });
     }
 
-    // fallback to legacy parser
-    if (!context) {
+    if (context) {
+      context.graph = buildGraph(context.ir, logger).graph;
+    } else {
+      // fallback to legacy parser
       const parsed = parseLegacy({ openApi: data });
       client = postProcessClient(parsed, config);
     }

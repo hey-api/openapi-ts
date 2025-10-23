@@ -51,6 +51,11 @@ export class SymbolRegistry implements ISymbolRegistry {
       : { selector: symbolIdOrSelector };
   }
 
+  isRegistered(symbolIdOrSelector: number | ISelector): boolean {
+    const symbol = this.get(symbolIdOrSelector);
+    return symbol ? this.registerOrder.has(symbol.id) : false;
+  }
+
   reference(symbolIdOrSelector: number | ISelector): ISymbolOut {
     const symbol = this.idOrSelector(symbolIdOrSelector);
     return this.register(symbol);

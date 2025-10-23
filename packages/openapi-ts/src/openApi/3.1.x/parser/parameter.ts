@@ -143,7 +143,6 @@ const parameterToIrParameter = ({
       state: {
         $ref,
         circularReferenceTracker: new Set(),
-        refStack: [$ref],
       },
     }),
     style,

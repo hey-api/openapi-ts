@@ -370,7 +370,7 @@ const schemasV2_0_X = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       name: schemaName({ name, plugin, schema }),
-      selector: plugin.api.getSelector('ref', name),
+      selector: plugin.api.selector('ref', name),
     });
     const obj = schemaToJsonSchemaDraft_04({
       context,
@@ -403,7 +403,7 @@ const schemasV3_0_X = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       name: schemaName({ name, plugin, schema }),
-      selector: plugin.api.getSelector('ref', name),
+      selector: plugin.api.selector('ref', name),
     });
     const obj = schemaToJsonSchemaDraft_05({
       context,
@@ -436,7 +436,7 @@ const schemasV3_1_X = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       name: schemaName({ name, plugin, schema }),
-      selector: plugin.api.getSelector('ref', name),
+      selector: plugin.api.selector('ref', name),
     });
     const obj = schemaToJsonSchema2020_12({
       context,

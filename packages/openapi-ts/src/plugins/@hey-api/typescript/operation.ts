@@ -128,7 +128,7 @@ const operationToDataType = ({
       config: plugin.config.requests,
       name: operation.id,
     }),
-    selector: plugin.api.getSelector('data', operation.id),
+    selector: plugin.api.selector('data', operation.id),
   });
   const type = schemaToType({
     plugin,
@@ -164,7 +164,7 @@ export const operationToType = ({
         config: plugin.config.errors,
         name: operation.id,
       }),
-      selector: plugin.api.getSelector('errors', operation.id),
+      selector: plugin.api.selector('errors', operation.id),
     });
     const type = schemaToType({
       plugin,
@@ -190,7 +190,7 @@ export const operationToType = ({
           },
           name: operation.id,
         }),
-        selector: plugin.api.getSelector('error', operation.id),
+        selector: plugin.api.selector('error', operation.id),
       });
       const type = tsc.indexedAccessTypeNode({
         indexType: tsc.typeOperatorNode({
@@ -220,7 +220,7 @@ export const operationToType = ({
         config: plugin.config.responses,
         name: operation.id,
       }),
-      selector: plugin.api.getSelector('responses', operation.id),
+      selector: plugin.api.selector('responses', operation.id),
     });
     const type = schemaToType({
       plugin,
@@ -246,7 +246,7 @@ export const operationToType = ({
           },
           name: operation.id,
         }),
-        selector: plugin.api.getSelector('response', operation.id),
+        selector: plugin.api.selector('response', operation.id),
       });
       const type = tsc.indexedAccessTypeNode({
         indexType: tsc.typeOperatorNode({

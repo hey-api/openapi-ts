@@ -36,7 +36,7 @@ export const createUseQuery = ({
   });
 
   const symbolUseQuery = plugin.referenceSymbol(
-    plugin.api.getSelector('useQuery'),
+    plugin.api.selector('useQuery'),
   );
 
   const isRequiredOptions = isOperationOptionsRequired({
@@ -46,7 +46,7 @@ export const createUseQuery = ({
   const typeData = useTypeData({ operation, plugin });
 
   const symbolQueryOptionsFn = plugin.referenceSymbol(
-    plugin.api.getSelector('queryOptionsFn', operation.id),
+    plugin.api.selector('queryOptionsFn', operation.id),
   );
   const statement = tsc.constVariable({
     comment: plugin.config.comments

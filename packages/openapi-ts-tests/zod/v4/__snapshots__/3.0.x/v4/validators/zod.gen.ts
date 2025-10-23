@@ -2,17 +2,17 @@
 
 import { z } from 'zod';
 
-export const zBar = z.object({
-    get foo(): z.ZodOptional {
-        return z.optional(zFoo);
-    }
-});
+export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
 
 export const zFoo = z.union([
     z.object({
         foo: z.optional(z.string().regex(/^\d{3}-\d{2}-\d{4}$/)),
-        bar: z.optional(zBar),
-        get baz(): z.ZodOptional {
+        get bar() {
+            return z.optional(z.lazy((): any => {
+                return zBar;
+            }));
+        },
+        get baz() {
             return z.optional(z.array(z.lazy((): any => {
                 return zFoo;
             })));
@@ -22,4 +22,6 @@ export const zFoo = z.union([
     z.null()
 ]).default(null);
 
-export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
+export const zBar = z.object({
+    foo: z.optional(zFoo)
+});

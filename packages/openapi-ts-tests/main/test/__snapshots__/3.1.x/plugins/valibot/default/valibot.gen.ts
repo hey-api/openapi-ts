@@ -7,21 +7,6 @@ import * as v from 'valibot';
  */
 export const v400 = v.string();
 
-export const vExternalSharedExternalSharedModel = v.object({
-    id: v.string(),
-    name: v.optional(v.string())
-});
-
-/**
- * External ref to shared model (A)
- */
-export const vExternalRefA = vExternalSharedExternalSharedModel;
-
-/**
- * External ref to shared model (B)
- */
-export const vExternalRefB = vExternalSharedExternalSharedModel;
-
 /**
  * Testing multiline comments in string: First line
  * Second line
@@ -94,18 +79,6 @@ export const vNonAsciiStringæøåÆøÅöôêÊ字符串 = v.string();
 export const vSimpleFile = v.string();
 
 /**
- * This is a model with one string property
- */
-export const vModelWithString = v.object({
-    prop: v.optional(v.string())
-});
-
-/**
- * This is a simple reference
- */
-export const vSimpleReference = vModelWithString;
-
-/**
  * This is a simple string
  */
 export const vSimpleStringWithPattern = v.union([
@@ -165,16 +138,6 @@ export const vArrayWithBooleans = v.array(v.boolean());
 export const vArrayWithStrings = v.optional(v.array(v.string()), ['test']);
 
 /**
- * This is a simple array with references
- */
-export const vArrayWithReferences = v.array(vModelWithString);
-
-/**
- * This is a simple array containing an array
- */
-export const vArrayWithArray = v.array(v.array(vModelWithString));
-
-/**
  * This is a simple array with properties
  */
 export const vArrayWithProperties = v.array(v.object({
@@ -212,16 +175,6 @@ export const vDictionaryWithPropertiesAndAdditionalProperties = v.object({
 });
 
 /**
- * This is a string reference
- */
-export const vDictionaryWithReference = v.object({});
-
-/**
- * This is a complex dictionary
- */
-export const vDictionaryWithArray = v.object({});
-
-/**
  * This is a string dictionary
  */
 export const vDictionaryWithDictionary = v.record(v.string(), v.object({}));
@@ -247,6 +200,38 @@ export const vModelWithInteger = v.object({
 export const vModelWithBoolean = v.object({
     prop: v.optional(v.boolean())
 });
+
+/**
+ * This is a model with one string property
+ */
+export const vModelWithString = v.object({
+    prop: v.optional(v.string())
+});
+
+/**
+ * This is a simple reference
+ */
+export const vSimpleReference = vModelWithString;
+
+/**
+ * This is a simple array with references
+ */
+export const vArrayWithReferences = v.array(vModelWithString);
+
+/**
+ * This is a simple array containing an array
+ */
+export const vArrayWithArray = v.array(v.array(vModelWithString));
+
+/**
+ * This is a string reference
+ */
+export const vDictionaryWithReference = v.object({});
+
+/**
+ * This is a complex dictionary
+ */
+export const vDictionaryWithArray = v.object({});
 
 /**
  * This is a model with one string property
@@ -343,48 +328,6 @@ export const vModelWithNestedEnums = v.object({
         'Error',
         'ØÆÅ字符串'
     ]))
-});
-
-/**
- * This is a model with one nested property
- */
-export const vModelWithProperties = v.object({
-    required: v.string(),
-    requiredAndReadOnly: v.pipe(v.string(), v.readonly()),
-    requiredAndNullable: v.union([
-        v.string(),
-        v.null()
-    ]),
-    string: v.optional(v.string()),
-    number: v.optional(v.number()),
-    boolean: v.optional(v.boolean()),
-    reference: v.optional(vModelWithString),
-    'property with space': v.optional(v.string()),
-    default: v.optional(v.string()),
-    try: v.optional(v.string()),
-    '@namespace.string': v.optional(v.pipe(v.string(), v.readonly())),
-    '@namespace.integer': v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly()))
-});
-
-/**
- * This is a model with one property containing a reference
- */
-export const vModelWithReference = v.object({
-    prop: v.optional(vModelWithProperties)
-});
-
-export const vModelWithReadOnlyAndWriteOnly = v.object({
-    foo: v.string(),
-    bar: v.pipe(v.string(), v.readonly())
-});
-
-/**
- * This is a model with one property containing an array
- */
-export const vModelWithArrayReadOnlyAndWriteOnly = v.object({
-    prop: v.optional(v.array(vModelWithReadOnlyAndWriteOnly)),
-    propWithFile: v.optional(v.array(v.string())),
-    propWithNumber: v.optional(v.array(v.number()))
 });
 
 /**
@@ -632,6 +575,34 @@ export const vCompositionExtendedModel = v.intersect([
 /**
  * This is a model with one nested property
  */
+export const vModelWithProperties = v.object({
+    required: v.string(),
+    requiredAndReadOnly: v.pipe(v.string(), v.readonly()),
+    requiredAndNullable: v.union([
+        v.string(),
+        v.null()
+    ]),
+    string: v.optional(v.string()),
+    number: v.optional(v.number()),
+    boolean: v.optional(v.boolean()),
+    reference: v.optional(vModelWithString),
+    'property with space': v.optional(v.string()),
+    default: v.optional(v.string()),
+    try: v.optional(v.string()),
+    '@namespace.string': v.optional(v.pipe(v.string(), v.readonly())),
+    '@namespace.integer': v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly()))
+});
+
+/**
+ * This is a model with one property containing a reference
+ */
+export const vModelWithReference = v.object({
+    prop: v.optional(vModelWithProperties)
+});
+
+/**
+ * This is a model with one nested property
+ */
 export const vModelWithNestedProperties = v.object({
     first: v.pipe(v.union([
         v.pipe(v.object({
@@ -767,29 +738,6 @@ export const vNestedAnyOfArraysNullable = v.object({
 });
 
 /**
- * This is a reusable parameter
- */
-export const vSimpleParameter = v.unknown();
-
-export const vCompositionWithOneOfAndProperties = v.intersect([
-    v.union([
-        v.object({
-            foo: vSimpleParameter
-        }),
-        v.object({
-            bar: vNonAsciiStringæøåÆøÅöôêÊ字符串
-        })
-    ]),
-    v.object({
-        baz: v.union([
-            v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint16 to be >= 0'), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 2^16-1'), v.minValue(0)),
-            v.null()
-        ]),
-        qux: v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint8 to be >= 0'), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 2^8-1'), v.minValue(0))
-    })
-]);
-
-/**
  * An object that can be null
  */
 export const vNullableObject = v.optional(v.union([
@@ -865,6 +813,20 @@ export const vModelWithNestedCompositionEnums = v.object({
     foo: v.optional(vModelWithNestedArrayEnumsDataFoo)
 });
 
+export const vModelWithReadOnlyAndWriteOnly = v.object({
+    foo: v.string(),
+    bar: v.pipe(v.string(), v.readonly())
+});
+
+/**
+ * This is a model with one property containing an array
+ */
+export const vModelWithArrayReadOnlyAndWriteOnly = v.object({
+    prop: v.optional(v.array(vModelWithReadOnlyAndWriteOnly)),
+    propWithFile: v.optional(v.array(v.string())),
+    propWithNumber: v.optional(v.array(v.number()))
+});
+
 export const vModelWithConstantSizeArray = v.tuple([
     v.number(),
     v.number()
@@ -912,22 +874,6 @@ export const vModelWithAnyOfConstantSizeArrayNullable = v.tuple([
     ])
 ]);
 
-/**
- * Model with restricted keyword name
- */
-export const vImport = v.string();
-
-export const vModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = v.tuple([
-    v.union([
-        v.number(),
-        vImport
-    ]),
-    v.union([
-        v.number(),
-        vImport
-    ])
-]);
-
 export const vModelWithAnyOfConstantSizeArrayAndIntersect = v.tuple([
     v.intersect([
         v.number(),
@@ -949,20 +895,6 @@ export const vModelWithNumericEnumUnion = v.object({
 export const vModelWithBackticksInDescription = v.object({
     template: v.optional(v.string())
 });
-
-export const vModelWithOneOfAndProperties = v.intersect([
-    v.union([
-        vSimpleParameter,
-        vNonAsciiStringæøåÆøÅöôêÊ字符串
-    ]),
-    v.object({
-        baz: v.union([
-            v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint16 to be >= 0'), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 2^16-1'), v.minValue(0)),
-            v.null()
-        ]),
-        qux: v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint8 to be >= 0'), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 2^8-1'), v.minValue(0))
-    })
-]);
 
 /**
  * Model used to test deduplication strategy (unused)
@@ -988,6 +920,22 @@ export const vDeleteFooData = v.string();
  * Model used to test deduplication strategy
  */
 export const vDeleteFooData2 = v.string();
+
+/**
+ * Model with restricted keyword name
+ */
+export const vImport = v.string();
+
+export const vModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = v.tuple([
+    v.union([
+        v.number(),
+        vImport
+    ]),
+    v.union([
+        v.number(),
+        vImport
+    ])
+]);
 
 export const vSchemaWithFormRestrictedKeys = v.object({
     description: v.optional(v.string()),
@@ -1074,6 +1022,21 @@ export const vOneOfAllOfIssue = v.union([
     vGenericSchemaDuplicateIssue1SystemString
 ]);
 
+export const vExternalSharedExternalSharedModel = v.object({
+    id: v.string(),
+    name: v.optional(v.string())
+});
+
+/**
+ * External ref to shared model (A)
+ */
+export const vExternalRefA = vExternalSharedExternalSharedModel;
+
+/**
+ * External ref to shared model (B)
+ */
+export const vExternalRefB = vExternalSharedExternalSharedModel;
+
 /**
  * This is a model with one nested property
  */
@@ -1135,6 +1098,43 @@ export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.object({
         v.null()
     ]))
 });
+
+/**
+ * This is a reusable parameter
+ */
+export const vSimpleParameter = v.string();
+
+export const vCompositionWithOneOfAndProperties = v.intersect([
+    v.union([
+        v.object({
+            foo: vSimpleParameter
+        }),
+        v.object({
+            bar: vNonAsciiStringæøåÆøÅöôêÊ字符串
+        })
+    ]),
+    v.object({
+        baz: v.union([
+            v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint16 to be >= 0'), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 2^16-1'), v.minValue(0)),
+            v.null()
+        ]),
+        qux: v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint8 to be >= 0'), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 2^8-1'), v.minValue(0))
+    })
+]);
+
+export const vModelWithOneOfAndProperties = v.intersect([
+    v.union([
+        vSimpleParameter,
+        vNonAsciiStringæøåÆøÅöôêÊ字符串
+    ]),
+    v.object({
+        baz: v.union([
+            v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint16 to be >= 0'), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 2^16-1'), v.minValue(0)),
+            v.null()
+        ]),
+        qux: v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint8 to be >= 0'), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 2^8-1'), v.minValue(0))
+    })
+]);
 
 /**
  * Parameter with illegal characters

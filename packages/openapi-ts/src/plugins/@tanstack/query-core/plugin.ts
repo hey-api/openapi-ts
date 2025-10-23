@@ -13,7 +13,7 @@ export const handler: PluginHandler = ({ plugin }) => {
       kind: 'type',
     },
     name: 'DefaultError',
-    selector: plugin.api.getSelector('DefaultError'),
+    selector: plugin.api.selector('DefaultError'),
   });
   plugin.registerSymbol({
     external: plugin.name,
@@ -21,7 +21,7 @@ export const handler: PluginHandler = ({ plugin }) => {
       kind: 'type',
     },
     name: 'InfiniteData',
-    selector: plugin.api.getSelector('InfiniteData'),
+    selector: plugin.api.selector('InfiniteData'),
   });
   const mutationsType =
     plugin.name === '@tanstack/angular-query-experimental' ||
@@ -35,22 +35,22 @@ export const handler: PluginHandler = ({ plugin }) => {
       kind: 'type',
     },
     name: mutationsType,
-    selector: plugin.api.getSelector('MutationOptions'),
+    selector: plugin.api.selector('MutationOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
     name: 'infiniteQueryOptions',
-    selector: plugin.api.getSelector('infiniteQueryOptions'),
+    selector: plugin.api.selector('infiniteQueryOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
     name: 'queryOptions',
-    selector: plugin.api.getSelector('queryOptions'),
+    selector: plugin.api.selector('queryOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
     name: 'useQuery',
-    selector: plugin.api.getSelector('useQuery'),
+    selector: plugin.api.selector('useQuery'),
   });
   plugin.registerSymbol({
     external: 'axios',
@@ -58,60 +58,66 @@ export const handler: PluginHandler = ({ plugin }) => {
       kind: 'type',
     },
     name: 'AxiosError',
-    selector: plugin.api.getSelector('AxiosError'),
+    selector: plugin.api.selector('AxiosError'),
   });
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
 
-  plugin.forEach('operation', ({ operation }) => {
-    const classes = sdkPlugin.config.asClass
-      ? operationClasses({
-          context: plugin.context,
-          operation,
-          plugin: sdkPlugin,
-        })
-      : undefined;
-    const entry = classes ? classes.values().next().value : undefined;
-    const queryFn =
-      // TODO: this should use class graph to determine correct path string
-      // as it's really easy to break once we change the class casing
-      entry
-        ? [
-            plugin.referenceSymbol(
-              sdkPlugin.api.getSelector('class', entry.path[0]),
-            ).placeholder,
-            ...entry.path.slice(1).map((className) =>
-              stringCase({
-                case: 'camelCase',
-                value: className,
-              }),
-            ),
-            entry.methodName,
-          ]
-            .filter(Boolean)
-            .join('.')
-        : plugin.referenceSymbol(
-            sdkPlugin.api.getSelector('function', operation.id),
-          ).placeholder;
+  plugin.forEach(
+    'operation',
+    ({ operation }) => {
+      const classes = sdkPlugin.config.asClass
+        ? operationClasses({
+            context: plugin.context,
+            operation,
+            plugin: sdkPlugin,
+          })
+        : undefined;
+      const entry = classes ? classes.values().next().value : undefined;
+      const queryFn =
+        // TODO: this should use class graph to determine correct path string
+        // as it's really easy to break once we change the class casing
+        entry
+          ? [
+              plugin.referenceSymbol(
+                sdkPlugin.api.selector('class', entry.path[0]),
+              ).placeholder,
+              ...entry.path.slice(1).map((className) =>
+                stringCase({
+                  case: 'camelCase',
+                  value: className,
+                }),
+              ),
+              entry.methodName,
+            ]
+              .filter(Boolean)
+              .join('.')
+          : plugin.referenceSymbol(
+              sdkPlugin.api.selector('function', operation.id),
+            ).placeholder;
 
-    if (plugin.hooks.operation.isQuery(operation)) {
-      if (plugin.config.queryOptions.enabled) {
-        createQueryOptions({ operation, plugin, queryFn });
+      if (plugin.hooks.operation.isQuery(operation)) {
+        if (plugin.config.queryOptions.enabled) {
+          createQueryOptions({ operation, plugin, queryFn });
+        }
+
+        if (plugin.config.infiniteQueryOptions.enabled) {
+          createInfiniteQueryOptions({ operation, plugin, queryFn });
+        }
+
+        if ('useQuery' in plugin.config && plugin.config.useQuery.enabled) {
+          createUseQuery({ operation, plugin });
+        }
       }
 
-      if (plugin.config.infiniteQueryOptions.enabled) {
-        createInfiniteQueryOptions({ operation, plugin, queryFn });
+      if (plugin.hooks.operation.isMutation(operation)) {
+        if (plugin.config.mutationOptions.enabled) {
+          createMutationOptions({ operation, plugin, queryFn });
+        }
       }
-
-      if ('useQuery' in plugin.config && plugin.config.useQuery.enabled) {
-        createUseQuery({ operation, plugin });
-      }
-    }
-
-    if (plugin.hooks.operation.isMutation(operation)) {
-      if (plugin.config.mutationOptions.enabled) {
-        createMutationOptions({ operation, plugin, queryFn });
-      }
-    }
-  });
+    },
+    {
+      order: 'declarations',
+    },
+  );
 };

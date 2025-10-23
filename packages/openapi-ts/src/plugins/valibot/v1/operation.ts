@@ -1,21 +1,19 @@
-import type { IR } from '../../ir/types';
-import { buildName } from '../../openApi/shared/utils/name';
-import { pathToSymbolResourceType } from '../shared/utils/meta';
-import { schemaToValibotSchema, type State } from './plugin';
-import type { ValibotPlugin } from './types';
+import { operationResponsesMap } from '../../../ir/operation';
+import type { IR } from '../../../ir/types';
+import { buildName } from '../../../openApi/shared/utils/name';
+import { pathToSymbolResourceType } from '../../shared/utils/meta';
+import { toRef } from '../../shared/utils/refs';
+import type { IrSchemaToAstOptions } from '../shared/types';
+import { irSchemaToAst } from './plugin';
 
-export const webhookToValibotSchema = ({
-  _path,
+export const irOperationToAst = ({
   operation,
   plugin,
   state,
-}: {
-  _path: ReadonlyArray<string | number>;
+}: IrSchemaToAstOptions & {
   operation: IR.OperationObject;
-  plugin: ValibotPlugin['Instance'];
-  state: State;
 }) => {
-  if (plugin.config.webhooks.enabled) {
+  if (plugin.config.requests.enabled) {
     const requiredProperties = new Set<string>();
 
     const schemaData: IR.SchemaObject = {
@@ -116,20 +114,49 @@ export const webhookToValibotSchema = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
-        resourceType: pathToSymbolResourceType(_path),
+        resourceType: pathToSymbolResourceType(state._path.value),
       },
       name: buildName({
-        config: plugin.config.webhooks,
+        config: plugin.config.requests,
         name: operation.id,
       }),
-      selector: plugin.api.getSelector('webhook-request', operation.id),
+      selector: plugin.api.selector('data', operation.id),
     });
-    schemaToValibotSchema({
-      _path,
+    irSchemaToAst({
       plugin,
       schema: schemaData,
       state,
       symbol,
     });
+  }
+
+  if (plugin.config.responses.enabled) {
+    if (operation.responses) {
+      const { response } = operationResponsesMap(operation);
+
+      if (response) {
+        const path = [...state._path.value, 'responses'];
+        const symbol = plugin.registerSymbol({
+          exported: true,
+          meta: {
+            resourceType: pathToSymbolResourceType(path),
+          },
+          name: buildName({
+            config: plugin.config.responses,
+            name: operation.id,
+          }),
+          selector: plugin.api.selector('responses', operation.id),
+        });
+        irSchemaToAst({
+          plugin,
+          schema: response,
+          state: {
+            ...state,
+            _path: toRef(path),
+          },
+          symbol,
+        });
+      }
+    }
   }
 };

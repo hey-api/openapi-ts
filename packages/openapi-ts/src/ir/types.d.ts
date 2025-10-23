@@ -250,13 +250,6 @@ interface IRSchemaObject
    */
   additionalProperties?: IRSchemaObject | false;
   /**
-   * If this schema is a $ref and is circular (points to itself or is in the current resolution stack),
-   * this flag is set to true.
-   *
-   * @default undefined
-   */
-  circular?: boolean;
-  /**
    * Any string value is accepted as `format`.
    */
   format?: JsonSchemaDraft2020_12['format'] | 'binary' | 'integer';
@@ -281,7 +274,6 @@ interface IRSchemaObject
    * When type is `object`, `properties` will contain a map of its properties.
    */
   properties?: Record<string, IRSchemaObject>;
-
   /**
    * The names of `properties` can be validated against a schema, irrespective
    * of their values. This can be useful if you don't want to enforce specific

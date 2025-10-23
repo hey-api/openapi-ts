@@ -27,6 +27,10 @@ describe('SymbolRegistry', () => {
     expect(registry.get(symbol1.id)).toEqual(symbol1);
     expect(registry.get(['foo'])).toEqual(symbol1);
 
+    // isRegistered should be true for explicitly registered symbols
+    expect(registry.isRegistered(symbol1.id)).toBe(true);
+    expect(registry.isRegistered(['foo'])).toBe(true);
+
     // Registering again with same selector returns same symbol
     const symbol1b = registry.register({ selector: ['foo'] });
     expect(symbol1b).toEqual(symbol1);
@@ -75,6 +79,15 @@ describe('SymbolRegistry', () => {
     registry.setValue(symbol1.id, 42);
     expect(registry.hasValue(symbol1.id)).toBe(true);
     expect(registry.getValue(symbol1.id)).toBe(42);
+
+    // referenced-only symbol should not be registered until register() with data
+    const symRef = registry.reference(['qux']);
+    expect(registry.isRegistered(symRef.id)).toBe(false);
+    const symRegistered = registry.register({
+      placeholder: 'Qux',
+      selector: ['qux'],
+    });
+    expect(registry.isRegistered(symRegistered.id)).toBe(true);
   });
 
   it('throws on invalid register or reference', () => {

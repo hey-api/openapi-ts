@@ -3,6 +3,7 @@ import { Project } from '@hey-api/codegen-core';
 import type { Package } from '../config/utils/package';
 import { packageFactory } from '../config/utils/package';
 import { TypeScriptRenderer } from '../generate/renderer';
+import type { Graph } from '../openApi/shared/utils/graph';
 import { buildName } from '../openApi/shared/utils/name';
 import type { PluginConfigMap } from '../plugins/config';
 import { PluginInstance } from '../plugins/shared/utils/instance';
@@ -22,6 +23,10 @@ export class IRContext<Spec extends Record<string, any> = any> {
    * The code generation project instance used to manage files, symbols,
    */
   gen: Project;
+  /**
+   * The dependency graph built from the intermediate representation.
+   */
+  graph: Graph | undefined;
   /**
    * Intermediate representation model obtained from `spec`.
    */
