@@ -2,12 +2,12 @@
 
 import { createClientConfig } from '../hey-api';
 import {
-  type ClientOptions as DefaultClientOptions,
+  type ClientOptions,
   type Config,
   createClient,
   createConfig,
 } from './client';
-import type { ClientOptions } from './types.gen';
+import type { ClientOptions as ClientOptions2 } from './types.gen';
 
 /**
  * The `createClientConfig()` function will be called on client initialization
@@ -17,14 +17,13 @@ import type { ClientOptions } from './types.gen';
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> =
-  (
-    override?: Config<DefaultClientOptions & T>,
-  ) => Config<Required<DefaultClientOptions> & T>;
+export type CreateClientConfig<T extends ClientOptions = ClientOptions2> = (
+  override?: Config<ClientOptions & T>,
+) => Config<Required<ClientOptions> & T>;
 
 export const client = createClient(
   createClientConfig(
-    createConfig<ClientOptions>({
+    createConfig<ClientOptions2>({
       baseUrl: 'https://petstore3.swagger.io/api/v3',
     }),
   ),

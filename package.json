@@ -22,7 +22,8 @@
   "scripts": {
     "build": "turbo run build --filter=\"!@example/openapi-ts-sample\"",
     "changeset": "changeset",
-    "example": "sh ./scripts/example.sh",
+    "examples:check": "sh ./scripts/examples-check.sh",
+    "examples:generate": "sh ./scripts/examples-generate.sh",
     "format": "prettier --write .",
     "lint:fix": "prettier --check --write . && eslint . --fix",
     "lint": "prettier --check . && eslint .",
