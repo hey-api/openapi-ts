@@ -855,6 +855,15 @@ export const zModelWithReadOnlyAndWriteOnly = z.object({
     bar: z.string().readonly()
 });
 
+/**
+ * This is a model with one property containing an array
+ */
+export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
+    prop: z.array(zModelWithReadOnlyAndWriteOnly).optional(),
+    propWithFile: z.array(z.string()).optional(),
+    propWithNumber: z.array(z.number()).optional()
+});
+
 export const zModelWithConstantSizeArray = z.tuple([
     z.number(),
     z.number()
@@ -1105,15 +1114,6 @@ export const zFileWritable = z.object({
 export const zModelWithReadOnlyAndWriteOnlyWritable = z.object({
     foo: z.string(),
     baz: z.string()
-});
-
-/**
- * This is a model with one property containing an array
- */
-export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
-    prop: z.array(zModelWithReadOnlyAndWriteOnlyWritable).optional(),
-    propWithFile: z.array(z.string()).optional(),
-    propWithNumber: z.array(z.number()).optional()
 });
 
 export const zAdditionalPropertiesUnknownIssueWritable = z.record(z.union([
