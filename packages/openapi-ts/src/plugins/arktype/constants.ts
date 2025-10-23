@@ -1,4 +1,4 @@
-import { tsc } from '../../tsc';
+import { tsc } from '~/tsc';
 
 export const identifiers = {
   keywords: {

@@ -1,6 +1,7 @@
-import { clientFolderAbsolutePath } from '../../../generate/client';
-import { tsc } from '../../../tsc';
-import { getClientPlugin } from '../client-core/utils';
+import { clientFolderAbsolutePath } from '~/generate/client';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { tsc } from '~/tsc';
+
 import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
 import type { HeyApiSdkPlugin } from './types';
 

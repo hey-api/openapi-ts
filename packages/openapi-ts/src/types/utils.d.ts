@@ -1,4 +1,4 @@
-import type { GeneratedFile } from '../generate/file';
+import type { GeneratedFile } from '~/generate/file';
 
 /**
  * Converts all top-level ReadonlyArray properties to Array (shallow).

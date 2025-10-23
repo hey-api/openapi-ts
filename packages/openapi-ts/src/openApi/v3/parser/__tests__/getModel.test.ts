@@ -1,9 +1,10 @@
 import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
+import { getType } from '~/openApi/common/parser/type';
+
 import type { Config } from '../../../../types/config';
 import { reservedJavaScriptKeywordsRegExp } from '../../../../utils/regexp';
-import { getType } from '../../../common/parser/type';
 import { getModel } from '../getModel';
 
 vi.mock('../../../../utils/config', () => {

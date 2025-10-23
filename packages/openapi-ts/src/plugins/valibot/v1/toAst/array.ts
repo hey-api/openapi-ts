@@ -1,9 +1,10 @@
 import type ts from 'typescript';
 
-import { deduplicateSchema } from '../../../../ir/schema';
-import { tsc } from '../../../../tsc';
-import type { SchemaWithType } from '../../../shared/types/schema';
-import { toRef } from '../../../shared/utils/refs';
+import { deduplicateSchema } from '~/ir/schema';
+import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import { toRef } from '~/plugins/shared/utils/refs';
+import { tsc } from '~/tsc';
+
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 import { pipesToAst } from '../pipesToAst';

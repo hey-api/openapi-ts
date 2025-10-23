@@ -1,8 +1,6 @@
-import type { IRMediaType } from '../../../ir/mediaType';
-import {
-  isMediaTypeFileLike,
-  mediaTypeToIrMediaType,
-} from '../../../ir/mediaType';
+import type { IRMediaType } from '~/ir/mediaType';
+import { isMediaTypeFileLike, mediaTypeToIrMediaType } from '~/ir/mediaType';
+
 import type {
   MediaTypeObject,
   ReferenceObject,

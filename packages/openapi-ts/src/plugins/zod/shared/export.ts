@@ -1,9 +1,10 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { IR } from '../../../ir/types';
-import { tsc } from '../../../tsc';
-import { createSchemaComment } from '../../shared/utils/schema';
+import type { IR } from '~/ir/types';
+import { createSchemaComment } from '~/plugins/shared/utils/schema';
+import { tsc } from '~/tsc';
+
 import { identifiers } from '../constants';
 import type { ZodPlugin } from '../types';
 import type { Ast } from './types';

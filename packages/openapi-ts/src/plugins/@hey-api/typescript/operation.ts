@@ -1,8 +1,9 @@
-import { operationResponsesMap } from '../../../ir/operation';
-import { deduplicateSchema } from '../../../ir/schema';
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
+import { operationResponsesMap } from '~/ir/operation';
+import { deduplicateSchema } from '~/ir/schema';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import { tsc } from '~/tsc';
+
 import { schemaToType } from './plugin';
 import type { HeyApiTypeScriptPlugin } from './types';
 

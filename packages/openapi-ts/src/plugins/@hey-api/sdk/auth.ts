@@ -1,4 +1,5 @@
-import type { IR } from '../../../ir/types';
+import type { IR } from '~/ir/types';
+
 import type { Auth } from '../client-core/bundle/auth';
 import type { HeyApiSdkPlugin } from './types';
 

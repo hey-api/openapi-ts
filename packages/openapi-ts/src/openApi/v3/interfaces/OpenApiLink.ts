@@ -1,4 +1,5 @@
-import type { Dictionary } from '../../common/interfaces/Dictionary';
+import type { Dictionary } from '~/openApi/common/interfaces/Dictionary';
+
 import type { OpenApiReference } from './OpenApiReference';
 import type { OpenApiServer } from './OpenApiServer';
 

@@ -1,5 +1,6 @@
-import { clientFolderAbsolutePath } from '../../../generate/client';
-import { tsc } from '../../../tsc';
+import { clientFolderAbsolutePath } from '~/generate/client';
+import { tsc } from '~/tsc';
+
 import type { PluginHandler } from './types';
 
 export const createClientConfigType = ({

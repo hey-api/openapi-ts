@@ -1,5 +1,6 @@
+import type { OpenApiParameter } from '~/openApi/v3/interfaces/OpenApiParameter';
+
 import type { Config } from '../../../types/config';
-import type { OpenApiParameter } from '../../v3/interfaces/OpenApiParameter';
 
 export interface ModelComposition
   extends Pick<Model, '$refs' | 'enums' | 'imports' | 'properties'> {

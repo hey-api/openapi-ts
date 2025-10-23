@@ -1,7 +1,8 @@
-import { getClientPlugin } from '../../plugins/@hey-api/client-core/utils';
-import { tsc } from '../../tsc';
-import type { Files } from '../../types/utils';
-import { getConfig, legacyNameFromConfig } from '../../utils/config';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { tsc } from '~/tsc';
+import type { Files } from '~/types/utils';
+import { getConfig, legacyNameFromConfig } from '~/utils/config';
+
 import { GeneratedFile } from '../file';
 
 export const generateIndexFile = ({ files }: { files: Files }): void => {

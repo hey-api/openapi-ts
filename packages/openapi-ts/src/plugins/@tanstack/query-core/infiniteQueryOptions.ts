@@ -1,11 +1,12 @@
 import ts from 'typescript';
 
-import { operationPagination } from '../../../ir/operation';
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
-import { tsNodeToString } from '../../../tsc/utils';
-import { isOperationOptionsRequired } from '../../shared/utils/operation';
+import { operationPagination } from '~/ir/operation';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import { isOperationOptionsRequired } from '~/plugins/shared/utils/operation';
+import { tsc } from '~/tsc';
+import { tsNodeToString } from '~/tsc/utils';
+
 import { handleMeta } from './meta';
 import {
   createQueryKeyFunction,

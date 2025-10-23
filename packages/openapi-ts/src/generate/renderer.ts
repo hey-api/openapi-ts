@@ -12,9 +12,9 @@ import type {
 import { createBinding, mergeBindings, renderIds } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { ensureValidIdentifier } from '../openApi/shared/utils/identifier';
-import { tsc } from '../tsc';
-import { tsNodeToString } from '../tsc/utils';
+import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
+import { tsc } from '~/tsc';
+import { tsNodeToString } from '~/tsc/utils';
 
 const nodeBuiltins = new Set([
   'buffer',

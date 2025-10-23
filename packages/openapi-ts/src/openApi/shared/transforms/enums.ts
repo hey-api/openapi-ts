@@ -1,5 +1,6 @@
+import { jsonPointerToPath } from '~/utils/ref';
+
 import type { Config } from '../../../types/config';
-import { jsonPointerToPath } from '../../../utils/ref';
 import { buildName } from '../utils/name';
 import { deepClone } from '../utils/schema';
 import { childSchemaRelationships } from '../utils/schemaChildRelationships';

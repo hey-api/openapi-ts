@@ -1,10 +1,11 @@
-import { createOperationKey } from '../../../ir/operation';
-import type { Logger } from '../../../utils/logger';
-import { httpMethods } from '../../shared/utils/operation';
+import { createOperationKey } from '~/ir/operation';
+import { httpMethods } from '~/openApi/shared/utils/operation';
 import type {
   ValidatorIssue,
   ValidatorResult,
-} from '../../shared/utils/validator';
+} from '~/openApi/shared/utils/validator';
+import type { Logger } from '~/utils/logger';
+
 import type { OpenApiV2_0_X, PathItemObject, PathsObject } from '../types/spec';
 
 export const validateOpenApiSpec = (

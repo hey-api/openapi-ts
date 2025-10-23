@@ -3,8 +3,9 @@ import fs from 'node:fs';
 import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { Config } from '../../types/config';
-import { setConfig } from '../../utils/config';
+import type { Config } from '~/types/config';
+import { setConfig } from '~/utils/config';
+
 import { generateLegacyClientClass } from '../class';
 import { mockTemplates, openApi } from './mocks';
 

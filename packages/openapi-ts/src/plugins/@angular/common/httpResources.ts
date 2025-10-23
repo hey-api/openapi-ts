@@ -1,12 +1,13 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
-import { stringCase } from '../../../utils/stringCase';
-import { operationClasses } from '../../@hey-api/sdk/operation';
-import { isOperationOptionsRequired } from '../../shared/utils/operation';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import { operationClasses } from '~/plugins/@hey-api/sdk/operation';
+import { isOperationOptionsRequired } from '~/plugins/shared/utils/operation';
+import { tsc } from '~/tsc';
+import { stringCase } from '~/utils/stringCase';
+
 import type { AngularCommonPlugin } from './types';
 
 interface AngularServiceClassEntry {

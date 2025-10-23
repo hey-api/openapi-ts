@@ -3,22 +3,22 @@ import path from 'node:path';
 import { $RefParser } from '@hey-api/json-schema-ref-parser';
 import colors from 'ansi-colors';
 
-import { generateLegacyOutput } from './generate/legacy/output';
-import { generateOutput } from './generate/output';
-import { getSpec } from './getSpec';
-import type { IR } from './ir/types';
-import { parseLegacy, parseOpenApiSpec } from './openApi';
-import { buildGraph } from './openApi/shared/utils/graph';
-import { patchOpenApiSpec } from './openApi/shared/utils/patch';
-import { processOutput } from './processOutput';
-import type { Client } from './types/client';
-import type { Config } from './types/config';
-import type { Input } from './types/input';
-import type { WatchValues } from './types/types';
-import { isLegacyClient, legacyNameFromConfig } from './utils/config';
-import type { Templates } from './utils/handlebars';
-import type { Logger } from './utils/logger';
-import { postProcessClient } from './utils/postprocess';
+import { generateLegacyOutput } from '~/generate/legacy/output';
+import { generateOutput } from '~/generate/output';
+import { getSpec } from '~/getSpec';
+import type { IR } from '~/ir/types';
+import { parseLegacy, parseOpenApiSpec } from '~/openApi';
+import { buildGraph } from '~/openApi/shared/utils/graph';
+import { patchOpenApiSpec } from '~/openApi/shared/utils/patch';
+import { processOutput } from '~/processOutput';
+import type { Client } from '~/types/client';
+import type { Config } from '~/types/config';
+import type { Input } from '~/types/input';
+import type { WatchValues } from '~/types/types';
+import { isLegacyClient, legacyNameFromConfig } from '~/utils/config';
+import type { Templates } from '~/utils/handlebars';
+import type { Logger } from '~/utils/logger';
+import { postProcessClient } from '~/utils/postprocess';
 
 export const compileInputPath = (input: Omit<Input, 'watch'>) => {
   const result: Pick<

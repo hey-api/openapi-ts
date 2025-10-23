@@ -4,11 +4,12 @@ import { Project } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
 
-import { client, openApi } from '../../../../generate/__tests__/mocks';
-import type { OpenApiV3Schema } from '../../../../openApi';
-import type { Files } from '../../../../types/utils';
-import { setConfig } from '../../../../utils/config';
-import { PluginInstance } from '../../../shared/utils/instance';
+import { client, openApi } from '~/generate/__tests__/mocks';
+import type { OpenApiV3Schema } from '~/openApi';
+import { PluginInstance } from '~/plugins/shared/utils/instance';
+import type { Files } from '~/types/utils';
+import { setConfig } from '~/utils/config';
+
 import { handlerLegacy } from '../plugin-legacy';
 
 vi.mock('node:fs');

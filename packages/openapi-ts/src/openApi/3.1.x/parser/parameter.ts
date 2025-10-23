@@ -1,5 +1,6 @@
-import type { IR } from '../../../ir/types';
-import { refToName } from '../../../utils/ref';
+import type { IR } from '~/ir/types';
+import { refToName } from '~/utils/ref';
+
 import type {
   ParameterObject,
   ReferenceObject,

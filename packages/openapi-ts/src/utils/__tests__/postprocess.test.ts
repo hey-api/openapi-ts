@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { parseLegacy } from '../../openApi';
-import type { Config } from '../../types/config';
+import { parseLegacy } from '~/openApi';
+import type { Config } from '~/types/config';
+
 import { getServiceName, postProcessClient } from '../postprocess';
 
 vi.mock('../config', () => {

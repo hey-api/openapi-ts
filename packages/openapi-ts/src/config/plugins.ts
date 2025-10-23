@@ -1,10 +1,11 @@
-import { defaultPluginConfigs } from '../plugins/config';
+import { defaultPluginConfigs } from '~/plugins/config';
 import type {
   AnyPluginName,
   PluginContext,
   PluginNames,
-} from '../plugins/types';
-import type { Config, UserConfig } from '../types/config';
+} from '~/plugins/types';
+import type { Config, UserConfig } from '~/types/config';
+
 import { valueToObject } from './utils/config';
 import { packageFactory } from './utils/package';
 

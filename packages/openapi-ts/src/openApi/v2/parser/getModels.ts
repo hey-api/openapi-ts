@@ -1,6 +1,7 @@
+import { getType } from '~/openApi/common/parser/type';
+import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
+
 import type { Client } from '../../../types/client';
-import { reservedJavaScriptKeywordsRegExp } from '../../../utils/regexp';
-import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getModel } from './getModel';
 

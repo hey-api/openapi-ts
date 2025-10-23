@@ -1,5 +1,6 @@
-import type { Logger } from '../../../utils/logger';
-import { normalizeJsonPointer, pathToJsonPointer } from '../../../utils/ref';
+import type { Logger } from '~/utils/logger';
+import { normalizeJsonPointer, pathToJsonPointer } from '~/utils/ref';
+
 import { childSchemaRelationships } from './schemaChildRelationships';
 
 /**

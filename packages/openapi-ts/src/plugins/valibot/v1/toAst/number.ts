@@ -1,7 +1,8 @@
 import type ts from 'typescript';
 
-import { tsc } from '../../../../tsc';
-import type { SchemaWithType } from '../../../shared/types/schema';
+import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import { tsc } from '~/tsc';
+
 import {
   INTEGER_FORMATS,
   isIntegerFormat,

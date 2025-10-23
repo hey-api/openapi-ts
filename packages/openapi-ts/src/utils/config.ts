@@ -1,5 +1,5 @@
-import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
-import type { Config } from '../types/config';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import type { Config } from '~/types/config';
 
 let _config: Config;
 

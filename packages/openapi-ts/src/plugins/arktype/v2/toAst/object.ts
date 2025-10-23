@@ -1,9 +1,10 @@
 import ts from 'typescript';
 
-import { tsc } from '../../../../tsc';
-import { numberRegExp } from '../../../../utils/regexp';
-import type { SchemaWithType } from '../../../shared/types/schema';
-import { toRef } from '../../../shared/utils/refs';
+import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import { toRef } from '~/plugins/shared/utils/refs';
+import { tsc } from '~/tsc';
+import { numberRegExp } from '~/utils/regexp';
+
 // import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
