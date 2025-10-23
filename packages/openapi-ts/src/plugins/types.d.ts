@@ -1,7 +1,7 @@
 import type { ValueToObject } from '~/config/utils/config';
 import type { Package } from '~/config/utils/package';
-import type { IR } from '~/ir/types';
 import type { OpenApi as LegacyOpenApi } from '~/openApi';
+import type { Hooks } from '~/parser/types/hooks';
 import type { PluginInstance } from '~/plugins/shared/utils/instance';
 import type { Client as LegacyClient } from '~/types/client';
 import type { Files } from '~/types/utils';
@@ -68,7 +68,7 @@ type BaseConfig = {
    * Use these to classify resources, control which outputs are generated,
    * or provide custom behavior for specific resources.
    */
-  '~hooks'?: IR.Hooks;
+  '~hooks'?: Hooks;
 };
 
 /**
