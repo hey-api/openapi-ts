@@ -652,13 +652,15 @@ export const updateRefsInSpec = ({
         } else if (key === '$ref' && typeof value === 'string') {
           // Prefer exact match first
           const map = split.mapping[value];
-          if (map && nextContext) {
-            // Only update $refs when we have a clear read/write context
-            // This avoids defaulting to read variant when context is null
-            if (map.read && nextContext === 'read') {
+          if (map) {
+            if (nextContext === 'read' && map.read) {
               (node as Record<string, unknown>)[key] = map.read;
-            } else if (map.write && nextContext === 'write') {
+            } else if (nextContext === 'write' && map.write) {
               (node as Record<string, unknown>)[key] = map.write;
+            } else if (!nextContext && map.read) {
+              // For schemas with no context (unused in operations), default to read variant
+              // This ensures $refs in unused schemas don't point to removed originals
+              (node as Record<string, unknown>)[key] = map.read;
             }
           }
         } else {
