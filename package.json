@@ -61,7 +61,7 @@
     "eslint-plugin-vue": "9.32.0",
     "globals": "15.14.0",
     "husky": "9.1.7",
-    "lint-staged": "15.3.0",
+    "lint-staged": "16.2.5",
     "prettier": "3.4.2",
     "rollup": "4.31.0",
     "rollup-plugin-dts": "6.1.1",
