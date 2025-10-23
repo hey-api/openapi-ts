@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.86.3
+
+### Patch Changes
+
+- feat(parser): add `events` hooks ([#2829](https://github.com/hey-api/openapi-ts/pull/2829)) ([`d5c85fc`](https://github.com/hey-api/openapi-ts/commit/d5c85fc29e985af0cdc6ce7ac7e8210c60171163)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(parser): writeOnly schema properties missing from request types in nested schemas ([#2793](https://github.com/hey-api/openapi-ts/pull/2793)) ([`7d1c475`](https://github.com/hey-api/openapi-ts/commit/7d1c47592a806c34fb627f21e3ee59e2ec3c015a)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.86.2
 
 ### Patch Changes
