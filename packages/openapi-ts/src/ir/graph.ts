@@ -1,4 +1,4 @@
-import type { GetPointerPriorityFn, PointerGroupMatch } from '~/graph';
+import type { GetPointerPriorityFn, MatchPointerToGroupFn } from '~/graph';
 
 export const irTopLevelKinds = [
   'operation',
@@ -18,10 +18,10 @@ export type IrTopLevelKind = (typeof irTopLevelKinds)[number];
  * @param kind - (Optional) The component kind to check
  * @returns { matched: true, kind: IrTopLevelKind } | { matched: false } - Whether it matched, and the matched kind if so
  */
-export const matchIrPointerToGroup = (
-  pointer: string,
-  kind?: IrTopLevelKind,
-): PointerGroupMatch<IrTopLevelKind> => {
+export const matchIrPointerToGroup: MatchPointerToGroupFn<IrTopLevelKind> = (
+  pointer,
+  kind,
+) => {
   const patterns: Record<IrTopLevelKind, RegExp> = {
     operation:
       /^#\/paths\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
