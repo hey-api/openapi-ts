@@ -1,7 +1,8 @@
+import { getConfig, isLegacyClient } from '~/utils/config';
+import { stringCase } from '~/utils/stringCase';
+import { transformTypeKeyName } from '~/utils/type';
+
 import type { Config } from '../../../types/config';
-import { getConfig, isLegacyClient } from '../../../utils/config';
-import { stringCase } from '../../../utils/stringCase';
-import { transformTypeKeyName } from '../../../utils/type';
 import type {
   OperationParameter,
   OperationResponse,

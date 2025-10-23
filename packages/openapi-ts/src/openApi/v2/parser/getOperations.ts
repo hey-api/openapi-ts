@@ -1,8 +1,9 @@
-import { createOperationKey } from '../../../ir/operation';
-import { getConfig } from '../../../utils/config';
-import type { Client, Operation } from '../../common/interfaces/client';
-import { operationFilterFn } from '../../common/parser/operation';
-import { allowedServiceMethods } from '../../common/parser/service';
+import { createOperationKey } from '~/ir/operation';
+import type { Client, Operation } from '~/openApi/common/interfaces/client';
+import { operationFilterFn } from '~/openApi/common/parser/operation';
+import { allowedServiceMethods } from '~/openApi/common/parser/service';
+import { getConfig } from '~/utils/config';
+
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getOperationParameters } from './getOperationParameters';
 import { getOperation } from './operation';

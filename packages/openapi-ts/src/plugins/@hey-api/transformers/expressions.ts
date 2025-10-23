@@ -1,7 +1,8 @@
 import type ts from 'typescript';
 
-import type { IR } from '../../../ir/types';
-import { tsc } from '../../../tsc';
+import type { IR } from '~/ir/types';
+import { tsc } from '~/tsc';
+
 import type { UserConfig } from './types';
 
 export type ExpressionTransformer = ({

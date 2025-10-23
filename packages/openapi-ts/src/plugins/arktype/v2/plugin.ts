@@ -1,11 +1,12 @@
-import { deduplicateSchema } from '../../../ir/schema';
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
-import { refToName } from '../../../utils/ref';
-import type { SchemaWithType } from '../../shared/types/schema';
-import { pathToSymbolResourceType } from '../../shared/utils/meta';
-import { toRefs } from '../../shared/utils/refs';
+import { deduplicateSchema } from '~/ir/schema';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import { pathToSymbolResourceType } from '~/plugins/shared/utils/meta';
+import { toRefs } from '~/plugins/shared/utils/refs';
+import { tsc } from '~/tsc';
+import { refToName } from '~/utils/ref';
+
 import { exportAst } from '../shared/export';
 import type { Ast, IrSchemaToAstOptions } from '../shared/types';
 import type { ArktypePlugin } from '../types';

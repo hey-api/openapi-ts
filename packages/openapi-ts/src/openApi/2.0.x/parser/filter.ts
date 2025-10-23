@@ -1,7 +1,8 @@
-import { createOperationKey } from '../../../ir/operation';
-import type { Logger } from '../../../utils/logger';
-import { addNamespace, removeNamespace } from '../../shared/utils/filter';
-import { httpMethods } from '../../shared/utils/operation';
+import { createOperationKey } from '~/ir/operation';
+import { addNamespace, removeNamespace } from '~/openApi/shared/utils/filter';
+import { httpMethods } from '~/openApi/shared/utils/operation';
+import type { Logger } from '~/utils/logger';
+
 import type {
   OpenApiV2_0_X,
   OperationObject,

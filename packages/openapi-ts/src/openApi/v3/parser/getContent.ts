@@ -1,4 +1,5 @@
-import type { Dictionary } from '../../common/interfaces/Dictionary';
+import type { Dictionary } from '~/openApi/common/interfaces/Dictionary';
+
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiMediaType } from '../interfaces/OpenApiMediaType';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';

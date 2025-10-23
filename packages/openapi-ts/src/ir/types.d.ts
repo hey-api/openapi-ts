@@ -1,10 +1,11 @@
 import type { Symbol } from '@hey-api/codegen-core';
 
-import type { JsonSchemaDraft2020_12 } from '../openApi/3.1.x/types/json-schema-draft-2020-12';
+import type { JsonSchemaDraft2020_12 } from '~/openApi/3.1.x/types/json-schema-draft-2020-12';
 import type {
   SecuritySchemeObject,
   ServerObject,
-} from '../openApi/3.1.x/types/spec';
+} from '~/openApi/3.1.x/types/spec';
+
 import type { IRContext } from './context';
 import type { IRMediaType } from './mediaType';
 

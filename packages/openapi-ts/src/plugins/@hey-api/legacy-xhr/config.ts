@@ -1,4 +1,5 @@
-import { definePluginConfig } from '../../shared/utils/config';
+import { definePluginConfig } from '~/plugins/shared/utils/config';
+
 import type { HeyApiClientLegacyXhrPlugin } from './types';
 
 export const defaultConfig: HeyApiClientLegacyXhrPlugin['Config'] = {

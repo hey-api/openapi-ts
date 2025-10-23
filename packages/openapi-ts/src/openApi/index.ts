@@ -1,16 +1,16 @@
-import { satisfies } from '../config/utils/package';
-import { IRContext } from '../ir/context';
-import type { IR } from '../ir/types';
-import type { Config } from '../types/config';
-import type { Logger } from '../utils/logger';
-import { parseV2_0_X } from './2.0.x';
-import { parseV3_0_X } from './3.0.x';
-import { parseV3_1_X } from './3.1.x';
-import type { Client } from './common/interfaces/client';
-import type { OpenApi as LegacyOpenApi } from './common/interfaces/OpenApi';
-import type { OpenApi } from './types';
-import { parse as parseV2 } from './v2';
-import { parse as parseV3 } from './v3';
+import { satisfies } from '~/config/utils/package';
+import { IRContext } from '~/ir/context';
+import type { IR } from '~/ir/types';
+import { parseV2_0_X } from '~/openApi/2.0.x';
+import { parseV3_0_X } from '~/openApi/3.0.x';
+import { parseV3_1_X } from '~/openApi/3.1.x';
+import type { Client } from '~/openApi/common/interfaces/client';
+import type { OpenApi as LegacyOpenApi } from '~/openApi/common/interfaces/OpenApi';
+import type { OpenApi } from '~/openApi/types';
+import { parse as parseV2 } from '~/openApi/v2';
+import { parse as parseV3 } from '~/openApi/v3';
+import type { Config } from '~/types/config';
+import type { Logger } from '~/utils/logger';
 
 export type {
   Client,

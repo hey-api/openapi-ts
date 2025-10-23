@@ -1,7 +1,8 @@
-import type { IR } from '../../../ir/types';
-import type { State } from '../../shared/types/state';
-import type { httpMethods } from '../../shared/utils/operation';
-import { operationToId } from '../../shared/utils/operation';
+import type { IR } from '~/ir/types';
+import type { State } from '~/openApi/shared/types/state';
+import type { httpMethods } from '~/openApi/shared/utils/operation';
+import { operationToId } from '~/openApi/shared/utils/operation';
+
 import type {
   OperationObject,
   RequestBodyObject,

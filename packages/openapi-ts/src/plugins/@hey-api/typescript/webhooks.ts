@@ -1,6 +1,7 @@
 import type { Symbol } from '@hey-api/codegen-core';
 
-import { tsc } from '../../../tsc';
+import { tsc } from '~/tsc';
+
 import type { HeyApiTypeScriptPlugin } from './types';
 
 export const createWebhooks = ({

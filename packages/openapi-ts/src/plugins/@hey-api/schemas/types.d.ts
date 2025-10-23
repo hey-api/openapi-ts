@@ -1,8 +1,9 @@
-import type { OpenApiV2Schema, OpenApiV3Schema } from '../../../openApi';
-import type { OpenApiV2_0_XTypes } from '../../../openApi/2.0.x';
-import type { OpenApiV3_0_XTypes } from '../../../openApi/3.0.x';
-import type { OpenApiV3_1_XTypes } from '../../../openApi/3.1.x';
-import type { DefinePlugin, Plugin } from '../../types';
+import type { OpenApiV2Schema, OpenApiV3Schema } from '~/openApi';
+import type { OpenApiV2_0_XTypes } from '~/openApi/2.0.x';
+import type { OpenApiV3_0_XTypes } from '~/openApi/3.0.x';
+import type { OpenApiV3_1_XTypes } from '~/openApi/3.1.x';
+import type { DefinePlugin, Plugin } from '~/plugins/types';
+
 import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'@hey-api/schemas'> &

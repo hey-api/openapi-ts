@@ -1,10 +1,11 @@
+import type { Model, ModelMeta } from '~/openApi/common/interfaces/client';
+import { getDefault } from '~/openApi/common/parser/getDefault';
+import { getEnums } from '~/openApi/common/parser/getEnums';
+import { getPattern } from '~/openApi/common/parser/getPattern';
+import { getType } from '~/openApi/common/parser/type';
+import { enumMeta } from '~/utils/enum';
+
 import type { Client } from '../../../types/client';
-import { enumMeta } from '../../../utils/enum';
-import type { Model, ModelMeta } from '../../common/interfaces/client';
-import { getDefault } from '../../common/parser/getDefault';
-import { getEnums } from '../../common/parser/getEnums';
-import { getPattern } from '../../common/parser/getPattern';
-import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import {

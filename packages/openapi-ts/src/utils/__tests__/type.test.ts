@@ -1,6 +1,7 @@
 import { describe, expect, it, type MockedFunction, vi } from 'vitest';
 
-import type { Config } from '../../types/config';
+import type { Config } from '~/types/config';
+
 import { isLegacyClient } from '../config';
 import { transformTypeKeyName } from '../type';
 

@@ -1,5 +1,5 @@
-import type { IrTopLevelKind } from '../../../ir/graph';
-import type { IR } from '../../../ir/types';
+import type { IrTopLevelKind } from '~/ir/graph';
+import type { IR } from '~/ir/types';
 
 type WalkEvents =
   | {

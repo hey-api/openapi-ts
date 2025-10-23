@@ -1,7 +1,7 @@
 import colors from 'ansi-colors';
 
-import type { IR } from '../ir/types';
-import { httpMethods } from '../openApi/shared/utils/operation';
+import type { IR } from '~/ir/types';
+import { httpMethods } from '~/openApi/shared/utils/operation';
 
 export interface PrintOptions {
   /**

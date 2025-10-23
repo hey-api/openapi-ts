@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { detectInteractiveSession, initConfigs } from '../config/init';
-import { mergeConfigs } from '../config/merge';
-import { Logger } from '../utils/logger';
+import { detectInteractiveSession, initConfigs } from '~/config/init';
+import { mergeConfigs } from '~/config/merge';
+import { Logger } from '~/utils/logger';
 
 describe('interactive config', () => {
   it('should use detectInteractiveSession when not provided', async () => {

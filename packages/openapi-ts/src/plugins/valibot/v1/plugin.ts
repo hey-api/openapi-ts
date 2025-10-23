@@ -1,15 +1,16 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import { deduplicateSchema } from '../../../ir/schema';
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
-import { refToName } from '../../../utils/ref';
-import type { SchemaWithType } from '../../shared/types/schema';
-import { pathToSymbolResourceType } from '../../shared/utils/meta';
-import { toRef, toRefs } from '../../shared/utils/refs';
-import { createSchemaComment } from '../../shared/utils/schema';
+import { deduplicateSchema } from '~/ir/schema';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import { pathToSymbolResourceType } from '~/plugins/shared/utils/meta';
+import { toRef, toRefs } from '~/plugins/shared/utils/refs';
+import { createSchemaComment } from '~/plugins/shared/utils/schema';
+import { tsc } from '~/tsc';
+import { refToName } from '~/utils/ref';
+
 import { numberParameter } from '../shared/numbers';
 import type { IrSchemaToAstOptions, PluginState } from '../shared/types';
 import type { ValibotPlugin } from '../types';

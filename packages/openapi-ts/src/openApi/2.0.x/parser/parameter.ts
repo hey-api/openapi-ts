@@ -1,4 +1,5 @@
-import type { IR } from '../../../ir/types';
+import type { IR } from '~/ir/types';
+
 import type {
   OperationObject,
   ParameterObject,

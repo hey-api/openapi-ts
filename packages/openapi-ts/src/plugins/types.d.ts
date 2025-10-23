@@ -1,10 +1,10 @@
-import type { ValueToObject } from '../config/utils/config';
-import type { Package } from '../config/utils/package';
-import type { IR } from '../ir/types';
-import type { OpenApi as LegacyOpenApi } from '../openApi';
-import type { Client as LegacyClient } from '../types/client';
-import type { Files } from '../types/utils';
-import type { PluginInstance } from './shared/utils/instance';
+import type { ValueToObject } from '~/config/utils/config';
+import type { Package } from '~/config/utils/package';
+import type { IR } from '~/ir/types';
+import type { OpenApi as LegacyOpenApi } from '~/openApi';
+import type { PluginInstance } from '~/plugins/shared/utils/instance';
+import type { Client as LegacyClient } from '~/types/client';
+import type { Files } from '~/types/utils';
 
 export type PluginClientNames =
   | '@hey-api/client-angular'

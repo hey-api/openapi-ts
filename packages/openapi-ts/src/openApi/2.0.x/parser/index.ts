@@ -1,15 +1,16 @@
-import type { IR } from '../../../ir/types';
-import { buildResourceMetadata } from '../../shared/graph/meta';
-import { transformOpenApiSpec } from '../../shared/transforms';
-import type { State } from '../../shared/types/state';
+import type { IR } from '~/ir/types';
+import { buildResourceMetadata } from '~/openApi/shared/graph/meta';
+import { transformOpenApiSpec } from '~/openApi/shared/transforms';
+import type { State } from '~/openApi/shared/types/state';
 import {
   createFilteredDependencies,
   createFilters,
   hasFilters,
-} from '../../shared/utils/filter';
-import { buildGraph } from '../../shared/utils/graph';
-import { mergeParametersObjects } from '../../shared/utils/parameter';
-import { handleValidatorResult } from '../../shared/utils/validator';
+} from '~/openApi/shared/utils/filter';
+import { buildGraph } from '~/openApi/shared/utils/graph';
+import { mergeParametersObjects } from '~/openApi/shared/utils/parameter';
+import { handleValidatorResult } from '~/openApi/shared/utils/validator';
+
 import type {
   OpenApiV2_0_X,
   OperationObject,

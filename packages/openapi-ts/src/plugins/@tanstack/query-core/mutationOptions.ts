@@ -1,8 +1,9 @@
 import type ts from 'typescript';
 
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import { tsc } from '~/tsc';
+
 import { handleMeta } from './meta';
 import type { PluginInstance } from './types';
 import { useTypeData, useTypeError, useTypeResponse } from './useType';

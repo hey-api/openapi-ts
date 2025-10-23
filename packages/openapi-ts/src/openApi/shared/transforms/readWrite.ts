@@ -1,6 +1,7 @@
+import type { Logger } from '~/utils/logger';
+import { jsonPointerToPath } from '~/utils/ref';
+
 import type { Config } from '../../../types/config';
-import type { Logger } from '../../../utils/logger';
-import { jsonPointerToPath } from '../../../utils/ref';
 import deepEqual from '../utils/deepEqual';
 import { buildGraph, type Graph, type Scope } from '../utils/graph';
 import { buildName } from '../utils/name';

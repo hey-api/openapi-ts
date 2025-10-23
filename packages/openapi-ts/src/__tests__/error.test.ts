@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { shouldReportCrash } from '../error';
+import { shouldReportCrash } from '~/error';
 
 describe('shouldReportCrash', () => {
   it('should return false when isInteractive is false', async () => {

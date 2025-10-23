@@ -1,7 +1,8 @@
 import type { Selector } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { Plugin } from '../../types';
+import type { Plugin } from '~/plugins/types';
+
 import { schemaToType } from './plugin';
 
 type SelectorType =

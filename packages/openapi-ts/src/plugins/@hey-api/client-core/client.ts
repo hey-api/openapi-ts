@@ -1,6 +1,7 @@
-import { clientFolderAbsolutePath } from '../../../generate/client';
-import { tsc } from '../../../tsc';
-import { parseUrl } from '../../../utils/url';
+import { clientFolderAbsolutePath } from '~/generate/client';
+import { tsc } from '~/tsc';
+import { parseUrl } from '~/utils/url';
+
 import type { PluginHandler } from './types';
 import { getClientBaseUrlKey } from './utils';
 

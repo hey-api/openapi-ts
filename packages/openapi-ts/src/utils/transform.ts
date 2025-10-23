@@ -1,5 +1,6 @@
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
-import type { Config } from '../types/config';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '~/openApi';
+import type { Config } from '~/types/config';
+
 import { getConfig } from './config';
 import { reservedJavaScriptKeywordsRegExp } from './regexp';
 import { stringCase } from './stringCase';

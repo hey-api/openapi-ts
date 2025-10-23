@@ -1,5 +1,5 @@
-import type { DefinePlugin, Plugin } from '../../types';
-import type { Client } from '../client-core/types';
+import type { Client } from '~/plugins/@hey-api/client-core/types';
+import type { DefinePlugin, Plugin } from '~/plugins/types';
 
 export type UserConfig = Plugin.Name<'legacy/xhr'> &
   Pick<Client.Config, 'output'>;

@@ -1,15 +1,16 @@
 import type ts from 'typescript';
 
-import { deduplicateSchema } from '../../../ir/schema';
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import type { Property } from '../../../tsc';
-import { tsc } from '../../../tsc';
-import { refToName } from '../../../utils/ref';
-import { stringCase } from '../../../utils/stringCase';
-import type { SchemaWithType } from '../../shared/types/schema';
-import { fieldName } from '../../shared/utils/case';
-import { createSchemaComment } from '../../shared/utils/schema';
+import { deduplicateSchema } from '~/ir/schema';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import { fieldName } from '~/plugins/shared/utils/case';
+import { createSchemaComment } from '~/plugins/shared/utils/schema';
+import type { Property } from '~/tsc';
+import { tsc } from '~/tsc';
+import { refToName } from '~/utils/ref';
+import { stringCase } from '~/utils/stringCase';
+
 import { createClientOptions } from './clientOptions';
 import { exportType } from './export';
 import { operationToType } from './operation';
