@@ -4,7 +4,12 @@ export type WalkCallbackFn = (pointer: string, nodeInfo: NodeInfo) => void;
 
 export type GetPointerPriorityFn = (pointer: string) => number;
 
-export type PointerGroupMatch<T extends string = string> =
+export type MatchPointerToGroupFn<T extends string = string> = (
+  pointer: string,
+  kind?: T,
+) => PointerGroupMatch<T>;
+
+type PointerGroupMatch<T extends string = string> =
   | { kind: T; matched: true }
   | { kind?: undefined; matched: false };
 
@@ -21,7 +26,7 @@ export type WalkOptions<T extends string = string> = {
    * @param pointer The pointer string
    * @returns The group name, or undefined if no match
    */
-  matchPointerToGroup?: (pointer: string) => PointerGroupMatch<T>;
+  matchPointerToGroup?: MatchPointerToGroupFn<T>;
   /**
    * Order of walking schemas.
    *
@@ -47,8 +52,8 @@ export type WalkOptions<T extends string = string> = {
   preferGroups?: ReadonlyArray<T>;
 };
 
-export type WalkFn = (
+export type WalkFn = <T extends string = string>(
   graph: Graph,
   callback: WalkCallbackFn,
-  options?: WalkOptions,
+  options?: WalkOptions<T>,
 ) => void;
