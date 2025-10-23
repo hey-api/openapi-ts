@@ -2,12 +2,13 @@ import path from 'node:path';
 
 import type { ProjectRenderMeta } from '@hey-api/codegen-core';
 
-import type { OpenApi } from '../../openApi';
-import { getClientPlugin } from '../../plugins/@hey-api/client-core/utils';
-import type { Client } from '../../types/client';
-import type { Files } from '../../types/utils';
-import { getConfig, isLegacyClient } from '../../utils/config';
-import type { Templates } from '../../utils/handlebars';
+import type { OpenApi } from '~/openApi';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import type { Client } from '~/types/client';
+import type { Files } from '~/types/utils';
+import { getConfig, isLegacyClient } from '~/utils/config';
+import type { Templates } from '~/utils/handlebars';
+
 import { generateLegacyClientClass } from '../class';
 import { generateClientBundle } from '../client';
 import { generateLegacyCore } from '../core';

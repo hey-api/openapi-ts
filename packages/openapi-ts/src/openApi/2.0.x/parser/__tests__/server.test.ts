@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import type { OpenApi } from '~/openApi/types';
+
 import type { IR } from '../../../../ir/types';
-import type { OpenApi } from '../../../types';
 import { parseServers } from '../server';
 
 describe('parseServers', () => {

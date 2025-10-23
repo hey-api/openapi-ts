@@ -1,6 +1,7 @@
-import { clientFolderAbsolutePath } from '../../../generate/client';
-import { tsc } from '../../../tsc';
-import { parseUrl } from '../../../utils/url';
+import { clientFolderAbsolutePath } from '~/generate/client';
+import { tsc } from '~/tsc';
+import { parseUrl } from '~/utils/url';
+
 import type { PluginHandler } from './types';
 import { getClientBaseUrlKey } from './utils';
 
@@ -38,7 +39,7 @@ export const createClient: PluginHandler = ({ plugin }) => {
   });
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
   const symbolClientOptions = plugin.referenceSymbol(
-    pluginTypeScript.api.getSelector('ClientOptions'),
+    pluginTypeScript.api.selector('ClientOptions'),
   );
 
   const { runtimeConfigPath } = plugin.config;
@@ -93,7 +94,7 @@ export const createClient: PluginHandler = ({ plugin }) => {
 
   const symbolClient = plugin.registerSymbol({
     name: 'client',
-    selector: plugin.api.getSelector('client'),
+    selector: plugin.api.selector('client'),
   });
   const statement = tsc.constVariable({
     exportConst: true,

@@ -12,9 +12,9 @@ import type {
 import { createBinding, mergeBindings, renderIds } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { ensureValidIdentifier } from '../openApi/shared/utils/identifier';
-import { tsc } from '../tsc';
-import { tsNodeToString } from '../tsc/utils';
+import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
+import { tsc } from '~/tsc';
+import { tsNodeToString } from '~/tsc/utils';
 
 const nodeBuiltins = new Set([
   'buffer',
@@ -479,8 +479,16 @@ export class TypeScriptRenderer implements Renderer {
     const [symbolFile] = project.symbolIdToFiles(symbol.id);
     const symbolFileResolvedName = symbolFile?.resolvedNames.get(symbol.id);
     let name = ensureValidIdentifier(symbolFileResolvedName ?? symbol.name);
-    if (file.resolvedNames.hasValue(name)) {
-      name = this.getUniqueName(name, file.resolvedNames);
+    const conflictId = file.resolvedNames.getKey(name);
+    if (conflictId !== undefined) {
+      const conflictSymbol = project.symbols.get(conflictId);
+      if (
+        (conflictSymbol?.meta?.kind === 'type' &&
+          symbol.meta?.kind === 'type') ||
+        (conflictSymbol?.meta?.kind !== 'type' && symbol.meta?.kind !== 'type')
+      ) {
+        name = this.getUniqueName(name, file.resolvedNames);
+      }
     }
     file.resolvedNames.set(symbol.id, name);
     return name;

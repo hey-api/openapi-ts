@@ -1,7 +1,8 @@
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
-import { createSchemaComment } from '../../shared/utils/schema';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import { createSchemaComment } from '~/plugins/shared/utils/schema';
+import { tsc } from '~/tsc';
+
 import { schemaToType } from './plugin';
 import type { HeyApiTypeScriptPlugin } from './types';
 
@@ -34,7 +35,7 @@ const operationToDataType = ({
         },
         name: operation.id,
       }),
-      selector: plugin.api.getSelector('webhook-payload', operation.id),
+      selector: plugin.api.selector('webhook-payload', operation.id),
     });
     const type = schemaToType({
       plugin,
@@ -55,7 +56,7 @@ const operationToDataType = ({
       },
       name: symbolWebhookPayload.name,
       placeholder: symbolWebhookPayload.placeholder,
-      selector: plugin.api.getSelector('ref', symbolWebhookPayload.placeholder),
+      selector: plugin.api.selector('ref', symbolWebhookPayload.placeholder),
     });
     data.properties.body = { $ref: symbolWebhookPayload.placeholder };
     dataRequired.push('body');
@@ -83,7 +84,7 @@ const operationToDataType = ({
       config: plugin.config.webhooks,
       name: operation.id,
     }),
-    selector: plugin.api.getSelector('webhook-request', operation.id),
+    selector: plugin.api.selector('webhook-request', operation.id),
   });
   const type = schemaToType({
     plugin,

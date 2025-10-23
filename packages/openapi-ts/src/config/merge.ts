@@ -1,4 +1,4 @@
-import type { UserConfig } from '../types/config';
+import type { UserConfig } from '~/types/config';
 
 const mergeObjects = (
   objA: Record<string, unknown> | undefined,

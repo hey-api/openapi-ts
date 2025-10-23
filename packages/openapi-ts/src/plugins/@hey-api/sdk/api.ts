@@ -1,6 +1,7 @@
 import type { Selector } from '@hey-api/codegen-core';
 
-import type { Plugin } from '../../types';
+import type { Plugin } from '~/plugins/types';
+
 import { createOperationComment } from './comment';
 
 type SelectorType =
@@ -30,7 +31,7 @@ export type IApi = {
    *  - `urlSearchParamsBodySerializer`: never
    * @returns Selector array
    */
-  getSelector: (type: SelectorType, value?: string) => Selector;
+  selector: (type: SelectorType, value?: string) => Selector;
 };
 
 export class Api implements IApi {
@@ -42,7 +43,7 @@ export class Api implements IApi {
     return createOperationComment(...args);
   }
 
-  getSelector(...args: ReadonlyArray<string | undefined>): Selector {
+  selector(...args: ReadonlyArray<string | undefined>): Selector {
     return [this.meta.name, ...(args as Selector)];
   }
 }

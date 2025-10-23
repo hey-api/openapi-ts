@@ -1,4 +1,5 @@
-import type { IR } from '../../../ir/types';
+import type { IR } from '~/ir/types';
+
 import type {
   OperationObject,
   ParameterObject,
@@ -146,7 +147,6 @@ const parameterToIrParameter = ({
       state: {
         $ref,
         circularReferenceTracker: new Set(),
-        refStack: [$ref],
       },
     }),
     style,

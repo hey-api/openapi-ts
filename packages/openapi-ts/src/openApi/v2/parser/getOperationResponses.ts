@@ -1,11 +1,12 @@
-import type { Client } from '../../../types/client';
-import type { OperationResponse } from '../../common/interfaces/client';
-import { getRef } from '../../common/parser/getRef';
+import type { OperationResponse } from '~/openApi/common/interfaces/client';
+import { getRef } from '~/openApi/common/parser/getRef';
 import {
   parseResponseStatusCode,
   sorterByResponseStatusCode,
   tagResponseTypes,
-} from '../../common/parser/operation';
+} from '~/openApi/common/parser/operation';
+
+import type { Client } from '../../../types/client';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiResponse } from '../interfaces/OpenApiResponse';
 import type { OpenApiResponses } from '../interfaces/OpenApiResponses';

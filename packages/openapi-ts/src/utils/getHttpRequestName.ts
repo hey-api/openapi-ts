@@ -1,4 +1,4 @@
-import type { PluginClientNames } from '../plugins/types';
+import type { PluginClientNames } from '~/plugins/types';
 
 /**
  * Generate the HttpRequest filename based on the selected client

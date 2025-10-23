@@ -1,11 +1,12 @@
-import { satisfies } from '../../../config/utils/package';
-import type { IR } from '../../../ir/types';
-import type { OpenApiV2_0_XTypes } from '../../../openApi/2.0.x';
-import type { OpenApiV3_0_XTypes } from '../../../openApi/3.0.x';
-import type { OpenApiV3_1_XTypes } from '../../../openApi/3.1.x';
-import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
-import type { OpenApi } from '../../../openApi/types';
-import { tsc } from '../../../tsc';
+import { satisfies } from '~/config/utils/package';
+import type { IR } from '~/ir/types';
+import type { OpenApiV2_0_XTypes } from '~/openApi/2.0.x';
+import type { OpenApiV3_0_XTypes } from '~/openApi/3.0.x';
+import type { OpenApiV3_1_XTypes } from '~/openApi/3.1.x';
+import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
+import type { OpenApi } from '~/openApi/types';
+import { tsc } from '~/tsc';
+
 import type { HeyApiSchemasPlugin } from './types';
 
 const stripSchema = ({
@@ -370,7 +371,7 @@ const schemasV2_0_X = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       name: schemaName({ name, plugin, schema }),
-      selector: plugin.api.getSelector('ref', name),
+      selector: plugin.api.selector('ref', name),
     });
     const obj = schemaToJsonSchemaDraft_04({
       context,
@@ -403,7 +404,7 @@ const schemasV3_0_X = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       name: schemaName({ name, plugin, schema }),
-      selector: plugin.api.getSelector('ref', name),
+      selector: plugin.api.selector('ref', name),
     });
     const obj = schemaToJsonSchemaDraft_05({
       context,
@@ -436,7 +437,7 @@ const schemasV3_1_X = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       name: schemaName({ name, plugin, schema }),
-      selector: plugin.api.getSelector('ref', name),
+      selector: plugin.api.selector('ref', name),
     });
     const obj = schemaToJsonSchema2020_12({
       context,

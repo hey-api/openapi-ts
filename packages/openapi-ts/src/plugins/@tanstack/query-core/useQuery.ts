@@ -1,10 +1,11 @@
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
 import {
   hasOperationSse,
   isOperationOptionsRequired,
-} from '../../shared/utils/operation';
+} from '~/plugins/shared/utils/operation';
+import { tsc } from '~/tsc';
+
 import type { PluginInstance } from './types';
 import { useTypeData } from './useType';
 
@@ -36,7 +37,7 @@ export const createUseQuery = ({
   });
 
   const symbolUseQuery = plugin.referenceSymbol(
-    plugin.api.getSelector('useQuery'),
+    plugin.api.selector('useQuery'),
   );
 
   const isRequiredOptions = isOperationOptionsRequired({
@@ -46,7 +47,7 @@ export const createUseQuery = ({
   const typeData = useTypeData({ operation, plugin });
 
   const symbolQueryOptionsFn = plugin.referenceSymbol(
-    plugin.api.getSelector('queryOptionsFn', operation.id),
+    plugin.api.selector('queryOptionsFn', operation.id),
   );
   const statement = tsc.constVariable({
     comment: plugin.config.comments

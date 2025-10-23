@@ -1,15 +1,16 @@
 import type ts from 'typescript';
 
-import { deduplicateSchema } from '../../../ir/schema';
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import type { Property } from '../../../tsc';
-import { tsc } from '../../../tsc';
-import { refToName } from '../../../utils/ref';
-import { stringCase } from '../../../utils/stringCase';
-import { fieldName } from '../../shared/utils/case';
-import { createSchemaComment } from '../../shared/utils/schema';
-import type { SchemaWithType } from '../../zod/shared/types';
+import { deduplicateSchema } from '~/ir/schema';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
+import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import { fieldName } from '~/plugins/shared/utils/case';
+import { createSchemaComment } from '~/plugins/shared/utils/schema';
+import type { Property } from '~/tsc';
+import { tsc } from '~/tsc';
+import { refToName } from '~/utils/ref';
+import { stringCase } from '~/utils/stringCase';
+
 import { createClientOptions } from './clientOptions';
 import { exportType } from './export';
 import { operationToType } from './operation';
@@ -262,9 +263,9 @@ const stringTypeToIdentifier = ({
       parts.pop(); // remove the ID part
       const type = parts.join('_');
 
-      const selector = plugin.api.getSelector('TypeID', type);
+      const selector = plugin.api.selector('TypeID', type);
       if (!plugin.getSymbol(selector)) {
-        const selectorTypeId = plugin.api.getSelector('TypeID');
+        const selectorTypeId = plugin.api.selector('TypeID');
 
         if (!plugin.getSymbol(selectorTypeId)) {
           const symbolTypeId = plugin.registerSymbol({
@@ -447,7 +448,7 @@ export const schemaToType = ({
 }): ts.TypeNode => {
   if (schema.$ref) {
     const symbol = plugin.referenceSymbol(
-      plugin.api.getSelector('ref', schema.$ref),
+      plugin.api.selector('ref', schema.$ref),
     );
     return tsc.typeReferenceNode({ typeName: symbol.placeholder });
   }
@@ -506,7 +507,7 @@ const handleComponent = ({
       config: plugin.config.definitions,
       name: refToName(id),
     }),
-    selector: plugin.api.getSelector('ref', id),
+    selector: plugin.api.selector('ref', id),
   });
   exportType({
     plugin,
@@ -529,7 +530,7 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
       },
       name: 'ClientOptions',
     }),
-    selector: plugin.api.getSelector('ClientOptions'),
+    selector: plugin.api.selector('ClientOptions'),
   });
   // reserve identifier for Webhooks
   const symbolWebhooks = plugin.registerSymbol({
@@ -543,7 +544,7 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
       },
       name: 'Webhooks',
     }),
-    selector: plugin.api.getSelector('Webhooks'),
+    selector: plugin.api.selector('Webhooks'),
   });
 
   const servers: Array<IR.ServerObject> = [];
@@ -594,6 +595,9 @@ export const handler: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
           );
           break;
       }
+    },
+    {
+      order: 'declarations',
     },
   );
 

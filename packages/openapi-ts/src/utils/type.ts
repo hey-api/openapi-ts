@@ -1,9 +1,10 @@
 import type ts from 'typescript';
 
-import type { Model } from '../openApi';
-import { sanitizeOperationParameterName } from '../openApi';
-import { type Property, tsc } from '../tsc';
-import type { Client } from '../types/client';
+import type { Model } from '~/openApi';
+import { sanitizeOperationParameterName } from '~/openApi';
+import { type Property, tsc } from '~/tsc';
+import type { Client } from '~/types/client';
+
 import { getConfig, isLegacyClient } from './config';
 import { refSchemasPartial } from './const';
 import { enumValue } from './enum';

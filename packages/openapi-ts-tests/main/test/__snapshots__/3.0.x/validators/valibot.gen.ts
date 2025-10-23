@@ -2,16 +2,14 @@
 
 import * as v from 'valibot';
 
-export const vBar: v.GenericSchema = v.object({
-    foo: v.optional(v.lazy(() => {
-        return vFoo;
-    }))
-});
+export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), 'baz');
 
 export const vFoo: v.GenericSchema = v.optional(v.union([
     v.object({
         foo: v.optional(v.pipe(v.string(), v.regex(/^\d{3}-\d{2}-\d{4}$/))),
-        bar: v.optional(vBar),
+        bar: v.optional(v.lazy(() => {
+            return vBar;
+        })),
         baz: v.optional(v.array(v.lazy(() => {
             return vFoo;
         }))),
@@ -20,4 +18,6 @@ export const vFoo: v.GenericSchema = v.optional(v.union([
     v.null()
 ]), null);
 
-export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), 'baz');
+export const vBar = v.object({
+    foo: v.optional(vFoo)
+});

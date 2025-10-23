@@ -1,5 +1,6 @@
-import type { Enum, Model } from '../openApi';
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
+import type { Enum, Model } from '~/openApi';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '~/openApi';
+
 import { unescapeName } from './escape';
 import { sort } from './sort';
 import { unique } from './unique';

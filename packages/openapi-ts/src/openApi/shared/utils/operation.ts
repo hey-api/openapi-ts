@@ -1,7 +1,8 @@
-import { createOperationKey } from '../../../ir/operation';
-import type { IR } from '../../../ir/types';
-import { stringCase } from '../../../utils/stringCase';
-import { sanitizeNamespaceIdentifier } from '../../common/parser/sanitize';
+import { createOperationKey } from '~/ir/operation';
+import type { IR } from '~/ir/types';
+import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
+import { stringCase } from '~/utils/stringCase';
+
 import type { State } from '../types/state';
 
 export const httpMethods = [

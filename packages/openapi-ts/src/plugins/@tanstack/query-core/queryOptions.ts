@@ -1,12 +1,13 @@
 import type ts from 'typescript';
 
-import type { IR } from '../../../ir/types';
-import { buildName } from '../../../openApi/shared/utils/name';
-import { tsc } from '../../../tsc';
+import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
 import {
   hasOperationSse,
   isOperationOptionsRequired,
-} from '../../shared/utils/operation';
+} from '~/plugins/shared/utils/operation';
+import { tsc } from '~/tsc';
+
 import { handleMeta } from './meta';
 import {
   createQueryKeyFunction,
@@ -36,13 +37,13 @@ export const createQueryOptions = ({
     operation,
   });
 
-  if (!plugin.getSymbol(plugin.api.getSelector('createQueryKey'))) {
+  if (!plugin.getSymbol(plugin.api.selector('createQueryKey'))) {
     createQueryKeyType({ plugin });
     createQueryKeyFunction({ plugin });
   }
 
   const symbolQueryOptions = plugin.referenceSymbol(
-    plugin.api.getSelector('queryOptions'),
+    plugin.api.selector('queryOptions'),
   );
 
   const symbolQueryKey = plugin.registerSymbol({
@@ -160,7 +161,7 @@ export const createQueryOptions = ({
       config: plugin.config.queryOptions,
       name: operation.id,
     }),
-    selector: plugin.api.getSelector('queryOptionsFn', operation.id),
+    selector: plugin.api.selector('queryOptionsFn', operation.id),
   });
   const statement = tsc.constVariable({
     comment: plugin.config.comments

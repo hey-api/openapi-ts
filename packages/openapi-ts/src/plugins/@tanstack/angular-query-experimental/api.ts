@@ -1,6 +1,6 @@
 import type { Selector } from '@hey-api/codegen-core';
 
-import type { Plugin } from '../../types';
+import type { Plugin } from '~/plugins/types';
 
 type SelectorType =
   | 'AxiosError'
@@ -32,7 +32,7 @@ export type IApi = {
    *  - `useQuery`: never
    * @returns Selector array
    */
-  getSelector: (type: SelectorType, value?: string) => Selector;
+  selector: (type: SelectorType, value?: string) => Selector;
 };
 
 export class Api implements IApi {
@@ -40,7 +40,7 @@ export class Api implements IApi {
     public meta: Plugin.Name<'@tanstack/angular-query-experimental'>,
   ) {}
 
-  getSelector(...args: ReadonlyArray<string | undefined>): Selector {
+  selector(...args: ReadonlyArray<string | undefined>): Selector {
     return [this.meta.name, ...(args as Selector)];
   }
 }

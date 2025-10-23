@@ -1,7 +1,8 @@
 import ts from 'typescript';
 
-import { findTsConfigPath, loadTsConfig } from '../generate/tsConfig';
-import type { Config, UserConfig } from '../types/config';
+import { findTsConfigPath, loadTsConfig } from '~/generate/tsConfig';
+import type { Config, UserConfig } from '~/types/config';
+
 import { valueToObject } from './utils/config';
 
 export const getOutput = (userConfig: UserConfig): Config['output'] => {

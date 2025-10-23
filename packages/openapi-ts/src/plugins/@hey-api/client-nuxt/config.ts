@@ -1,6 +1,10 @@
-import { definePluginConfig } from '../../shared/utils/config';
-import { clientDefaultConfig, clientDefaultMeta } from '../client-core/config';
-import { clientPluginHandler } from '../client-core/plugin';
+import {
+  clientDefaultConfig,
+  clientDefaultMeta,
+} from '~/plugins/@hey-api/client-core/config';
+import { clientPluginHandler } from '~/plugins/@hey-api/client-core/plugin';
+import { definePluginConfig } from '~/plugins/shared/utils/config';
+
 import { Api } from './api';
 import type { HeyApiClientNuxtPlugin } from './types';
 
