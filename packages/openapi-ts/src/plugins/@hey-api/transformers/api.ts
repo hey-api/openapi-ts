@@ -12,13 +12,13 @@ export type IApi = {
    *  - `response-ref`: `$ref` JSON pointer
    * @returns Selector array
    */
-  getSelector: (type: SelectorType, value?: string) => Selector;
+  selector: (type: SelectorType, value?: string) => Selector;
 };
 
 export class Api implements IApi {
   constructor(public meta: Plugin.Name<'@hey-api/transformers'>) {}
 
-  getSelector(...args: ReadonlyArray<string | undefined>): Selector {
+  selector(...args: ReadonlyArray<string | undefined>): Selector {
     return [this.meta.name, ...(args as Selector)];
   }
 }

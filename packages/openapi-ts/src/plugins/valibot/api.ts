@@ -1,18 +1,16 @@
 import type { Selector } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { IR } from '../../ir/types';
-import { tsc } from '../../tsc';
 import type { Plugin } from '../types';
-import { identifiers } from './constants';
-import type { ValibotPlugin } from './types';
+import type { ValidatorArgs } from './shared/types';
+import { createRequestValidatorV1, createResponseValidatorV1 } from './v1/api';
 
-type SelectorType = 'data' | 'import' | 'ref' | 'responses' | 'webhook-request';
-
-type ValidatorArgs = {
-  operation: IR.OperationObject;
-  plugin: ValibotPlugin['Instance'];
-};
+type SelectorType =
+  | 'data'
+  | 'external'
+  | 'ref'
+  | 'responses'
+  | 'webhook-request';
 
 export type IApi = {
   createRequestValidator: (args: ValidatorArgs) => ts.ArrowFunction | undefined;
@@ -23,101 +21,27 @@ export type IApi = {
    * @param type Selector type.
    * @param value Depends on `type`:
    *  - `data`: `operation.id` string
-   *  - `import`: headless symbols representing module imports
+   *  - `external`: external modules
    *  - `ref`: `$ref` JSON pointer
    *  - `responses`: `operation.id` string
    *  - `webhook-request`: `operation.id` string
    * @returns Selector array
    */
-  getSelector: (type: SelectorType, value?: string) => Selector;
+  selector: (type: SelectorType, value?: string) => Selector;
 };
 
 export class Api implements IApi {
   constructor(public meta: Plugin.Name<'valibot'>) {}
 
-  createRequestValidator({
-    operation,
-    plugin,
-  }: ValidatorArgs): ts.ArrowFunction | undefined {
-    const symbol = plugin.getSymbol(
-      plugin.api.getSelector('data', operation.id),
-    );
-    if (!symbol) return;
-
-    const vSymbol = plugin.referenceSymbol(
-      plugin.api.getSelector('import', 'valibot'),
-    );
-
-    const dataParameterName = 'data';
-
-    return tsc.arrowFunction({
-      async: true,
-      parameters: [
-        {
-          name: dataParameterName,
-        },
-      ],
-      statements: [
-        tsc.returnStatement({
-          expression: tsc.awaitExpression({
-            expression: tsc.callExpression({
-              functionName: tsc.propertyAccessExpression({
-                expression: vSymbol.placeholder,
-                name: identifiers.async.parseAsync,
-              }),
-              parameters: [
-                tsc.identifier({ text: symbol.placeholder }),
-                tsc.identifier({ text: dataParameterName }),
-              ],
-            }),
-          }),
-        }),
-      ],
-    });
+  createRequestValidator(args: ValidatorArgs): ts.ArrowFunction | undefined {
+    return createRequestValidatorV1(args);
   }
 
-  createResponseValidator({
-    operation,
-    plugin,
-  }: ValidatorArgs): ts.ArrowFunction | undefined {
-    const symbol = plugin.getSymbol(
-      plugin.api.getSelector('responses', operation.id),
-    );
-    if (!symbol) return;
-
-    const vSymbol = plugin.referenceSymbol(
-      plugin.api.getSelector('import', 'valibot'),
-    );
-
-    const dataParameterName = 'data';
-
-    return tsc.arrowFunction({
-      async: true,
-      parameters: [
-        {
-          name: dataParameterName,
-        },
-      ],
-      statements: [
-        tsc.returnStatement({
-          expression: tsc.awaitExpression({
-            expression: tsc.callExpression({
-              functionName: tsc.propertyAccessExpression({
-                expression: vSymbol.placeholder,
-                name: identifiers.async.parseAsync,
-              }),
-              parameters: [
-                tsc.identifier({ text: symbol.placeholder }),
-                tsc.identifier({ text: dataParameterName }),
-              ],
-            }),
-          }),
-        }),
-      ],
-    });
+  createResponseValidator(args: ValidatorArgs): ts.ArrowFunction | undefined {
+    return createResponseValidatorV1(args);
   }
 
-  getSelector(...args: ReadonlyArray<string | undefined>): Selector {
+  selector(...args: ReadonlyArray<string | undefined>): Selector {
     return [this.meta.name, ...(args as Selector)];
   }
 }

@@ -11,8 +11,8 @@ vi.mock('../../../../utils/config', () => {
     plugins: {
       '@hey-api/typescript': {
         api: {
-          getSelector: () => [],
           schemaToType: () => ({}) as ts.TypeNode,
+          selector: () => [],
         },
         config: {
           name: '@hey-api/typescript',

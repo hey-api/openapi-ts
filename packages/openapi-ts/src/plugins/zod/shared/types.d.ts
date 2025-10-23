@@ -1,25 +1,29 @@
 import type ts from 'typescript';
 
 import type { IR } from '../../../ir/types';
+import type { ToRefs } from '../../shared/types/refs';
+import type { ZodPlugin } from '../types';
 
-export interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
-  extends Omit<IR.SchemaObject, 'type'> {
-  type: Extract<Required<IR.SchemaObject>['type'], T>;
-}
-
-export type State = {
-  circularReferenceTracker: Array<string>;
-  /**
-   * Works the same as `circularReferenceTracker`, but it resets whenever we
-   * walk inside another schema. This can be used to detect if a schema
-   * directly references itself.
-   */
-  currentReferenceTracker: Array<string>;
-  hasCircularReference: boolean;
+export type Ast = {
+  expression: ts.Expression;
+  hasLazyExpression?: boolean;
+  typeName?: string | ts.Identifier;
 };
 
-export type ZodSchema = {
-  expression: ts.Expression;
-  hasCircularReference?: boolean;
-  typeName?: string | ts.Identifier;
+export type IrSchemaToAstOptions = {
+  plugin: ZodPlugin['Instance'];
+  state: ToRefs<PluginState>;
+};
+
+export type PluginState = {
+  /**
+   * Path to the schema in the intermediary representation.
+   */
+  _path: ReadonlyArray<string | number>;
+  hasLazyExpression: boolean;
+};
+
+export type ValidatorArgs = {
+  operation: IR.OperationObject;
+  plugin: ZodPlugin['Instance'];
 };

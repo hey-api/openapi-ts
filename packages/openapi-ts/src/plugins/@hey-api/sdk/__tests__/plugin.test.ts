@@ -90,7 +90,7 @@ describe('handlerLegacy', () => {
       plugins: {
         '@hey-api/schemas': {
           api: {
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/schemas',
@@ -102,7 +102,7 @@ describe('handlerLegacy', () => {
         '@hey-api/sdk': {
           api: {
             createOperationComment: () => undefined,
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             asClass: true,
@@ -114,8 +114,8 @@ describe('handlerLegacy', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
+            selector: () => [],
           },
           config: {
             name: '@hey-api/typescript',
@@ -326,7 +326,7 @@ describe('methodNameBuilder', () => {
       plugins: {
         '@hey-api/schemas': {
           api: {
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/schemas',
@@ -338,7 +338,7 @@ describe('methodNameBuilder', () => {
         '@hey-api/sdk': {
           api: {
             createOperationComment: () => undefined,
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             asClass: true,
@@ -350,8 +350,8 @@ describe('methodNameBuilder', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
+            selector: () => [],
           },
           config: {
             name: '@hey-api/typescript',
@@ -484,7 +484,7 @@ describe('methodNameBuilder', () => {
       plugins: {
         '@hey-api/schemas': {
           api: {
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/schemas',
@@ -496,7 +496,7 @@ describe('methodNameBuilder', () => {
         '@hey-api/sdk': {
           api: {
             createOperationComment: () => undefined,
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             asClass: true,
@@ -509,8 +509,8 @@ describe('methodNameBuilder', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
+            selector: () => [],
           },
           config: {
             name: '@hey-api/typescript',
@@ -645,7 +645,7 @@ describe('methodNameBuilder', () => {
       plugins: {
         '@hey-api/schemas': {
           api: {
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             name: '@hey-api/schemas',
@@ -657,7 +657,7 @@ describe('methodNameBuilder', () => {
         '@hey-api/sdk': {
           api: {
             createOperationComment: () => undefined,
-            getSelector: () => [],
+            selector: () => [],
           },
           config: {
             asClass: false,
@@ -670,8 +670,8 @@ describe('methodNameBuilder', () => {
         },
         '@hey-api/typescript': {
           api: {
-            getSelector: () => [],
             schemaToType: () => ({}) as ts.TypeNode,
+            selector: () => [],
           },
           config: {
             name: '@hey-api/typescript',

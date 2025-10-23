@@ -9,22 +9,22 @@ export const handler: AngularCommonPlugin['Handler'] = ({ plugin }) => {
       kind: 'type',
     },
     name: 'HttpRequest',
-    selector: plugin.api.getSelector('HttpRequest'),
+    selector: plugin.api.selector('HttpRequest'),
   });
   plugin.registerSymbol({
     external: '@angular/core',
     name: 'inject',
-    selector: plugin.api.getSelector('inject'),
+    selector: plugin.api.selector('inject'),
   });
   plugin.registerSymbol({
     external: '@angular/core',
     name: 'Injectable',
-    selector: plugin.api.getSelector('Injectable'),
+    selector: plugin.api.selector('Injectable'),
   });
   plugin.registerSymbol({
     external: '@angular/common/http',
     name: 'httpResource',
-    selector: plugin.api.getSelector('httpResource'),
+    selector: plugin.api.selector('httpResource'),
   });
 
   if (plugin.config.httpRequests.enabled) {

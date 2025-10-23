@@ -741,7 +741,6 @@ const parseRef = ({
   const isComponentsRef = schema.$ref.startsWith('#/components/');
   if (!isComponentsRef) {
     if (!state.circularReferenceTracker.has(schema.$ref)) {
-      state.refStack.push(schema.$ref);
       const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
       const originalRef = state.$ref;
       state.$ref = schema.$ref;
@@ -751,7 +750,6 @@ const parseRef = ({
         state,
       });
       state.$ref = originalRef;
-      state.refStack.pop();
       return irSchema;
     }
     // Fallback to preserving the ref if circular
@@ -763,15 +761,7 @@ const parseRef = ({
   // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
   irSchema.$ref = decodeURI(schema.$ref);
 
-  if (state.refStack.includes(schema.$ref)) {
-    if (state.refStack[0] === schema.$ref) {
-      state.circularRef = schema.$ref;
-    }
-    irSchema.circular = true;
-  }
-
   if (!state.circularReferenceTracker.has(schema.$ref)) {
-    state.refStack.push(schema.$ref);
     const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
     const originalRef = state.$ref;
     state.$ref = schema.$ref;
@@ -780,11 +770,7 @@ const parseRef = ({
       schema: refSchema,
       state,
     });
-    if (state.circularRef && state.refStack[0] === state.circularRef) {
-      irSchema.circular = true;
-    }
     state.$ref = originalRef;
-    state.refStack.pop();
   }
 
   return irSchema;
@@ -972,7 +958,6 @@ export const schemaToIrSchema = ({
   if (!state) {
     state = {
       circularReferenceTracker: new Set(),
-      refStack: [],
     };
   }
 
@@ -1055,7 +1040,6 @@ export const parseSchema = ({
     state: {
       $ref,
       circularReferenceTracker: new Set(),
-      refStack: [$ref],
     },
   });
 };

@@ -26,7 +26,7 @@ export const createTypeOptions = ({
       kind: 'type',
     },
     name: 'Client',
-    selector: plugin.api.getSelector('Client'),
+    selector: plugin.api.selector('Client'),
   });
   const symbolClientOptions = plugin.registerSymbol({
     external: clientModule,
@@ -41,7 +41,7 @@ export const createTypeOptions = ({
       kind: 'type',
     },
     name: 'Options',
-    selector: plugin.api.getSelector('Options'),
+    selector: plugin.api.selector('Options'),
   });
 
   const typeOptions = tsc.typeAliasDeclaration({
@@ -102,7 +102,7 @@ export const createTypeOptions = ({
           tsc.typeParameterDeclaration({
             constraint: tsc.typeReferenceNode({
               typeName: plugin.referenceSymbol(
-                plugin.api.getSelector('Composable'),
+                plugin.api.selector('Composable'),
               ).placeholder,
             }),
             defaultType: tsc.typeNode("'$fetch'"),

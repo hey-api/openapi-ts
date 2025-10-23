@@ -2,38 +2,42 @@
 
 import { z } from 'zod/v3';
 
-export const zBaz: z.AnyZodObject = z.object({
+export const zFoo: z.AnyZodObject = z.object({
     quux: z.lazy(() => {
         return zQuux;
     }).optional()
-});
-
-export const zCorge = z.object({
-    baz: z.array(zBaz).optional()
-});
-
-export const zQux: z.ZodTypeAny = z.union([
-    z.object({
-        type: z.literal('struct')
-    }).and(zCorge),
-    z.object({
-        type: z.literal('array')
-    }).and(z.lazy(() => {
-        return zFoo;
-    }))
-]);
-
-export const zQuux = z.object({
-    qux: zQux.optional()
-});
-
-export const zFoo = z.object({
-    quux: zQuux.optional()
 });
 
 export const zBar: z.AnyZodObject = z.object({
     bar: z.lazy(() => {
         return zBar;
     }).optional(),
-    baz: zBaz.optional()
+    baz: z.lazy(() => {
+        return zBaz;
+    }).optional()
+});
+
+export const zBaz: z.AnyZodObject = z.object({
+    quux: z.lazy(() => {
+        return zQuux;
+    }).optional()
+});
+
+export const zQux: z.ZodTypeAny = z.union([
+    z.object({
+        type: z.literal('struct')
+    }).and(z.lazy(() => {
+        return zCorge;
+    })),
+    z.object({
+        type: z.literal('array')
+    }).and(zFoo)
+]);
+
+export const zQuux = z.object({
+    qux: zQux.optional()
+});
+
+export const zCorge = z.object({
+    baz: z.array(zBaz).optional()
 });

@@ -30,13 +30,13 @@ export const createQueryKeyFunction = ({
       },
       name: 'createQueryKey',
     }),
-    selector: plugin.api.getSelector('createQueryKey'),
+    selector: plugin.api.selector('createQueryKey'),
   });
   const symbolQueryKeyType = plugin.referenceSymbol(
-    plugin.api.getSelector('QueryKey'),
+    plugin.api.selector('QueryKey'),
   );
   const symbolJsonValue = plugin.referenceSymbol(
-    plugin.api.getSelector('_JSONValue'),
+    plugin.api.selector('_JSONValue'),
   );
 
   const returnType = tsc.indexedAccessTypeNode({
@@ -53,14 +53,14 @@ export const createQueryKeyFunction = ({
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.getSelector('Options'),
+    sdkPlugin.api.selector('Options'),
   );
   const client = getClientPlugin(plugin.context.config);
   const symbolClient =
-    client.api && 'getSelector' in client.api
+    client.api && 'selector' in client.api
       ? plugin.getSymbol(
           // @ts-expect-error
-          client.api.getSelector('client'),
+          client.api.selector('client'),
         )
       : undefined;
 
@@ -289,7 +289,7 @@ const createQueryKeyLiteral = ({
   }
 
   const symbolCreateQueryKey = plugin.referenceSymbol(
-    plugin.api.getSelector('createQueryKey'),
+    plugin.api.selector('createQueryKey'),
   );
   const createQueryKeyCallExpression = tsc.callExpression({
     functionName: symbolCreateQueryKey.placeholder,
@@ -304,7 +304,7 @@ export const createQueryKeyType = ({
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
   const symbolJsonValue = plugin.referenceSymbol(
-    plugin.api.getSelector('_JSONValue'),
+    plugin.api.selector('_JSONValue'),
   );
 
   const properties: Array<Property> = [
@@ -333,13 +333,13 @@ export const createQueryKeyType = ({
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.getSelector('Options'),
+    sdkPlugin.api.selector('Options'),
   );
   const symbolQueryKeyType = plugin.registerSymbol({
     exported: true,
     meta: { kind: 'type' },
     name: 'QueryKey',
-    selector: plugin.api.getSelector('QueryKey'),
+    selector: plugin.api.selector('QueryKey'),
   });
   const queryKeyType = tsc.typeAliasDeclaration({
     exportType: symbolQueryKeyType.exported,

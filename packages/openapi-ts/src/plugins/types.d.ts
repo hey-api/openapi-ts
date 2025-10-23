@@ -19,7 +19,7 @@ export type PluginClientNames =
   | 'legacy/node'
   | 'legacy/xhr';
 
-export type PluginValidatorNames = 'valibot' | 'zod';
+export type PluginValidatorNames = 'arktype' | 'valibot' | 'zod';
 
 export type PluginNames =
   | PluginClientNames

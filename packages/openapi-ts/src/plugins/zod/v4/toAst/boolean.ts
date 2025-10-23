@@ -1,0 +1,34 @@
+import { tsc } from '../../../../tsc';
+import type { SchemaWithType } from '../../../shared/types/schema';
+import { identifiers } from '../../constants';
+import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+
+export const booleanToAst = ({
+  plugin,
+  schema,
+}: IrSchemaToAstOptions & {
+  schema: SchemaWithType<'boolean'>;
+}): Omit<Ast, 'typeName'> => {
+  const result: Partial<Omit<Ast, 'typeName'>> = {};
+
+  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
+
+  if (typeof schema.const === 'boolean') {
+    result.expression = tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
+        expression: z.placeholder,
+        name: identifiers.literal,
+      }),
+      parameters: [tsc.ots.boolean(schema.const)],
+    });
+    return result as Omit<Ast, 'typeName'>;
+  }
+
+  result.expression = tsc.callExpression({
+    functionName: tsc.propertyAccessExpression({
+      expression: z.placeholder,
+      name: identifiers.boolean,
+    }),
+  });
+  return result as Omit<Ast, 'typeName'>;
+};

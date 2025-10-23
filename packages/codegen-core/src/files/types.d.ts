@@ -83,6 +83,13 @@ export interface IFileRegistry {
    */
   readonly id: number;
   /**
+   * Returns whether a file is registered in the registry.
+   *
+   * @param fileIdOrSelector File ID or selector to check.
+   * @returns True if the file is registered, false otherwise.
+   */
+  isRegistered(fileIdOrSelector: number | ISelector): boolean;
+  /**
    * Returns a file by ID or selector, registering it if it doesn't exist.
    *
    * @param fileIdOrSelector File ID or selector to reference.

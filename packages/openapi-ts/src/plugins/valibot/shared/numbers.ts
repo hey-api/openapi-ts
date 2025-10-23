@@ -1,6 +1,5 @@
-import { tsc } from '../../tsc';
+import { tsc } from '../../../tsc';
 
-// Integer format ranges and properties
 export const INTEGER_FORMATS = {
   int16: {
     max: 32767,

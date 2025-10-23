@@ -27,70 +27,76 @@ const generateAngularClassServices = ({
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
 
-  plugin.forEach('operation', ({ operation }) => {
-    const isRequiredOptions = isOperationOptionsRequired({
-      context: plugin.context,
-      operation,
-    });
-
-    const classes = operationClasses({
-      context: plugin.context,
-      operation,
-      plugin: sdkPlugin,
-    });
-
-    for (const entry of classes.values()) {
-      entry.path.forEach((currentClassName, index) => {
-        if (!serviceClasses.has(currentClassName)) {
-          serviceClasses.set(currentClassName, {
-            className: currentClassName,
-            classes: new Set(),
-            methods: new Set(),
-            nodes: [],
-            root: !index,
-          });
-        }
-
-        const parentClassName = entry.path[index - 1];
-        if (parentClassName && parentClassName !== currentClassName) {
-          const parentClass = serviceClasses.get(parentClassName)!;
-          parentClass.classes.add(currentClassName);
-          serviceClasses.set(parentClassName, parentClass);
-        }
-
-        const isLast = entry.path.length === index + 1;
-        if (!isLast) {
-          return;
-        }
-
-        const currentClass = serviceClasses.get(currentClassName)!;
-
-        const resourceMethodName =
-          plugin.config.httpResources.methodNameBuilder(operation);
-
-        if (currentClass.methods.has(resourceMethodName)) {
-          return;
-        }
-
-        const methodNode = generateAngularResourceMethod({
-          isRequiredOptions,
-          methodName: resourceMethodName,
-          operation,
-          plugin,
-        });
-
-        if (!currentClass.nodes.length) {
-          currentClass.nodes.push(methodNode);
-        } else {
-          // @ts-expect-error
-          currentClass.nodes.push(tsc.identifier({ text: '\n' }), methodNode);
-        }
-
-        currentClass.methods.add(resourceMethodName);
-        serviceClasses.set(currentClassName, currentClass);
+  plugin.forEach(
+    'operation',
+    ({ operation }) => {
+      const isRequiredOptions = isOperationOptionsRequired({
+        context: plugin.context,
+        operation,
       });
-    }
-  });
+
+      const classes = operationClasses({
+        context: plugin.context,
+        operation,
+        plugin: sdkPlugin,
+      });
+
+      for (const entry of classes.values()) {
+        entry.path.forEach((currentClassName, index) => {
+          if (!serviceClasses.has(currentClassName)) {
+            serviceClasses.set(currentClassName, {
+              className: currentClassName,
+              classes: new Set(),
+              methods: new Set(),
+              nodes: [],
+              root: !index,
+            });
+          }
+
+          const parentClassName = entry.path[index - 1];
+          if (parentClassName && parentClassName !== currentClassName) {
+            const parentClass = serviceClasses.get(parentClassName)!;
+            parentClass.classes.add(currentClassName);
+            serviceClasses.set(parentClassName, parentClass);
+          }
+
+          const isLast = entry.path.length === index + 1;
+          if (!isLast) {
+            return;
+          }
+
+          const currentClass = serviceClasses.get(currentClassName)!;
+
+          const resourceMethodName =
+            plugin.config.httpResources.methodNameBuilder(operation);
+
+          if (currentClass.methods.has(resourceMethodName)) {
+            return;
+          }
+
+          const methodNode = generateAngularResourceMethod({
+            isRequiredOptions,
+            methodName: resourceMethodName,
+            operation,
+            plugin,
+          });
+
+          if (!currentClass.nodes.length) {
+            currentClass.nodes.push(methodNode);
+          } else {
+            // @ts-expect-error
+            currentClass.nodes.push(tsc.identifier({ text: '\n' }), methodNode);
+          }
+
+          currentClass.methods.add(resourceMethodName);
+          serviceClasses.set(currentClassName, currentClass);
+        });
+      }
+    },
+    {
+      order: 'declarations',
+    },
+  );
 
   const generateClass = (currentClass: AngularServiceClassEntry) => {
     if (generatedClasses.has(currentClass.className)) {
@@ -126,7 +132,7 @@ const generateAngularClassServices = ({
     }
 
     const symbolInjectable = plugin.referenceSymbol(
-      plugin.api.getSelector('Injectable'),
+      plugin.api.selector('Injectable'),
     );
     const symbolClass = plugin.registerSymbol({
       exported: true,
@@ -164,24 +170,30 @@ const generateAngularFunctionServices = ({
 }: {
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  plugin.forEach('operation', ({ operation }) => {
-    const isRequiredOptions = isOperationOptionsRequired({
-      context: plugin.context,
-      operation,
-    });
+  plugin.forEach(
+    'operation',
+    ({ operation }) => {
+      const isRequiredOptions = isOperationOptionsRequired({
+        context: plugin.context,
+        operation,
+      });
 
-    const symbol = plugin.registerSymbol({
-      exported: true,
-      name: plugin.config.httpResources.methodNameBuilder(operation),
-    });
-    const node = generateAngularResourceFunction({
-      isRequiredOptions,
-      operation,
-      plugin,
-      symbol,
-    });
-    plugin.setSymbolValue(symbol, node);
-  });
+      const symbol = plugin.registerSymbol({
+        exported: true,
+        name: plugin.config.httpResources.methodNameBuilder(operation),
+      });
+      const node = generateAngularResourceFunction({
+        isRequiredOptions,
+        operation,
+        plugin,
+        symbol,
+      });
+      plugin.setSymbolValue(symbol, node);
+    },
+    {
+      order: 'declarations',
+    },
+  );
 };
 
 const generateResourceCallExpression = ({
@@ -195,11 +207,11 @@ const generateResourceCallExpression = ({
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
   const symbolHttpResource = plugin.referenceSymbol(
-    plugin.api.getSelector('httpResource'),
+    plugin.api.selector('httpResource'),
   );
 
   const symbolResponseType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('response', operation.id),
+    pluginTypeScript.api.selector('response', operation.id),
   );
   const responseType = symbolResponseType?.placeholder || 'unknown';
 
@@ -216,12 +228,12 @@ const generateResourceCallExpression = ({
       // Import the root class from HTTP requests
       const rootClassName = firstEntry.path[0]!;
       const symbolClass = plugin.referenceSymbol(
-        plugin.api.getSelector('class', rootClassName),
+        plugin.api.selector('class', rootClassName),
       );
 
       // Build the method access path using inject
       const symbolInject = plugin.referenceSymbol(
-        plugin.api.getSelector('inject'),
+        plugin.api.selector('inject'),
       );
       let methodAccess: ts.Expression = tsc.callExpression({
         functionName: symbolInject.placeholder,
@@ -282,7 +294,7 @@ const generateResourceCallExpression = ({
     }
   } else {
     const symbolHttpRequest = plugin.referenceSymbol(
-      plugin.api.getSelector('httpRequest', operation.id),
+      plugin.api.selector('httpRequest', operation.id),
     );
 
     return tsc.callExpression({
@@ -351,11 +363,11 @@ const generateAngularResourceMethod = ({
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.getSelector('Options'),
+    sdkPlugin.api.selector('Options'),
   );
 
   const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('data', operation.id),
+    pluginTypeScript.api.selector('data', operation.id),
   );
   const dataType = symbolDataType?.placeholder || 'unknown';
 
@@ -404,11 +416,11 @@ const generateAngularResourceFunction = ({
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.getSelector('Options'),
+    sdkPlugin.api.selector('Options'),
   );
 
   const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.getSelector('data', operation.id),
+    pluginTypeScript.api.selector('data', operation.id),
   );
   const dataType = symbolDataType?.placeholder || 'unknown';
 
