@@ -818,6 +818,15 @@ export const vModelWithReadOnlyAndWriteOnly = v.object({
     bar: v.pipe(v.string(), v.readonly())
 });
 
+/**
+ * This is a model with one property containing an array
+ */
+export const vModelWithArrayReadOnlyAndWriteOnly = v.object({
+    prop: v.optional(v.array(vModelWithReadOnlyAndWriteOnly)),
+    propWithFile: v.optional(v.array(v.string())),
+    propWithNumber: v.optional(v.array(v.number()))
+});
+
 export const vModelWithConstantSizeArray = v.tuple([
     v.number(),
     v.number()
@@ -1066,15 +1075,6 @@ export const vFileWritable = v.object({
 export const vModelWithReadOnlyAndWriteOnlyWritable = v.object({
     foo: v.string(),
     baz: v.string()
-});
-
-/**
- * This is a model with one property containing an array
- */
-export const vModelWithArrayReadOnlyAndWriteOnly = v.object({
-    prop: v.optional(v.array(vModelWithReadOnlyAndWriteOnlyWritable)),
-    propWithFile: v.optional(v.array(v.string())),
-    propWithNumber: v.optional(v.array(v.number()))
 });
 
 export const vAdditionalPropertiesUnknownIssueWritable = v.object({});

@@ -474,17 +474,18 @@ type WalkArgs = {
  * @param split - The split mapping (from splitSchemas)
  */
 export const updateRefsInSpec = ({
+  graph,
   logger,
   spec,
   split,
 }: {
+  graph: Graph;
   logger: Logger;
   spec: unknown;
   split: Omit<SplitSchemas, 'schemas'>;
 }): void => {
   const event = logger.timeEvent('update-refs-in-spec');
   const schemasPointerNamespace = specToSchemasPointerNamespace(spec);
-  const globalVisited = new Set<string>(); // Track globally visited schemas to prevent multiple walks
 
   const walk = ({
     context,
@@ -521,6 +522,21 @@ export const updateRefsInSpec = ({
             nextContext = 'read';
           } else if (mapping?.write === nextPointer) {
             nextContext = 'write';
+          }
+        } else {
+          // Not a split variant - check graph for the schema's scopes
+          const nodeInfo = graph.nodes.get(nextPointer);
+          if (nodeInfo?.scopes) {
+            // If schema has only write scope, use write context
+            // If schema has only read scope, use read context
+            // If schema has both or neither, leave context as-is (null)
+            const hasRead = nodeInfo.scopes.has('read');
+            const hasWrite = nodeInfo.scopes.has('write');
+            if (hasWrite && !hasRead) {
+              nextContext = 'write';
+            } else if (hasRead && !hasWrite) {
+              nextContext = 'read';
+            }
           }
         }
       }
@@ -644,37 +660,6 @@ export const updateRefsInSpec = ({
             } else if (map.write && nextContext === 'write') {
               (node as Record<string, unknown>)[key] = map.write;
             }
-          } else if (
-            inSchema &&
-            nextContext &&
-            value.startsWith(schemasPointerNamespace) &&
-            !visited.has(value) &&
-            !globalVisited.has(value) // Prevent walking the same schema multiple times
-          ) {
-            // If we're in a schema with a defined context (read/write), follow the $ref
-            // to update nested $refs within the referenced schema
-            // Use visited set to avoid circular references, and global visited to prevent
-            // multiple walks of the same schema from different paths
-            const schemasObj = getSchemasObject(spec);
-            if (schemasObj) {
-              const schemaName = value.substring(
-                schemasPointerNamespace.length,
-              );
-              const referencedSchema = schemasObj[schemaName];
-              if (referencedSchema) {
-                const newVisited = new Set(visited);
-                newVisited.add(value);
-                globalVisited.add(value); // Mark as globally visited
-                walk({
-                  context: nextContext,
-                  currentPointer: value,
-                  inSchema: true,
-                  node: referencedSchema,
-                  path: value.split('/').filter(Boolean),
-                  visited: newVisited,
-                });
-              }
-            }
           }
         } else {
           walk({
@@ -723,6 +708,6 @@ export const readWriteTransform = ({
   const originalSchemas = captureOriginalSchemas(spec, logger);
   const split = splitSchemas({ config, graph, logger, spec });
   insertSplitSchemasIntoSpec({ logger, spec, split });
-  updateRefsInSpec({ logger, spec, split });
+  updateRefsInSpec({ graph, logger, spec, split });
   removeOriginalSplitSchemas({ logger, originalSchemas, spec, split });
 };
