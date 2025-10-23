@@ -156,7 +156,14 @@ describe('generateLegacySchemas', () => {
         config: {
           exportFromIndex: false,
         },
-        context: {} as any,
+        context: {
+          config: {
+            // @ts-expect-error
+            parser: {
+              hooks: {},
+            },
+          },
+        },
         dependencies: [],
         gen: new Project({
           renderers: {},
@@ -322,7 +329,14 @@ describe('generateLegacySchemas', () => {
         config: {
           exportFromIndex: false,
         },
-        context: {} as any,
+        context: {
+          config: {
+            // @ts-expect-error
+            parser: {
+              hooks: {},
+            },
+          },
+        },
         dependencies: [],
         gen: new Project({
           renderers: {},

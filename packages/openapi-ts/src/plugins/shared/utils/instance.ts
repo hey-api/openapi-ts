@@ -16,6 +16,7 @@ import {
 } from '~/ir/graph';
 import type { IR } from '~/ir/types';
 import type { OpenApi } from '~/openApi/types';
+import type { Hooks } from '~/parser/types/hooks';
 import type { PluginConfigMap } from '~/plugins/config';
 import type { Plugin } from '~/plugins/types';
 import { jsonPointerToPath } from '~/utils/ref';
@@ -38,7 +39,7 @@ const defaultGetFilePath = (symbol: Symbol): string | undefined => {
   return symbol.meta.pluginName;
 };
 
-const defaultGetKind: Required<Required<IR.Hooks>['operations']>['getKind'] = (
+const defaultGetKind: Required<Required<Hooks>['operations']>['getKind'] = (
   operation,
 ) => {
   switch (operation.method) {
@@ -54,11 +55,18 @@ const defaultGetKind: Required<Required<IR.Hooks>['operations']>['getKind'] = (
   }
 };
 
+type EventHooks = {
+  [K in keyof Required<NonNullable<Hooks['events']>>]: Array<
+    NonNullable<NonNullable<Hooks['events']>[K]>
+  >;
+};
+
 export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   api: T['api'];
   config: Omit<T['resolvedConfig'], 'name' | 'output'>;
   context: IR.Context;
   dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
+  private eventHooks: EventHooks;
   gen: IProject;
   private handler: Plugin.Config<T>['handler'];
   name: T['resolvedConfig']['name'];
@@ -87,6 +95,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.config = props.config;
     this.context = props.context;
     this.dependencies = props.dependencies;
+    this.eventHooks = this.buildEventHooks();
     this.gen = props.gen;
     this.handler = props.handler;
     this.name = props.name;
@@ -336,18 +345,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     }
   }
 
-  private forEachError(error: unknown, event: WalkEvent) {
-    const originalError =
-      error instanceof Error ? error : new Error(String(error));
-    throw new HeyApiError({
-      args: [event],
-      error: originalError,
-      event: event.type,
-      name: 'Error',
-      pluginName: this.name,
-    });
-  }
-
   /**
    * Retrieves a registered plugin instance by its name from the context. This
    * allows plugins to access other plugins that have been registered in the
@@ -382,29 +379,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return this.gen.symbols.get(symbolIdOrSelector);
   }
 
-  private getSymbolFilePath(symbol: Symbol): string | undefined {
-    const getFilePathFnPlugin = this.config['~hooks']?.symbols?.getFilePath;
-    const getFilePathFnPluginResult = getFilePathFnPlugin?.(symbol);
-    if (getFilePathFnPluginResult !== undefined) {
-      return getFilePathFnPluginResult;
-    }
-    const getFilePathFnParser =
-      this.context.config.parser.hooks.symbols?.getFilePath;
-    const getFilePathFnParserResult = getFilePathFnParser?.(symbol);
-    if (getFilePathFnParserResult !== undefined) {
-      return getFilePathFnParserResult;
-    }
-    return defaultGetFilePath(symbol);
-  }
-
-  getSymbolValue(idOrSymbol: number | Symbol): unknown {
-    return this.gen.symbols.getValue(this.symbolToId(idOrSymbol));
-  }
-
-  hasSymbolValue(idOrSymbol: number | Symbol): boolean {
-    return this.gen.symbols.hasValue(this.symbolToId(idOrSymbol));
-  }
-
   hooks = {
     operation: {
       isMutation: (operation: IR.OperationObject): boolean =>
@@ -412,41 +386,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       isQuery: (operation: IR.OperationObject): boolean =>
         this.isOperationKind(operation, 'query'),
     },
-    symbol: {
-      getFilePath: (symbol: Symbol): string | undefined =>
-        this.getSymbolFilePath(symbol),
-    },
   };
-
-  private isOperationKind(
-    operation: IR.OperationObject,
-    kind: 'mutation' | 'query',
-  ): boolean {
-    const methodName = kind === 'query' ? 'isQuery' : 'isMutation';
-    const isFnPlugin = this.config['~hooks']?.operations?.[methodName];
-    const isFnPluginResult = isFnPlugin?.(operation);
-    if (isFnPluginResult !== undefined) {
-      return isFnPluginResult;
-    }
-    const getKindFnPlugin = this.config['~hooks']?.operations?.getKind;
-    const getKindFnPluginResult = getKindFnPlugin?.(operation);
-    if (getKindFnPluginResult !== undefined) {
-      return getKindFnPluginResult.includes(kind);
-    }
-    const isFnParser =
-      this.context.config.parser.hooks.operations?.[methodName];
-    const isFnParserResult = isFnParser?.(operation);
-    if (isFnParserResult !== undefined) {
-      return isFnParserResult;
-    }
-    const getKindFnParser =
-      this.context.config.parser.hooks.operations?.getKind;
-    const getKindFnParserResult = getKindFnParser?.(operation);
-    if (getKindFnParserResult !== undefined) {
-      return getKindFnParserResult.includes(kind);
-    }
-    return (defaultGetKind(operation) ?? []).includes(kind);
-  }
 
   isSymbolRegistered(symbolIdOrSelector: number | Selector): boolean {
     return this.gen.symbols.isRegistered(symbolIdOrSelector);
@@ -457,7 +397,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   registerSymbol(symbol: SymbolIn): Symbol {
-    return this.gen.symbols.register({
+    const symbolIn: SymbolIn = {
       ...symbol,
       exportFrom:
         symbol.exportFrom ??
@@ -466,29 +406,113 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
         this.config.exportFromIndex
           ? ['index']
           : undefined),
-      getFilePath: symbol.getFilePath ?? this.hooks.symbol.getFilePath,
+      getFilePath: symbol.getFilePath ?? this.getSymbolFilePath.bind(this),
       meta: {
         pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
         ...symbol.meta,
       },
-    });
+    };
+    for (const hook of this.eventHooks['symbol:register:before']) {
+      hook({ plugin: this, symbol: symbolIn });
+    }
+    const symbolOut = this.gen.symbols.register(symbolIn);
+    for (const hook of this.eventHooks['symbol:register:after']) {
+      hook({ plugin: this, symbol: symbolOut });
+    }
+    return symbolOut;
   }
 
   /**
    * Executes plugin's handler function.
    */
-  async run() {
+  async run(): Promise<void> {
+    for (const hook of this.eventHooks['plugin:handler:before']) {
+      hook({ plugin: this });
+    }
     await this.handler({ plugin: this });
+    for (const hook of this.eventHooks['plugin:handler:after']) {
+      hook({ plugin: this });
+    }
   }
 
-  setSymbolValue(
-    idOrSymbol: number | Symbol,
-    value: unknown,
-  ): Map<number, unknown> {
-    return this.gen.symbols.setValue(this.symbolToId(idOrSymbol), value);
+  setSymbolValue(symbol: Symbol, value: unknown): void {
+    for (const hook of this.eventHooks['symbol:setValue:before']) {
+      hook({ plugin: this, symbol, value });
+    }
+    this.gen.symbols.setValue(symbol.id, value);
+    for (const hook of this.eventHooks['symbol:setValue:after']) {
+      hook({ plugin: this, symbol, value });
+    }
   }
 
-  private symbolToId(idOrSymbol: number | Symbol): number {
-    return typeof idOrSymbol === 'number' ? idOrSymbol : idOrSymbol.id;
+  private buildEventHooks(): EventHooks {
+    const result: EventHooks = {
+      'plugin:handler:after': [],
+      'plugin:handler:before': [],
+      'symbol:register:after': [],
+      'symbol:register:before': [],
+      'symbol:setValue:after': [],
+      'symbol:setValue:before': [],
+    };
+    const scopes = [
+      this.config['~hooks']?.events,
+      this.context.config.parser.hooks.events,
+    ];
+    for (const scope of scopes) {
+      if (!scope) continue;
+      for (const [key, value] of Object.entries(scope)) {
+        if (value) {
+          result[key as keyof typeof result].push(value.bind(scope) as any);
+        }
+      }
+    }
+    return result;
+  }
+
+  private forEachError(error: unknown, event: WalkEvent) {
+    const originalError =
+      error instanceof Error ? error : new Error(String(error));
+    throw new HeyApiError({
+      args: [event],
+      error: originalError,
+      event: event.type,
+      name: 'Error',
+      pluginName: this.name,
+    });
+  }
+
+  private getSymbolFilePath(symbol: Symbol): string | undefined {
+    const hooks = [
+      this.config['~hooks']?.symbols,
+      this.context.config.parser.hooks.symbols,
+    ];
+    for (const hook of hooks) {
+      const result = hook?.getFilePath?.(symbol);
+      if (result !== undefined) return result;
+    }
+    return defaultGetFilePath(symbol);
+  }
+
+  private isOperationKind(
+    operation: IR.OperationObject,
+    kind: 'mutation' | 'query',
+  ): boolean {
+    const method = kind === 'query' ? 'isQuery' : 'isMutation';
+    const hooks = [
+      this.config['~hooks']?.operations?.[method],
+      this.config['~hooks']?.operations?.getKind,
+      this.context.config.parser.hooks.operations?.[method],
+      this.context.config.parser.hooks.operations?.getKind,
+      defaultGetKind,
+    ];
+    for (const hook of hooks) {
+      if (hook) {
+        const result = hook(operation);
+        if (result !== undefined) {
+          return typeof result === 'boolean' ? result : result.includes(kind);
+        }
+      }
+    }
+    return false;
   }
 }

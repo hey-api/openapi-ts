@@ -1,5 +1,3 @@
-import type { Symbol } from '@hey-api/codegen-core';
-
 import type { JsonSchemaDraft2020_12 } from '~/openApi/3.1.x/types/json-schema-draft-2020-12';
 import type {
   SecuritySchemeObject,
@@ -27,101 +25,7 @@ interface IRComponentsObject {
   schemas?: Record<string, IRSchemaObject>;
 }
 
-interface IRHooks {
-  /**
-   * Hooks specifically for overriding operations behavior.
-   *
-   * Use these to classify operations, decide which outputs to generate,
-   * or apply custom behavior to individual operations.
-   */
-  operations?: {
-    /**
-     * Classify the given operation into one or more kinds.
-     *
-     * Each kind determines how we treat the operation (e.g., generating queries or mutations).
-     *
-     * **Default behavior:**
-     * - GET → 'query'
-     * - DELETE, PATCH, POST, PUT → 'mutation'
-     *
-     * **Resolution order:**
-     * 1. If `isQuery` or `isMutation` returns `true` or `false`, that overrides `getKind`.
-     * 2. If `isQuery` or `isMutation` returns `undefined`, the result of `getKind` is used.
-     *
-     * @param operation - The operation object to classify.
-     * @returns An array containing one or more of 'query' or 'mutation', or undefined to fallback to default behavior.
-     * @example
-     * getKind: (operation) => {
-     *   if (operation.method === 'get' && operation.path === '/search') {
-     *     return ['query', 'mutation'];
-     *   }
-     *   return; // fallback to default behavior
-     * }
-     */
-    getKind?: (
-      operation: IROperationObject,
-    ) => ReadonlyArray<'mutation' | 'query'> | undefined;
-    /**
-     * Check if the given operation should be treated as a mutation.
-     *
-     * This affects which outputs are generated for the operation.
-     *
-     * **Default behavior:** DELETE, PATCH, POST, and PUT operations are treated as mutations.
-     *
-     * **Resolution order:** If this returns `true` or `false`, it overrides `getKind`.
-     * If it returns `undefined`, `getKind` is used instead.
-     *
-     * @param operation - The operation object to check.
-     * @returns true if the operation is a mutation, false otherwise, or undefined to fallback to `getKind`.
-     * @example
-     * isMutation: (operation) => {
-     *   if (operation.method === 'post' && operation.path === '/search') {
-     *     return true;
-     *   }
-     *   return; // fallback to default behavior
-     }
-     */
-    isMutation?: (operation: IROperationObject) => boolean | undefined;
-    /**
-     * Check if the given operation should be treated as a query.
-     *
-     * This affects which outputs are generated for the operation.
-     *
-     * **Default behavior:** GET operations are treated as queries.
-     *
-     * **Resolution order:** If this returns `true` or `false`, it overrides `getKind`.
-     * If it returns `undefined`, `getKind` is used instead.
-     *
-     * @param operation - The operation object to check.
-     * @returns true if the operation is a query, false otherwise, or undefined to fallback to `getKind`.
-     * @example
-     * isQuery: (operation) => {
-     *   if (operation.method === 'post' && operation.path === '/search') {
-     *     return true;
-     *   }
-     *   return; // fallback to default behavior
-     }
-     */
-    isQuery?: (operation: IROperationObject) => boolean | undefined;
-  };
-  /**
-   * Hooks specifically for overriding symbols behavior.
-   *
-   * Use these to customize file placement.
-   */
-  symbols?: {
-    /**
-     * Optional output strategy to override default plugin behavior.
-     *
-     * Use this to route generated symbols to specific files.
-     *
-     * @returns The file path to output the symbol to, or undefined to fallback to default behavior.
-     */
-    getFilePath?: (symbol: Symbol) => string | undefined;
-  };
-}
-
-interface IROperationObject {
+export interface IROperationObject {
   body?: IRBodyObject;
   deprecated?: boolean;
   description?: string;
@@ -318,7 +222,6 @@ export namespace IR {
   export type BodyObject = IRBodyObject;
   export type ComponentsObject = IRComponentsObject;
   export type Context<Spec extends Record<string, any> = any> = IRContext<Spec>;
-  export type Hooks = IRHooks;
   export type Model = IRModel;
   export type OperationObject = IROperationObject;
   export type ParameterObject = IRParameterObject;
