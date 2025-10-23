@@ -113,6 +113,8 @@ export const createClient = (config: Config = {}): Client => {
         error.error = error.response?.data ?? {};
         return error;
       }
+
+      return { error: {} };
     }
   };
 
