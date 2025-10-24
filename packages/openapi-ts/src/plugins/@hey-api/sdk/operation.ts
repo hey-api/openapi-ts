@@ -228,6 +228,11 @@ export const operationParameters = ({
           type: pluginTypeScript.api.schemaToType({
             plugin: pluginTypeScript,
             schema: parameter.schema,
+            state: {
+              path: {
+                value: [],
+              },
+            },
           }),
         });
       }
@@ -249,6 +254,11 @@ export const operationParameters = ({
           type: pluginTypeScript.api.schemaToType({
             plugin: pluginTypeScript,
             schema: parameter.schema,
+            state: {
+              path: {
+                value: [],
+              },
+            },
           }),
         });
       }
@@ -265,6 +275,11 @@ export const operationParameters = ({
         type: pluginTypeScript.api.schemaToType({
           plugin: pluginTypeScript,
           schema: operation.body.schema,
+          state: {
+            path: {
+              value: [],
+            },
+          },
         }),
       });
     }

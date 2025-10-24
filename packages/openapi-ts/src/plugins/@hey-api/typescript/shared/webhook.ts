@@ -3,15 +3,15 @@ import { buildName } from '~/openApi/shared/utils/name';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import { tsc } from '~/tsc';
 
-import { schemaToType } from './plugin';
-import type { HeyApiTypeScriptPlugin } from './types';
+import { irSchemaToAst } from '../v1/plugin';
+import type { IrSchemaToAstOptions } from './types';
 
 const operationToDataType = ({
   operation,
   plugin,
-}: {
+  state,
+}: IrSchemaToAstOptions & {
   operation: IR.OperationObject;
-  plugin: HeyApiTypeScriptPlugin['Instance'];
 }): string => {
   const data: IR.SchemaObject = {
     type: 'object',
@@ -27,6 +27,7 @@ const operationToDataType = ({
       exported: true,
       meta: {
         kind: 'type',
+        path: state.path.value,
       },
       name: buildName({
         config: {
@@ -37,9 +38,10 @@ const operationToDataType = ({
       }),
       selector: plugin.api.selector('webhook-payload', operation.id),
     });
-    const type = schemaToType({
+    const type = irSchemaToAst({
       plugin,
       schema: operation.body.schema,
+      state,
     });
     const node = tsc.typeAliasDeclaration({
       comment: createSchemaComment({ schema: operation.body.schema }),
@@ -53,6 +55,7 @@ const operationToDataType = ({
       exported: true,
       meta: {
         kind: 'type',
+        path: state.path.value,
       },
       name: symbolWebhookPayload.name,
       placeholder: symbolWebhookPayload.placeholder,
@@ -79,6 +82,7 @@ const operationToDataType = ({
     exported: true,
     meta: {
       kind: 'type',
+      path: state.path.value,
     },
     name: buildName({
       config: plugin.config.webhooks,
@@ -86,9 +90,10 @@ const operationToDataType = ({
     }),
     selector: plugin.api.selector('webhook-request', operation.id),
   });
-  const type = schemaToType({
+  const type = irSchemaToAst({
     plugin,
     schema: data,
+    state,
   });
   const node = tsc.typeAliasDeclaration({
     exportType: symbolWebhookRequest.exported,
@@ -103,11 +108,11 @@ const operationToDataType = ({
 export const webhookToType = ({
   operation,
   plugin,
-}: {
+  state,
+}: IrSchemaToAstOptions & {
   operation: IR.OperationObject;
-  plugin: HeyApiTypeScriptPlugin['Instance'];
 }): string => {
-  const name = operationToDataType({ operation, plugin });
+  const name = operationToDataType({ operation, plugin, state });
   return name;
 
   // don't handle webhook responses for now, users only need requestBody
