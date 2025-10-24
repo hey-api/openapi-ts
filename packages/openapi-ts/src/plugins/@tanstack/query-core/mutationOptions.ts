@@ -2,6 +2,7 @@ import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
+import { createOperationComment } from '~/plugins/shared/utils/operation';
 import { tsc } from '~/tsc';
 
 import { handleMeta } from './meta';
@@ -98,8 +99,6 @@ export const createMutationOptions = ({
     });
   }
 
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-
   const mutationOptionsFn = 'mutationOptions';
   const expression = tsc.arrowFunction({
     parameters: [
@@ -132,7 +131,7 @@ export const createMutationOptions = ({
   });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
-      ? sdkPlugin.api.createOperationComment({ operation })
+      ? createOperationComment({ operation })
       : undefined,
     exportConst: symbolMutationOptions.exported,
     expression,

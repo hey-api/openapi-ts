@@ -141,9 +141,15 @@ export default defineConfig(() => {
               if (!symbol.external && !symbol.meta?.path) {
                 console.log(`[${plugin.name}]:`, symbol.name, symbol.meta);
               }
-              // if (symbol.meta?.path) {
-              //   console.log(`[${plugin.name}]:`, symbol.name, symbol.meta.path);
-              // }
+              if (symbol.meta?.path) {
+                if (plugin.name === '@hey-api/sdk') {
+                  console.log(
+                    `[${plugin.name}]:`,
+                    symbol.name,
+                    symbol.meta.path,
+                  );
+                }
+              }
             },
             // 'symbol:setValue:after': ({ plugin, symbol }) => {
             //   console.log(`(${plugin.name}) set value:`, symbol.id);
@@ -229,7 +235,7 @@ export default defineConfig(() => {
           //   error: '他們_error_{{name}}',
           //   name: '你們_errors_{{name}}',
           // },
-          name: '@hey-api/typescript',
+          // name: '@hey-api/typescript',
           // requests: '我們_data_{{name}}',
           // responses: {
           //   name: '我_responses_{{name}}',
@@ -255,7 +261,7 @@ export default defineConfig(() => {
           // },
           // include...
           // instance: true,
-          // name: '@hey-api/sdk',
+          name: '@hey-api/sdk',
           // operationId: false,
           // params_EXPERIMENTAL: 'experiment',
           // responseStyle: 'data',

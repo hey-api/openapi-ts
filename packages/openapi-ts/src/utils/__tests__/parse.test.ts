@@ -72,7 +72,6 @@ describe('operationNameFn', () => {
     plugins: {
       '@hey-api/sdk': {
         api: {
-          createOperationComment: () => undefined,
           selector: () => [],
         },
         config: {
@@ -103,7 +102,6 @@ describe('operationNameFn', () => {
       ...optionsCommon.plugins,
       '@hey-api/sdk': {
         api: {
-          createOperationComment: () => undefined,
           selector: () => [],
         },
         config: {
@@ -124,7 +122,6 @@ describe('operationNameFn', () => {
       ...optionsCommon.plugins,
       '@hey-api/sdk': {
         api: {
-          createOperationComment: () => undefined,
           selector: () => [],
         },
         config: {
@@ -157,7 +154,6 @@ describe('operationNameFn', () => {
       },
       '@hey-api/sdk': {
         api: {
-          createOperationComment: () => undefined,
           selector: () => [],
         },
         config: {
@@ -190,7 +186,6 @@ describe('operationNameFn', () => {
       },
       '@hey-api/sdk': {
         api: {
-          createOperationComment: () => undefined,
           selector: () => [],
         },
         config: {
