@@ -44,6 +44,7 @@ export const tsc = {
   namespaceDeclaration: types.createNamespaceDeclaration,
   newExpression: types.createNewExpression,
   nodeToString: utils.tsNodeToString,
+  nonEmptyArrayTupleNode: typedef.createNonEmptyArrayTupleNode,
   null: types.createNull,
   objectExpression: types.createObjectType,
   ots: utils.ots,
