@@ -270,6 +270,11 @@ export const createInfiniteQueryOptions = ({
   const type = pluginTypeScript.api.schemaToType({
     plugin: pluginTypeScript,
     schema: pagination.schema,
+    state: {
+      path: {
+        value: [],
+      },
+    },
   });
   const typePageParam = `${tsNodeToString({
     node: type,

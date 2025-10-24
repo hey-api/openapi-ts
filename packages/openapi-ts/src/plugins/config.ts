@@ -1,3 +1,4 @@
+import type { Plugin } from '~/plugins';
 import type { AngularCommonPlugin } from '~/plugins/@angular/common';
 import { defaultConfig as angularCommon } from '~/plugins/@angular/common';
 import type { HeyApiClientAngularPlugin } from '~/plugins/@hey-api/client-angular';
@@ -46,7 +47,7 @@ import type { ArktypePlugin } from '~/plugins/arktype';
 import { defaultConfig as arktype } from '~/plugins/arktype';
 import type { FastifyPlugin } from '~/plugins/fastify';
 import { defaultConfig as fastify } from '~/plugins/fastify';
-import type { Plugin, PluginNames } from '~/plugins/types';
+import type { PluginNames } from '~/plugins/types';
 import type { ValibotPlugin } from '~/plugins/valibot';
 import { defaultConfig as valibot } from '~/plugins/valibot';
 import type { ZodPlugin } from '~/plugins/zod';

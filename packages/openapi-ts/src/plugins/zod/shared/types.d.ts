@@ -1,7 +1,7 @@
 import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
-import type { ToRefs } from '~/plugins/shared/types/refs';
+import type { ToRefs } from '~/plugins';
 
 import type { ZodPlugin } from '../types';
 
