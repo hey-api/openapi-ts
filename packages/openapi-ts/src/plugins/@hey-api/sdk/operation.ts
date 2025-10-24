@@ -424,34 +424,73 @@ export const operationStatements = ({
   // content type. currently impossible because successes do not contain
   // header information
 
+  // Build per-parameter serialization settings
+  const parameterSerializers: Array<ObjectValue> = [];
+
   for (const name in operation.parameters?.query) {
     const parameter = operation.parameters.query[name]!;
-    if (
+
+    const needsCustomArraySerialization =
       (parameter.schema.type === 'array' ||
         parameter.schema.type === 'tuple') &&
-      (parameter.style !== 'form' || !parameter.explode)
-    ) {
-      // override the default settings for `querySerializer`
-      requestOptions.push({
-        key: 'querySerializer',
-        value: [
-          {
-            key: 'array',
-            value: [
-              {
-                key: 'explode',
-                value: false,
-              },
-              {
-                key: 'style',
-                value: 'form',
-              },
-            ],
-          },
-        ],
+      (parameter.style !== 'form' || parameter.explode !== true);
+
+    const needsCustomObjectSerialization =
+      parameter.schema.type === 'object' &&
+      (parameter.style !== 'deepObject' || parameter.explode !== true);
+
+    if (needsCustomArraySerialization || needsCustomObjectSerialization) {
+      const paramConfig: Array<ObjectValue> = [];
+
+      if (needsCustomArraySerialization) {
+        paramConfig.push({
+          key: 'array',
+          value: [
+            {
+              key: 'explode',
+              value: parameter.explode ?? true,
+            },
+            {
+              key: 'style',
+              value: parameter.style ?? 'form',
+            },
+          ],
+        });
+      }
+
+      if (needsCustomObjectSerialization) {
+        paramConfig.push({
+          key: 'object',
+          value: [
+            {
+              key: 'explode',
+              value: parameter.explode ?? true,
+            },
+            {
+              key: 'style',
+              value: parameter.style ?? 'deepObject',
+            },
+          ],
+        });
+      }
+
+      parameterSerializers.push({
+        key: parameter.name,
+        value: paramConfig,
       });
-      break;
     }
+  }
+
+  if (parameterSerializers.length > 0) {
+    requestOptions.push({
+      key: 'querySerializer',
+      value: [
+        {
+          key: 'parameters',
+          value: parameterSerializers,
+        },
+      ],
+    });
   }
 
   const requestValidator = createRequestValidator({ operation, plugin });
