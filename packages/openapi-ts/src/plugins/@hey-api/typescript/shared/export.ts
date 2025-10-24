@@ -7,7 +7,7 @@ import { tsc } from '~/tsc';
 import { numberRegExp } from '~/utils/regexp';
 import { stringCase } from '~/utils/stringCase';
 
-import type { HeyApiTypeScriptPlugin } from './types';
+import type { HeyApiTypeScriptPlugin } from '../types';
 
 const schemaToEnumObject = ({
   plugin,

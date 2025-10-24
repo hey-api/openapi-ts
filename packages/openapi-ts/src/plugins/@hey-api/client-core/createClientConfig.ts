@@ -29,6 +29,7 @@ export const createClientConfigType = ({
     exported: true,
     meta: {
       kind: 'type',
+      path: [],
     },
     name: 'CreateClientConfig',
   });

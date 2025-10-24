@@ -3,8 +3,11 @@ import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { operationClasses } from '~/plugins/@hey-api/sdk/operation';
-import { isOperationOptionsRequired } from '~/plugins/shared/utils/operation';
+import { operationClasses } from '~/plugins/@hey-api/sdk/shared/operation';
+import {
+  createOperationComment,
+  isOperationOptionsRequired,
+} from '~/plugins/shared/utils/operation';
 import { tsc } from '~/tsc';
 import { stringCase } from '~/utils/stringCase';
 
@@ -374,7 +377,7 @@ const generateAngularResourceMethod = ({
 
   return tsc.methodDeclaration({
     accessLevel: 'public',
-    comment: sdkPlugin.api.createOperationComment({ operation }),
+    comment: createOperationComment({ operation }),
     name: methodName,
     parameters: [
       {
@@ -426,7 +429,7 @@ const generateAngularResourceFunction = ({
   const dataType = symbolDataType?.placeholder || 'unknown';
 
   return tsc.constVariable({
-    comment: sdkPlugin.api.createOperationComment({ operation }),
+    comment: createOperationComment({ operation }),
     exportConst: symbol.exported,
     expression: tsc.arrowFunction({
       parameters: [

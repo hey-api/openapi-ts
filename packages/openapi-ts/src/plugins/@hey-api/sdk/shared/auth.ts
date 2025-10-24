@@ -1,7 +1,7 @@
 import type { IR } from '~/ir/types';
 
-import type { Auth } from '../client-core/bundle/auth';
-import type { HeyApiSdkPlugin } from './types';
+import type { Auth } from '../../client-core/bundle/auth';
+import type { HeyApiSdkPlugin } from '../types';
 
 // TODO: parser - handle more security types
 const securitySchemeObjectToAuthObject = ({

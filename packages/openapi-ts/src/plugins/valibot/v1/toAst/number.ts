@@ -1,6 +1,6 @@
 import type ts from 'typescript';
 
-import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import type { SchemaWithType } from '~/plugins';
 import { tsc } from '~/tsc';
 
 import {
@@ -9,9 +9,9 @@ import {
   needsBigIntForFormat,
   numberParameter,
 } from '../../shared/numbers';
+import { pipesToAst } from '../../shared/pipesToAst';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
-import { pipesToAst } from '../pipesToAst';
 
 export const numberToAst = ({
   plugin,

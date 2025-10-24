@@ -1,18 +1,23 @@
+import { operationResponsesMap } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { pathToSymbolResourceType } from '~/plugins/shared/utils/meta';
 
-import type { IrSchemaToAstOptions } from '../shared/types';
-import { irSchemaToAst } from './plugin';
+import { exportAst } from './export';
+import type { Ast, IrSchemaToAstOptions } from './types';
 
-export const irWebhookToAst = ({
+export const irOperationToAst = ({
+  getAst,
   operation,
   plugin,
   state,
 }: IrSchemaToAstOptions & {
+  getAst: (
+    schema: IR.SchemaObject,
+    path: ReadonlyArray<string | number>,
+  ) => Ast;
   operation: IR.OperationObject;
 }) => {
-  if (plugin.config.webhooks.enabled) {
+  if (plugin.config.requests.enabled) {
     const requiredProperties = new Set<string>();
 
     const schemaData: IR.SchemaObject = {
@@ -110,22 +115,55 @@ export const irWebhookToAst = ({
 
     schemaData.required = [...requiredProperties];
 
+    const ast = getAst(schemaData, state.path.value);
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
-        resourceType: pathToSymbolResourceType(state._path.value),
+        path: state.path.value,
+        tags: state.tags?.value,
       },
       name: buildName({
-        config: plugin.config.webhooks,
+        config: plugin.config.requests,
         name: operation.id,
       }),
-      selector: plugin.api.selector('webhook-request', operation.id),
+      selector: plugin.api.selector('data', operation.id),
     });
-    irSchemaToAst({
+    exportAst({
+      ast,
       plugin,
       schema: schemaData,
       state,
       symbol,
     });
+  }
+
+  if (plugin.config.responses.enabled) {
+    if (operation.responses) {
+      const { response } = operationResponsesMap(operation);
+
+      if (response) {
+        const path = [...state.path.value, 'responses'];
+        const ast = getAst(response, path);
+        const symbol = plugin.registerSymbol({
+          exported: true,
+          meta: {
+            path,
+            tags: state.tags?.value,
+          },
+          name: buildName({
+            config: plugin.config.responses,
+            name: operation.id,
+          }),
+          selector: plugin.api.selector('responses', operation.id),
+        });
+        exportAst({
+          ast,
+          plugin,
+          schema: response,
+          state,
+          symbol,
+        });
+      }
+    }
   }
 };

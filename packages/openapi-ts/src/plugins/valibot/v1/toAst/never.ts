@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import type { SchemaWithType } from '~/plugins';
 import { tsc } from '~/tsc';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';

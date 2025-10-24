@@ -20,11 +20,11 @@ import {
 import type { IR } from '~/ir/types';
 import type { OpenApi } from '~/openApi/types';
 import type { Hooks } from '~/parser/types/hooks';
+import type { Plugin } from '~/plugins';
 import type { PluginConfigMap } from '~/plugins/config';
-import type { Plugin } from '~/plugins/types';
 import { jsonPointerToPath } from '~/utils/ref';
 
-import type { WalkEvent } from '../types/instance';
+import type { BaseEvent, WalkEvent } from '../types/instance';
 
 const defaultGetFilePath = (symbol: Symbol): string | undefined => {
   if (!symbol.meta?.pluginName || typeof symbol.meta.pluginName !== 'string') {
@@ -182,20 +182,24 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
         const result = matchIrPointerToGroup(pointer);
         if (!result.matched || !eventSet.has(result.kind)) return;
         let event: WalkEvent | undefined;
+        const baseEvent: BaseEvent = {
+          _path: jsonPointerToPath(pointer),
+          pointer,
+          tags: nodeInfo.tags,
+        };
         switch (result.kind) {
           case 'operation':
             event = {
-              _path: jsonPointerToPath(pointer),
+              ...baseEvent,
               method: nodeInfo.key as keyof IR.PathItemObject,
               operation: nodeInfo.node as IR.OperationObject,
-              path: jsonPointerToPath(pointer)[1]!,
+              path: baseEvent._path[1] as string,
               type: result.kind,
             } satisfies WalkEvent<'operation'>;
             break;
           case 'parameter':
             event = {
-              $ref: pointer,
-              _path: jsonPointerToPath(pointer),
+              ...baseEvent,
               name: nodeInfo.key as string,
               parameter: nodeInfo.node as IR.ParameterObject,
               type: result.kind,
@@ -203,8 +207,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
             break;
           case 'requestBody':
             event = {
-              $ref: pointer,
-              _path: jsonPointerToPath(pointer),
+              ...baseEvent,
               name: nodeInfo.key as string,
               requestBody: nodeInfo.node as IR.RequestBodyObject,
               type: result.kind,
@@ -212,8 +215,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
             break;
           case 'schema':
             event = {
-              $ref: pointer,
-              _path: jsonPointerToPath(pointer),
+              ...baseEvent,
               name: nodeInfo.key as string,
               schema: nodeInfo.node as IR.SchemaObject,
               type: result.kind,
@@ -221,15 +223,15 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
             break;
           case 'server':
             event = {
-              _path: jsonPointerToPath(pointer),
+              ...baseEvent,
               server: nodeInfo.node as IR.ServerObject,
               type: result.kind,
             } satisfies WalkEvent<'server'>;
             break;
           case 'webhook':
             event = {
-              _path: jsonPointerToPath(pointer),
-              key: jsonPointerToPath(pointer)[1]!,
+              ...baseEvent,
+              key: baseEvent._path[1] as string,
               method: nodeInfo.key as keyof IR.PathItemObject,
               operation: nodeInfo.node as IR.OperationObject,
               type: result.kind,

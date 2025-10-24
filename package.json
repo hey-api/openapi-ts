@@ -40,7 +40,7 @@
     "node": ">=20.19.0"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "0.17.4",
+    "@arethetypeswrong/cli": "0.18.2",
     "@changesets/cli": "2.29.7",
     "@changesets/get-github-info": "0.6.0",
     "@changesets/parse": "0.4.1",
@@ -71,5 +71,5 @@
     "typescript-eslint": "8.29.1",
     "vitest": "3.1.1"
   },
-  "packageManager": "pnpm@10.18.3"
+  "packageManager": "pnpm@10.19.0"
 }

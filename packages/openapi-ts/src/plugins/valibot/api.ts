@@ -1,7 +1,7 @@
 import type { Selector } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { Plugin } from '~/plugins/types';
+import type { Plugin } from '~/plugins';
 
 import type { ValidatorArgs } from './shared/types';
 import { createRequestValidatorV1, createResponseValidatorV1 } from './v1/api';

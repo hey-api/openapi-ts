@@ -4,8 +4,8 @@ import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import { tsc } from '~/tsc';
 
-import { schemaToType } from './plugin';
-import type { HeyApiTypeScriptPlugin } from './types';
+import { irSchemaToAst } from '../v1/plugin';
+import type { IrSchemaToAstOptions } from './types';
 
 const irParametersToIrSchema = ({
   parameters,
@@ -46,9 +46,9 @@ const irParametersToIrSchema = ({
 const operationToDataType = ({
   operation,
   plugin,
-}: {
+  state,
+}: IrSchemaToAstOptions & {
   operation: IR.OperationObject;
-  plugin: HeyApiTypeScriptPlugin['Instance'];
 }) => {
   const data: IR.SchemaObject = {
     type: 'object',
@@ -124,6 +124,8 @@ const operationToDataType = ({
     exported: true,
     meta: {
       kind: 'type',
+      path: state.path.value,
+      tags: state.tags?.value,
     },
     name: buildName({
       config: plugin.config.requests,
@@ -131,9 +133,10 @@ const operationToDataType = ({
     }),
     selector: plugin.api.selector('data', operation.id),
   });
-  const type = schemaToType({
+  const type = irSchemaToAst({
     plugin,
     schema: data,
+    state,
   });
   const node = tsc.typeAliasDeclaration({
     exportType: symbol.exported,
@@ -146,11 +149,11 @@ const operationToDataType = ({
 export const operationToType = ({
   operation,
   plugin,
-}: {
+  state,
+}: IrSchemaToAstOptions & {
   operation: IR.OperationObject;
-  plugin: HeyApiTypeScriptPlugin['Instance'];
 }) => {
-  operationToDataType({ operation, plugin });
+  operationToDataType({ operation, plugin, state });
 
   const { error, errors, response, responses } =
     operationResponsesMap(operation);
@@ -160,6 +163,8 @@ export const operationToType = ({
       exported: true,
       meta: {
         kind: 'type',
+        path: state.path.value,
+        tags: state.tags?.value,
       },
       name: buildName({
         config: plugin.config.errors,
@@ -167,9 +172,10 @@ export const operationToType = ({
       }),
       selector: plugin.api.selector('errors', operation.id),
     });
-    const type = schemaToType({
+    const type = irSchemaToAst({
       plugin,
       schema: errors,
+      state,
     });
     const node = tsc.typeAliasDeclaration({
       exportType: symbolErrors.exported,
@@ -183,6 +189,8 @@ export const operationToType = ({
         exported: true,
         meta: {
           kind: 'type',
+          path: state.path.value,
+          tags: state.tags?.value,
         },
         name: buildName({
           config: {
@@ -216,6 +224,8 @@ export const operationToType = ({
       exported: true,
       meta: {
         kind: 'type',
+        path: state.path.value,
+        tags: state.tags?.value,
       },
       name: buildName({
         config: plugin.config.responses,
@@ -223,9 +233,10 @@ export const operationToType = ({
       }),
       selector: plugin.api.selector('responses', operation.id),
     });
-    const type = schemaToType({
+    const type = irSchemaToAst({
       plugin,
       schema: responses,
+      state,
     });
     const node = tsc.typeAliasDeclaration({
       exportType: symbolResponses.exported,
@@ -239,6 +250,8 @@ export const operationToType = ({
         exported: true,
         meta: {
           kind: 'type',
+          path: state.path.value,
+          tags: state.tags?.value,
         },
         name: buildName({
           config: {

@@ -1,5 +1,35 @@
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference path="./overrides.d.ts" />
+// OVERRIDES
+// hard-coded here because build process doesn't pick up overrides from separate files
+import '@hey-api/codegen-core';
+
+declare module '@hey-api/codegen-core' {
+  interface ProjectRenderMeta {
+    /**
+     * If specified, this will be the file extension used when importing
+     * other modules. By default, we don't add a file extension and let the
+     * runtime resolve it.
+     *
+     * @default null
+     */
+    importFileExtension?: (string & {}) | null;
+  }
+
+  interface SymbolMeta {
+    /**
+     * Path to the resource this symbol represents.
+     */
+    path?: ReadonlyArray<string | number>;
+    /**
+     * Name of the plugin that registered this symbol.
+     */
+    pluginName?: string;
+    /**
+     * Tags associated with this symbol.
+     */
+    tags?: Set<string>;
+  }
+}
+// END OVERRIDES
 
 import colors from 'ansi-colors';
 // @ts-expect-error
@@ -160,6 +190,7 @@ export type {
   OpenApiResponseObject,
   OpenApiSchemaObject,
 } from './openApi/types';
+export type { DefinePlugin, Plugin } from './plugins';
 export type { AngularClient } from './plugins/@hey-api/client-angular';
 export type { AxiosClient } from './plugins/@hey-api/client-axios';
 export {
@@ -175,7 +206,6 @@ export type { OfetchClient } from './plugins/@hey-api/client-ofetch';
 export type { ExpressionTransformer } from './plugins/@hey-api/transformers/expressions';
 export type { TypeTransformer } from './plugins/@hey-api/transformers/types';
 export { definePluginConfig } from './plugins/shared/utils/config';
-export type { DefinePlugin, Plugin } from './plugins/types';
 export { compiler, tsc } from './tsc';
 export type { UserConfig } from './types/config';
 export type { LegacyIR } from './types/types';
