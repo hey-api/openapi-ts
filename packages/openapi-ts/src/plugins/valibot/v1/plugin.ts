@@ -5,7 +5,6 @@ import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins/shared/types/schema';
-import { pathToSymbolResourceType } from '~/plugins/shared/utils/meta';
 import { toRef, toRefs } from '~/plugins/shared/utils/refs';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import { tsc } from '~/tsc';
@@ -118,7 +117,7 @@ export const irSchemaToAst = ({
           schema: item,
           state: {
             ...state,
-            _path: toRef([...state._path.value, 'items', index]),
+            path: toRef([...state.path.value, 'items', index]),
           },
         });
         return pipesToAst({ pipes: itemAst, plugin });
@@ -215,7 +214,7 @@ export const irSchemaToAst = ({
       symbol = plugin.registerSymbol({
         exported: true,
         meta: {
-          resourceType: pathToSymbolResourceType(state._path.value),
+          path: state.path.value,
         },
         name: buildName({
           config: {
@@ -264,10 +263,10 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
     'webhook',
     (event) => {
       const state = toRefs<PluginState>({
-        _path: event._path,
         hasLazyExpression: false,
         nameCase: plugin.config.definitions.case,
         nameTransformer: plugin.config.definitions.name,
+        path: event._path,
       });
 
       switch (event.type) {

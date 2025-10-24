@@ -10,13 +10,13 @@ export type IrSchemaToAstOptions = {
 };
 
 export type PluginState = {
-  /**
-   * Path to the schema in the intermediary representation.
-   */
-  _path: ReadonlyArray<string | number>;
   hasLazyExpression: boolean;
   nameCase: StringCase;
   nameTransformer: StringName;
+  /**
+   * Path to the schema in the intermediary representation.
+   */
+  path: ReadonlyArray<string | number>;
 };
 
 export type ValidatorArgs = {

@@ -1,6 +1,5 @@
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { pathToSymbolResourceType } from '~/plugins/shared/utils/meta';
 
 import type { IrSchemaToAstOptions } from '../shared/types';
 import { irSchemaToAst } from './plugin';
@@ -113,7 +112,7 @@ export const irWebhookToAst = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
-        resourceType: pathToSymbolResourceType(state._path.value),
+        path: state.path.value,
       },
       name: buildName({
         config: plugin.config.webhooks,
