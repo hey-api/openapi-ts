@@ -2,7 +2,7 @@ import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 
-import type { HeyApiSdkPlugin } from './types';
+import type { HeyApiSdkPlugin } from '../types';
 
 interface ValidatorProps {
   operation: IR.OperationObject;

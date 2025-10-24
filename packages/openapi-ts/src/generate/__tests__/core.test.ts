@@ -112,7 +112,6 @@ describe('generateLegacyCore', () => {
         },
         '@hey-api/sdk': {
           api: {
-            createOperationComment: () => undefined,
             selector: () => [],
           },
           config: {
@@ -270,7 +269,6 @@ describe('generateLegacyCore', () => {
         },
         '@hey-api/sdk': {
           api: {
-            createOperationComment: () => undefined,
             selector: () => [],
           },
           config: {
@@ -411,7 +409,6 @@ describe('generateLegacyCore', () => {
         },
         '@hey-api/sdk': {
           api: {
-            createOperationComment: () => undefined,
             selector: () => [],
           },
           config: {

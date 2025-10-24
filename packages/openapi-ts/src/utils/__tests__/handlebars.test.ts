@@ -93,7 +93,6 @@ describe('registerHandlebarHelpers', () => {
         },
         '@hey-api/sdk': {
           api: {
-            createOperationComment: () => undefined,
             selector: () => [],
           },
           config: {
@@ -224,7 +223,6 @@ describe('registerHandlebarTemplates', () => {
         },
         '@hey-api/sdk': {
           api: {
-            createOperationComment: () => undefined,
             selector: () => [],
           },
           config: {

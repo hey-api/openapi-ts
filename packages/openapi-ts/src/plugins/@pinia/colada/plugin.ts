@@ -1,4 +1,4 @@
-import { operationClasses } from '~/plugins/@hey-api/sdk/operation';
+import { operationClasses } from '~/plugins/@hey-api/sdk/shared/operation';
 import { stringCase } from '~/utils/stringCase';
 
 import { createMutationOptions } from './mutationOptions';

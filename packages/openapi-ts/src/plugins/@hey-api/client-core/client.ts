@@ -93,6 +93,9 @@ export const createClient: PluginHandler = ({ plugin }) => {
   ];
 
   const symbolClient = plugin.registerSymbol({
+    meta: {
+      path: [],
+    },
     name: 'client',
     selector: plugin.api.selector('client'),
   });
