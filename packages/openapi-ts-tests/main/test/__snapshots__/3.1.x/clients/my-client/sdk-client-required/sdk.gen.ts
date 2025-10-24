@@ -336,6 +336,16 @@ export const fileResponse = <ThrowOnError extends boolean = false>(options: Opti
 
 export const complexTypes = <ThrowOnError extends boolean = false>(options: Options<ComplexTypesData, ThrowOnError>) => {
     return options.client.get<ComplexTypesResponses, ComplexTypesErrors, ThrowOnError>({
+        querySerializer: {
+            parameters: {
+                parameterObject: {
+                    object: {
+                        explode: true,
+                        style: 'form'
+                    }
+                }
+            }
+        },
         url: '/api/v{api-version}/complex',
         ...options
     });

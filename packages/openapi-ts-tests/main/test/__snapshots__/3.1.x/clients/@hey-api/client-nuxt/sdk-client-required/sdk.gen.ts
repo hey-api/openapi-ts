@@ -336,6 +336,16 @@ export const fileResponse = <TComposable extends Composable = '$fetch', DefaultT
 
 export const complexTypes = <TComposable extends Composable = '$fetch', DefaultT extends ComplexTypesResponse = ComplexTypesResponse>(options: Options<TComposable, ComplexTypesData, ComplexTypesResponse, DefaultT>) => {
     return options.client.get<TComposable, ComplexTypesResponse | DefaultT, unknown, DefaultT>({
+        querySerializer: {
+            parameters: {
+                parameterObject: {
+                    object: {
+                        explode: true,
+                        style: 'form'
+                    }
+                }
+            }
+        },
         url: '/api/v{api-version}/complex',
         ...options
     });

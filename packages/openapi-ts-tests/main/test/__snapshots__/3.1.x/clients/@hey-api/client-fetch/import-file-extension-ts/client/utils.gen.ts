@@ -15,6 +15,7 @@ export const createQuerySerializer = <T = unknown>({
   allowReserved,
   array,
   object,
+  parameters = {},
 }: QuerySerializerOptions = {}) => {
   const querySerializer = (queryParams: T) => {
     const search: string[] = [];
@@ -26,29 +27,35 @@ export const createQuerySerializer = <T = unknown>({
           continue;
         }
 
+        // Get parameter-specific settings or fall back to global
+        const paramConfig = parameters[name] || {};
+        const paramAllowReserved = paramConfig.allowReserved ?? allowReserved;
+
         if (Array.isArray(value)) {
           const serializedArray = serializeArrayParam({
-            allowReserved,
+            allowReserved: paramAllowReserved,
             explode: true,
             name,
             style: 'form',
             value,
             ...array,
+            ...paramConfig.array,
           });
           if (serializedArray) search.push(serializedArray);
         } else if (typeof value === 'object') {
           const serializedObject = serializeObjectParam({
-            allowReserved,
+            allowReserved: paramAllowReserved,
             explode: true,
             name,
             style: 'deepObject',
             value: value as Record<string, unknown>,
             ...object,
+            ...paramConfig.object,
           });
           if (serializedObject) search.push(serializedObject);
         } else {
           const serializedPrimitive = serializePrimitiveParam({
-            allowReserved,
+            allowReserved: paramAllowReserved,
             name,
             value: value as string,
           });
