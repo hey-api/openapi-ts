@@ -109,7 +109,6 @@ describe('generateLegacyOutput', () => {
         },
         '@hey-api/sdk': {
           api: {
-            createOperationComment: () => undefined,
             selector: () => [],
           },
           config: {

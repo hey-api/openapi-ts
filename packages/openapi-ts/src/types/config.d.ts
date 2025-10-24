@@ -1,5 +1,6 @@
+import type { Plugin } from '~/plugins';
 import type { PluginConfigMap } from '~/plugins/config';
-import type { Plugin, PluginNames } from '~/plugins/types';
+import type { PluginNames } from '~/plugins/types';
 
 import type { Input, UserInput, Watch } from './input';
 import type { Logs } from './logs';

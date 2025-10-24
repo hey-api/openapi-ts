@@ -3,7 +3,10 @@ import ts from 'typescript';
 import { operationPagination } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { isOperationOptionsRequired } from '~/plugins/shared/utils/operation';
+import {
+  createOperationComment,
+  isOperationOptionsRequired,
+} from '~/plugins/shared/utils/operation';
 import { tsc } from '~/tsc';
 import { tsNodeToString } from '~/tsc/utils';
 
@@ -270,6 +273,11 @@ export const createInfiniteQueryOptions = ({
   const type = pluginTypeScript.api.schemaToType({
     plugin: pluginTypeScript,
     schema: pagination.schema,
+    state: {
+      path: {
+        value: [],
+      },
+    },
   });
   const typePageParam = `${tsNodeToString({
     node: type,
@@ -439,8 +447,6 @@ export const createInfiniteQueryOptions = ({
     });
   }
 
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-
   const symbolInfiniteQueryOptionsFn = plugin.registerSymbol({
     exported: true,
     name: buildName({
@@ -450,7 +456,7 @@ export const createInfiniteQueryOptions = ({
   });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
-      ? sdkPlugin.api.createOperationComment({ operation })
+      ? createOperationComment({ operation })
       : undefined,
     exportConst: symbolInfiniteQueryOptionsFn.exported,
     expression: tsc.arrowFunction({

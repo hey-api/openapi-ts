@@ -100,7 +100,6 @@ describe('generateLegacyTypes', () => {
         },
         '@hey-api/sdk': {
           api: {
-            createOperationComment: () => undefined,
             selector: () => [],
           },
           config: {

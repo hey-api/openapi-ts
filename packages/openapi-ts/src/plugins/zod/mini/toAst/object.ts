@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
 import { tsc } from '~/tsc';
 import { numberRegExp } from '~/utils/regexp';
@@ -36,7 +36,7 @@ export const objectToAst = ({
       schema: property,
       state: {
         ...state,
-        _path: toRef([...state._path.value, 'properties', name]),
+        path: toRef([...state.path.value, 'properties', name]),
       },
     });
     if (propertyAst.hasLazyExpression) {
@@ -93,7 +93,7 @@ export const objectToAst = ({
       schema: schema.additionalProperties,
       state: {
         ...state,
-        _path: toRef([...state._path.value, 'additionalProperties']),
+        path: toRef([...state.path.value, 'additionalProperties']),
       },
     });
     result.expression = tsc.callExpression({

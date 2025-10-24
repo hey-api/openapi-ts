@@ -9,7 +9,7 @@ import {
 import { tsc } from '~/tsc';
 import { parseUrl } from '~/utils/url';
 
-import type { HeyApiTypeScriptPlugin } from './types';
+import type { HeyApiTypeScriptPlugin } from '../types';
 
 const stringType = tsc.keywordTypeNode({ keyword: 'string' });
 

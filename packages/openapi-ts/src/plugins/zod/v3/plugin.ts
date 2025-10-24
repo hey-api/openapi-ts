@@ -1,11 +1,10 @@
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import type { SchemaWithType } from '~/plugins/shared/types/schema';
-import { pathToSymbolResourceType } from '~/plugins/shared/utils/meta';
+import type { SchemaWithType } from '~/plugins';
 import { toRef, toRefs } from '~/plugins/shared/utils/refs';
 import { tsc } from '~/tsc';
-import { refToName } from '~/utils/ref';
+import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { identifiers } from '../constants';
 import { exportAst } from '../shared/export';
@@ -89,7 +88,7 @@ export const irSchemaToAst = ({
           schema: item,
           state: {
             ...state,
-            _path: toRef([...state._path.value, 'items', index]),
+            path: toRef([...state.path.value, 'items', index]),
           },
         });
         return typeAst.expression;
@@ -201,21 +200,20 @@ export const irSchemaToAst = ({
 };
 
 const handleComponent = ({
-  $ref,
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
-  $ref: string;
   schema: IR.SchemaObject;
 }): void => {
+  const $ref = pathToJsonPointer(state.path.value);
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
-  const resourceType = pathToSymbolResourceType(state._path.value);
   const symbol = plugin.registerSymbol({
     exported: true,
     meta: {
-      resourceType,
+      path: state.path.value,
+      tags: state.tags?.value,
     },
     name: buildName({
       config: plugin.config.definitions,
@@ -228,7 +226,8 @@ const handleComponent = ({
         exported: true,
         meta: {
           kind: 'type',
-          resourceType,
+          path: state.path.value,
+          tags: state.tags?.value,
         },
         name: buildName({
           config: plugin.config.definitions.types.infer,
@@ -260,70 +259,61 @@ export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
     'schema',
     'webhook',
     (event) => {
+      const state = toRefs<PluginState>({
+        hasLazyExpression: false,
+        path: event._path,
+        tags: event.tags,
+      });
       switch (event.type) {
         case 'operation':
           irOperationToAst({
             getAst: (schema, path) => {
               const state = toRefs<PluginState>({
-                _path: path,
                 hasLazyExpression: false,
+                path,
+                tags: event.tags,
               });
               return irSchemaToAst({ plugin, schema, state });
             },
             operation: event.operation,
             plugin,
-            state: toRefs({
-              _path: event._path,
-            }),
+            state,
           });
           break;
         case 'parameter':
           handleComponent({
-            $ref: event.$ref,
             plugin,
             schema: event.parameter.schema,
-            state: toRefs({
-              _path: event._path,
-              hasLazyExpression: false,
-            }),
+            state,
           });
           break;
         case 'requestBody':
           handleComponent({
-            $ref: event.$ref,
             plugin,
             schema: event.requestBody.schema,
-            state: toRefs({
-              _path: event._path,
-              hasLazyExpression: false,
-            }),
+            state,
           });
           break;
         case 'schema':
           handleComponent({
-            $ref: event.$ref,
             plugin,
             schema: event.schema,
-            state: toRefs({
-              _path: event._path,
-              hasLazyExpression: false,
-            }),
+            state,
           });
           break;
         case 'webhook':
           irWebhookToAst({
             getAst: (schema, path) => {
               const state = toRefs<PluginState>({
-                _path: path,
                 hasLazyExpression: false,
+                path,
+                tags: event.tags,
               });
               return irSchemaToAst({ plugin, schema, state });
             },
             operation: event.operation,
             plugin,
-            state: toRefs({
-              _path: event._path,
-            }),
+            state,
           });
           break;
       }

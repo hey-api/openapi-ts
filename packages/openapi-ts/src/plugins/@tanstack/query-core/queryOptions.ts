@@ -3,6 +3,7 @@ import type ts from 'typescript';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import {
+  createOperationComment,
   hasOperationSse,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
@@ -153,8 +154,6 @@ export const createQueryOptions = ({
     });
   }
 
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-
   const symbolQueryOptionsFn = plugin.registerSymbol({
     exported: plugin.config.queryOptions.exported,
     name: buildName({
@@ -165,7 +164,7 @@ export const createQueryOptions = ({
   });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
-      ? sdkPlugin.api.createOperationComment({ operation })
+      ? createOperationComment({ operation })
       : undefined,
     exportConst: symbolQueryOptionsFn.exported,
     expression: tsc.arrowFunction({
