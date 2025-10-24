@@ -1,9 +1,9 @@
+import type { Graph } from '~/graph';
 import { createOperationKey } from '~/ir/operation';
 import type { Logger } from '~/utils/logger';
 import { jsonPointerToPath } from '~/utils/ref';
 
 import { addNamespace, stringToNamespace } from '../utils/filter';
-import type { Graph } from '../utils/graph';
 import { httpMethods } from '../utils/operation';
 
 export type ResourceMetadata = {

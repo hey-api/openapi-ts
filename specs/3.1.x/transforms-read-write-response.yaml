@@ -1,0 +1,43 @@
+openapi: 3.0.3
+info:
+  title: readOnly response test
+  version: 1.0.0
+paths:
+  /items:
+    get:
+      operationId: item_list
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemListResponse'
+components:
+  schemas:
+    ItemListResponse:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+    Item:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          readOnly: true
+          description: Server-generated ID
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Server-generated timestamp
