@@ -2,9 +2,9 @@ import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
 import { tsc } from '~/tsc';
 
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import { pipesToAst } from '../../shared/pipesToAst';
+import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
-import { pipesToAst } from '../pipesToAst';
 import { irSchemaToAst } from '../plugin';
 import { unknownToAst } from './unknown';
 
@@ -14,7 +14,9 @@ export const tupleToAst = ({
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'tuple'>;
-}) => {
+}): Omit<Ast, 'typeName'> => {
+  const result: Partial<Omit<Ast, 'typeName'>> = {};
+
   const v = plugin.referenceSymbol(
     plugin.api.selector('external', 'valibot.v'),
   );
@@ -29,18 +31,20 @@ export const tupleToAst = ({
         parameters: [tsc.valueToExpression({ value })],
       }),
     );
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.schemas.tuple,
-      }),
-      parameters: [
-        tsc.arrayLiteralExpression({
-          elements: tupleElements,
+    result.pipes = [
+      tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
+          expression: v.placeholder,
+          name: identifiers.schemas.tuple,
         }),
-      ],
-    });
-    return expression;
+        parameters: [
+          tsc.arrayLiteralExpression({
+            elements: tupleElements,
+          }),
+        ],
+      }),
+    ];
+    return result as Omit<Ast, 'typeName'>;
   }
 
   if (schema.items) {
@@ -53,27 +57,36 @@ export const tupleToAst = ({
           path: toRef([...state.path.value, 'items', index]),
         },
       });
-      return pipesToAst({ pipes: schemaPipes, plugin });
+      if (schemaPipes.hasLazyExpression) {
+        result.hasLazyExpression = true;
+      }
+      return pipesToAst({ pipes: schemaPipes.pipes, plugin });
     });
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.schemas.tuple,
-      }),
-      parameters: [
-        tsc.arrayLiteralExpression({
-          elements: tupleElements,
+    result.pipes = [
+      tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
+          expression: v.placeholder,
+          name: identifiers.schemas.tuple,
         }),
-      ],
-    });
-    return expression;
+        parameters: [
+          tsc.arrayLiteralExpression({
+            elements: tupleElements,
+          }),
+        ],
+      }),
+    ];
+    return result as Omit<Ast, 'typeName'>;
   }
 
-  return unknownToAst({
-    plugin,
-    schema: {
-      type: 'unknown',
-    },
-    state,
-  });
+  return {
+    pipes: [
+      unknownToAst({
+        plugin,
+        schema: {
+          type: 'unknown',
+        },
+        state,
+      }),
+    ],
+  };
 };

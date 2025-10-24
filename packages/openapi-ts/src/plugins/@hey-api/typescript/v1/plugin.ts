@@ -6,12 +6,12 @@ import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
 import { toRefs } from '~/plugins/shared/utils/refs';
 import { tsc } from '~/tsc';
-import { refToName } from '~/utils/ref';
+import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { createClientOptions } from '../shared/clientOptions';
 import { exportType } from '../shared/export';
 import { operationToType } from '../shared/operation';
-import type { IrSchemaToAstOptions } from '../shared/types';
+import type { IrSchemaToAstOptions, PluginState } from '../shared/types';
 import { webhookToType } from '../shared/webhook';
 import { createWebhooks } from '../shared/webhooks';
 import type { HeyApiTypeScriptPlugin } from '../types';
@@ -68,12 +68,10 @@ export const irSchemaToAst = ({
 };
 
 const handleComponent = ({
-  $ref,
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
-  $ref: string;
   schema: IR.SchemaObject;
 }) => {
   const type = irSchemaToAst({ plugin, schema, state });
@@ -81,11 +79,13 @@ const handleComponent = ({
   // Don't tag enums as 'type' since they export runtime artifacts (values)
   const isEnum = schema.type === 'enum' && plugin.config.enums.enabled;
 
+  const $ref = pathToJsonPointer(state.path.value);
   const symbol = plugin.registerSymbol({
     exported: true,
     meta: {
       kind: isEnum ? undefined : 'type',
       path: state.path.value,
+      tags: state.tags?.value,
     },
     name: buildName({
       config: plugin.config.definitions,
@@ -144,44 +144,37 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
     'server',
     'webhook',
     (event) => {
+      const state = toRefs<PluginState>({
+        path: event._path,
+        tags: event.tags,
+      });
       switch (event.type) {
         case 'operation':
           operationToType({
             operation: event.operation,
             plugin,
-            state: toRefs({
-              path: event._path,
-            }),
+            state,
           });
           break;
         case 'parameter':
           handleComponent({
-            $ref: event.$ref,
             plugin,
             schema: event.parameter.schema,
-            state: toRefs({
-              path: event._path,
-            }),
+            state,
           });
           break;
         case 'requestBody':
           handleComponent({
-            $ref: event.$ref,
             plugin,
             schema: event.requestBody.schema,
-            state: toRefs({
-              path: event._path,
-            }),
+            state,
           });
           break;
         case 'schema':
           handleComponent({
-            $ref: event.$ref,
             plugin,
             schema: event.schema,
-            state: toRefs({
-              path: event._path,
-            }),
+            state,
           });
           break;
         case 'server':
@@ -192,9 +185,7 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
             webhookToType({
               operation: event.operation,
               plugin,
-              state: toRefs({
-                path: event._path,
-              }),
+              state,
             }),
           );
           break;

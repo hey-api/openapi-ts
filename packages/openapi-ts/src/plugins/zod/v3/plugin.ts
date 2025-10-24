@@ -4,7 +4,7 @@ import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
 import { toRef, toRefs } from '~/plugins/shared/utils/refs';
 import { tsc } from '~/tsc';
-import { refToName } from '~/utils/ref';
+import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { identifiers } from '../constants';
 import { exportAst } from '../shared/export';
@@ -200,20 +200,20 @@ export const irSchemaToAst = ({
 };
 
 const handleComponent = ({
-  $ref,
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
-  $ref: string;
   schema: IR.SchemaObject;
 }): void => {
+  const $ref = pathToJsonPointer(state.path.value);
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
   const symbol = plugin.registerSymbol({
     exported: true,
     meta: {
       path: state.path.value,
+      tags: state.tags?.value,
     },
     name: buildName({
       config: plugin.config.definitions,
@@ -227,6 +227,7 @@ const handleComponent = ({
         meta: {
           kind: 'type',
           path: state.path.value,
+          tags: state.tags?.value,
         },
         name: buildName({
           config: plugin.config.definitions.types.infer,
@@ -258,6 +259,11 @@ export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
     'schema',
     'webhook',
     (event) => {
+      const state = toRefs<PluginState>({
+        hasLazyExpression: false,
+        path: event._path,
+        tags: event.tags,
+      });
       switch (event.type) {
         case 'operation':
           irOperationToAst({
@@ -265,47 +271,34 @@ export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
               const state = toRefs<PluginState>({
                 hasLazyExpression: false,
                 path,
+                tags: event.tags,
               });
               return irSchemaToAst({ plugin, schema, state });
             },
             operation: event.operation,
             plugin,
-            state: toRefs({
-              path: event._path,
-            }),
+            state,
           });
           break;
         case 'parameter':
           handleComponent({
-            $ref: event.$ref,
             plugin,
             schema: event.parameter.schema,
-            state: toRefs({
-              hasLazyExpression: false,
-              path: event._path,
-            }),
+            state,
           });
           break;
         case 'requestBody':
           handleComponent({
-            $ref: event.$ref,
             plugin,
             schema: event.requestBody.schema,
-            state: toRefs({
-              hasLazyExpression: false,
-              path: event._path,
-            }),
+            state,
           });
           break;
         case 'schema':
           handleComponent({
-            $ref: event.$ref,
             plugin,
             schema: event.schema,
-            state: toRefs({
-              hasLazyExpression: false,
-              path: event._path,
-            }),
+            state,
           });
           break;
         case 'webhook':
@@ -314,14 +307,13 @@ export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
               const state = toRefs<PluginState>({
                 hasLazyExpression: false,
                 path,
+                tags: event.tags,
               });
               return irSchemaToAst({ plugin, schema, state });
             },
             operation: event.operation,
             plugin,
-            state: toRefs({
-              path: event._path,
-            }),
+            state,
           });
           break;
       }

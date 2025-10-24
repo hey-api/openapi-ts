@@ -46,6 +46,7 @@ export const generateFlatSdk = ({
       const symbol = plugin.registerSymbol({
         meta: {
           path: event._path,
+          tags: event.tags,
         },
         name: serviceFunctionIdentifier({
           config: plugin.context.config,

@@ -141,14 +141,13 @@ export default defineConfig(() => {
               if (!symbol.external && !symbol.meta?.path) {
                 console.log(`[${plugin.name}]:`, symbol.name, symbol.meta);
               }
-              if (symbol.meta?.path) {
-                if (plugin.name === '@hey-api/sdk') {
-                  console.log(
-                    `[${plugin.name}]:`,
-                    symbol.name,
-                    symbol.meta.path,
-                  );
-                }
+              if (symbol.meta?.tags && symbol.meta?.tags.size > 0) {
+                console.log(
+                  `[${plugin.name}]:`,
+                  symbol.name,
+                  symbol.meta.path,
+                  symbol.meta.tags,
+                );
               }
             },
             // 'symbol:setValue:after': ({ plugin, symbol }) => {

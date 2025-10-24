@@ -3,7 +3,7 @@ import type ts from 'typescript';
 import { tsc } from '~/tsc';
 
 import type { ValibotPlugin } from '../types';
-import { identifiers } from './constants';
+import { identifiers } from '../v1/constants';
 
 export const pipesToAst = ({
   pipes,
