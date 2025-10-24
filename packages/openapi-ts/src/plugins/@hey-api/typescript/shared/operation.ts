@@ -125,6 +125,7 @@ const operationToDataType = ({
     meta: {
       kind: 'type',
       path: state.path.value,
+      tags: state.tags?.value,
     },
     name: buildName({
       config: plugin.config.requests,
@@ -163,6 +164,7 @@ export const operationToType = ({
       meta: {
         kind: 'type',
         path: state.path.value,
+        tags: state.tags?.value,
       },
       name: buildName({
         config: plugin.config.errors,
@@ -188,6 +190,7 @@ export const operationToType = ({
         meta: {
           kind: 'type',
           path: state.path.value,
+          tags: state.tags?.value,
         },
         name: buildName({
           config: {
@@ -222,6 +225,7 @@ export const operationToType = ({
       meta: {
         kind: 'type',
         path: state.path.value,
+        tags: state.tags?.value,
       },
       name: buildName({
         config: plugin.config.responses,
@@ -247,6 +251,7 @@ export const operationToType = ({
         meta: {
           kind: 'type',
           path: state.path.value,
+          tags: state.tags?.value,
         },
         name: buildName({
           config: {

@@ -28,6 +28,7 @@ const operationToDataType = ({
       meta: {
         kind: 'type',
         path: state.path.value,
+        tags: state.tags?.value,
       },
       name: buildName({
         config: {
@@ -56,6 +57,7 @@ const operationToDataType = ({
       meta: {
         kind: 'type',
         path: state.path.value,
+        tags: state.tags?.value,
       },
       name: symbolWebhookPayload.name,
       placeholder: symbolWebhookPayload.placeholder,
@@ -83,6 +85,7 @@ const operationToDataType = ({
     meta: {
       kind: 'type',
       path: state.path.value,
+      tags: state.tags?.value,
     },
     name: buildName({
       config: plugin.config.webhooks,

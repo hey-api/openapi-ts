@@ -1,14 +1,19 @@
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 
-import type { IrSchemaToAstOptions } from '../shared/types';
-import { irSchemaToAst } from './plugin';
+import { exportAst } from './export';
+import type { Ast, IrSchemaToAstOptions } from './types';
 
 export const irWebhookToAst = ({
+  getAst,
   operation,
   plugin,
   state,
 }: IrSchemaToAstOptions & {
+  getAst: (
+    schema: IR.SchemaObject,
+    path: ReadonlyArray<string | number>,
+  ) => Ast;
   operation: IR.OperationObject;
 }) => {
   if (plugin.config.webhooks.enabled) {
@@ -109,10 +114,12 @@ export const irWebhookToAst = ({
 
     schemaData.required = [...requiredProperties];
 
+    const ast = getAst(schemaData, state.path.value);
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
         path: state.path.value,
+        tags: state.tags?.value,
       },
       name: buildName({
         config: plugin.config.webhooks,
@@ -120,7 +127,8 @@ export const irWebhookToAst = ({
       }),
       selector: plugin.api.selector('webhook-request', operation.id),
     });
-    irSchemaToAst({
+    exportAst({
+      ast,
       plugin,
       schema: schemaData,
       state,

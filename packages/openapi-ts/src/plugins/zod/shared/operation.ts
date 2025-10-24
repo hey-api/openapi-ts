@@ -10,13 +10,12 @@ export const irOperationToAst = ({
   operation,
   plugin,
   state,
-}: Omit<IrSchemaToAstOptions, 'state'> & {
+}: IrSchemaToAstOptions & {
   getAst: (
     schema: IR.SchemaObject,
     path: ReadonlyArray<string | number>,
   ) => Ast;
   operation: IR.OperationObject;
-  state: Partial<IrSchemaToAstOptions['state']>;
 }): void => {
   if (plugin.config.requests.enabled) {
     const requiredProperties = new Set<string>();
@@ -116,12 +115,12 @@ export const irOperationToAst = ({
 
     schemaData.required = [...requiredProperties];
 
-    const path = state.path?.value || [];
-    const ast = getAst(schemaData, path);
+    const ast = getAst(schemaData, state.path.value);
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
-        path,
+        path: state.path.value,
+        tags: state.tags?.value,
       },
       name: buildName({
         config: plugin.config.requests,
@@ -134,7 +133,8 @@ export const irOperationToAst = ({
           exported: true,
           meta: {
             kind: 'type',
-            path,
+            path: state.path.value,
+            tags: state.tags?.value,
           },
           name: buildName({
             config: plugin.config.requests.types.infer,
@@ -157,12 +157,13 @@ export const irOperationToAst = ({
       const { response } = operationResponsesMap(operation);
 
       if (response) {
-        const path = [...(state.path?.value || []), 'responses'];
+        const path = [...state.path.value, 'responses'];
         const ast = getAst(response, path);
         const symbol = plugin.registerSymbol({
           exported: true,
           meta: {
             path,
+            tags: state.tags?.value,
           },
           name: buildName({
             config: plugin.config.responses,
@@ -176,6 +177,7 @@ export const irOperationToAst = ({
               meta: {
                 kind: 'type',
                 path,
+                tags: state.tags?.value,
               },
               name: buildName({
                 config: plugin.config.responses.types.infer,
