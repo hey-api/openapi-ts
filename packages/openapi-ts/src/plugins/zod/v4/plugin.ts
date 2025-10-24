@@ -2,7 +2,6 @@ import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins/shared/types/schema';
-import { pathToSymbolResourceType } from '~/plugins/shared/utils/meta';
 import { toRef, toRefs } from '~/plugins/shared/utils/refs';
 import { tsc } from '~/tsc';
 import { refToName } from '~/utils/ref';
@@ -103,7 +102,7 @@ export const irSchemaToAst = ({
           schema: item,
           state: {
             ...state,
-            _path: toRef([...state._path.value, 'items', index]),
+            path: toRef([...state.path.value, 'items', index]),
           },
         }),
       );
@@ -239,11 +238,10 @@ const handleComponent = ({
 }): void => {
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
-  const resourceType = pathToSymbolResourceType(state._path.value);
   const symbol = plugin.registerSymbol({
     exported: true,
     meta: {
-      resourceType,
+      path: state.path.value,
     },
     name: buildName({
       config: plugin.config.definitions,
@@ -256,7 +254,7 @@ const handleComponent = ({
         exported: true,
         meta: {
           kind: 'type',
-          resourceType,
+          path: state.path.value,
         },
         name: buildName({
           config: plugin.config.definitions.types.infer,
@@ -293,15 +291,15 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
           irOperationToAst({
             getAst: (schema, path) => {
               const state = toRefs<PluginState>({
-                _path: path,
                 hasLazyExpression: false,
+                path,
               });
               return irSchemaToAst({ plugin, schema, state });
             },
             operation: event.operation,
             plugin,
             state: toRefs({
-              _path: event._path,
+              path: event._path,
             }),
           });
           break;
@@ -311,8 +309,8 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
             plugin,
             schema: event.parameter.schema,
             state: toRefs({
-              _path: event._path,
               hasLazyExpression: false,
+              path: event._path,
             }),
           });
           break;
@@ -322,8 +320,8 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
             plugin,
             schema: event.requestBody.schema,
             state: toRefs({
-              _path: event._path,
               hasLazyExpression: false,
+              path: event._path,
             }),
           });
           break;
@@ -333,8 +331,8 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
             plugin,
             schema: event.schema,
             state: toRefs({
-              _path: event._path,
               hasLazyExpression: false,
+              path: event._path,
             }),
           });
           break;
@@ -342,15 +340,15 @@ export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
           irWebhookToAst({
             getAst: (schema, path) => {
               const state = toRefs<PluginState>({
-                _path: path,
                 hasLazyExpression: false,
+                path,
               });
               return irSchemaToAst({ plugin, schema, state });
             },
             operation: event.operation,
             plugin,
             state: toRefs({
-              _path: event._path,
+              path: event._path,
             }),
           });
           break;
