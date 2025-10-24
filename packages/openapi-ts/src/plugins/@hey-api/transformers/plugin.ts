@@ -61,6 +61,7 @@ const processSchemaType = ({
     const selector = plugin.api.selector('response-ref', schema.$ref);
 
     if (!plugin.getSymbol(selector)) {
+      // TODO: remove
       // create each schema response transformer only once
       const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
         schema.$ref,

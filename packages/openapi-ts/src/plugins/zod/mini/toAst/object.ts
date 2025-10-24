@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
 import { tsc } from '~/tsc';
 import { numberRegExp } from '~/utils/regexp';

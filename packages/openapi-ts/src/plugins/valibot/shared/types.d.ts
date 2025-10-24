@@ -1,5 +1,5 @@
 import type { IR } from '~/ir/types';
-import type { ToRefs } from '~/plugins/shared/types/refs';
+import type { ToRefs } from '~/plugins';
 import type { StringCase, StringName } from '~/types/case';
 
 import type { ValibotPlugin } from '../types';
