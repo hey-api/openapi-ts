@@ -1,9 +1,10 @@
+import type { Graph } from '~/graph';
 import type { Logger } from '~/utils/logger';
 import { jsonPointerToPath } from '~/utils/ref';
 
 import type { Config } from '../../../types/config';
 import deepEqual from '../utils/deepEqual';
-import { buildGraph, type Graph, type Scope } from '../utils/graph';
+import { buildGraph, type Scope } from '../utils/graph';
 import { buildName } from '../utils/name';
 import { deepClone } from '../utils/schema';
 import { childSchemaRelationships } from '../utils/schemaChildRelationships';
@@ -463,6 +464,7 @@ type WalkArgs = {
   inSchema: boolean;
   node: unknown;
   path: ReadonlyArray<string | number>;
+  visited?: Set<string>;
 };
 
 /**
@@ -473,10 +475,12 @@ type WalkArgs = {
  * @param split - The split mapping (from splitSchemas)
  */
 export const updateRefsInSpec = ({
+  graph,
   logger,
   spec,
   split,
 }: {
+  graph: Graph;
   logger: Logger;
   spec: unknown;
   split: Omit<SplitSchemas, 'schemas'>;
@@ -490,6 +494,7 @@ export const updateRefsInSpec = ({
     inSchema,
     node,
     path,
+    visited = new Set(),
   }: WalkArgs): void => {
     if (node instanceof Array) {
       node.forEach((item, index) =>
@@ -499,6 +504,7 @@ export const updateRefsInSpec = ({
           inSchema,
           node: item,
           path: [...path, index],
+          visited,
         }),
       );
     } else if (node && typeof node === 'object') {
@@ -518,6 +524,21 @@ export const updateRefsInSpec = ({
           } else if (mapping?.write === nextPointer) {
             nextContext = 'write';
           }
+        } else {
+          // Not a split variant - check graph for the schema's scopes
+          const nodeInfo = graph.nodes.get(nextPointer);
+          if (nodeInfo?.scopes) {
+            // If schema has only write scope, use write context
+            // If schema has only read scope, use read context
+            // If schema has both or neither, leave context as-is (null)
+            const hasRead = nodeInfo.scopes.has('read');
+            const hasWrite = nodeInfo.scopes.has('write');
+            if (hasWrite && !hasRead) {
+              nextContext = 'write';
+            } else if (hasRead && !hasWrite) {
+              nextContext = 'read';
+            }
+          }
         }
       }
 
@@ -534,6 +555,7 @@ export const updateRefsInSpec = ({
             inSchema: false,
             node: (node as Record<string, unknown>)[key],
             path: [...path, key],
+            visited,
           });
         }
         return;
@@ -554,6 +576,7 @@ export const updateRefsInSpec = ({
               inSchema: false,
               node: value,
               path: [...path, key],
+              visited,
             });
             continue;
           }
@@ -564,6 +587,7 @@ export const updateRefsInSpec = ({
               inSchema: false,
               node: value,
               path: [...path, key],
+              visited,
             });
             continue;
           }
@@ -576,6 +600,7 @@ export const updateRefsInSpec = ({
                   inSchema: true,
                   node: param.schema,
                   path: [...path, key, index, 'schema'],
+                  visited,
                 });
               }
               // Also handle content (OpenAPI 3.x)
@@ -586,6 +611,7 @@ export const updateRefsInSpec = ({
                   inSchema: false,
                   node: param.content,
                   path: [...path, key, index, 'content'],
+                  visited,
                 });
               }
             });
@@ -607,6 +633,7 @@ export const updateRefsInSpec = ({
                 inSchema: false,
                 node: (value as Record<string, unknown>)[headerKey],
                 path: [...path, key, headerKey],
+                visited,
               });
             }
             continue;
@@ -621,15 +648,20 @@ export const updateRefsInSpec = ({
             inSchema: true,
             node: value,
             path: [...path, key],
+            visited,
           });
         } else if (key === '$ref' && typeof value === 'string') {
           // Prefer exact match first
           const map = split.mapping[value];
           if (map) {
-            if (map.read && (!nextContext || nextContext === 'read')) {
+            if (nextContext === 'read' && map.read) {
               (node as Record<string, unknown>)[key] = map.read;
-            } else if (map.write && (!nextContext || nextContext === 'write')) {
+            } else if (nextContext === 'write' && map.write) {
               (node as Record<string, unknown>)[key] = map.write;
+            } else if (!nextContext && map.read) {
+              // For schemas with no context (unused in operations), default to read variant
+              // This ensures $refs in unused schemas don't point to removed originals
+              (node as Record<string, unknown>)[key] = map.read;
             }
           }
         } else {
@@ -639,6 +671,7 @@ export const updateRefsInSpec = ({
             inSchema,
             node: value,
             path: [...path, key],
+            visited,
           });
         }
       }
@@ -678,6 +711,6 @@ export const readWriteTransform = ({
   const originalSchemas = captureOriginalSchemas(spec, logger);
   const split = splitSchemas({ config, graph, logger, spec });
   insertSplitSchemasIntoSpec({ logger, spec, split });
-  updateRefsInSpec({ logger, spec, split });
+  updateRefsInSpec({ graph, logger, spec, split });
   removeOriginalSplitSchemas({ logger, originalSchemas, spec, split });
 };

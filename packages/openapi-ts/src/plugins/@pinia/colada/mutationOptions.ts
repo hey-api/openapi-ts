@@ -141,5 +141,5 @@ export const createMutationOptions = ({
     }),
     name: symbolMutationOptions.placeholder,
   });
-  plugin.setSymbolValue(symbolMutationOptions.id, statement);
+  plugin.setSymbolValue(symbolMutationOptions, statement);
 };

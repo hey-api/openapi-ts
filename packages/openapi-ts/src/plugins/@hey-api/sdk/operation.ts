@@ -505,16 +505,12 @@ export const operationStatements = ({
     const pluginTransformers = plugin.getPluginOrThrow(
       plugin.config.transformer,
     );
-    const symbolResponseTransformer = plugin.getSymbol(
-      pluginTransformers.api.selector('response', operation.id),
-    );
-    if (
-      symbolResponseTransformer &&
-      plugin.getSymbolValue(symbolResponseTransformer)
-    ) {
+    const selector = pluginTransformers.api.selector('response', operation.id);
+    if (plugin.isSymbolRegistered(selector)) {
+      const ref = plugin.referenceSymbol(selector);
       requestOptions.push({
         key: 'responseTransformer',
-        value: symbolResponseTransformer.placeholder,
+        value: ref.placeholder,
       });
     }
   }
