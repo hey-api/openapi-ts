@@ -37,7 +37,7 @@ export const objectToAst = ({
       schema: property,
       state: {
         ...state,
-        _path: toRef([...state._path.value, 'properties', name]),
+        path: toRef([...state.path.value, 'properties', name]),
       },
     });
 
@@ -81,7 +81,7 @@ export const objectToAst = ({
       schema: schema.additionalProperties,
       state: {
         ...state,
-        _path: toRef([...state._path.value, 'additionalProperties']),
+        path: toRef([...state.path.value, 'additionalProperties']),
       },
     });
     const expression = tsc.callExpression({

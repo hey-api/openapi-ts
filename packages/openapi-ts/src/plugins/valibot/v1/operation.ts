@@ -1,7 +1,6 @@
 import { operationResponsesMap } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { pathToSymbolResourceType } from '~/plugins/shared/utils/meta';
 import { toRef } from '~/plugins/shared/utils/refs';
 
 import type { IrSchemaToAstOptions } from '../shared/types';
@@ -115,7 +114,7 @@ export const irOperationToAst = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
-        resourceType: pathToSymbolResourceType(state._path.value),
+        path: state.path.value,
       },
       name: buildName({
         config: plugin.config.requests,
@@ -136,11 +135,11 @@ export const irOperationToAst = ({
       const { response } = operationResponsesMap(operation);
 
       if (response) {
-        const path = [...state._path.value, 'responses'];
+        const path = [...state.path.value, 'responses'];
         const symbol = plugin.registerSymbol({
           exported: true,
           meta: {
-            resourceType: pathToSymbolResourceType(path),
+            path,
           },
           name: buildName({
             config: plugin.config.responses,
@@ -153,7 +152,7 @@ export const irOperationToAst = ({
           schema: response,
           state: {
             ...state,
-            _path: toRef(path),
+            path: toRef(path),
           },
           symbol,
         });
