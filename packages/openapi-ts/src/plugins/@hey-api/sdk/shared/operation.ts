@@ -11,11 +11,11 @@ import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
 import { stringCase } from '~/utils/stringCase';
 import { transformClassName } from '~/utils/transform';
 
-import type { Field, Fields } from '../client-core/bundle/params';
+import type { Field, Fields } from '../../client-core/bundle/params';
+// import { getSignatureParameters } from './signature';
+import type { HeyApiSdkPlugin } from '../types';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
-// import { getSignatureParameters } from './signature';
-import type { HeyApiSdkPlugin } from './types';
 import { createRequestValidator, createResponseValidator } from './validator';
 
 interface ClassNameEntry {

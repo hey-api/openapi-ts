@@ -2,8 +2,8 @@ import { clientFolderAbsolutePath } from '~/generate/client';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { tsc } from '~/tsc';
 
+import type { HeyApiSdkPlugin } from '../types';
 import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
-import type { HeyApiSdkPlugin } from './types';
 
 export const createTypeOptions = ({
   plugin,
@@ -18,6 +18,7 @@ export const createTypeOptions = ({
     external: clientModule,
     meta: {
       kind: 'type',
+      path: [],
     },
     name: 'TDataShape',
   });
@@ -25,6 +26,7 @@ export const createTypeOptions = ({
     external: clientModule,
     meta: {
       kind: 'type',
+      path: [],
     },
     name: 'Client',
     selector: plugin.api.selector('Client'),
@@ -33,6 +35,7 @@ export const createTypeOptions = ({
     external: clientModule,
     meta: {
       kind: 'type',
+      path: [],
     },
     name: 'Options',
   });
@@ -40,6 +43,7 @@ export const createTypeOptions = ({
     exported: true,
     meta: {
       kind: 'type',
+      path: [],
     },
     name: 'Options',
     selector: plugin.api.selector('Options'),
