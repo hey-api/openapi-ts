@@ -1,16 +1,20 @@
 import { operationResponsesMap } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { toRef } from '~/plugins/shared/utils/refs';
 
-import type { IrSchemaToAstOptions } from '../shared/types';
-import { irSchemaToAst } from './plugin';
+import { exportAst } from './export';
+import type { Ast, IrSchemaToAstOptions } from './types';
 
 export const irOperationToAst = ({
+  getAst,
   operation,
   plugin,
   state,
 }: IrSchemaToAstOptions & {
+  getAst: (
+    schema: IR.SchemaObject,
+    path: ReadonlyArray<string | number>,
+  ) => Ast;
   operation: IR.OperationObject;
 }) => {
   if (plugin.config.requests.enabled) {
@@ -111,10 +115,12 @@ export const irOperationToAst = ({
 
     schemaData.required = [...requiredProperties];
 
+    const ast = getAst(schemaData, state.path.value);
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
         path: state.path.value,
+        tags: state.tags?.value,
       },
       name: buildName({
         config: plugin.config.requests,
@@ -122,7 +128,8 @@ export const irOperationToAst = ({
       }),
       selector: plugin.api.selector('data', operation.id),
     });
-    irSchemaToAst({
+    exportAst({
+      ast,
       plugin,
       schema: schemaData,
       state,
@@ -136,10 +143,12 @@ export const irOperationToAst = ({
 
       if (response) {
         const path = [...state.path.value, 'responses'];
+        const ast = getAst(response, path);
         const symbol = plugin.registerSymbol({
           exported: true,
           meta: {
             path,
+            tags: state.tags?.value,
           },
           name: buildName({
             config: plugin.config.responses,
@@ -147,13 +156,11 @@ export const irOperationToAst = ({
           }),
           selector: plugin.api.selector('responses', operation.id),
         });
-        irSchemaToAst({
+        exportAst({
+          ast,
           plugin,
           schema: response,
-          state: {
-            ...state,
-            path: toRef(path),
-          },
+          state,
           symbol,
         });
       }

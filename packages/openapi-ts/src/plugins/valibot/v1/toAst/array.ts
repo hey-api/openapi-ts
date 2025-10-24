@@ -1,13 +1,11 @@
-import type ts from 'typescript';
-
 import { deduplicateSchema } from '~/ir/schema';
 import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
 import { tsc } from '~/tsc';
 
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import { pipesToAst } from '../../shared/pipesToAst';
+import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
-import { pipesToAst } from '../pipesToAst';
 import { irSchemaToAst } from '../plugin';
 import { unknownToAst } from './unknown';
 
@@ -17,7 +15,11 @@ export const arrayToAst = ({
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'array'>;
-}): ts.Expression => {
+}): Omit<Ast, 'typeName'> => {
+  const result: Omit<Ast, 'typeName'> = {
+    pipes: [],
+  };
+
   const v = plugin.referenceSymbol(
     plugin.api.selector('external', 'valibot.v'),
   );
@@ -25,8 +27,6 @@ export const arrayToAst = ({
     expression: v.placeholder,
     name: identifiers.schemas.array,
   });
-
-  const pipes: Array<ts.CallExpression> = [];
 
   if (!schema.items) {
     const expression = tsc.callExpression({
@@ -41,13 +41,13 @@ export const arrayToAst = ({
         }),
       ],
     });
-    pipes.push(expression);
+    result.pipes.push(expression);
   } else {
     schema = deduplicateSchema({ schema });
 
     // at least one item is guaranteed
     const itemExpressions = schema.items!.map((item, index) => {
-      const schemaPipes = irSchemaToAst({
+      const itemAst = irSchemaToAst({
         plugin,
         schema: item,
         state: {
@@ -55,7 +55,10 @@ export const arrayToAst = ({
           path: toRef([...state.path.value, 'items', index]),
         },
       });
-      return pipesToAst({ pipes: schemaPipes, plugin });
+      if (itemAst.hasLazyExpression) {
+        result.hasLazyExpression = true;
+      }
+      return pipesToAst({ pipes: itemAst.pipes, plugin });
     });
 
     if (itemExpressions.length === 1) {
@@ -63,7 +66,7 @@ export const arrayToAst = ({
         functionName,
         parameters: itemExpressions,
       });
-      pipes.push(expression);
+      result.pipes.push(expression);
     } else {
       if (schema.logicalOperator === 'and') {
         // TODO: parser - handle intersection
@@ -87,7 +90,7 @@ export const arrayToAst = ({
           }),
         ],
       });
-      pipes.push(expression);
+      result.pipes.push(expression);
     }
   }
 
@@ -99,7 +102,7 @@ export const arrayToAst = ({
       }),
       parameters: [tsc.valueToExpression({ value: schema.minItems })],
     });
-    pipes.push(expression);
+    result.pipes.push(expression);
   } else {
     if (schema.minItems !== undefined) {
       const expression = tsc.callExpression({
@@ -109,7 +112,7 @@ export const arrayToAst = ({
         }),
         parameters: [tsc.valueToExpression({ value: schema.minItems })],
       });
-      pipes.push(expression);
+      result.pipes.push(expression);
     }
 
     if (schema.maxItems !== undefined) {
@@ -120,9 +123,9 @@ export const arrayToAst = ({
         }),
         parameters: [tsc.valueToExpression({ value: schema.maxItems })],
       });
-      pipes.push(expression);
+      result.pipes.push(expression);
     }
   }
 
-  return pipesToAst({ pipes, plugin });
+  return result as Omit<Ast, 'typeName'>;
 };
