@@ -100,7 +100,6 @@ describe('generateLegacySchemas', () => {
         },
         '@hey-api/sdk': {
           api: {
-            createOperationComment: () => undefined,
             selector: () => [],
           },
           config: {
@@ -271,7 +270,6 @@ describe('generateLegacySchemas', () => {
         },
         '@hey-api/sdk': {
           api: {
-            createOperationComment: () => undefined,
             selector: () => [],
           },
           config: {
