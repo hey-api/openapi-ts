@@ -14,6 +14,18 @@ export interface QuerySerializerOptions {
   allowReserved?: boolean;
   array?: SerializerOptions<ArrayStyle>;
   object?: SerializerOptions<ObjectStyle>;
+  /**
+   * Per-parameter serialization overrides. When provided, these settings
+   * override the global array/object settings for specific parameter names.
+   */
+  parameters?: Record<
+    string,
+    {
+      allowReserved?: boolean;
+      array?: SerializerOptions<ArrayStyle>;
+      object?: SerializerOptions<ObjectStyle>;
+    }
+  >;
 }
 
 const serializeFormDataPair = (
