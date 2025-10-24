@@ -5,9 +5,9 @@ import { toRef } from '~/plugins/shared/utils/refs';
 import { tsc } from '~/tsc';
 import { numberRegExp } from '~/utils/regexp';
 
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import { pipesToAst } from '../../shared/pipesToAst';
+import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
-import { pipesToAst } from '../pipesToAst';
 import { irSchemaToAst } from '../plugin';
 
 export const objectToAst = ({
@@ -16,10 +16,9 @@ export const objectToAst = ({
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'object'>;
-}): {
-  anyType: string;
-  expression: ts.CallExpression;
-} => {
+}): Omit<Ast, 'typeName'> => {
+  const result: Partial<Omit<Ast, 'typeName'>> = {};
+
   // TODO: parser - handle constants
   const properties: Array<ts.PropertyAssignment> = [];
 
@@ -29,7 +28,7 @@ export const objectToAst = ({
     const property = schema.properties[name]!;
     const isRequired = required.includes(name);
 
-    const schemaPipes = irSchemaToAst({
+    const propertyAst = irSchemaToAst({
       optional: !isRequired,
       plugin,
       schema: property,
@@ -38,6 +37,9 @@ export const objectToAst = ({
         path: toRef([...state.path.value, 'properties', name]),
       },
     });
+    if (propertyAst.hasLazyExpression) {
+      result.hasLazyExpression = true;
+    }
 
     numberRegExp.lastIndex = 0;
     let propertyName;
@@ -60,7 +62,7 @@ export const objectToAst = ({
     }
     properties.push(
       tsc.propertyAssignment({
-        initializer: pipesToAst({ pipes: schemaPipes, plugin }),
+        initializer: pipesToAst({ pipes: propertyAst.pipes, plugin }),
         name: propertyName,
       }),
     );
@@ -75,7 +77,7 @@ export const objectToAst = ({
     schema.additionalProperties.type === 'object' &&
     !Object.keys(properties).length
   ) {
-    const pipes = irSchemaToAst({
+    const additionalAst = irSchemaToAst({
       plugin,
       schema: schema.additionalProperties,
       state: {
@@ -83,38 +85,38 @@ export const objectToAst = ({
         path: toRef([...state.path.value, 'additionalProperties']),
       },
     });
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.schemas.record,
-      }),
-      parameters: [
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: v.placeholder,
-            name: identifiers.schemas.string,
-          }),
-          parameters: [],
+    if (additionalAst.hasLazyExpression) {
+      result.hasLazyExpression = true;
+    }
+    result.pipes = [
+      tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
+          expression: v.placeholder,
+          name: identifiers.schemas.record,
         }),
-        pipesToAst({ pipes, plugin }),
-      ],
-    });
-    return {
-      anyType: 'AnyZodObject',
-      expression,
-    };
+        parameters: [
+          tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
+              expression: v.placeholder,
+              name: identifiers.schemas.string,
+            }),
+            parameters: [],
+          }),
+          pipesToAst({ pipes: additionalAst.pipes, plugin }),
+        ],
+      }),
+    ];
+    return result as Omit<Ast, 'typeName'>;
   }
 
-  const expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: v.placeholder,
-      name: identifiers.schemas.object,
+  result.pipes = [
+    tsc.callExpression({
+      functionName: tsc.propertyAccessExpression({
+        expression: v.placeholder,
+        name: identifiers.schemas.object,
+      }),
+      parameters: [ts.factory.createObjectLiteralExpression(properties, true)],
     }),
-    parameters: [ts.factory.createObjectLiteralExpression(properties, true)],
-  });
-  return {
-    // Zod uses AnyZodObject here, maybe we want to be more specific too
-    anyType: identifiers.types.GenericSchema.text,
-    expression,
-  };
+  ];
+  return result as Omit<Ast, 'typeName'>;
 };

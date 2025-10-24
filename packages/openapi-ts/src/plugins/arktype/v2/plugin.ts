@@ -4,10 +4,10 @@ import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins/shared/types/schema';
 import { toRefs } from '~/plugins/shared/utils/refs';
 import { tsc } from '~/tsc';
-import { refToName } from '~/utils/ref';
+import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { exportAst } from '../shared/export';
-import type { Ast, IrSchemaToAstOptions } from '../shared/types';
+import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
 import type { ArktypePlugin } from '../types';
 import { irSchemaWithTypeToAst } from './toAst';
 
@@ -236,20 +236,19 @@ export const irSchemaToAst = ({
 };
 
 const handleComponent = ({
-  $ref,
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
-  $ref: string;
   schema: IR.SchemaObject;
 }): void => {
+  const $ref = pathToJsonPointer(state.path.value);
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
   const symbol = plugin.registerSymbol({
     exported: true,
     meta: {
-      path: state._path.value,
+      path: state.path.value,
     },
     name: buildName({
       config: plugin.config.definitions,
@@ -262,7 +261,7 @@ const handleComponent = ({
         exported: true,
         meta: {
           kind: 'type',
-          path: state._path.value,
+          path: state.path.value,
         },
         name: buildName({
           config: plugin.config.definitions.types.infer,
@@ -294,6 +293,11 @@ export const handlerV2: ArktypePlugin['Handler'] = ({ plugin }) => {
     'schema',
     'webhook',
     (event) => {
+      const state = toRefs<PluginState>({
+        hasLazyExpression: false,
+        path: event._path,
+        tags: event.tags,
+      });
       switch (event.type) {
         //   case 'operation':
         //     operationToZodSchema({
@@ -311,35 +315,23 @@ export const handlerV2: ArktypePlugin['Handler'] = ({ plugin }) => {
         //     break;
         case 'parameter':
           handleComponent({
-            $ref: event.$ref,
             plugin,
             schema: event.parameter.schema,
-            state: toRefs({
-              _path: event._path,
-              hasLazyExpression: false,
-            }),
+            state,
           });
           break;
         case 'requestBody':
           handleComponent({
-            $ref: event.$ref,
             plugin,
             schema: event.requestBody.schema,
-            state: toRefs({
-              _path: event._path,
-              hasLazyExpression: false,
-            }),
+            state,
           });
           break;
         case 'schema':
           handleComponent({
-            $ref: event.$ref,
             plugin,
             schema: event.schema,
-            state: toRefs({
-              _path: event._path,
-              hasLazyExpression: false,
-            }),
+            state,
           });
           break;
         //   case 'webhook':

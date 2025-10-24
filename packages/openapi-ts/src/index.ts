@@ -23,6 +23,10 @@ declare module '@hey-api/codegen-core' {
      * Name of the plugin that registered this symbol.
      */
     pluginName?: string;
+    /**
+     * Tags associated with this symbol.
+     */
+    tags?: Set<string>;
   }
 }
 // END OVERRIDES

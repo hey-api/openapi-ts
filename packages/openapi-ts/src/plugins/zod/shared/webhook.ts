@@ -9,13 +9,12 @@ export const irWebhookToAst = ({
   operation,
   plugin,
   state,
-}: Omit<IrSchemaToAstOptions, 'state'> & {
+}: IrSchemaToAstOptions & {
   getAst: (
     schema: IR.SchemaObject,
     path: ReadonlyArray<string | number>,
   ) => Ast;
   operation: IR.OperationObject;
-  state: Partial<IrSchemaToAstOptions['state']>;
 }) => {
   if (plugin.config.webhooks.enabled) {
     const requiredProperties = new Set<string>();
@@ -115,12 +114,12 @@ export const irWebhookToAst = ({
 
     schemaData.required = [...requiredProperties];
 
-    const path = state.path?.value || [];
-    const ast = getAst(schemaData, path);
+    const ast = getAst(schemaData, state.path.value);
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
-        path,
+        path: state.path.value,
+        tags: state.tags?.value,
       },
       name: buildName({
         config: plugin.config.webhooks,
@@ -133,7 +132,8 @@ export const irWebhookToAst = ({
           exported: true,
           meta: {
             kind: 'type',
-            path,
+            path: state.path.value,
+            tags: state.tags?.value,
           },
           name: buildName({
             config: plugin.config.webhooks.types.infer,
