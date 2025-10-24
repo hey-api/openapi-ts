@@ -17,11 +17,11 @@ export type IrSchemaToAstOptions = {
 };
 
 export type PluginState = {
+  hasLazyExpression: boolean;
   /**
    * Path to the schema in the intermediary representation.
    */
-  _path: ReadonlyArray<string | number>;
-  hasLazyExpression: boolean;
+  path: ReadonlyArray<string | number>;
 };
 
 export type ValidatorArgs = {

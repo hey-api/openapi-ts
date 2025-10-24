@@ -49,7 +49,7 @@ export const arrayToAst = ({
         schema: item,
         state: {
           ...state,
-          _path: toRef([...state._path.value, 'items', index]),
+          path: toRef([...state.path.value, 'items', index]),
         },
       });
       if (itemAst.hasLazyExpression) {
