@@ -20,8 +20,8 @@ import {
 import type { IR } from '~/ir/types';
 import type { OpenApi } from '~/openApi/types';
 import type { Hooks } from '~/parser/types/hooks';
+import type { Plugin } from '~/plugins';
 import type { PluginConfigMap } from '~/plugins/config';
-import type { Plugin } from '~/plugins/types';
 import { jsonPointerToPath } from '~/utils/ref';
 
 import type { WalkEvent } from '../types/instance';

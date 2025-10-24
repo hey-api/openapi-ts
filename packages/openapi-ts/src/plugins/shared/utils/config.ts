@@ -1,4 +1,4 @@
-import type { Plugin } from '~/plugins/types';
+import type { Plugin } from '~/plugins';
 
 export const definePluginConfig =
   <T extends Plugin.Types>(defaultConfig: Plugin.Config<T>) =>

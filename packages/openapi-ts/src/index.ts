@@ -186,6 +186,7 @@ export type {
   OpenApiResponseObject,
   OpenApiSchemaObject,
 } from './openApi/types';
+export type { DefinePlugin, Plugin } from './plugins';
 export type { AngularClient } from './plugins/@hey-api/client-angular';
 export type { AxiosClient } from './plugins/@hey-api/client-axios';
 export {
@@ -201,7 +202,6 @@ export type { OfetchClient } from './plugins/@hey-api/client-ofetch';
 export type { ExpressionTransformer } from './plugins/@hey-api/transformers/expressions';
 export type { TypeTransformer } from './plugins/@hey-api/transformers/types';
 export { definePluginConfig } from './plugins/shared/utils/config';
-export type { DefinePlugin, Plugin } from './plugins/types';
 export { compiler, tsc } from './tsc';
 export type { UserConfig } from './types/config';
 export type { LegacyIR } from './types/types';

@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import type { SchemaWithType } from '~/plugins';
 
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { arrayToAst } from './array';

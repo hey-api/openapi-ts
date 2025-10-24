@@ -1,9 +1,9 @@
 import type { Selector } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { Plugin } from '~/plugins/types';
+import type { Plugin } from '~/plugins';
 
-import { schemaToType } from './plugin';
+import { irSchemaToAstV1 } from './v1/api';
 
 type SelectorType =
   | 'ClientOptions'
@@ -19,7 +19,7 @@ type SelectorType =
   | 'Webhooks';
 
 export type IApi = {
-  schemaToType: (args: Parameters<typeof schemaToType>[0]) => ts.TypeNode;
+  schemaToType: (args: Parameters<typeof irSchemaToAstV1>[0]) => ts.TypeNode;
   /**
    * @param type Selector type.
    * @param value Depends on `type`:
@@ -46,7 +46,7 @@ export class Api implements IApi {
     return [this.meta.name, ...(args as Selector)];
   }
 
-  schemaToType(args: Parameters<typeof schemaToType>[0]): ts.TypeNode {
-    return schemaToType(args);
+  schemaToType(args: Parameters<typeof irSchemaToAstV1>[0]): ts.TypeNode {
+    return irSchemaToAstV1(args);
   }
 }

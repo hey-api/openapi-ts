@@ -1,5 +1,5 @@
 import type { IR } from '~/ir/types';
-import type { DefinePlugin, Plugin } from '~/plugins/types';
+import type { DefinePlugin, Plugin } from '~/plugins';
 import type { StringCase, StringName } from '~/types/case';
 
 import type { IApi } from './api';

@@ -1,10 +1,6 @@
 import type { IR } from '~/ir/types';
-import type {
-  DefinePlugin,
-  Plugin,
-  PluginClientNames,
-  PluginValidatorNames,
-} from '~/plugins/types';
+import type { DefinePlugin, Plugin } from '~/plugins';
+import type { PluginClientNames, PluginValidatorNames } from '~/plugins/types';
 import type { StringName } from '~/types/case';
 import type { Operation } from '~/types/client';
 
