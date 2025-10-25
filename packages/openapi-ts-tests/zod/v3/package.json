@@ -16,7 +16,7 @@
   "devDependencies": {
     "@config/vite-base": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
-    "typescript": "5.9.3",
-    "zod": "^3.25.0"
+    "typescript": "catalog:dev",
+    "zod": "catalog:zod3"
   }
 }
