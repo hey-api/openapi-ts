@@ -2260,7 +2260,6 @@ export class OpenAi extends _HeyApiClient {
         parameters: {
           effective_at: {
             object: {
-              explode: true,
               style: 'form',
             },
           },
