@@ -98,7 +98,7 @@ export class TypeScriptRenderer implements Renderer {
     if (!currentFile.path || !symbolFile.path) {
       return '';
     }
-    if (symbolFile.external && !path.isAbsolute(symbolFile.path)) {
+    if (symbolFile.external && path.isAbsolute(symbolFile.path)) {
       return symbolFile.path;
     }
     let relativePath = path.posix.relative(
