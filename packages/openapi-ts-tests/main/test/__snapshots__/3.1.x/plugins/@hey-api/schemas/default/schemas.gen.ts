@@ -1997,6 +1997,42 @@ export const external_shared_ExternalSharedModelSchema = {
     required: ['id']
 } as const;
 
+export const ModelWithReferenceWritableSchema = {
+    description: 'This is a model with one property containing a reference',
+    type: 'object',
+    properties: {
+        prop: {
+            '$ref': '#/components/schemas/ModelWithPropertiesWritable'
+        }
+    }
+} as const;
+
+export const ModelWithArrayReadOnlyAndWriteOnlyWritableSchema = {
+    description: 'This is a model with one property containing an array',
+    type: 'object',
+    properties: {
+        prop: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/ModelWithReadOnlyAndWriteOnlyWritable'
+            }
+        },
+        propWithFile: {
+            type: 'array',
+            items: {
+                format: 'binary',
+                type: 'string'
+            }
+        },
+        propWithNumber: {
+            type: 'array',
+            items: {
+                type: 'number'
+            }
+        }
+    }
+} as const;
+
 export const ModelWithPropertiesWritableSchema = {
     description: 'This is a model with one nested property',
     type: 'object',
@@ -2096,6 +2132,22 @@ export const ModelWithReadOnlyAndWriteOnlyWritableSchema = {
     }
 } as const;
 
+export const ModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritableSchema = {
+    type: 'array',
+    items: {
+        oneOf: [
+            {
+                type: 'number'
+            },
+            {
+                '$ref': '#/components/schemas/import'
+            }
+        ]
+    },
+    minItems: 2,
+    maxItems: 2
+} as const;
+
 export const AdditionalPropertiesUnknownIssueWritableSchema = {
     type: 'object',
     additionalProperties: {
@@ -2108,6 +2160,31 @@ export const AdditionalPropertiesUnknownIssueWritableSchema = {
             }
         ]
     }
+} as const;
+
+export const OneOfAllOfIssueWritableSchema = {
+    oneOf: [
+        {
+            allOf: [
+                {
+                    oneOf: [
+                        {
+                            '$ref': '#/components/schemas/ConstValue'
+                        },
+                        {
+                            '$ref': '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.Boolean]'
+                        }
+                    ]
+                },
+                {
+                    '$ref': '#/components/schemas/3e-num_1Период'
+                }
+            ]
+        },
+        {
+            '$ref': '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.String]'
+        }
+    ]
 } as const;
 
 export const Generic_Schema_Duplicate_Issue_1_System_Boolean_WritableSchema = {

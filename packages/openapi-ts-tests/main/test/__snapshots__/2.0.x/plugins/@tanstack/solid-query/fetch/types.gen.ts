@@ -420,6 +420,13 @@ export type ExternalSharedExternalSharedModel = {
 };
 
 /**
+ * This is a model with one property containing a reference
+ */
+export type ModelWithReferenceWritable = {
+    prop?: ModelWithPropertiesWritable;
+};
+
+/**
  * This is a model with one nested property
  */
 export type ModelWithPropertiesWritable = {
