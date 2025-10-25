@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.86.4
+
+### Patch Changes
+
+- feat(parser): pass tags to symbol meta ([#2845](https://github.com/hey-api/openapi-ts/pull/2845)) ([`e157288`](https://github.com/hey-api/openapi-ts/commit/e1572888aec1e95d23eb0124fb9a5f3383e89def)) by [@mrlubos](https://github.com/mrlubos)
+
+- feat(clients): granular query parameter serialization strategy ([#2837](https://github.com/hey-api/openapi-ts/pull/2837)) ([`e0e6ab3`](https://github.com/hey-api/openapi-ts/commit/e0e6ab37888ac9eb88fa9f0d45e0a9123f9f1158)) by [@pixelmord](https://github.com/pixelmord)
+
 ## 0.86.3
 
 ### Patch Changes
