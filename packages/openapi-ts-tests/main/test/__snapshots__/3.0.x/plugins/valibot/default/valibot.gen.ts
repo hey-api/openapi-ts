@@ -1052,6 +1052,13 @@ export const vModelWithPropertiesWritable = v.object({
 });
 
 /**
+ * This is a model with one property containing a reference
+ */
+export const vModelWithReferenceWritable = v.object({
+    prop: v.optional(vModelWithPropertiesWritable)
+});
+
+/**
  * This is a model that contains a some patterns
  */
 export const vModelWithPatternWritable = v.object({
@@ -1073,7 +1080,38 @@ export const vModelWithReadOnlyAndWriteOnlyWritable = v.object({
     baz: v.string()
 });
 
+/**
+ * This is a model with one property containing an array
+ */
+export const vModelWithArrayReadOnlyAndWriteOnlyWritable = v.object({
+    prop: v.optional(v.array(vModelWithReadOnlyAndWriteOnlyWritable)),
+    propWithFile: v.optional(v.array(v.string())),
+    propWithNumber: v.optional(v.array(v.number()))
+});
+
+export const vModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable = v.tuple([
+    v.union([
+        v.number(),
+        vImport
+    ]),
+    v.union([
+        v.number(),
+        vImport
+    ])
+]);
+
 export const vAdditionalPropertiesUnknownIssueWritable = v.object({});
+
+export const vOneOfAllOfIssueWritable = v.union([
+    v.intersect([
+        v.union([
+            vConstValue,
+            vGenericSchemaDuplicateIssue1SystemBoolean
+        ]),
+        v3eNum1Период
+    ]),
+    vGenericSchemaDuplicateIssue1SystemString
+]);
 
 export const vGenericSchemaDuplicateIssue1SystemBooleanWritable = v.object({
     item: v.optional(v.boolean()),
@@ -1156,7 +1194,7 @@ export const vPatchApiVbyApiVersionNoTagData = v.object({
 export const vImportData = v.object({
     body: v.union([
         vModelWithReadOnlyAndWriteOnlyWritable,
-        vModelWithArrayReadOnlyAndWriteOnly
+        vModelWithArrayReadOnlyAndWriteOnlyWritable
     ]),
     path: v.optional(v.never()),
     query: v.optional(v.never())

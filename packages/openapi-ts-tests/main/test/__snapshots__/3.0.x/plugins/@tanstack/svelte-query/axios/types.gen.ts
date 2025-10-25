@@ -970,6 +970,22 @@ export type ExternalSharedExternalSharedModel = {
 };
 
 /**
+ * This is a model with one property containing a reference
+ */
+export type ModelWithReferenceWritable = {
+    prop?: ModelWithPropertiesWritable;
+};
+
+/**
+ * This is a model with one property containing an array
+ */
+export type ModelWithArrayReadOnlyAndWriteOnlyWritable = {
+    prop?: Array<ModelWithReadOnlyAndWriteOnlyWritable>;
+    propWithFile?: Array<Blob | File>;
+    propWithNumber?: Array<number>;
+};
+
+/**
  * This is a model with one nested property
  */
 export type ModelWithPropertiesWritable = {
@@ -1009,9 +1025,16 @@ export type ModelWithReadOnlyAndWriteOnlyWritable = {
     baz: string;
 };
 
+export type ModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable = [
+    number | Import,
+    number | Import
+];
+
 export type AdditionalPropertiesUnknownIssueWritable = {
     [key: string]: string | number;
 };
+
+export type OneOfAllOfIssueWritable = ((ConstValue | GenericSchemaDuplicateIssue1SystemBoolean) & _3eNum1Период) | GenericSchemaDuplicateIssue1SystemString;
 
 export type GenericSchemaDuplicateIssue1SystemBooleanWritable = {
     item?: boolean;
@@ -1062,7 +1085,7 @@ export type PatchApiVbyApiVersionNoTagResponses = {
 };
 
 export type ImportData = {
-    body: ModelWithReadOnlyAndWriteOnlyWritable | ModelWithArrayReadOnlyAndWriteOnly;
+    body: ModelWithReadOnlyAndWriteOnlyWritable | ModelWithArrayReadOnlyAndWriteOnlyWritable;
     path?: never;
     query?: never;
     url: '/api/v{api-version}/no+tag';

@@ -422,6 +422,13 @@ export const vModelWithPropertiesWritable = v.object({
 });
 
 /**
+ * This is a model with one property containing a reference
+ */
+export const vModelWithReferenceWritable = v.object({
+    prop: v.optional(vModelWithPropertiesWritable)
+});
+
+/**
  * This is a model that contains a some patterns
  */
 export const vModelWithPatternWritable = v.object({

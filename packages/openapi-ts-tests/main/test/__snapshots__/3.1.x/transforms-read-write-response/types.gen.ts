@@ -20,6 +20,10 @@ export type Item = {
     readonly created_at?: string;
 };
 
+export type ItemListResponseWritable = {
+    items: Array<ItemWritable>;
+};
+
 export type ItemWritable = {
     name: string;
 };

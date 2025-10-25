@@ -693,6 +693,16 @@ export const external_shared_ExternalSharedModelSchema = {
     required: ['id']
 } as const;
 
+export const ModelWithReferenceWritableSchema = {
+    description: 'This is a model with one property containing a reference',
+    type: 'object',
+    properties: {
+        prop: {
+            '$ref': '#/definitions/ModelWithPropertiesWritable'
+        }
+    }
+} as const;
+
 export const ModelWithPropertiesWritableSchema = {
     description: 'This is a model with one nested property',
     type: 'object',

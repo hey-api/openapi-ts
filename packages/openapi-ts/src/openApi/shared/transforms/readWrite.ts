@@ -423,9 +423,26 @@ export const splitSchemas = ({
     const writeSchema = deepClone<unknown>(nodeInfo.node);
     pruneSchemaByScope(graph, writeSchema, 'readOnly');
 
+    // Check if this schema (or any of its descendants) references any schema that
+    // will need read/write variants. This is determined by checking transitive
+    // dependencies for schemas with both 'normal' and ('read' or 'write') scopes.
+    const transitiveDeps =
+      graph.transitiveDependencies.get(pointer) || new Set();
+    const referencesReadWriteSchemas = Array.from(transitiveDeps).some(
+      (depPointer) => {
+        const depNodeInfo = graph.nodes.get(depPointer);
+        return (
+          depNodeInfo?.scopes?.has('normal') &&
+          (depNodeInfo.scopes.has('read') || depNodeInfo.scopes.has('write'))
+        );
+      },
+    );
+
     // If pruning did not change anything (both variants equal and equal to original),
+    // and the schema doesn't reference any schemas that will have read/write variants,
     // skip splitting and keep the original single schema.
     if (
+      !referencesReadWriteSchemas &&
       deepEqual(readSchema, writeSchema) &&
       deepEqual(readSchema, nodeInfo.node)
     ) {
@@ -475,12 +492,10 @@ type WalkArgs = {
  * @param split - The split mapping (from splitSchemas)
  */
 export const updateRefsInSpec = ({
-  graph,
   logger,
   spec,
   split,
 }: {
-  graph: Graph;
   logger: Logger;
   spec: unknown;
   split: Omit<SplitSchemas, 'schemas'>;
@@ -524,22 +539,11 @@ export const updateRefsInSpec = ({
           } else if (mapping?.write === nextPointer) {
             nextContext = 'write';
           }
-        } else {
-          // Not a split variant - check graph for the schema's scopes
-          const nodeInfo = graph.nodes.get(nextPointer);
-          if (nodeInfo?.scopes) {
-            // If schema has only write scope, use write context
-            // If schema has only read scope, use read context
-            // If schema has both or neither, leave context as-is (null)
-            const hasRead = nodeInfo.scopes.has('read');
-            const hasWrite = nodeInfo.scopes.has('write');
-            if (hasWrite && !hasRead) {
-              nextContext = 'write';
-            } else if (hasRead && !hasWrite) {
-              nextContext = 'read';
-            }
-          }
         }
+        // For schemas that are not split variants, keep the inherited context.
+        // This ensures that $refs inside these schemas are resolved based on
+        // where the schema is actually used (requestBody vs responses), not
+        // based on the schema's own scopes which track readOnly/writeOnly fields.
       }
 
       const compContext = getComponentContext(path);
@@ -711,6 +715,6 @@ export const readWriteTransform = ({
   const originalSchemas = captureOriginalSchemas(spec, logger);
   const split = splitSchemas({ config, graph, logger, spec });
   insertSplitSchemasIntoSpec({ logger, spec, split });
-  updateRefsInSpec({ graph, logger, spec, split });
+  updateRefsInSpec({ logger, spec, split });
   removeOriginalSplitSchemas({ logger, originalSchemas, spec, split });
 };
