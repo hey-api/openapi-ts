@@ -4864,6 +4864,10 @@ export type AppliedDiscountWritable = {
     amount: number;
 };
 
+export type BroadcastedResponsesWritable = {
+    responses: Array<LocationResponseWritable> | null;
+};
+
 /**
  * Product category sales summary for cannabis retail closing reports and financial analysis.
  */
@@ -5441,6 +5445,11 @@ export type InventoryDiscrepancyWritable = {
     serialNumber: string | null;
 };
 
+export type InventoryIntegrationReconResponseWritable = {
+    lastUpdated: string | null;
+    discrepancies: Array<InventoryDiscrepancyWritable> | null;
+};
+
 /**
  * Inventory item model representing current stock and product details for available inventory.
  */
@@ -5875,7 +5884,7 @@ export type ProductDetailWritable = {
     externalId: string | null;
     syncExternally: boolean;
     regulatoryName: string | null;
-    broadcastedResponses: BroadcastedResponses;
+    broadcastedResponses: BroadcastedResponsesWritable;
     administrationMethod: string | null;
     unitCBDContentDose: number | null;
     unitTHCContentDose: number | null;
