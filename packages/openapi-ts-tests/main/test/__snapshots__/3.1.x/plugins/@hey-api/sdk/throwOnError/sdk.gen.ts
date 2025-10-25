@@ -341,7 +341,6 @@ export const complexTypes = <ThrowOnError extends boolean = true>(options: Optio
             parameters: {
                 parameterObject: {
                     object: {
-                        explode: true,
                         style: 'form'
                     }
                 }

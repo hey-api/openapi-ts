@@ -223,26 +223,22 @@ export const collectionFormat = <ThrowOnError extends boolean = true>(options: O
             parameters: {
                 parameterArrayCSV: {
                     array: {
-                        explode: false,
-                        style: 'form'
+                        explode: false
                     }
                 },
                 parameterArraySSV: {
                     array: {
-                        explode: false,
-                        style: 'form'
+                        explode: false
                     }
                 },
                 parameterArrayTSV: {
                     array: {
-                        explode: false,
-                        style: 'form'
+                        explode: false
                     }
                 },
                 parameterArrayPipes: {
                     array: {
-                        explode: false,
-                        style: 'form'
+                        explode: false
                     }
                 }
             }
@@ -258,8 +254,7 @@ export const types = <ThrowOnError extends boolean = true>(options: Options<Type
             parameters: {
                 parameterArray: {
                     array: {
-                        explode: false,
-                        style: 'form'
+                        explode: false
                     }
                 },
                 parameterDictionary: {

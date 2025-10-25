@@ -351,7 +351,6 @@ export const complexTypes = <ThrowOnError extends boolean = false>(options: Opti
             parameters: {
                 parameterObject: {
                     object: {
-                        explode: true,
                         style: 'form'
                     }
                 }

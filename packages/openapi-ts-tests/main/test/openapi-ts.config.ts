@@ -138,17 +138,17 @@ export default defineConfig(() => {
               // if (!symbol.external && !symbol.meta?.resourceType) {
               //   console.log(`[${plugin.name}]:`, symbol.name);
               // }
-              if (!symbol.external && !symbol.meta?.path) {
-                console.log(`[${plugin.name}]:`, symbol.name, symbol.meta);
-              }
-              if (symbol.meta?.tags && symbol.meta?.tags.size > 0) {
-                console.log(
-                  `[${plugin.name}]:`,
-                  symbol.name,
-                  symbol.meta.path,
-                  symbol.meta.tags,
-                );
-              }
+              // if (!symbol.external && !symbol.meta?.path) {
+              //   console.log(`[${plugin.name}]:`, symbol.name, symbol.meta);
+              // }
+              // if (symbol.meta?.tags && symbol.meta?.tags.size > 0) {
+              //   console.log(
+              //     `[${plugin.name}]:`,
+              //     symbol.name,
+              //     symbol.meta.path,
+              //     symbol.meta.tags,
+              //   );
+              // }
             },
             // 'symbol:setValue:after': ({ plugin, symbol }) => {
             //   console.log(`(${plugin.name}) set value:`, symbol.id);

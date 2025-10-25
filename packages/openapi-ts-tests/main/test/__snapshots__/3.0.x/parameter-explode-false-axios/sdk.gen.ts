@@ -24,8 +24,7 @@ export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<
             parameters: {
                 foo: {
                     array: {
-                        explode: false,
-                        style: 'form'
+                        explode: false
                     }
                 }
             }
