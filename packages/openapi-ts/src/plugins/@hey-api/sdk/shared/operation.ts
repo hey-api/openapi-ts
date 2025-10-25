@@ -439,34 +439,79 @@ export const operationStatements = ({
   // content type. currently impossible because successes do not contain
   // header information
 
+  const parameterSerializers: Array<ObjectValue> = [];
+
   for (const name in operation.parameters?.query) {
     const parameter = operation.parameters.query[name]!;
+
     if (
-      (parameter.schema.type === 'array' ||
-        parameter.schema.type === 'tuple') &&
-      (parameter.style !== 'form' || !parameter.explode)
+      parameter.schema.type === 'array' ||
+      parameter.schema.type === 'tuple'
     ) {
-      // override the default settings for `querySerializer`
-      requestOptions.push({
-        key: 'querySerializer',
-        value: [
-          {
-            key: 'array',
-            value: [
-              {
-                key: 'explode',
-                value: false,
-              },
-              {
-                key: 'style',
-                value: 'form',
-              },
-            ],
-          },
-        ],
-      });
-      break;
+      if (parameter.style !== 'form' || !parameter.explode) {
+        // override the default settings for array serialization
+        parameterSerializers.push({
+          key: parameter.name,
+          value: [
+            {
+              key: 'array',
+              value: [
+                {
+                  key: 'explode',
+                  value:
+                    parameter.explode !== true ? parameter.explode : undefined,
+                },
+                {
+                  key: 'style',
+                  value:
+                    parameter.style !== 'form' ? parameter.style : undefined,
+                },
+              ].filter(({ value }) => value !== undefined),
+            },
+          ],
+        });
+      }
+    } else if (parameter.schema.type === 'object') {
+      if (parameter.style !== 'deepObject' || !parameter.explode) {
+        // override the default settings for object serialization
+        parameterSerializers.push({
+          key: parameter.name,
+          value: [
+            {
+              key: 'object',
+              value: [
+                {
+                  key: 'explode',
+                  value:
+                    parameter.explode !== true ? parameter.explode : undefined,
+                },
+                {
+                  key: 'style',
+                  value:
+                    parameter.style !== 'deepObject'
+                      ? parameter.style
+                      : undefined,
+                },
+              ].filter(({ value }) => value !== undefined),
+            },
+          ],
+        });
+      }
     }
+  }
+
+  if (parameterSerializers.length) {
+    // TODO: if all parameters have the same serialization,
+    // apply it globally to reduce output size
+    requestOptions.push({
+      key: 'querySerializer',
+      value: [
+        {
+          key: 'parameters',
+          value: parameterSerializers,
+        },
+      ],
+    });
   }
 
   const requestValidator = createRequestValidator({ operation, plugin });
