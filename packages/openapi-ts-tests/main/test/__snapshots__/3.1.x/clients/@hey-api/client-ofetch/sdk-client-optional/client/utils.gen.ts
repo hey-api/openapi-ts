@@ -24,10 +24,8 @@ import type {
 } from './types.gen';
 
 export const createQuerySerializer = <T = unknown>({
-  allowReserved,
-  array,
-  object,
   parameters = {},
+  ...args
 }: QuerySerializerOptions = {}) => {
   const querySerializer = (queryParams: T) => {
     const search: string[] = [];
@@ -39,35 +37,31 @@ export const createQuerySerializer = <T = unknown>({
           continue;
         }
 
-        // Get parameter-specific settings or fall back to global
-        const paramConfig = parameters[name] || {};
-        const paramAllowReserved = paramConfig.allowReserved ?? allowReserved;
+        const options = parameters[name] || args;
 
         if (Array.isArray(value)) {
           const serializedArray = serializeArrayParam({
-            allowReserved: paramAllowReserved,
+            allowReserved: options.allowReserved,
             explode: true,
             name,
             style: 'form',
             value,
-            ...array,
-            ...paramConfig.array,
+            ...options.array,
           });
           if (serializedArray) search.push(serializedArray);
         } else if (typeof value === 'object') {
           const serializedObject = serializeObjectParam({
-            allowReserved: paramAllowReserved,
+            allowReserved: options.allowReserved,
             explode: true,
             name,
             style: 'deepObject',
             value: value as Record<string, unknown>,
-            ...object,
-            ...paramConfig.object,
+            ...options.object,
           });
           if (serializedObject) search.push(serializedObject);
         } else {
           const serializedPrimitive = serializePrimitiveParam({
-            allowReserved: paramAllowReserved,
+            allowReserved: options.allowReserved,
             name,
             value: value as string,
           });

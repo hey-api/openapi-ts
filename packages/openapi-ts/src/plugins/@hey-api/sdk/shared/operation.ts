@@ -439,64 +439,70 @@ export const operationStatements = ({
   // content type. currently impossible because successes do not contain
   // header information
 
-  // Build per-parameter serialization settings
   const parameterSerializers: Array<ObjectValue> = [];
 
   for (const name in operation.parameters?.query) {
     const parameter = operation.parameters.query[name]!;
 
-    const needsCustomArraySerialization =
-      (parameter.schema.type === 'array' ||
-        parameter.schema.type === 'tuple') &&
-      (parameter.style !== 'form' || parameter.explode !== true);
-
-    const needsCustomObjectSerialization =
-      parameter.schema.type === 'object' &&
-      (parameter.style !== 'deepObject' || parameter.explode !== true);
-
-    if (needsCustomArraySerialization || needsCustomObjectSerialization) {
-      const paramConfig: Array<ObjectValue> = [];
-
-      if (needsCustomArraySerialization) {
-        paramConfig.push({
-          key: 'array',
+    if (
+      parameter.schema.type === 'array' ||
+      parameter.schema.type === 'tuple'
+    ) {
+      if (parameter.style !== 'form' || !parameter.explode) {
+        // override the default settings for array serialization
+        parameterSerializers.push({
+          key: parameter.name,
           value: [
             {
-              key: 'explode',
-              value: parameter.explode ?? true,
-            },
-            {
-              key: 'style',
-              value: parameter.style ?? 'form',
+              key: 'array',
+              value: [
+                {
+                  key: 'explode',
+                  value:
+                    parameter.explode !== true ? parameter.explode : undefined,
+                },
+                {
+                  key: 'style',
+                  value:
+                    parameter.style !== 'form' ? parameter.style : undefined,
+                },
+              ].filter(({ value }) => value !== undefined),
             },
           ],
         });
       }
-
-      if (needsCustomObjectSerialization) {
-        paramConfig.push({
-          key: 'object',
+    } else if (parameter.schema.type === 'object') {
+      if (parameter.style !== 'deepObject' || !parameter.explode) {
+        // override the default settings for object serialization
+        parameterSerializers.push({
+          key: parameter.name,
           value: [
             {
-              key: 'explode',
-              value: parameter.explode ?? true,
-            },
-            {
-              key: 'style',
-              value: parameter.style ?? 'deepObject',
+              key: 'object',
+              value: [
+                {
+                  key: 'explode',
+                  value:
+                    parameter.explode !== true ? parameter.explode : undefined,
+                },
+                {
+                  key: 'style',
+                  value:
+                    parameter.style !== 'deepObject'
+                      ? parameter.style
+                      : undefined,
+                },
+              ].filter(({ value }) => value !== undefined),
             },
           ],
         });
       }
-
-      parameterSerializers.push({
-        key: parameter.name,
-        value: paramConfig,
-      });
     }
   }
 
-  if (parameterSerializers.length > 0) {
+  if (parameterSerializers.length) {
+    // TODO: if all parameters have the same serialization,
+    // apply it globally to reduce output size
     requestOptions.push({
       key: 'querySerializer',
       value: [

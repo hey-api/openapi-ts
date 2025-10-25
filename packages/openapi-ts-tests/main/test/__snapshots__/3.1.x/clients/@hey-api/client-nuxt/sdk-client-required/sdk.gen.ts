@@ -340,7 +340,6 @@ export const complexTypes = <TComposable extends Composable = '$fetch', DefaultT
             parameters: {
                 parameterObject: {
                     object: {
-                        explode: true,
                         style: 'form'
                     }
                 }
