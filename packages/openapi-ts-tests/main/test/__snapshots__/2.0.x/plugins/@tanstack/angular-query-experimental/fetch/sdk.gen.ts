@@ -111,6 +111,16 @@ export const callWithWeirdParameterNames = <ThrowOnError extends boolean = false
 
 export const callWithDefaultParameters = <ThrowOnError extends boolean = false>(options: Options<CallWithDefaultParametersData, ThrowOnError>) => {
     return (options.client ?? client).get<unknown, unknown, ThrowOnError>({
+        querySerializer: {
+            parameters: {
+                parameterModel: {
+                    object: {
+                        explode: false,
+                        style: 'form'
+                    }
+                }
+            }
+        },
         url: '/api/v{api-version}/defaults',
         ...options
     });
@@ -210,9 +220,27 @@ export const callWithResponses = <ThrowOnError extends boolean = false>(options?
 export const collectionFormat = <ThrowOnError extends boolean = false>(options: Options<CollectionFormatData, ThrowOnError>) => {
     return (options.client ?? client).get<unknown, unknown, ThrowOnError>({
         querySerializer: {
-            array: {
-                explode: false,
-                style: 'form'
+            parameters: {
+                parameterArrayCSV: {
+                    array: {
+                        explode: false
+                    }
+                },
+                parameterArraySSV: {
+                    array: {
+                        explode: false
+                    }
+                },
+                parameterArrayTSV: {
+                    array: {
+                        explode: false
+                    }
+                },
+                parameterArrayPipes: {
+                    array: {
+                        explode: false
+                    }
+                }
             }
         },
         url: '/api/v{api-version}/collectionFormat',
@@ -223,9 +251,18 @@ export const collectionFormat = <ThrowOnError extends boolean = false>(options: 
 export const types = <ThrowOnError extends boolean = false>(options: Options<TypesData, ThrowOnError>) => {
     return (options.client ?? client).get<TypesResponses, unknown, ThrowOnError>({
         querySerializer: {
-            array: {
-                explode: false,
-                style: 'form'
+            parameters: {
+                parameterArray: {
+                    array: {
+                        explode: false
+                    }
+                },
+                parameterDictionary: {
+                    object: {
+                        explode: false,
+                        style: 'form'
+                    }
+                }
             }
         },
         url: '/api/v{api-version}/types',
@@ -235,6 +272,22 @@ export const types = <ThrowOnError extends boolean = false>(options: Options<Typ
 
 export const complexTypes = <ThrowOnError extends boolean = false>(options: Options<ComplexTypesData, ThrowOnError>) => {
     return (options.client ?? client).get<ComplexTypesResponses, ComplexTypesErrors, ThrowOnError>({
+        querySerializer: {
+            parameters: {
+                parameterObject: {
+                    object: {
+                        explode: false,
+                        style: 'form'
+                    }
+                },
+                parameterReference: {
+                    object: {
+                        explode: false,
+                        style: 'form'
+                    }
+                }
+            }
+        },
         url: '/api/v{api-version}/complex',
         ...options
     });

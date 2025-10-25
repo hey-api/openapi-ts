@@ -95,9 +95,8 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
 };
 
 export const createQuerySerializer = <T = unknown>({
-  allowReserved,
-  array,
-  object,
+  parameters = {},
+  ...args
 }: QuerySerializerOptions = {}) => {
   const querySerializer = (queryParams: T) => {
     const search: string[] = [];
@@ -109,29 +108,31 @@ export const createQuerySerializer = <T = unknown>({
           continue;
         }
 
+        const options = parameters[name] || args;
+
         if (Array.isArray(value)) {
           const serializedArray = serializeArrayParam({
-            allowReserved,
+            allowReserved: options.allowReserved,
             explode: true,
             name,
             style: 'form',
             value,
-            ...array,
+            ...options.array,
           });
           if (serializedArray) search.push(serializedArray);
         } else if (typeof value === 'object') {
           const serializedObject = serializeObjectParam({
-            allowReserved,
+            allowReserved: options.allowReserved,
             explode: true,
             name,
             style: 'deepObject',
             value: value as Record<string, unknown>,
-            ...object,
+            ...options.object,
           });
           if (serializedObject) search.push(serializedObject);
         } else {
           const serializedPrimitive = serializePrimitiveParam({
-            allowReserved,
+            allowReserved: options.allowReserved,
             name,
             value: value as string,
           });
