@@ -1,5 +1,21 @@
 # @hey-api/openapi-ts
 
+## 0.86.4
+
+### Patch Changes
+
+- feat(parser): pass tags to symbol meta ([#2845](https://github.com/hey-api/openapi-ts/pull/2845)) ([`e157288`](https://github.com/hey-api/openapi-ts/commit/e1572888aec1e95d23eb0124fb9a5f3383e89def)) by [@mrlubos](https://github.com/mrlubos)
+
+- feat(clients): granular query parameter serialization strategy ([#2837](https://github.com/hey-api/openapi-ts/pull/2837)) ([`e0e6ab3`](https://github.com/hey-api/openapi-ts/commit/e0e6ab37888ac9eb88fa9f0d45e0a9123f9f1158)) by [@pixelmord](https://github.com/pixelmord)
+
+## 0.86.3
+
+### Patch Changes
+
+- feat(parser): add `events` hooks ([#2829](https://github.com/hey-api/openapi-ts/pull/2829)) ([`d5c85fc`](https://github.com/hey-api/openapi-ts/commit/d5c85fc29e985af0cdc6ce7ac7e8210c60171163)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(parser): writeOnly schema properties missing from request types in nested schemas ([#2793](https://github.com/hey-api/openapi-ts/pull/2793)) ([`7d1c475`](https://github.com/hey-api/openapi-ts/commit/7d1c47592a806c34fb627f21e3ee59e2ec3c015a)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.86.2
 
 ### Patch Changes

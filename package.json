@@ -40,7 +40,7 @@
     "node": ">=20.19.0"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "0.17.4",
+    "@arethetypeswrong/cli": "0.18.2",
     "@changesets/cli": "2.29.7",
     "@changesets/get-github-info": "0.6.0",
     "@changesets/parse": "0.4.1",
@@ -59,9 +59,9 @@
     "eslint-plugin-sort-keys-fix": "1.1.2",
     "eslint-plugin-typescript-sort-keys": "3.3.0",
     "eslint-plugin-vue": "9.32.0",
-    "globals": "15.14.0",
+    "globals": "16.4.0",
     "husky": "9.1.7",
-    "lint-staged": "15.3.0",
+    "lint-staged": "16.2.5",
     "prettier": "3.4.2",
     "rollup": "4.31.0",
     "rollup-plugin-dts": "6.1.1",
@@ -71,5 +71,5 @@
     "typescript-eslint": "8.29.1",
     "vitest": "3.1.1"
   },
-  "packageManager": "pnpm@10.18.3"
+  "packageManager": "pnpm@10.19.0"
 }

@@ -1,8 +1,6 @@
 import type { Selector } from '@hey-api/codegen-core';
 
-import type { Plugin } from '~/plugins/types';
-
-import { createOperationComment } from './comment';
+import type { Plugin } from '~/plugins';
 
 type SelectorType =
   | 'buildClientParams'
@@ -16,7 +14,6 @@ type SelectorType =
   | 'urlSearchParamsBodySerializer';
 
 export type IApi = {
-  createOperationComment: typeof createOperationComment;
   /**
    * @param type Selector type.
    * @param value Depends on `type`:
@@ -36,12 +33,6 @@ export type IApi = {
 
 export class Api implements IApi {
   constructor(public meta: Plugin.Name<'@hey-api/sdk'>) {}
-
-  createOperationComment(
-    ...args: Parameters<typeof createOperationComment>
-  ): ReturnType<typeof createOperationComment> {
-    return createOperationComment(...args);
-  }
 
   selector(...args: ReadonlyArray<string | undefined>): Selector {
     return [this.meta.name, ...(args as Selector)];

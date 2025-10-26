@@ -2,13 +2,6 @@
 
 import type { GetFooResponse } from './types.gen';
 
-export const getFooResponseTransformer = async (data: any): Promise<GetFooResponse> => {
-    data = data.map((item: any) => {
-        return fooSchemaResponseTransformer(item);
-    });
-    return data;
-};
-
 const fooSchemaResponseTransformer = (data: any) => {
     if (data.foo) {
         data.foo = new Date(data.foo);
@@ -19,5 +12,12 @@ const fooSchemaResponseTransformer = (data: any) => {
     if (data.requiredBaz) {
         data.requiredBaz = new Date(data.requiredBaz);
     }
+    return data;
+};
+
+export const getFooResponseTransformer = async (data: any): Promise<GetFooResponse> => {
+    data = data.map((item: any) => {
+        return fooSchemaResponseTransformer(item);
+    });
     return data;
 };

@@ -11,11 +11,11 @@ import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
 import { stringCase } from '~/utils/stringCase';
 import { transformClassName } from '~/utils/transform';
 
-import type { Field, Fields } from '../client-core/bundle/params';
+import type { Field, Fields } from '../../client-core/bundle/params';
+// import { getSignatureParameters } from './signature';
+import type { HeyApiSdkPlugin } from '../types';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
-// import { getSignatureParameters } from './signature';
-import type { HeyApiSdkPlugin } from './types';
 import { createRequestValidator, createResponseValidator } from './validator';
 
 interface ClassNameEntry {
@@ -228,6 +228,11 @@ export const operationParameters = ({
           type: pluginTypeScript.api.schemaToType({
             plugin: pluginTypeScript,
             schema: parameter.schema,
+            state: {
+              path: {
+                value: [],
+              },
+            },
           }),
         });
       }
@@ -249,6 +254,11 @@ export const operationParameters = ({
           type: pluginTypeScript.api.schemaToType({
             plugin: pluginTypeScript,
             schema: parameter.schema,
+            state: {
+              path: {
+                value: [],
+              },
+            },
           }),
         });
       }
@@ -265,6 +275,11 @@ export const operationParameters = ({
         type: pluginTypeScript.api.schemaToType({
           plugin: pluginTypeScript,
           schema: operation.body.schema,
+          state: {
+            path: {
+              value: [],
+            },
+          },
         }),
       });
     }
@@ -424,34 +439,79 @@ export const operationStatements = ({
   // content type. currently impossible because successes do not contain
   // header information
 
+  const parameterSerializers: Array<ObjectValue> = [];
+
   for (const name in operation.parameters?.query) {
     const parameter = operation.parameters.query[name]!;
+
     if (
-      (parameter.schema.type === 'array' ||
-        parameter.schema.type === 'tuple') &&
-      (parameter.style !== 'form' || !parameter.explode)
+      parameter.schema.type === 'array' ||
+      parameter.schema.type === 'tuple'
     ) {
-      // override the default settings for `querySerializer`
-      requestOptions.push({
-        key: 'querySerializer',
-        value: [
-          {
-            key: 'array',
-            value: [
-              {
-                key: 'explode',
-                value: false,
-              },
-              {
-                key: 'style',
-                value: 'form',
-              },
-            ],
-          },
-        ],
-      });
-      break;
+      if (parameter.style !== 'form' || !parameter.explode) {
+        // override the default settings for array serialization
+        parameterSerializers.push({
+          key: parameter.name,
+          value: [
+            {
+              key: 'array',
+              value: [
+                {
+                  key: 'explode',
+                  value:
+                    parameter.explode !== true ? parameter.explode : undefined,
+                },
+                {
+                  key: 'style',
+                  value:
+                    parameter.style !== 'form' ? parameter.style : undefined,
+                },
+              ].filter(({ value }) => value !== undefined),
+            },
+          ],
+        });
+      }
+    } else if (parameter.schema.type === 'object') {
+      if (parameter.style !== 'deepObject' || !parameter.explode) {
+        // override the default settings for object serialization
+        parameterSerializers.push({
+          key: parameter.name,
+          value: [
+            {
+              key: 'object',
+              value: [
+                {
+                  key: 'explode',
+                  value:
+                    parameter.explode !== true ? parameter.explode : undefined,
+                },
+                {
+                  key: 'style',
+                  value:
+                    parameter.style !== 'deepObject'
+                      ? parameter.style
+                      : undefined,
+                },
+              ].filter(({ value }) => value !== undefined),
+            },
+          ],
+        });
+      }
     }
+  }
+
+  if (parameterSerializers.length) {
+    // TODO: if all parameters have the same serialization,
+    // apply it globally to reduce output size
+    requestOptions.push({
+      key: 'querySerializer',
+      value: [
+        {
+          key: 'parameters',
+          value: parameterSerializers,
+        },
+      ],
+    });
   }
 
   const requestValidator = createRequestValidator({ operation, plugin });
@@ -466,16 +526,12 @@ export const operationStatements = ({
     const pluginTransformers = plugin.getPluginOrThrow(
       plugin.config.transformer,
     );
-    const symbolResponseTransformer = plugin.getSymbol(
-      pluginTransformers.api.selector('response', operation.id),
-    );
-    if (
-      symbolResponseTransformer &&
-      plugin.getSymbolValue(symbolResponseTransformer)
-    ) {
+    const selector = pluginTransformers.api.selector('response', operation.id);
+    if (plugin.isSymbolRegistered(selector)) {
+      const ref = plugin.referenceSymbol(selector);
       requestOptions.push({
         key: 'responseTransformer',
-        value: symbolResponseTransformer.placeholder,
+        value: ref.placeholder,
       });
     }
   }

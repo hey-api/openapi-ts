@@ -441,6 +441,13 @@ export const zModelWithPropertiesWritable = z.object({
 });
 
 /**
+ * This is a model with one property containing a reference
+ */
+export const zModelWithReferenceWritable = z.object({
+    prop: z.optional(zModelWithPropertiesWritable)
+});
+
+/**
  * This is a model that contains a some patterns
  */
 export const zModelWithPatternWritable = z.object({

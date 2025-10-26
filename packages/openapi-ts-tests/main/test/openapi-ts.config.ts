@@ -124,6 +124,39 @@ export default defineConfig(() => {
           // },
         },
         hooks: {
+          events: {
+            // 'plugin:handler:after': ({ plugin }) => {
+            //   console.log(`(${plugin.name}): handler finished`);
+            // },
+            // 'plugin:handler:before': ({ plugin }) => {
+            //   console.log(`(${plugin.name}): handler starting`);
+            // },
+            // 'symbol:register:after': ({ plugin, symbol }) => {
+            //   console.log(`(global, ${plugin.name}) registered:`, symbol.id);
+            // },
+            'symbol:register:before': ({ plugin, symbol }) => {
+              // if (!symbol.external && !symbol.meta?.resourceType) {
+              //   console.log(`[${plugin.name}]:`, symbol.name);
+              // }
+              if (!symbol.external && !symbol.meta?.path) {
+                console.log(`[${plugin.name}]:`, symbol.name, symbol.meta);
+              }
+              // if (symbol.meta?.tags && symbol.meta?.tags.size > 0) {
+              //   console.log(
+              //     `[${plugin.name}]:`,
+              //     symbol.name,
+              //     symbol.meta.path,
+              //     symbol.meta.tags,
+              //   );
+              // }
+            },
+            // 'symbol:setValue:after': ({ plugin, symbol }) => {
+            //   console.log(`(${plugin.name}) set value:`, symbol.id);
+            // },
+            // 'symbol:setValue:before': ({ plugin, symbol }) => {
+            //   console.log(`(${plugin.name}) setting value:`, symbol.id);
+            // },
+          },
           operations: {
             getKind() {
               // noop
@@ -201,7 +234,7 @@ export default defineConfig(() => {
           //   error: '他們_error_{{name}}',
           //   name: '你們_errors_{{name}}',
           // },
-          name: '@hey-api/typescript',
+          // name: '@hey-api/typescript',
           // requests: '我們_data_{{name}}',
           // responses: {
           //   name: '我_responses_{{name}}',
@@ -227,7 +260,7 @@ export default defineConfig(() => {
           // },
           // include...
           // instance: true,
-          // name: '@hey-api/sdk',
+          name: '@hey-api/sdk',
           // operationId: false,
           // params_EXPERIMENTAL: 'experiment',
           // responseStyle: 'data',
@@ -237,8 +270,8 @@ export default defineConfig(() => {
           // transformer: '@hey-api/transformers',
           // transformer: true,
           validator: {
-            request: 'arktype',
-            response: 'arktype',
+            request: 'zod',
+            response: 'zod',
           },
           '~hooks': {
             symbols: {
@@ -275,7 +308,7 @@ export default defineConfig(() => {
           // mutationOptions: {
           //   name: '{{name}}MO',
           // },
-          name: '@tanstack/react-query',
+          // name: '@tanstack/react-query',
           // queryKeys: {
           //   name: '{{name}}QK',
           // },
@@ -326,6 +359,14 @@ export default defineConfig(() => {
           //   name: 'q{{name}}CoolWebhook',
           // },
           '~hooks': {
+            events: {
+              // 'symbol:register:after': ({ plugin, symbol }) => {
+              //   console.log(`(${plugin.name}) registered:`, symbol.id);
+              // },
+              // 'symbol:register:before': ({ plugin, symbol }) => {
+              //   console.log(`(${plugin.name}):`, symbol.name);
+              // },
+            },
             symbols: {
               // getFilePath: (symbol) => {
               //   if (symbol.name) {

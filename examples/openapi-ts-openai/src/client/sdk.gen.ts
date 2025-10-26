@@ -2256,6 +2256,15 @@ export class OpenAi extends _HeyApiClient {
       unknown,
       ThrowOnError
     >({
+      querySerializer: {
+        parameters: {
+          effective_at: {
+            object: {
+              style: 'form',
+            },
+          },
+        },
+      },
       security: [
         {
           scheme: 'bearer',

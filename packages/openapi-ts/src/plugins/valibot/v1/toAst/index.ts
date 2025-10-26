@@ -1,7 +1,8 @@
 import type ts from 'typescript';
 
-import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import type { SchemaWithType } from '~/plugins';
 
+import { pipesToAst } from '../../shared/pipesToAst';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { arrayToAst } from './array';
 import { booleanToAst } from './boolean';
@@ -28,9 +29,12 @@ export const irSchemaWithTypeToAst = ({
   switch (schema.type) {
     case 'array':
       return {
-        expression: arrayToAst({
-          ...args,
-          schema: schema as SchemaWithType<'array'>,
+        expression: pipesToAst({
+          pipes: arrayToAst({
+            ...args,
+            schema: schema as SchemaWithType<'array'>,
+          }).pipes,
+          plugin: args.plugin,
         }),
       };
     case 'boolean':
@@ -70,10 +74,15 @@ export const irSchemaWithTypeToAst = ({
         }),
       };
     case 'object':
-      return objectToAst({
-        ...args,
-        schema: schema as SchemaWithType<'object'>,
-      });
+      return {
+        expression: pipesToAst({
+          pipes: objectToAst({
+            ...args,
+            schema: schema as SchemaWithType<'object'>,
+          }).pipes,
+          plugin: args.plugin,
+        }),
+      };
     case 'string':
       // For string schemas with int64/uint64 formats, use number handler to generate union with transform
       if (schema.format === 'int64' || schema.format === 'uint64') {
@@ -92,9 +101,12 @@ export const irSchemaWithTypeToAst = ({
       };
     case 'tuple':
       return {
-        expression: tupleToAst({
-          ...args,
-          schema: schema as SchemaWithType<'tuple'>,
+        expression: pipesToAst({
+          pipes: tupleToAst({
+            ...args,
+            schema: schema as SchemaWithType<'tuple'>,
+          }).pipes,
+          plugin: args.plugin,
         }),
       };
     case 'undefined':

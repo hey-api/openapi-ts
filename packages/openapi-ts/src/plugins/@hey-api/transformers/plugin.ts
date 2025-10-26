@@ -61,17 +61,7 @@ const processSchemaType = ({
     const selector = plugin.api.selector('response-ref', schema.$ref);
 
     if (!plugin.getSymbol(selector)) {
-      const symbol = plugin.registerSymbol({
-        name: buildName({
-          config: {
-            case: 'camelCase',
-            name: '{{name}}SchemaResponseTransformer',
-          },
-          name: refToName(schema.$ref),
-        }),
-        selector,
-      });
-
+      // TODO: remove
       // create each schema response transformer only once
       const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
         schema.$ref,
@@ -81,6 +71,16 @@ const processSchemaType = ({
         schema: refSchema,
       });
       if (nodes.length) {
+        const symbol = plugin.registerSymbol({
+          name: buildName({
+            config: {
+              case: 'camelCase',
+              name: '{{name}}SchemaResponseTransformer',
+            },
+            name: refToName(schema.$ref),
+          }),
+          selector,
+        });
         const node = tsc.constVariable({
           expression: tsc.arrowFunction({
             async: false,
@@ -97,17 +97,13 @@ const processSchemaType = ({
           name: symbol.placeholder,
         });
         plugin.setSymbolValue(symbol, node);
-      } else {
-        // the created schema response transformer was empty, do not generate
-        // it and prevent any future attempts
-        plugin.setSymbolValue(symbol, null);
       }
     }
 
-    const symbolResponseTransformerRef = plugin.referenceSymbol(selector);
-    if (plugin.getSymbolValue(symbolResponseTransformerRef) !== null) {
+    if (plugin.isSymbolRegistered(selector)) {
+      const ref = plugin.referenceSymbol(selector);
       const callExpression = tsc.callExpression({
-        functionName: symbolResponseTransformerRef.placeholder,
+        functionName: ref.placeholder,
         parameters: [dataExpression],
       });
 
@@ -341,7 +337,13 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       );
       if (!symbolResponse) return;
 
-      const symbolResponseTransformer = plugin.registerSymbol({
+      // TODO: parser - consider handling simple string response which is also a date
+      const nodes = schemaResponseTransformerNodes({
+        plugin,
+        schema: response,
+      });
+      if (!nodes.length) return;
+      const symbol = plugin.registerSymbol({
         exported: true,
         name: buildName({
           config: {
@@ -352,42 +354,29 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
         }),
         selector: plugin.api.selector('response', operation.id),
       });
-
-      // TODO: parser - consider handling simple string response which is also a date
-      const nodes = schemaResponseTransformerNodes({
-        plugin,
-        schema: response,
-      });
-      if (nodes.length) {
-        const responseTransformerNode = tsc.constVariable({
-          exportConst: symbolResponseTransformer.exported,
-          expression: tsc.arrowFunction({
-            async: true,
-            multiLine: true,
-            parameters: [
-              {
-                name: dataVariableName,
-                // TODO: parser - add types, generate types without transforms
-                type: tsc.keywordTypeNode({ keyword: 'any' }),
-              },
+      const value = tsc.constVariable({
+        exportConst: symbol.exported,
+        expression: tsc.arrowFunction({
+          async: true,
+          multiLine: true,
+          parameters: [
+            {
+              name: dataVariableName,
+              // TODO: parser - add types, generate types without transforms
+              type: tsc.keywordTypeNode({ keyword: 'any' }),
+            },
+          ],
+          returnType: tsc.typeReferenceNode({
+            typeArguments: [
+              tsc.typeReferenceNode({ typeName: symbolResponse.placeholder }),
             ],
-            returnType: tsc.typeReferenceNode({
-              typeArguments: [
-                tsc.typeReferenceNode({ typeName: symbolResponse.placeholder }),
-              ],
-              typeName: 'Promise',
-            }),
-            statements: ensureStatements(nodes),
+            typeName: 'Promise',
           }),
-          name: symbolResponseTransformer.placeholder,
-        });
-        plugin.setSymbolValue(
-          symbolResponseTransformer,
-          responseTransformerNode,
-        );
-      } else {
-        plugin.setSymbolValue(symbolResponseTransformer, null);
-      }
+          statements: ensureStatements(nodes),
+        }),
+        name: symbol.placeholder,
+      });
+      plugin.setSymbolValue(symbol, value);
     },
     {
       order: 'declarations',

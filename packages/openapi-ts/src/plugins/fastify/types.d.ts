@@ -1,4 +1,4 @@
-import type { DefinePlugin, Plugin } from '~/plugins/types';
+import type { DefinePlugin, Plugin } from '~/plugins';
 
 import type { IApi } from './api';
 

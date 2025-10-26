@@ -1,9 +1,10 @@
+import type { Graph } from '~/graph';
 import type { Logger } from '~/utils/logger';
 import { jsonPointerToPath } from '~/utils/ref';
 
 import type { Config } from '../../../types/config';
 import deepEqual from '../utils/deepEqual';
-import { buildGraph, type Graph, type Scope } from '../utils/graph';
+import { buildGraph, type Scope } from '../utils/graph';
 import { buildName } from '../utils/name';
 import { deepClone } from '../utils/schema';
 import { childSchemaRelationships } from '../utils/schemaChildRelationships';
@@ -422,9 +423,26 @@ export const splitSchemas = ({
     const writeSchema = deepClone<unknown>(nodeInfo.node);
     pruneSchemaByScope(graph, writeSchema, 'readOnly');
 
+    // Check if this schema (or any of its descendants) references any schema that
+    // will need read/write variants. This is determined by checking transitive
+    // dependencies for schemas with both 'normal' and ('read' or 'write') scopes.
+    const transitiveDeps =
+      graph.transitiveDependencies.get(pointer) || new Set();
+    const referencesReadWriteSchemas = Array.from(transitiveDeps).some(
+      (depPointer) => {
+        const depNodeInfo = graph.nodes.get(depPointer);
+        return (
+          depNodeInfo?.scopes?.has('normal') &&
+          (depNodeInfo.scopes.has('read') || depNodeInfo.scopes.has('write'))
+        );
+      },
+    );
+
     // If pruning did not change anything (both variants equal and equal to original),
+    // and the schema doesn't reference any schemas that will have read/write variants,
     // skip splitting and keep the original single schema.
     if (
+      !referencesReadWriteSchemas &&
       deepEqual(readSchema, writeSchema) &&
       deepEqual(readSchema, nodeInfo.node)
     ) {
@@ -463,6 +481,7 @@ type WalkArgs = {
   inSchema: boolean;
   node: unknown;
   path: ReadonlyArray<string | number>;
+  visited?: Set<string>;
 };
 
 /**
@@ -490,6 +509,7 @@ export const updateRefsInSpec = ({
     inSchema,
     node,
     path,
+    visited = new Set(),
   }: WalkArgs): void => {
     if (node instanceof Array) {
       node.forEach((item, index) =>
@@ -499,6 +519,7 @@ export const updateRefsInSpec = ({
           inSchema,
           node: item,
           path: [...path, index],
+          visited,
         }),
       );
     } else if (node && typeof node === 'object') {
@@ -519,6 +540,10 @@ export const updateRefsInSpec = ({
             nextContext = 'write';
           }
         }
+        // For schemas that are not split variants, keep the inherited context.
+        // This ensures that $refs inside these schemas are resolved based on
+        // where the schema is actually used (requestBody vs responses), not
+        // based on the schema's own scopes which track readOnly/writeOnly fields.
       }
 
       const compContext = getComponentContext(path);
@@ -534,6 +559,7 @@ export const updateRefsInSpec = ({
             inSchema: false,
             node: (node as Record<string, unknown>)[key],
             path: [...path, key],
+            visited,
           });
         }
         return;
@@ -554,6 +580,7 @@ export const updateRefsInSpec = ({
               inSchema: false,
               node: value,
               path: [...path, key],
+              visited,
             });
             continue;
           }
@@ -564,6 +591,7 @@ export const updateRefsInSpec = ({
               inSchema: false,
               node: value,
               path: [...path, key],
+              visited,
             });
             continue;
           }
@@ -576,6 +604,7 @@ export const updateRefsInSpec = ({
                   inSchema: true,
                   node: param.schema,
                   path: [...path, key, index, 'schema'],
+                  visited,
                 });
               }
               // Also handle content (OpenAPI 3.x)
@@ -586,6 +615,7 @@ export const updateRefsInSpec = ({
                   inSchema: false,
                   node: param.content,
                   path: [...path, key, index, 'content'],
+                  visited,
                 });
               }
             });
@@ -607,6 +637,7 @@ export const updateRefsInSpec = ({
                 inSchema: false,
                 node: (value as Record<string, unknown>)[headerKey],
                 path: [...path, key, headerKey],
+                visited,
               });
             }
             continue;
@@ -621,15 +652,20 @@ export const updateRefsInSpec = ({
             inSchema: true,
             node: value,
             path: [...path, key],
+            visited,
           });
         } else if (key === '$ref' && typeof value === 'string') {
           // Prefer exact match first
           const map = split.mapping[value];
           if (map) {
-            if (map.read && (!nextContext || nextContext === 'read')) {
+            if (nextContext === 'read' && map.read) {
               (node as Record<string, unknown>)[key] = map.read;
-            } else if (map.write && (!nextContext || nextContext === 'write')) {
+            } else if (nextContext === 'write' && map.write) {
               (node as Record<string, unknown>)[key] = map.write;
+            } else if (!nextContext && map.read) {
+              // For schemas with no context (unused in operations), default to read variant
+              // This ensures $refs in unused schemas don't point to removed originals
+              (node as Record<string, unknown>)[key] = map.read;
             }
           }
         } else {
@@ -639,6 +675,7 @@ export const updateRefsInSpec = ({
             inSchema,
             node: value,
             path: [...path, key],
+            visited,
           });
         }
       }
