@@ -13,13 +13,10 @@
       "request": "launch",
       "name": "openapi-ts",
       "skipFiles": ["<node_internals>/**"],
+      "cwd": "${workspaceFolder}/dev",
       "runtimeExecutable": "node",
-      "runtimeArgs": [],
-      "program": "${workspaceFolder}/packages/openapi-ts/bin/index.cjs",
-      "args": [
-        "-f",
-        "${workspaceFolder}/packages/openapi-ts-tests/main/test/openapi-ts.config.ts"
-      ]
+      "runtimeArgs": ["-r", "ts-node/register/transpile-only"],
+      "program": "${workspaceFolder}/packages/openapi-ts/src/cli.ts"
     }
   ]
 }

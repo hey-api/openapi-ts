@@ -29,7 +29,7 @@ export default defineConfig((options) => ({
   },
   clean: true,
   dts: true,
-  entry: ['src/index.ts', 'src/internal.ts'],
+  entry: ['./src/{index,internal,run}.ts'],
   format: ['cjs', 'esm'],
   minify: !options.watch,
   onSuccess: async () => {

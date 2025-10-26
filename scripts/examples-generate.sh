@@ -10,6 +10,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 echo "⏳ Generating client code for all examples..."
+
 # Find all examples with openapi-ts script and generate code in parallel
 # Concurrency control: adjust this number depending on CI machine resources
 CONCURRENCY=${CONCURRENCY:-4}
@@ -44,8 +45,8 @@ for dir in "$ROOT_DIR"/examples/*/; do
     echo "Generating: $example_name"
     set -e
     cd "$dir"
-    echo "-> Running pnpm openapi-ts"
-    pnpm openapi-ts
+    echo "-> Running openapi-ts"
+    pnpm run openapi-ts
 
     # Format generated files in this example only to keep the step fast
     if command -v pnpm >/dev/null 2>&1 && pnpm -w -s --version >/dev/null 2>&1; then
@@ -76,8 +77,16 @@ for pid in $PIDS; do
     echo "✅ $name succeeded"
   else
     name=$(cat "$tmpdir/$pid.name" 2>/dev/null || echo "$pid")
-    log=$(cat "$tmpdir/$pid.log" 2>/dev/null || echo "(no log)")
-    echo "❌ $name failed — see log: $tmpdir/$pid.log"
+    # Read the metadata file which contains the path to the real log
+    logpath=$(cat "$tmpdir/$pid.log" 2>/dev/null || echo "")
+    if [ -n "$logpath" ] && [ -f "$logpath" ]; then
+      echo "❌ $name failed — showing full log ($logpath):"
+      echo "---- full log start ----"
+      cat "$logpath" || true
+      echo "---- full log end ----"
+    else
+      echo "❌ $name failed — no log found (metadata: $tmpdir/$pid.log)"
+    fi
     failed=1
   fi
 done
