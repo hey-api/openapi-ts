@@ -4,7 +4,7 @@ import type {
   ServerObject,
 } from '~/openApi/3.1.x/types/spec';
 
-import type { IRContext } from './context';
+import type { Context as IRContext } from './context';
 import type { IRMediaType } from './mediaType';
 
 interface IRBodyObject {
