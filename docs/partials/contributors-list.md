@@ -6,6 +6,7 @@
 - [Alexander Horner](https://github.com/alexanderhorner)
 - [Alexander Skvortcov](https://github.com/askvortcov)
 - [Andrea](https://github.com/andreasciamanna)
+- [Andreas Adam](https://github.com/pixelmord)
 - [Ben Vincent](https://github.com/bvincent1)
 - [Björn Henriksson](https://github.com/bjornhenriksson)
 - [Bogdan ](https://github.com/BogdanMaier)
