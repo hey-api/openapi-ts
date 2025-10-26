@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.86.5
+
+### Patch Changes
+
+- fix(parser): write-only schema incorrectly used in response schemas ([#2850](https://github.com/hey-api/openapi-ts/pull/2850)) ([`16cc0e7`](https://github.com/hey-api/openapi-ts/commit/16cc0e7d50993e36dab6349eda1361421bdf44ac)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- fix(cli): move cli script to typescript ([#2852](https://github.com/hey-api/openapi-ts/pull/2852)) ([`b677f89`](https://github.com/hey-api/openapi-ts/commit/b677f893f9dc1848bb54164e736a90e617d1269d)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.86.4
 
 ### Patch Changes
