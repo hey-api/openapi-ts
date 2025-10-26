@@ -11,14 +11,14 @@
     "preview": "vitepress preview"
   },
   "dependencies": {
-    "@stackblitz/sdk": "1.11.0",
-    "vue3-select-component": "0.11.8"
+    "@stackblitz/sdk": "catalog:docs",
+    "vue3-select-component": "catalog:docs"
   },
   "devDependencies": {
-    "sharp": "0.33.5",
-    "vitepress": "2.0.0-alpha.12",
-    "vitepress-plugin-llms": "1.7.3",
-    "vue": "3.5.13"
+    "sharp": "catalog:dev",
+    "vitepress": "catalog:dev",
+    "vitepress-plugin-llms": "catalog:dev",
+    "vue": "catalog:dev"
   },
   "packageManager": "pnpm@10.19.0"
 }
