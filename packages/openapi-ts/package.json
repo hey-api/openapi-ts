@@ -66,10 +66,9 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "openapi-ts": "./dist/cli.cjs"
+    "openapi-ts": "./dist/run.cjs"
   },
   "files": [
-    "bin",
     "dist",
     "LICENSE.md",
     "README.md"
