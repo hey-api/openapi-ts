@@ -55,12 +55,20 @@ for dir in "$ROOT_DIR"/examples/*/; do
     echo "-> Debug: node $(node --version 2>/dev/null || echo 'node-not-found')"
     echo "-> Debug: pnpm $(pnpm --version 2>/dev/null || echo 'pnpm-not-found')"
     echo "-> Debug: pwd $(pwd)"
-    echo "-> Running pnpm exec for openapi-ts (workspace-aware if available)"
-    # Use `pnpm -w exec` when available so the CLI binary from the workspace is resolved in CI
-    if pnpm -w -s --version >/dev/null 2>&1; then
-      pnpm -w -s exec openapi-ts
+    echo "-> Running pnpm run openapi-ts (invokes package script in example)"
+    # Run the example's package script so pnpm resolves the workspace binary correctly
+    # Use silent mode to keep logs concise but preserve errors
+    echo "--- begin openapi-ts output ---"
+    if pnpm -s --version >/dev/null 2>&1; then
+      pnpm -s run openapi-ts || rc=$?
     else
-      pnpm -s exec openapi-ts
+      pnpm run openapi-ts || rc=$?
+    fi
+    rc=${rc:-0}
+    echo "--- end openapi-ts output (rc=$rc) ---"
+    if [ "$rc" -ne 0 ]; then
+      echo "openapi-ts failed with exit code $rc"
+      exit $rc
     fi
 
     # Format generated files in this example only to keep the step fast
