@@ -5,11 +5,15 @@ export type ClientOptions = {
 };
 
 export type CreateItemRequest = {
-    payload: PayloadWritable;
+    payload: Payload;
 };
 
 export type Payload = {
     kind: 'jpeg';
+};
+
+export type CreateItemRequestWritable = {
+    payload: PayloadWritable;
 };
 
 export type PayloadWritable = {
@@ -21,7 +25,7 @@ export type PayloadWritable = {
 };
 
 export type ItemCreateData = {
-    body: CreateItemRequest;
+    body: CreateItemRequestWritable;
     path?: never;
     query?: never;
     url: '/items';
