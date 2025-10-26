@@ -44,8 +44,9 @@ for dir in "$ROOT_DIR"/examples/*/; do
     echo "Generating: $example_name"
     set -e
     cd "$dir"
-    echo "-> Running pnpm openapi-ts"
-    pnpm openapi-ts
+    echo "-> Running pnpm -s exec openapi-ts"
+    # Use `pnpm exec` so the CLI binary from the workspace is resolved in CI
+    pnpm -s exec openapi-ts
 
     # Format generated files in this example only to keep the step fast
     if command -v pnpm >/dev/null 2>&1 && pnpm -w -s --version >/dev/null 2>&1; then
