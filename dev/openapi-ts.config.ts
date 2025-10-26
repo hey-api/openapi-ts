@@ -6,9 +6,9 @@ import { customClientPlugin } from '@hey-api/custom-client/plugin';
 // @ts-ignore
 import { defineConfig, utils } from '@hey-api/openapi-ts';
 
-import { getSpecsPath } from '../../utils';
 // @ts-ignore
-import { myClientPlugin } from './custom/client/plugin';
+import { myClientPlugin } from '../packages/openapi-ts-tests/main/test/custom/client/plugin';
+import { getSpecsPath } from '../packages/openapi-ts-tests/utils';
 
 // @ts-ignore
 // eslint-disable-next-line arrow-body-style
@@ -96,14 +96,14 @@ export default defineConfig(() => {
         //   importFileExtension: '.ts',
         //   // indexFile: false,
         //   // lint: 'eslint',
-        //   path: path.resolve(__dirname, 'generated', 'sample'),
+        //   path: path.resolve(__dirname, '.gen'),
         //   tsConfigPath: path.resolve(
         //     __dirname,
         //     'tsconfig',
         //     'tsconfig.nodenext.json',
         //   ),
         // },
-        path.resolve(__dirname, 'generated', 'sample'),
+        '.gen',
       ],
       parser: {
         filters: {
@@ -478,7 +478,7 @@ export default defineConfig(() => {
     //     // level: 'debug',
     //     path: './logs',
     //   },
-    //   output: path.resolve(__dirname, 'generated', 'sample'),
+    //   output: '.gen',
     // },
   ];
 });

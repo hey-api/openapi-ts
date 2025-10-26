@@ -21,7 +21,11 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
   };
 
   const client = getClientPlugin(context.config);
-  if ('bundle' in client.config && client.config.bundle) {
+  if (
+    'bundle' in client.config &&
+    client.config.bundle &&
+    !context.config.dryRun
+  ) {
     // not proud of this one
     // @ts-expect-error
     context.config._FRAGILE_CLIENT_BUNDLE_RENAMED = generateClientBundle({
