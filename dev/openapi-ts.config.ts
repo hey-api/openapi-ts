@@ -103,7 +103,7 @@ export default defineConfig(() => {
         //     'tsconfig.nodenext.json',
         //   ),
         // },
-        path.resolve(__dirname, '.gen'),
+        '.gen',
       ],
       parser: {
         filters: {
@@ -478,7 +478,7 @@ export default defineConfig(() => {
     //     // level: 'debug',
     //     path: './logs',
     //   },
-    //   output: path.resolve(__dirname, '.gen'),
+    //   output: '.gen',
     // },
   ];
 });

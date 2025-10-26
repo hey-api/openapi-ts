@@ -11,30 +11,6 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 echo "⏳ Generating client code for all examples..."
 
-# Build the CLI package and show diagnostics so CI can report why the bin may be missing
-echo "Building @hey-api/openapi-ts (required for example generation)..."
-if command -v pnpm >/dev/null 2>&1; then
-  if pnpm -w -s --version >/dev/null 2>&1; then
-    pnpm -w -s --filter "@hey-api/openapi-ts" build || pnpm -s --filter "@hey-api/openapi-ts" build || true
-  else
-    pnpm -s --filter "@hey-api/openapi-ts" build || true
-  fi
-fi
-
-CLI_PKG_DIR="$ROOT_DIR/packages/openapi-ts"
-echo "-> Debug: showing $CLI_PKG_DIR/package.json"
-if [ -f "$CLI_PKG_DIR/package.json" ]; then
-  cat "$CLI_PKG_DIR/package.json"
-else
-  echo "-> Debug: package.json missing at $CLI_PKG_DIR"
-fi
-
-echo "-> Debug: listing $CLI_PKG_DIR top-level files"
-ls -la "$CLI_PKG_DIR" || true
-echo "-> Debug: listing $CLI_PKG_DIR/dist"
-ls -la "$CLI_PKG_DIR/dist" 2>/dev/null || echo "-> Debug: dist missing"
-
-
 # Find all examples with openapi-ts script and generate code in parallel
 # Concurrency control: adjust this number depending on CI machine resources
 CONCURRENCY=${CONCURRENCY:-4}
