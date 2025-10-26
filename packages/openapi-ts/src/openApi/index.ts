@@ -1,5 +1,5 @@
 import { satisfies } from '~/config/utils/package';
-import { IRContext } from '~/ir/context';
+import { Context } from '~/ir/context';
 import type { IR } from '~/ir/types';
 import { parseV2_0_X } from '~/openApi/2.0.x';
 import { parseV3_0_X } from '~/openApi/3.0.x';
@@ -74,7 +74,7 @@ export const parseOpenApiSpec = ({
   logger: Logger;
   spec: unknown;
 }): IR.Context | undefined => {
-  const context = new IRContext({
+  const context = new Context({
     config,
     dependencies,
     logger,

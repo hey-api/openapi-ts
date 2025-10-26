@@ -16,5 +16,6 @@ coverage
 .env
 
 # test files
+.gen/
 test/generated
 generated/

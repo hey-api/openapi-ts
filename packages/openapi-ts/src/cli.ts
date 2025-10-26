@@ -2,13 +2,14 @@
 
 'use strict';
 
-const path = require('path');
+import { program } from 'commander';
 
-const { program } = require('commander');
-const pkg = require('../package.json');
+import { createClient } from '~/index';
+
+import pkg from '../package.json' assert { type: 'json' };
 
 const params = program
-  .name(Object.keys(pkg.bin)[0])
+  .name(Object.keys(pkg.bin)[0]!)
   .usage('[options]')
   .version(pkg.version)
   .option(
@@ -52,7 +53,7 @@ const params = program
   .parse(process.argv)
   .opts();
 
-const stringToBoolean = (value) => {
+const stringToBoolean = (value: any) => {
   if (value === 'true') {
     return true;
   }
@@ -62,7 +63,7 @@ const stringToBoolean = (value) => {
   return value;
 };
 
-const processParams = (obj, booleanKeys) => {
+const processParams = (obj: any, booleanKeys: any) => {
   for (const key of booleanKeys) {
     const value = obj[key];
     if (typeof value === 'string') {
@@ -81,10 +82,6 @@ async function start() {
   let userConfig;
 
   try {
-    const { createClient } = require(
-      path.resolve(__dirname, '../dist/index.cjs'),
-    );
-
     userConfig = processParams(params, [
       'dryRun',
       'logFile',
@@ -131,10 +128,7 @@ async function start() {
 
     const context = await createClient(userConfig);
     if (
-      !context[0] ||
-      !context[0].config ||
-      !context[0].config.input ||
-      !context[0].config.input.some(
+      !context[0]?.config.input.some(
         (input) => input.watch && input.watch.enabled,
       )
     ) {
