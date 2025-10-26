@@ -65,7 +65,8 @@ export const generateLegacyOutput = async ({
   if (
     !isLegacyClient(config) &&
     'bundle' in clientPlugin.config &&
-    clientPlugin.config.bundle
+    clientPlugin.config.bundle &&
+    !config.dryRun
   ) {
     const meta: ProjectRenderMeta = {
       importFileExtension: config.output.importFileExtension,
