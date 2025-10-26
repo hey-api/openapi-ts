@@ -76,8 +76,23 @@ for pid in $PIDS; do
     echo "✅ $name succeeded"
   else
     name=$(cat "$tmpdir/$pid.name" 2>/dev/null || echo "$pid")
-    log=$(cat "$tmpdir/$pid.log" 2>/dev/null || echo "(no log)")
-    echo "❌ $name failed — see log: $tmpdir/$pid.log"
+    # Read the metadata file which contains the path to the real log
+    logpath=$(cat "$tmpdir/$pid.log" 2>/dev/null || echo "")
+    if [ -n "$logpath" ] && [ -f "$logpath" ]; then
+      echo "❌ $name failed — showing log excerpt ($logpath):"
+      echo "---- log excerpt (last 200 lines) ----"
+      tail -n 200 "$logpath" || true
+      echo "---- possible error lines (case-insensitive match: error|exception|failed) ----"
+      if grep -iE 'error|exception|failed' "$logpath" >/dev/null 2>&1; then
+        # show up to 200 matching lines to keep CI output bounded
+        grep -iE 'error|exception|failed' "$logpath" | sed -n '1,200p' || true
+      else
+        echo "(no obvious error lines found in log)"
+      fi
+      echo "Full log available at: $logpath"
+    else
+      echo "❌ $name failed — no log found (metadata: $tmpdir/$pid.log)"
+    fi
     failed=1
   fi
 done
