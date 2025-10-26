@@ -2,16 +2,10 @@
 
 import type { GetFooResponse } from './types.gen';
 
-const quxSchemaResponseTransformer = (data: any) => {
-    if (data.baz) {
-        data.baz = new Date(data.baz);
-    }
-    return data;
-};
-
-const bazSchemaResponseTransformer = (data: any) => {
-    data = quxSchemaResponseTransformer(data);
-    data.bar = new Date(data.bar);
+const fooSchemaResponseTransformer = (data: any) => {
+    data.foo = data.foo.map((item: any) => {
+        return barSchemaResponseTransformer(item);
+    });
     return data;
 };
 
@@ -22,10 +16,16 @@ const barSchemaResponseTransformer = (data: any) => {
     return data;
 };
 
-const fooSchemaResponseTransformer = (data: any) => {
-    data.foo = data.foo.map((item: any) => {
-        return barSchemaResponseTransformer(item);
-    });
+const bazSchemaResponseTransformer = (data: any) => {
+    data = quxSchemaResponseTransformer(data);
+    data.bar = new Date(data.bar);
+    return data;
+};
+
+const quxSchemaResponseTransformer = (data: any) => {
+    if (data.baz) {
+        data.baz = new Date(data.baz);
+    }
     return data;
 };
 
