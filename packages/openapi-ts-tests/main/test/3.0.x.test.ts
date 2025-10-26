@@ -639,6 +639,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-recursive.json',
+        output: 'transformers-recursive',
+        plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
+      }),
+      description: 'transforms recursive/self-referential schemas',
+    },
+    {
+      config: createConfig({
         input: 'dutchie.json',
         output: 'transforms-properties-required-by-default',
         parser: {
