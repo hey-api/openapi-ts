@@ -10,13 +10,6 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 echo "⏳ Generating client code for all examples..."
-# Build the CLI package so its bin is available to examples in the workspace.
-echo "Building @hey-api/openapi-ts (required for example generation)..."
-if pnpm -w -s --version >/dev/null 2>&1; then
-  pnpm -w -s --filter "@hey-api/openapi-ts" build
-else
-  pnpm -s --filter "@hey-api/openapi-ts" build
-fi
 
 # Find all examples with openapi-ts script and generate code in parallel
 # Concurrency control: adjust this number depending on CI machine resources
@@ -52,24 +45,8 @@ for dir in "$ROOT_DIR"/examples/*/; do
     echo "Generating: $example_name"
     set -e
     cd "$dir"
-    echo "-> Debug: node $(node --version 2>/dev/null || echo 'node-not-found')"
-    echo "-> Debug: pnpm $(pnpm --version 2>/dev/null || echo 'pnpm-not-found')"
-    echo "-> Debug: pwd $(pwd)"
-    echo "-> Running pnpm run openapi-ts (invokes package script in example)"
-    # Run the example's package script so pnpm resolves the workspace binary correctly
-    # Use silent mode to keep logs concise but preserve errors
-    echo "--- begin openapi-ts output ---"
-    if pnpm -s --version >/dev/null 2>&1; then
-      pnpm -s run openapi-ts || rc=$?
-    else
-      pnpm run openapi-ts || rc=$?
-    fi
-    rc=${rc:-0}
-    echo "--- end openapi-ts output (rc=$rc) ---"
-    if [ "$rc" -ne 0 ]; then
-      echo "openapi-ts failed with exit code $rc"
-      exit $rc
-    fi
+    echo "-> Running openapi-ts"
+    pnpm run openapi-ts
 
     # Format generated files in this example only to keep the step fast
     if command -v pnpm >/dev/null 2>&1 && pnpm -w -s --version >/dev/null 2>&1; then
@@ -103,17 +80,10 @@ for pid in $PIDS; do
     # Read the metadata file which contains the path to the real log
     logpath=$(cat "$tmpdir/$pid.log" 2>/dev/null || echo "")
     if [ -n "$logpath" ] && [ -f "$logpath" ]; then
-      echo "❌ $name failed — showing log excerpt ($logpath):"
-      echo "---- log excerpt (last 200 lines) ----"
-      tail -n 200 "$logpath" || true
-      echo "---- possible error lines (case-insensitive match: error|exception|failed) ----"
-      if grep -iE 'error|exception|failed' "$logpath" >/dev/null 2>&1; then
-        # show up to 200 matching lines to keep CI output bounded
-        grep -iE 'error|exception|failed' "$logpath" | sed -n '1,200p' || true
-      else
-        echo "(no obvious error lines found in log)"
-      fi
-      echo "Full log available at: $logpath"
+      echo "❌ $name failed — showing full log ($logpath):"
+      echo "---- full log start ----"
+      cat "$logpath" || true
+      echo "---- full log end ----"
     else
       echo "❌ $name failed — no log found (metadata: $tmpdir/$pid.log)"
     fi
