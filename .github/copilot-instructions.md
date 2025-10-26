@@ -49,7 +49,7 @@ pnpm --filter @example/openapi-ts-fetch dev
 # Server starts on http://localhost:5173/
 
 # Run CLI tool directly
-node packages/openapi-ts/bin/index.cjs --help
+node packages/openapi-ts/dist/run.js --help
 # or after building
 npx @hey-api/openapi-ts --help
 ```
@@ -85,14 +85,14 @@ After making changes, ALWAYS validate with these scenarios:
 
    ```bash
    # Test CLI help
-   node packages/openapi-ts/bin/index.cjs --help
+   node packages/openapi-ts/dist/run.js --help
 
    # Test CLI version
-   node packages/openapi-ts/bin/index.cjs --version
+   node packages/openapi-ts/dist/run.js --version
 
    # Test basic code generation with a simple OpenAPI spec
    # Create a minimal test spec and generate client code
-   node packages/openapi-ts/bin/index.cjs -i path/to/spec.json -o ./test-output --plugins "@hey-api/client-fetch" "@hey-api/typescript"
+   node packages/openapi-ts/dist/run.js -i path/to/spec.json -o ./test-output --plugins "@hey-api/client-fetch" "@hey-api/typescript"
    ```
 
 2. **Example Application Test**:
