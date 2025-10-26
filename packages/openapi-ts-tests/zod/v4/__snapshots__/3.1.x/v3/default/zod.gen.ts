@@ -1095,6 +1095,13 @@ export const zModelWithPropertiesWritable = z.object({
 });
 
 /**
+ * This is a model with one property containing a reference
+ */
+export const zModelWithReferenceWritable = z.object({
+    prop: zModelWithPropertiesWritable.optional()
+});
+
+/**
  * This is a model that contains a some patterns
  */
 export const zModelWithPatternWritable = z.object({
@@ -1116,10 +1123,38 @@ export const zModelWithReadOnlyAndWriteOnlyWritable = z.object({
     baz: z.string()
 });
 
+/**
+ * This is a model with one property containing an array
+ */
+export const zModelWithArrayReadOnlyAndWriteOnlyWritable = z.object({
+    prop: z.array(zModelWithReadOnlyAndWriteOnlyWritable).optional(),
+    propWithFile: z.array(z.string()).optional(),
+    propWithNumber: z.array(z.number()).optional()
+});
+
+export const zModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable = z.tuple([
+    z.union([
+        z.number(),
+        zImport
+    ]),
+    z.union([
+        z.number(),
+        zImport
+    ])
+]);
+
 export const zAdditionalPropertiesUnknownIssueWritable = z.record(z.union([
     z.string(),
     z.number()
 ]));
+
+export const zOneOfAllOfIssueWritable = z.union([
+    z.intersection(z.union([
+        zConstValue,
+        zGenericSchemaDuplicateIssue1SystemBoolean
+    ]), z3eNum1Период),
+    zGenericSchemaDuplicateIssue1SystemString
+]);
 
 export const zGenericSchemaDuplicateIssue1SystemBooleanWritable = z.object({
     item: z.boolean().optional(),
@@ -1202,7 +1237,7 @@ export const zPatchApiVbyApiVersionNoTagData = z.object({
 export const zImportData = z.object({
     body: z.union([
         zModelWithReadOnlyAndWriteOnlyWritable,
-        zModelWithArrayReadOnlyAndWriteOnly
+        zModelWithArrayReadOnlyAndWriteOnlyWritable
     ]),
     path: z.never().optional(),
     query: z.never().optional()
