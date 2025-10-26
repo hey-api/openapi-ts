@@ -63,6 +63,19 @@ const processSchemaType = ({
     if (!plugin.getSymbol(selector)) {
       // TODO: remove
       // create each schema response transformer only once
+
+      // Register symbol early to prevent infinite recursion with self-referential schemas
+      const symbol = plugin.registerSymbol({
+        name: buildName({
+          config: {
+            case: 'camelCase',
+            name: '{{name}}SchemaResponseTransformer',
+          },
+          name: refToName(schema.$ref),
+        }),
+        selector,
+      });
+
       const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
         schema.$ref,
       );
@@ -71,16 +84,6 @@ const processSchemaType = ({
         schema: refSchema,
       });
       if (nodes.length) {
-        const symbol = plugin.registerSymbol({
-          name: buildName({
-            config: {
-              case: 'camelCase',
-              name: '{{name}}SchemaResponseTransformer',
-            },
-            name: refToName(schema.$ref),
-          }),
-          selector,
-        });
         const node = tsc.constVariable({
           expression: tsc.arrowFunction({
             async: false,
