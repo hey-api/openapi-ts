@@ -10,6 +10,14 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 echo "⏳ Generating client code for all examples..."
+# Build the CLI package so its bin is available to examples in the workspace.
+echo "Building @hey-api/openapi-ts (required for example generation)..."
+if pnpm -w -s --version >/dev/null 2>&1; then
+  pnpm -w -s --filter "@hey-api/openapi-ts" build
+else
+  pnpm -s --filter "@hey-api/openapi-ts" build
+fi
+
 # Find all examples with openapi-ts script and generate code in parallel
 # Concurrency control: adjust this number depending on CI machine resources
 CONCURRENCY=${CONCURRENCY:-4}
