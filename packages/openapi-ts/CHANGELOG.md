@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.86.6
+
+### Patch Changes
+
+- fix(transformers): revert function order to fix infinite cycle regression ([#2855](https://github.com/hey-api/openapi-ts/pull/2855)) ([`81f91a9`](https://github.com/hey-api/openapi-ts/commit/81f91a97e8e50427b45f21c80f72fdff7ce1deca)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.86.5
 
 ### Patch Changes
