@@ -297,11 +297,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return this.gen.symbols.isRegistered(symbolIdOrSelector);
   }
 
-  hasSymbolValue(symbolIdOrSelector: number | Selector): boolean {
-    const symbol = this.getSymbol(symbolIdOrSelector);
-    return symbol ? this.gen.symbols.hasValue(symbol.id) : false;
-  }
-
   referenceSymbol(symbolIdOrSelector: number | Selector): Symbol {
     return this.gen.symbols.reference(symbolIdOrSelector);
   }

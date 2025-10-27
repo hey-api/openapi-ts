@@ -27,18 +27,15 @@ const isNodeReturnStatement = ({
 
 const schemaResponseTransformerNodes = ({
   plugin,
-  processingSchemas,
   schema,
 }: {
   plugin: HeyApiTransformersPlugin['Instance'];
-  processingSchemas: Set<string>;
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   const identifierData = tsc.identifier({ text: dataVariableName });
   const nodes = processSchemaType({
     dataExpression: identifierData,
     plugin,
-    processingSchemas,
     schema,
   });
   // append return statement if one does not already exist
@@ -54,24 +51,18 @@ const schemaResponseTransformerNodes = ({
 const processSchemaType = ({
   dataExpression,
   plugin,
-  processingSchemas,
   schema,
 }: {
   dataExpression?: ts.Expression | string;
   plugin: HeyApiTransformersPlugin['Instance'];
-  processingSchemas: Set<string>;
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   if (schema.$ref) {
     const selector = plugin.api.selector('response-ref', schema.$ref);
-    const selectorKey = JSON.stringify(selector);
 
     if (!plugin.getSymbol(selector)) {
       // TODO: remove
       // create each schema response transformer only once
-
-      // Mark as currently processing to handle recursion
-      processingSchemas.add(selectorKey);
 
       // Register symbol early to prevent infinite recursion with self-referential schemas
       const symbol = plugin.registerSymbol({
@@ -90,35 +81,33 @@ const processSchemaType = ({
       );
       const nodes = schemaResponseTransformerNodes({
         plugin,
-        processingSchemas,
         schema: refSchema,
       });
-
-      // Done processing
-      processingSchemas.delete(selectorKey);
-
-      if (nodes.length) {
-        const node = tsc.constVariable({
-          expression: tsc.arrowFunction({
-            async: false,
-            multiLine: true,
-            parameters: [
-              {
-                name: dataVariableName,
-                // TODO: parser - add types, generate types without transforms
-                type: tsc.keywordTypeNode({ keyword: 'any' }),
-              },
-            ],
-            statements: ensureStatements(nodes),
-          }),
-          name: symbol.placeholder,
-        });
-        plugin.setSymbolValue(symbol, node);
-      }
+      // Always create the transformer function, even if there are no transformations
+      // This ensures consistency and prevents missing function errors
+      const identifierData = tsc.identifier({ text: dataVariableName });
+      const statements = nodes.length
+        ? ensureStatements(nodes)
+        : [tsc.returnStatement({ expression: identifierData })];
+      const node = tsc.constVariable({
+        expression: tsc.arrowFunction({
+          async: false,
+          multiLine: true,
+          parameters: [
+            {
+              name: dataVariableName,
+              // TODO: parser - add types, generate types without transforms
+              type: tsc.keywordTypeNode({ keyword: 'any' }),
+            },
+          ],
+          statements,
+        }),
+        name: symbol.placeholder,
+      });
+      plugin.setSymbolValue(symbol, node);
     }
 
-    // Reference the symbol if it has a value OR is currently being processed (recursive case)
-    if (plugin.hasSymbolValue(selector) || processingSchemas.has(selectorKey)) {
+    if (plugin.isSymbolRegistered(selector)) {
       const ref = plugin.referenceSymbol(selector);
       const callExpression = tsc.callExpression({
         functionName: ref.placeholder,
@@ -160,7 +149,6 @@ const processSchemaType = ({
       : processSchemaType({
           dataExpression: 'item',
           plugin,
-          processingSchemas,
           schema: schema.items?.[0]
             ? schema.items[0]
             : {
@@ -225,7 +213,6 @@ const processSchemaType = ({
       const propertyNodes = processSchemaType({
         dataExpression: propertyAccessExpression,
         plugin,
-        processingSchemas,
         schema: property,
       });
       if (!propertyNodes.length) {
@@ -262,7 +249,6 @@ const processSchemaType = ({
       return processSchemaType({
         dataExpression: 'item',
         plugin,
-        processingSchemas,
         schema: schema.items[0]!,
       });
     }
@@ -280,7 +266,6 @@ const processSchemaType = ({
         const nodes = processSchemaType({
           dataExpression: dataExpression || 'item',
           plugin,
-          processingSchemas,
           schema: item,
         });
         if (nodes.length) {
@@ -338,9 +323,6 @@ const processSchemaType = ({
 
 // handles only response transformers for now
 export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
-  // Track schemas currently being processed to handle recursion
-  const processingSchemas = new Set<string>();
-
   plugin.forEach(
     'operation',
     ({ operation }) => {
@@ -365,7 +347,6 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       // TODO: parser - consider handling simple string response which is also a date
       const nodes = schemaResponseTransformerNodes({
         plugin,
-        processingSchemas,
         schema: response,
       });
       if (!nodes.length) return;
