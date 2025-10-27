@@ -78,6 +78,7 @@ export type { ExpressionTransformer } from './plugins/@hey-api/transformers/expr
 export type { TypeTransformer } from './plugins/@hey-api/transformers/types';
 export { definePluginConfig } from './plugins/shared/utils/config';
 export { compiler, tsc } from './tsc';
+export type { Operation } from './types/client';
 export type { UserConfig } from './types/config';
 export type { LegacyIR } from './types/types';
 export { utils } from './utils/exports';
