@@ -10,9 +10,6 @@ import type { HeyApiTransformersPlugin } from './types';
 
 const dataVariableName = 'data';
 
-// Track schemas currently being processed to handle recursion
-const processingSchemas = new Set<string>();
-
 const ensureStatements = (
   nodes: Array<ts.Expression | ts.Statement>,
 ): Array<ts.Statement> =>
@@ -30,15 +27,18 @@ const isNodeReturnStatement = ({
 
 const schemaResponseTransformerNodes = ({
   plugin,
+  processingSchemas,
   schema,
 }: {
   plugin: HeyApiTransformersPlugin['Instance'];
+  processingSchemas: Set<string>;
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   const identifierData = tsc.identifier({ text: dataVariableName });
   const nodes = processSchemaType({
     dataExpression: identifierData,
     plugin,
+    processingSchemas,
     schema,
   });
   // append return statement if one does not already exist
@@ -54,10 +54,12 @@ const schemaResponseTransformerNodes = ({
 const processSchemaType = ({
   dataExpression,
   plugin,
+  processingSchemas,
   schema,
 }: {
   dataExpression?: ts.Expression | string;
   plugin: HeyApiTransformersPlugin['Instance'];
+  processingSchemas: Set<string>;
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   if (schema.$ref) {
@@ -88,6 +90,7 @@ const processSchemaType = ({
       );
       const nodes = schemaResponseTransformerNodes({
         plugin,
+        processingSchemas,
         schema: refSchema,
       });
 
@@ -157,6 +160,7 @@ const processSchemaType = ({
       : processSchemaType({
           dataExpression: 'item',
           plugin,
+          processingSchemas,
           schema: schema.items?.[0]
             ? schema.items[0]
             : {
@@ -221,6 +225,7 @@ const processSchemaType = ({
       const propertyNodes = processSchemaType({
         dataExpression: propertyAccessExpression,
         plugin,
+        processingSchemas,
         schema: property,
       });
       if (!propertyNodes.length) {
@@ -257,6 +262,7 @@ const processSchemaType = ({
       return processSchemaType({
         dataExpression: 'item',
         plugin,
+        processingSchemas,
         schema: schema.items[0]!,
       });
     }
@@ -274,6 +280,7 @@ const processSchemaType = ({
         const nodes = processSchemaType({
           dataExpression: dataExpression || 'item',
           plugin,
+          processingSchemas,
           schema: item,
         });
         if (nodes.length) {
@@ -331,6 +338,9 @@ const processSchemaType = ({
 
 // handles only response transformers for now
 export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
+  // Track schemas currently being processed to handle recursion
+  const processingSchemas = new Set<string>();
+
   plugin.forEach(
     'operation',
     ({ operation }) => {
@@ -355,6 +365,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       // TODO: parser - consider handling simple string response which is also a date
       const nodes = schemaResponseTransformerNodes({
         plugin,
+        processingSchemas,
         schema: response,
       });
       if (!nodes.length) return;
