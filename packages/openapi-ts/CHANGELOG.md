@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.86.7
+
+### Patch Changes
+
+- fix(types): export Operation type ([#2862](https://github.com/hey-api/openapi-ts/pull/2862)) ([`857c464`](https://github.com/hey-api/openapi-ts/commit/857c464ac04832c3bf26f33af3c1c90ccf67fda1)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.86.6
 
 ### Patch Changes
