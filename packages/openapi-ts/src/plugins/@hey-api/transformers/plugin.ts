@@ -10,6 +10,9 @@ import type { HeyApiTransformersPlugin } from './types';
 
 const dataVariableName = 'data';
 
+// Track schemas currently being processed to handle recursion
+const processingSchemas = new Set<string>();
+
 const ensureStatements = (
   nodes: Array<ts.Expression | ts.Statement>,
 ): Array<ts.Statement> =>
@@ -59,10 +62,14 @@ const processSchemaType = ({
 }): Array<ts.Expression | ts.Statement> => {
   if (schema.$ref) {
     const selector = plugin.api.selector('response-ref', schema.$ref);
+    const selectorKey = JSON.stringify(selector);
 
     if (!plugin.getSymbol(selector)) {
       // TODO: remove
       // create each schema response transformer only once
+
+      // Mark as currently processing to handle recursion
+      processingSchemas.add(selectorKey);
 
       // Register symbol early to prevent infinite recursion with self-referential schemas
       const symbol = plugin.registerSymbol({
@@ -83,6 +90,10 @@ const processSchemaType = ({
         plugin,
         schema: refSchema,
       });
+
+      // Done processing
+      processingSchemas.delete(selectorKey);
+
       if (nodes.length) {
         const node = tsc.constVariable({
           expression: tsc.arrowFunction({
@@ -103,7 +114,8 @@ const processSchemaType = ({
       }
     }
 
-    if (plugin.isSymbolRegistered(selector)) {
+    // Reference the symbol if it has a value OR is currently being processed (recursive case)
+    if (plugin.hasSymbolValue(selector) || processingSchemas.has(selectorKey)) {
       const ref = plugin.referenceSymbol(selector);
       const callExpression = tsc.callExpression({
         functionName: ref.placeholder,
