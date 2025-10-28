@@ -164,17 +164,17 @@ export const vAnyOfArrays = v.object({
 /**
  * This is a string dictionary
  */
-export const vDictionaryWithString = v.object({});
+export const vDictionaryWithString = v.record(v.string(), v.string());
 
-export const vDictionaryWithPropertiesAndAdditionalProperties = v.object({
+export const vDictionaryWithPropertiesAndAdditionalProperties = v.objectWithRest({
     foo: v.optional(v.number()),
     bar: v.optional(v.boolean())
-});
+}, v.string());
 
 /**
  * This is a string dictionary
  */
-export const vDictionaryWithDictionary = v.record(v.string(), v.object({}));
+export const vDictionaryWithDictionary = v.record(v.string(), v.record(v.string(), v.string()));
 
 /**
  * This is a complex dictionary
@@ -228,7 +228,7 @@ export const vDictionaryWithReference = v.object({});
 /**
  * This is a complex dictionary
  */
-export const vDictionaryWithArray = v.object({});
+export const vDictionaryWithArray = v.record(v.string(), v.array(vModelWithString));
 
 /**
  * This is a model with one string property
@@ -311,8 +311,12 @@ export const vModelWithEnumFromDescription = v.object({
  * This is a model with nested enums
  */
 export const vModelWithNestedEnums = v.object({
-    dictionaryWithEnum: v.optional(v.object({})),
-    dictionaryWithEnumFromDescription: v.optional(v.object({})),
+    dictionaryWithEnum: v.optional(v.record(v.string(), v.picklist([
+        'Success',
+        'Warning',
+        'Error'
+    ]))),
+    dictionaryWithEnumFromDescription: v.optional(v.record(v.string(), v.pipe(v.number(), v.integer()))),
     arrayWithEnum: v.optional(v.array(v.picklist([
         'Success',
         'Warning',
@@ -340,7 +344,7 @@ export const vModelWithArray = v.object({
  * This is a model with one property containing a dictionary
  */
 export const vModelWithDictionary = v.object({
-    prop: v.optional(v.object({}))
+    prop: v.optional(v.record(v.string(), v.string()))
 });
 
 /**
@@ -501,7 +505,7 @@ export const vCompositionWithOneOfAndNullable = v.object({
 export const vCompositionWithOneOfAndSimpleDictionary = v.object({
     propA: v.optional(v.union([
         v.boolean(),
-        v.object({})
+        v.record(v.string(), v.number())
     ]))
 });
 
@@ -511,7 +515,7 @@ export const vCompositionWithOneOfAndSimpleDictionary = v.object({
 export const vCompositionWithOneOfAndSimpleArrayDictionary = v.object({
     propA: v.optional(v.union([
         v.boolean(),
-        v.object({})
+        v.record(v.string(), v.array(v.boolean()))
     ]))
 });
 
@@ -521,7 +525,7 @@ export const vCompositionWithOneOfAndSimpleArrayDictionary = v.object({
 export const vCompositionWithOneOfAndComplexArrayDictionary = v.object({
     propA: v.optional(v.union([
         v.boolean(),
-        v.object({})
+        v.record(v.string(), v.array(v.unknown()))
     ]))
 });
 
@@ -709,17 +713,17 @@ export const vPageable = v.object({
 /**
  * This is a free-form object without additionalProperties.
  */
-export const vFreeFormObjectWithoutAdditionalProperties = v.object({});
+export const vFreeFormObjectWithoutAdditionalProperties = v.record(v.string(), v.unknown());
 
 /**
  * This is a free-form object with additionalProperties: true.
  */
-export const vFreeFormObjectWithAdditionalPropertiesEqTrue = v.object({});
+export const vFreeFormObjectWithAdditionalPropertiesEqTrue = v.record(v.string(), v.unknown());
 
 /**
  * This is a free-form object with additionalProperties: {}.
  */
-export const vFreeFormObjectWithAdditionalPropertiesEqEmptyObject = v.object({});
+export const vFreeFormObjectWithAdditionalPropertiesEqEmptyObject = v.record(v.string(), v.unknown());
 
 export const vModelWithConst = v.object({
     String: v.optional(v.picklist([
@@ -735,9 +739,9 @@ export const vModelWithConst = v.object({
 /**
  * This is a model with one property and additionalProperties: true
  */
-export const vModelWithAdditionalPropertiesEqTrue = v.object({
+export const vModelWithAdditionalPropertiesEqTrue = v.objectWithRest({
     prop: v.optional(v.string())
-});
+}, v.unknown());
 
 export const vNestedAnyOfArraysNullable = v.object({
     nullableArray: v.optional(v.union([
@@ -987,21 +991,21 @@ export const vAdditionalPropertiesUnknownIssue3 = v.intersect([
     })
 ]);
 
-export const vAdditionalPropertiesIntegerIssue = v.object({
+export const vAdditionalPropertiesIntegerIssue = v.objectWithRest({
     value: v.pipe(v.number(), v.integer())
-});
+}, v.pipe(v.number(), v.integer()));
 
-export const vGenericSchemaDuplicateIssue1SystemBoolean = v.object({
+export const vGenericSchemaDuplicateIssue1SystemBoolean = v.objectWithRest({
     item: v.optional(v.boolean()),
     error: v.optional(v.union([
         v.string(),
         v.null()
     ])),
     hasError: v.optional(v.pipe(v.boolean(), v.readonly())),
-    data: v.optional(v.object({}))
-});
+    data: v.optional(v.record(v.string(), v.never()))
+}, v.never());
 
-export const vGenericSchemaDuplicateIssue1SystemString = v.object({
+export const vGenericSchemaDuplicateIssue1SystemString = v.objectWithRest({
     item: v.optional(v.union([
         v.string(),
         v.null()
@@ -1011,7 +1015,7 @@ export const vGenericSchemaDuplicateIssue1SystemString = v.object({
         v.null()
     ])),
     hasError: v.optional(v.pipe(v.boolean(), v.readonly()))
-});
+}, v.never());
 
 export const vOneOfAllOfIssue = v.union([
     v.intersect([
@@ -1113,16 +1117,16 @@ export const vOneOfAllOfIssueWritable = v.union([
     vGenericSchemaDuplicateIssue1SystemString
 ]);
 
-export const vGenericSchemaDuplicateIssue1SystemBooleanWritable = v.object({
+export const vGenericSchemaDuplicateIssue1SystemBooleanWritable = v.objectWithRest({
     item: v.optional(v.boolean()),
     error: v.optional(v.union([
         v.string(),
         v.null()
     ])),
-    data: v.optional(v.object({}))
-});
+    data: v.optional(v.record(v.string(), v.never()))
+}, v.never());
 
-export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.object({
+export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.objectWithRest({
     item: v.optional(v.union([
         v.string(),
         v.null()
@@ -1131,7 +1135,7 @@ export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.object({
         v.string(),
         v.null()
     ]))
-});
+}, v.never());
 
 /**
  * This is a reusable parameter
@@ -1140,12 +1144,12 @@ export const vSimpleParameter = v.string();
 
 export const vCompositionWithOneOfAndProperties = v.intersect([
     v.union([
-        v.object({
+        v.objectWithRest({
             foo: vSimpleParameter
-        }),
-        v.object({
+        }, v.never()),
+        v.objectWithRest({
             bar: vNonAsciiStringæøåÆøÅöôêÊ字符串
-        })
+        }, v.never())
     ]),
     v.object({
         baz: v.union([
@@ -1316,7 +1320,7 @@ export const vDeprecatedCallData = v.object({
 
 export const vCallWithParametersData = v.object({
     body: v.union([
-        v.object({}),
+        v.record(v.string(), v.unknown()),
         v.null()
     ]),
     path: v.object({
@@ -1627,7 +1631,7 @@ export const vTypesData = v.object({
             v.null()
         ]), true),
         parameterObject: v.optional(v.union([
-            v.object({}),
+            v.record(v.string(), v.unknown()),
             v.null()
         ]), null),
         parameterArray: v.union([
@@ -1635,7 +1639,7 @@ export const vTypesData = v.object({
             v.null()
         ]),
         parameterDictionary: v.union([
-            v.object({}),
+            v.record(v.string(), v.unknown()),
             v.null()
         ]),
         parameterEnum: v.picklist([
@@ -1650,7 +1654,7 @@ export const vTypesResponse = v.union([
     v.number(),
     v.string(),
     v.boolean(),
-    v.object({})
+    v.record(v.string(), v.unknown())
 ]);
 
 export const vUploadFileData = v.object({
