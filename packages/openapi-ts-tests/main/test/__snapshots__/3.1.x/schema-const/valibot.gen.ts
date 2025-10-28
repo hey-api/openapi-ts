@@ -14,7 +14,7 @@ export const vFoo = v.object({
         v.literal('foo'),
         v.literal(true)
     ])),
-    corge: v.optional(v.object({})),
+    corge: v.optional(v.record(v.string(), v.unknown())),
     garply: v.optional(v.literal(BigInt('10'))),
     numberInt8: v.optional(v.literal(100)),
     numberInt16: v.optional(v.literal(1000)),

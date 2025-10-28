@@ -72,10 +72,12 @@ export const objectToAst = ({
     plugin.api.selector('external', 'valibot.v'),
   );
 
+  // Handle additionalProperties with a schema (not just true/false)
+  // This supports objects with dynamic keys (e.g., Record<string, T>)
   if (
     schema.additionalProperties &&
-    schema.additionalProperties.type === 'object' &&
-    !Object.keys(properties).length
+    typeof schema.additionalProperties === 'object' &&
+    schema.additionalProperties.type !== undefined
   ) {
     const additionalAst = irSchemaToAst({
       plugin,
@@ -88,20 +90,40 @@ export const objectToAst = ({
     if (additionalAst.hasLazyExpression) {
       result.hasLazyExpression = true;
     }
+
+    // If there are no named properties, use v.record() directly
+    if (!Object.keys(properties).length) {
+      result.pipes = [
+        tsc.callExpression({
+          functionName: tsc.propertyAccessExpression({
+            expression: v.placeholder,
+            name: identifiers.schemas.record,
+          }),
+          parameters: [
+            tsc.callExpression({
+              functionName: tsc.propertyAccessExpression({
+                expression: v.placeholder,
+                name: identifiers.schemas.string,
+              }),
+              parameters: [],
+            }),
+            pipesToAst({ pipes: additionalAst.pipes, plugin }),
+          ],
+        }),
+      ];
+      return result as Omit<Ast, 'typeName'>;
+    }
+
+    // If there are named properties, use v.objectWithRest() to validate both
+    // The rest parameter is the schema for each additional property value
     result.pipes = [
       tsc.callExpression({
         functionName: tsc.propertyAccessExpression({
           expression: v.placeholder,
-          name: identifiers.schemas.record,
+          name: identifiers.schemas.objectWithRest,
         }),
         parameters: [
-          tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: v.placeholder,
-              name: identifiers.schemas.string,
-            }),
-            parameters: [],
-          }),
+          ts.factory.createObjectLiteralExpression(properties, true),
           pipesToAst({ pipes: additionalAst.pipes, plugin }),
         ],
       }),
