@@ -124,7 +124,6 @@ describe('generateLegacyCore', () => {
         '@hey-api/typescript': {
           api: {
             schemaToType: () => ({}) as ts.TypeNode,
-            selector: () => [],
           },
           config: {
             enums: 'javascript',
@@ -281,7 +280,6 @@ describe('generateLegacyCore', () => {
         '@hey-api/typescript': {
           api: {
             schemaToType: () => ({}) as ts.TypeNode,
-            selector: () => [],
           },
           config: {
             enums: 'javascript',
@@ -421,7 +419,6 @@ describe('generateLegacyCore', () => {
         '@hey-api/typescript': {
           api: {
             schemaToType: () => ({}) as ts.TypeNode,
-            selector: () => [],
           },
           config: {
             enums: 'javascript',
