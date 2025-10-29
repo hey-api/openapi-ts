@@ -5,9 +5,7 @@ import type { AngularCommonPlugin } from './types';
 export const handler: AngularCommonPlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: '@angular/common/http',
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: 'HttpRequest',
     selector: plugin.api.selector('HttpRequest'),
   });

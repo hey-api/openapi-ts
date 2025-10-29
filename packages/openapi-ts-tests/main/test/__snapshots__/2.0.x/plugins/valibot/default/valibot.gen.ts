@@ -123,12 +123,12 @@ export const vArrayWithProperties = v.array(v.object({
 /**
  * This is a string dictionary
  */
-export const vDictionaryWithString = v.object({});
+export const vDictionaryWithString = v.record(v.string(), v.string());
 
 /**
  * This is a string dictionary
  */
-export const vDictionaryWithDictionary = v.record(v.string(), v.object({}));
+export const vDictionaryWithDictionary = v.record(v.string(), v.record(v.string(), v.string()));
 
 /**
  * This is a complex dictionary
@@ -184,7 +184,7 @@ export const vDictionaryWithReference = v.object({});
 /**
  * This is a complex dictionary
  */
-export const vDictionaryWithArray = v.object({});
+export const vDictionaryWithArray = v.record(v.string(), v.array(vModelWithString));
 
 /**
  * This is a model with one string property
@@ -239,8 +239,12 @@ export const vModelWithEnumFromDescription = v.object({
  * This is a model with nested enums
  */
 export const vModelWithNestedEnums = v.object({
-    dictionaryWithEnum: v.optional(v.object({})),
-    dictionaryWithEnumFromDescription: v.optional(v.object({})),
+    dictionaryWithEnum: v.optional(v.record(v.string(), v.picklist([
+        'Success',
+        'Warning',
+        'Error'
+    ]))),
+    dictionaryWithEnumFromDescription: v.optional(v.record(v.string(), v.pipe(v.number(), v.integer()))),
     arrayWithEnum: v.optional(v.array(v.picklist([
         'Success',
         'Warning',
@@ -262,7 +266,7 @@ export const vModelWithArray = v.object({
  * This is a model with one property containing a dictionary
  */
 export const vModelWithDictionary = v.object({
-    prop: v.optional(v.object({}))
+    prop: v.optional(v.record(v.string(), v.string()))
 });
 
 /**
@@ -714,7 +718,7 @@ export const vTypesData = v.object({
         parameterString: v.optional(v.string(), 'default'),
         parameterBoolean: v.optional(v.boolean(), true),
         parameterArray: v.array(v.string()),
-        parameterDictionary: v.object({}),
+        parameterDictionary: v.record(v.string(), v.unknown()),
         parameterEnum: v.picklist([
             'Success',
             'Warning',
@@ -727,7 +731,7 @@ export const vTypesResponse = v.union([
     v.number(),
     v.string(),
     v.boolean(),
-    v.object({})
+    v.record(v.string(), v.unknown())
 ]);
 
 export const vComplexTypesData = v.object({

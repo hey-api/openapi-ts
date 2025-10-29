@@ -20,9 +20,10 @@ export const arrayToAst = ({
     pipes: [],
   };
 
-  const v = plugin.referenceSymbol(
-    plugin.api.selector('external', 'valibot.v'),
-  );
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
   const functionName = tsc.propertyAccessExpression({
     expression: v.placeholder,
     name: identifiers.schemas.array,

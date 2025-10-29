@@ -1,26 +1,45 @@
+import type { ISymbolMeta } from '../extensions/types';
 import { wrapId } from '../renderer/utils';
-import type { ISelector } from '../selectors/types';
-import type { ISymbolIn, ISymbolOut, ISymbolRegistry } from './types';
+import type {
+  ISymbolIdentifier,
+  ISymbolIn,
+  ISymbolOut,
+  ISymbolRegistry,
+} from './types';
+
+type IndexEntry = [string, unknown];
+type IndexKeySpace = ReadonlyArray<IndexEntry>;
+type QueryCacheKey = string;
+type SymbolId = number;
 
 export class SymbolRegistry implements ISymbolRegistry {
-  private _id: number = 0;
-  private nodes: Map<number, unknown> = new Map();
-  private registerOrder: Set<number> = new Set();
-  private selectorToId: Map<string, number> = new Map();
-  private values: Map<number, ISymbolOut> = new Map();
+  private _id: SymbolId = 0;
+  private indices: Map<IndexEntry[0], Map<IndexEntry[1], Set<SymbolId>>> =
+    new Map();
+  private nodes: Map<SymbolId, unknown> = new Map();
+  private queryCache: Map<QueryCacheKey, ReadonlyArray<SymbolId>> = new Map();
+  private queryCacheDependencies: Map<QueryCacheKey, Set<QueryCacheKey>> =
+    new Map();
+  private registerOrder: Set<SymbolId> = new Set();
+  // TODO: remove after removing selectors
+  private selectorToId: Map<string, SymbolId> = new Map();
+  private stubs: Set<SymbolId> = new Set();
+  private values: Map<SymbolId, ISymbolOut> = new Map();
 
-  get(symbolIdOrSelector: number | ISelector): ISymbolOut | undefined {
-    const symbol = this.idOrSelector(symbolIdOrSelector);
+  get(identifier: ISymbolIdentifier): ISymbolOut | undefined {
+    const symbol = this.identifierToSymbol(identifier);
 
     if (symbol.id !== undefined) {
       return this.values.get(symbol.id);
     }
 
+    // TODO: remove after removing selectors
     const selector =
       symbol.selector !== undefined
         ? JSON.stringify(symbol.selector)
         : undefined;
 
+    // TODO: remove after removing selectors
     if (selector) {
       const id = this.selectorToId.get(selector);
       if (id !== undefined) {
@@ -28,40 +47,91 @@ export class SymbolRegistry implements ISymbolRegistry {
       }
     }
 
+    if (symbol.meta) {
+      return this.query(symbol.meta)[0];
+    }
+
     return;
   }
 
-  getValue(symbolId: number): unknown {
+  getValue(symbolId: SymbolId): unknown {
     return this.nodes.get(symbolId);
   }
 
-  hasValue(symbolId: number): boolean {
+  hasValue(symbolId: SymbolId): boolean {
     return this.nodes.has(symbolId);
   }
 
-  get id(): number {
+  get id(): SymbolId {
     return this._id++;
   }
 
-  private idOrSelector(
-    symbolIdOrSelector: number | ISelector,
-  ): Pick<ISymbolIn, 'id' | 'selector'> {
-    return typeof symbolIdOrSelector === 'number'
-      ? { id: symbolIdOrSelector }
-      : { selector: symbolIdOrSelector };
-  }
-
-  isRegistered(symbolIdOrSelector: number | ISelector): boolean {
-    const symbol = this.get(symbolIdOrSelector);
+  isRegistered(identifier: ISymbolIdentifier): boolean {
+    const symbol = this.get(identifier);
     return symbol ? this.registerOrder.has(symbol.id) : false;
   }
 
-  reference(symbolIdOrSelector: number | ISelector): ISymbolOut {
-    const symbol = this.idOrSelector(symbolIdOrSelector);
-    return this.register(symbol);
+  query(filter: ISymbolMeta): ReadonlyArray<ISymbolOut> {
+    const cacheKey = this.buildCacheKey(filter);
+    const cachedIds = this.queryCache.get(cacheKey);
+    if (cachedIds) {
+      return cachedIds.map((symbolId) => this.values.get(symbolId)!);
+    }
+    const sets: Array<Set<SymbolId>> = [];
+    const indexKeySpace = this.buildIndexKeySpace(filter);
+    const cacheDependencies = new Set<QueryCacheKey>();
+    let missed = false;
+    for (const indexEntry of indexKeySpace) {
+      cacheDependencies.add(this.serializeIndexEntry(indexEntry));
+      const values = this.indices.get(indexEntry[0]);
+      if (!values) {
+        missed = true;
+        break;
+      }
+      const set = values.get(indexEntry[1]);
+      if (!set) {
+        missed = true;
+        break;
+      }
+      sets.push(set);
+    }
+    if (missed || !sets.length) {
+      this.queryCacheDependencies.set(cacheKey, cacheDependencies);
+      this.queryCache.set(cacheKey, []);
+      return [];
+    }
+    let result = new Set(sets[0]);
+    for (const set of sets.slice(1)) {
+      result = new Set([...result].filter((symbolId) => set.has(symbolId)));
+    }
+    const resultIds = [...result];
+    this.queryCacheDependencies.set(cacheKey, cacheDependencies);
+    this.queryCache.set(cacheKey, resultIds);
+    return resultIds.map((symbolId) => this.values.get(symbolId)!);
+  }
+
+  reference(identifier: ISymbolIdentifier): ISymbolOut {
+    const symbol = this.identifierToSymbol(identifier);
+    if (!symbol.meta) {
+      // TODO: remove/refactor after removing selectors
+      return this.register(symbol);
+    }
+    const [registered] = this.query(symbol.meta);
+    if (registered) return registered;
+    const id = this.id;
+    const stub: ISymbolOut = {
+      exportFrom: [],
+      id,
+      meta: symbol.meta,
+      placeholder: wrapId(String(id)),
+    };
+    this.values.set(stub.id, stub);
+    this.stubs.add(stub.id);
+    return stub;
   }
 
   register(symbol: ISymbolIn): ISymbolOut {
+    // TODO: refactor after removing selectors
     if (symbol.id !== undefined) {
       const result = this.values.get(symbol.id);
       if (!result) {
@@ -72,12 +142,14 @@ export class SymbolRegistry implements ISymbolRegistry {
       return result;
     }
 
+    // TODO: refactor after removing selectors
     const hasOtherKeys = Object.keys(symbol).some(
-      (key) => !['id', 'selector'].includes(key),
+      (key) => !['id', 'meta', 'selector'].includes(key),
     );
 
     let result: ISymbolOut | undefined;
 
+    // TODO: remove after removing selectors
     const selector =
       symbol.selector !== undefined
         ? JSON.stringify(symbol.selector)
@@ -112,14 +184,22 @@ export class SymbolRegistry implements ISymbolRegistry {
       placeholder:
         result?.placeholder ?? symbol.placeholder ?? wrapId(String(id)),
     };
-    this.values.set(id, result);
+    this.values.set(result.id, result);
 
     if (hasOtherKeys) {
-      this.registerOrder.add(id);
+      this.registerOrder.add(result.id);
     }
 
     if (selector) {
-      this.selectorToId.set(selector, id);
+      // TODO: remove after removing selectors
+      this.selectorToId.set(selector, result.id);
+    }
+
+    if (result.meta) {
+      const indexKeySpace = this.buildIndexKeySpace(result.meta);
+      this.indexSymbol(result.id, indexKeySpace);
+      this.invalidateCache(indexKeySpace);
+      this.replaceStubs(result, indexKeySpace);
     }
 
     return result;
@@ -131,7 +211,96 @@ export class SymbolRegistry implements ISymbolRegistry {
     }
   }
 
-  setValue(symbolId: number, value: unknown): Map<number, unknown> {
+  setValue(symbolId: SymbolId, value: unknown): Map<SymbolId, unknown> {
     return this.nodes.set(symbolId, value);
+  }
+
+  private buildCacheKey(filter: ISymbolMeta): QueryCacheKey {
+    const indexKeySpace = this.buildIndexKeySpace(filter);
+    return indexKeySpace
+      .map((indexEntry) => this.serializeIndexEntry(indexEntry))
+      .sort() // ensure order-insensitivity
+      .join('|');
+  }
+
+  private buildIndexKeySpace(meta: ISymbolMeta, prefix = ''): IndexKeySpace {
+    const entries: Array<IndexEntry> = [];
+    for (const [key, value] of Object.entries(meta)) {
+      const path = prefix ? `${prefix}.${key}` : key;
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        entries.push(...this.buildIndexKeySpace(value as ISymbolMeta, path));
+      } else {
+        entries.push([path, value]);
+      }
+    }
+    return entries;
+  }
+
+  private identifierToSymbol(
+    identifier: ISymbolIdentifier,
+  ): Pick<ISymbolIn, 'id' | 'meta' | 'selector'> {
+    if (typeof identifier === 'number') {
+      return { id: identifier };
+    }
+    if (identifier instanceof Array) {
+      // TODO: remove after removing selectors
+      return { selector: identifier };
+    }
+    return { meta: identifier };
+  }
+
+  private indexSymbol(symbolId: SymbolId, indexKeySpace: IndexKeySpace): void {
+    for (const [key, value] of indexKeySpace) {
+      if (!this.indices.has(key)) this.indices.set(key, new Map());
+      const values = this.indices.get(key)!;
+      const set = values.get(value) ?? new Set();
+      set.add(symbolId);
+      values.set(value, set);
+    }
+  }
+
+  private invalidateCache(indexKeySpace: IndexKeySpace): void {
+    const changed = indexKeySpace.map((indexEntry) =>
+      this.serializeIndexEntry(indexEntry),
+    );
+    for (const [
+      cacheKey,
+      cacheDependencies,
+    ] of this.queryCacheDependencies.entries()) {
+      for (const key of changed) {
+        if (cacheDependencies.has(key)) {
+          this.queryCacheDependencies.delete(cacheKey);
+          this.queryCache.delete(cacheKey);
+          break;
+        }
+      }
+    }
+  }
+
+  private isSubset(sub: IndexKeySpace, sup: IndexKeySpace): boolean {
+    const supMap = new Map(sup);
+    for (const [key, value] of sub) {
+      if (!supMap.has(key) || supMap.get(key) !== value) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private replaceStubs(symbol: ISymbolOut, indexKeySpace: IndexKeySpace): void {
+    for (const stubId of this.stubs.values()) {
+      const stub = this.values.get(stubId);
+      if (
+        stub?.meta &&
+        this.isSubset(this.buildIndexKeySpace(stub.meta), indexKeySpace)
+      ) {
+        this.values.set(stubId, Object.assign(stub, symbol));
+        this.stubs.delete(stubId);
+      }
+    }
+  }
+
+  private serializeIndexEntry(indexEntry: IndexEntry): string {
+    return `${indexEntry[0]}:${JSON.stringify(indexEntry[1])}`;
   }
 }

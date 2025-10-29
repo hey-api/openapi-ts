@@ -1,5 +1,31 @@
 # @hey-api/openapi-ts
 
+## 0.86.8
+
+### Patch Changes
+
+- fix(valibot): improve handling of additionalProperties type ([#2870](https://github.com/hey-api/openapi-ts/pull/2870)) ([`da88dd9`](https://github.com/hey-api/openapi-ts/commit/da88dd9962ff3a619f3d4853d641acc3637406f4)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+## 0.86.7
+
+### Patch Changes
+
+- fix(types): export Operation type ([#2862](https://github.com/hey-api/openapi-ts/pull/2862)) ([`857c464`](https://github.com/hey-api/openapi-ts/commit/857c464ac04832c3bf26f33af3c1c90ccf67fda1)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+## 0.86.6
+
+### Patch Changes
+
+- fix(transformers): revert function order to fix infinite cycle regression ([#2855](https://github.com/hey-api/openapi-ts/pull/2855)) ([`81f91a9`](https://github.com/hey-api/openapi-ts/commit/81f91a97e8e50427b45f21c80f72fdff7ce1deca)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+## 0.86.5
+
+### Patch Changes
+
+- fix(parser): write-only schema incorrectly used in response schemas ([#2850](https://github.com/hey-api/openapi-ts/pull/2850)) ([`16cc0e7`](https://github.com/hey-api/openapi-ts/commit/16cc0e7d50993e36dab6349eda1361421bdf44ac)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- fix(cli): move cli script to typescript ([#2852](https://github.com/hey-api/openapi-ts/pull/2852)) ([`b677f89`](https://github.com/hey-api/openapi-ts/commit/b677f893f9dc1848bb54164e736a90e617d1269d)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.86.4
 
 ### Patch Changes

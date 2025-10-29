@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 result=$(pnpx turbo run build --affected --dry-run=json)
 

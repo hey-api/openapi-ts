@@ -16,9 +16,10 @@ export const pipesToAst = ({
     return pipes[0]!;
   }
 
-  const v = plugin.referenceSymbol(
-    plugin.api.selector('external', 'valibot.v'),
-  );
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
       expression: v.placeholder,

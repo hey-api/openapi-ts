@@ -130,8 +130,8 @@ export const irWebhookToAst = ({
     const typeInferSymbol = plugin.config.webhooks.types.infer.enabled
       ? plugin.registerSymbol({
           exported: true,
+          kind: 'type',
           meta: {
-            kind: 'type',
             path: state.path.value,
             tags: state.tags?.value,
           },

@@ -1,3 +1,4 @@
+import type { SymbolMeta } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import { deduplicateSchema } from '~/ir/schema';
@@ -36,14 +37,20 @@ export const irSchemaToAst = ({
     pipes: [],
   };
 
-  const v = plugin.referenceSymbol(
-    plugin.api.selector('external', 'valibot.v'),
-  );
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
 
   if (schema.$ref) {
-    const selector = plugin.api.selector('ref', schema.$ref);
-    const refSymbol = plugin.referenceSymbol(selector);
-    if (plugin.isSymbolRegistered(selector)) {
+    const query: SymbolMeta = {
+      category: 'schema',
+      resource: 'definition',
+      resourceId: schema.$ref,
+      tool: 'valibot',
+    };
+    const refSymbol = plugin.referenceSymbol(query);
+    if (plugin.isSymbolRegistered(query)) {
       const ref = tsc.identifier({ text: refSymbol.placeholder });
       ast.pipes.push(ref);
     } else {
@@ -214,14 +221,17 @@ const handleComponent = ({
   const symbol = plugin.registerSymbol({
     exported: true,
     meta: {
+      category: 'schema',
       path: state.path.value,
+      resource: 'definition',
+      resourceId: $ref,
       tags: state.tags?.value,
+      tool: 'valibot',
     },
     name: buildName({
       config: plugin.config.definitions,
       name: baseName,
     }),
-    selector: plugin.api.selector('ref', $ref),
   });
   exportAst({
     ast,
@@ -235,9 +245,12 @@ const handleComponent = ({
 export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: 'valibot',
-    meta: { importKind: 'namespace' },
+    importKind: 'namespace',
+    meta: {
+      category: 'external',
+      resource: 'valibot.v',
+    },
     name: 'v',
-    selector: plugin.api.selector('external', 'valibot.v'),
   });
 
   plugin.forEach(

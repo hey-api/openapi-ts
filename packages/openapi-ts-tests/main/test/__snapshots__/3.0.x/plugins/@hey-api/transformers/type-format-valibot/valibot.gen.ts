@@ -12,9 +12,9 @@ export const vFoo = v.object({
     id: v.string()
 });
 
-export const vBar = v.object({
+export const vBar = v.objectWithRest({
     foo: v.pipe(v.number(), v.integer())
-});
+}, v.pipe(v.number(), v.integer()));
 
 export const vPostFooData = v.object({
     body: v.optional(v.never()),

@@ -21,6 +21,7 @@ export type IApi = {
    *  - `inject`: never
    *  - `Injectable`: never
    * @returns Selector array
+   * @deprecated
    */
   selector: (type: SelectorType, value?: string) => Selector;
 };

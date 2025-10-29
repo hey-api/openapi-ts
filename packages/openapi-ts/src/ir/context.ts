@@ -14,7 +14,7 @@ import { resolveRef } from '~/utils/ref';
 
 import type { IR } from './types';
 
-export class IRContext<Spec extends Record<string, any> = any> {
+export class Context<Spec extends Record<string, any> = any> {
   /**
    * Configuration for parsing and generating the output. This
    * is a mix of user-provided and default values.
