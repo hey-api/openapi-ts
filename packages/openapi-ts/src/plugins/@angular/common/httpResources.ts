@@ -375,6 +375,7 @@ const generateAngularResourceMethod = ({
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
+    tool: 'typescript',
   });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
@@ -429,6 +430,7 @@ const generateAngularResourceFunction = ({
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
+    tool: 'typescript',
   });
   const dataType = symbolDataType?.placeholder || 'unknown';
 

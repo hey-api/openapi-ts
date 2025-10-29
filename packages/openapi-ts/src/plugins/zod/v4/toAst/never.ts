@@ -10,7 +10,10 @@ export const neverToAst = ({
   schema: SchemaWithType<'never'>;
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
-  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
       expression: z.placeholder,

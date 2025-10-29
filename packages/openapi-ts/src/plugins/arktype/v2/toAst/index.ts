@@ -86,9 +86,10 @@ export const irSchemaWithTypeToAst = ({
     //   });
   }
 
-  const type = args.plugin.referenceSymbol(
-    args.plugin.api.selector('external', 'arktype.type'),
-  );
+  const type = args.plugin.referenceSymbol({
+    category: 'external',
+    resource: 'arktype.type',
+  });
 
   const expression = ts.factory.createCallExpression(
     ts.factory.createIdentifier(type.placeholder),

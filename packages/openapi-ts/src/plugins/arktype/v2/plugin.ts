@@ -27,7 +27,10 @@ export const irSchemaToAst = ({
 }): Ast => {
   let ast: Partial<Ast> = {};
 
-  // const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
+  // const z = plugin.referenceSymbol({
+  //   category: 'external',
+  //   resource: 'arktype.type',
+  // });
 
   if (schema.$ref) {
     const selector = plugin.api.selector('ref', schema.$ref);
@@ -261,13 +264,17 @@ const handleComponent = ({
         exported: true,
         kind: 'type',
         meta: {
+          category: 'type',
           path: state.path.value,
+          resource: 'definition',
+          resourceId: $ref,
+          tool: 'arktype',
+          variant: 'infer',
         },
         name: buildName({
           config: plugin.config.definitions.types.infer,
           name: baseName,
         }),
-        selector: plugin.api.selector('type-infer-ref', $ref),
       })
     : undefined;
   exportAst({
@@ -282,8 +289,11 @@ const handleComponent = ({
 export const handlerV2: ArktypePlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: 'arktype',
+    meta: {
+      category: 'external',
+      resource: 'arktype.type',
+    },
     name: 'type',
-    selector: plugin.api.selector('external', 'arktype.type'),
   });
 
   plugin.forEach(

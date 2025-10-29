@@ -6,16 +6,7 @@ import type { Plugin } from '~/plugins';
 import type { ValidatorArgs } from './shared/types';
 import { createRequestValidatorV2, createResponseValidatorV2 } from './v2/api';
 
-type SelectorType =
-  | 'data'
-  | 'external'
-  | 'ref'
-  | 'responses'
-  | 'type-infer-data'
-  | 'type-infer-ref'
-  | 'type-infer-responses'
-  | 'type-infer-webhook-request'
-  | 'webhook-request';
+type SelectorType = 'data' | 'ref' | 'responses' | 'webhook-request';
 
 export type IApi = {
   createRequestValidator: (args: ValidatorArgs) => ts.ArrowFunction | undefined;
@@ -26,13 +17,8 @@ export type IApi = {
    * @param type Selector type.
    * @param value Depends on `type`:
    *  - `data`: `operation.id` string
-   *  - `external`: external modules
    *  - `ref`: `$ref` JSON pointer
    *  - `responses`: `operation.id` string
-   *  - `type-infer-data`: `operation.id` string
-   *  - `type-infer-ref`: `$ref` JSON pointer
-   *  - `type-infer-responses`: `operation.id` string
-   *  - `type-infer-webhook-request`: `operation.id` string
    *  - `webhook-request`: `operation.id` string
    * @returns Selector array
    * @deprecated

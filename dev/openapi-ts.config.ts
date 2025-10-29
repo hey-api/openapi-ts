@@ -346,7 +346,7 @@ export default defineConfig(() => {
           // definitions: 'z{{name}}Definition',
           exportFromIndex: true,
           // metadata: true,
-          name: 'valibot',
+          // name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
@@ -385,7 +385,7 @@ export default defineConfig(() => {
           // comments: false,
           compatibilityVersion: 4,
           dates: {
-            local: true,
+            // local: true,
             // offset: true,
           },
           definitions: {
@@ -394,7 +394,7 @@ export default defineConfig(() => {
             //     infer: 'D{{name}}ZodType',
             //   },
           },
-          exportFromIndex: true,
+          // exportFromIndex: true,
           // metadata: true,
           // name: 'zod',
           // requests: {
@@ -417,9 +417,9 @@ export default defineConfig(() => {
             // },
           },
           types: {
-            // infer: {
-            //   case: 'snake_case',
-            // },
+            infer: {
+              case: 'snake_case',
+            },
           },
           '~hooks': {
             symbols: {

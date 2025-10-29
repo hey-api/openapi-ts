@@ -12,7 +12,10 @@ export const stringToAst = ({
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
-  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
 
   if (typeof schema.const === 'string') {
     result.expression = tsc.callExpression({
