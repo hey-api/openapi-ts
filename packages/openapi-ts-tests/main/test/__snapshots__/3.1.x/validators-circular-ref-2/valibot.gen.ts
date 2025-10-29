@@ -2,15 +2,15 @@
 
 import * as v from 'valibot';
 
-export const vBar: v.GenericSchema = v.object({
+export const vBar: v.GenericSchema = v.objectWithRest({
     bar: v.union([
         v.array(v.lazy(() => {
             return vBar;
         })),
         v.null()
     ])
-});
+}, v.never());
 
-export const vFoo = v.object({
+export const vFoo = v.objectWithRest({
     foo: vBar
-});
+}, v.never());
