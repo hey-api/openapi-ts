@@ -248,10 +248,10 @@ export default defineConfig(() => {
           // },
         },
         {
-          // asClass: true,
+          asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}',
-          // classNameBuilder: '{{name}}Service',
+          classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
           // client: false,
           // getSignature: ({ fields, signature, operation }) => {
@@ -259,7 +259,7 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          instance: true,
+          // instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
           // params_EXPERIMENTAL: 'experiment',

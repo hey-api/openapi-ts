@@ -85,9 +85,7 @@ describe('generateLegacyClientClass', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/schemas',
           },
@@ -96,9 +94,7 @@ describe('generateLegacyClientClass', () => {
           output: '',
         },
         '@hey-api/sdk': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/sdk',
           },

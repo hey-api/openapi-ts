@@ -60,6 +60,7 @@ export class Foo extends _HeyApiClient {
             ...options
         });
     }
+    
     bar = new Bar({ client: this._client });
 }
 
@@ -77,5 +78,6 @@ export class Sdk extends _HeyApiClient {
             ...options
         });
     }
+    
     foo = new Foo({ client: this._client });
 }

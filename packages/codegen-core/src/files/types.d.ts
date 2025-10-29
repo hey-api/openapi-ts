@@ -1,5 +1,13 @@
 import type { IBiMap } from '../bimap/types';
-import type { ISelector } from '../selectors/types';
+
+/**
+ * Selector array used to reference files.
+ *
+ * @example ["foo", "bar"]
+ */
+export type IFileSelector = ReadonlyArray<string>;
+
+export type IFileIdentifier = number | IFileSelector;
 
 export interface IFileIn {
   /**
@@ -32,12 +40,11 @@ export interface IFileIn {
    */
   readonly path?: string;
   /**
-   * Selector array used to select this file. It doesn't have to be
-   * unique, but in practice it might be desirable.
+   * Selector array used to select this file.
    *
-   * @example ["zod", "#/components/schemas/Foo"]
+   * @example ["foo", "bar"]
    */
-  readonly selector?: ISelector;
+  readonly selector?: IFileSelector;
 }
 
 export interface IFileOut extends IFileIn {
@@ -70,12 +77,12 @@ export interface IFileOut extends IFileIn {
 
 export interface IFileRegistry {
   /**
-   * Get a file by its ID.
+   * Get a file.
    *
-   * @param fileIdOrSelector File ID or selector to reference.
+   * @param identifier File identifier to reference.
    * @returns The file, or undefined if not found.
    */
-  get(fileIdOrSelector: number | ISelector): IFileOut | undefined;
+  get(identifier: IFileIdentifier): IFileOut | undefined;
   /**
    * Returns the current file ID and increments it.
    *
@@ -85,17 +92,17 @@ export interface IFileRegistry {
   /**
    * Returns whether a file is registered in the registry.
    *
-   * @param fileIdOrSelector File ID or selector to check.
+   * @param identifier File identifier to check.
    * @returns True if the file is registered, false otherwise.
    */
-  isRegistered(fileIdOrSelector: number | ISelector): boolean;
+  isRegistered(identifier: IFileIdentifier): boolean;
   /**
-   * Returns a file by ID or selector, registering it if it doesn't exist.
+   * Returns a file by identifier, registering it if it doesn't exist.
    *
-   * @param fileIdOrSelector File ID or selector to reference.
+   * @param identifier File identifier to reference.
    * @returns The referenced or newly registered file.
    */
-  reference(fileIdOrSelector: number | ISelector): IFileOut;
+  reference(identifier: IFileIdentifier): IFileOut;
   /**
    * Get all unregistered files in the order they were referenced.
    *
