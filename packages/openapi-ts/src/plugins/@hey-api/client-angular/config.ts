@@ -10,9 +10,7 @@ import type { HeyApiClientAngularPlugin } from './types';
 
 export const defaultConfig: HeyApiClientAngularPlugin['Config'] = {
   ...clientDefaultMeta,
-  api: new Api({
-    name: '@hey-api/client-angular',
-  }),
+  api: new Api(),
   config: {
     ...clientDefaultConfig,
     throwOnError: false,

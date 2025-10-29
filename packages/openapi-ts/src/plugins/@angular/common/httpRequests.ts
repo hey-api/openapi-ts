@@ -3,7 +3,6 @@ import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { operationClasses } from '~/plugins/@hey-api/sdk/shared/operation';
 import {
   createOperationComment,
@@ -210,14 +209,9 @@ const generateRequestCallExpression = ({
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  const client = getClientPlugin(plugin.context.config);
-  const symbolClient =
-    client.api && 'selector' in client.api
-      ? plugin.getSymbol(
-          // @ts-expect-error
-          client.api.selector('client'),
-        )
-      : undefined;
+  const symbolClient = plugin.getSymbol({
+    category: 'client',
+  });
 
   const optionsClient = tsc.propertyAccessExpression({
     expression: tsc.identifier({ text: 'options' }),

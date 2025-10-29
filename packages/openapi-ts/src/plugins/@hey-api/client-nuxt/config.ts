@@ -10,9 +10,7 @@ import type { HeyApiClientNuxtPlugin } from './types';
 
 export const defaultConfig: HeyApiClientNuxtPlugin['Config'] = {
   ...clientDefaultMeta,
-  api: new Api({
-    name: '@hey-api/client-nuxt',
-  }),
+  api: new Api(),
   config: clientDefaultConfig,
   handler: clientPluginHandler,
   name: '@hey-api/client-nuxt',
