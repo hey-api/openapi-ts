@@ -19,9 +19,10 @@ export const createMutationOptions = ({
   plugin: PiniaColadaPlugin['Instance'];
   queryFn: string;
 }): void => {
-  const symbolMutationOptionsType = plugin.referenceSymbol(
-    plugin.api.selector('UseMutationOptions'),
-  );
+  const symbolMutationOptionsType = plugin.referenceSymbol({
+    category: 'external',
+    resource: `${plugin.name}.UseMutationOptions`,
+  });
 
   const typeData = useTypeData({ operation, plugin });
   const typeError = useTypeError({ operation, plugin });

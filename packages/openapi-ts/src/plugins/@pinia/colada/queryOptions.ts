@@ -171,10 +171,9 @@ export const createQueryOptions = ({
       name: operation.id,
     }),
   });
-  const symbolDefineQueryOptions = plugin.registerSymbol({
-    external: plugin.name,
-    name: 'defineQueryOptions',
-    selector: plugin.api.selector('defineQueryOptions'),
+  const symbolDefineQueryOptions = plugin.referenceSymbol({
+    category: 'external',
+    resource: `${plugin.name}.defineQueryOptions`,
   });
   const statement = tsc.constVariable({
     comment: plugin.config.comments

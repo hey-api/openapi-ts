@@ -1,3 +1,4 @@
+import type { SymbolMeta } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import { statusCodeToGroup } from '~/ir/operation';
@@ -525,13 +526,15 @@ export const operationStatements = ({
     });
   }
 
-  if (plugin.config.transformer === '@hey-api/transformers') {
-    const pluginTransformers = plugin.getPluginOrThrow(
-      plugin.config.transformer,
-    );
-    const selector = pluginTransformers.api.selector('response', operation.id);
-    if (plugin.isSymbolRegistered(selector)) {
-      const ref = plugin.referenceSymbol(selector);
+  if (plugin.config.transformer) {
+    const query: SymbolMeta = {
+      category: 'transform',
+      resource: 'operation',
+      resourceId: operation.id,
+      role: 'response',
+    };
+    if (plugin.isSymbolRegistered(query)) {
+      const ref = plugin.referenceSymbol(query);
       requestOptions.push({
         key: 'responseTransformer',
         value: ref.placeholder,

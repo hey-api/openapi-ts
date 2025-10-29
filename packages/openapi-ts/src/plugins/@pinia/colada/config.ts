@@ -5,9 +5,7 @@ import { handler } from './plugin';
 import type { PiniaColadaPlugin } from './types';
 
 export const defaultConfig: PiniaColadaPlugin['Config'] = {
-  api: new Api({
-    name: '@pinia/colada',
-  }),
+  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,

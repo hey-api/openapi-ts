@@ -339,8 +339,10 @@ export const generateClassSdk = ({
                   providedIn: 'root',
                 },
               ],
-              name: plugin.referenceSymbol(plugin.api.selector('Injectable'))
-                .placeholder,
+              name: plugin.referenceSymbol({
+                category: 'external',
+                resource: '@angular/core.Injectable',
+              }).placeholder,
             }
           : undefined,
       exportClass: symbol.exported,

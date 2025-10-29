@@ -21,6 +21,7 @@ declare module '@hey-api/codegen-core' {
       | 'hook'
       | 'schema'
       | 'sdk'
+      | 'transform'
       | 'type'
       | 'utility'
       | (string & {});
@@ -52,8 +53,10 @@ declare module '@hey-api/codegen-core' {
      */
     tags?: ReadonlyArray<string>;
     tool?:
+      | 'angular'
       | 'arktype'
       | 'fastify'
+      | 'json-schema'
       | 'typescript'
       | 'valibot'
       | 'zod'
