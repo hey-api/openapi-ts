@@ -11,9 +11,7 @@ type CompatibilityVersion = NonNullable<
 >;
 
 export const defaultConfig: ZodPlugin['Config'] = {
-  api: new Api({
-    name: 'zod',
-  }),
+  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,

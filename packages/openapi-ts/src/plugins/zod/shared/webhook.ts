@@ -118,31 +118,37 @@ export const irWebhookToAst = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
+        category: 'schema',
         path: state.path.value,
+        resource: 'webhook',
+        resourceId: operation.id,
+        role: 'data',
         tags: state.tags?.value,
+        tool: 'zod',
       },
       name: buildName({
         config: plugin.config.webhooks,
         name: operation.id,
       }),
-      selector: plugin.api.selector('webhook-request', operation.id),
     });
     const typeInferSymbol = plugin.config.webhooks.types.infer.enabled
       ? plugin.registerSymbol({
           exported: true,
           kind: 'type',
           meta: {
+            category: 'type',
             path: state.path.value,
+            resource: 'webhook',
+            resourceId: operation.id,
+            role: 'data',
             tags: state.tags?.value,
+            tool: 'zod',
+            variant: 'infer',
           },
           name: buildName({
             config: plugin.config.webhooks.types.infer,
             name: operation.id,
           }),
-          selector: plugin.api.selector(
-            'type-infer-webhook-request',
-            operation.id,
-          ),
         })
       : undefined;
     exportAst({

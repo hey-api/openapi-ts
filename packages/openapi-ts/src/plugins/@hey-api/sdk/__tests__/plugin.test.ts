@@ -115,7 +115,6 @@ describe('handlerLegacy', () => {
         '@hey-api/typescript': {
           api: {
             schemaToType: () => ({}) as ts.TypeNode,
-            selector: () => [],
           },
           config: {
             name: '@hey-api/typescript',
@@ -357,7 +356,6 @@ describe('methodNameBuilder', () => {
         '@hey-api/typescript': {
           api: {
             schemaToType: () => ({}) as ts.TypeNode,
-            selector: () => [],
           },
           config: {
             name: '@hey-api/typescript',
@@ -522,7 +520,6 @@ describe('methodNameBuilder', () => {
         '@hey-api/typescript': {
           api: {
             schemaToType: () => ({}) as ts.TypeNode,
-            selector: () => [],
           },
           config: {
             name: '@hey-api/typescript',
@@ -689,7 +686,6 @@ describe('methodNameBuilder', () => {
         '@hey-api/typescript': {
           api: {
             schemaToType: () => ({}) as ts.TypeNode,
-            selector: () => [],
           },
           config: {
             name: '@hey-api/typescript',

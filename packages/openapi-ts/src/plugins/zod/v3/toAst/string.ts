@@ -10,7 +10,10 @@ export const stringToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
 }) => {
-  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
 
   if (typeof schema.const === 'string') {
     const expression = tsc.callExpression({

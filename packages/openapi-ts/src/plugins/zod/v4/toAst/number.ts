@@ -15,7 +15,10 @@ export const numberToAst = ({
 
   const isBigInt = schema.type === 'integer' && schema.format === 'int64';
 
-  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
 
   if (typeof schema.const === 'number') {
     // TODO: parser - handle bigint constants

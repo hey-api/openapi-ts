@@ -43,7 +43,7 @@ declare module '@hey-api/codegen-core' {
      * Tags associated with this symbol.
      */
     tags?: Set<string>;
-    tool?: 'valibot' | (string & {});
+    tool?: 'arktype' | 'typescript' | 'valibot' | 'zod' | (string & {});
     variant?: 'container' | (string & {});
   }
 }
