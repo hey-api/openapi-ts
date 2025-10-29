@@ -24,9 +24,10 @@ export const numberToAst = ({
   const isBigInt = needsBigIntForFormat(format);
   const formatInfo = isIntegerFormat(format) ? INTEGER_FORMATS[format] : null;
 
-  const v = plugin.referenceSymbol(
-    plugin.api.selector('external', 'valibot.v'),
-  );
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
 
   // Return early if const is defined since we can create a literal type directly without additional validation
   if (schema.const !== undefined && schema.const !== null) {

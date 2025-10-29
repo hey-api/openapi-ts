@@ -17,9 +17,10 @@ export const tupleToAst = ({
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
-  const v = plugin.referenceSymbol(
-    plugin.api.selector('external', 'valibot.v'),
-  );
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
