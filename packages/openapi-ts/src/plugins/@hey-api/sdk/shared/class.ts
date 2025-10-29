@@ -144,11 +144,13 @@ export const generateClassSdk = ({
         context: plugin.context,
         operation,
       });
-      const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
       const symbolResponse = isNuxtClient
-        ? plugin.getSymbol(
-            pluginTypeScript.api.selector('response', operation.id),
-          )
+        ? plugin.querySymbol({
+            category: 'type',
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'response',
+          })
         : undefined;
 
       const classes = operationClasses({
@@ -278,9 +280,6 @@ export const generateClassSdk = ({
 
   const symbolHeyApiClient = plugin.registerSymbol({
     exported: false,
-    meta: {
-      path: [],
-    },
     name: '_HeyApiClient',
   });
 
@@ -333,9 +332,6 @@ export const generateClassSdk = ({
 
     const symbol = plugin.registerSymbol({
       exported: true,
-      meta: {
-        path: [],
-      },
       name: currentClass.className,
       selector: plugin.api.selector('class', currentClass.className),
     });

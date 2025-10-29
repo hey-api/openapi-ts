@@ -259,8 +259,8 @@ const handleComponent = ({
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
     ? plugin.registerSymbol({
         exported: true,
+        kind: 'type',
         meta: {
-          kind: 'type',
           path: state.path.value,
         },
         name: buildName({

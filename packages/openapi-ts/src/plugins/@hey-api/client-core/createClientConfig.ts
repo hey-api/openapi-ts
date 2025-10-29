@@ -7,30 +7,24 @@ export const createClientConfigType = ({
   plugin,
 }: Parameters<PluginHandler>[0]) => {
   const clientModule = clientFolderAbsolutePath(plugin.context.config);
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  const symbolClientOptions = plugin.referenceSymbol(
-    pluginTypeScript.api.selector('ClientOptions'),
-  );
+  const symbolClientOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client',
+    role: 'options',
+  });
   const symbolConfig = plugin.registerSymbol({
     external: clientModule,
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: 'Config',
   });
   const symbolDefaultClientOptions = plugin.registerSymbol({
     external: clientModule,
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: 'ClientOptions',
   });
   const symbolCreateClientConfig = plugin.registerSymbol({
     exported: true,
-    meta: {
-      kind: 'type',
-      path: [],
-    },
+    kind: 'type',
     name: 'CreateClientConfig',
   });
 

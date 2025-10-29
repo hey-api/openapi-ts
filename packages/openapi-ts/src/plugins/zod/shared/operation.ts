@@ -131,8 +131,8 @@ export const irOperationToAst = ({
     const typeInferSymbol = plugin.config.requests.types.infer.enabled
       ? plugin.registerSymbol({
           exported: true,
+          kind: 'type',
           meta: {
-            kind: 'type',
             path: state.path.value,
             tags: state.tags?.value,
           },
@@ -174,8 +174,8 @@ export const irOperationToAst = ({
         const typeInferSymbol = plugin.config.responses.types.infer.enabled
           ? plugin.registerSymbol({
               exported: true,
+              kind: 'type',
               meta: {
-                kind: 'type',
                 path,
                 tags: state.tags?.value,
               },

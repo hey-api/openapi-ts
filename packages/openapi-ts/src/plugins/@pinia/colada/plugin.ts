@@ -8,33 +8,25 @@ import type { PiniaColadaPlugin } from './types';
 export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: plugin.name,
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: 'UseMutationOptions',
     selector: plugin.api.selector('UseMutationOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: 'UseQueryOptions',
     selector: plugin.api.selector('UseQueryOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: '_JSONValue',
     selector: plugin.api.selector('_JSONValue'),
   });
   plugin.registerSymbol({
     external: 'axios',
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: 'AxiosError',
     selector: plugin.api.selector('AxiosError'),
   });

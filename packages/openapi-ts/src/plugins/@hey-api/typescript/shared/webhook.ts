@@ -25,8 +25,8 @@ const operationToDataType = ({
   if (operation.body) {
     const symbolWebhookPayload = plugin.registerSymbol({
       exported: true,
+      kind: 'type',
       meta: {
-        kind: 'type',
         path: state.path.value,
         tags: state.tags?.value,
       },
@@ -54,14 +54,13 @@ const operationToDataType = ({
 
     plugin.registerSymbol({
       exported: true,
+      kind: 'type',
       meta: {
-        kind: 'type',
         path: state.path.value,
         tags: state.tags?.value,
       },
       name: symbolWebhookPayload.name,
       placeholder: symbolWebhookPayload.placeholder,
-      selector: plugin.api.selector('ref', symbolWebhookPayload.placeholder),
     });
     data.properties.body = { $ref: symbolWebhookPayload.placeholder };
     dataRequired.push('body');
@@ -82,8 +81,8 @@ const operationToDataType = ({
 
   const symbolWebhookRequest = plugin.registerSymbol({
     exported: true,
+    kind: 'type',
     meta: {
-      kind: 'type',
       path: state.path.value,
       tags: state.tags?.value,
     },

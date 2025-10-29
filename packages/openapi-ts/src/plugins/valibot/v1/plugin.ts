@@ -235,7 +235,7 @@ const handleComponent = ({
 export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: 'valibot',
-    meta: { importKind: 'namespace' },
+    importKind: 'namespace',
     name: 'v',
     selector: plugin.api.selector('external', 'valibot.v'),
   });

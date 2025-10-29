@@ -334,10 +334,12 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
         return;
       }
 
-      const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-      const symbolResponse = plugin.getSymbol(
-        pluginTypeScript.api.selector('response', operation.id),
-      );
+      const symbolResponse = plugin.querySymbol({
+        category: 'type',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'response',
+      });
       if (!symbolResponse) return;
 
       // TODO: parser - consider handling simple string response which is also a date

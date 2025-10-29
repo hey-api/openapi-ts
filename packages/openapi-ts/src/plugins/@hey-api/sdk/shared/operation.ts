@@ -158,19 +158,23 @@ export const operationOptionsType = ({
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-
-  const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.selector('data', operation.id),
-  );
+  const symbolDataType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'data',
+  });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
   const symbolOptions = plugin.referenceSymbol(plugin.api.selector('Options'));
 
   if (isNuxtClient) {
-    const symbolResponseType = plugin.getSymbol(
-      pluginTypeScript.api.selector('response', operation.id),
-    );
+    const symbolResponseType = plugin.querySymbol({
+      category: 'type',
+      resource: 'operation',
+      resourceId: operation.id,
+      role: 'response',
+    });
     const responseType = symbolResponseType?.placeholder || 'unknown';
     return `${symbolOptions.placeholder}<${nuxtTypeComposable}, ${dataType}, ${responseType}, ${nuxtTypeDefault}>`;
   }
@@ -369,22 +373,20 @@ export const operationStatements = ({
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-
-  const symbolResponseType = plugin.getSymbol(
-    pluginTypeScript.api.selector(
-      isNuxtClient ? 'response' : 'responses',
-      operation.id,
-    ),
-  );
+  const symbolResponseType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: isNuxtClient ? 'response' : 'responses',
+  });
   const responseType = symbolResponseType?.placeholder || 'unknown';
 
-  const symbolErrorType = plugin.getSymbol(
-    pluginTypeScript.api.selector(
-      isNuxtClient ? 'error' : 'errors',
-      operation.id,
-    ),
-  );
+  const symbolErrorType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: isNuxtClient ? 'error' : 'errors',
+  });
   const errorType = symbolErrorType?.placeholder || 'unknown';
 
   // TODO: transform parameters

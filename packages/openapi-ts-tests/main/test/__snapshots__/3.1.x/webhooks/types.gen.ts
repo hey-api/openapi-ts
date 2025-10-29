@@ -95,7 +95,7 @@ export type SessionUserPhoneCalloutRingingWebhookPayload = {
 };
 
 export type SessionUserPhoneCalloutRingingWebhookRequest = {
-    body: SessionUserPhoneCalloutRingingWebhookPayload;
+    body: _heyapi_5_;
     key: 'session.user_phone_callout_ringing';
     path?: never;
     query?: never;
@@ -186,7 +186,7 @@ export type SessionUserRoomSystemCalloutRingingWebhookPayload = {
 };
 
 export type SessionUserRoomSystemCalloutRingingWebhookRequest = {
-    body: SessionUserRoomSystemCalloutRingingWebhookPayload;
+    body: _heyapi_9_;
     key: 'session.user_room_system_callout_ringing';
     path?: never;
     query?: never;
@@ -271,7 +271,7 @@ export type SessionRecordingStartedWebhookPayload = {
 };
 
 export type SessionRecordingStartedWebhookRequest = {
-    body: SessionRecordingStartedWebhookPayload;
+    body: _heyapi_13_;
     key: 'session.recording_started';
     path?: never;
     query?: never;
@@ -356,7 +356,7 @@ export type SessionRecordingResumedWebhookPayload = {
 };
 
 export type SessionRecordingResumedWebhookRequest = {
-    body: SessionRecordingResumedWebhookPayload;
+    body: _heyapi_17_;
     key: 'session.recording_resumed';
     path?: never;
     query?: never;
@@ -461,7 +461,7 @@ export type SessionLiveStreamingStoppedWebhookPayload = {
 };
 
 export type SessionLiveStreamingStoppedWebhookRequest = {
-    body: SessionLiveStreamingStoppedWebhookPayload;
+    body: _heyapi_21_;
     key: 'session.live_streaming_stopped';
     path?: never;
     query?: never;
@@ -545,7 +545,7 @@ export type SessionStreamIngestionStoppedWebhookPayload = {
 };
 
 export type SessionStreamIngestionStoppedWebhookRequest = {
-    body: SessionStreamIngestionStoppedWebhookPayload;
+    body: _heyapi_25_;
     key: 'session.stream_ingestion_stopped';
     path?: never;
     query?: never;
@@ -636,7 +636,7 @@ export type SessionUserRoomSystemCalloutRejectedWebhookPayload = {
 };
 
 export type SessionUserRoomSystemCalloutRejectedWebhookRequest = {
-    body: SessionUserRoomSystemCalloutRejectedWebhookPayload;
+    body: _heyapi_29_;
     key: 'session.user_room_system_callout_rejected';
     path?: never;
     query?: never;
@@ -712,7 +712,7 @@ export type SessionAlertWebhookPayload = {
 };
 
 export type SessionAlertWebhookRequest = {
-    body: SessionAlertWebhookPayload;
+    body: _heyapi_33_;
     key: 'session.alert';
     path?: never;
     query?: never;
@@ -813,7 +813,7 @@ export type SessionSharingEndedWebhookPayload = {
 };
 
 export type SessionSharingEndedWebhookRequest = {
-    body: SessionSharingEndedWebhookPayload;
+    body: _heyapi_37_;
     key: 'session.sharing_ended';
     path?: never;
     query?: never;
@@ -898,7 +898,7 @@ export type SessionRecordingPausedWebhookPayload = {
 };
 
 export type SessionRecordingPausedWebhookRequest = {
-    body: SessionRecordingPausedWebhookPayload;
+    body: _heyapi_41_;
     key: 'session.recording_paused';
     path?: never;
     query?: never;
@@ -973,7 +973,7 @@ export type SessionEndedWebhookPayload = {
 };
 
 export type SessionEndedWebhookRequest = {
-    body: SessionEndedWebhookPayload;
+    body: _heyapi_45_;
     key: 'session.ended';
     path?: never;
     query?: never;
@@ -1044,7 +1044,7 @@ export type SessionStartedWebhookPayload = {
 };
 
 export type SessionStartedWebhookRequest = {
-    body: SessionStartedWebhookPayload;
+    body: _heyapi_49_;
     key: 'session.started';
     path?: never;
     query?: never;
@@ -1128,7 +1128,7 @@ export type SessionStreamIngestionUnbindWebhookPayload = {
 };
 
 export type SessionStreamIngestionUnbindWebhookRequest = {
-    body: SessionStreamIngestionUnbindWebhookPayload;
+    body: _heyapi_53_;
     key: 'session.stream_ingestion_unbind';
     path?: never;
     query?: never;
@@ -1233,7 +1233,7 @@ export type SessionLiveStreamingStartedWebhookPayload = {
 };
 
 export type SessionLiveStreamingStartedWebhookRequest = {
-    body: SessionLiveStreamingStartedWebhookPayload;
+    body: _heyapi_57_;
     key: 'session.live_streaming_started';
     path?: never;
     query?: never;
@@ -1324,7 +1324,7 @@ export type SessionUserRoomSystemCalloutMissedWebhookPayload = {
 };
 
 export type SessionUserRoomSystemCalloutMissedWebhookRequest = {
-    body: SessionUserRoomSystemCalloutMissedWebhookPayload;
+    body: _heyapi_61_;
     key: 'session.user_room_system_callout_missed';
     path?: never;
     query?: never;
@@ -1418,7 +1418,7 @@ export type SessionUserPhoneCalloutAcceptedWebhookPayload = {
 };
 
 export type SessionUserPhoneCalloutAcceptedWebhookRequest = {
-    body: SessionUserPhoneCalloutAcceptedWebhookPayload;
+    body: _heyapi_65_;
     key: 'session.user_phone_callout_accepted';
     path?: never;
     query?: never;
@@ -1525,7 +1525,7 @@ export type SessionUserLeftWebhookPayload = {
 };
 
 export type SessionUserLeftWebhookRequest = {
-    body: SessionUserLeftWebhookPayload;
+    body: _heyapi_69_;
     key: 'session.user_left';
     path?: never;
     query?: never;
@@ -1623,7 +1623,7 @@ export type SessionSharingStartedWebhookPayload = {
 };
 
 export type SessionSharingStartedWebhookRequest = {
-    body: SessionSharingStartedWebhookPayload;
+    body: _heyapi_73_;
     key: 'session.sharing_started';
     path?: never;
     query?: never;
@@ -1699,7 +1699,7 @@ export type SessionUserPhoneCalloutCanceledWebhookPayload = {
 };
 
 export type SessionUserPhoneCalloutCanceledWebhookRequest = {
-    body: SessionUserPhoneCalloutCanceledWebhookPayload;
+    body: _heyapi_77_;
     key: 'session.user_phone_callout_canceled';
     path?: never;
     query?: never;
@@ -1874,7 +1874,7 @@ export type SessionRecordingTranscriptCompletedWebhookPayload = {
 };
 
 export type SessionRecordingTranscriptCompletedWebhookRequest = {
-    body: SessionRecordingTranscriptCompletedWebhookPayload;
+    body: _heyapi_81_;
     key: 'session.recording_transcript_completed';
     path?: never;
     query?: never;
@@ -1960,7 +1960,7 @@ export type SessionRecordingDeletedWebhookPayload = {
 };
 
 export type SessionRecordingDeletedWebhookRequest = {
-    body: SessionRecordingDeletedWebhookPayload;
+    body: _heyapi_85_;
     key: 'session.recording_deleted';
     path?: never;
     query?: never;
@@ -2070,7 +2070,7 @@ export type SessionUserRoomSystemCalloutFailedWebhookPayload = {
 };
 
 export type SessionUserRoomSystemCalloutFailedWebhookRequest = {
-    body: SessionUserRoomSystemCalloutFailedWebhookPayload;
+    body: _heyapi_89_;
     key: 'session.user_room_system_callout_failed';
     path?: never;
     query?: never;
@@ -2373,7 +2373,7 @@ export type SessionRecordingCompletedWebhookPayload = {
 };
 
 export type SessionRecordingCompletedWebhookRequest = {
-    body: SessionRecordingCompletedWebhookPayload;
+    body: _heyapi_93_;
     key: 'session.recording_completed';
     path?: never;
     query?: never;
@@ -2448,7 +2448,7 @@ export type SessionRecordingTranscriptFailedWebhookPayload = {
 };
 
 export type SessionRecordingTranscriptFailedWebhookRequest = {
-    body: SessionRecordingTranscriptFailedWebhookPayload;
+    body: _heyapi_97_;
     key: 'session.recording_transcript_failed';
     path?: never;
     query?: never;
@@ -2534,7 +2534,7 @@ export type SessionRecordingTrashedWebhookPayload = {
 };
 
 export type SessionRecordingTrashedWebhookRequest = {
-    body: SessionRecordingTrashedWebhookPayload;
+    body: _heyapi_101_;
     key: 'session.recording_trashed';
     path?: never;
     query?: never;
@@ -2628,7 +2628,7 @@ export type SessionUserJoinedWebhookPayload = {
 };
 
 export type SessionUserJoinedWebhookRequest = {
-    body: SessionUserJoinedWebhookPayload;
+    body: _heyapi_105_;
     key: 'session.user_joined';
     path?: never;
     query?: never;
@@ -2712,7 +2712,7 @@ export type SessionStreamIngestionStartedWebhookPayload = {
 };
 
 export type SessionStreamIngestionStartedWebhookRequest = {
-    body: SessionStreamIngestionStartedWebhookPayload;
+    body: _heyapi_109_;
     key: 'session.stream_ingestion_started';
     path?: never;
     query?: never;
@@ -2796,7 +2796,7 @@ export type SessionStreamIngestionConnectedWebhookPayload = {
 };
 
 export type SessionStreamIngestionConnectedWebhookRequest = {
-    body: SessionStreamIngestionConnectedWebhookPayload;
+    body: _heyapi_113_;
     key: 'session.stream_ingestion_connected';
     path?: never;
     query?: never;
@@ -2880,7 +2880,7 @@ export type SessionStreamIngestionDisconnectedWebhookPayload = {
 };
 
 export type SessionStreamIngestionDisconnectedWebhookRequest = {
-    body: SessionStreamIngestionDisconnectedWebhookPayload;
+    body: _heyapi_117_;
     key: 'session.stream_ingestion_disconnected';
     path?: never;
     query?: never;
@@ -2966,7 +2966,7 @@ export type SessionRecordingRecoveredWebhookPayload = {
 };
 
 export type SessionRecordingRecoveredWebhookRequest = {
-    body: SessionRecordingRecoveredWebhookPayload;
+    body: _heyapi_121_;
     key: 'session.recording_recovered';
     path?: never;
     query?: never;
@@ -3061,7 +3061,7 @@ export type SessionUserPhoneCalloutMissedWebhookPayload = {
 };
 
 export type SessionUserPhoneCalloutMissedWebhookRequest = {
-    body: SessionUserPhoneCalloutMissedWebhookPayload;
+    body: _heyapi_125_;
     key: 'session.user_phone_callout_missed';
     path?: never;
     query?: never;
@@ -3156,7 +3156,7 @@ export type SessionUserPhoneCalloutRejectedWebhookPayload = {
 };
 
 export type SessionUserPhoneCalloutRejectedWebhookRequest = {
-    body: SessionUserPhoneCalloutRejectedWebhookPayload;
+    body: _heyapi_129_;
     key: 'session.user_phone_callout_rejected';
     path?: never;
     query?: never;
@@ -3247,7 +3247,7 @@ export type SessionUserRoomSystemCalloutAcceptedWebhookPayload = {
 };
 
 export type SessionUserRoomSystemCalloutAcceptedWebhookRequest = {
-    body: SessionUserRoomSystemCalloutAcceptedWebhookPayload;
+    body: _heyapi_133_;
     key: 'session.user_room_system_callout_accepted';
     path?: never;
     query?: never;
@@ -3332,7 +3332,7 @@ export type SessionRecordingStoppedWebhookPayload = {
 };
 
 export type SessionRecordingStoppedWebhookRequest = {
-    body: SessionRecordingStoppedWebhookPayload;
+    body: _heyapi_137_;
     key: 'session.recording_stopped';
     path?: never;
     query?: never;

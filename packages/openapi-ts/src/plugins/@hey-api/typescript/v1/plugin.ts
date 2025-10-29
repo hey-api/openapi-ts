@@ -25,9 +25,11 @@ export const irSchemaToAst = ({
   schema: IR.SchemaObject;
 }): ts.TypeNode => {
   if (schema.$ref) {
-    const symbol = plugin.referenceSymbol(
-      plugin.api.selector('ref', schema.$ref),
-    );
+    const symbol = plugin.referenceSymbol({
+      category: 'type',
+      resource: 'definition',
+      resourceId: schema.$ref,
+    });
     return tsc.typeReferenceNode({ typeName: symbol.placeholder });
   }
 
@@ -82,16 +84,18 @@ const handleComponent = ({
   const $ref = pathToJsonPointer(state.path.value);
   const symbol = plugin.registerSymbol({
     exported: true,
+    kind: isEnum ? undefined : 'type',
     meta: {
-      kind: isEnum ? undefined : 'type',
+      category: 'type',
       path: state.path.value,
+      resource: 'definition',
+      resourceId: $ref,
       tags: state.tags?.value,
     },
     name: buildName({
       config: plugin.config.definitions,
       name: refToName($ref),
     }),
-    selector: plugin.api.selector('ref', $ref),
   });
   exportType({
     plugin,
@@ -105,9 +109,11 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   // reserve identifier for ClientOptions
   const symbolClientOptions = plugin.registerSymbol({
     exported: true,
+    kind: 'type',
     meta: {
-      kind: 'type',
-      path: [],
+      category: 'type',
+      resource: 'client',
+      role: 'options',
     },
     name: buildName({
       config: {
@@ -115,15 +121,11 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
       },
       name: 'ClientOptions',
     }),
-    selector: plugin.api.selector('ClientOptions'),
   });
   // reserve identifier for Webhooks
   const symbolWebhooks = plugin.registerSymbol({
     exported: true,
-    meta: {
-      kind: 'type',
-      path: [],
-    },
+    kind: 'type',
     name: buildName({
       config: {
         case: plugin.config.case,
