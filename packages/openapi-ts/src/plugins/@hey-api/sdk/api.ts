@@ -27,6 +27,7 @@ export type IApi = {
    *  - `Options`: never
    *  - `urlSearchParamsBodySerializer`: never
    * @returns Selector array
+   * @deprecated
    */
   selector: (type: SelectorType, value?: string) => Selector;
 };

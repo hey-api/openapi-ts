@@ -40,6 +40,7 @@ export type IApi = {
    *  - `type-infer-webhook-request`: `operation.id` string
    *  - `webhook-request`: `operation.id` string
    * @returns Selector array
+   * @deprecated
    */
   selector: (type: SelectorType, value?: string) => Selector;
 };
