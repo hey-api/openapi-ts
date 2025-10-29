@@ -289,10 +289,11 @@ const generateAngularRequestMethod = ({
     resource: '@angular/common/http.HttpRequest',
   });
 
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.selector('Options'),
-  );
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
 
   const symbolDataType = plugin.querySymbol({
     category: 'type',
@@ -349,10 +350,11 @@ const generateAngularRequestFunction = ({
     resource: '@angular/common/http.HttpRequest',
   });
 
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.selector('Options'),
-  );
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
 
   const symbolDataType = plugin.querySymbol({
     category: 'type',

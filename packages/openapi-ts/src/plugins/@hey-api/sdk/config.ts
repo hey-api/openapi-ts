@@ -6,9 +6,7 @@ import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiSdkPlugin } from './types';
 
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
-  api: new Api({
-    name: '@hey-api/sdk',
-  }),
+  api: new Api(),
   config: {
     asClass: false,
     auth: true,
