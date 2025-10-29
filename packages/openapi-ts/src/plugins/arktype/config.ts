@@ -5,9 +5,7 @@ import { handler } from './plugin';
 import type { ArktypePlugin } from './types';
 
 export const defaultConfig: ArktypePlugin['Config'] = {
-  api: new Api({
-    name: 'arktype',
-  }),
+  api: new Api(),
   config: {
     case: 'PascalCase',
     comments: true,
