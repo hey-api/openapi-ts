@@ -71,29 +71,55 @@ export class Logger {
     }
   }
 
+  /**
+   * Recursively end all unended events in the event tree.
+   * This ensures all events have end marks before measuring.
+   */
+  private endAllEvents(events: Array<LoggerEvent>): void {
+    for (const event of events) {
+      if (!event.end) {
+        event.end = performance.mark(idEnd(event.id));
+      }
+      if (event.events.length > 0) {
+        this.endAllEvents(event.events);
+      }
+    }
+  }
+
   report(print: boolean = true): PerformanceMeasure | undefined {
     const firstEvent = this.events[0];
     if (!firstEvent) return;
+
+    // Ensure all events are ended before reporting
+    this.endAllEvents(this.events);
+
     const lastEvent = this.events[this.events.length - 1]!;
     const name = 'root';
     const id = nameToId(name);
-    const measure = performance.measure(
-      idLength(id),
-      idStart(firstEvent.id),
-      idEnd(lastEvent.id),
-    );
-    if (print) {
-      this.reportEvent({
-        end: lastEvent.end,
-        events: this.events,
-        id,
-        indent: 0,
-        measure,
-        name,
-        start: firstEvent!.start,
-      });
+
+    try {
+      const measure = performance.measure(
+        idLength(id),
+        idStart(firstEvent.id),
+        idEnd(lastEvent.id),
+      );
+      if (print) {
+        this.reportEvent({
+          end: lastEvent.end,
+          events: this.events,
+          id,
+          indent: 0,
+          measure,
+          name,
+          start: firstEvent!.start,
+        });
+      }
+      return measure;
+    } catch {
+      // If measuring fails (e.g., marks don't exist), silently skip reporting
+      // to avoid crashing the application
+      return;
     }
-    return measure;
   }
 
   private reportEvent({
@@ -107,41 +133,46 @@ export class Logger {
     const lastIndex = parent.events.length - 1;
 
     parent.events.forEach((event, index) => {
-      const measure = performance.measure(
-        idLength(event.id),
-        idStart(event.id),
-        idEnd(event.id),
-      );
-      const duration = Math.ceil(measure.duration * 100) / 100;
-      const percentage =
-        Math.ceil((measure.duration / parent.measure.duration) * 100 * 100) /
-        100;
-      const severity = indent ? getSeverity(duration, percentage) : undefined;
+      try {
+        const measure = performance.measure(
+          idLength(event.id),
+          idStart(event.id),
+          idEnd(event.id),
+        );
+        const duration = Math.ceil(measure.duration * 100) / 100;
+        const percentage =
+          Math.ceil((measure.duration / parent.measure.duration) * 100 * 100) /
+          100;
+        const severity = indent ? getSeverity(duration, percentage) : undefined;
 
-      let durationLabel = `${duration.toFixed(2).padStart(8)}ms`;
-      if (severity?.type === 'duration') {
-        durationLabel = severity.color(durationLabel);
+        let durationLabel = `${duration.toFixed(2).padStart(8)}ms`;
+        if (severity?.type === 'duration') {
+          durationLabel = severity.color(durationLabel);
+        }
+
+        const branch = index === lastIndex ? '└─ ' : '├─ ';
+        const prefix = !indent ? '' : '│  '.repeat(indent - 1) + branch;
+        const maxLength = 38 - prefix.length;
+
+        const percentageBranch = !indent ? '' : '↳ ';
+        const percentagePrefix = indent
+          ? ' '.repeat(indent - 1) + percentageBranch
+          : '';
+        let percentageLabel = `${percentagePrefix}${percentage.toFixed(2)}%`;
+        if (severity?.type === 'percentage') {
+          percentageLabel = severity.color(percentageLabel);
+        }
+        const jobPrefix = colors.gray('[root] ');
+        console.log(
+          `${jobPrefix}${colors.gray(prefix)}${color(
+            `${event.name.padEnd(maxLength)} ${durationLabel} (${percentageLabel})`,
+          )}`,
+        );
+        this.reportEvent({ ...event, indent: indent + 1, measure });
+      } catch {
+        // If measuring fails (e.g., marks don't exist), silently skip this event
+        // to avoid crashing the application
       }
-
-      const branch = index === lastIndex ? '└─ ' : '├─ ';
-      const prefix = !indent ? '' : '│  '.repeat(indent - 1) + branch;
-      const maxLength = 38 - prefix.length;
-
-      const percentageBranch = !indent ? '' : '↳ ';
-      const percentagePrefix = indent
-        ? ' '.repeat(indent - 1) + percentageBranch
-        : '';
-      let percentageLabel = `${percentagePrefix}${percentage.toFixed(2)}%`;
-      if (severity?.type === 'percentage') {
-        percentageLabel = severity.color(percentageLabel);
-      }
-      const jobPrefix = colors.gray('[root] ');
-      console.log(
-        `${jobPrefix}${colors.gray(prefix)}${color(
-          `${event.name.padEnd(maxLength)} ${durationLabel} (${percentageLabel})`,
-        )}`,
-      );
-      this.reportEvent({ ...event, indent: indent + 1, measure });
     });
   }
 
