@@ -57,6 +57,7 @@ declare module '@hey-api/codegen-core' {
       | 'arktype'
       | 'fastify'
       | 'json-schema'
+      | 'sdk'
       | 'typescript'
       | 'valibot'
       | 'zod'

@@ -375,10 +375,11 @@ const generateAngularResourceMethod = ({
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.selector('Options'),
-  );
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
 
   const symbolDataType = plugin.querySymbol({
     category: 'type',
@@ -430,10 +431,11 @@ const generateAngularResourceFunction = ({
   plugin: AngularCommonPlugin['Instance'];
   symbol: Symbol;
 }) => {
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.selector('Options'),
-  );
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
 
   const symbolDataType = plugin.querySymbol({
     category: 'type',

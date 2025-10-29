@@ -47,8 +47,12 @@ export const generateFlatSdk = ({
       });
       const symbol = plugin.registerSymbol({
         meta: {
+          category: 'sdk',
           path: event._path,
+          resource: 'operation',
+          resourceId: operation.id,
           tags: event.tags,
+          tool: 'sdk',
         },
         name: serviceFunctionIdentifier({
           config: plugin.context.config,
@@ -56,7 +60,6 @@ export const generateFlatSdk = ({
           id: operation.id,
           operation,
         }),
-        selector: plugin.api.selector('function', operation.id),
       });
       const node = tsc.constVariable({
         comment: createOperationComment({ operation }),
@@ -70,8 +73,10 @@ export const generateFlatSdk = ({
                 {
                   default: tsc.ots.string('$fetch'),
                   extends: tsc.typeNode(
-                    plugin.referenceSymbol(plugin.api.selector('Composable'))
-                      .placeholder,
+                    plugin.referenceSymbol({
+                      category: 'external',
+                      resource: 'client.Composable',
+                    }).placeholder,
                   ),
                   name: nuxtTypeComposable,
                 },

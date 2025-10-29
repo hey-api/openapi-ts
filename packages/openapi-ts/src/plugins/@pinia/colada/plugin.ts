@@ -69,9 +69,12 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
         // as it's really easy to break once we change the class casing
         entry
           ? [
-              plugin.referenceSymbol(
-                sdkPlugin.api.selector('class', entry.path[0]),
-              ).placeholder,
+              plugin.referenceSymbol({
+                category: 'utility',
+                resource: 'class',
+                resourceId: entry.path[0],
+                tool: 'sdk',
+              }).placeholder,
               ...entry.path.slice(1).map((className: string) =>
                 stringCase({
                   case: 'camelCase',
@@ -82,9 +85,11 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
             ]
               .filter(Boolean)
               .join('.')
-          : plugin.referenceSymbol(
-              sdkPlugin.api.selector('function', operation.id),
-            ).placeholder;
+          : plugin.referenceSymbol({
+              category: 'sdk',
+              resource: 'operation',
+              resourceId: operation.id,
+            }).placeholder;
 
       if (plugin.hooks.operation.isQuery(operation)) {
         if (plugin.config.queryOptions.enabled) {

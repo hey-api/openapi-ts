@@ -168,7 +168,11 @@ export const operationOptionsType = ({
   });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
-  const symbolOptions = plugin.referenceSymbol(plugin.api.selector('Options'));
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
 
   if (isNuxtClient) {
     const symbolResponseType = plugin.querySymbol({
@@ -412,9 +416,10 @@ export const operationStatements = ({
   if (operation.body) {
     switch (operation.body.type) {
       case 'form-data': {
-        const symbol = plugin.referenceSymbol(
-          plugin.api.selector('formDataBodySerializer'),
-        );
+        const symbol = plugin.referenceSymbol({
+          category: 'external',
+          resource: 'client.formDataBodySerializer',
+        });
         requestOptions.push({ spread: symbol.placeholder });
         break;
       }
@@ -430,9 +435,10 @@ export const operationStatements = ({
         });
         break;
       case 'url-search-params': {
-        const symbol = plugin.referenceSymbol(
-          plugin.api.selector('urlSearchParamsBodySerializer'),
-        );
+        const symbol = plugin.referenceSymbol({
+          category: 'external',
+          resource: 'client.urlSearchParamsBodySerializer',
+        });
         requestOptions.push({ spread: symbol.placeholder });
         break;
       }
@@ -631,9 +637,10 @@ export const operationStatements = ({
       }
       config.push(tsc.objectExpression({ obj }));
     }
-    const symbol = plugin.referenceSymbol(
-      plugin.api.selector('buildClientParams'),
-    );
+    const symbol = plugin.referenceSymbol({
+      category: 'external',
+      resource: 'client.buildClientParams',
+    });
     statements.push(
       tsc.constVariable({
         expression: tsc.callExpression({

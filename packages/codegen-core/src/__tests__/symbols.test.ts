@@ -230,4 +230,43 @@ describe('SymbolRegistry', () => {
     expect(cacheKeys3.length).toBe(3);
     expect(registry['queryCache'].get(cacheKeys3[2]!)).toEqual([]);
   });
+
+  it('returns the same stub reference for identical unresolved meta', () => {
+    const registry = new SymbolRegistry();
+
+    const stubA1 = registry.reference({ a: 1 });
+    const stubA2 = registry.reference({ a: 1 });
+
+    // Same reference, not new instance
+    expect(stubA1).toBe(stubA2);
+
+    // Cache entry created by the internal query call
+    const cacheKey = registry['buildCacheKey']({ a: 1 });
+    expect(registry['queryCache'].has(cacheKey)).toBe(true);
+    expect(registry['queryCache'].get(cacheKey)).toEqual([]);
+  });
+
+  it('demonstrates stub addition does not invalidate unrelated cache', () => {
+    const registry = new SymbolRegistry();
+
+    // Create one indexed symbol and one query to seed cache
+    const symA = registry.register({ meta: { foo: 'bar' }, name: 'A' });
+    const resultFoo = registry.query({ foo: 'bar' });
+    expect(resultFoo).toEqual([symA]);
+    const cacheKeysBefore = Array.from(registry['queryCache'].keys());
+    expect(cacheKeysBefore.length).toBe(1);
+
+    // Add unrelated stub (its meta triggers its own query)
+    const stub = registry.reference({ something: 'else' });
+    expect(stub.meta).toEqual({ something: 'else' });
+
+    // Existing cache entry still present, plus one new entry for stub
+    const cacheKeysAfter = Array.from(registry['queryCache'].keys());
+    expect(cacheKeysAfter.length).toBe(cacheKeysBefore.length + 1);
+    expect(cacheKeysAfter).toEqual(expect.arrayContaining(cacheKeysBefore));
+
+    // The new stub isn't indexed, so query returns nothing yet
+    const newQuery = registry.query({ something: 'else' });
+    expect(newQuery).toEqual([]);
+  });
 });
