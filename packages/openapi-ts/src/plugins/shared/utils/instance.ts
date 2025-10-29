@@ -186,7 +186,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
         const baseEvent: BaseEvent = {
           _path: jsonPointerToPath(pointer),
           pointer,
-          tags: nodeInfo.tags,
+          tags: nodeInfo.tags ? Array.from(nodeInfo.tags) : undefined,
         };
         switch (result.kind) {
           case 'operation':

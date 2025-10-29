@@ -5,9 +5,7 @@ import { handler } from './plugin';
 import type { FastifyPlugin } from './types';
 
 export const defaultConfig: FastifyPlugin['Config'] = {
-  api: new Api({
-    name: 'fastify',
-  }),
+  api: new Api(),
   config: {
     exportFromIndex: false,
   },
