@@ -22,9 +22,10 @@ export const exportAst = ({
   symbol: Symbol;
   typeInferSymbol: Symbol | undefined;
 }): void => {
-  const type = plugin.referenceSymbol(
-    plugin.api.selector('external', 'arktype.type'),
-  );
+  const type = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'arktype.type',
+  });
 
   const statement = tsc.constVariable({
     comment: plugin.config.comments

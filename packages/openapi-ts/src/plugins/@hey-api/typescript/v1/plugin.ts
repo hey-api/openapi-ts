@@ -91,6 +91,7 @@ const handleComponent = ({
       resource: 'definition',
       resourceId: $ref,
       tags: state.tags?.value,
+      tool: 'typescript',
     },
     name: buildName({
       config: plugin.config.definitions,
@@ -114,6 +115,7 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
       category: 'type',
       resource: 'client',
       role: 'options',
+      tool: 'typescript',
     },
     name: buildName({
       config: {
@@ -126,13 +128,18 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   const symbolWebhooks = plugin.registerSymbol({
     exported: true,
     kind: 'type',
+    meta: {
+      category: 'type',
+      resource: 'webhook',
+      tool: 'typescript',
+      variant: 'container',
+    },
     name: buildName({
       config: {
         case: plugin.config.case,
       },
       name: 'Webhooks',
     }),
-    selector: plugin.api.selector('Webhooks'),
   });
 
   const servers: Array<IR.ServerObject> = [];

@@ -6,9 +6,7 @@ import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiTypeScriptPlugin } from './types';
 
 export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
-  api: new Api({
-    name: '@hey-api/typescript',
-  }),
+  api: new Api(),
   config: {
     case: 'PascalCase',
     exportFromIndex: true,

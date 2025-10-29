@@ -21,6 +21,7 @@ const operationToRouteHandler = ({
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
+    tool: 'typescript',
   });
   if (symbolDataType) {
     if (operation.body) {
