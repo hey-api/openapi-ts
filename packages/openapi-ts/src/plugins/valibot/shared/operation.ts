@@ -119,14 +119,18 @@ export const irOperationToAst = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
+        category: 'schema',
         path: state.path.value,
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'data',
         tags: state.tags?.value,
+        tool: 'valibot',
       },
       name: buildName({
         config: plugin.config.requests,
         name: operation.id,
       }),
-      selector: plugin.api.selector('data', operation.id),
     });
     exportAst({
       ast,
@@ -147,14 +151,18 @@ export const irOperationToAst = ({
         const symbol = plugin.registerSymbol({
           exported: true,
           meta: {
+            category: 'schema',
             path,
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'responses',
             tags: state.tags?.value,
+            tool: 'valibot',
           },
           name: buildName({
             config: plugin.config.responses,
             name: operation.id,
           }),
-          selector: plugin.api.selector('responses', operation.id),
         });
         exportAst({
           ast,

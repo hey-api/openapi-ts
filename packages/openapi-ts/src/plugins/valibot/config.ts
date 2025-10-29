@@ -5,9 +5,7 @@ import { handler } from './plugin';
 import type { ValibotPlugin } from './types';
 
 export const defaultConfig: ValibotPlugin['Config'] = {
-  api: new Api({
-    name: 'valibot',
-  }),
+  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,

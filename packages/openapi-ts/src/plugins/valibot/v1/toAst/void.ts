@@ -9,9 +9,10 @@ export const voidToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'void'>;
 }) => {
-  const v = plugin.referenceSymbol(
-    plugin.api.selector('external', 'valibot.v'),
-  );
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
 
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({

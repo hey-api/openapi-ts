@@ -346,7 +346,7 @@ export default defineConfig(() => {
           // definitions: 'z{{name}}Definition',
           exportFromIndex: true,
           // metadata: true,
-          // name: 'valibot',
+          name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
