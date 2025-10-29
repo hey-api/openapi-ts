@@ -51,10 +51,7 @@ export const stringToAst = ({
         if (!plugin.getSymbol(selectorTypeId)) {
           const symbolTypeId = plugin.registerSymbol({
             exported: true,
-            meta: {
-              kind: 'type',
-              path: [],
-            },
+            kind: 'type',
             name: 'TypeID',
             selector: selectorTypeId,
           });
@@ -83,10 +80,7 @@ export const stringToAst = ({
         const symbolTypeId = plugin.referenceSymbol(selectorTypeId);
         const symbolTypeName = plugin.registerSymbol({
           exported: true,
-          meta: {
-            kind: 'type',
-            path: [],
-          },
+          kind: 'type',
           name: stringCase({
             case: plugin.config.case,
             value: `${type}_id`,

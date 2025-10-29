@@ -65,13 +65,18 @@ const makeSymbol = (
   placeholder: string,
   meta: ISymbolMeta = {},
   name?: string,
-): ISymbolOut => ({
-  exportFrom: [],
-  id,
-  meta,
-  name,
-  placeholder,
-});
+): ISymbolOut => {
+  const { importKind, kind, ...restMeta } = meta as any;
+  return {
+    exportFrom: [],
+    id,
+    importKind,
+    kind,
+    meta: restMeta,
+    name,
+    placeholder,
+  } as any;
+};
 
 describe('createBinding', () => {
   it('creates a named binding by default', () => {

@@ -10,17 +10,13 @@ import { createUseQuery } from './useQuery';
 export const handler: PluginHandler = ({ plugin }) => {
   plugin.registerSymbol({
     external: plugin.name,
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: 'DefaultError',
     selector: plugin.api.selector('DefaultError'),
   });
   plugin.registerSymbol({
     external: plugin.name,
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: 'InfiniteData',
     selector: plugin.api.selector('InfiniteData'),
   });
@@ -32,9 +28,7 @@ export const handler: PluginHandler = ({ plugin }) => {
       : 'UseMutationOptions';
   plugin.registerSymbol({
     external: plugin.name,
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: mutationsType,
     selector: plugin.api.selector('MutationOptions'),
   });
@@ -55,9 +49,7 @@ export const handler: PluginHandler = ({ plugin }) => {
   });
   plugin.registerSymbol({
     external: 'axios',
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: 'AxiosError',
     selector: plugin.api.selector('AxiosError'),
   });

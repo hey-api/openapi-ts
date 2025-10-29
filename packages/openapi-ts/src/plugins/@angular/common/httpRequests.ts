@@ -278,8 +278,6 @@ const generateAngularRequestMethod = ({
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-
   const symbolHttpRequest = plugin.referenceSymbol(
     plugin.api.selector('HttpRequest'),
   );
@@ -289,9 +287,12 @@ const generateAngularRequestMethod = ({
     sdkPlugin.api.selector('Options'),
   );
 
-  const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.selector('data', operation.id),
-  );
+  const symbolDataType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'data',
+  });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
   return tsc.methodDeclaration({
@@ -335,8 +336,6 @@ const generateAngularRequestFunction = ({
   plugin: AngularCommonPlugin['Instance'];
   symbol: Symbol;
 }) => {
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-
   const symbolHttpRequest = plugin.referenceSymbol(
     plugin.api.selector('HttpRequest'),
   );
@@ -346,9 +345,12 @@ const generateAngularRequestFunction = ({
     sdkPlugin.api.selector('Options'),
   );
 
-  const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.selector('data', operation.id),
-  );
+  const symbolDataType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'data',
+  });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
   return tsc.constVariable({

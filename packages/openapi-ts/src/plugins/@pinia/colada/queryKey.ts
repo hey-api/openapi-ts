@@ -338,7 +338,7 @@ export const createQueryKeyType = ({
   );
   const symbolQueryKeyType = plugin.registerSymbol({
     exported: true,
-    meta: { kind: 'type' },
+    kind: 'type',
     name: 'QueryKey',
     selector: plugin.api.selector('QueryKey'),
   });

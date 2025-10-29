@@ -122,16 +122,19 @@ const operationToDataType = ({
 
   const symbol = plugin.registerSymbol({
     exported: true,
+    kind: 'type',
     meta: {
-      kind: 'type',
+      category: 'type',
       path: state.path.value,
+      resource: 'operation',
+      resourceId: operation.id,
+      role: 'data',
       tags: state.tags?.value,
     },
     name: buildName({
       config: plugin.config.requests,
       name: operation.id,
     }),
-    selector: plugin.api.selector('data', operation.id),
   });
   const type = irSchemaToAst({
     plugin,
@@ -161,16 +164,19 @@ export const operationToType = ({
   if (errors) {
     const symbolErrors = plugin.registerSymbol({
       exported: true,
+      kind: 'type',
       meta: {
-        kind: 'type',
+        category: 'type',
         path: state.path.value,
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'errors',
         tags: state.tags?.value,
       },
       name: buildName({
         config: plugin.config.errors,
         name: operation.id,
       }),
-      selector: plugin.api.selector('errors', operation.id),
     });
     const type = irSchemaToAst({
       plugin,
@@ -187,9 +193,13 @@ export const operationToType = ({
     if (error) {
       const symbol = plugin.registerSymbol({
         exported: true,
+        kind: 'type',
         meta: {
-          kind: 'type',
+          category: 'type',
           path: state.path.value,
+          resource: 'operation',
+          resourceId: operation.id,
+          role: 'error',
           tags: state.tags?.value,
         },
         name: buildName({
@@ -199,7 +209,6 @@ export const operationToType = ({
           },
           name: operation.id,
         }),
-        selector: plugin.api.selector('error', operation.id),
       });
       const type = tsc.indexedAccessTypeNode({
         indexType: tsc.typeOperatorNode({
@@ -222,16 +231,19 @@ export const operationToType = ({
   if (responses) {
     const symbolResponses = plugin.registerSymbol({
       exported: true,
+      kind: 'type',
       meta: {
-        kind: 'type',
+        category: 'type',
         path: state.path.value,
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'responses',
         tags: state.tags?.value,
       },
       name: buildName({
         config: plugin.config.responses,
         name: operation.id,
       }),
-      selector: plugin.api.selector('responses', operation.id),
     });
     const type = irSchemaToAst({
       plugin,
@@ -248,9 +260,13 @@ export const operationToType = ({
     if (response) {
       const symbol = plugin.registerSymbol({
         exported: true,
+        kind: 'type',
         meta: {
-          kind: 'type',
+          category: 'type',
           path: state.path.value,
+          resource: 'operation',
+          resourceId: operation.id,
+          role: 'response',
           tags: state.tags?.value,
         },
         name: buildName({
@@ -260,7 +276,6 @@ export const operationToType = ({
           },
           name: operation.id,
         }),
-        selector: plugin.api.selector('response', operation.id),
       });
       const type = tsc.indexedAccessTypeNode({
         indexType: tsc.typeOperatorNode({

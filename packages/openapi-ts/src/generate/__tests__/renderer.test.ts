@@ -87,7 +87,8 @@ describe('TypeScriptRenderer', () => {
       const typeSymbol: any = {
         exportFrom: [],
         id: typeSymbolId,
-        meta: { kind: 'type' },
+        kind: 'type',
+        meta: {},
         name: 'Foo',
         placeholder: '_heyapi_1_',
       };

@@ -26,11 +26,13 @@ export const generateFlatSdk = ({
         context: plugin.context,
         operation,
       });
-      const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
       const symbolResponse = isNuxtClient
-        ? plugin.getSymbol(
-            pluginTypeScript.api.selector('response', operation.id),
-          )
+        ? plugin.querySymbol({
+            category: 'type',
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'response',
+          })
         : undefined;
       const opParameters = operationParameters({
         isRequiredOptions,

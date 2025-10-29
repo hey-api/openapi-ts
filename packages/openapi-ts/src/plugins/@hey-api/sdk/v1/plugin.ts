@@ -30,9 +30,7 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   if (isNuxtClient) {
     plugin.registerSymbol({
       external: clientModule,
-      meta: {
-        kind: 'type',
-      },
+      kind: 'type',
       name: 'Composable',
       selector: plugin.api.selector('Composable'),
     });

@@ -14,5 +14,6 @@ export { renderIds } from './renderer/utils';
 export type { ISelector as Selector } from './selectors/types';
 export type {
   ISymbolOut as Symbol,
+  ISymbolIdentifier as SymbolIdentifier,
   ISymbolIn as SymbolIn,
 } from './symbols/types';
