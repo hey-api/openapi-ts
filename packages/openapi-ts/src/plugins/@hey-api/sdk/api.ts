@@ -9,7 +9,6 @@ type SelectorType =
   | 'Composable'
   | 'formDataBodySerializer'
   | 'function'
-  | 'Injectable'
   | 'Options'
   | 'urlSearchParamsBodySerializer';
 
@@ -23,7 +22,6 @@ export type IApi = {
    *  - `Composable`: never
    *  - `formDataBodySerializer`: never
    *  - `function`: `operation.id` string
-   *  - `Injectable`: never
    *  - `Options`: never
    *  - `urlSearchParamsBodySerializer`: never
    * @returns Selector array

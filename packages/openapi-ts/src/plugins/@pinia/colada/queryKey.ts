@@ -39,9 +39,10 @@ export const createQueryKeyFunction = ({
     resource: 'QueryKey',
     tool: plugin.name,
   });
-  const symbolJsonValue = plugin.referenceSymbol(
-    plugin.api.selector('_JSONValue'),
-  );
+  const symbolJsonValue = plugin.referenceSymbol({
+    category: 'external',
+    resource: `${plugin.name}._JSONValue`,
+  });
 
   const returnType = tsc.indexedAccessTypeNode({
     indexType: tsc.literalTypeNode({
@@ -66,6 +67,10 @@ export const createQueryKeyFunction = ({
   const clientModule = clientFolderAbsolutePath(plugin.context.config);
   const symbolSerializeQueryValue = plugin.registerSymbol({
     external: clientModule,
+    meta: {
+      category: 'external',
+      resource: `${clientModule}.serializeQueryKeyValue`,
+    },
     name: 'serializeQueryKeyValue',
   });
 
@@ -304,9 +309,10 @@ export const createQueryKeyType = ({
 }: {
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
-  const symbolJsonValue = plugin.referenceSymbol(
-    plugin.api.selector('_JSONValue'),
-  );
+  const symbolJsonValue = plugin.referenceSymbol({
+    category: 'external',
+    resource: `${plugin.name}._JSONValue`,
+  });
 
   const properties: Array<Property> = [
     { name: '_id', type: tsc.keywordTypeNode({ keyword: 'string' }) },

@@ -5,9 +5,7 @@ import { handler } from './plugin';
 import type { AngularCommonPlugin } from './types';
 
 export const defaultConfig: AngularCommonPlugin['Config'] = {
-  api: new Api({
-    name: '@angular/common',
-  }),
+  api: new Api(),
   config: {
     exportFromIndex: false,
   },

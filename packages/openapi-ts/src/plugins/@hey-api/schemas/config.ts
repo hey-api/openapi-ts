@@ -6,9 +6,7 @@ import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiSchemasPlugin } from './types';
 
 export const defaultConfig: HeyApiSchemasPlugin['Config'] = {
-  api: new Api({
-    name: '@hey-api/schemas',
-  }),
+  api: new Api(),
   config: {
     exportFromIndex: false,
     nameBuilder: (name) => `${name}Schema`,
