@@ -20,9 +20,10 @@ export const exportAst = ({
   schema: IR.SchemaObject;
   symbol: Symbol;
 }): void => {
-  const v = plugin.referenceSymbol(
-    plugin.api.selector('external', 'valibot.v'),
-  );
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
 
   const statement = tsc.constVariable({
     comment: plugin.config.comments

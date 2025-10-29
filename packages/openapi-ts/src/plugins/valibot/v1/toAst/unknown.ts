@@ -9,9 +9,10 @@ export const unknownToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'unknown'>;
 }) => {
-  const v = plugin.referenceSymbol(
-    plugin.api.selector('external', 'valibot.v'),
-  );
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
 
   const expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({

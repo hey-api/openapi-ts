@@ -68,9 +68,10 @@ export const objectToAst = ({
     );
   }
 
-  const v = plugin.referenceSymbol(
-    plugin.api.selector('external', 'valibot.v'),
-  );
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
 
   // Handle additionalProperties with a schema (not just true/false)
   // This supports objects with dynamic keys (e.g., Record<string, T>)
