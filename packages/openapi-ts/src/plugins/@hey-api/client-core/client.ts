@@ -37,10 +37,11 @@ export const createClient: PluginHandler = ({ plugin }) => {
     external: clientModule,
     name: 'createConfig',
   });
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  const symbolClientOptions = plugin.referenceSymbol(
-    pluginTypeScript.api.selector('ClientOptions'),
-  );
+  const symbolClientOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client',
+    role: 'options',
+  });
 
   const { runtimeConfigPath } = plugin.config;
   const symbolCreateClientConfig = runtimeConfigPath
@@ -93,9 +94,6 @@ export const createClient: PluginHandler = ({ plugin }) => {
   ];
 
   const symbolClient = plugin.registerSymbol({
-    meta: {
-      path: [],
-    },
     name: 'client',
     selector: plugin.api.selector('client'),
   });

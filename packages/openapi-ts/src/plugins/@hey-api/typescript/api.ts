@@ -6,13 +6,6 @@ import type { Plugin } from '~/plugins';
 import { irSchemaToAstV1 } from './v1/api';
 
 type SelectorType =
-  | 'ClientOptions'
-  | 'data'
-  | 'error'
-  | 'errors'
-  | 'ref'
-  | 'response'
-  | 'responses'
   | 'TypeID'
   | 'webhook-payload'
   | 'webhook-request'
@@ -23,13 +16,6 @@ export type IApi = {
   /**
    * @param type Selector type.
    * @param value Depends on `type`:
-   *  - `ClientOptions`: never
-   *  - `data`: `operation.id` string
-   *  - `error`: `operation.id` string
-   *  - `errors`: `operation.id` string
-   *  - `ref`: `$ref` JSON pointer
-   *  - `response`: `operation.id` string
-   *  - `responses`: `operation.id` string
    *  - `TypeID`: `type` name string
    *  - `webhook-payload`: `operation.id` string
    *  - `webhook-request`: `operation.id` string

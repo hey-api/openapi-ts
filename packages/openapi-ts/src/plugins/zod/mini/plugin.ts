@@ -250,8 +250,8 @@ const handleComponent = ({
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
     ? plugin.registerSymbol({
         exported: true,
+        kind: 'type',
         meta: {
-          kind: 'type',
           path: state.path.value,
           tags: state.tags?.value,
         },
@@ -274,7 +274,7 @@ const handleComponent = ({
 export const handlerMini: ZodPlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: getZodModule({ plugin }),
-    meta: { importKind: 'namespace' },
+    importKind: 'namespace',
     name: 'z',
     selector: plugin.api.selector('external', 'zod.z'),
   });

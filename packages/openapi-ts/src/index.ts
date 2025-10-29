@@ -15,6 +15,7 @@ declare module '@hey-api/codegen-core' {
   }
 
   interface SymbolMeta {
+    category?: 'sdk' | 'type' | (string & {});
     /**
      * Path to the resource this symbol represents.
      */
@@ -23,10 +24,22 @@ declare module '@hey-api/codegen-core' {
      * Name of the plugin that registered this symbol.
      */
     pluginName?: string;
+    resource?: 'client' | 'definition' | 'operation' | (string & {});
+    resourceId?: string;
+    role?:
+      | 'data'
+      | 'error'
+      | 'errors'
+      | 'options'
+      | 'response'
+      | 'responses'
+      | (string & {});
     /**
      * Tags associated with this symbol.
      */
     tags?: Set<string>;
+    tool?: string;
+    variant?: 'container' | (string & {});
   }
 }
 // END OVERRIDES

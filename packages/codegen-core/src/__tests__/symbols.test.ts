@@ -90,6 +90,52 @@ describe('SymbolRegistry', () => {
     expect(registry.isRegistered(symRegistered.id)).toBe(true);
   });
 
+  it('indexes symbols and supports querying by meta', () => {
+    const registry = new SymbolRegistry();
+
+    // register a couple of symbols with meta
+    const symA = registry.register({
+      meta: { bar: 'type', foo: { bar: true } },
+      name: 'A',
+    });
+    const symB = registry.register({
+      meta: { bar: 'value', foo: { bar: false } },
+      name: 'B',
+    });
+
+    // query by top-level meta key
+    const types = registry.query({ bar: 'type' });
+    expect(types).toEqual([symA]);
+
+    // query by nested meta key
+    const nestedTrue = registry.query({ foo: { bar: true } });
+    expect(nestedTrue).toEqual([symA]);
+
+    const nestedFalse = registry.query({ foo: { bar: false } });
+    expect(nestedFalse).toEqual([symB]);
+  });
+
+  it('replaces stubs after registering', () => {
+    const registry = new SymbolRegistry();
+
+    const refA = registry.reference({ a: 0 });
+    const refAB = registry.reference({ a: 0, b: 0 });
+    const refB = registry.reference({ b: -1 });
+    const symC = registry.register({
+      meta: { a: 0, b: 0, c: 0 },
+      name: 'C',
+    });
+    const refAD = registry.reference({ a: 0, d: 0 });
+    const refAC = registry.reference({ a: 0, c: 0 });
+
+    expect(symC).toEqual(refA);
+    expect(symC).toEqual(refAB);
+    expect(symC).toEqual(refAC);
+    expect(symC).not.toEqual(refAD);
+    expect(symC).not.toEqual(refB);
+    expect(symC.meta).toEqual({ a: 0, b: 0, c: 0 });
+  });
+
   it('throws on invalid register or reference', () => {
     const registry = new SymbolRegistry();
     // Register with id that does not exist
@@ -102,5 +148,59 @@ describe('SymbolRegistry', () => {
     expect(() => registry.register({ selector: ['missing'] })).toThrow(
       'Symbol with ID 42 not found. The selector ["missing"] matched an ID, but there was no result. This is likely an issue with the application logic.',
     );
+  });
+
+  it('caches query results and invalidates on relevant updates', () => {
+    const registry = new SymbolRegistry();
+    const symA = registry.register({ meta: { foo: 'bar' }, name: 'A' });
+
+    // first query populates cache
+    const result1 = registry.query({ foo: 'bar' });
+    expect(result1).toEqual([symA]);
+    expect(registry['queryCache'].size).toBe(1);
+
+    // same query should hit cache, no change in cache size
+    const result2 = registry.query({ foo: 'bar' });
+    expect(result2).toEqual([symA]);
+    expect(registry['queryCache'].size).toBe(1);
+
+    // register another symbol with matching key should invalidate cache
+    registry.register({ meta: { foo: 'bar' }, name: 'B' });
+    expect(registry['queryCache'].size).toBe(0);
+
+    // new query repopulates cache
+    const result3 = registry.query({ foo: 'bar' });
+    expect(result3.map((r) => r.name).sort()).toEqual(['A', 'B']);
+    expect(registry['queryCache'].size).toBe(1);
+  });
+
+  it('invalidates only affected cache entries', () => {
+    const registry = new SymbolRegistry();
+    const symA = registry.register({ meta: { foo: 'bar' }, name: 'A' });
+    const symX = registry.register({ meta: { x: 'y' }, name: 'X' });
+
+    // Seed multiple cache entries
+    const resultFoo = registry.query({ foo: 'bar' });
+    const resultX = registry.query({ x: 'y' });
+    expect(resultFoo).toEqual([symA]);
+    expect(resultX).toEqual([symX]);
+    const initialCacheKeys = Array.from(registry['queryCache'].keys());
+    expect(initialCacheKeys.length).toBe(2);
+
+    // Add new symbol that should only affect foo:bar queries
+    registry.register({ meta: { foo: 'bar' }, name: 'B' });
+
+    // Cache entry for foo:bar should be invalidated, x:y should remain
+    const cacheKeysAfter = Array.from(registry['queryCache'].keys());
+    expect(cacheKeysAfter.length).toBe(1);
+    const remainingKey = cacheKeysAfter[0];
+    expect(remainingKey).toBe(
+      initialCacheKeys.find((k) => k.includes('x:"y"')),
+    );
+
+    // Query foo:bar again to repopulate it
+    const resultFoo2 = registry.query({ foo: 'bar' });
+    expect(resultFoo2.map((r) => r.name).sort()).toEqual(['A', 'B']);
+    expect(registry['queryCache'].size).toBe(2);
   });
 });

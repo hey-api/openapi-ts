@@ -208,15 +208,17 @@ const generateResourceCallExpression = ({
   plugin: AngularCommonPlugin['Instance'];
 }) => {
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
   const symbolHttpResource = plugin.referenceSymbol(
     plugin.api.selector('httpResource'),
   );
 
-  const symbolResponseType = plugin.getSymbol(
-    pluginTypeScript.api.selector('response', operation.id),
-  );
+  const symbolResponseType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'response',
+  });
   const responseType = symbolResponseType?.placeholder || 'unknown';
 
   if (plugin.config.httpRequests.asClass) {
@@ -363,16 +365,17 @@ const generateAngularResourceMethod = ({
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
     sdkPlugin.api.selector('Options'),
   );
 
-  const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.selector('data', operation.id),
-  );
+  const symbolDataType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'data',
+  });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
   return tsc.methodDeclaration({
@@ -416,16 +419,17 @@ const generateAngularResourceFunction = ({
   plugin: AngularCommonPlugin['Instance'];
   symbol: Symbol;
 }) => {
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
   const symbolOptions = plugin.referenceSymbol(
     sdkPlugin.api.selector('Options'),
   );
 
-  const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.selector('data', operation.id),
-  );
+  const symbolDataType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'data',
+  });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
   return tsc.constVariable({

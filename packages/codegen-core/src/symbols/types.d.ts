@@ -1,6 +1,8 @@
 import type { ISymbolMeta } from '../extensions/types';
 import type { ISelector } from '../selectors/types';
 
+export type ISymbolIdentifier = number | ISymbolMeta | ISelector;
+
 export interface ISymbolIn {
   /**
    * Array of file names (without extensions) from which this symbol is re-exported.
@@ -32,20 +34,19 @@ export interface ISymbolIn {
    */
   readonly id?: number;
   /**
+   * Kind of import if this symbol represents an import.
+   */
+  readonly importKind?: 'namespace' | 'default' | 'named';
+  /**
+   * Kind of symbol.
+   */
+  readonly kind?: 'type';
+  /**
    * Arbitrary metadata about the symbol.
    *
    * @default undefined
    */
-  readonly meta?: ISymbolMeta & {
-    /**
-     * Kind of import if this symbol represents an import.
-     */
-    importKind?: 'namespace' | 'default' | 'named';
-    /**
-     * Kind of symbol.
-     */
-    kind?: 'type';
-  };
+  readonly meta?: ISymbolMeta;
   /**
    * The desired name for the symbol within its file. If there are multiple symbols
    * with the same desired name, this might not end up being the actual name.
@@ -63,6 +64,7 @@ export interface ISymbolIn {
    * Selector array used to select this symbol. It doesn't have to be
    * unique, but in practice it might be desirable.
    *
+   * @deprecated
    * @example ["zod", "#/components/schemas/Foo"]
    */
   readonly selector?: ISelector;
@@ -87,12 +89,12 @@ export interface ISymbolOut extends ISymbolIn {
 
 export interface ISymbolRegistry {
   /**
-   * Get a symbol by its ID.
+   * Get a symbol.
    *
-   * @param symbolIdOrSelector Symbol ID or selector to reference.
+   * @param identifier Symbol identifier to reference.
    * @returns The symbol, or undefined if not found.
    */
-  get(symbolIdOrSelector: number | ISelector): ISymbolOut | undefined;
+  get(identifier: ISymbolIdentifier): ISymbolOut | undefined;
   /**
    * Returns the value associated with a symbol ID.
    *
@@ -116,17 +118,24 @@ export interface ISymbolRegistry {
   /**
    * Returns whether a symbol is registered in the registry.
    *
-   * @param symbolIdOrSelector Symbol ID or selector to check.
+   * @param identifier Symbol identifier to check.
    * @returns True if the symbol is registered, false otherwise.
    */
-  isRegistered(symbolIdOrSelector: number | ISelector): boolean;
+  isRegistered(identifier: ISymbolIdentifier): boolean;
   /**
-   * Returns a symbol by ID or selector, registering it if it doesn't exist.
+   * Queries symbols by metadata filter.
    *
-   * @param symbolIdOrSelector Symbol ID or selector to reference.
+   * @param filter Metadata filter to query symbols by.
+   * @returns Array of symbols matching the filter.
+   */
+  query(filter: ISymbolMeta): ReadonlyArray<ISymbolOut>;
+  /**
+   * Returns a symbol, registers it if it doesn't exist.
+   *
+   * @param identifier Symbol identifier to reference.
    * @returns The referenced or newly registered symbol.
    */
-  reference(symbolIdOrSelector: number | ISelector): ISymbolOut;
+  reference(identifier: ISymbolIdentifier): ISymbolOut;
   /**
    * Register a symbol globally.
    *

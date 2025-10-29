@@ -16,10 +16,12 @@ const operationToRouteHandler = ({
 }): Property | undefined => {
   const properties: Array<Property> = [];
 
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  const symbolDataType = plugin.getSymbol(
-    pluginTypeScript.api.selector('data', operation.id),
-  );
+  const symbolDataType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'data',
+  });
   if (symbolDataType) {
     if (operation.body) {
       properties.push({
@@ -65,9 +67,12 @@ const operationToRouteHandler = ({
   const { errors, responses } = operationResponsesMap(operation);
 
   let errorsTypeReference: ts.TypeReferenceNode | undefined = undefined;
-  const symbolErrorType = plugin.getSymbol(
-    pluginTypeScript.api.selector('errors', operation.id),
-  );
+  const symbolErrorType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'errors',
+  });
   if (symbolErrorType && errors && errors.properties) {
     const keys = Object.keys(errors.properties);
     if (keys.length) {
@@ -92,9 +97,12 @@ const operationToRouteHandler = ({
   }
 
   let responsesTypeReference: ts.TypeReferenceNode | undefined = undefined;
-  const symbolResponseType = plugin.getSymbol(
-    pluginTypeScript.api.selector('responses', operation.id),
-  );
+  const symbolResponseType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'responses',
+  });
   if (symbolResponseType && responses && responses.properties) {
     const keys = Object.keys(responses.properties);
     if (keys.length) {
@@ -155,18 +163,14 @@ const operationToRouteHandler = ({
 export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: 'fastify',
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: 'RouteHandler',
     selector: plugin.api.selector('RouteHandler'),
   });
 
   const symbolRouteHandlers = plugin.registerSymbol({
     exported: true,
-    meta: {
-      kind: 'type',
-    },
+    kind: 'type',
     name: 'RouteHandlers',
   });
 

@@ -19,22 +19,22 @@ export const createBinding = ({
     aliases: {},
     from: modulePath,
   };
-  if (symbol.meta?.importKind) {
-    if (symbol.meta.importKind === 'default') {
+  if (symbol.importKind) {
+    if (symbol.importKind === 'default') {
       binding.defaultBinding = symbol.placeholder;
-      if (symbol.meta.kind === 'type') {
+      if (symbol.kind === 'type') {
         binding.typeDefaultBinding = true;
       }
-    } else if (symbol.meta.importKind === 'namespace') {
+    } else if (symbol.importKind === 'namespace') {
       binding.namespaceBinding = symbol.placeholder;
-      if (symbol.meta.kind === 'type') {
+      if (symbol.kind === 'type') {
         binding.typeNamespaceBinding = true;
       }
     }
   }
   // default to named binding
   if (
-    symbol.meta?.importKind === 'named' ||
+    symbol.importKind === 'named' ||
     (!names.length && !binding.defaultBinding && !binding.namespaceBinding)
   ) {
     let name = symbol.placeholder;
@@ -52,7 +52,7 @@ export const createBinding = ({
       }
     }
     names.push(name);
-    if (symbol.meta?.kind === 'type') {
+    if (symbol.kind === 'type') {
       typeNames.push(name);
     }
   }
