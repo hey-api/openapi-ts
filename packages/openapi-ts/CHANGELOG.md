@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.86.8
+
+### Patch Changes
+
+- fix(valibot): improve handling of additionalProperties type ([#2870](https://github.com/hey-api/openapi-ts/pull/2870)) ([`da88dd9`](https://github.com/hey-api/openapi-ts/commit/da88dd9962ff3a619f3d4853d641acc3637406f4)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.86.7
 
 ### Patch Changes
