@@ -10,7 +10,6 @@ vi.mock('../../../../utils/config', () => {
       '@hey-api/typescript': {
         api: {
           schemaToType: () => ({}) as ts.TypeNode,
-          selector: () => [],
         },
         config: {
           name: '@hey-api/typescript',
