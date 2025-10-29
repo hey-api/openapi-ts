@@ -6,9 +6,7 @@ import { Api } from './api';
 import type { TanStackAngularQueryPlugin } from './types';
 
 export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
-  api: new Api({
-    name: '@tanstack/angular-query-experimental',
-  }),
+  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,

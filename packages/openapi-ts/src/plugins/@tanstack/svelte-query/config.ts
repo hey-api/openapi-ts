@@ -6,9 +6,7 @@ import { Api } from './api';
 import type { TanStackSvelteQueryPlugin } from './types';
 
 export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
-  api: new Api({
-    name: '@tanstack/svelte-query',
-  }),
+  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,
