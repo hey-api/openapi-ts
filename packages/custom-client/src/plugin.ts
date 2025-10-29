@@ -1,4 +1,3 @@
-import type { Selector } from '@hey-api/codegen-core';
 import {
   type Client,
   clientDefaultConfig,
@@ -8,25 +7,9 @@ import {
   definePluginConfig,
 } from '@hey-api/openapi-ts';
 
-type SelectorType = 'client';
+export type IApi = any;
 
-export type IApi = {
-  /**
-   * @param type Selector type.
-   * @param value Depends on `type`:
-   *  - `client`: never
-   * @returns Selector array
-   */
-  selector: (type: SelectorType, value?: string) => Selector;
-};
-
-export class Api implements IApi {
-  constructor(public meta: Pick<Config, 'name'>) {}
-
-  selector(...args: ReadonlyArray<string | undefined>): Selector {
-    return [this.meta.name, ...(args as Selector)];
-  }
-}
+export class Api implements IApi {}
 
 export type Config = Client.Config & {
   /**
@@ -39,9 +22,7 @@ export type CustomClientPlugin = DefinePlugin<Config, Config, IApi>;
 
 export const defaultConfig: CustomClientPlugin['Config'] = {
   ...clientDefaultMeta,
-  api: new Api({
-    name: '@hey-api/custom-client',
-  }),
+  api: new Api(),
   config: {
     ...clientDefaultConfig,
     bundle: false,

@@ -10,9 +10,7 @@ import type { HeyApiClientOfetchPlugin } from './types';
 
 export const defaultConfig: HeyApiClientOfetchPlugin['Config'] = {
   ...clientDefaultMeta,
-  api: new Api({
-    name: '@hey-api/client-ofetch',
-  }),
+  api: new Api(),
   config: {
     ...clientDefaultConfig,
     throwOnError: false,

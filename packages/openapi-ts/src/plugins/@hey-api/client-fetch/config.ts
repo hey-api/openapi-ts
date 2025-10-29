@@ -10,9 +10,7 @@ import type { HeyApiClientFetchPlugin } from './types';
 
 export const defaultConfig: HeyApiClientFetchPlugin['Config'] = {
   ...clientDefaultMeta,
-  api: new Api({
-    name: '@hey-api/client-fetch',
-  }),
+  api: new Api(),
   config: {
     ...clientDefaultConfig,
     throwOnError: false,

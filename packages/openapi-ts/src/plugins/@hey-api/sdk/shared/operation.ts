@@ -683,13 +683,9 @@ export const operationStatements = ({
     }
   }
 
-  const symbolClient =
-    plugin.config.client && client.api && 'selector' in client.api
-      ? plugin.getSymbol(
-          // @ts-expect-error
-          client.api.selector('client'),
-        )
-      : undefined;
+  const symbolClient = plugin.getSymbol({
+    category: 'client',
+  });
 
   const optionsClient = tsc.propertyAccessExpression({
     expression: tsc.identifier({ text: 'options' }),
