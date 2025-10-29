@@ -18,9 +18,11 @@ declare module '@hey-api/codegen-core' {
     category?:
       | 'client'
       | 'external'
+      | 'hook'
       | 'schema'
       | 'sdk'
       | 'type'
+      | 'utility'
       | (string & {});
     /**
      * Path to the resource this symbol represents.

@@ -27,8 +27,11 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: 'axios',
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: 'axios.AxiosError',
+    },
     name: 'AxiosError',
-    selector: plugin.api.selector('AxiosError'),
   });
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');

@@ -21,17 +21,23 @@ export const createQueryKeyFunction = ({
   plugin: PluginInstance;
 }) => {
   const symbolCreateQueryKey = plugin.registerSymbol({
+    meta: {
+      category: 'utility',
+      resource: 'createQueryKey',
+      tool: plugin.name,
+    },
     name: buildName({
       config: {
         case: plugin.config.case,
       },
       name: 'createQueryKey',
     }),
-    selector: plugin.api.selector('createQueryKey'),
   });
-  const symbolQueryKeyType = plugin.referenceSymbol(
-    plugin.api.selector('QueryKey'),
-  );
+  const symbolQueryKeyType = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'QueryKey',
+    tool: plugin.name,
+  });
 
   const returnType = tsc.indexedAccessTypeNode({
     indexType: tsc.literalTypeNode({
@@ -267,9 +273,11 @@ const createQueryKeyLiteral = ({
     });
   }
 
-  const symbolCreateQueryKey = plugin.referenceSymbol(
-    plugin.api.selector('createQueryKey'),
-  );
+  const symbolCreateQueryKey = plugin.referenceSymbol({
+    category: 'utility',
+    resource: 'createQueryKey',
+    tool: plugin.name,
+  });
   const createQueryKeyCallExpression = tsc.callExpression({
     functionName: symbolCreateQueryKey.placeholder,
     parameters: [
@@ -309,8 +317,12 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
   const symbolQueryKeyType = plugin.registerSymbol({
     exported: true,
     kind: 'type',
+    meta: {
+      category: 'type',
+      resource: 'QueryKey',
+      tool: plugin.name,
+    },
     name: 'QueryKey',
-    selector: plugin.api.selector('QueryKey'),
   });
   const queryKeyType = tsc.typeAliasDeclaration({
     exportType: symbolQueryKeyType.exported,

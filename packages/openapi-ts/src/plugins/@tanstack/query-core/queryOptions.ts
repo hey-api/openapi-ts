@@ -38,14 +38,21 @@ export const createQueryOptions = ({
     operation,
   });
 
-  if (!plugin.getSymbol(plugin.api.selector('createQueryKey'))) {
+  if (
+    !plugin.getSymbol({
+      category: 'utility',
+      resource: 'createQueryKey',
+      tool: plugin.name,
+    })
+  ) {
     createQueryKeyType({ plugin });
     createQueryKeyFunction({ plugin });
   }
 
-  const symbolQueryOptions = plugin.referenceSymbol(
-    plugin.api.selector('queryOptions'),
-  );
+  const symbolQueryOptions = plugin.referenceSymbol({
+    category: 'external',
+    resource: `${plugin.name}.queryOptions`,
+  });
 
   const symbolQueryKey = plugin.registerSymbol({
     exported: true,
@@ -156,11 +163,17 @@ export const createQueryOptions = ({
 
   const symbolQueryOptionsFn = plugin.registerSymbol({
     exported: plugin.config.queryOptions.exported,
+    meta: {
+      category: 'hook',
+      resource: 'operation',
+      resourceId: operation.id,
+      role: 'queryOptions',
+      tool: plugin.name,
+    },
     name: buildName({
       config: plugin.config.queryOptions,
       name: operation.id,
     }),
-    selector: plugin.api.selector('queryOptionsFn', operation.id),
   });
   const statement = tsc.constVariable({
     comment: plugin.config.comments

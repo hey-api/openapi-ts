@@ -25,13 +25,17 @@ const createInfiniteParamsFunction = ({
   plugin: PluginInstance;
 }) => {
   const symbolCreateInfiniteParams = plugin.registerSymbol({
+    meta: {
+      category: 'utility',
+      resource: 'createInfiniteParams',
+      tool: plugin.name,
+    },
     name: buildName({
       config: {
         case: plugin.config.case,
       },
       name: 'createInfiniteParams',
     }),
-    selector: plugin.api.selector('createInfiniteParams'),
   });
 
   const fn = tsc.constVariable({
@@ -242,29 +246,45 @@ export const createInfiniteQueryOptions = ({
     operation,
   });
 
-  if (!plugin.getSymbol(plugin.api.selector('createQueryKey'))) {
+  if (
+    !plugin.getSymbol({
+      category: 'utility',
+      resource: 'createQueryKey',
+      tool: plugin.name,
+    })
+  ) {
     createQueryKeyType({ plugin });
     createQueryKeyFunction({ plugin });
   }
 
-  if (!plugin.getSymbol(plugin.api.selector('createInfiniteParams'))) {
+  if (
+    !plugin.getSymbol({
+      category: 'utility',
+      resource: 'createInfiniteParams',
+      tool: plugin.name,
+    })
+  ) {
     createInfiniteParamsFunction({ plugin });
   }
 
-  const symbolInfiniteQueryOptions = plugin.referenceSymbol(
-    plugin.api.selector('infiniteQueryOptions'),
-  );
-  const symbolInfiniteDataType = plugin.referenceSymbol(
-    plugin.api.selector('InfiniteData'),
-  );
+  const symbolInfiniteQueryOptions = plugin.referenceSymbol({
+    category: 'external',
+    resource: `${plugin.name}.infiniteQueryOptions`,
+  });
+  const symbolInfiniteDataType = plugin.referenceSymbol({
+    category: 'external',
+    resource: `${plugin.name}.InfiniteData`,
+  });
 
   const typeData = useTypeData({ operation, plugin });
   const typeError = useTypeError({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
 
-  const symbolQueryKeyType = plugin.referenceSymbol(
-    plugin.api.selector('QueryKey'),
-  );
+  const symbolQueryKeyType = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'QueryKey',
+    tool: plugin.name,
+  });
   const typeQueryKey = `${symbolQueryKeyType.placeholder}<${typeData}>`;
   const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
@@ -330,9 +350,11 @@ export const createInfiniteQueryOptions = ({
     }),
   });
 
-  const symbolCreateInfiniteParams = plugin.referenceSymbol(
-    plugin.api.selector('createInfiniteParams'),
-  );
+  const symbolCreateInfiniteParams = plugin.referenceSymbol({
+    category: 'utility',
+    resource: 'createInfiniteParams',
+    tool: plugin.name,
+  });
 
   const statements: Array<ts.Statement> = [
     tsc.constVariable({
