@@ -7,9 +7,7 @@ import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiTransformersPlugin } from './types';
 
 export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
-  api: new Api({
-    name: '@hey-api/transformers',
-  }),
+  api: new Api(),
   config: {
     bigInt: true,
     dates: true,

@@ -1,3 +1,4 @@
+import type { SymbolMeta } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { createOperationKey, operationResponsesMap } from '~/ir/operation';
@@ -58,14 +59,19 @@ const processSchemaType = ({
   schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   if (schema.$ref) {
-    const selector = plugin.api.selector('response-ref', schema.$ref);
+    const query: SymbolMeta = {
+      category: 'transform',
+      resource: 'definition',
+      resourceId: schema.$ref,
+    };
 
-    if (!plugin.getSymbol(selector)) {
+    if (!plugin.getSymbol(query)) {
       // TODO: remove
       // create each schema response transformer only once
 
       // Register symbol early to prevent infinite recursion with self-referential schemas
       const symbol = plugin.registerSymbol({
+        meta: query,
         name: buildName({
           config: {
             case: 'camelCase',
@@ -73,7 +79,6 @@ const processSchemaType = ({
           },
           name: refToName(schema.$ref),
         }),
-        selector,
       });
 
       const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
@@ -103,8 +108,8 @@ const processSchemaType = ({
       }
     }
 
-    if (plugin.isSymbolRegistered(selector)) {
-      const ref = plugin.referenceSymbol(selector);
+    if (plugin.isSymbolRegistered(query)) {
+      const ref = plugin.referenceSymbol(query);
       const callExpression = tsc.callExpression({
         functionName: ref.placeholder,
         parameters: [dataExpression],
@@ -350,6 +355,12 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       if (!nodes.length) return;
       const symbol = plugin.registerSymbol({
         exported: true,
+        meta: {
+          category: 'transform',
+          resource: 'operation',
+          resourceId: operation.id,
+          role: 'response',
+        },
         name: buildName({
           config: {
             case: 'camelCase',
@@ -357,7 +368,6 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
           },
           name: operation.id,
         }),
-        selector: plugin.api.selector('response', operation.id),
       });
       const value = tsc.constVariable({
         exportConst: symbol.exported,

@@ -135,9 +135,10 @@ const generateAngularClassServices = ({
       }
     }
 
-    const symbolInjectable = plugin.referenceSymbol(
-      plugin.api.selector('Injectable'),
-    );
+    const symbolInjectable = plugin.referenceSymbol({
+      category: 'external',
+      resource: '@angular/core.Injectable',
+    });
     const symbolClass = plugin.registerSymbol({
       exported: true,
       name: buildName({
@@ -209,9 +210,10 @@ const generateResourceCallExpression = ({
 }) => {
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
 
-  const symbolHttpResource = plugin.referenceSymbol(
-    plugin.api.selector('httpResource'),
-  );
+  const symbolHttpResource = plugin.referenceSymbol({
+    category: 'external',
+    resource: '@angular/common/http.httpResource',
+  });
 
   const symbolResponseType = plugin.querySymbol({
     category: 'type',
@@ -233,14 +235,18 @@ const generateResourceCallExpression = ({
     if (firstEntry) {
       // Import the root class from HTTP requests
       const rootClassName = firstEntry.path[0]!;
-      const symbolClass = plugin.referenceSymbol(
-        plugin.api.selector('class', rootClassName),
-      );
+      const symbolClass = plugin.referenceSymbol({
+        category: 'utility',
+        resource: 'class',
+        resourceId: rootClassName,
+        tool: 'angular',
+      });
 
       // Build the method access path using inject
-      const symbolInject = plugin.referenceSymbol(
-        plugin.api.selector('inject'),
-      );
+      const symbolInject = plugin.referenceSymbol({
+        category: 'external',
+        resource: '@angular/core.inject',
+      });
       let methodAccess: ts.Expression = tsc.callExpression({
         functionName: symbolInject.placeholder,
         parameters: [tsc.identifier({ text: symbolClass.placeholder })],
@@ -299,9 +305,13 @@ const generateResourceCallExpression = ({
       });
     }
   } else {
-    const symbolHttpRequest = plugin.referenceSymbol(
-      plugin.api.selector('httpRequest', operation.id),
-    );
+    const symbolHttpRequest = plugin.referenceSymbol({
+      category: 'utility',
+      resource: 'operation',
+      resourceId: operation.id,
+      role: 'data',
+      tool: 'angular',
+    });
 
     return tsc.callExpression({
       functionName: symbolHttpResource.placeholder,

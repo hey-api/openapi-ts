@@ -39,8 +39,11 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   if (isAngularClient && plugin.config.asClass) {
     plugin.registerSymbol({
       external: '@angular/core',
+      meta: {
+        category: 'external',
+        resource: '@angular/core.Injectable',
+      },
       name: 'Injectable',
-      selector: plugin.api.selector('Injectable'),
     });
   }
 
