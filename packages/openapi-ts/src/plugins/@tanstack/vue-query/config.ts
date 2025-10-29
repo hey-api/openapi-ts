@@ -6,9 +6,7 @@ import { Api } from './api';
 import type { TanStackVueQueryPlugin } from './types';
 
 export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
-  api: new Api({
-    name: '@tanstack/vue-query',
-  }),
+  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,

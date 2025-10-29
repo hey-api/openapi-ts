@@ -35,9 +35,10 @@ export const createUseQuery = ({
     }),
   });
 
-  const symbolUseQuery = plugin.referenceSymbol(
-    plugin.api.selector('useQuery'),
-  );
+  const symbolUseQuery = plugin.referenceSymbol({
+    category: 'external',
+    resource: `${plugin.name}.useQuery`,
+  });
 
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
@@ -45,9 +46,13 @@ export const createUseQuery = ({
   });
   const typeData = useTypeData({ operation, plugin });
 
-  const symbolQueryOptionsFn = plugin.referenceSymbol(
-    plugin.api.selector('queryOptionsFn', operation.id),
-  );
+  const symbolQueryOptionsFn = plugin.referenceSymbol({
+    category: 'hook',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'queryOptions',
+    tool: plugin.name,
+  });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
       ? createOperationComment({ operation })

@@ -37,7 +37,10 @@ export const useTypeError = ({
     typeErrorName = 'Error';
   }
   if (client.name === '@hey-api/client-axios') {
-    const symbol = plugin.referenceSymbol(plugin.api.selector('AxiosError'));
+    const symbol = plugin.referenceSymbol({
+      category: 'external',
+      resource: 'axios.AxiosError',
+    });
     typeErrorName = `${symbol.placeholder}<${typeErrorName}>`;
   }
   return typeErrorName;

@@ -11,14 +11,20 @@ export const handler: PluginHandler = ({ plugin }) => {
   plugin.registerSymbol({
     external: plugin.name,
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.DefaultError`,
+    },
     name: 'DefaultError',
-    selector: plugin.api.selector('DefaultError'),
   });
   plugin.registerSymbol({
     external: plugin.name,
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.InfiniteData`,
+    },
     name: 'InfiniteData',
-    selector: plugin.api.selector('InfiniteData'),
   });
   const mutationsType =
     plugin.name === '@tanstack/angular-query-experimental' ||
@@ -29,29 +35,44 @@ export const handler: PluginHandler = ({ plugin }) => {
   plugin.registerSymbol({
     external: plugin.name,
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.MutationOptions`,
+    },
     name: mutationsType,
-    selector: plugin.api.selector('MutationOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.infiniteQueryOptions`,
+    },
     name: 'infiniteQueryOptions',
-    selector: plugin.api.selector('infiniteQueryOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.queryOptions`,
+    },
     name: 'queryOptions',
-    selector: plugin.api.selector('queryOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.useQuery`,
+    },
     name: 'useQuery',
-    selector: plugin.api.selector('useQuery'),
   });
   plugin.registerSymbol({
     external: 'axios',
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: 'axios.AxiosError',
+    },
     name: 'AxiosError',
-    selector: plugin.api.selector('AxiosError'),
   });
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');

@@ -6,9 +6,7 @@ import { Api } from './api';
 import type { TanStackReactQueryPlugin } from './types';
 
 export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
-  api: new Api({
-    name: '@tanstack/react-query',
-  }),
+  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,
