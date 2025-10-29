@@ -41,9 +41,10 @@ export const enumToAst = ({
     });
   }
 
-  const v = plugin.referenceSymbol(
-    plugin.api.selector('external', 'valibot.v'),
-  );
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
 
   let resultExpression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({

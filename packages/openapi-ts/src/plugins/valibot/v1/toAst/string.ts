@@ -13,9 +13,10 @@ export const stringToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
 }) => {
-  const v = plugin.referenceSymbol(
-    plugin.api.selector('external', 'valibot.v'),
-  );
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
 
   if (typeof schema.const === 'string') {
     const expression = tsc.callExpression({

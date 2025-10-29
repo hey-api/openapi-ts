@@ -118,14 +118,18 @@ export const irWebhookToAst = ({
     const symbol = plugin.registerSymbol({
       exported: true,
       meta: {
+        category: 'schema',
         path: state.path.value,
+        resource: 'webhook',
+        resourceId: operation.id,
+        role: 'data',
         tags: state.tags?.value,
+        tool: 'valibot',
       },
       name: buildName({
         config: plugin.config.webhooks,
         name: operation.id,
       }),
-      selector: plugin.api.selector('webhook-request', operation.id),
     });
     exportAst({
       ast,
