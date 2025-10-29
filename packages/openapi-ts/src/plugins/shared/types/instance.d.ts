@@ -13,7 +13,7 @@ export type BaseEvent = {
   /**
    * Tags associated with the node.
    */
-  tags?: Set<string>;
+  tags?: ReadonlyArray<string>;
 };
 
 type WalkEvents = BaseEvent &

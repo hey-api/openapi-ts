@@ -1,3 +1,5 @@
+import type { SymbolMeta } from '@hey-api/codegen-core';
+
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
@@ -33,9 +35,14 @@ export const irSchemaToAst = ({
   // });
 
   if (schema.$ref) {
-    const selector = plugin.api.selector('ref', schema.$ref);
-    const refSymbol = plugin.referenceSymbol(selector);
-    if (plugin.isSymbolRegistered(selector)) {
+    const query: SymbolMeta = {
+      category: 'schema',
+      resource: 'definition',
+      resourceId: schema.$ref,
+      tool: 'arktype',
+    };
+    const refSymbol = plugin.referenceSymbol(query);
+    if (plugin.isSymbolRegistered(query)) {
       const ref = tsc.identifier({ text: refSymbol.placeholder });
       ast.expression = ref;
     } else {
@@ -251,13 +258,17 @@ const handleComponent = ({
   const symbol = plugin.registerSymbol({
     exported: true,
     meta: {
+      category: 'schema',
       path: state.path.value,
+      resource: 'definition',
+      resourceId: $ref,
+      tags: state.tags?.value,
+      tool: 'arktype',
     },
     name: buildName({
       config: plugin.config.definitions,
       name: baseName,
     }),
-    selector: plugin.api.selector('ref', $ref),
   });
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
     ? plugin.registerSymbol({
