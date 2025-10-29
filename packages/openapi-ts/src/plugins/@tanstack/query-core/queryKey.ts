@@ -55,10 +55,11 @@ export const createQueryKeyFunction = ({
     category: 'client',
   });
 
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.selector('Options'),
-  );
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
 
   const fn = tsc.constVariable({
     expression: tsc.arrowFunction({
@@ -310,10 +311,11 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
     },
   ];
 
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.selector('Options'),
-  );
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
   const symbolQueryKeyType = plugin.registerSymbol({
     exported: true,
     kind: 'type',

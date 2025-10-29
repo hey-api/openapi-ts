@@ -22,9 +22,9 @@ type SdkClassEntry = {
    */
   className: string;
   /**
-   * Symbol IDs for child classes located inside this class.
+   * Class names for child classes located inside this class.
    */
-  classes: Set<number>;
+  classes: Set<string>;
   /**
    * Symbol ID for the class.
    */
@@ -62,7 +62,10 @@ const createClientClassNodes = ({
     }),
   });
 
-  const symbolClient = plugin.referenceSymbol(plugin.api.selector('Client'));
+  const symbolClient = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'client.Client',
+  });
   const symClient = plugin.getSymbol({
     category: 'client',
   });
@@ -122,11 +125,11 @@ export const generateClassSdk = ({
   const client = getClientPlugin(plugin.context.config);
   const isAngularClient = client.name === '@hey-api/client-angular';
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
-  const sdkClasses = new Map<number, SdkClassEntry>();
+  const sdkClasses = new Map<string, SdkClassEntry>();
   /**
    * Track unique added classes.
    */
-  const generatedClasses = new Set<number>();
+  const generatedClasses = new Set<string>();
 
   const clientClassNodes = plugin.config.instance
     ? createClientClassNodes({ plugin })
@@ -156,11 +159,14 @@ export const generateClassSdk = ({
 
       for (const entry of classes.values()) {
         entry.path.forEach((currentClassName, index) => {
-          const symbolCurrentClass = plugin.referenceSymbol(
-            plugin.api.selector('class', currentClassName),
-          );
-          if (!sdkClasses.has(symbolCurrentClass.id)) {
-            sdkClasses.set(symbolCurrentClass.id, {
+          const symbolCurrentClass = plugin.referenceSymbol({
+            category: 'utility',
+            resource: 'class',
+            resourceId: currentClassName,
+            tool: 'sdk',
+          });
+          if (!sdkClasses.has(symbolCurrentClass.meta!.resourceId!)) {
+            sdkClasses.set(symbolCurrentClass.meta!.resourceId!, {
               className: currentClassName,
               classes: new Set(),
               id: symbolCurrentClass.id,
@@ -172,15 +178,20 @@ export const generateClassSdk = ({
 
           const parentClassName = entry.path[index - 1];
           if (parentClassName) {
-            const symbolParentClass = plugin.referenceSymbol(
-              plugin.api.selector('class', parentClassName),
-            );
+            const symbolParentClass = plugin.referenceSymbol({
+              category: 'utility',
+              resource: 'class',
+              resourceId: parentClassName,
+              tool: 'sdk',
+            });
             if (
               symbolParentClass.placeholder !== symbolCurrentClass.placeholder
             ) {
-              const parentClass = sdkClasses.get(symbolParentClass.id)!;
-              parentClass.classes.add(symbolCurrentClass.id);
-              sdkClasses.set(symbolParentClass.id, parentClass);
+              const parentClass = sdkClasses.get(
+                symbolParentClass.meta!.resourceId!,
+              )!;
+              parentClass.classes.add(symbolCurrentClass.meta!.resourceId!);
+              sdkClasses.set(symbolParentClass.meta!.resourceId!, parentClass);
             }
           }
 
@@ -190,7 +201,9 @@ export const generateClassSdk = ({
             return;
           }
 
-          const currentClass = sdkClasses.get(symbolCurrentClass.id)!;
+          const currentClass = sdkClasses.get(
+            symbolCurrentClass.meta!.resourceId!,
+          )!;
 
           // avoid duplicate methods
           if (currentClass.methods.has(entry.methodName)) {
@@ -221,8 +234,10 @@ export const generateClassSdk = ({
                   {
                     default: tsc.ots.string('$fetch'),
                     extends: tsc.typeNode(
-                      plugin.referenceSymbol(plugin.api.selector('Composable'))
-                        .placeholder,
+                      plugin.referenceSymbol({
+                        category: 'external',
+                        resource: 'client.Composable',
+                      }).placeholder,
                     ),
                     name: nuxtTypeComposable,
                   },
@@ -264,7 +279,7 @@ export const generateClassSdk = ({
 
           currentClass.methods.add(entry.methodName);
 
-          sdkClasses.set(symbolCurrentClass.id, currentClass);
+          sdkClasses.set(symbolCurrentClass.meta!.resourceId!, currentClass);
         });
       }
     },
@@ -279,7 +294,7 @@ export const generateClassSdk = ({
   });
 
   const generateClass = (currentClass: SdkClassEntry) => {
-    if (generatedClasses.has(currentClass.id)) {
+    if (generatedClasses.has(currentClass.className)) {
       return;
     }
 
@@ -327,8 +342,13 @@ export const generateClassSdk = ({
 
     const symbol = plugin.registerSymbol({
       exported: true,
+      meta: {
+        category: 'utility',
+        resource: 'class',
+        resourceId: currentClass.className,
+        tool: 'sdk',
+      },
       name: currentClass.className,
-      selector: plugin.api.selector('class', currentClass.className),
     });
     const node = tsc.classDeclaration({
       decorator:
@@ -353,7 +373,7 @@ export const generateClassSdk = ({
       nodes: currentClass.nodes,
     });
     plugin.setSymbolValue(symbol, node);
-    generatedClasses.add(symbol.id);
+    generatedClasses.add(symbol.meta!.resourceId!);
   };
 
   if (clientClassNodes.length) {

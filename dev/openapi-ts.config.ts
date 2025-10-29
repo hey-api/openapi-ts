@@ -40,9 +40,9 @@ export default defineConfig(() => {
             // 'dutchie.json',
             // 'invalid',
             // 'openai.yaml',
-            'full.yaml',
+            // 'full.yaml',
             // 'opencode.yaml',
-            // 'sdk-instance.yaml',
+            'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'type-format.yaml',
@@ -214,7 +214,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          name: '@hey-api/client-fetch',
+          // name: '@hey-api/client-fetch',
           // name: 'legacy/angular',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
@@ -259,7 +259,7 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          // instance: true,
+          instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
           // params_EXPERIMENTAL: 'experiment',

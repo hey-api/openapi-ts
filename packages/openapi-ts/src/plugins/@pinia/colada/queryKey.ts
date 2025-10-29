@@ -56,10 +56,11 @@ export const createQueryKeyFunction = ({
 
   const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
 
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.selector('Options'),
-  );
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
   const symbolClient = plugin.getSymbol({
     category: 'client',
   });
@@ -338,10 +339,11 @@ export const createQueryKeyType = ({
     },
   ];
 
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.selector('Options'),
-  );
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
   const symbolQueryKeyType = plugin.registerSymbol({
     exported: true,
     kind: 'type',
