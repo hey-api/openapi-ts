@@ -1,25 +1,3 @@
-import type { Selector } from '@hey-api/codegen-core';
+export type IApi = any;
 
-import type { Plugin } from '~/plugins';
-
-type SelectorType = 'response' | 'response-ref';
-
-export type IApi = {
-  /**
-   * @param type Selector type.
-   * @param value Depends on `type`:
-   *  - `response`: `operation.id` string
-   *  - `response-ref`: `$ref` JSON pointer
-   * @returns Selector array
-   * @deprecated
-   */
-  selector: (type: SelectorType, value?: string) => Selector;
-};
-
-export class Api implements IApi {
-  constructor(public meta: Plugin.Name<'@hey-api/transformers'>) {}
-
-  selector(...args: ReadonlyArray<string | undefined>): Selector {
-    return [this.meta.name, ...(args as Selector)];
-  }
-}
+export class Api implements IApi {}

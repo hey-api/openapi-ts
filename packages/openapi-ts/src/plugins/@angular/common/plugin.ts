@@ -6,23 +6,35 @@ export const handler: AngularCommonPlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: '@angular/common/http',
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: '@angular/common/http.HttpRequest',
+    },
     name: 'HttpRequest',
-    selector: plugin.api.selector('HttpRequest'),
   });
   plugin.registerSymbol({
     external: '@angular/core',
+    meta: {
+      category: 'external',
+      resource: '@angular/core.inject',
+    },
     name: 'inject',
-    selector: plugin.api.selector('inject'),
   });
   plugin.registerSymbol({
     external: '@angular/core',
+    meta: {
+      category: 'external',
+      resource: '@angular/core.Injectable',
+    },
     name: 'Injectable',
-    selector: plugin.api.selector('Injectable'),
   });
   plugin.registerSymbol({
     external: '@angular/common/http',
+    meta: {
+      category: 'external',
+      resource: '@angular/common/http.httpResource',
+    },
     name: 'httpResource',
-    selector: plugin.api.selector('httpResource'),
   });
 
   if (plugin.config.httpRequests.enabled) {
