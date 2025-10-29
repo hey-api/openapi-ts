@@ -48,8 +48,14 @@ declare module '@hey-api/codegen-core' {
     /**
      * Tags associated with this symbol.
      */
-    tags?: Set<string>;
-    tool?: 'arktype' | 'typescript' | 'valibot' | 'zod' | (string & {});
+    tags?: ReadonlyArray<string>;
+    tool?:
+      | 'arktype'
+      | 'fastify'
+      | 'typescript'
+      | 'valibot'
+      | 'zod'
+      | (string & {});
     variant?: 'container' | (string & {});
   }
 }

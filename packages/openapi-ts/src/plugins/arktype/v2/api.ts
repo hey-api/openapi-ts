@@ -9,7 +9,13 @@ export const createRequestValidatorV2 = ({
   operation,
   plugin,
 }: ValidatorArgs): ts.ArrowFunction | undefined => {
-  const symbol = plugin.getSymbol(plugin.api.selector('data', operation.id));
+  const symbol = plugin.getSymbol({
+    category: 'schema',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'data',
+    tool: 'arktype',
+  });
   if (!symbol) return;
 
   // const out = User({
@@ -56,9 +62,13 @@ export const createResponseValidatorV2 = ({
   operation,
   plugin,
 }: ValidatorArgs): ts.ArrowFunction | undefined => {
-  const symbol = plugin.getSymbol(
-    plugin.api.selector('responses', operation.id),
-  );
+  const symbol = plugin.getSymbol({
+    category: 'schema',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'responses',
+    tool: 'arktype',
+  });
   if (!symbol) return;
 
   const dataParameterName = 'data';
