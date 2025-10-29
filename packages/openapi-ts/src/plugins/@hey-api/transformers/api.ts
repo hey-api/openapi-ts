@@ -11,6 +11,7 @@ export type IApi = {
    *  - `response`: `operation.id` string
    *  - `response-ref`: `$ref` JSON pointer
    * @returns Selector array
+   * @deprecated
    */
   selector: (type: SelectorType, value?: string) => Selector;
 };

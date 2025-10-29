@@ -80,15 +80,26 @@ export class SymbolRegistry implements ISymbolRegistry {
     const sets: Array<Set<SymbolId>> = [];
     const indexKeySpace = this.buildIndexKeySpace(filter);
     const cacheDependencies = new Set<QueryCacheKey>();
+    let missed = false;
     for (const indexEntry of indexKeySpace) {
       cacheDependencies.add(this.serializeIndexEntry(indexEntry));
       const values = this.indices.get(indexEntry[0]);
-      if (!values) return [];
+      if (!values) {
+        missed = true;
+        break;
+      }
       const set = values.get(indexEntry[1]);
-      if (!set) return [];
+      if (!set) {
+        missed = true;
+        break;
+      }
       sets.push(set);
     }
-    if (!sets.length) return [];
+    if (missed || !sets.length) {
+      this.queryCacheDependencies.set(cacheKey, cacheDependencies);
+      this.queryCache.set(cacheKey, []);
+      return [];
+    }
     let result = new Set(sets[0]);
     for (const set of sets.slice(1)) {
       result = new Set([...result].filter((symbolId) => set.has(symbolId)));

@@ -10,6 +10,7 @@ export type IApi = {
    * @param value Depends on `type`:
    *  - `client`: never
    * @returns Selector array
+   * @deprecated
    */
   selector: (type: SelectorType, value?: string) => Selector;
 };
