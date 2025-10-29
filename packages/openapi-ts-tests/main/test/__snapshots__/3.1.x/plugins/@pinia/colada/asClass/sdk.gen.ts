@@ -48,6 +48,7 @@ export class FooService {
             ...options
         });
     }
+    
     static barService = BarService;
 }
 
@@ -58,6 +59,7 @@ export class FooBazService {
             ...options
         });
     }
+    
     static fooService = FooService;
 }
 
@@ -68,5 +70,6 @@ export class BarBazService {
             ...options
         });
     }
+    
     static fooService = FooService;
 }

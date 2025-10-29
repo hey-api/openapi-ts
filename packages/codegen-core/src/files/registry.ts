@@ -1,6 +1,10 @@
 import { BiMap } from '../bimap/bimap';
-import type { ISelector } from '../selectors/types';
-import type { IFileIn, IFileOut, IFileRegistry } from './types';
+import type {
+  IFileIdentifier,
+  IFileIn,
+  IFileOut,
+  IFileRegistry,
+} from './types';
 
 export class FileRegistry implements IFileRegistry {
   private _id: number = 0;
@@ -9,17 +13,15 @@ export class FileRegistry implements IFileRegistry {
   private selectorToId: Map<string, number> = new Map();
   private values: Map<number, IFileOut> = new Map();
 
-  get(fileIdOrSelector: number | ISelector): IFileOut | undefined {
-    const symbol = this.idOrSelector(fileIdOrSelector);
+  get(identifier: IFileIdentifier): IFileOut | undefined {
+    const file = this.identifierToFile(identifier);
 
-    if (symbol.id !== undefined) {
-      return this.values.get(symbol.id);
+    if (file.id !== undefined) {
+      return this.values.get(file.id);
     }
 
     const selector =
-      symbol.selector !== undefined
-        ? JSON.stringify(symbol.selector)
-        : undefined;
+      file.selector !== undefined ? JSON.stringify(file.selector) : undefined;
 
     if (selector) {
       const id = this.selectorToId.get(selector);
@@ -35,21 +37,21 @@ export class FileRegistry implements IFileRegistry {
     return this._id++;
   }
 
-  private idOrSelector(
-    symbolIdOrSelector: number | ISelector,
+  private identifierToFile(
+    identifier: IFileIdentifier,
   ): Pick<IFileIn, 'id' | 'selector'> {
-    return typeof symbolIdOrSelector === 'number'
-      ? { id: symbolIdOrSelector }
-      : { selector: symbolIdOrSelector };
+    return typeof identifier === 'number'
+      ? { id: identifier }
+      : { selector: identifier };
   }
 
-  isRegistered(fileIdOrSelector: number | ISelector): boolean {
-    const file = this.get(fileIdOrSelector);
+  isRegistered(identifier: IFileIdentifier): boolean {
+    const file = this.get(identifier);
     return file ? this.registerOrder.has(file.id) : false;
   }
 
-  reference(fileIdOrSelector: number | ISelector): IFileOut {
-    const file = this.idOrSelector(fileIdOrSelector);
+  reference(identifier: IFileIdentifier): IFileOut {
+    const file = this.identifierToFile(identifier);
     return this.register(file);
   }
 

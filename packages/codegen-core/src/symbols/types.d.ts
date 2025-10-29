@@ -1,7 +1,6 @@
 import type { ISymbolMeta } from '../extensions/types';
-import type { ISelector } from '../selectors/types';
 
-export type ISymbolIdentifier = number | ISymbolMeta | ISelector;
+export type ISymbolIdentifier = number | ISymbolMeta;
 
 export interface ISymbolIn {
   /**
@@ -60,14 +59,6 @@ export interface ISymbolIn {
    * @example "_heyapi_31_"
    */
   readonly placeholder?: string;
-  /**
-   * Selector array used to select this symbol. It doesn't have to be
-   * unique, but in practice it might be desirable.
-   *
-   * @deprecated
-   * @example ["zod", "#/components/schemas/Foo"]
-   */
-  readonly selector?: ISelector;
 }
 
 export interface ISymbolOut extends ISymbolIn {
@@ -130,12 +121,12 @@ export interface ISymbolRegistry {
    */
   query(filter: ISymbolMeta): ReadonlyArray<ISymbolOut>;
   /**
-   * Returns a symbol, registers it if it doesn't exist.
+   * References a symbol.
    *
-   * @param identifier Symbol identifier to reference.
-   * @returns The referenced or newly registered symbol.
+   * @param meta Metadata filter to reference symbol by.
+   * @returns The referenced symbol.
    */
-  reference(identifier: ISymbolIdentifier): ISymbolOut;
+  reference(meta: ISymbolMeta): ISymbolOut;
   /**
    * Register a symbol globally.
    *

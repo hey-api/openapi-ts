@@ -52,6 +52,7 @@ export class Business {
             ...options
         });
     }
+    
     static providers = Providers;
 }
 
@@ -62,5 +63,6 @@ export class Locations {
             ...options
         });
     }
+    
     static business = Business;
 }

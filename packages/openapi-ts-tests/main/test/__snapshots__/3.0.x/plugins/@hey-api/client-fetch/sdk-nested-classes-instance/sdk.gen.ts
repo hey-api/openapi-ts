@@ -57,6 +57,7 @@ export class Business extends _HeyApiClient {
             ...options
         });
     }
+    
     providers = new Providers({ client: this._client });
 }
 
@@ -74,5 +75,6 @@ export class NestedSdkWithInstance extends _HeyApiClient {
             ...options
         });
     }
+    
     business = new Business({ client: this._client });
 }
