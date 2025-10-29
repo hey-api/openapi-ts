@@ -54,6 +54,64 @@ const nodeBuiltins = new Set([
 ]);
 
 export class TypeScriptRenderer implements Renderer {
+  renderFile(
+    symbolsAndExports: string,
+    file: File,
+    project: IProject,
+    meta?: ProjectRenderMeta,
+  ): string {
+    const imports: Map<string, Binding> = new Map();
+    symbolsAndExports = renderIds(symbolsAndExports, (symbolId) => {
+      const symbol = project.symbols.get(symbolId);
+      const replaced = this.replacerFn({ file, project, symbol });
+      if (symbol) {
+        this.addBinding({ bindings: imports, file, meta, project, symbol });
+      }
+      return replaced;
+    });
+    if (!symbolsAndExports.length) return '';
+    let output = '';
+    const headerLines = this.getHeaderLines();
+    output += `${headerLines.join('\n')}${headerLines.length ? '\n\n' : ''}`;
+    const importLines = this.getImportLines(imports, file, project);
+    output += `${importLines.join('\n')}${importLines.length ? '\n\n' : ''}`;
+    return `${output}${symbolsAndExports}`;
+  }
+
+  renderSymbols(
+    file: File,
+    project: IProject,
+    meta?: ProjectRenderMeta,
+  ): string {
+    const exports: Map<string, Binding> = new Map();
+    let output = '';
+    const bodyLines = this.getBodyLines(file, project);
+    output += `${bodyLines.join('\n\n')}${bodyLines.length ? '\n' : ''}`;
+    output = renderIds(output, (symbolId) => {
+      if (!file.symbols.body.includes(symbolId)) return;
+      const symbol = project.symbols.get(symbolId);
+      return this.replacerFn({ file, project, symbol });
+    });
+    for (const symbolId of file.symbols.exports) {
+      const symbol = project.symbols.get(symbolId);
+      if (symbol) {
+        this.addBinding({ bindings: exports, file, meta, project, symbol });
+      }
+    }
+    // cast everything into namespace exports for now
+    for (const binding of exports.values()) {
+      binding.namespaceBinding = true;
+      binding.typeNamespaceBinding =
+        binding.names &&
+        binding.typeNames &&
+        binding.names.length === binding.typeNames.length &&
+        binding.names.every((name) => (binding.typeNames ?? []).includes(name));
+    }
+    const exportLines = this.getExportLines(exports, file, project);
+    output += `${exportLines.join('\n')}${exportLines.length ? '\n' : ''}`;
+    return output;
+  }
+
   private addBinding({
     bindings,
     file,
@@ -72,7 +130,7 @@ export class TypeScriptRenderer implements Renderer {
     }
 
     const [symbolFile] = project.symbolIdToFiles(symbol.id);
-    if (!symbolFile) return;
+    if (!symbolFile || file === symbolFile) return;
 
     const modulePath = this.getBindingPath(file, symbolFile, meta);
     const existing = bindings.get(modulePath);
@@ -405,64 +463,6 @@ export class TypeScriptRenderer implements Renderer {
     return name;
   }
 
-  renderFile(
-    symbolsAndExports: string,
-    file: File,
-    project: IProject,
-    meta?: ProjectRenderMeta,
-  ): string {
-    const imports: Map<string, Binding> = new Map();
-    symbolsAndExports = renderIds(symbolsAndExports, (symbolId) => {
-      const symbol = project.symbols.get(symbolId);
-      const replaced = this.replacerFn({ file, project, symbol });
-      if (symbol) {
-        this.addBinding({ bindings: imports, file, meta, project, symbol });
-      }
-      return replaced;
-    });
-    if (!symbolsAndExports.length) return '';
-    let output = '';
-    const headerLines = this.getHeaderLines();
-    output += `${headerLines.join('\n')}${headerLines.length ? '\n\n' : ''}`;
-    const importLines = this.getImportLines(imports, file, project);
-    output += `${importLines.join('\n')}${importLines.length ? '\n\n' : ''}`;
-    return `${output}${symbolsAndExports}`;
-  }
-
-  renderSymbols(
-    file: File,
-    project: IProject,
-    meta?: ProjectRenderMeta,
-  ): string {
-    const exports: Map<string, Binding> = new Map();
-    let output = '';
-    const bodyLines = this.getBodyLines(file, project);
-    output += `${bodyLines.join('\n\n')}${bodyLines.length ? '\n' : ''}`;
-    output = renderIds(output, (symbolId) => {
-      if (!file.symbols.body.includes(symbolId)) return;
-      const symbol = project.symbols.get(symbolId);
-      return this.replacerFn({ file, project, symbol });
-    });
-    for (const symbolId of file.symbols.exports) {
-      const symbol = project.symbols.get(symbolId);
-      if (symbol) {
-        this.addBinding({ bindings: exports, file, meta, project, symbol });
-      }
-    }
-    // cast everything into namespace exports for now
-    for (const binding of exports.values()) {
-      binding.namespaceBinding = true;
-      binding.typeNamespaceBinding =
-        binding.names &&
-        binding.typeNames &&
-        binding.names.length === binding.typeNames.length &&
-        binding.names.every((name) => (binding.typeNames ?? []).includes(name));
-    }
-    const exportLines = this.getExportLines(exports, file, project);
-    output += `${exportLines.join('\n')}${exportLines.length ? '\n' : ''}`;
-    return output;
-  }
-
   private replacerFn({
     file,
     project,
@@ -483,9 +483,8 @@ export class TypeScriptRenderer implements Renderer {
     if (conflictId !== undefined) {
       const conflictSymbol = project.symbols.get(conflictId);
       if (
-        (conflictSymbol?.meta?.kind === 'type' &&
-          symbol.meta?.kind === 'type') ||
-        (conflictSymbol?.meta?.kind !== 'type' && symbol.meta?.kind !== 'type')
+        (conflictSymbol?.kind === 'type' && symbol.kind === 'type') ||
+        (conflictSymbol?.kind !== 'type' && symbol.kind !== 'type')
       ) {
         name = this.getUniqueName(name, file.resolvedNames);
       }

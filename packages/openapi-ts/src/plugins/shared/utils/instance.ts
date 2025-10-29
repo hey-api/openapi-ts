@@ -2,9 +2,10 @@ import path from 'node:path';
 
 import type {
   IProject,
-  Selector,
   Symbol,
+  SymbolIdentifier,
   SymbolIn,
+  SymbolMeta,
 } from '@hey-api/codegen-core';
 
 import { HeyApiError } from '~/error';
@@ -280,8 +281,8 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return plugin as any;
   }
 
-  getSymbol(symbolIdOrSelector: number | Selector): Symbol | undefined {
-    return this.gen.symbols.get(symbolIdOrSelector);
+  getSymbol(identifier: SymbolIdentifier): Symbol | undefined {
+    return this.gen.symbols.get(identifier);
   }
 
   hooks = {
@@ -293,12 +294,16 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     },
   };
 
-  isSymbolRegistered(symbolIdOrSelector: number | Selector): boolean {
-    return this.gen.symbols.isRegistered(symbolIdOrSelector);
+  isSymbolRegistered(identifier: SymbolIdentifier): boolean {
+    return this.gen.symbols.isRegistered(identifier);
   }
 
-  referenceSymbol(symbolIdOrSelector: number | Selector): Symbol {
-    return this.gen.symbols.reference(symbolIdOrSelector);
+  querySymbol(filter: SymbolMeta): Symbol | undefined {
+    return this.gen.symbols.query(filter)[0];
+  }
+
+  referenceSymbol(identifier: SymbolIdentifier): Symbol {
+    return this.gen.symbols.reference(identifier);
   }
 
   registerSymbol(symbol: SymbolIn): Symbol {

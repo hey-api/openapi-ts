@@ -138,8 +138,8 @@ export default defineConfig(() => {
               // if (!symbol.external && !symbol.meta?.resourceType) {
               //   console.log(`[${plugin.name}]:`, symbol.name);
               // }
-              if (!symbol.external && !symbol.meta?.path) {
-                console.log(`[${plugin.name}]:`, symbol.name, symbol.meta);
+              if (plugin && !symbol.external && !symbol.meta?.path) {
+                // console.log(`[${plugin.name}]:`, symbol.name, symbol.meta);
               }
               // if (symbol.meta?.tags && symbol.meta?.tags.size > 0) {
               //   console.log(
@@ -213,11 +213,11 @@ export default defineConfig(() => {
         // myClientPlugin(),
         {
           // baseUrl: false,
-          exportFromIndex: true,
-          // name: '@hey-api/client-fetch',
+          // exportFromIndex: true,
+          name: '@hey-api/client-fetch',
           // name: 'legacy/angular',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
-          runtimeConfigPath: './src/hey-api.ts',
+          // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
           // throwOnError: true,
         },
@@ -269,10 +269,10 @@ export default defineConfig(() => {
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          validator: {
-            request: 'zod',
-            response: 'zod',
-          },
+          // validator: {
+          //   request: 'zod',
+          //   response: 'zod',
+          // },
           '~hooks': {
             symbols: {
               // getFilePath: (symbol) => {
@@ -346,7 +346,7 @@ export default defineConfig(() => {
           // definitions: 'z{{name}}Definition',
           exportFromIndex: true,
           // metadata: true,
-          name: 'valibot',
+          // name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
@@ -396,7 +396,7 @@ export default defineConfig(() => {
           },
           exportFromIndex: true,
           // metadata: true,
-          name: 'zod',
+          // name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',

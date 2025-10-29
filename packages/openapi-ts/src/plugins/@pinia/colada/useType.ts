@@ -24,11 +24,13 @@ export const useTypeError = ({
   plugin: PiniaColadaPlugin['Instance'];
 }): string => {
   const client = getClientPlugin(plugin.context.config);
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
 
-  const symbolErrorType = plugin.getSymbol(
-    pluginTypeScript.api.selector('error', operation.id),
-  );
+  const symbolErrorType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'error',
+  });
 
   let typeErrorName: string | undefined = symbolErrorType?.placeholder;
   if (!typeErrorName) {
@@ -48,9 +50,11 @@ export const useTypeResponse = ({
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
 }): string => {
-  const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  const symbolResponseType = plugin.getSymbol(
-    pluginTypeScript.api.selector('response', operation.id),
-  );
+  const symbolResponseType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'response',
+  });
   return symbolResponseType?.placeholder || 'unknown';
 };

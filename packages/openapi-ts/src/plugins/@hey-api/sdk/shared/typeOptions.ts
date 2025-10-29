@@ -16,35 +16,23 @@ export const createTypeOptions = ({
 
   const symbolTDataShape = plugin.registerSymbol({
     external: clientModule,
-    meta: {
-      kind: 'type',
-      path: [],
-    },
+    kind: 'type',
     name: 'TDataShape',
   });
   const symbolClient = plugin.registerSymbol({
     external: clientModule,
-    meta: {
-      kind: 'type',
-      path: [],
-    },
+    kind: 'type',
     name: 'Client',
     selector: plugin.api.selector('Client'),
   });
   const symbolClientOptions = plugin.registerSymbol({
     external: clientModule,
-    meta: {
-      kind: 'type',
-      path: [],
-    },
+    kind: 'type',
     name: 'Options',
   });
   const symbolOptions = plugin.registerSymbol({
     exported: true,
-    meta: {
-      kind: 'type',
-      path: [],
-    },
+    kind: 'type',
     name: 'Options',
     selector: plugin.api.selector('Options'),
   });
