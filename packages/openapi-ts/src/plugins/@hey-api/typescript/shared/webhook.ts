@@ -56,7 +56,10 @@ const operationToDataType = ({
       exported: true,
       kind: 'type',
       meta: {
+        category: 'type',
         path: state.path.value,
+        resource: 'definition',
+        resourceId: symbolWebhookPayload.placeholder,
         tags: state.tags?.value,
       },
       name: symbolWebhookPayload.name,
