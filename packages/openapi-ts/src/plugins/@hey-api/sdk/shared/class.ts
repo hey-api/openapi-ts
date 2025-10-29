@@ -63,14 +63,9 @@ const createClientClassNodes = ({
   });
 
   const symbolClient = plugin.referenceSymbol(plugin.api.selector('Client'));
-  const client = getClientPlugin(plugin.context.config);
-  const symClient =
-    client.api && 'selector' in client.api
-      ? plugin.getSymbol(
-          // @ts-expect-error
-          client.api.selector('client'),
-        )
-      : undefined;
+  const symClient = plugin.getSymbol({
+    category: 'client',
+  });
 
   return [
     tsc.propertyDeclaration({

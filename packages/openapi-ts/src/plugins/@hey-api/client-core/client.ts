@@ -94,8 +94,10 @@ export const createClient: PluginHandler = ({ plugin }) => {
   ];
 
   const symbolClient = plugin.registerSymbol({
+    meta: {
+      category: 'client',
+    },
     name: 'client',
-    selector: plugin.api.selector('client'),
   });
   const statement = tsc.constVariable({
     exportConst: true,
