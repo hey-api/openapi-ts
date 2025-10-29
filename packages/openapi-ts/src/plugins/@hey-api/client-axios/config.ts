@@ -10,9 +10,7 @@ import type { HeyApiClientAxiosPlugin } from './types';
 
 export const defaultConfig: HeyApiClientAxiosPlugin['Config'] = {
   ...clientDefaultMeta,
-  api: new Api({
-    name: '@hey-api/client-axios',
-  }),
+  api: new Api(),
   config: {
     ...clientDefaultConfig,
     throwOnError: false,

@@ -15,7 +15,13 @@ declare module '@hey-api/codegen-core' {
   }
 
   interface SymbolMeta {
-    category?: 'external' | 'schema' | 'sdk' | 'type' | (string & {});
+    category?:
+      | 'client'
+      | 'external'
+      | 'schema'
+      | 'sdk'
+      | 'type'
+      | (string & {});
     /**
      * Path to the resource this symbol represents.
      */

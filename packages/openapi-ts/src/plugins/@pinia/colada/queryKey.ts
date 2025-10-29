@@ -5,10 +5,7 @@ import { clientFolderAbsolutePath } from '~/generate/client';
 import { hasOperationDataRequired } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import {
-  getClientBaseUrlKey,
-  getClientPlugin,
-} from '~/plugins/@hey-api/client-core/utils';
+import { getClientBaseUrlKey } from '~/plugins/@hey-api/client-core/utils';
 import { type Property, tsc } from '~/tsc';
 
 import type { PiniaColadaPlugin } from './types';
@@ -56,14 +53,9 @@ export const createQueryKeyFunction = ({
   const symbolOptions = plugin.referenceSymbol(
     sdkPlugin.api.selector('Options'),
   );
-  const client = getClientPlugin(plugin.context.config);
-  const symbolClient =
-    client.api && 'selector' in client.api
-      ? plugin.getSymbol(
-          // @ts-expect-error
-          client.api.selector('client'),
-        )
-      : undefined;
+  const symbolClient = plugin.getSymbol({
+    category: 'client',
+  });
 
   const clientModule = clientFolderAbsolutePath(plugin.context.config);
   const symbolSerializeQueryValue = plugin.registerSymbol({
