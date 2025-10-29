@@ -23,6 +23,7 @@ export class SymbolRegistry implements ISymbolRegistry {
   private registerOrder: Set<SymbolId> = new Set();
   // TODO: remove after removing selectors
   private selectorToId: Map<string, SymbolId> = new Map();
+  private stubCache: Map<QueryCacheKey, SymbolId> = new Map();
   private stubs: Set<SymbolId> = new Set();
   private values: Map<SymbolId, ISymbolOut> = new Map();
 
@@ -118,6 +119,9 @@ export class SymbolRegistry implements ISymbolRegistry {
     }
     const [registered] = this.query(symbol.meta);
     if (registered) return registered;
+    const cacheKey = this.buildCacheKey(symbol.meta);
+    const cachedId = this.stubCache.get(cacheKey);
+    if (cachedId !== undefined) return this.values.get(cachedId)!;
     const id = this.id;
     const stub: ISymbolOut = {
       exportFrom: [],
@@ -127,6 +131,7 @@ export class SymbolRegistry implements ISymbolRegistry {
     };
     this.values.set(stub.id, stub);
     this.stubs.add(stub.id);
+    this.stubCache.set(cacheKey, stub.id);
     return stub;
   }
 
@@ -294,6 +299,8 @@ export class SymbolRegistry implements ISymbolRegistry {
         stub?.meta &&
         this.isSubset(this.buildIndexKeySpace(stub.meta), indexKeySpace)
       ) {
+        const cacheKey = this.buildCacheKey(stub.meta);
+        this.stubCache.delete(cacheKey);
         this.values.set(stubId, Object.assign(stub, symbol));
         this.stubs.delete(stubId);
       }
