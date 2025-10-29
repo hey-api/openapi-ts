@@ -203,4 +203,31 @@ describe('SymbolRegistry', () => {
     expect(resultFoo2.map((r) => r.name).sort()).toEqual(['A', 'B']);
     expect(registry['queryCache'].size).toBe(2);
   });
+
+  it('caches empty results across all early exit paths', () => {
+    const registry = new SymbolRegistry();
+
+    // 1. Key doesn't exist in indices
+    const resNoKey = registry.query({ foo: 'bar' });
+    expect(resNoKey).toEqual([]);
+    const cacheKeys1 = Array.from(registry['queryCache'].keys());
+    expect(cacheKeys1.length).toBe(1);
+    expect(registry['queryCache'].get(cacheKeys1[0]!)).toEqual([]);
+
+    // 2. Key exists but value doesn't
+    // Insert symbol with unrelated meta
+    registry.register({ meta: { something: 'else' }, name: 'A' });
+    const resNoValue = registry.query({ bar: 'baz' });
+    expect(resNoValue).toEqual([]);
+    const cacheKeys2 = Array.from(registry['queryCache'].keys());
+    expect(cacheKeys2.length).toBe(2);
+    expect(registry['queryCache'].get(cacheKeys2[1]!)).toEqual([]);
+
+    // 3. Empty indexKeySpace (empty meta object)
+    const resEmpty = registry.query({});
+    expect(resEmpty).toEqual([]);
+    const cacheKeys3 = Array.from(registry['queryCache'].keys());
+    expect(cacheKeys3.length).toBe(3);
+    expect(registry['queryCache'].get(cacheKeys3[2]!)).toEqual([]);
+  });
 });

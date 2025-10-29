@@ -31,6 +31,7 @@ export type IApi = {
    *  - `QueryKey`: never
    *  - `useQuery`: never
    * @returns Selector array
+   * @deprecated
    */
   selector: (type: SelectorType, value?: string) => Selector;
 };

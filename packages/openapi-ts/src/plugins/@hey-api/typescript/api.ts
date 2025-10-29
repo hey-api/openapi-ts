@@ -21,6 +21,7 @@ export type IApi = {
    *  - `webhook-request`: `operation.id` string
    *  - `Webhooks`: never
    * @returns Selector array
+   * @deprecated
    */
   selector: (type: SelectorType, value?: string) => Selector;
 };
