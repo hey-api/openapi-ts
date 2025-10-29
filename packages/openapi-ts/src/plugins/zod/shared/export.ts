@@ -22,7 +22,10 @@ export const exportAst = ({
   symbol: Symbol;
   typeInferSymbol: Symbol | undefined;
 }): void => {
-  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
 
   const statement = tsc.constVariable({
     comment: plugin.config.comments

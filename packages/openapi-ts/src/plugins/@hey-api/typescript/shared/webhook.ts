@@ -27,8 +27,13 @@ const operationToDataType = ({
       exported: true,
       kind: 'type',
       meta: {
+        category: 'type',
         path: state.path.value,
+        resource: 'webhook',
+        resourceId: operation.id,
+        role: 'data',
         tags: state.tags?.value,
+        tool: 'typescript',
       },
       name: buildName({
         config: {
@@ -37,7 +42,6 @@ const operationToDataType = ({
         },
         name: operation.id,
       }),
-      selector: plugin.api.selector('webhook-payload', operation.id),
     });
     const type = irSchemaToAst({
       plugin,
@@ -61,6 +65,7 @@ const operationToDataType = ({
         resource: 'definition',
         resourceId: symbolWebhookPayload.placeholder,
         tags: state.tags?.value,
+        tool: 'typescript',
       },
       name: symbolWebhookPayload.name,
       placeholder: symbolWebhookPayload.placeholder,
@@ -86,14 +91,18 @@ const operationToDataType = ({
     exported: true,
     kind: 'type',
     meta: {
+      category: 'type',
       path: state.path.value,
+      resource: 'webhook',
+      resourceId: operation.id,
+      role: 'data',
       tags: state.tags?.value,
+      tool: 'typescript',
     },
     name: buildName({
       config: plugin.config.webhooks,
       name: operation.id,
     }),
-    selector: plugin.api.selector('webhook-request', operation.id),
   });
   const type = irSchemaToAst({
     plugin,

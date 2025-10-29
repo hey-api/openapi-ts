@@ -9,7 +9,10 @@ export const undefinedToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'undefined'>;
 }): Omit<Ast, 'typeName'> => {
-  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
   const result: Partial<Omit<Ast, 'typeName'>> = {};
   result.expression = tsc.callExpression({
     functionName: tsc.propertyAccessExpression({
