@@ -39,7 +39,13 @@ export const createQueryOptions = ({
     context: plugin.context,
     operation,
   });
-  if (!plugin.getSymbol(plugin.api.selector('createQueryKey'))) {
+  if (
+    !plugin.getSymbol({
+      category: 'utility',
+      resource: 'createQueryKey',
+      tool: plugin.name,
+    })
+  ) {
     createQueryKeyType({ plugin });
     createQueryKeyFunction({ plugin });
   }
@@ -64,9 +70,11 @@ export const createQueryOptions = ({
       parameters: [optionsParamName],
     });
   } else {
-    const symbolCreateQueryKey = plugin.referenceSymbol(
-      plugin.api.selector('createQueryKey'),
-    );
+    const symbolCreateQueryKey = plugin.referenceSymbol({
+      category: 'utility',
+      resource: 'createQueryKey',
+      tool: plugin.name,
+    });
     // Optionally include tags when configured
     let tagsExpr: ts.Expression | undefined;
     if (
@@ -151,11 +159,17 @@ export const createQueryOptions = ({
 
   const symbolQueryOptionsFn = plugin.registerSymbol({
     exported: true,
+    meta: {
+      category: 'hook',
+      resource: 'operation',
+      resourceId: operation.id,
+      role: 'queryOptions',
+      tool: plugin.name,
+    },
     name: buildName({
       config: plugin.config.queryOptions,
       name: operation.id,
     }),
-    selector: plugin.api.selector('queryOptionsFn', operation.id),
   });
   const symbolDefineQueryOptions = plugin.registerSymbol({
     external: plugin.name,
