@@ -24,10 +24,9 @@ const createContext = () =>
       paths: {},
       servers: [],
     },
-    resolveRef: () => 
+    resolveRef: () =>
       // Mock implementation
-       undefined
-    ,
+      undefined,
   }) as unknown as IR.Context;
 
 describe('operation', () => {
