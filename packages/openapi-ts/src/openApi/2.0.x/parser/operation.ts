@@ -130,7 +130,8 @@ const operationToIrOperation = ({
             type: requestBody.type === 'file' ? 'string' : requestBody.type,
           };
     const contents = mediaTypeObjects({
-      mimeTypes: operation.consumes,
+      // assume JSON by default
+      mimeTypes: operation.consumes ? operation.consumes : ['application/json'],
       response: { schema },
     });
     // TODO: add support for multiple content types, for now prefer JSON
