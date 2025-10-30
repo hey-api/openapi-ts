@@ -6,8 +6,8 @@ export const vGetSearchData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
-        start_time: v.optional(v.pipe(v.string(), v.isoTime())),
-        end_time: v.pipe(v.string(), v.isoTime())
+        start_time: v.optional(v.pipe(v.string(), v.isoTimeSecond())),
+        end_time: v.pipe(v.string(), v.isoTimeSecond())
     })
 });
 
@@ -16,5 +16,5 @@ export const vGetSearchData = v.object({
  */
 export const vGetSearchResponse = v.object({
     result: v.optional(v.string()),
-    scheduled_time: v.optional(v.pipe(v.string(), v.isoTime()))
+    scheduled_time: v.optional(v.pipe(v.string(), v.isoTimeSecond()))
 });
