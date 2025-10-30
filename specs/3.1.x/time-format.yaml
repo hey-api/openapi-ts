@@ -1,0 +1,35 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI 3.1.0 time format example
+  version: '1'
+paths:
+  /search:
+    get:
+      summary: Search with time parameter
+      parameters:
+        - name: start_time
+          in: query
+          description: Start time in HH:MM:SS format
+          schema:
+            type: string
+            format: time
+        - name: end_time
+          in: query
+          description: End time in HH:MM:SS format
+          required: true
+          schema:
+            type: string
+            format: time
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                  scheduled_time:
+                    type: string
+                    format: time

@@ -994,6 +994,14 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'anyOf string and binary string',
     },
+    {
+      config: createConfig({
+        input: 'time-format.yaml',
+        output: 'time-format',
+        plugins: ['valibot'],
+      }),
+      description: 'generates correct valibot schema for time format',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
