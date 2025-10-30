@@ -88,9 +88,7 @@ describe('generateLegacySchemas', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/schemas',
           },
@@ -99,9 +97,7 @@ describe('generateLegacySchemas', () => {
           output: '',
         },
         '@hey-api/sdk': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/sdk',
           },
@@ -256,9 +252,7 @@ describe('generateLegacySchemas', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/schemas',
             nameBuilder: nameFn,
@@ -268,9 +262,7 @@ describe('generateLegacySchemas', () => {
           output: '',
         },
         '@hey-api/sdk': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/sdk',
           },

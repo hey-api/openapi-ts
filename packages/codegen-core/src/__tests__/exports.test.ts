@@ -11,12 +11,13 @@ export type _TypeExports = [
   index.ProjectRenderMeta,
   index.SymbolMeta,
   index.File,
+  index.FileIdentifier,
   index.FileIn,
   index.Output,
   index.IProject,
   index.Renderer,
-  index.Selector,
   index.Symbol,
+  index.SymbolIdentifier,
   index.SymbolIn,
 ];
 

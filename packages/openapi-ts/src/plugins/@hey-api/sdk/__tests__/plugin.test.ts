@@ -90,9 +90,7 @@ describe('handlerLegacy', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/schemas',
           },
@@ -101,9 +99,7 @@ describe('handlerLegacy', () => {
           output: '',
         },
         '@hey-api/sdk': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             asClass: true,
             name: '@hey-api/sdk',
@@ -331,9 +327,7 @@ describe('methodNameBuilder', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/schemas',
           },
@@ -342,9 +336,7 @@ describe('methodNameBuilder', () => {
           output: '',
         },
         '@hey-api/sdk': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             asClass: true,
             name: '@hey-api/sdk',
@@ -494,9 +486,7 @@ describe('methodNameBuilder', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/schemas',
           },
@@ -505,9 +495,7 @@ describe('methodNameBuilder', () => {
           output: '',
         },
         '@hey-api/sdk': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             asClass: true,
             methodNameBuilder,
@@ -660,9 +648,7 @@ describe('methodNameBuilder', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/schemas',
           },
@@ -671,9 +657,7 @@ describe('methodNameBuilder', () => {
           output: '',
         },
         '@hey-api/sdk': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             asClass: false,
             methodNameBuilder,

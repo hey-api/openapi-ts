@@ -167,7 +167,7 @@ export const generateClassSdk = ({
           });
           if (!sdkClasses.has(symbolCurrentClass.meta!.resourceId!)) {
             sdkClasses.set(symbolCurrentClass.meta!.resourceId!, {
-              className: currentClassName,
+              className: symbolCurrentClass.meta!.resourceId!,
               classes: new Set(),
               id: symbolCurrentClass.id,
               methods: new Set(),
@@ -185,7 +185,8 @@ export const generateClassSdk = ({
               tool: 'sdk',
             });
             if (
-              symbolParentClass.placeholder !== symbolCurrentClass.placeholder
+              symbolParentClass.meta?.resourceId !==
+              symbolCurrentClass.meta?.resourceId
             ) {
               const parentClass = sdkClasses.get(
                 symbolParentClass.meta!.resourceId!,
@@ -303,40 +304,58 @@ export const generateClassSdk = ({
         const childClass = sdkClasses.get(childClassName)!;
         generateClass(childClass);
 
-        currentClass.nodes.push(
-          tsc.propertyDeclaration({
-            initializer: plugin.config.instance
-              ? tsc.newExpression({
-                  argumentsArray: plugin.config.instance
-                    ? [
-                        tsc.objectExpression({
-                          multiLine: false,
-                          obj: [
-                            {
-                              key: 'client',
-                              value: tsc.propertyAccessExpression({
-                                expression: tsc.this(),
-                                name: '_client',
-                              }),
-                            },
-                          ],
-                        }),
-                      ]
-                    : [],
-                  expression: tsc.identifier({
-                    text: plugin.referenceSymbol(childClass.id).placeholder,
-                  }),
-                })
-              : tsc.identifier({
-                  text: plugin.referenceSymbol(childClass.id).placeholder,
+        const subClassReferenceNode = tsc.propertyDeclaration({
+          initializer: plugin.config.instance
+            ? tsc.newExpression({
+                argumentsArray: plugin.config.instance
+                  ? [
+                      tsc.objectExpression({
+                        multiLine: false,
+                        obj: [
+                          {
+                            key: 'client',
+                            value: tsc.propertyAccessExpression({
+                              expression: tsc.this(),
+                              name: '_client',
+                            }),
+                          },
+                        ],
+                      }),
+                    ]
+                  : [],
+                expression: tsc.identifier({
+                  text: plugin.referenceSymbol({
+                    category: 'utility',
+                    resource: 'class',
+                    resourceId: childClass.className,
+                    tool: 'sdk',
+                  }).placeholder,
                 }),
-            modifier: plugin.config.instance ? undefined : 'static',
-            name: stringCase({
-              case: 'camelCase',
-              value: childClass.className,
-            }),
+              })
+            : tsc.identifier({
+                text: plugin.referenceSymbol({
+                  category: 'utility',
+                  resource: 'class',
+                  resourceId: childClass.className,
+                  tool: 'sdk',
+                }).placeholder,
+              }),
+          modifier: plugin.config.instance ? undefined : 'static',
+          name: stringCase({
+            case: 'camelCase',
+            value: childClass.className,
           }),
-        );
+        });
+
+        if (!currentClass.nodes.length) {
+          currentClass.nodes.push(subClassReferenceNode);
+        } else {
+          currentClass.nodes.push(
+            // @ts-expect-error
+            tsc.identifier({ text: '\n' }),
+            subClassReferenceNode,
+          );
+        }
       }
     }
 
