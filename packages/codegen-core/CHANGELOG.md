@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.3.2
+
+### Patch Changes
+
+- feat: add `.query()` method to symbol registry ([#2873](https://github.com/hey-api/openapi-ts/pull/2873)) ([`1cfc8f2`](https://github.com/hey-api/openapi-ts/commit/1cfc8f2b4673b53e0b1fff43f3d2078dcd595ca2)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.3.1
 
 ### Patch Changes
