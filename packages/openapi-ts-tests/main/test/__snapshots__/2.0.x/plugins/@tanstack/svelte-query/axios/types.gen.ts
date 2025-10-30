@@ -600,7 +600,10 @@ export type CallWithParametersData = {
 };
 
 export type CallWithWeirdParameterNamesData = {
-    body?: never;
+    /**
+     * This is the parameter that is sent as request body
+     */
+    body: string;
     headers: {
         /**
          * This is the parameter that goes into the request header

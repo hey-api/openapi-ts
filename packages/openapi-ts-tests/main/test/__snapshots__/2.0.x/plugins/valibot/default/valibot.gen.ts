@@ -533,7 +533,7 @@ export const vCallWithParametersData = v.object({
 });
 
 export const vCallWithWeirdParameterNamesData = v.object({
-    body: v.optional(v.never()),
+    body: v.string(),
     path: v.object({
         'parameter.path.1': v.optional(v.string()),
         'parameter-path-2': v.optional(v.string()),
