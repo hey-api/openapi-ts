@@ -77,7 +77,7 @@ export const stringToAst = ({
           tsc.callExpression({
             functionName: tsc.propertyAccessExpression({
               expression: v.placeholder,
-              name: identifiers.actions.isoTime,
+              name: identifiers.actions.isoTimeSecond,
             }),
           }),
         );
