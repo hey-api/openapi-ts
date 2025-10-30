@@ -1,21 +1,37 @@
 import { describe, expect, it } from 'vitest';
 
 import type { IR } from '../../../../ir/types';
-import type { SecuritySchemeObject } from '../../types/spec';
+import type { ParameterObject, SecuritySchemeObject } from '../../types/spec';
 import { parsePathOperation } from '../operation';
 
 type ParseOperationProps = Parameters<typeof parsePathOperation>[0];
 
-describe('operation', () => {
-  const context = {
+const createContext = () =>
+  ({
     config: {
+      parser: {
+        pagination: {
+          keywords: ['after', 'before', 'cursor', 'offset', 'page', 'start'],
+        },
+      },
       plugins: {},
     },
+    dereference: <T>(obj: any): T => obj as T,
     ir: {
+      components: {
+        schemas: {},
+      },
       paths: {},
       servers: [],
     },
-  } as unknown as IR.Context;
+    resolveRef: () => 
+      // Mock implementation
+       undefined
+    ,
+  }) as unknown as IR.Context;
+
+describe('operation', () => {
+  const context = createContext();
 
   it('should parse operation correctly', () => {
     const method = 'get';
@@ -89,5 +105,149 @@ describe('operation', () => {
       ],
       summary: 'Test Operation',
     });
+  });
+
+  it('should parse body parameter when consumes is undefined', () => {
+    const context = createContext();
+    const method = 'post';
+    const bodyParam: ParameterObject = {
+      description: 'Request body',
+      in: 'body',
+      name: 'body',
+      required: true,
+      schema: {
+        properties: {
+          id: { type: 'string' },
+          name: { type: 'string' },
+        },
+        required: ['id'],
+        type: 'object',
+      },
+    };
+    const operation: ParseOperationProps['operation'] = {
+      operationId: 'createItem',
+      requestBody: [bodyParam],
+      responses: {
+        '201': {
+          description: 'Created',
+        },
+      },
+      summary: 'Create an item',
+    };
+    const path = '/items';
+    const securitySchemesMap = new Map<string, SecuritySchemeObject>();
+    const state: ParseOperationProps['state'] = {
+      ids: new Map<string, string>(),
+    };
+
+    parsePathOperation({
+      context,
+      method,
+      operation,
+      path,
+      securitySchemesMap,
+      state,
+    });
+
+    const result = context.ir.paths?.[path]?.[method];
+    expect(result).toBeDefined();
+    expect(result?.body).toBeDefined();
+    expect(result?.body?.mediaType).toBe('application/json');
+    expect(result?.body?.required).toBe(true);
+    expect(result?.body?.schema.type).toBe('object');
+  });
+
+  it('should parse body parameter with array schema', () => {
+    const context = createContext();
+    const method = 'post';
+    const bodyParam: ParameterObject = {
+      description: 'add items',
+      in: 'body',
+      name: 'request',
+      required: true,
+      schema: {
+        items: {
+          properties: {
+            count: { type: 'number' },
+            id: { type: 'integer' },
+          },
+          type: 'object',
+        },
+        type: 'array',
+      },
+    };
+    const operation: ParseOperationProps['operation'] = {
+      operationId: 'addItems',
+      requestBody: [bodyParam],
+      responses: {
+        '201': {
+          description: 'Created',
+        },
+      },
+    };
+    const path = '/api/v1/items';
+    const securitySchemesMap = new Map<string, SecuritySchemeObject>();
+    const state: ParseOperationProps['state'] = {
+      ids: new Map<string, string>(),
+    };
+
+    parsePathOperation({
+      context,
+      method,
+      operation,
+      path,
+      securitySchemesMap,
+      state,
+    });
+
+    const result = context.ir.paths?.[path]?.[method];
+    expect(result).toBeDefined();
+    expect(result?.body).toBeDefined();
+    expect(result?.body?.mediaType).toBe('application/json');
+    expect(result?.body?.required).toBe(true);
+    expect(result?.body?.schema.type).toBe('array');
+  });
+
+  it('should use consumes when specified', () => {
+    const context = createContext();
+    const method = 'post';
+    const bodyParam: ParameterObject = {
+      description: 'XML body',
+      in: 'body',
+      name: 'body',
+      required: true,
+      schema: {
+        type: 'object',
+      },
+    };
+    const operation: ParseOperationProps['operation'] = {
+      consumes: ['application/xml'],
+      operationId: 'createXml',
+      requestBody: [bodyParam],
+      responses: {
+        '201': {
+          description: 'Created',
+        },
+      },
+    };
+    const path = '/items';
+    const securitySchemesMap = new Map<string, SecuritySchemeObject>();
+    const state: ParseOperationProps['state'] = {
+      ids: new Map<string, string>(),
+    };
+
+    parsePathOperation({
+      context,
+      method,
+      operation,
+      path,
+      securitySchemesMap,
+      state,
+    });
+
+    const result = context.ir.paths?.[path]?.[method];
+    expect(result).toBeDefined();
+    expect(result?.body).toBeDefined();
+    expect(result?.body?.mediaType).toBe('application/xml');
   });
 });
