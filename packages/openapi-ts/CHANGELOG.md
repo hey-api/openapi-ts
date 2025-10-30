@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.86.9
+
+### Patch Changes
+
+- fix(valibot): handle `time` string format ([#2889](https://github.com/hey-api/openapi-ts/pull/2889)) ([`0db5a43`](https://github.com/hey-api/openapi-ts/commit/0db5a43b868511784cdffabbec8ea234c7841d19)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- refactor: replace plugin references with queries ([#2873](https://github.com/hey-api/openapi-ts/pull/2873)) ([`1cfc8f2`](https://github.com/hey-api/openapi-ts/commit/1cfc8f2b4673b53e0b1fff43f3d2078dcd595ca2)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix: gracefully handle errors in debug reports ([#2884](https://github.com/hey-api/openapi-ts/pull/2884)) ([`d5c0a1c`](https://github.com/hey-api/openapi-ts/commit/d5c0a1c03edd3cefcd9438cee59d538cf87e9d3f)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.3.2
+
 ## 0.86.8
 
 ### Patch Changes
