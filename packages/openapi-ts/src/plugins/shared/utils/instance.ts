@@ -302,8 +302,8 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return this.gen.symbols.query(filter)[0];
   }
 
-  referenceSymbol(identifier: SymbolIdentifier): Symbol {
-    return this.gen.symbols.reference(identifier);
+  referenceSymbol(meta: SymbolMeta): Symbol {
+    return this.gen.symbols.reference(meta);
   }
 
   registerSymbol(symbol: SymbolIn): Symbol {

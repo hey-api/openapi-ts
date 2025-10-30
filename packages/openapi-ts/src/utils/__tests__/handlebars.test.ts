@@ -81,9 +81,7 @@ describe('registerHandlebarHelpers', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/schemas',
           },
@@ -92,9 +90,7 @@ describe('registerHandlebarHelpers', () => {
           output: '',
         },
         '@hey-api/sdk': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/sdk',
           },
@@ -210,9 +206,7 @@ describe('registerHandlebarTemplates', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/schemas',
           },
@@ -221,9 +215,7 @@ describe('registerHandlebarTemplates', () => {
           output: '',
         },
         '@hey-api/sdk': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/sdk',
           },

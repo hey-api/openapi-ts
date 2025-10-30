@@ -97,9 +97,7 @@ describe('generateLegacyOutput', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/schemas',
           },
@@ -108,9 +106,7 @@ describe('generateLegacyOutput', () => {
           output: '',
         },
         '@hey-api/sdk': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/sdk',
           },

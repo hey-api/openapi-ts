@@ -11,67 +11,62 @@ describe('SymbolRegistry', () => {
     expect(typeof id1).toBe('number');
     expect(id2).toBe(id1 + 1);
 
-    // Register a symbol with selector
+    // Register a symbol with meta
     const symbol1 = registry.register({
+      meta: {
+        foo: 'bar',
+      },
       placeholder: 'Foo',
-      selector: ['foo'],
     });
     expect(symbol1).toEqual({
       exportFrom: [],
       id: expect.any(Number),
+      meta: {
+        foo: 'bar',
+      },
       placeholder: 'Foo',
-      selector: ['foo'],
     });
 
-    // get by id and selector
+    // get by id and meta
     expect(registry.get(symbol1.id)).toEqual(symbol1);
-    expect(registry.get(['foo'])).toEqual(symbol1);
+    expect(registry.get({ foo: 'bar' })).toEqual(symbol1);
 
     // isRegistered should be true for explicitly registered symbols
     expect(registry.isRegistered(symbol1.id)).toBe(true);
-    expect(registry.isRegistered(['foo'])).toBe(true);
+    expect(registry.isRegistered({ foo: 'bar' })).toBe(true);
 
-    // Registering again with same selector returns same symbol
-    const symbol1b = registry.register({ selector: ['foo'] });
-    expect(symbol1b).toEqual(symbol1);
+    // Registering again with same meta creates a new symbol
+    const symbol1b = registry.register({ meta: { foo: 'bar' } });
+    expect(symbol1b).not.toEqual(symbol1);
 
-    // Registering with id returns same symbol
+    // Registering with id overrides the symbol
     const symbol1c = registry.register({ id: symbol1.id });
-    expect(symbol1c).toEqual(symbol1);
+    expect(symbol1c).not.toEqual(symbol1);
+    expect(symbol1c.id).toBe(symbol1.id);
 
-    // Reference by id returns same symbol
-    const ref1 = registry.reference(symbol1.id);
-    expect(ref1).toEqual(symbol1);
+    // Reference returns same symbol
+    const ref1 = registry.reference({ foo: 'bar' });
+    expect(ref1).toEqual(symbol1c);
 
-    // Reference by selector returns same symbol
-    const ref1b = registry.reference(['foo']);
-    expect(ref1b).toEqual(symbol1);
-
-    // Register a new symbol with a different selector
+    // Register a new symbol with different meta
     const symbol2 = registry.register({
       exportFrom: ['x'],
+      meta: { bar: 'baz' },
       placeholder: 'Bar',
-      selector: ['bar'],
     });
     expect(symbol2).toEqual({
       exportFrom: ['x'],
       id: expect.any(Number),
+      meta: { bar: 'baz' },
       placeholder: 'Bar',
-      selector: ['bar'],
     });
-
-    // Registering with same selector and extra exportFrom merges exportFrom
-    const symbol2b = registry.register({
-      exportFrom: ['y'],
-      selector: ['bar'],
-    });
-    expect(symbol2b.exportFrom).toEqual(['x', 'y']);
 
     // Registered symbols are yielded in order
     const registered = Array.from(registry.registered());
     expect(registered).toEqual([
-      expect.objectContaining({ selector: ['foo'] }),
-      expect.objectContaining({ selector: ['bar'] }),
+      expect.objectContaining({ id: 2 }),
+      expect.objectContaining({ meta: { foo: 'bar' } }),
+      expect.objectContaining({ meta: { bar: 'baz' } }),
     ]);
 
     // setValue, getValue, hasValue
@@ -80,12 +75,12 @@ describe('SymbolRegistry', () => {
     expect(registry.hasValue(symbol1.id)).toBe(true);
     expect(registry.getValue(symbol1.id)).toBe(42);
 
-    // referenced-only symbol should not be registered until register() with data
-    const symRef = registry.reference(['qux']);
+    // referenced-only symbol should not be registered until register()
+    const symRef = registry.reference({ qux: true });
     expect(registry.isRegistered(symRef.id)).toBe(false);
     const symRegistered = registry.register({
+      meta: { qux: true },
       placeholder: 'Qux',
-      selector: ['qux'],
     });
     expect(registry.isRegistered(symRegistered.id)).toBe(true);
   });
@@ -134,20 +129,6 @@ describe('SymbolRegistry', () => {
     expect(symC).not.toEqual(refAD);
     expect(symC).not.toEqual(refB);
     expect(symC.meta).toEqual({ a: 0, b: 0, c: 0 });
-  });
-
-  it('throws on invalid register or reference', () => {
-    const registry = new SymbolRegistry();
-    // Register with id that does not exist
-    expect(() => registry.register({ id: 9999 })).toThrow(
-      'Symbol with ID 9999 not found. To register a new symbol, leave the ID undefined.',
-    );
-    // Register with selector that maps to missing id
-    // Simulate by manually setting selectorToId
-    registry['selectorToId'].set(JSON.stringify(['missing']), 42);
-    expect(() => registry.register({ selector: ['missing'] })).toThrow(
-      'Symbol with ID 42 not found. The selector ["missing"] matched an ID, but there was no result. This is likely an issue with the application logic.',
-    );
   });
 
   it('caches query results and invalidates on relevant updates', () => {

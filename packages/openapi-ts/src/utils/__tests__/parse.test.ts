@@ -71,9 +71,7 @@ describe('operationNameFn', () => {
     pluginOrder: ['legacy/fetch', '@hey-api/sdk'],
     plugins: {
       '@hey-api/sdk': {
-        api: {
-          selector: () => [],
-        },
+        api: {},
         config: {
           name: '@hey-api/sdk',
           operationId: true,
@@ -101,9 +99,7 @@ describe('operationNameFn', () => {
     plugins: {
       ...optionsCommon.plugins,
       '@hey-api/sdk': {
-        api: {
-          selector: () => [],
-        },
+        api: {},
         config: {
           name: '@hey-api/sdk',
           operationId: true,
@@ -121,9 +117,7 @@ describe('operationNameFn', () => {
     plugins: {
       ...optionsCommon.plugins,
       '@hey-api/sdk': {
-        api: {
-          selector: () => [],
-        },
+        api: {},
         config: {
           name: '@hey-api/sdk',
           operationId: false,
@@ -141,9 +135,7 @@ describe('operationNameFn', () => {
     pluginOrder: ['@hey-api/client-fetch', '@hey-api/sdk'],
     plugins: {
       '@hey-api/client-fetch': {
-        api: {
-          selector: () => [],
-        },
+        api: {},
         config: {
           name: '@hey-api/client-fetch',
         },
@@ -153,9 +145,7 @@ describe('operationNameFn', () => {
         tags: ['client'],
       },
       '@hey-api/sdk': {
-        api: {
-          selector: () => [],
-        },
+        api: {},
         config: {
           name: '@hey-api/sdk',
           operationId: true,
@@ -173,9 +163,7 @@ describe('operationNameFn', () => {
     pluginOrder: ['@hey-api/client-fetch', '@hey-api/sdk'],
     plugins: {
       '@hey-api/client-fetch': {
-        api: {
-          selector: () => [],
-        },
+        api: {},
         config: {
           name: '@hey-api/client-fetch',
         },
@@ -185,9 +173,7 @@ describe('operationNameFn', () => {
         tags: ['client'],
       },
       '@hey-api/sdk': {
-        api: {
-          selector: () => [],
-        },
+        api: {},
         config: {
           name: '@hey-api/sdk',
           operationId: false,

@@ -23,8 +23,8 @@ describe('Project', () => {
     // Add a symbol and render output
     const symbol = project.symbols.register({
       getFilePath: () => 'foo',
+      meta: { foo: 'bar' },
       placeholder: 'Foo',
-      selector: ['foo'],
     });
     // Add a renderer for .ts files
     // Simulate a file with .ts extension
@@ -80,8 +80,8 @@ describe('Project', () => {
     // Register a symbol with selector
     project.symbols.register({
       getFilePath: () => 'bar',
+      meta: { bar: 'baz' },
       placeholder: 'Bar',
-      selector: ['bar'],
     });
     // Render output (should use fileName override)
     const outputs = project.render();
