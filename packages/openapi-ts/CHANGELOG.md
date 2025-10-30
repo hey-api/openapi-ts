@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.86.10
+
+### Patch Changes
+
+- fix(parser): handle OpenAPI 2.0 body as JSON by default if not explicitly defined ([#2893](https://github.com/hey-api/openapi-ts/pull/2893)) ([`767ad18`](https://github.com/hey-api/openapi-ts/commit/767ad185d5a2bb5a7344ca1c297e8d2b1c16d638)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.86.9
 
 ### Patch Changes
