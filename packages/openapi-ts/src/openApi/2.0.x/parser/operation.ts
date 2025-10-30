@@ -115,6 +115,13 @@ const operationToIrOperation = ({
   };
   const requestBodyObjectRequired: Array<string> = [];
 
+  // Check if there are any body parameters (not formData) to determine default media type
+  const hasBodyParameter = operation.requestBody?.some((param) => {
+    const resolvedParam =
+      '$ref' in param ? context.resolveRef<ParameterObject>(param.$ref) : param;
+    return resolvedParam.in === 'body';
+  });
+
   for (const requestBodyParameter of operation.requestBody ?? []) {
     const requestBody =
       '$ref' in requestBodyParameter
@@ -129,8 +136,16 @@ const operationToIrOperation = ({
             required: undefined,
             type: requestBody.type === 'file' ? 'string' : requestBody.type,
           };
+
+    // Only default to JSON if we have body parameters and no consumes specified
+    // FormData parameters without consumes should not get a default media type
+    let mimeTypes = operation.consumes;
+    if (!mimeTypes && hasBodyParameter && requestBody.in === 'body') {
+      mimeTypes = ['application/json'];
+    }
+
     const contents = mediaTypeObjects({
-      mimeTypes: operation.consumes,
+      mimeTypes,
       response: { schema },
     });
     // TODO: add support for multiple content types, for now prefer JSON

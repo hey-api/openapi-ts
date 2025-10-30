@@ -176,7 +176,10 @@ export type GetExternalModelResponses = {
 export type GetExternalModelResponse = GetExternalModelResponses[keyof GetExternalModelResponses];
 
 export type PostExternalModelData = {
-    body?: never;
+    /**
+     * Request body using external model
+     */
+    body: ExternalSharedExternalSharedModel;
     path?: never;
     query?: never;
     url: '/external-model';
@@ -217,7 +220,10 @@ export type GetExternalUuidResponses = {
 export type GetExternalUuidResponse = GetExternalUuidResponses[keyof GetExternalUuidResponses];
 
 export type PutExternalUuidData = {
-    body?: never;
+    /**
+     * Request body using external UUID
+     */
+    body?: ExternalSharedExternalSharedModelWithUuid;
     path?: never;
     query?: never;
     url: '/external-uuid';
@@ -252,7 +258,10 @@ export type GetExternalNestedResponses = {
 export type GetExternalNestedResponse = GetExternalNestedResponses[keyof GetExternalNestedResponses];
 
 export type PostExternalNestedData = {
-    body?: never;
+    /**
+     * Request body using external nested object
+     */
+    body?: ExternalSharedExternalNested;
     path?: never;
     query?: never;
     url: '/external-nested';
@@ -292,7 +301,15 @@ export type GetExternalMixedResponses = {
 export type GetExternalMixedResponse = GetExternalMixedResponses[keyof GetExternalMixedResponses];
 
 export type PostExternalMixedData = {
-    body?: never;
+    /**
+     * Request body with mixed external properties
+     */
+    body?: {
+        id?: ExternalSharedId;
+        name?: ExternalSharedName;
+        uuid?: ExternalSharedExternalSharedModelWithUuid;
+        deep?: ExternalSharedDeep;
+    };
     path?: never;
     query?: never;
     url: '/external-mixed';
@@ -324,7 +341,7 @@ export type GetExternalArrayResponses = {
 export type GetExternalArrayResponse = GetExternalArrayResponses[keyof GetExternalArrayResponses];
 
 export type PostExternalArrayData = {
-    body?: never;
+    body: Array<ExternalSharedExternalSharedModel>;
     path?: never;
     query?: never;
     url: '/external-array';
@@ -354,7 +371,7 @@ export type GetExternalUnionResponses = {
 };
 
 export type PostExternalUnionData = {
-    body?: never;
+    body: unknown;
     path?: never;
     query?: never;
     url: '/external-union';

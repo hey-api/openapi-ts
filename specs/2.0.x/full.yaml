@@ -113,11 +113,6 @@ paths:
           in: formData
           type: string
           required: true
-        - description: This is the parameter that is sent as request body
-          name: parameterBody
-          in: body
-          type: string
-          required: true
         - description: This is the parameter that goes into the path
           name: parameterPath
           in: path
@@ -164,16 +159,12 @@ paths:
           in: query
           type: string
           required: true
-        - description: This is the parameter that goes into the request form data
-          name: parameter_form
-          in: formData
-          type: string
-          required: true
         - description: This is the parameter that is sent as request body
           name: PARAMETER-BODY
           in: body
-          type: string
           required: true
+          schema:
+            type: string
         - description: api-version should be required in standalone clients
           name: api-version
           in: path
