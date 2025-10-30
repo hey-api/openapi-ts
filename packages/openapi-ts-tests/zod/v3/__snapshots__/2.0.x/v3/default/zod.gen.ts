@@ -546,7 +546,7 @@ export const zCallWithParametersData = z.object({
 });
 
 export const zCallWithWeirdParameterNamesData = z.object({
-    body: z.never().optional(),
+    body: z.string(),
     path: z.object({
         'parameter.path.1': z.string().optional(),
         'parameter-path-2': z.string().optional(),
