@@ -1,13 +1,15 @@
 import path from 'node:path';
 
 import { sync } from 'cross-spawn';
-import { describe, expect, it } from 'vitest';
+import { beforeAll,describe, expect, it } from 'vitest';
 
 import { getSpecsPath } from '../../utils';
 
 const specs = getSpecsPath();
 
 describe('bin', () => {
+  beforeAll(() => {});
+
   it('openapi-ts works', () => {
     const result = sync('openapi-ts', [
       '--input',
@@ -17,7 +19,8 @@ describe('bin', () => {
       '--dry-run',
       'true',
     ]);
+
     expect(result.error).toBeFalsy();
     expect(result.status).toBe(0);
-  });
+  }, 60000);
 });

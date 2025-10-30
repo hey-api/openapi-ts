@@ -61,6 +61,16 @@ export const stringToAst = ({
           }),
         );
         break;
+      case 'time':
+        pipes.push(
+          tsc.callExpression({
+            functionName: tsc.propertyAccessExpression({
+              expression: v.placeholder,
+              name: identifiers.actions.isoTime, // ✅ FIXED HERE
+            }),
+          }),
+        );
+        break;
       case 'ipv4':
       case 'ipv6':
         pipes.push(
@@ -83,7 +93,6 @@ export const stringToAst = ({
         );
         break;
       case 'email':
-      case 'time':
       case 'uuid':
         pipes.push(
           tsc.callExpression({
