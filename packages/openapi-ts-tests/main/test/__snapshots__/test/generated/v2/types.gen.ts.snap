@@ -679,10 +679,6 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Response = (NonAsciiStringæø�
 
 export type CallWithParametersData = {
     /**
-     * This is the parameter that is sent as request body
-     */
-    parameterBody: string;
-    /**
      * This is the parameter that goes into the form data
      */
     parameterForm: string;
@@ -709,10 +705,6 @@ export type CallWithWeirdParameterNamesData = {
      * This is the parameter that is sent as request body
      */
     parameterBody: string;
-    /**
-     * This is the parameter that goes into the request form data
-     */
-    parameterForm: string;
     /**
      * This is the parameter that goes into the request header
      */
