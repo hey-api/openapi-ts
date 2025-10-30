@@ -105,7 +105,11 @@ export const callWithParameters = <ThrowOnError extends boolean = true>(options:
 export const callWithWeirdParameterNames = <ThrowOnError extends boolean = true>(options: Options<CallWithWeirdParameterNamesData, ThrowOnError>) => {
     return (options.client ?? client).post<unknown, unknown, ThrowOnError>({
         url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
-        ...options
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
     });
 };
 

@@ -409,7 +409,6 @@ export class Parameters {
      * @param data.parameterHeader This is the parameter that goes into the header
      * @param data.parameterQuery This is the parameter that goes into the query params
      * @param data.parameterForm This is the parameter that goes into the form data
-     * @param data.parameterBody This is the parameter that is sent as request body
      * @param data.parameterPath This is the parameter that goes into the path
      * @throws ApiError
      */
@@ -428,8 +427,7 @@ export class Parameters {
             },
             formData: {
                 parameterForm: data.parameterForm
-            },
-            body: data.parameterBody
+            }
         });
     }
     
@@ -437,7 +435,6 @@ export class Parameters {
      * @param data The data for the request.
      * @param data.parameterHeader This is the parameter that goes into the request header
      * @param data.parameterQuery This is the parameter that goes into the request query params
-     * @param data.parameterForm This is the parameter that goes into the request form data
      * @param data.parameterBody This is the parameter that is sent as request body
      * @param data.parameterPath1 This is the parameter that goes into the path
      * @param data.parameterPath2 This is the parameter that goes into the path
@@ -460,9 +457,6 @@ export class Parameters {
             query: {
                 default: data._default,
                 'parameter-query': data.parameterQuery
-            },
-            formData: {
-                parameter_form: data.parameterForm
             },
             body: data.parameterBody
         });
