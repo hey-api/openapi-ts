@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.86.11
+
+### Patch Changes
+
+- fix(types): use unique generic names in `PluginInstance` to avoid typing issues ([#2897](https://github.com/hey-api/openapi-ts/pull/2897)) ([`a625980`](https://github.com/hey-api/openapi-ts/commit/a625980e7bbcba1f4bb91aecae9546ff51942964)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.86.10
 
 ### Patch Changes
