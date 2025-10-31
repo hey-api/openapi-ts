@@ -40,7 +40,13 @@ export const bigIntExpressions: ExpressionTransformer = ({
 
   if (bigIntCallExpression) {
     if (typeof dataExpression === 'string') {
-      return [bigIntCallExpression];
+      // When dataExpression is a string (e.g., 'item' in a map callback),
+      // return a return statement with the transformed value
+      return [
+        tsc.returnStatement({
+          expression: bigIntCallExpression,
+        }),
+      ];
     }
 
     if (dataExpression) {
@@ -70,10 +76,14 @@ export const dateExpressions: ExpressionTransformer = ({
   const identifierDate = tsc.identifier({ text: 'Date' });
 
   if (typeof dataExpression === 'string') {
+    // When dataExpression is a string (e.g., 'item' in a map callback),
+    // return a return statement with the transformed value
     return [
-      tsc.newExpression({
-        argumentsArray: [tsc.identifier({ text: dataExpression })],
-        expression: identifierDate,
+      tsc.returnStatement({
+        expression: tsc.newExpression({
+          argumentsArray: [tsc.identifier({ text: dataExpression })],
+          expression: identifierDate,
+        }),
       }),
     ];
   }
