@@ -2,10 +2,9 @@ import path from 'node:path';
 
 import type { IProjectRenderMeta } from '../extensions/types';
 import { FileRegistry } from '../files/registry';
-import type { IFileOut } from '../files/types';
+import type { IFileOut, IFileSelector } from '../files/types';
 import type { IOutput } from '../output/types';
 import type { IRenderer } from '../renderer/types';
-import type { ISelector } from '../selectors/types';
 import { SymbolRegistry } from '../symbols/registry';
 import type { ISymbolOut } from '../symbols/types';
 import type { IProject } from './types';
@@ -132,7 +131,7 @@ export class Project implements IProject {
     return Array.from(fileIds ?? []).map((fileId) => this.files.get(fileId)!);
   }
 
-  private symbolToFileSelector(symbol: ISymbolOut): ISelector {
+  private symbolToFileSelector(symbol: ISymbolOut): IFileSelector {
     if (symbol.external) {
       return [externalSourceSymbol, symbol.external];
     }

@@ -14,6 +14,7 @@ export type RouteHandlers = {
         Querystring: CallWithParametersData['query'];
     }>;
     callWithWeirdParameterNames: RouteHandler<{
+        Body: CallWithWeirdParameterNamesData['body'];
         Headers: CallWithWeirdParameterNamesData['headers'];
         Params: CallWithWeirdParameterNamesData['path'];
         Querystring: CallWithWeirdParameterNamesData['query'];

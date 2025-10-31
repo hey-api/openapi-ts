@@ -3,7 +3,6 @@ import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { operationClasses } from '~/plugins/@hey-api/sdk/shared/operation';
 import {
   createOperationComment,
@@ -136,11 +135,18 @@ const generateAngularClassRequests = ({
       }
     }
 
-    const symbolInjectable = plugin.referenceSymbol(
-      plugin.api.selector('Injectable'),
-    );
+    const symbolInjectable = plugin.referenceSymbol({
+      category: 'external',
+      resource: '@angular/core.Injectable',
+    });
     const symbolClass = plugin.registerSymbol({
       exported: true,
+      meta: {
+        category: 'utility',
+        resource: 'class',
+        resourceId: currentClass.className,
+        tool: 'angular',
+      },
       name: buildName({
         config: {
           case: 'preserve',
@@ -148,7 +154,6 @@ const generateAngularClassRequests = ({
         },
         name: currentClass.className,
       }),
-      selector: plugin.api.selector('class', currentClass.className),
     });
     const node = tsc.classDeclaration({
       decorator: currentClass.root
@@ -186,8 +191,14 @@ const generateAngularFunctionRequests = ({
 
       const symbol = plugin.registerSymbol({
         exported: true,
+        meta: {
+          category: 'utility',
+          resource: 'operation',
+          resourceId: operation.id,
+          role: 'data',
+          tool: 'angular',
+        },
         name: plugin.config.httpRequests.methodNameBuilder(operation),
-        selector: plugin.api.selector('httpRequest', operation.id),
       });
       const node = generateAngularRequestFunction({
         isRequiredOptions,
@@ -210,14 +221,9 @@ const generateRequestCallExpression = ({
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  const client = getClientPlugin(plugin.context.config);
-  const symbolClient =
-    client.api && 'selector' in client.api
-      ? plugin.getSymbol(
-          // @ts-expect-error
-          client.api.selector('client'),
-        )
-      : undefined;
+  const symbolClient = plugin.getSymbol({
+    category: 'client',
+  });
 
   const optionsClient = tsc.propertyAccessExpression({
     expression: tsc.identifier({ text: 'options' }),
@@ -278,20 +284,23 @@ const generateAngularRequestMethod = ({
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
 }) => {
-  const symbolHttpRequest = plugin.referenceSymbol(
-    plugin.api.selector('HttpRequest'),
-  );
+  const symbolHttpRequest = plugin.referenceSymbol({
+    category: 'external',
+    resource: '@angular/common/http.HttpRequest',
+  });
 
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.selector('Options'),
-  );
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
 
   const symbolDataType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
+    tool: 'typescript',
   });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
@@ -336,20 +345,23 @@ const generateAngularRequestFunction = ({
   plugin: AngularCommonPlugin['Instance'];
   symbol: Symbol;
 }) => {
-  const symbolHttpRequest = plugin.referenceSymbol(
-    plugin.api.selector('HttpRequest'),
-  );
+  const symbolHttpRequest = plugin.referenceSymbol({
+    category: 'external',
+    resource: '@angular/common/http.HttpRequest',
+  });
 
-  const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
-  const symbolOptions = plugin.referenceSymbol(
-    sdkPlugin.api.selector('Options'),
-  );
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
 
   const symbolDataType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
+    tool: 'typescript',
   });
   const dataType = symbolDataType?.placeholder || 'unknown';
 

@@ -11,14 +11,20 @@ export const handler: PluginHandler = ({ plugin }) => {
   plugin.registerSymbol({
     external: plugin.name,
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.DefaultError`,
+    },
     name: 'DefaultError',
-    selector: plugin.api.selector('DefaultError'),
   });
   plugin.registerSymbol({
     external: plugin.name,
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.InfiniteData`,
+    },
     name: 'InfiniteData',
-    selector: plugin.api.selector('InfiniteData'),
   });
   const mutationsType =
     plugin.name === '@tanstack/angular-query-experimental' ||
@@ -29,29 +35,44 @@ export const handler: PluginHandler = ({ plugin }) => {
   plugin.registerSymbol({
     external: plugin.name,
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.MutationOptions`,
+    },
     name: mutationsType,
-    selector: plugin.api.selector('MutationOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.infiniteQueryOptions`,
+    },
     name: 'infiniteQueryOptions',
-    selector: plugin.api.selector('infiniteQueryOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.queryOptions`,
+    },
     name: 'queryOptions',
-    selector: plugin.api.selector('queryOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.useQuery`,
+    },
     name: 'useQuery',
-    selector: plugin.api.selector('useQuery'),
   });
   plugin.registerSymbol({
     external: 'axios',
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: 'axios.AxiosError',
+    },
     name: 'AxiosError',
-    selector: plugin.api.selector('AxiosError'),
   });
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
@@ -72,9 +93,12 @@ export const handler: PluginHandler = ({ plugin }) => {
         // as it's really easy to break once we change the class casing
         entry
           ? [
-              plugin.referenceSymbol(
-                sdkPlugin.api.selector('class', entry.path[0]),
-              ).placeholder,
+              plugin.referenceSymbol({
+                category: 'utility',
+                resource: 'class',
+                resourceId: entry.path[0],
+                tool: 'sdk',
+              }).placeholder,
               ...entry.path.slice(1).map((className) =>
                 stringCase({
                   case: 'camelCase',
@@ -85,9 +109,11 @@ export const handler: PluginHandler = ({ plugin }) => {
             ]
               .filter(Boolean)
               .join('.')
-          : plugin.referenceSymbol(
-              sdkPlugin.api.selector('function', operation.id),
-            ).placeholder;
+          : plugin.referenceSymbol({
+              category: 'sdk',
+              resource: 'operation',
+              resourceId: operation.id,
+            }).placeholder;
 
       if (plugin.hooks.operation.isQuery(operation)) {
         if (plugin.config.queryOptions.enabled) {

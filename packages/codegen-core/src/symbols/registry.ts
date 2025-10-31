@@ -21,37 +21,14 @@ export class SymbolRegistry implements ISymbolRegistry {
   private queryCacheDependencies: Map<QueryCacheKey, Set<QueryCacheKey>> =
     new Map();
   private registerOrder: Set<SymbolId> = new Set();
-  // TODO: remove after removing selectors
-  private selectorToId: Map<string, SymbolId> = new Map();
+  private stubCache: Map<QueryCacheKey, SymbolId> = new Map();
   private stubs: Set<SymbolId> = new Set();
   private values: Map<SymbolId, ISymbolOut> = new Map();
 
   get(identifier: ISymbolIdentifier): ISymbolOut | undefined {
-    const symbol = this.identifierToSymbol(identifier);
-
-    if (symbol.id !== undefined) {
-      return this.values.get(symbol.id);
-    }
-
-    // TODO: remove after removing selectors
-    const selector =
-      symbol.selector !== undefined
-        ? JSON.stringify(symbol.selector)
-        : undefined;
-
-    // TODO: remove after removing selectors
-    if (selector) {
-      const id = this.selectorToId.get(selector);
-      if (id !== undefined) {
-        return this.values.get(id);
-      }
-    }
-
-    if (symbol.meta) {
-      return this.query(symbol.meta)[0];
-    }
-
-    return;
+    return typeof identifier === 'number'
+      ? this.values.get(identifier)
+      : this.query(identifier)[0];
   }
 
   getValue(symbolId: SymbolId): unknown {
@@ -110,98 +87,41 @@ export class SymbolRegistry implements ISymbolRegistry {
     return resultIds.map((symbolId) => this.values.get(symbolId)!);
   }
 
-  reference(identifier: ISymbolIdentifier): ISymbolOut {
-    const symbol = this.identifierToSymbol(identifier);
-    if (!symbol.meta) {
-      // TODO: remove/refactor after removing selectors
-      return this.register(symbol);
-    }
-    const [registered] = this.query(symbol.meta);
+  reference(meta: ISymbolMeta): ISymbolOut {
+    const [registered] = this.query(meta);
     if (registered) return registered;
+    const cacheKey = this.buildCacheKey(meta);
+    const cachedId = this.stubCache.get(cacheKey);
+    if (cachedId !== undefined) return this.values.get(cachedId)!;
     const id = this.id;
     const stub: ISymbolOut = {
       exportFrom: [],
       id,
-      meta: symbol.meta,
+      meta,
       placeholder: wrapId(String(id)),
     };
     this.values.set(stub.id, stub);
     this.stubs.add(stub.id);
+    this.stubCache.set(cacheKey, stub.id);
     return stub;
   }
 
   register(symbol: ISymbolIn): ISymbolOut {
-    // TODO: refactor after removing selectors
-    if (symbol.id !== undefined) {
-      const result = this.values.get(symbol.id);
-      if (!result) {
-        throw new Error(
-          `Symbol with ID ${symbol.id} not found. To register a new symbol, leave the ID undefined.`,
-        );
-      }
-      return result;
-    }
-
-    // TODO: refactor after removing selectors
-    const hasOtherKeys = Object.keys(symbol).some(
-      (key) => !['id', 'meta', 'selector'].includes(key),
-    );
-
-    let result: ISymbolOut | undefined;
-
-    // TODO: remove after removing selectors
-    const selector =
-      symbol.selector !== undefined
-        ? JSON.stringify(symbol.selector)
-        : undefined;
-    if (selector) {
-      const id = this.selectorToId.get(selector);
-      if (id !== undefined) {
-        result = this.values.get(id);
-        if (!result) {
-          throw new Error(
-            `Symbol with ID ${id} not found. The selector ${selector} matched an ID, but there was no result. This is likely an issue with the application logic.`,
-          );
-        }
-        if (!hasOtherKeys) {
-          return result;
-        }
-      }
-    }
-
-    const id = result?.id !== undefined ? result.id : this.id;
-    const exportFrom: Array<string> = result?.exportFrom
-      ? [...result.exportFrom]
-      : [];
-    if (symbol.exportFrom) {
-      exportFrom.push(...symbol.exportFrom);
-    }
-    result = {
-      ...result,
+    const id = symbol.id !== undefined ? symbol.id : this.id;
+    const result: ISymbolOut = {
       ...symbol, // clone to avoid mutation
-      exportFrom,
+      exportFrom: symbol.exportFrom ?? [],
       id,
-      placeholder:
-        result?.placeholder ?? symbol.placeholder ?? wrapId(String(id)),
+      placeholder: symbol.placeholder ?? wrapId(String(id)),
     };
     this.values.set(result.id, result);
-
-    if (hasOtherKeys) {
-      this.registerOrder.add(result.id);
-    }
-
-    if (selector) {
-      // TODO: remove after removing selectors
-      this.selectorToId.set(selector, result.id);
-    }
-
+    this.registerOrder.add(result.id);
     if (result.meta) {
       const indexKeySpace = this.buildIndexKeySpace(result.meta);
       this.indexSymbol(result.id, indexKeySpace);
       this.invalidateCache(indexKeySpace);
       this.replaceStubs(result, indexKeySpace);
     }
-
     return result;
   }
 
@@ -234,19 +154,6 @@ export class SymbolRegistry implements ISymbolRegistry {
       }
     }
     return entries;
-  }
-
-  private identifierToSymbol(
-    identifier: ISymbolIdentifier,
-  ): Pick<ISymbolIn, 'id' | 'meta' | 'selector'> {
-    if (typeof identifier === 'number') {
-      return { id: identifier };
-    }
-    if (identifier instanceof Array) {
-      // TODO: remove after removing selectors
-      return { selector: identifier };
-    }
-    return { meta: identifier };
   }
 
   private indexSymbol(symbolId: SymbolId, indexKeySpace: IndexKeySpace): void {
@@ -294,6 +201,8 @@ export class SymbolRegistry implements ISymbolRegistry {
         stub?.meta &&
         this.isSubset(this.buildIndexKeySpace(stub.meta), indexKeySpace)
       ) {
+        const cacheKey = this.buildCacheKey(stub.meta);
+        this.stubCache.delete(cacheKey);
         this.values.set(stubId, Object.assign(stub, symbol));
         this.stubs.delete(stubId);
       }

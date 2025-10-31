@@ -8,27 +8,47 @@ import type { PiniaColadaPlugin } from './types';
 export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: plugin.name,
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.defineQueryOptions`,
+    },
+    name: 'defineQueryOptions',
+  });
+  plugin.registerSymbol({
+    external: plugin.name,
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.UseMutationOptions`,
+    },
     name: 'UseMutationOptions',
-    selector: plugin.api.selector('UseMutationOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.UseQueryOptions`,
+    },
     name: 'UseQueryOptions',
-    selector: plugin.api.selector('UseQueryOptions'),
   });
   plugin.registerSymbol({
     external: plugin.name,
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}._JSONValue`,
+    },
     name: '_JSONValue',
-    selector: plugin.api.selector('_JSONValue'),
   });
   plugin.registerSymbol({
     external: 'axios',
     kind: 'type',
+    meta: {
+      category: 'external',
+      resource: 'axios.AxiosError',
+    },
     name: 'AxiosError',
-    selector: plugin.api.selector('AxiosError'),
   });
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
@@ -49,9 +69,12 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
         // as it's really easy to break once we change the class casing
         entry
           ? [
-              plugin.referenceSymbol(
-                sdkPlugin.api.selector('class', entry.path[0]),
-              ).placeholder,
+              plugin.referenceSymbol({
+                category: 'utility',
+                resource: 'class',
+                resourceId: entry.path[0],
+                tool: 'sdk',
+              }).placeholder,
               ...entry.path.slice(1).map((className: string) =>
                 stringCase({
                   case: 'camelCase',
@@ -62,9 +85,11 @@ export const handler: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
             ]
               .filter(Boolean)
               .join('.')
-          : plugin.referenceSymbol(
-              sdkPlugin.api.selector('function', operation.id),
-            ).placeholder;
+          : plugin.referenceSymbol({
+              category: 'sdk',
+              resource: 'operation',
+              resourceId: operation.id,
+            }).placeholder;
 
       if (plugin.hooks.operation.isQuery(operation)) {
         if (plugin.config.queryOptions.enabled) {

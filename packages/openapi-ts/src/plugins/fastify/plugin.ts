@@ -21,6 +21,7 @@ const operationToRouteHandler = ({
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
+    tool: 'typescript',
   });
   if (symbolDataType) {
     if (operation.body) {
@@ -142,9 +143,11 @@ const operationToRouteHandler = ({
     return;
   }
 
-  const symbolRouteHandler = plugin.referenceSymbol(
-    plugin.api.selector('RouteHandler'),
-  );
+  const symbolRouteHandler = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'route-handler',
+    tool: 'fastify',
+  });
   const routeHandler: Property = {
     name: operation.id,
     type: tsc.typeReferenceNode({
@@ -164,8 +167,12 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: 'fastify',
     kind: 'type',
+    meta: {
+      category: 'type',
+      resource: 'route-handler',
+      tool: 'fastify',
+    },
     name: 'RouteHandler',
-    selector: plugin.api.selector('RouteHandler'),
   });
 
   const symbolRouteHandlers = plugin.registerSymbol({

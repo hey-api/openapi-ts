@@ -15,7 +15,16 @@ declare module '@hey-api/codegen-core' {
   }
 
   interface SymbolMeta {
-    category?: 'external' | 'schema' | 'sdk' | 'type' | (string & {});
+    category?:
+      | 'client'
+      | 'external'
+      | 'hook'
+      | 'schema'
+      | 'sdk'
+      | 'transform'
+      | 'type'
+      | 'utility'
+      | (string & {});
     /**
      * Path to the resource this symbol represents.
      */
@@ -42,8 +51,17 @@ declare module '@hey-api/codegen-core' {
     /**
      * Tags associated with this symbol.
      */
-    tags?: Set<string>;
-    tool?: 'valibot' | (string & {});
+    tags?: ReadonlyArray<string>;
+    tool?:
+      | 'angular'
+      | 'arktype'
+      | 'fastify'
+      | 'json-schema'
+      | 'sdk'
+      | 'typescript'
+      | 'valibot'
+      | 'zod'
+      | (string & {});
     variant?: 'container' | (string & {});
   }
 }

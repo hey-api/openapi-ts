@@ -6,9 +6,7 @@ import { Api } from './api';
 import type { TanStackSolidQueryPlugin } from './types';
 
 export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
-  api: new Api({
-    name: '@tanstack/solid-query',
-  }),
+  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,

@@ -10,9 +10,7 @@ import type { HeyApiClientNextPlugin } from './types';
 
 export const defaultConfig: HeyApiClientNextPlugin['Config'] = {
   ...clientDefaultMeta,
-  api: new Api({
-    name: '@hey-api/client-next',
-  }),
+  api: new Api(),
   config: {
     ...clientDefaultConfig,
     throwOnError: false,

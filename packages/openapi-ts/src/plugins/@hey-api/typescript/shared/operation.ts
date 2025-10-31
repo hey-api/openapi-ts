@@ -130,6 +130,7 @@ const operationToDataType = ({
       resourceId: operation.id,
       role: 'data',
       tags: state.tags?.value,
+      tool: 'typescript',
     },
     name: buildName({
       config: plugin.config.requests,
@@ -172,6 +173,7 @@ export const operationToType = ({
         resourceId: operation.id,
         role: 'errors',
         tags: state.tags?.value,
+        tool: 'typescript',
       },
       name: buildName({
         config: plugin.config.errors,
@@ -201,6 +203,7 @@ export const operationToType = ({
           resourceId: operation.id,
           role: 'error',
           tags: state.tags?.value,
+          tool: 'typescript',
         },
         name: buildName({
           config: {
@@ -239,6 +242,7 @@ export const operationToType = ({
         resourceId: operation.id,
         role: 'responses',
         tags: state.tags?.value,
+        tool: 'typescript',
       },
       name: buildName({
         config: plugin.config.responses,
@@ -268,6 +272,7 @@ export const operationToType = ({
           resourceId: operation.id,
           role: 'response',
           tags: state.tags?.value,
+          tool: 'typescript',
         },
         name: buildName({
           config: {

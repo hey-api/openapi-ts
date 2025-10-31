@@ -24,7 +24,10 @@ export const objectToAst = ({
 
   const required = schema.required ?? [];
 
-  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;

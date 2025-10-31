@@ -88,9 +88,7 @@ describe('generateLegacySchemas', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/schemas',
           },
@@ -99,9 +97,7 @@ describe('generateLegacySchemas', () => {
           output: '',
         },
         '@hey-api/sdk': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/sdk',
           },
@@ -112,7 +108,6 @@ describe('generateLegacySchemas', () => {
         '@hey-api/typescript': {
           api: {
             schemaToType: () => ({}) as ts.TypeNode,
-            selector: () => [],
           },
           config: {
             enums: 'javascript',
@@ -257,9 +252,7 @@ describe('generateLegacySchemas', () => {
       ],
       plugins: {
         '@hey-api/schemas': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/schemas',
             nameBuilder: nameFn,
@@ -269,9 +262,7 @@ describe('generateLegacySchemas', () => {
           output: '',
         },
         '@hey-api/sdk': {
-          api: {
-            selector: () => [],
-          },
+          api: {},
           config: {
             name: '@hey-api/sdk',
           },
@@ -282,7 +273,6 @@ describe('generateLegacySchemas', () => {
         '@hey-api/typescript': {
           api: {
             schemaToType: () => ({}) as ts.TypeNode,
-            selector: () => [],
           },
           config: {
             enums: 'javascript',

@@ -115,7 +115,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    * This ensures, for example, that schemas are always processed before
    * operations, which may reference them.
    *
-   * @template T - The event type(s) to yield. Defaults to all event types.
+   * @template TKind - The event type(s) to yield. Defaults to all event types.
    * @param events - The event types to walk over. If none are provided, all event types are included.
    * @param callback - Function to execute for each event.
    *
@@ -129,23 +129,23 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    *   }
    * });
    */
-  forEach<T extends IrTopLevelKind = IrTopLevelKind>(
+  forEach<TKind extends IrTopLevelKind = IrTopLevelKind>(
     ...args: [
-      ...events: ReadonlyArray<T>,
-      callback: (event: WalkEvent<T>) => void,
+      ...events: ReadonlyArray<TKind>,
+      callback: (event: WalkEvent<TKind>) => void,
     ]
   ): void;
-  forEach<T extends IrTopLevelKind = IrTopLevelKind>(
+  forEach<TKind extends IrTopLevelKind = IrTopLevelKind>(
     ...args: [
-      ...events: ReadonlyArray<T>,
-      callback: (event: WalkEvent<T>) => void,
-      options: WalkOptions<T>,
+      ...events: ReadonlyArray<TKind>,
+      callback: (event: WalkEvent<TKind>) => void,
+      options: WalkOptions<TKind>,
     ]
   ): void;
-  forEach<T extends IrTopLevelKind = IrTopLevelKind>(
+  forEach<TKind extends IrTopLevelKind = IrTopLevelKind>(
     ...args: [
-      ...events: ReadonlyArray<T>,
-      callback: (event: WalkEvent<T>) => void,
+      ...events: ReadonlyArray<TKind>,
+      callback: (event: WalkEvent<TKind>) => void,
       options: any,
     ]
   ): void {
@@ -153,16 +153,16 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       throw new Error('No graph available in context');
     }
 
-    let callback: (event: WalkEvent<T>) => void;
-    let events: ReadonlyArray<T>;
-    let options: WalkOptions<T> = {
+    let callback: (event: WalkEvent<TKind>) => void;
+    let events: ReadonlyArray<TKind>;
+    let options: WalkOptions<TKind> = {
       getPointerPriority: getIrPointerPriority,
       // default functions operate on the full union of kinds; cast them
       // to the WalkOptions generic to keep strict typing for callers.
       matchPointerToGroup:
-        matchIrPointerToGroup as unknown as MatchPointerToGroupFn<T>,
+        matchIrPointerToGroup as unknown as MatchPointerToGroupFn<TKind>,
       order: 'topological',
-      preferGroups: preferGroups as unknown as ReadonlyArray<T>,
+      preferGroups: preferGroups as unknown as ReadonlyArray<TKind>,
     };
     if (typeof args[args.length - 1] === 'function') {
       events = args.slice(0, -1);
@@ -186,7 +186,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
         const baseEvent: BaseEvent = {
           _path: jsonPointerToPath(pointer),
           pointer,
-          tags: nodeInfo.tags,
+          tags: nodeInfo.tags ? Array.from(nodeInfo.tags) : undefined,
         };
         switch (result.kind) {
           case 'operation':
@@ -241,7 +241,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
         }
         if (event) {
           try {
-            callback(event as WalkEvent<T>);
+            callback(event as WalkEvent<TKind>);
           } catch (error) {
             this.forEachError(error, event);
           }
@@ -259,9 +259,11 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    * @param name Plugin name as defined in the configuration.
    * @returns The plugin instance if found, undefined otherwise.
    */
-  getPlugin<T extends keyof PluginConfigMap>(
-    name: T,
-  ): T extends any ? PluginInstance<PluginConfigMap[T]> | undefined : never {
+  getPlugin<TName extends keyof PluginConfigMap>(
+    name: TName,
+  ): TName extends any
+    ? PluginInstance<PluginConfigMap[TName]> | undefined
+    : never {
     return this.context.plugins[name] as any;
   }
 
@@ -273,9 +275,9 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    * @param name Plugin name as defined in the configuration.
    * @returns The plugin instance if found, throw otherwise.
    */
-  getPluginOrThrow<T extends keyof PluginConfigMap>(
-    name: T,
-  ): T extends any ? PluginInstance<PluginConfigMap[T]> : never {
+  getPluginOrThrow<TName extends keyof PluginConfigMap>(
+    name: TName,
+  ): TName extends any ? PluginInstance<PluginConfigMap[TName]> : never {
     const plugin = this.getPlugin(name);
     if (!plugin) throw new Error(`plugin not found ${name}`);
     return plugin as any;
@@ -302,8 +304,8 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return this.gen.symbols.query(filter)[0];
   }
 
-  referenceSymbol(identifier: SymbolIdentifier): Symbol {
-    return this.gen.symbols.reference(identifier);
+  referenceSymbol(meta: SymbolMeta): Symbol {
+    return this.gen.symbols.reference(meta);
   }
 
   registerSymbol(symbol: SymbolIn): Symbol {

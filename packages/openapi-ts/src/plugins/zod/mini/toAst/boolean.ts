@@ -10,7 +10,10 @@ export const booleanToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'boolean'>;
 }): Omit<Ast, 'typeName'> => {
-  const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
 
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 

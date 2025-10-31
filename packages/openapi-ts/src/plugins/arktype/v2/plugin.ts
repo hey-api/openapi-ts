@@ -1,3 +1,5 @@
+import type { SymbolMeta } from '@hey-api/codegen-core';
+
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
@@ -27,12 +29,20 @@ export const irSchemaToAst = ({
 }): Ast => {
   let ast: Partial<Ast> = {};
 
-  // const z = plugin.referenceSymbol(plugin.api.selector('external', 'zod.z'));
+  // const z = plugin.referenceSymbol({
+  //   category: 'external',
+  //   resource: 'arktype.type',
+  // });
 
   if (schema.$ref) {
-    const selector = plugin.api.selector('ref', schema.$ref);
-    const refSymbol = plugin.referenceSymbol(selector);
-    if (plugin.isSymbolRegistered(selector)) {
+    const query: SymbolMeta = {
+      category: 'schema',
+      resource: 'definition',
+      resourceId: schema.$ref,
+      tool: 'arktype',
+    };
+    const refSymbol = plugin.referenceSymbol(query);
+    if (plugin.isSymbolRegistered(query)) {
       const ref = tsc.identifier({ text: refSymbol.placeholder });
       ast.expression = ref;
     } else {
@@ -248,26 +258,34 @@ const handleComponent = ({
   const symbol = plugin.registerSymbol({
     exported: true,
     meta: {
+      category: 'schema',
       path: state.path.value,
+      resource: 'definition',
+      resourceId: $ref,
+      tags: state.tags?.value,
+      tool: 'arktype',
     },
     name: buildName({
       config: plugin.config.definitions,
       name: baseName,
     }),
-    selector: plugin.api.selector('ref', $ref),
   });
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
     ? plugin.registerSymbol({
         exported: true,
         kind: 'type',
         meta: {
+          category: 'type',
           path: state.path.value,
+          resource: 'definition',
+          resourceId: $ref,
+          tool: 'arktype',
+          variant: 'infer',
         },
         name: buildName({
           config: plugin.config.definitions.types.infer,
           name: baseName,
         }),
-        selector: plugin.api.selector('type-infer-ref', $ref),
       })
     : undefined;
   exportAst({
@@ -282,8 +300,11 @@ const handleComponent = ({
 export const handlerV2: ArktypePlugin['Handler'] = ({ plugin }) => {
   plugin.registerSymbol({
     external: 'arktype',
+    meta: {
+      category: 'external',
+      resource: 'arktype.type',
+    },
     name: 'type',
-    selector: plugin.api.selector('external', 'arktype.type'),
   });
 
   plugin.forEach(

@@ -1,3 +1,4 @@
+import type { SymbolMeta } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import { statusCodeToGroup } from '~/ir/operation';
@@ -163,10 +164,15 @@ export const operationOptionsType = ({
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
+    tool: 'typescript',
   });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
-  const symbolOptions = plugin.referenceSymbol(plugin.api.selector('Options'));
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
 
   if (isNuxtClient) {
     const symbolResponseType = plugin.querySymbol({
@@ -410,9 +416,10 @@ export const operationStatements = ({
   if (operation.body) {
     switch (operation.body.type) {
       case 'form-data': {
-        const symbol = plugin.referenceSymbol(
-          plugin.api.selector('formDataBodySerializer'),
-        );
+        const symbol = plugin.referenceSymbol({
+          category: 'external',
+          resource: 'client.formDataBodySerializer',
+        });
         requestOptions.push({ spread: symbol.placeholder });
         break;
       }
@@ -428,9 +435,10 @@ export const operationStatements = ({
         });
         break;
       case 'url-search-params': {
-        const symbol = plugin.referenceSymbol(
-          plugin.api.selector('urlSearchParamsBodySerializer'),
-        );
+        const symbol = plugin.referenceSymbol({
+          category: 'external',
+          resource: 'client.urlSearchParamsBodySerializer',
+        });
         requestOptions.push({ spread: symbol.placeholder });
         break;
       }
@@ -524,13 +532,15 @@ export const operationStatements = ({
     });
   }
 
-  if (plugin.config.transformer === '@hey-api/transformers') {
-    const pluginTransformers = plugin.getPluginOrThrow(
-      plugin.config.transformer,
-    );
-    const selector = pluginTransformers.api.selector('response', operation.id);
-    if (plugin.isSymbolRegistered(selector)) {
-      const ref = plugin.referenceSymbol(selector);
+  if (plugin.config.transformer) {
+    const query: SymbolMeta = {
+      category: 'transform',
+      resource: 'operation',
+      resourceId: operation.id,
+      role: 'response',
+    };
+    if (plugin.isSymbolRegistered(query)) {
+      const ref = plugin.referenceSymbol(query);
       requestOptions.push({
         key: 'responseTransformer',
         value: ref.placeholder,
@@ -627,9 +637,10 @@ export const operationStatements = ({
       }
       config.push(tsc.objectExpression({ obj }));
     }
-    const symbol = plugin.referenceSymbol(
-      plugin.api.selector('buildClientParams'),
-    );
+    const symbol = plugin.referenceSymbol({
+      category: 'external',
+      resource: 'client.buildClientParams',
+    });
     statements.push(
       tsc.constVariable({
         expression: tsc.callExpression({
@@ -682,13 +693,11 @@ export const operationStatements = ({
     }
   }
 
-  const symbolClient =
-    plugin.config.client && client.api && 'selector' in client.api
-      ? plugin.getSymbol(
-          // @ts-expect-error
-          client.api.selector('client'),
-        )
-      : undefined;
+  const symbolClient = plugin.config.client
+    ? plugin.getSymbol({
+        category: 'client',
+      })
+    : undefined;
 
   const optionsClient = tsc.propertyAccessExpression({
     expression: tsc.identifier({ text: 'options' }),
