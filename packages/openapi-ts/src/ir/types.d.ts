@@ -1,11 +1,16 @@
 import type { JsonSchemaDraft2020_12 } from '~/openApi/3.1.x/types/json-schema-draft-2020-12';
 import type {
+  ReferenceObject,
   SecuritySchemeObject,
   ServerObject,
 } from '~/openApi/3.1.x/types/spec';
 
-import type { Context as IRContext } from './context';
+import type { Context } from './context';
 import type { IRMediaType } from './mediaType';
+
+type IRContext<Spec extends Record<string, any> = any> = Context<Spec>;
+
+type IRReferenceObject = ReferenceObject;
 
 interface IRBodyObject {
   mediaType: string;
@@ -228,7 +233,7 @@ export namespace IR {
   export type ParametersObject = IRParametersObject;
   export type PathItemObject = IRPathItemObject;
   export type PathsObject = IRPathsObject;
-  export type ReferenceObject = ReferenceObject;
+  export type ReferenceObject = IRReferenceObject;
   export type RequestBodyObject = IRRequestBodyObject;
   export type ResponseObject = IRResponseObject;
   export type ResponsesObject = IRResponsesObject;
