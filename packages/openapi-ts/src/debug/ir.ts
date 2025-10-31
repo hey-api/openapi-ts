@@ -72,7 +72,7 @@ const print = (ir: IR.Model, options: PrintOptions = {}) => {
 
       const operation = item[method]!;
       log(
-        `${colors.green(method.toUpperCase())} ${colors.cyan(key)} (${colors.magenta(operation.operationId)})`,
+        `${colors.green(method.toUpperCase())} ${colors.cyan(key)} (${colors.magenta(operation.operationId ?? operation.id)})`,
         base,
       );
 
