@@ -39,7 +39,7 @@ export interface ISymbolIn {
   /**
    * Kind of symbol.
    */
-  readonly kind?: 'type';
+  readonly kind?: 'class' | 'function' | 'type';
   /**
    * Arbitrary metadata about the symbol.
    *

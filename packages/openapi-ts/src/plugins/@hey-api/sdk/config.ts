@@ -16,7 +16,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     exportFromIndex: true,
     instance: false,
     operationId: true,
-    params_EXPERIMENTAL: 'default',
+    paramsStructure: 'grouped',
     response: 'body',
     responseStyle: 'fields',
     transformer: false,

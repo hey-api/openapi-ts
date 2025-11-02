@@ -291,6 +291,13 @@ export const generateClassSdk = ({
 
   const symbolHeyApiClient = plugin.registerSymbol({
     exported: false,
+    kind: 'class',
+    meta: {
+      category: 'utility',
+      resource: 'class',
+      resourceId: '_HeyApiClient',
+      tool: 'sdk',
+    },
     name: '_HeyApiClient',
   });
 
@@ -361,6 +368,7 @@ export const generateClassSdk = ({
 
     const symbol = plugin.registerSymbol({
       exported: true,
+      kind: 'class',
       meta: {
         category: 'utility',
         resource: 'class',
