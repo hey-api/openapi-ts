@@ -1,24 +1,5 @@
 type Slot = 'body' | 'headers' | 'path' | 'query';
 
-type Params = {
-  body: unknown;
-  headers: Record<string, unknown>;
-  path: Record<string, unknown>;
-  query: Record<string, unknown>;
-};
-
-type KeyMap = Map<
-  string,
-  | {
-      in: Slot;
-      map?: string;
-    }
-  | {
-      in?: never;
-      map: Slot;
-    }
->;
-
 export type Field =
   | {
       in: Exclude<Slot, 'body'>;
@@ -67,6 +48,18 @@ const extraPrefixesMap: Record<string, Slot> = {
 };
 const extraPrefixes = Object.entries(extraPrefixesMap);
 
+type KeyMap = Map<
+  string,
+  | {
+      in: Slot;
+      map?: string;
+    }
+  | {
+      in?: never;
+      map: Slot;
+    }
+>;
+
 const buildKeyMap = (fields: FieldsConfig, map?: KeyMap): KeyMap => {
   if (!map) {
     map = new Map();
@@ -91,6 +84,13 @@ const buildKeyMap = (fields: FieldsConfig, map?: KeyMap): KeyMap => {
 
   return map;
 };
+
+interface Params {
+  body: unknown;
+  headers: Record<string, unknown>;
+  path: Record<string, unknown>;
+  query: Record<string, unknown>;
+}
 
 const stripEmptySlots = (params: Params) => {
   for (const [slot, value] of Object.entries(params)) {
