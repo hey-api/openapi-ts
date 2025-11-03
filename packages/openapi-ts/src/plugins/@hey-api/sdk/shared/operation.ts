@@ -1,6 +1,7 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
+import type { Context } from '~/ir/context';
 import { statusCodeToGroup } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { sanitizeNamespaceIdentifier } from '~/openApi';
@@ -39,7 +40,7 @@ const operationClassName = ({
   context,
   value,
 }: {
-  context: IR.Context;
+  context: Context;
   value: string;
 }) => {
   const name = stringCase({
@@ -84,7 +85,7 @@ export const operationClasses = ({
   operation,
   plugin,
 }: {
-  context: IR.Context;
+  context: Context;
   operation: IR.OperationObject;
   plugin: {
     config: Pick<

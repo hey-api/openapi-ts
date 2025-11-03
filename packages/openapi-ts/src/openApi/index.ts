@@ -1,6 +1,5 @@
 import { satisfies } from '~/config/utils/package';
 import { Context } from '~/ir/context';
-import type { IR } from '~/ir/types';
 import { parseV2_0_X } from '~/openApi/2.0.x';
 import { parseV3_0_X } from '~/openApi/3.0.x';
 import { parseV3_1_X } from '~/openApi/3.1.x';
@@ -73,7 +72,7 @@ export const parseOpenApiSpec = ({
   dependencies: Record<string, string>;
   logger: Logger;
   spec: unknown;
-}): IR.Context | undefined => {
+}): Context | undefined => {
   const context = new Context({
     config,
     dependencies,
@@ -82,17 +81,17 @@ export const parseOpenApiSpec = ({
   });
 
   if ('swagger' in context.spec) {
-    parseV2_0_X(context as IR.Context<OpenApi.V2_0_X>);
+    parseV2_0_X(context as Context<OpenApi.V2_0_X>);
     return context;
   }
 
   if (satisfies(context.spec.openapi, '>=3.0.0 <3.1.0')) {
-    parseV3_0_X(context as IR.Context<OpenApi.V3_0_X>);
+    parseV3_0_X(context as Context<OpenApi.V3_0_X>);
     return context;
   }
 
   if (satisfies(context.spec.openapi, '>=3.1.0')) {
-    parseV3_1_X(context as IR.Context<OpenApi.V3_1_X>);
+    parseV3_1_X(context as Context<OpenApi.V3_1_X>);
     return context;
   }
 

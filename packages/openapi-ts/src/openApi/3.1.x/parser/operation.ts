@@ -1,3 +1,4 @@
+import type { Context } from '~/ir/context';
 import type { IR } from '~/ir/types';
 import type { State } from '~/openApi/shared/types/state';
 import type { httpMethods } from '~/openApi/shared/utils/operation';
@@ -48,7 +49,7 @@ const initIrOperation = ({
   path,
   state,
 }: Pick<IR.OperationObject, 'method' | 'path'> & {
-  context: IR.Context;
+  context: Context;
   operation: Operation;
   state: State;
 }): IR.OperationObject => {
@@ -84,7 +85,7 @@ const operationToIrOperation = ({
   securitySchemesMap,
   state,
 }: Pick<IR.OperationObject, 'method' | 'path'> & {
-  context: IR.Context;
+  context: Context;
   operation: Operation;
   securitySchemesMap: Map<string, SecuritySchemeObject>;
   state: State;
@@ -222,7 +223,7 @@ const parseOperationObject = ({
   securitySchemesMap,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   method: (typeof httpMethods)[number];
   operation: Operation;
   path: keyof IR.PathsObject;
@@ -251,7 +252,7 @@ export const parsePathOperation = ({
   path,
   ...options
 }: {
-  context: IR.Context;
+  context: Context;
   method: (typeof httpMethods)[number];
   operation: Operation;
   path: keyof IR.PathsObject;
@@ -282,7 +283,7 @@ export const parseWebhookOperation = ({
   method,
   ...options
 }: {
-  context: IR.Context;
+  context: Context;
   key: string;
   method: (typeof httpMethods)[number];
   operation: Operation;
