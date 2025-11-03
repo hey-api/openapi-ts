@@ -11,6 +11,7 @@ import type {
 import { HeyApiError } from '~/error';
 import type { MatchPointerToGroupFn, WalkOptions } from '~/graph';
 import { walk } from '~/graph';
+import type { Context } from '~/ir/context';
 import type { IrTopLevelKind } from '~/ir/graph';
 import {
   getIrPointerPriority,
@@ -68,7 +69,7 @@ type EventHooks = {
 export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   api: T['api'];
   config: Omit<T['resolvedConfig'], 'name' | 'output'>;
-  context: IR.Context;
+  context: Context;
   dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
   private eventHooks: EventHooks;
   gen: IProject;
@@ -81,7 +82,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    * information such as name, version, and dependency resolution during
    * code generation.
    */
-  package: IR.Context['package'];
+  package: Context['package'];
 
   constructor(
     props: Pick<
@@ -89,7 +90,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       'config' | 'dependencies' | 'handler'
     > & {
       api?: T['api'];
-      context: IR.Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
+      context: Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
       gen: IProject;
       name: string;
       output: string;

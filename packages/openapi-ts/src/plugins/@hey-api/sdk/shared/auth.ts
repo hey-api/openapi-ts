@@ -1,3 +1,4 @@
+import type { Context } from '~/ir/context';
 import type { IR } from '~/ir/types';
 
 import type { Auth } from '../../client-core/bundle/auth';
@@ -73,7 +74,7 @@ export const operationAuth = ({
   operation,
   plugin,
 }: {
-  context: IR.Context;
+  context: Context;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
 }): Array<Auth> => {

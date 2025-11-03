@@ -1,3 +1,4 @@
+import type { Context } from './context';
 import type { Pagination } from './pagination';
 import type { IR } from './types';
 
@@ -5,7 +6,7 @@ const getPaginationSchema = ({
   context,
   parameter,
 }: {
-  context: IR.Context;
+  context: Context;
   parameter: IR.ParameterObject;
 }): IR.SchemaObject | undefined => {
   if (!parameter.pagination) {
@@ -66,7 +67,7 @@ export const parameterWithPagination = ({
   context,
   parameters,
 }: {
-  context: IR.Context;
+  context: Context;
   parameters: IR.ParametersObject | undefined;
 }): Pagination | undefined => {
   if (!parameters) {
