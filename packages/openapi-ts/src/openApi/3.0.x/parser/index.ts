@@ -1,4 +1,4 @@
-import type { IR } from '~/ir/types';
+import type { Context } from '~/ir/context';
 import { buildResourceMetadata } from '~/openApi/shared/graph/meta';
 import { transformOpenApiSpec } from '~/openApi/shared/transforms';
 import type { State } from '~/openApi/shared/types/state';
@@ -27,7 +27,7 @@ import { parseSchema } from './schema';
 import { parseServers } from './server';
 import { validateOpenApiSpec } from './validate';
 
-export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
+export const parseV3_0_X = (context: Context<OpenApiV3_0_X>) => {
   if (context.config.parser.validate_EXPERIMENTAL) {
     const result = validateOpenApiSpec(context.spec, context.logger);
     handleValidatorResult({ context, result });

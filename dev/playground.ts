@@ -1,56 +1,14 @@
-import { Sdk } from './.gen/sdk.gen';
+import type { DefinePlugin, IR } from '@hey-api/openapi-ts';
 
-const opencode = new Sdk();
-opencode.session.create(
-  {
-    parentID: '',
-    title: '',
-  },
-  {
-    headers: {
-      'X-Custom-Header': 'value',
-    },
-  },
-);
-opencode.session.init({
-  id: '',
-  messageID: '',
-  modelID: '',
-  providerID: '',
-});
-opencode.session.chat({
-  agent: '',
-  id: '',
-  messageID: '',
-  modelID: '',
-  parts: [
-    {
-      name: '',
-      type: 'agent',
-    },
-  ],
-  providerID: '',
-  system: '',
-  tools: {},
-});
-opencode.auth.set({
-  auth: {
-    // access: '',
-    // expires: 1,
-    key: '',
-    // refresh: '',
-    // token: '',
-    type: 'api',
-  },
-  id: '123',
-});
-opencode.postSessionByIdPermissionsByPermissionId({
-  id: 'session-id',
-  permissionID: 'permission-id',
-  response: 'always',
-});
-opencode.tui.showToast({
-  message: '',
-  title: '',
-  variant: 'error',
-});
+type MyPluginConfig = { readonly name: 'myplugin' };
+type MyPlugin = DefinePlugin<MyPluginConfig>;
+
+export function f(schema: IR.SchemaObject, plugin: MyPlugin['Instance']) {
+  plugin.context.resolveIrRef(schema.$ref);
+}
+
+export const handler: MyPlugin['Handler'] = ({ plugin }) => {
+  plugin.forEach('schema', 'operation', (event) => {
+    console.log(event);
+  });
+};

@@ -1,3 +1,4 @@
+import type { Context } from '~/ir/context';
 import { hasOperationDataRequired } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
@@ -42,7 +43,7 @@ export const isOperationOptionsRequired = ({
   context,
   operation,
 }: {
-  context: IR.Context;
+  context: Context;
   operation: IR.OperationObject;
 }): boolean => {
   const client = getClientPlugin(context.config);

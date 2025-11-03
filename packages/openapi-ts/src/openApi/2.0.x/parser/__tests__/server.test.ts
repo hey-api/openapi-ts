@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
+import type { Context } from '~/ir/context';
 import type { OpenApi } from '~/openApi/types';
 
-import type { IR } from '../../../../ir/types';
 import { parseServers } from '../server';
 
 describe('parseServers', () => {
   it('host + basePath + schemes', () => {
-    const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
+    const context: Partial<Context<Partial<OpenApi.V2_0_X>>> = {
       config: {
         input: [
           // @ts-expect-error
@@ -23,7 +23,7 @@ describe('parseServers', () => {
         schemes: ['http', 'https'],
       },
     };
-    parseServers({ context: context as IR.Context });
+    parseServers({ context: context as Context });
     expect(context.ir!.servers).toEqual([
       {
         url: 'http://foo.com/v1',
@@ -35,7 +35,7 @@ describe('parseServers', () => {
   });
 
   it('schemes + host', () => {
-    const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
+    const context: Partial<Context<Partial<OpenApi.V2_0_X>>> = {
       config: {
         input: [
           // @ts-expect-error
@@ -50,7 +50,7 @@ describe('parseServers', () => {
         schemes: ['ws'],
       },
     };
-    parseServers({ context: context as IR.Context });
+    parseServers({ context: context as Context });
     expect(context.ir!.servers).toEqual([
       {
         url: 'ws://foo.com',
@@ -59,7 +59,7 @@ describe('parseServers', () => {
   });
 
   it('host + basePath', () => {
-    const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
+    const context: Partial<Context<Partial<OpenApi.V2_0_X>>> = {
       config: {
         input: [
           // @ts-expect-error
@@ -74,7 +74,7 @@ describe('parseServers', () => {
         host: 'foo.com',
       },
     };
-    parseServers({ context: context as IR.Context });
+    parseServers({ context: context as Context });
     expect(context.ir!.servers).toEqual([
       {
         url: 'foo.com/v1',
@@ -83,7 +83,7 @@ describe('parseServers', () => {
   });
 
   it('host', () => {
-    const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
+    const context: Partial<Context<Partial<OpenApi.V2_0_X>>> = {
       config: {
         input: [
           // @ts-expect-error
@@ -97,7 +97,7 @@ describe('parseServers', () => {
         host: 'foo.com',
       },
     };
-    parseServers({ context: context as IR.Context });
+    parseServers({ context: context as Context });
     expect(context.ir!.servers).toEqual([
       {
         url: 'foo.com',
@@ -106,7 +106,7 @@ describe('parseServers', () => {
   });
 
   it('basePath', () => {
-    const context: Partial<IR.Context<Partial<OpenApi.V2_0_X>>> = {
+    const context: Partial<Context<Partial<OpenApi.V2_0_X>>> = {
       config: {
         input: [
           // @ts-expect-error
@@ -120,7 +120,7 @@ describe('parseServers', () => {
         basePath: '/v1',
       },
     };
-    parseServers({ context: context as IR.Context });
+    parseServers({ context: context as Context });
     expect(context.ir!.servers).toEqual([
       {
         url: '/v1',

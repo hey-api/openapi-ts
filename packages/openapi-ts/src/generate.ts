@@ -11,7 +11,7 @@ import {
   printCrashReport,
   shouldReportCrash,
 } from '~/error';
-import type { IR } from '~/ir/types';
+import type { Context } from '~/ir/context';
 import type { Client } from '~/types/client';
 import type { UserConfig } from '~/types/config';
 import type { LazyOrAsync, MaybeArray } from '~/types/utils';
@@ -27,7 +27,7 @@ import { Logger } from '~/utils/logger';
 export const createClient = async (
   userConfig?: LazyOrAsync<MaybeArray<UserConfig>>,
   logger = new Logger(),
-): Promise<ReadonlyArray<Client | IR.Context>> => {
+): Promise<ReadonlyArray<Client | Context>> => {
   const resolvedConfig =
     typeof userConfig === 'function' ? await userConfig() : userConfig;
   const userConfigs = resolvedConfig
@@ -90,7 +90,7 @@ export const createClient = async (
       }),
     );
     const result = clients.filter((client) => Boolean(client)) as ReadonlyArray<
-      Client | IR.Context
+      Client | Context
     >;
 
     eventCreateClient.timeEnd();

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { IR } from '../../../../ir/types';
+import type { Context } from '~/ir/context';
+
 import type { SecuritySchemeObject } from '../../types/spec';
 import { parsePathOperation } from '../operation';
 
@@ -15,7 +16,7 @@ describe('operation', () => {
       paths: {},
       servers: [],
     },
-  } as unknown as IR.Context;
+  } as unknown as Context;
 
   it('should parse operation correctly', () => {
     const method = 'get';

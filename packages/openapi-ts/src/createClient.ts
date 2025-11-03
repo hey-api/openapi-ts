@@ -6,7 +6,7 @@ import colors from 'ansi-colors';
 import { generateLegacyOutput } from '~/generate/legacy/output';
 import { generateOutput } from '~/generate/output';
 import { getSpec } from '~/getSpec';
-import type { IR } from '~/ir/types';
+import type { Context } from '~/ir/context';
 import { parseLegacy, parseOpenApiSpec } from '~/openApi';
 import { buildGraph } from '~/openApi/shared/utils/graph';
 import { patchOpenApiSpec } from '~/openApi/shared/utils/patch';
@@ -254,7 +254,7 @@ export const createClient = async ({
    * Always undefined on the first run, defined on subsequent runs.
    */
   watches?: ReadonlyArray<WatchValues>;
-}): Promise<Client | undefined | IR.Context> => {
+}): Promise<Client | undefined | Context> => {
   const watches: ReadonlyArray<WatchValues> =
     _watches ||
     Array.from({ length: config.input.length }, () => ({
@@ -296,7 +296,7 @@ export const createClient = async ({
   ).filter((data) => data.arrayBuffer || data.resolvedInput);
 
   let client: Client | undefined;
-  let context: IR.Context | undefined;
+  let context: Context | undefined;
 
   if (specData.length) {
     const refParser = new $RefParser();

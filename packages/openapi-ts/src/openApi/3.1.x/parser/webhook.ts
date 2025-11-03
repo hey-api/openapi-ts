@@ -1,4 +1,4 @@
-import type { IR } from '~/ir/types';
+import type { Context } from '~/ir/context';
 import { mergeParametersObjects } from '~/openApi/shared/utils/parameter';
 
 import type { OpenApiV3_1_X, PathItemObject } from '../types/spec';
@@ -9,7 +9,7 @@ export const parseWebhooks = ({
   context,
   securitySchemesMap,
 }: Pick<Parameters<typeof parseWebhookOperation>[0], 'securitySchemesMap'> & {
-  context: IR.Context<OpenApiV3_1_X>;
+  context: Context<OpenApiV3_1_X>;
 }) => {
   const state: Parameters<typeof parseWebhookOperation>[0]['state'] = {
     ids: new Map(),
