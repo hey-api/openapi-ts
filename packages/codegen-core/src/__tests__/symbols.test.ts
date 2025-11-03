@@ -19,7 +19,6 @@ describe('SymbolRegistry', () => {
       placeholder: 'Foo',
     });
     expect(symbol1).toEqual({
-      exportFrom: [],
       id: expect.any(Number),
       meta: {
         foo: 'bar',

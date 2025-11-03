@@ -9,11 +9,11 @@ export type IFileSelector = ReadonlyArray<string>;
 
 export type IFileIdentifier = number | IFileSelector;
 
-export interface IFileIn {
+export type IFileIn = {
   /**
    * File extension, if any.
    */
-  readonly extension?: string;
+  extension?: string;
   /**
    * Indicates whether the file is external, meaning it is not generated
    * as part of the project but is referenced (e.g., a module from
@@ -21,7 +21,7 @@ export interface IFileIn {
    *
    * @example true
    */
-  readonly external?: boolean;
+  external?: boolean;
   /**
    * Unique file ID. If one is not provided, it will be auto-generated.
    */
@@ -32,22 +32,22 @@ export interface IFileIn {
    *
    * @example "UserModel"
    */
-  readonly name?: string;
+  name?: string;
   /**
    * Absolute logical output path for the file.
    *
    * @example "/src/models/user.ts"
    */
-  readonly path?: string;
+  path?: string;
   /**
    * Selector array used to select this file.
    *
    * @example ["foo", "bar"]
    */
   readonly selector?: IFileSelector;
-}
+};
 
-export interface IFileOut extends IFileIn {
+export type IFileOut = IFileIn & {
   /**
    * Unique file ID.
    */
@@ -73,7 +73,7 @@ export interface IFileOut extends IFileIn {
      */
     imports: Array<number>;
   };
-}
+};
 
 export interface IFileRegistry {
   /**
