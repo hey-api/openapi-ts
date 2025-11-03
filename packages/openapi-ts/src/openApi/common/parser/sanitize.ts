@@ -1,14 +1,3 @@
-import { illegalStartCharactersRegExp } from '~/utils/regexp';
-
-export const ensureValidTypeScriptJavaScriptIdentifier = (name: string) => {
-  const replaced = name.replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '_');
-  illegalStartCharactersRegExp.lastIndex = 0;
-  const startsWithIllegalCharacter =
-    illegalStartCharactersRegExp.test(replaced);
-  const valid = startsWithIllegalCharacter ? `_${replaced}` : replaced;
-  return valid;
-};
-
 /**
  * Sanitizes namespace identifiers so they are valid TypeScript identifiers of a certain form.
  *
@@ -28,8 +17,3 @@ export const sanitizeNamespaceIdentifier = (name: string) =>
     .replace(/^[^\p{ID_Start}]+/u, '')
     .replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '-')
     .replace(/[$+]/g, '-');
-
-export const sanitizeOperationParameterName = (name: string) => {
-  const withoutBrackets = name.replace('[]', 'Array');
-  return sanitizeNamespaceIdentifier(withoutBrackets);
-};

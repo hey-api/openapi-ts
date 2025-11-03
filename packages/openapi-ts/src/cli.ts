@@ -33,16 +33,9 @@ export const runCli = async (): Promise<void> => {
     .name(Object.keys(pkg.bin)[0]!)
     .usage('[options]')
     .version(pkg.version)
-    .option(
-      '-c, --client <value>',
-      'HTTP client to generate [@hey-api/client-axios, @hey-api/client-fetch, @hey-api/client-next, @hey-api/client-nuxt, legacy/angular, legacy/axios, legacy/fetch, legacy/node, legacy/xhr]',
-    )
+    .option('-c, --client <value>', 'HTTP client to generate')
     .option('-d, --debug', 'Set log level to debug')
     .option('--dry-run [value]', 'Skip writing files to disk?')
-    .option(
-      '-e, --experimental-parser [value]',
-      'Opt-in to the experimental parser?',
-    )
     .option('-f, --file [value]', 'Path to the config file')
     .option(
       '-i, --input <value>',
@@ -51,10 +44,6 @@ export const runCli = async (): Promise<void> => {
     .option('-l, --logs [value]', 'Logs folder')
     .option('-o, --output <value>', 'Output folder')
     .option('-p, --plugins [value...]', "List of plugins you'd like to use")
-    .option(
-      '--base [value]',
-      'DEPRECATED. Manually set base in OpenAPI config instead of inferring from server value',
-    )
     .option('-s, --silent', 'Set log level to silent')
     .option(
       '--no-log-file',
@@ -64,26 +53,13 @@ export const runCli = async (): Promise<void> => {
       '-w, --watch [value]',
       'Regenerate the client when the input file changes?',
     )
-    .option('--exportCore [value]', 'DEPRECATED. Write core files to disk')
-    .option('--name <value>', 'DEPRECATED. Custom client class name')
-    .option('--request <value>', 'DEPRECATED. Path to custom request file')
-    .option(
-      '--useOptions [value]',
-      'DEPRECATED. Use options instead of arguments?',
-    )
     .parse(process.argv)
     .opts();
 
   let userConfig: Record<string, unknown>;
 
   try {
-    userConfig = processParams(params, [
-      'dryRun',
-      'experimentalParser',
-      'exportCore',
-      'logFile',
-      'useOptions',
-    ]);
+    userConfig = processParams(params, ['dryRun', 'logFile']);
 
     if (userConfig.file) {
       userConfig.configFile = userConfig.file;

@@ -2,7 +2,6 @@ import { definePluginConfig } from '~/plugins/shared/utils/config';
 
 import { Api } from './api';
 import { handler } from './plugin';
-import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiSdkPlugin } from './types';
 
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
@@ -24,7 +23,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   },
   dependencies: ['@hey-api/typescript'],
   handler,
-  handlerLegacy,
   name: '@hey-api/sdk',
   resolveConfig: (plugin, context) => {
     if (plugin.config.client) {

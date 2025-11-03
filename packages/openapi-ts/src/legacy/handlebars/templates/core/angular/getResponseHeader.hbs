@@ -1,9 +1,0 @@
-export const getResponseHeader = <T>(response: HttpResponse<T>, responseHeader?: string): string | undefined => {
-	if (responseHeader) {
-		const value = response.headers.get(responseHeader);
-		if (isString(value)) {
-			return value;
-		}
-	}
-	return undefined;
-};

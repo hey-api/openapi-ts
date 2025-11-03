@@ -1,6 +1,0 @@
-export const getResponseBody = <T>(response: HttpResponse<T>): T | undefined => {
-	if (response.status !== 204 && response.body !== null) {
-		return response.body;
-	}
-	return undefined;
-};

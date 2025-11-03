@@ -599,7 +599,6 @@ for (const version of versions) {
         },
         dependencies: ['@hey-api/typescript'],
         handler: vi.fn(),
-        handlerLegacy: vi.fn(),
         name: 'my-plugin',
         output: 'my-plugin',
       };
@@ -614,7 +613,6 @@ for (const version of versions) {
       });
 
       expect(myPlugin.handler).toHaveBeenCalled();
-      expect(myPlugin.handlerLegacy).not.toHaveBeenCalled();
     });
 
     it('throws on invalid dependency', async () => {
@@ -626,7 +624,6 @@ for (const version of versions) {
         config: {},
         dependencies: ['@hey-api/oops'],
         handler: vi.fn(),
-        handlerLegacy: vi.fn(),
         name: 'my-plugin',
         output: 'my-plugin',
       };
@@ -643,7 +640,6 @@ for (const version of versions) {
       ).rejects.toThrowError(/Found 1 configuration error./g);
 
       expect(myPlugin.handler).not.toHaveBeenCalled();
-      expect(myPlugin.handlerLegacy).not.toHaveBeenCalled();
     });
   });
 }

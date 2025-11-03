@@ -7,13 +7,14 @@ import type { Context } from '~/ir/context';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 
 import { generateClientBundle } from './client';
-import { removeDirSync } from './utils';
 
 export const generateOutput = async ({ context }: { context: Context }) => {
   const outputPath = path.resolve(context.config.output.path);
 
   if (context.config.output.clean) {
-    removeDirSync(outputPath);
+    if (fs.existsSync(outputPath)) {
+      fs.rmSync(outputPath, { force: true, recursive: true });
+    }
   }
 
   const meta: ProjectRenderMeta = {

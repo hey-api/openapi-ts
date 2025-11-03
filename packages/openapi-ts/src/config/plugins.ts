@@ -129,12 +129,11 @@ const getPluginsConfig = ({
 
 const isPluginClient = (plugin: Required<UserConfig>['plugins'][number]) => {
   if (typeof plugin === 'string') {
-    return plugin.startsWith('@hey-api/client') || plugin.startsWith('legacy/');
+    return plugin.startsWith('@hey-api/client');
   }
 
   return (
     plugin.name.startsWith('@hey-api/client') ||
-    plugin.name.startsWith('legacy/') ||
     // @ts-expect-error
     (plugin.tags && plugin.tags.includes('client'))
   );

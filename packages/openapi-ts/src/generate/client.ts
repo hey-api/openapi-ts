@@ -9,42 +9,10 @@ import type { Client } from '~/plugins/@hey-api/client-core/types';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import type { Config } from '~/types/config';
 
-import { ensureDirSync, relativeModulePath } from './utils';
+import { ensureDirSync } from './utils';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-/**
- * Returns path to the client module. When using client packages, this will be
- * simply the name of the package. When bundling a client, this will be a
- * relative path to the bundled client folder.
- *
- * @deprecated
- */
-export const clientModulePath = ({
-  config,
-  sourceOutput,
-}: {
-  config: Config;
-  sourceOutput: string;
-}): string => {
-  const client = getClientPlugin(config);
-
-  if ('bundle' in client.config && client.config.bundle) {
-    return relativeModulePath({
-      moduleOutput: 'client',
-      sourceOutput,
-    });
-  }
-
-  if (path.isAbsolute(client.name)) {
-    const clientSrcPath = path.dirname(client.name);
-    const outputPath = path.resolve(config.output.path);
-    return path.relative(outputPath, clientSrcPath).replace(/\\/g, '/');
-  }
-
-  return client.name;
-};
 
 /**
  * Returns absolute path to the client folder. This is hard-coded for now.

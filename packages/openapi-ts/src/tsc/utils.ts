@@ -1,6 +1,5 @@
 import ts from 'typescript';
 
-import { getConfig } from '~/utils/config';
 import { unescapeName } from '~/utils/escape';
 
 import type { AccessLevel } from './types';
@@ -66,9 +65,9 @@ export function tsNodeToString({
      */
     return unescapeUnicode(result);
   } catch {
-    if (getConfig().logs.level === 'debug') {
-      console.warn('Could not decode value:', result);
-    }
+    // if (getConfig().logs.level === 'debug') {
+    //   console.warn('Could not decode value:', result);
+    // }
     return result;
   }
 }

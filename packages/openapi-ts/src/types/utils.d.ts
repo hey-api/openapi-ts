@@ -1,5 +1,3 @@
-import type { GeneratedFile } from '~/generate/file';
-
 /**
  * Converts all top-level ReadonlyArray properties to Array (shallow).
  */
@@ -17,9 +15,6 @@ export type DeepPartial<T> = {
       ? DeepPartial<T[K]>
       : T[K];
 };
-
-/** @deprecated */
-export type Files = Record<string, GeneratedFile>;
 
 /**
  * Accepts a value, a function returning a value, or a function returning a promise of a value.
