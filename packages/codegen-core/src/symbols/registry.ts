@@ -95,7 +95,6 @@ export class SymbolRegistry implements ISymbolRegistry {
     if (cachedId !== undefined) return this.values.get(cachedId)!;
     const id = this.id;
     const stub: ISymbolOut = {
-      exportFrom: [],
       id,
       meta,
       placeholder: wrapId(String(id)),
@@ -110,7 +109,6 @@ export class SymbolRegistry implements ISymbolRegistry {
     const id = symbol.id !== undefined ? symbol.id : this.id;
     const result: ISymbolOut = {
       ...symbol, // clone to avoid mutation
-      exportFrom: symbol.exportFrom ?? [],
       id,
       placeholder: symbol.placeholder ?? wrapId(String(id)),
     };
