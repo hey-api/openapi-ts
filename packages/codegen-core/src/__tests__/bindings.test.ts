@@ -68,7 +68,6 @@ const makeSymbol = (
 ): ISymbolOut => {
   const { importKind, kind, ...restMeta } = meta as any;
   return {
-    exportFrom: [],
     id,
     importKind,
     kind,
