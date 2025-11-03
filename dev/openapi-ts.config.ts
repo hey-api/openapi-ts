@@ -41,8 +41,8 @@ export default defineConfig(() => {
             // 'invalid',
             // 'openai.yaml',
             // 'full.yaml',
-            // 'opencode.yaml',
-            'sdk-instance.yaml',
+            'opencode.yaml',
+            // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'type-format.yaml',
@@ -248,10 +248,10 @@ export default defineConfig(() => {
           // },
         },
         {
-          asClass: true,
+          // asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}',
-          classNameBuilder: '{{name}}Service',
+          // classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
           // client: false,
           // getSignature: ({ fields, signature, operation }) => {
@@ -259,10 +259,10 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          // instance: true,
+          instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
-          // params_EXPERIMENTAL: 'experiment',
+          paramsStructure: 'flat',
           // responseStyle: 'data',
           // signature: 'auto',
           // signature: 'client',

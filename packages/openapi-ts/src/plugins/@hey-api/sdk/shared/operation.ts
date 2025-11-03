@@ -4,8 +4,9 @@ import type ts from 'typescript';
 import { statusCodeToGroup } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { sanitizeNamespaceIdentifier } from '~/openApi';
-import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { toRefs } from '~/plugins/shared/utils/refs';
+import type { Property } from '~/tsc';
 import { tsc } from '~/tsc';
 import type { FunctionParameter, ObjectValue } from '~/tsc/types';
 import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
@@ -13,10 +14,10 @@ import { stringCase } from '~/utils/stringCase';
 import { transformClassName } from '~/utils/transform';
 
 import type { Field, Fields } from '../../client-core/bundle/params';
-// import { getSignatureParameters } from './signature';
 import type { HeyApiSdkPlugin } from '../types';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
+import { getSignatureParameters } from './signature';
 import { createRequestValidator, createResponseValidator } from './validator';
 
 interface ClassNameEntry {
@@ -147,11 +148,14 @@ export const operationClasses = ({
   return classNames;
 };
 
+/** TODO: needs complete refactor */
 export const operationOptionsType = ({
+  isDataAllowed = true,
   operation,
   plugin,
   throwOnError,
 }: {
+  isDataAllowed?: boolean;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
   throwOnError?: string;
@@ -159,14 +163,15 @@ export const operationOptionsType = ({
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  const symbolDataType = plugin.querySymbol({
-    category: 'type',
-    resource: 'operation',
-    resourceId: operation.id,
-    role: 'data',
-    tool: 'typescript',
-  });
-  const dataType = symbolDataType?.placeholder || 'unknown';
+  const symbolDataType = isDataAllowed
+    ? plugin.querySymbol({
+        category: 'type',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'data',
+        tool: 'typescript',
+      })
+    : undefined;
 
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
@@ -181,16 +186,23 @@ export const operationOptionsType = ({
       resourceId: operation.id,
       role: 'response',
     });
+    const dataType = isDataAllowed
+      ? symbolDataType?.placeholder || 'unknown'
+      : 'never';
     const responseType = symbolResponseType?.placeholder || 'unknown';
     return `${symbolOptions.placeholder}<${nuxtTypeComposable}, ${dataType}, ${responseType}, ${nuxtTypeDefault}>`;
   }
 
   // TODO: refactor this to be more generic, works for now
   if (throwOnError) {
+    const dataType = isDataAllowed
+      ? symbolDataType?.placeholder || 'unknown'
+      : 'never';
     return `${symbolOptions.placeholder}<${dataType}, ${throwOnError}>`;
   }
-  return symbolDataType
-    ? `${symbolOptions.placeholder}<${symbolDataType.placeholder}>`
+  const dataType = isDataAllowed ? symbolDataType?.placeholder : 'never';
+  return dataType
+    ? `${symbolOptions.placeholder}<${dataType}>`
     : symbolOptions.placeholder;
 };
 
@@ -209,8 +221,6 @@ export const operationParameters = ({
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
 }): OperationParameters => {
-  // getSignatureParameters({ operation });
-
   const result: OperationParameters = {
     argNames: [],
     fields: [],
@@ -221,75 +231,42 @@ export const operationParameters = ({
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  if (plugin.config.params_EXPERIMENTAL === 'experiment') {
-    if (operation.parameters?.path) {
-      for (const key in operation.parameters.path) {
-        const parameter = operation.parameters.path[key]!;
-        const name = ensureValidIdentifier(parameter.name);
-        // TODO: detect duplicates
-        result.argNames.push(name);
-        result.fields.push({
-          in: 'path',
-          key: name,
-        });
-        result.parameters.push({
-          isRequired: parameter.required,
-          name,
+  if (plugin.config.paramsStructure === 'flat') {
+    const signature = getSignatureParameters({ operation, plugin });
+    const flatParamsTypeProperties: Array<Property> = [];
+
+    if (signature) {
+      let isParametersRequired = false;
+
+      for (const key in signature.parameters) {
+        const parameter = signature.parameters[key]!;
+        if (parameter.isRequired) {
+          isParametersRequired = true;
+        }
+        flatParamsTypeProperties.push({
+          isRequired: parameter.isRequired,
+          name: parameter.name,
           type: pluginTypeScript.api.schemaToType({
             plugin: pluginTypeScript,
             schema: parameter.schema,
-            state: {
-              path: {
-                value: [],
-              },
-            },
+            state: toRefs({
+              path: [],
+            }),
           }),
         });
       }
-    }
 
-    if (operation.parameters?.query) {
-      for (const key in operation.parameters.query) {
-        const parameter = operation.parameters.query[key]!;
-        const name = ensureValidIdentifier(parameter.name);
-        // TODO: detect duplicates
-        result.argNames.push(name);
-        result.fields.push({
-          in: 'path',
-          key: name,
-        });
-        result.parameters.push({
-          isRequired: parameter.required,
-          name,
-          type: pluginTypeScript.api.schemaToType({
-            plugin: pluginTypeScript,
-            schema: parameter.schema,
-            state: {
-              path: {
-                value: [],
-              },
-            },
-          }),
-        });
+      result.argNames.push('parameters');
+      for (const field of signature.fields) {
+        result.fields.push(field);
       }
-    }
 
-    if (operation.body) {
-      const name = 'body';
-      // TODO: detect duplicates
-      result.argNames.push(name);
-      result.fields.push({ in: 'body' });
       result.parameters.push({
-        isRequired: operation.body.required,
-        name,
-        type: pluginTypeScript.api.schemaToType({
-          plugin: pluginTypeScript,
-          schema: operation.body.schema,
-          state: {
-            path: {
-              value: [],
-            },
-          },
+        isRequired: isParametersRequired,
+        name: 'parameters',
+        type: tsc.typeInterfaceNode({
+          properties: flatParamsTypeProperties,
+          useLegacyResolution: false,
         }),
       });
     }
@@ -298,8 +275,8 @@ export const operationParameters = ({
   result.parameters.push({
     isRequired: isRequiredOptions,
     name: 'options',
-    // TODO: ensure no path, body, query
     type: operationOptionsType({
+      isDataAllowed: plugin.config.paramsStructure === 'grouped',
       operation,
       plugin,
       throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
