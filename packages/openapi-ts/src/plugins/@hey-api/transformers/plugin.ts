@@ -11,6 +11,10 @@ import type { HeyApiTransformersPlugin } from './types';
 
 const dataVariableName = 'data';
 
+// Track symbols that are currently being built so recursive references
+// can emit calls to transformers that will be implemented later.
+const buildingSymbols = new Set<number>();
+
 const ensureStatements = (
   nodes: Array<ts.Expression | ts.Statement>,
 ): Array<ts.Statement> =>
@@ -65,12 +69,14 @@ const processSchemaType = ({
       resourceId: schema.$ref,
     };
 
-    if (!plugin.getSymbol(query)) {
-      // TODO: remove
-      // create each schema response transformer only once
+    let symbol = plugin.getSymbol(query);
 
-      // Register symbol early to prevent infinite recursion with self-referential schemas
-      const symbol = plugin.registerSymbol({
+    if (!symbol) {
+      // Register a placeholder symbol immediately and set its value to null
+      // as a stop token to prevent infinite recursion for self-referential
+      // schemas. We also mark this symbol as "building" so that nested
+      // references to it can emit calls that will be implemented later.
+      symbol = plugin.registerSymbol({
         meta: query,
         name: buildName({
           config: {
@@ -80,35 +86,53 @@ const processSchemaType = ({
           name: refToName(schema.$ref),
         }),
       });
+      plugin.setSymbolValue(symbol, null);
+    }
 
-      const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
-        schema.$ref,
-      );
-      const nodes = schemaResponseTransformerNodes({
-        plugin,
-        schema: refSchema,
-      });
-      if (nodes.length) {
-        const node = tsc.constVariable({
-          expression: tsc.arrowFunction({
-            async: false,
-            multiLine: true,
-            parameters: [
-              {
-                name: dataVariableName,
-                // TODO: parser - add types, generate types without transforms
-                type: tsc.keywordTypeNode({ keyword: 'any' }),
-              },
-            ],
-            statements: ensureStatements(nodes),
-          }),
-          name: symbol.placeholder,
+    // Only compute the implementation if the symbol isn't already being built.
+    // This prevents infinite recursion on self-referential schemas. We still
+    // allow emitting a call when the symbol is currently being built so
+    // parent nodes can reference the transformer that will be emitted later.
+    const existingValue = plugin.gen.symbols.getValue(symbol.id);
+    if (!existingValue && !buildingSymbols.has(symbol.id)) {
+      buildingSymbols.add(symbol.id);
+      try {
+        const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
+          schema.$ref,
+        );
+        const nodes = schemaResponseTransformerNodes({
+          plugin,
+          schema: refSchema,
         });
-        plugin.setSymbolValue(symbol, node);
+
+        if (nodes.length) {
+          const node = tsc.constVariable({
+            expression: tsc.arrowFunction({
+              async: false,
+              multiLine: true,
+              parameters: [
+                {
+                  name: dataVariableName,
+                  // TODO: parser - add types, generate types without transforms
+                  type: tsc.keywordTypeNode({ keyword: 'any' }),
+                },
+              ],
+              statements: ensureStatements(nodes),
+            }),
+            name: symbol.placeholder,
+          });
+          plugin.setSymbolValue(symbol, node);
+        }
+      } finally {
+        buildingSymbols.delete(symbol.id);
       }
     }
 
-    if (plugin.isSymbolRegistered(query)) {
+    // Only emit a call if the symbol has a value (implementation) OR the
+    // symbol is currently being built (recursive reference) — in the
+    // latter case we allow emitting a call that will be implemented later.
+    const currentValue = plugin.gen.symbols.getValue(symbol.id);
+    if (currentValue || buildingSymbols.has(symbol.id)) {
       const ref = plugin.referenceSymbol(query);
       const callExpression = tsc.callExpression({
         functionName: ref.placeholder,
