@@ -149,7 +149,7 @@ type BuildUrlFn = <
     url: string;
   },
 >(
-  options: Pick<TData, 'url'> & Options<TData>,
+  options: TData & Options<TData>,
 ) => string;
 
 export type Client = CoreClient<
