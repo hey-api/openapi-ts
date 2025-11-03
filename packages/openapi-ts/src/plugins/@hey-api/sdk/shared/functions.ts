@@ -1,3 +1,4 @@
+import { clientFolderAbsolutePath } from '~/generate/client';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
@@ -17,6 +18,16 @@ export const generateFlatSdk = ({
 }): void => {
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
+
+  // Register RequestResult type for explicit return type annotations
+  const clientModule = clientFolderAbsolutePath(plugin.context.config);
+  const symbolRequestResult = !isNuxtClient
+    ? plugin.registerSymbol({
+        external: clientModule,
+        kind: 'type',
+        name: 'RequestResult',
+      })
+    : undefined;
 
   plugin.forEach(
     'operation',
@@ -61,12 +72,53 @@ export const generateFlatSdk = ({
           operation,
         }),
       });
+
+      // Construct explicit return type to prevent circular type inference issues
+      // Only for non-Nuxt clients (Nuxt has a different return type structure)
+      let returnType: any;
+
+      if (!isNuxtClient && symbolRequestResult) {
+        // Query symbols for response and error types
+        const symbolResponseType = plugin.querySymbol({
+          category: 'type',
+          resource: 'operation',
+          resourceId: operation.id,
+          role: 'responses',
+        });
+        const responseType = symbolResponseType?.placeholder || 'unknown';
+
+        const symbolErrorType = plugin.querySymbol({
+          category: 'type',
+          resource: 'operation',
+          resourceId: operation.id,
+          role: 'errors',
+        });
+        const errorType = symbolErrorType?.placeholder || 'unknown';
+
+        // Build return type: RequestResult<TResponses, TErrors, ThrowOnError, TResponseStyle?>
+        const typeArguments = [
+          tsc.typeNode(responseType),
+          tsc.typeNode(errorType),
+          tsc.typeNode('ThrowOnError'),
+        ];
+
+        // Add responseStyle type argument if using 'data' response style
+        if (plugin.config.responseStyle === 'data') {
+          typeArguments.push(tsc.typeNode(tsc.ots.string('data')));
+        }
+
+        returnType = tsc.typeReferenceNode({
+          typeArguments,
+          typeName: symbolRequestResult.placeholder,
+        });
+      }
+
       const node = tsc.constVariable({
         comment: createOperationComment({ operation }),
         exportConst: true,
         expression: tsc.arrowFunction({
           parameters: opParameters.parameters,
-          returnType: undefined,
+          returnType,
           statements,
           types: isNuxtClient
             ? [
