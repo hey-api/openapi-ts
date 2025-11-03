@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+// @ts-ignore
 import path from 'node:path';
 
 // @ts-ignore
@@ -8,6 +9,7 @@ import { defineConfig, utils } from '@hey-api/openapi-ts';
 
 // @ts-ignore
 import { myClientPlugin } from '../packages/openapi-ts-tests/main/test/custom/client/plugin';
+// @ts-ignore
 import { getSpecsPath } from '../packages/openapi-ts-tests/utils';
 
 // @ts-ignore
@@ -32,26 +34,26 @@ export default defineConfig(() => {
           //   openapi: '3.1.0',
           //   paths: {},
           // },
-          path: 'https://gist.githubusercontent.com/nghiepdev/b2c9996750505ec82adb04fdc9b95ea6/raw/ebe990458001a5c4d3e1de0218f93dcb8f132db8/test-openapi.json',
-          // path: path.resolve(
-          //   getSpecsPath(),
-          //   // '3.0.x',
-          //   '3.1.x',
-          //   // 'circular.yaml',
-          //   // 'dutchie.json',
-          //   // 'invalid',
-          //   // 'openai.yaml',
-          //   // 'full.yaml',
-          //   // 'opencode.yaml',
-          //   // 'sdk-instance.yaml',
-          //   // 'string-with-format.yaml',
-          //   // 'transformers.json',
-          //   // 'type-format.yaml',
-          //   'validators.yaml',
-          //   // 'validators-circular-ref.json',
-          //   // 'validators-circular-ref-2.yaml',
-          //   // 'zoom-video-sdk.json',
-          // ),
+          path: path.resolve(
+            getSpecsPath(),
+            '3.0.x',
+            // '3.1.x',
+            // 'circular.yaml',
+            // 'dutchie.json',
+            // 'invalid',
+            // 'openai.yaml',
+            // 'full.yaml',
+            // 'opencode.yaml',
+            'sdk-circular-bug.yaml',
+            // 'sdk-instance.yaml',
+            // 'string-with-format.yaml',
+            // 'transformers.json',
+            // 'type-format.yaml',
+            // 'validators.yaml',
+            // 'validators-circular-ref.json',
+            // 'validators-circular-ref-2.yaml',
+            // 'zoom-video-sdk.json',
+          ),
           // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
           // path: 'http://localhost:4000/',
           // path: 'http://localhost:8000/openapi.json',
@@ -249,7 +251,7 @@ export default defineConfig(() => {
           // },
         },
         {
-          // asClass: true,
+          asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}',
           // classNameBuilder: '{{name}}Service',
@@ -260,7 +262,7 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          // instance: true,
+          instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
           // paramsStructure: 'flat',
