@@ -2,32 +2,32 @@ import type { ISymbolMeta } from '../extensions/types';
 
 export type ISymbolIdentifier = number | ISymbolMeta;
 
-export interface ISymbolIn {
+export type ISymbolIn = {
   /**
    * Array of file names (without extensions) from which this symbol is re-exported.
    *
    * @default undefined
    */
-  readonly exportFrom?: ReadonlyArray<string>;
+  exportFrom?: ReadonlyArray<string>;
   /**
    * Whether this symbol is exported from its own file.
    *
    * @default false
    */
-  readonly exported?: boolean;
+  exported?: boolean;
   /**
    * External module name if this symbol is imported from a module not managed
    * by the project (e.g. "zod", "lodash").
    *
    * @default undefined
    */
-  readonly external?: string;
+  external?: string;
   /**
    * Optional output strategy to override default behavior.
    *
    * @returns The file path to output the symbol to, or undefined to fallback to default behavior.
    */
-  readonly getFilePath?: (symbol: ISymbolOut) => string | undefined;
+  getFilePath?: (symbol: ISymbolOut) => string | undefined;
   /**
    * Unique symbol ID. If one is not provided, it will be auto-generated.
    */
@@ -35,48 +35,34 @@ export interface ISymbolIn {
   /**
    * Kind of import if this symbol represents an import.
    */
-  readonly importKind?: 'namespace' | 'default' | 'named';
+  importKind?: 'namespace' | 'default' | 'named';
   /**
    * Kind of symbol.
    */
-  readonly kind?: 'class' | 'function' | 'type';
+  kind?: 'class' | 'function' | 'type';
   /**
    * Arbitrary metadata about the symbol.
    *
    * @default undefined
    */
-  readonly meta?: ISymbolMeta;
+  meta?: ISymbolMeta;
   /**
    * The desired name for the symbol within its file. If there are multiple symbols
    * with the same desired name, this might not end up being the actual name.
    *
    * @example "UserModel"
    */
-  readonly name?: string;
+  name?: string;
   /**
    * Placeholder name for the symbol to be replaced later with the final value.
    *
    * @example "_heyapi_31_"
    */
   readonly placeholder?: string;
-}
+};
 
-export interface ISymbolOut extends ISymbolIn {
-  /**
-   * Array of file names (without extensions) from which this symbol is re-exported.
-   */
-  readonly exportFrom: ReadonlyArray<string>;
-  /**
-   * Unique symbol ID.
-   */
-  readonly id: number;
-  /**
-   * Placeholder name for the symbol to be replaced later with the final value.
-   *
-   * @example "_heyapi_31_"
-   */
-  readonly placeholder: string;
-}
+export type ISymbolOut = Omit<ISymbolIn, 'id' | 'placeholder'> &
+  Pick<Required<ISymbolIn>, 'id' | 'placeholder'>;
 
 export interface ISymbolRegistry {
   /**
