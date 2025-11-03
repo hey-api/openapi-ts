@@ -78,7 +78,7 @@ export const createIdentifier = ({ text }: { text: string }): ts.Identifier =>
 
 export const createThis = (): ts.ThisExpression => ts.factory.createThis();
 
-type Modifier = AccessLevel | 'async' | 'export' | 'readonly' | 'static';
+export type Modifier = AccessLevel | 'async' | 'export' | 'readonly' | 'static';
 
 export const createModifier = ({ keyword }: { keyword: Modifier }) => {
   const kind = syntaxKindKeyword({ keyword });
