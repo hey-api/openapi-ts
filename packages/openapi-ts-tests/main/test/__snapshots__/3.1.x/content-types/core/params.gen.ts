@@ -92,7 +92,7 @@ interface Params {
   headers: Record<string, unknown>;
   path: Record<string, unknown>;
   query: Record<string, unknown>;
-};
+}
 
 const stripEmptySlots = (params: Params) => {
   for (const [slot, value] of Object.entries(params)) {
