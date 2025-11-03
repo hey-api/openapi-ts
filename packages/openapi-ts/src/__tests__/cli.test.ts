@@ -206,8 +206,6 @@ describe('cli', () => {
         'quux',
         '--plugins',
         '--watch',
-        '--useOptions',
-        '--exportCore',
       ];
       await runCli();
     } finally {
@@ -216,8 +214,6 @@ describe('cli', () => {
     expect(spy).toHaveBeenCalledWith({
       configFile: 'bar',
       dryRun: true,
-      experimentalParser: true,
-      exportCore: true,
       input: 'baz',
       logs: {
         file: true,
@@ -225,29 +221,7 @@ describe('cli', () => {
       },
       output: 'quux',
       plugins: ['foo'],
-      useOptions: true,
       watch: true,
-    });
-  });
-
-  it('with false booleans', async () => {
-    const originalArgv = process.argv.slice();
-    try {
-      process.argv = [
-        String(process.argv[0]),
-        String(process.argv[1]),
-        '--useOptions',
-        'false',
-      ];
-      await runCli();
-    } finally {
-      process.argv = originalArgv;
-    }
-    expect(spy).toHaveBeenCalledWith({
-      logs: {
-        file: true,
-      },
-      useOptions: false,
     });
   });
 

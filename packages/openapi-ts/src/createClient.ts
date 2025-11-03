@@ -3,22 +3,17 @@ import path from 'node:path';
 import { $RefParser } from '@hey-api/json-schema-ref-parser';
 import colors from 'ansi-colors';
 
-import { generateLegacyOutput } from '~/generate/legacy/output';
 import { generateOutput } from '~/generate/output';
 import { getSpec } from '~/getSpec';
 import type { Context } from '~/ir/context';
-import { parseLegacy, parseOpenApiSpec } from '~/openApi';
+import { parseOpenApiSpec } from '~/openApi';
 import { buildGraph } from '~/openApi/shared/utils/graph';
 import { patchOpenApiSpec } from '~/openApi/shared/utils/patch';
 import { processOutput } from '~/processOutput';
-import type { Client } from '~/types/client';
 import type { Config } from '~/types/config';
 import type { Input } from '~/types/input';
 import type { WatchValues } from '~/types/types';
-import { isLegacyClient, legacyNameFromConfig } from '~/utils/config';
-import type { Templates } from '~/utils/handlebars';
 import type { Logger } from '~/utils/logger';
-import { postProcessClient } from '~/utils/postprocess';
 
 export const compileInputPath = (input: Omit<Input, 'watch'>) => {
   const result: Pick<
@@ -242,19 +237,17 @@ export const createClient = async ({
   dependencies,
   jobIndex,
   logger,
-  templates,
   watches: _watches,
 }: {
   config: Config;
   dependencies: Record<string, string>;
   jobIndex: number;
   logger: Logger;
-  templates: Templates;
   /**
    * Always undefined on the first run, defined on subsequent runs.
    */
   watches?: ReadonlyArray<WatchValues>;
-}): Promise<Client | undefined | Context> => {
+}): Promise<Context | undefined> => {
   const watches: ReadonlyArray<WatchValues> =
     _watches ||
     Array.from({ length: config.input.length }, () => ({
@@ -295,7 +288,6 @@ export const createClient = async ({
     )
   ).filter((data) => data.arrayBuffer || data.resolvedInput);
 
-  let client: Client | undefined;
   let context: Context | undefined;
 
   if (specData.length) {
@@ -325,29 +317,12 @@ export const createClient = async ({
     eventInputPatch.timeEnd();
 
     const eventParser = logger.timeEvent('parser');
-    if (
-      config.experimentalParser &&
-      !isLegacyClient(config) &&
-      !legacyNameFromConfig(config)
-    ) {
-      context = parseOpenApiSpec({ config, dependencies, logger, spec: data });
-    }
-
-    if (context) {
-      context.graph = buildGraph(context.ir, logger).graph;
-    } else {
-      // fallback to legacy parser
-      const parsed = parseLegacy({ openApi: data });
-      client = postProcessClient(parsed, config);
-    }
+    context = parseOpenApiSpec({ config, dependencies, logger, spec: data });
+    context.graph = buildGraph(context.ir, logger).graph;
     eventParser.timeEnd();
 
     const eventGenerator = logger.timeEvent('generator');
-    if (context) {
-      await generateOutput({ context });
-    } else if (client) {
-      await generateLegacyOutput({ client, openApi: data, templates });
-    }
+    await generateOutput({ context });
     eventGenerator.timeEnd();
 
     const eventPostprocess = logger.timeEvent('postprocess');
@@ -379,11 +354,10 @@ export const createClient = async ({
         dependencies,
         jobIndex,
         logger,
-        templates,
         watches,
       });
     }, watchedInput.watch.interval);
   }
 
-  return context || client;
+  return context;
 };

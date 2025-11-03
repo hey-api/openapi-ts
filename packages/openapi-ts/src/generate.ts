@@ -12,11 +12,9 @@ import {
   shouldReportCrash,
 } from '~/error';
 import type { Context } from '~/ir/context';
-import type { Client } from '~/types/client';
 import type { UserConfig } from '~/types/config';
 import type { LazyOrAsync, MaybeArray } from '~/types/utils';
 import { printCliIntro } from '~/utils/cli';
-import { registerHandlebarTemplates } from '~/utils/handlebars';
 import { Logger } from '~/utils/logger';
 
 /**
@@ -27,7 +25,7 @@ import { Logger } from '~/utils/logger';
 export const createClient = async (
   userConfig?: LazyOrAsync<MaybeArray<UserConfig>>,
   logger = new Logger(),
-): Promise<ReadonlyArray<Client | Context>> => {
+): Promise<ReadonlyArray<Context>> => {
   const resolvedConfig =
     typeof userConfig === 'function' ? await userConfig() : userConfig;
   const userConfigs = resolvedConfig
@@ -67,10 +65,6 @@ export const createClient = async (
       throw new ConfigValidationError(allConfigErrors);
     }
 
-    const eventHandlebars = logger.timeEvent('handlebars');
-    const templates = registerHandlebarTemplates();
-    eventHandlebars.timeEnd();
-
     const clients = await Promise.all(
       configs.results.map(async (result) => {
         try {
@@ -79,7 +73,6 @@ export const createClient = async (
             dependencies: configs!.dependencies,
             jobIndex: result.jobIndex,
             logger,
-            templates,
           });
         } catch (error) {
           throw new JobError('', {
@@ -89,9 +82,9 @@ export const createClient = async (
         }
       }),
     );
-    const result = clients.filter((client) => Boolean(client)) as ReadonlyArray<
-      Client | Context
-    >;
+    const result = clients.filter((client) =>
+      Boolean(client),
+    ) as ReadonlyArray<Context>;
 
     eventCreateClient.timeEnd();
 

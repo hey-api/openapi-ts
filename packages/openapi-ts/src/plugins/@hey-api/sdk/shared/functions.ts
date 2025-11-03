@@ -1,14 +1,35 @@
+import type { IR } from '~/ir/types';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import { tsc } from '~/tsc';
+import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
 
-import { serviceFunctionIdentifier } from '../plugin-legacy';
 import type { HeyApiSdkPlugin } from '../types';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { operationParameters, operationStatements } from './operation';
+
+const serviceFunctionIdentifier = ({
+  id,
+  operation,
+  plugin,
+}: {
+  id: string;
+  operation: IR.OperationObject;
+  plugin: HeyApiSdkPlugin['Instance'];
+}) => {
+  if (plugin.config.methodNameBuilder) {
+    return plugin.config.methodNameBuilder(operation);
+  }
+
+  if (id.match(reservedJavaScriptKeywordsRegExp)) {
+    return `${id}_`;
+  }
+
+  return id;
+};
 
 export const generateFlatSdk = ({
   plugin,
@@ -55,10 +76,9 @@ export const generateFlatSdk = ({
           tool: 'sdk',
         },
         name: serviceFunctionIdentifier({
-          config: plugin.context.config,
-          handleIllegal: true,
           id: operation.id,
           operation,
+          plugin,
         }),
       });
       const node = tsc.constVariable({

@@ -2,7 +2,6 @@ import { definePluginConfig } from '~/plugins/shared/utils/config';
 
 import { Api } from './api';
 import { handler } from './plugin';
-import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiSchemasPlugin } from './types';
 
 export const defaultConfig: HeyApiSchemasPlugin['Config'] = {
@@ -13,7 +12,6 @@ export const defaultConfig: HeyApiSchemasPlugin['Config'] = {
     type: 'json',
   },
   handler,
-  handlerLegacy,
   name: '@hey-api/schemas',
 };
 

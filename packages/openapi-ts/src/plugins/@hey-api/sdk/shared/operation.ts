@@ -4,7 +4,7 @@ import type ts from 'typescript';
 import type { Context } from '~/ir/context';
 import { statusCodeToGroup } from '~/ir/operation';
 import type { IR } from '~/ir/types';
-import { sanitizeNamespaceIdentifier } from '~/openApi';
+import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { toRefs } from '~/plugins/shared/utils/refs';
 import type { Property } from '~/tsc';

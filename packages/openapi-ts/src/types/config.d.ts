@@ -76,55 +76,6 @@ export interface UserConfig {
         };
       }[PluginNames]
   >;
-
-  // DEPRECATED OPTIONS BELOW
-
-  /**
-   * Manually set base in OpenAPI config instead of inferring from server value
-   *
-   * @deprecated
-   */
-  // eslint-disable-next-line typescript-sort-keys/interface
-  base?: string;
-  /**
-   * Opt in to the experimental parser?
-   *
-   * @deprecated
-   * @default true
-   */
-  experimentalParser?: boolean;
-  /**
-   * Generate core client classes?
-   *
-   * @deprecated
-   * @default true
-   */
-  exportCore?: boolean;
-  /**
-   * Custom client class name. Please note this option is deprecated and
-   * will be removed in favor of clients.
-   *
-   * @deprecated
-   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
-   */
-  name?: string;
-  /**
-   * Path to custom request file. Please note this option is deprecated and
-   * will be removed in favor of clients.
-   *
-   * @deprecated
-   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-request
-   */
-  request?: string;
-  /**
-   * Use options or arguments functions. Please note this option is deprecated and
-   * will be removed in favor of clients.
-   *
-   * @deprecated
-   * @default true
-   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-useoptions
-   */
-  useOptions?: boolean;
   /**
    * @deprecated use `input.watch` instead
    */
@@ -133,33 +84,24 @@ export interface UserConfig {
 
 export type Config = Omit<
   Required<UserConfig>,
-  | 'base'
-  | 'input'
-  | 'logs'
-  | 'name'
-  | 'output'
-  | 'parser'
-  | 'plugins'
-  | 'request'
-  | 'watch'
-> &
-  Pick<UserConfig, 'base' | 'name' | 'request'> & {
-    /**
-     * Path to the input specification.
-     */
-    input: ReadonlyArray<Input>;
-    logs: Logs;
-    /**
-     * Path to the output folder.
-     */
-    output: Output;
-    /**
-     * Customize how the input is parsed and transformed before it's passed to
-     * plugins.
-     */
-    parser: Parser;
-    pluginOrder: ReadonlyArray<keyof PluginConfigMap>;
-    plugins: {
-      [K in PluginNames]?: Plugin.ConfigWithName<PluginConfigMap[K]>;
-    };
+  'input' | 'logs' | 'output' | 'parser' | 'plugins' | 'watch'
+> & {
+  /**
+   * Path to the input specification.
+   */
+  input: ReadonlyArray<Input>;
+  logs: Logs;
+  /**
+   * Path to the output folder.
+   */
+  output: Output;
+  /**
+   * Customize how the input is parsed and transformed before it's passed to
+   * plugins.
+   */
+  parser: Parser;
+  pluginOrder: ReadonlyArray<keyof PluginConfigMap>;
+  plugins: {
+    [K in PluginNames]?: Plugin.ConfigWithName<PluginConfigMap[K]>;
   };
+};
