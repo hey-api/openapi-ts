@@ -480,9 +480,11 @@ export class TypeScriptRenderer implements Renderer {
     let symbolName = symbol.name;
     if (!symbolName && symbol.meta?.resource) {
       // For external symbols like 'zod.z', extract the last part as the name
-      const resource = symbol.meta.resource as string;
-      const parts = resource.split('.');
-      symbolName = parts[parts.length - 1];
+      const resource = symbol.meta.resource;
+      if (typeof resource === 'string') {
+        const parts = resource.split('.');
+        symbolName = parts[parts.length - 1];
+      }
     }
 
     if (!symbolName) return;

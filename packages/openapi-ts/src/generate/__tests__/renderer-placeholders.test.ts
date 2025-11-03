@@ -116,8 +116,7 @@ describe('TypeScriptRenderer - Placeholder Replacement', () => {
     // When a symbol has no name but has external+resource, we should derive the name
     const result = renderer['replacerFn']({ file, project, symbol });
 
-    // Currently this returns undefined, but it should return 'z'
-    // (derived from resource 'zod.z' → last part after the dot)
-    expect(result).toBe('z'); // This will fail with current implementation
+    // With the fix: derives the name from the resource 'zod.z' → 'z'
+    expect(result).toBe('z');
   });
 });
