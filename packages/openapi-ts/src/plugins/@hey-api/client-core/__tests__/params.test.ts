@@ -246,6 +246,23 @@ describe('buildClientParams', () => {
     {
       args: [
         {
+          foo: 1,
+        },
+      ],
+      config: [
+        {
+          key: 'foo',
+          map: 'body',
+        },
+      ],
+      description: 'alias flat body',
+      params: {
+        body: 1,
+      },
+    },
+    {
+      args: [
+        {
           bar: 2,
           baz: 3,
           foo: 1,

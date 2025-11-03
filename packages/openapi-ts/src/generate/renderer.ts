@@ -482,11 +482,16 @@ export class TypeScriptRenderer implements Renderer {
     const conflictId = file.resolvedNames.getKey(name);
     if (conflictId !== undefined) {
       const conflictSymbol = project.symbols.get(conflictId);
-      if (
-        (conflictSymbol?.kind === 'type' && symbol.kind === 'type') ||
-        (conflictSymbol?.kind !== 'type' && symbol.kind !== 'type')
-      ) {
-        name = this.getUniqueName(name, file.resolvedNames);
+      if (conflictSymbol) {
+        const kinds = [conflictSymbol.kind, symbol.kind];
+        if (
+          kinds.every((kind) => kind === 'type') ||
+          kinds.every((kind) => kind !== 'type') ||
+          // avoid conflicts between class and type of the same name
+          (kinds.includes('class') && kinds.includes('type'))
+        ) {
+          name = this.getUniqueName(name, file.resolvedNames);
+        }
       }
     }
     file.resolvedNames.set(symbol.id, name);
