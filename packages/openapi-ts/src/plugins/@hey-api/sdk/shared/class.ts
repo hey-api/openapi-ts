@@ -306,53 +306,107 @@ export const generateClassSdk = ({
       return;
     }
 
+    const resourceId = currentClass.className;
+    generatedClasses.add(resourceId);
+
     if (currentClass.classes.size) {
       for (const childClassName of currentClass.classes) {
         const childClass = sdkClasses.get(childClassName)!;
         generateClass(childClass);
 
-        const subClassReferenceNode = tsc.propertyDeclaration({
-          initializer: plugin.config.instance
-            ? tsc.newExpression({
-                argumentsArray: plugin.config.instance
-                  ? [
-                      tsc.objectExpression({
-                        multiLine: false,
-                        obj: [
-                          {
-                            key: 'client',
-                            value: tsc.propertyAccessExpression({
-                              expression: tsc.this(),
-                              name: '_client',
-                            }),
-                          },
-                        ],
-                      }),
-                    ]
-                  : [],
-                expression: tsc.identifier({
-                  text: plugin.referenceSymbol({
-                    category: 'utility',
-                    resource: 'class',
-                    resourceId: childClass.className,
-                    tool: 'sdk',
-                  }).placeholder,
-                }),
-              })
-            : tsc.identifier({
-                text: plugin.referenceSymbol({
-                  category: 'utility',
-                  resource: 'class',
-                  resourceId: childClass.className,
-                  tool: 'sdk',
-                }).placeholder,
-              }),
-          modifier: plugin.config.instance ? undefined : 'static',
-          name: stringCase({
-            case: 'camelCase',
-            value: childClass.className,
-          }),
+        const refChildClass = plugin.referenceSymbol({
+          category: 'utility',
+          resource: 'class',
+          resourceId: childClass.className,
+          tool: 'sdk',
         });
+
+        const originalMemberName = stringCase({
+          case: 'camelCase',
+          value: refChildClass.meta!.resourceId!,
+        });
+        // avoid collisions with existing method names
+        let memberName = originalMemberName;
+        if (currentClass.methods.has(memberName)) {
+          let index = 2;
+          let attempt = `${memberName}${index}`;
+          while (currentClass.methods.has(attempt)) {
+            attempt = `${memberName}${index++}`;
+          }
+          memberName = attempt;
+        }
+        currentClass.methods.add(memberName);
+
+        let subClassReferenceNode:
+          | ts.GetAccessorDeclaration
+          | ts.PropertyDeclaration;
+        if (plugin.isSymbolRegistered(refChildClass.id)) {
+          subClassReferenceNode = tsc.propertyDeclaration({
+            initializer: plugin.config.instance
+              ? tsc.newExpression({
+                  argumentsArray: plugin.config.instance
+                    ? [
+                        tsc.objectExpression({
+                          multiLine: false,
+                          obj: [
+                            {
+                              key: 'client',
+                              value: tsc.propertyAccessExpression({
+                                expression: tsc.this(),
+                                name: '_client',
+                              }),
+                            },
+                          ],
+                        }),
+                      ]
+                    : [],
+                  expression: tsc.identifier({
+                    text: refChildClass.placeholder,
+                  }),
+                })
+              : tsc.identifier({ text: refChildClass.placeholder }),
+            modifier: plugin.config.instance ? undefined : 'static',
+            name: memberName,
+          });
+        } else {
+          subClassReferenceNode = tsc.getAccessorDeclaration({
+            modifiers: plugin.config.instance
+              ? undefined
+              : ['public', 'static'],
+            name: memberName,
+            statements: plugin.config.instance
+              ? [
+                  tsc.returnStatement({
+                    expression: tsc.newExpression({
+                      argumentsArray: [
+                        tsc.objectExpression({
+                          multiLine: false,
+                          obj: [
+                            {
+                              key: 'client',
+                              value: tsc.propertyAccessExpression({
+                                expression: tsc.this(),
+                                name: '_client',
+                              }),
+                            },
+                          ],
+                        }),
+                      ],
+                      expression: tsc.identifier({
+                        text: refChildClass.placeholder,
+                      }),
+                    }),
+                  }),
+                ]
+              : [
+                  tsc.returnStatement({
+                    expression: tsc.identifier({
+                      text: refChildClass.placeholder,
+                    }),
+                  }),
+                ],
+          });
+        }
 
         if (!currentClass.nodes.length) {
           currentClass.nodes.push(subClassReferenceNode);
@@ -372,10 +426,10 @@ export const generateClassSdk = ({
       meta: {
         category: 'utility',
         resource: 'class',
-        resourceId: currentClass.className,
+        resourceId,
         tool: 'sdk',
       },
-      name: currentClass.className,
+      name: resourceId,
     });
     const node = tsc.classDeclaration({
       decorator:
@@ -400,7 +454,6 @@ export const generateClassSdk = ({
       nodes: currentClass.nodes,
     });
     plugin.setSymbolValue(symbol, node);
-    generatedClasses.add(symbol.meta!.resourceId!);
   };
 
   if (clientClassNodes.length) {

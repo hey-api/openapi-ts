@@ -11,12 +11,16 @@ import {
   getTempSnapshotsPath,
 } from './utils';
 
-const namespace = 'opencode';
+const namespace = 'method-class-conflict';
 
 const outputDir = path.join(getTempSnapshotsPath(), namespace);
 const snapshotsDir = path.join(getSnapshotsPath(), namespace);
 
-const specPath = path.join(getSpecsPath(), '3.1.x', 'opencode.yaml');
+const specPath = path.join(
+  getSpecsPath(),
+  '3.0.x',
+  'sdk-method-class-conflict.yaml',
+);
 
 describe(`SDK: ${namespace}`, () => {
   const createConfig = createSdkConfig({
@@ -27,11 +31,32 @@ describe(`SDK: ${namespace}`, () => {
     {
       config: createConfig({
         input: specPath,
-        output: 'flat',
+        output: {
+          indexFile: false,
+          path: 'class',
+        },
         plugins: [
           {
+            asClass: true,
+            instance: false,
             name: '@hey-api/sdk',
-            paramsStructure: 'flat',
+          },
+        ],
+      }),
+      description: 'class',
+    },
+    {
+      config: createConfig({
+        input: specPath,
+        output: {
+          indexFile: false,
+          path: 'flat',
+        },
+        plugins: [
+          {
+            asClass: false,
+            instance: false,
+            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -40,15 +65,18 @@ describe(`SDK: ${namespace}`, () => {
     {
       config: createConfig({
         input: specPath,
-        output: 'grouped',
+        output: {
+          indexFile: false,
+          path: 'instance',
+        },
         plugins: [
           {
+            instance: true,
             name: '@hey-api/sdk',
-            paramsStructure: 'grouped',
           },
         ],
       }),
-      description: 'grouped',
+      description: 'instance',
     },
   ];
 
