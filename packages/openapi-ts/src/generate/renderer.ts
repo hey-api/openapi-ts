@@ -475,10 +475,20 @@ export class TypeScriptRenderer implements Renderer {
     if (!symbol) return;
     const cached = file.resolvedNames.get(symbol.id);
     if (cached) return cached;
-    if (!symbol.name) return;
+
+    // Handle symbols without a name by deriving it from the resource
+    let symbolName = symbol.name;
+    if (!symbolName && symbol.meta?.resource) {
+      // For external symbols like 'zod.z', extract the last part as the name
+      const resource = symbol.meta.resource as string;
+      const parts = resource.split('.');
+      symbolName = parts[parts.length - 1];
+    }
+
+    if (!symbolName) return;
     const [symbolFile] = project.symbolIdToFiles(symbol.id);
     const symbolFileResolvedName = symbolFile?.resolvedNames.get(symbol.id);
-    let name = ensureValidIdentifier(symbolFileResolvedName ?? symbol.name);
+    let name = ensureValidIdentifier(symbolFileResolvedName ?? symbolName);
     const conflictId = file.resolvedNames.getKey(name);
     if (conflictId !== undefined) {
       const conflictSymbol = project.symbols.get(conflictId);
