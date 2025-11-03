@@ -1,5 +1,21 @@
 # @hey-api/openapi-ts
 
+## 0.86.12
+
+### Patch Changes
+
+- fix(transformers): do not reference undefined transformers ([#2924](https://github.com/hey-api/openapi-ts/pull/2924)) ([`b3f4f91`](https://github.com/hey-api/openapi-ts/commit/b3f4f91bbf6ac1db504b7605a73c986b37003880)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(sdk): add `paramsStructure` option ([#2909](https://github.com/hey-api/openapi-ts/pull/2909)) ([`d9dd389`](https://github.com/hey-api/openapi-ts/commit/d9dd38927ce5c7901ce46bfe439454935b2053fa)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(sdk): handle conflicts between method names and subclasses in class-based SDKs ([#2920](https://github.com/hey-api/openapi-ts/pull/2920)) ([`48c7fa3`](https://github.com/hey-api/openapi-ts/commit/48c7fa3db65ef1ee146b6e09e53ae500483d4b22)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix: bundled context types ([#2923](https://github.com/hey-api/openapi-ts/pull/2923)) ([`f5a91c4`](https://github.com/hey-api/openapi-ts/commit/f5a91c4e068f64987d8138fadb0e969f1e28081f)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.3.3
+
 ## 0.86.11
 
 ### Patch Changes
