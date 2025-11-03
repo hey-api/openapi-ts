@@ -14,10 +14,18 @@ export const createSdkConfig =
       logs: {
         level: 'silent',
       },
-      output: path.join(
-        outputDir,
-        typeof userConfig.output === 'string' ? userConfig.output : '',
-      ),
+      output:
+        typeof userConfig.output === 'string'
+          ? path.join(outputDir, userConfig.output)
+          : {
+              ...userConfig.output,
+              path: path.join(
+                outputDir,
+                userConfig.output instanceof Array
+                  ? ''
+                  : userConfig.output.path,
+              ),
+            },
     }) as const satisfies UserConfig;
 
 export const getSnapshotsPath = (): string =>
