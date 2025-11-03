@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': patch
 ---
 
-fix(sdk): add paramsStructure field
+fix(sdk): add `paramsStructure` option
