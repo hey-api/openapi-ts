@@ -41,12 +41,12 @@ export default defineConfig(() => {
             // 'invalid',
             // 'openai.yaml',
             // 'full.yaml',
-            'opencode.yaml',
+            // 'opencode.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'type-format.yaml',
-            // 'validators.yaml',
+            'validators.yaml',
             // 'validators-circular-ref.json',
             // 'validators-circular-ref-2.yaml',
             // 'zoom-video-sdk.json',
@@ -260,7 +260,7 @@ export default defineConfig(() => {
           // },
           // include...
           instance: true,
-          name: '@hey-api/sdk',
+          // name: '@hey-api/sdk',
           // operationId: false,
           paramsStructure: 'flat',
           // responseStyle: 'data',
@@ -335,7 +335,7 @@ export default defineConfig(() => {
           },
         },
         {
-          // name: 'arktype',
+          name: 'arktype',
           // types: {
           //   infer: true,
           // },
@@ -346,7 +346,7 @@ export default defineConfig(() => {
           // definitions: 'z{{name}}Definition',
           exportFromIndex: true,
           // metadata: true,
-          // name: 'valibot',
+          name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
@@ -396,7 +396,7 @@ export default defineConfig(() => {
           },
           // exportFromIndex: true,
           // metadata: true,
-          // name: 'zod',
+          name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',
@@ -417,9 +417,9 @@ export default defineConfig(() => {
             // },
           },
           types: {
-            infer: {
-              case: 'snake_case',
-            },
+            // infer: {
+            //   case: 'snake_case',
+            // },
           },
           '~hooks': {
             symbols: {
