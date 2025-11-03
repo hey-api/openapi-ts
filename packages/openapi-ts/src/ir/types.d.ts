@@ -4,7 +4,6 @@ import type {
   ServerObject,
 } from '~/openApi/3.1.x/types/spec';
 
-import type { Context as IRContext } from './context';
 import type { IRMediaType } from './mediaType';
 
 interface IRBodyObject {
@@ -221,7 +220,6 @@ interface IRModel {
 export namespace IR {
   export type BodyObject = IRBodyObject;
   export type ComponentsObject = IRComponentsObject;
-  export type Context<Spec extends Record<string, any> = any> = IRContext<Spec>;
   export type Model = IRModel;
   export type OperationObject = IROperationObject;
   export type ParameterObject = IRParameterObject;

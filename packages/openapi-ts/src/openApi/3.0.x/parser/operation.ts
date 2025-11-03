@@ -1,3 +1,4 @@
+import type { Context } from '~/ir/context';
 import type { IR } from '~/ir/types';
 import type { State } from '~/openApi/shared/types/state';
 import { operationToId } from '~/openApi/shared/utils/operation';
@@ -48,7 +49,7 @@ const initIrOperation = ({
   path,
   state,
 }: Pick<IR.OperationObject, 'method' | 'path'> & {
-  context: IR.Context;
+  context: Context;
   operation: Operation;
   state: State;
 }): IR.OperationObject => {
@@ -84,7 +85,7 @@ const operationToIrOperation = ({
   securitySchemesMap,
   state,
 }: Pick<IR.OperationObject, 'method' | 'path'> & {
-  context: IR.Context;
+  context: Context;
   operation: Operation;
   securitySchemesMap: Map<string, SecuritySchemeObject>;
   state: State;
@@ -237,7 +238,7 @@ export const parsePathOperation = ({
   securitySchemesMap,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   method: Extract<
     keyof PathItemObject,
     'delete' | 'get' | 'head' | 'options' | 'patch' | 'post' | 'put' | 'trace'

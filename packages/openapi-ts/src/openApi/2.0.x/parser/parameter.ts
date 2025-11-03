@@ -1,3 +1,4 @@
+import type { Context } from '~/ir/context';
 import type { IR } from '~/ir/types';
 
 import type {
@@ -50,7 +51,7 @@ export const parametersArrayToObject = ({
   operation,
   parameters,
 }: {
-  context: IR.Context;
+  context: Context;
   operation: OperationObject;
   parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
 }): IR.ParametersObject | undefined => {
@@ -101,7 +102,7 @@ const parameterToIrParameter = ({
   parameter,
 }: {
   $ref: string;
-  context: IR.Context;
+  context: Context;
   parameter: Parameter;
 }): IR.ParameterObject => {
   const schema = parameter;

@@ -1,4 +1,4 @@
-import type { IR } from '~/ir/types';
+import type { Context } from '~/ir/context';
 import { buildResourceMetadata } from '~/openApi/shared/graph/meta';
 import { transformOpenApiSpec } from '~/openApi/shared/transforms';
 import type { State } from '~/openApi/shared/types/state';
@@ -28,7 +28,7 @@ import { validateOpenApiSpec } from './validate';
 type PathKeys<T extends keyof PathsObject = keyof PathsObject> =
   keyof T extends infer K ? (K extends `/${string}` ? K : never) : never;
 
-export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
+export const parseV2_0_X = (context: Context<OpenApiV2_0_X>) => {
   if (context.config.parser.validate_EXPERIMENTAL) {
     const result = validateOpenApiSpec(context.spec, context.logger);
     handleValidatorResult({ context, result });

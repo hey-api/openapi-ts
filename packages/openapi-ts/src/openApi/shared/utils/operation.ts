@@ -1,5 +1,5 @@
+import type { Context } from '~/ir/context';
 import { createOperationKey } from '~/ir/operation';
-import type { IR } from '~/ir/types';
 import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
 import { stringCase } from '~/utils/stringCase';
 
@@ -29,7 +29,7 @@ export const operationToId = ({
   path,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   count?: number;
   id: string | undefined;
   method: string;

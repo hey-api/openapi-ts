@@ -1,3 +1,4 @@
+import type { Context } from '~/ir/context';
 import type { IR } from '~/ir/types';
 import { addItemsToSchema } from '~/ir/utils';
 import type {
@@ -115,7 +116,7 @@ const parseArray = ({
   schema,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   irSchema?: IR.SchemaObject;
   schema: SchemaObject;
   state: SchemaState;
@@ -171,7 +172,7 @@ const parseArray = ({
 const parseBoolean = ({
   irSchema = {},
 }: {
-  context: IR.Context;
+  context: Context;
   irSchema?: IR.SchemaObject;
   schema: SchemaObject;
   state: SchemaState;
@@ -185,7 +186,7 @@ const parseNumber = ({
   irSchema = {},
   schema,
 }: {
-  context: IR.Context;
+  context: Context;
   irSchema?: IR.SchemaObject;
   schema: SchemaWithRequired<SchemaObject, 'type'>;
   state: SchemaState;
@@ -201,7 +202,7 @@ const parseObject = ({
   schema,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   irSchema?: IR.SchemaObject;
   schema: SchemaObject;
   state: SchemaState;
@@ -265,7 +266,7 @@ const parseObject = ({
 const parseString = ({
   irSchema = {},
 }: {
-  context: IR.Context;
+  context: Context;
   irSchema?: IR.SchemaObject;
   schema: SchemaObject;
   state: SchemaState;
@@ -295,7 +296,7 @@ const parseAllOf = ({
   schema,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   schema: SchemaWithRequired<SchemaObject, 'allOf'>;
   state: SchemaState;
 }): IR.SchemaObject => {
@@ -468,7 +469,7 @@ const parseAnyOf = ({
   schema,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   schema: SchemaWithRequired<SchemaObject, 'anyOf'>;
   state: SchemaState;
 }): IR.SchemaObject => {
@@ -556,7 +557,7 @@ const parseEnum = ({
   schema,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   schema: SchemaWithRequired<SchemaObject, 'enum'>;
   state: SchemaState;
 }): IR.SchemaObject => {
@@ -634,7 +635,7 @@ const parseOneOf = ({
   schema,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   schema: SchemaWithRequired<SchemaObject, 'oneOf'>;
   state: SchemaState;
 }): IR.SchemaObject => {
@@ -734,7 +735,7 @@ const parseRef = ({
   schema,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   schema: ReferenceObject;
   state: SchemaState;
 }): IR.SchemaObject => {
@@ -783,7 +784,7 @@ const parseNullableType = ({
   schema,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   irSchema?: IR.SchemaObject;
   schema: SchemaWithRequired<SchemaObject, 'type'>;
   state: SchemaState;
@@ -827,7 +828,7 @@ const parseType = ({
   schema,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   schema: SchemaWithRequired<SchemaObject, 'type'>;
   state: SchemaState;
 }): IR.SchemaObject => {
@@ -870,7 +871,7 @@ const parseOneType = ({
   schema,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   irSchema?: IR.SchemaObject;
   schema: SchemaWithRequired<SchemaObject, 'type'>;
   state: SchemaState;
@@ -932,7 +933,7 @@ const parseUnknown = ({
   irSchema,
   schema,
 }: {
-  context: IR.Context;
+  context: Context;
   irSchema?: IR.SchemaObject;
   schema: SchemaObject;
 }): IR.SchemaObject => {
@@ -952,7 +953,7 @@ export const schemaToIrSchema = ({
   schema,
   state,
 }: {
-  context: IR.Context;
+  context: Context;
   schema: SchemaObject | ReferenceObject;
   state: SchemaState | undefined;
 }): IR.SchemaObject => {
@@ -1024,7 +1025,7 @@ export const parseSchema = ({
   schema,
 }: {
   $ref: string;
-  context: IR.Context;
+  context: Context;
   schema: SchemaObject | ReferenceObject;
 }) => {
   if (!context.ir.components) {

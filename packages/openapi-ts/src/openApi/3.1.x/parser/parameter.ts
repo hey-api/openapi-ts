@@ -1,3 +1,4 @@
+import type { Context } from '~/ir/context';
 import type { IR } from '~/ir/types';
 import { refToName } from '~/utils/ref';
 
@@ -60,7 +61,7 @@ export const parametersArrayToObject = ({
   context,
   parameters,
 }: {
-  context: IR.Context;
+  context: Context;
   parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
 }): IR.ParametersObject | undefined => {
   if (!parameters || !Object.keys(parameters).length) {
@@ -97,7 +98,7 @@ const parameterToIrParameter = ({
   parameter,
 }: {
   $ref: string;
-  context: IR.Context;
+  context: Context;
   parameter: ParameterObject;
 }): IR.ParameterObject => {
   // TODO: parser - fix
@@ -174,7 +175,7 @@ export const parseParameter = ({
   parameter,
 }: {
   $ref: string;
-  context: IR.Context;
+  context: Context;
   parameter: ParameterObject;
 }) => {
   if (!context.ir.components) {

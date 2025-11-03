@@ -1,7 +1,7 @@
-import type { IR } from '~/ir/types';
+import type { Context } from '~/ir/context';
 import { parseUrl } from '~/utils/url';
 
-export const parseServers = ({ context }: { context: IR.Context }) => {
+export const parseServers = ({ context }: { context: Context }) => {
   let schemes: ReadonlyArray<string> = context.spec.schemes ?? [];
   let host = context.spec.host ?? '';
   const path = context.spec.basePath ?? '';
