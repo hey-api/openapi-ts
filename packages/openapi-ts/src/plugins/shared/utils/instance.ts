@@ -68,14 +68,13 @@ type EventHooks = {
 
 export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   api: T['api'];
-  config: Omit<T['resolvedConfig'], 'name' | 'output'>;
+  config: Omit<T['resolvedConfig'], 'name'>;
   context: Context;
   dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
   private eventHooks: EventHooks;
   gen: IProject;
   private handler: Plugin.Config<T>['handler'];
   name: T['resolvedConfig']['name'];
-  output: string;
   /**
    * The package metadata and utilities for the current context, constructed
    * from the provided dependencies. Used for managing package-related
@@ -93,7 +92,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       context: Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
       gen: IProject;
       name: string;
-      output: string;
     },
   ) {
     this.api = props.api ?? {};
@@ -104,7 +102,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.gen = props.gen;
     this.handler = props.handler;
     this.name = props.name;
-    this.output = props.output;
     this.package = props.context.package;
   }
 

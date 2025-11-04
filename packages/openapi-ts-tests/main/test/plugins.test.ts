@@ -591,7 +591,6 @@ for (const version of versions) {
       const myPlugin: DefinePlugin<{
         customOption: boolean;
         name: any;
-        output: string;
       }>['Config'] = {
         api: undefined,
         config: {
@@ -600,7 +599,6 @@ for (const version of versions) {
         dependencies: ['@hey-api/typescript'],
         handler: vi.fn(),
         name: 'my-plugin',
-        output: 'my-plugin',
       };
 
       await createClient({
@@ -618,14 +616,12 @@ for (const version of versions) {
     it('throws on invalid dependency', async () => {
       const myPlugin: DefinePlugin<{
         name: any;
-        output: string;
       }>['Config'] = {
         api: undefined,
         config: {},
         dependencies: ['@hey-api/oops'],
         handler: vi.fn(),
         name: 'my-plugin',
-        output: 'my-plugin',
       };
 
       await expect(() =>

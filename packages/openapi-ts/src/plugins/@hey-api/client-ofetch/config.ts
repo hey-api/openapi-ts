@@ -5,12 +5,10 @@ import {
 import { clientPluginHandler } from '~/plugins/@hey-api/client-core/plugin';
 import { definePluginConfig } from '~/plugins/shared/utils/config';
 
-import { Api } from './api';
 import type { HeyApiClientOfetchPlugin } from './types';
 
 export const defaultConfig: HeyApiClientOfetchPlugin['Config'] = {
   ...clientDefaultMeta,
-  api: new Api(),
   config: {
     ...clientDefaultConfig,
     throwOnError: false,

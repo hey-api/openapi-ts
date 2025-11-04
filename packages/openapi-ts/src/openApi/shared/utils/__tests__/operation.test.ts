@@ -43,9 +43,9 @@ describe('operationToId', () => {
             // @ts-expect-error
             '@hey-api/sdk': {
               config: {
-                name: '@hey-api/sdk',
                 operationId: true,
               },
+              name: '@hey-api/sdk',
             },
           },
         },

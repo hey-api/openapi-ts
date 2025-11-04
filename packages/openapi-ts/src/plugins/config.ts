@@ -37,6 +37,8 @@ import type { ArktypePlugin } from '~/plugins/arktype';
 import { defaultConfig as arktype } from '~/plugins/arktype';
 import type { FastifyPlugin } from '~/plugins/fastify';
 import { defaultConfig as fastify } from '~/plugins/fastify';
+import type { SwrPlugin } from '~/plugins/swr';
+import { defaultConfig as swr } from '~/plugins/swr';
 import type { PluginNames } from '~/plugins/types';
 import type { ValibotPlugin } from '~/plugins/valibot';
 import { defaultConfig as valibot } from '~/plugins/valibot';
@@ -63,6 +65,7 @@ export interface PluginConfigMap {
   '@tanstack/vue-query': TanStackVueQueryPlugin['Types'];
   arktype: ArktypePlugin['Types'];
   fastify: FastifyPlugin['Types'];
+  swr: SwrPlugin['Types'];
   valibot: ValibotPlugin['Types'];
   zod: ZodPlugin['Types'];
 }
@@ -89,6 +92,7 @@ export const defaultPluginConfigs: {
   '@tanstack/vue-query': tanStackVueQuery,
   arktype,
   fastify,
+  swr,
   valibot,
   zod,
 };
