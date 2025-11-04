@@ -31,7 +31,7 @@ export type PluginNames =
 
 export type AnyPluginName = PluginNames | (string & {});
 
-type PluginTag = 'client' | 'transformer' | 'validator';
+type PluginTag = 'client' | 'sdk' | 'transformer' | 'validator';
 
 export type PluginContext = {
   package: Package;
