@@ -5,6 +5,34 @@ import type { StringName } from '~/types/case';
 
 import type { IApi } from './api';
 
+type ValidatorValue = PluginValidatorNames | boolean;
+type ValidatorResult =
+  | ValidatorValue
+  | {
+      /**
+       * Validate request data against schema before sending.
+       *
+       * Can be a validator plugin name or boolean (true to auto-select, false
+       * to disable).
+       *
+       * @default false
+       */
+      request?:
+        | ValidatorValue
+        | ((operation: IR.OperationObject) => ValidatorValue);
+      /**
+       * Validate response data against schema before returning.
+       *
+       * Can be a validator plugin name or boolean (true to auto-select, false
+       * to disable).
+       *
+       * @default false
+       */
+      response?:
+        | ValidatorValue
+        | ((operation: IR.OperationObject) => ValidatorValue);
+    };
+
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks & {
     /**
@@ -137,50 +165,18 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * @default false
      */
     validator?:
-      | PluginValidatorNames
-      | boolean
-      | {
-          /**
-           * Validate request data against schema before sending.
-           *
-           * Can be a validator plugin name or boolean (true to auto-select, false
-           * to disable).
-           *
-           * @default false
-           */
-          request?: PluginValidatorNames | boolean;
-          /**
-           * Validate response data against schema before returning.
-           *
-           * Can be a validator plugin name or boolean (true to auto-select, false
-           * to disable).
-           *
-           * @default false
-           */
-          response?: PluginValidatorNames | boolean;
-        };
+      | ValidatorResult
+      | ((operation: IR.OperationObject) => ValidatorResult);
 
     // DEPRECATED OPTIONS BELOW
 
-    /**
-     * **This feature works only with the legacy parser**
-     *
-     * Filter endpoints to be included in the generated SDK. The provided
-     * string should be a regular expression where matched results will be
-     * included in the output. The input pattern this string will be tested
-     * against is `{method} {path}`. For example, you can match
-     * `POST /api/v1/foo` with `^POST /api/v1/foo$`.
-     *
-     * @deprecated
-     */
-    // eslint-disable-next-line typescript-sort-keys/interface
-    filter?: string;
     /**
      * Define shape of returned value from service calls
      *
      * @deprecated
      * @default 'body'
      */
+    // eslint-disable-next-line typescript-sort-keys/interface
     response?: 'body' | 'response';
   };
 
@@ -303,7 +299,7 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      * to a desired shape. However, validation adds runtime overhead, so it's
      * not recommended to use unless absolutely necessary.
      */
-    validator: {
+    validator: (operation: IR.OperationObject) => {
       /**
        * The validator plugin to use for request validation, or false to disable.
        *
@@ -321,24 +317,12 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
     // DEPRECATED OPTIONS BELOW
 
     /**
-     * **This feature works only with the legacy parser**
-     *
-     * Filter endpoints to be included in the generated SDK. The provided
-     * string should be a regular expression where matched results will be
-     * included in the output. The input pattern this string will be tested
-     * against is `{method} {path}`. For example, you can match
-     * `POST /api/v1/foo` with `^POST /api/v1/foo$`.
-     *
-     * @deprecated
-     */
-    // eslint-disable-next-line typescript-sort-keys/interface
-    filter?: string;
-    /**
      * Define shape of returned value from service calls
      *
      * @deprecated
      * @default 'body'
      */
+    // eslint-disable-next-line typescript-sort-keys/interface
     response: 'body' | 'response';
   };
 

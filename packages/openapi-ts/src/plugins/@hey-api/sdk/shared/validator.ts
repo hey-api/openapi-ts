@@ -4,39 +4,39 @@ import type { IR } from '~/ir/types';
 
 import type { HeyApiSdkPlugin } from '../types';
 
-interface ValidatorProps {
-  operation: IR.OperationObject;
-  plugin: HeyApiSdkPlugin['Instance'];
-}
-
-export const createRequestValidator = ({
-  operation,
-  plugin,
-}: ValidatorProps): ts.ArrowFunction | undefined => {
-  if (!plugin.config.validator.request) return;
-
-  const validator = plugin.getPluginOrThrow(plugin.config.validator.request);
-  if (!validator.api.createRequestValidator) return;
-
-  return validator.api.createRequestValidator({
-    operation,
-    // @ts-expect-error
-    plugin: validator,
-  });
+type Validators = {
+  request?: ts.ArrowFunction;
+  response?: ts.ArrowFunction;
 };
 
-export const createResponseValidator = ({
+export const createValidators = ({
   operation,
   plugin,
-}: ValidatorProps): ts.ArrowFunction | undefined => {
-  if (!plugin.config.validator.response) return;
-
-  const validator = plugin.getPluginOrThrow(plugin.config.validator.response);
-  if (!validator.api.createResponseValidator) return;
-
-  return validator.api.createResponseValidator({
-    operation,
-    // @ts-expect-error
-    plugin: validator,
-  });
+}: {
+  operation: IR.OperationObject;
+  plugin: HeyApiSdkPlugin['Instance'];
+}): Validators => {
+  const validators: Validators = {};
+  const values = plugin.config.validator(operation);
+  if (values.request) {
+    const validator = plugin.getPluginOrThrow(values.request);
+    if (validator.api.createRequestValidator) {
+      validators.request = validator.api.createRequestValidator({
+        operation,
+        // @ts-expect-error
+        plugin: validator,
+      });
+    }
+  }
+  if (values.response) {
+    const validator = plugin.getPluginOrThrow(values.response);
+    if (validator.api.createResponseValidator) {
+      validators.response = validator.api.createResponseValidator({
+        operation,
+        // @ts-expect-error
+        plugin: validator,
+      });
+    }
+  }
+  return validators;
 };

@@ -1,4 +1,5 @@
 import { definePluginConfig } from '~/plugins/shared/utils/config';
+import type { PluginValidatorNames } from '~/plugins/types';
 
 import { Api } from './api';
 import { handler } from './plugin';
@@ -47,32 +48,40 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       plugin.config.transformer = false;
     }
 
-    if (typeof plugin.config.validator !== 'object') {
-      plugin.config.validator = {
-        request: plugin.config.validator,
-        response: plugin.config.validator,
+    const { validator } = plugin.config;
+    plugin.config.validator = ((operation) => {
+      if (typeof validator === 'boolean') {
+        const validatorPlugin = validator
+          ? context.pluginByTag('validator')
+          : undefined;
+        const validatorValue = validatorPlugin
+          ? (validatorPlugin as PluginValidatorNames)
+          : false;
+        return {
+          request: validatorValue,
+          response: validatorValue,
+        };
+      }
+
+      if (typeof validator === 'string') {
+        return {
+          request: validator,
+          response: validator,
+        };
+      }
+
+      if (typeof validator === 'function') {
+        const result = validator(operation);
+        if (typeof result === 'object') {
+          // result.request
+        }
+      }
+
+      return {
+        request: false,
+        response: false,
       };
-    }
-
-    if (plugin.config.validator.request) {
-      if (typeof plugin.config.validator.request === 'boolean') {
-        plugin.config.validator.request = context.pluginByTag('validator');
-      }
-
-      plugin.dependencies.add(plugin.config.validator.request!);
-    } else {
-      plugin.config.validator.request = false;
-    }
-
-    if (plugin.config.validator.response) {
-      if (typeof plugin.config.validator.response === 'boolean') {
-        plugin.config.validator.response = context.pluginByTag('validator');
-      }
-
-      plugin.dependencies.add(plugin.config.validator.response!);
-    } else {
-      plugin.config.validator.response = false;
-    }
+    }) satisfies HeyApiSdkPlugin['Types']['resolvedConfig']['validator'];
 
     if (plugin.config.instance) {
       if (typeof plugin.config.instance !== 'string') {
@@ -91,6 +100,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       }
     }
   },
+  tags: ['sdk'],
 };
 
 /**

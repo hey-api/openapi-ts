@@ -272,11 +272,13 @@ export default defineConfig(() => {
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          // validator: true,
-          // validator: {
-          //   request: 'zod',
-          //   response: 'zod',
+          // validator(operation) {
+          //   return 'zod';
           // },
+          validator: {
+            request: 'valibot',
+            response: 'zod',
+          },
           '~hooks': {
             symbols: {
               // getFilePath: (symbol) => {
@@ -339,7 +341,7 @@ export default defineConfig(() => {
           },
         },
         {
-          name: 'arktype',
+          // name: 'arktype',
           // types: {
           //   infer: true,
           // },
