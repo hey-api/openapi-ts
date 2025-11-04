@@ -20,9 +20,7 @@
 
 ## Dashboard
 
-Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with Hey API Platform.
-
-[Sign In](https://app.heyapi.dev) to Hey API Platform.
+Access your projects and OpenAPI specifications in the [Hey API Platform](https://app.heyapi.dev/).
 
 ## Contributing
 

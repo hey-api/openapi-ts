@@ -1,5 +1,4 @@
 import { handler } from '~/plugins/@tanstack/query-core/plugin';
-import { handlerLegacy } from '~/plugins/@tanstack/query-core/plugin-legacy';
 import { definePluginConfig } from '~/plugins/shared/utils/config';
 
 import { Api } from './api';
@@ -14,7 +13,6 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler: handler as TanStackReactQueryPlugin['Handler'],
-  handlerLegacy: handlerLegacy as TanStackReactQueryPlugin['LegacyHandler'],
   name: '@tanstack/react-query',
   output: '@tanstack/react-query',
   resolveConfig: (plugin, context) => {

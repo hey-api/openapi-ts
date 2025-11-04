@@ -3,7 +3,6 @@ import { definePluginConfig } from '~/plugins/shared/utils/config';
 import { Api } from './api';
 import { bigIntExpressions, dateExpressions } from './expressions';
 import { handler } from './plugin';
-import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiTransformersPlugin } from './types';
 
 export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
@@ -17,7 +16,6 @@ export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
   },
   dependencies: ['@hey-api/typescript'],
   handler,
-  handlerLegacy,
   name: '@hey-api/transformers',
   resolveConfig: (plugin) => {
     if (!plugin.config.transformers) {

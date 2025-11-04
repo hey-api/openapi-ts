@@ -2,7 +2,6 @@ import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { PluginClientNames, PluginValidatorNames } from '~/plugins/types';
 import type { StringName } from '~/types/case';
-import type { Operation } from '~/types/client';
 
 import type { IApi } from './api';
 
@@ -78,9 +77,9 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
     instance?: string | boolean;
     /**
      * Customise the name of methods within the service. By default,
-     * {@link IR.OperationObject.id} or {@link Operation.name} is used.
+     * {@link IR.OperationObject.id} is used.
      */
-    methodNameBuilder?: (operation: IR.OperationObject | Operation) => string;
+    methodNameBuilder?: (operation: IR.OperationObject) => string;
     // TODO: parser - rename operationId option to something like inferId?: boolean
     /**
      * Use operation ID to generate operation names?
@@ -257,9 +256,9 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
     instance: string | boolean;
     /**
      * Customise the name of methods within the service. By default,
-     * {@link IR.OperationObject.id} or {@link Operation.name} is used.
+     * {@link IR.OperationObject.id} is used.
      */
-    methodNameBuilder?: (operation: IR.OperationObject | Operation) => string;
+    methodNameBuilder?: (operation: IR.OperationObject) => string;
     // TODO: parser - rename operationId option to something like inferId?: boolean
     /**
      * Use operation ID to generate operation names?

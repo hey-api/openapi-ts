@@ -1,9 +1,0 @@
-export const getResponseHeader = (response: AxiosResponse<unknown>, responseHeader?: string): string | undefined => {
-	if (responseHeader) {
-		const content = response.headers[responseHeader];
-		if (isString(content)) {
-			return content;
-		}
-	}
-	return undefined;
-};
