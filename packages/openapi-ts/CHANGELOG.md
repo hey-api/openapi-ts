@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.87.0
+
+### Minor Changes
+
+- feat: remove legacy clients and plugins ([#2925](https://github.com/hey-api/openapi-ts/pull/2925)) ([`c9fb65d`](https://github.com/hey-api/openapi-ts/commit/c9fb65d2f5757f389383f8b9007baf6a5e26f45a)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed legacy clients
+
+This release removes support for legacy clients and plugins. Please migrate to the new clients if you haven't done so yet. If you're unable to do so due to a missing feature, let us know on [GitHub](https://github.com/hey-api/openapi-ts/issues).
+
 ## 0.86.12
 
 ### Patch Changes
