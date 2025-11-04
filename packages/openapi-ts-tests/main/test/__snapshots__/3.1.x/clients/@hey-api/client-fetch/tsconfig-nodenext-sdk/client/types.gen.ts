@@ -239,30 +239,3 @@ export type Options<
   'body' | 'path' | 'query' | 'url'
 > &
   ([TData] extends [never] ? unknown : Omit<TData, 'url'>);
-
-export type OptionsLegacyParser<
-  TData = unknown,
-  ThrowOnError extends boolean = boolean,
-  TResponseStyle extends ResponseStyle = 'fields',
-> = TData extends { body?: any }
-  ? TData extends { headers?: any }
-    ? OmitKeys<
-        RequestOptions<unknown, TResponseStyle, ThrowOnError>,
-        'body' | 'headers' | 'url'
-      > &
-        TData
-    : OmitKeys<
-        RequestOptions<unknown, TResponseStyle, ThrowOnError>,
-        'body' | 'url'
-      > &
-        TData &
-        Pick<RequestOptions<unknown, TResponseStyle, ThrowOnError>, 'headers'>
-  : TData extends { headers?: any }
-    ? OmitKeys<
-        RequestOptions<unknown, TResponseStyle, ThrowOnError>,
-        'headers' | 'url'
-      > &
-        TData &
-        Pick<RequestOptions<unknown, TResponseStyle, ThrowOnError>, 'body'>
-    : OmitKeys<RequestOptions<unknown, TResponseStyle, ThrowOnError>, 'url'> &
-        TData;

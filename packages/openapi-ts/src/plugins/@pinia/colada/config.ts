@@ -1,11 +1,9 @@
 import { definePluginConfig } from '~/plugins/shared/utils/config';
 
-import { Api } from './api';
 import { handler } from './plugin';
 import type { PiniaColadaPlugin } from './types';
 
 export const defaultConfig: PiniaColadaPlugin['Config'] = {
-  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,

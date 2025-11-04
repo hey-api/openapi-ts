@@ -3,8 +3,6 @@ import type { DefinePlugin, Plugin } from '~/plugins';
 import type { PluginClientNames, PluginValidatorNames } from '~/plugins/types';
 import type { StringName } from '~/types/case';
 
-import type { IApi } from './api';
-
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks & {
     /**
@@ -342,4 +340,4 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
     response: 'body' | 'response';
   };
 
-export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config, IApi>;
+export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config>;

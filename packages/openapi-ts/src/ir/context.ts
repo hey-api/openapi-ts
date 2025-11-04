@@ -126,7 +126,6 @@ export class Context<Spec extends Record<string, any> = any> {
       gen: this.gen,
       handler: plugin.handler,
       name: plugin.name,
-      output: plugin.output as string,
     });
     this.plugins[instance.name] = instance;
     return instance;

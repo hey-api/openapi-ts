@@ -239,13 +239,6 @@ interface TDataShape {
 }
 type OmitKeys<T, K$1> = Pick<T, Exclude<keyof T, K$1>>;
 type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
-type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean> = TData extends {
-  body?: any;
-} ? TData extends {
-  headers?: any;
-} ? OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'headers' | 'url'> & TData : OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'url'> & TData & Pick<RequestOptions<ThrowOnError>, 'headers'> : TData extends {
-  headers?: any;
-} ? OmitKeys<RequestOptions<ThrowOnError>, 'headers' | 'url'> & TData & Pick<RequestOptions<ThrowOnError>, 'body'> : OmitKeys<RequestOptions<ThrowOnError>, 'url'> & TData;
 //#endregion
 //#region src/client.d.ts
 declare const createClient: (config?: Config) => Client;
@@ -275,4 +268,4 @@ interface Params {
 declare const buildClientParams: (args: ReadonlyArray<unknown>, fields: FieldsConfig) => Params;
 //# sourceMappingURL=index.d.cts.map
 
-export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, buildClientParams, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, buildClientParams, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

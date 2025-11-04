@@ -1,7 +1,7 @@
 <div align="center">
   <img alt="Two people looking at the blueprint" height="214" src="https://heyapi.dev/images/blueprint-640w.png" width="320">
   <h1><b>OpenAPI TypeScript</b></h1>
-  <p><em>“OpenAPI codegen that just works.”</em><br/><sub>— Guillermo Rauch</sub></p>
+  <p><em>“OpenAPI codegen that just works.”</em><br/><sub>— Guillermo Rauch, CEO of Vercel</sub></p>
 </div>
 
 <p align="center">
