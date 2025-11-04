@@ -19,7 +19,7 @@ import type { HeyApiSdkPlugin } from '../types';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { getSignatureParameters } from './signature';
-import { createRequestValidator, createResponseValidator } from './validator';
+import { createValidators } from './validator';
 
 interface ClassNameEntry {
   /**
@@ -502,11 +502,11 @@ export const operationStatements = ({
     });
   }
 
-  const requestValidator = createRequestValidator({ operation, plugin });
-  if (requestValidator) {
+  const validators = createValidators({ operation, plugin });
+  if (validators.request) {
     requestOptions.push({
       key: 'requestValidator',
-      value: requestValidator,
+      value: validators.request,
     });
   }
 
@@ -553,11 +553,10 @@ export const operationStatements = ({
     }
   }
 
-  const responseValidator = createResponseValidator({ operation, plugin });
-  if (responseValidator) {
+  if (validators.response) {
     requestOptions.push({
       key: 'responseValidator',
-      value: responseValidator,
+      value: validators.response,
     });
   }
 
