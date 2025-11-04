@@ -7,10 +7,6 @@ import {
   definePluginConfig,
 } from '@hey-api/openapi-ts';
 
-export type IApi = any;
-
-export class Api implements IApi {}
-
 export type Config = Client.Config & {
   /**
    * Plugin name. Must be unique.
@@ -18,11 +14,10 @@ export type Config = Client.Config & {
   name: string;
 };
 
-export type MyClientPlugin = DefinePlugin<Config, Config, IApi>;
+export type MyClientPlugin = DefinePlugin<Config, Config>;
 
 export const defaultConfig: MyClientPlugin['Config'] = {
   ...clientDefaultMeta,
-  api: new Api(),
   config: clientDefaultConfig,
   handler: clientPluginHandler,
   name: __filename,

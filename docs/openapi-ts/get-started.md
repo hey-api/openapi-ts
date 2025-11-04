@@ -11,8 +11,9 @@ import { embedProject } from '../embed'
 
 [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an [open source](/openapi-ts/license) OpenAPI to TypeScript code generator trusted by companies like Google, Amazon, and PayPal to generate API clients, SDKs, validators, and more. We also build complementary tools and [services](https://app.heyapi.dev/) that help teams design, manage, and distribute APIs more effectively.
 
-> “OpenAPI codegen that just works.”
-> — Guillermo Rauch
+> _“OpenAPI codegen that just works.”_
+>
+> <sub>— Guillermo Rauch, CEO of Vercel</sub>
 
 ### Demo
 

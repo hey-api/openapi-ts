@@ -1,11 +1,9 @@
 import { handler } from '~/plugins/@tanstack/query-core/plugin';
 import { definePluginConfig } from '~/plugins/shared/utils/config';
 
-import { Api } from './api';
 import type { TanStackSolidQueryPlugin } from './types';
 
 export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
-  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,
@@ -14,7 +12,6 @@ export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler: handler as TanStackSolidQueryPlugin['Handler'],
   name: '@tanstack/solid-query',
-  output: '@tanstack/solid-query',
   resolveConfig: (plugin, context) => {
     plugin.config.infiniteQueryKeys = context.valueToObject({
       defaultValue: {

@@ -3,7 +3,7 @@ import type { Plugin } from '~/plugins';
 export const definePluginConfig =
   <T extends Plugin.Types>(defaultConfig: Plugin.Config<T>) =>
   (
-    userConfig?: Omit<Plugin.UserConfig<T['config']>, 'name'>,
+    userConfig?: Omit<T['config'], 'name'>,
   ): Omit<Plugin.Config<T>, 'name'> & {
     /**
      * Cast name to `any` so it doesn't throw type error in `plugins` array.

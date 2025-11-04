@@ -1,8 +1,6 @@
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { Client } from '~/plugins/@hey-api/client-core/types';
 
-import type { IApi } from './api';
-
 export type UserConfig = Plugin.Name<'@hey-api/client-angular'> &
   Client.Config & {
     /**
@@ -13,8 +11,4 @@ export type UserConfig = Plugin.Name<'@hey-api/client-angular'> &
     throwOnError?: boolean;
   };
 
-export type HeyApiClientAngularPlugin = DefinePlugin<
-  UserConfig,
-  UserConfig,
-  IApi
->;
+export type HeyApiClientAngularPlugin = DefinePlugin<UserConfig, UserConfig>;

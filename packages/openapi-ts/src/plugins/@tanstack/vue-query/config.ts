@@ -1,11 +1,9 @@
 import { handler } from '~/plugins/@tanstack/query-core/plugin';
 import { definePluginConfig } from '~/plugins/shared/utils/config';
 
-import { Api } from './api';
 import type { TanStackVueQueryPlugin } from './types';
 
 export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
-  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,
@@ -14,7 +12,6 @@ export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler: handler as TanStackVueQueryPlugin['Handler'],
   name: '@tanstack/vue-query',
-  output: '@tanstack/vue-query',
   resolveConfig: (plugin, context) => {
     plugin.config.infiniteQueryKeys = context.valueToObject({
       defaultValue: {

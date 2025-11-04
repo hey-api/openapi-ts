@@ -2,8 +2,6 @@ import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { StringCase, StringName } from '~/types/case';
 
-import type { IApi } from './api';
-
 export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
   Plugin.Hooks & {
     /**
@@ -623,4 +621,4 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
     };
   };
 
-export type TanStackReactQueryPlugin = DefinePlugin<UserConfig, Config, IApi>;
+export type TanStackReactQueryPlugin = DefinePlugin<UserConfig, Config>;
