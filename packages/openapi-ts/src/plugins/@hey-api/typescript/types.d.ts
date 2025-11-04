@@ -240,37 +240,6 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
            */
           payload?: StringName;
         };
-
-    // DEPRECATED OPTIONS BELOW
-
-    /**
-     * **This feature works only with the legacy parser**
-     *
-     * Include only types matching regular expression.
-     *
-     * @deprecated
-     */
-    // eslint-disable-next-line typescript-sort-keys/interface
-    include?: string;
-    /**
-     * **This feature works only with the legacy parser**
-     *
-     * Use your preferred naming pattern
-     *
-     * @deprecated
-     * @default 'preserve'
-     */
-    style?: 'PascalCase' | 'preserve';
-    /**
-     * **This feature works only with the legacy parser**
-     *
-     * Generate a tree of types containing all operations? It will be named
-     * $OpenApiTs.
-     *
-     * @deprecated
-     * @default false
-     */
-    tree?: boolean;
   };
 
 export type Config = Plugin.Name<'@hey-api/typescript'> &
@@ -463,37 +432,6 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
        */
       payload: StringName;
     };
-
-    // DEPRECATED OPTIONS BELOW
-
-    /**
-     * **This feature works only with the legacy parser**
-     *
-     * Include only types matching regular expression.
-     *
-     * @deprecated
-     */
-    // eslint-disable-next-line typescript-sort-keys/interface
-    include?: string;
-    /**
-     * **This feature works only with the legacy parser**
-     *
-     * Use your preferred naming pattern
-     *
-     * @deprecated
-     * @default 'preserve'
-     */
-    style: 'PascalCase' | 'preserve';
-    /**
-     * **This feature works only with the legacy parser**
-     *
-     * Generate a tree of types containing all operations? It will be named
-     * $OpenApiTs.
-     *
-     * @deprecated
-     * @default false
-     */
-    tree: boolean;
   };
 
 export type HeyApiTypeScriptPlugin = DefinePlugin<UserConfig, Config, IApi>;

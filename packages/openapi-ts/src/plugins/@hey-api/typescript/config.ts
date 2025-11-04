@@ -9,9 +9,7 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   config: {
     case: 'PascalCase',
     exportFromIndex: true,
-    style: 'preserve',
     topType: 'unknown',
-    tree: false,
   },
   handler,
   name: '@hey-api/typescript',
