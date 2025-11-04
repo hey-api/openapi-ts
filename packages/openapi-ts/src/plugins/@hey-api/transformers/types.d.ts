@@ -3,7 +3,6 @@ import type ts from 'typescript';
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
 
-import type { IApi } from './api';
 import type { ExpressionTransformer } from './expressions';
 
 /**
@@ -78,4 +77,4 @@ export type Config = Plugin.Name<'@hey-api/transformers'> &
     typeTransformers: ReadonlyArray<TypeTransformer>;
   };
 
-export type HeyApiTransformersPlugin = DefinePlugin<UserConfig, Config, IApi>;
+export type HeyApiTransformersPlugin = DefinePlugin<UserConfig, Config>;

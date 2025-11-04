@@ -1,8 +1,6 @@
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { Client } from '~/plugins/@hey-api/client-core/types';
 
-import type { IApi } from './api';
-
 export type UserConfig = Plugin.Name<'@hey-api/client-ofetch'> &
   Client.Config & {
     /**
@@ -13,8 +11,4 @@ export type UserConfig = Plugin.Name<'@hey-api/client-ofetch'> &
     throwOnError?: boolean;
   };
 
-export type HeyApiClientOfetchPlugin = DefinePlugin<
-  UserConfig,
-  UserConfig,
-  IApi
->;
+export type HeyApiClientOfetchPlugin = DefinePlugin<UserConfig, UserConfig>;

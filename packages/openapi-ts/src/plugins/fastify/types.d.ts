@@ -1,7 +1,5 @@
 import type { DefinePlugin, Plugin } from '~/plugins';
 
-import type { IApi } from './api';
-
 export type UserConfig = Plugin.Name<'fastify'> &
   Plugin.Hooks & {
     /**
@@ -13,4 +11,4 @@ export type UserConfig = Plugin.Name<'fastify'> &
     exportFromIndex?: boolean;
   };
 
-export type FastifyPlugin = DefinePlugin<UserConfig, UserConfig, IApi>;
+export type FastifyPlugin = DefinePlugin<UserConfig, UserConfig>;

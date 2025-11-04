@@ -12,7 +12,6 @@ export type {
   Config,
   CreateClientConfig,
   Options,
-  OptionsLegacyParser,
   RequestOptions,
   RequestResult,
   TDataShape,

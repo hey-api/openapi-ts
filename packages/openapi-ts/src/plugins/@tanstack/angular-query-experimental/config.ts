@@ -1,11 +1,9 @@
 import { handler } from '~/plugins/@tanstack/query-core/plugin';
 import { definePluginConfig } from '~/plugins/shared/utils/config';
 
-import { Api } from './api';
 import type { TanStackAngularQueryPlugin } from './types';
 
 export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
-  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,
@@ -14,7 +12,6 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler: handler as TanStackAngularQueryPlugin['Handler'],
   name: '@tanstack/angular-query-experimental',
-  output: '@tanstack/angular-query-experimental',
   resolveConfig: (plugin, context) => {
     plugin.config.infiniteQueryKeys = context.valueToObject({
       defaultValue: {

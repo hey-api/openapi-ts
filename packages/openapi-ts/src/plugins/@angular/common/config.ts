@@ -1,18 +1,15 @@
 import { definePluginConfig } from '~/plugins/shared/utils/config';
 
-import { Api } from './api';
 import { handler } from './plugin';
 import type { AngularCommonPlugin } from './types';
 
 export const defaultConfig: AngularCommonPlugin['Config'] = {
-  api: new Api(),
   config: {
     exportFromIndex: false,
   },
   dependencies: ['@hey-api/client-angular', '@hey-api/sdk'],
   handler,
   name: '@angular/common',
-  output: '@angular/common',
   resolveConfig: (plugin, context) => {
     plugin.config.httpRequests = context.valueToObject({
       defaultValue: {

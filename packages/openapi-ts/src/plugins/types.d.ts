@@ -27,6 +27,7 @@ export type PluginNames =
   | '@tanstack/svelte-query'
   | '@tanstack/vue-query'
   | 'fastify'
+  | 'swr'
   | PluginValidatorNames;
 
 export type AnyPluginName = PluginNames | (string & {});
@@ -68,7 +69,7 @@ type BaseConfig = {
  */
 export namespace Plugin {
   export type Config<T extends Types> = Pick<T, 'api'> & {
-    config: Omit<T['config'], 'name' | 'output'>;
+    config: Omit<T['config'], 'name'>;
     /**
      * Dependency plugins will be always processed, regardless of whether user
      * explicitly defines them in their `plugins` config.
@@ -76,7 +77,6 @@ export namespace Plugin {
     dependencies?: ReadonlyArray<AnyPluginName>;
     handler: Handler<T>;
     name: T['config']['name'];
-    output?: NonNullable<T['config']['output']>;
     /**
      * Resolves static configuration values into their runtime equivalents. For
      * example, when `validator` is set to `true`, it figures out which plugin
@@ -89,31 +89,10 @@ export namespace Plugin {
       context: PluginContext,
     ) => void;
     /**
-     * Optional tags can be used to help with deciding plugin order and resolving
+     * Tags can be used to help with deciding plugin order and resolving
      * plugin configuration options.
      */
     tags?: ReadonlyArray<PluginTag>;
-  };
-
-  export type ConfigWithName<T extends Types> = Omit<Config<T>, 'config'> & {
-    config: Omit<T['config'], 'output'>;
-  };
-
-  /** @deprecated use `definePluginConfig()` instead */
-  export type DefineConfig<
-    Config extends BaseConfig,
-    ResolvedConfig extends BaseConfig = Config,
-  > = (config?: UserConfig<Omit<Config, 'name'>>) => Omit<
-    Plugin.Config<Config, ResolvedConfig>,
-    'name'
-  > & {
-    /**
-     * Cast name to `any` so it doesn't throw type error in `plugins` array.
-     * We could allow any `string` as plugin `name` in the object syntax, but
-     * that TypeScript trick would cause all string methods to appear as
-     * suggested auto completions, which is undesirable.
-     */
-    name: any;
   };
 
   /**
@@ -133,11 +112,6 @@ export namespace Plugin {
     config: Config;
     resolvedConfig: ResolvedConfig;
   };
-
-  /**
-   * Users cannot modify output file path to avoid risk of conflicts.
-   */
-  export type UserConfig<Config extends BaseConfig> = Omit<Config, 'output'>;
 }
 
 export type DefinePlugin<

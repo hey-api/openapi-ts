@@ -189,18 +189,6 @@ export type Options<
 > &
   ([TData] extends [never] ? unknown : WithRefs<Omit<TData, 'url'>>);
 
-export type OptionsLegacyParser<TData = unknown> = TData extends { body?: any }
-  ? TData extends { headers?: any }
-    ? OmitKeys<RequestOptions, 'body' | 'headers' | 'url'> & TData
-    : OmitKeys<RequestOptions, 'body' | 'url'> &
-        TData &
-        Pick<RequestOptions, 'headers'>
-  : TData extends { headers?: any }
-    ? OmitKeys<RequestOptions, 'headers' | 'url'> &
-        TData &
-        Pick<RequestOptions, 'body'>
-    : OmitKeys<RequestOptions, 'url'> & TData;
-
 type FetchOptions<TData> = Omit<
   UseFetchOptions<TData, TData>,
   keyof AsyncDataOptions<TData>

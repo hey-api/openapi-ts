@@ -71,7 +71,7 @@ export interface UserConfig {
   plugins?: ReadonlyArray<
     | PluginNames
     | {
-        [K in PluginNames]: Plugin.UserConfig<PluginConfigMap[K]['config']> & {
+        [K in PluginNames]: PluginConfigMap[K]['config'] & {
           name: K;
         };
       }[PluginNames]
@@ -102,6 +102,6 @@ export type Config = Omit<
   parser: Parser;
   pluginOrder: ReadonlyArray<keyof PluginConfigMap>;
   plugins: {
-    [K in PluginNames]?: Plugin.ConfigWithName<PluginConfigMap[K]>;
+    [K in PluginNames]?: Plugin.Config<PluginConfigMap[K]>;
   };
 };

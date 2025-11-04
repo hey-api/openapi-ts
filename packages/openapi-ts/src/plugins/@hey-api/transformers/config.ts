@@ -1,12 +1,10 @@
 import { definePluginConfig } from '~/plugins/shared/utils/config';
 
-import { Api } from './api';
 import { bigIntExpressions, dateExpressions } from './expressions';
 import { handler } from './plugin';
 import type { HeyApiTransformersPlugin } from './types';
 
 export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
-  api: new Api(),
   config: {
     bigInt: true,
     dates: true,
