@@ -1,4 +1,3 @@
-import type { OpenApiV2Schema, OpenApiV3Schema } from '~/openApi';
 import type { OpenApiV2_0_XTypes } from '~/openApi/2.0.x';
 import type { OpenApiV3_0_XTypes } from '~/openApi/3.0.x';
 import type { OpenApiV3_1_XTypes } from '~/openApi/3.1.x';
@@ -27,8 +26,6 @@ export type UserConfig = Plugin.Name<'@hey-api/schemas'> &
       | ((
           name: string,
           schema:
-            | OpenApiV2Schema
-            | OpenApiV3Schema
             | OpenApiV2_0_XTypes['SchemaObject']
             | OpenApiV3_0_XTypes['ReferenceObject']
             | OpenApiV3_0_XTypes['SchemaObject']

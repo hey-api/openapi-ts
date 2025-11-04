@@ -13,16 +13,6 @@ import type { HeyApiClientNuxtPlugin } from '~/plugins/@hey-api/client-nuxt';
 import { defaultConfig as heyApiClientNuxt } from '~/plugins/@hey-api/client-nuxt';
 import type { HeyApiClientOfetchPlugin } from '~/plugins/@hey-api/client-ofetch';
 import { defaultConfig as heyApiClientOfetch } from '~/plugins/@hey-api/client-ofetch';
-import type { HeyApiClientLegacyAngularPlugin } from '~/plugins/@hey-api/legacy-angular';
-import { defaultConfig as heyApiLegacyAngular } from '~/plugins/@hey-api/legacy-angular';
-import type { HeyApiClientLegacyAxiosPlugin } from '~/plugins/@hey-api/legacy-axios';
-import { defaultConfig as heyApiLegacyAxios } from '~/plugins/@hey-api/legacy-axios';
-import type { HeyApiClientLegacyFetchPlugin } from '~/plugins/@hey-api/legacy-fetch';
-import { defaultConfig as heyApiLegacyFetch } from '~/plugins/@hey-api/legacy-fetch';
-import type { HeyApiClientLegacyNodePlugin } from '~/plugins/@hey-api/legacy-node';
-import { defaultConfig as heyApiLegacyNode } from '~/plugins/@hey-api/legacy-node';
-import type { HeyApiClientLegacyXhrPlugin } from '~/plugins/@hey-api/legacy-xhr';
-import { defaultConfig as heyApiLegacyXhr } from '~/plugins/@hey-api/legacy-xhr';
 import type { HeyApiSchemasPlugin } from '~/plugins/@hey-api/schemas';
 import { defaultConfig as heyApiSchemas } from '~/plugins/@hey-api/schemas';
 import type { HeyApiSdkPlugin } from '~/plugins/@hey-api/sdk';
@@ -73,11 +63,6 @@ export interface PluginConfigMap {
   '@tanstack/vue-query': TanStackVueQueryPlugin['Types'];
   arktype: ArktypePlugin['Types'];
   fastify: FastifyPlugin['Types'];
-  'legacy/angular': HeyApiClientLegacyAngularPlugin['Types'];
-  'legacy/axios': HeyApiClientLegacyAxiosPlugin['Types'];
-  'legacy/fetch': HeyApiClientLegacyFetchPlugin['Types'];
-  'legacy/node': HeyApiClientLegacyNodePlugin['Types'];
-  'legacy/xhr': HeyApiClientLegacyXhrPlugin['Types'];
   valibot: ValibotPlugin['Types'];
   zod: ZodPlugin['Types'];
 }
@@ -104,11 +89,6 @@ export const defaultPluginConfigs: {
   '@tanstack/vue-query': tanStackVueQuery,
   arktype,
   fastify,
-  'legacy/angular': heyApiLegacyAngular,
-  'legacy/axios': heyApiLegacyAxios,
-  'legacy/fetch': heyApiLegacyFetch,
-  'legacy/node': heyApiLegacyNode,
-  'legacy/xhr': heyApiLegacyXhr,
   valibot,
   zod,
 };

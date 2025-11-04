@@ -11,7 +11,7 @@ describe('bin', () => {
   it('openapi-ts works', () => {
     const result = sync('openapi-ts', [
       '--input',
-      path.resolve(specs, 'v3.json'),
+      path.resolve(specs, '3.1.x', 'full.yaml'),
       '--output',
       path.resolve(__dirname, '.gen'),
       '--dry-run',

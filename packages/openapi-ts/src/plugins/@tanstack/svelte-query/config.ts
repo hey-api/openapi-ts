@@ -1,5 +1,4 @@
 import { handler } from '~/plugins/@tanstack/query-core/plugin';
-import { handlerLegacy } from '~/plugins/@tanstack/query-core/plugin-legacy';
 import { definePluginConfig } from '~/plugins/shared/utils/config';
 
 import { Api } from './api';
@@ -14,7 +13,6 @@ export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler: handler as TanStackSvelteQueryPlugin['Handler'],
-  handlerLegacy: handlerLegacy as TanStackSvelteQueryPlugin['LegacyHandler'],
   name: '@tanstack/svelte-query',
   output: '@tanstack/svelte-query',
   resolveConfig: (plugin, context) => {

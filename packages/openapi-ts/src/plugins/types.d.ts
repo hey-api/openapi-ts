@@ -1,10 +1,7 @@
 import type { ValueToObject } from '~/config/utils/config';
 import type { Package } from '~/config/utils/package';
-import type { OpenApi as LegacyOpenApi } from '~/openApi';
 import type { Hooks } from '~/parser/types/hooks';
 import type { PluginInstance } from '~/plugins/shared/utils/instance';
-import type { Client as LegacyClient } from '~/types/client';
-import type { Files } from '~/types/utils';
 
 export type PluginClientNames =
   | '@hey-api/client-angular'
@@ -12,12 +9,7 @@ export type PluginClientNames =
   | '@hey-api/client-fetch'
   | '@hey-api/client-next'
   | '@hey-api/client-nuxt'
-  | '@hey-api/client-ofetch'
-  | 'legacy/angular'
-  | 'legacy/axios'
-  | 'legacy/fetch'
-  | 'legacy/node'
-  | 'legacy/xhr';
+  | '@hey-api/client-ofetch';
 
 export type PluginValidatorNames = 'arktype' | 'valibot' | 'zod';
 
@@ -83,7 +75,6 @@ export namespace Plugin {
      */
     dependencies?: ReadonlyArray<AnyPluginName>;
     handler: Handler<T>;
-    handlerLegacy?: LegacyHandler<T>;
     name: T['config']['name'];
     output?: NonNullable<T['config']['output']>;
     /**
@@ -159,16 +150,5 @@ export type DefinePlugin<
     plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
   }) => void;
   Instance: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
-  /**
-   * Plugin implementation for legacy parser.
-   *
-   * @deprecated
-   */
-  LegacyHandler: (args: {
-    client: LegacyClient;
-    files: Files;
-    openApi: LegacyOpenApi;
-    plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
-  }) => void;
   Types: Plugin.Types<Config, ResolvedConfig, Api>;
 };
