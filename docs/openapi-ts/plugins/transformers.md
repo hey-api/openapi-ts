@@ -81,6 +81,24 @@ export default {
 
 This will generate types that use `Date` instead of `string` and appropriate transformers. Note that third-party date packages are not supported at the moment.
 
+## BigInt
+
+The `@hey-api/transformers` plugin will natively type all BigInts as `bigint` instead of `number`, which can affect arithmetic operations if your application previously used `number`. To force BigInts to be numbers, use the `bigint` configuration option.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      bigint: true, // [!code ++]
+      name: '@hey-api/transformers',
+    },
+  ],
+};
+```
+
 ## Example
 
 A generated response transformer might look something like this. Please note the example has been edited for brevity.
