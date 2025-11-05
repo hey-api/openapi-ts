@@ -9,7 +9,7 @@ import type {
 } from '../../client-core/bundle/types';
 import type { Middleware } from './utils';
 
-export type ResponseStyle = 'data' | 'fields';
+export type ResponseStyle = 'data' | 'fields' | 'response';
 
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
