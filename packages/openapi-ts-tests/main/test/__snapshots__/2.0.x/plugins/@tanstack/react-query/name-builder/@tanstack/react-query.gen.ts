@@ -59,7 +59,7 @@ export const getFooE = (options?: Options<GetFooData>) => {
 };
 
 export const fooPostC = (options?: Partial<Options<FooPostData>>): UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> => {
-    const mutationOptions: UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> = {
+    return {
         mutationFn: async (fnOptions) => {
             const { data } = await fooPost({
                 ...options,
@@ -69,11 +69,10 @@ export const fooPostC = (options?: Partial<Options<FooPostData>>): UseMutationOp
             return data;
         }
     };
-    return mutationOptions;
 };
 
 export const fooPutC = (options?: Partial<Options<FooPutData>>): UseMutationOptions<FooPutResponse, DefaultError, Options<FooPutData>> => {
-    const mutationOptions: UseMutationOptions<FooPutResponse, DefaultError, Options<FooPutData>> = {
+    return {
         mutationFn: async (fnOptions) => {
             const { data } = await fooPut({
                 ...options,
@@ -83,7 +82,6 @@ export const fooPutC = (options?: Partial<Options<FooPutData>>): UseMutationOpti
             return data;
         }
     };
-    return mutationOptions;
 };
 
 export const getFooBarD = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
@@ -104,7 +102,7 @@ export const getFooBarE = (options?: Options<GetFooBarData>) => {
 };
 
 export const fooBarPostC = (options?: Partial<Options<FooBarPostData>>): UseMutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> => {
-    const mutationOptions: UseMutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> = {
+    return {
         mutationFn: async (fnOptions) => {
             const { data } = await fooBarPost({
                 ...options,
@@ -114,11 +112,10 @@ export const fooBarPostC = (options?: Partial<Options<FooBarPostData>>): UseMuta
             return data;
         }
     };
-    return mutationOptions;
 };
 
 export const fooBarPutC = (options?: Partial<Options<FooBarPutData>>): UseMutationOptions<FooBarPutResponse, DefaultError, Options<FooBarPutData>> => {
-    const mutationOptions: UseMutationOptions<FooBarPutResponse, DefaultError, Options<FooBarPutData>> = {
+    return {
         mutationFn: async (fnOptions) => {
             const { data } = await fooBarPut({
                 ...options,
@@ -128,5 +125,4 @@ export const fooBarPutC = (options?: Partial<Options<FooBarPutData>>): UseMutati
             return data;
         }
     };
-    return mutationOptions;
 };

@@ -17,7 +17,7 @@ import type {
 } from '../core/types.gen.js';
 import type { Middleware } from './utils.gen.js';
 
-export type ResponseStyle = 'data' | 'fields';
+export type ResponseStyle = 'data' | 'fields' | 'response';
 
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
