@@ -27,7 +27,7 @@ export const createMutationOptions = ({
   const typeError = useTypeError({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
   // TODO: better types syntax
-  const mutationType = `${symbolMutationOptionsType.placeholder}<{data: ${typeResponse}, response: Response, request: Request }, ${typeError}, ${typeData}>`;
+  const mutationType = `${symbolMutationOptionsType.placeholder}<${plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'response' ? `{data: ${typeResponse}, response: Response, request: Request }` : typeResponse}, ${typeError}, ${typeData}>`;
 
   const fnOptions = 'fnOptions';
 
@@ -103,29 +103,6 @@ export const createMutationOptions = ({
     });
   }
 
-  const mutationOptionsFn = 'mutationOptions';
-  const expression = tsc.arrowFunction({
-    parameters: [
-      {
-        isRequired: false,
-        name: 'options',
-        type: `Partial<${typeData}>`,
-      },
-    ],
-    returnType: mutationType,
-    statements: [
-      tsc.constVariable({
-        expression: tsc.objectExpression({
-          obj: mutationOptionsObj,
-        }),
-        name: mutationOptionsFn,
-        typeName: mutationType,
-      }),
-      tsc.returnVariable({
-        expression: mutationOptionsFn,
-      }),
-    ],
-  });
   const symbolMutationOptions = plugin.registerSymbol({
     exported: true,
     name: buildName({
@@ -138,7 +115,23 @@ export const createMutationOptions = ({
       ? createOperationComment({ operation })
       : undefined,
     exportConst: symbolMutationOptions.exported,
-    expression,
+    expression: tsc.arrowFunction({
+      parameters: [
+        {
+          isRequired: false,
+          name: 'options',
+          type: `Partial<${typeData}>`,
+        },
+      ],
+      returnType: mutationType,
+      statements: [
+        tsc.returnStatement({
+          expression: tsc.objectExpression({
+            obj: mutationOptionsObj,
+          }),
+        }),
+      ],
+    }),
     name: symbolMutationOptions.placeholder,
   });
   plugin.setSymbolValue(symbolMutationOptions, statement);
