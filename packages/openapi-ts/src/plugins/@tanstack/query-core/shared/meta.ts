@@ -3,7 +3,7 @@ import type ts from 'typescript';
 import type { IR } from '~/ir/types';
 import { tsc } from '~/tsc';
 
-import type { PluginInstance } from './types';
+import type { PluginInstance } from '../types';
 
 export const handleMeta = (
   plugin: PluginInstance,

@@ -5,9 +5,9 @@ import { buildName } from '~/openApi/shared/utils/name';
 import { createOperationComment } from '~/plugins/shared/utils/operation';
 import { tsc } from '~/tsc';
 
-import { handleMeta } from './meta';
+import { handleMeta } from './shared/meta';
+import { useTypeData, useTypeError, useTypeResponse } from './shared/useType';
 import type { PluginInstance } from './types';
-import { useTypeData, useTypeError, useTypeResponse } from './useType';
 
 export const createMutationOptions = ({
   operation,

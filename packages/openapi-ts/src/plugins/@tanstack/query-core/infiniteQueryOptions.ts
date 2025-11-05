@@ -10,14 +10,14 @@ import {
 import { tsc } from '~/tsc';
 import { tsNodeToString } from '~/tsc/utils';
 
-import { handleMeta } from './meta';
 import {
   createQueryKeyFunction,
   createQueryKeyType,
   queryKeyStatement,
 } from './queryKey';
+import { handleMeta } from './shared/meta';
+import { useTypeData, useTypeError, useTypeResponse } from './shared/useType';
 import type { PluginInstance } from './types';
-import { useTypeData, useTypeError, useTypeResponse } from './useType';
 
 const createInfiniteParamsFunction = ({
   plugin,

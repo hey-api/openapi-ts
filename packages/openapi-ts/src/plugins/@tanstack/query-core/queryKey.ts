@@ -7,8 +7,8 @@ import { buildName } from '~/openApi/shared/utils/name';
 import { getClientBaseUrlKey } from '~/plugins/@hey-api/client-core/utils';
 import { type Property, tsc } from '~/tsc';
 
+import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
-import { useTypeData } from './useType';
 
 const TOptionsType = 'TOptions';
 
