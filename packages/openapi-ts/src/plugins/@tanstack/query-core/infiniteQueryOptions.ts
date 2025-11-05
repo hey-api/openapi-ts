@@ -407,7 +407,7 @@ export const createInfiniteQueryOptions = ({
     }),
   ];
 
-  if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
+  if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data' || plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'response') {
     statements.push(
       tsc.returnVariable({
         expression: awaitSdkExpression,

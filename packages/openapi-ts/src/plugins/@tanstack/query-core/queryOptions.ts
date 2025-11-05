@@ -1,35 +1,35 @@
 import type ts from 'typescript';
 
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
+import type {IR} from '~/ir/types';
+import {buildName} from '~/openApi/shared/utils/name';
 import {
   createOperationComment,
   hasOperationSse,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
-import { tsc } from '~/tsc';
+import {tsc} from '~/tsc';
 
-import { handleMeta } from './meta';
+import {handleMeta} from './meta';
 import {
   createQueryKeyFunction,
   createQueryKeyType,
   queryKeyStatement,
 } from './queryKey';
-import type { PluginInstance } from './types';
-import { useTypeData } from './useType';
+import type {PluginInstance} from './types';
+import {useTypeData} from './useType';
 
 const optionsParamName = 'options';
 
 export const createQueryOptions = ({
-  operation,
-  plugin,
-  queryFn,
-}: {
+                                     operation,
+                                     plugin,
+                                     queryFn,
+                                   }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
   queryFn: string;
 }): void => {
-  if (hasOperationSse({ operation })) {
+  if (hasOperationSse({operation})) {
     return;
   }
 
@@ -45,8 +45,8 @@ export const createQueryOptions = ({
       tool: plugin.name,
     })
   ) {
-    createQueryKeyType({ plugin });
-    createQueryKeyFunction({ plugin });
+    createQueryKeyType({plugin});
+    createQueryKeyFunction({plugin});
   }
 
   const symbolQueryOptions = plugin.referenceSymbol({
@@ -69,7 +69,7 @@ export const createQueryOptions = ({
   });
   plugin.setSymbolValue(symbolQueryKey, node);
 
-  const typeData = useTypeData({ operation, plugin });
+  const typeData = useTypeData({operation, plugin});
 
   const awaitSdkExpression = tsc.awaitExpression({
     expression: tsc.callExpression({
@@ -103,7 +103,7 @@ export const createQueryOptions = ({
 
   const statements: Array<ts.Statement> = [];
 
-  if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
+  if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data' || plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'response') {
     statements.push(
       tsc.returnVariable({
         expression: awaitSdkExpression,
@@ -177,7 +177,7 @@ export const createQueryOptions = ({
   });
   const statement = tsc.constVariable({
     comment: plugin.config.comments
-      ? createOperationComment({ operation })
+      ? createOperationComment({operation})
       : undefined,
     exportConst: symbolQueryOptionsFn.exported,
     expression: tsc.arrowFunction({
@@ -190,7 +190,7 @@ export const createQueryOptions = ({
       ],
       statements: [
         tsc.returnFunctionCall({
-          args: [tsc.objectExpression({ obj: queryOptionsObj })],
+          args: [tsc.objectExpression({obj: queryOptionsObj})],
           name: symbolQueryOptions.placeholder,
         }),
       ],
