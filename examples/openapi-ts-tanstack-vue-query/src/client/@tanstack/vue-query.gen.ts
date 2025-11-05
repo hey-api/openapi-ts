@@ -61,8 +61,16 @@ import type {
  */
 export const addPetMutation = (
   options?: Partial<Options<AddPetData>>
-): UseMutationOptions<AddPetResponse, DefaultError, Options<AddPetData>> => {
-  const mutationOptions: UseMutationOptions<AddPetResponse, DefaultError, Options<AddPetData>> = {
+): UseMutationOptions<
+  { data: AddPetResponse; request: Request; response: Response },
+  DefaultError,
+  Options<AddPetData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    { data: AddPetResponse; request: Request; response: Response },
+    DefaultError,
+    Options<AddPetData>
+  > = {
     mutationFn: async (fnOptions) => {
       const { data } = await addPet({
         ...options,
@@ -82,9 +90,13 @@ export const addPetMutation = (
  */
 export const updatePetMutation = (
   options?: Partial<Options<UpdatePetData>>
-): UseMutationOptions<UpdatePetResponse, DefaultError, Options<UpdatePetData>> => {
+): UseMutationOptions<
+  { data: UpdatePetResponse; request: Request; response: Response },
+  DefaultError,
+  Options<UpdatePetData>
+> => {
   const mutationOptions: UseMutationOptions<
-    UpdatePetResponse,
+    { data: UpdatePetResponse; request: Request; response: Response },
     DefaultError,
     Options<UpdatePetData>
   > = {
@@ -190,8 +202,16 @@ export const findPetsByTagsOptions = (options: Options<FindPetsByTagsData>) =>
  */
 export const deletePetMutation = (
   options?: Partial<Options<DeletePetData>>
-): UseMutationOptions<unknown, DefaultError, Options<DeletePetData>> => {
-  const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<DeletePetData>> = {
+): UseMutationOptions<
+  { data: unknown; request: Request; response: Response },
+  DefaultError,
+  Options<DeletePetData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    { data: unknown; request: Request; response: Response },
+    DefaultError,
+    Options<DeletePetData>
+  > = {
     mutationFn: async (fnOptions) => {
       const { data } = await deletePet({
         ...options,
@@ -233,9 +253,13 @@ export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
  */
 export const updatePetWithFormMutation = (
   options?: Partial<Options<UpdatePetWithFormData>>
-): UseMutationOptions<UpdatePetWithFormResponse, DefaultError, Options<UpdatePetWithFormData>> => {
+): UseMutationOptions<
+  { data: UpdatePetWithFormResponse; request: Request; response: Response },
+  DefaultError,
+  Options<UpdatePetWithFormData>
+> => {
   const mutationOptions: UseMutationOptions<
-    UpdatePetWithFormResponse,
+    { data: UpdatePetWithFormResponse; request: Request; response: Response },
     DefaultError,
     Options<UpdatePetWithFormData>
   > = {
@@ -258,9 +282,13 @@ export const updatePetWithFormMutation = (
  */
 export const uploadFileMutation = (
   options?: Partial<Options<UploadFileData>>
-): UseMutationOptions<UploadFileResponse, DefaultError, Options<UploadFileData>> => {
+): UseMutationOptions<
+  { data: UploadFileResponse; request: Request; response: Response },
+  DefaultError,
+  Options<UploadFileData>
+> => {
   const mutationOptions: UseMutationOptions<
-    UploadFileResponse,
+    { data: UploadFileResponse; request: Request; response: Response },
     DefaultError,
     Options<UploadFileData>
   > = {
@@ -305,9 +333,13 @@ export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
  */
 export const placeOrderMutation = (
   options?: Partial<Options<PlaceOrderData>>
-): UseMutationOptions<PlaceOrderResponse, DefaultError, Options<PlaceOrderData>> => {
+): UseMutationOptions<
+  { data: PlaceOrderResponse; request: Request; response: Response },
+  DefaultError,
+  Options<PlaceOrderData>
+> => {
   const mutationOptions: UseMutationOptions<
-    PlaceOrderResponse,
+    { data: PlaceOrderResponse; request: Request; response: Response },
     DefaultError,
     Options<PlaceOrderData>
   > = {
@@ -330,8 +362,16 @@ export const placeOrderMutation = (
  */
 export const deleteOrderMutation = (
   options?: Partial<Options<DeleteOrderData>>
-): UseMutationOptions<unknown, DefaultError, Options<DeleteOrderData>> => {
-  const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<DeleteOrderData>> = {
+): UseMutationOptions<
+  { data: unknown; request: Request; response: Response },
+  DefaultError,
+  Options<DeleteOrderData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    { data: unknown; request: Request; response: Response },
+    DefaultError,
+    Options<DeleteOrderData>
+  > = {
     mutationFn: async (fnOptions) => {
       const { data } = await deleteOrder({
         ...options,
@@ -373,9 +413,13 @@ export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
  */
 export const createUserMutation = (
   options?: Partial<Options<CreateUserData>>
-): UseMutationOptions<CreateUserResponse, DefaultError, Options<CreateUserData>> => {
+): UseMutationOptions<
+  { data: CreateUserResponse; request: Request; response: Response },
+  DefaultError,
+  Options<CreateUserData>
+> => {
   const mutationOptions: UseMutationOptions<
-    CreateUserResponse,
+    { data: CreateUserResponse; request: Request; response: Response },
     DefaultError,
     Options<CreateUserData>
   > = {
@@ -399,12 +443,12 @@ export const createUserMutation = (
 export const createUsersWithListInputMutation = (
   options?: Partial<Options<CreateUsersWithListInputData>>
 ): UseMutationOptions<
-  CreateUsersWithListInputResponse,
+  { data: CreateUsersWithListInputResponse; request: Request; response: Response },
   DefaultError,
   Options<CreateUsersWithListInputData>
 > => {
   const mutationOptions: UseMutationOptions<
-    CreateUsersWithListInputResponse,
+    { data: CreateUsersWithListInputResponse; request: Request; response: Response },
     DefaultError,
     Options<CreateUsersWithListInputData>
   > = {
@@ -471,8 +515,16 @@ export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
  */
 export const deleteUserMutation = (
   options?: Partial<Options<DeleteUserData>>
-): UseMutationOptions<unknown, DefaultError, Options<DeleteUserData>> => {
-  const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<DeleteUserData>> = {
+): UseMutationOptions<
+  { data: unknown; request: Request; response: Response },
+  DefaultError,
+  Options<DeleteUserData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    { data: unknown; request: Request; response: Response },
+    DefaultError,
+    Options<DeleteUserData>
+  > = {
     mutationFn: async (fnOptions) => {
       const { data } = await deleteUser({
         ...options,
@@ -514,8 +566,16 @@ export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
  */
 export const updateUserMutation = (
   options?: Partial<Options<UpdateUserData>>
-): UseMutationOptions<unknown, DefaultError, Options<UpdateUserData>> => {
-  const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<UpdateUserData>> = {
+): UseMutationOptions<
+  { data: unknown; request: Request; response: Response },
+  DefaultError,
+  Options<UpdateUserData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    { data: unknown; request: Request; response: Response },
+    DefaultError,
+    Options<UpdateUserData>
+  > = {
     mutationFn: async (fnOptions) => {
       const { data } = await updateUser({
         ...options,

@@ -65,9 +65,13 @@ import type {
  */
 export const addPetMutation = (
   options?: Partial<Options<AddPetData>>,
-): MutationOptions<AddPetResponse, DefaultError, Options<AddPetData>> => {
+): MutationOptions<
+  { data: AddPetResponse; request: Request; response: Response },
+  DefaultError,
+  Options<AddPetData>
+> => {
   const mutationOptions: MutationOptions<
-    AddPetResponse,
+    { data: AddPetResponse; request: Request; response: Response },
     DefaultError,
     Options<AddPetData>
   > = {
@@ -90,9 +94,13 @@ export const addPetMutation = (
  */
 export const updatePetMutation = (
   options?: Partial<Options<UpdatePetData>>,
-): MutationOptions<UpdatePetResponse, DefaultError, Options<UpdatePetData>> => {
+): MutationOptions<
+  { data: UpdatePetResponse; request: Request; response: Response },
+  DefaultError,
+  Options<UpdatePetData>
+> => {
   const mutationOptions: MutationOptions<
-    UpdatePetResponse,
+    { data: UpdatePetResponse; request: Request; response: Response },
     DefaultError,
     Options<UpdatePetData>
   > = {
@@ -202,9 +210,13 @@ export const findPetsByTagsOptions = (options: Options<FindPetsByTagsData>) =>
  */
 export const deletePetMutation = (
   options?: Partial<Options<DeletePetData>>,
-): MutationOptions<unknown, DefaultError, Options<DeletePetData>> => {
+): MutationOptions<
+  { data: unknown; request: Request; response: Response },
+  DefaultError,
+  Options<DeletePetData>
+> => {
   const mutationOptions: MutationOptions<
-    unknown,
+    { data: unknown; request: Request; response: Response },
     DefaultError,
     Options<DeletePetData>
   > = {
@@ -250,12 +262,12 @@ export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
 export const updatePetWithFormMutation = (
   options?: Partial<Options<UpdatePetWithFormData>>,
 ): MutationOptions<
-  UpdatePetWithFormResponse,
+  { data: UpdatePetWithFormResponse; request: Request; response: Response },
   DefaultError,
   Options<UpdatePetWithFormData>
 > => {
   const mutationOptions: MutationOptions<
-    UpdatePetWithFormResponse,
+    { data: UpdatePetWithFormResponse; request: Request; response: Response },
     DefaultError,
     Options<UpdatePetWithFormData>
   > = {
@@ -279,12 +291,12 @@ export const updatePetWithFormMutation = (
 export const uploadFileMutation = (
   options?: Partial<Options<UploadFileData>>,
 ): MutationOptions<
-  UploadFileResponse,
+  { data: UploadFileResponse; request: Request; response: Response },
   DefaultError,
   Options<UploadFileData>
 > => {
   const mutationOptions: MutationOptions<
-    UploadFileResponse,
+    { data: UploadFileResponse; request: Request; response: Response },
     DefaultError,
     Options<UploadFileData>
   > = {
@@ -330,12 +342,12 @@ export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
 export const placeOrderMutation = (
   options?: Partial<Options<PlaceOrderData>>,
 ): MutationOptions<
-  PlaceOrderResponse,
+  { data: PlaceOrderResponse; request: Request; response: Response },
   DefaultError,
   Options<PlaceOrderData>
 > => {
   const mutationOptions: MutationOptions<
-    PlaceOrderResponse,
+    { data: PlaceOrderResponse; request: Request; response: Response },
     DefaultError,
     Options<PlaceOrderData>
   > = {
@@ -358,9 +370,13 @@ export const placeOrderMutation = (
  */
 export const deleteOrderMutation = (
   options?: Partial<Options<DeleteOrderData>>,
-): MutationOptions<unknown, DefaultError, Options<DeleteOrderData>> => {
+): MutationOptions<
+  { data: unknown; request: Request; response: Response },
+  DefaultError,
+  Options<DeleteOrderData>
+> => {
   const mutationOptions: MutationOptions<
-    unknown,
+    { data: unknown; request: Request; response: Response },
     DefaultError,
     Options<DeleteOrderData>
   > = {
@@ -406,12 +422,12 @@ export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
 export const createUserMutation = (
   options?: Partial<Options<CreateUserData>>,
 ): MutationOptions<
-  CreateUserResponse,
+  { data: CreateUserResponse; request: Request; response: Response },
   DefaultError,
   Options<CreateUserData>
 > => {
   const mutationOptions: MutationOptions<
-    CreateUserResponse,
+    { data: CreateUserResponse; request: Request; response: Response },
     DefaultError,
     Options<CreateUserData>
   > = {
@@ -435,12 +451,20 @@ export const createUserMutation = (
 export const createUsersWithListInputMutation = (
   options?: Partial<Options<CreateUsersWithListInputData>>,
 ): MutationOptions<
-  CreateUsersWithListInputResponse,
+  {
+    data: CreateUsersWithListInputResponse;
+    request: Request;
+    response: Response;
+  },
   DefaultError,
   Options<CreateUsersWithListInputData>
 > => {
   const mutationOptions: MutationOptions<
-    CreateUsersWithListInputResponse,
+    {
+      data: CreateUsersWithListInputResponse;
+      request: Request;
+      response: Response;
+    },
     DefaultError,
     Options<CreateUsersWithListInputData>
   > = {
@@ -507,9 +531,13 @@ export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
  */
 export const deleteUserMutation = (
   options?: Partial<Options<DeleteUserData>>,
-): MutationOptions<unknown, DefaultError, Options<DeleteUserData>> => {
+): MutationOptions<
+  { data: unknown; request: Request; response: Response },
+  DefaultError,
+  Options<DeleteUserData>
+> => {
   const mutationOptions: MutationOptions<
-    unknown,
+    { data: unknown; request: Request; response: Response },
     DefaultError,
     Options<DeleteUserData>
   > = {
@@ -554,9 +582,13 @@ export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
  */
 export const updateUserMutation = (
   options?: Partial<Options<UpdateUserData>>,
-): MutationOptions<unknown, DefaultError, Options<UpdateUserData>> => {
+): MutationOptions<
+  { data: unknown; request: Request; response: Response },
+  DefaultError,
+  Options<UpdateUserData>
+> => {
   const mutationOptions: MutationOptions<
-    unknown,
+    { data: unknown; request: Request; response: Response },
     DefaultError,
     Options<UpdateUserData>
   > = {

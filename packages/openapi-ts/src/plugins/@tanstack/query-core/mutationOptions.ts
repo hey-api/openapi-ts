@@ -27,7 +27,7 @@ export const createMutationOptions = ({
   const typeError = useTypeError({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
   // TODO: better types syntax
-  const mutationType = `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${typeError}, ${typeData}>`;
+  const mutationType = `${symbolMutationOptionsType.placeholder}<{data: ${typeResponse}, response: Response, request: Request }, ${typeError}, ${typeData}>`;
 
   const fnOptions = 'fnOptions';
 
