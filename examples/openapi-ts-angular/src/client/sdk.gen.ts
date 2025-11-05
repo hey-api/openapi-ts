@@ -81,9 +81,7 @@ export type Options<
   meta?: Record<string, unknown>;
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PetService {
   /**
    * Add a new pet to the store.
@@ -295,9 +293,7 @@ export class PetService {
   }
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class StoreService {
   /**
    * Returns pet inventories by status.
@@ -382,9 +378,7 @@ export class StoreService {
   }
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class UserService {
   /**
    * Create user.

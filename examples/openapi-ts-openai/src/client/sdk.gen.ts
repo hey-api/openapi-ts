@@ -365,17 +365,42 @@ export type Options<
   meta?: Record<string, unknown>;
 };
 
-class _HeyApiClient {
-  protected _client: Client = client;
+class HeyApiClient {
+  protected client: Client;
 
   constructor(args?: { client?: Client }) {
-    if (args?.client) {
-      this._client = args.client;
-    }
+    this.client = args?.client ?? client;
   }
 }
 
-export class OpenAi extends _HeyApiClient {
+class HeyApiRegistry<T> {
+  private readonly defaultKey = 'default';
+
+  private readonly instances: Map<string, T> = new Map();
+
+  get(key?: string): T {
+    const instance = this.instances.get(key ?? this.defaultKey);
+    if (!instance) {
+      throw new Error(
+        `No SDK client found. Create one with "new OpenAi()" to fix this error.`,
+      );
+    }
+    return instance;
+  }
+
+  set(value: T, key?: string): void {
+    this.instances.set(key ?? this.defaultKey, value);
+  }
+}
+
+export class OpenAi extends HeyApiClient {
+  public static readonly __registry = new HeyApiRegistry<OpenAi>();
+
+  constructor(args?: { client?: Client; key?: string }) {
+    super(args);
+    OpenAi.__registry.set(this, args?.key);
+  }
+
   /**
    * List assistants
    *
@@ -384,7 +409,7 @@ export class OpenAi extends _HeyApiClient {
   public listAssistants<ThrowOnError extends boolean = false>(
     options?: Options<ListAssistantsData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListAssistantsResponses,
       unknown,
       ThrowOnError
@@ -408,7 +433,7 @@ export class OpenAi extends _HeyApiClient {
   public createAssistant<ThrowOnError extends boolean = false>(
     options: Options<CreateAssistantData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateAssistantResponses,
       unknown,
       ThrowOnError
@@ -436,7 +461,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteAssistant<ThrowOnError extends boolean = false>(
     options: Options<DeleteAssistantData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteAssistantResponses,
       unknown,
       ThrowOnError
@@ -460,7 +485,7 @@ export class OpenAi extends _HeyApiClient {
   public getAssistant<ThrowOnError extends boolean = false>(
     options: Options<GetAssistantData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetAssistantResponses,
       unknown,
       ThrowOnError
@@ -484,7 +509,7 @@ export class OpenAi extends _HeyApiClient {
   public modifyAssistant<ThrowOnError extends boolean = false>(
     options: Options<ModifyAssistantData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ModifyAssistantResponses,
       unknown,
       ThrowOnError
@@ -512,7 +537,7 @@ export class OpenAi extends _HeyApiClient {
   public createSpeech<ThrowOnError extends boolean = false>(
     options: Options<CreateSpeechData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateSpeechResponses,
       unknown,
       ThrowOnError
@@ -540,7 +565,7 @@ export class OpenAi extends _HeyApiClient {
   public createTranscription<ThrowOnError extends boolean = false>(
     options: Options<CreateTranscriptionData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateTranscriptionResponses,
       unknown,
       ThrowOnError
@@ -569,7 +594,7 @@ export class OpenAi extends _HeyApiClient {
   public createTranslation<ThrowOnError extends boolean = false>(
     options: Options<CreateTranslationData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateTranslationResponses,
       unknown,
       ThrowOnError
@@ -598,7 +623,7 @@ export class OpenAi extends _HeyApiClient {
   public listBatches<ThrowOnError extends boolean = false>(
     options?: Options<ListBatchesData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListBatchesResponses,
       unknown,
       ThrowOnError
@@ -622,7 +647,7 @@ export class OpenAi extends _HeyApiClient {
   public createBatch<ThrowOnError extends boolean = false>(
     options: Options<CreateBatchData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateBatchResponses,
       unknown,
       ThrowOnError
@@ -650,7 +675,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveBatch<ThrowOnError extends boolean = false>(
     options: Options<RetrieveBatchData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveBatchResponses,
       unknown,
       ThrowOnError
@@ -674,7 +699,7 @@ export class OpenAi extends _HeyApiClient {
   public cancelBatch<ThrowOnError extends boolean = false>(
     options: Options<CancelBatchData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CancelBatchResponses,
       unknown,
       ThrowOnError
@@ -691,16 +716,16 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * List Chat Completions
-   *
-   * List stored Chat Completions. Only Chat Completions that have been stored
-   * with the `store` parameter set to `true` will be returned.
-   *
-   */
+     * List Chat Completions
+     *
+     * List stored Chat Completions. Only Chat Completions that have been stored
+    with the `store` parameter set to `true` will be returned.
+    
+     */
   public listChatCompletions<ThrowOnError extends boolean = false>(
     options?: Options<ListChatCompletionsData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListChatCompletionsResponses,
       unknown,
       ThrowOnError
@@ -717,29 +742,29 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Create chat completion
-   *
-   * **Starting a new project?** We recommend trying [Responses](https://platform.openai.com/docs/api-reference/responses)
-   * to take advantage of the latest OpenAI platform features. Compare
-   * [Chat Completions with Responses](https://platform.openai.com/docs/guides/responses-vs-chat-completions?api-mode=responses).
-   *
-   * ---
-   *
-   * Creates a model response for the given chat conversation. Learn more in the
-   * [text generation](https://platform.openai.com/docs/guides/text-generation), [vision](https://platform.openai.com/docs/guides/vision),
-   * and [audio](https://platform.openai.com/docs/guides/audio) guides.
-   *
-   * Parameter support can differ depending on the model used to generate the
-   * response, particularly for newer reasoning models. Parameters that are only
-   * supported for reasoning models are noted below. For the current state of
-   * unsupported parameters in reasoning models,
-   * [refer to the reasoning guide](https://platform.openai.com/docs/guides/reasoning).
-   *
-   */
+     * Create chat completion
+     *
+     * **Starting a new project?** We recommend trying [Responses](https://platform.openai.com/docs/api-reference/responses)
+    to take advantage of the latest OpenAI platform features. Compare
+    [Chat Completions with Responses](https://platform.openai.com/docs/guides/responses-vs-chat-completions?api-mode=responses).
+    
+    ---
+    
+    Creates a model response for the given chat conversation. Learn more in the
+    [text generation](https://platform.openai.com/docs/guides/text-generation), [vision](https://platform.openai.com/docs/guides/vision),
+    and [audio](https://platform.openai.com/docs/guides/audio) guides.
+    
+    Parameter support can differ depending on the model used to generate the
+    response, particularly for newer reasoning models. Parameters that are only
+    supported for reasoning models are noted below. For the current state of
+    unsupported parameters in reasoning models,
+    [refer to the reasoning guide](https://platform.openai.com/docs/guides/reasoning).
+    
+     */
   public createChatCompletion<ThrowOnError extends boolean = false>(
     options: Options<CreateChatCompletionData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateChatCompletionResponses,
       unknown,
       ThrowOnError
@@ -760,16 +785,16 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Delete chat completion
-   *
-   * Delete a stored chat completion. Only Chat Completions that have been
-   * created with the `store` parameter set to `true` can be deleted.
-   *
-   */
+     * Delete chat completion
+     *
+     * Delete a stored chat completion. Only Chat Completions that have been
+    created with the `store` parameter set to `true` can be deleted.
+    
+     */
   public deleteChatCompletion<ThrowOnError extends boolean = false>(
     options: Options<DeleteChatCompletionData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteChatCompletionResponses,
       unknown,
       ThrowOnError
@@ -786,16 +811,16 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Get chat completion
-   *
-   * Get a stored chat completion. Only Chat Completions that have been created
-   * with the `store` parameter set to `true` will be returned.
-   *
-   */
+     * Get chat completion
+     *
+     * Get a stored chat completion. Only Chat Completions that have been created
+    with the `store` parameter set to `true` will be returned.
+    
+     */
   public getChatCompletion<ThrowOnError extends boolean = false>(
     options: Options<GetChatCompletionData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetChatCompletionResponses,
       unknown,
       ThrowOnError
@@ -812,17 +837,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Update chat completion
-   *
-   * Modify a stored chat completion. Only Chat Completions that have been
-   * created with the `store` parameter set to `true` can be modified. Currently,
-   * the only supported modification is to update the `metadata` field.
-   *
-   */
+     * Update chat completion
+     *
+     * Modify a stored chat completion. Only Chat Completions that have been
+    created with the `store` parameter set to `true` can be modified. Currently,
+    the only supported modification is to update the `metadata` field.
+    
+     */
   public updateChatCompletion<ThrowOnError extends boolean = false>(
     options: Options<UpdateChatCompletionData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       UpdateChatCompletionResponses,
       unknown,
       ThrowOnError
@@ -843,17 +868,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Get chat messages
-   *
-   * Get the messages in a stored chat completion. Only Chat Completions that
-   * have been created with the `store` parameter set to `true` will be
-   * returned.
-   *
-   */
+     * Get chat messages
+     *
+     * Get the messages in a stored chat completion. Only Chat Completions that
+    have been created with the `store` parameter set to `true` will be
+    returned.
+    
+     */
   public getChatCompletionMessages<ThrowOnError extends boolean = false>(
     options: Options<GetChatCompletionMessagesData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetChatCompletionMessagesResponses,
       unknown,
       ThrowOnError
@@ -877,7 +902,7 @@ export class OpenAi extends _HeyApiClient {
   public createCompletion<ThrowOnError extends boolean = false>(
     options: Options<CreateCompletionData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateCompletionResponses,
       unknown,
       ThrowOnError
@@ -905,7 +930,7 @@ export class OpenAi extends _HeyApiClient {
   public listContainers<ThrowOnError extends boolean = false>(
     options?: Options<ListContainersData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListContainersResponses,
       unknown,
       ThrowOnError
@@ -929,7 +954,7 @@ export class OpenAi extends _HeyApiClient {
   public createContainer<ThrowOnError extends boolean = false>(
     options?: Options<CreateContainerData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).post<
+    return (options?.client ?? this.client).post<
       CreateContainerResponses,
       unknown,
       ThrowOnError
@@ -957,7 +982,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteContainer<ThrowOnError extends boolean = false>(
     options: Options<DeleteContainerData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteContainerResponses,
       unknown,
       ThrowOnError
@@ -981,7 +1006,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveContainer<ThrowOnError extends boolean = false>(
     options: Options<RetrieveContainerData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveContainerResponses,
       unknown,
       ThrowOnError
@@ -1005,7 +1030,7 @@ export class OpenAi extends _HeyApiClient {
   public listContainerFiles<ThrowOnError extends boolean = false>(
     options: Options<ListContainerFilesData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListContainerFilesResponses,
       unknown,
       ThrowOnError
@@ -1022,17 +1047,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Create container file
-   *
-   * Create a Container File
-   *
-   * You can send either a multipart/form-data request with the raw file content, or a JSON request with a file ID.
-   *
-   */
+     * Create container file
+     *
+     * Create a Container File
+    
+    You can send either a multipart/form-data request with the raw file content, or a JSON request with a file ID.
+    
+     */
   public createContainerFile<ThrowOnError extends boolean = false>(
     options: Options<CreateContainerFileData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateContainerFileResponses,
       unknown,
       ThrowOnError
@@ -1061,7 +1086,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteContainerFile<ThrowOnError extends boolean = false>(
     options: Options<DeleteContainerFileData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteContainerFileResponses,
       unknown,
       ThrowOnError
@@ -1085,7 +1110,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveContainerFile<ThrowOnError extends boolean = false>(
     options: Options<RetrieveContainerFileData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveContainerFileResponses,
       unknown,
       ThrowOnError
@@ -1109,7 +1134,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveContainerFileContent<ThrowOnError extends boolean = false>(
     options: Options<RetrieveContainerFileContentData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveContainerFileContentResponses,
       unknown,
       ThrowOnError
@@ -1133,7 +1158,7 @@ export class OpenAi extends _HeyApiClient {
   public createEmbedding<ThrowOnError extends boolean = false>(
     options: Options<CreateEmbeddingData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateEmbeddingResponses,
       unknown,
       ThrowOnError
@@ -1154,15 +1179,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * List evals
-   *
-   * List evaluations for a project.
-   *
-   */
+     * List evals
+     *
+     * List evaluations for a project.
+    
+     */
   public listEvals<ThrowOnError extends boolean = false>(
     options?: Options<ListEvalsData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListEvalsResponses,
       unknown,
       ThrowOnError
@@ -1179,17 +1204,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Create eval
-   *
-   * Create the structure of an evaluation that can be used to test a model's performance.
-   * An evaluation is a set of testing criteria and the config for a data source, which dictates the schema of the data used in the evaluation. After creating an evaluation, you can run it on different models and model parameters. We support several types of graders and datasources.
-   * For more information, see the [Evals guide](https://platform.openai.com/docs/guides/evals).
-   *
-   */
+     * Create eval
+     *
+     * Create the structure of an evaluation that can be used to test a model's performance.
+    An evaluation is a set of testing criteria and the config for a data source, which dictates the schema of the data used in the evaluation. After creating an evaluation, you can run it on different models and model parameters. We support several types of graders and datasources.
+    For more information, see the [Evals guide](https://platform.openai.com/docs/guides/evals).
+    
+     */
   public createEval<ThrowOnError extends boolean = false>(
     options: Options<CreateEvalData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateEvalResponses,
       unknown,
       ThrowOnError
@@ -1210,15 +1235,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Delete an eval
-   *
-   * Delete an evaluation.
-   *
-   */
+     * Delete an eval
+     *
+     * Delete an evaluation.
+    
+     */
   public deleteEval<ThrowOnError extends boolean = false>(
     options: Options<DeleteEvalData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteEvalResponses,
       DeleteEvalErrors,
       ThrowOnError
@@ -1235,15 +1260,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Get an eval
-   *
-   * Get an evaluation by ID.
-   *
-   */
+     * Get an eval
+     *
+     * Get an evaluation by ID.
+    
+     */
   public getEval<ThrowOnError extends boolean = false>(
     options: Options<GetEvalData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetEvalResponses,
       unknown,
       ThrowOnError
@@ -1260,15 +1285,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Update an eval
-   *
-   * Update certain properties of an evaluation.
-   *
-   */
+     * Update an eval
+     *
+     * Update certain properties of an evaluation.
+    
+     */
   public updateEval<ThrowOnError extends boolean = false>(
     options: Options<UpdateEvalData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       UpdateEvalResponses,
       unknown,
       ThrowOnError
@@ -1289,15 +1314,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Get eval runs
-   *
-   * Get a list of runs for an evaluation.
-   *
-   */
+     * Get eval runs
+     *
+     * Get a list of runs for an evaluation.
+    
+     */
   public getEvalRuns<ThrowOnError extends boolean = false>(
     options: Options<GetEvalRunsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetEvalRunsResponses,
       unknown,
       ThrowOnError
@@ -1314,15 +1339,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Create eval run
-   *
-   * Kicks off a new run for a given evaluation, specifying the data source, and what model configuration to use to test. The datasource will be validated against the schema specified in the config of the evaluation.
-   *
-   */
+     * Create eval run
+     *
+     * Kicks off a new run for a given evaluation, specifying the data source, and what model configuration to use to test. The datasource will be validated against the schema specified in the config of the evaluation.
+    
+     */
   public createEvalRun<ThrowOnError extends boolean = false>(
     options: Options<CreateEvalRunData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateEvalRunResponses,
       CreateEvalRunErrors,
       ThrowOnError
@@ -1343,15 +1368,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Delete eval run
-   *
-   * Delete an eval run.
-   *
-   */
+     * Delete eval run
+     *
+     * Delete an eval run.
+    
+     */
   public deleteEvalRun<ThrowOnError extends boolean = false>(
     options: Options<DeleteEvalRunData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteEvalRunResponses,
       DeleteEvalRunErrors,
       ThrowOnError
@@ -1368,15 +1393,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Get an eval run
-   *
-   * Get an evaluation run by ID.
-   *
-   */
+     * Get an eval run
+     *
+     * Get an evaluation run by ID.
+    
+     */
   public getEvalRun<ThrowOnError extends boolean = false>(
     options: Options<GetEvalRunData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetEvalRunResponses,
       unknown,
       ThrowOnError
@@ -1393,15 +1418,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Cancel eval run
-   *
-   * Cancel an ongoing evaluation run.
-   *
-   */
+     * Cancel eval run
+     *
+     * Cancel an ongoing evaluation run.
+    
+     */
   public cancelEvalRun<ThrowOnError extends boolean = false>(
     options: Options<CancelEvalRunData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CancelEvalRunResponses,
       unknown,
       ThrowOnError
@@ -1418,15 +1443,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Get eval run output items
-   *
-   * Get a list of output items for an evaluation run.
-   *
-   */
+     * Get eval run output items
+     *
+     * Get a list of output items for an evaluation run.
+    
+     */
   public getEvalRunOutputItems<ThrowOnError extends boolean = false>(
     options: Options<GetEvalRunOutputItemsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetEvalRunOutputItemsResponses,
       unknown,
       ThrowOnError
@@ -1443,15 +1468,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Get an output item of an eval run
-   *
-   * Get an evaluation run output item by ID.
-   *
-   */
+     * Get an output item of an eval run
+     *
+     * Get an evaluation run output item by ID.
+    
+     */
   public getEvalRunOutputItem<ThrowOnError extends boolean = false>(
     options: Options<GetEvalRunOutputItemData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetEvalRunOutputItemResponses,
       unknown,
       ThrowOnError
@@ -1475,7 +1500,7 @@ export class OpenAi extends _HeyApiClient {
   public listFiles<ThrowOnError extends boolean = false>(
     options?: Options<ListFilesData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListFilesResponses,
       unknown,
       ThrowOnError
@@ -1492,23 +1517,23 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Upload file
-   *
-   * Upload a file that can be used across various endpoints. Individual files can be up to 512 MB, and the size of all files uploaded by one organization can be up to 1 TB.
-   *
-   * The Assistants API supports files up to 2 million tokens and of specific file types. See the [Assistants Tools guide](https://platform.openai.com/docs/assistants/tools) for details.
-   *
-   * The Fine-tuning API only supports `.jsonl` files. The input also has certain required formats for fine-tuning [chat](https://platform.openai.com/docs/api-reference/fine-tuning/chat-input) or [completions](https://platform.openai.com/docs/api-reference/fine-tuning/completions-input) models.
-   *
-   * The Batch API only supports `.jsonl` files up to 200 MB in size. The input also has a specific required [format](https://platform.openai.com/docs/api-reference/batch/request-input).
-   *
-   * Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
-   *
-   */
+     * Upload file
+     *
+     * Upload a file that can be used across various endpoints. Individual files can be up to 512 MB, and the size of all files uploaded by one organization can be up to 1 TB.
+    
+    The Assistants API supports files up to 2 million tokens and of specific file types. See the [Assistants Tools guide](https://platform.openai.com/docs/assistants/tools) for details.
+    
+    The Fine-tuning API only supports `.jsonl` files. The input also has certain required formats for fine-tuning [chat](https://platform.openai.com/docs/api-reference/fine-tuning/chat-input) or [completions](https://platform.openai.com/docs/api-reference/fine-tuning/completions-input) models.
+    
+    The Batch API only supports `.jsonl` files up to 200 MB in size. The input also has a specific required [format](https://platform.openai.com/docs/api-reference/batch/request-input).
+    
+    Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
+    
+     */
   public createFile<ThrowOnError extends boolean = false>(
     options: Options<CreateFileData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateFileResponses,
       unknown,
       ThrowOnError
@@ -1537,7 +1562,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteFile<ThrowOnError extends boolean = false>(
     options: Options<DeleteFileData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteFileResponses,
       unknown,
       ThrowOnError
@@ -1561,7 +1586,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveFile<ThrowOnError extends boolean = false>(
     options: Options<RetrieveFileData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveFileResponses,
       unknown,
       ThrowOnError
@@ -1585,7 +1610,7 @@ export class OpenAi extends _HeyApiClient {
   public downloadFile<ThrowOnError extends boolean = false>(
     options: Options<DownloadFileData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       DownloadFileResponses,
       unknown,
       ThrowOnError
@@ -1602,15 +1627,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Run grader
-   *
-   * Run a grader.
-   *
-   */
+     * Run grader
+     *
+     * Run a grader.
+    
+     */
   public runGrader<ThrowOnError extends boolean = false>(
     options: Options<RunGraderData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       RunGraderResponses,
       unknown,
       ThrowOnError
@@ -1631,15 +1656,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Validate grader
-   *
-   * Validate a grader.
-   *
-   */
+     * Validate grader
+     *
+     * Validate a grader.
+    
+     */
   public validateGrader<ThrowOnError extends boolean = false>(
     options: Options<ValidateGraderData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ValidateGraderResponses,
       unknown,
       ThrowOnError
@@ -1660,17 +1685,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * List checkpoint permissions
-   *
-   * **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
-   *
-   * Organization owners can use this endpoint to view all permissions for a fine-tuned model checkpoint.
-   *
-   */
+     * List checkpoint permissions
+     *
+     * **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
+    
+    Organization owners can use this endpoint to view all permissions for a fine-tuned model checkpoint.
+    
+     */
   public listFineTuningCheckpointPermissions<
     ThrowOnError extends boolean = false,
   >(options: Options<ListFineTuningCheckpointPermissionsData, ThrowOnError>) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListFineTuningCheckpointPermissionsResponses,
       unknown,
       ThrowOnError
@@ -1687,17 +1712,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Create checkpoint permissions
-   *
-   * **NOTE:** Calling this endpoint requires an [admin API key](../admin-api-keys).
-   *
-   * This enables organization owners to share fine-tuned models with other projects in their organization.
-   *
-   */
+     * Create checkpoint permissions
+     *
+     * **NOTE:** Calling this endpoint requires an [admin API key](../admin-api-keys).
+    
+    This enables organization owners to share fine-tuned models with other projects in their organization.
+    
+     */
   public createFineTuningCheckpointPermission<
     ThrowOnError extends boolean = false,
   >(options: Options<CreateFineTuningCheckpointPermissionData, ThrowOnError>) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateFineTuningCheckpointPermissionResponses,
       unknown,
       ThrowOnError
@@ -1718,17 +1743,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Delete checkpoint permission
-   *
-   * **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
-   *
-   * Organization owners can use this endpoint to delete a permission for a fine-tuned model checkpoint.
-   *
-   */
+     * Delete checkpoint permission
+     *
+     * **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
+    
+    Organization owners can use this endpoint to delete a permission for a fine-tuned model checkpoint.
+    
+     */
   public deleteFineTuningCheckpointPermission<
     ThrowOnError extends boolean = false,
   >(options: Options<DeleteFineTuningCheckpointPermissionData, ThrowOnError>) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteFineTuningCheckpointPermissionResponses,
       unknown,
       ThrowOnError
@@ -1745,15 +1770,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * List fine-tuning jobs
-   *
-   * List your organization's fine-tuning jobs
-   *
-   */
+     * List fine-tuning jobs
+     *
+     * List your organization's fine-tuning jobs
+    
+     */
   public listPaginatedFineTuningJobs<ThrowOnError extends boolean = false>(
     options?: Options<ListPaginatedFineTuningJobsData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListPaginatedFineTuningJobsResponses,
       unknown,
       ThrowOnError
@@ -1770,19 +1795,19 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Create fine-tuning job
-   *
-   * Creates a fine-tuning job which begins the process of creating a new model from a given dataset.
-   *
-   * Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.
-   *
-   * [Learn more about fine-tuning](https://platform.openai.com/docs/guides/model-optimization)
-   *
-   */
+     * Create fine-tuning job
+     *
+     * Creates a fine-tuning job which begins the process of creating a new model from a given dataset.
+    
+    Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.
+    
+    [Learn more about fine-tuning](https://platform.openai.com/docs/guides/model-optimization)
+    
+     */
   public createFineTuningJob<ThrowOnError extends boolean = false>(
     options: Options<CreateFineTuningJobData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateFineTuningJobResponses,
       unknown,
       ThrowOnError
@@ -1803,17 +1828,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Retrieve fine-tuning job
-   *
-   * Get info about a fine-tuning job.
-   *
-   * [Learn more about fine-tuning](https://platform.openai.com/docs/guides/model-optimization)
-   *
-   */
+     * Retrieve fine-tuning job
+     *
+     * Get info about a fine-tuning job.
+    
+    [Learn more about fine-tuning](https://platform.openai.com/docs/guides/model-optimization)
+    
+     */
   public retrieveFineTuningJob<ThrowOnError extends boolean = false>(
     options: Options<RetrieveFineTuningJobData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveFineTuningJobResponses,
       unknown,
       ThrowOnError
@@ -1830,15 +1855,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Cancel fine-tuning
-   *
-   * Immediately cancel a fine-tune job.
-   *
-   */
+     * Cancel fine-tuning
+     *
+     * Immediately cancel a fine-tune job.
+    
+     */
   public cancelFineTuningJob<ThrowOnError extends boolean = false>(
     options: Options<CancelFineTuningJobData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CancelFineTuningJobResponses,
       unknown,
       ThrowOnError
@@ -1855,15 +1880,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * List fine-tuning checkpoints
-   *
-   * List checkpoints for a fine-tuning job.
-   *
-   */
+     * List fine-tuning checkpoints
+     *
+     * List checkpoints for a fine-tuning job.
+    
+     */
   public listFineTuningJobCheckpoints<ThrowOnError extends boolean = false>(
     options: Options<ListFineTuningJobCheckpointsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListFineTuningJobCheckpointsResponses,
       unknown,
       ThrowOnError
@@ -1880,15 +1905,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * List fine-tuning events
-   *
-   * Get status updates for a fine-tuning job.
-   *
-   */
+     * List fine-tuning events
+     *
+     * Get status updates for a fine-tuning job.
+    
+     */
   public listFineTuningEvents<ThrowOnError extends boolean = false>(
     options: Options<ListFineTuningEventsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListFineTuningEventsResponses,
       unknown,
       ThrowOnError
@@ -1905,15 +1930,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Pause fine-tuning
-   *
-   * Pause a fine-tune job.
-   *
-   */
+     * Pause fine-tuning
+     *
+     * Pause a fine-tune job.
+    
+     */
   public pauseFineTuningJob<ThrowOnError extends boolean = false>(
     options: Options<PauseFineTuningJobData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       PauseFineTuningJobResponses,
       unknown,
       ThrowOnError
@@ -1930,15 +1955,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Resume fine-tuning
-   *
-   * Resume a fine-tune job.
-   *
-   */
+     * Resume fine-tuning
+     *
+     * Resume a fine-tune job.
+    
+     */
   public resumeFineTuningJob<ThrowOnError extends boolean = false>(
     options: Options<ResumeFineTuningJobData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ResumeFineTuningJobResponses,
       unknown,
       ThrowOnError
@@ -1962,7 +1987,7 @@ export class OpenAi extends _HeyApiClient {
   public createImageEdit<ThrowOnError extends boolean = false>(
     options: Options<CreateImageEditData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateImageEditResponses,
       unknown,
       ThrowOnError
@@ -1984,15 +2009,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Create image
-   *
-   * Creates an image given a prompt. [Learn more](https://platform.openai.com/docs/guides/images).
-   *
-   */
+     * Create image
+     *
+     * Creates an image given a prompt. [Learn more](https://platform.openai.com/docs/guides/images).
+    
+     */
   public createImage<ThrowOnError extends boolean = false>(
     options: Options<CreateImageData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateImageResponses,
       unknown,
       ThrowOnError
@@ -2020,7 +2045,7 @@ export class OpenAi extends _HeyApiClient {
   public createImageVariation<ThrowOnError extends boolean = false>(
     options: Options<CreateImageVariationData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateImageVariationResponses,
       unknown,
       ThrowOnError
@@ -2049,7 +2074,7 @@ export class OpenAi extends _HeyApiClient {
   public listModels<ThrowOnError extends boolean = false>(
     options?: Options<ListModelsData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListModelsResponses,
       unknown,
       ThrowOnError
@@ -2073,7 +2098,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteModel<ThrowOnError extends boolean = false>(
     options: Options<DeleteModelData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteModelResponses,
       unknown,
       ThrowOnError
@@ -2097,7 +2122,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveModel<ThrowOnError extends boolean = false>(
     options: Options<RetrieveModelData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveModelResponses,
       unknown,
       ThrowOnError
@@ -2114,16 +2139,16 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Create moderation
-   *
-   * Classifies if text and/or image inputs are potentially harmful. Learn
-   * more in the [moderation guide](https://platform.openai.com/docs/guides/moderation).
-   *
-   */
+     * Create moderation
+     *
+     * Classifies if text and/or image inputs are potentially harmful. Learn
+    more in the [moderation guide](https://platform.openai.com/docs/guides/moderation).
+    
+     */
   public createModeration<ThrowOnError extends boolean = false>(
     options: Options<CreateModerationData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateModerationResponses,
       unknown,
       ThrowOnError
@@ -2151,7 +2176,7 @@ export class OpenAi extends _HeyApiClient {
   public adminApiKeysList<ThrowOnError extends boolean = false>(
     options?: Options<AdminApiKeysListData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       AdminApiKeysListResponses,
       unknown,
       ThrowOnError
@@ -2175,7 +2200,7 @@ export class OpenAi extends _HeyApiClient {
   public adminApiKeysCreate<ThrowOnError extends boolean = false>(
     options: Options<AdminApiKeysCreateData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       AdminApiKeysCreateResponses,
       unknown,
       ThrowOnError
@@ -2203,7 +2228,7 @@ export class OpenAi extends _HeyApiClient {
   public adminApiKeysDelete<ThrowOnError extends boolean = false>(
     options: Options<AdminApiKeysDeleteData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       AdminApiKeysDeleteResponses,
       unknown,
       ThrowOnError
@@ -2227,7 +2252,7 @@ export class OpenAi extends _HeyApiClient {
   public adminApiKeysGet<ThrowOnError extends boolean = false>(
     options: Options<AdminApiKeysGetData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       AdminApiKeysGetResponses,
       unknown,
       ThrowOnError
@@ -2251,7 +2276,7 @@ export class OpenAi extends _HeyApiClient {
   public listAuditLogs<ThrowOnError extends boolean = false>(
     options?: Options<ListAuditLogsData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListAuditLogsResponses,
       unknown,
       ThrowOnError
@@ -2284,7 +2309,7 @@ export class OpenAi extends _HeyApiClient {
   public listOrganizationCertificates<ThrowOnError extends boolean = false>(
     options?: Options<ListOrganizationCertificatesData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListOrganizationCertificatesResponses,
       unknown,
       ThrowOnError
@@ -2301,17 +2326,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Upload certificate
-   *
-   * Upload a certificate to the organization. This does **not** automatically activate the certificate.
-   *
-   * Organizations can upload up to 50 certificates.
-   *
-   */
+     * Upload certificate
+     *
+     * Upload a certificate to the organization. This does **not** automatically activate the certificate.
+    
+    Organizations can upload up to 50 certificates.
+    
+     */
   public uploadCertificate<ThrowOnError extends boolean = false>(
     options: Options<UploadCertificateData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       UploadCertificateResponses,
       unknown,
       ThrowOnError
@@ -2332,17 +2357,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Activate certificates for organization
-   *
-   * Activate certificates at the organization level.
-   *
-   * You can atomically and idempotently activate up to 10 certificates at a time.
-   *
-   */
+     * Activate certificates for organization
+     *
+     * Activate certificates at the organization level.
+    
+    You can atomically and idempotently activate up to 10 certificates at a time.
+    
+     */
   public activateOrganizationCertificates<ThrowOnError extends boolean = false>(
     options: Options<ActivateOrganizationCertificatesData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ActivateOrganizationCertificatesResponses,
       unknown,
       ThrowOnError
@@ -2363,17 +2388,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Deactivate certificates for organization
-   *
-   * Deactivate certificates at the organization level.
-   *
-   * You can atomically and idempotently deactivate up to 10 certificates at a time.
-   *
-   */
+     * Deactivate certificates for organization
+     *
+     * Deactivate certificates at the organization level.
+    
+    You can atomically and idempotently deactivate up to 10 certificates at a time.
+    
+     */
   public deactivateOrganizationCertificates<
     ThrowOnError extends boolean = false,
   >(options: Options<DeactivateOrganizationCertificatesData, ThrowOnError>) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       DeactivateOrganizationCertificatesResponses,
       unknown,
       ThrowOnError
@@ -2394,17 +2419,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Delete certificate
-   *
-   * Delete a certificate from the organization.
-   *
-   * The certificate must be inactive for the organization and all projects.
-   *
-   */
+     * Delete certificate
+     *
+     * Delete a certificate from the organization.
+    
+    The certificate must be inactive for the organization and all projects.
+    
+     */
   public deleteCertificate<ThrowOnError extends boolean = false>(
     options?: Options<DeleteCertificateData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).delete<
+    return (options?.client ?? this.client).delete<
       DeleteCertificateResponses,
       unknown,
       ThrowOnError
@@ -2421,17 +2446,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Get certificate
-   *
-   * Get a certificate that has been uploaded to the organization.
-   *
-   * You can get a certificate regardless of whether it is active or not.
-   *
-   */
+     * Get certificate
+     *
+     * Get a certificate that has been uploaded to the organization.
+    
+    You can get a certificate regardless of whether it is active or not.
+    
+     */
   public getCertificate<ThrowOnError extends boolean = false>(
     options: Options<GetCertificateData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetCertificateResponses,
       unknown,
       ThrowOnError
@@ -2448,15 +2473,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Modify certificate
-   *
-   * Modify a certificate. Note that only the name can be modified.
-   *
-   */
+     * Modify certificate
+     *
+     * Modify a certificate. Note that only the name can be modified.
+    
+     */
   public modifyCertificate<ThrowOnError extends boolean = false>(
     options: Options<ModifyCertificateData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ModifyCertificateResponses,
       unknown,
       ThrowOnError
@@ -2484,7 +2509,7 @@ export class OpenAi extends _HeyApiClient {
   public usageCosts<ThrowOnError extends boolean = false>(
     options: Options<UsageCostsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       UsageCostsResponses,
       unknown,
       ThrowOnError
@@ -2508,7 +2533,7 @@ export class OpenAi extends _HeyApiClient {
   public listInvites<ThrowOnError extends boolean = false>(
     options?: Options<ListInvitesData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListInvitesResponses,
       unknown,
       ThrowOnError
@@ -2532,7 +2557,7 @@ export class OpenAi extends _HeyApiClient {
   public inviteUser<ThrowOnError extends boolean = false>(
     options: Options<InviteUserData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       InviteUserResponses,
       unknown,
       ThrowOnError
@@ -2560,7 +2585,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteInvite<ThrowOnError extends boolean = false>(
     options: Options<DeleteInviteData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteInviteResponses,
       unknown,
       ThrowOnError
@@ -2584,7 +2609,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveInvite<ThrowOnError extends boolean = false>(
     options: Options<RetrieveInviteData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveInviteResponses,
       unknown,
       ThrowOnError
@@ -2608,7 +2633,7 @@ export class OpenAi extends _HeyApiClient {
   public listProjects<ThrowOnError extends boolean = false>(
     options?: Options<ListProjectsData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListProjectsResponses,
       unknown,
       ThrowOnError
@@ -2632,7 +2657,7 @@ export class OpenAi extends _HeyApiClient {
   public createProject<ThrowOnError extends boolean = false>(
     options: Options<CreateProjectData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateProjectResponses,
       unknown,
       ThrowOnError
@@ -2660,7 +2685,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveProject<ThrowOnError extends boolean = false>(
     options: Options<RetrieveProjectData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveProjectResponses,
       unknown,
       ThrowOnError
@@ -2684,7 +2709,7 @@ export class OpenAi extends _HeyApiClient {
   public modifyProject<ThrowOnError extends boolean = false>(
     options: Options<ModifyProjectData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ModifyProjectResponses,
       ModifyProjectErrors,
       ThrowOnError
@@ -2712,7 +2737,7 @@ export class OpenAi extends _HeyApiClient {
   public listProjectApiKeys<ThrowOnError extends boolean = false>(
     options: Options<ListProjectApiKeysData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListProjectApiKeysResponses,
       unknown,
       ThrowOnError
@@ -2736,7 +2761,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteProjectApiKey<ThrowOnError extends boolean = false>(
     options: Options<DeleteProjectApiKeyData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteProjectApiKeyResponses,
       DeleteProjectApiKeyErrors,
       ThrowOnError
@@ -2760,7 +2785,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveProjectApiKey<ThrowOnError extends boolean = false>(
     options: Options<RetrieveProjectApiKeyData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveProjectApiKeyResponses,
       unknown,
       ThrowOnError
@@ -2784,7 +2809,7 @@ export class OpenAi extends _HeyApiClient {
   public archiveProject<ThrowOnError extends boolean = false>(
     options: Options<ArchiveProjectData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ArchiveProjectResponses,
       unknown,
       ThrowOnError
@@ -2808,7 +2833,7 @@ export class OpenAi extends _HeyApiClient {
   public listProjectCertificates<ThrowOnError extends boolean = false>(
     options: Options<ListProjectCertificatesData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListProjectCertificatesResponses,
       unknown,
       ThrowOnError
@@ -2825,17 +2850,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Activate certificates for project
-   *
-   * Activate certificates at the project level.
-   *
-   * You can atomically and idempotently activate up to 10 certificates at a time.
-   *
-   */
+     * Activate certificates for project
+     *
+     * Activate certificates at the project level.
+    
+    You can atomically and idempotently activate up to 10 certificates at a time.
+    
+     */
   public activateProjectCertificates<ThrowOnError extends boolean = false>(
     options: Options<ActivateProjectCertificatesData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ActivateProjectCertificatesResponses,
       unknown,
       ThrowOnError
@@ -2856,16 +2881,16 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Deactivate certificates for project
-   *
-   * Deactivate certificates at the project level. You can atomically and
-   * idempotently deactivate up to 10 certificates at a time.
-   *
-   */
+     * Deactivate certificates for project
+     *
+     * Deactivate certificates at the project level. You can atomically and
+    idempotently deactivate up to 10 certificates at a time.
+    
+     */
   public deactivateProjectCertificates<ThrowOnError extends boolean = false>(
     options: Options<DeactivateProjectCertificatesData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       DeactivateProjectCertificatesResponses,
       unknown,
       ThrowOnError
@@ -2893,7 +2918,7 @@ export class OpenAi extends _HeyApiClient {
   public listProjectRateLimits<ThrowOnError extends boolean = false>(
     options: Options<ListProjectRateLimitsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListProjectRateLimitsResponses,
       unknown,
       ThrowOnError
@@ -2917,7 +2942,7 @@ export class OpenAi extends _HeyApiClient {
   public updateProjectRateLimits<ThrowOnError extends boolean = false>(
     options: Options<UpdateProjectRateLimitsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       UpdateProjectRateLimitsResponses,
       UpdateProjectRateLimitsErrors,
       ThrowOnError
@@ -2945,7 +2970,7 @@ export class OpenAi extends _HeyApiClient {
   public listProjectServiceAccounts<ThrowOnError extends boolean = false>(
     options: Options<ListProjectServiceAccountsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListProjectServiceAccountsResponses,
       ListProjectServiceAccountsErrors,
       ThrowOnError
@@ -2969,7 +2994,7 @@ export class OpenAi extends _HeyApiClient {
   public createProjectServiceAccount<ThrowOnError extends boolean = false>(
     options: Options<CreateProjectServiceAccountData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateProjectServiceAccountResponses,
       CreateProjectServiceAccountErrors,
       ThrowOnError
@@ -2997,7 +3022,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteProjectServiceAccount<ThrowOnError extends boolean = false>(
     options: Options<DeleteProjectServiceAccountData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteProjectServiceAccountResponses,
       unknown,
       ThrowOnError
@@ -3021,7 +3046,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveProjectServiceAccount<ThrowOnError extends boolean = false>(
     options: Options<RetrieveProjectServiceAccountData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveProjectServiceAccountResponses,
       unknown,
       ThrowOnError
@@ -3045,7 +3070,7 @@ export class OpenAi extends _HeyApiClient {
   public listProjectUsers<ThrowOnError extends boolean = false>(
     options: Options<ListProjectUsersData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListProjectUsersResponses,
       ListProjectUsersErrors,
       ThrowOnError
@@ -3069,7 +3094,7 @@ export class OpenAi extends _HeyApiClient {
   public createProjectUser<ThrowOnError extends boolean = false>(
     options: Options<CreateProjectUserData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateProjectUserResponses,
       CreateProjectUserErrors,
       ThrowOnError
@@ -3097,7 +3122,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteProjectUser<ThrowOnError extends boolean = false>(
     options: Options<DeleteProjectUserData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteProjectUserResponses,
       DeleteProjectUserErrors,
       ThrowOnError
@@ -3121,7 +3146,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveProjectUser<ThrowOnError extends boolean = false>(
     options: Options<RetrieveProjectUserData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveProjectUserResponses,
       unknown,
       ThrowOnError
@@ -3145,7 +3170,7 @@ export class OpenAi extends _HeyApiClient {
   public modifyProjectUser<ThrowOnError extends boolean = false>(
     options: Options<ModifyProjectUserData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ModifyProjectUserResponses,
       ModifyProjectUserErrors,
       ThrowOnError
@@ -3173,7 +3198,7 @@ export class OpenAi extends _HeyApiClient {
   public usageAudioSpeeches<ThrowOnError extends boolean = false>(
     options: Options<UsageAudioSpeechesData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       UsageAudioSpeechesResponses,
       unknown,
       ThrowOnError
@@ -3197,7 +3222,7 @@ export class OpenAi extends _HeyApiClient {
   public usageAudioTranscriptions<ThrowOnError extends boolean = false>(
     options: Options<UsageAudioTranscriptionsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       UsageAudioTranscriptionsResponses,
       unknown,
       ThrowOnError
@@ -3221,7 +3246,7 @@ export class OpenAi extends _HeyApiClient {
   public usageCodeInterpreterSessions<ThrowOnError extends boolean = false>(
     options: Options<UsageCodeInterpreterSessionsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       UsageCodeInterpreterSessionsResponses,
       unknown,
       ThrowOnError
@@ -3245,7 +3270,7 @@ export class OpenAi extends _HeyApiClient {
   public usageCompletions<ThrowOnError extends boolean = false>(
     options: Options<UsageCompletionsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       UsageCompletionsResponses,
       unknown,
       ThrowOnError
@@ -3269,7 +3294,7 @@ export class OpenAi extends _HeyApiClient {
   public usageEmbeddings<ThrowOnError extends boolean = false>(
     options: Options<UsageEmbeddingsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       UsageEmbeddingsResponses,
       unknown,
       ThrowOnError
@@ -3293,7 +3318,7 @@ export class OpenAi extends _HeyApiClient {
   public usageImages<ThrowOnError extends boolean = false>(
     options: Options<UsageImagesData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       UsageImagesResponses,
       unknown,
       ThrowOnError
@@ -3317,7 +3342,7 @@ export class OpenAi extends _HeyApiClient {
   public usageModerations<ThrowOnError extends boolean = false>(
     options: Options<UsageModerationsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       UsageModerationsResponses,
       unknown,
       ThrowOnError
@@ -3341,7 +3366,7 @@ export class OpenAi extends _HeyApiClient {
   public usageVectorStores<ThrowOnError extends boolean = false>(
     options: Options<UsageVectorStoresData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       UsageVectorStoresResponses,
       unknown,
       ThrowOnError
@@ -3365,7 +3390,7 @@ export class OpenAi extends _HeyApiClient {
   public listUsers<ThrowOnError extends boolean = false>(
     options?: Options<ListUsersData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListUsersResponses,
       unknown,
       ThrowOnError
@@ -3389,7 +3414,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteUser<ThrowOnError extends boolean = false>(
     options: Options<DeleteUserData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteUserResponses,
       unknown,
       ThrowOnError
@@ -3413,7 +3438,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveUser<ThrowOnError extends boolean = false>(
     options: Options<RetrieveUserData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveUserResponses,
       unknown,
       ThrowOnError
@@ -3437,7 +3462,7 @@ export class OpenAi extends _HeyApiClient {
   public modifyUser<ThrowOnError extends boolean = false>(
     options: Options<ModifyUserData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ModifyUserResponses,
       unknown,
       ThrowOnError
@@ -3458,21 +3483,21 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Create session
-   *
-   * Create an ephemeral API token for use in client-side applications with the
-   * Realtime API. Can be configured with the same session parameters as the
-   * `session.update` client event.
-   *
-   * It responds with a session object, plus a `client_secret` key which contains
-   * a usable ephemeral API token that can be used to authenticate browser clients
-   * for the Realtime API.
-   *
-   */
+     * Create session
+     *
+     * Create an ephemeral API token for use in client-side applications with the
+    Realtime API. Can be configured with the same session parameters as the
+    `session.update` client event.
+    
+    It responds with a session object, plus a `client_secret` key which contains
+    a usable ephemeral API token that can be used to authenticate browser clients
+    for the Realtime API.
+    
+     */
   public createRealtimeSession<ThrowOnError extends boolean = false>(
     options: Options<CreateRealtimeSessionData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateRealtimeSessionResponses,
       unknown,
       ThrowOnError
@@ -3493,21 +3518,21 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Create transcription session
-   *
-   * Create an ephemeral API token for use in client-side applications with the
-   * Realtime API specifically for realtime transcriptions.
-   * Can be configured with the same session parameters as the `transcription_session.update` client event.
-   *
-   * It responds with a session object, plus a `client_secret` key which contains
-   * a usable ephemeral API token that can be used to authenticate browser clients
-   * for the Realtime API.
-   *
-   */
+     * Create transcription session
+     *
+     * Create an ephemeral API token for use in client-side applications with the
+    Realtime API specifically for realtime transcriptions.
+    Can be configured with the same session parameters as the `transcription_session.update` client event.
+    
+    It responds with a session object, plus a `client_secret` key which contains
+    a usable ephemeral API token that can be used to authenticate browser clients
+    for the Realtime API.
+    
+     */
   public createRealtimeTranscriptionSession<
     ThrowOnError extends boolean = false,
   >(options: Options<CreateRealtimeTranscriptionSessionData, ThrowOnError>) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateRealtimeTranscriptionSessionResponses,
       unknown,
       ThrowOnError
@@ -3528,21 +3553,21 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Create a model response
-   *
-   * Creates a model response. Provide [text](https://platform.openai.com/docs/guides/text) or
-   * [image](https://platform.openai.com/docs/guides/images) inputs to generate [text](https://platform.openai.com/docs/guides/text)
-   * or [JSON](https://platform.openai.com/docs/guides/structured-outputs) outputs. Have the model call
-   * your own [custom code](https://platform.openai.com/docs/guides/function-calling) or use built-in
-   * [tools](https://platform.openai.com/docs/guides/tools) like [web search](https://platform.openai.com/docs/guides/tools-web-search)
-   * or [file search](https://platform.openai.com/docs/guides/tools-file-search) to use your own data
-   * as input for the model's response.
-   *
-   */
+     * Create a model response
+     *
+     * Creates a model response. Provide [text](https://platform.openai.com/docs/guides/text) or
+    [image](https://platform.openai.com/docs/guides/images) inputs to generate [text](https://platform.openai.com/docs/guides/text)
+    or [JSON](https://platform.openai.com/docs/guides/structured-outputs) outputs. Have the model call
+    your own [custom code](https://platform.openai.com/docs/guides/function-calling) or use built-in
+    [tools](https://platform.openai.com/docs/guides/tools) like [web search](https://platform.openai.com/docs/guides/tools-web-search)
+    or [file search](https://platform.openai.com/docs/guides/tools-file-search) to use your own data
+    as input for the model's response.
+    
+     */
   public createResponse<ThrowOnError extends boolean = false>(
     options: Options<CreateResponseData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateResponseResponses,
       unknown,
       ThrowOnError
@@ -3563,15 +3588,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Delete a model response
-   *
-   * Deletes a model response with the given ID.
-   *
-   */
+     * Delete a model response
+     *
+     * Deletes a model response with the given ID.
+    
+     */
   public deleteResponse<ThrowOnError extends boolean = false>(
     options: Options<DeleteResponseData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteResponseResponses,
       DeleteResponseErrors,
       ThrowOnError
@@ -3588,15 +3613,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Get a model response
-   *
-   * Retrieves a model response with the given ID.
-   *
-   */
+     * Get a model response
+     *
+     * Retrieves a model response with the given ID.
+    
+     */
   public getResponse<ThrowOnError extends boolean = false>(
     options: Options<GetResponseData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetResponseResponses,
       unknown,
       ThrowOnError
@@ -3613,17 +3638,17 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Cancel a response
-   *
-   * Cancels a model response with the given ID. Only responses created with
-   * the `background` parameter set to `true` can be cancelled.
-   * [Learn more](https://platform.openai.com/docs/guides/background).
-   *
-   */
+     * Cancel a response
+     *
+     * Cancels a model response with the given ID. Only responses created with
+    the `background` parameter set to `true` can be cancelled.
+    [Learn more](https://platform.openai.com/docs/guides/background).
+    
+     */
   public cancelResponse<ThrowOnError extends boolean = false>(
     options: Options<CancelResponseData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CancelResponseResponses,
       CancelResponseErrors,
       ThrowOnError
@@ -3647,7 +3672,7 @@ export class OpenAi extends _HeyApiClient {
   public listInputItems<ThrowOnError extends boolean = false>(
     options: Options<ListInputItemsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListInputItemsResponses,
       unknown,
       ThrowOnError
@@ -3671,7 +3696,7 @@ export class OpenAi extends _HeyApiClient {
   public createThread<ThrowOnError extends boolean = false>(
     options?: Options<CreateThreadData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).post<
+    return (options?.client ?? this.client).post<
       CreateThreadResponses,
       unknown,
       ThrowOnError
@@ -3699,7 +3724,7 @@ export class OpenAi extends _HeyApiClient {
   public createThreadAndRun<ThrowOnError extends boolean = false>(
     options: Options<CreateThreadAndRunData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateThreadAndRunResponses,
       unknown,
       ThrowOnError
@@ -3727,7 +3752,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteThread<ThrowOnError extends boolean = false>(
     options: Options<DeleteThreadData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteThreadResponses,
       unknown,
       ThrowOnError
@@ -3751,7 +3776,7 @@ export class OpenAi extends _HeyApiClient {
   public getThread<ThrowOnError extends boolean = false>(
     options: Options<GetThreadData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetThreadResponses,
       unknown,
       ThrowOnError
@@ -3775,7 +3800,7 @@ export class OpenAi extends _HeyApiClient {
   public modifyThread<ThrowOnError extends boolean = false>(
     options: Options<ModifyThreadData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ModifyThreadResponses,
       unknown,
       ThrowOnError
@@ -3803,7 +3828,7 @@ export class OpenAi extends _HeyApiClient {
   public listMessages<ThrowOnError extends boolean = false>(
     options: Options<ListMessagesData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListMessagesResponses,
       unknown,
       ThrowOnError
@@ -3827,7 +3852,7 @@ export class OpenAi extends _HeyApiClient {
   public createMessage<ThrowOnError extends boolean = false>(
     options: Options<CreateMessageData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateMessageResponses,
       unknown,
       ThrowOnError
@@ -3855,7 +3880,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteMessage<ThrowOnError extends boolean = false>(
     options: Options<DeleteMessageData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteMessageResponses,
       unknown,
       ThrowOnError
@@ -3879,7 +3904,7 @@ export class OpenAi extends _HeyApiClient {
   public getMessage<ThrowOnError extends boolean = false>(
     options: Options<GetMessageData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetMessageResponses,
       unknown,
       ThrowOnError
@@ -3903,7 +3928,7 @@ export class OpenAi extends _HeyApiClient {
   public modifyMessage<ThrowOnError extends boolean = false>(
     options: Options<ModifyMessageData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ModifyMessageResponses,
       unknown,
       ThrowOnError
@@ -3931,7 +3956,7 @@ export class OpenAi extends _HeyApiClient {
   public listRuns<ThrowOnError extends boolean = false>(
     options: Options<ListRunsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListRunsResponses,
       unknown,
       ThrowOnError
@@ -3955,7 +3980,7 @@ export class OpenAi extends _HeyApiClient {
   public createRun<ThrowOnError extends boolean = false>(
     options: Options<CreateRunData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateRunResponses,
       unknown,
       ThrowOnError
@@ -3983,7 +4008,7 @@ export class OpenAi extends _HeyApiClient {
   public getRun<ThrowOnError extends boolean = false>(
     options: Options<GetRunData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetRunResponses,
       unknown,
       ThrowOnError
@@ -4007,7 +4032,7 @@ export class OpenAi extends _HeyApiClient {
   public modifyRun<ThrowOnError extends boolean = false>(
     options: Options<ModifyRunData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ModifyRunResponses,
       unknown,
       ThrowOnError
@@ -4035,7 +4060,7 @@ export class OpenAi extends _HeyApiClient {
   public cancelRun<ThrowOnError extends boolean = false>(
     options: Options<CancelRunData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CancelRunResponses,
       unknown,
       ThrowOnError
@@ -4059,7 +4084,7 @@ export class OpenAi extends _HeyApiClient {
   public listRunSteps<ThrowOnError extends boolean = false>(
     options: Options<ListRunStepsData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListRunStepsResponses,
       unknown,
       ThrowOnError
@@ -4083,7 +4108,7 @@ export class OpenAi extends _HeyApiClient {
   public getRunStep<ThrowOnError extends boolean = false>(
     options: Options<GetRunStepData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetRunStepResponses,
       unknown,
       ThrowOnError
@@ -4100,15 +4125,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Submit tool outputs to run
-   *
-   * When a run has the `status: "requires_action"` and `required_action.type` is `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once they're all completed. All outputs must be submitted in a single request.
-   *
-   */
+     * Submit tool outputs to run
+     *
+     * When a run has the `status: "requires_action"` and `required_action.type` is `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once they're all completed. All outputs must be submitted in a single request.
+    
+     */
   public submitToolOuputsToRun<ThrowOnError extends boolean = false>(
     options: Options<SubmitToolOuputsToRunData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       SubmitToolOuputsToRunResponses,
       unknown,
       ThrowOnError
@@ -4129,31 +4154,31 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Create upload
-   *
-   * Creates an intermediate [Upload](https://platform.openai.com/docs/api-reference/uploads/object) object
-   * that you can add [Parts](https://platform.openai.com/docs/api-reference/uploads/part-object) to.
-   * Currently, an Upload can accept at most 8 GB in total and expires after an
-   * hour after you create it.
-   *
-   * Once you complete the Upload, we will create a
-   * [File](https://platform.openai.com/docs/api-reference/files/object) object that contains all the parts
-   * you uploaded. This File is usable in the rest of our platform as a regular
-   * File object.
-   *
-   * For certain `purpose` values, the correct `mime_type` must be specified.
-   * Please refer to documentation for the
-   * [supported MIME types for your use case](https://platform.openai.com/docs/assistants/tools/file-search#supported-files).
-   *
-   * For guidance on the proper filename extensions for each purpose, please
-   * follow the documentation on [creating a
-   * File](https://platform.openai.com/docs/api-reference/files/create).
-   *
-   */
+     * Create upload
+     *
+     * Creates an intermediate [Upload](https://platform.openai.com/docs/api-reference/uploads/object) object
+    that you can add [Parts](https://platform.openai.com/docs/api-reference/uploads/part-object) to.
+    Currently, an Upload can accept at most 8 GB in total and expires after an
+    hour after you create it.
+    
+    Once you complete the Upload, we will create a
+    [File](https://platform.openai.com/docs/api-reference/files/object) object that contains all the parts
+    you uploaded. This File is usable in the rest of our platform as a regular
+    File object.
+    
+    For certain `purpose` values, the correct `mime_type` must be specified.
+    Please refer to documentation for the
+    [supported MIME types for your use case](https://platform.openai.com/docs/assistants/tools/file-search#supported-files).
+    
+    For guidance on the proper filename extensions for each purpose, please
+    follow the documentation on [creating a
+    File](https://platform.openai.com/docs/api-reference/files/create).
+    
+     */
   public createUpload<ThrowOnError extends boolean = false>(
     options: Options<CreateUploadData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateUploadResponses,
       unknown,
       ThrowOnError
@@ -4174,15 +4199,15 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Cancel upload
-   *
-   * Cancels the Upload. No Parts may be added after an Upload is cancelled.
-   *
-   */
+     * Cancel upload
+     *
+     * Cancels the Upload. No Parts may be added after an Upload is cancelled.
+    
+     */
   public cancelUpload<ThrowOnError extends boolean = false>(
     options: Options<CancelUploadData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CancelUploadResponses,
       unknown,
       ThrowOnError
@@ -4199,21 +4224,21 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Complete upload
-   *
-   * Completes the [Upload](https://platform.openai.com/docs/api-reference/uploads/object).
-   *
-   * Within the returned Upload object, there is a nested [File](https://platform.openai.com/docs/api-reference/files/object) object that is ready to use in the rest of the platform.
-   *
-   * You can specify the order of the Parts by passing in an ordered list of the Part IDs.
-   *
-   * The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.
-   *
-   */
+     * Complete upload
+     *
+     * Completes the [Upload](https://platform.openai.com/docs/api-reference/uploads/object).
+    
+    Within the returned Upload object, there is a nested [File](https://platform.openai.com/docs/api-reference/files/object) object that is ready to use in the rest of the platform.
+    
+    You can specify the order of the Parts by passing in an ordered list of the Part IDs.
+    
+    The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.
+    
+     */
   public completeUpload<ThrowOnError extends boolean = false>(
     options: Options<CompleteUploadData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CompleteUploadResponses,
       unknown,
       ThrowOnError
@@ -4234,19 +4259,19 @@ export class OpenAi extends _HeyApiClient {
   }
 
   /**
-   * Add upload part
-   *
-   * Adds a [Part](https://platform.openai.com/docs/api-reference/uploads/part-object) to an [Upload](https://platform.openai.com/docs/api-reference/uploads/object) object. A Part represents a chunk of bytes from the file you are trying to upload.
-   *
-   * Each Part can be at most 64 MB, and you can add Parts until you hit the Upload maximum of 8 GB.
-   *
-   * It is possible to add multiple Parts in parallel. You can decide the intended order of the Parts when you [complete the Upload](https://platform.openai.com/docs/api-reference/uploads/complete).
-   *
-   */
+     * Add upload part
+     *
+     * Adds a [Part](https://platform.openai.com/docs/api-reference/uploads/part-object) to an [Upload](https://platform.openai.com/docs/api-reference/uploads/object) object. A Part represents a chunk of bytes from the file you are trying to upload.
+    
+    Each Part can be at most 64 MB, and you can add Parts until you hit the Upload maximum of 8 GB.
+    
+    It is possible to add multiple Parts in parallel. You can decide the intended order of the Parts when you [complete the Upload](https://platform.openai.com/docs/api-reference/uploads/complete).
+    
+     */
   public addUploadPart<ThrowOnError extends boolean = false>(
     options: Options<AddUploadPartData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       AddUploadPartResponses,
       unknown,
       ThrowOnError
@@ -4275,7 +4300,7 @@ export class OpenAi extends _HeyApiClient {
   public listVectorStores<ThrowOnError extends boolean = false>(
     options?: Options<ListVectorStoresData, ThrowOnError>,
   ) {
-    return (options?.client ?? this._client).get<
+    return (options?.client ?? this.client).get<
       ListVectorStoresResponses,
       unknown,
       ThrowOnError
@@ -4299,7 +4324,7 @@ export class OpenAi extends _HeyApiClient {
   public createVectorStore<ThrowOnError extends boolean = false>(
     options: Options<CreateVectorStoreData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateVectorStoreResponses,
       unknown,
       ThrowOnError
@@ -4327,7 +4352,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteVectorStore<ThrowOnError extends boolean = false>(
     options: Options<DeleteVectorStoreData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteVectorStoreResponses,
       unknown,
       ThrowOnError
@@ -4351,7 +4376,7 @@ export class OpenAi extends _HeyApiClient {
   public getVectorStore<ThrowOnError extends boolean = false>(
     options: Options<GetVectorStoreData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetVectorStoreResponses,
       unknown,
       ThrowOnError
@@ -4375,7 +4400,7 @@ export class OpenAi extends _HeyApiClient {
   public modifyVectorStore<ThrowOnError extends boolean = false>(
     options: Options<ModifyVectorStoreData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       ModifyVectorStoreResponses,
       unknown,
       ThrowOnError
@@ -4403,7 +4428,7 @@ export class OpenAi extends _HeyApiClient {
   public createVectorStoreFileBatch<ThrowOnError extends boolean = false>(
     options: Options<CreateVectorStoreFileBatchData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateVectorStoreFileBatchResponses,
       unknown,
       ThrowOnError
@@ -4431,7 +4456,7 @@ export class OpenAi extends _HeyApiClient {
   public getVectorStoreFileBatch<ThrowOnError extends boolean = false>(
     options: Options<GetVectorStoreFileBatchData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetVectorStoreFileBatchResponses,
       unknown,
       ThrowOnError
@@ -4455,7 +4480,7 @@ export class OpenAi extends _HeyApiClient {
   public cancelVectorStoreFileBatch<ThrowOnError extends boolean = false>(
     options: Options<CancelVectorStoreFileBatchData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CancelVectorStoreFileBatchResponses,
       unknown,
       ThrowOnError
@@ -4479,7 +4504,7 @@ export class OpenAi extends _HeyApiClient {
   public listFilesInVectorStoreBatch<ThrowOnError extends boolean = false>(
     options: Options<ListFilesInVectorStoreBatchData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListFilesInVectorStoreBatchResponses,
       unknown,
       ThrowOnError
@@ -4503,7 +4528,7 @@ export class OpenAi extends _HeyApiClient {
   public listVectorStoreFiles<ThrowOnError extends boolean = false>(
     options: Options<ListVectorStoreFilesData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       ListVectorStoreFilesResponses,
       unknown,
       ThrowOnError
@@ -4527,7 +4552,7 @@ export class OpenAi extends _HeyApiClient {
   public createVectorStoreFile<ThrowOnError extends boolean = false>(
     options: Options<CreateVectorStoreFileData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       CreateVectorStoreFileResponses,
       unknown,
       ThrowOnError
@@ -4555,7 +4580,7 @@ export class OpenAi extends _HeyApiClient {
   public deleteVectorStoreFile<ThrowOnError extends boolean = false>(
     options: Options<DeleteVectorStoreFileData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).delete<
+    return (options.client ?? this.client).delete<
       DeleteVectorStoreFileResponses,
       unknown,
       ThrowOnError
@@ -4579,7 +4604,7 @@ export class OpenAi extends _HeyApiClient {
   public getVectorStoreFile<ThrowOnError extends boolean = false>(
     options: Options<GetVectorStoreFileData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       GetVectorStoreFileResponses,
       unknown,
       ThrowOnError
@@ -4603,7 +4628,7 @@ export class OpenAi extends _HeyApiClient {
   public updateVectorStoreFileAttributes<ThrowOnError extends boolean = false>(
     options: Options<UpdateVectorStoreFileAttributesData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       UpdateVectorStoreFileAttributesResponses,
       unknown,
       ThrowOnError
@@ -4631,7 +4656,7 @@ export class OpenAi extends _HeyApiClient {
   public retrieveVectorStoreFileContent<ThrowOnError extends boolean = false>(
     options: Options<RetrieveVectorStoreFileContentData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).get<
+    return (options.client ?? this.client).get<
       RetrieveVectorStoreFileContentResponses,
       unknown,
       ThrowOnError
@@ -4655,7 +4680,7 @@ export class OpenAi extends _HeyApiClient {
   public searchVectorStore<ThrowOnError extends boolean = false>(
     options: Options<SearchVectorStoreData, ThrowOnError>,
   ) {
-    return (options.client ?? this._client).post<
+    return (options.client ?? this.client).post<
       SearchVectorStoreResponses,
       unknown,
       ThrowOnError

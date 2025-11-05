@@ -132,6 +132,7 @@ export const createClassDeclaration = ({
   extendedClasses,
   name,
   nodes,
+  typeParameters,
 }: {
   /**
    * Class decorator.
@@ -153,6 +154,7 @@ export const createClassDeclaration = ({
    * Class elements.
    */
   nodes: ReadonlyArray<ts.ClassElement>;
+  typeParameters?: ReadonlyArray<ts.TypeParameterDeclaration>;
 }): ts.ClassDeclaration => {
   const modifiers: Array<ts.ModifierLike> = [];
 
@@ -191,7 +193,7 @@ export const createClassDeclaration = ({
   return ts.factory.createClassDeclaration(
     modifiers,
     createIdentifier({ text: name }),
-    undefined,
+    typeParameters,
     heritageClauses,
     nodes,
   );
