@@ -1,5 +1,6 @@
 packages:
   - docs
+  - dev/**
   - examples/**/*
   - packages/**/*
 

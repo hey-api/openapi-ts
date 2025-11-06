@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { defaultPaginationKeywords } from '~/config/parser';
 import type { Config } from '~/types/config';
 
+import type { Context } from '../context';
 import { operationPagination } from '../operation';
 import { getPaginationKeywordsRegExp } from '../pagination';
 import type { IR } from '../types';
@@ -92,7 +93,7 @@ describe('operationPagination', () => {
     ...(pagination ? { pagination: true } : {}),
   });
 
-  const emptyContext = {} as IR.Context;
+  const emptyContext = {} as Context;
 
   const baseOperationMeta = {
     method: 'post' as const,
@@ -216,7 +217,7 @@ describe('operationPagination', () => {
   });
 
   it('resolves $ref and uses the resolved pagination property', () => {
-    const context: IR.Context = {
+    const context: Context = {
       resolveIrRef: vi.fn().mockReturnValue({
         properties: {
           pagination: {
@@ -228,7 +229,7 @@ describe('operationPagination', () => {
         },
         type: 'object',
       }),
-    } as unknown as IR.Context;
+    } as unknown as Context;
 
     const operation: IR.OperationObject = {
       ...baseOperationMeta,

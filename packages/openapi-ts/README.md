@@ -1,16 +1,14 @@
 <div align="center">
   <img alt="Two people looking at the blueprint" height="214" src="https://heyapi.dev/images/blueprint-640w.png" width="320">
-  <h1 align="center"><b>OpenAPI TypeScript</b></h1>
-  <p align="center">🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.</p>
+  <h1><b>OpenAPI TypeScript</b></h1>
+  <p><em>“OpenAPI codegen that just works.”</em><br/><sub>— Guillermo Rauch, CEO of Vercel</sub></p>
 </div>
 
-<br/>
-
 <p align="center">
-  <a href="https://opensource.org/license/mit" rel="nofollow"><img src="https://img.shields.io/github/license/hey-api/openapi-ts" alt="MIT License"></a>
   <a href="https://npmjs.com/package/@hey-api/openapi-ts" rel="nofollow"><img src="https://img.shields.io/npm/dm/%40hey-api%2Fopenapi-ts?label=npm" alt="npm downloads"></a>
-  <a href="https://github.com/hey-api/openapi-ts" rel="nofollow"><img src="https://img.shields.io/github/stars/hey-api/openapi-ts?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
   <a href="https://github.com/hey-api/openapi-ts/actions?query=branch%3Amain"><img src="https://github.com/hey-api/openapi-ts/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
+  <a href="https://github.com/hey-api/openapi-ts" rel="nofollow"><img src="https://img.shields.io/github/stars/hey-api/openapi-ts?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
+  <a href="https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md" rel="nofollow"><img src="https://img.shields.io/github/license/hey-api/openapi-ts" alt="MIT License"></a>
 </p>
 
 <p align="center">
@@ -20,14 +18,12 @@
   <span>&nbsp;•&nbsp;</span>
   <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://github.com/orgs/hey-api/discussions/1495">Roadmap</a>
-  <span>&nbsp;•&nbsp;</span>
   <a href="https://heyapi.dev/openapi-ts/community/contributing">Contribute</a>
-  <span>&nbsp;•&nbsp;</span>
-  <a href="https://heyapi.dev/openapi-ts/community/spotlight#core-team">Join Core Team</a>
 </p>
 
-<br/>
+## About
+
+[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an [open source](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md) OpenAPI to TypeScript code generator trusted by companies like Google, Amazon, and PayPal to generate API clients, SDKs, validators, and more. We also build complementary tools and [services](https://app.heyapi.dev/) that help teams design, manage, and distribute APIs more effectively.
 
 ## Features
 
@@ -41,9 +37,7 @@
 
 ## Dashboard
 
-Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with Hey API Platform.
-
-[Sign In](https://app.heyapi.dev) to Hey API Platform.
+Access your projects and OpenAPI specifications in the [Hey API Platform](https://app.heyapi.dev/).
 
 ## Contributing
 

@@ -1,12 +1,9 @@
 import { definePluginConfig } from '~/plugins/shared/utils/config';
 
-import { Api } from './api';
 import { handler } from './plugin';
-import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiSdkPlugin } from './types';
 
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
-  api: new Api(),
   config: {
     asClass: false,
     auth: true,
@@ -16,7 +13,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     exportFromIndex: true,
     instance: false,
     operationId: true,
-    params_EXPERIMENTAL: 'default',
+    paramsStructure: 'grouped',
     response: 'body',
     responseStyle: 'fields',
     transformer: false,
@@ -24,7 +21,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   },
   dependencies: ['@hey-api/typescript'],
   handler,
-  handlerLegacy,
   name: '@hey-api/sdk',
   resolveConfig: (plugin, context) => {
     if (plugin.config.client) {

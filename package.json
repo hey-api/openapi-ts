@@ -20,7 +20,7 @@
   "funding": "https://github.com/sponsors/hey-api",
   "type": "module",
   "scripts": {
-    "build": "turbo run build --filter=\"!@example/openapi-ts-sample\"",
+    "build": "turbo run build",
     "changeset": "changeset",
     "examples:check": "sh ./scripts/examples-check.sh",
     "examples:generate": "sh ./scripts/examples-generate.sh",
@@ -33,8 +33,8 @@
     "test:coverage": "turbo run test:coverage",
     "test:update": "turbo run test:update",
     "test:watch": "turbo run test:watch",
-    "test": "turbo run test --filter=\"!@example/openapi-ts-sample\"",
-    "typecheck": "turbo run typecheck --filter=\"!@example/openapi-ts-sample\""
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck"
   },
   "engines": {
     "node": ">=20.19.0"
@@ -67,7 +67,7 @@
     "rollup": "4.31.0",
     "rollup-plugin-dts": "6.1.1",
     "ts-node": "10.9.2",
-    "tsdown": "0.15.9",
+    "tsdown": "0.15.12",
     "turbo": "2.5.8",
     "typescript": "5.9.3",
     "typescript-eslint": "8.29.1",

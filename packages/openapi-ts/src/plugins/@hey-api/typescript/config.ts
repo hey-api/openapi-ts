@@ -2,7 +2,6 @@ import { definePluginConfig } from '~/plugins/shared/utils/config';
 
 import { Api } from './api';
 import { handler } from './plugin';
-import { handlerLegacy } from './plugin-legacy';
 import type { HeyApiTypeScriptPlugin } from './types';
 
 export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
@@ -10,12 +9,9 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   config: {
     case: 'PascalCase',
     exportFromIndex: true,
-    style: 'preserve',
     topType: 'unknown',
-    tree: false,
   },
   handler,
-  handlerLegacy,
   name: '@hey-api/typescript',
   resolveConfig: (plugin, context) => {
     plugin.config.definitions = context.valueToObject({

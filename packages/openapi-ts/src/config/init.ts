@@ -5,7 +5,6 @@ import colors from 'ansi-colors';
 import { ConfigError } from '~/error';
 import type { Config, UserConfig } from '~/types/config';
 import type { ArrayOnly } from '~/types/utils';
-import { isLegacyClient, setConfig } from '~/utils/config';
 import type { Logger } from '~/utils/logger';
 
 import { getInput } from './input';
@@ -121,24 +120,7 @@ export const initConfigs = async ({
 
   const eventBuild = logger.timeEvent('build');
   for (const userConfig of configs) {
-    const {
-      base,
-      configFile = '',
-      dryRun = false,
-      experimentalParser = true,
-      exportCore = true,
-      name,
-      request,
-      useOptions = true,
-    } = userConfig;
-
-    const interactive =
-      userConfig.interactive !== undefined
-        ? userConfig.interactive
-        : detectInteractiveSession();
-
     const logs = getLogs(userConfig);
-
     const input = getInput(userConfig);
     const output = getOutput(userConfig);
     const parser = getParser(userConfig);
@@ -161,12 +143,6 @@ export const initConfigs = async ({
       );
     }
 
-    if (!useOptions && logs.level !== 'silent') {
-      console.warn(
-        '❗️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://heyapi.dev/openapi-ts/migrating.html#v0-27-38',
-      );
-    }
-
     output.path = path.resolve(process.cwd(), output.path);
 
     let plugins: Pick<Config, 'plugins' | 'pluginOrder'>;
@@ -181,23 +157,17 @@ export const initConfigs = async ({
       };
     }
 
-    const config = setConfig({
-      ...plugins,
-      base,
-      configFile,
-      dryRun,
-      experimentalParser,
-      exportCore: false,
+    const config: Config = {
+      configFile: userConfig.configFile ?? '',
+      dryRun: userConfig.dryRun ?? false,
       input,
-      interactive,
+      interactive: userConfig.interactive ?? detectInteractiveSession(),
       logs,
-      name,
       output,
       parser,
-      request,
-      useOptions,
-    });
-    config.exportCore = isLegacyClient(config) ? exportCore : false;
+      pluginOrder: plugins.pluginOrder,
+      plugins: plugins.plugins,
+    };
 
     const jobIndex = results.length;
 

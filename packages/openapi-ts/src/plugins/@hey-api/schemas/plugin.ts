@@ -1,5 +1,5 @@
 import { satisfies } from '~/config/utils/package';
-import type { IR } from '~/ir/types';
+import type { Context } from '~/ir/context';
 import type { OpenApiV2_0_XTypes } from '~/openApi/2.0.x';
 import type { OpenApiV3_0_XTypes } from '~/openApi/3.0.x';
 import type { OpenApiV3_1_XTypes } from '~/openApi/3.1.x';
@@ -47,7 +47,7 @@ const schemaToJsonSchemaDraft_04 = ({
   plugin,
   schema: _schema,
 }: {
-  context: IR.Context;
+  context: Context;
   plugin: HeyApiSchemasPlugin['Instance'];
   schema: OpenApiV2_0_XTypes['SchemaObject'];
 }): OpenApiV2_0_XTypes['SchemaObject'] => {
@@ -123,7 +123,7 @@ const schemaToJsonSchemaDraft_05 = ({
   plugin,
   schema: _schema,
 }: {
-  context: IR.Context;
+  context: Context;
   plugin: HeyApiSchemasPlugin['Instance'];
   schema:
     | OpenApiV3_0_XTypes['SchemaObject']
@@ -225,7 +225,7 @@ const schemaToJsonSchema2020_12 = ({
   plugin,
   schema: _schema,
 }: {
-  context: IR.Context;
+  context: Context;
   plugin: HeyApiSchemasPlugin['Instance'];
   schema: OpenApiV3_1_XTypes['SchemaObject'];
 }): OpenApiV3_1_XTypes['SchemaObject'] => {
@@ -359,7 +359,7 @@ const schemasV2_0_X = ({
   context,
   plugin,
 }: {
-  context: IR.Context<OpenApi.V2_0_X>;
+  context: Context<OpenApi.V2_0_X>;
   plugin: HeyApiSchemasPlugin['Instance'];
 }) => {
   if (!context.spec.definitions) {
@@ -397,7 +397,7 @@ const schemasV3_0_X = ({
   context,
   plugin,
 }: {
-  context: IR.Context<OpenApi.V3_0_X>;
+  context: Context<OpenApi.V3_0_X>;
   plugin: HeyApiSchemasPlugin['Instance'];
 }) => {
   if (!context.spec.components) {
@@ -435,7 +435,7 @@ const schemasV3_1_X = ({
   context,
   plugin,
 }: {
-  context: IR.Context<OpenApi.V3_1_X>;
+  context: Context<OpenApi.V3_1_X>;
   plugin: HeyApiSchemasPlugin['Instance'];
 }) => {
   if (!context.spec.components) {
@@ -472,7 +472,7 @@ const schemasV3_1_X = ({
 export const handler: HeyApiSchemasPlugin['Handler'] = ({ plugin }) => {
   if ('swagger' in plugin.context.spec) {
     schemasV2_0_X({
-      context: plugin.context as IR.Context<OpenApi.V2_0_X>,
+      context: plugin.context as Context<OpenApi.V2_0_X>,
       plugin,
     });
     return;
@@ -480,7 +480,7 @@ export const handler: HeyApiSchemasPlugin['Handler'] = ({ plugin }) => {
 
   if (satisfies(plugin.context.spec.openapi, '>=3.0.0 <3.1.0')) {
     schemasV3_0_X({
-      context: plugin.context as IR.Context<OpenApi.V3_0_X>,
+      context: plugin.context as Context<OpenApi.V3_0_X>,
       plugin,
     });
     return;
@@ -488,7 +488,7 @@ export const handler: HeyApiSchemasPlugin['Handler'] = ({ plugin }) => {
 
   if (satisfies(plugin.context.spec.openapi, '>=3.1.0')) {
     schemasV3_1_X({
-      context: plugin.context as IR.Context<OpenApi.V3_1_X>,
+      context: plugin.context as Context<OpenApi.V3_1_X>,
       plugin,
     });
     return;

@@ -15,17 +15,13 @@
   <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
   <span>&nbsp;•&nbsp;</span>
   <a href="https://heyapi.dev/openapi-ts/community/contributing">Contribute</a>
-  <span>&nbsp;•&nbsp;</span>
-  <a href="https://heyapi.dev/openapi-ts/community/spotlight#core-team">Join Core Team</a>
 </p>
 
 <br/>
 
 ## Dashboard
 
-Hey API is an ecosystem of products helping you build better APIs. Superpower your codegen and APIs with Hey API Platform.
-
-[Sign In](https://app.heyapi.dev) to Hey API Platform.
+Access your projects and OpenAPI specifications in the [Hey API Platform](https://app.heyapi.dev/).
 
 ## Contributing
 

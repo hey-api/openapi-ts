@@ -1,9 +1,3 @@
-import type { Operation } from './client';
-
-export namespace LegacyIR {
-  export type LegacyOperation = Operation;
-}
-
 export interface WatchValues {
   /**
    * Headers to be sent with each HEAD and/or GET request. This effectively

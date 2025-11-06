@@ -1,12 +1,9 @@
 import { handler } from '~/plugins/@tanstack/query-core/plugin';
-import { handlerLegacy } from '~/plugins/@tanstack/query-core/plugin-legacy';
 import { definePluginConfig } from '~/plugins/shared/utils/config';
 
-import { Api } from './api';
 import type { TanStackSvelteQueryPlugin } from './types';
 
 export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
-  api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,
@@ -14,9 +11,7 @@ export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler: handler as TanStackSvelteQueryPlugin['Handler'],
-  handlerLegacy: handlerLegacy as TanStackSvelteQueryPlugin['LegacyHandler'],
   name: '@tanstack/svelte-query',
-  output: '@tanstack/svelte-query',
   resolveConfig: (plugin, context) => {
     plugin.config.infiniteQueryKeys = context.valueToObject({
       defaultValue: {

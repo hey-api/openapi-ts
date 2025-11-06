@@ -189,19 +189,7 @@ export type Options<
   RequestOptions<TComposable, ResT, DefaultT>,
   'body' | 'path' | 'query' | 'url'
 > &
-  WithRefs<Omit<TData, 'url'>>;
-
-export type OptionsLegacyParser<TData = unknown> = TData extends { body?: any }
-  ? TData extends { headers?: any }
-    ? OmitKeys<RequestOptions, 'body' | 'headers' | 'url'> & TData
-    : OmitKeys<RequestOptions, 'body' | 'url'> &
-        TData &
-        Pick<RequestOptions, 'headers'>
-  : TData extends { headers?: any }
-    ? OmitKeys<RequestOptions, 'headers' | 'url'> &
-        TData &
-        Pick<RequestOptions, 'body'>
-    : OmitKeys<RequestOptions, 'url'> & TData;
+  ([TData] extends [never] ? unknown : WithRefs<Omit<TData, 'url'>>);
 
 type FetchOptions<TData> = Omit<
   UseFetchOptions<TData, TData>,

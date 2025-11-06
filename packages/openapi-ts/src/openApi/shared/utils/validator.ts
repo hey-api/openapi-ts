@@ -1,6 +1,6 @@
 import colors from 'ansi-colors';
 
-import type { IR } from '~/ir/types';
+import type { Context } from '~/ir/context';
 
 export interface ValidatorIssue {
   /**
@@ -72,7 +72,7 @@ const shouldPrint = ({
   context,
   issue,
 }: {
-  context: IR.Context;
+  context: Context;
   issue: ValidatorIssue;
 }) => {
   if (context.config.logs.level === 'silent') {
@@ -90,7 +90,7 @@ export const handleValidatorResult = ({
   context,
   result,
 }: {
-  context: IR.Context;
+  context: Context;
   result: ValidatorResult;
 }) => {
   for (const issue of result.issues) {

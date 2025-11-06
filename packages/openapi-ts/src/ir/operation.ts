@@ -1,3 +1,4 @@
+import type { Context } from './context';
 import type { Pagination } from './pagination';
 import {
   hasParametersObjectRequired,
@@ -33,7 +34,7 @@ export const operationPagination = ({
   context,
   operation,
 }: {
-  context: IR.Context;
+  context: Context;
   operation: IR.OperationObject;
 }): Pagination | undefined => {
   const body = operation.body;

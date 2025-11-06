@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+// @ts-ignore
 import path from 'node:path';
 
 // @ts-ignore
@@ -8,6 +9,7 @@ import { defineConfig, utils } from '@hey-api/openapi-ts';
 
 // @ts-ignore
 import { myClientPlugin } from '../packages/openapi-ts-tests/main/test/custom/client/plugin';
+// @ts-ignore
 import { getSpecsPath } from '../packages/openapi-ts-tests/utils';
 
 // @ts-ignore
@@ -41,8 +43,9 @@ export default defineConfig(() => {
             // 'invalid',
             // 'openai.yaml',
             // 'full.yaml',
-            // 'opencode.yaml',
-            'sdk-instance.yaml',
+            'opencode.yaml',
+            // 'sdk-circular-bug.yaml',
+            // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'type-format.yaml',
@@ -251,7 +254,7 @@ export default defineConfig(() => {
           asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}',
-          classNameBuilder: '{{name}}Service',
+          // classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
           // client: false,
           // getSignature: ({ fields, signature, operation }) => {
@@ -259,16 +262,17 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          // instance: true,
+          instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
-          // params_EXPERIMENTAL: 'experiment',
+          paramsStructure: 'flat',
           // responseStyle: 'data',
           // signature: 'auto',
           // signature: 'client',
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
+          // validator: true,
           // validator: {
           //   request: 'zod',
           //   response: 'zod',
@@ -308,7 +312,7 @@ export default defineConfig(() => {
           // mutationOptions: {
           //   name: '{{name}}MO',
           // },
-          // name: '@tanstack/react-query',
+          name: '@tanstack/react-query',
           // queryKeys: {
           //   name: '{{name}}QK',
           // },
@@ -335,7 +339,7 @@ export default defineConfig(() => {
           },
         },
         {
-          // name: 'arktype',
+          name: 'arktype',
           // types: {
           //   infer: true,
           // },
@@ -346,7 +350,7 @@ export default defineConfig(() => {
           // definitions: 'z{{name}}Definition',
           exportFromIndex: true,
           // metadata: true,
-          // name: 'valibot',
+          name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
@@ -396,7 +400,7 @@ export default defineConfig(() => {
           },
           // exportFromIndex: true,
           // metadata: true,
-          // name: 'zod',
+          name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',
@@ -417,9 +421,9 @@ export default defineConfig(() => {
             // },
           },
           types: {
-            infer: {
-              case: 'snake_case',
-            },
+            // infer: {
+            //   case: 'snake_case',
+            // },
           },
           '~hooks': {
             symbols: {

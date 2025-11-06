@@ -80,7 +80,6 @@ export const defaultConfig: MyPlugin['Config'] = {
   dependencies: ['@hey-api/typescript'],
   handler,
   name: 'my-plugin',
-  output: 'my-plugin',
 };
 
 /**

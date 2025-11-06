@@ -2,9 +2,6 @@ import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { PluginClientNames, PluginValidatorNames } from '~/plugins/types';
 import type { StringName } from '~/types/case';
-import type { Operation } from '~/types/client';
-
-import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks & {
@@ -78,9 +75,9 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
     instance?: string | boolean;
     /**
      * Customise the name of methods within the service. By default,
-     * {@link IR.OperationObject.id} or {@link Operation.name} is used.
+     * {@link IR.OperationObject.id} is used.
      */
-    methodNameBuilder?: (operation: IR.OperationObject | Operation) => string;
+    methodNameBuilder?: (operation: IR.OperationObject) => string;
     // TODO: parser - rename operationId option to something like inferId?: boolean
     /**
      * Use operation ID to generate operation names?
@@ -88,8 +85,17 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * @default true
      */
     operationId?: boolean;
-    /** @deprecated - this is an experimental feature, do not use */
-    params_EXPERIMENTAL?: 'default' | 'experiment';
+    /**
+     * Define how request parameters are structured in generated SDK methods.
+     *
+     * - `'flat'` merges parameters into a single object.
+     * - `'grouped'` separates parameters by transport layer.
+     *
+     * Use `'flat'` for simpler calls or `'grouped'` for stricter typing and code clarity.
+     *
+     * @default 'grouped'
+     */
+    paramsStructure?: 'flat' | 'grouped';
     /**
      * **This feature works only with the Fetch client**
      *
@@ -248,9 +254,9 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
     instance: string | boolean;
     /**
      * Customise the name of methods within the service. By default,
-     * {@link IR.OperationObject.id} or {@link Operation.name} is used.
+     * {@link IR.OperationObject.id} is used.
      */
-    methodNameBuilder?: (operation: IR.OperationObject | Operation) => string;
+    methodNameBuilder?: (operation: IR.OperationObject) => string;
     // TODO: parser - rename operationId option to something like inferId?: boolean
     /**
      * Use operation ID to generate operation names?
@@ -258,8 +264,17 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      * @default true
      */
     operationId: boolean;
-    /** @deprecated - this is an experimental feature, do not use */
-    params_EXPERIMENTAL: 'default' | 'experiment';
+    /**
+     * Define how request parameters are structured in generated SDK methods.
+     *
+     * - `'flat'` merges parameters into a single object.
+     * - `'grouped'` separates parameters by transport layer.
+     *
+     * Use `'flat'` for simpler calls or `'grouped'` for stricter typing and code clarity.
+     *
+     * @default 'grouped'
+     */
+    paramsStructure: 'flat' | 'grouped';
     /**
      * **This feature works only with the Fetch client**
      *
@@ -325,4 +340,4 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
     response: 'body' | 'response';
   };
 
-export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config, IApi>;
+export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config>;

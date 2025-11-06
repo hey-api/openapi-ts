@@ -119,10 +119,6 @@ export default defineConfig({
                 link: '/openapi-ts/clients/ky',
                 text: 'Ky <span data-soon>soon</span>',
               },
-              {
-                link: '/openapi-ts/clients/legacy',
-                text: 'Legacy',
-              },
             ],
             link: '/openapi-ts/clients',
             text: 'Clients',

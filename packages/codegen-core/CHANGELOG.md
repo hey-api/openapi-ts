@@ -1,5 +1,13 @@
 # @hey-api/codegen-core
 
+## 0.3.3
+
+### Patch Changes
+
+- fix: remove most of readonly properties to allow mutating in place ([#2919](https://github.com/hey-api/openapi-ts/pull/2919)) ([`34ee973`](https://github.com/hey-api/openapi-ts/commit/34ee973be30a9cbc66fd8463fe6f5961db0f3d37)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix: update types ([#2909](https://github.com/hey-api/openapi-ts/pull/2909)) ([`d9dd389`](https://github.com/hey-api/openapi-ts/commit/d9dd38927ce5c7901ce46bfe439454935b2053fa)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.3.2
 
 ### Patch Changes

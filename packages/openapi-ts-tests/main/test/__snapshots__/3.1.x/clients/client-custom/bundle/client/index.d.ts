@@ -18,12 +18,12 @@ interface Auth {
 }
 //#endregion
 //#region src/core/pathSerializer.d.ts
-interface SerializerOptions<T$1> {
+interface SerializerOptions<T> {
   /**
    * @default true
    */
   explode: boolean;
-  style: T$1;
+  style: T;
 }
 type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';
 type ObjectStyle = 'form' | 'deepObject';
@@ -127,9 +127,9 @@ interface Config$1 {
 }
 //#endregion
 //#region src/utils.d.ts
-type ErrInterceptor<Err$1, Res$1, Req$1, Options$2> = (error: Err$1, response: Res$1, request: Req$1, options: Options$2) => Err$1 | Promise<Err$1>;
-type ReqInterceptor<Req$1, Options$2> = (request: Req$1, options: Options$2) => Req$1 | Promise<Req$1>;
-type ResInterceptor<Res$1, Req$1, Options$2> = (response: Res$1, request: Req$1, options: Options$2) => Res$1 | Promise<Res$1>;
+type ErrInterceptor<Err, Res, Req, Options$1> = (error: Err, response: Res, request: Req, options: Options$1) => Err | Promise<Err>;
+type ReqInterceptor<Req, Options$1> = (request: Req, options: Options$1) => Req | Promise<Req>;
+type ResInterceptor<Res, Req, Options$1> = (response: Res, request: Req, options: Options$1) => Res | Promise<Res>;
 declare class Interceptors<Interceptor> {
   fns: Array<Interceptor | null>;
   clear(): void;
@@ -139,19 +139,19 @@ declare class Interceptors<Interceptor> {
   update(id: number | Interceptor, fn: Interceptor): number | Interceptor | false;
   use(fn: Interceptor): number;
 }
-interface Middleware<Req$1, Res$1, Err$1, Options$2> {
-  error: Interceptors<ErrInterceptor<Err$1, Res$1, Req$1, Options$2>>;
-  request: Interceptors<ReqInterceptor<Req$1, Options$2>>;
-  response: Interceptors<ResInterceptor<Res$1, Req$1, Options$2>>;
+interface Middleware<Req, Res, Err, Options$1> {
+  error: Interceptors<ErrInterceptor<Err, Res, Req, Options$1>>;
+  request: Interceptors<ReqInterceptor<Req, Options$1>>;
+  response: Interceptors<ResInterceptor<Res, Req, Options$1>>;
 }
 declare const createConfig: <T extends ClientOptions = ClientOptions>(override?: Config<Omit<ClientOptions, keyof T> & T>) => Config<Omit<ClientOptions, keyof T> & T>;
 //#endregion
 //#region src/types.d.ts
-interface Config<T$1 extends ClientOptions = ClientOptions> extends Omit<RequestInit, 'body' | 'headers' | 'method'>, Config$1 {
+interface Config<T extends ClientOptions = ClientOptions> extends Omit<RequestInit, 'body' | 'headers' | 'method'>, Config$1 {
   /**
    * Base URL for all requests made by this client.
    */
-  baseUrl?: T$1['baseUrl'];
+  baseUrl?: T['baseUrl'];
   /**
    * Fetch API implementation. You can use this option to provide a custom
    * fetch instance.
@@ -173,10 +173,10 @@ interface Config<T$1 extends ClientOptions = ClientOptions> extends Omit<Request
    *
    * @default false
    */
-  throwOnError?: T$1['throwOnError'];
+  throwOnError?: T['throwOnError'];
 }
-interface RequestOptions<ThrowOnError$1 extends boolean = boolean, Url extends string = string> extends Config<{
-  throwOnError: ThrowOnError$1;
+interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends string = string> extends Config<{
+  throwOnError: ThrowOnError;
 }> {
   /**
    * Any body that you want to add to your request.
@@ -192,16 +192,16 @@ interface RequestOptions<ThrowOnError$1 extends boolean = boolean, Url extends s
   security?: ReadonlyArray<Auth>;
   url: Url;
 }
-type RequestResult<TData$1 = unknown, TError$1 = unknown, ThrowOnError$1 extends boolean = boolean> = ThrowOnError$1 extends true ? Promise<{
-  data: TData$1;
+type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boolean = boolean> = ThrowOnError extends true ? Promise<{
+  data: TData;
   request: Request;
   response: Response;
 }> : Promise<({
-  data: TData$1;
+  data: TData;
   error: undefined;
 } | {
   data: undefined;
-  error: TError$1;
+  error: TError;
 }) & {
   request: Request;
   response: Response;
@@ -217,7 +217,7 @@ type BuildUrlFn = <TData extends {
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   url: string;
-}>(options: Pick<TData, 'url'> & Options$1<TData>) => string;
+}>(options: Pick<TData, 'url'> & Options<TData>) => string;
 type Client = Client$1<RequestFn, Config, MethodFn, BuildUrlFn> & {
   interceptors: Middleware<Request, Response, unknown, RequestOptions>;
 };
@@ -229,7 +229,7 @@ type Client = Client$1<RequestFn, Config, MethodFn, BuildUrlFn> & {
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-type CreateClientConfig<T$1 extends ClientOptions = ClientOptions> = (override?: Config<ClientOptions & T$1>) => Config<Required<ClientOptions> & T$1>;
+type CreateClientConfig<T extends ClientOptions = ClientOptions> = (override?: Config<ClientOptions & T>) => Config<Required<ClientOptions> & T>;
 interface TDataShape {
   body?: unknown;
   headers?: unknown;
@@ -237,15 +237,8 @@ interface TDataShape {
   query?: unknown;
   url: string;
 }
-type OmitKeys<T$1, K$1> = Pick<T$1, Exclude<keyof T$1, K$1>>;
-type Options$1<TData$1 extends TDataShape = TDataShape, ThrowOnError$1 extends boolean = boolean> = OmitKeys<RequestOptions<ThrowOnError$1>, 'body' | 'path' | 'query' | 'url'> & Omit<TData$1, 'url'>;
-type OptionsLegacyParser<TData$1 = unknown, ThrowOnError$1 extends boolean = boolean> = TData$1 extends {
-  body?: any;
-} ? TData$1 extends {
-  headers?: any;
-} ? OmitKeys<RequestOptions<ThrowOnError$1>, 'body' | 'headers' | 'url'> & TData$1 : OmitKeys<RequestOptions<ThrowOnError$1>, 'body' | 'url'> & TData$1 & Pick<RequestOptions<ThrowOnError$1>, 'headers'> : TData$1 extends {
-  headers?: any;
-} ? OmitKeys<RequestOptions<ThrowOnError$1>, 'headers' | 'url'> & TData$1 & Pick<RequestOptions<ThrowOnError$1>, 'body'> : OmitKeys<RequestOptions<ThrowOnError$1>, 'url'> & TData$1;
+type OmitKeys<T, K$1> = Pick<T, Exclude<keyof T, K$1>>;
+type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
 //#endregion
 //#region src/client.d.ts
 declare const createClient: (config?: Config) => Client;
@@ -275,4 +268,4 @@ interface Params {
 declare const buildClientParams: (args: ReadonlyArray<unknown>, fields: FieldsConfig) => Params;
 //# sourceMappingURL=index.d.ts.map
 
-export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options$1 as Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, buildClientParams, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, buildClientParams, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

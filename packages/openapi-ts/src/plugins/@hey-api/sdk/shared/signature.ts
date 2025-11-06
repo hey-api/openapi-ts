@@ -1,57 +1,37 @@
 import type { IR } from '~/ir/types';
+import type { PluginInstance } from '~/plugins/shared/utils/instance';
+import { refToName } from '~/utils/ref';
+import { stringCase } from '~/utils/stringCase';
+
+import type { Field } from '../../client-core/bundle/params';
 
 type Location = keyof IR.ParametersObject | 'body';
 
 type SignatureParameter = {
+  /**
+   * Is this parameter required in the SDK method signature?
+   */
+  isRequired: boolean;
+  /**
+   * Parameter name in the SDK method signature.
+   */
   name: string;
   /**
    * If the name was modified due to conflicts, this holds the original name.
    */
   originalName?: string;
   /**
-   * JSON Path to the parameter within the operation object.
+   * Parameter schema object.
    */
-  path: ReadonlyArray<string | number>;
+  schema: IR.SchemaObject;
 };
 
 type SignatureParameters = Record<string, SignatureParameter>;
 
-type SignatureField =
-  | {
-      kind: 'inline';
-      value: SignatureParameter;
-    }
-  | {
-      kind: 'object';
-      value: SignatureParameters;
-    };
-
-export type Signature = ReadonlyArray<SignatureField>;
-
-export const sig1 = [
-  {
-    kind: 'value',
-    name: 'id',
-    value: {
-      name: 'id',
-      path: ['path', 'id'],
-    },
-  },
-  {
-    kind: 'object',
-    name: '',
-    value: {
-      limit: {
-        name: 'limit',
-        path: ['query', 'limit'],
-      },
-      search: {
-        name: 'search',
-        path: ['query', 'search'],
-      },
-    },
-  },
-];
+type Signature = {
+  fields: ReadonlyArray<Field>;
+  parameters: SignatureParameters;
+};
 
 /**
  * Collects and resolves all operation parameters for flattened SDK signatures.
@@ -62,7 +42,8 @@ export const getSignatureParameters = ({
   operation,
 }: {
   operation: IR.OperationObject;
-}): SignatureParameters | undefined => {
+  plugin: PluginInstance;
+}): Signature | undefined => {
   // TODO: add cookies
   const locations = [
     'header',
@@ -89,10 +70,24 @@ export const getSignatureParameters = ({
   }
 
   if (operation.body) {
-    // TODO: we might want to spread body too if there's only a single object
-    // TODO: we might want to alias body for more ergonomic naming, e.g. user
-    // if the type is User
-    addParameter('body', 'body');
+    // spread body if there's only a single object
+    if (
+      !operation.body.schema.logicalOperator &&
+      operation.body.schema.type === 'object' &&
+      operation.body.schema.properties
+    ) {
+      const properties = operation.body.schema.properties;
+      for (const key in properties) {
+        addParameter(key, 'body');
+      }
+    } else if (operation.body.schema.$ref) {
+      // alias body for more ergonomic naming, e.g. user if the type is User
+      const name = refToName(operation.body.schema.$ref);
+      const key = stringCase({ case: 'camelCase', value: name });
+      addParameter(key, 'body');
+    } else {
+      addParameter('body', 'body');
+    }
   }
 
   const conflicts = new Set<string>();
@@ -103,6 +98,7 @@ export const getSignatureParameters = ({
   }
 
   const signatureParameters: SignatureParameters = {};
+  const fields: Array<Field> = [];
 
   for (const location of locations) {
     const parameters = operation.parameters?.[location];
@@ -114,29 +110,84 @@ export const getSignatureParameters = ({
           ? `${location}_${originalName}`
           : originalName;
         const signatureParameter: SignatureParameter = {
+          isRequired: parameter.required ?? false,
           name,
-          path: [location, key],
+          schema: parameter.schema,
         };
         if (name !== originalName) {
           signatureParameter.originalName = originalName;
         }
         signatureParameters[name] = signatureParameter;
+        fields.push({
+          in: location === 'header' ? 'headers' : location,
+          key: name,
+          ...(name !== originalName ? { map: originalName } : {}),
+        });
       }
     }
   }
 
   if (operation.body) {
-    // never alias body
-    signatureParameters.body = {
-      name: 'body',
-      path: ['body'],
-    };
+    const location = 'body';
+    if (
+      !operation.body.schema.logicalOperator &&
+      operation.body.schema.type === 'object' &&
+      operation.body.schema.properties
+    ) {
+      const properties = operation.body.schema.properties;
+      for (const originalName in properties) {
+        const property = properties[originalName]!;
+        const name = conflicts.has(originalName)
+          ? `${location}_${originalName}`
+          : originalName;
+        const signatureParameter: SignatureParameter = {
+          isRequired: property.required?.includes(originalName) ?? false,
+          name,
+          schema: property,
+        };
+        if (name !== originalName) {
+          signatureParameter.originalName = originalName;
+        }
+        signatureParameters[name] = signatureParameter;
+        fields.push({
+          in: location,
+          key: name,
+          ...(name !== originalName ? { map: originalName } : {}),
+        });
+      }
+    } else if (operation.body.schema.$ref) {
+      const value = refToName(operation.body.schema.$ref);
+      const originalName = stringCase({ case: 'camelCase', value });
+      const name = conflicts.has(originalName)
+        ? `${location}_${originalName}`
+        : originalName;
+      const signatureParameter: SignatureParameter = {
+        isRequired: operation.body.required ?? false,
+        name,
+        schema: operation.body.schema,
+      };
+      if (name !== originalName) {
+        signatureParameter.originalName = originalName;
+      }
+      signatureParameters[name] = signatureParameter;
+      fields.push({
+        key: name,
+        map: 'body',
+      });
+    } else {
+      // never alias body
+      signatureParameters.body = {
+        isRequired: operation.body.required ?? false,
+        name: 'body',
+        schema: operation.body.schema,
+      };
+      fields.push({ in: 'body' });
+    }
   }
 
   if (!Object.keys(signatureParameters).length) {
-    return undefined;
+    return;
   }
 
-  console.log(signatureParameters);
-  return signatureParameters;
+  return { fields, parameters: signatureParameters };
 };

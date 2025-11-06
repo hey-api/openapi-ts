@@ -2,8 +2,6 @@ import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { StringCase, StringName } from '~/types/case';
 
-import type { IApi } from './api';
-
 export type UserConfig = Plugin.Name<'@pinia/colada'> &
   Plugin.Hooks & {
     /**
@@ -348,4 +346,4 @@ export type Config = Plugin.Name<'@pinia/colada'> &
     };
   };
 
-export type PiniaColadaPlugin = DefinePlugin<UserConfig, Config, IApi>;
+export type PiniaColadaPlugin = DefinePlugin<UserConfig, Config>;

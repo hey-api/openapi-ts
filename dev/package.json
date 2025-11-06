@@ -1,0 +1,23 @@
+{
+  "name": "@test/openapi-ts-playground",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "devDependencies": {
+    "@hey-api/codegen-core": "workspace:*",
+    "@hey-api/openapi-ts": "workspace:*",
+    "@pinia/colada": "0.17.7",
+    "@tanstack/angular-query-experimental": "5.73.3",
+    "@tanstack/react-query": "5.73.3",
+    "@tanstack/solid-query": "5.73.3",
+    "@tanstack/svelte-query": "5.73.3",
+    "@tanstack/vue-query": "5.73.3",
+    "arktype": "2.1.25",
+    "typescript": "5.9.3",
+    "valibot": "1.1.0",
+    "zod": "4.1.12"
+  }
+}

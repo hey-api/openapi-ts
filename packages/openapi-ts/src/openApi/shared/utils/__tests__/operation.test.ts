@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { IR } from '../../../../ir/types';
+import type { Context } from '~/ir/context';
+
 import { operationToId } from '../operation';
 
 describe('operationToId', () => {
@@ -36,22 +37,22 @@ describe('operationToId', () => {
   it.each(scenarios)(
     'transforms $method $path ($id) -> $output',
     async ({ id, method, output, path }) => {
-      const context: Partial<IR.Context> = {
+      const context: Partial<Context> = {
         config: {
           plugins: {
             // @ts-expect-error
             '@hey-api/sdk': {
               config: {
-                name: '@hey-api/sdk',
                 operationId: true,
               },
+              name: '@hey-api/sdk',
             },
           },
         },
       };
       expect(
         operationToId({
-          context: context as IR.Context,
+          context: context as Context,
           id,
           method,
           path,

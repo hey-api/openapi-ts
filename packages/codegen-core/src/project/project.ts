@@ -50,11 +50,13 @@ export class Project implements IProject {
       symbolIdToFileIds.add(file.id);
       this.symbolIdToFileIds.set(symbol.id, symbolIdToFileIds);
       // update re-exports
-      for (const exportFrom of symbol.exportFrom) {
-        const exportSelector = [exportFrom];
-        const exportFile = this.files.reference(exportSelector);
-        if (exportFile.id !== file.id) {
-          exportFile.symbols.exports.push(symbol.id);
+      if (symbol.exportFrom) {
+        for (const exportFrom of symbol.exportFrom) {
+          const exportSelector = [exportFrom];
+          const exportFile = this.files.reference(exportSelector);
+          if (exportFile.id !== file.id) {
+            exportFile.symbols.exports.push(symbol.id);
+          }
         }
       }
     }

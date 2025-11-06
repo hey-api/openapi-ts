@@ -11,6 +11,7 @@ import type {
 import { HeyApiError } from '~/error';
 import type { MatchPointerToGroupFn, WalkOptions } from '~/graph';
 import { walk } from '~/graph';
+import type { Context } from '~/ir/context';
 import type { IrTopLevelKind } from '~/ir/graph';
 import {
   getIrPointerPriority,
@@ -67,21 +68,20 @@ type EventHooks = {
 
 export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   api: T['api'];
-  config: Omit<T['resolvedConfig'], 'name' | 'output'>;
-  context: IR.Context;
+  config: Omit<T['resolvedConfig'], 'name'>;
+  context: Context;
   dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
   private eventHooks: EventHooks;
   gen: IProject;
   private handler: Plugin.Config<T>['handler'];
   name: T['resolvedConfig']['name'];
-  output: string;
   /**
    * The package metadata and utilities for the current context, constructed
    * from the provided dependencies. Used for managing package-related
    * information such as name, version, and dependency resolution during
    * code generation.
    */
-  package: IR.Context['package'];
+  package: Context['package'];
 
   constructor(
     props: Pick<
@@ -89,10 +89,9 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       'config' | 'dependencies' | 'handler'
     > & {
       api?: T['api'];
-      context: IR.Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
+      context: Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
       gen: IProject;
       name: string;
-      output: string;
     },
   ) {
     this.api = props.api ?? {};
@@ -103,7 +102,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.gen = props.gen;
     this.handler = props.handler;
     this.name = props.name;
-    this.output = props.output;
     this.package = props.context.package;
   }
 

@@ -1,5 +1,5 @@
+import type { Context } from '~/ir/context';
 import { getPaginationKeywordsRegExp } from '~/ir/pagination';
-import type { IR } from '~/ir/types';
 import type { SchemaType } from '~/openApi/shared/types/schema';
 
 import type { ParameterObject, ReferenceObject } from '../types/spec';
@@ -20,7 +20,7 @@ export const paginationField = ({
   name,
   schema,
 }: {
-  context: IR.Context;
+  context: Context;
   name: string;
   schema:
     | ParameterObject

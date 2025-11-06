@@ -1,3 +1,4 @@
+import type { Context } from '~/ir/context';
 import type { IR } from '~/ir/types';
 import { refToName } from '~/utils/ref';
 
@@ -11,7 +12,7 @@ const requestBodyToIrRequestBody = ({
   requestBody,
 }: {
   $ref: string;
-  context: IR.Context;
+  context: Context;
   requestBody: RequestBodyObject;
 }): IR.RequestBodyObject => {
   // TODO: parser - fix
@@ -54,7 +55,7 @@ export const parseRequestBody = ({
   requestBody,
 }: {
   $ref: string;
-  context: IR.Context;
+  context: Context;
   requestBody: RequestBodyObject;
 }) => {
   if (!context.ir.components) {

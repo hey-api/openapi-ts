@@ -1,6 +1,5 @@
 import ts from 'typescript';
 
-import { getConfig } from '~/utils/config';
 import { unescapeName } from '~/utils/escape';
 
 import type { AccessLevel } from './types';
@@ -66,9 +65,9 @@ export function tsNodeToString({
      */
     return unescapeUnicode(result);
   } catch {
-    if (getConfig().logs.level === 'debug') {
-      console.warn('Could not decode value:', result);
-    }
+    // if (getConfig().logs.level === 'debug') {
+    //   console.warn('Could not decode value:', result);
+    // }
     return result;
   }
 }
@@ -78,7 +77,7 @@ export const createIdentifier = ({ text }: { text: string }): ts.Identifier =>
 
 export const createThis = (): ts.ThisExpression => ts.factory.createThis();
 
-type Modifier = AccessLevel | 'async' | 'export' | 'readonly' | 'static';
+export type Modifier = AccessLevel | 'async' | 'export' | 'readonly' | 'static';
 
 export const createModifier = ({ keyword }: { keyword: Modifier }) => {
   const kind = syntaxKindKeyword({ keyword });

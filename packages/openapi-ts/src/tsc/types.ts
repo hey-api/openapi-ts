@@ -3,6 +3,7 @@ import ts from 'typescript';
 import { escapeName } from '~/utils/escape';
 import { validTypescriptIdentifierRegExp } from '~/utils/regexp';
 
+import type { Modifier } from './utils';
 import {
   addLeadingComments,
   type Comments,
@@ -879,21 +880,25 @@ export const createIndexedAccessTypeNode = ({
 };
 
 export const createGetAccessorDeclaration = ({
+  modifiers,
   name,
   returnType,
   statements,
 }: {
+  modifiers?: Modifier | ReadonlyArray<Modifier>;
   name: string | ts.PropertyName;
   returnType?: string | ts.Identifier;
   statements: ReadonlyArray<ts.Statement>;
-}) =>
-  ts.factory.createGetAccessorDeclaration(
-    undefined, // modifiers
+}) => {
+  const mods = Array.isArray(modifiers) ? modifiers : [modifiers];
+  return ts.factory.createGetAccessorDeclaration(
+    modifiers ? mods.map((keyword) => createModifier({ keyword })) : undefined,
     name,
-    [], // parameters
+    [],
     returnType ? createTypeReferenceNode({ typeName: returnType }) : undefined,
     createBlock({ statements }),
   );
+};
 
 export const createStringLiteral = ({
   isSingleQuote,
