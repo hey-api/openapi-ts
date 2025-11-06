@@ -139,10 +139,12 @@ export const createClient = (config: Config = {}): Client => {
     opts.signal = (request as any).signal as AbortSignal | undefined;
 
     // When body is FormData, remove Content-Type header to avoid boundary mismatch.
-    // The Request constructor auto-generates a boundary and sets Content-Type, but
-    // we pass the original FormData to ofetch which will generate its own boundary.
-    // If we keep the Request's Content-Type, the boundary in the header won't match
-    // the boundary in the actual request body sent by ofetch.
+    // Note: We already delete Content-Type in resolveOptions for FormData, but the
+    // Request constructor (line 175) re-adds it with an auto-generated boundary.
+    // Since we pass the original FormData (not the Request's body) to ofetch, and
+    // ofetch will generate its own boundary, we must remove the Request's Content-Type
+    // to let ofetch set the correct one. Otherwise the boundary in the header won't
+    // match the boundary in the actual multipart body sent by ofetch.
     if (typeof FormData !== 'undefined' && body instanceof FormData) {
       opts.headers.delete('Content-Type');
     }
