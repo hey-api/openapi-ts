@@ -716,12 +716,12 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * List Chat Completions
-     *
-     * List stored Chat Completions. Only Chat Completions that have been stored
-    with the `store` parameter set to `true` will be returned.
-    
-     */
+   * List Chat Completions
+   *
+   * List stored Chat Completions. Only Chat Completions that have been stored
+   * with the `store` parameter set to `true` will be returned.
+   *
+   */
   public listChatCompletions<ThrowOnError extends boolean = false>(
     options?: Options<ListChatCompletionsData, ThrowOnError>,
   ) {
@@ -742,25 +742,25 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Create chat completion
-     *
-     * **Starting a new project?** We recommend trying [Responses](https://platform.openai.com/docs/api-reference/responses)
-    to take advantage of the latest OpenAI platform features. Compare
-    [Chat Completions with Responses](https://platform.openai.com/docs/guides/responses-vs-chat-completions?api-mode=responses).
-    
-    ---
-    
-    Creates a model response for the given chat conversation. Learn more in the
-    [text generation](https://platform.openai.com/docs/guides/text-generation), [vision](https://platform.openai.com/docs/guides/vision),
-    and [audio](https://platform.openai.com/docs/guides/audio) guides.
-    
-    Parameter support can differ depending on the model used to generate the
-    response, particularly for newer reasoning models. Parameters that are only
-    supported for reasoning models are noted below. For the current state of
-    unsupported parameters in reasoning models,
-    [refer to the reasoning guide](https://platform.openai.com/docs/guides/reasoning).
-    
-     */
+   * Create chat completion
+   *
+   * **Starting a new project?** We recommend trying [Responses](https://platform.openai.com/docs/api-reference/responses)
+   * to take advantage of the latest OpenAI platform features. Compare
+   * [Chat Completions with Responses](https://platform.openai.com/docs/guides/responses-vs-chat-completions?api-mode=responses).
+   *
+   * ---
+   *
+   * Creates a model response for the given chat conversation. Learn more in the
+   * [text generation](https://platform.openai.com/docs/guides/text-generation), [vision](https://platform.openai.com/docs/guides/vision),
+   * and [audio](https://platform.openai.com/docs/guides/audio) guides.
+   *
+   * Parameter support can differ depending on the model used to generate the
+   * response, particularly for newer reasoning models. Parameters that are only
+   * supported for reasoning models are noted below. For the current state of
+   * unsupported parameters in reasoning models,
+   * [refer to the reasoning guide](https://platform.openai.com/docs/guides/reasoning).
+   *
+   */
   public createChatCompletion<ThrowOnError extends boolean = false>(
     options: Options<CreateChatCompletionData, ThrowOnError>,
   ) {
@@ -785,12 +785,12 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Delete chat completion
-     *
-     * Delete a stored chat completion. Only Chat Completions that have been
-    created with the `store` parameter set to `true` can be deleted.
-    
-     */
+   * Delete chat completion
+   *
+   * Delete a stored chat completion. Only Chat Completions that have been
+   * created with the `store` parameter set to `true` can be deleted.
+   *
+   */
   public deleteChatCompletion<ThrowOnError extends boolean = false>(
     options: Options<DeleteChatCompletionData, ThrowOnError>,
   ) {
@@ -811,12 +811,12 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Get chat completion
-     *
-     * Get a stored chat completion. Only Chat Completions that have been created
-    with the `store` parameter set to `true` will be returned.
-    
-     */
+   * Get chat completion
+   *
+   * Get a stored chat completion. Only Chat Completions that have been created
+   * with the `store` parameter set to `true` will be returned.
+   *
+   */
   public getChatCompletion<ThrowOnError extends boolean = false>(
     options: Options<GetChatCompletionData, ThrowOnError>,
   ) {
@@ -837,13 +837,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Update chat completion
-     *
-     * Modify a stored chat completion. Only Chat Completions that have been
-    created with the `store` parameter set to `true` can be modified. Currently,
-    the only supported modification is to update the `metadata` field.
-    
-     */
+   * Update chat completion
+   *
+   * Modify a stored chat completion. Only Chat Completions that have been
+   * created with the `store` parameter set to `true` can be modified. Currently,
+   * the only supported modification is to update the `metadata` field.
+   *
+   */
   public updateChatCompletion<ThrowOnError extends boolean = false>(
     options: Options<UpdateChatCompletionData, ThrowOnError>,
   ) {
@@ -868,13 +868,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Get chat messages
-     *
-     * Get the messages in a stored chat completion. Only Chat Completions that
-    have been created with the `store` parameter set to `true` will be
-    returned.
-    
-     */
+   * Get chat messages
+   *
+   * Get the messages in a stored chat completion. Only Chat Completions that
+   * have been created with the `store` parameter set to `true` will be
+   * returned.
+   *
+   */
   public getChatCompletionMessages<ThrowOnError extends boolean = false>(
     options: Options<GetChatCompletionMessagesData, ThrowOnError>,
   ) {
@@ -1047,13 +1047,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Create container file
-     *
-     * Create a Container File
-    
-    You can send either a multipart/form-data request with the raw file content, or a JSON request with a file ID.
-    
-     */
+   * Create container file
+   *
+   * Create a Container File
+   *
+   * You can send either a multipart/form-data request with the raw file content, or a JSON request with a file ID.
+   *
+   */
   public createContainerFile<ThrowOnError extends boolean = false>(
     options: Options<CreateContainerFileData, ThrowOnError>,
   ) {
@@ -1179,11 +1179,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * List evals
-     *
-     * List evaluations for a project.
-    
-     */
+   * List evals
+   *
+   * List evaluations for a project.
+   *
+   */
   public listEvals<ThrowOnError extends boolean = false>(
     options?: Options<ListEvalsData, ThrowOnError>,
   ) {
@@ -1204,13 +1204,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Create eval
-     *
-     * Create the structure of an evaluation that can be used to test a model's performance.
-    An evaluation is a set of testing criteria and the config for a data source, which dictates the schema of the data used in the evaluation. After creating an evaluation, you can run it on different models and model parameters. We support several types of graders and datasources.
-    For more information, see the [Evals guide](https://platform.openai.com/docs/guides/evals).
-    
-     */
+   * Create eval
+   *
+   * Create the structure of an evaluation that can be used to test a model's performance.
+   * An evaluation is a set of testing criteria and the config for a data source, which dictates the schema of the data used in the evaluation. After creating an evaluation, you can run it on different models and model parameters. We support several types of graders and datasources.
+   * For more information, see the [Evals guide](https://platform.openai.com/docs/guides/evals).
+   *
+   */
   public createEval<ThrowOnError extends boolean = false>(
     options: Options<CreateEvalData, ThrowOnError>,
   ) {
@@ -1235,11 +1235,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Delete an eval
-     *
-     * Delete an evaluation.
-    
-     */
+   * Delete an eval
+   *
+   * Delete an evaluation.
+   *
+   */
   public deleteEval<ThrowOnError extends boolean = false>(
     options: Options<DeleteEvalData, ThrowOnError>,
   ) {
@@ -1260,11 +1260,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Get an eval
-     *
-     * Get an evaluation by ID.
-    
-     */
+   * Get an eval
+   *
+   * Get an evaluation by ID.
+   *
+   */
   public getEval<ThrowOnError extends boolean = false>(
     options: Options<GetEvalData, ThrowOnError>,
   ) {
@@ -1285,11 +1285,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Update an eval
-     *
-     * Update certain properties of an evaluation.
-    
-     */
+   * Update an eval
+   *
+   * Update certain properties of an evaluation.
+   *
+   */
   public updateEval<ThrowOnError extends boolean = false>(
     options: Options<UpdateEvalData, ThrowOnError>,
   ) {
@@ -1314,11 +1314,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Get eval runs
-     *
-     * Get a list of runs for an evaluation.
-    
-     */
+   * Get eval runs
+   *
+   * Get a list of runs for an evaluation.
+   *
+   */
   public getEvalRuns<ThrowOnError extends boolean = false>(
     options: Options<GetEvalRunsData, ThrowOnError>,
   ) {
@@ -1339,11 +1339,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Create eval run
-     *
-     * Kicks off a new run for a given evaluation, specifying the data source, and what model configuration to use to test. The datasource will be validated against the schema specified in the config of the evaluation.
-    
-     */
+   * Create eval run
+   *
+   * Kicks off a new run for a given evaluation, specifying the data source, and what model configuration to use to test. The datasource will be validated against the schema specified in the config of the evaluation.
+   *
+   */
   public createEvalRun<ThrowOnError extends boolean = false>(
     options: Options<CreateEvalRunData, ThrowOnError>,
   ) {
@@ -1368,11 +1368,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Delete eval run
-     *
-     * Delete an eval run.
-    
-     */
+   * Delete eval run
+   *
+   * Delete an eval run.
+   *
+   */
   public deleteEvalRun<ThrowOnError extends boolean = false>(
     options: Options<DeleteEvalRunData, ThrowOnError>,
   ) {
@@ -1393,11 +1393,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Get an eval run
-     *
-     * Get an evaluation run by ID.
-    
-     */
+   * Get an eval run
+   *
+   * Get an evaluation run by ID.
+   *
+   */
   public getEvalRun<ThrowOnError extends boolean = false>(
     options: Options<GetEvalRunData, ThrowOnError>,
   ) {
@@ -1418,11 +1418,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Cancel eval run
-     *
-     * Cancel an ongoing evaluation run.
-    
-     */
+   * Cancel eval run
+   *
+   * Cancel an ongoing evaluation run.
+   *
+   */
   public cancelEvalRun<ThrowOnError extends boolean = false>(
     options: Options<CancelEvalRunData, ThrowOnError>,
   ) {
@@ -1443,11 +1443,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Get eval run output items
-     *
-     * Get a list of output items for an evaluation run.
-    
-     */
+   * Get eval run output items
+   *
+   * Get a list of output items for an evaluation run.
+   *
+   */
   public getEvalRunOutputItems<ThrowOnError extends boolean = false>(
     options: Options<GetEvalRunOutputItemsData, ThrowOnError>,
   ) {
@@ -1468,11 +1468,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Get an output item of an eval run
-     *
-     * Get an evaluation run output item by ID.
-    
-     */
+   * Get an output item of an eval run
+   *
+   * Get an evaluation run output item by ID.
+   *
+   */
   public getEvalRunOutputItem<ThrowOnError extends boolean = false>(
     options: Options<GetEvalRunOutputItemData, ThrowOnError>,
   ) {
@@ -1517,19 +1517,19 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Upload file
-     *
-     * Upload a file that can be used across various endpoints. Individual files can be up to 512 MB, and the size of all files uploaded by one organization can be up to 1 TB.
-    
-    The Assistants API supports files up to 2 million tokens and of specific file types. See the [Assistants Tools guide](https://platform.openai.com/docs/assistants/tools) for details.
-    
-    The Fine-tuning API only supports `.jsonl` files. The input also has certain required formats for fine-tuning [chat](https://platform.openai.com/docs/api-reference/fine-tuning/chat-input) or [completions](https://platform.openai.com/docs/api-reference/fine-tuning/completions-input) models.
-    
-    The Batch API only supports `.jsonl` files up to 200 MB in size. The input also has a specific required [format](https://platform.openai.com/docs/api-reference/batch/request-input).
-    
-    Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
-    
-     */
+   * Upload file
+   *
+   * Upload a file that can be used across various endpoints. Individual files can be up to 512 MB, and the size of all files uploaded by one organization can be up to 1 TB.
+   *
+   * The Assistants API supports files up to 2 million tokens and of specific file types. See the [Assistants Tools guide](https://platform.openai.com/docs/assistants/tools) for details.
+   *
+   * The Fine-tuning API only supports `.jsonl` files. The input also has certain required formats for fine-tuning [chat](https://platform.openai.com/docs/api-reference/fine-tuning/chat-input) or [completions](https://platform.openai.com/docs/api-reference/fine-tuning/completions-input) models.
+   *
+   * The Batch API only supports `.jsonl` files up to 200 MB in size. The input also has a specific required [format](https://platform.openai.com/docs/api-reference/batch/request-input).
+   *
+   * Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
+   *
+   */
   public createFile<ThrowOnError extends boolean = false>(
     options: Options<CreateFileData, ThrowOnError>,
   ) {
@@ -1627,11 +1627,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Run grader
-     *
-     * Run a grader.
-    
-     */
+   * Run grader
+   *
+   * Run a grader.
+   *
+   */
   public runGrader<ThrowOnError extends boolean = false>(
     options: Options<RunGraderData, ThrowOnError>,
   ) {
@@ -1656,11 +1656,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Validate grader
-     *
-     * Validate a grader.
-    
-     */
+   * Validate grader
+   *
+   * Validate a grader.
+   *
+   */
   public validateGrader<ThrowOnError extends boolean = false>(
     options: Options<ValidateGraderData, ThrowOnError>,
   ) {
@@ -1685,13 +1685,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * List checkpoint permissions
-     *
-     * **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
-    
-    Organization owners can use this endpoint to view all permissions for a fine-tuned model checkpoint.
-    
-     */
+   * List checkpoint permissions
+   *
+   * **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
+   *
+   * Organization owners can use this endpoint to view all permissions for a fine-tuned model checkpoint.
+   *
+   */
   public listFineTuningCheckpointPermissions<
     ThrowOnError extends boolean = false,
   >(options: Options<ListFineTuningCheckpointPermissionsData, ThrowOnError>) {
@@ -1712,13 +1712,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Create checkpoint permissions
-     *
-     * **NOTE:** Calling this endpoint requires an [admin API key](../admin-api-keys).
-    
-    This enables organization owners to share fine-tuned models with other projects in their organization.
-    
-     */
+   * Create checkpoint permissions
+   *
+   * **NOTE:** Calling this endpoint requires an [admin API key](../admin-api-keys).
+   *
+   * This enables organization owners to share fine-tuned models with other projects in their organization.
+   *
+   */
   public createFineTuningCheckpointPermission<
     ThrowOnError extends boolean = false,
   >(options: Options<CreateFineTuningCheckpointPermissionData, ThrowOnError>) {
@@ -1743,13 +1743,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Delete checkpoint permission
-     *
-     * **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
-    
-    Organization owners can use this endpoint to delete a permission for a fine-tuned model checkpoint.
-    
-     */
+   * Delete checkpoint permission
+   *
+   * **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
+   *
+   * Organization owners can use this endpoint to delete a permission for a fine-tuned model checkpoint.
+   *
+   */
   public deleteFineTuningCheckpointPermission<
     ThrowOnError extends boolean = false,
   >(options: Options<DeleteFineTuningCheckpointPermissionData, ThrowOnError>) {
@@ -1770,11 +1770,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * List fine-tuning jobs
-     *
-     * List your organization's fine-tuning jobs
-    
-     */
+   * List fine-tuning jobs
+   *
+   * List your organization's fine-tuning jobs
+   *
+   */
   public listPaginatedFineTuningJobs<ThrowOnError extends boolean = false>(
     options?: Options<ListPaginatedFineTuningJobsData, ThrowOnError>,
   ) {
@@ -1795,15 +1795,15 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Create fine-tuning job
-     *
-     * Creates a fine-tuning job which begins the process of creating a new model from a given dataset.
-    
-    Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.
-    
-    [Learn more about fine-tuning](https://platform.openai.com/docs/guides/model-optimization)
-    
-     */
+   * Create fine-tuning job
+   *
+   * Creates a fine-tuning job which begins the process of creating a new model from a given dataset.
+   *
+   * Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.
+   *
+   * [Learn more about fine-tuning](https://platform.openai.com/docs/guides/model-optimization)
+   *
+   */
   public createFineTuningJob<ThrowOnError extends boolean = false>(
     options: Options<CreateFineTuningJobData, ThrowOnError>,
   ) {
@@ -1828,13 +1828,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Retrieve fine-tuning job
-     *
-     * Get info about a fine-tuning job.
-    
-    [Learn more about fine-tuning](https://platform.openai.com/docs/guides/model-optimization)
-    
-     */
+   * Retrieve fine-tuning job
+   *
+   * Get info about a fine-tuning job.
+   *
+   * [Learn more about fine-tuning](https://platform.openai.com/docs/guides/model-optimization)
+   *
+   */
   public retrieveFineTuningJob<ThrowOnError extends boolean = false>(
     options: Options<RetrieveFineTuningJobData, ThrowOnError>,
   ) {
@@ -1855,11 +1855,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Cancel fine-tuning
-     *
-     * Immediately cancel a fine-tune job.
-    
-     */
+   * Cancel fine-tuning
+   *
+   * Immediately cancel a fine-tune job.
+   *
+   */
   public cancelFineTuningJob<ThrowOnError extends boolean = false>(
     options: Options<CancelFineTuningJobData, ThrowOnError>,
   ) {
@@ -1880,11 +1880,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * List fine-tuning checkpoints
-     *
-     * List checkpoints for a fine-tuning job.
-    
-     */
+   * List fine-tuning checkpoints
+   *
+   * List checkpoints for a fine-tuning job.
+   *
+   */
   public listFineTuningJobCheckpoints<ThrowOnError extends boolean = false>(
     options: Options<ListFineTuningJobCheckpointsData, ThrowOnError>,
   ) {
@@ -1905,11 +1905,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * List fine-tuning events
-     *
-     * Get status updates for a fine-tuning job.
-    
-     */
+   * List fine-tuning events
+   *
+   * Get status updates for a fine-tuning job.
+   *
+   */
   public listFineTuningEvents<ThrowOnError extends boolean = false>(
     options: Options<ListFineTuningEventsData, ThrowOnError>,
   ) {
@@ -1930,11 +1930,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Pause fine-tuning
-     *
-     * Pause a fine-tune job.
-    
-     */
+   * Pause fine-tuning
+   *
+   * Pause a fine-tune job.
+   *
+   */
   public pauseFineTuningJob<ThrowOnError extends boolean = false>(
     options: Options<PauseFineTuningJobData, ThrowOnError>,
   ) {
@@ -1955,11 +1955,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Resume fine-tuning
-     *
-     * Resume a fine-tune job.
-    
-     */
+   * Resume fine-tuning
+   *
+   * Resume a fine-tune job.
+   *
+   */
   public resumeFineTuningJob<ThrowOnError extends boolean = false>(
     options: Options<ResumeFineTuningJobData, ThrowOnError>,
   ) {
@@ -2009,11 +2009,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Create image
-     *
-     * Creates an image given a prompt. [Learn more](https://platform.openai.com/docs/guides/images).
-    
-     */
+   * Create image
+   *
+   * Creates an image given a prompt. [Learn more](https://platform.openai.com/docs/guides/images).
+   *
+   */
   public createImage<ThrowOnError extends boolean = false>(
     options: Options<CreateImageData, ThrowOnError>,
   ) {
@@ -2139,12 +2139,12 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Create moderation
-     *
-     * Classifies if text and/or image inputs are potentially harmful. Learn
-    more in the [moderation guide](https://platform.openai.com/docs/guides/moderation).
-    
-     */
+   * Create moderation
+   *
+   * Classifies if text and/or image inputs are potentially harmful. Learn
+   * more in the [moderation guide](https://platform.openai.com/docs/guides/moderation).
+   *
+   */
   public createModeration<ThrowOnError extends boolean = false>(
     options: Options<CreateModerationData, ThrowOnError>,
   ) {
@@ -2326,13 +2326,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Upload certificate
-     *
-     * Upload a certificate to the organization. This does **not** automatically activate the certificate.
-    
-    Organizations can upload up to 50 certificates.
-    
-     */
+   * Upload certificate
+   *
+   * Upload a certificate to the organization. This does **not** automatically activate the certificate.
+   *
+   * Organizations can upload up to 50 certificates.
+   *
+   */
   public uploadCertificate<ThrowOnError extends boolean = false>(
     options: Options<UploadCertificateData, ThrowOnError>,
   ) {
@@ -2357,13 +2357,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Activate certificates for organization
-     *
-     * Activate certificates at the organization level.
-    
-    You can atomically and idempotently activate up to 10 certificates at a time.
-    
-     */
+   * Activate certificates for organization
+   *
+   * Activate certificates at the organization level.
+   *
+   * You can atomically and idempotently activate up to 10 certificates at a time.
+   *
+   */
   public activateOrganizationCertificates<ThrowOnError extends boolean = false>(
     options: Options<ActivateOrganizationCertificatesData, ThrowOnError>,
   ) {
@@ -2388,13 +2388,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Deactivate certificates for organization
-     *
-     * Deactivate certificates at the organization level.
-    
-    You can atomically and idempotently deactivate up to 10 certificates at a time.
-    
-     */
+   * Deactivate certificates for organization
+   *
+   * Deactivate certificates at the organization level.
+   *
+   * You can atomically and idempotently deactivate up to 10 certificates at a time.
+   *
+   */
   public deactivateOrganizationCertificates<
     ThrowOnError extends boolean = false,
   >(options: Options<DeactivateOrganizationCertificatesData, ThrowOnError>) {
@@ -2419,13 +2419,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Delete certificate
-     *
-     * Delete a certificate from the organization.
-    
-    The certificate must be inactive for the organization and all projects.
-    
-     */
+   * Delete certificate
+   *
+   * Delete a certificate from the organization.
+   *
+   * The certificate must be inactive for the organization and all projects.
+   *
+   */
   public deleteCertificate<ThrowOnError extends boolean = false>(
     options?: Options<DeleteCertificateData, ThrowOnError>,
   ) {
@@ -2446,13 +2446,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Get certificate
-     *
-     * Get a certificate that has been uploaded to the organization.
-    
-    You can get a certificate regardless of whether it is active or not.
-    
-     */
+   * Get certificate
+   *
+   * Get a certificate that has been uploaded to the organization.
+   *
+   * You can get a certificate regardless of whether it is active or not.
+   *
+   */
   public getCertificate<ThrowOnError extends boolean = false>(
     options: Options<GetCertificateData, ThrowOnError>,
   ) {
@@ -2473,11 +2473,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Modify certificate
-     *
-     * Modify a certificate. Note that only the name can be modified.
-    
-     */
+   * Modify certificate
+   *
+   * Modify a certificate. Note that only the name can be modified.
+   *
+   */
   public modifyCertificate<ThrowOnError extends boolean = false>(
     options: Options<ModifyCertificateData, ThrowOnError>,
   ) {
@@ -2850,13 +2850,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Activate certificates for project
-     *
-     * Activate certificates at the project level.
-    
-    You can atomically and idempotently activate up to 10 certificates at a time.
-    
-     */
+   * Activate certificates for project
+   *
+   * Activate certificates at the project level.
+   *
+   * You can atomically and idempotently activate up to 10 certificates at a time.
+   *
+   */
   public activateProjectCertificates<ThrowOnError extends boolean = false>(
     options: Options<ActivateProjectCertificatesData, ThrowOnError>,
   ) {
@@ -2881,12 +2881,12 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Deactivate certificates for project
-     *
-     * Deactivate certificates at the project level. You can atomically and
-    idempotently deactivate up to 10 certificates at a time.
-    
-     */
+   * Deactivate certificates for project
+   *
+   * Deactivate certificates at the project level. You can atomically and
+   * idempotently deactivate up to 10 certificates at a time.
+   *
+   */
   public deactivateProjectCertificates<ThrowOnError extends boolean = false>(
     options: Options<DeactivateProjectCertificatesData, ThrowOnError>,
   ) {
@@ -3483,17 +3483,17 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Create session
-     *
-     * Create an ephemeral API token for use in client-side applications with the
-    Realtime API. Can be configured with the same session parameters as the
-    `session.update` client event.
-    
-    It responds with a session object, plus a `client_secret` key which contains
-    a usable ephemeral API token that can be used to authenticate browser clients
-    for the Realtime API.
-    
-     */
+   * Create session
+   *
+   * Create an ephemeral API token for use in client-side applications with the
+   * Realtime API. Can be configured with the same session parameters as the
+   * `session.update` client event.
+   *
+   * It responds with a session object, plus a `client_secret` key which contains
+   * a usable ephemeral API token that can be used to authenticate browser clients
+   * for the Realtime API.
+   *
+   */
   public createRealtimeSession<ThrowOnError extends boolean = false>(
     options: Options<CreateRealtimeSessionData, ThrowOnError>,
   ) {
@@ -3518,17 +3518,17 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Create transcription session
-     *
-     * Create an ephemeral API token for use in client-side applications with the
-    Realtime API specifically for realtime transcriptions.
-    Can be configured with the same session parameters as the `transcription_session.update` client event.
-    
-    It responds with a session object, plus a `client_secret` key which contains
-    a usable ephemeral API token that can be used to authenticate browser clients
-    for the Realtime API.
-    
-     */
+   * Create transcription session
+   *
+   * Create an ephemeral API token for use in client-side applications with the
+   * Realtime API specifically for realtime transcriptions.
+   * Can be configured with the same session parameters as the `transcription_session.update` client event.
+   *
+   * It responds with a session object, plus a `client_secret` key which contains
+   * a usable ephemeral API token that can be used to authenticate browser clients
+   * for the Realtime API.
+   *
+   */
   public createRealtimeTranscriptionSession<
     ThrowOnError extends boolean = false,
   >(options: Options<CreateRealtimeTranscriptionSessionData, ThrowOnError>) {
@@ -3553,17 +3553,17 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Create a model response
-     *
-     * Creates a model response. Provide [text](https://platform.openai.com/docs/guides/text) or
-    [image](https://platform.openai.com/docs/guides/images) inputs to generate [text](https://platform.openai.com/docs/guides/text)
-    or [JSON](https://platform.openai.com/docs/guides/structured-outputs) outputs. Have the model call
-    your own [custom code](https://platform.openai.com/docs/guides/function-calling) or use built-in
-    [tools](https://platform.openai.com/docs/guides/tools) like [web search](https://platform.openai.com/docs/guides/tools-web-search)
-    or [file search](https://platform.openai.com/docs/guides/tools-file-search) to use your own data
-    as input for the model's response.
-    
-     */
+   * Create a model response
+   *
+   * Creates a model response. Provide [text](https://platform.openai.com/docs/guides/text) or
+   * [image](https://platform.openai.com/docs/guides/images) inputs to generate [text](https://platform.openai.com/docs/guides/text)
+   * or [JSON](https://platform.openai.com/docs/guides/structured-outputs) outputs. Have the model call
+   * your own [custom code](https://platform.openai.com/docs/guides/function-calling) or use built-in
+   * [tools](https://platform.openai.com/docs/guides/tools) like [web search](https://platform.openai.com/docs/guides/tools-web-search)
+   * or [file search](https://platform.openai.com/docs/guides/tools-file-search) to use your own data
+   * as input for the model's response.
+   *
+   */
   public createResponse<ThrowOnError extends boolean = false>(
     options: Options<CreateResponseData, ThrowOnError>,
   ) {
@@ -3588,11 +3588,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Delete a model response
-     *
-     * Deletes a model response with the given ID.
-    
-     */
+   * Delete a model response
+   *
+   * Deletes a model response with the given ID.
+   *
+   */
   public deleteResponse<ThrowOnError extends boolean = false>(
     options: Options<DeleteResponseData, ThrowOnError>,
   ) {
@@ -3613,11 +3613,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Get a model response
-     *
-     * Retrieves a model response with the given ID.
-    
-     */
+   * Get a model response
+   *
+   * Retrieves a model response with the given ID.
+   *
+   */
   public getResponse<ThrowOnError extends boolean = false>(
     options: Options<GetResponseData, ThrowOnError>,
   ) {
@@ -3638,13 +3638,13 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Cancel a response
-     *
-     * Cancels a model response with the given ID. Only responses created with
-    the `background` parameter set to `true` can be cancelled.
-    [Learn more](https://platform.openai.com/docs/guides/background).
-    
-     */
+   * Cancel a response
+   *
+   * Cancels a model response with the given ID. Only responses created with
+   * the `background` parameter set to `true` can be cancelled.
+   * [Learn more](https://platform.openai.com/docs/guides/background).
+   *
+   */
   public cancelResponse<ThrowOnError extends boolean = false>(
     options: Options<CancelResponseData, ThrowOnError>,
   ) {
@@ -4125,11 +4125,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Submit tool outputs to run
-     *
-     * When a run has the `status: "requires_action"` and `required_action.type` is `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once they're all completed. All outputs must be submitted in a single request.
-    
-     */
+   * Submit tool outputs to run
+   *
+   * When a run has the `status: "requires_action"` and `required_action.type` is `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once they're all completed. All outputs must be submitted in a single request.
+   *
+   */
   public submitToolOuputsToRun<ThrowOnError extends boolean = false>(
     options: Options<SubmitToolOuputsToRunData, ThrowOnError>,
   ) {
@@ -4154,27 +4154,27 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Create upload
-     *
-     * Creates an intermediate [Upload](https://platform.openai.com/docs/api-reference/uploads/object) object
-    that you can add [Parts](https://platform.openai.com/docs/api-reference/uploads/part-object) to.
-    Currently, an Upload can accept at most 8 GB in total and expires after an
-    hour after you create it.
-    
-    Once you complete the Upload, we will create a
-    [File](https://platform.openai.com/docs/api-reference/files/object) object that contains all the parts
-    you uploaded. This File is usable in the rest of our platform as a regular
-    File object.
-    
-    For certain `purpose` values, the correct `mime_type` must be specified.
-    Please refer to documentation for the
-    [supported MIME types for your use case](https://platform.openai.com/docs/assistants/tools/file-search#supported-files).
-    
-    For guidance on the proper filename extensions for each purpose, please
-    follow the documentation on [creating a
-    File](https://platform.openai.com/docs/api-reference/files/create).
-    
-     */
+   * Create upload
+   *
+   * Creates an intermediate [Upload](https://platform.openai.com/docs/api-reference/uploads/object) object
+   * that you can add [Parts](https://platform.openai.com/docs/api-reference/uploads/part-object) to.
+   * Currently, an Upload can accept at most 8 GB in total and expires after an
+   * hour after you create it.
+   *
+   * Once you complete the Upload, we will create a
+   * [File](https://platform.openai.com/docs/api-reference/files/object) object that contains all the parts
+   * you uploaded. This File is usable in the rest of our platform as a regular
+   * File object.
+   *
+   * For certain `purpose` values, the correct `mime_type` must be specified.
+   * Please refer to documentation for the
+   * [supported MIME types for your use case](https://platform.openai.com/docs/assistants/tools/file-search#supported-files).
+   *
+   * For guidance on the proper filename extensions for each purpose, please
+   * follow the documentation on [creating a
+   * File](https://platform.openai.com/docs/api-reference/files/create).
+   *
+   */
   public createUpload<ThrowOnError extends boolean = false>(
     options: Options<CreateUploadData, ThrowOnError>,
   ) {
@@ -4199,11 +4199,11 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Cancel upload
-     *
-     * Cancels the Upload. No Parts may be added after an Upload is cancelled.
-    
-     */
+   * Cancel upload
+   *
+   * Cancels the Upload. No Parts may be added after an Upload is cancelled.
+   *
+   */
   public cancelUpload<ThrowOnError extends boolean = false>(
     options: Options<CancelUploadData, ThrowOnError>,
   ) {
@@ -4224,17 +4224,17 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Complete upload
-     *
-     * Completes the [Upload](https://platform.openai.com/docs/api-reference/uploads/object).
-    
-    Within the returned Upload object, there is a nested [File](https://platform.openai.com/docs/api-reference/files/object) object that is ready to use in the rest of the platform.
-    
-    You can specify the order of the Parts by passing in an ordered list of the Part IDs.
-    
-    The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.
-    
-     */
+   * Complete upload
+   *
+   * Completes the [Upload](https://platform.openai.com/docs/api-reference/uploads/object).
+   *
+   * Within the returned Upload object, there is a nested [File](https://platform.openai.com/docs/api-reference/files/object) object that is ready to use in the rest of the platform.
+   *
+   * You can specify the order of the Parts by passing in an ordered list of the Part IDs.
+   *
+   * The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.
+   *
+   */
   public completeUpload<ThrowOnError extends boolean = false>(
     options: Options<CompleteUploadData, ThrowOnError>,
   ) {
@@ -4259,15 +4259,15 @@ export class OpenAi extends HeyApiClient {
   }
 
   /**
-     * Add upload part
-     *
-     * Adds a [Part](https://platform.openai.com/docs/api-reference/uploads/part-object) to an [Upload](https://platform.openai.com/docs/api-reference/uploads/object) object. A Part represents a chunk of bytes from the file you are trying to upload.
-    
-    Each Part can be at most 64 MB, and you can add Parts until you hit the Upload maximum of 8 GB.
-    
-    It is possible to add multiple Parts in parallel. You can decide the intended order of the Parts when you [complete the Upload](https://platform.openai.com/docs/api-reference/uploads/complete).
-    
-     */
+   * Add upload part
+   *
+   * Adds a [Part](https://platform.openai.com/docs/api-reference/uploads/part-object) to an [Upload](https://platform.openai.com/docs/api-reference/uploads/object) object. A Part represents a chunk of bytes from the file you are trying to upload.
+   *
+   * Each Part can be at most 64 MB, and you can add Parts until you hit the Upload maximum of 8 GB.
+   *
+   * It is possible to add multiple Parts in parallel. You can decide the intended order of the Parts when you [complete the Upload](https://platform.openai.com/docs/api-reference/uploads/complete).
+   *
+   */
   public addUploadPart<ThrowOnError extends boolean = false>(
     options: Options<AddUploadPartData, ThrowOnError>,
   ) {
