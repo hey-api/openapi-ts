@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom/client';
 
 import App from './App.tsx';
 import { client } from './client/client.gen';
+import { Sdk } from './client/sdk.gen.ts';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,6 +27,7 @@ client.setConfig({
     Authorization: 'Bearer <token_from_service_client>',
   },
 });
+new Sdk();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

@@ -7,8 +7,8 @@ import {
 } from '~/plugins/shared/utils/operation';
 import { tsc } from '~/tsc';
 
-import type { PluginInstance } from './types';
-import { useTypeData } from './useType';
+import { useTypeData } from '../shared/useType';
+import type { PluginInstance } from '../types';
 
 const optionsParamName = 'options';
 

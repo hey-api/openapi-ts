@@ -72,8 +72,35 @@ export function tsNodeToString({
   }
 }
 
-export const createIdentifier = ({ text }: { text: string }): ts.Identifier =>
-  ts.factory.createIdentifier(text);
+export const createIdentifier = (
+  args: string | { text: string },
+): ts.Identifier =>
+  ts.factory.createIdentifier(typeof args === 'string' ? args : args.text);
+
+type Prefix = '!' | '-';
+
+const prefixToOperator = (prefix: Prefix): ts.PrefixUnaryOperator => {
+  switch (prefix) {
+    case '!':
+      return ts.SyntaxKind.ExclamationToken;
+    case '-':
+      return ts.SyntaxKind.MinusToken;
+  }
+};
+
+export const createPrefixUnaryExpression = ({
+  expression,
+  prefix,
+}: {
+  expression: string | ts.Expression;
+  prefix: Prefix | ts.PrefixUnaryOperator;
+}): ts.PrefixUnaryExpression => {
+  const operand =
+    typeof expression === 'string' ? createIdentifier(expression) : expression;
+  const operator =
+    typeof prefix === 'string' ? prefixToOperator(prefix) : prefix;
+  return ts.factory.createPrefixUnaryExpression(operator, operand);
+};
 
 export const createThis = (): ts.ThisExpression => ts.factory.createThis();
 
@@ -86,23 +113,23 @@ export const createModifier = ({ keyword }: { keyword: Modifier }) => {
 
 export const createPropertyDeclaration = ({
   initializer,
-  modifier,
+  modifiers,
   name,
   type,
 }: {
   initializer?: ts.Expression;
-  modifier?: Modifier;
+  modifiers?: Modifier | ReadonlyArray<Modifier>;
   name: string | ts.PropertyName;
   type?: ts.TypeNode;
 }) => {
-  const node = ts.factory.createPropertyDeclaration(
-    modifier ? [createModifier({ keyword: modifier })] : undefined,
+  const mods = Array.isArray(modifiers) ? modifiers : [modifiers];
+  return ts.factory.createPropertyDeclaration(
+    modifiers ? mods.map((keyword) => createModifier({ keyword })) : undefined,
     name,
     undefined,
     type,
     initializer,
   );
-  return node;
 };
 
 /**
@@ -116,17 +143,17 @@ export const ots = {
   boolean: (value: boolean) =>
     value ? ts.factory.createTrue() : ts.factory.createFalse(),
   export: ({ alias, asType = false, name }: ImportExportItemObject) => {
-    const nameNode = createIdentifier({ text: name! });
+    const nameNode = createIdentifier(name!);
     if (alias) {
-      const aliasNode = createIdentifier({ text: alias });
+      const aliasNode = createIdentifier(alias);
       return ts.factory.createExportSpecifier(asType, nameNode, aliasNode);
     }
     return ts.factory.createExportSpecifier(asType, undefined, nameNode);
   },
   import: ({ alias, asType = false, name }: ImportExportItemObject) => {
-    const nameNode = createIdentifier({ text: name! });
+    const nameNode = createIdentifier(name!);
     if (alias) {
-      const aliasNode = createIdentifier({ text: alias });
+      const aliasNode = createIdentifier(alias);
       return ts.factory.createImportSpecifier(asType, nameNode, aliasNode);
     }
     return ts.factory.createImportSpecifier(asType, undefined, nameNode);
@@ -136,10 +163,10 @@ export const ots = {
    */
   number: (value: number) => {
     if (value < 0) {
-      return ts.factory.createPrefixUnaryExpression(
-        ts.SyntaxKind.MinusToken,
-        ts.factory.createNumericLiteral(Math.abs(value)),
-      );
+      return createPrefixUnaryExpression({
+        expression: ts.factory.createNumericLiteral(Math.abs(value)),
+        prefix: '-',
+      });
     }
     return ts.factory.createNumericLiteral(value);
   },
@@ -162,7 +189,7 @@ export const ots = {
       text = `\`${text.replace(/(?<!\\)`/g, '\\`').replace(/\${/g, '\\${')}\``;
     }
     if (text.startsWith('`')) {
-      return createIdentifier({ text });
+      return createIdentifier(text);
     }
     return createStringLiteral({ text });
   },

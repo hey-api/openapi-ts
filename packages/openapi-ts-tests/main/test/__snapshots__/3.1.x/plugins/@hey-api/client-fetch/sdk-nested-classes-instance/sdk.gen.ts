@@ -18,63 +18,89 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-class _HeyApiClient {
-    protected _client: Client = client;
+class HeyApiClient {
+    protected client: Client;
     
     constructor(args?: {
         client?: Client;
     }) {
-        if (args?.client) {
-            this._client = args.client;
-        }
+        this.client = args?.client ?? client;
     }
 }
 
-export class Domains extends _HeyApiClient {
+class HeyApiRegistry<T> {
+    private readonly defaultKey = "default";
+    
+    private readonly instances: Map<string, T> = new Map();
+    
+    get(key?: string): T {
+        const instance = this.instances.get(key ?? this.defaultKey);
+        if (!instance) {
+            throw new Error(`No SDK client found. Create one with "new NestedSdkWithInstance()" to fix this error.`);
+        }
+        return instance;
+    }
+    
+    set(value: T, key?: string): void {
+        this.instances.set(key ?? this.defaultKey, value);
+    }
+}
+
+export class Domains extends HeyApiClient {
     public get<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsGetData, ThrowOnError>) {
-        return (options?.client ?? this._client).get<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError>({
+        return (options?.client ?? this.client).get<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError>({
             url: '/business/providers/domains',
             ...options
         });
     }
     
     public post<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsPostData, ThrowOnError>) {
-        return (options?.client ?? this._client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({
+        return (options?.client ?? this.client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({
             url: '/business/providers/domains',
             ...options
         });
     }
 }
 
-export class Providers extends _HeyApiClient {
-    domains = new Domains({ client: this._client });
+export class Providers extends HeyApiClient {
+    domains = new Domains({ client: this.client });
 }
 
-export class Business extends _HeyApiClient {
+export class Business extends HeyApiClient {
     public get<ThrowOnError extends boolean = false>(options?: Options<BusinessGetData, ThrowOnError>) {
-        return (options?.client ?? this._client).get<BusinessGetResponses, unknown, ThrowOnError>({
+        return (options?.client ?? this.client).get<BusinessGetResponses, unknown, ThrowOnError>({
             url: '/locations/businesses',
             ...options
         });
     }
     
-    providers = new Providers({ client: this._client });
+    providers = new Providers({ client: this.client });
 }
 
-export class NestedSdkWithInstance extends _HeyApiClient {
+export class NestedSdkWithInstance extends HeyApiClient {
+    public static readonly __registry = new HeyApiRegistry<NestedSdkWithInstance>();
+    
+    constructor(args?: {
+        client?: Client;
+        key?: string;
+    }) {
+        super(args);
+        NestedSdkWithInstance.__registry.set(this, args?.key);
+    }
+    
     public putBusinessProvidersDomains<ThrowOnError extends boolean = false>(options?: Options<PutBusinessProvidersDomainsData, ThrowOnError>) {
-        return (options?.client ?? this._client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({
+        return (options?.client ?? this.client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({
             url: '/business/providers/domains',
             ...options
         });
     }
     
     public get<ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>) {
-        return (options?.client ?? this._client).get<GetResponses, unknown, ThrowOnError>({
+        return (options?.client ?? this.client).get<GetResponses, unknown, ThrowOnError>({
             url: '/locations',
             ...options
         });
     }
     
-    business = new Business({ client: this._client });
+    business = new Business({ client: this.client });
 }
