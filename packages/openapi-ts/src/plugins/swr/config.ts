@@ -86,11 +86,11 @@ export const defaultConfig: SwrPlugin['Config'] = {
       value: plugin.config.queryOptions,
     });
 
-    plugin.config.useQuery = context.valueToObject({
+    plugin.config.useSwr = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: 'use{{name}}Query',
+        enabled: true,
+        name: 'use{{name}}',
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),
@@ -98,11 +98,11 @@ export const defaultConfig: SwrPlugin['Config'] = {
         object: (fields) => ({ enabled: true, ...fields }),
         string: (name) => ({ enabled: true, name }),
       },
-      value: plugin.config.useQuery,
+      value: plugin.config.useSwr,
     });
 
-    if (plugin.config.useQuery.enabled) {
-      // useQuery hooks consume queryOptions
+    if (plugin.config.useSwr.enabled) {
+      // useSwr hooks consume queryOptions
       if (!plugin.config.queryOptions.enabled) {
         plugin.config.queryOptions.enabled = true;
         plugin.config.queryOptions.exported = false;

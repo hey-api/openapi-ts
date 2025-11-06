@@ -11,7 +11,10 @@ export default defineConfig({
   plugins: [
     '@hey-api/client-fetch',
     '@hey-api/schemas',
-    '@hey-api/sdk',
+    {
+      instance: true,
+      name: '@hey-api/sdk',
+    },
     {
       enums: 'javascript',
       name: '@hey-api/typescript',

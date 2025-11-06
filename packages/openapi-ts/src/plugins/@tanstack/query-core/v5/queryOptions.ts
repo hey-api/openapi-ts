@@ -9,14 +9,14 @@ import {
 } from '~/plugins/shared/utils/operation';
 import { tsc } from '~/tsc';
 
-import { handleMeta } from './meta';
 import {
   createQueryKeyFunction,
   createQueryKeyType,
   queryKeyStatement,
-} from './queryKey';
-import type { PluginInstance } from './types';
-import { useTypeData } from './useType';
+} from '../queryKey';
+import { handleMeta } from '../shared/meta';
+import { useTypeData } from '../shared/useType';
+import type { PluginInstance } from '../types';
 
 const optionsParamName = 'options';
 

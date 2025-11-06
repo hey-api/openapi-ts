@@ -11,7 +11,7 @@ export type UserConfig = Plugin.Name<'swr'> &
      */
     case?: StringCase;
     /**
-     * Add comments from SDK functions to the generated TanStack Query code?
+     * Add comments from SDK functions to the generated SWR code?
      *
      * Duplicating comments this way is useful so you don't need to drill into
      * the underlying SDK function to learn what it does or whether it's
@@ -308,18 +308,18 @@ export type UserConfig = Plugin.Name<'swr'> &
           name?: StringName;
         };
     /**
-     * Configuration for generated `useQuery()` function helpers.
+     * Configuration for generated `useSwr()` function helpers.
      *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
+     * See {@link https://swr.vercel.app/docs/api API}
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
      * - `string` or `function`: Shorthand for `{ name: string | function }`
      * - `object`: Full configuration object
      *
-     * @default false
+     * @default true
      */
-    useQuery?:
+    useSwr?:
       | boolean
       | StringName
       | {
@@ -330,18 +330,18 @@ export type UserConfig = Plugin.Name<'swr'> &
            */
           case?: StringCase;
           /**
-           * Whether to generate `useQuery()` function helpers.
+           * Whether to generate `useSwr()` function helpers.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated `useQuery()` function names. The name variable is
+           * Custom naming pattern for generated `useSwr()` function names. The name variable is
            * obtained from the SDK function name.
            *
-           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
+           * See {@link https://swr.vercel.app/docs/api API}
            *
-           * @default 'use{{name}}Query'
+           * @default 'use{{name}}'
            */
           name?: StringName;
         };
@@ -356,7 +356,7 @@ export type Config = Plugin.Name<'swr'> &
      */
     case: StringCase;
     /**
-     * Add comments from SDK functions to the generated TanStack Query code?
+     * Add comments from SDK functions to the generated SWR code?
      *
      * @default true
      */
@@ -592,11 +592,11 @@ export type Config = Plugin.Name<'swr'> &
       name: StringName;
     };
     /**
-     * Configuration for generated `useQuery()` function helpers.
+     * Configuration for generated `useSwr()` function helpers.
      *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
+     * See {@link https://swr.vercel.app/docs/api API}
      */
-    useQuery: {
+    useSwr: {
       /**
        * The casing convention to use for generated names.
        *
@@ -604,18 +604,18 @@ export type Config = Plugin.Name<'swr'> &
        */
       case: StringCase;
       /**
-       * Whether to generate `useQuery()` function helpers.
+       * Whether to generate `useSwr()` function helpers.
        *
        * @default true
        */
       enabled: boolean;
       /**
-       * Custom naming pattern for generated `useQuery()` function names. The name variable is
+       * Custom naming pattern for generated `useSwr()` function names. The name variable is
        * obtained from the SDK function name.
        *
-       * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
+       * See {@link https://swr.vercel.app/docs/api API}
        *
-       * @default 'use{{name}}Query'
+       * @default 'use{{name}}'
        */
       name: StringName;
     };

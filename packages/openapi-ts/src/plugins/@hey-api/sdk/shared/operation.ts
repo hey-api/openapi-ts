@@ -690,7 +690,7 @@ export const operationStatements = ({
       operator: '??',
       right: tsc.propertyAccessExpression({
         expression: tsc.this(),
-        name: '_client',
+        name: 'client',
       }),
     });
   } else if (symbolClient) {

@@ -41,10 +41,9 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'invalid',
-            // 'openai.yaml',
             // 'full.yaml',
-            'opencode.yaml',
-            // 'sdk-circular-bug.yaml',
+            'openai.yaml',
+            // 'opencode.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
@@ -217,8 +216,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          // name: '@hey-api/client-fetch',
-          // name: 'legacy/angular',
+          name: '@hey-api/client-fetch',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
@@ -256,7 +254,7 @@ export default defineConfig(() => {
           // classNameBuilder: '{{name}}',
           // classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
-          // client: false,
+          client: false,
           // getSignature: ({ fields, signature, operation }) => {
           //   // ...
           //   fields.unwrap('path')
@@ -265,7 +263,7 @@ export default defineConfig(() => {
           instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
-          paramsStructure: 'flat',
+          // paramsStructure: 'flat',
           // responseStyle: 'data',
           // signature: 'auto',
           // signature: 'client',
@@ -298,6 +296,9 @@ export default defineConfig(() => {
         },
         {
           // name: 'fastify',
+        },
+        {
+          name: 'swr',
         },
         {
           // case: 'SCREAMING_SNAKE_CASE',

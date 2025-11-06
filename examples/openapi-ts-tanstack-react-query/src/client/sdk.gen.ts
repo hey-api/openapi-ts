@@ -79,408 +79,468 @@ export type Options<
   meta?: Record<string, unknown>;
 };
 
-/**
- * Add a new pet to the store.
- *
- * Add a new pet to the store.
- */
-export const addPet = <ThrowOnError extends boolean = false>(
-  options: Options<AddPetData, ThrowOnError>,
-) =>
-  (options.client ?? client).post<AddPetResponses, AddPetErrors, ThrowOnError>({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
+class HeyApiClient {
+  protected client: Client;
+
+  constructor(args?: { client?: Client }) {
+    this.client = args?.client ?? client;
+  }
+}
+
+class HeyApiRegistry<T> {
+  private readonly defaultKey = 'default';
+
+  private readonly instances: Map<string, T> = new Map();
+
+  get(key?: string): T {
+    const instance = this.instances.get(key ?? this.defaultKey);
+    if (!instance) {
+      throw new Error(
+        `No SDK client found. Create one with "new Sdk()" to fix this error.`,
+      );
+    }
+    return instance;
+  }
+
+  set(value: T, key?: string): void {
+    this.instances.set(key ?? this.defaultKey, value);
+  }
+}
+
+export class Sdk extends HeyApiClient {
+  public static readonly __registry = new HeyApiRegistry<Sdk>();
+
+  constructor(args?: { client?: Client; key?: string }) {
+    super(args);
+    Sdk.__registry.set(this, args?.key);
+  }
+
+  /**
+   * Add a new pet to the store.
+   *
+   * Add a new pet to the store.
+   */
+  public addPet<ThrowOnError extends boolean = false>(
+    options: Options<AddPetData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).post<
+      AddPetResponses,
+      AddPetErrors,
+      ThrowOnError
+    >({
+      security: [
+        {
+          scheme: 'bearer',
+          type: 'http',
+        },
+      ],
+      url: '/pet',
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
       },
-    ],
-    url: '/pet',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+    });
+  }
 
-/**
- * Update an existing pet.
- *
- * Update an existing pet by Id.
- */
-export const updatePet = <ThrowOnError extends boolean = false>(
-  options: Options<UpdatePetData, ThrowOnError>,
-) =>
-  (options.client ?? client).put<
-    UpdatePetResponses,
-    UpdatePetErrors,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
+  /**
+   * Update an existing pet.
+   *
+   * Update an existing pet by Id.
+   */
+  public updatePet<ThrowOnError extends boolean = false>(
+    options: Options<UpdatePetData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).put<
+      UpdatePetResponses,
+      UpdatePetErrors,
+      ThrowOnError
+    >({
+      security: [
+        {
+          scheme: 'bearer',
+          type: 'http',
+        },
+      ],
+      url: '/pet',
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
       },
-    ],
-    url: '/pet',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+    });
+  }
 
-/**
- * Finds Pets by status.
- *
- * Multiple status values can be provided with comma separated strings.
- */
-export const findPetsByStatus = <ThrowOnError extends boolean = false>(
-  options: Options<FindPetsByStatusData, ThrowOnError>,
-) =>
-  (options.client ?? client).get<
-    FindPetsByStatusResponses,
-    FindPetsByStatusErrors,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
+  /**
+   * Finds Pets by status.
+   *
+   * Multiple status values can be provided with comma separated strings.
+   */
+  public findPetsByStatus<ThrowOnError extends boolean = false>(
+    options: Options<FindPetsByStatusData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).get<
+      FindPetsByStatusResponses,
+      FindPetsByStatusErrors,
+      ThrowOnError
+    >({
+      security: [
+        {
+          scheme: 'bearer',
+          type: 'http',
+        },
+      ],
+      url: '/pet/findByStatus',
+      ...options,
+    });
+  }
+
+  /**
+   * Finds Pets by tags.
+   *
+   * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
+   */
+  public findPetsByTags<ThrowOnError extends boolean = false>(
+    options: Options<FindPetsByTagsData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).get<
+      FindPetsByTagsResponses,
+      FindPetsByTagsErrors,
+      ThrowOnError
+    >({
+      security: [
+        {
+          scheme: 'bearer',
+          type: 'http',
+        },
+      ],
+      url: '/pet/findByTags',
+      ...options,
+    });
+  }
+
+  /**
+   * Deletes a pet.
+   *
+   * Delete a pet.
+   */
+  public deletePet<ThrowOnError extends boolean = false>(
+    options: Options<DeletePetData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).delete<
+      DeletePetResponses,
+      DeletePetErrors,
+      ThrowOnError
+    >({
+      security: [
+        {
+          scheme: 'bearer',
+          type: 'http',
+        },
+      ],
+      url: '/pet/{petId}',
+      ...options,
+    });
+  }
+
+  /**
+   * Find pet by ID.
+   *
+   * Returns a single pet.
+   */
+  public getPetById<ThrowOnError extends boolean = false>(
+    options: Options<GetPetByIdData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).get<
+      GetPetByIdResponses,
+      GetPetByIdErrors,
+      ThrowOnError
+    >({
+      security: [
+        {
+          name: 'api_key',
+          type: 'apiKey',
+        },
+        {
+          scheme: 'bearer',
+          type: 'http',
+        },
+      ],
+      url: '/pet/{petId}',
+      ...options,
+    });
+  }
+
+  /**
+   * Updates a pet in the store with form data.
+   *
+   * Updates a pet resource based on the form data.
+   */
+  public updatePetWithForm<ThrowOnError extends boolean = false>(
+    options: Options<UpdatePetWithFormData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).post<
+      UpdatePetWithFormResponses,
+      UpdatePetWithFormErrors,
+      ThrowOnError
+    >({
+      security: [
+        {
+          scheme: 'bearer',
+          type: 'http',
+        },
+      ],
+      url: '/pet/{petId}',
+      ...options,
+    });
+  }
+
+  /**
+   * Uploads an image.
+   *
+   * Upload image of the pet.
+   */
+  public uploadFile<ThrowOnError extends boolean = false>(
+    options: Options<UploadFileData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).post<
+      UploadFileResponses,
+      UploadFileErrors,
+      ThrowOnError
+    >({
+      bodySerializer: null,
+      security: [
+        {
+          scheme: 'bearer',
+          type: 'http',
+        },
+      ],
+      url: '/pet/{petId}/uploadImage',
+      ...options,
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        ...options.headers,
       },
-    ],
-    url: '/pet/findByStatus',
-    ...options,
-  });
+    });
+  }
 
-/**
- * Finds Pets by tags.
- *
- * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
- */
-export const findPetsByTags = <ThrowOnError extends boolean = false>(
-  options: Options<FindPetsByTagsData, ThrowOnError>,
-) =>
-  (options.client ?? client).get<
-    FindPetsByTagsResponses,
-    FindPetsByTagsErrors,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
+  /**
+   * Returns pet inventories by status.
+   *
+   * Returns a map of status codes to quantities.
+   */
+  public getInventory<ThrowOnError extends boolean = false>(
+    options?: Options<GetInventoryData, ThrowOnError>,
+  ) {
+    return (options?.client ?? this.client).get<
+      GetInventoryResponses,
+      GetInventoryErrors,
+      ThrowOnError
+    >({
+      security: [
+        {
+          name: 'api_key',
+          type: 'apiKey',
+        },
+      ],
+      url: '/store/inventory',
+      ...options,
+    });
+  }
+
+  /**
+   * Place an order for a pet.
+   *
+   * Place a new order in the store.
+   */
+  public placeOrder<ThrowOnError extends boolean = false>(
+    options?: Options<PlaceOrderData, ThrowOnError>,
+  ) {
+    return (options?.client ?? this.client).post<
+      PlaceOrderResponses,
+      PlaceOrderErrors,
+      ThrowOnError
+    >({
+      url: '/store/order',
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
       },
-    ],
-    url: '/pet/findByTags',
-    ...options,
-  });
+    });
+  }
 
-/**
- * Deletes a pet.
- *
- * Delete a pet.
- */
-export const deletePet = <ThrowOnError extends boolean = false>(
-  options: Options<DeletePetData, ThrowOnError>,
-) =>
-  (options.client ?? client).delete<
-    DeletePetResponses,
-    DeletePetErrors,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
+  /**
+   * Delete purchase order by identifier.
+   *
+   * For valid response try integer IDs with value < 1000. Anything above 1000 or non-integers will generate API errors.
+   */
+  public deleteOrder<ThrowOnError extends boolean = false>(
+    options: Options<DeleteOrderData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).delete<
+      DeleteOrderResponses,
+      DeleteOrderErrors,
+      ThrowOnError
+    >({
+      url: '/store/order/{orderId}',
+      ...options,
+    });
+  }
+
+  /**
+   * Find purchase order by ID.
+   *
+   * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
+   */
+  public getOrderById<ThrowOnError extends boolean = false>(
+    options: Options<GetOrderByIdData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).get<
+      GetOrderByIdResponses,
+      GetOrderByIdErrors,
+      ThrowOnError
+    >({
+      url: '/store/order/{orderId}',
+      ...options,
+    });
+  }
+
+  /**
+   * Create user.
+   *
+   * This can only be done by the logged in user.
+   */
+  public createUser<ThrowOnError extends boolean = false>(
+    options?: Options<CreateUserData, ThrowOnError>,
+  ) {
+    return (options?.client ?? this.client).post<
+      CreateUserResponses,
+      CreateUserErrors,
+      ThrowOnError
+    >({
+      url: '/user',
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
       },
-    ],
-    url: '/pet/{petId}',
-    ...options,
-  });
+    });
+  }
 
-/**
- * Find pet by ID.
- *
- * Returns a single pet.
- */
-export const getPetById = <ThrowOnError extends boolean = false>(
-  options: Options<GetPetByIdData, ThrowOnError>,
-) =>
-  (options.client ?? client).get<
-    GetPetByIdResponses,
-    GetPetByIdErrors,
-    ThrowOnError
-  >({
-    security: [
-      {
-        name: 'api_key',
-        type: 'apiKey',
+  /**
+   * Creates list of users with given input array.
+   *
+   * Creates list of users with given input array.
+   */
+  public createUsersWithListInput<ThrowOnError extends boolean = false>(
+    options?: Options<CreateUsersWithListInputData, ThrowOnError>,
+  ) {
+    return (options?.client ?? this.client).post<
+      CreateUsersWithListInputResponses,
+      CreateUsersWithListInputErrors,
+      ThrowOnError
+    >({
+      url: '/user/createWithList',
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
       },
-      {
-        scheme: 'bearer',
-        type: 'http',
+    });
+  }
+
+  /**
+   * Logs user into the system.
+   *
+   * Log into the system.
+   */
+  public loginUser<ThrowOnError extends boolean = false>(
+    options?: Options<LoginUserData, ThrowOnError>,
+  ) {
+    return (options?.client ?? this.client).get<
+      LoginUserResponses,
+      LoginUserErrors,
+      ThrowOnError
+    >({
+      url: '/user/login',
+      ...options,
+    });
+  }
+
+  /**
+   * Logs out current logged in user session.
+   *
+   * Log user out of the system.
+   */
+  public logoutUser<ThrowOnError extends boolean = false>(
+    options?: Options<LogoutUserData, ThrowOnError>,
+  ) {
+    return (options?.client ?? this.client).get<
+      LogoutUserResponses,
+      LogoutUserErrors,
+      ThrowOnError
+    >({
+      url: '/user/logout',
+      ...options,
+    });
+  }
+
+  /**
+   * Delete user resource.
+   *
+   * This can only be done by the logged in user.
+   */
+  public deleteUser<ThrowOnError extends boolean = false>(
+    options: Options<DeleteUserData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).delete<
+      DeleteUserResponses,
+      DeleteUserErrors,
+      ThrowOnError
+    >({
+      url: '/user/{username}',
+      ...options,
+    });
+  }
+
+  /**
+   * Get user by user name.
+   *
+   * Get user detail based on username.
+   */
+  public getUserByName<ThrowOnError extends boolean = false>(
+    options: Options<GetUserByNameData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).get<
+      GetUserByNameResponses,
+      GetUserByNameErrors,
+      ThrowOnError
+    >({
+      url: '/user/{username}',
+      ...options,
+    });
+  }
+
+  /**
+   * Update user resource.
+   *
+   * This can only be done by the logged in user.
+   */
+  public updateUser<ThrowOnError extends boolean = false>(
+    options: Options<UpdateUserData, ThrowOnError>,
+  ) {
+    return (options.client ?? this.client).put<
+      UpdateUserResponses,
+      UpdateUserErrors,
+      ThrowOnError
+    >({
+      url: '/user/{username}',
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
       },
-    ],
-    url: '/pet/{petId}',
-    ...options,
-  });
-
-/**
- * Updates a pet in the store with form data.
- *
- * Updates a pet resource based on the form data.
- */
-export const updatePetWithForm = <ThrowOnError extends boolean = false>(
-  options: Options<UpdatePetWithFormData, ThrowOnError>,
-) =>
-  (options.client ?? client).post<
-    UpdatePetWithFormResponses,
-    UpdatePetWithFormErrors,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/pet/{petId}',
-    ...options,
-  });
-
-/**
- * Uploads an image.
- *
- * Upload image of the pet.
- */
-export const uploadFile = <ThrowOnError extends boolean = false>(
-  options: Options<UploadFileData, ThrowOnError>,
-) =>
-  (options.client ?? client).post<
-    UploadFileResponses,
-    UploadFileErrors,
-    ThrowOnError
-  >({
-    bodySerializer: null,
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/pet/{petId}/uploadImage',
-    ...options,
-    headers: {
-      'Content-Type': 'application/octet-stream',
-      ...options.headers,
-    },
-  });
-
-/**
- * Returns pet inventories by status.
- *
- * Returns a map of status codes to quantities.
- */
-export const getInventory = <ThrowOnError extends boolean = false>(
-  options?: Options<GetInventoryData, ThrowOnError>,
-) =>
-  (options?.client ?? client).get<
-    GetInventoryResponses,
-    GetInventoryErrors,
-    ThrowOnError
-  >({
-    security: [
-      {
-        name: 'api_key',
-        type: 'apiKey',
-      },
-    ],
-    url: '/store/inventory',
-    ...options,
-  });
-
-/**
- * Place an order for a pet.
- *
- * Place a new order in the store.
- */
-export const placeOrder = <ThrowOnError extends boolean = false>(
-  options?: Options<PlaceOrderData, ThrowOnError>,
-) =>
-  (options?.client ?? client).post<
-    PlaceOrderResponses,
-    PlaceOrderErrors,
-    ThrowOnError
-  >({
-    url: '/store/order',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  });
-
-/**
- * Delete purchase order by identifier.
- *
- * For valid response try integer IDs with value < 1000. Anything above 1000 or non-integers will generate API errors.
- */
-export const deleteOrder = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteOrderData, ThrowOnError>,
-) =>
-  (options.client ?? client).delete<
-    DeleteOrderResponses,
-    DeleteOrderErrors,
-    ThrowOnError
-  >({
-    url: '/store/order/{orderId}',
-    ...options,
-  });
-
-/**
- * Find purchase order by ID.
- *
- * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
- */
-export const getOrderById = <ThrowOnError extends boolean = false>(
-  options: Options<GetOrderByIdData, ThrowOnError>,
-) =>
-  (options.client ?? client).get<
-    GetOrderByIdResponses,
-    GetOrderByIdErrors,
-    ThrowOnError
-  >({
-    url: '/store/order/{orderId}',
-    ...options,
-  });
-
-/**
- * Create user.
- *
- * This can only be done by the logged in user.
- */
-export const createUser = <ThrowOnError extends boolean = false>(
-  options?: Options<CreateUserData, ThrowOnError>,
-) =>
-  (options?.client ?? client).post<
-    CreateUserResponses,
-    CreateUserErrors,
-    ThrowOnError
-  >({
-    url: '/user',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  });
-
-/**
- * Creates list of users with given input array.
- *
- * Creates list of users with given input array.
- */
-export const createUsersWithListInput = <ThrowOnError extends boolean = false>(
-  options?: Options<CreateUsersWithListInputData, ThrowOnError>,
-) =>
-  (options?.client ?? client).post<
-    CreateUsersWithListInputResponses,
-    CreateUsersWithListInputErrors,
-    ThrowOnError
-  >({
-    url: '/user/createWithList',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  });
-
-/**
- * Logs user into the system.
- *
- * Log into the system.
- */
-export const loginUser = <ThrowOnError extends boolean = false>(
-  options?: Options<LoginUserData, ThrowOnError>,
-) =>
-  (options?.client ?? client).get<
-    LoginUserResponses,
-    LoginUserErrors,
-    ThrowOnError
-  >({
-    url: '/user/login',
-    ...options,
-  });
-
-/**
- * Logs out current logged in user session.
- *
- * Log user out of the system.
- */
-export const logoutUser = <ThrowOnError extends boolean = false>(
-  options?: Options<LogoutUserData, ThrowOnError>,
-) =>
-  (options?.client ?? client).get<
-    LogoutUserResponses,
-    LogoutUserErrors,
-    ThrowOnError
-  >({
-    url: '/user/logout',
-    ...options,
-  });
-
-/**
- * Delete user resource.
- *
- * This can only be done by the logged in user.
- */
-export const deleteUser = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteUserData, ThrowOnError>,
-) =>
-  (options.client ?? client).delete<
-    DeleteUserResponses,
-    DeleteUserErrors,
-    ThrowOnError
-  >({
-    url: '/user/{username}',
-    ...options,
-  });
-
-/**
- * Get user by user name.
- *
- * Get user detail based on username.
- */
-export const getUserByName = <ThrowOnError extends boolean = false>(
-  options: Options<GetUserByNameData, ThrowOnError>,
-) =>
-  (options.client ?? client).get<
-    GetUserByNameResponses,
-    GetUserByNameErrors,
-    ThrowOnError
-  >({
-    url: '/user/{username}',
-    ...options,
-  });
-
-/**
- * Update user resource.
- *
- * This can only be done by the logged in user.
- */
-export const updateUser = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateUserData, ThrowOnError>,
-) =>
-  (options.client ?? client).put<
-    UpdateUserResponses,
-    UpdateUserErrors,
-    ThrowOnError
-  >({
-    url: '/user/{username}',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+    });
+  }
+}
