@@ -522,6 +522,51 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          output: 'fetch-response-style',
+          plugins: [
+            '@tanstack/react-query',
+            '@hey-api/client-fetch',
+            {
+              name: '@hey-api/sdk',
+              responseStyle: 'response',
+            },
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack React Query plugin using responseStyle: response',
+      },
+      {
+        config: createConfig({
+          output: 'fetch-pinia-response-style',
+          plugins: [
+            '@pinia/colada',
+            '@hey-api/client-fetch',
+            {
+              name: '@hey-api/sdk',
+              responseStyle: 'response',
+            },
+          ],
+        }),
+        description:
+          'generate Fetch API client with Pinia Colada plugin using responseStyle: response',
+      },
+      {
+        config: createConfig({
+          output: 'fetch-vue-response-style',
+          plugins: [
+            '@tanstack/vue-query',
+            '@hey-api/client-fetch',
+            {
+              name: '@hey-api/sdk',
+              responseStyle: 'response',
+            },
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Vue Query plugin using responseStyle: response',
+      },
+      {
+        config: createConfig({
           input: 'sdk-instance.yaml',
           output: 'asClass',
           plugins: [

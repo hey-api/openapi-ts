@@ -103,7 +103,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      *
      * @default 'fields'
      */
-    responseStyle?: 'data' | 'fields';
+    responseStyle?: 'data' | 'fields' | 'response';
     /**
      * Transform response data before returning. This is useful if you want to
      * convert for example ISO strings into Date objects. However, transformation
@@ -282,7 +282,7 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      *
      * @default 'fields'
      */
-    responseStyle: 'data' | 'fields';
+    responseStyle: 'data' | 'fields' | 'response';
     /**
      * Transform response data before returning. This is useful if you want to
      * convert for example ISO strings into Date objects. However, transformation

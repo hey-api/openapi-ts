@@ -59,7 +59,7 @@ export const createOptions = (options?: Options<CreateData>) => {
 };
 
 export const create2Mutation = (options?: Partial<Options<Create2Data>>): UseMutationOptions<unknown, DefaultError, Options<Create2Data>> => {
-    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<Create2Data>> = {
+    return {
         mutationFn: async (fnOptions) => {
             const { data } = await create2({
                 ...options,
@@ -69,11 +69,10 @@ export const create2Mutation = (options?: Partial<Options<Create2Data>>): UseMut
             return data;
         }
     };
-    return mutationOptions;
 };
 
 export const create3Mutation = (options?: Partial<Options<Create3Data>>): UseMutationOptions<unknown, DefaultError, Options<Create3Data>> => {
-    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<Create3Data>> = {
+    return {
         mutationFn: async (fnOptions) => {
             const { data } = await create3({
                 ...options,
@@ -83,5 +82,4 @@ export const create3Mutation = (options?: Partial<Options<Create3Data>>): UseMut
             return data;
         }
     };
-    return mutationOptions;
 };
