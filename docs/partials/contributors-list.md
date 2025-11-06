@@ -74,6 +74,7 @@
 - [Tran Phuc](https://github.com/Glup3)
 - [Vincent Olesen](https://github.com/volesen)
 - [Warren Seine](https://github.com/warrenseine)
+- [Will Mitchell](https://github.com/wn-mitch)
 - [a1mer](https://github.com/a1mersnow)
 - [carson](https://github.com/carson2222)
 - [johnny kim](https://github.com/johnny-mh)
