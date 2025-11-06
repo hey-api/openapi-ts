@@ -1,6 +1,6 @@
 {
   "name": "@docs/openapi-ts",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "description": "Documentation for OpenaAPI TypeScript.",
   "private": true,
   "type": "module",

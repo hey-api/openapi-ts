@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.87.1
+
+### Patch Changes
+
+- fix(typescript): remove legacy options ([#2929](https://github.com/hey-api/openapi-ts/pull/2929)) ([`97c1f0e`](https://github.com/hey-api/openapi-ts/commit/97c1f0e94f8eb8ca2d74f4f5ebe51a53f347641b)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(tanstack-query): correctly access instantiated SDKs ([#2939](https://github.com/hey-api/openapi-ts/pull/2939)) ([`01a1fb4`](https://github.com/hey-api/openapi-ts/commit/01a1fb48a2e2d4e14a33cf3e81b44b5fad76e72a)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.87.0
 
 ### Minor Changes
