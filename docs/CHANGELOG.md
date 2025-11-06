@@ -1,5 +1,11 @@
 # @docs/openapi-ts
 
+## 0.10.4
+
+### Patch Changes
+
+- docs: add bigint section to transformers ([#2865](https://github.com/hey-api/openapi-ts/pull/2865)) ([`ba4d9bf`](https://github.com/hey-api/openapi-ts/commit/ba4d9bf603d8c897016fd1775d13e184111ace17)) by [@wn-mitch](https://github.com/wn-mitch)
+
 ## 0.10.3
 
 ### Patch Changes
