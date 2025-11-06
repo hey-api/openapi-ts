@@ -123,6 +123,7 @@ export const createClient = (config: Config = {}): Client => {
   const applyRequestInterceptors = async (
     request: Request,
     opts: ResolvedRequestOptions,
+    body: BodyInit | null | undefined,
   ) => {
     for (const fn of interceptors.request.fns) {
       if (fn) {
@@ -136,6 +137,16 @@ export const createClient = (config: Config = {}): Client => {
     // body comes only from getValidRequestBody(options)
     // reflect signal if present
     opts.signal = (request as any).signal as AbortSignal | undefined;
+
+    // When body is FormData, remove Content-Type header to avoid boundary mismatch.
+    // The Request constructor auto-generates a boundary and sets Content-Type, but
+    // we pass the original FormData to ofetch which will generate its own boundary.
+    // If we keep the Request's Content-Type, the boundary in the header won't match
+    // the boundary in the actual request body sent by ofetch.
+    if (typeof FormData !== 'undefined' && body instanceof FormData) {
+      opts.headers.delete('Content-Type');
+    }
+
     return request;
   };
 
@@ -174,7 +185,7 @@ export const createClient = (config: Config = {}): Client => {
     };
     let request = new Request(url, requestInit);
 
-    request = await applyRequestInterceptors(request, opts);
+    request = await applyRequestInterceptors(request, opts, networkBody);
     const finalUrl = request.url;
 
     // build ofetch options and perform the request (.raw keeps the Response)
@@ -233,7 +244,7 @@ export const createClient = (config: Config = {}): Client => {
         method,
         onRequest: async (url, init) => {
           let request = new Request(url, init);
-          request = await applyRequestInterceptors(request, opts);
+          request = await applyRequestInterceptors(request, opts, networkBody);
           return request;
         },
         serializedBody: networkBody as BodyInit | null | undefined,
