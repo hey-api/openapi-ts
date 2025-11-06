@@ -32,10 +32,7 @@ export const createMutationOptions = ({
     typeData,
   });
   // TODO: better types syntax
-  const mutationType = isNuxtClient
-    ? `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${strippedTypeData}, ${typeError}>`
-    : `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${typeData}, ${typeError}>`;
-
+  const mutationType = `${symbolMutationOptionsType.placeholder}<${plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'response' ? `{data: ${typeResponse}, response: Response, request: Request }` : typeResponse}, ${isNuxtClient ? strippedTypeData : typeData}, ${typeError}>`;
   const fnOptions = 'fnOptions';
 
   const awaitSdkExpression = tsc.awaitExpression({
