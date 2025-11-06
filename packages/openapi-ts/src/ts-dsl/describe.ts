@@ -26,14 +26,41 @@ export class DescribeTsDsl extends TsDsl {
   }
 
   apply<T extends ts.Node>(node: T): T {
-    if (!this._lines.length) return node;
-    const content = `*\n * ${this._lines.join('\n * ')}\n `;
-    return ts.addSyntheticLeadingComment(
+    const lines = this._lines.filter((line) => Boolean(line) || line === '');
+    if (!lines.length) return node;
+
+    const jsdocTexts = lines.map((line, index) => {
+      let text = line;
+      if (index !== lines.length) {
+        text = `${text}\n`;
+      }
+      return ts.factory.createJSDocText(text);
+    });
+
+    const jsdoc = ts.factory.createJSDocComment(
+      ts.factory.createNodeArray(jsdocTexts),
+      undefined,
+    );
+
+    const cleanedJsdoc = ts
+      .createPrinter()
+      .printNode(
+        ts.EmitHint.Unspecified,
+        jsdoc,
+        node.getSourceFile?.() ??
+          ts.createSourceFile('', '', ts.ScriptTarget.Latest),
+      )
+      .replace('/*', '')
+      .replace('*  */', '');
+
+    ts.addSyntheticLeadingComment(
       node,
       ts.SyntaxKind.MultiLineCommentTrivia,
-      content,
+      cleanedJsdoc,
       true,
     );
+
+    return node;
   }
 
   $render(): ts.Node {
