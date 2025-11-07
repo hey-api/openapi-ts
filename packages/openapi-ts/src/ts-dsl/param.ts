@@ -15,7 +15,7 @@ export class ParamTsDsl extends TsDsl<ts.ParameterDeclaration> {
   constructor(name: string, fn?: (p: ParamTsDsl) => void) {
     super();
     this.name = name;
-    if (fn) fn(this);
+    fn?.(this);
   }
 
   /** Sets the parameter's type. */

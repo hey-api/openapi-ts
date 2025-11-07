@@ -24,7 +24,7 @@ export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
   constructor(name: string, fn?: (f: FieldTsDsl) => void) {
     super();
     this.name = name;
-    if (fn) fn(this);
+    fn?.(this);
   }
 
   /** Sets the property's type. */

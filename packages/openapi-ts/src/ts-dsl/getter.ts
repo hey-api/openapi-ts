@@ -25,7 +25,7 @@ export class GetterTsDsl extends TsDsl<ts.GetAccessorDeclaration> {
   constructor(name: string, fn?: (g: GetterTsDsl) => void) {
     super();
     this.name = name;
-    if (fn) fn(this);
+    fn?.(this);
   }
 
   /** Adds one or more expressions to the getter body. */

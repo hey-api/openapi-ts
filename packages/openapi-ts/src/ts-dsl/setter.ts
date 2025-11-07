@@ -25,7 +25,7 @@ export class SetterTsDsl extends TsDsl<ts.SetAccessorDeclaration> {
   constructor(name: string, fn?: (s: SetterTsDsl) => void) {
     super();
     this.name = name;
-    if (fn) fn(this);
+    fn?.(this);
   }
 
   /** Adds one or more expressions/statements to the setter body. */
