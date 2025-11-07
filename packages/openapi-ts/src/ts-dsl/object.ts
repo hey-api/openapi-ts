@@ -1,20 +1,18 @@
 import ts from 'typescript';
 
-import type { ExprInput } from './base';
+import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
-import { ExprTsDsl } from './expr';
 
 export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
-  private props: Array<{ expr: TsDsl<ts.Expression>; name: string }> = [];
-  private layout: boolean | number = 3;
-
-  constructor(fn?: (o: ObjectTsDsl) => void) {
-    super();
-    fn?.(this);
-  }
+  private static readonly DEFAULT_THRESHOLD = 3;
+  private layout: boolean | number = ObjectTsDsl.DEFAULT_THRESHOLD;
+  private props: Array<
+    | { expr: MaybeTsDsl<WithString>; kind: 'prop'; name: string }
+    | { expr: MaybeTsDsl<WithString>; kind: 'spread' }
+  > = [];
 
   /** Sets automatic line output with optional threshold (default: 3). */
-  auto(threshold: number = 3): this {
+  auto(threshold: number = ObjectTsDsl.DEFAULT_THRESHOLD): this {
     this.layout = threshold;
     return this;
   }
@@ -32,24 +30,26 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
   }
 
   /** Adds a property assignment. */
-  prop(
-    name: string,
-    fn:
-      | TsDsl<ts.Expression>
-      | ((p: (expr: ExprInput) => ExprTsDsl) => TsDsl<ts.Expression>),
-  ): this {
-    const result =
-      typeof fn === 'function'
-        ? fn((expr: ExprInput) => new ExprTsDsl(expr))
-        : fn;
-    this.props.push({ expr: result, name });
+  prop(name: string, expr: MaybeTsDsl<WithString>): this {
+    this.props.push({ expr, kind: 'prop', name });
     return this;
   }
 
+  /** Adds a spread property (e.g. `{ ...options }`). */
+  spread(expr: MaybeTsDsl<WithString>): this {
+    this.props.push({ expr, kind: 'spread' });
+    return this;
+  }
+
+  /** Builds and returns the object literal expression. */
   $render(): ts.ObjectLiteralExpression {
-    const props = this.props.map(({ expr, name }) =>
-      ts.factory.createPropertyAssignment(name, expr.$render()),
-    );
+    const props = this.props.map((p) => {
+      const node = this.$node(p.expr);
+      if (p.kind === 'spread') return ts.factory.createSpreadAssignment(node);
+      return ts.isIdentifier(node) && node.text === p.name
+        ? ts.factory.createShorthandPropertyAssignment(p.name)
+        : ts.factory.createPropertyAssignment(p.name, node);
+    });
 
     const multiLine =
       typeof this.layout === 'number'

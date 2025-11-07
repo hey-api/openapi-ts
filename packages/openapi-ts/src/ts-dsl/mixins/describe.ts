@@ -1,4 +1,4 @@
-import type { ITsDsl } from '../base';
+import type { ITsDsl, MaybeArray } from '../base';
 import { DescribeTsDsl } from '../describe';
 
 export function DescribeMixin<
@@ -8,7 +8,7 @@ export function DescribeMixin<
     protected _desc?: DescribeTsDsl;
 
     describe(
-      lines?: string | ReadonlyArray<string>,
+      lines?: MaybeArray<string>,
       fn?: (d: DescribeTsDsl) => void,
     ): this {
       this._desc = new DescribeTsDsl(lines, fn);

@@ -43,20 +43,18 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const getFooQueryKey = (options: Options<GetFooData>) => createQueryKey('getFoo', options);
 
-export const getFooOptions = (options: Options<GetFooData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await getFoo({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getFooQueryKey(options)
-    });
-};
+export const getFooOptions = (options: Options<GetFooData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getFoo({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getFooQueryKey(options)
+});
 
 const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>>(queryKey: QueryKey<Options>, page: K) => {
     const params = {

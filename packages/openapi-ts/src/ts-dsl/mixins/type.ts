@@ -1,7 +1,7 @@
 import type ts from 'typescript';
 
-import type { TypeInput } from '../base';
 import type { TsDsl } from '../base';
+import type { TypeInput } from '../type';
 import { TypeTsDsl } from '../type';
 
 /** Provides `.type()`-like access with internal state management. */
@@ -11,16 +11,9 @@ export function createTypeAccessor<Parent extends TsDsl>(parent: Parent) {
   let _type: ReturnType<typeof TypeTsDsl> | undefined;
   let input: TypeInput | undefined;
 
-  function $render(): ts.TypeNode | undefined {
-    if (_type) {
-      return _type.$render();
-    }
-    return $type(input);
-  }
-
-  function method(): ReturnType<typeof TypeTsDsl>;
-  function method(type: TypeInput): Parent;
-  function method(type?: TypeInput): ReturnType<typeof TypeTsDsl> | Parent {
+  function fn(): ReturnType<typeof TypeTsDsl>;
+  function fn(type: TypeInput): Parent;
+  function fn(type?: TypeInput): ReturnType<typeof TypeTsDsl> | Parent {
     if (type === undefined) {
       if (!_type) _type = TypeTsDsl();
       return _type;
@@ -29,8 +22,12 @@ export function createTypeAccessor<Parent extends TsDsl>(parent: Parent) {
     return parent;
   }
 
+  function $render(): ts.TypeNode | undefined {
+    return _type?.$render() ?? $type(input);
+  }
+
   return {
     $render,
-    method,
+    fn,
   };
 }

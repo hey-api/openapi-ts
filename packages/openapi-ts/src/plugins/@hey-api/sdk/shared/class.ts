@@ -1,5 +1,4 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import type ts from 'typescript';
 
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import {
@@ -39,7 +38,7 @@ type SdkClassEntry = {
   /**
    * List of class nodes containing methods.
    */
-  nodes: Array<ts.ClassElement | TsDsl>;
+  nodes: Array<TsDsl>;
   /**
    * Is this a root class?
    */
@@ -375,41 +374,33 @@ export const generateClassSdk = ({
         }
         currentClass.methods.add(memberName);
 
-        let subClassReferenceNode:
-          | ts.GetAccessorDeclaration
-          | ts.PropertyDeclaration
-          | TsDsl;
-        if (plugin.isSymbolRegistered(refChildClass.id)) {
-          subClassReferenceNode = $.field(memberName, (f) =>
-            f
-              .static(!plugin.config.instance)
-              .assign(
-                plugin.config.instance
-                  ? $.new(refChildClass.placeholder).args(
-                      $.object((o) =>
-                        o.prop('client', $('this').attr('client')),
-                      ),
-                    )
-                  : $(refChildClass.placeholder),
-              ),
-          );
-        } else {
-          subClassReferenceNode = $.getter(memberName, (g) =>
-            g
-              .$if(!plugin.config.instance, (g) => g.public().static())
-              .do(
-                plugin.config.instance
-                  ? $.return(
-                      $.new(refChildClass.placeholder).args(
-                        $.object((o) =>
-                          o.prop('client', $('this').attr('client')),
+        const subClassReferenceNode = plugin.isSymbolRegistered(
+          refChildClass.id,
+        )
+          ? $.field(memberName, (f) =>
+              f
+                .static(!plugin.config.instance)
+                .assign(
+                  plugin.config.instance
+                    ? $.new(refChildClass.placeholder).args(
+                        $.object().prop('client', $('this').attr('client')),
+                      )
+                    : $(refChildClass.placeholder),
+                ),
+            )
+          : $.getter(memberName, (g) =>
+              g
+                .$if(!plugin.config.instance, (g) => g.public().static())
+                .do(
+                  plugin.config.instance
+                    ? $.return(
+                        $.new(refChildClass.placeholder).args(
+                          $.object().prop('client', $('this').attr('client')),
                         ),
-                      ),
-                    )
-                  : $.return(refChildClass.placeholder),
-              ),
-          );
-        }
+                      )
+                    : $.return(refChildClass.placeholder),
+                ),
+            );
 
         if (!currentClass.nodes.length) {
           currentClass.nodes.push(subClassReferenceNode);
@@ -509,7 +500,7 @@ export const generateClassSdk = ({
             category: 'external',
             resource: '@angular/core.Injectable',
           }).placeholder,
-          (o) => o.prop('providedIn', $.literal('root')),
+          $.object().prop('providedIn', $.literal('root')),
         ),
       )
       .do(...currentClass.nodes);

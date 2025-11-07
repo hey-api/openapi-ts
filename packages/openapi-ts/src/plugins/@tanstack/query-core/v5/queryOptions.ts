@@ -1,5 +1,3 @@
-import type ts from 'typescript';
-
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import {
@@ -7,7 +5,8 @@ import {
   hasOperationSse,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
-import { tsc } from '~/tsc';
+import type { TsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import {
   createQueryKeyFunction,
@@ -71,95 +70,39 @@ export const createQueryOptions = ({
 
   const typeData = useTypeData({ operation, plugin });
 
-  const awaitSdkExpression = tsc.awaitExpression({
-    expression: tsc.callExpression({
-      functionName: queryFn,
-      parameters: [
-        tsc.objectExpression({
-          multiLine: true,
-          obj: [
-            {
-              spread: optionsParamName,
-            },
-            {
-              spread: 'queryKey[0]',
-            },
-            {
-              key: 'signal',
-              shorthand: true,
-              value: tsc.identifier({
-                text: 'signal',
-              }),
-            },
-            {
-              key: 'throwOnError',
-              value: true,
-            },
-          ],
-        }),
-      ],
-    }),
-  });
+  const awaitSdkFn = $(queryFn)
+    .call(
+      $.object()
+        .spread(optionsParamName)
+        .spread($('queryKey').attr(0))
+        .prop('signal', $('signal'))
+        .prop('throwOnError', $.literal(true)),
+    )
+    .await();
 
-  const statements: Array<ts.Statement> = [];
-
+  const statements: Array<TsDsl<any>> = [];
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
-    statements.push(
-      tsc.returnVariable({
-        expression: awaitSdkExpression,
-      }),
-    );
+    statements.push($.return(awaitSdkFn));
   } else {
     statements.push(
-      tsc.constVariable({
-        destructure: true,
-        expression: awaitSdkExpression,
-        name: 'data',
-      }),
-      tsc.returnVariable({
-        expression: 'data',
-      }),
+      $.const().object('data').assign(awaitSdkFn),
+      $.return('data'),
     );
   }
 
-  const queryOptionsObj: Array<{ key: string; value: ts.Expression }> = [
-    {
-      key: 'queryFn',
-      value: tsc.arrowFunction({
-        async: true,
-        multiLine: true,
-        parameters: [
-          {
-            destructure: [
-              {
-                name: 'queryKey',
-              },
-              {
-                name: 'signal',
-              },
-            ],
-          },
-        ],
-        statements,
-      }),
-    },
-    {
-      key: 'queryKey',
-      value: tsc.callExpression({
-        functionName: symbolQueryKey.placeholder,
-        parameters: [optionsParamName],
-      }),
-    },
-  ];
-
-  const meta = handleMeta(plugin, operation, 'queryOptions');
-
-  if (meta) {
-    queryOptionsObj.push({
-      key: 'meta',
-      value: meta,
-    });
-  }
+  const queryOptionsObj = $.object()
+    .pretty()
+    .prop(
+      'queryFn',
+      $.func()
+        .async()
+        .param((p) => p.object('queryKey', 'signal'))
+        .do(...statements),
+    )
+    .prop('queryKey', $(symbolQueryKey.placeholder).call(optionsParamName))
+    .$if(handleMeta(plugin, operation, 'queryOptions'), (o, v) =>
+      o.prop('meta', $(v)),
+    );
 
   const symbolQueryOptionsFn = plugin.registerSymbol({
     exported: plugin.config.queryOptions.exported,
@@ -175,29 +118,20 @@ export const createQueryOptions = ({
       name: operation.id,
     }),
   });
-  const statement = tsc.constVariable({
-    comment: plugin.config.comments
-      ? createOperationComment({ operation })
-      : undefined,
-    exportConst: symbolQueryOptionsFn.exported,
-    expression: tsc.arrowFunction({
-      parameters: [
-        {
-          isRequired: isRequiredOptions,
-          name: optionsParamName,
-          type: typeData,
-        },
-      ],
-      statements: [
-        tsc.returnFunctionCall({
-          args: [tsc.objectExpression({ obj: queryOptionsObj })],
-          name: symbolQueryOptions.placeholder,
-        }),
-      ],
-    }),
-    name: symbolQueryOptionsFn.placeholder,
-    // TODO: add type error
-    // TODO: AxiosError<PutSubmissionMetaError>
-  });
+  // TODO: add type error
+  // TODO: AxiosError<PutSubmissionMetaError>
+  const statement = $.const(symbolQueryOptionsFn.placeholder)
+    .export(symbolQueryOptionsFn.exported)
+    .$if(
+      plugin.config.comments && createOperationComment({ operation }),
+      (c, v) => c.describe(v as Array<string>),
+    )
+    .assign(
+      $.func()
+        .param(optionsParamName, (p) =>
+          p.optional(!isRequiredOptions).type(typeData),
+        )
+        .do($.return($(symbolQueryOptions.placeholder).call(queryOptionsObj))),
+    );
   plugin.setSymbolValue(symbolQueryOptionsFn, statement);
 };
