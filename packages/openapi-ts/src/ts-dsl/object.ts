@@ -10,7 +10,7 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
 
   constructor(fn?: (o: ObjectTsDsl) => void) {
     super();
-    if (fn) fn(this);
+    fn?.(this);
   }
 
   /** Sets automatic line output with optional threshold (default: 3). */
@@ -31,12 +31,17 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
     return this;
   }
 
-  /** Adds a property assignment using a callback builder. */
+  /** Adds a property assignment. */
   prop(
     name: string,
-    fn: (p: (expr: ExprInput) => ExprTsDsl) => TsDsl<ts.Expression>,
+    fn:
+      | TsDsl<ts.Expression>
+      | ((p: (expr: ExprInput) => ExprTsDsl) => TsDsl<ts.Expression>),
   ): this {
-    const result = fn((expr: ExprInput) => new ExprTsDsl(expr));
+    const result =
+      typeof fn === 'function'
+        ? fn((expr: ExprInput) => new ExprTsDsl(expr))
+        : fn;
     this.props.push({ expr: result, name });
     return this;
   }

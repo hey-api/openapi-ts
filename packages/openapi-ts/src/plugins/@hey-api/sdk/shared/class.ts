@@ -387,7 +387,7 @@ export const generateClassSdk = ({
                 plugin.config.instance
                   ? $.new(refChildClass.placeholder).args(
                       $.object((o) =>
-                        o.prop('client', () => $('this').attr('client')),
+                        o.prop('client', $('this').attr('client')),
                       ),
                     )
                   : $(refChildClass.placeholder),
@@ -402,7 +402,7 @@ export const generateClassSdk = ({
                   ? $.return(
                       $.new(refChildClass.placeholder).args(
                         $.object((o) =>
-                          o.prop('client', () => $('this').attr('client')),
+                          o.prop('client', $('this').attr('client')),
                         ),
                       ),
                     )
@@ -426,7 +426,7 @@ export const generateClassSdk = ({
       const node = createClientClass({
         plugin,
         symbol: symbolHeyApiClient,
-      }).$render();
+      });
       plugin.setSymbolValue(symbolHeyApiClient, node);
     }
 
@@ -486,7 +486,7 @@ export const generateClassSdk = ({
         plugin,
         sdkName: symbol.placeholder,
         symbol: symbolHeyApiRegistry,
-      }).$render();
+      });
       plugin.setSymbolValue(symbolHeyApiRegistry, node);
       const registryNode = $.field(registryName, (f) =>
         f
@@ -509,11 +509,10 @@ export const generateClassSdk = ({
             category: 'external',
             resource: '@angular/core.Injectable',
           }).placeholder,
-          (o) => o.prop('providedIn', () => $.literal('root')),
+          (o) => o.prop('providedIn', $.literal('root')),
         ),
       )
-      .do(...currentClass.nodes)
-      .$render();
+      .do(...currentClass.nodes);
     plugin.setSymbolValue(symbol, node);
   };
 

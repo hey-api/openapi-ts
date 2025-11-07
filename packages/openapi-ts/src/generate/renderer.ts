@@ -13,6 +13,7 @@ import { createBinding, mergeBindings, renderIds } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
+import { TsDsl } from '~/ts-dsl';
 import { tsc } from '~/tsc';
 import { tsNodeToString } from '~/tsc/utils';
 
@@ -186,7 +187,10 @@ export class TypeScriptRenderer implements Renderer {
 
     for (const symbolId of file.symbols.body) {
       const value = project.symbols.getValue(symbolId);
-      if (typeof value === 'string') {
+      if (value instanceof TsDsl) {
+        const node = value.$render();
+        lines.push(tsNodeToString({ node, unescape: true }));
+      } else if (typeof value === 'string') {
         lines.push(value);
       } else if (value instanceof Array) {
         for (const node of value) {

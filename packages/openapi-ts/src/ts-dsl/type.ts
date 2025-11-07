@@ -39,7 +39,7 @@ export class TypeReferenceTsDsl extends BaseTypeTsDsl<ts.TypeNode> {
     fn?: (base: TypeReferenceTsDsl) => void,
   ) {
     super(name);
-    if (fn) fn(this);
+    fn?.(this);
   }
 
   /** Starts an object type literal (e.g. `{ foo: string }`). */
@@ -70,7 +70,7 @@ export class TypeParamTsDsl extends BaseTypeTsDsl<ts.TypeParameterDeclaration> {
     fn?: (base: TypeParamTsDsl) => void,
   ) {
     super(name);
-    if (fn) fn(this);
+    fn?.(this);
   }
 
   $render(): ts.TypeParameterDeclaration {

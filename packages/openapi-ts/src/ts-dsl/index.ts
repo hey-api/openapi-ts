@@ -1,11 +1,12 @@
 import { AttrTsDsl } from './attr';
+import { AwaitTsDsl } from './await';
 import { BinaryTsDsl } from './binary';
 import { CallTsDsl } from './call';
 import { ClassTsDsl } from './class';
-import { ConstTsDsl } from './const';
 import { DescribeTsDsl } from './describe';
 import { ExprTsDsl } from './expr';
 import { FieldTsDsl } from './field';
+import { FuncTsDsl } from './func';
 import { GetterTsDsl } from './getter';
 import { IfTsDsl } from './if';
 import { InitTsDsl } from './init';
@@ -21,29 +22,45 @@ import { SetterTsDsl } from './setter';
 import { TemplateTsDsl } from './template';
 import { ThrowTsDsl } from './throw';
 import { TypeTsDsl } from './type';
+import { VarTsDsl } from './var';
 
 const base = {
   attr: (...args: ConstructorParameters<typeof AttrTsDsl>) =>
     new AttrTsDsl(...args),
+  await: (...args: ConstructorParameters<typeof AwaitTsDsl>) =>
+    new AwaitTsDsl(...args),
   binary: (...args: ConstructorParameters<typeof BinaryTsDsl>) =>
     new BinaryTsDsl(...args),
   call: (...args: ConstructorParameters<typeof CallTsDsl>) =>
     new CallTsDsl(...args),
   class: (...args: ConstructorParameters<typeof ClassTsDsl>) =>
     new ClassTsDsl(...args),
-  const: (...args: ConstructorParameters<typeof ConstTsDsl>) =>
-    new ConstTsDsl(...args),
+  const: (...args: ConstructorParameters<typeof VarTsDsl>) =>
+    new VarTsDsl(...args).const(),
   describe: (...args: ConstructorParameters<typeof DescribeTsDsl>) =>
     new DescribeTsDsl(...args),
   expr: (...args: ConstructorParameters<typeof ExprTsDsl>) =>
     new ExprTsDsl(...args),
   field: (...args: ConstructorParameters<typeof FieldTsDsl>) =>
     new FieldTsDsl(...args),
+  func: ((nameOrFn?: any, fn?: any) => {
+    if (nameOrFn === undefined) return new FuncTsDsl();
+    if (typeof nameOrFn !== 'string') return new FuncTsDsl(nameOrFn);
+    if (fn === undefined) return new FuncTsDsl(nameOrFn);
+    return new FuncTsDsl(nameOrFn, fn);
+  }) as {
+    (): FuncTsDsl<'arrow'>;
+    (fn: (f: FuncTsDsl<'arrow'>) => void): FuncTsDsl<'arrow'>;
+    (name: string): FuncTsDsl<'decl'>;
+    (name: string, fn: (f: FuncTsDsl<'decl'>) => void): FuncTsDsl<'decl'>;
+  },
   getter: (...args: ConstructorParameters<typeof GetterTsDsl>) =>
     new GetterTsDsl(...args),
   if: (...args: ConstructorParameters<typeof IfTsDsl>) => new IfTsDsl(...args),
   init: (...args: ConstructorParameters<typeof InitTsDsl>) =>
     new InitTsDsl(...args),
+  let: (...args: ConstructorParameters<typeof VarTsDsl>) =>
+    new VarTsDsl(...args).let(),
   literal: (...args: ConstructorParameters<typeof LiteralTsDsl>) =>
     new LiteralTsDsl(...args),
   method: (...args: ConstructorParameters<typeof MethodTsDsl>) =>
@@ -67,6 +84,8 @@ const base = {
   throw: (...args: ConstructorParameters<typeof ThrowTsDsl>) =>
     new ThrowTsDsl(...args),
   type: TypeTsDsl,
+  var: (...args: ConstructorParameters<typeof VarTsDsl>) =>
+    new VarTsDsl(...args),
 };
 
 export const $ = Object.assign(
@@ -74,4 +93,4 @@ export const $ = Object.assign(
   base,
 );
 
-export type { TsDsl } from './base';
+export { TsDsl } from './base';
