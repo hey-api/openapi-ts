@@ -73,6 +73,27 @@ export const objectToAst = ({
     resource: 'valibot.v',
   });
 
+  // Handle additionalProperties: false (which becomes type: 'never' in IR)
+  // Use v.strictObject() to forbid additional properties
+  if (
+    schema.additionalProperties &&
+    typeof schema.additionalProperties === 'object' &&
+    schema.additionalProperties.type === 'never'
+  ) {
+    result.pipes = [
+      tsc.callExpression({
+        functionName: tsc.propertyAccessExpression({
+          expression: v.placeholder,
+          name: identifiers.schemas.strictObject,
+        }),
+        parameters: [
+          ts.factory.createObjectLiteralExpression(properties, true),
+        ],
+      }),
+    ];
+    return result as Omit<Ast, 'typeName'>;
+  }
+
   // Handle additionalProperties with a schema (not just true/false)
   // This supports objects with dynamic keys (e.g., Record<string, T>)
   if (
