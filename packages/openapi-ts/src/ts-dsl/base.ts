@@ -23,20 +23,71 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     value: V,
     ifTrue: (self: T, v: Exclude<V, false | null | undefined>) => R | void,
     ifFalse?: (self: T, v: Extract<V, false | null | undefined>) => R | void,
+  ): R | T;
+  $if<T extends TsDsl, V, R extends TsDsl = T>(
+    this: T,
+    value: V,
+    ifTrue: (v: Exclude<V, false | null | undefined>) => R | void,
+    ifFalse?: (v: Extract<V, false | null | undefined>) => R | void,
+  ): R | T;
+  $if<T extends TsDsl, V, R extends TsDsl = T>(
+    this: T,
+    value: V,
+    ifTrue: () => R | void,
+    ifFalse?: () => R | void,
+  ): R | T;
+  $if<T extends TsDsl, V, R extends TsDsl = T>(
+    this: T,
+    value: V,
+    ifTrue: any,
+    ifFalse?: any,
   ): R | T {
     if (value) {
-      const result = ifTrue(
-        this,
-        value as Exclude<V, false | null | undefined>,
-      );
-      return result ?? this;
+      // Try calling with (self, value), then (value), then ()
+      let result: R | void | undefined;
+      try {
+        result = ifTrue?.(this, value as Exclude<V, false | null | undefined>);
+      } catch {
+        // ignore and try other signatures
+      }
+      if (result === undefined) {
+        try {
+          result = ifTrue?.(value as Exclude<V, false | null | undefined>);
+        } catch {
+          // ignore and try zero-arg
+        }
+      }
+      if (result === undefined) {
+        try {
+          result = ifTrue?.();
+        } catch {
+          // swallow
+        }
+      }
+      return (result ?? this) as R | T;
     }
     if (ifFalse) {
-      const result = ifFalse(
-        this,
-        value as Extract<V, false | null | undefined>,
-      );
-      return result ?? this;
+      let result: R | void | undefined;
+      try {
+        result = ifFalse?.(this, value as Extract<V, false | null | undefined>);
+      } catch {
+        // ignore
+      }
+      if (result === undefined) {
+        try {
+          result = ifFalse?.(value as Extract<V, false | null | undefined>);
+        } catch {
+          // ignore
+        }
+      }
+      if (result === undefined) {
+        try {
+          result = ifFalse?.();
+        } catch {
+          // ignore
+        }
+      }
+      return (result ?? this) as R | T;
     }
     return this;
   }

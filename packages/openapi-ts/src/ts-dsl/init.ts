@@ -20,7 +20,7 @@ export class InitTsDsl extends TsDsl<ts.ConstructorDeclaration> {
 
   constructor(fn?: (i: InitTsDsl) => void) {
     super();
-    if (fn) fn(this);
+    fn?.(this);
   }
 
   /** Adds one or more statements or expressions to the constructor body. */
