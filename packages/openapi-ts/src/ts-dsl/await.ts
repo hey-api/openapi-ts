@@ -1,12 +1,12 @@
 import ts from 'typescript';
 
-import type { ExprInput, MaybeTsDsl } from './base';
+import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
 
 export class AwaitTsDsl extends TsDsl<ts.AwaitExpression> {
-  private exprNode: MaybeTsDsl<ExprInput>;
+  private exprNode: MaybeTsDsl<WithString>;
 
-  constructor(expr: MaybeTsDsl<ExprInput>) {
+  constructor(expr: MaybeTsDsl<WithString>) {
     super();
     this.exprNode = expr;
   }

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { DecoratorMixin } from './mixins/decorator';
 import { DescribeMixin } from './mixins/describe';
+import { DoMixin } from './mixins/do';
 import { GenericsMixin } from './mixins/generics';
 import {
   AbstractMixin,
@@ -29,7 +29,6 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
       ? ts.FunctionExpression
       : ts.ArrowFunction
 > {
-  private body: Array<MaybeTsDsl<ts.Statement | ts.Expression>> = [];
   private mode: FuncMode;
   private modifiers = createModifierAccessor(this);
   private name?: string;
@@ -69,32 +68,24 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
     return this as unknown as FuncTsDsl<'expr'>;
   }
 
-  do(...items: ReadonlyArray<MaybeTsDsl<ts.Statement | ts.Expression>>): this {
-    this.body.push(...items);
-    return this;
-  }
-
   /** Sets the return type. */
-  returns = this._returns.method;
+  returns = this._returns.fn;
 
   $render(): M extends 'decl'
     ? ts.FunctionDeclaration
     : M extends 'expr'
       ? ts.FunctionExpression
       : ts.ArrowFunction {
-    const builtParams = this.$node(this._params ?? []);
-    const builtBody = this.$stmt(this.body);
-
     if (this.mode === 'decl') {
       if (!this.name) throw new Error('Function declaration requires a name');
       return ts.factory.createFunctionDeclaration(
-        [...(this.decorators ?? []), ...this.modifiers.list()],
+        [...this.$decorators(), ...this.modifiers.list()],
         undefined,
         this.name,
         this.$generics(),
-        builtParams,
+        this.$params(),
         this._returns.$render(),
-        ts.factory.createBlock(builtBody, true),
+        ts.factory.createBlock(this.$do(), true),
       ) as any;
     }
 
@@ -104,21 +95,22 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
         undefined,
         this.name ? ts.factory.createIdentifier(this.name) : undefined,
         this.$generics(),
-        builtParams,
+        this.$params(),
         this._returns.$render(),
-        ts.factory.createBlock(builtBody, true),
+        ts.factory.createBlock(this.$do(), true),
       ) as any;
     }
 
+    const body = this.$do();
     const exprBody =
-      builtBody.length === 1 && ts.isReturnStatement(builtBody[0]!)
-        ? (builtBody[0].expression ?? ts.factory.createBlock(builtBody, true))
-        : ts.factory.createBlock(builtBody, true);
+      body.length === 1 && ts.isReturnStatement(body[0]!)
+        ? (body[0].expression ?? ts.factory.createBlock(body, true))
+        : ts.factory.createBlock(body, true);
 
     return ts.factory.createArrowFunction(
       [...this.modifiers.list()],
       this.$generics(),
-      builtParams,
+      this.$params(),
       this._returns.$render(),
       undefined,
       exprBody,
@@ -131,6 +123,7 @@ interface ImplFuncTsDsl
     AsyncMixin,
     DecoratorMixin,
     DescribeMixin,
+    DoMixin,
     GenericsMixin,
     OptionalMixin,
     ParamMixin,
@@ -144,6 +137,7 @@ mixin(
   AsyncMixin,
   DecoratorMixin,
   [DescribeMixin, { overrideRender: true }],
+  DoMixin,
   GenericsMixin,
   OptionalMixin,
   ParamMixin,

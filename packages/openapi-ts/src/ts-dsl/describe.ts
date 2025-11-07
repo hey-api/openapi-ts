@@ -1,14 +1,12 @@
 import ts from 'typescript';
 
+import type { MaybeArray } from './base';
 import { TsDsl } from './base';
 
 export class DescribeTsDsl extends TsDsl {
   private _lines: Array<string> = [];
 
-  constructor(
-    lines?: string | ReadonlyArray<string>,
-    fn?: (d: DescribeTsDsl) => void,
-  ) {
+  constructor(lines?: MaybeArray<string>, fn?: (d: DescribeTsDsl) => void) {
     super();
     if (lines) {
       if (typeof lines === 'string') {

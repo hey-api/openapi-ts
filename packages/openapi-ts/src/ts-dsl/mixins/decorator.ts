@@ -1,31 +1,25 @@
-import ts from 'typescript';
+import type ts from 'typescript';
 
-import type { ExprInput } from '../base';
+import type { MaybeTsDsl, WithString } from '../base';
 import { TsDsl } from '../base';
-import { ObjectTsDsl } from '../object';
+import { DecoratorTsDsl } from '../decorator';
 
 export class DecoratorMixin extends TsDsl {
-  protected decorators?: Array<ts.Decorator>;
+  private decorators?: Array<DecoratorTsDsl>;
 
   /** Adds a decorator (e.g. `@sealed({ in: 'root' })`). */
-  decorator<T extends this>(
-    this: T,
-    name: ExprInput | false | null,
-    fn?: (o: ObjectTsDsl) => void,
-  ): T {
-    if (!name) return this;
-
-    const expr = this.$expr(name);
-    let call: ts.Expression = expr;
-
-    // if callback provided, build object argument
-    if (fn) {
-      const obj = new ObjectTsDsl(fn);
-      call = ts.factory.createCallExpression(expr, undefined, [obj.$render()]);
-    }
-
-    (this.decorators ??= []).push(ts.factory.createDecorator(call));
+  decorator(
+    name: WithString,
+    ...args: ReadonlyArray<MaybeTsDsl<WithString>>
+  ): this {
+    (this.decorators ??= []).push(new DecoratorTsDsl(name, ...args));
     return this;
+  }
+
+  /** Renders the decorators into an array of `ts.Decorator`s. */
+  protected $decorators(): ReadonlyArray<ts.Decorator> {
+    if (!this.decorators) return [];
+    return this.$node(this.decorators);
   }
 
   $render(): ts.Node {

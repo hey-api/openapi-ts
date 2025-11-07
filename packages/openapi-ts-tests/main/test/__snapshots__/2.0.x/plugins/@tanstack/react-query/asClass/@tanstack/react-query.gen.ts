@@ -43,20 +43,18 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
 
-export const getFooOptions = (options?: Options<GetFooData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await FooBazService.getFoo({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getFooQueryKey(options)
-    });
-};
+export const getFooOptions = (options?: Options<GetFooData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await FooBazService.getFoo({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getFooQueryKey(options)
+});
 
 export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> => {
     const mutationOptions: UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> = {
@@ -88,20 +86,18 @@ export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutat
 
 export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
 
-export const getFooBarOptions = (options?: Options<GetFooBarData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await BarBazService.getFooBar({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getFooBarQueryKey(options)
-    });
-};
+export const getFooBarOptions = (options?: Options<GetFooBarData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await BarBazService.getFooBar({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getFooBarQueryKey(options)
+});
 
 export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): UseMutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> => {
     const mutationOptions: UseMutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> = {

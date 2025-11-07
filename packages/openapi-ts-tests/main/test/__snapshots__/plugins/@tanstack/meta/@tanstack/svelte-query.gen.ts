@@ -43,44 +43,40 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
 
-export const getFooOptions = (options?: Options<GetFooData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await getFoo({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getFooQueryKey(options),
-        meta: {
-            id: 'getFoo',
-            method: 'get',
-            path: '/foo'
-        }
-    });
-};
+export const getFooOptions = (options?: Options<GetFooData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getFoo({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getFooQueryKey(options),
+    meta: {
+        id: 'getFoo',
+        method: 'get',
+        path: '/foo'
+    }
+});
 
 export const getBarQueryKey = (options?: Options<GetBarData>) => createQueryKey('getBar', options);
 
-export const getBarOptions = (options?: Options<GetBarData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await getBar({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getBarQueryKey(options),
-        meta: {
-            id: 'getBar',
-            method: 'get',
-            path: '/bar'
-        }
-    });
-};
+export const getBarOptions = (options?: Options<GetBarData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getBar({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getBarQueryKey(options),
+    meta: {
+        id: 'getBar',
+        method: 'get',
+        path: '/bar'
+    }
+});

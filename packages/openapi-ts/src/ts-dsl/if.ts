@@ -1,25 +1,22 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { ExprInput, MaybeTsDsl } from './base';
+import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
+import { mixin } from './mixins/apply';
+import { DoMixin } from './mixins/do';
 
 export class IfTsDsl extends TsDsl<ts.IfStatement> {
-  private conditionInput?: MaybeTsDsl<ExprInput>;
-  private thenInput?: ReadonlyArray<MaybeTsDsl<ts.Statement>>;
+  private conditionInput?: MaybeTsDsl<WithString>;
   private elseInput?: ReadonlyArray<MaybeTsDsl<ts.Statement>>;
 
-  constructor(condition?: MaybeTsDsl<ExprInput>) {
+  constructor(condition?: MaybeTsDsl<WithString>) {
     super();
     if (condition) this.condition(condition);
   }
 
-  condition(condition: MaybeTsDsl<ExprInput>): this {
+  condition(condition: MaybeTsDsl<WithString>): this {
     this.conditionInput = condition;
-    return this;
-  }
-
-  do(...items: ReadonlyArray<MaybeTsDsl<ts.Statement>>): this {
-    this.thenInput = items;
     return this;
   }
 
@@ -30,11 +27,11 @@ export class IfTsDsl extends TsDsl<ts.IfStatement> {
 
   $render(): ts.IfStatement {
     if (!this.conditionInput) throw new Error('Missing condition in if');
-    if (!this.thenInput) throw new Error('Missing then block in if');
+
+    const thenStmts = this.$do();
+    if (!thenStmts.length) throw new Error('Missing then block in if');
 
     const condition = this.$node(this.conditionInput);
-
-    const thenStmts = this.$node(this.thenInput);
     const thenBlock =
       thenStmts.length === 1
         ? thenStmts[0]!
@@ -58,3 +55,6 @@ export class IfTsDsl extends TsDsl<ts.IfStatement> {
     return ts.factory.createIfStatement(condition, thenNode, elseNode);
   }
 }
+
+export interface IfTsDsl extends DoMixin {}
+mixin(IfTsDsl, DoMixin);
