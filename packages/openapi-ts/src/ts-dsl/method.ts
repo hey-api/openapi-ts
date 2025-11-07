@@ -29,7 +29,7 @@ export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
   constructor(name: string, fn?: (m: MethodTsDsl) => void) {
     super();
     this.name = name;
-    if (fn) fn(this);
+    fn?.(this);
   }
 
   /** Sets the return type. */

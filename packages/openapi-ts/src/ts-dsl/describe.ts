@@ -17,7 +17,7 @@ export class DescribeTsDsl extends TsDsl {
         this.add(...lines);
       }
     }
-    if (fn) fn(this);
+    fn?.(this);
   }
 
   add(...lines: ReadonlyArray<string>): this {

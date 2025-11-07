@@ -6,7 +6,8 @@ import {
   createOperationComment,
   hasOperationSse,
 } from '~/plugins/shared/utils/operation';
-import { tsc } from '~/tsc';
+import type { TsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import type { SwrPlugin } from '../types';
 
@@ -35,86 +36,37 @@ export const createUseSwr = ({
     }),
   });
 
-  const awaitSdkExpression = tsc.awaitExpression({
-    expression: tsc.callExpression({
-      functionName: queryFn,
-      parameters: [
-        tsc.objectExpression({
-          multiLine: true,
-          obj: [
-            // {
-            //   spread: optionsParamName,
-            // },
-            // {
-            //   spread: 'queryKey[0]',
-            // },
-            // {
-            //   key: 'signal',
-            //   shorthand: true,
-            //   value: tsc.identifier({
-            //     text: 'signal',
-            //   }),
-            // },
-            {
-              key: 'throwOnError',
-              value: true,
-            },
-          ],
-        }),
-      ],
-    }),
-  });
-  const statements: Array<ts.Statement> = [];
+  const awaitSdkFn = $(queryFn)
+    .call($.object((o) => o.prop('throwOnError', $.literal(true))))
+    .await();
+
+  const statements: Array<ts.Statement | TsDsl<any>> = [];
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
-    statements.push(
-      tsc.returnVariable({
-        expression: awaitSdkExpression,
-      }),
-    );
+    statements.push($.return(awaitSdkFn));
   } else {
     statements.push(
-      tsc.constVariable({
-        destructure: true,
-        expression: awaitSdkExpression,
-        name: 'data',
-      }),
-      tsc.returnVariable({
-        expression: 'data',
-      }),
+      $.const().object('data').assign(awaitSdkFn),
+      $.return('data'),
     );
   }
 
-  const statement = tsc.constVariable({
-    comment: plugin.config.comments
-      ? createOperationComment({ operation })
-      : undefined,
-    exportConst: symbolUseQueryFn.exported,
-    expression: tsc.arrowFunction({
-      parameters: [
-        // {
-        //   isRequired: isRequiredOptions,
-        //   name: optionsParamName,
-        //   type: typeData,
-        // },
-      ],
-      statements: [
-        tsc.returnStatement({
-          expression: tsc.callExpression({
-            functionName: symbolUseSwr.placeholder,
-            parameters: [
-              tsc.stringLiteral({
-                text: operation.path,
-              }),
-              tsc.arrowFunction({
-                async: true,
-                statements,
-              }),
-            ],
-          }),
-        }),
-      ],
-    }),
-    name: symbolUseQueryFn.placeholder,
-  });
+  const statement = $.const(symbolUseQueryFn.placeholder)
+    .export(symbolUseQueryFn.exported)
+    .$if(
+      plugin.config.comments && createOperationComment({ operation }),
+      (c, v) => c.describe(v as Array<string>),
+    )
+    .assign(
+      $.func().do(
+        $.return(
+          $(symbolUseSwr.placeholder).call(
+            $.literal(operation.path),
+            $.func()
+              .async()
+              .do(...statements),
+          ),
+        ),
+      ),
+    );
   plugin.setSymbolValue(symbolUseQueryFn, statement);
 };

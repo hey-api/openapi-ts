@@ -1,5 +1,6 @@
 import ts from 'typescript';
 
+import { AwaitTsDsl } from './await';
 import type { ExprInput, MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 
@@ -20,6 +21,11 @@ export class CallTsDsl extends TsDsl<ts.CallExpression> {
   args(...args: ReadonlyArray<MaybeTsDsl<ExprInput>>): this {
     this.callArgs = args;
     return this;
+  }
+
+  /** Await the result of the call expression. */
+  await(): AwaitTsDsl {
+    return new AwaitTsDsl(this);
   }
 
   $render(): ts.CallExpression {
