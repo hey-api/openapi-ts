@@ -63,3 +63,27 @@ components:
         properties:
           name:
             type: string
+
+    # Object with additionalProperties set to false (no additional properties allowed)
+    ObjectWithAdditionalPropertiesFalse:
+      type: object
+      properties:
+        id:
+          type: string
+        count:
+          type: integer
+      additionalProperties: false
+
+    # Object with nested object that has additionalProperties: false
+    ObjectWithNestedAdditionalPropertiesFalse:
+      type: object
+      properties:
+        membership:
+          type: object
+          properties:
+            status:
+              type: string
+              enum: [approved, declined, pending]
+            calendar_membership_tier_id:
+              type: string
+          additionalProperties: false
