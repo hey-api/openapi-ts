@@ -295,6 +295,7 @@ const parseAllOf = ({
   state: SchemaState;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
+  parseSchemaMeta({ irSchema, schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
   const schemaType = getSchemaType({ schema });
@@ -533,6 +534,10 @@ const parseRef = ({
   state: SchemaState;
 }): IR.SchemaObject => {
   const irSchema: IR.SchemaObject = {};
+
+  // Parse metadata from the schema (like default, description, etc.)
+  parseSchemaMeta({ irSchema, schema });
+
   // Inline non-component refs (e.g. #/paths/...) to avoid generating orphaned named types
   const isComponentsRef = schema.$ref.startsWith('#/definitions/');
   if (!isComponentsRef) {
