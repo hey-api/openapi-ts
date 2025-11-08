@@ -8,15 +8,15 @@ import { mixin } from './mixins/apply';
 import { OperatorMixin } from './mixins/operator';
 
 export class ExprTsDsl extends TsDsl<ts.Expression> {
-  private input: MaybeTsDsl<WithString>;
+  private _exprInput: MaybeTsDsl<WithString>;
 
   constructor(id: MaybeTsDsl<WithString>) {
     super();
-    this.input = id;
+    this._exprInput = id;
   }
 
   $render(): ts.Expression {
-    return this.$node(this.input);
+    return this.$node(this._exprInput);
   }
 }
 

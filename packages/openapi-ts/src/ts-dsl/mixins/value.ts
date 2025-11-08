@@ -1,6 +1,7 @@
 import type ts from 'typescript';
 
-import { type MaybeTsDsl, TsDsl, type WithString } from '../base';
+import type { MaybeTsDsl, WithString } from '../base';
+import { TsDsl } from '../base';
 
 export class ValueMixin extends TsDsl {
   private value?: MaybeTsDsl<WithString>;
