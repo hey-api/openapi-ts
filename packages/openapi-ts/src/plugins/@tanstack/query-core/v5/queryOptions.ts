@@ -131,7 +131,7 @@ export const createQueryOptions = ({
         .param(optionsParamName, (p) =>
           p.optional(!isRequiredOptions).type(typeData),
         )
-        .do($.return($(symbolQueryOptions.placeholder).call(queryOptionsObj))),
+        .do($(symbolQueryOptions.placeholder).call(queryOptionsObj).return()),
     );
   plugin.setSymbolValue(symbolQueryOptionsFn, statement);
 };

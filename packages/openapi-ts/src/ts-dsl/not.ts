@@ -4,18 +4,17 @@ import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
 
 export class NotTsDsl extends TsDsl<ts.PrefixUnaryExpression> {
-  private exprInput: MaybeTsDsl<WithString>;
+  private _notExpr: MaybeTsDsl<WithString>;
 
   constructor(expr: MaybeTsDsl<WithString>) {
     super();
-    this.exprInput = expr;
+    this._notExpr = expr;
   }
 
   $render(): ts.PrefixUnaryExpression {
-    const expression = this.$node(this.exprInput);
     return ts.factory.createPrefixUnaryExpression(
       ts.SyntaxKind.ExclamationToken,
-      expression,
+      this.$node(this._notExpr),
     );
   }
 }
