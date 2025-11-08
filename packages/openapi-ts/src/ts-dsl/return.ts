@@ -1,12 +1,12 @@
 import ts from 'typescript';
 
-import type { ExprInput, MaybeTsDsl } from './base';
+import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
 
 export class ReturnTsDsl extends TsDsl<ts.ReturnStatement> {
-  private expr?: MaybeTsDsl<ExprInput>;
+  private expr?: MaybeTsDsl<WithString>;
 
-  constructor(expr?: MaybeTsDsl<ExprInput>) {
+  constructor(expr?: MaybeTsDsl<WithString>) {
     super();
     this.expr = expr;
   }

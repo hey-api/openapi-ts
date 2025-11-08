@@ -43,20 +43,18 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const getFooD = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
 
-export const getFooE = (options?: Options<GetFooData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await getFoo({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getFooD(options)
-    });
-};
+export const getFooE = (options?: Options<GetFooData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getFoo({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getFooD(options)
+});
 
 export const fooPostC = (options?: Partial<Options<FooPostData>>): UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> => {
     const mutationOptions: UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> = {
@@ -88,20 +86,18 @@ export const fooPutC = (options?: Partial<Options<FooPutData>>): UseMutationOpti
 
 export const getFooBarD = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
 
-export const getFooBarE = (options?: Options<GetFooBarData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await getFooBar({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getFooBarD(options)
-    });
-};
+export const getFooBarE = (options?: Options<GetFooBarData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getFooBar({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getFooBarD(options)
+});
 
 export const fooBarPostC = (options?: Partial<Options<FooBarPostData>>): UseMutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> => {
     const mutationOptions: UseMutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> = {

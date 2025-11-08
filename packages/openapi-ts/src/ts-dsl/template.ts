@@ -1,19 +1,19 @@
 import ts from 'typescript';
 
-import type { ExprInput, MaybeTsDsl } from './base';
+import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
 
 export class TemplateTsDsl extends TsDsl<
   ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral
 > {
-  private parts: Array<MaybeTsDsl<ExprInput>> = [];
+  private parts: Array<MaybeTsDsl<WithString>> = [];
 
-  constructor(value?: MaybeTsDsl<ExprInput>) {
+  constructor(value?: MaybeTsDsl<WithString>) {
     super();
     if (value !== undefined) this.add(value);
   }
 
-  add(value: MaybeTsDsl<ExprInput>): this {
+  add(value: MaybeTsDsl<WithString>): this {
     this.parts.push(value);
     return this;
   }
@@ -21,7 +21,7 @@ export class TemplateTsDsl extends TsDsl<
   $render(): ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral {
     const parts = this.$node(this.parts);
 
-    const normalized: Array<ExprInput> = [];
+    const normalized: Array<WithString> = [];
     // merge consecutive string parts
     for (let index = 0; index < parts.length; index++) {
       const current = parts[index]!;

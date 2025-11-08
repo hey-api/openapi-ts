@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { DecoratorMixin } from './mixins/decorator';
 import { DescribeMixin } from './mixins/describe';
+import { DoMixin } from './mixins/do';
 import { GenericsMixin } from './mixins/generics';
 import {
   AbstractMixin,
@@ -21,7 +21,6 @@ import { ParamMixin } from './mixins/param';
 import { createTypeAccessor } from './mixins/type';
 
 export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
-  private body: Array<MaybeTsDsl<ts.Statement | ts.Expression>> = [];
   private modifiers = createModifierAccessor(this);
   private name: string;
   private _returns = createTypeAccessor(this);
@@ -33,27 +32,19 @@ export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
   }
 
   /** Sets the return type. */
-  returns = this._returns.method;
-
-  /** Adds one or more statements or expressions to the method body. */
-  do(...items: ReadonlyArray<MaybeTsDsl<ts.Statement | ts.Expression>>): this {
-    this.body.push(...items);
-    return this;
-  }
+  returns = this._returns.fn;
 
   /** Builds the `MethodDeclaration` node. */
   $render(): ts.MethodDeclaration {
-    const builtParams = this.$node(this._params ?? []);
-    const builtBody = this.$stmt(this.body);
     return ts.factory.createMethodDeclaration(
-      [...(this.decorators ?? []), ...this.modifiers.list()],
+      [...this.$decorators(), ...this.modifiers.list()],
       undefined,
       ts.factory.createIdentifier(this.name),
       this.questionToken,
       this.$generics(),
-      builtParams,
+      this.$params(),
       this._returns.$render(),
-      ts.factory.createBlock(builtBody, true),
+      ts.factory.createBlock(this.$do(), true),
     );
   }
 }
@@ -63,6 +54,7 @@ export interface MethodTsDsl
     AsyncMixin,
     DecoratorMixin,
     DescribeMixin,
+    DoMixin,
     GenericsMixin,
     OptionalMixin,
     ParamMixin,
@@ -76,6 +68,7 @@ mixin(
   AsyncMixin,
   DecoratorMixin,
   [DescribeMixin, { overrideRender: true }],
+  DoMixin,
   GenericsMixin,
   OptionalMixin,
   ParamMixin,

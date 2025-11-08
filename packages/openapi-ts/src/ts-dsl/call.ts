@@ -1,26 +1,22 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
 import { AwaitTsDsl } from './await';
-import type { ExprInput, MaybeTsDsl } from './base';
+import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
+import { mixin } from './mixins/apply';
+import { ArgsMixin } from './mixins/args';
 
 export class CallTsDsl extends TsDsl<ts.CallExpression> {
-  private callee: MaybeTsDsl<ExprInput>;
-  private callArgs: ReadonlyArray<MaybeTsDsl<ExprInput>> = [];
+  private callee: MaybeTsDsl<WithString>;
 
   constructor(
-    callee: MaybeTsDsl<ExprInput>,
-    ...args: ReadonlyArray<MaybeTsDsl<ExprInput>>
+    callee: MaybeTsDsl<WithString>,
+    ...args: ReadonlyArray<MaybeTsDsl<WithString>>
   ) {
     super();
     this.callee = callee;
-    if (args.length) this.callArgs = args;
-  }
-
-  /** Adds one or more arguments to the call expression. */
-  args(...args: ReadonlyArray<MaybeTsDsl<ExprInput>>): this {
-    this.callArgs = args;
-    return this;
+    this.args(...args);
   }
 
   /** Await the result of the call expression. */
@@ -29,8 +25,13 @@ export class CallTsDsl extends TsDsl<ts.CallExpression> {
   }
 
   $render(): ts.CallExpression {
-    const calleeNode = this.$node(this.callee);
-    const argsNodes = this.$node(this.callArgs).map((arg) => this.$expr(arg));
-    return ts.factory.createCallExpression(calleeNode, undefined, argsNodes);
+    return ts.factory.createCallExpression(
+      this.$node(this.callee),
+      undefined,
+      this.$args(),
+    );
   }
 }
+
+export interface CallTsDsl extends ArgsMixin {}
+mixin(CallTsDsl, ArgsMixin);

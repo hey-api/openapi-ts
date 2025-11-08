@@ -1,5 +1,3 @@
-import type ts from 'typescript';
-
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import {
@@ -37,10 +35,10 @@ export const createUseSwr = ({
   });
 
   const awaitSdkFn = $(queryFn)
-    .call($.object((o) => o.prop('throwOnError', $.literal(true))))
+    .call($.object().prop('throwOnError', $.literal(true)))
     .await();
 
-  const statements: Array<ts.Statement | TsDsl<any>> = [];
+  const statements: Array<TsDsl<any>> = [];
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));
   } else {

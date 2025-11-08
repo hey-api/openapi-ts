@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { ExprInput, MaybeTsDsl } from './base';
+import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
 import { FieldTsDsl } from './field';
 import { InitTsDsl } from './init';
@@ -29,15 +29,15 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
     this.name = name;
   }
 
-  /** Adds a class constructor. */
-  init(fn?: (i: InitTsDsl) => void): this {
-    const i = new InitTsDsl(fn);
-    this.body.push(i);
+  /** Adds one or more class members (fields, methods, etc.). */
+  do(...items: ReadonlyArray<MaybeTsDsl<ts.ClassElement | ts.Node>>): this {
+    // @ts-expect-error --- IGNORE ---
+    this.body.push(...items);
     return this;
   }
 
   /** Adds a base class to extend from. */
-  extends(base?: ExprInput | false | null): this {
+  extends(base?: WithString | false | null): this {
     if (!base) return this;
     this.heritageClauses.push(
       ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, [
@@ -57,17 +57,17 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
     return this;
   }
 
+  /** Adds a class constructor. */
+  init(fn?: (i: InitTsDsl) => void): this {
+    const i = new InitTsDsl(fn);
+    this.body.push(i);
+    return this;
+  }
+
   /** Adds a class method. */
   method(name: string, fn?: (m: MethodTsDsl) => void): this {
     const m = new MethodTsDsl(name, fn);
     this.body.push(m);
-    return this;
-  }
-
-  /** Adds one or more class members (fields, methods, etc.). */
-  do(...items: ReadonlyArray<MaybeTsDsl<ts.ClassElement | ts.Node>>): this {
-    // @ts-expect-error --- IGNORE ---
-    this.body.push(...items);
     return this;
   }
 
@@ -79,13 +79,13 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
 
   /** Builds the `ClassDeclaration` node. */
   $render(): ts.ClassDeclaration {
-    const builtBody = this.$node(this.body) as ReadonlyArray<ts.ClassElement>;
+    const body = this.$node(this.body) as ReadonlyArray<ts.ClassElement>;
     return ts.factory.createClassDeclaration(
-      [...(this.decorators ?? []), ...this.modifiers.list()],
+      [...this.$decorators(), ...this.modifiers.list()],
       ts.factory.createIdentifier(this.name),
       this.$generics(),
       this.heritageClauses,
-      builtBody,
+      body,
     );
   }
 }

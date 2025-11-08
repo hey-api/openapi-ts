@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { ExprInput, MaybeTsDsl } from './base';
+import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
 import { AccessMixin } from './mixins/access';
 import { mixin } from './mixins/apply';
@@ -9,18 +9,33 @@ import { AssignmentMixin } from './mixins/assignment';
 import { OperatorMixin } from './mixins/operator';
 import { OptionalMixin } from './mixins/optional';
 
-export class AttrTsDsl extends TsDsl<ts.PropertyAccessExpression> {
-  private left: MaybeTsDsl<ExprInput>;
-  private right: string;
+export class AttrTsDsl extends TsDsl<
+  ts.PropertyAccessExpression | ts.ElementAccessExpression
+> {
+  private left: MaybeTsDsl<WithString>;
+  private right: WithString<number>;
 
-  constructor(left: MaybeTsDsl<ExprInput>, right: string) {
+  constructor(left: MaybeTsDsl<WithString>, right: WithString<number>) {
     super();
     this.left = left;
     this.right = right;
   }
 
-  $render(): ts.PropertyAccessExpression {
+  $render(): ts.PropertyAccessExpression | ts.ElementAccessExpression {
     const leftNode = this.$node(this.left);
+    if (typeof this.right === 'number') {
+      if (this.isOptional) {
+        return ts.factory.createElementAccessChain(
+          leftNode,
+          ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
+          ts.factory.createNumericLiteral(this.right),
+        );
+      }
+      return ts.factory.createElementAccessExpression(
+        leftNode,
+        ts.factory.createNumericLiteral(this.right),
+      );
+    }
     if (this.isOptional) {
       return ts.factory.createPropertyAccessChain(
         leftNode,

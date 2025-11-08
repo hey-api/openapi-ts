@@ -9,8 +9,7 @@ export class GenericsMixin extends TsDsl {
   /** Adds a single generic type argument (e.g. `T` in `Array<T>`). */
   generic(name: string, fn?: (t: TypeParamTsDsl) => void): this {
     const g = new TypeParamTsDsl(name, fn);
-    if (!this._generics) this._generics = [];
-    this._generics.push(g);
+    (this._generics ??= []).push(g);
     return this;
   }
 
