@@ -44,6 +44,13 @@ for (const zodVersion of zodVersions) {
       },
       {
         config: createConfig({
+          input: 'defaults-with-ref-and-anyof.json',
+          output: 'defaults-with-ref-and-anyof',
+        }),
+        description: 'preserves defaults with $ref and anyOf',
+      },
+      {
+        config: createConfig({
           input: 'enum-null.json',
           output: 'enum-null',
         }),
