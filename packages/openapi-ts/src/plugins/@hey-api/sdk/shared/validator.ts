@@ -1,6 +1,5 @@
-import type ts from 'typescript';
-
 import type { IR } from '~/ir/types';
+import type { TsDsl } from '~/ts-dsl';
 
 import type { HeyApiSdkPlugin } from '../types';
 
@@ -12,7 +11,7 @@ interface ValidatorProps {
 export const createRequestValidator = ({
   operation,
   plugin,
-}: ValidatorProps): ts.ArrowFunction | undefined => {
+}: ValidatorProps): TsDsl | undefined => {
   if (!plugin.config.validator.request) return;
 
   const validator = plugin.getPluginOrThrow(plugin.config.validator.request);
@@ -28,7 +27,7 @@ export const createRequestValidator = ({
 export const createResponseValidator = ({
   operation,
   plugin,
-}: ValidatorProps): ts.ArrowFunction | undefined => {
+}: ValidatorProps): TsDsl | undefined => {
   if (!plugin.config.validator.response) return;
 
   const validator = plugin.getPluginOrThrow(plugin.config.validator.response);

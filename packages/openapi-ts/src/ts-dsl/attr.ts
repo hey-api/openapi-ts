@@ -13,9 +13,12 @@ export class AttrTsDsl extends TsDsl<
   ts.PropertyAccessExpression | ts.ElementAccessExpression
 > {
   private left: MaybeTsDsl<WithString>;
-  private right: WithString<number>;
+  private right: WithString<ts.MemberName> | number;
 
-  constructor(left: MaybeTsDsl<WithString>, right: WithString<number>) {
+  constructor(
+    left: MaybeTsDsl<WithString>,
+    right: WithString<ts.MemberName> | number,
+  ) {
     super();
     this.left = left;
     this.right = right;
@@ -40,12 +43,12 @@ export class AttrTsDsl extends TsDsl<
       return ts.factory.createPropertyAccessChain(
         leftNode,
         ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-        ts.factory.createIdentifier(this.right),
+        this.$expr(this.right),
       );
     }
     return ts.factory.createPropertyAccessExpression(
       leftNode,
-      ts.factory.createIdentifier(this.right),
+      this.$expr(this.right),
     );
   }
 }
