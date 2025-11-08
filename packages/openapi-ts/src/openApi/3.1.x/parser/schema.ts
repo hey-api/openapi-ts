@@ -382,6 +382,7 @@ const parseAllOf = ({
   state: SchemaState;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
+  parseSchemaMeta({ irSchema, schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
   const schemaTypes = getSchemaTypes({ schema });
@@ -543,6 +544,7 @@ const parseAnyOf = ({
   state: SchemaState;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
+  parseSchemaMeta({ irSchema, schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
   const schemaTypes = getSchemaTypes({ schema });
@@ -699,6 +701,7 @@ const parseOneOf = ({
   state: SchemaState;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
+  parseSchemaMeta({ irSchema, schema });
 
   let schemaItems: Array<IR.SchemaObject> = [];
   const schemaTypes = getSchemaTypes({ schema });
@@ -817,6 +820,7 @@ const parseRef = ({
   }
 
   let irSchema = initIrSchema({ schema });
+  parseSchemaMeta({ irSchema, schema });
 
   const irRefSchema: IR.SchemaObject = {};
 
