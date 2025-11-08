@@ -1,8 +1,10 @@
 import ts from 'typescript';
 
-export type ExprInput<T = ts.Expression> = T | string;
+export type MaybeArray<T> = T | ReadonlyArray<T>;
 
-export type TypeInput = string | boolean | MaybeTsDsl<ts.TypeNode>;
+export type WithStatement<T = ts.Expression> = T | ts.Statement;
+
+export type WithString<T = ts.Expression> = T | string;
 
 export interface ITsDsl<T extends ts.Node = ts.Node> {
   $render(): T;
@@ -11,7 +13,7 @@ export interface ITsDsl<T extends ts.Node = ts.Node> {
 export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
   abstract $render(): T;
 
-  protected $expr<T>(expr: ExprInput<T>): T {
+  protected $expr<T>(expr: WithString<T>): T {
     return typeof expr === 'string'
       ? (ts.factory.createIdentifier(expr) as T)
       : expr;
@@ -106,9 +108,7 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
   }
 
   protected $stmt(
-    input:
-      | MaybeTsDsl<ExprInput<ts.Statement | ts.Expression>>
-      | ReadonlyArray<MaybeTsDsl<ExprInput<ts.Statement | ts.Expression>>>,
+    input: MaybeArray<MaybeTsDsl<WithString<WithStatement>>>,
   ): ReadonlyArray<ts.Statement> {
     const arr = input instanceof Array ? input : [input];
     return arr.map((item) => {

@@ -318,9 +318,14 @@ export default defineConfig(() => {
           //   name: '{{name}}QK',
           // },
           // queryOptions: false,
-          // queryOptions: {
-          //   name: '{{name}}QO',
-          // },
+          queryOptions: {
+            // meta() {
+            //   return {
+            //     custom: 'value',
+            //   }
+            // },
+            name: '{{name}}QO',
+          },
           useQuery: true,
           '~hooks': {
             operations: {

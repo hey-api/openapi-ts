@@ -1,12 +1,12 @@
 import ts from 'typescript';
 
-import type { ExprInput, MaybeTsDsl } from './base';
+import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
 
 export class NotTsDsl extends TsDsl<ts.PrefixUnaryExpression> {
-  private exprInput: MaybeTsDsl<ExprInput>;
+  private exprInput: MaybeTsDsl<WithString>;
 
-  constructor(expr: MaybeTsDsl<ExprInput>) {
+  constructor(expr: MaybeTsDsl<WithString>) {
     super();
     this.exprInput = expr;
   }

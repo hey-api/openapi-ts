@@ -44,20 +44,18 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const exportQueryKey = (options?: Options<ExportData>) => createQueryKey('export', options);
 
-export const exportOptions = (options?: Options<ExportData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await export_({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: exportQueryKey(options)
-    });
-};
+export const exportOptions = (options?: Options<ExportData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await export_({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: exportQueryKey(options)
+});
 
 export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchApiVbyApiVersionNoTagData>> => {
     const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchApiVbyApiVersionNoTagData>> = {
@@ -103,37 +101,33 @@ export const fooWowMutation = (options?: Partial<Options<FooWowData>>): Mutation
 
 export const apiVVersionODataControllerCountQueryKey = (options?: Options<ApiVVersionODataControllerCountData>) => createQueryKey('apiVVersionODataControllerCount', options);
 
-export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVersionODataControllerCountData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await apiVVersionODataControllerCount({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: apiVVersionODataControllerCountQueryKey(options)
-    });
-};
+export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVersionODataControllerCountData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await apiVVersionODataControllerCount({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: apiVVersionODataControllerCountQueryKey(options)
+});
 
 export const getApiVbyApiVersionSimpleOperationQueryKey = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => createQueryKey('getApiVbyApiVersionSimpleOperation', options);
 
-export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await getApiVbyApiVersionSimpleOperation({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getApiVbyApiVersionSimpleOperationQueryKey(options)
-    });
-};
+export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getApiVbyApiVersionSimpleOperation({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiVbyApiVersionSimpleOperationQueryKey(options)
+});
 
 export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<DeleteCallWithoutParametersAndResponseData>> => {
     const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<DeleteCallWithoutParametersAndResponseData>> = {
@@ -151,20 +145,18 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
 
 export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => createQueryKey('getCallWithoutParametersAndResponse', options);
 
-export const getCallWithoutParametersAndResponseOptions = (options?: Options<GetCallWithoutParametersAndResponseData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await getCallWithoutParametersAndResponse({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getCallWithoutParametersAndResponseQueryKey(options)
-    });
-};
+export const getCallWithoutParametersAndResponseOptions = (options?: Options<GetCallWithoutParametersAndResponseData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getCallWithoutParametersAndResponse({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getCallWithoutParametersAndResponseQueryKey(options)
+});
 
 export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchCallWithoutParametersAndResponseData>> => {
     const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchCallWithoutParametersAndResponseData>> = {
@@ -283,20 +275,18 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
 
 export const getCallWithOptionalParamQueryKey = (options: Options<GetCallWithOptionalParamData>) => createQueryKey('getCallWithOptionalParam', options);
 
-export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOptionalParamData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await getCallWithOptionalParam({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getCallWithOptionalParamQueryKey(options)
-    });
-};
+export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOptionalParamData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getCallWithOptionalParam({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getCallWithOptionalParamQueryKey(options)
+});
 
 const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>>(queryKey: QueryKey<Options>, page: K) => {
     const params = {
@@ -399,20 +389,18 @@ export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<P
 
 export const callWithDefaultParametersQueryKey = (options?: Options<CallWithDefaultParametersData>) => createQueryKey('callWithDefaultParameters', options);
 
-export const callWithDefaultParametersOptions = (options?: Options<CallWithDefaultParametersData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await callWithDefaultParameters({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: callWithDefaultParametersQueryKey(options)
-    });
-};
+export const callWithDefaultParametersOptions = (options?: Options<CallWithDefaultParametersData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await callWithDefaultParameters({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: callWithDefaultParametersQueryKey(options)
+});
 
 export const callWithDefaultOptionalParametersMutation = (options?: Partial<Options<CallWithDefaultOptionalParametersData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithDefaultOptionalParametersData>> => {
     const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithDefaultOptionalParametersData>> = {
@@ -458,20 +446,18 @@ export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameDat
 
 export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => createQueryKey('duplicateName2', options);
 
-export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await duplicateName2({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: duplicateName2QueryKey(options)
-    });
-};
+export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await duplicateName2({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: duplicateName2QueryKey(options)
+});
 
 export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3Data>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateName3Data>> => {
     const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateName3Data>> = {
@@ -503,88 +489,78 @@ export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4D
 
 export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => createQueryKey('callWithNoContentResponse', options);
 
-export const callWithNoContentResponseOptions = (options?: Options<CallWithNoContentResponseData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await callWithNoContentResponse({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: callWithNoContentResponseQueryKey(options)
-    });
-};
+export const callWithNoContentResponseOptions = (options?: Options<CallWithNoContentResponseData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await callWithNoContentResponse({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: callWithNoContentResponseQueryKey(options)
+});
 
 export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => createQueryKey('callWithResponseAndNoContentResponse', options);
 
-export const callWithResponseAndNoContentResponseOptions = (options?: Options<CallWithResponseAndNoContentResponseData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await callWithResponseAndNoContentResponse({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: callWithResponseAndNoContentResponseQueryKey(options)
-    });
-};
+export const callWithResponseAndNoContentResponseOptions = (options?: Options<CallWithResponseAndNoContentResponseData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await callWithResponseAndNoContentResponse({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: callWithResponseAndNoContentResponseQueryKey(options)
+});
 
 export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey('dummyA', options);
 
-export const dummyAOptions = (options?: Options<DummyAData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await dummyA({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: dummyAQueryKey(options)
-    });
-};
+export const dummyAOptions = (options?: Options<DummyAData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await dummyA({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: dummyAQueryKey(options)
+});
 
 export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey('dummyB', options);
 
-export const dummyBOptions = (options?: Options<DummyBData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await dummyB({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: dummyBQueryKey(options)
-    });
-};
+export const dummyBOptions = (options?: Options<DummyBData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await dummyB({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: dummyBQueryKey(options)
+});
 
 export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => createQueryKey('callWithResponse', options);
 
-export const callWithResponseOptions = (options?: Options<CallWithResponseData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await callWithResponse({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: callWithResponseQueryKey(options)
-    });
-};
+export const callWithResponseOptions = (options?: Options<CallWithResponseData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await callWithResponse({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: callWithResponseQueryKey(options)
+});
 
 export const callWithDuplicateResponsesMutation = (options?: Partial<Options<CallWithDuplicateResponsesData>>): MutationOptions<CallWithDuplicateResponsesResponse, AxiosError<CallWithDuplicateResponsesError>, Options<CallWithDuplicateResponsesData>> => {
     const mutationOptions: MutationOptions<CallWithDuplicateResponsesResponse, AxiosError<CallWithDuplicateResponsesError>, Options<CallWithDuplicateResponsesData>> = {
@@ -616,37 +592,33 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
 
 export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => createQueryKey('collectionFormat', options);
 
-export const collectionFormatOptions = (options: Options<CollectionFormatData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await collectionFormat({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: collectionFormatQueryKey(options)
-    });
-};
+export const collectionFormatOptions = (options: Options<CollectionFormatData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await collectionFormat({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: collectionFormatQueryKey(options)
+});
 
 export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('types', options);
 
-export const typesOptions = (options: Options<TypesData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await types({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: typesQueryKey(options)
-    });
-};
+export const typesOptions = (options: Options<TypesData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await types({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: typesQueryKey(options)
+});
 
 export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): MutationOptions<UploadFileResponse, AxiosError<DefaultError>, Options<UploadFileData>> => {
     const mutationOptions: MutationOptions<UploadFileResponse, AxiosError<DefaultError>, Options<UploadFileData>> = {
@@ -664,54 +636,48 @@ export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): 
 
 export const fileResponseQueryKey = (options: Options<FileResponseData>) => createQueryKey('fileResponse', options);
 
-export const fileResponseOptions = (options: Options<FileResponseData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await fileResponse({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: fileResponseQueryKey(options)
-    });
-};
+export const fileResponseOptions = (options: Options<FileResponseData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await fileResponse({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: fileResponseQueryKey(options)
+});
 
 export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => createQueryKey('complexTypes', options);
 
-export const complexTypesOptions = (options: Options<ComplexTypesData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await complexTypes({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: complexTypesQueryKey(options)
-    });
-};
+export const complexTypesOptions = (options: Options<ComplexTypesData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await complexTypes({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: complexTypesQueryKey(options)
+});
 
 export const multipartResponseQueryKey = (options?: Options<MultipartResponseData>) => createQueryKey('multipartResponse', options);
 
-export const multipartResponseOptions = (options?: Options<MultipartResponseData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await multipartResponse({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: multipartResponseQueryKey(options)
-    });
-};
+export const multipartResponseOptions = (options?: Options<MultipartResponseData>) => queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await multipartResponse({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: multipartResponseQueryKey(options)
+});
 
 export const multipartRequestMutation = (options?: Partial<Options<MultipartRequestData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<MultipartRequestData>> => {
     const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<MultipartRequestData>> = {

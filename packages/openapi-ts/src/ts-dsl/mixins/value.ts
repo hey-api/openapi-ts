@@ -1,11 +1,21 @@
-import type { ExprInput, MaybeTsDsl } from '../base';
+import type ts from 'typescript';
 
-export class ValueMixin {
-  protected initializer?: MaybeTsDsl<ExprInput>;
+import { type MaybeTsDsl, TsDsl, type WithString } from '../base';
+
+export class ValueMixin extends TsDsl {
+  private value?: MaybeTsDsl<WithString>;
 
   /** Sets the initializer expression (e.g. `= expr`). */
-  assign<T extends this>(this: T, expr: MaybeTsDsl<ExprInput>): T {
-    this.initializer = expr;
+  assign<T extends this>(this: T, expr: MaybeTsDsl<WithString>): T {
+    this.value = expr;
     return this;
+  }
+
+  protected $value(): ts.Expression | undefined {
+    return this.$node(this.value);
+  }
+
+  $render(): ts.Node {
+    throw new Error('noop');
   }
 }

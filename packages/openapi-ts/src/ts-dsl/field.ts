@@ -28,16 +28,16 @@ export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
   }
 
   /** Sets the property's type. */
-  type = this._type.method;
+  type = this._type.fn;
 
   /** Builds the `PropertyDeclaration` node. */
   $render(): ts.PropertyDeclaration {
     return ts.factory.createPropertyDeclaration(
-      [...(this.decorators ?? []), ...this.modifiers.list()],
+      [...this.$decorators(), ...this.modifiers.list()],
       ts.factory.createIdentifier(this.name),
       undefined,
       this._type.$render(),
-      this.$node(this.initializer),
+      this.$value(),
     );
   }
 }
