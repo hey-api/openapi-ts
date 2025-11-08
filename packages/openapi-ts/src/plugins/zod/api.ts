@@ -1,4 +1,4 @@
-import type ts from 'typescript';
+import type { TsDsl } from '~/ts-dsl';
 
 import {
   createRequestValidatorMini,
@@ -9,14 +9,12 @@ import { createRequestValidatorV3, createResponseValidatorV3 } from './v3/api';
 import { createRequestValidatorV4, createResponseValidatorV4 } from './v4/api';
 
 export type IApi = {
-  createRequestValidator: (args: ValidatorArgs) => ts.ArrowFunction | undefined;
-  createResponseValidator: (
-    args: ValidatorArgs,
-  ) => ts.ArrowFunction | undefined;
+  createRequestValidator: (args: ValidatorArgs) => TsDsl | undefined;
+  createResponseValidator: (args: ValidatorArgs) => TsDsl | undefined;
 };
 
 export class Api implements IApi {
-  createRequestValidator(args: ValidatorArgs): ts.ArrowFunction | undefined {
+  createRequestValidator(args: ValidatorArgs): TsDsl | undefined {
     const { plugin } = args;
     switch (plugin.config.compatibilityVersion) {
       case 3:
@@ -29,7 +27,7 @@ export class Api implements IApi {
     }
   }
 
-  createResponseValidator(args: ValidatorArgs): ts.ArrowFunction | undefined {
+  createResponseValidator(args: ValidatorArgs): TsDsl | undefined {
     const { plugin } = args;
     switch (plugin.config.compatibilityVersion) {
       case 3:

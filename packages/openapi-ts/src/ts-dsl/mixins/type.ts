@@ -4,8 +4,16 @@ import type { TsDsl } from '../base';
 import type { TypeInput } from '../type';
 import { TypeTsDsl } from '../type';
 
+export interface TypeAccessor<Parent extends TsDsl> {
+  $render(): ts.TypeNode | undefined;
+  fn(): ReturnType<typeof TypeTsDsl>;
+  fn(type: TypeInput): Parent;
+}
+
 /** Provides `.type()`-like access with internal state management. */
-export function createTypeAccessor<Parent extends TsDsl>(parent: Parent) {
+export function createTypeAccessor<Parent extends TsDsl>(
+  parent: Parent,
+): TypeAccessor<Parent> {
   const $type = parent['$type'].bind(parent);
 
   let _type: ReturnType<typeof TypeTsDsl> | undefined;

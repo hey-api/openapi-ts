@@ -18,21 +18,21 @@ import {
 } from './mixins/modifiers';
 import { OptionalMixin } from './mixins/optional';
 import { ParamMixin } from './mixins/param';
-import { createTypeAccessor } from './mixins/type';
+import { createTypeAccessor, type TypeAccessor } from './mixins/type';
 
 export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
   private modifiers = createModifierAccessor(this);
   private name: string;
-  private _returns = createTypeAccessor(this);
+  private _returns: TypeAccessor<MethodTsDsl> = createTypeAccessor(this);
+
+  /** Sets the return type. */
+  returns: TypeAccessor<MethodTsDsl>['fn'] = this._returns.fn;
 
   constructor(name: string, fn?: (m: MethodTsDsl) => void) {
     super();
     this.name = name;
     fn?.(this);
   }
-
-  /** Sets the return type. */
-  returns = this._returns.fn;
 
   /** Builds the `MethodDeclaration` node. */
   $render(): ts.MethodDeclaration {

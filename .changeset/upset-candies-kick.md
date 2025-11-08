@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': patch
 ---
 
-@tanstack/query: prettier query options
+**@tanstack/query**: prettier query options
