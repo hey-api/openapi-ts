@@ -5,7 +5,7 @@ export function DescribeMixin<
   TBase extends new (...args: ReadonlyArray<any>) => ITsDsl,
 >(Base: TBase) {
   const Mixin = class extends Base {
-    protected _desc?: DescribeTsDsl;
+    _desc?: DescribeTsDsl;
 
     describe(
       lines?: MaybeArray<string>,

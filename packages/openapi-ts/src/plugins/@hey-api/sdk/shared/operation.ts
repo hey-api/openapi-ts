@@ -503,10 +503,11 @@ export const operationStatements = ({
   }
 
   const requestValidator = createRequestValidator({ operation, plugin });
+  const responseValidator = createResponseValidator({ operation, plugin });
   if (requestValidator) {
     requestOptions.push({
       key: 'requestValidator',
-      value: requestValidator,
+      value: requestValidator.$render(),
     });
   }
 
@@ -553,11 +554,10 @@ export const operationStatements = ({
     }
   }
 
-  const responseValidator = createResponseValidator({ operation, plugin });
   if (responseValidator) {
     requestOptions.push({
       key: 'responseValidator',
-      value: responseValidator,
+      value: responseValidator.$render(),
     });
   }
 

@@ -22,13 +22,9 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 
 export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>) => {
     return (options?.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
-        requestValidator: async (data) => {
-            return await zPostFooData.parseAsync(data);
-        },
+        requestValidator: async (data) => await zPostFooData.parseAsync(data),
         responseTransformer: postFooResponseTransformer,
-        responseValidator: async (data) => {
-            return await zPostFooResponse.parseAsync(data);
-        },
+        responseValidator: async (data) => await zPostFooResponse.parseAsync(data),
         url: '/foo',
         ...options
     });
