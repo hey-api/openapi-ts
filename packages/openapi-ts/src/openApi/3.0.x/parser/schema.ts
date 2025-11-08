@@ -301,7 +301,6 @@ const parseAllOf = ({
   state: SchemaState;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
-  parseSchemaMeta({ irSchema, schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
   const schemaType = getSchemaType({ schema });
@@ -475,7 +474,6 @@ const parseAnyOf = ({
   state: SchemaState;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
-  parseSchemaMeta({ irSchema, schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
   const schemaType = getSchemaType({ schema });
@@ -642,7 +640,6 @@ const parseOneOf = ({
   state: SchemaState;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
-  parseSchemaMeta({ irSchema, schema });
 
   let schemaItems: Array<IR.SchemaObject> = [];
   const schemaType = getSchemaType({ schema });
@@ -761,10 +758,6 @@ const parseRef = ({
   }
 
   const irSchema: IR.SchemaObject = {};
-
-  // Parse metadata from the schema (like default, description, etc.)
-  // Cast to SchemaObject to access these fields
-  parseSchemaMeta({ irSchema, schema: schema as unknown as SchemaObject });
 
   // refs using unicode characters become encoded, didn't investigate why
   // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
