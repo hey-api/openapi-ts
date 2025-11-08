@@ -1455,7 +1455,9 @@ export const vCallWithDefaultParametersData = v.object({
             'Error'
         ])),
         parameterModel: v.optional(v.union([
-            vModelWithString,
+            v.optional(vModelWithString, {
+                prop: 'Hello World!'
+            }),
             v.null()
         ]))
     }))
@@ -1473,7 +1475,9 @@ export const vCallWithDefaultOptionalParametersData = v.object({
             'Warning',
             'Error'
         ])),
-        parameterModel: v.optional(vModelWithString)
+        parameterModel: v.optional(vModelWithString, {
+            prop: 'Hello World!'
+        })
     }))
 });
 
