@@ -56,14 +56,14 @@ export const createUseSwr = ({
     )
     .assign(
       $.func().do(
-        $.return(
-          $(symbolUseSwr.placeholder).call(
+        $(symbolUseSwr.placeholder)
+          .call(
             $.literal(operation.path),
             $.func()
               .async()
               .do(...statements),
-          ),
-        ),
+          )
+          .return(),
       ),
     );
   plugin.setSymbolValue(symbolUseQueryFn, statement);
