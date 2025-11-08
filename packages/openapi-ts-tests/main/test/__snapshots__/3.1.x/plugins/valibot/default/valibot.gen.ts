@@ -993,17 +993,17 @@ export const vAdditionalPropertiesIntegerIssue = v.objectWithRest({
     value: v.pipe(v.number(), v.integer())
 }, v.pipe(v.number(), v.integer()));
 
-export const vGenericSchemaDuplicateIssue1SystemBoolean = v.objectWithRest({
+export const vGenericSchemaDuplicateIssue1SystemBoolean = v.strictObject({
     item: v.optional(v.boolean()),
     error: v.optional(v.union([
         v.string(),
         v.null()
     ])),
     hasError: v.optional(v.pipe(v.boolean(), v.readonly())),
-    data: v.optional(v.record(v.string(), v.never()))
-}, v.never());
+    data: v.optional(v.strictObject({}))
+});
 
-export const vGenericSchemaDuplicateIssue1SystemString = v.objectWithRest({
+export const vGenericSchemaDuplicateIssue1SystemString = v.strictObject({
     item: v.optional(v.union([
         v.string(),
         v.null()
@@ -1013,7 +1013,7 @@ export const vGenericSchemaDuplicateIssue1SystemString = v.objectWithRest({
         v.null()
     ])),
     hasError: v.optional(v.pipe(v.boolean(), v.readonly()))
-}, v.never());
+});
 
 export const vOneOfAllOfIssue = v.union([
     v.intersect([
@@ -1121,16 +1121,16 @@ export const vOneOfAllOfIssueWritable = v.union([
     vGenericSchemaDuplicateIssue1SystemString
 ]);
 
-export const vGenericSchemaDuplicateIssue1SystemBooleanWritable = v.objectWithRest({
+export const vGenericSchemaDuplicateIssue1SystemBooleanWritable = v.strictObject({
     item: v.optional(v.boolean()),
     error: v.optional(v.union([
         v.string(),
         v.null()
     ])),
-    data: v.optional(v.record(v.string(), v.never()))
-}, v.never());
+    data: v.optional(v.strictObject({}))
+});
 
-export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.objectWithRest({
+export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.strictObject({
     item: v.optional(v.union([
         v.string(),
         v.null()
@@ -1139,7 +1139,7 @@ export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.objectWithRes
         v.string(),
         v.null()
     ]))
-}, v.never());
+});
 
 /**
  * This is a reusable parameter
@@ -1148,12 +1148,12 @@ export const vSimpleParameter = v.string();
 
 export const vCompositionWithOneOfAndProperties = v.intersect([
     v.union([
-        v.objectWithRest({
+        v.strictObject({
             foo: vSimpleParameter
-        }, v.never()),
-        v.objectWithRest({
+        }),
+        v.strictObject({
             bar: vNonAsciiStringæøåÆøÅöôêÊ字符串
-        }, v.never())
+        })
     ]),
     v.object({
         baz: v.union([
