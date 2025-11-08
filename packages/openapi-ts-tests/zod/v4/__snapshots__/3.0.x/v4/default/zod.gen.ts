@@ -1471,7 +1471,9 @@ export const zCallWithDefaultParametersData = z.object({
             'Error'
         ])),
         parameterModel: z.optional(z.union([
-            zModelWithString,
+            zModelWithString.default({
+                prop: 'Hello World!'
+            }),
             z.null()
         ]))
     }))
@@ -1489,7 +1491,9 @@ export const zCallWithDefaultOptionalParametersData = z.object({
             'Warning',
             'Error'
         ])),
-        parameterModel: z.optional(zModelWithString)
+        parameterModel: z.optional(zModelWithString).default({
+            prop: 'Hello World!'
+        })
     }))
 });
 
