@@ -3,6 +3,7 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
+import { AccessMixin } from './mixins/access';
 import { mixin } from './mixins/apply';
 import { ArgsMixin } from './mixins/args';
 import { GenericsMixin } from './mixins/generics';
@@ -31,5 +32,5 @@ export class NewTsDsl extends TsDsl<ts.NewExpression> {
   }
 }
 
-export interface NewTsDsl extends ArgsMixin, GenericsMixin {}
-mixin(NewTsDsl, ArgsMixin, GenericsMixin);
+export interface NewTsDsl extends AccessMixin, ArgsMixin, GenericsMixin {}
+mixin(NewTsDsl, AccessMixin, ArgsMixin, GenericsMixin);

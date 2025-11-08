@@ -25,12 +25,11 @@ export const createRequestValidatorV1 = ({
     .async()
     .param(dataParameterName)
     .do(
-      $.return(
-        $(v.placeholder)
-          .attr(identifiers.async.parseAsync)
-          .call($(symbol.placeholder), $(dataParameterName))
-          .await(),
-      ),
+      $(v.placeholder)
+        .attr(identifiers.async.parseAsync)
+        .call(symbol.placeholder, dataParameterName)
+        .await()
+        .return(),
     );
 };
 
@@ -56,11 +55,10 @@ export const createResponseValidatorV1 = ({
     .async()
     .param(dataParameterName)
     .do(
-      $.return(
-        $(v.placeholder)
-          .attr(identifiers.async.parseAsync)
-          .call($(symbol.placeholder), $(dataParameterName))
-          .await(),
-      ),
+      $(v.placeholder)
+        .attr(identifiers.async.parseAsync)
+        .call(symbol.placeholder, dataParameterName)
+        .await()
+        .return(),
     );
 };

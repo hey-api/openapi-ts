@@ -392,13 +392,13 @@ export const generateClassSdk = ({
               g
                 .$if(!plugin.config.instance, (g) => g.public().static())
                 .do(
-                  plugin.config.instance
-                    ? $.return(
-                        $.new(refChildClass.placeholder).args(
+                  $.return(
+                    plugin.config.instance
+                      ? $.new(refChildClass.placeholder).args(
                           $.object().prop('client', $('this').attr('client')),
-                        ),
-                      )
-                    : $.return(refChildClass.placeholder),
+                        )
+                      : refChildClass.placeholder,
+                  ),
                 ),
             );
 
