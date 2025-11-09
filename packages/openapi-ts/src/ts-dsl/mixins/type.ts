@@ -23,6 +23,7 @@ export function createTypeAccessor<Parent extends TsDsl>(
   function fn(type: TypeInput): Parent;
   function fn(type?: TypeInput): ReturnType<typeof TypeTsDsl> | Parent {
     if (type === undefined) {
+      // @ts-expect-error --- overload resolution
       if (!_type) _type = TypeTsDsl();
       return _type;
     }
