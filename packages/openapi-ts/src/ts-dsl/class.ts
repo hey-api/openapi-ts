@@ -19,8 +19,8 @@ import {
 import { NewlineTsDsl } from './newline';
 
 export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
-  private heritageClauses: Array<ts.HeritageClause> = [];
   private body: Array<MaybeTsDsl<ts.ClassElement> | NewlineTsDsl> = [];
+  private extended: Array<WithString> = [];
   private modifiers = createModifierAccessor(this);
   private name: string;
 
@@ -38,15 +38,7 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
 
   /** Adds a base class to extend from. */
   extends(base?: WithString | false | null): this {
-    if (!base) return this;
-    this.heritageClauses.push(
-      ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, [
-        ts.factory.createExpressionWithTypeArguments(
-          this.$expr(base),
-          undefined,
-        ),
-      ]),
-    );
+    if (base) this.extended.push(base);
     return this;
   }
 
@@ -84,7 +76,14 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
       [...this.$decorators(), ...this.modifiers.list()],
       ts.factory.createIdentifier(this.name),
       this.$generics(),
-      this.heritageClauses,
+      this.extended.map((extended) =>
+        ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, [
+          ts.factory.createExpressionWithTypeArguments(
+            this.$expr(extended),
+            undefined,
+          ),
+        ])
+      ),
       body,
     );
   }

@@ -18,7 +18,7 @@ import {
 } from './mixins/modifiers';
 import { OptionalMixin } from './mixins/optional';
 import { ParamMixin } from './mixins/param';
-import { createTypeAccessor, type TypeAccessor } from './mixins/type';
+import { createType, type Type } from './mixins/type';
 
 type FuncMode = 'arrow' | 'decl' | 'expr';
 
@@ -32,10 +32,10 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
   private mode: FuncMode;
   private modifiers = createModifierAccessor(this);
   private name?: string;
-  private _returns: TypeAccessor<ImplFuncTsDsl<M>> = createTypeAccessor(this);
+  private _returns: Type<ImplFuncTsDsl<M>> = createType(this);
 
   /** Sets the return type. */
-  returns: TypeAccessor<ImplFuncTsDsl<M>>['fn'] = this._returns.fn;
+  returns: Type<ImplFuncTsDsl<M>>['fn'] = this._returns.fn;
 
   constructor();
   constructor(fn: (f: ImplFuncTsDsl<'arrow'>) => void);
@@ -83,7 +83,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
         this.name,
         this.$generics(),
         this.$params(),
-        this._returns.$render(),
+        this.$type(this._returns),
         ts.factory.createBlock(this.$do(), true),
       ) as any;
     }
@@ -95,7 +95,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
         this.name ? ts.factory.createIdentifier(this.name) : undefined,
         this.$generics(),
         this.$params(),
-        this._returns.$render(),
+        this.$type(this._returns),
         ts.factory.createBlock(this.$do(), true),
       ) as any;
     }
@@ -110,7 +110,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
       [...this.modifiers.list()],
       this.$generics(),
       this.$params(),
-      this._returns.$render(),
+      this.$type(this._returns),
       undefined,
       exprBody,
     ) as any;

@@ -68,7 +68,7 @@ const createRegistryClass = ({
       f
         .private()
         .readonly()
-        .type($.type('Map').generics('string', 'T'))
+        // .type($.type('Map').generics('string', 'T'))
         .assign($.new('Map')),
     )
     .newline()
@@ -132,12 +132,13 @@ const createClientClass = ({
         .param('args', (p) =>
           p
             .optional(optionalClient)
-            .type()
-            .object((o) =>
-              o.prop('client', (p) =>
-                p.optional(optionalClient).type(symbolClient.placeholder),
-              ),
-            ),
+            // .type($.type
+            //   .expr('todo')
+            //   // .object()
+            //   // .prop('client', (p) =>
+            //   //   p.optional(optionalClient).type(symbolClient.placeholder),
+            //   // ),
+            // ),
         )
         .do(
           $('this')
@@ -173,14 +174,14 @@ export const generateClassSdk = ({
         context: plugin.context,
         operation,
       });
-      const symbolResponse = isNuxtClient
-        ? plugin.querySymbol({
-            category: 'type',
-            resource: 'operation',
-            resourceId: operation.id,
-            role: 'response',
-          })
-        : undefined;
+      // const symbolResponse = isNuxtClient
+      //   ? plugin.querySymbol({
+      //       category: 'type',
+      //       resource: 'operation',
+      //       resourceId: operation.id,
+      //       role: 'response',
+      //     })
+      //   : undefined;
 
       const classes = operationClasses({
         context: plugin.context,
@@ -266,28 +267,30 @@ export const generateClassSdk = ({
                   m
                     .generic(nuxtTypeComposable, (t) =>
                       t
-                        .extends(
-                          plugin.referenceSymbol({
-                            category: 'external',
-                            resource: 'client.Composable',
-                          }).placeholder,
-                        )
-                        .default($.type.literal('$fetch')),
+                        // .extends(
+                        //   plugin.referenceSymbol({
+                        //     category: 'external',
+                        //     resource: 'client.Composable',
+                        //   }).placeholder,
+                        // )
+                        // .default($.type.literal('$fetch')),
                     )
                     .generic(nuxtTypeDefault, (t) =>
-                      t.$if(symbolResponse, (t, s) =>
-                        t.extends(s.placeholder).default(s.placeholder),
-                      ),
+                      t
+                      // t.$if(symbolResponse, (t, s) =>
+                      //   t,
+                      //   // t.extends(s.placeholder).default(s.placeholder),
+                      // ),
                     ),
                 (m) =>
                   m.generic('ThrowOnError', (t) =>
                     t
-                      .extends('boolean')
-                      .default(
-                        ('throwOnError' in client.config
-                          ? client.config.throwOnError
-                          : false) ?? false,
-                      ),
+                      // .extends('boolean')
+                      // .default(
+                      //   ('throwOnError' in client.config
+                      //     ? client.config.throwOnError
+                      //     : false) ?? false,
+                      // ),
                   ),
               )
               .params(...toParameterDeclarations(opParameters.parameters))
@@ -438,25 +441,21 @@ export const generateClassSdk = ({
         category: 'client',
       });
       const isClientRequired = !plugin.config.client || !symClient;
-      const symbolClient = plugin.referenceSymbol({
-        category: 'external',
-        resource: 'client.Client',
-      });
+      // const symbolClient = plugin.referenceSymbol({
+      //   category: 'external',
+      //   resource: 'client.Client',
+      // });
       const ctor = $.init((i) =>
         i
           .param('args', (p) =>
             p
               .optional(!isClientRequired)
-              .type()
-              .object((o) =>
-                o
-                  .prop('client', (p) =>
-                    p
-                      .optional(!isClientRequired)
-                      .type(symbolClient.placeholder),
-                  )
-                  .prop('key', (p) => p.optional().type('string')),
-              ),
+              // .type($.type
+              //   .expr('todo')
+              //   // .object()
+              //   // .prop('client', (p) => p.optional(!isClientRequired).type(symbolClient.placeholder))
+              //   // .prop('key', (p) => p.optional().type('string')),
+              // )
           )
           .do(
             $('super').call('args'),

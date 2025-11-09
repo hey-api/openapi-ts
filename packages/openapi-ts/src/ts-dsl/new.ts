@@ -22,11 +22,10 @@ export class NewTsDsl extends TsDsl<ts.NewExpression> {
 
   /** Builds the `NewExpression` node. */
   $render(): ts.NewExpression {
-    const types = this._generics?.map((arg) => this.$type(arg));
     return ts.factory.createNewExpression(
       this.$node(this.classExpr),
       // @ts-expect-error --- generics are not officially supported on 'new' expressions yet
-      types,
+      this.$type(this._generics),
       this.$args(),
     );
   }

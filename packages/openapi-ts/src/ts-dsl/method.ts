@@ -18,15 +18,15 @@ import {
 } from './mixins/modifiers';
 import { OptionalMixin } from './mixins/optional';
 import { ParamMixin } from './mixins/param';
-import { createTypeAccessor, type TypeAccessor } from './mixins/type';
+import { createType, type Type } from './mixins/type';
 
 export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
   private modifiers = createModifierAccessor(this);
   private name: string;
-  private _returns: TypeAccessor<MethodTsDsl> = createTypeAccessor(this);
+  private _returns: Type<MethodTsDsl> = createType(this);
 
   /** Sets the return type. */
-  returns: TypeAccessor<MethodTsDsl>['fn'] = this._returns.fn;
+  returns: Type<MethodTsDsl>['fn'] = this._returns.fn;
 
   constructor(name: string, fn?: (m: MethodTsDsl) => void) {
     super();
@@ -43,7 +43,7 @@ export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
       this.questionToken,
       this.$generics(),
       this.$params(),
-      this._returns.$render(),
+      this.$type(this._returns),
       ts.factory.createBlock(this.$do(), true),
     );
   }

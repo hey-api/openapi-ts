@@ -6,15 +6,15 @@ import { mixin } from './mixins/apply';
 import { DecoratorMixin } from './mixins/decorator';
 import { OptionalMixin } from './mixins/optional';
 import { PatternMixin } from './mixins/pattern';
-import { createTypeAccessor, type TypeAccessor } from './mixins/type';
+import { createType, type Type } from './mixins/type';
 import { ValueMixin } from './mixins/value';
 
 export class ParamTsDsl extends TsDsl<ts.ParameterDeclaration> {
   private name?: string;
-  private _type: TypeAccessor<ParamTsDsl> = createTypeAccessor(this);
+  private _type: Type<ParamTsDsl> = createType(this);
 
   /** Sets the parameter's type. */
-  type: TypeAccessor<ParamTsDsl>['fn'] = this._type.fn;
+  type: Type<ParamTsDsl>['fn'] = this._type.fn;
 
   constructor(
     name: string | ((p: ParamTsDsl) => void),
@@ -40,7 +40,7 @@ export class ParamTsDsl extends TsDsl<ts.ParameterDeclaration> {
       undefined,
       name,
       this.questionToken,
-      this._type.$render(),
+      this.$type(this._type),
       this.$value(),
     );
   }

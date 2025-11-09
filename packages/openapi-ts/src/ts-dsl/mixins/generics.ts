@@ -1,7 +1,7 @@
 import ts from 'typescript';
 
 import { type MaybeTsDsl, TsDsl } from '../base';
-import { TypeParamTsDsl } from '../type';
+import { TypeParamTsDsl } from '../type/param';
 
 export class GenericsMixin extends TsDsl {
   protected _generics?: Array<string | MaybeTsDsl<ts.TypeParameterDeclaration>>;
@@ -24,6 +24,7 @@ export class GenericsMixin extends TsDsl {
   protected $generics():
     | ReadonlyArray<ts.TypeParameterDeclaration>
     | undefined {
+    console.log('hi')
     return this._generics?.map((g) => {
       if (typeof g === 'string') {
         return ts.factory.createTypeParameterDeclaration(

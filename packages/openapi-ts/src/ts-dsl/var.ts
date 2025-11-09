@@ -10,12 +10,18 @@ import {
   ExportMixin,
 } from './mixins/modifiers';
 import { PatternMixin } from './mixins/pattern';
+import type { Type } from './mixins/type';
+import { createType } from './mixins/type';
 import { ValueMixin } from './mixins/value';
 
 export class VarTsDsl extends TsDsl<ts.VariableStatement> {
   private kind: ts.NodeFlags = ts.NodeFlags.None;
   private modifiers = createModifierAccessor(this);
   private name?: string;
+  private _type: Type<VarTsDsl> = createType(this);
+
+  /** Sets the variable's type. */
+  type: Type<VarTsDsl>['fn'] = this._type.fn;
 
   constructor(name?: string) {
     super();
@@ -48,7 +54,7 @@ export class VarTsDsl extends TsDsl<ts.VariableStatement> {
           ts.factory.createVariableDeclaration(
             name,
             undefined,
-            undefined,
+            this.$type(this._type),
             this.$value(),
           ),
         ],

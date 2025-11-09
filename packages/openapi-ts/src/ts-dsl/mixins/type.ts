@@ -1,41 +1,28 @@
 import type ts from 'typescript';
 
-import type { TsDsl } from '../base';
-import type { TypeInput } from '../type';
-import { TypeTsDsl } from '../type';
+import type { MaybeTsDsl, TsDsl } from '../base';
+import { type as TypeDsl } from '../type';
 
-export interface TypeAccessor<Parent extends TsDsl> {
+export type Type<This extends TsDsl> = {
   $render(): ts.TypeNode | undefined;
-  fn(): ReturnType<typeof TypeTsDsl>;
-  fn(type: TypeInput): Parent;
+  fn(expr: MaybeTsDsl<ts.TypeNode | string>): This;
 }
 
-/** Provides `.type()`-like access with internal state management. */
-export function createTypeAccessor<Parent extends TsDsl>(
-  parent: Parent,
-): TypeAccessor<Parent> {
-  const $type = parent['$type'].bind(parent);
+/** Provides access to `TypeTsDsl` on an arbitrary method. */
+export function createType<This extends TsDsl>(_this: This): Type<This> {
+  let _type: MaybeTsDsl<ts.TypeNode | string> | undefined;
 
-  let _type: ReturnType<typeof TypeTsDsl> | undefined;
-  let input: TypeInput | undefined;
-
-  function fn(): ReturnType<typeof TypeTsDsl>;
-  function fn(type: TypeInput): Parent;
-  function fn(type?: TypeInput): ReturnType<typeof TypeTsDsl> | Parent {
-    if (type === undefined) {
-      if (!_type) _type = TypeTsDsl();
-      return _type;
-    }
-    input = type;
-    return parent;
+  function _fn(expr: MaybeTsDsl<ts.TypeNode | string>): This {
+    _type = TypeDsl(expr)
+    return _this;
   }
 
   function $render(): ts.TypeNode | undefined {
-    return _type?.$render() ?? $type(input);
+    return _this['$type'](_type)
   }
 
   return {
     $render,
-    fn,
+    fn: _fn,
   };
 }

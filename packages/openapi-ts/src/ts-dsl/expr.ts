@@ -10,9 +10,9 @@ import { OperatorMixin } from './mixins/operator';
 export class ExprTsDsl extends TsDsl<ts.Expression> {
   private _exprInput: MaybeTsDsl<WithString>;
 
-  constructor(id: MaybeTsDsl<WithString>) {
+  constructor(expr: MaybeTsDsl<WithString>) {
     super();
-    this._exprInput = id;
+    this._exprInput = expr;
   }
 
   $render(): ts.Expression {

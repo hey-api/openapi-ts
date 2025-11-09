@@ -13,16 +13,16 @@ import {
   ReadonlyMixin,
   StaticMixin,
 } from './mixins/modifiers';
-import { createTypeAccessor, type TypeAccessor } from './mixins/type';
+import { createType, type Type } from './mixins/type';
 import { ValueMixin } from './mixins/value';
 
 export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
   private modifiers = createModifierAccessor(this);
   private name: string;
-  private _type: TypeAccessor<FieldTsDsl> = createTypeAccessor(this);
+  private _type: Type<FieldTsDsl> = createType(this);
 
   /** Sets the property's type. */
-  type: TypeAccessor<FieldTsDsl>['fn'] = this._type.fn;
+  type: Type<FieldTsDsl>['fn'] = this._type.fn;
 
   constructor(name: string, fn?: (f: FieldTsDsl) => void) {
     super();
@@ -36,7 +36,7 @@ export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
       [...this.$decorators(), ...this.modifiers.list()],
       ts.factory.createIdentifier(this.name),
       undefined,
-      this._type.$render(),
+      this.$type(this._type),
       this.$value(),
     );
   }
