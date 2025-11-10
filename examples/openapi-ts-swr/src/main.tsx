@@ -22,10 +22,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <SWRConfig
       value={{
-        
         dedupingInterval: 2000,
         // Global SWR configuration
-revalidateOnFocus: false,
+        revalidateOnFocus: false,
       }}
     >
       <Theme appearance="dark">
