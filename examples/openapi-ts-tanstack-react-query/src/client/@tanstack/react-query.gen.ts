@@ -19,12 +19,19 @@ import type {
   DeletePetData,
   DeleteUserData,
   FindPetsByStatusData,
+  FindPetsByStatusResponse,
   FindPetsByTagsData,
+  FindPetsByTagsResponse,
   GetInventoryData,
+  GetInventoryResponse,
   GetOrderByIdData,
+  GetOrderByIdResponse,
   GetPetByIdData,
+  GetPetByIdResponse,
   GetUserByNameData,
+  GetUserByNameResponse,
   LoginUserData,
+  LoginUserResponse,
   LogoutUserData,
   PlaceOrderData,
   PlaceOrderResponse,
@@ -143,11 +150,19 @@ export const findPetsByStatusQueryKey = (
 export const findPetsByStatusOptions = (
   options: Options<FindPetsByStatusData>,
 ) =>
-  queryOptions({
+  queryOptions<
+    FindPetsByStatusResponse,
+    DefaultError,
+    FindPetsByStatusResponse,
+    ReturnType<typeof findPetsByStatusQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
+      const [queryParams] = queryKey as ReturnType<
+        typeof findPetsByStatusQueryKey
+      >;
       const { data } = await Sdk.__registry.get().findPetsByStatus({
         ...options,
-        ...queryKey[0],
+        ...queryParams,
         signal,
         throwOnError: true,
       });
@@ -165,11 +180,19 @@ export const findPetsByTagsQueryKey = (options: Options<FindPetsByTagsData>) =>
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
 export const findPetsByTagsOptions = (options: Options<FindPetsByTagsData>) =>
-  queryOptions({
+  queryOptions<
+    FindPetsByTagsResponse,
+    DefaultError,
+    FindPetsByTagsResponse,
+    ReturnType<typeof findPetsByTagsQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
+      const [queryParams] = queryKey as ReturnType<
+        typeof findPetsByTagsQueryKey
+      >;
       const { data } = await Sdk.__registry.get().findPetsByTags({
         ...options,
-        ...queryKey[0],
+        ...queryParams,
         signal,
         throwOnError: true,
       });
@@ -212,11 +235,17 @@ export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) =>
  * Returns a single pet.
  */
 export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
-  queryOptions({
+  queryOptions<
+    GetPetByIdResponse,
+    DefaultError,
+    GetPetByIdResponse,
+    ReturnType<typeof getPetByIdQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
+      const [queryParams] = queryKey as ReturnType<typeof getPetByIdQueryKey>;
       const { data } = await Sdk.__registry.get().getPetById({
         ...options,
-        ...queryKey[0],
+        ...queryParams,
         signal,
         throwOnError: true,
       });
@@ -292,11 +321,17 @@ export const getInventoryQueryKey = (options?: Options<GetInventoryData>) =>
  * Returns a map of status codes to quantities.
  */
 export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
-  queryOptions({
+  queryOptions<
+    GetInventoryResponse,
+    DefaultError,
+    GetInventoryResponse,
+    ReturnType<typeof getInventoryQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
+      const [queryParams] = queryKey as ReturnType<typeof getInventoryQueryKey>;
       const { data } = await Sdk.__registry.get().getInventory({
         ...options,
-        ...queryKey[0],
+        ...queryParams,
         signal,
         throwOnError: true,
       });
@@ -368,11 +403,17 @@ export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) =>
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  */
 export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
-  queryOptions({
+  queryOptions<
+    GetOrderByIdResponse,
+    DefaultError,
+    GetOrderByIdResponse,
+    ReturnType<typeof getOrderByIdQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
+      const [queryParams] = queryKey as ReturnType<typeof getOrderByIdQueryKey>;
       const { data } = await Sdk.__registry.get().getOrderById({
         ...options,
-        ...queryKey[0],
+        ...queryParams,
         signal,
         throwOnError: true,
       });
@@ -448,11 +489,17 @@ export const loginUserQueryKey = (options?: Options<LoginUserData>) =>
  * Log into the system.
  */
 export const loginUserOptions = (options?: Options<LoginUserData>) =>
-  queryOptions({
+  queryOptions<
+    LoginUserResponse,
+    DefaultError,
+    LoginUserResponse,
+    ReturnType<typeof loginUserQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
+      const [queryParams] = queryKey as ReturnType<typeof loginUserQueryKey>;
       const { data } = await Sdk.__registry.get().loginUser({
         ...options,
-        ...queryKey[0],
+        ...queryParams,
         signal,
         throwOnError: true,
       });
@@ -470,11 +517,17 @@ export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
  * Log user out of the system.
  */
 export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
-  queryOptions({
+  queryOptions<
+    unknown,
+    DefaultError,
+    unknown,
+    ReturnType<typeof logoutUserQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
+      const [queryParams] = queryKey as ReturnType<typeof logoutUserQueryKey>;
       const { data } = await Sdk.__registry.get().logoutUser({
         ...options,
-        ...queryKey[0],
+        ...queryParams,
         signal,
         throwOnError: true,
       });
@@ -517,11 +570,19 @@ export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) =>
  * Get user detail based on username.
  */
 export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
-  queryOptions({
+  queryOptions<
+    GetUserByNameResponse,
+    DefaultError,
+    GetUserByNameResponse,
+    ReturnType<typeof getUserByNameQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
+      const [queryParams] = queryKey as ReturnType<
+        typeof getUserByNameQueryKey
+      >;
       const { data } = await Sdk.__registry.get().getUserByName({
         ...options,
-        ...queryKey[0],
+        ...queryParams,
         signal,
         throwOnError: true,
       });
