@@ -7,6 +7,8 @@ import type { HeyApiClientAxiosPlugin } from '~/plugins/@hey-api/client-axios';
 import { defaultConfig as heyApiClientAxios } from '~/plugins/@hey-api/client-axios';
 import type { HeyApiClientFetchPlugin } from '~/plugins/@hey-api/client-fetch';
 import { defaultConfig as heyApiClientFetch } from '~/plugins/@hey-api/client-fetch';
+import type { HeyApiClientKyPlugin } from '~/plugins/@hey-api/client-ky';
+import { defaultConfig as heyApiClientKy } from '~/plugins/@hey-api/client-ky';
 import type { HeyApiClientNextPlugin } from '~/plugins/@hey-api/client-next';
 import { defaultConfig as heyApiClientNext } from '~/plugins/@hey-api/client-next';
 import type { HeyApiClientNuxtPlugin } from '~/plugins/@hey-api/client-nuxt';
@@ -50,6 +52,7 @@ export interface PluginConfigMap {
   '@hey-api/client-angular': HeyApiClientAngularPlugin['Types'];
   '@hey-api/client-axios': HeyApiClientAxiosPlugin['Types'];
   '@hey-api/client-fetch': HeyApiClientFetchPlugin['Types'];
+  '@hey-api/client-ky': HeyApiClientKyPlugin['Types'];
   '@hey-api/client-next': HeyApiClientNextPlugin['Types'];
   '@hey-api/client-nuxt': HeyApiClientNuxtPlugin['Types'];
   '@hey-api/client-ofetch': HeyApiClientOfetchPlugin['Types'];
@@ -77,6 +80,7 @@ export const defaultPluginConfigs: {
   '@hey-api/client-angular': heyApiClientAngular,
   '@hey-api/client-axios': heyApiClientAxios,
   '@hey-api/client-fetch': heyApiClientFetch,
+  '@hey-api/client-ky': heyApiClientKy,
   '@hey-api/client-next': heyApiClientNext,
   '@hey-api/client-nuxt': heyApiClientNuxt,
   '@hey-api/client-ofetch': heyApiClientOfetch,
