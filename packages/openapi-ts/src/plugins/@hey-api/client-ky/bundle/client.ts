@@ -139,19 +139,11 @@ export const createClient = (config: Config = {}): Client => {
       redirect: 'follow',
       referrer: opts.referrer,
       referrerPolicy: opts.referrerPolicy,
+      retry: opts.retry,
       signal: opts.signal,
       throwHttpErrors: opts.throwOnError ?? false,
       timeout: opts.timeout,
-      ...(opts.kyOptions || {}),
     };
-
-    if (opts.retry && typeof opts.retry === 'object') {
-      kyOptions.retry = {
-        limit: opts.retry.limit ?? 2,
-        methods: opts.retry.methods as KyOptions['retry']['methods'],
-        statusCodes: opts.retry.statusCodes,
-      };
-    }
 
     let request = new Request(url, {
       body: kyOptions.body as BodyInit,
