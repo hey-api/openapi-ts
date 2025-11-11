@@ -9,6 +9,7 @@ import type {
   Config,
   RequestOptions,
   ResolvedRequestOptions,
+  RetryOptions,
 } from './types';
 import type { Middleware } from './utils';
 import {
@@ -146,16 +147,26 @@ export const createClient = (config: Config = {}): Client => {
     };
 
     if (opts.retry && typeof opts.retry === 'object') {
+      const retryOpts = opts.retry as RetryOptions;
       kyOptions.retry = {
-        limit: opts.retry.limit ?? 2,
-        methods: opts.retry.methods as KyOptions['retry']['methods'],
-        statusCodes: opts.retry.statusCodes,
+        limit: retryOpts.limit ?? 2,
+        methods: retryOpts.methods as Array<
+          | 'get'
+          | 'post'
+          | 'put'
+          | 'patch'
+          | 'head'
+          | 'delete'
+          | 'options'
+          | 'trace'
+        >,
+        statusCodes: retryOpts.statusCodes,
       };
     }
 
     let request = new Request(url, {
       body: kyOptions.body as BodyInit,
-      headers: kyOptions.headers,
+      headers: kyOptions.headers as HeadersInit,
       method: kyOptions.method,
     });
 

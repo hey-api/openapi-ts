@@ -1,12 +1,9 @@
+import type { KyInstance } from 'ky';
 import { HTTPError } from 'ky';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { ResolvedRequestOptions } from '../bundle';
 import { createClient } from '../bundle/client';
-
-type MockKy = ((...args: any[]) => any) & {
-  preconnect?: any;
-};
 
 describe('buildUrl', () => {
   const client = createClient();
@@ -87,10 +84,10 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockKy: MockKy = vi.fn().mockResolvedValue(mockResponse);
+    const mockKy = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       method: 'GET',
       url: '/test',
     });
@@ -107,10 +104,10 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockKy: MockKy = vi.fn().mockResolvedValue(mockResponse);
+    const mockKy = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       method: 'GET',
       parseAs: 'arrayBuffer',
       url: '/test',
@@ -129,10 +126,10 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockKy: MockKy = vi.fn().mockResolvedValue(mockResponse);
+    const mockKy = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       method: 'GET',
       url: '/test',
     });
@@ -149,10 +146,10 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockKy: MockKy = vi.fn().mockResolvedValue(mockResponse);
+    const mockKy = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       method: 'GET',
       url: '/test',
     });
@@ -169,10 +166,10 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockKy: MockKy = vi.fn().mockResolvedValue(mockResponse);
+    const mockKy = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       method: 'GET',
       url: '/test',
     });
@@ -190,10 +187,10 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockKy: MockKy = vi.fn().mockResolvedValue(mockResponse);
+    const mockKy = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       method: 'GET',
       parseAs: 'stream',
       url: '/test',
@@ -211,10 +208,10 @@ describe('zero-length body handling', () => {
       status: 200,
     });
 
-    const mockKy: MockKy = vi.fn().mockResolvedValue(mockResponse);
+    const mockKy = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.request({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       method: 'GET',
       url: '/test',
     });
@@ -244,7 +241,7 @@ describe('unserialized request body handling', () => {
         status: 200,
       });
 
-      const mockKy: MockKy = vi.fn().mockResolvedValueOnce(mockResponse);
+      const mockKy = vi.fn().mockResolvedValueOnce(mockResponse);
 
       const result = await client.post({
         body,
@@ -252,7 +249,7 @@ describe('unserialized request body handling', () => {
         headers: {
           'Content-Type': 'text/plain',
         },
-        ky: mockKy,
+        ky: mockKy as Partial<KyInstance> as KyInstance,
         url: '/test',
       });
 
@@ -319,7 +316,7 @@ describe('serialized request body handling', () => {
         status: 200,
       });
 
-      const mockKy: MockKy = vi.fn().mockResolvedValueOnce(mockResponse);
+      const mockKy = vi.fn().mockResolvedValueOnce(mockResponse);
 
       const result = await client.post({
         body,
@@ -327,7 +324,7 @@ describe('serialized request body handling', () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        ky: mockKy,
+        ky: mockKy as Partial<KyInstance> as KyInstance,
         url: '/test',
       });
 
@@ -376,7 +373,7 @@ describe('request interceptor', () => {
         status: 200,
       });
 
-      const mockKy: MockKy = vi.fn().mockResolvedValueOnce(mockResponse);
+      const mockKy = vi.fn().mockResolvedValueOnce(mockResponse);
 
       const mockRequestInterceptor = vi
         .fn()
@@ -399,7 +396,7 @@ describe('request interceptor', () => {
         headers: {
           'Content-Type': contentType,
         },
-        ky: mockKy,
+        ky: mockKy as Partial<KyInstance> as KyInstance,
         url: '/test',
       });
 
@@ -421,7 +418,7 @@ describe('response interceptor', () => {
       status: 200,
     });
 
-    const mockKy: MockKy = vi.fn().mockResolvedValue(mockResponse);
+    const mockKy = vi.fn().mockResolvedValue(mockResponse);
 
     const mockResponseInterceptor = vi
       .fn()
@@ -435,7 +432,7 @@ describe('response interceptor', () => {
     );
 
     await client.get({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       url: '/test',
     });
 
@@ -459,14 +456,14 @@ describe('error handling', () => {
       },
     );
 
-    const mockKy: MockKy = vi.fn().mockRejectedValue(
+    const mockKy = vi.fn().mockRejectedValue(
       new HTTPError(errorResponse, new Request('https://example.com/test'), {
         method: 'GET',
       } as any),
     );
 
     const result = await client.get({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       throwOnError: false,
       url: '/test',
     });
@@ -486,7 +483,7 @@ describe('error handling', () => {
       },
     );
 
-    const mockKy: MockKy = vi.fn().mockRejectedValue(
+    const mockKy = vi.fn().mockRejectedValue(
       new HTTPError(errorResponse, new Request('https://example.com/test'), {
         method: 'GET',
       } as any),
@@ -494,7 +491,7 @@ describe('error handling', () => {
 
     await expect(
       client.get({
-        ky: mockKy,
+        ky: mockKy as Partial<KyInstance> as KyInstance,
         throwOnError: true,
         url: '/test',
       }),
@@ -506,14 +503,14 @@ describe('error handling', () => {
       status: 500,
     });
 
-    const mockKy: MockKy = vi.fn().mockRejectedValue(
+    const mockKy = vi.fn().mockRejectedValue(
       new HTTPError(errorResponse, new Request('https://example.com/test'), {
         method: 'GET',
       } as any),
     );
 
     const result = await client.get({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       throwOnError: false,
       url: '/test',
     });
@@ -537,7 +534,7 @@ describe('error interceptor', () => {
       },
     );
 
-    const mockKy: MockKy = vi.fn().mockRejectedValue(
+    const mockKy = vi.fn().mockRejectedValue(
       new HTTPError(errorResponse, new Request('https://example.com/test'), {
         method: 'GET',
       } as any),
@@ -550,7 +547,7 @@ describe('error interceptor', () => {
     const interceptorId = client.interceptors.error.use(mockErrorInterceptor);
 
     const result = await client.get({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       throwOnError: false,
       url: '/test',
     });
@@ -573,10 +570,10 @@ describe('retry configuration', () => {
       status: 200,
     });
 
-    const mockKy: MockKy = vi.fn().mockResolvedValue(mockResponse);
+    const mockKy = vi.fn().mockResolvedValue(mockResponse);
 
     await client.get({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       retry: {
         limit: 3,
         methods: ['get', 'post'],
@@ -612,10 +609,10 @@ describe('responseStyle configuration', () => {
       status: 200,
     });
 
-    const mockKy: MockKy = vi.fn().mockResolvedValue(mockResponse);
+    const mockKy = vi.fn().mockResolvedValue(mockResponse);
 
     const result = await client.get({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       url: '/test',
     });
 
@@ -635,14 +632,14 @@ describe('responseStyle configuration', () => {
       },
     );
 
-    const mockKy: MockKy = vi.fn().mockRejectedValue(
+    const mockKy = vi.fn().mockRejectedValue(
       new HTTPError(errorResponse, new Request('https://example.com/test'), {
         method: 'GET',
       } as any),
     );
 
     const result = await client.get({
-      ky: mockKy,
+      ky: mockKy as Partial<KyInstance> as KyInstance,
       throwOnError: false,
       url: '/test',
     });
