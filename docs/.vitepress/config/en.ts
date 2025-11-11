@@ -96,6 +96,10 @@ export default defineConfig({
                 text: 'Axios',
               },
               {
+                link: '/openapi-ts/clients/ky',
+                text: 'Ky',
+              },
+              {
                 link: '/openapi-ts/clients/next-js',
                 text: 'Next.js',
               },
@@ -114,10 +118,6 @@ export default defineConfig({
               {
                 link: '/openapi-ts/clients/got',
                 text: 'Got <span data-soon>soon</span>',
-              },
-              {
-                link: '/openapi-ts/clients/ky',
-                text: 'Ky <span data-soon>soon</span>',
               },
             ],
             link: '/openapi-ts/clients',
