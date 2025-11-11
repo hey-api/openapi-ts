@@ -14,8 +14,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const clients: ReadonlyArray<PluginClientNames> = [
+  '@hey-api/client-angular',
   '@hey-api/client-axios',
   '@hey-api/client-fetch',
+  '@hey-api/client-ky',
   '@hey-api/client-next',
   '@hey-api/client-nuxt',
   '@hey-api/client-ofetch',

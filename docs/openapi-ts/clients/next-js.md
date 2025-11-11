@@ -86,7 +86,7 @@ With this approach, `client.gen.ts` will call `createClientConfig()` before init
 
 ### `setConfig()`
 
-This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Fetch API configuration option to `setConfig()`, and even your own [Fetch](#custom-fetch) implementation.
+This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Fetch API configuration option to `setConfig()`, and even your own [Fetch](#custom-instance) implementation.
 
 ```js
 import { client } from 'client/client.gen';
