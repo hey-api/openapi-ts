@@ -61,7 +61,7 @@ When we installed the client above, it created a [`client.gen.ts`](/openapi-ts/o
 
 ### `setConfig()`
 
-This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any `ofetch` configuration option to `setConfig()`, and even your own [`ofetch`](#custom-ofetch) instance.
+This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any `ofetch` configuration option to `setConfig()`, and even your own [`ofetch`](#custom-instance) instance.
 
 ```js
 import { client } from 'client/client.gen';
