@@ -128,21 +128,11 @@ export const createClient = (config: Config = {}): Client => {
     const validBody = getValidRequestBody(opts);
 
     const kyOptions: KyOptions = {
+      ...opts,
       body: validBody as BodyInit,
-      cache: opts.cache,
-      credentials: opts.credentials,
-      headers: opts.headers,
-      integrity: opts.integrity,
-      keepalive: opts.keepalive,
       method: opts.method as KyOptions['method'],
-      mode: opts.mode,
       redirect: 'follow',
-      referrer: opts.referrer,
-      referrerPolicy: opts.referrerPolicy,
-      retry: opts.retry,
-      signal: opts.signal,
       throwHttpErrors: opts.throwOnError ?? false,
-      timeout: opts.timeout,
     };
 
     let request = new Request(url, {
