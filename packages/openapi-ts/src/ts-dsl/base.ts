@@ -101,6 +101,11 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     if (typeof input === 'string') {
       return this.$expr(input) as NodeOfMaybe<I>;
     }
+    if (typeof input === 'boolean') {
+      return (
+        input ? ts.factory.createTrue() : ts.factory.createFalse()
+      ) as NodeOfMaybe<I>;
+    }
     if (input instanceof Array) {
       return input.map((item) => this._render(item)) as NodeOfMaybe<I>;
     }
@@ -113,29 +118,33 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     const arr = input instanceof Array ? input : [input];
     return arr.map((item) => {
       const node =
-        typeof item === 'string'
-          ? ts.factory.createIdentifier(item)
-          : this._render(item as any);
+        typeof item === 'string' ? this.$expr(item) : this._render(item as any);
       return ts.isExpression(node)
         ? ts.factory.createExpressionStatement(node)
         : (node as ts.Statement);
     });
   }
 
-  protected $type<I>(type: I): TypeOfMaybe<I> {
-    if (type === undefined) {
+  protected $type<I>(
+    input: I,
+    args?: ReadonlyArray<ts.TypeNode>,
+  ): TypeOfMaybe<I> {
+    if (input === undefined) {
       return undefined as TypeOfMaybe<I>;
     }
-    if (typeof type === 'string') {
-      return ts.factory.createTypeReferenceNode(
-        type,
-      ) as unknown as TypeOfMaybe<I>;
+    if (typeof input === 'string') {
+      return ts.factory.createTypeReferenceNode(input, args) as TypeOfMaybe<I>;
     }
-    if (typeof type === 'boolean') {
-      const literal = type ? ts.factory.createTrue() : ts.factory.createFalse();
+    if (typeof input === 'boolean') {
+      const literal = input
+        ? ts.factory.createTrue()
+        : ts.factory.createFalse();
       return ts.factory.createLiteralTypeNode(literal) as TypeOfMaybe<I>;
     }
-    return this._render(type as any) as TypeOfMaybe<I>;
+    if (input instanceof Array) {
+      return input.map((item) => this.$type(item, args)) as TypeOfMaybe<I>;
+    }
+    return this._render(input as any) as TypeOfMaybe<I>;
   }
 
   private _render<T extends ts.Node>(value: MaybeTsDsl<T>): T {
@@ -152,33 +161,51 @@ type NodeOf<I> =
     ? ReadonlyArray<U extends TsDsl<infer N> ? N : U>
     : I extends string
       ? ts.Expression
-      : I extends TsDsl<infer N>
-        ? N
-        : I extends ts.Node
-          ? I
-          : never;
+      : I extends boolean
+        ? ts.Expression
+        : I extends TsDsl<infer N>
+          ? N
+          : I extends ts.Node
+            ? I
+            : never;
+
+export type MaybeTsDsl<T> =
+  // if T includes string
+  string extends T
+    ? Exclude<T, string> extends ts.Node
+      ? string | Exclude<T, string> | TsDsl<Exclude<T, string>>
+      : string
+    : // if it's a DSL itself
+      T extends TsDsl<any>
+      ? T
+      : // otherwise if it’s a Node
+        T extends ts.Node
+        ? T | TsDsl<T>
+        : never;
+
+export type TypeOfTsDsl<T> = T extends TsDsl<infer U> ? U : never;
+
+export abstract class TypeTsDsl<
+  T extends
+    | ts.TypeNode
+    | ts.TypeElement
+    | ts.LiteralTypeNode
+    | ts.TypeParameterDeclaration = ts.TypeNode,
+> extends TsDsl<T> {}
 
 type TypeOfMaybe<I> = undefined extends I
   ? TypeOf<NonNullable<I>> | undefined
   : TypeOf<I>;
 
-type TypeOf<I> = I extends string
-  ? ts.TypeNode
-  : I extends boolean
-    ? ts.LiteralTypeNode
-    : I extends TsDsl<infer N>
-      ? N
-      : I extends ts.TypeNode
-        ? I
-        : never;
-
-export type MaybeTsDsl<T> =
-  // if T includes string in the union
-  string extends T
-    ? Exclude<T, string> extends ts.Node
-      ? string | Exclude<T, string> | TsDsl<Exclude<T, string>>
-      : string
-    : // otherwise only node or DSL
-      T extends ts.Node
-      ? T | TsDsl<T>
-      : never;
+type TypeOf<I> =
+  I extends ReadonlyArray<infer U>
+    ? ReadonlyArray<TypeOf<U>>
+    : I extends string
+      ? ts.TypeNode
+      : I extends boolean
+        ? ts.LiteralTypeNode
+        : I extends TsDsl<infer N>
+          ? N
+          : I extends ts.TypeNode
+            ? I
+            : never;

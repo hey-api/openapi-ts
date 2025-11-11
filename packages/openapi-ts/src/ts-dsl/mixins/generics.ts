@@ -1,34 +1,35 @@
 import ts from 'typescript';
 
-import { type MaybeTsDsl, TsDsl } from '../base';
-import { TypeParamTsDsl } from '../type';
+import type { MaybeTsDsl, TypeOfTsDsl } from '../base';
+import { TsDsl } from '../base';
+import { TypeParamTsDsl } from '../type/param';
 
 export class GenericsMixin extends TsDsl {
-  protected _generics?: Array<string | MaybeTsDsl<ts.TypeParameterDeclaration>>;
+  protected _generics?: Array<string | MaybeTsDsl<TypeOfTsDsl<TypeParamTsDsl>>>;
 
   /** Adds a single generic type argument (e.g. `T` in `Array<T>`). */
-  generic(name: string, fn?: (t: TypeParamTsDsl) => void): this {
-    const g = new TypeParamTsDsl(name, fn);
+  generic(...args: ConstructorParameters<typeof TypeParamTsDsl>): this {
+    const g = new TypeParamTsDsl(...args);
     (this._generics ??= []).push(g);
     return this;
   }
 
   /** Adds generic type arguments (e.g. `Map<string, T>`). */
   generics(
-    ...args: ReadonlyArray<string | MaybeTsDsl<ts.TypeParameterDeclaration>>
+    ...args: ReadonlyArray<string | MaybeTsDsl<TypeOfTsDsl<TypeParamTsDsl>>>
   ): this {
     this._generics = [...args];
     return this;
   }
 
   protected $generics():
-    | ReadonlyArray<ts.TypeParameterDeclaration>
+    | ReadonlyArray<TypeOfTsDsl<TypeParamTsDsl>>
     | undefined {
     return this._generics?.map((g) => {
       if (typeof g === 'string') {
         return ts.factory.createTypeParameterDeclaration(
           undefined,
-          ts.factory.createIdentifier(g),
+          this.$expr(g),
           undefined,
           undefined,
         );

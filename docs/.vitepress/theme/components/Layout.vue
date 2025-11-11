@@ -8,7 +8,7 @@ const { Layout } = DefaultTheme;
   <Layout>
     <template #layout-top>
       <div class="announcement">
-        <span> Build better APIs with Hey API Platform </span>
+        <span>Build better APIs with Hey API Platform</span>
         <a
           href="https://app.heyapi.dev/"
           rel="noopener noreferrer"
@@ -16,18 +16,6 @@ const { Layout } = DefaultTheme;
           >Dashboard</a
         >
       </div>
-      <!-- <div class="announcement">
-        <span>
-          Request a feature<span class="hide-sm"> for your business</span>
-        </span>
-        <a
-          aria-label="Send an email to Lubos"
-          href="mailto:lubos@heyapi.dev?subject=Priority%20Feature%20Request"
-          target="_blank"
-        >
-          Let's Talk
-        </a>
-      </div> -->
     </template>
     <!-- <template #home-features-before>
       <a

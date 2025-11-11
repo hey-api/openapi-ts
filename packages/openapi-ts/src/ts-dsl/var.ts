@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import { TsDsl } from './base';
+import { TsDsl, TypeTsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { DescribeMixin } from './mixins/describe';
 import {
@@ -11,11 +11,13 @@ import {
 } from './mixins/modifiers';
 import { PatternMixin } from './mixins/pattern';
 import { ValueMixin } from './mixins/value';
+import { TypeExprTsDsl } from './type/expr';
 
 export class VarTsDsl extends TsDsl<ts.VariableStatement> {
   private kind: ts.NodeFlags = ts.NodeFlags.None;
   private modifiers = createModifierAccessor(this);
   private name?: string;
+  private _type?: TypeTsDsl;
 
   constructor(name?: string) {
     super();
@@ -29,6 +31,12 @@ export class VarTsDsl extends TsDsl<ts.VariableStatement> {
 
   let(): this {
     this.kind = ts.NodeFlags.Let;
+    return this;
+  }
+
+  /** Sets the variable type. */
+  type(type: string | TypeTsDsl): this {
+    this._type = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
     return this;
   }
 
@@ -48,7 +56,7 @@ export class VarTsDsl extends TsDsl<ts.VariableStatement> {
           ts.factory.createVariableDeclaration(
             name,
             undefined,
-            undefined,
+            this.$type(this._type),
             this.$value(),
           ),
         ],
