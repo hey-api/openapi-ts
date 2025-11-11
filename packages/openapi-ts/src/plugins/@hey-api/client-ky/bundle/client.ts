@@ -143,7 +143,7 @@ export const createClient = (config: Config = {}): Client => {
       signal: opts.signal,
       throwHttpErrors: opts.throwOnError ?? false,
       timeout: opts.timeout,
-      ...(opts.kyOptions || {}),
+      ...opts.kyOptions,
     };
 
     if (opts.retry && typeof opts.retry === 'object') {
