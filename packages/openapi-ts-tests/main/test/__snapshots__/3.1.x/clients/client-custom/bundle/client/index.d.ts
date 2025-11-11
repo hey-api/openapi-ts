@@ -266,6 +266,6 @@ interface Params {
   query: Record<string, unknown>;
 }
 declare const buildClientParams: (args: ReadonlyArray<unknown>, fields: FieldsConfig) => Params;
-//#endregion
-export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, buildClientParams, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
 //# sourceMappingURL=index.d.ts.map
+
+export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, buildClientParams, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
