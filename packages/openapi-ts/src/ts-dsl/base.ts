@@ -118,9 +118,7 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     const arr = input instanceof Array ? input : [input];
     return arr.map((item) => {
       const node =
-        typeof item === 'string'
-          ? ts.factory.createIdentifier(item)
-          : this._render(item as any);
+        typeof item === 'string' ? this.$expr(item) : this._render(item as any);
       return ts.isExpression(node)
         ? ts.factory.createExpressionStatement(node)
         : (node as ts.Statement);
@@ -171,6 +169,30 @@ type NodeOf<I> =
             ? I
             : never;
 
+export type MaybeTsDsl<T> =
+  // if T includes string
+  string extends T
+    ? Exclude<T, string> extends ts.Node
+      ? string | Exclude<T, string> | TsDsl<Exclude<T, string>>
+      : string
+    : // if it's a DSL itself
+      T extends TsDsl<any>
+      ? T
+      : // otherwise if it’s a Node
+        T extends ts.Node
+        ? T | TsDsl<T>
+        : never;
+
+export type TypeOfTsDsl<T> = T extends TsDsl<infer U> ? U : never;
+
+export abstract class TypeTsDsl<
+  T extends
+    | ts.TypeNode
+    | ts.TypeElement
+    | ts.LiteralTypeNode
+    | ts.TypeParameterDeclaration = ts.TypeNode,
+> extends TsDsl<T> {}
+
 type TypeOfMaybe<I> = undefined extends I
   ? TypeOf<NonNullable<I>> | undefined
   : TypeOf<I>;
@@ -187,16 +209,3 @@ type TypeOf<I> =
           : I extends ts.TypeNode
             ? I
             : never;
-
-export type MaybeTsDsl<T> =
-  // if T includes string in the union
-  string extends T
-    ? Exclude<T, string> extends ts.Node
-      ? string | Exclude<T, string> | TsDsl<Exclude<T, string>>
-      : string
-    : // otherwise only node or DSL
-      T extends ts.Node
-      ? T | TsDsl<T>
-      : never;
-
-export type TypeOfTsDsl<T> = T extends TsDsl<infer U> ? U : never;

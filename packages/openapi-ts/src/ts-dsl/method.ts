@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import { TsDsl } from './base';
+import { TsDsl, TypeTsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { DecoratorMixin } from './mixins/decorator';
 import { DescribeMixin } from './mixins/describe';
@@ -18,15 +18,12 @@ import {
 } from './mixins/modifiers';
 import { OptionalMixin } from './mixins/optional';
 import { ParamMixin } from './mixins/param';
-import { createTypeAccessor, type TypeAccessor } from './mixins/type';
+import { TypeExprTsDsl } from './type/expr';
 
 export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
   private modifiers = createModifierAccessor(this);
   private name: string;
-  private _returns: TypeAccessor<MethodTsDsl> = createTypeAccessor(this);
-
-  /** Sets the return type. */
-  returns: TypeAccessor<MethodTsDsl>['fn'] = this._returns.fn;
+  private _returns?: TypeTsDsl;
 
   constructor(name: string, fn?: (m: MethodTsDsl) => void) {
     super();
@@ -34,16 +31,22 @@ export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
     fn?.(this);
   }
 
+  /** Sets the return type. */
+  returns(type: string | TypeTsDsl): this {
+    this._returns = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
+    return this;
+  }
+
   /** Builds the `MethodDeclaration` node. */
   $render(): ts.MethodDeclaration {
     return ts.factory.createMethodDeclaration(
       [...this.$decorators(), ...this.modifiers.list()],
       undefined,
-      ts.factory.createIdentifier(this.name),
+      this.$expr(this.name),
       this.questionToken,
       this.$generics(),
       this.$params(),
-      this._returns.$render(),
+      this.$type(this._returns),
       ts.factory.createBlock(this.$do(), true),
     );
   }
