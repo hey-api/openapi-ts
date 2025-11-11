@@ -1,3 +1,5 @@
+import ts from 'typescript';
+
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import {
@@ -14,7 +16,7 @@ import {
   queryKeyStatement,
 } from '../queryKey';
 import { handleMeta } from '../shared/meta';
-import { useTypeData } from '../shared/useType';
+import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
 const optionsParamName = 'options';
@@ -69,6 +71,8 @@ export const createQueryOptions = ({
   plugin.setSymbolValue(symbolQueryKey, node);
 
   const typeData = useTypeData({ operation, plugin });
+  const typeError = useTypeError({ operation, plugin });
+  const typeResponse = useTypeResponse({ operation, plugin });
 
   const awaitSdkFn = $(queryFn)
     .call(
@@ -131,7 +135,21 @@ export const createQueryOptions = ({
         .param(optionsParamName, (p) =>
           p.optional(!isRequiredOptions).type(typeData),
         )
-        .do($(symbolQueryOptions.placeholder).call(queryOptionsObj).return()),
+        .do(
+          $(symbolQueryOptions.placeholder)
+            .call(queryOptionsObj)
+            .typeArgs(
+              typeResponse,
+              typeError,
+              typeResponse,
+              ts.factory.createTypeReferenceNode('ReturnType', [
+                ts.factory.createTypeQueryNode(
+                  ts.factory.createIdentifier(symbolQueryKey.placeholder),
+                ),
+              ]),
+            )
+            .return(),
+        ),
     );
   plugin.setSymbolValue(symbolQueryOptionsFn, statement);
 };
