@@ -1,20 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import { TsDsl } from './base';
+import { TsDsl, TypeTsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { DecoratorMixin } from './mixins/decorator';
 import { OptionalMixin } from './mixins/optional';
 import { PatternMixin } from './mixins/pattern';
-import { createTypeAccessor, type TypeAccessor } from './mixins/type';
 import { ValueMixin } from './mixins/value';
+import { TypeExprTsDsl } from './type/expr';
 
 export class ParamTsDsl extends TsDsl<ts.ParameterDeclaration> {
   private name?: string;
-  private _type: TypeAccessor<ParamTsDsl> = createTypeAccessor(this);
-
-  /** Sets the parameter's type. */
-  type: TypeAccessor<ParamTsDsl>['fn'] = this._type.fn;
+  private _type?: TypeTsDsl;
 
   constructor(
     name: string | ((p: ParamTsDsl) => void),
@@ -29,6 +26,12 @@ export class ParamTsDsl extends TsDsl<ts.ParameterDeclaration> {
     }
   }
 
+  /** Sets the parameter type. */
+  type(type: string | TypeTsDsl): this {
+    this._type = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
+    return this;
+  }
+
   $render(): ts.ParameterDeclaration {
     const name = this.$pattern() ?? this.name;
     if (!name)
@@ -40,7 +43,7 @@ export class ParamTsDsl extends TsDsl<ts.ParameterDeclaration> {
       undefined,
       name,
       this.questionToken,
-      this._type.$render(),
+      this.$type(this._type),
       this.$value(),
     );
   }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import { TsDsl } from './base';
+import { TsDsl, TypeTsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { DecoratorMixin } from './mixins/decorator';
 import { DescribeMixin } from './mixins/describe';
@@ -18,7 +18,7 @@ import {
 } from './mixins/modifiers';
 import { OptionalMixin } from './mixins/optional';
 import { ParamMixin } from './mixins/param';
-import { createTypeAccessor, type TypeAccessor } from './mixins/type';
+import { TypeExprTsDsl } from './type/expr';
 
 type FuncMode = 'arrow' | 'decl' | 'expr';
 
@@ -32,10 +32,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
   private mode: FuncMode;
   private modifiers = createModifierAccessor(this);
   private name?: string;
-  private _returns: TypeAccessor<ImplFuncTsDsl<M>> = createTypeAccessor(this);
-
-  /** Sets the return type. */
-  returns: TypeAccessor<ImplFuncTsDsl<M>>['fn'] = this._returns.fn;
+  private _returns?: TypeTsDsl;
 
   constructor();
   constructor(fn: (f: ImplFuncTsDsl<'arrow'>) => void);
@@ -70,6 +67,13 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
     this.mode = 'expr';
     return this as unknown as FuncTsDsl<'expr'>;
   }
+
+  /** Sets the return type. */
+  returns(type: string | TypeTsDsl): this {
+    this._returns = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
+    return this;
+  }
+
   $render(): M extends 'decl'
     ? ts.FunctionDeclaration
     : M extends 'expr'
@@ -83,7 +87,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
         this.name,
         this.$generics(),
         this.$params(),
-        this._returns.$render(),
+        this.$type(this._returns),
         ts.factory.createBlock(this.$do(), true),
       ) as any;
     }
@@ -92,10 +96,10 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
       return ts.factory.createFunctionExpression(
         [...this.modifiers.list()],
         undefined,
-        this.name ? ts.factory.createIdentifier(this.name) : undefined,
+        this.$expr(this.name),
         this.$generics(),
         this.$params(),
-        this._returns.$render(),
+        this.$type(this._returns),
         ts.factory.createBlock(this.$do(), true),
       ) as any;
     }
@@ -110,7 +114,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
       [...this.modifiers.list()],
       this.$generics(),
       this.$params(),
-      this._returns.$render(),
+      this.$type(this._returns),
       undefined,
       exprBody,
     ) as any;
