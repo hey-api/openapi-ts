@@ -53,14 +53,14 @@ const linters: Record<Linters, OutputProcessor> = {
 };
 
 export const processOutput = ({ config }: { config: Config }) => {
-  if (config.output.format) {
-    const module = formatters[config.output.format];
+  if (config.output.lint) {
+    const module = linters[config.output.lint];
     console.log(`✨ Running ${module.name}`);
     sync(module.command, module.args(config.output.path));
   }
 
-  if (config.output.lint) {
-    const module = linters[config.output.lint];
+  if (config.output.format) {
+    const module = formatters[config.output.format];
     console.log(`✨ Running ${module.name}`);
     sync(module.command, module.args(config.output.path));
   }
