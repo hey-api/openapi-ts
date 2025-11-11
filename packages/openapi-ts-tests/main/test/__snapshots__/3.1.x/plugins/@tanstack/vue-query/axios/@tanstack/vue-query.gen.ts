@@ -5,7 +5,7 @@ import type { AxiosError } from 'axios';
 
 import { client } from '../client.gen';
 import { apiVVersionODataControllerCount, callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexParams, complexTypes, deleteCallWithoutParametersAndResponse, deleteFoo, deprecatedCall, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, export_, fileResponse, fooWow, getApiVbyApiVersionSimpleOperation, getCallWithOptionalParam, getCallWithoutParametersAndResponse, import_, multipartRequest, multipartResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchApiVbyApiVersionNoTag, patchCallWithoutParametersAndResponse, postApiVbyApiVersionFormData, postApiVbyApiVersionRequestBody, postCallWithOptionalParam, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, putWithFormUrlEncoded, testErrorCode, types, uploadFile } from '../sdk.gen';
-import type { ApiVVersionODataControllerCountData, CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseData, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexParamsData, ComplexParamsResponse, ComplexTypesData, DeleteCallWithoutParametersAndResponseData, DeleteFooData3, DeprecatedCallData, DummyAData, DummyBData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, ExportData, FileResponseData, FooWowData, GetApiVbyApiVersionSimpleOperationData, GetCallWithOptionalParamData, GetCallWithoutParametersAndResponseData, ImportData, ImportResponse, MultipartRequestData, MultipartResponseData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionFormDataData, PostApiVbyApiVersionRequestBodyData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, PutWithFormUrlEncodedData, TestErrorCodeData, TypesData, UploadFileData, UploadFileResponse } from '../types.gen';
+import type { ApiVVersionODataControllerCountData, ApiVVersionODataControllerCountResponse, CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithNoContentResponseResponse, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, CallWithResponseData, CallWithResponseResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexParamsData, ComplexParamsResponse, ComplexTypesData, ComplexTypesResponse, DeleteCallWithoutParametersAndResponseData, DeleteFooData3, DeprecatedCallData, DummyAData, DummyAResponse, DummyBData, DummyBResponse, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, ExportData, FileResponseData, FileResponseResponse, FooWowData, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationError, GetApiVbyApiVersionSimpleOperationResponse, GetCallWithOptionalParamData, GetCallWithoutParametersAndResponseData, ImportData, ImportResponse, MultipartRequestData, MultipartResponseData, MultipartResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionFormDataData, PostApiVbyApiVersionRequestBodyData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, PutWithFormUrlEncodedData, TestErrorCodeData, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -44,7 +44,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const exportQueryKey = (options?: Options<ExportData>) => createQueryKey('export', options);
 
-export const exportOptions = (options?: Options<ExportData>) => queryOptions({
+export const exportOptions = (options?: Options<ExportData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof exportQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await export_({
             ...options,
@@ -101,7 +101,7 @@ export const fooWowMutation = (options?: Partial<Options<FooWowData>>): UseMutat
 
 export const apiVVersionODataControllerCountQueryKey = (options?: Options<ApiVVersionODataControllerCountData>) => createQueryKey('apiVVersionODataControllerCount', options);
 
-export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVersionODataControllerCountData>) => queryOptions({
+export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVersionODataControllerCountData>) => queryOptions<ApiVVersionODataControllerCountResponse, AxiosError<DefaultError>, ApiVVersionODataControllerCountResponse, ReturnType<typeof apiVVersionODataControllerCountQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await apiVVersionODataControllerCount({
             ...options,
@@ -116,7 +116,7 @@ export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVer
 
 export const getApiVbyApiVersionSimpleOperationQueryKey = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => createQueryKey('getApiVbyApiVersionSimpleOperation', options);
 
-export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => queryOptions({
+export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => queryOptions<GetApiVbyApiVersionSimpleOperationResponse, AxiosError<GetApiVbyApiVersionSimpleOperationError>, GetApiVbyApiVersionSimpleOperationResponse, ReturnType<typeof getApiVbyApiVersionSimpleOperationQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getApiVbyApiVersionSimpleOperation({
             ...options,
@@ -145,7 +145,7 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
 
 export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => createQueryKey('getCallWithoutParametersAndResponse', options);
 
-export const getCallWithoutParametersAndResponseOptions = (options?: Options<GetCallWithoutParametersAndResponseData>) => queryOptions({
+export const getCallWithoutParametersAndResponseOptions = (options?: Options<GetCallWithoutParametersAndResponseData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof getCallWithoutParametersAndResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getCallWithoutParametersAndResponse({
             ...options,
@@ -275,7 +275,7 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
 
 export const getCallWithOptionalParamQueryKey = (options: Options<GetCallWithOptionalParamData>) => createQueryKey('getCallWithOptionalParam', options);
 
-export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOptionalParamData>) => queryOptions({
+export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOptionalParamData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof getCallWithOptionalParamQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getCallWithOptionalParam({
             ...options,
@@ -389,7 +389,7 @@ export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<P
 
 export const callWithDefaultParametersQueryKey = (options?: Options<CallWithDefaultParametersData>) => createQueryKey('callWithDefaultParameters', options);
 
-export const callWithDefaultParametersOptions = (options?: Options<CallWithDefaultParametersData>) => queryOptions({
+export const callWithDefaultParametersOptions = (options?: Options<CallWithDefaultParametersData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof callWithDefaultParametersQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await callWithDefaultParameters({
             ...options,
@@ -446,7 +446,7 @@ export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameDat
 
 export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => createQueryKey('duplicateName2', options);
 
-export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => queryOptions({
+export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof duplicateName2QueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await duplicateName2({
             ...options,
@@ -489,7 +489,7 @@ export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4D
 
 export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => createQueryKey('callWithNoContentResponse', options);
 
-export const callWithNoContentResponseOptions = (options?: Options<CallWithNoContentResponseData>) => queryOptions({
+export const callWithNoContentResponseOptions = (options?: Options<CallWithNoContentResponseData>) => queryOptions<CallWithNoContentResponseResponse, AxiosError<DefaultError>, CallWithNoContentResponseResponse, ReturnType<typeof callWithNoContentResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await callWithNoContentResponse({
             ...options,
@@ -504,7 +504,7 @@ export const callWithNoContentResponseOptions = (options?: Options<CallWithNoCon
 
 export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => createQueryKey('callWithResponseAndNoContentResponse', options);
 
-export const callWithResponseAndNoContentResponseOptions = (options?: Options<CallWithResponseAndNoContentResponseData>) => queryOptions({
+export const callWithResponseAndNoContentResponseOptions = (options?: Options<CallWithResponseAndNoContentResponseData>) => queryOptions<CallWithResponseAndNoContentResponseResponse, AxiosError<DefaultError>, CallWithResponseAndNoContentResponseResponse, ReturnType<typeof callWithResponseAndNoContentResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await callWithResponseAndNoContentResponse({
             ...options,
@@ -519,7 +519,7 @@ export const callWithResponseAndNoContentResponseOptions = (options?: Options<Ca
 
 export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey('dummyA', options);
 
-export const dummyAOptions = (options?: Options<DummyAData>) => queryOptions({
+export const dummyAOptions = (options?: Options<DummyAData>) => queryOptions<DummyAResponse, AxiosError<DefaultError>, DummyAResponse, ReturnType<typeof dummyAQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await dummyA({
             ...options,
@@ -534,7 +534,7 @@ export const dummyAOptions = (options?: Options<DummyAData>) => queryOptions({
 
 export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey('dummyB', options);
 
-export const dummyBOptions = (options?: Options<DummyBData>) => queryOptions({
+export const dummyBOptions = (options?: Options<DummyBData>) => queryOptions<DummyBResponse, AxiosError<DefaultError>, DummyBResponse, ReturnType<typeof dummyBQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await dummyB({
             ...options,
@@ -549,7 +549,7 @@ export const dummyBOptions = (options?: Options<DummyBData>) => queryOptions({
 
 export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => createQueryKey('callWithResponse', options);
 
-export const callWithResponseOptions = (options?: Options<CallWithResponseData>) => queryOptions({
+export const callWithResponseOptions = (options?: Options<CallWithResponseData>) => queryOptions<CallWithResponseResponse, AxiosError<DefaultError>, CallWithResponseResponse, ReturnType<typeof callWithResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await callWithResponse({
             ...options,
@@ -592,7 +592,7 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
 
 export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => createQueryKey('collectionFormat', options);
 
-export const collectionFormatOptions = (options: Options<CollectionFormatData>) => queryOptions({
+export const collectionFormatOptions = (options: Options<CollectionFormatData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof collectionFormatQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await collectionFormat({
             ...options,
@@ -607,7 +607,7 @@ export const collectionFormatOptions = (options: Options<CollectionFormatData>) 
 
 export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('types', options);
 
-export const typesOptions = (options: Options<TypesData>) => queryOptions({
+export const typesOptions = (options: Options<TypesData>) => queryOptions<TypesResponse, AxiosError<DefaultError>, TypesResponse, ReturnType<typeof typesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await types({
             ...options,
@@ -636,7 +636,7 @@ export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): 
 
 export const fileResponseQueryKey = (options: Options<FileResponseData>) => createQueryKey('fileResponse', options);
 
-export const fileResponseOptions = (options: Options<FileResponseData>) => queryOptions({
+export const fileResponseOptions = (options: Options<FileResponseData>) => queryOptions<FileResponseResponse, AxiosError<DefaultError>, FileResponseResponse, ReturnType<typeof fileResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await fileResponse({
             ...options,
@@ -651,7 +651,7 @@ export const fileResponseOptions = (options: Options<FileResponseData>) => query
 
 export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => createQueryKey('complexTypes', options);
 
-export const complexTypesOptions = (options: Options<ComplexTypesData>) => queryOptions({
+export const complexTypesOptions = (options: Options<ComplexTypesData>) => queryOptions<ComplexTypesResponse, AxiosError<DefaultError>, ComplexTypesResponse, ReturnType<typeof complexTypesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await complexTypes({
             ...options,
@@ -666,7 +666,7 @@ export const complexTypesOptions = (options: Options<ComplexTypesData>) => query
 
 export const multipartResponseQueryKey = (options?: Options<MultipartResponseData>) => createQueryKey('multipartResponse', options);
 
-export const multipartResponseOptions = (options?: Options<MultipartResponseData>) => queryOptions({
+export const multipartResponseOptions = (options?: Options<MultipartResponseData>) => queryOptions<MultipartResponseResponse, AxiosError<DefaultError>, MultipartResponseResponse, ReturnType<typeof multipartResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await multipartResponse({
             ...options,
