@@ -1,6 +1,6 @@
 import type ts from 'typescript';
 
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import type { ValibotPlugin } from '../types';
 import { identifiers } from '../v1/constants';
@@ -20,12 +20,8 @@ export const pipesToAst = ({
     category: 'external',
     resource: 'valibot.v',
   });
-  const expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: v.placeholder,
-      name: identifiers.methods.pipe,
-    }),
-    parameters: pipes,
-  });
-  return expression;
+  return $(v.placeholder)
+    .attr(identifiers.methods.pipe)
+    .call(...pipes)
+    .$render();
 };

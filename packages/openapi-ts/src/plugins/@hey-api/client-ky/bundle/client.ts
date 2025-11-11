@@ -147,7 +147,7 @@ export const createClient = (config: Config = {}): Client => {
 
     let request = new Request(url, {
       body: kyOptions.body as BodyInit,
-      headers: kyOptions.headers,
+      headers: kyOptions.headers as HeadersInit,
       method: kyOptions.method,
     });
 

@@ -55,7 +55,7 @@ export interface RequestOptions<
    *
    * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
    */
-  body?: BodyInit | null;
+  body?: unknown;
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   /**
