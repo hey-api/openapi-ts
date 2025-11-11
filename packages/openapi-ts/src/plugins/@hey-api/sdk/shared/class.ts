@@ -132,11 +132,12 @@ const createClientClass = ({
         .param('args', (p) =>
           p
             .optional(optionalClient)
-            .type()
-            .object((o) =>
-              o.prop('client', (p) =>
-                p.optional(optionalClient).type(symbolClient.placeholder),
-              ),
+            .type(
+              $.type
+                .object()
+                .prop('client', (p) =>
+                  p.optional(optionalClient).type(symbolClient.placeholder),
+                ),
             ),
         )
         .do(
@@ -445,18 +446,14 @@ export const generateClassSdk = ({
       const ctor = $.init((i) =>
         i
           .param('args', (p) =>
-            p
-              .optional(!isClientRequired)
-              .type()
-              .object((o) =>
-                o
-                  .prop('client', (p) =>
-                    p
-                      .optional(!isClientRequired)
-                      .type(symbolClient.placeholder),
-                  )
-                  .prop('key', (p) => p.optional().type('string')),
-              ),
+            p.optional(!isClientRequired).type(
+              $.type
+                .object()
+                .prop('client', (p) =>
+                  p.optional(!isClientRequired).type(symbolClient.placeholder),
+                )
+                .prop('key', (p) => p.optional().type('string')),
+            ),
           )
           .do(
             $('super').call('args'),

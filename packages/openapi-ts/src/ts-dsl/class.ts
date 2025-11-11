@@ -82,7 +82,7 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
     const body = this.$node(this.body) as ReadonlyArray<ts.ClassElement>;
     return ts.factory.createClassDeclaration(
       [...this.$decorators(), ...this.modifiers.list()],
-      ts.factory.createIdentifier(this.name),
+      this.$expr(this.name),
       this.$generics(),
       this.heritageClauses,
       body,
