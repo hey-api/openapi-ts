@@ -41,12 +41,12 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'invalid',
-            // 'full.yaml',
+            'full.yaml',
             // 'openai.yaml',
             // 'opencode.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
-            'transformers.json',
+            // 'transformers.json',
             // 'type-format.yaml',
             // 'validators.yaml',
             // 'validators-circular-ref.json',
@@ -396,6 +396,14 @@ export default defineConfig(() => {
             },
           },
           '~resolvers': {
+            object: {
+              // base({ $, additional, pipes, shape }) {
+              //   if (additional === undefined) {
+              //     return pipes.push($('v').attr('looseObject').call(shape));
+              //   }
+              //   return;
+              // },
+            },
             string: {
               formats: {
                 // date: ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
@@ -407,7 +415,7 @@ export default defineConfig(() => {
         {
           // case: 'snake_case',
           // comments: false,
-          compatibilityVersion: 3,
+          compatibilityVersion: 4,
           dates: {
             // local: true,
             // offset: true,
@@ -456,6 +464,15 @@ export default defineConfig(() => {
             },
           },
           '~resolvers': {
+            object: {
+              base({ $, additional, shape }) {
+                if (!additional) {
+                  // return $('z').attr('object').call(shape).attr('passthrough').call()
+                  return $('z').attr('looseObject').call(shape);
+                }
+                return;
+              },
+            },
             string: {
               formats: {
                 // date: ({ $ }) => $('z').attr('date').call(),
