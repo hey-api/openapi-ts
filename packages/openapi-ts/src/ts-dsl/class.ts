@@ -9,13 +9,13 @@ import { MethodTsDsl } from './method';
 import { mixin } from './mixins/apply';
 import { DecoratorMixin } from './mixins/decorator';
 import { DescribeMixin } from './mixins/describe';
-import { GenericsMixin } from './mixins/generics';
 import {
   AbstractMixin,
   createModifierAccessor,
   DefaultMixin,
   ExportMixin,
 } from './mixins/modifiers';
+import { TypeParamsMixin } from './mixins/type-params';
 import { NewlineTsDsl } from './newline';
 
 export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
@@ -96,7 +96,7 @@ export interface ClassTsDsl
     DescribeMixin,
     DefaultMixin,
     ExportMixin,
-    GenericsMixin {}
+    TypeParamsMixin {}
 mixin(
   ClassTsDsl,
   AbstractMixin,
@@ -104,5 +104,5 @@ mixin(
   [DescribeMixin, { overrideRender: true }],
   DefaultMixin,
   ExportMixin,
-  GenericsMixin,
+  TypeParamsMixin,
 );

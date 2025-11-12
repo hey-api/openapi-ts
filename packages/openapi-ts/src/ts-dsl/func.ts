@@ -6,7 +6,6 @@ import { mixin } from './mixins/apply';
 import { DecoratorMixin } from './mixins/decorator';
 import { DescribeMixin } from './mixins/describe';
 import { DoMixin } from './mixins/do';
-import { GenericsMixin } from './mixins/generics';
 import {
   AbstractMixin,
   AsyncMixin,
@@ -18,6 +17,7 @@ import {
 } from './mixins/modifiers';
 import { OptionalMixin } from './mixins/optional';
 import { ParamMixin } from './mixins/param';
+import { TypeParamsMixin } from './mixins/type-params';
 import { TypeExprTsDsl } from './type/expr';
 
 type FuncMode = 'arrow' | 'decl' | 'expr';
@@ -127,13 +127,13 @@ interface ImplFuncTsDsl
     DecoratorMixin,
     DescribeMixin,
     DoMixin,
-    GenericsMixin,
     OptionalMixin,
     ParamMixin,
     PrivateMixin,
     ProtectedMixin,
     PublicMixin,
-    StaticMixin {}
+    StaticMixin,
+    TypeParamsMixin {}
 mixin(
   ImplFuncTsDsl,
   AbstractMixin,
@@ -141,13 +141,13 @@ mixin(
   DecoratorMixin,
   [DescribeMixin, { overrideRender: true }],
   DoMixin,
-  GenericsMixin,
   OptionalMixin,
   ParamMixin,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,
   StaticMixin,
+  TypeParamsMixin,
 );
 
 export const FuncTsDsl = ImplFuncTsDsl as {

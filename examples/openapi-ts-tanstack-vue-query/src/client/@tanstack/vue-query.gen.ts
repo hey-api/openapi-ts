@@ -36,12 +36,19 @@ import type {
   DeletePetData,
   DeleteUserData,
   FindPetsByStatusData,
+  FindPetsByStatusResponse,
   FindPetsByTagsData,
+  FindPetsByTagsResponse,
   GetInventoryData,
+  GetInventoryResponse,
   GetOrderByIdData,
+  GetOrderByIdResponse,
   GetPetByIdData,
+  GetPetByIdResponse,
   GetUserByNameData,
+  GetUserByNameResponse,
   LoginUserData,
+  LoginUserResponse,
   LogoutUserData,
   PlaceOrderData,
   PlaceOrderResponse,
@@ -148,7 +155,12 @@ export const findPetsByStatusQueryKey = (options: Options<FindPetsByStatusData>)
  * Multiple status values can be provided with comma separated strings.
  */
 export const findPetsByStatusOptions = (options: Options<FindPetsByStatusData>) =>
-  queryOptions({
+  queryOptions<
+    FindPetsByStatusResponse,
+    DefaultError,
+    FindPetsByStatusResponse,
+    ReturnType<typeof findPetsByStatusQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await findPetsByStatus({
         ...options,
@@ -170,7 +182,12 @@ export const findPetsByTagsQueryKey = (options: Options<FindPetsByTagsData>) =>
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
 export const findPetsByTagsOptions = (options: Options<FindPetsByTagsData>) =>
-  queryOptions({
+  queryOptions<
+    FindPetsByTagsResponse,
+    DefaultError,
+    FindPetsByTagsResponse,
+    ReturnType<typeof findPetsByTagsQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await findPetsByTags({
         ...options,
@@ -213,7 +230,12 @@ export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) =>
  * Returns a single pet.
  */
 export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
-  queryOptions({
+  queryOptions<
+    GetPetByIdResponse,
+    DefaultError,
+    GetPetByIdResponse,
+    ReturnType<typeof getPetByIdQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await getPetById({
         ...options,
@@ -285,7 +307,12 @@ export const getInventoryQueryKey = (options?: Options<GetInventoryData>) =>
  * Returns a map of status codes to quantities.
  */
 export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
-  queryOptions({
+  queryOptions<
+    GetInventoryResponse,
+    DefaultError,
+    GetInventoryResponse,
+    ReturnType<typeof getInventoryQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await getInventory({
         ...options,
@@ -353,7 +380,12 @@ export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) =>
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  */
 export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
-  queryOptions({
+  queryOptions<
+    GetOrderByIdResponse,
+    DefaultError,
+    GetOrderByIdResponse,
+    ReturnType<typeof getOrderByIdQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await getOrderById({
         ...options,
@@ -429,7 +461,12 @@ export const loginUserQueryKey = (options?: Options<LoginUserData>) =>
  * Log into the system.
  */
 export const loginUserOptions = (options?: Options<LoginUserData>) =>
-  queryOptions({
+  queryOptions<
+    LoginUserResponse,
+    DefaultError,
+    LoginUserResponse,
+    ReturnType<typeof loginUserQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await loginUser({
         ...options,
@@ -451,7 +488,7 @@ export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
  * Log user out of the system.
  */
 export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
-  queryOptions({
+  queryOptions<unknown, DefaultError, unknown, ReturnType<typeof logoutUserQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await logoutUser({
         ...options,
@@ -494,7 +531,12 @@ export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) =>
  * Get user detail based on username.
  */
 export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
-  queryOptions({
+  queryOptions<
+    GetUserByNameResponse,
+    DefaultError,
+    GetUserByNameResponse,
+    ReturnType<typeof getUserByNameQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await getUserByName({
         ...options,
