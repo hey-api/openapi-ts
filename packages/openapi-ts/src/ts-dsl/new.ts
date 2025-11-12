@@ -6,7 +6,7 @@ import { TsDsl } from './base';
 import { AccessMixin } from './mixins/access';
 import { mixin } from './mixins/apply';
 import { ArgsMixin } from './mixins/args';
-import { GenericsMixin } from './mixins/generics';
+import { TypeArgsMixin } from './mixins/type-args';
 
 export class NewTsDsl extends TsDsl<ts.NewExpression> {
   private classExpr: MaybeTsDsl<WithString>;
@@ -22,15 +22,13 @@ export class NewTsDsl extends TsDsl<ts.NewExpression> {
 
   /** Builds the `NewExpression` node. */
   $render(): ts.NewExpression {
-    const types = this._generics?.map((arg) => this.$type(arg));
     return ts.factory.createNewExpression(
       this.$node(this.classExpr),
-      // @ts-expect-error --- generics are not officially supported on 'new' expressions yet
-      types,
+      this.$generics(),
       this.$args(),
     );
   }
 }
 
-export interface NewTsDsl extends AccessMixin, ArgsMixin, GenericsMixin {}
-mixin(NewTsDsl, AccessMixin, ArgsMixin, GenericsMixin);
+export interface NewTsDsl extends AccessMixin, ArgsMixin, TypeArgsMixin {}
+mixin(NewTsDsl, AccessMixin, ArgsMixin, TypeArgsMixin);

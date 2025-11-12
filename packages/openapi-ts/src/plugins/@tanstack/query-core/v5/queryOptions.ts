@@ -138,7 +138,7 @@ export const createQueryOptions = ({
         .do(
           $(symbolQueryOptions.placeholder)
             .call(queryOptionsObj)
-            .typeArgs(
+            .generics(
               typeResponse,
               typeError,
               typeResponse,

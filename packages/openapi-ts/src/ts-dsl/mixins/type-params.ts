@@ -1,20 +1,20 @@
-import ts from 'typescript';
+import type ts from 'typescript';
 
 import type { MaybeTsDsl, TypeOfTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { TypeTsDsl } from '../base';
 import { TypeParamTsDsl } from '../type/param';
 
-export class GenericsMixin extends TsDsl {
+export class TypeParamsMixin extends TypeTsDsl {
   protected _generics?: Array<string | MaybeTsDsl<TypeOfTsDsl<TypeParamTsDsl>>>;
 
-  /** Adds a single generic type argument (e.g. `T` in `Array<T>`). */
+  /** Adds a single type parameter (e.g. `T` in `Array<T>`). */
   generic(...args: ConstructorParameters<typeof TypeParamTsDsl>): this {
     const g = new TypeParamTsDsl(...args);
     (this._generics ??= []).push(g);
     return this;
   }
 
-  /** Adds generic type arguments (e.g. `Map<string, T>`). */
+  /** Adds type parameters (e.g. `Map<string, T>`). */
   generics(
     ...args: ReadonlyArray<string | MaybeTsDsl<TypeOfTsDsl<TypeParamTsDsl>>>
   ): this {
@@ -22,23 +22,19 @@ export class GenericsMixin extends TsDsl {
     return this;
   }
 
+  /**
+   * Returns the type parameters as an array of ts.TypeParameterDeclaration nodes.
+   */
   protected $generics():
-    | ReadonlyArray<TypeOfTsDsl<TypeParamTsDsl>>
+    | ReadonlyArray<ts.TypeParameterDeclaration>
     | undefined {
     return this._generics?.map((g) => {
-      if (typeof g === 'string') {
-        return ts.factory.createTypeParameterDeclaration(
-          undefined,
-          this.$expr(g),
-          undefined,
-          undefined,
-        );
-      }
-      return this.$node(g);
+      const node = typeof g === 'string' ? new TypeParamTsDsl(g) : g;
+      return this.$node(node);
     });
   }
 
-  $render(): ts.Node {
+  $render(): ts.TypeNode {
     throw new Error('noop');
   }
 }
