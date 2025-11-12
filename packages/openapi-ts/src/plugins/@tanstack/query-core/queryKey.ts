@@ -1,10 +1,12 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import type { Expression } from 'typescript';
+import type ts from 'typescript';
 
 import { hasOperationDataRequired } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import { getClientBaseUrlKey } from '~/plugins/@hey-api/client-core/utils';
+import type { TsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 import { type Property, tsc } from '~/tsc';
 
 import { useTypeData } from './shared/useType';
@@ -267,29 +269,21 @@ const createQueryKeyLiteral = ({
   const config = isInfinite
     ? plugin.config.infiniteQueryKeys
     : plugin.config.queryKeys;
-  let tagsExpression: Expression | undefined;
+  let tagsArray: TsDsl<ts.ArrayLiteralExpression> | undefined;
   if (config.tags && operation.tags && operation.tags.length > 0) {
-    tagsExpression = tsc.arrayLiteralExpression({
-      elements: operation.tags.map((tag) => tsc.stringLiteral({ text: tag })),
-    });
+    tagsArray = $.array().items(...operation.tags);
   }
-
   const symbolCreateQueryKey = plugin.referenceSymbol({
     category: 'utility',
     resource: 'createQueryKey',
     tool: plugin.name,
   });
-  const createQueryKeyCallExpression = tsc.callExpression({
-    functionName: symbolCreateQueryKey.placeholder,
-    parameters: [
-      tsc.ots.string(id),
-      'options',
-      isInfinite || tagsExpression
-        ? tsc.ots.boolean(Boolean(isInfinite))
-        : undefined,
-      tagsExpression,
-    ],
-  });
+  const createQueryKeyCallExpression = $(symbolCreateQueryKey.placeholder).call(
+    $.literal(id),
+    'options',
+    isInfinite || tagsArray ? $.literal(Boolean(isInfinite)) : undefined,
+    tagsArray,
+  );
   return createQueryKeyCallExpression;
 };
 
@@ -370,25 +364,22 @@ export const queryKeyStatement = ({
   typeQueryKey?: string;
 }) => {
   const typeData = useTypeData({ operation, plugin });
-  const statement = tsc.constVariable({
-    exportConst: symbol.exported,
-    expression: tsc.arrowFunction({
-      parameters: [
-        {
-          isRequired: hasOperationDataRequired(operation),
-          name: 'options',
-          type: typeData,
-        },
-      ],
-      returnType: isInfinite ? typeQueryKey : undefined,
-      statements: createQueryKeyLiteral({
-        id: operation.id,
-        isInfinite,
-        operation,
-        plugin,
-      }),
-    }),
-    name: symbol.placeholder,
-  });
+  const statement = $.const(symbol.placeholder)
+    .export(symbol.exported)
+    .assign(
+      $.func()
+        .param('options', (p) =>
+          p.optional(!hasOperationDataRequired(operation)).type(typeData),
+        )
+        .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
+        .do(
+          createQueryKeyLiteral({
+            id: operation.id,
+            isInfinite,
+            operation,
+            plugin,
+          }).return(),
+        ),
+    );
   return statement;
 };
