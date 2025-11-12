@@ -20,6 +20,7 @@
 - [David Ovčačík](https://github.com/dovca)
 - [Dmitriy Brolnickij](https://github.com/brolnickij)
 - [Finn Poppinga](https://github.com/fpoppinga)
+- [Flo Edelmann](https://github.com/FloEdelmann)
 - [Florian Lutze](https://github.com/flow96)
 - [Francisco García](https://github.com/goltra)
 - [George Smith](https://github.com/georgesmith46)
