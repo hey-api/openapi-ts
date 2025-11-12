@@ -1,6 +1,10 @@
-import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import type ts from 'typescript';
 
+import type { SchemaWithType } from '~/plugins';
+import type { CallTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
+
+import { pipesToAst } from '../../shared/pipesToAst';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 
@@ -9,28 +13,23 @@ export const booleanToAst = ({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'boolean'>;
-}) => {
+}): ts.Expression => {
+  const pipes: Array<CallTsDsl> = [];
+
   const v = plugin.referenceSymbol({
     category: 'external',
     resource: 'valibot.v',
   });
 
   if (typeof schema.const === 'boolean') {
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.schemas.literal,
-      }),
-      parameters: [tsc.ots.boolean(schema.const)],
-    });
-    return expression;
+    pipes.push(
+      $(v.placeholder)
+        .attr(identifiers.schemas.literal)
+        .call($.literal(schema.const)),
+    );
+    return pipesToAst({ pipes, plugin });
   }
 
-  const expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: v.placeholder,
-      name: identifiers.schemas.boolean,
-    }),
-  });
-  return expression;
+  pipes.push($(v.placeholder).attr(identifiers.schemas.boolean).call());
+  return pipesToAst({ pipes, plugin });
 };

@@ -452,10 +452,10 @@ export const zModelSquare = z.object({
  */
 export const zCompositionWithOneOfDiscriminator = z.union([
     z.intersection(z.object({
-        kind: z.literal('circle')
+        kind: z.literal("circle")
     }), zModelCircle),
     z.intersection(z.object({
-        kind: z.literal('square')
+        kind: z.literal("square")
     }), zModelSquare)
 ]);
 

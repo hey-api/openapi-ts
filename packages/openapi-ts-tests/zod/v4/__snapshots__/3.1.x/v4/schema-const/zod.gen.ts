@@ -3,7 +3,7 @@
 import { z } from 'zod';
 
 export const zFoo = z.object({
-    foo: z.optional(z.literal('foo')),
+    foo: z.optional(z.literal("foo")),
     bar: z.optional(z.literal(3.2)),
     baz: z.optional(z.literal(-1)),
     qux: z.optional(z.literal(true)),
@@ -32,6 +32,6 @@ export const zFoo = z.object({
     integerUint16: z.optional(z.literal(65535)),
     integerUint32: z.optional(z.literal(4294967295)),
     integerUint64: z.optional(z.int()),
-    stringInt64: z.optional(z.literal('-9223372036854775808')),
-    stringUint64: z.optional(z.literal('18446744073709551615'))
+    stringInt64: z.optional(z.literal("-9223372036854775808")),
+    stringUint64: z.optional(z.literal("18446744073709551615"))
 });

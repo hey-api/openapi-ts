@@ -1,10 +1,13 @@
+import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
+import type { CallTsDsl, DollarTsDsl } from '~/ts-dsl';
 import type { StringCase, StringName } from '~/types/case';
 
 import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'valibot'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Resolvers & {
     /**
      * The casing convention to use for generated names.
      *
@@ -176,7 +179,8 @@ export type UserConfig = Plugin.Name<'valibot'> &
   };
 
 export type Config = Plugin.Name<'valibot'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Resolvers & {
     /**
      * The casing convention to use for generated names.
      *
@@ -312,5 +316,47 @@ export type Config = Plugin.Name<'valibot'> &
       name: StringName;
     };
   };
+
+export type FormatResolverArgs = DollarTsDsl & {
+  /**
+   * The current builder state being processed by this resolver.
+   *
+   * In Valibot, this represents the current list of call expressions ("pipes")
+   * being assembled to form a schema definition.
+   *
+   * Each pipe can be extended, modified, or replaced to customize how the
+   * resulting schema is constructed. Returning `undefined` from a resolver will
+   * use the default generation behavior.
+   */
+  pipes: Array<CallTsDsl>;
+  plugin: ValibotPlugin['Instance'];
+  schema: IR.SchemaObject;
+};
+
+type Resolvers = Plugin.Resolvers<{
+  /**
+   * Resolvers for string schemas.
+   *
+   * Allows customization of how string types are rendered, including
+   * per-format handling.
+   */
+  string?: {
+    /**
+     * Resolvers for string formats (e.g., `uuid`, `email`, `date-time`).
+     *
+     * Each key represents a specific format name with a custom
+     * resolver function that controls how that format is rendered.
+     *
+     * Example path: `~resolvers.string.formats.uuid`
+     *
+     * Returning `undefined` from a resolver will apply the default
+     * generation behavior for that format.
+     */
+    formats?: Record<
+      string,
+      (args: FormatResolverArgs) => boolean | number | undefined
+    >;
+  };
+}>;
 
 export type ValibotPlugin = DefinePlugin<UserConfig, Config, IApi>;

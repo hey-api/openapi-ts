@@ -1,5 +1,6 @@
 import type ts from 'typescript';
 
+import { CallTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
 import type { ValibotPlugin } from '../types';
@@ -9,11 +10,11 @@ export const pipesToAst = ({
   pipes,
   plugin,
 }: {
-  pipes: Array<ts.Expression>;
+  pipes: ReadonlyArray<ts.Expression | CallTsDsl>;
   plugin: ValibotPlugin['Instance'];
 }): ts.Expression => {
   if (pipes.length === 1) {
-    return pipes[0]!;
+    return pipes[0] instanceof CallTsDsl ? pipes[0].$render() : pipes[0]!;
   }
 
   const v = plugin.referenceSymbol({

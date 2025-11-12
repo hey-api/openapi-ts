@@ -3,7 +3,7 @@
 import * as v from 'valibot';
 
 export const vFoo = v.object({
-    foo: v.optional(v.literal('foo')),
+    foo: v.optional(v.literal("foo")),
     bar: v.optional(v.literal(3.2)),
     baz: v.optional(v.literal(-1)),
     qux: v.optional(v.literal(true)),

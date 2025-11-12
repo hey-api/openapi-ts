@@ -41,12 +41,12 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'invalid',
-            'full.yaml',
+            // 'full.yaml',
             // 'openai.yaml',
             // 'opencode.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
-            // 'transformers.json',
+            'transformers.json',
             // 'type-format.yaml',
             // 'validators.yaml',
             // 'validators-circular-ref.json',
@@ -269,8 +269,8 @@ export default defineConfig(() => {
           // signature: 'client',
           // signature: 'object',
           // transformer: '@hey-api/transformers',
-          // transformer: true,
-          // validator: true,
+          transformer: true,
+          validator: 'zod',
           // validator: {
           //   request: 'zod',
           //   response: 'zod',
@@ -291,8 +291,8 @@ export default defineConfig(() => {
         },
         {
           // bigInt: true,
-          // dates: true,
-          // name: '@hey-api/transformers',
+          dates: true,
+          name: '@hey-api/transformers',
         },
         {
           // name: 'fastify',
@@ -395,11 +395,19 @@ export default defineConfig(() => {
               // },
             },
           },
+          '~resolvers': {
+            string: {
+              formats: {
+                // date: ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
+                // 'date-time': ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
+              },
+            },
+          },
         },
         {
           // case: 'snake_case',
           // comments: false,
-          compatibilityVersion: 4,
+          compatibilityVersion: 3,
           dates: {
             // local: true,
             // offset: true,
@@ -445,6 +453,14 @@ export default defineConfig(() => {
               //   }
               //   return;
               // },
+            },
+          },
+          '~resolvers': {
+            string: {
+              formats: {
+                // date: ({ $ }) => $('z').attr('date').call(),
+                // 'date-time': ({ $ }) => $('z').attr('date').call(),
+              },
             },
           },
         },
