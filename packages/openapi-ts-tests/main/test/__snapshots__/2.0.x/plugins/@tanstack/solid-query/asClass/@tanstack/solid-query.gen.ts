@@ -41,7 +41,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     ];
 };
 
-export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
+export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey("getFoo", options);
 
 export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -84,7 +84,7 @@ export const fooPutMutation = (options?: Partial<Options<FooPutData>>): Mutation
     return mutationOptions;
 };
 
-export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
+export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQueryKey("getFooBar", options);
 
 export const getFooBarOptions = (options?: Options<GetFooBarData>) => queryOptions<GetFooBarResponse, DefaultError, GetFooBarResponse, ReturnType<typeof getFooBarQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {

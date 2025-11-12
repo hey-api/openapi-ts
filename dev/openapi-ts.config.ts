@@ -41,9 +41,9 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'invalid',
-            // 'full.yaml',
+            'full.yaml',
             // 'openai.yaml',
-            'opencode.yaml',
+            // 'opencode.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
@@ -319,9 +319,10 @@ export default defineConfig(() => {
             },
           },
           name: '@tanstack/react-query',
-          // queryKeys: {
-          //   name: '{{name}}QK',
-          // },
+          queryKeys: {
+            // name: '{{name}}QK',
+            tags: true,
+          },
           // queryOptions: false,
           queryOptions: {
             // meta() {

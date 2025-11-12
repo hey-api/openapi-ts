@@ -1,3 +1,4 @@
+import { ArrayTsDsl } from './array';
 import { AttrTsDsl } from './attr';
 import { AwaitTsDsl } from './await';
 import { BinaryTsDsl } from './binary';
@@ -30,6 +31,10 @@ import { TypeObjectTsDsl } from './type/object';
 import { VarTsDsl } from './var';
 
 const base = {
+  /** Creates an array literal expression (e.g. `[1, 2, 3]`). */
+  array: (...args: ConstructorParameters<typeof ArrayTsDsl>) =>
+    new ArrayTsDsl(...args),
+
   /** Creates a property access expression (e.g. `obj.foo`). */
   attr: (...args: ConstructorParameters<typeof AttrTsDsl>) =>
     new AttrTsDsl(...args),

@@ -13,11 +13,13 @@ export class CallTsDsl extends TsDsl<ts.CallExpression> {
 
   constructor(
     callee: MaybeTsDsl<WithString>,
-    ...args: ReadonlyArray<MaybeTsDsl<WithString>>
+    ...args: ReadonlyArray<MaybeTsDsl<WithString> | undefined>
   ) {
     super();
     this._callee = callee;
-    this.args(...args);
+    this.args(
+      ...args.filter((a): a is NonNullable<typeof a> => a !== undefined),
+    );
   }
 
   $render(): ts.CallExpression {
