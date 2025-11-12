@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.87.3
+
+### Patch Changes
+
+- **valibot**: allow generating custom pipes with `~resolvers` ([#2975](https://github.com/hey-api/openapi-ts/pull/2975)) ([`62a4745`](https://github.com/hey-api/openapi-ts/commit/62a4745c2de331330480d77c9838aa9429e950d7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **zod**: allow generating custom chains with `~resolvers` ([#2975](https://github.com/hey-api/openapi-ts/pull/2975)) ([`62a4745`](https://github.com/hey-api/openapi-ts/commit/62a4745c2de331330480d77c9838aa9429e950d7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **@tanstack/query**: add type annotations to `queryOptions()` ([#2964](https://github.com/hey-api/openapi-ts/pull/2964)) ([`7e1b017`](https://github.com/hey-api/openapi-ts/commit/7e1b01794911b590febaf821369aae0d4d798301)) by [@NovakAnton](https://github.com/NovakAnton)
+
+- **client-fetch**: intercept AbortError ([#2970](https://github.com/hey-api/openapi-ts/pull/2970)) ([`9075309`](https://github.com/hey-api/openapi-ts/commit/90753091a72796f6c6dffb6789ef42ecc4fd4e6b)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **@tanstack/query**: prettier mutation options ([#2972](https://github.com/hey-api/openapi-ts/pull/2972)) ([`50266bd`](https://github.com/hey-api/openapi-ts/commit/50266bdb1524aec72e1fdf5e903bad6bebded5e5)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.87.2
 
 ### Patch Changes
