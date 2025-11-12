@@ -5,6 +5,7 @@ import type { HeyApiClientFetchPlugin } from '~/plugins/@hey-api/client-fetch';
 import type { HeyApiClientNextPlugin } from '~/plugins/@hey-api/client-next';
 import type { HeyApiClientNuxtPlugin } from '~/plugins/@hey-api/client-nuxt';
 import type { HeyApiClientOfetchPlugin } from '~/plugins/@hey-api/client-ofetch';
+import type { HeyApiClientNestjsPlugin } from '~/plugins/@hey-api/client-nestjs';
 
 export interface PluginHandler {
   (...args: Parameters<HeyApiClientAngularPlugin['Handler']>): void;
@@ -13,6 +14,7 @@ export interface PluginHandler {
   (...args: Parameters<HeyApiClientNextPlugin['Handler']>): void;
   (...args: Parameters<HeyApiClientNuxtPlugin['Handler']>): void;
   (...args: Parameters<HeyApiClientOfetchPlugin['Handler']>): void;
+  (...args: Parameters<HeyApiClientNestjsPlugin['Handler']>): void;
 }
 
 /**

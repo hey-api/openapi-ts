@@ -43,6 +43,7 @@ export default defineConfig((options) => ({
       'client-next',
       'client-nuxt',
       'client-ofetch',
+      'client-nestjs',
     ];
 
     for (const pluginName of pluginNames) {

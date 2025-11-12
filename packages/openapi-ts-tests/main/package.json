@@ -31,6 +31,8 @@
     "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@pinia/colada": "0.17.7",
+    "@nestjs/common": "11.1.6",
+    "@nestjs/core": "11.1.6",
     "@tanstack/angular-query-experimental": "5.73.3",
     "@tanstack/react-query": "5.73.3",
     "@tanstack/solid-query": "5.73.3",
