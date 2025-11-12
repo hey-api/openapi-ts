@@ -21,11 +21,17 @@ import useSWRMutation from 'swr/mutation';
 
 import { createClient } from './client/client';
 import { PetSchema } from './client/schemas.gen';
+import { getInventory } from './client/sdk.gen';
 import {
   addPetMutation,
+  findPetsByStatusKey,
+  findPetsByStatusOptions,
+  getInventoryKey,
   getPetByIdOptions,
+  loginUserKey,
   updatePetMutation,
 } from './client/swr.gen';
+// import { getPetByIdKey } from './client/swr.gen'; // For Pattern 2 example
 import type { Pet } from './client/types.gen';
 
 const localClient = createClient({
@@ -59,8 +65,12 @@ function App() {
   const [pet, setPet] = useState<Pet>();
   const [petId, setPetId] = useState<number>();
   const [isRequiredNameError, setIsRequiredNameError] = useState(false);
+  const [showAdvancedExamples, setShowAdvancedExamples] = useState(false);
 
-  // Mutations
+  // ============================================================================
+  // Mutations - using the generated mutation options
+  // ============================================================================
+  // The mutation options provide the key and fetcher following SWR best practices
   const { fetcher: addPetFetcher, key: addPetKey } = addPetMutation();
   const addPet = useSWRMutation(addPetKey, addPetFetcher, {
     onError: (error) => {
@@ -83,7 +93,11 @@ function App() {
     },
   });
 
-  // Query - only fetch if petId is set
+  // ============================================================================
+  // Pattern 1: Using Options (Recommended for most cases)
+  // ============================================================================
+  // The options provide both key and fetcher in the correct format
+  // Conditional fetching is controlled by passing null to useSWR
   const petOptions = petId
     ? getPetByIdOptions({
         client: localClient,
@@ -97,6 +111,75 @@ function App() {
     petOptions?.key ?? null,
     petOptions?.fetcher ?? null,
   );
+
+  // ============================================================================
+  // Pattern 2: Using Key function directly (for custom fetchers)
+  // ============================================================================
+  // Key functions always return a valid key array, never null
+  // This gives you full control over the fetcher while maintaining cache consistency
+  //
+  // Example (disabled to avoid duplicate requests):
+  // const petByIdKey = petId ? getPetByIdKey({ path: { petId } }) : null;
+  // const { data: customFetchedPet } = useSWR(petByIdKey, async (key) => {
+  //   if (!key) return null;
+  //   // Custom fetch logic here - you can add transforms, error handling, etc.
+  //   console.log('Fetching with key:', key);
+  //   const response = await fetch(`/api/pet/${key[1]}`);
+  //   return response.json();
+  // });
+
+  // ============================================================================
+  // Pattern 3: Optional parameters with optional chaining
+  // ============================================================================
+  // When options are optional, keys use optional chaining (options?.query)
+  // This is safe and always returns a valid key
+  const inventoryKey = getInventoryKey(); // No params needed
+  const { data: inventory } = useSWR(
+    showAdvancedExamples ? inventoryKey : null,
+    async () => {
+      // Custom fetcher - you control the implementation
+      const { data } = await getInventory({
+        client: localClient,
+        throwOnError: true,
+      });
+      return data;
+    },
+  );
+
+  // ============================================================================
+  // Pattern 4: Required parameters
+  // ============================================================================
+  // When parameters are required, options must be provided
+  // The key function directly accesses options.query without optional chaining
+  const petsByStatusKey = findPetsByStatusKey({
+    query: { status: 'available' },
+  });
+
+  // Or use the full options for convenience
+  const { fetcher: petsByStatusFetcher, key: petsByStatusKey2 } =
+    findPetsByStatusOptions({
+      client: localClient,
+      query: { status: 'available' },
+    });
+
+  const { data: availablePets } = useSWR(
+    showAdvancedExamples ? petsByStatusKey2 : null,
+    showAdvancedExamples ? petsByStatusFetcher : null,
+  );
+
+  // ============================================================================
+  // Pattern 5: Demonstrating key equality for cache consistency
+  // ============================================================================
+  // Keys with the same parameters will have the same cache entry
+  // This is a core SWR v2 improvement - primitive values in key arrays
+  const loginKey1 = loginUserKey({
+    query: { password: 'pass', username: 'test' },
+  });
+  const loginKey2 = loginUserKey({
+    query: { password: 'pass', username: 'test' },
+  });
+  // loginKey1 and loginKey2 will be treated as the same cache key by SWR
+  // because they have the same primitive values: ['/user/login', { username: 'test', password: 'pass' }]
 
   const onAddPet = async (formData: FormData) => {
     // simple form field validation to demonstrate using schemas
@@ -180,7 +263,10 @@ function App() {
           <Heading>@hey-api/openapi-ts 🤝 SWR</Heading>
         </Flex>
         <Section size="1" />
+
+        {/* Main Demo Section */}
         <Flex direction="column" gapY="2">
+          <Heading size="4">Basic Usage Demo</Heading>
           <Box maxWidth="240px">
             <Card>
               <Flex gap="3" align="center">
@@ -204,6 +290,66 @@ function App() {
           <Button onClick={onGetPetById}>
             <DownloadIcon /> Get Random Pet
           </Button>
+        </Flex>
+
+        <Section size="1" />
+
+        {/* Advanced Examples Toggle */}
+        <Flex direction="column" gapY="2">
+          <Button
+            variant={showAdvancedExamples ? 'solid' : 'outline'}
+            onClick={() => setShowAdvancedExamples(!showAdvancedExamples)}
+          >
+            {showAdvancedExamples ? 'Hide' : 'Show'} Advanced SWR v2 Examples
+          </Button>
+
+          {showAdvancedExamples && (
+            <Card>
+              <Flex direction="column" gapY="2">
+                <Heading size="3">SWR v2 Key Patterns</Heading>
+
+                <Box>
+                  <Text size="2" weight="bold">
+                    Inventory (Optional params):
+                  </Text>
+                  <Text size="1" color="gray">
+                    Key: {JSON.stringify(inventoryKey)}
+                  </Text>
+                  <Text size="1">
+                    Count:{' '}
+                    {inventory ? Object.keys(inventory).length : 'Loading...'}
+                  </Text>
+                </Box>
+
+                <Box>
+                  <Text size="2" weight="bold">
+                    Available Pets (Required params):
+                  </Text>
+                  <Text size="1" color="gray">
+                    Key: {JSON.stringify(petsByStatusKey)}
+                  </Text>
+                  <Text size="1">
+                    Found: {availablePets?.length ?? 'Loading...'} pets
+                  </Text>
+                </Box>
+
+                <Box>
+                  <Text size="2" weight="bold">
+                    Key Equality Demo:
+                  </Text>
+                  <Text size="1" color="gray">
+                    Key 1: {JSON.stringify(loginKey1)}
+                  </Text>
+                  <Text size="1" color="gray">
+                    Key 2: {JSON.stringify(loginKey2)}
+                  </Text>
+                  <Text size="1" color="green">
+                    ✓ These keys are equal and share the same cache
+                  </Text>
+                </Box>
+              </Flex>
+            </Card>
+          )}
         </Flex>
         <Section size="1" />
         <Flex direction="column" gapY="2">
@@ -266,13 +412,24 @@ function App() {
         {/*
           useSWRInfinite Example (for paginated endpoints):
 
-          If your OpenAPI spec has pagination configured, you can use useSWRInfinite:
+          If your OpenAPI spec has pagination configured, the SWR plugin generates
+          infinite options functions (e.g., findPetsByStatusInfinite).
+
+          These functions return an object with:
+          - getKey: Function that generates keys for each page
+          - fetcher: Function that fetches a single page
+
+          Example usage:
 
           import useSWRInfinite from 'swr/infinite';
-          import { getPetsInfinite } from './client/swr.gen';
+          import { findPetsByStatusInfinite } from './client/swr.gen';
 
           function InfinitePetList() {
-            const { getKey, fetcher } = getPetsInfinite();
+            // Get the infinite options with your query parameters
+            const { getKey, fetcher } = findPetsByStatusInfinite({
+              query: { status: 'available' }
+            });
+
             const { data, size, setSize, isLoading } = useSWRInfinite(getKey, fetcher);
 
             const pets = data ? data.flat() : [];
@@ -296,6 +453,9 @@ function App() {
               </div>
             );
           }
+
+          Note: The infinite options are only generated for operations that have
+          pagination configured in the OpenAPI spec.
         */}
       </Container>
     </Box>

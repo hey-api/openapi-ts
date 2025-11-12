@@ -18,6 +18,7 @@ export const defaultConfig: SwrPlugin['Config'] = {
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
+        exported: true,
         name: '{{name}}Key',
       },
       mappers: {

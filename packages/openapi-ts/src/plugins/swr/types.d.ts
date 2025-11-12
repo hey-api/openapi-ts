@@ -89,6 +89,12 @@ export type UserConfig = Plugin.Name<'swr'> &
            */
           enabled?: boolean;
           /**
+           * Whether to export generated symbols.
+           *
+           * @default true
+           */
+          exported?: boolean;
+          /**
            * Custom naming pattern for generated SWR key names. The name variable is
            * obtained from the SDK function name.
            *
@@ -243,6 +249,12 @@ export type Config = Plugin.Name<'swr'> &
        * @default true
        */
       enabled: boolean;
+      /**
+       * Whether to export generated symbols.
+       *
+       * @default true
+       */
+      exported: boolean;
       /**
        * Custom naming pattern for generated SWR key names. The name variable is obtained from the SDK function name.
        *
