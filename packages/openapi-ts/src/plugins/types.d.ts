@@ -10,7 +10,8 @@ export type PluginClientNames =
   | '@hey-api/client-ky'
   | '@hey-api/client-next'
   | '@hey-api/client-nuxt'
-  | '@hey-api/client-ofetch';
+  | '@hey-api/client-ofetch'
+  | '@hey-api/client-nestjs';
 
 export type PluginValidatorNames = 'arktype' | 'valibot' | 'zod';
 

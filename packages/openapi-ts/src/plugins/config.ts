@@ -15,6 +15,8 @@ import type { HeyApiClientNuxtPlugin } from '~/plugins/@hey-api/client-nuxt';
 import { defaultConfig as heyApiClientNuxt } from '~/plugins/@hey-api/client-nuxt';
 import type { HeyApiClientOfetchPlugin } from '~/plugins/@hey-api/client-ofetch';
 import { defaultConfig as heyApiClientOfetch } from '~/plugins/@hey-api/client-ofetch';
+import type { HeyApiClientNestjsPlugin } from '~/plugins/@hey-api/client-nestjs';
+import { defaultConfig as heyApiClientNestjs } from '~/plugins/@hey-api/client-nestjs';
 import type { HeyApiSchemasPlugin } from '~/plugins/@hey-api/schemas';
 import { defaultConfig as heyApiSchemas } from '~/plugins/@hey-api/schemas';
 import type { HeyApiSdkPlugin } from '~/plugins/@hey-api/sdk';
@@ -54,6 +56,7 @@ export interface PluginConfigMap {
   '@hey-api/client-fetch': HeyApiClientFetchPlugin['Types'];
   '@hey-api/client-ky': HeyApiClientKyPlugin['Types'];
   '@hey-api/client-next': HeyApiClientNextPlugin['Types'];
+  '@hey-api/client-nestjs': HeyApiClientNestjsPlugin['Types'];
   '@hey-api/client-nuxt': HeyApiClientNuxtPlugin['Types'];
   '@hey-api/client-ofetch': HeyApiClientOfetchPlugin['Types'];
   '@hey-api/schemas': HeyApiSchemasPlugin['Types'];
@@ -79,6 +82,7 @@ export const defaultPluginConfigs: {
   '@angular/common': angularCommon,
   '@hey-api/client-angular': heyApiClientAngular,
   '@hey-api/client-axios': heyApiClientAxios,
+  '@hey-api/client-nestjs': heyApiClientNestjs,
   '@hey-api/client-fetch': heyApiClientFetch,
   '@hey-api/client-ky': heyApiClientKy,
   '@hey-api/client-next': heyApiClientNext,
