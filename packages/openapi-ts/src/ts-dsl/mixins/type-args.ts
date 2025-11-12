@@ -1,9 +1,9 @@
 import type ts from 'typescript';
 
-import type { MaybeTsDsl, TypeOfTsDsl, WithString } from '../base';
-import { TypeTsDsl } from '../base';
+import type { MaybeTsDsl, TypeOfTsDsl, TypeTsDsl, WithString } from '../base';
+import { TsDsl } from '../base';
 
-export class TypeArgsMixin extends TypeTsDsl {
+export class TypeArgsMixin extends TsDsl {
   protected _generics?: Array<WithString<MaybeTsDsl<TypeOfTsDsl<TypeTsDsl>>>>;
 
   /** Adds a single type argument (e.g. `string` in `Foo<string>`). */
@@ -27,7 +27,7 @@ export class TypeArgsMixin extends TypeTsDsl {
     return this.$type(this._generics);
   }
 
-  $render(): ts.TypeNode {
+  $render(): ts.Node {
     throw new Error('noop');
   }
 }
