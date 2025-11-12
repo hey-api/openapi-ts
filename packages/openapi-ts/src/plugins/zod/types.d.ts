@@ -1,10 +1,13 @@
+import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
+import type { CallTsDsl, DollarTsDsl } from '~/ts-dsl';
 import type { StringCase, StringName } from '~/types/case';
 
 import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'zod'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Resolvers & {
     /**
      * The casing convention to use for generated names.
      *
@@ -417,7 +420,8 @@ export type UserConfig = Plugin.Name<'zod'> &
   };
 
 export type Config = Plugin.Name<'zod'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Resolvers & {
     /**
      * The casing convention to use for generated names.
      *
@@ -738,5 +742,46 @@ export type Config = Plugin.Name<'zod'> &
       };
     };
   };
+
+export type FormatResolverArgs = DollarTsDsl & {
+  /**
+   * The current fluent builder chain under construction for this resolver.
+   *
+   * Represents the in-progress call sequence (e.g., a Zod or DSL chain)
+   * that defines the current schema or expression being generated.
+   *
+   * This chain can be extended, transformed, or replaced entirely to customize
+   * the resulting output of the resolver.
+   */
+  chain: CallTsDsl;
+  plugin: ZodPlugin['Instance'];
+  schema: IR.SchemaObject;
+};
+
+type Resolvers = Plugin.Resolvers<{
+  /**
+   * Resolvers for string schemas.
+   *
+   * Allows customization of how string types are rendered, including
+   * per-format handling.
+   */
+  string?: {
+    /**
+     * Resolvers for string formats (e.g., `uuid`, `email`, `date-time`).
+     *
+     * Each key represents a specific format name with a custom
+     * resolver function that controls how that format is rendered.
+     *
+     * Example path: `~resolvers.string.formats.uuid`
+     *
+     * Returning `undefined` from a resolver will apply the default
+     * generation logic for that format.
+     */
+    formats?: Record<
+      string,
+      (args: FormatResolverArgs) => CallTsDsl | undefined
+    >;
+  };
+}>;
 
 export type ZodPlugin = DefinePlugin<UserConfig, Config, IApi>;

@@ -25,12 +25,12 @@ export const zBaz: z.AnyZodObject = z.object({
 
 export const zQux: z.ZodTypeAny = z.union([
     z.object({
-        type: z.literal('struct')
+        type: z.literal("struct")
     }).and(z.lazy(() => {
         return zCorge;
     })),
     z.object({
-        type: z.literal('array')
+        type: z.literal("array")
     }).and(zFoo)
 ]);
 

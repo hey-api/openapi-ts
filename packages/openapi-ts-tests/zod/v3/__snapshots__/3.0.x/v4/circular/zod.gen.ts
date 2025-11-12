@@ -33,14 +33,14 @@ export const zBaz = z.object({
 
 export const zQux = z.union([
     z.object({
-        type: z.literal('struct')
+        type: z.literal("struct")
     }).and(z.lazy(() => {
         return z.lazy((): any => {
             return zCorge;
         });
     })),
     z.object({
-        type: z.literal('array')
+        type: z.literal("array")
     }).and(zFoo)
 ]);
 

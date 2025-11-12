@@ -17,10 +17,20 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
     return this;
   }
 
+  /** Returns true if object has at least one property or spread. */
+  hasProps(): boolean {
+    return this.props.length > 0;
+  }
+
   /** Sets single line output. */
   inline(): this {
     this.layout = false;
     return this;
+  }
+
+  /** Returns true if object has no properties or spreads. */
+  get isEmpty(): boolean {
+    return !this.props.length;
   }
 
   /** Sets multi line output. */

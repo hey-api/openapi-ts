@@ -20,10 +20,12 @@ import { NotTsDsl } from './not';
 import { ObjectTsDsl } from './object';
 import { ParamTsDsl } from './param';
 import { PatternTsDsl } from './pattern';
+import { RegExpTsDsl } from './regexp';
 import { ReturnTsDsl } from './return';
 import { SetterTsDsl } from './setter';
 import { TemplateTsDsl } from './template';
 import { ThrowTsDsl } from './throw';
+import { TypeAliasTsDsl } from './type/alias';
 import { TypeAttrTsDsl } from './type/attr';
 import { TypeExprTsDsl } from './type/expr';
 import { TypeLiteralTsDsl } from './type/literal';
@@ -135,6 +137,10 @@ const base = {
   pattern: (...args: ConstructorParameters<typeof PatternTsDsl>) =>
     new PatternTsDsl(...args),
 
+  /** Creates a regular expression literal (e.g. `/foo/gi`). */
+  regexp: (...args: ConstructorParameters<typeof RegExpTsDsl>) =>
+    new RegExpTsDsl(...args),
+
   /** Creates a return statement. */
   return: (...args: ConstructorParameters<typeof ReturnTsDsl>) =>
     new ReturnTsDsl(...args),
@@ -156,6 +162,10 @@ const base = {
     (...args: ConstructorParameters<typeof TypeExprTsDsl>) =>
       new TypeExprTsDsl(...args),
     {
+      /** Creates a type alias declaration (e.g. `type Foo = Bar`). */
+      alias: (...args: ConstructorParameters<typeof TypeAliasTsDsl>) =>
+        new TypeAliasTsDsl(...args),
+
       /** Creates a qualified type reference (e.g. Foo.Bar). */
       attr: (...args: ConstructorParameters<typeof TypeAttrTsDsl>) =>
         new TypeAttrTsDsl(...args),
@@ -179,10 +189,61 @@ const base = {
     new VarTsDsl(...args),
 };
 
-/** Creates a general expression node. */
 export const $ = Object.assign(
   (...args: ConstructorParameters<typeof ExprTsDsl>) => new ExprTsDsl(...args),
   base,
 );
+export type DollarTsDsl = {
+  /**
+   * Entry point to the TypeScript DSL.
+   *
+   * `$` creates a general expression node by default, but also exposes
+   * builders for all other constructs such as `.type()`, `.call()`,
+   * `.object()`, `.func()`, etc.
+   *
+   * Example:
+   * ```ts
+   * const node = $('console').attr('log').call($.literal('Hello'));
+   * ```
+   *
+   * Returns:
+   * - A new `ExprTsDsl` instance when called directly.
+   * - The `base` factory object for constructing more specific nodes.
+   */
+  $: typeof $;
+};
 
+export { ArrayTsDsl } from './array';
+export { AttrTsDsl } from './attr';
+export { AwaitTsDsl } from './await';
 export { TsDsl } from './base';
+export { BinaryTsDsl } from './binary';
+export { CallTsDsl } from './call';
+export { ClassTsDsl } from './class';
+export { DecoratorTsDsl } from './decorator';
+export { DescribeTsDsl } from './describe';
+export { ExprTsDsl } from './expr';
+export { FieldTsDsl } from './field';
+export { FuncTsDsl } from './func';
+export { GetterTsDsl } from './getter';
+export { IfTsDsl } from './if';
+export { InitTsDsl } from './init';
+export { LiteralTsDsl } from './literal';
+export { MethodTsDsl } from './method';
+export { NewTsDsl } from './new';
+export { NewlineTsDsl } from './newline';
+export { NotTsDsl } from './not';
+export { ObjectTsDsl } from './object';
+export { ParamTsDsl } from './param';
+export { PatternTsDsl } from './pattern';
+export { RegExpTsDsl } from './regexp';
+export { ReturnTsDsl } from './return';
+export { SetterTsDsl } from './setter';
+export { TemplateTsDsl } from './template';
+export { ThrowTsDsl } from './throw';
+export { TypeAliasTsDsl } from './type/alias';
+export { TypeAttrTsDsl } from './type/attr';
+export { TypeExprTsDsl } from './type/expr';
+export { TypeLiteralTsDsl } from './type/literal';
+export { TypeObjectTsDsl } from './type/object';
+export { VarTsDsl } from './var';

@@ -53,9 +53,7 @@ export const zPatchFooData = z.object({
             baz: z.string().optional()
         }).optional(),
         qux: z.string().date().optional(),
-        quux: z.string().datetime({
-            offset: true
-        }).optional()
+        quux: z.string().datetime({ offset: true }).optional()
     }).optional()
 });
 
