@@ -6,6 +6,8 @@ import { TsDsl } from './base';
 import { AccessMixin } from './mixins/access';
 import { mixin } from './mixins/apply';
 import { OperatorMixin } from './mixins/operator';
+import { TypeExprTsDsl } from './type/expr';
+import { TypeQueryTsDsl } from './type/query';
 
 export class ExprTsDsl extends TsDsl<ts.Expression> {
   private _exprInput: MaybeTsDsl<WithString>;
@@ -13,6 +15,14 @@ export class ExprTsDsl extends TsDsl<ts.Expression> {
   constructor(id: MaybeTsDsl<WithString>) {
     super();
     this._exprInput = id;
+  }
+
+  typeof(): TypeQueryTsDsl {
+    return new TypeQueryTsDsl(this);
+  }
+
+  returnType(): TypeExprTsDsl {
+    return new TypeExprTsDsl('ReturnType').generic(this.typeof());
   }
 
   $render(): ts.Expression {

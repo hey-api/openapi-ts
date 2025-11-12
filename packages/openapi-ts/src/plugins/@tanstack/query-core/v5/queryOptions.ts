@@ -1,5 +1,3 @@
-import ts from 'typescript';
-
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import {
@@ -142,11 +140,7 @@ export const createQueryOptions = ({
               typeResponse,
               typeError,
               typeResponse,
-              ts.factory.createTypeReferenceNode('ReturnType', [
-                ts.factory.createTypeQueryNode(
-                  ts.factory.createIdentifier(symbolQueryKey.placeholder),
-                ),
-              ]),
+              $(symbolQueryKey.placeholder).returnType(),
             )
             .return(),
         ),
