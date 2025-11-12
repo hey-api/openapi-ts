@@ -406,3 +406,108 @@ describe('request interceptor', () => {
     },
   );
 });
+
+describe('error interceptor for fetch exceptions', () => {
+  it('intercepts AbortError when fetch is aborted', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+
+    const abortError = new DOMException(
+      'The operation was aborted',
+      'AbortError',
+    );
+    const mockFetch: MockFetch = vi.fn().mockRejectedValue(abortError);
+
+    const mockErrorInterceptor = vi.fn().mockImplementation((error) => {
+      expect(error).toBe(abortError);
+      return { message: 'Request was aborted', type: 'abort' };
+    });
+
+    const interceptorId = client.interceptors.error.use(mockErrorInterceptor);
+
+    const result = await client.get({
+      fetch: mockFetch,
+      url: '/test',
+    });
+
+    expect(mockErrorInterceptor).toHaveBeenCalledOnce();
+    expect(result.error).toEqual({
+      message: 'Request was aborted',
+      type: 'abort',
+    });
+
+    client.interceptors.error.eject(interceptorId);
+  });
+
+  it('intercepts network errors', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+
+    const networkError = new TypeError('Failed to fetch');
+    const mockFetch: MockFetch = vi.fn().mockRejectedValue(networkError);
+
+    const mockErrorInterceptor = vi.fn().mockImplementation((error) => {
+      expect(error).toBe(networkError);
+      return { message: 'Network error occurred', type: 'network' };
+    });
+
+    const interceptorId = client.interceptors.error.use(mockErrorInterceptor);
+
+    const result = await client.get({
+      fetch: mockFetch,
+      url: '/test',
+    });
+
+    expect(mockErrorInterceptor).toHaveBeenCalledOnce();
+    expect(result.error).toEqual({
+      message: 'Network error occurred',
+      type: 'network',
+    });
+
+    client.interceptors.error.eject(interceptorId);
+  });
+
+  it('throws AbortError when throwOnError is true', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+
+    const abortError = new DOMException(
+      'The operation was aborted',
+      'AbortError',
+    );
+    const mockFetch: MockFetch = vi.fn().mockRejectedValue(abortError);
+
+    const mockErrorInterceptor = vi.fn().mockImplementation(() => ({
+      message: 'Request was aborted',
+      type: 'abort',
+    }));
+
+    const interceptorId = client.interceptors.error.use(mockErrorInterceptor);
+
+    await expect(
+      client.get({
+        fetch: mockFetch,
+        throwOnError: true,
+        url: '/test',
+      }),
+    ).rejects.toEqual({ message: 'Request was aborted', type: 'abort' });
+
+    expect(mockErrorInterceptor).toHaveBeenCalledOnce();
+
+    client.interceptors.error.eject(interceptorId);
+  });
+
+  it('handles fetch exceptions without error interceptor', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+
+    const abortError = new DOMException(
+      'The operation was aborted',
+      'AbortError',
+    );
+    const mockFetch: MockFetch = vi.fn().mockRejectedValue(abortError);
+
+    const result = await client.get({
+      fetch: mockFetch,
+      url: '/test',
+    });
+
+    expect(result.error).toBe(abortError);
+  });
+});
