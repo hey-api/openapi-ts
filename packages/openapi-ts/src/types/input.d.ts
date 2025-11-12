@@ -182,6 +182,12 @@ export type Watch = {
    */
   interval?: number;
   /**
+   * Does the remote server support `HEAD` requests for change detection?
+   * Set this to `false` if you know the endpoint does not implement `HEAD`
+   * to avoid unnecessary requests during watch mode.
+   */
+  isHeadMethodSupported?: boolean;
+  /**
    * How long will we wait before the request times out?
    *
    * @default 60_000
