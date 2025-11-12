@@ -1,13 +1,33 @@
-import ts from 'typescript';
+import type ts from 'typescript';
 
 import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
-import { numberRegExp } from '~/utils/regexp';
+import type { CallTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { ObjectBaseResolverArgs } from '../../types';
 import { irSchemaToAst } from '../plugin';
+
+function defaultObjectBaseResolver({
+  additional,
+  plugin,
+  shape,
+}: ObjectBaseResolverArgs): CallTsDsl {
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
+
+  if (additional) {
+    return $(z.placeholder)
+      .attr(identifiers.record)
+      .call($(z.placeholder).attr(identifiers.string).call(), additional);
+  }
+
+  return $(z.placeholder).attr(identifiers.object).call(shape);
+}
 
 export const objectToAst = ({
   plugin,
@@ -16,17 +36,11 @@ export const objectToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'object'>;
 }): Omit<Ast, 'typeName'> => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
-
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
   // TODO: parser - handle constants
-  const properties: Array<ts.PropertyAssignment | ts.GetAccessorDeclaration> =
-    [];
 
+  const shape = $.object().pretty();
   const required = schema.required ?? [];
 
   for (const name in schema.properties) {
@@ -46,47 +60,14 @@ export const objectToAst = ({
       result.hasLazyExpression = true;
     }
 
-    numberRegExp.lastIndex = 0;
-    let propertyName;
-    if (numberRegExp.test(name)) {
-      // For numeric literals, we'll handle negative numbers by using a string literal
-      // instead of trying to use a PrefixUnaryExpression
-      propertyName = name.startsWith('-')
-        ? ts.factory.createStringLiteral(name)
-        : ts.factory.createNumericLiteral(name);
-    } else {
-      propertyName = name;
-    }
-    // TODO: parser - abstract safe property name logic
-    if (
-      ((name.match(/^[0-9]/) && name.match(/\D+/g)) || name.match(/\W/g)) &&
-      !name.startsWith("'") &&
-      !name.endsWith("'")
-    ) {
-      propertyName = `'${name}'`;
-    }
-
     if (propertyAst.hasLazyExpression) {
-      properties.push(
-        tsc.getAccessorDeclaration({
-          name: propertyName,
-          statements: [
-            tsc.returnStatement({
-              expression: propertyAst.expression,
-            }),
-          ],
-        }),
-      );
+      shape.getter(name, $(propertyAst.expression).return());
     } else {
-      properties.push(
-        tsc.propertyAssignment({
-          initializer: propertyAst.expression,
-          name: propertyName,
-        }),
-      );
+      shape.prop(name, propertyAst.expression);
     }
   }
 
+  let additional: ts.Expression | null | undefined;
   if (
     schema.additionalProperties &&
     (!schema.properties || !Object.keys(schema.properties).length)
@@ -99,35 +80,21 @@ export const objectToAst = ({
         path: toRef([...state.path.value, 'additionalProperties']),
       },
     });
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.record,
-      }),
-      parameters: [
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.string,
-          }),
-          parameters: [],
-        }),
-        additionalAst.expression,
-      ],
-    });
-    if (additionalAst.hasLazyExpression) {
-      result.hasLazyExpression = true;
-    }
-    return result as Omit<Ast, 'typeName'>;
+    if (additionalAst.hasLazyExpression) result.hasLazyExpression = true;
+    additional = additionalAst.expression;
   }
 
-  result.expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: z.placeholder,
-      name: identifiers.object,
-    }),
-    parameters: [ts.factory.createObjectLiteralExpression(properties, true)],
-  });
+  const args: ObjectBaseResolverArgs = {
+    $,
+    additional,
+    chain: undefined,
+    plugin,
+    schema,
+    shape,
+  };
+  const resolver = plugin.config['~resolvers']?.object?.base;
+  const chain = resolver?.(args) ?? defaultObjectBaseResolver(args);
+  result.expression = chain.$render();
 
   return result as Omit<Ast, 'typeName'>;
 };

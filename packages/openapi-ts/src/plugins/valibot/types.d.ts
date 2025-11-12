@@ -1,6 +1,8 @@
+import type ts from 'typescript';
+
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
-import type { CallTsDsl, DollarTsDsl } from '~/ts-dsl';
+import type { CallTsDsl, DollarTsDsl, ObjectTsDsl } from '~/ts-dsl';
 import type { StringCase, StringName } from '~/types/case';
 
 import type { IApi } from './api';
@@ -317,7 +319,7 @@ export type Config = Plugin.Name<'valibot'> &
     };
   };
 
-export type FormatResolverArgs = DollarTsDsl & {
+type SharedResolverArgs = DollarTsDsl & {
   /**
    * The current builder state being processed by this resolver.
    *
@@ -330,10 +332,42 @@ export type FormatResolverArgs = DollarTsDsl & {
    */
   pipes: Array<CallTsDsl>;
   plugin: ValibotPlugin['Instance'];
+};
+
+export type FormatResolverArgs = SharedResolverArgs & {
   schema: IR.SchemaObject;
 };
 
+export type ObjectBaseResolverArgs = SharedResolverArgs & {
+  /** Null = never */
+  additional?: ts.Expression | null;
+  schema: IR.SchemaObject;
+  shape: ObjectTsDsl;
+};
+
 type Resolvers = Plugin.Resolvers<{
+  /**
+   * Resolvers for object schemas.
+   *
+   * Allows customization of how object types are rendered.
+   *
+   * Example path: `~resolvers.object.base`
+   *
+   * Returning `undefined` from a resolver will apply the default
+   * generation behavior for the object schema.
+   */
+  object?: {
+    /**
+     * Controls how object schemas are constructed.
+     *
+     * Called with the fully assembled shape (properties) and any additional
+     * property schema, allowing the resolver to choose the correct Valibot
+     * base constructor and modify the schema chain if needed.
+     *
+     * Returning `undefined` will execute the default resolver logic.
+     */
+    base?: (args: ObjectBaseResolverArgs) => CallTsDsl | undefined;
+  };
   /**
    * Resolvers for string schemas.
    *

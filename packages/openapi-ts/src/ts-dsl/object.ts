@@ -1,19 +1,39 @@
 import ts from 'typescript';
 
+import { numberRegExp } from '~/utils/regexp';
+
 import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
+import { GetterTsDsl } from './getter';
+import { SetterTsDsl } from './setter';
 
 export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
   private static readonly DEFAULT_THRESHOLD = 3;
   private layout: boolean | number = ObjectTsDsl.DEFAULT_THRESHOLD;
   private props: Array<
+    | {
+        expr: WithString<MaybeTsDsl<ts.Statement>>;
+        kind: 'getter';
+        name: string;
+      }
     | { expr: MaybeTsDsl<WithString>; kind: 'prop'; name: string }
+    | {
+        expr: WithString<MaybeTsDsl<ts.Statement>>;
+        kind: 'setter';
+        name: string;
+      }
     | { expr: MaybeTsDsl<WithString>; kind: 'spread' }
   > = [];
 
   /** Sets automatic line output with optional threshold (default: 3). */
   auto(threshold: number = ObjectTsDsl.DEFAULT_THRESHOLD): this {
     this.layout = threshold;
+    return this;
+  }
+
+  /** Adds a getter property (e.g. `{ get foo() { ... } }`). */
+  getter(name: string, expr: WithString<MaybeTsDsl<ts.Statement>>): this {
+    this.props.push({ expr, kind: 'getter', name });
     return this;
   }
 
@@ -45,6 +65,12 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
     return this;
   }
 
+  /** Adds a setter property (e.g. `{ set foo(v) { ... } }`). */
+  setter(name: string, expr: WithString<MaybeTsDsl<ts.Statement>>): this {
+    this.props.push({ expr, kind: 'setter', name });
+    return this;
+  }
+
   /** Adds a spread property (e.g. `{ ...options }`). */
   spread(expr: MaybeTsDsl<WithString>): this {
     this.props.push({ expr, kind: 'spread' });
@@ -55,10 +81,38 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
   $render(): ts.ObjectLiteralExpression {
     const props = this.props.map((p) => {
       const node = this.$node(p.expr);
-      if (p.kind === 'spread') return ts.factory.createSpreadAssignment(node);
-      return ts.isIdentifier(node) && node.text === p.name
-        ? ts.factory.createShorthandPropertyAssignment(p.name)
-        : ts.factory.createPropertyAssignment(p.name, node);
+      if (p.kind === 'spread') {
+        if (ts.isStatement(node)) {
+          throw new Error(
+            'Invalid spread: object spread must be an expression, not a statement.',
+          );
+        }
+        return ts.factory.createSpreadAssignment(node);
+      }
+      if (p.kind === 'getter') {
+        const getter = new GetterTsDsl(
+          this.safePropertyName(p.name) as string,
+        ).do(node);
+        return this.$node(getter);
+      }
+      if (p.kind === 'setter') {
+        const setter = new SetterTsDsl(
+          this.safePropertyName(p.name) as string,
+        ).do(node);
+        return this.$node(setter);
+      }
+      if (ts.isIdentifier(node) && node.text === p.name) {
+        return ts.factory.createShorthandPropertyAssignment(p.name);
+      }
+      if (ts.isStatement(node)) {
+        throw new Error(
+          'Invalid property: object property value must be an expression, not a statement.',
+        );
+      }
+      return ts.factory.createPropertyAssignment(
+        this.safePropertyName(p.name),
+        node,
+      );
     });
 
     const multiLine =
@@ -67,5 +121,27 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
         : this.layout;
 
     return ts.factory.createObjectLiteralExpression(props, multiLine);
+  }
+
+  private safePropertyName(name: string): string | ts.PropertyName {
+    let propertyName: string | ts.PropertyName;
+    numberRegExp.lastIndex = 0;
+    if (numberRegExp.test(name)) {
+      // For numeric literals, we'll handle negative numbers by using a string literal
+      // instead of trying to use a PrefixUnaryExpression
+      propertyName = name.startsWith('-')
+        ? ts.factory.createStringLiteral(name)
+        : ts.factory.createNumericLiteral(name);
+    } else {
+      propertyName = name;
+    }
+    if (
+      ((name.match(/^[0-9]/) && name.match(/\D+/g)) || name.match(/\W/g)) &&
+      !name.startsWith("'") &&
+      !name.endsWith("'")
+    ) {
+      propertyName = `'${name}'`;
+    }
+    return propertyName;
   }
 }
