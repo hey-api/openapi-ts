@@ -126,7 +126,7 @@ export const createQueryOptions = ({
     .export(symbolQueryOptionsFn.exported)
     .$if(
       plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.describe(v as Array<string>),
+      (c, v) => c.describe(v as ReadonlyArray<string>),
     )
     .assign(
       $.func()

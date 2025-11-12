@@ -310,9 +310,14 @@ export default defineConfig(() => {
           // infiniteQueryOptions: {
           //   name: '{{name}}IQO',
           // },
-          // mutationOptions: {
-          //   name: '{{name}}MO',
-          // },
+          mutationOptions: {
+            // name: '{{name}}MO',
+            meta() {
+              return {
+                custom: 'value',
+              };
+            },
+          },
           name: '@tanstack/react-query',
           // queryKeys: {
           //   name: '{{name}}QK',
