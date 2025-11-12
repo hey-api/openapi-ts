@@ -1,10 +1,10 @@
 import type ts from 'typescript';
 
 import type { MaybeTsDsl, TypeOfTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { TypeParamTsDsl } from '../type/param';
 
-export class TypeParamsMixin extends TypeTsDsl {
+export class TypeParamsMixin extends TsDsl {
   protected _generics?: Array<string | MaybeTsDsl<TypeOfTsDsl<TypeParamTsDsl>>>;
 
   /** Adds a single type parameter (e.g. `T` in `Array<T>`). */
@@ -34,7 +34,7 @@ export class TypeParamsMixin extends TypeTsDsl {
     });
   }
 
-  $render(): ts.TypeNode {
+  $render(): ts.Node {
     throw new Error('noop');
   }
 }
