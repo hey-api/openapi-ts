@@ -32,7 +32,7 @@ export function registerLazyAccessAwaitFactory(factory: AwaitFactory): void {
 
 type CallFactory = (
   expr: MaybeTsDsl<WithString>,
-  args: ReadonlyArray<MaybeTsDsl<WithString>>,
+  args: ReadonlyArray<MaybeTsDsl<WithString> | undefined>,
 ) => CallTsDsl;
 let callFactory: CallFactory | undefined;
 /** Registers the Call DSL factory after its module has finished evaluating. */
@@ -64,7 +64,7 @@ export class AccessMixin {
   /** Calls the current expression (e.g. `fn(arg1, arg2)`). */
   call(
     this: MaybeTsDsl<WithString>,
-    ...args: ReadonlyArray<MaybeTsDsl<WithString>>
+    ...args: ReadonlyArray<MaybeTsDsl<WithString> | undefined>
   ): CallTsDsl {
     return callFactory!(this, args);
   }
