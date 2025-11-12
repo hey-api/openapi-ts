@@ -5,7 +5,7 @@ import {
   hasOperationSse,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { useTypeData } from '../shared/useType';
 import type { PluginInstance } from '../types';
@@ -53,34 +53,22 @@ export const createUseQuery = ({
     role: 'queryOptions',
     tool: plugin.name,
   });
-  const statement = tsc.constVariable({
-    comment: plugin.config.comments
-      ? createOperationComment({ operation })
-      : undefined,
-    exportConst: symbolUseQueryFn.exported,
-    expression: tsc.arrowFunction({
-      parameters: [
-        {
-          isRequired: isRequiredOptions,
-          name: optionsParamName,
-          type: typeData,
-        },
-      ],
-      statements: [
-        tsc.returnStatement({
-          expression: tsc.callExpression({
-            functionName: symbolUseQuery.placeholder,
-            parameters: [
-              tsc.callExpression({
-                functionName: symbolQueryOptionsFn.placeholder,
-                parameters: [optionsParamName],
-              }),
-            ],
-          }),
-        }),
-      ],
-    }),
-    name: symbolUseQueryFn.placeholder,
-  });
+  const statement = $.const(symbolUseQueryFn.placeholder)
+    .export(symbolUseQueryFn.exported)
+    .$if(
+      plugin.config.comments && createOperationComment({ operation }),
+      (c, v) => c.describe(v as ReadonlyArray<string>),
+    )
+    .assign(
+      $.func()
+        .param(optionsParamName, (p) =>
+          p.optional(!isRequiredOptions).type(typeData),
+        )
+        .do(
+          $(symbolUseQuery.placeholder)
+            .call($(symbolQueryOptionsFn.placeholder).call(optionsParamName))
+            .return(),
+        ),
+    );
   plugin.setSymbolValue(symbolUseQueryFn, statement);
 };
