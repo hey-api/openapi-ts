@@ -1,153 +1,114 @@
 import type ts from 'typescript';
 
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import type { CallTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import { pipesToAst } from '../../shared/pipesToAst';
 import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { FormatResolverArgs } from '../../types';
 import { identifiers } from '../constants';
+
+const defaultFormatResolver = ({
+  pipes,
+  plugin,
+  schema,
+}: FormatResolverArgs): boolean | number => {
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
+
+  switch (schema.format) {
+    case 'date':
+      return pipes.push(
+        $(v.placeholder).attr(identifiers.actions.isoDate).call(),
+      );
+    case 'date-time':
+      return pipes.push(
+        $(v.placeholder).attr(identifiers.actions.isoTimestamp).call(),
+      );
+    case 'email':
+      return pipes.push(
+        $(v.placeholder).attr(identifiers.actions.email).call(),
+      );
+    case 'ipv4':
+    case 'ipv6':
+      return pipes.push($(v.placeholder).attr(identifiers.actions.ip).call());
+    case 'time':
+      return pipes.push(
+        $(v.placeholder).attr(identifiers.actions.isoTimeSecond).call(),
+      );
+    case 'uri':
+      return pipes.push($(v.placeholder).attr(identifiers.actions.url).call());
+    case 'uuid':
+      return pipes.push($(v.placeholder).attr(identifiers.actions.uuid).call());
+  }
+
+  return true;
+};
 
 export const stringToAst = ({
   plugin,
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
-}) => {
+}): ts.Expression => {
+  const pipes: Array<CallTsDsl> = [];
+
   const v = plugin.referenceSymbol({
     category: 'external',
     resource: 'valibot.v',
   });
 
   if (typeof schema.const === 'string') {
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.schemas.literal,
-      }),
-      parameters: [tsc.ots.string(schema.const)],
-    });
-    return expression;
+    pipes.push(
+      $(v.placeholder)
+        .attr(identifiers.schemas.literal)
+        .call($.literal(schema.const)),
+    );
+    return pipesToAst({ pipes, plugin });
   }
 
-  const pipes: Array<ts.CallExpression> = [];
-
-  const expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: v.placeholder,
-      name: identifiers.schemas.string,
-    }),
-  });
-  pipes.push(expression);
+  pipes.push($(v.placeholder).attr(identifiers.schemas.string).call());
 
   if (schema.format) {
-    switch (schema.format) {
-      case 'date':
-        pipes.push(
-          tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: v.placeholder,
-              name: identifiers.actions.isoDate,
-            }),
-          }),
-        );
-        break;
-      case 'date-time':
-        pipes.push(
-          tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: v.placeholder,
-              name: identifiers.actions.isoTimestamp,
-            }),
-          }),
-        );
-        break;
-      case 'ipv4':
-      case 'ipv6':
-        pipes.push(
-          tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: v.placeholder,
-              name: identifiers.actions.ip,
-            }),
-          }),
-        );
-        break;
-      case 'time':
-        pipes.push(
-          tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: v.placeholder,
-              name: identifiers.actions.isoTimeSecond,
-            }),
-          }),
-        );
-        break;
-      case 'uri':
-        pipes.push(
-          tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: v.placeholder,
-              name: identifiers.actions.url,
-            }),
-          }),
-        );
-        break;
-      case 'email':
-      case 'uuid':
-        pipes.push(
-          tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: v.placeholder,
-              name: tsc.identifier({ text: schema.format }),
-            }),
-          }),
-        );
-        break;
-    }
+    const args: FormatResolverArgs = { $, pipes, plugin, schema };
+    const resolver =
+      plugin.config['~resolvers']?.string?.formats?.[schema.format];
+    if (!resolver?.(args)) defaultFormatResolver(args);
   }
 
   if (schema.minLength === schema.maxLength && schema.minLength !== undefined) {
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.actions.length,
-      }),
-      parameters: [tsc.valueToExpression({ value: schema.minLength })],
-    });
-    pipes.push(expression);
+    pipes.push(
+      $(v.placeholder)
+        .attr(identifiers.actions.length)
+        .call($.literal(schema.minLength)),
+    );
   } else {
     if (schema.minLength !== undefined) {
-      const expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.actions.minLength,
-        }),
-        parameters: [tsc.valueToExpression({ value: schema.minLength })],
-      });
-      pipes.push(expression);
+      pipes.push(
+        $(v.placeholder)
+          .attr(identifiers.actions.minLength)
+          .call($.literal(schema.minLength)),
+      );
     }
 
     if (schema.maxLength !== undefined) {
-      const expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.actions.maxLength,
-        }),
-        parameters: [tsc.valueToExpression({ value: schema.maxLength })],
-      });
-      pipes.push(expression);
+      pipes.push(
+        $(v.placeholder)
+          .attr(identifiers.actions.maxLength)
+          .call($.literal(schema.maxLength)),
+      );
     }
   }
 
   if (schema.pattern) {
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.actions.regex,
-      }),
-      parameters: [tsc.regularExpressionLiteral({ text: schema.pattern })],
-    });
-    pipes.push(expression);
+    pipes.push(
+      $(v.placeholder)
+        .attr(identifiers.actions.regex)
+        .call($.regexp(schema.pattern)),
+    );
   }
 
   return pipesToAst({ pipes, plugin });

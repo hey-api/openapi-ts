@@ -271,7 +271,7 @@ const createQueryKeyLiteral = ({
     : plugin.config.queryKeys;
   let tagsArray: TsDsl<ts.ArrayLiteralExpression> | undefined;
   if (config.tags && operation.tags && operation.tags.length > 0) {
-    tagsArray = $.array().items(...operation.tags);
+    tagsArray = $.array().elements(...operation.tags);
   }
   const symbolCreateQueryKey = plugin.referenceSymbol({
     category: 'utility',

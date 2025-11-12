@@ -105,6 +105,25 @@ export namespace Plugin {
     name: Name;
   }
 
+  /**
+   * Generic wrapper for plugin resolvers.
+   *
+   * Provides a namespaced configuration entry (`~resolvers`)
+   * where plugins can define how specific schema constructs
+   * should be resolved or overridden.
+   */
+  export type Resolvers<
+    T extends Record<string, unknown> = Record<string, unknown>,
+  > = {
+    /**
+     * Custom behavior resolvers for a plugin.
+     *
+     * Used to define how specific schema constructs are
+     * resolved into AST or runtime logic.
+     */
+    '~resolvers'?: T;
+  };
+
   export type Types<
     Config extends BaseConfig = BaseConfig,
     ResolvedConfig extends BaseConfig = Config,
