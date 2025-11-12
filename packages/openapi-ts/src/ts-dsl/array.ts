@@ -4,19 +4,19 @@ import { TsDsl } from './base';
 import { LiteralTsDsl } from './literal';
 
 export class ArrayTsDsl extends TsDsl<ts.ArrayLiteralExpression> {
-  private elements: Array<string | number | boolean | TsDsl<ts.Expression>> =
+  private _elements: Array<string | number | boolean | TsDsl<ts.Expression>> =
     [];
 
   /** Adds one or more elements to the array expression. */
-  items(
+  elements(
     ...exprs: ReadonlyArray<string | number | boolean | TsDsl<ts.Expression>>
   ): this {
-    this.elements.push(...exprs);
+    this._elements.push(...exprs);
     return this;
   }
 
   $render(): ts.ArrayLiteralExpression {
-    const elements = this.elements.map((element) => {
+    const elements = this._elements.map((element) => {
       if (
         typeof element === 'string' ||
         typeof element === 'number' ||

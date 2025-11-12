@@ -1,9 +1,8 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../constants';
 import type { ZodPlugin } from '../types';
@@ -27,38 +26,24 @@ export const exportAst = ({
     resource: 'zod.z',
   });
 
-  const statement = tsc.constVariable({
-    comment: plugin.config.comments
-      ? createSchemaComment({ schema })
-      : undefined,
-    exportConst: symbol.exported,
-    expression: ast.expression,
-    name: symbol.placeholder,
-    typeName: ast.typeName
-      ? (tsc.propertyAccessExpression({
-          expression: z.placeholder,
-          name: ast.typeName,
-        }) as unknown as ts.TypeNode)
-      : undefined,
-  });
+  const statement = $.const(symbol.placeholder)
+    .export(symbol.exported)
+    .$if(plugin.config.comments && createSchemaComment({ schema }), (c, v) =>
+      c.describe(v as ReadonlyArray<string>),
+    )
+    .$if(ast.typeName, (c, v) => c.type($.type(z.placeholder).attr(v)))
+    .assign(ast.expression);
   plugin.setSymbolValue(symbol, statement);
 
   if (typeInferSymbol) {
-    const inferType = tsc.typeAliasDeclaration({
-      exportType: typeInferSymbol.exported,
-      name: typeInferSymbol.placeholder,
-      type: tsc.typeReferenceNode({
-        typeArguments: [
-          tsc.typeOfExpression({
-            text: symbol.placeholder,
-          }) as unknown as ts.TypeNode,
-        ],
-        typeName: tsc.propertyAccessExpression({
-          expression: z.placeholder,
-          name: identifiers.infer,
-        }) as unknown as string,
-      }),
-    });
+    const inferType = $.type
+      .alias(typeInferSymbol.placeholder)
+      .export(typeInferSymbol.exported)
+      .type(
+        $.type(z.placeholder)
+          .attr(identifiers.infer)
+          .generic($(symbol.placeholder).typeof()),
+      );
     plugin.setSymbolValue(typeInferSymbol, inferType);
   }
 };
