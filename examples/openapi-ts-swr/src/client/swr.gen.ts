@@ -51,7 +51,7 @@ import type {
  */
 export const addPetMutation = (options?: Options<AddPetData>) => ({
   fetcher: async (
-    _key: unknown,
+    _key: string,
     {
       arg,
     }: {
@@ -75,7 +75,7 @@ export const addPetMutation = (options?: Options<AddPetData>) => ({
  */
 export const updatePetMutation = (options?: Options<UpdatePetData>) => ({
   fetcher: async (
-    _key: unknown,
+    _key: string,
     {
       arg,
     }: {
@@ -92,19 +92,10 @@ export const updatePetMutation = (options?: Options<UpdatePetData>) => ({
   key: '/pet',
 });
 
-export const findPetsByStatusKey = (options: Options<FindPetsByStatusData>) => {
-  const key: any[] = ['/pet/findByStatus'];
-  if (options?.path) {
-    key.push({ path: options.path });
-  }
-  if (options?.query) {
-    key.push({ query: options.query });
-  }
-  if (options?.body) {
-    key.push({ body: options.body });
-  }
-  return key;
-};
+export const findPetsByStatusKey = (options: Options<FindPetsByStatusData>) => [
+  '/pet/findByStatus',
+  options.query,
+];
 
 /**
  * Finds Pets by status.
@@ -115,28 +106,16 @@ export const findPetsByStatusOptions = (
   options: Options<FindPetsByStatusData>,
 ) => ({
   fetcher: async () => {
-    const { data } = await findPetsByStatus({
-      ...options,
-      throwOnError: true,
-    });
+    const { data } = await findPetsByStatus({ ...options, throwOnError: true });
     return data;
   },
   key: findPetsByStatusKey(options),
 });
 
-export const findPetsByTagsKey = (options: Options<FindPetsByTagsData>) => {
-  const key: any[] = ['/pet/findByTags'];
-  if (options?.path) {
-    key.push({ path: options.path });
-  }
-  if (options?.query) {
-    key.push({ query: options.query });
-  }
-  if (options?.body) {
-    key.push({ body: options.body });
-  }
-  return key;
-};
+export const findPetsByTagsKey = (options: Options<FindPetsByTagsData>) => [
+  '/pet/findByTags',
+  options.query,
+];
 
 /**
  * Finds Pets by tags.
@@ -147,10 +126,7 @@ export const findPetsByTagsOptions = (
   options: Options<FindPetsByTagsData>,
 ) => ({
   fetcher: async () => {
-    const { data } = await findPetsByTags({
-      ...options,
-      throwOnError: true,
-    });
+    const { data } = await findPetsByTags({ ...options, throwOnError: true });
     return data;
   },
   key: findPetsByTagsKey(options),
@@ -163,7 +139,7 @@ export const findPetsByTagsOptions = (
  */
 export const deletePetMutation = (options?: Options<DeletePetData>) => ({
   fetcher: async (
-    _key: unknown,
+    _key: string | readonly [string, ...Array<string | number>],
     {
       arg,
     }: {
@@ -177,22 +153,13 @@ export const deletePetMutation = (options?: Options<DeletePetData>) => ({
     });
     return data;
   },
-  key: '/pet/{petId}',
+  key: options?.path ? ['/pet/{petId}', options.path.petId] : '/pet/{petId}',
 });
 
-export const getPetByIdKey = (options: Options<GetPetByIdData>) => {
-  const key: any[] = ['/pet/{petId}'];
-  if (options?.path) {
-    key.push({ path: options.path });
-  }
-  if (options?.query) {
-    key.push({ query: options.query });
-  }
-  if (options?.body) {
-    key.push({ body: options.body });
-  }
-  return key;
-};
+export const getPetByIdKey = (options: Options<GetPetByIdData>) => [
+  '/pet/{petId}',
+  options.path.petId,
+];
 
 /**
  * Find pet by ID.
@@ -201,10 +168,7 @@ export const getPetByIdKey = (options: Options<GetPetByIdData>) => {
  */
 export const getPetByIdOptions = (options: Options<GetPetByIdData>) => ({
   fetcher: async () => {
-    const { data } = await getPetById({
-      ...options,
-      throwOnError: true,
-    });
+    const { data } = await getPetById({ ...options, throwOnError: true });
     return data;
   },
   key: getPetByIdKey(options),
@@ -219,7 +183,7 @@ export const updatePetWithFormMutation = (
   options?: Options<UpdatePetWithFormData>,
 ) => ({
   fetcher: async (
-    _key: unknown,
+    _key: string | readonly [string, ...Array<string | number>],
     {
       arg,
     }: {
@@ -233,7 +197,7 @@ export const updatePetWithFormMutation = (
     });
     return data;
   },
-  key: '/pet/{petId}',
+  key: options?.path ? ['/pet/{petId}', options.path.petId] : '/pet/{petId}',
 });
 
 /**
@@ -243,7 +207,7 @@ export const updatePetWithFormMutation = (
  */
 export const uploadFileMutation = (options?: Options<UploadFileData>) => ({
   fetcher: async (
-    _key: unknown,
+    _key: string | readonly [string, ...Array<string | number>],
     {
       arg,
     }: {
@@ -257,22 +221,15 @@ export const uploadFileMutation = (options?: Options<UploadFileData>) => ({
     });
     return data;
   },
-  key: '/pet/{petId}/uploadImage',
+  key: options?.path
+    ? ['/pet/{petId}/uploadImage', options.path.petId]
+    : '/pet/{petId}/uploadImage',
 });
 
-export const getInventoryKey = (options?: Options<GetInventoryData>) => {
-  const key: any[] = ['/store/inventory'];
-  if (options?.path) {
-    key.push({ path: options.path });
-  }
-  if (options?.query) {
-    key.push({ query: options.query });
-  }
-  if (options?.body) {
-    key.push({ body: options.body });
-  }
-  return key;
-};
+export const getInventoryKey = (options?: Options<GetInventoryData>) => [
+  '/store/inventory',
+  options?.query,
+];
 
 /**
  * Returns pet inventories by status.
@@ -281,10 +238,7 @@ export const getInventoryKey = (options?: Options<GetInventoryData>) => {
  */
 export const getInventoryOptions = (options?: Options<GetInventoryData>) => ({
   fetcher: async () => {
-    const { data } = await getInventory({
-      ...options,
-      throwOnError: true,
-    });
+    const { data } = await getInventory({ ...options, throwOnError: true });
     return data;
   },
   key: getInventoryKey(options),
@@ -297,7 +251,7 @@ export const getInventoryOptions = (options?: Options<GetInventoryData>) => ({
  */
 export const placeOrderMutation = (options?: Options<PlaceOrderData>) => ({
   fetcher: async (
-    _key: unknown,
+    _key: string,
     {
       arg,
     }: {
@@ -321,7 +275,7 @@ export const placeOrderMutation = (options?: Options<PlaceOrderData>) => ({
  */
 export const deleteOrderMutation = (options?: Options<DeleteOrderData>) => ({
   fetcher: async (
-    _key: unknown,
+    _key: string | readonly [string, ...Array<string | number>],
     {
       arg,
     }: {
@@ -335,22 +289,15 @@ export const deleteOrderMutation = (options?: Options<DeleteOrderData>) => ({
     });
     return data;
   },
-  key: '/store/order/{orderId}',
+  key: options?.path
+    ? ['/store/order/{orderId}', options.path.orderId]
+    : '/store/order/{orderId}',
 });
 
-export const getOrderByIdKey = (options: Options<GetOrderByIdData>) => {
-  const key: any[] = ['/store/order/{orderId}'];
-  if (options?.path) {
-    key.push({ path: options.path });
-  }
-  if (options?.query) {
-    key.push({ query: options.query });
-  }
-  if (options?.body) {
-    key.push({ body: options.body });
-  }
-  return key;
-};
+export const getOrderByIdKey = (options: Options<GetOrderByIdData>) => [
+  '/store/order/{orderId}',
+  options.path.orderId,
+];
 
 /**
  * Find purchase order by ID.
@@ -359,10 +306,7 @@ export const getOrderByIdKey = (options: Options<GetOrderByIdData>) => {
  */
 export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) => ({
   fetcher: async () => {
-    const { data } = await getOrderById({
-      ...options,
-      throwOnError: true,
-    });
+    const { data } = await getOrderById({ ...options, throwOnError: true });
     return data;
   },
   key: getOrderByIdKey(options),
@@ -375,7 +319,7 @@ export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) => ({
  */
 export const createUserMutation = (options?: Options<CreateUserData>) => ({
   fetcher: async (
-    _key: unknown,
+    _key: string,
     {
       arg,
     }: {
@@ -401,7 +345,7 @@ export const createUsersWithListInputMutation = (
   options?: Options<CreateUsersWithListInputData>,
 ) => ({
   fetcher: async (
-    _key: unknown,
+    _key: string,
     {
       arg,
     }: {
@@ -418,19 +362,10 @@ export const createUsersWithListInputMutation = (
   key: '/user/createWithList',
 });
 
-export const loginUserKey = (options?: Options<LoginUserData>) => {
-  const key: any[] = ['/user/login'];
-  if (options?.path) {
-    key.push({ path: options.path });
-  }
-  if (options?.query) {
-    key.push({ query: options.query });
-  }
-  if (options?.body) {
-    key.push({ body: options.body });
-  }
-  return key;
-};
+export const loginUserKey = (options?: Options<LoginUserData>) => [
+  '/user/login',
+  options?.query,
+];
 
 /**
  * Logs user into the system.
@@ -439,28 +374,16 @@ export const loginUserKey = (options?: Options<LoginUserData>) => {
  */
 export const loginUserOptions = (options?: Options<LoginUserData>) => ({
   fetcher: async () => {
-    const { data } = await loginUser({
-      ...options,
-      throwOnError: true,
-    });
+    const { data } = await loginUser({ ...options, throwOnError: true });
     return data;
   },
   key: loginUserKey(options),
 });
 
-export const logoutUserKey = (options?: Options<LogoutUserData>) => {
-  const key: any[] = ['/user/logout'];
-  if (options?.path) {
-    key.push({ path: options.path });
-  }
-  if (options?.query) {
-    key.push({ query: options.query });
-  }
-  if (options?.body) {
-    key.push({ body: options.body });
-  }
-  return key;
-};
+export const logoutUserKey = (options?: Options<LogoutUserData>) => [
+  '/user/logout',
+  options?.query,
+];
 
 /**
  * Logs out current logged in user session.
@@ -469,10 +392,7 @@ export const logoutUserKey = (options?: Options<LogoutUserData>) => {
  */
 export const logoutUserOptions = (options?: Options<LogoutUserData>) => ({
   fetcher: async () => {
-    const { data } = await logoutUser({
-      ...options,
-      throwOnError: true,
-    });
+    const { data } = await logoutUser({ ...options, throwOnError: true });
     return data;
   },
   key: logoutUserKey(options),
@@ -485,7 +405,7 @@ export const logoutUserOptions = (options?: Options<LogoutUserData>) => ({
  */
 export const deleteUserMutation = (options?: Options<DeleteUserData>) => ({
   fetcher: async (
-    _key: unknown,
+    _key: string | readonly [string, ...Array<string | number>],
     {
       arg,
     }: {
@@ -499,22 +419,15 @@ export const deleteUserMutation = (options?: Options<DeleteUserData>) => ({
     });
     return data;
   },
-  key: '/user/{username}',
+  key: options?.path
+    ? ['/user/{username}', options.path.username]
+    : '/user/{username}',
 });
 
-export const getUserByNameKey = (options: Options<GetUserByNameData>) => {
-  const key: any[] = ['/user/{username}'];
-  if (options?.path) {
-    key.push({ path: options.path });
-  }
-  if (options?.query) {
-    key.push({ query: options.query });
-  }
-  if (options?.body) {
-    key.push({ body: options.body });
-  }
-  return key;
-};
+export const getUserByNameKey = (options: Options<GetUserByNameData>) => [
+  '/user/{username}',
+  options.path.username,
+];
 
 /**
  * Get user by user name.
@@ -523,10 +436,7 @@ export const getUserByNameKey = (options: Options<GetUserByNameData>) => {
  */
 export const getUserByNameOptions = (options: Options<GetUserByNameData>) => ({
   fetcher: async () => {
-    const { data } = await getUserByName({
-      ...options,
-      throwOnError: true,
-    });
+    const { data } = await getUserByName({ ...options, throwOnError: true });
     return data;
   },
   key: getUserByNameKey(options),
@@ -539,7 +449,7 @@ export const getUserByNameOptions = (options: Options<GetUserByNameData>) => ({
  */
 export const updateUserMutation = (options?: Options<UpdateUserData>) => ({
   fetcher: async (
-    _key: unknown,
+    _key: string | readonly [string, ...Array<string | number>],
     {
       arg,
     }: {
@@ -553,5 +463,7 @@ export const updateUserMutation = (options?: Options<UpdateUserData>) => ({
     });
     return data;
   },
-  key: '/user/{username}',
+  key: options?.path
+    ? ['/user/{username}', options.path.username]
+    : '/user/{username}',
 });
