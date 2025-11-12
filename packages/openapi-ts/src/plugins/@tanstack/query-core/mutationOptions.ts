@@ -1,9 +1,8 @@
-import type ts from 'typescript';
-
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import { createOperationComment } from '~/plugins/shared/utils/operation';
-import { tsc } from '~/tsc';
+import type { TsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import { handleMeta } from './shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from './shared/useType';
@@ -31,98 +30,27 @@ export const createMutationOptions = ({
 
   const fnOptions = 'fnOptions';
 
-  const awaitSdkExpression = tsc.awaitExpression({
-    expression: tsc.callExpression({
-      functionName: queryFn,
-      parameters: [
-        tsc.objectExpression({
-          multiLine: true,
-          obj: [
-            {
-              spread: 'options',
-            },
-            {
-              spread: fnOptions,
-            },
-            {
-              key: 'throwOnError',
-              value: true,
-            },
-          ],
-        }),
-      ],
-    }),
-  });
+  const awaitSdkFn = $(queryFn)
+    .call(
+      $.object()
+        .spread('options')
+        .spread(fnOptions)
+        .prop('throwOnError', $.literal(true)),
+    )
+    .await();
 
-  const statements: Array<ts.Statement> = [];
-
+  const statements: Array<TsDsl<any>> = [];
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
-    statements.push(
-      tsc.returnVariable({
-        expression: awaitSdkExpression,
-      }),
-    );
+    statements.push($.return(awaitSdkFn));
   } else {
     statements.push(
-      tsc.constVariable({
-        destructure: true,
-        expression: awaitSdkExpression,
-        name: 'data',
-      }),
-      tsc.returnVariable({
-        expression: 'data',
-      }),
+      $.const().object('data').assign(awaitSdkFn),
+      $.return('data'),
     );
   }
 
-  const mutationOptionsObj: Array<{ key: string; value: ts.Expression }> = [
-    {
-      key: 'mutationFn',
-      value: tsc.arrowFunction({
-        async: true,
-        multiLine: true,
-        parameters: [
-          {
-            name: fnOptions,
-          },
-        ],
-        statements,
-      }),
-    },
-  ];
-
   const meta = handleMeta(plugin, operation, 'mutationOptions');
-
-  if (meta) {
-    mutationOptionsObj.push({
-      key: 'meta',
-      value: meta,
-    });
-  }
-
   const mutationOptionsFn = 'mutationOptions';
-  const expression = tsc.arrowFunction({
-    parameters: [
-      {
-        isRequired: false,
-        name: 'options',
-        type: `Partial<${typeData}>`,
-      },
-    ],
-    returnType: mutationType,
-    statements: [
-      tsc.constVariable({
-        expression: tsc.objectExpression({
-          obj: mutationOptionsObj,
-        }),
-        name: mutationOptionsFn,
-        typeName: mutationType,
-      }),
-      tsc.returnVariable({
-        expression: mutationOptionsFn,
-      }),
-    ],
-  });
   const symbolMutationOptions = plugin.registerSymbol({
     exported: true,
     name: buildName({
@@ -130,13 +58,33 @@ export const createMutationOptions = ({
       name: operation.id,
     }),
   });
-  const statement = tsc.constVariable({
-    comment: plugin.config.comments
-      ? createOperationComment({ operation })
-      : undefined,
-    exportConst: symbolMutationOptions.exported,
-    expression,
-    name: symbolMutationOptions.placeholder,
-  });
+  const statement = $.const(symbolMutationOptions.placeholder)
+    .export(symbolMutationOptions.exported)
+    .$if(
+      plugin.config.comments && createOperationComment({ operation }),
+      (c, v) => c.describe(v as ReadonlyArray<string>),
+    )
+    .assign(
+      $.func()
+        .param('options', (p) => p.optional().type(`Partial<${typeData}>`))
+        .returns(mutationType)
+        .do(
+          $.const(mutationOptionsFn)
+            .type(mutationType)
+            .assign(
+              $.object()
+                .pretty()
+                .prop(
+                  'mutationFn',
+                  $.func()
+                    .async()
+                    .param(fnOptions)
+                    .do(...statements),
+                )
+                .$if(meta, (c, v) => c.prop('meta', v)),
+            ),
+          $(mutationOptionsFn).return(),
+        ),
+    );
   plugin.setSymbolValue(symbolMutationOptions, statement);
 };
