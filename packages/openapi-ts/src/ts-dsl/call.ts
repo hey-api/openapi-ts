@@ -6,6 +6,7 @@ import { TsDsl } from './base';
 import { AccessMixin, registerLazyAccessCallFactory } from './mixins/access';
 import { mixin } from './mixins/apply';
 import { ArgsMixin } from './mixins/args';
+import { TypeArgsMixin } from './mixins/type-args';
 
 export class CallTsDsl extends TsDsl<ts.CallExpression> {
   private _callee: MaybeTsDsl<WithString>;
@@ -22,13 +23,13 @@ export class CallTsDsl extends TsDsl<ts.CallExpression> {
   $render(): ts.CallExpression {
     return ts.factory.createCallExpression(
       this.$node(this._callee),
-      undefined,
+      this.$generics(),
       this.$args(),
     );
   }
 }
 
-export interface CallTsDsl extends AccessMixin, ArgsMixin {}
-mixin(CallTsDsl, AccessMixin, ArgsMixin);
+export interface CallTsDsl extends AccessMixin, ArgsMixin, TypeArgsMixin {}
+mixin(CallTsDsl, AccessMixin, ArgsMixin, TypeArgsMixin);
 
 registerLazyAccessCallFactory((expr, args) => new CallTsDsl(expr, ...args));
