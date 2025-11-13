@@ -41,7 +41,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const getFooQueryKey = (options: Options<GetFooData>) => createQueryKey('getFoo', options);
 
-export const getFooOptions = (options: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooQueryKey>>({
+export const getFooOptions = (options: Options<GetFooData>) => queryOptions({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getFoo({
             ...options,

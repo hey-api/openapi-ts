@@ -3,14 +3,18 @@
 import { z } from 'zod/v3';
 
 export const zBar: z.AnyZodObject = z.object({
-    bar: z.array(z.lazy(() => zBar)).optional()
+    bar: z.array(z.lazy(() => {
+        return zBar;
+    })).optional()
 });
 
 export const zFoo = z.object({
     foo: zBar.optional()
 });
 
-export const zBaz: z.ZodTypeAny = z.lazy(() => zQux);
+export const zBaz: z.ZodTypeAny = z.lazy(() => {
+    return zQux;
+});
 
 /**
  * description caused circular reference error

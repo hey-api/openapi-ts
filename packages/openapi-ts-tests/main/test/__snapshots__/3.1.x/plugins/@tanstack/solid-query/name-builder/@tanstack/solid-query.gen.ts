@@ -4,7 +4,7 @@ import { type DefaultError, type MutationOptions, queryOptions } from '@tanstack
 
 import { client } from '../client.gen';
 import { fooBarPost, fooBarPut, fooPost, fooPut, getFoo, getFooBar, type Options } from '../sdk.gen';
-import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooBarResponse, GetFooData, GetFooResponse } from '../types.gen';
+import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -41,7 +41,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const getFooD = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
 
-export const getFooE = (options?: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooD>>({
+export const getFooE = (options?: Options<GetFooData>) => queryOptions({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getFoo({
             ...options,
@@ -84,7 +84,7 @@ export const fooPutC = (options?: Partial<Options<FooPutData>>): MutationOptions
 
 export const getFooBarD = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
 
-export const getFooBarE = (options?: Options<GetFooBarData>) => queryOptions<GetFooBarResponse, DefaultError, GetFooBarResponse, ReturnType<typeof getFooBarD>>({
+export const getFooBarE = (options?: Options<GetFooBarData>) => queryOptions({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getFooBar({
             ...options,
