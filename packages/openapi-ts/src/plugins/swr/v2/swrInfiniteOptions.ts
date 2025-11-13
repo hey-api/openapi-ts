@@ -27,10 +27,8 @@ const optionsParamName = 'options';
  * The getKey function signature matches SWR's requirements:
  * (pageIndex: number, previousPageData: ResponseType | null) => Key | null
  *
- * The key structure uses primitive values for optimal caching:
- * [path, ...pathParams, queryObject]
- *
- * Optional parameters use optional chaining (options?.query) for safe access.
+ * The key structure uses object serialization (since SWR 1.1.0):
+ * [path, { ...options, [paginationParam]: pageIndex }]
  *
  * Usage with useSWRInfinite:
  * const { getKey, fetcher } = getUsersInfinite({ query: { status: 'active' } });
@@ -44,10 +42,9 @@ const optionsParamName = 'options';
  * Without path params (optional):
  * export const getUsersInfinite = (options?: GetUsersData) => ({
  *   getKey: (pageIndex: number, previousPageData: GetUsersResponse | null) =>
- *     ['/users', { ...options?.query, page: pageIndex }],
- *   fetcher: async (key: readonly [string, GetUsersData['query']]) => {
- *     const params = { query: key[1] };
- *     const { data } = await getUsers({ ...params, throwOnError: true });
+ *     ['/users', { ...options, query: { ...options?.query, page: pageIndex } }],
+ *   fetcher: async (key: readonly [string, GetUsersData]) => {
+ *     const { data } = await getUsers({ ...key[1], throwOnError: true });
  *     return data;
  *   }
  * });
@@ -55,10 +52,9 @@ const optionsParamName = 'options';
  * With path params (options required):
  * export const getOrgUsersInfinite = (options: GetOrgUsersData) => ({
  *   getKey: (pageIndex: number, previousPageData: GetOrgUsersResponse | null) =>
- *     ['/orgs/{orgId}/users', options.path.orgId, { ...options.query, page: pageIndex }],
- *   fetcher: async (key: readonly [string, string, GetOrgUsersData['query']]) => {
- *     const params = { path: { orgId: key[1] }, query: key[2] };
- *     const { data } = await getOrgUsers({ ...params, throwOnError: true });
+ *     ['/orgs/{orgId}/users', { ...options, query: { ...options.query, page: pageIndex } }],
+ *   fetcher: async (key: readonly [string, GetOrgUsersData]) => {
+ *     const { data } = await getOrgUsers({ ...key[1], throwOnError: true });
  *     return data;
  *   }
  * });
@@ -100,52 +96,22 @@ export const createSwrInfiniteOptions = ({
   const typeResponse = useTypeResponse({ operation, plugin });
 
   // Create the getKey function
-  // Following SWR's useSWRInfinite pattern:
+  // Following SWR's useSWRInfinite pattern with object serialization:
   // getKey: (pageIndex: number, previousPageData: ResponseType | null) => Key | null
   //
-  // The getKey function should:
-  // 1. Return null to stop fetching (when previousPageData is empty/end reached)
-  // 2. Return key array with primitive values for each page
-  // 3. Match the pattern from swrKey.ts: ['/path', ...pathParams, queryObject]
+  // The getKey function returns: ['/path', { ...options, query: { ...query, page: pageIndex } }]
+  // This leverages SWR 1.1.0+ automatic object serialization
   const getKeyStatements: Array<TsDsl<any>> = [];
 
-  // Build the key array following the same pattern as regular keys
-  const pathParams = operation.parameters?.path || {};
   const hasQueryParams =
     operation.parameters?.query &&
     Object.keys(operation.parameters.query).length > 0;
 
-  const keyElements: ts.Expression[] = [$.literal(operation.path).$render()];
+  // Build the options object with pagination merged into query
+  let paginatedOptions: TsDsl<any>;
 
-  // Extract each path parameter as a separate primitive value
-  for (const key in pathParams) {
-    const parameter = pathParams[key]!;
-    // Use optional chaining if options is optional
-    if (isRequiredOptions) {
-      keyElements.push(
-        $('options').attr('path').attr(parameter.name).$render(),
-      );
-    } else {
-      // Create options?.path.{paramName} with optional chaining
-      keyElements.push(
-        $(
-          ts.factory.createPropertyAccessExpression(
-            ts.factory.createPropertyAccessChain(
-              $('options').$render(),
-              ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-              ts.factory.createIdentifier('path'),
-            ),
-            ts.factory.createIdentifier(parameter.name),
-          ),
-        ).$render(),
-      );
-    }
-  }
-
-  // For query parameters, merge with pagination
   if (hasQueryParams) {
-    // Create merged query object: { ...options?.query, [paginationName]: pageIndex }
-    // Need to use optional chaining for options.query when options is optional
+    // Merge pagination param into existing query params
     const queryAccess = isRequiredOptions
       ? $('options').attr('query')
       : $(
@@ -155,17 +121,26 @@ export const createSwrInfiniteOptions = ({
             ts.factory.createIdentifier('query'),
           ),
         );
+
     const mergedQuery = $.object()
       .spread(queryAccess)
       .prop(pagination.name, 'pageIndex');
-    keyElements.push(mergedQuery.$render());
+
+    paginatedOptions = $.object().spread('options').prop('query', mergedQuery);
   } else {
-    // If no existing query params, just add pagination as an object
-    keyElements.push($.object().prop(pagination.name, 'pageIndex').$render());
+    // No existing query params, create query object with just pagination
+    const queryObj = $.object().prop(pagination.name, 'pageIndex');
+
+    paginatedOptions = $.object().spread('options').prop('query', queryObj);
   }
 
-  // Create the array: ['/path', ...pathParams, queryWithPagination]
-  const keyArrayExpr = $(ts.factory.createArrayLiteralExpression(keyElements));
+  // Create the key array: ['/path', paginatedOptions]
+  const keyArrayExpr = $(
+    ts.factory.createArrayLiteralExpression([
+      $.literal(operation.path).$render(),
+      paginatedOptions.$render(),
+    ]),
+  );
 
   // Return the key array
   getKeyStatements.push(keyArrayExpr.return());
@@ -175,52 +150,26 @@ export const createSwrInfiniteOptions = ({
     .param('previousPageData', (p) => p.type(`${typeResponse} | null`))
     .do(...getKeyStatements);
 
+  const getKeyNode = getKeyFunction.$render();
+
   // Create the fetcher function
-  // Fetcher receives the key array and reconstructs the options object
+  // Fetcher receives the key array: [path, options]
+  // Since we pass the options object directly in the key, we can extract it easily
   const fetcherStatements: Array<TsDsl<any>> = [];
 
-  // Reconstruct the options object from the key array
-  // Key structure: ['/path', ...pathParams, queryObj]
-  // We need to build: { path: { param1: value1, ... }, query: queryObj }
-  const pathParamsCount = Object.keys(pathParams).length;
-
-  // Build the reconstructed options object
-  let reconstructedOptions = $.object();
-
-  // Add path params if they exist
-  if (pathParamsCount > 0) {
-    let pathObj = $.object();
-    let paramIndex = 1; // Start after the path string
-    for (const key in pathParams) {
-      const parameter = pathParams[key]!;
-      // Create element access: key[index]
-      const elementAccess = $(
-        ts.factory.createElementAccessExpression(
-          $('key').$render(),
-          ts.factory.createNumericLiteral(paramIndex),
-        ),
-      );
-      pathObj = pathObj.prop(parameter.name, elementAccess);
-      paramIndex++;
-    }
-    reconstructedOptions = reconstructedOptions.prop('path', pathObj);
-  }
-
-  // Add query params (last element in key array)
-  // Query is at index: 1 + pathParamsCount
-  const queryIndex = 1 + pathParamsCount;
-  const queryAccess = $(
+  // Extract options from key[1]
+  const optionsFromKey = $(
     ts.factory.createElementAccessExpression(
       $('key').$render(),
-      ts.factory.createNumericLiteral(queryIndex),
+      ts.factory.createNumericLiteral(1),
     ),
   );
-  reconstructedOptions = reconstructedOptions.prop('query', queryAccess);
 
-  fetcherStatements.push($.const('params').assign(reconstructedOptions));
-
+  // Call SDK function with the options from the key
   const awaitSdkFn = $(sdkFn)
-    .call($.object().spread('params').prop('throwOnError', $.literal(true)))
+    .call(
+      $.object().spread(optionsFromKey).prop('throwOnError', $.literal(true)),
+    )
     .await();
 
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
@@ -232,25 +181,9 @@ export const createSwrInfiniteOptions = ({
     );
   }
 
-  // Build the fetcher key type: readonly [string, ...pathParams, queryType]
-  // Example: readonly [string, number, { page: number }]
-  const keyTypeElements = ['string'];
-
-  // Add path param types
-  Object.keys(pathParams).forEach(() => {
-    // Use the parameter's type - for simplicity, we'll use the base type
-    keyTypeElements.push('string');
-  });
-
-  // Add query type - extract query type from the options type
-  // If the operation has query params, use the query property type from typeData
-  // Otherwise, use the pagination parameter type
-  const queryType = hasQueryParams
-    ? `${typeData}['query']`
-    : `{ ${pagination.name}: number }`;
-  keyTypeElements.push(queryType);
-
-  const keyType = `readonly [${keyTypeElements.join(', ')}]`;
+  // Build the fetcher key type: readonly [string, optionsType]
+  // Much simpler since we pass the entire options object
+  const keyType = `readonly [string, ${typeData}]`;
 
   const fetcherFunction = $.func()
     .async()
@@ -260,7 +193,7 @@ export const createSwrInfiniteOptions = ({
   // Build the infinite options object
   const swrInfiniteOptionsObj = $.object()
     .pretty()
-    .prop('getKey', getKeyFunction)
+    .prop('getKey', $(getKeyNode))
     .prop('fetcher', fetcherFunction);
 
   // Register the infinite options symbol

@@ -1,12 +1,11 @@
-<<<<<<< HEAD
-import type { SwrPlugin } from '../types';
-import { createUseSwr } from './useSwr';
-
 import { operationClasses } from '~/plugins/@hey-api/sdk/shared/operation';
 import { stringCase } from '~/utils/stringCase';
+
+import type { SwrPlugin } from '../types';
 import { createSwrInfiniteOptions } from './swrInfiniteOptions';
 import { createSwrMutationOptions } from './swrMutationOptions';
 import { createSwrOptions } from './swrOptions';
+import { createUseSwr } from './useSwr';
 
 export const handlerV2: SwrPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('useSWR', {
