@@ -142,13 +142,11 @@ describe('SWR Plugin Basic Generation', () => {
 
       // Verify mutation fetcher signature with _key and arg
       // _key is now typed as readonly [string] instead of unknown
-      expect(fileContent).toContain('_key: readonly [string]');
+      expect(fileContent).toContain('_key: string[]');
       expect(fileContent).toContain('{ arg }');
 
       // Verify async fetcher for mutations with proper typing
-      expect(fileContent).toMatch(
-        /fetcher: async \(_key: readonly \[string\].*{ arg }/,
-      );
+      expect(fileContent).toMatch(/fetcher: async \(_key: string\[\].*{ arg }/);
 
       // Verify key and fetcher structure
       expect(fileContent).toContain('key:');

@@ -100,7 +100,7 @@ export const createSwrMutationOptions = ({
         ]),
       ),
     );
-    keyType = `readonly [string] | readonly [string, ${typeData}]`;
+    keyType = `string[] | [string, ${typeData}]`;
   } else {
     // No parameters: simple array key [path]
     mutationKey = $(
@@ -108,7 +108,7 @@ export const createSwrMutationOptions = ({
         $.literal(operation.path).$render(),
       ]),
     );
-    keyType = 'readonly [string]';
+    keyType = 'string[]';
   }
 
   // Build the options object
