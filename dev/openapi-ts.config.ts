@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars, arrow-body-style */
 // @ts-ignore
 import path from 'node:path';
 
@@ -13,7 +13,6 @@ import { myClientPlugin } from '../packages/openapi-ts-tests/main/test/custom/cl
 import { getSpecsPath } from '../packages/openapi-ts-tests/utils';
 
 // @ts-ignore
-// eslint-disable-next-line arrow-body-style
 export default defineConfig(() => {
   // ...
   return [
@@ -41,14 +40,14 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'invalid',
-            'full.yaml',
+            // 'full.yaml',
             // 'openai.yaml',
             // 'opencode.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'type-format.yaml',
-            // 'validators.yaml',
+            'validators.yaml',
             // 'validators-circular-ref.json',
             // 'validators-circular-ref-2.yaml',
             // 'zoom-video-sdk.json',
@@ -270,7 +269,7 @@ export default defineConfig(() => {
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           transformer: true,
-          validator: 'zod',
+          validator: 'valibot',
           // validator: {
           //   request: 'zod',
           //   response: 'zod',
@@ -410,12 +409,23 @@ export default defineConfig(() => {
                 // 'date-time': ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
               },
             },
+            validator({ $, schema, v }) {
+              return [
+                $.const('parsed').assign(
+                  $(v.placeholder)
+                    .attr('safeParseAsync')
+                    .call(schema.placeholder, 'data')
+                    .await(),
+                ),
+                $('parsed').return(),
+              ];
+            },
           },
         },
         {
           // case: 'snake_case',
           // comments: false,
-          compatibilityVersion: 4,
+          compatibilityVersion: 'mini',
           dates: {
             // local: true,
             // offset: true,
@@ -427,7 +437,7 @@ export default defineConfig(() => {
             //   },
           },
           // exportFromIndex: true,
-          // metadata: true,
+          metadata: true,
           name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
@@ -465,19 +475,30 @@ export default defineConfig(() => {
           },
           '~resolvers': {
             object: {
-              base({ $, additional, shape }) {
-                if (!additional) {
-                  // return $('z').attr('object').call(shape).attr('passthrough').call()
-                  return $('z').attr('looseObject').call(shape);
-                }
-                return;
-              },
+              // base({ $, additional, shape }) {
+              //   if (!additional) {
+              //     // return $('z').attr('object').call(shape).attr('passthrough').call()
+              //     return $('z').attr('object').call(shape).attr('strict').call();
+              //   }
+              //   return;
+              // },
             },
             string: {
               formats: {
                 // date: ({ $ }) => $('z').attr('date').call(),
                 // 'date-time': ({ $ }) => $('z').attr('date').call(),
               },
+            },
+            validator({ $, schema }) {
+              return [
+                $.const('parsed').assign(
+                  $(schema.placeholder)
+                    .attr('safeParseAsync')
+                    .call('data')
+                    .await(),
+                ),
+                $('parsed').return(),
+              ];
             },
           },
         },
