@@ -4,9 +4,7 @@ import { z } from 'zod';
 
 export const zBar: z.AnyZodObject = z.object({
     bar: z.union([
-        z.array(z.lazy(() => {
-            return zBar;
-        })),
+        z.array(z.lazy(() => zBar)),
         z.null()
     ])
 });

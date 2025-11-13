@@ -5,7 +5,7 @@ import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
 import { toRef, toRefs } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { identifiers } from '../constants';
@@ -48,25 +48,12 @@ export const irSchemaToAst = ({
     };
     const refSymbol = plugin.referenceSymbol(query);
     if (plugin.isSymbolRegistered(query)) {
-      const ref = tsc.identifier({ text: refSymbol.placeholder });
-      ast.expression = ref;
+      ast.expression = $(refSymbol.placeholder).$render();
     } else {
-      const lazyExpression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: z.placeholder,
-          name: identifiers.lazy,
-        }),
-        parameters: [
-          tsc.arrowFunction({
-            statements: [
-              tsc.returnStatement({
-                expression: tsc.identifier({ text: refSymbol.placeholder }),
-              }),
-            ],
-          }),
-        ],
-      });
-      ast.expression = lazyExpression;
+      ast.expression = $(z.placeholder)
+        .attr(identifiers.lazy)
+        .call($.func().do($(refSymbol.placeholder).return()))
+        .$render();
       ast.hasLazyExpression = true;
       state.hasLazyExpression.value = true;
     }
@@ -80,13 +67,10 @@ export const irSchemaToAst = ({
     ast.typeName = typeAst.anyType;
 
     if (plugin.config.metadata && schema.description) {
-      ast.expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: ast.expression,
-          name: identifiers.describe,
-        }),
-        parameters: [tsc.stringLiteral({ text: schema.description })],
-      });
+      ast.expression = $(ast.expression)
+        .attr(identifiers.describe)
+        .call($.literal(schema.description))
+        .$render();
     }
   } else if (schema.items) {
     schema = deduplicateSchema({ schema });
@@ -113,37 +97,28 @@ export const irSchemaToAst = ({
           firstSchema.logicalOperator === 'or' ||
           (firstSchema.type && firstSchema.type !== 'object')
         ) {
-          ast.expression = tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: z.placeholder,
-              name: identifiers.intersection,
-            }),
-            parameters: itemTypes,
-          });
+          ast.expression = $(z.placeholder)
+            .attr(identifiers.intersection)
+            .call(...itemTypes)
+            .$render();
         } else {
           ast.expression = itemTypes[0];
           itemTypes.slice(1).forEach((item) => {
-            ast.expression = tsc.callExpression({
-              functionName: tsc.propertyAccessExpression({
-                expression: ast.expression!,
-                name: identifiers.and,
-              }),
-              parameters: [item],
-            });
+            ast.expression = $(ast.expression!)
+              .attr(identifiers.and)
+              .call(item)
+              .$render();
           });
         }
       } else {
-        ast.expression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.union,
-          }),
-          parameters: [
-            tsc.arrayLiteralExpression({
-              elements: itemTypes,
-            }),
-          ],
-        });
+        ast.expression = $(z.placeholder)
+          .attr(identifiers.union)
+          .call(
+            $.array()
+              .pretty()
+              .elements(...itemTypes),
+          )
+          .$render();
       }
     } else {
       ast = irSchemaToAst({ plugin, schema, state });
@@ -163,21 +138,17 @@ export const irSchemaToAst = ({
 
   if (ast.expression) {
     if (schema.accessScope === 'read') {
-      ast.expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: ast.expression,
-          name: identifiers.readonly,
-        }),
-      });
+      ast.expression = $(ast.expression)
+        .attr(identifiers.readonly)
+        .call()
+        .$render();
     }
 
     if (optional) {
-      ast.expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: ast.expression,
-          name: identifiers.optional,
-        }),
-      });
+      ast.expression = $(ast.expression)
+        .attr(identifiers.optional)
+        .call()
+        .$render();
     }
 
     if (schema.default !== undefined) {
@@ -187,13 +158,10 @@ export const irSchemaToAst = ({
         value: schema.default,
       });
       if (callParameter) {
-        ast.expression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: ast.expression,
-            name: identifiers.default,
-          }),
-          parameters: [callParameter],
-        });
+        ast.expression = $(ast.expression)
+          .attr(identifiers.default)
+          .call(callParameter)
+          .$render();
       }
     }
   }

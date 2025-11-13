@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
 import { numberRegExp } from '~/utils/regexp';
@@ -5,11 +6,11 @@ import { numberRegExp } from '~/utils/regexp';
 import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
 import { GetterTsDsl } from './getter';
+import { mixin } from './mixins/apply';
+import { LayoutMixin } from './mixins/layout';
 import { SetterTsDsl } from './setter';
 
 export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
-  private static readonly DEFAULT_THRESHOLD = 3;
-  private layout: boolean | number = ObjectTsDsl.DEFAULT_THRESHOLD;
   private props: Array<
     | {
         expr: WithString<MaybeTsDsl<ts.Statement>>;
@@ -25,12 +26,6 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
     | { expr: MaybeTsDsl<WithString>; kind: 'spread' }
   > = [];
 
-  /** Sets automatic line output with optional threshold (default: 3). */
-  auto(threshold: number = ObjectTsDsl.DEFAULT_THRESHOLD): this {
-    this.layout = threshold;
-    return this;
-  }
-
   /** Adds a getter property (e.g. `{ get foo() { ... } }`). */
   getter(name: string, expr: WithString<MaybeTsDsl<ts.Statement>>): this {
     this.props.push({ expr, kind: 'getter', name });
@@ -42,21 +37,9 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
     return this.props.length > 0;
   }
 
-  /** Sets single line output. */
-  inline(): this {
-    this.layout = false;
-    return this;
-  }
-
   /** Returns true if object has no properties or spreads. */
   get isEmpty(): boolean {
     return !this.props.length;
-  }
-
-  /** Sets multi line output. */
-  pretty(): this {
-    this.layout = true;
-    return this;
   }
 
   /** Adds a property assignment. */
@@ -115,12 +98,10 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
       );
     });
 
-    const multiLine =
-      typeof this.layout === 'number'
-        ? this.props.length >= this.layout
-        : this.layout;
-
-    return ts.factory.createObjectLiteralExpression(props, multiLine);
+    return ts.factory.createObjectLiteralExpression(
+      props,
+      this.$multiline(this.props.length),
+    );
   }
 
   private safePropertyName(name: string): string | ts.PropertyName {
@@ -145,3 +126,6 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
     return propertyName;
   }
 }
+
+export interface ObjectTsDsl extends LayoutMixin {}
+mixin(ObjectTsDsl, LayoutMixin);
