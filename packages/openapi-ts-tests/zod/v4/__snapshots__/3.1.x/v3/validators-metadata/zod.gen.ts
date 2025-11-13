@@ -13,10 +13,14 @@ export const zQux = z.record(z.object({
  */
 export const zFoo: z.ZodTypeAny = z.union([
     z.object({
-        foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).describe("This is foo property.").optional(),
-        bar: z.lazy(() => zBar).optional(),
-        baz: z.array(z.lazy(() => zFoo)).describe("This is baz property.").optional(),
-        qux: z.number().int().gt(0).describe("This is qux property.").optional().default(0)
+        foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).describe('This is foo property.').optional(),
+        bar: z.lazy(() => {
+            return zBar;
+        }).optional(),
+        baz: z.array(z.lazy(() => {
+            return zFoo;
+        })).describe('This is baz property.').optional(),
+        qux: z.number().int().gt(0).describe('This is qux property.').optional().default(0)
     }),
     z.null()
 ]).default(null);
@@ -26,12 +30,12 @@ export const zFoo: z.ZodTypeAny = z.union([
  */
 export const zBar = z.object({
     foo: zFoo.optional()
-}).describe("This is Bar schema.");
+}).describe('This is Bar schema.');
 
 /**
  * This is Foo parameter.
  */
-export const zFoo2 = z.string().describe("This is Foo parameter.");
+export const zFoo2 = z.string().describe('This is Foo parameter.');
 
 export const zFoo3 = z.object({
     foo: zBar.optional()
@@ -43,7 +47,7 @@ export const zPatchFooData = z.object({
     }),
     path: z.never().optional(),
     query: z.object({
-        foo: z.string().describe("This is Foo parameter.").optional(),
+        foo: z.string().describe('This is Foo parameter.').optional(),
         bar: zBar.optional(),
         baz: z.object({
             baz: z.string().optional()

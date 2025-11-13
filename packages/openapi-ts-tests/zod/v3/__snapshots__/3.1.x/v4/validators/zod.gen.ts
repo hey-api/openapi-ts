@@ -15,10 +15,14 @@ export const zFoo = z.union([
     z.object({
         foo: z.optional(z.string().regex(/^\d{3}-\d{2}-\d{4}$/)),
         get bar() {
-            return z.optional(z.lazy((): any => zBar));
+            return z.optional(z.lazy((): any => {
+                return zBar;
+            }));
         },
         get baz() {
-            return z.optional(z.array(z.lazy((): any => zFoo)));
+            return z.optional(z.array(z.lazy((): any => {
+                return zFoo;
+            })));
         },
         qux: z.optional(z.int().gt(0)).default(0)
     }),

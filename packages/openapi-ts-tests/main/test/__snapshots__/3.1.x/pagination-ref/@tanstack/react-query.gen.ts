@@ -41,9 +41,9 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     ];
 };
 
-export const getFooQueryKey = (options: Options<GetFooData>) => createQueryKey("getFoo", options);
+export const getFooQueryKey = (options: Options<GetFooData>) => createQueryKey('getFoo', options);
 
-export const getFooOptions = (options: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooQueryKey>>({
+export const getFooOptions = (options: Options<GetFooData>) => queryOptions({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getFoo({
             ...options,
@@ -87,7 +87,7 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
     return params as unknown as typeof page;
 };
 
-export const getFooInfiniteQueryKey = (options: Options<GetFooData>): QueryKey<Options<GetFooData>> => createQueryKey("getFoo", options, true);
+export const getFooInfiniteQueryKey = (options: Options<GetFooData>): QueryKey<Options<GetFooData>> => createQueryKey('getFoo', options, true);
 
 export const getFooInfiniteOptions = (options: Options<GetFooData>) => {
     return infiniteQueryOptions<GetFooResponse, DefaultError, InfiniteData<GetFooResponse>, QueryKey<Options<GetFooData>>, number | null | Pick<QueryKey<Options<GetFooData>>[0], 'body' | 'headers' | 'path' | 'query'>>(

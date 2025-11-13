@@ -19,19 +19,12 @@ import type {
   DeletePetData,
   DeleteUserData,
   FindPetsByStatusData,
-  FindPetsByStatusResponse,
   FindPetsByTagsData,
-  FindPetsByTagsResponse,
   GetInventoryData,
-  GetInventoryResponse,
   GetOrderByIdData,
-  GetOrderByIdResponse,
   GetPetByIdData,
-  GetPetByIdResponse,
   GetUserByNameData,
-  GetUserByNameResponse,
   LoginUserData,
-  LoginUserResponse,
   LogoutUserData,
   PlaceOrderData,
   PlaceOrderResponse,
@@ -150,12 +143,7 @@ export const findPetsByStatusQueryKey = (
 export const findPetsByStatusOptions = (
   options: Options<FindPetsByStatusData>,
 ) =>
-  queryOptions<
-    FindPetsByStatusResponse,
-    DefaultError,
-    FindPetsByStatusResponse,
-    ReturnType<typeof findPetsByStatusQueryKey>
-  >({
+  queryOptions({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await Sdk.__registry.get().findPetsByStatus({
         ...options,
@@ -177,12 +165,7 @@ export const findPetsByTagsQueryKey = (options: Options<FindPetsByTagsData>) =>
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
 export const findPetsByTagsOptions = (options: Options<FindPetsByTagsData>) =>
-  queryOptions<
-    FindPetsByTagsResponse,
-    DefaultError,
-    FindPetsByTagsResponse,
-    ReturnType<typeof findPetsByTagsQueryKey>
-  >({
+  queryOptions({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await Sdk.__registry.get().findPetsByTags({
         ...options,
@@ -229,12 +212,7 @@ export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) =>
  * Returns a single pet.
  */
 export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
-  queryOptions<
-    GetPetByIdResponse,
-    DefaultError,
-    GetPetByIdResponse,
-    ReturnType<typeof getPetByIdQueryKey>
-  >({
+  queryOptions({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await Sdk.__registry.get().getPetById({
         ...options,
@@ -314,12 +292,7 @@ export const getInventoryQueryKey = (options?: Options<GetInventoryData>) =>
  * Returns a map of status codes to quantities.
  */
 export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
-  queryOptions<
-    GetInventoryResponse,
-    DefaultError,
-    GetInventoryResponse,
-    ReturnType<typeof getInventoryQueryKey>
-  >({
+  queryOptions({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await Sdk.__registry.get().getInventory({
         ...options,
@@ -395,12 +368,7 @@ export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) =>
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  */
 export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
-  queryOptions<
-    GetOrderByIdResponse,
-    DefaultError,
-    GetOrderByIdResponse,
-    ReturnType<typeof getOrderByIdQueryKey>
-  >({
+  queryOptions({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await Sdk.__registry.get().getOrderById({
         ...options,
@@ -480,12 +448,7 @@ export const loginUserQueryKey = (options?: Options<LoginUserData>) =>
  * Log into the system.
  */
 export const loginUserOptions = (options?: Options<LoginUserData>) =>
-  queryOptions<
-    LoginUserResponse,
-    DefaultError,
-    LoginUserResponse,
-    ReturnType<typeof loginUserQueryKey>
-  >({
+  queryOptions({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await Sdk.__registry.get().loginUser({
         ...options,
@@ -507,12 +470,7 @@ export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
  * Log user out of the system.
  */
 export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
-  queryOptions<
-    unknown,
-    DefaultError,
-    unknown,
-    ReturnType<typeof logoutUserQueryKey>
-  >({
+  queryOptions({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await Sdk.__registry.get().logoutUser({
         ...options,
@@ -559,12 +517,7 @@ export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) =>
  * Get user detail based on username.
  */
 export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
-  queryOptions<
-    GetUserByNameResponse,
-    DefaultError,
-    GetUserByNameResponse,
-    ReturnType<typeof getUserByNameQueryKey>
-  >({
+  queryOptions({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await Sdk.__registry.get().getUserByName({
         ...options,

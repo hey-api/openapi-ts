@@ -415,13 +415,13 @@ export const vModelSquare = v.object({
 export const vCompositionWithOneOfDiscriminator = v.union([
     v.intersect([
         v.object({
-            kind: v.literal("circle")
+            kind: v.literal('circle')
         }),
         vModelCircle
     ]),
     v.intersect([
         v.object({
-            kind: v.literal("square")
+            kind: v.literal('square')
         }),
         vModelSquare
     ])
@@ -467,7 +467,7 @@ export const v3eNum1Период = v.picklist([
     'Dog'
 ]);
 
-export const vConstValue = v.literal("ConstValue");
+export const vConstValue = v.literal('ConstValue');
 
 /**
  * This is a model with one property with a 'any of' relationship where the options are not $ref
@@ -721,10 +721,10 @@ export const vFreeFormObjectWithAdditionalPropertiesEqTrue = v.record(v.string()
 export const vFreeFormObjectWithAdditionalPropertiesEqEmptyObject = v.record(v.string(), v.unknown());
 
 export const vModelWithConst = v.object({
-    String: v.optional(v.literal("String")),
+    String: v.optional(v.literal('String')),
     number: v.optional(v.literal(0)),
     null: v.optional(v.null()),
-    withType: v.optional(v.literal("Some string"))
+    withType: v.optional(v.literal('Some string'))
 });
 
 /**
@@ -1660,9 +1660,9 @@ export const vTypesData = v.object({
             v.null()
         ]),
         parameterEnum: v.union([
-            v.literal("Success"),
-            v.literal("Warning"),
-            v.literal("Error"),
+            v.literal('Success'),
+            v.literal('Warning'),
+            v.literal('Error'),
             v.null()
         ])
     })

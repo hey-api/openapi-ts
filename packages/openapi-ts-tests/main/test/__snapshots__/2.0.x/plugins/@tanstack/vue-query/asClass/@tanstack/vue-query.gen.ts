@@ -4,7 +4,7 @@ import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanst
 
 import { client } from '../client.gen';
 import { BarBazService, FooBazService, type Options } from '../sdk.gen';
-import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooBarResponse, GetFooData, GetFooResponse } from '../types.gen';
+import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -41,9 +41,9 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     ];
 };
 
-export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey("getFoo", options);
+export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
 
-export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooQueryKey>>({
+export const getFooOptions = (options?: Options<GetFooData>) => queryOptions({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await FooBazService.getFoo({
             ...options,
@@ -84,9 +84,9 @@ export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutat
     return mutationOptions;
 };
 
-export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQueryKey("getFooBar", options);
+export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
 
-export const getFooBarOptions = (options?: Options<GetFooBarData>) => queryOptions<GetFooBarResponse, DefaultError, GetFooBarResponse, ReturnType<typeof getFooBarQueryKey>>({
+export const getFooBarOptions = (options?: Options<GetFooBarData>) => queryOptions({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await BarBazService.getFooBar({
             ...options,

@@ -412,13 +412,13 @@ export const vModelSquare = v.object({
 export const vCompositionWithOneOfDiscriminator = v.union([
     v.intersect([
         v.object({
-            kind: v.literal("circle")
+            kind: v.literal('circle')
         }),
         vModelCircle
     ]),
     v.intersect([
         v.object({
-            kind: v.literal("square")
+            kind: v.literal('square')
         }),
         vModelSquare
     ])

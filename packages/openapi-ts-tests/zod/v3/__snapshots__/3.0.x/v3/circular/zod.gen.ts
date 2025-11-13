@@ -3,24 +3,34 @@
 import { z } from 'zod';
 
 export const zFoo: z.AnyZodObject = z.object({
-    quux: z.lazy(() => zQuux).optional()
+    quux: z.lazy(() => {
+        return zQuux;
+    }).optional()
 });
 
 export const zBar: z.AnyZodObject = z.object({
-    bar: z.lazy(() => zBar).optional(),
-    baz: z.lazy(() => zBaz).optional()
+    bar: z.lazy(() => {
+        return zBar;
+    }).optional(),
+    baz: z.lazy(() => {
+        return zBaz;
+    }).optional()
 });
 
 export const zBaz: z.AnyZodObject = z.object({
-    quux: z.lazy(() => zQuux).optional()
+    quux: z.lazy(() => {
+        return zQuux;
+    }).optional()
 });
 
 export const zQux: z.ZodTypeAny = z.union([
     z.object({
-        type: z.literal("struct")
-    }).and(z.lazy(() => zCorge)),
+        type: z.literal('struct')
+    }).and(z.lazy(() => {
+        return zCorge;
+    })),
     z.object({
-        type: z.literal("array")
+        type: z.literal('array')
     }).and(zFoo)
 ]);
 

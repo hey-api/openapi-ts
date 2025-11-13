@@ -399,7 +399,9 @@ export const zDeprecatedModel = z.object({
  * This is a model with one property containing a circular reference
  */
 export const zModelWithCircularReference: z.AnyZodObject = z.object({
-    prop: z.lazy(() => zModelWithCircularReference).optional()
+    prop: z.lazy(() => {
+        return zModelWithCircularReference;
+    }).optional()
 });
 
 /**
@@ -448,10 +450,10 @@ export const zModelSquare = z.object({
  */
 export const zCompositionWithOneOfDiscriminator = z.union([
     z.object({
-        kind: z.literal("circle")
+        kind: z.literal('circle')
     }).and(zModelCircle),
     z.object({
-        kind: z.literal("square")
+        kind: z.literal('square')
     }).and(zModelSquare)
 ]);
 
