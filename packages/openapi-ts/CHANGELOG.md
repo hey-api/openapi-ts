@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.87.4
+
+### Patch Changes
+
+- **valibot**: expose validator resolvers ([#2980](https://github.com/hey-api/openapi-ts/pull/2980)) ([`6226f6f`](https://github.com/hey-api/openapi-ts/commit/6226f6fa271369b5ff06853c1f623557a2ebe837)) by [@mrlubos](https://github.com/mrlubos)
+
+- **zod**: expose validator resolvers ([#2980](https://github.com/hey-api/openapi-ts/pull/2980)) ([`6226f6f`](https://github.com/hey-api/openapi-ts/commit/6226f6fa271369b5ff06853c1f623557a2ebe837)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.87.3
 
 ### Patch Changes
