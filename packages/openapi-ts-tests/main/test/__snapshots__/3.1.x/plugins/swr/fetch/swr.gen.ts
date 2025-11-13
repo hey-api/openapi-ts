@@ -3,997 +3,595 @@
 import { apiVVersionODataControllerCount, callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexParams, complexTypes, deleteCallWithoutParametersAndResponse, deleteFoo, deprecatedCall, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, export_, fileResponse, fooWow, getApiVbyApiVersionSimpleOperation, getCallWithOptionalParam, getCallWithoutParametersAndResponse, import_, multipartRequest, multipartResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchApiVbyApiVersionNoTag, patchCallWithoutParametersAndResponse, postApiVbyApiVersionFormData, postApiVbyApiVersionRequestBody, postCallWithOptionalParam, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, putWithFormUrlEncoded, testErrorCode, types, uploadFile } from './sdk.gen';
 import type { ApiVVersionODataControllerCountData, CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithNoContentResponseData, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseData, CallWithResponsesData, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexParamsData, ComplexTypesData, DeleteCallWithoutParametersAndResponseData, DeleteFooData3, DeprecatedCallData, DummyAData, DummyBData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, ExportData, FileResponseData, FooWowData, GetApiVbyApiVersionSimpleOperationData, GetCallWithOptionalParamData, GetCallWithoutParametersAndResponseData, ImportData, MultipartRequestData, MultipartResponseData, NonAsciiæøåÆøÅöôêÊ字符串Data, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionFormDataData, PostApiVbyApiVersionRequestBodyData, PostCallWithOptionalParamData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, PutWithFormUrlEncodedData, TestErrorCodeData, TypesData, UploadFileData } from './types.gen';
 
-export const exportKey = (options?: Options<ExportData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/no+tag'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+/* eslint-disable @typescript-eslint/no-unused-vars */
+;
+
+export const exportKey = (options?: Options<ExportData>) => ["/api/v{api-version}/no+tag"];
+
+export const exportOptions = (options?: Options<ExportData>) => ({
+    key: exportKey(options),
+    fetcher: async () => {
+        const { data } = await export_({ ...options, throwOnError: true });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const patchApiVbyApiVersionNoTagMutation = (options?: Options<PatchApiVbyApiVersionNoTagData>) => ({
+    key: ["/api/v{api-version}/no+tag"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<PatchApiVbyApiVersionNoTagData>;
+    }) => {
+        const { data } = await patchApiVbyApiVersionNoTag({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const importMutation = (options?: Options<ImportData>) => ({
+    key: ["/api/v{api-version}/no+tag"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<ImportData>;
+    }) => {
+        const { data } = await import_({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    return key;
-};
+});
 
-export const exportOptions = (options?: Options<ExportData>) => {
-    return {
-        key: exportKey(options),
-        fetcher: async () => {
-            const { data } = await export_({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const patchApiVbyApiVersionNoTagMutation = (options?: Options<PatchApiVbyApiVersionNoTagData>) => {
-    return {
-        key: '/api/v{api-version}/no+tag',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<PatchApiVbyApiVersionNoTagData>;
-        }) => {
-            const { data } = await patchApiVbyApiVersionNoTag({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const importMutation = (options?: Options<ImportData>) => {
-    return {
-        key: '/api/v{api-version}/no+tag',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<ImportData>;
-        }) => {
-            const { data } = await import_({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const fooWowMutation = (options?: Options<FooWowData>) => {
-    return {
-        key: '/api/v{api-version}/no+tag',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<FooWowData>;
-        }) => {
-            const { data } = await fooWow({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const apiVVersionODataControllerCountKey = (options?: Options<ApiVVersionODataControllerCountData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/simple/$count'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const fooWowMutation = (options?: Options<FooWowData>) => ({
+    key: ["/api/v{api-version}/no+tag"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<FooWowData>;
+    }) => {
+        const { data } = await fooWow({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const apiVVersionODataControllerCountKey = (options?: Options<ApiVVersionODataControllerCountData>) => ["/api/v{api-version}/simple/$count"];
+
+export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVersionODataControllerCountData>) => ({
+    key: apiVVersionODataControllerCountKey(options),
+    fetcher: async () => {
+        const { data } = await apiVVersionODataControllerCount({ ...options, throwOnError: true });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const getApiVbyApiVersionSimpleOperationKey = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => ["/api/v{api-version}/simple:operation", options];
+
+export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => ({
+    key: getApiVbyApiVersionSimpleOperationKey(options),
+    fetcher: async () => {
+        const { data } = await getApiVbyApiVersionSimpleOperation({ ...options, throwOnError: true });
+        return data;
     }
-    return key;
-};
+});
 
-export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVersionODataControllerCountData>) => {
-    return {
-        key: apiVVersionODataControllerCountKey(options),
-        fetcher: async () => {
-            const { data } = await apiVVersionODataControllerCount({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const getApiVbyApiVersionSimpleOperationKey = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/simple:operation'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const deleteCallWithoutParametersAndResponseMutation = (options?: Options<DeleteCallWithoutParametersAndResponseData>) => ({
+    key: ["/api/v{api-version}/simple"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<DeleteCallWithoutParametersAndResponseData>;
+    }) => {
+        const { data } = await deleteCallWithoutParametersAndResponse({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const getCallWithoutParametersAndResponseKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => ["/api/v{api-version}/simple"];
+
+export const getCallWithoutParametersAndResponseOptions = (options?: Options<GetCallWithoutParametersAndResponseData>) => ({
+    key: getCallWithoutParametersAndResponseKey(options),
+    fetcher: async () => {
+        const { data } = await getCallWithoutParametersAndResponse({ ...options, throwOnError: true });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const patchCallWithoutParametersAndResponseMutation = (options?: Options<PatchCallWithoutParametersAndResponseData>) => ({
+    key: ["/api/v{api-version}/simple"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<PatchCallWithoutParametersAndResponseData>;
+    }) => {
+        const { data } = await patchCallWithoutParametersAndResponse({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    return key;
-};
+});
 
-export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => {
-    return {
-        key: getApiVbyApiVersionSimpleOperationKey(options),
-        fetcher: async () => {
-            const { data } = await getApiVbyApiVersionSimpleOperation({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const deleteCallWithoutParametersAndResponseMutation = (options?: Options<DeleteCallWithoutParametersAndResponseData>) => {
-    return {
-        key: '/api/v{api-version}/simple',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<DeleteCallWithoutParametersAndResponseData>;
-        }) => {
-            const { data } = await deleteCallWithoutParametersAndResponse({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const getCallWithoutParametersAndResponseKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/simple'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const postCallWithoutParametersAndResponseMutation = (options?: Options<PostCallWithoutParametersAndResponseData>) => ({
+    key: ["/api/v{api-version}/simple"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<PostCallWithoutParametersAndResponseData>;
+    }) => {
+        const { data } = await postCallWithoutParametersAndResponse({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const putCallWithoutParametersAndResponseMutation = (options?: Options<PutCallWithoutParametersAndResponseData>) => ({
+    key: ["/api/v{api-version}/simple"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<PutCallWithoutParametersAndResponseData>;
+    }) => {
+        const { data } = await putCallWithoutParametersAndResponse({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const deleteFooMutation = (options?: Options<DeleteFooData3>) => ({
+    key: options?.path ? ["/api/v{api-version}/foo/{foo_param}/bar/{BarParam}", options] : ["/api/v{api-version}/foo/{foo_param}/bar/{BarParam}"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<DeleteFooData3>], { arg }: {
+        arg: Options<DeleteFooData3>;
+    }) => {
+        const { data } = await deleteFoo({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    return key;
-};
+});
 
-export const getCallWithoutParametersAndResponseOptions = (options?: Options<GetCallWithoutParametersAndResponseData>) => {
-    return {
-        key: getCallWithoutParametersAndResponseKey(options),
-        fetcher: async () => {
-            const { data } = await getCallWithoutParametersAndResponse({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const patchCallWithoutParametersAndResponseMutation = (options?: Options<PatchCallWithoutParametersAndResponseData>) => {
-    return {
-        key: '/api/v{api-version}/simple',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<PatchCallWithoutParametersAndResponseData>;
-        }) => {
-            const { data } = await patchCallWithoutParametersAndResponse({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const postCallWithoutParametersAndResponseMutation = (options?: Options<PostCallWithoutParametersAndResponseData>) => {
-    return {
-        key: '/api/v{api-version}/simple',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<PostCallWithoutParametersAndResponseData>;
-        }) => {
-            const { data } = await postCallWithoutParametersAndResponse({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const putCallWithoutParametersAndResponseMutation = (options?: Options<PutCallWithoutParametersAndResponseData>) => {
-    return {
-        key: '/api/v{api-version}/simple',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<PutCallWithoutParametersAndResponseData>;
-        }) => {
-            const { data } = await putCallWithoutParametersAndResponse({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const deleteFooMutation = (options?: Options<DeleteFooData3>) => {
-    return {
-        key: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<DeleteFooData3>;
-        }) => {
-            const { data } = await deleteFoo({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const callWithDescriptionsMutation = (options?: Options<CallWithDescriptionsData>) => {
-    return {
-        key: '/api/v{api-version}/descriptions',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<CallWithDescriptionsData>;
-        }) => {
-            const { data } = await callWithDescriptions({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
+export const callWithDescriptionsMutation = (options?: Options<CallWithDescriptionsData>) => ({
+    key: options?.path ? ["/api/v{api-version}/descriptions", options] : ["/api/v{api-version}/descriptions"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<CallWithDescriptionsData>], { arg }: {
+        arg: Options<CallWithDescriptionsData>;
+    }) => {
+        const { data } = await callWithDescriptions({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
+    }
+});
 
 /**
  * @deprecated
  */
-export const deprecatedCallMutation = (options?: Options<DeprecatedCallData>) => {
-    return {
-        key: '/api/v{api-version}/parameters/deprecated',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<DeprecatedCallData>;
-        }) => {
-            const { data } = await deprecatedCall({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const callWithParametersMutation = (options?: Options<CallWithParametersData>) => {
-    return {
-        key: '/api/v{api-version}/parameters/{parameterPath}',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<CallWithParametersData>;
-        }) => {
-            const { data } = await callWithParameters({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const callWithWeirdParameterNamesMutation = (options?: Options<CallWithWeirdParameterNamesData>) => {
-    return {
-        key: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<CallWithWeirdParameterNamesData>;
-        }) => {
-            const { data } = await callWithWeirdParameterNames({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const getCallWithOptionalParamKey = (options: Options<GetCallWithOptionalParamData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/parameters'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const deprecatedCallMutation = (options?: Options<DeprecatedCallData>) => ({
+    key: ["/api/v{api-version}/parameters/deprecated"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<DeprecatedCallData>;
+    }) => {
+        const { data } = await deprecatedCall({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const callWithParametersMutation = (options?: Options<CallWithParametersData>) => ({
+    key: options?.path ? ["/api/v{api-version}/parameters/{parameterPath}", options] : ["/api/v{api-version}/parameters/{parameterPath}"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<CallWithParametersData>], { arg }: {
+        arg: Options<CallWithParametersData>;
+    }) => {
+        const { data } = await callWithParameters({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const callWithWeirdParameterNamesMutation = (options?: Options<CallWithWeirdParameterNamesData>) => ({
+    key: options?.path ? ["/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}", options] : ["/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<CallWithWeirdParameterNamesData>], { arg }: {
+        arg: Options<CallWithWeirdParameterNamesData>;
+    }) => {
+        const { data } = await callWithWeirdParameterNames({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    return key;
-};
+});
 
-export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOptionalParamData>) => {
-    return {
-        key: getCallWithOptionalParamKey(options),
-        fetcher: async () => {
-            const { data } = await getCallWithOptionalParam({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
+export const getCallWithOptionalParamKey = (options: Options<GetCallWithOptionalParamData>) => ["/api/v{api-version}/parameters", options];
 
-export const getCallWithOptionalParamInfinite = (options: Options<GetCallWithOptionalParamData>) => {
-    return {
-        getKey: (pageIndex: number, previousPageData: any) => {
-            const pageParam = {
-                query: {
-                    page: pageIndex
-                }
-            };
-            const key: any[] = [
-                '/api/v{api-version}/parameters'
-            ];
-            if (options?.path) {
-                key.push({ path: options.path });
-            }
-            const mergedQuery = { ...options?.query, ...pageParam.query };
-            key.push({ query: mergedQuery });
-            if (options?.body) {
-                key.push({ body: options.body });
-            }
-            return key;
-        },
-        fetcher: async (key) => {
-            const params = Object.assign({}, ...key.slice(1));
-            const { data } = await getCallWithOptionalParam({
-                ...params,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const postCallWithOptionalParamMutation = (options?: Options<PostCallWithOptionalParamData>) => {
-    return {
-        key: '/api/v{api-version}/parameters',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<PostCallWithOptionalParamData>;
-        }) => {
-            const { data } = await postCallWithOptionalParam({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const postApiVbyApiVersionRequestBodyMutation = (options?: Options<PostApiVbyApiVersionRequestBodyData>) => {
-    return {
-        key: '/api/v{api-version}/requestBody',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<PostApiVbyApiVersionRequestBodyData>;
-        }) => {
-            const { data } = await postApiVbyApiVersionRequestBody({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const postApiVbyApiVersionFormDataMutation = (options?: Options<PostApiVbyApiVersionFormDataData>) => {
-    return {
-        key: '/api/v{api-version}/formData',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<PostApiVbyApiVersionFormDataData>;
-        }) => {
-            const { data } = await postApiVbyApiVersionFormData({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const callWithDefaultParametersKey = (options?: Options<CallWithDefaultParametersData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/defaults'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOptionalParamData>) => ({
+    key: getCallWithOptionalParamKey(options),
+    fetcher: async () => {
+        const { data } = await getCallWithOptionalParam({ ...options, throwOnError: true });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const getCallWithOptionalParamInfinite = (options: Options<GetCallWithOptionalParamData>) => ({
+    getKey: (pageIndex: number, previousPageData: unknown | null) => ["/api/v{api-version}/parameters", { ...options, query: { ...options.query, page: pageIndex } }],
+    fetcher: async (key: readonly [string, Options<GetCallWithOptionalParamData>]) => {
+        const { data } = await getCallWithOptionalParam({ ...key[1], throwOnError: true });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const postCallWithOptionalParamMutation = (options?: Options<PostCallWithOptionalParamData>) => ({
+    key: options?.path ? ["/api/v{api-version}/parameters", options] : ["/api/v{api-version}/parameters"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<PostCallWithOptionalParamData>], { arg }: {
+        arg: Options<PostCallWithOptionalParamData>;
+    }) => {
+        const { data } = await postCallWithOptionalParam({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    return key;
-};
+});
 
-export const callWithDefaultParametersOptions = (options?: Options<CallWithDefaultParametersData>) => {
-    return {
-        key: callWithDefaultParametersKey(options),
-        fetcher: async () => {
-            const { data } = await callWithDefaultParameters({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const callWithDefaultOptionalParametersMutation = (options?: Options<CallWithDefaultOptionalParametersData>) => {
-    return {
-        key: '/api/v{api-version}/defaults',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<CallWithDefaultOptionalParametersData>;
-        }) => {
-            const { data } = await callWithDefaultOptionalParameters({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const callToTestOrderOfParamsMutation = (options?: Options<CallToTestOrderOfParamsData>) => {
-    return {
-        key: '/api/v{api-version}/defaults',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<CallToTestOrderOfParamsData>;
-        }) => {
-            const { data } = await callToTestOrderOfParams({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const duplicateNameMutation = (options?: Options<DuplicateNameData>) => {
-    return {
-        key: '/api/v{api-version}/duplicate',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<DuplicateNameData>;
-        }) => {
-            const { data } = await duplicateName({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const duplicateName2Key = (options?: Options<DuplicateName2Data>) => {
-    const key: any[] = [
-        '/api/v{api-version}/duplicate'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const postApiVbyApiVersionRequestBodyMutation = (options?: Options<PostApiVbyApiVersionRequestBodyData>) => ({
+    key: options?.path ? ["/api/v{api-version}/requestBody", options] : ["/api/v{api-version}/requestBody"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<PostApiVbyApiVersionRequestBodyData>], { arg }: {
+        arg: Options<PostApiVbyApiVersionRequestBodyData>;
+    }) => {
+        const { data } = await postApiVbyApiVersionRequestBody({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
-    }
-    if (options?.body) {
-        key.push({ body: options.body });
-    }
-    return key;
-};
+});
 
-export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => {
-    return {
-        key: duplicateName2Key(options),
-        fetcher: async () => {
-            const { data } = await duplicateName2({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const duplicateName3Mutation = (options?: Options<DuplicateName3Data>) => {
-    return {
-        key: '/api/v{api-version}/duplicate',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<DuplicateName3Data>;
-        }) => {
-            const { data } = await duplicateName3({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const duplicateName4Mutation = (options?: Options<DuplicateName4Data>) => {
-    return {
-        key: '/api/v{api-version}/duplicate',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<DuplicateName4Data>;
-        }) => {
-            const { data } = await duplicateName4({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const callWithNoContentResponseKey = (options?: Options<CallWithNoContentResponseData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/no-content'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const postApiVbyApiVersionFormDataMutation = (options?: Options<PostApiVbyApiVersionFormDataData>) => ({
+    key: options?.path ? ["/api/v{api-version}/formData", options] : ["/api/v{api-version}/formData"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<PostApiVbyApiVersionFormDataData>], { arg }: {
+        arg: Options<PostApiVbyApiVersionFormDataData>;
+    }) => {
+        const { data } = await postApiVbyApiVersionFormData({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
-    }
-    if (options?.body) {
-        key.push({ body: options.body });
-    }
-    return key;
-};
+});
 
-export const callWithNoContentResponseOptions = (options?: Options<CallWithNoContentResponseData>) => {
-    return {
-        key: callWithNoContentResponseKey(options),
-        fetcher: async () => {
-            const { data } = await callWithNoContentResponse({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
+export const callWithDefaultParametersKey = (options?: Options<CallWithDefaultParametersData>) => ["/api/v{api-version}/defaults", options];
 
-export const callWithResponseAndNoContentResponseKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/multiple-tags/response-and-no-content'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const callWithDefaultParametersOptions = (options?: Options<CallWithDefaultParametersData>) => ({
+    key: callWithDefaultParametersKey(options),
+    fetcher: async () => {
+        const { data } = await callWithDefaultParameters({ ...options, throwOnError: true });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
-    }
-    if (options?.body) {
-        key.push({ body: options.body });
-    }
-    return key;
-};
+});
 
-export const callWithResponseAndNoContentResponseOptions = (options?: Options<CallWithResponseAndNoContentResponseData>) => {
-    return {
-        key: callWithResponseAndNoContentResponseKey(options),
-        fetcher: async () => {
-            const { data } = await callWithResponseAndNoContentResponse({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const dummyAKey = (options?: Options<DummyAData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/multiple-tags/a'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const callWithDefaultOptionalParametersMutation = (options?: Options<CallWithDefaultOptionalParametersData>) => ({
+    key: options?.path ? ["/api/v{api-version}/defaults", options] : ["/api/v{api-version}/defaults"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<CallWithDefaultOptionalParametersData>], { arg }: {
+        arg: Options<CallWithDefaultOptionalParametersData>;
+    }) => {
+        const { data } = await callWithDefaultOptionalParameters({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
-    }
-    if (options?.body) {
-        key.push({ body: options.body });
-    }
-    return key;
-};
+});
 
-export const dummyAOptions = (options?: Options<DummyAData>) => {
-    return {
-        key: dummyAKey(options),
-        fetcher: async () => {
-            const { data } = await dummyA({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const dummyBKey = (options?: Options<DummyBData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/multiple-tags/b'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const callToTestOrderOfParamsMutation = (options?: Options<CallToTestOrderOfParamsData>) => ({
+    key: options?.path ? ["/api/v{api-version}/defaults", options] : ["/api/v{api-version}/defaults"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<CallToTestOrderOfParamsData>], { arg }: {
+        arg: Options<CallToTestOrderOfParamsData>;
+    }) => {
+        const { data } = await callToTestOrderOfParams({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const duplicateNameMutation = (options?: Options<DuplicateNameData>) => ({
+    key: ["/api/v{api-version}/duplicate"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<DuplicateNameData>;
+    }) => {
+        const { data } = await duplicateName({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const duplicateName2Key = (options?: Options<DuplicateName2Data>) => ["/api/v{api-version}/duplicate"];
+
+export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => ({
+    key: duplicateName2Key(options),
+    fetcher: async () => {
+        const { data } = await duplicateName2({ ...options, throwOnError: true });
+        return data;
     }
-    return key;
-};
+});
 
-export const dummyBOptions = (options?: Options<DummyBData>) => {
-    return {
-        key: dummyBKey(options),
-        fetcher: async () => {
-            const { data } = await dummyB({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const callWithResponseKey = (options?: Options<CallWithResponseData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/response'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const duplicateName3Mutation = (options?: Options<DuplicateName3Data>) => ({
+    key: ["/api/v{api-version}/duplicate"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<DuplicateName3Data>;
+    }) => {
+        const { data } = await duplicateName3({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const duplicateName4Mutation = (options?: Options<DuplicateName4Data>) => ({
+    key: ["/api/v{api-version}/duplicate"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<DuplicateName4Data>;
+    }) => {
+        const { data } = await duplicateName4({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const callWithNoContentResponseKey = (options?: Options<CallWithNoContentResponseData>) => ["/api/v{api-version}/no-content"];
+
+export const callWithNoContentResponseOptions = (options?: Options<CallWithNoContentResponseData>) => ({
+    key: callWithNoContentResponseKey(options),
+    fetcher: async () => {
+        const { data } = await callWithNoContentResponse({ ...options, throwOnError: true });
+        return data;
     }
-    return key;
-};
+});
 
-export const callWithResponseOptions = (options?: Options<CallWithResponseData>) => {
-    return {
-        key: callWithResponseKey(options),
-        fetcher: async () => {
-            const { data } = await callWithResponse({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
+export const callWithResponseAndNoContentResponseKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => ["/api/v{api-version}/multiple-tags/response-and-no-content"];
 
-export const callWithDuplicateResponsesMutation = (options?: Options<CallWithDuplicateResponsesData>) => {
-    return {
-        key: '/api/v{api-version}/response',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<CallWithDuplicateResponsesData>;
-        }) => {
-            const { data } = await callWithDuplicateResponses({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const callWithResponsesMutation = (options?: Options<CallWithResponsesData>) => {
-    return {
-        key: '/api/v{api-version}/response',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<CallWithResponsesData>;
-        }) => {
-            const { data } = await callWithResponses({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const collectionFormatKey = (options: Options<CollectionFormatData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/collectionFormat'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const callWithResponseAndNoContentResponseOptions = (options?: Options<CallWithResponseAndNoContentResponseData>) => ({
+    key: callWithResponseAndNoContentResponseKey(options),
+    fetcher: async () => {
+        const { data } = await callWithResponseAndNoContentResponse({ ...options, throwOnError: true });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const dummyAKey = (options?: Options<DummyAData>) => ["/api/v{api-version}/multiple-tags/a"];
+
+export const dummyAOptions = (options?: Options<DummyAData>) => ({
+    key: dummyAKey(options),
+    fetcher: async () => {
+        const { data } = await dummyA({ ...options, throwOnError: true });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const dummyBKey = (options?: Options<DummyBData>) => ["/api/v{api-version}/multiple-tags/b"];
+
+export const dummyBOptions = (options?: Options<DummyBData>) => ({
+    key: dummyBKey(options),
+    fetcher: async () => {
+        const { data } = await dummyB({ ...options, throwOnError: true });
+        return data;
     }
-    return key;
-};
+});
 
-export const collectionFormatOptions = (options: Options<CollectionFormatData>) => {
-    return {
-        key: collectionFormatKey(options),
-        fetcher: async () => {
-            const { data } = await collectionFormat({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
+export const callWithResponseKey = (options?: Options<CallWithResponseData>) => ["/api/v{api-version}/response"];
 
-export const typesKey = (options: Options<TypesData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/types'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const callWithResponseOptions = (options?: Options<CallWithResponseData>) => ({
+    key: callWithResponseKey(options),
+    fetcher: async () => {
+        const { data } = await callWithResponse({ ...options, throwOnError: true });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const callWithDuplicateResponsesMutation = (options?: Options<CallWithDuplicateResponsesData>) => ({
+    key: ["/api/v{api-version}/response"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<CallWithDuplicateResponsesData>;
+    }) => {
+        const { data } = await callWithDuplicateResponses({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const callWithResponsesMutation = (options?: Options<CallWithResponsesData>) => ({
+    key: ["/api/v{api-version}/response"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<CallWithResponsesData>;
+    }) => {
+        const { data } = await callWithResponses({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    return key;
-};
+});
 
-export const typesOptions = (options: Options<TypesData>) => {
-    return {
-        key: typesKey(options),
-        fetcher: async () => {
-            const { data } = await types({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
+export const collectionFormatKey = (options: Options<CollectionFormatData>) => ["/api/v{api-version}/collectionFormat", options];
 
-export const uploadFileMutation = (options?: Options<UploadFileData>) => {
-    return {
-        key: '/api/v{api-version}/upload',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<UploadFileData>;
-        }) => {
-            const { data } = await uploadFile({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const fileResponseKey = (options: Options<FileResponseData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/file/{id}'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const collectionFormatOptions = (options: Options<CollectionFormatData>) => ({
+    key: collectionFormatKey(options),
+    fetcher: async () => {
+        const { data } = await collectionFormat({ ...options, throwOnError: true });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const typesKey = (options: Options<TypesData>) => ["/api/v{api-version}/types", options];
+
+export const typesOptions = (options: Options<TypesData>) => ({
+    key: typesKey(options),
+    fetcher: async () => {
+        const { data } = await types({ ...options, throwOnError: true });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const uploadFileMutation = (options?: Options<UploadFileData>) => ({
+    key: options?.path ? ["/api/v{api-version}/upload", options] : ["/api/v{api-version}/upload"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<UploadFileData>], { arg }: {
+        arg: Options<UploadFileData>;
+    }) => {
+        const { data } = await uploadFile({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    return key;
-};
+});
 
-export const fileResponseOptions = (options: Options<FileResponseData>) => {
-    return {
-        key: fileResponseKey(options),
-        fetcher: async () => {
-            const { data } = await fileResponse({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
+export const fileResponseKey = (options: Options<FileResponseData>) => ["/api/v{api-version}/file/{id}", options];
 
-export const complexTypesKey = (options: Options<ComplexTypesData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/complex'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const fileResponseOptions = (options: Options<FileResponseData>) => ({
+    key: fileResponseKey(options),
+    fetcher: async () => {
+        const { data } = await fileResponse({ ...options, throwOnError: true });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const complexTypesKey = (options: Options<ComplexTypesData>) => ["/api/v{api-version}/complex", options];
+
+export const complexTypesOptions = (options: Options<ComplexTypesData>) => ({
+    key: complexTypesKey(options),
+    fetcher: async () => {
+        const { data } = await complexTypes({ ...options, throwOnError: true });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const multipartResponseKey = (options?: Options<MultipartResponseData>) => ["/api/v{api-version}/multipart"];
+
+export const multipartResponseOptions = (options?: Options<MultipartResponseData>) => ({
+    key: multipartResponseKey(options),
+    fetcher: async () => {
+        const { data } = await multipartResponse({ ...options, throwOnError: true });
+        return data;
     }
-    return key;
-};
+});
 
-export const complexTypesOptions = (options: Options<ComplexTypesData>) => {
-    return {
-        key: complexTypesKey(options),
-        fetcher: async () => {
-            const { data } = await complexTypes({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const multipartResponseKey = (options?: Options<MultipartResponseData>) => {
-    const key: any[] = [
-        '/api/v{api-version}/multipart'
-    ];
-    if (options?.path) {
-        key.push({ path: options.path });
+export const multipartRequestMutation = (options?: Options<MultipartRequestData>) => ({
+    key: ["/api/v{api-version}/multipart"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<MultipartRequestData>;
+    }) => {
+        const { data } = await multipartRequest({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.query) {
-        key.push({ query: options.query });
+});
+
+export const complexParamsMutation = (options?: Options<ComplexParamsData>) => ({
+    key: options?.path ? ["/api/v{api-version}/complex/{id}", options] : ["/api/v{api-version}/complex/{id}"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<ComplexParamsData>], { arg }: {
+        arg: Options<ComplexParamsData>;
+    }) => {
+        const { data } = await complexParams({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    if (options?.body) {
-        key.push({ body: options.body });
+});
+
+export const callWithResultFromHeaderMutation = (options?: Options<CallWithResultFromHeaderData>) => ({
+    key: ["/api/v{api-version}/header"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<CallWithResultFromHeaderData>;
+    }) => {
+        const { data } = await callWithResultFromHeader({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
     }
-    return key;
-};
+});
 
-export const multipartResponseOptions = (options?: Options<MultipartResponseData>) => {
-    return {
-        key: multipartResponseKey(options),
-        fetcher: async () => {
-            const { data } = await multipartResponse({
-                ...options,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
+export const testErrorCodeMutation = (options?: Options<TestErrorCodeData>) => ({
+    key: options?.path ? ["/api/v{api-version}/error", options] : ["/api/v{api-version}/error"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<TestErrorCodeData>], { arg }: {
+        arg: Options<TestErrorCodeData>;
+    }) => {
+        const { data } = await testErrorCode({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
+    }
+});
 
-export const multipartRequestMutation = (options?: Options<MultipartRequestData>) => {
-    return {
-        key: '/api/v{api-version}/multipart',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<MultipartRequestData>;
-        }) => {
-            const { data } = await multipartRequest({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const complexParamsMutation = (options?: Options<ComplexParamsData>) => {
-    return {
-        key: '/api/v{api-version}/complex/{id}',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<ComplexParamsData>;
-        }) => {
-            const { data } = await complexParams({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const callWithResultFromHeaderMutation = (options?: Options<CallWithResultFromHeaderData>) => {
-    return {
-        key: '/api/v{api-version}/header',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<CallWithResultFromHeaderData>;
-        }) => {
-            const { data } = await callWithResultFromHeader({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const testErrorCodeMutation = (options?: Options<TestErrorCodeData>) => {
-    return {
-        key: '/api/v{api-version}/error',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<TestErrorCodeData>;
-        }) => {
-            const { data } = await testErrorCode({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
-
-export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => {
-    return {
-        key: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>;
-        }) => {
-            const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
+export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => ({
+    key: options?.path ? ["/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串", options] : ["/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串"],
+    fetcher: async (_key: readonly [string] | readonly [string, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>], { arg }: {
+        arg: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>;
+    }) => {
+        const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
+    }
+});
 
 /**
  * Login User
  */
-export const putWithFormUrlEncodedMutation = (options?: Options<PutWithFormUrlEncodedData>) => {
-    return {
-        key: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
-        fetcher: async (_key: unknown, { arg }: {
-            arg: Options<PutWithFormUrlEncodedData>;
-        }) => {
-            const { data } = await putWithFormUrlEncoded({
-                ...options,
-                ...arg,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-};
+export const putWithFormUrlEncodedMutation = (options?: Options<PutWithFormUrlEncodedData>) => ({
+    key: ["/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串"],
+    fetcher: async (_key: readonly [string], { arg }: {
+        arg: Options<PutWithFormUrlEncodedData>;
+    }) => {
+        const { data } = await putWithFormUrlEncoded({
+            ...options,
+            ...arg,
+            throwOnError: true
+        });
+        return data;
+    }
+});

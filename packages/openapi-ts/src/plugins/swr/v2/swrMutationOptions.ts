@@ -15,24 +15,24 @@ const optionsParamName = 'options';
  * Create useSWRMutation options for a given operation.
  *
  * This generates a function that returns an object with:
- * - key: The mutation key following SWR patterns (array with path + path params)
+ * - key: The mutation key following SWR patterns (array with path + options object)
  * - fetcher: Async function that calls the SDK function with arg parameter
  *
- * Following SWR best practices:
- * - No path params: string key like '/api/users'
- * - With path params: array key like ['/api/users/{id}', userId]
+ * Following SWR best practices with automatic object serialization (since SWR 1.1.0):
+ * - No params: ['/api/users']
+ * - With params: ['/api/users/{id}', options] (object serialized automatically)
  * - This matches the query key structure for proper cache integration
  *
  * Example outputs:
  * // No path parameters
  * export const createUserMutation = (options?: CreateUserOptions) => ({
- *   key: '/api/users',
+ *   key: ['/api/users'],
  *   fetcher: async (_key, arg) => { ... },
  * });
  *
  * // With path parameters
  * export const deletePetMutation = (options?: DeletePetOptions) => ({
- *   key: options?.path ? ['/pet/{petId}', options.path.petId] : '/pet/{petId}',
+ *   key: ['/pet/{petId}', options],
  *   fetcher: async (_key, arg) => { ... },
  * });
  */
@@ -68,28 +68,20 @@ export const createSwrMutationOptions = ({
     );
   }
 
-  // Build mutation key following SWR patterns
-  // - If path params exist: use array [path, ...pathParams]
-  // - If no path params: use simple string key
-  const pathParams = operation.parameters?.path || {};
-  const hasPathParams = Object.keys(pathParams).length > 0;
+  // Build mutation key following SWR patterns with object serialization
+  // Since SWR 1.1.0+, we can pass options object directly in the array key
+  const hasParams =
+    (operation.parameters?.path &&
+      Object.keys(operation.parameters.path).length > 0) ||
+    (operation.parameters?.query &&
+      Object.keys(operation.parameters.query).length > 0);
 
   let mutationKey: TsDsl<any>;
   let keyType: string;
 
-  if (hasPathParams) {
-    // Build array key: [path, param1, param2, ...]
-    const keyElements: ts.Expression[] = [$.literal(operation.path).$render()];
-
-    // Add each path parameter as a separate primitive value
-    for (const key in pathParams) {
-      const parameter = pathParams[key]!;
-      keyElements.push(
-        $('options').attr('path').attr(parameter.name).$render(),
-      );
-    }
-
-    // Wrap in conditional: options?.path ? [...] : path
+  if (hasParams) {
+    // With parameters: conditional key based on whether options is provided
+    // options?.path ? [path, options] : [path]
     mutationKey = $(
       ts.factory.createConditionalExpression(
         ts.factory.createPropertyAccessChain(
@@ -98,17 +90,25 @@ export const createSwrMutationOptions = ({
           'path',
         ),
         ts.factory.createToken(ts.SyntaxKind.QuestionToken),
-        ts.factory.createArrayLiteralExpression(keyElements),
+        ts.factory.createArrayLiteralExpression([
+          $.literal(operation.path).$render(),
+          $('options').$render(),
+        ]),
         ts.factory.createToken(ts.SyntaxKind.ColonToken),
-        $.literal(operation.path).$render(),
+        ts.factory.createArrayLiteralExpression([
+          $.literal(operation.path).$render(),
+        ]),
       ),
     );
-    // Key type is either array or string depending on whether path params are provided
-    keyType = 'string | readonly [string, ...Array<string | number>]';
+    keyType = `readonly [string] | readonly [string, ${typeData}]`;
   } else {
-    // Simple string key for operations without path params
-    mutationKey = $.literal(operation.path);
-    keyType = 'string';
+    // No parameters: simple array key [path]
+    mutationKey = $(
+      ts.factory.createArrayLiteralExpression([
+        $.literal(operation.path).$render(),
+      ]),
+    );
+    keyType = 'readonly [string]';
   }
 
   // Build the options object
@@ -121,11 +121,9 @@ export const createSwrMutationOptions = ({
         .async()
         .param('_key', (p) => p.type(keyType))
         .param((p) =>
-          p.object('arg').type(
-            $.type.object((t) => {
-              t.prop('arg', (p) => p.type(typeData));
-            }),
-          ),
+          p
+            .object('arg')
+            .type($.type.object().prop('arg', (p) => p.type(typeData))),
         )
         .do(...statements),
     );

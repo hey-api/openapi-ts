@@ -86,8 +86,9 @@ describe('SWR Plugin Edge Cases', () => {
       // Path parameters should be required
       expect(fileContent).toMatch(/\(options: Options</);
 
-      // Key should contain the path template
-      expect(fileContent).toMatch(/'\/(api\/)?[^']*\{[^}]+\}[^']*'/);
+      // Key should return array with path template and options
+      // New format: ['/path/{param}', options]
+      expect(fileContent).toMatch(/=> \["\/[^"]*\{[^}]+\}[^"]*",\s*options\]/);
     }
   });
 
@@ -279,12 +280,13 @@ describe('SWR Plugin Edge Cases', () => {
       // Key functions should be generated
       expect(fileContent).toContain('Key =');
 
-      // Keys should be functions that construct arrays (SWR format)
-      // Pattern: const key: any[] = [ '/path', ...
-      expect(fileContent).toMatch(/const key: any\[\] = \[/);
+      // Keys should be functions that return arrays (SWR format)
+      // With new refactoring: ['/path', options] or just ['/path']
+      // Check for arrow function returning array: => ['/path'] or => ['/path', options]
+      expect(fileContent).toMatch(/=> \[["']\/[^"']*["']/);
 
       // Keys should contain path strings
-      expect(fileContent).toMatch(/'\/(api\/)?[^']*'/);
+      expect(fileContent).toMatch(/["']\/(?:api\/)?[^"']*["']/);
     }
   });
 });

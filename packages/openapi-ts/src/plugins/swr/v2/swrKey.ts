@@ -12,20 +12,18 @@ import { useTypeData } from '../useType';
 /**
  * Generate a SWR key statement for a given operation.
  *
- * For SWR, keys follow the official recommended pattern with primitive values:
- * - Simple cases: string key like '/api/user'
- * - With params: array key like ['/api/user', userId] with primitive values
+ * For SWR, keys follow the official recommended pattern using array keys with objects:
+ * - Simple cases: ['/api/user'] (no params)
+ * - With params: ['/api/user', options] (object serialized automatically since SWR 1.1.0)
  * - Conditional fetching: controlled by the consumer, not the key function
  *
  * This generates a function that always returns a valid key array.
- * Following SWR best practices: "use arrays with primitive values instead of objects"
+ * Since SWR 1.1.0+, objects in array keys are automatically serialized.
  *
  * Example outputs:
  * - No params: ['/api/users']
- * - Single path param: ['/api/users', options.path.id]
- * - Multiple path params: ['/api/users', options.path.userId, options.path.orgId]
- * - Path + query: ['/api/users', options.path.id, options.query]
- * - Optional params: ['/api/users', options?.query] (uses optional chaining)
+ * - With params: ['/api/users/{id}', options] (SWR handles object serialization)
+ * - Optional params: ['/api/users', options] (uses optional chaining for safety)
  *
  * Note: Conditional fetching should be controlled at the usage site:
  * useSWR(shouldFetch ? getKey(options) : null, fetcher)
@@ -42,78 +40,33 @@ export const swrKeyStatement = ({
   const typeData = useTypeData({ operation, plugin });
   const isRequired = hasOperationDataRequired(operation);
 
-  // Build the key based on what parameters exist
-  // Following SWR's pattern: use primitive values for better serialization
-  const pathParams = operation.parameters?.path || {};
-  const hasQueryParams =
-    operation.parameters?.query &&
-    Object.keys(operation.parameters.query).length > 0;
+  // Build the key using array with path and options object
+  // Since SWR 1.1.0+, objects in array keys are automatically serialized
+  const hasParams =
+    (operation.parameters?.path &&
+      Object.keys(operation.parameters.path).length > 0) ||
+    (operation.parameters?.query &&
+      Object.keys(operation.parameters.query).length > 0);
 
-  // Build array elements for the key using ts-dsl
-  const baseKeyElements: ts.Expression[] = [
-    $.literal(operation.path).$render(),
-  ];
-
-  // Extract each path parameter as a separate primitive value
-  // This follows SWR best practice: ['/api/users', userId] not ['/api/users', { userId }]
-  // Use parameter.name (the transformed TypeScript property name) not the key (original OpenAPI name)
-  const pathKeyElements: ts.Expression[] = [];
-  for (const key in pathParams) {
-    const parameter = pathParams[key]!;
-    pathKeyElements.push(
-      $('options').attr('path').attr(parameter.name).$render(),
-    );
-  }
-
-  // For query parameters, we keep them as an object since they can be complex
-  // and are typically used together for filtering/pagination
-  const queryKeyElement = hasQueryParams
-    ? $('options').attr('query').$render()
-    : null;
-
-  // Determine the key expression based on whether parameters are required
   let keyExpression: ts.Expression;
 
-  const hasParams = pathKeyElements.length > 0 || hasQueryParams;
-
-  if (isRequired || !hasParams) {
-    // If required OR no params at all, always return the full key array
-    const allElements = [...baseKeyElements, ...pathKeyElements];
-    if (queryKeyElement) {
-      allElements.push(queryKeyElement);
-    }
-    keyExpression = ts.factory.createArrayLiteralExpression(allElements);
+  if (!hasParams) {
+    // No parameters: just return ['/path']
+    keyExpression = ts.factory.createArrayLiteralExpression([
+      $.literal(operation.path).$render(),
+    ]);
+  } else if (isRequired) {
+    // Required parameters: ['/path', options]
+    keyExpression = ts.factory.createArrayLiteralExpression([
+      $.literal(operation.path).$render(),
+      $('options').$render(),
+    ]);
   } else {
-    // If optional and has params, use optional chaining to safely access nested properties
-    // Build the key array with optional chaining for safety
-    const allElements = [...baseKeyElements];
-
-    for (const key in pathParams) {
-      const parameter = pathParams[key]!;
-      allElements.push(
-        ts.factory.createPropertyAccessChain(
-          ts.factory.createPropertyAccessChain(
-            ts.factory.createIdentifier('options'),
-            ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-            ts.factory.createIdentifier('path'),
-          ),
-          undefined,
-          ts.factory.createIdentifier(parameter.name),
-        ),
-      );
-    }
-
-    if (hasQueryParams) {
-      allElements.push(
-        ts.factory.createPropertyAccessChain(
-          ts.factory.createIdentifier('options'),
-          ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-          ts.factory.createIdentifier('query'),
-        ),
-      );
-    }
-
-    keyExpression = ts.factory.createArrayLiteralExpression(allElements);
+    // Optional parameters: ['/path', options] (with optional chaining for safety)
+    keyExpression = ts.factory.createArrayLiteralExpression([
+      $.literal(operation.path).$render(),
+      $('options').$render(),
+    ]);
   }
 
   const statement = $.const(symbol.placeholder)
@@ -124,7 +77,7 @@ export const swrKeyStatement = ({
         .do($(keyExpression).return()),
     );
 
-  return statement;
+  return statement.$render();
 };
 
 /**
