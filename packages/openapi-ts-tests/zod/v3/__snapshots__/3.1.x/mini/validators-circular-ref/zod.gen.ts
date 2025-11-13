@@ -4,9 +4,7 @@ import * as z from 'zod/v4-mini';
 
 export const zBar = z.object({
     get bar() {
-        return z.optional(z.array(z.lazy((): any => {
-            return zBar;
-        })));
+        return z.optional(z.array(z.lazy((): any => zBar)));
     }
 });
 
@@ -14,9 +12,7 @@ export const zFoo = z.object({
     foo: z.optional(zBar)
 });
 
-export const zBaz = z.lazy((): any => {
-    return zQux;
-});
+export const zBaz = z.lazy((): any => zQux);
 
 /**
  * description caused circular reference error

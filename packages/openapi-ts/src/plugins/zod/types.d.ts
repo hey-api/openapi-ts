@@ -1,9 +1,11 @@
+import type { Symbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
-import type { CallTsDsl, DollarTsDsl, ObjectTsDsl } from '~/ts-dsl';
+import type { CallTsDsl, DollarTsDsl, ObjectTsDsl, TsDsl } from '~/ts-dsl';
 import type { StringCase, StringName } from '~/types/case';
+import type { MaybeArray } from '~/types/utils';
 
 import type { IApi } from './api';
 
@@ -770,6 +772,15 @@ export type ObjectBaseResolverArgs = SharedResolverArgs & {
   shape: ObjectTsDsl;
 };
 
+export type ValidatorResolverArgs = SharedResolverArgs & {
+  operation: IR.Operation;
+  schema: Symbol;
+};
+
+type ValidatorResolver = (
+  args: ValidatorResolverArgs,
+) => MaybeArray<TsDsl<ts.Statement>> | null | undefined;
+
 type Resolvers = Plugin.Resolvers<{
   /**
    * Resolvers for object schemas.
@@ -816,6 +827,31 @@ type Resolvers = Plugin.Resolvers<{
       (args: FormatResolverArgs) => CallTsDsl | undefined
     >;
   };
+  /**
+   * Resolvers for request and response validators.
+   *
+   * Allow customization of validator function bodies.
+   *
+   * Example path: `~resolvers.validator.request` or `~resolvers.validator.response`
+   *
+   * Returning `undefined` from a resolver will apply the default generation logic.
+   */
+  validator?:
+    | ValidatorResolver
+    | {
+        /**
+         * Controls how the request validator function body is generated.
+         *
+         * Returning `undefined` will fall back to the default `.await().return()` logic.
+         */
+        request?: ValidatorResolver;
+        /**
+         * Controls how the response validator function body is generated.
+         *
+         * Returning `undefined` will fall back to the default `.await().return()` logic.
+         */
+        response?: ValidatorResolver;
+      };
 }>;
 
 export type ZodPlugin = DefinePlugin<UserConfig, Config, IApi>;

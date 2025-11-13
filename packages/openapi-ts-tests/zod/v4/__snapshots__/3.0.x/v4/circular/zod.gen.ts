@@ -4,41 +4,29 @@ import { z } from 'zod';
 
 export const zFoo = z.object({
     get quux() {
-        return z.optional(z.lazy((): any => {
-            return zQuux;
-        }));
+        return z.optional(z.lazy((): any => zQuux));
     }
 });
 
 export const zBar = z.object({
     get bar() {
-        return z.optional(z.lazy((): any => {
-            return zBar;
-        }));
+        return z.optional(z.lazy((): any => zBar));
     },
     get baz() {
-        return z.optional(z.lazy((): any => {
-            return zBaz;
-        }));
+        return z.optional(z.lazy((): any => zBaz));
     }
 });
 
 export const zBaz = z.object({
     get quux() {
-        return z.optional(z.lazy((): any => {
-            return zQuux;
-        }));
+        return z.optional(z.lazy((): any => zQuux));
     }
 });
 
 export const zQux = z.union([
     z.object({
         type: z.literal("struct")
-    }).and(z.lazy(() => {
-        return z.lazy((): any => {
-            return zCorge;
-        });
-    })),
+    }).and(z.lazy(() => z.lazy((): any => zCorge))),
     z.object({
         type: z.literal("array")
     }).and(zFoo)

@@ -1,7 +1,21 @@
-import { $, type TsDsl } from '~/ts-dsl';
+import type ts from 'typescript';
+
+import type { TsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import type { ValidatorArgs } from '../shared/types';
+import type { ValidatorResolverArgs } from '../types';
 import { identifiers } from './constants';
+
+const defaultValidatorResolver = ({
+  schema,
+  v,
+}: ValidatorResolverArgs): TsDsl<ts.Statement> =>
+  $(v.placeholder)
+    .attr(identifiers.async.parseAsync)
+    .call(schema.placeholder, 'data')
+    .await()
+    .return();
 
 export const createRequestValidatorV1 = ({
   operation,
@@ -20,17 +34,29 @@ export const createRequestValidatorV1 = ({
     category: 'external',
     resource: 'valibot.v',
   });
-  const dataParameterName = 'data';
-  return $.func()
-    .async()
-    .param(dataParameterName)
-    .do(
-      $(v.placeholder)
-        .attr(identifiers.async.parseAsync)
-        .call(symbol.placeholder, dataParameterName)
-        .await()
-        .return(),
-    );
+  const args: ValidatorResolverArgs = {
+    $,
+    operation,
+    pipes: [],
+    plugin,
+    schema: symbol,
+    v,
+  };
+  const validator = plugin.config['~resolvers']?.validator;
+  const resolver =
+    typeof validator === 'function' ? validator : validator?.request;
+  const candidates = [resolver, defaultValidatorResolver];
+  for (const candidate of candidates) {
+    const statements = candidate?.(args);
+    if (statements === null) return;
+    if (statements !== undefined) {
+      return $.func()
+        .async()
+        .param('data')
+        .do(...(statements instanceof Array ? statements : [statements]));
+    }
+  }
+  return;
 };
 
 export const createResponseValidatorV1 = ({
@@ -50,15 +76,27 @@ export const createResponseValidatorV1 = ({
     category: 'external',
     resource: 'valibot.v',
   });
-  const dataParameterName = 'data';
-  return $.func()
-    .async()
-    .param(dataParameterName)
-    .do(
-      $(v.placeholder)
-        .attr(identifiers.async.parseAsync)
-        .call(symbol.placeholder, dataParameterName)
-        .await()
-        .return(),
-    );
+  const args: ValidatorResolverArgs = {
+    $,
+    operation,
+    pipes: [],
+    plugin,
+    schema: symbol,
+    v,
+  };
+  const validator = plugin.config['~resolvers']?.validator;
+  const resolver =
+    typeof validator === 'function' ? validator : validator?.response;
+  const candidates = [resolver, defaultValidatorResolver];
+  for (const candidate of candidates) {
+    const statements = candidate?.(args);
+    if (statements === null) return;
+    if (statements !== undefined) {
+      return $.func()
+        .async()
+        .param('data')
+        .do(...(statements instanceof Array ? statements : [statements]));
+    }
+  }
+  return;
 };
