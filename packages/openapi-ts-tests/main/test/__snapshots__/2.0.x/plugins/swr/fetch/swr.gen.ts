@@ -18,7 +18,7 @@ export const serviceWithEmptyTagOptions = (options?: Options<ServiceWithEmptyTag
 
 export const patchApiVbyApiVersionNoTagMutation = (options?: Options<PatchApiVbyApiVersionNoTagData>) => ({
     key: ["/api/v{api-version}/no+tag"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<PatchApiVbyApiVersionNoTagData>;
     }) => {
         const { data } = await patchApiVbyApiVersionNoTag({
@@ -32,7 +32,7 @@ export const patchApiVbyApiVersionNoTagMutation = (options?: Options<PatchApiVby
 
 export const fooWowMutation = (options?: Options<FooWowData>) => ({
     key: ["/api/v{api-version}/no+tag"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<FooWowData>;
     }) => {
         const { data } = await fooWow({
@@ -46,7 +46,7 @@ export const fooWowMutation = (options?: Options<FooWowData>) => ({
 
 export const deleteCallWithoutParametersAndResponseMutation = (options?: Options<DeleteCallWithoutParametersAndResponseData>) => ({
     key: ["/api/v{api-version}/simple"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<DeleteCallWithoutParametersAndResponseData>;
     }) => {
         const { data } = await deleteCallWithoutParametersAndResponse({
@@ -70,7 +70,7 @@ export const getCallWithoutParametersAndResponseOptions = (options?: Options<Get
 
 export const patchCallWithoutParametersAndResponseMutation = (options?: Options<PatchCallWithoutParametersAndResponseData>) => ({
     key: ["/api/v{api-version}/simple"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<PatchCallWithoutParametersAndResponseData>;
     }) => {
         const { data } = await patchCallWithoutParametersAndResponse({
@@ -84,7 +84,7 @@ export const patchCallWithoutParametersAndResponseMutation = (options?: Options<
 
 export const postCallWithoutParametersAndResponseMutation = (options?: Options<PostCallWithoutParametersAndResponseData>) => ({
     key: ["/api/v{api-version}/simple"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<PostCallWithoutParametersAndResponseData>;
     }) => {
         const { data } = await postCallWithoutParametersAndResponse({
@@ -98,7 +98,7 @@ export const postCallWithoutParametersAndResponseMutation = (options?: Options<P
 
 export const putCallWithoutParametersAndResponseMutation = (options?: Options<PutCallWithoutParametersAndResponseData>) => ({
     key: ["/api/v{api-version}/simple"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<PutCallWithoutParametersAndResponseData>;
     }) => {
         const { data } = await putCallWithoutParametersAndResponse({
@@ -112,7 +112,7 @@ export const putCallWithoutParametersAndResponseMutation = (options?: Options<Pu
 
 export const callWithDescriptionsMutation = (options?: Options<CallWithDescriptionsData>) => ({
     key: options?.path ? ["/api/v{api-version}/descriptions/", options] : ["/api/v{api-version}/descriptions/"],
-    fetcher: async (_key: readonly [string] | readonly [string, Options<CallWithDescriptionsData>], { arg }: {
+    fetcher: async (_key: string[] | [string, Options<CallWithDescriptionsData>], { arg }: {
         arg: Options<CallWithDescriptionsData>;
     }) => {
         const { data } = await callWithDescriptions({
@@ -126,7 +126,7 @@ export const callWithDescriptionsMutation = (options?: Options<CallWithDescripti
 
 export const callWithParametersMutation = (options?: Options<CallWithParametersData>) => ({
     key: options?.path ? ["/api/v{api-version}/parameters/{parameterPath}", options] : ["/api/v{api-version}/parameters/{parameterPath}"],
-    fetcher: async (_key: readonly [string] | readonly [string, Options<CallWithParametersData>], { arg }: {
+    fetcher: async (_key: string[] | [string, Options<CallWithParametersData>], { arg }: {
         arg: Options<CallWithParametersData>;
     }) => {
         const { data } = await callWithParameters({
@@ -140,7 +140,7 @@ export const callWithParametersMutation = (options?: Options<CallWithParametersD
 
 export const callWithWeirdParameterNamesMutation = (options?: Options<CallWithWeirdParameterNamesData>) => ({
     key: options?.path ? ["/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}", options] : ["/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}"],
-    fetcher: async (_key: readonly [string] | readonly [string, Options<CallWithWeirdParameterNamesData>], { arg }: {
+    fetcher: async (_key: string[] | [string, Options<CallWithWeirdParameterNamesData>], { arg }: {
         arg: Options<CallWithWeirdParameterNamesData>;
     }) => {
         const { data } = await callWithWeirdParameterNames({
@@ -164,7 +164,7 @@ export const callWithDefaultParametersOptions = (options: Options<CallWithDefaul
 
 export const callWithDefaultOptionalParametersMutation = (options?: Options<CallWithDefaultOptionalParametersData>) => ({
     key: options?.path ? ["/api/v{api-version}/defaults", options] : ["/api/v{api-version}/defaults"],
-    fetcher: async (_key: readonly [string] | readonly [string, Options<CallWithDefaultOptionalParametersData>], { arg }: {
+    fetcher: async (_key: string[] | [string, Options<CallWithDefaultOptionalParametersData>], { arg }: {
         arg: Options<CallWithDefaultOptionalParametersData>;
     }) => {
         const { data } = await callWithDefaultOptionalParameters({
@@ -178,7 +178,7 @@ export const callWithDefaultOptionalParametersMutation = (options?: Options<Call
 
 export const callToTestOrderOfParamsMutation = (options?: Options<CallToTestOrderOfParamsData>) => ({
     key: options?.path ? ["/api/v{api-version}/defaults", options] : ["/api/v{api-version}/defaults"],
-    fetcher: async (_key: readonly [string] | readonly [string, Options<CallToTestOrderOfParamsData>], { arg }: {
+    fetcher: async (_key: string[] | [string, Options<CallToTestOrderOfParamsData>], { arg }: {
         arg: Options<CallToTestOrderOfParamsData>;
     }) => {
         const { data } = await callToTestOrderOfParams({
@@ -192,7 +192,7 @@ export const callToTestOrderOfParamsMutation = (options?: Options<CallToTestOrde
 
 export const duplicateNameMutation = (options?: Options<DuplicateNameData>) => ({
     key: ["/api/v{api-version}/duplicate"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<DuplicateNameData>;
     }) => {
         const { data } = await duplicateName({
@@ -216,7 +216,7 @@ export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => 
 
 export const duplicateName3Mutation = (options?: Options<DuplicateName3Data>) => ({
     key: ["/api/v{api-version}/duplicate"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<DuplicateName3Data>;
     }) => {
         const { data } = await duplicateName3({
@@ -230,7 +230,7 @@ export const duplicateName3Mutation = (options?: Options<DuplicateName3Data>) =>
 
 export const duplicateName4Mutation = (options?: Options<DuplicateName4Data>) => ({
     key: ["/api/v{api-version}/duplicate"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<DuplicateName4Data>;
     }) => {
         const { data } = await duplicateName4({
@@ -294,7 +294,7 @@ export const callWithResponseOptions = (options?: Options<CallWithResponseData>)
 
 export const callWithDuplicateResponsesMutation = (options?: Options<CallWithDuplicateResponsesData>) => ({
     key: ["/api/v{api-version}/response"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<CallWithDuplicateResponsesData>;
     }) => {
         const { data } = await callWithDuplicateResponses({
@@ -308,7 +308,7 @@ export const callWithDuplicateResponsesMutation = (options?: Options<CallWithDup
 
 export const callWithResponsesMutation = (options?: Options<CallWithResponsesData>) => ({
     key: ["/api/v{api-version}/response"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<CallWithResponsesData>;
     }) => {
         const { data } = await callWithResponses({
@@ -352,7 +352,7 @@ export const complexTypesOptions = (options: Options<ComplexTypesData>) => ({
 
 export const callWithResultFromHeaderMutation = (options?: Options<CallWithResultFromHeaderData>) => ({
     key: ["/api/v{api-version}/header"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<CallWithResultFromHeaderData>;
     }) => {
         const { data } = await callWithResultFromHeader({
@@ -366,7 +366,7 @@ export const callWithResultFromHeaderMutation = (options?: Options<CallWithResul
 
 export const testErrorCodeMutation = (options?: Options<TestErrorCodeData>) => ({
     key: options?.path ? ["/api/v{api-version}/error", options] : ["/api/v{api-version}/error"],
-    fetcher: async (_key: readonly [string] | readonly [string, Options<TestErrorCodeData>], { arg }: {
+    fetcher: async (_key: string[] | [string, Options<TestErrorCodeData>], { arg }: {
         arg: Options<TestErrorCodeData>;
     }) => {
         const { data } = await testErrorCode({
@@ -380,7 +380,7 @@ export const testErrorCodeMutation = (options?: Options<TestErrorCodeData>) => (
 
 export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => ({
     key: options?.path ? ["/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串", options] : ["/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串"],
-    fetcher: async (_key: readonly [string] | readonly [string, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>], { arg }: {
+    fetcher: async (_key: string[] | [string, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>], { arg }: {
         arg: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>;
     }) => {
         const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
@@ -399,7 +399,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Options<
  */
 export const postApiVbyApiVersionBodyMutation = (options?: Options<PostApiVbyApiVersionBodyData>) => ({
     key: ["/api/v{api-version}/body"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<PostApiVbyApiVersionBodyData>;
     }) => {
         const { data } = await postApiVbyApiVersionBody({

@@ -18,7 +18,7 @@ export const getFooOptions = (options?: Options<GetFooData>) => ({
 
 export const fooPostMutation = (options?: Options<FooPostData>) => ({
     key: ["/foo"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<FooPostData>;
     }) => {
         const { data } = await FooBazService.fooService.post({
@@ -32,7 +32,7 @@ export const fooPostMutation = (options?: Options<FooPostData>) => ({
 
 export const fooPutMutation = (options?: Options<FooPutData>) => ({
     key: ["/foo"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<FooPutData>;
     }) => {
         const { data } = await FooBazService.fooService.put({
@@ -56,7 +56,7 @@ export const getFooBarOptions = (options?: Options<GetFooBarData>) => ({
 
 export const fooBarPostMutation = (options?: Options<FooBarPostData>) => ({
     key: ["/foo/bar"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<FooBarPostData>;
     }) => {
         const { data } = await FooBazService.fooService.barService.post({
@@ -70,7 +70,7 @@ export const fooBarPostMutation = (options?: Options<FooBarPostData>) => ({
 
 export const fooBarPutMutation = (options?: Options<FooBarPutData>) => ({
     key: ["/foo/bar"],
-    fetcher: async (_key: readonly [string], { arg }: {
+    fetcher: async (_key: string[], { arg }: {
         arg: Options<FooBarPutData>;
     }) => {
         const { data } = await FooBazService.fooService.barService.put({

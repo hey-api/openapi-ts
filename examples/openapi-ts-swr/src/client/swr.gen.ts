@@ -52,7 +52,7 @@ import type {
  */
 export const addPetMutation = (options?: Options<AddPetData>) => ({
   fetcher: async (
-    _key: readonly [string],
+    _key: string[],
     {
       arg,
     }: {
@@ -76,7 +76,7 @@ export const addPetMutation = (options?: Options<AddPetData>) => ({
  */
 export const updatePetMutation = (options?: Options<UpdatePetData>) => ({
   fetcher: async (
-    _key: readonly [string],
+    _key: string[],
     {
       arg,
     }: {
@@ -140,7 +140,7 @@ export const findPetsByTagsOptions = (
  */
 export const deletePetMutation = (options?: Options<DeletePetData>) => ({
   fetcher: async (
-    _key: readonly [string] | readonly [string, Options<DeletePetData>],
+    _key: string[] | [string, Options<DeletePetData>],
     {
       arg,
     }: {
@@ -184,7 +184,7 @@ export const updatePetWithFormMutation = (
   options?: Options<UpdatePetWithFormData>,
 ) => ({
   fetcher: async (
-    _key: readonly [string] | readonly [string, Options<UpdatePetWithFormData>],
+    _key: string[] | [string, Options<UpdatePetWithFormData>],
     {
       arg,
     }: {
@@ -208,7 +208,7 @@ export const updatePetWithFormMutation = (
  */
 export const uploadFileMutation = (options?: Options<UploadFileData>) => ({
   fetcher: async (
-    _key: readonly [string] | readonly [string, Options<UploadFileData>],
+    _key: string[] | [string, Options<UploadFileData>],
     {
       arg,
     }: {
@@ -251,7 +251,7 @@ export const getInventoryOptions = (options?: Options<GetInventoryData>) => ({
  */
 export const placeOrderMutation = (options?: Options<PlaceOrderData>) => ({
   fetcher: async (
-    _key: readonly [string],
+    _key: string[],
     {
       arg,
     }: {
@@ -275,7 +275,7 @@ export const placeOrderMutation = (options?: Options<PlaceOrderData>) => ({
  */
 export const deleteOrderMutation = (options?: Options<DeleteOrderData>) => ({
   fetcher: async (
-    _key: readonly [string] | readonly [string, Options<DeleteOrderData>],
+    _key: string[] | [string, Options<DeleteOrderData>],
     {
       arg,
     }: {
@@ -319,7 +319,7 @@ export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) => ({
  */
 export const createUserMutation = (options?: Options<CreateUserData>) => ({
   fetcher: async (
-    _key: readonly [string],
+    _key: string[],
     {
       arg,
     }: {
@@ -345,7 +345,7 @@ export const createUsersWithListInputMutation = (
   options?: Options<CreateUsersWithListInputData>,
 ) => ({
   fetcher: async (
-    _key: readonly [string],
+    _key: string[],
     {
       arg,
     }: {
@@ -404,7 +404,7 @@ export const logoutUserOptions = (options?: Options<LogoutUserData>) => ({
  */
 export const deleteUserMutation = (options?: Options<DeleteUserData>) => ({
   fetcher: async (
-    _key: readonly [string] | readonly [string, Options<DeleteUserData>],
+    _key: string[] | [string, Options<DeleteUserData>],
     {
       arg,
     }: {
@@ -446,7 +446,7 @@ export const getUserByNameOptions = (options: Options<GetUserByNameData>) => ({
  */
 export const updateUserMutation = (options?: Options<UpdateUserData>) => ({
   fetcher: async (
-    _key: readonly [string] | readonly [string, Options<UpdateUserData>],
+    _key: string[] | [string, Options<UpdateUserData>],
     {
       arg,
     }: {
