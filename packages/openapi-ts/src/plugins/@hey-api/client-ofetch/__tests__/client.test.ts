@@ -404,5 +404,118 @@ describe('request interceptor', () => {
   );
 });
 
+describe('FormData boundary handling', () => {
+  const client = createClient({ baseUrl: 'https://example.com' });
+
+  it('should not include Content-Type header for FormData body to avoid boundary mismatch', async () => {
+    const mockResponse = new Response(JSON.stringify({ success: true }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    });
+
+    const mockOfetch = makeMockOfetch(mockResponse);
+
+    const formData = new FormData();
+    formData.append('field1', 'value1');
+    formData.append('field2', 'value2');
+
+    await client.post({
+      body: formData,
+      bodySerializer: null,
+      ofetch: mockOfetch as any,
+      url: '/upload',
+    });
+
+    // Verify that ofetch.raw was called
+    expect(mockOfetch.raw).toHaveBeenCalledOnce();
+
+    // Get the options passed to ofetch.raw
+    const call = (mockOfetch.raw as any).mock.calls[0];
+    const opts = call[1];
+
+    // Verify that FormData is passed as body
+    expect(opts.body).toBeInstanceOf(FormData);
+
+    // Verify that Content-Type header is NOT set (so ofetch can set its own boundary)
+    expect(opts.headers.get('Content-Type')).toBeNull();
+  });
+
+  it('should preserve Content-Type header for non-FormData bodies', async () => {
+    const mockResponse = new Response(JSON.stringify({ success: true }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    });
+
+    const mockOfetch = makeMockOfetch(mockResponse);
+
+    await client.post({
+      body: { test: 'data' },
+      ofetch: mockOfetch as any,
+      url: '/api',
+    });
+
+    // Verify that ofetch.raw was called
+    expect(mockOfetch.raw).toHaveBeenCalledOnce();
+
+    // Get the options passed to ofetch.raw
+    const call = (mockOfetch.raw as any).mock.calls[0];
+    const opts = call[1];
+
+    // Verify that Content-Type header IS set for JSON
+    expect(opts.headers.get('Content-Type')).toBe('application/json');
+  });
+
+  it('should handle FormData with interceptors correctly', async () => {
+    const mockResponse = new Response(JSON.stringify({ success: true }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    });
+
+    const mockOfetch = makeMockOfetch(mockResponse);
+
+    const formData = new FormData();
+    formData.append('field1', 'value1');
+
+    const mockRequestInterceptor = vi
+      .fn()
+      .mockImplementation((request: Request) => {
+        // Interceptor can modify headers but we should still remove Content-Type for FormData
+        request.headers.set('X-Custom-Header', 'custom-value');
+        return request;
+      });
+
+    const interceptorId = client.interceptors.request.use(
+      mockRequestInterceptor,
+    );
+
+    await client.post({
+      body: formData,
+      bodySerializer: null,
+      ofetch: mockOfetch as any,
+      url: '/upload',
+    });
+
+    expect(mockRequestInterceptor).toHaveBeenCalledOnce();
+
+    // Get the options passed to ofetch.raw
+    const call = (mockOfetch.raw as any).mock.calls[0];
+    const opts = call[1];
+
+    // Verify that Content-Type is NOT set even after interceptor
+    expect(opts.headers.get('Content-Type')).toBeNull();
+
+    // Verify that custom header from interceptor IS preserved
+    expect(opts.headers.get('X-Custom-Header')).toBe('custom-value');
+
+    client.interceptors.request.eject(interceptorId);
+  });
+});
+
 // Note: дополнительные проверки поведения ofetch (responseType/responseStyle/retry)
 // не дублируем, чтобы набор тестов оставался сопоставим с другими клиентами.
