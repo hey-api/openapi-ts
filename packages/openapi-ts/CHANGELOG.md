@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.87.5
+
+### Patch Changes
+
+- **client-ofetch**: fix FormData boundary mismatch ([#2940](https://github.com/hey-api/openapi-ts/pull/2940)) ([`b290ec9`](https://github.com/hey-api/openapi-ts/commit/b290ec9a944c4e536d204e481d942f79ac02c5b9)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.87.4
 
 ### Patch Changes
