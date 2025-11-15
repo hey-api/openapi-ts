@@ -217,6 +217,7 @@ export const $ = Object.assign(
   (...args: ConstructorParameters<typeof ExprTsDsl>) => new ExprTsDsl(...args),
   base,
 );
+
 export type DollarTsDsl = {
   /**
    * Entry point to the TypeScript DSL.
@@ -237,40 +238,4 @@ export type DollarTsDsl = {
   $: typeof $;
 };
 
-export { ArrayTsDsl } from './array';
-export { AsTsDsl } from './as';
-export { AttrTsDsl } from './attr';
-export { AwaitTsDsl } from './await';
 export { TsDsl } from './base';
-export { BinaryTsDsl } from './binary';
-export { CallTsDsl } from './call';
-export { ClassTsDsl } from './class';
-export { DecoratorTsDsl } from './decorator';
-export { DocTsDsl } from './doc';
-export { ExprTsDsl } from './expr';
-export { FieldTsDsl } from './field';
-export { FuncTsDsl } from './func';
-export { GetterTsDsl } from './getter';
-export { HintTsDsl } from './hint';
-export { IfTsDsl } from './if';
-export { InitTsDsl } from './init';
-export { LiteralTsDsl } from './literal';
-export { MethodTsDsl } from './method';
-export { NewTsDsl } from './new';
-export { NewlineTsDsl } from './newline';
-export { NotTsDsl } from './not';
-export { NoteTsDsl } from './note';
-export { ObjectTsDsl } from './object';
-export { ParamTsDsl } from './param';
-export { PatternTsDsl } from './pattern';
-export { RegExpTsDsl } from './regexp';
-export { ReturnTsDsl } from './return';
-export { SetterTsDsl } from './setter';
-export { TemplateTsDsl } from './template';
-export { ThrowTsDsl } from './throw';
-export { TypeAliasTsDsl } from './type/alias';
-export { TypeAttrTsDsl } from './type/attr';
-export { TypeExprTsDsl } from './type/expr';
-export { TypeLiteralTsDsl } from './type/literal';
-export { TypeObjectTsDsl } from './type/object';
-export { VarTsDsl } from './var';
