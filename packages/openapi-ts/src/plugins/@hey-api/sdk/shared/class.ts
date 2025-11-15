@@ -257,7 +257,7 @@ export const generateClassSdk = ({
           const functionNode = $.method(entry.methodName, (m) =>
             m
               .$if(createOperationComment({ operation }), (m, v) =>
-                m.describe(v as ReadonlyArray<string>),
+                m.doc(v as ReadonlyArray<string>),
               )
               .public()
               .static(!isAngularClient && !plugin.config.instance)

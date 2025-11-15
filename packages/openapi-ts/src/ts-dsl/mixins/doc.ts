@@ -1,17 +1,14 @@
 import type { ITsDsl, MaybeArray } from '../base';
-import { DescribeTsDsl } from '../describe';
+import { DocTsDsl } from '../doc';
 
-export function DescribeMixin<
+export function DocMixin<
   TBase extends new (...args: ReadonlyArray<any>) => ITsDsl,
 >(Base: TBase) {
   const Mixin = class extends Base {
-    _desc?: DescribeTsDsl;
+    _doc?: DocTsDsl;
 
-    describe(
-      lines?: MaybeArray<string>,
-      fn?: (d: DescribeTsDsl) => void,
-    ): this {
-      this._desc = new DescribeTsDsl(lines, fn);
+    doc(lines?: MaybeArray<string>, fn?: (d: DocTsDsl) => void): this {
+      this._doc = new DocTsDsl(lines, fn);
       return this;
     }
   };
@@ -20,10 +17,10 @@ export function DescribeMixin<
 
   Mixin.prototype.$render = function (...args: Parameters<ITsDsl['$render']>) {
     const node = originalFn.apply(this, args);
-    return this._desc ? this._desc.apply(node) : node;
+    return this._doc ? this._doc.apply(node) : node;
   };
 
   return Mixin;
 }
 
-export type DescribeMixin = InstanceType<ReturnType<typeof DescribeMixin>>;
+export type DocMixin = InstanceType<ReturnType<typeof DocMixin>>;

@@ -4,8 +4,8 @@ import ts from 'typescript';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { DecoratorMixin } from './mixins/decorator';
-import { DescribeMixin } from './mixins/describe';
 import { DoMixin } from './mixins/do';
+import { DocMixin } from './mixins/doc';
 import type { AsyncMixin } from './mixins/modifiers';
 import {
   AbstractMixin,
@@ -41,8 +41,8 @@ export interface SetterTsDsl
   extends AbstractMixin,
     AsyncMixin,
     DecoratorMixin,
-    DescribeMixin,
     DoMixin,
+    DocMixin,
     ParamMixin,
     PrivateMixin,
     ProtectedMixin,
@@ -52,8 +52,8 @@ mixin(
   SetterTsDsl,
   AbstractMixin,
   DecoratorMixin,
-  [DescribeMixin, { overrideRender: true }],
   DoMixin,
+  [DocMixin, { overrideRender: true }],
   ParamMixin,
   PrivateMixin,
   ProtectedMixin,
