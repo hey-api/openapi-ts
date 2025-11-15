@@ -3,7 +3,7 @@ import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
-import type { CallTsDsl, DollarTsDsl, ObjectTsDsl, TsDsl } from '~/ts-dsl';
+import type { $, DollarTsDsl, TsDsl } from '~/ts-dsl';
 import type { StringCase, StringName } from '~/types/case';
 import type { MaybeArray } from '~/types/utils';
 
@@ -757,7 +757,7 @@ type SharedResolverArgs = DollarTsDsl & {
    * This chain can be extended, transformed, or replaced entirely to customize
    * the resulting output of the resolver.
    */
-  chain?: CallTsDsl;
+  chain?: ReturnType<typeof $.call>;
   plugin: ZodPlugin['Instance'];
 };
 
@@ -769,7 +769,7 @@ export type ObjectBaseResolverArgs = SharedResolverArgs & {
   /** Null = never */
   additional?: ts.Expression | null;
   schema: IR.SchemaObject;
-  shape: ObjectTsDsl;
+  shape: ReturnType<typeof $.object>;
 };
 
 export type ValidatorResolverArgs = SharedResolverArgs & {
@@ -802,7 +802,9 @@ type Resolvers = Plugin.Resolvers<{
      *
      * Returning `undefined` will execute the default resolver logic.
      */
-    base?: (args: ObjectBaseResolverArgs) => CallTsDsl | undefined;
+    base?: (
+      args: ObjectBaseResolverArgs,
+    ) => ReturnType<typeof $.call> | undefined;
   };
   /**
    * Resolvers for string schemas.
@@ -824,7 +826,7 @@ type Resolvers = Plugin.Resolvers<{
      */
     formats?: Record<
       string,
-      (args: FormatResolverArgs) => CallTsDsl | undefined
+      (args: FormatResolverArgs) => ReturnType<typeof $.call> | undefined
     >;
   };
   /**

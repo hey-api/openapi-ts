@@ -4,7 +4,7 @@ import ts from 'typescript';
 import { TsDsl, TypeTsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { DecoratorMixin } from './mixins/decorator';
-import { DescribeMixin } from './mixins/describe';
+import { DocMixin } from './mixins/doc';
 import {
   createModifierAccessor,
   PrivateMixin,
@@ -47,7 +47,7 @@ export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
 
 export interface FieldTsDsl
   extends DecoratorMixin,
-    DescribeMixin,
+    DocMixin,
     PrivateMixin,
     ProtectedMixin,
     PublicMixin,
@@ -57,7 +57,7 @@ export interface FieldTsDsl
 mixin(
   FieldTsDsl,
   DecoratorMixin,
-  [DescribeMixin, { overrideRender: true }],
+  [DocMixin, { overrideRender: true }],
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,

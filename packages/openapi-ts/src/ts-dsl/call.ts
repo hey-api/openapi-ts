@@ -3,9 +3,9 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
-import { AccessMixin, registerLazyAccessCallFactory } from './mixins/access';
 import { mixin } from './mixins/apply';
 import { ArgsMixin } from './mixins/args';
+import { ExprMixin, registerLazyAccessCallFactory } from './mixins/expr';
 import { TypeArgsMixin } from './mixins/type-args';
 
 export class CallTsDsl extends TsDsl<ts.CallExpression> {
@@ -31,7 +31,7 @@ export class CallTsDsl extends TsDsl<ts.CallExpression> {
   }
 }
 
-export interface CallTsDsl extends AccessMixin, ArgsMixin, TypeArgsMixin {}
-mixin(CallTsDsl, AccessMixin, ArgsMixin, TypeArgsMixin);
+export interface CallTsDsl extends ArgsMixin, ExprMixin, TypeArgsMixin {}
+mixin(CallTsDsl, ArgsMixin, ExprMixin, TypeArgsMixin);
 
 registerLazyAccessCallFactory((expr, args) => new CallTsDsl(expr, ...args));

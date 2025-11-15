@@ -3,7 +3,8 @@ import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from './base';
 import { mixin } from './mixins/apply';
-import { DescribeMixin } from './mixins/describe';
+import { DocMixin } from './mixins/doc';
+import { HintMixin } from './mixins/hint';
 import {
   createModifierAccessor,
   DefaultMixin,
@@ -68,15 +69,17 @@ export class VarTsDsl extends TsDsl<ts.VariableStatement> {
 
 export interface VarTsDsl
   extends DefaultMixin,
-    DescribeMixin,
+    DocMixin,
     ExportMixin,
+    HintMixin,
     PatternMixin,
     ValueMixin {}
 mixin(
   VarTsDsl,
   DefaultMixin,
-  [DescribeMixin, { overrideRender: true }],
+  [DocMixin, { overrideRender: true }],
   ExportMixin,
+  [HintMixin, { overrideRender: true }],
   PatternMixin,
   ValueMixin,
 );

@@ -3,8 +3,8 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
-import { AccessMixin, registerLazyAccessAwaitFactory } from './mixins/access';
 import { mixin } from './mixins/apply';
+import { ExprMixin, registerLazyAccessAwaitFactory } from './mixins/expr';
 
 export class AwaitTsDsl extends TsDsl<ts.AwaitExpression> {
   private _awaitExpr: MaybeTsDsl<WithString>;
@@ -19,7 +19,7 @@ export class AwaitTsDsl extends TsDsl<ts.AwaitExpression> {
   }
 }
 
-export interface AwaitTsDsl extends AccessMixin {}
-mixin(AwaitTsDsl, AccessMixin);
+export interface AwaitTsDsl extends ExprMixin {}
+mixin(AwaitTsDsl, ExprMixin);
 
 registerLazyAccessAwaitFactory((expr) => new AwaitTsDsl(expr));
