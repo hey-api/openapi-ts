@@ -2,7 +2,6 @@ import type ts from 'typescript';
 
 import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
-import type { CallTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
@@ -14,7 +13,7 @@ function defaultObjectBaseResolver({
   additional,
   plugin,
   shape,
-}: ObjectBaseResolverArgs): CallTsDsl {
+}: ObjectBaseResolverArgs): ReturnType<typeof $.call> {
   const z = plugin.referenceSymbol({
     category: 'external',
     resource: 'zod.z',
