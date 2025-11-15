@@ -593,28 +593,69 @@ export const operationStatements = ({
     for (const argName of opParameters.argNames) {
       args.push(tsc.identifier({ text: argName }));
     }
-    for (const field of opParameters.fields) {
-      const obj: Array<Record<string, unknown>> = [];
-      if ('in' in field) {
-        obj.push({
-          key: 'in',
-          value: field.in,
-        });
-        if (field.key) {
+
+    // When using flat params, fields need to be wrapped in an args array
+    if (plugin.config.paramsStructure === 'flat') {
+      const fieldObjects: Array<unknown> = [];
+      for (const field of opParameters.fields) {
+        const obj: Array<Record<string, unknown>> = [];
+        if ('in' in field) {
           obj.push({
-            key: 'key',
-            value: field.key,
+            key: 'in',
+            value: field.in,
           });
+          if (field.key) {
+            obj.push({
+              key: 'key',
+              value: field.key,
+            });
+          }
+          if (field.map) {
+            obj.push({
+              key: 'map',
+              value: field.map,
+            });
+          }
         }
-        if (field.map) {
-          obj.push({
-            key: 'map',
-            value: field.map,
-          });
-        }
+        fieldObjects.push(tsc.objectExpression({ obj }));
       }
-      config.push(tsc.objectExpression({ obj }));
+      // Wrap all fields in an args array for flat params
+      config.push(
+        tsc.objectExpression({
+          obj: [
+            {
+              key: 'args',
+              value: tsc.arrayLiteralExpression({ elements: fieldObjects }),
+            },
+          ],
+        }),
+      );
+    } else {
+      // For grouped params, generate fields as before
+      for (const field of opParameters.fields) {
+        const obj: Array<Record<string, unknown>> = [];
+        if ('in' in field) {
+          obj.push({
+            key: 'in',
+            value: field.in,
+          });
+          if (field.key) {
+            obj.push({
+              key: 'key',
+              value: field.key,
+            });
+          }
+          if (field.map) {
+            obj.push({
+              key: 'map',
+              value: field.map,
+            });
+          }
+        }
+        config.push(tsc.objectExpression({ obj }));
+      }
     }
+
     const symbol = plugin.referenceSymbol({
       category: 'external',
       resource: 'client.buildClientParams',

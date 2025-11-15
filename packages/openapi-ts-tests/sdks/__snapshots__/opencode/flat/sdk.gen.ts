@@ -79,12 +79,16 @@ export const sessionCreate = <ThrowOnError extends boolean = false>(parameters?:
         parameters
     ], [
         {
-            in: 'body',
-            key: 'parentID'
-        },
-        {
-            in: 'body',
-            key: 'title'
+            args: [
+                {
+                    in: 'body',
+                    key: 'parentID'
+                },
+                {
+                    in: 'body',
+                    key: 'title'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<SessionCreateResponses, SessionCreateErrors, ThrowOnError>({
@@ -109,8 +113,12 @@ export const sessionDelete = <ThrowOnError extends boolean = false>(parameters: 
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).delete<SessionDeleteResponses, unknown, ThrowOnError>({
@@ -130,8 +138,12 @@ export const sessionGet = <ThrowOnError extends boolean = false>(parameters: {
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).get<SessionGetResponses, unknown, ThrowOnError>({
@@ -152,12 +164,16 @@ export const sessionUpdate = <ThrowOnError extends boolean = false>(parameters: 
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
-        },
-        {
-            in: 'body',
-            key: 'title'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                },
+                {
+                    in: 'body',
+                    key: 'title'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).patch<SessionUpdateResponses, unknown, ThrowOnError>({
@@ -182,8 +198,12 @@ export const sessionChildren = <ThrowOnError extends boolean = false>(parameters
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).get<SessionChildrenResponses, unknown, ThrowOnError>({
@@ -206,20 +226,24 @@ export const sessionInit = <ThrowOnError extends boolean = false>(parameters: {
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
-        },
-        {
-            in: 'body',
-            key: 'messageID'
-        },
-        {
-            in: 'body',
-            key: 'providerID'
-        },
-        {
-            in: 'body',
-            key: 'modelID'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                },
+                {
+                    in: 'body',
+                    key: 'messageID'
+                },
+                {
+                    in: 'body',
+                    key: 'providerID'
+                },
+                {
+                    in: 'body',
+                    key: 'modelID'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<SessionInitResponses, unknown, ThrowOnError>({
@@ -244,8 +268,12 @@ export const sessionAbort = <ThrowOnError extends boolean = false>(parameters: {
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<SessionAbortResponses, unknown, ThrowOnError>({
@@ -265,8 +293,12 @@ export const sessionUnshare = <ThrowOnError extends boolean = false>(parameters:
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).delete<SessionUnshareResponses, unknown, ThrowOnError>({
@@ -286,8 +318,12 @@ export const sessionShare = <ThrowOnError extends boolean = false>(parameters: {
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<SessionShareResponses, unknown, ThrowOnError>({
@@ -309,16 +345,20 @@ export const sessionSummarize = <ThrowOnError extends boolean = false>(parameter
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
-        },
-        {
-            in: 'body',
-            key: 'providerID'
-        },
-        {
-            in: 'body',
-            key: 'modelID'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                },
+                {
+                    in: 'body',
+                    key: 'providerID'
+                },
+                {
+                    in: 'body',
+                    key: 'modelID'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<SessionSummarizeResponses, unknown, ThrowOnError>({
@@ -343,8 +383,12 @@ export const sessionMessages = <ThrowOnError extends boolean = false>(parameters
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).get<SessionMessagesResponses, unknown, ThrowOnError>({
@@ -379,36 +423,40 @@ export const sessionChat = <ThrowOnError extends boolean = false>(parameters: {
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
-        },
-        {
-            in: 'body',
-            key: 'messageID'
-        },
-        {
-            in: 'body',
-            key: 'providerID'
-        },
-        {
-            in: 'body',
-            key: 'modelID'
-        },
-        {
-            in: 'body',
-            key: 'agent'
-        },
-        {
-            in: 'body',
-            key: 'system'
-        },
-        {
-            in: 'body',
-            key: 'tools'
-        },
-        {
-            in: 'body',
-            key: 'parts'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                },
+                {
+                    in: 'body',
+                    key: 'messageID'
+                },
+                {
+                    in: 'body',
+                    key: 'providerID'
+                },
+                {
+                    in: 'body',
+                    key: 'modelID'
+                },
+                {
+                    in: 'body',
+                    key: 'agent'
+                },
+                {
+                    in: 'body',
+                    key: 'system'
+                },
+                {
+                    in: 'body',
+                    key: 'tools'
+                },
+                {
+                    in: 'body',
+                    key: 'parts'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<SessionChatResponses, unknown, ThrowOnError>({
@@ -434,12 +482,16 @@ export const sessionMessage = <ThrowOnError extends boolean = false>(parameters:
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
-        },
-        {
-            in: 'path',
-            key: 'messageID'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                },
+                {
+                    in: 'path',
+                    key: 'messageID'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).get<SessionMessageResponses, unknown, ThrowOnError>({
@@ -461,16 +513,20 @@ export const sessionShell = <ThrowOnError extends boolean = false>(parameters: {
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
-        },
-        {
-            in: 'body',
-            key: 'agent'
-        },
-        {
-            in: 'body',
-            key: 'command'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                },
+                {
+                    in: 'body',
+                    key: 'agent'
+                },
+                {
+                    in: 'body',
+                    key: 'command'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<SessionShellResponses, unknown, ThrowOnError>({
@@ -497,16 +553,20 @@ export const sessionRevert = <ThrowOnError extends boolean = false>(parameters: 
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
-        },
-        {
-            in: 'body',
-            key: 'messageID'
-        },
-        {
-            in: 'body',
-            key: 'partID'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                },
+                {
+                    in: 'body',
+                    key: 'messageID'
+                },
+                {
+                    in: 'body',
+                    key: 'partID'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<SessionRevertResponses, unknown, ThrowOnError>({
@@ -531,8 +591,12 @@ export const sessionUnrevert = <ThrowOnError extends boolean = false>(parameters
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<SessionUnrevertResponses, unknown, ThrowOnError>({
@@ -554,16 +618,20 @@ export const postSessionByIdPermissionsByPermissionId = <ThrowOnError extends bo
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
-        },
-        {
-            in: 'path',
-            key: 'permissionID'
-        },
-        {
-            in: 'body',
-            key: 'response'
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                },
+                {
+                    in: 'path',
+                    key: 'permissionID'
+                },
+                {
+                    in: 'body',
+                    key: 'response'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<PostSessionByIdPermissionsByPermissionIdResponses, unknown, ThrowOnError>({
@@ -598,8 +666,12 @@ export const findText = <ThrowOnError extends boolean = false>(parameters: {
         parameters
     ], [
         {
-            in: 'query',
-            key: 'pattern'
+            args: [
+                {
+                    in: 'query',
+                    key: 'pattern'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).get<FindTextResponses, unknown, ThrowOnError>({
@@ -619,8 +691,12 @@ export const findFiles = <ThrowOnError extends boolean = false>(parameters: {
         parameters
     ], [
         {
-            in: 'query',
-            key: 'query'
+            args: [
+                {
+                    in: 'query',
+                    key: 'query'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).get<FindFilesResponses, unknown, ThrowOnError>({
@@ -640,8 +716,12 @@ export const findSymbols = <ThrowOnError extends boolean = false>(parameters: {
         parameters
     ], [
         {
-            in: 'query',
-            key: 'query'
+            args: [
+                {
+                    in: 'query',
+                    key: 'query'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).get<FindSymbolsResponses, unknown, ThrowOnError>({
@@ -661,8 +741,12 @@ export const fileRead = <ThrowOnError extends boolean = false>(parameters: {
         parameters
     ], [
         {
-            in: 'query',
-            key: 'path'
+            args: [
+                {
+                    in: 'query',
+                    key: 'path'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).get<FileReadResponses, unknown, ThrowOnError>({
@@ -697,20 +781,24 @@ export const appLog = <ThrowOnError extends boolean = false>(parameters?: {
         parameters
     ], [
         {
-            in: 'body',
-            key: 'service'
-        },
-        {
-            in: 'body',
-            key: 'level'
-        },
-        {
-            in: 'body',
-            key: 'message'
-        },
-        {
-            in: 'body',
-            key: 'extra'
+            args: [
+                {
+                    in: 'body',
+                    key: 'service'
+                },
+                {
+                    in: 'body',
+                    key: 'level'
+                },
+                {
+                    in: 'body',
+                    key: 'message'
+                },
+                {
+                    in: 'body',
+                    key: 'extra'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<AppLogResponses, unknown, ThrowOnError>({
@@ -745,8 +833,12 @@ export const tuiAppendPrompt = <ThrowOnError extends boolean = false>(parameters
         parameters
     ], [
         {
-            in: 'body',
-            key: 'text'
+            args: [
+                {
+                    in: 'body',
+                    key: 'text'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<TuiAppendPromptResponses, unknown, ThrowOnError>({
@@ -831,8 +923,12 @@ export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(paramete
         parameters
     ], [
         {
-            in: 'body',
-            key: 'command'
+            args: [
+                {
+                    in: 'body',
+                    key: 'command'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<TuiExecuteCommandResponses, unknown, ThrowOnError>({
@@ -859,16 +955,20 @@ export const tuiShowToast = <ThrowOnError extends boolean = false>(parameters?: 
         parameters
     ], [
         {
-            in: 'body',
-            key: 'title'
-        },
-        {
-            in: 'body',
-            key: 'message'
-        },
-        {
-            in: 'body',
-            key: 'variant'
+            args: [
+                {
+                    in: 'body',
+                    key: 'title'
+                },
+                {
+                    in: 'body',
+                    key: 'message'
+                },
+                {
+                    in: 'body',
+                    key: 'variant'
+                }
+            ]
         }
     ]);
     return (options?.client ?? client).post<TuiShowToastResponses, unknown, ThrowOnError>({
@@ -894,10 +994,14 @@ export const authSet = <ThrowOnError extends boolean = false>(parameters: {
         parameters
     ], [
         {
-            in: 'path',
-            key: 'id'
-        },
-        {}
+            args: [
+                {
+                    in: 'path',
+                    key: 'id'
+                },
+                {}
+            ]
+        }
     ]);
     return (options?.client ?? client).put<AuthSetResponses, AuthSetErrors, ThrowOnError>({
         url: '/auth/{id}',
