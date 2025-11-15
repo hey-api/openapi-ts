@@ -57,7 +57,7 @@ export const createUseQuery = ({
     .export(symbolUseQueryFn.exported)
     .$if(
       plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.describe(v as ReadonlyArray<string>),
+      (c, v) => c.doc(v as ReadonlyArray<string>),
     )
     .assign(
       $.func()

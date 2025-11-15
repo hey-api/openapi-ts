@@ -7,8 +7,8 @@ import { mixin } from './mixins/apply';
 import { DoMixin } from './mixins/do';
 
 export class IfTsDsl extends TsDsl<ts.IfStatement> {
-  private conditionInput?: MaybeTsDsl<WithString>;
-  private elseInput?: ReadonlyArray<MaybeTsDsl<ts.Statement>>;
+  private _condition?: MaybeTsDsl<WithString>;
+  private _else?: ReadonlyArray<MaybeTsDsl<ts.Statement>>;
 
   constructor(condition?: MaybeTsDsl<WithString>) {
     super();
@@ -16,22 +16,22 @@ export class IfTsDsl extends TsDsl<ts.IfStatement> {
   }
 
   condition(condition: MaybeTsDsl<WithString>): this {
-    this.conditionInput = condition;
+    this._condition = condition;
     return this;
   }
 
   otherwise(...statements: ReadonlyArray<MaybeTsDsl<ts.Statement>>): this {
-    this.elseInput = statements;
+    this._else = statements;
     return this;
   }
 
   $render(): ts.IfStatement {
-    if (!this.conditionInput) throw new Error('Missing condition in if');
+    if (!this._condition) throw new Error('Missing condition in if');
 
     const thenStmts = this.$do();
     if (!thenStmts.length) throw new Error('Missing then block in if');
 
-    const condition = this.$node(this.conditionInput);
+    const condition = this.$node(this._condition);
     const thenBlock =
       thenStmts.length === 1
         ? thenStmts[0]!
@@ -41,8 +41,8 @@ export class IfTsDsl extends TsDsl<ts.IfStatement> {
       : ts.factory.createBlock([thenBlock], true);
 
     let elseNode: ts.Statement | undefined;
-    if (this.elseInput) {
-      const elseStmts = this.$node(this.elseInput);
+    if (this._else) {
+      const elseStmts = this.$node(this._else);
       const elseBlock =
         elseStmts.length === 1
           ? elseStmts[0]!

@@ -4,9 +4,9 @@ import { createOperationComment } from '~/plugins/shared/utils/operation';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
-import { handleMeta } from './shared/meta';
-import { useTypeData, useTypeError, useTypeResponse } from './shared/useType';
-import type { PluginInstance } from './types';
+import { handleMeta } from '../shared/meta';
+import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
+import type { PluginInstance } from '../types';
 
 export const createMutationOptions = ({
   operation,
@@ -62,7 +62,7 @@ export const createMutationOptions = ({
     .export(symbolMutationOptions.exported)
     .$if(
       plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.describe(v as ReadonlyArray<string>),
+      (c, v) => c.doc(v as ReadonlyArray<string>),
     )
     .assign(
       $.func()
