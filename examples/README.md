@@ -82,3 +82,33 @@ To exclude an example from CI (like `openapi-ts-sample`):
 
 1. Remove the `openapi-ts` script from `package.json`, or
 2. Update the exclusion filters in `package.json` scripts and `.github/workflows/ci.yml`
+
+## StackBlitz Integration
+
+Examples are automatically synced to StackBlitz after each release. When a new version is published to npm:
+
+1. The release workflow waits for the package to be available on npm
+2. Example `package.json` files are updated to use the published version (instead of `workspace:*`)
+3. Changes are committed to the main branch
+4. StackBlitz can import examples directly from GitHub
+
+### Opening Examples in StackBlitz
+
+Each example can be opened in StackBlitz using stable GitHub import URLs:
+
+```
+https://stackblitz.com/github/hey-api/openapi-ts/tree/main/examples/{example-name}
+```
+
+For example:
+
+- [openapi-ts-fetch](https://stackblitz.com/github/hey-api/openapi-ts/tree/main/examples/openapi-ts-fetch)
+- [openapi-ts-tanstack-react-query](https://stackblitz.com/github/hey-api/openapi-ts/tree/main/examples/openapi-ts-tanstack-react-query)
+
+These URLs are stable and automatically pull the latest code from the repository.
+
+### How It Works
+
+- **During Development**: Examples use `workspace:*` references to test against local code
+- **After Release**: Workflow replaces `workspace:*` with actual npm versions (e.g., `^0.55.0`)
+- **On StackBlitz**: GitHub imports work seamlessly with npm dependencies
