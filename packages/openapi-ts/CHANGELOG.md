@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.87.6
+
+### Patch Changes
+
+- **@tanstack/query**: prettier infinite query options ([#2986](https://github.com/hey-api/openapi-ts/pull/2986)) ([`37ff4ab`](https://github.com/hey-api/openapi-ts/commit/37ff4ab6bc89463778bf3709687ab84d3dab0618)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.87.5
 
 ### Patch Changes
