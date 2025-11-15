@@ -3,8 +3,8 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
-import { AccessMixin, registerLazyAccessReturnFactory } from './mixins/access';
 import { mixin } from './mixins/apply';
+import { ExprMixin, registerLazyAccessReturnFactory } from './mixins/expr';
 
 export class ReturnTsDsl extends TsDsl<ts.ReturnStatement> {
   private _returnExpr?: MaybeTsDsl<WithString>;
@@ -19,7 +19,7 @@ export class ReturnTsDsl extends TsDsl<ts.ReturnStatement> {
   }
 }
 
-export interface ReturnTsDsl extends AccessMixin {}
-mixin(ReturnTsDsl, AccessMixin);
+export interface ReturnTsDsl extends ExprMixin {}
+mixin(ReturnTsDsl, ExprMixin);
 
 registerLazyAccessReturnFactory((expr) => new ReturnTsDsl(expr));

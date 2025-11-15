@@ -3,9 +3,9 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
-import { AccessMixin, registerLazyAccessAttrFactory } from './mixins/access';
 import { mixin } from './mixins/apply';
 import { AssignmentMixin } from './mixins/assignment';
+import { ExprMixin, registerLazyAccessAttrFactory } from './mixins/expr';
 import { OperatorMixin } from './mixins/operator';
 import { OptionalMixin } from './mixins/optional';
 
@@ -54,10 +54,10 @@ export class AttrTsDsl extends TsDsl<
 }
 
 export interface AttrTsDsl
-  extends AccessMixin,
-    AssignmentMixin,
+  extends AssignmentMixin,
+    ExprMixin,
     OperatorMixin,
     OptionalMixin {}
-mixin(AttrTsDsl, AccessMixin, AssignmentMixin, OperatorMixin, OptionalMixin);
+mixin(AttrTsDsl, AssignmentMixin, ExprMixin, OperatorMixin, OptionalMixin);
 
 registerLazyAccessAttrFactory((expr, name) => new AttrTsDsl(expr, name));

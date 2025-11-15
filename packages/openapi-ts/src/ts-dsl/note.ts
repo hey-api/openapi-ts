@@ -3,10 +3,10 @@ import ts from 'typescript';
 import type { MaybeArray } from './base';
 import { TsDsl } from './base';
 
-export class DescribeTsDsl extends TsDsl {
+export class NoteTsDsl extends TsDsl<ts.Node> {
   private _lines: Array<string> = [];
 
-  constructor(lines?: MaybeArray<string>, fn?: (d: DescribeTsDsl) => void) {
+  constructor(lines?: MaybeArray<string>, fn?: (d: NoteTsDsl) => void) {
     super();
     if (lines) {
       if (typeof lines === 'string') {
@@ -27,34 +27,10 @@ export class DescribeTsDsl extends TsDsl {
     const lines = this._lines.filter((line) => Boolean(line) || line === '');
     if (!lines.length) return node;
 
-    const jsdocTexts = lines.map((line, index) => {
-      let text = line;
-      if (index !== lines.length) {
-        text = `${text}\n`;
-      }
-      return ts.factory.createJSDocText(text);
-    });
-
-    const jsdoc = ts.factory.createJSDocComment(
-      ts.factory.createNodeArray(jsdocTexts),
-      undefined,
-    );
-
-    const cleanedJsdoc = ts
-      .createPrinter()
-      .printNode(
-        ts.EmitHint.Unspecified,
-        jsdoc,
-        node.getSourceFile?.() ??
-          ts.createSourceFile('', '', ts.ScriptTarget.Latest),
-      )
-      .replace('/*', '')
-      .replace('*  */', '');
-
     ts.addSyntheticLeadingComment(
       node,
       ts.SyntaxKind.MultiLineCommentTrivia,
-      cleanedJsdoc,
+      `\n${lines.join('\n')}\n`,
       true,
     );
 

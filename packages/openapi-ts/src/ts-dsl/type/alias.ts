@@ -4,6 +4,7 @@ import ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { mixin } from '../mixins/apply';
+import { DocMixin } from '../mixins/doc';
 import { createModifierAccessor, ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 
@@ -37,5 +38,8 @@ export class TypeAliasTsDsl extends TsDsl<ts.TypeAliasDeclaration> {
   }
 }
 
-export interface TypeAliasTsDsl extends ExportMixin, TypeParamsMixin {}
-mixin(TypeAliasTsDsl, ExportMixin, TypeParamsMixin);
+export interface TypeAliasTsDsl
+  extends DocMixin,
+    ExportMixin,
+    TypeParamsMixin {}
+mixin(TypeAliasTsDsl, DocMixin, ExportMixin, TypeParamsMixin);

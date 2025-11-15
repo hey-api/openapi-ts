@@ -1,15 +1,17 @@
 import { ArrayTsDsl } from './array';
+import { AsTsDsl } from './as';
 import { AttrTsDsl } from './attr';
 import { AwaitTsDsl } from './await';
 import { BinaryTsDsl } from './binary';
 import { CallTsDsl } from './call';
 import { ClassTsDsl } from './class';
 import { DecoratorTsDsl } from './decorator';
-import { DescribeTsDsl } from './describe';
+import { DocTsDsl } from './doc';
 import { ExprTsDsl } from './expr';
 import { FieldTsDsl } from './field';
 import { FuncTsDsl } from './func';
 import { GetterTsDsl } from './getter';
+import { HintTsDsl } from './hint';
 import { IfTsDsl } from './if';
 import { InitTsDsl } from './init';
 import { LiteralTsDsl } from './literal';
@@ -17,6 +19,7 @@ import { MethodTsDsl } from './method';
 import { NewTsDsl } from './new';
 import { NewlineTsDsl } from './newline';
 import { NotTsDsl } from './not';
+import { NoteTsDsl } from './note';
 import { ObjectTsDsl } from './object';
 import { ParamTsDsl } from './param';
 import { PatternTsDsl } from './pattern';
@@ -24,18 +27,23 @@ import { RegExpTsDsl } from './regexp';
 import { ReturnTsDsl } from './return';
 import { SetterTsDsl } from './setter';
 import { TemplateTsDsl } from './template';
+import { TernaryTsDsl } from './ternary';
 import { ThrowTsDsl } from './throw';
 import { TypeAliasTsDsl } from './type/alias';
 import { TypeAttrTsDsl } from './type/attr';
 import { TypeExprTsDsl } from './type/expr';
 import { TypeLiteralTsDsl } from './type/literal';
 import { TypeObjectTsDsl } from './type/object';
+import { TypeOfExprTsDsl } from './typeof';
 import { VarTsDsl } from './var';
 
 const base = {
   /** Creates an array literal expression (e.g. `[1, 2, 3]`). */
   array: (...args: ConstructorParameters<typeof ArrayTsDsl>) =>
     new ArrayTsDsl(...args),
+
+  /** Creates an `as` type assertion expression (e.g. `value as Type`). */
+  as: (...args: ConstructorParameters<typeof AsTsDsl>) => new AsTsDsl(...args),
 
   /** Creates a property access expression (e.g. `obj.foo`). */
   attr: (...args: ConstructorParameters<typeof AttrTsDsl>) =>
@@ -65,9 +73,9 @@ const base = {
   decorator: (...args: ConstructorParameters<typeof DecoratorTsDsl>) =>
     new DecoratorTsDsl(...args),
 
-  /** Creates a describe block (used for tests or descriptions). */
-  describe: (...args: ConstructorParameters<typeof DescribeTsDsl>) =>
-    new DescribeTsDsl(...args),
+  /** Creates a JSDoc documentation block. */
+  doc: (...args: ConstructorParameters<typeof DocTsDsl>) =>
+    new DocTsDsl(...args),
 
   /** Creates a general expression node. */
   expr: (...args: ConstructorParameters<typeof ExprTsDsl>) =>
@@ -93,6 +101,10 @@ const base = {
   /** Creates a getter method declaration. */
   getter: (...args: ConstructorParameters<typeof GetterTsDsl>) =>
     new GetterTsDsl(...args),
+
+  /** Creates a single-line comment (//). */
+  hint: (...args: ConstructorParameters<typeof HintTsDsl>) =>
+    new HintTsDsl(...args),
 
   /** Creates an if statement. */
   if: (...args: ConstructorParameters<typeof IfTsDsl>) => new IfTsDsl(...args),
@@ -125,6 +137,10 @@ const base = {
   not: (...args: ConstructorParameters<typeof NotTsDsl>) =>
     new NotTsDsl(...args),
 
+  /** Creates a block comment (/* ... *\/). */
+  note: (...args: ConstructorParameters<typeof NoteTsDsl>) =>
+    new NoteTsDsl(...args),
+
   /** Creates an object literal expression. */
   object: (...args: ConstructorParameters<typeof ObjectTsDsl>) =>
     new ObjectTsDsl(...args),
@@ -152,6 +168,10 @@ const base = {
   /** Creates a template literal expression. */
   template: (...args: ConstructorParameters<typeof TemplateTsDsl>) =>
     new TemplateTsDsl(...args),
+
+  /** Creates a ternary conditional expression (if ? then : else). */
+  ternary: (...args: ConstructorParameters<typeof TernaryTsDsl>) =>
+    new TernaryTsDsl(...args),
 
   /** Creates a throw statement. */
   throw: (...args: ConstructorParameters<typeof ThrowTsDsl>) =>
@@ -184,6 +204,10 @@ const base = {
     },
   ),
 
+  /** Creates a runtime `typeof` expression (e.g. typeof x). */
+  typeofExpr: (...args: ConstructorParameters<typeof TypeOfExprTsDsl>) =>
+    new TypeOfExprTsDsl(...args),
+
   /** Creates a variable declaration (var). */
   var: (...args: ConstructorParameters<typeof VarTsDsl>) =>
     new VarTsDsl(...args),
@@ -214,6 +238,7 @@ export type DollarTsDsl = {
 };
 
 export { ArrayTsDsl } from './array';
+export { AsTsDsl } from './as';
 export { AttrTsDsl } from './attr';
 export { AwaitTsDsl } from './await';
 export { TsDsl } from './base';
@@ -221,11 +246,12 @@ export { BinaryTsDsl } from './binary';
 export { CallTsDsl } from './call';
 export { ClassTsDsl } from './class';
 export { DecoratorTsDsl } from './decorator';
-export { DescribeTsDsl } from './describe';
+export { DocTsDsl } from './doc';
 export { ExprTsDsl } from './expr';
 export { FieldTsDsl } from './field';
 export { FuncTsDsl } from './func';
 export { GetterTsDsl } from './getter';
+export { HintTsDsl } from './hint';
 export { IfTsDsl } from './if';
 export { InitTsDsl } from './init';
 export { LiteralTsDsl } from './literal';
@@ -233,6 +259,7 @@ export { MethodTsDsl } from './method';
 export { NewTsDsl } from './new';
 export { NewlineTsDsl } from './newline';
 export { NotTsDsl } from './not';
+export { NoteTsDsl } from './note';
 export { ObjectTsDsl } from './object';
 export { ParamTsDsl } from './param';
 export { PatternTsDsl } from './pattern';

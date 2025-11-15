@@ -289,9 +289,7 @@ export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOpti
 });
 
 const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>>(queryKey: QueryKey<Options>, page: K) => {
-    const params = {
-        ...queryKey[0]
-    };
+    const params = { ...queryKey[0] };
     if (page.body) {
         params.body = {
             ...queryKey[0].body as any,
@@ -321,29 +319,27 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
 
 export const getCallWithOptionalParamInfiniteQueryKey = (options: Options<GetCallWithOptionalParamData>): QueryKey<Options<GetCallWithOptionalParamData>> => createQueryKey("getCallWithOptionalParam", options, true);
 
-export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCallWithOptionalParamData>) => {
-    return infiniteQueryOptions<unknown, AxiosError<DefaultError>, InfiniteData<unknown>, QueryKey<Options<GetCallWithOptionalParamData>>, number | Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
-    // @ts-ignore
-    {
-        queryFn: async ({ pageParam, queryKey, signal }) => {
-            // @ts-ignore
-            const page: Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
-                query: {
-                    page: pageParam
-                }
-            };
-            const params = createInfiniteParams(queryKey, page);
-            const { data } = await getCallWithOptionalParam({
-                ...options,
-                ...params,
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getCallWithOptionalParamInfiniteQueryKey(options)
-    });
-};
+export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCallWithOptionalParamData>) => infiniteQueryOptions<unknown, AxiosError<DefaultError>, InfiniteData<unknown>, QueryKey<Options<GetCallWithOptionalParamData>>, number | Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+// @ts-ignore
+{
+    queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === "object" ? pageParam : {
+            query: {
+                page: pageParam
+            }
+        };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getCallWithOptionalParam({
+            ...options,
+            ...params,
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getCallWithOptionalParamInfiniteQueryKey(options)
+});
 
 export const postCallWithOptionalParamMutation = (options?: Partial<Options<PostCallWithOptionalParamData>>): MutationOptions<PostCallWithOptionalParamResponse, AxiosError<DefaultError>, Options<PostCallWithOptionalParamData>> => {
     const mutationOptions: MutationOptions<PostCallWithOptionalParamResponse, AxiosError<DefaultError>, Options<PostCallWithOptionalParamData>> = {
