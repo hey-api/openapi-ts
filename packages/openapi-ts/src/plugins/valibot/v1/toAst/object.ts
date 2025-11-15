@@ -2,7 +2,7 @@ import type ts from 'typescript';
 
 import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
-import { $, type CallTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import { pipesToAst } from '../../shared/pipesToAst';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
@@ -63,7 +63,7 @@ export const objectToAst = ({
   schema: SchemaWithType<'object'>;
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
-  const pipes: Array<CallTsDsl> = [];
+  const pipes: Array<ReturnType<typeof $.call>> = [];
 
   // TODO: parser - handle constants
 

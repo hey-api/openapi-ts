@@ -1,7 +1,6 @@
 import type ts from 'typescript';
 
 import type { SchemaWithType } from '~/plugins';
-import type { CallTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
 import { pipesToAst } from '../../shared/pipesToAst';
@@ -54,7 +53,7 @@ export const stringToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
 }): ts.Expression => {
-  const pipes: Array<CallTsDsl> = [];
+  const pipes: Array<ReturnType<typeof $.call>> = [];
 
   const v = plugin.referenceSymbol({
     category: 'external',
