@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { WithString } from '../base';
 import { TypeTsDsl } from '../base';
 import { mixin } from '../mixins/apply';
 import { OptionalMixin } from '../mixins/optional';
@@ -23,7 +22,7 @@ export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
 
 class TypePropTsDsl extends TypeTsDsl<ts.TypeElement> {
   private name: string;
-  private typeInput?: WithString<ts.TypeNode>;
+  private typeInput?: string | ts.TypeNode;
 
   constructor(name: string, fn: (p: TypePropTsDsl) => void) {
     super();
@@ -32,7 +31,7 @@ class TypePropTsDsl extends TypeTsDsl<ts.TypeElement> {
   }
 
   /** Sets the property type. */
-  type(type: WithString<ts.TypeNode>): this {
+  type(type: string | ts.TypeNode): this {
     this.typeInput = type;
     return this;
   }
@@ -44,7 +43,7 @@ class TypePropTsDsl extends TypeTsDsl<ts.TypeElement> {
     }
     return ts.factory.createPropertySignature(
       undefined,
-      this.$expr(this.name),
+      this.name,
       this.questionToken,
       this.$type(this.typeInput),
     );

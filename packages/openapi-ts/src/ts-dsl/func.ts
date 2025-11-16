@@ -96,7 +96,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
       return ts.factory.createFunctionExpression(
         [...this.modifiers.list()],
         undefined,
-        this.$expr(this.name),
+        this.name,
         this.$generics(),
         this.$params(),
         this.$type(this._returns),

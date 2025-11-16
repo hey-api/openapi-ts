@@ -40,10 +40,10 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'invalid',
-            // 'full.yaml',
+            'full.yaml',
             // 'openai.yaml',
             // 'opencode.yaml',
-            'pagination-ref.yaml',
+            // 'pagination-ref.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
@@ -431,7 +431,7 @@ export default defineConfig(() => {
         {
           // case: 'snake_case',
           // comments: false,
-          compatibilityVersion: 'mini',
+          compatibilityVersion: 4,
           dates: {
             // local: true,
             // offset: true,

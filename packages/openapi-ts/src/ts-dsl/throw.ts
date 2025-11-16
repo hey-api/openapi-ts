@@ -1,20 +1,20 @@
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from './base';
+import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 
 export class ThrowTsDsl extends TsDsl<ts.ThrowStatement> {
-  private error: MaybeTsDsl<WithString>;
-  private msg?: MaybeTsDsl<WithString>;
+  private error: string | MaybeTsDsl<ts.Expression>;
+  private msg?: string | MaybeTsDsl<ts.Expression>;
   private useNew: boolean;
 
-  constructor(error: MaybeTsDsl<WithString>, useNew = true) {
+  constructor(error: string | MaybeTsDsl<ts.Expression>, useNew = true) {
     super();
     this.error = error;
     this.useNew = useNew;
   }
 
-  message(value: MaybeTsDsl<WithString>): this {
+  message(value: string | MaybeTsDsl<ts.Expression>): this {
     this.msg = value;
     return this;
   }

@@ -2,7 +2,7 @@
 
 import * as z from 'zod/mini';
 
-export const zBaz = z._default(z.readonly(z.string().check(z.regex(/foo\nbar/))), 'baz');
+export const zBaz = z._default(z.readonly(z.string().check(z.regex(/foo\nbar/))), "baz");
 
 export const zFoo = z._default(z.union([
     z.object({

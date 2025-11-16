@@ -1,5 +1,5 @@
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
@@ -14,11 +14,6 @@ export const undefinedToAst = ({
     category: 'external',
     resource: 'zod.z',
   });
-  result.expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: z.placeholder,
-      name: identifiers.undefined,
-    }),
-  });
+  result.expression = $(z.placeholder).attr(identifiers.undefined).call();
   return result as Omit<Ast, 'typeName'>;
 };

@@ -42,7 +42,7 @@ export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
     return ts.factory.createMethodDeclaration(
       [...this.$decorators(), ...this.modifiers.list()],
       undefined,
-      this.$expr(this.name),
+      this.name,
       this.questionToken,
       this.$generics(),
       this.$params(),

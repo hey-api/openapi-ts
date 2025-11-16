@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { WithString } from '../base';
 import { TypeTsDsl } from '../base';
 import { mixin } from '../mixins/apply';
 import { TypeArgsMixin } from '../mixins/type-args';
@@ -9,7 +8,7 @@ import { TypeAttrTsDsl } from './attr';
 import { TypeIdxTsDsl } from './idx';
 
 export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
-  private _exprInput?: WithString<ts.Identifier> | TypeAttrTsDsl;
+  private _exprInput?: string | ts.Identifier | TypeAttrTsDsl;
 
   constructor();
   constructor(fn: (t: TypeExprTsDsl) => void);
@@ -29,7 +28,7 @@ export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
   }
 
   /** Accesses a nested type (e.g. `Foo.Bar`). */
-  attr(right: WithString<ts.Identifier> | TypeAttrTsDsl): this {
+  attr(right: string | ts.Identifier | TypeAttrTsDsl): this {
     this._exprInput =
       right instanceof TypeAttrTsDsl
         ? right.base(this._exprInput)
@@ -38,7 +37,7 @@ export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
   }
 
   /** Creates an indexed-access type (e.g. `Foo<T>[K]`). */
-  idx(index: WithString<ts.TypeNode> | number): TypeIdxTsDsl {
+  idx(index: string | ts.TypeNode | number): TypeIdxTsDsl {
     return new TypeIdxTsDsl(this, index);
   }
 

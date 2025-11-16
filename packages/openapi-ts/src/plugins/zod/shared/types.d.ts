@@ -3,11 +3,12 @@ import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import type { ToRefs } from '~/plugins';
+import type { $ } from '~/ts-dsl';
 
 import type { ZodPlugin } from '../types';
 
 export type Ast = {
-  expression: ts.Expression;
+  expression: ReturnType<typeof $.expr | typeof $.call>;
   hasLazyExpression?: boolean;
   typeName?: string | ts.Identifier;
 };

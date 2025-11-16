@@ -767,7 +767,7 @@ export type FormatResolverArgs = Required<SharedResolverArgs> & {
 
 export type ObjectBaseResolverArgs = SharedResolverArgs & {
   /** Null = never */
-  additional?: ts.Expression | null;
+  additional?: ReturnType<typeof $.call | typeof $.expr> | null;
   schema: IR.SchemaObject;
   shape: ReturnType<typeof $.object>;
 };
