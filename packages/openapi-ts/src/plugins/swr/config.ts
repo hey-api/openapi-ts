@@ -10,15 +10,27 @@ export const defaultConfig: SwrPlugin['Config'] = {
     exportFromIndex: false,
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
-  handler: handler as SwrPlugin['Handler'],
+  handler,
   name: 'swr',
   resolveConfig: (plugin, context) => {
-    // Resolve swrKeys configuration
+    plugin.config.swrInfiniteOptions = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: '{{name}}Infinite',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ name }),
+        string: (name) => ({ name }),
+      },
+      value: plugin.config.swrInfiniteOptions,
+    });
+
     plugin.config.swrKeys = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
-        exported: true,
         name: '{{name}}Key',
       },
       mappers: {
@@ -29,28 +41,10 @@ export const defaultConfig: SwrPlugin['Config'] = {
       value: plugin.config.swrKeys,
     });
 
-    // Resolve swrOptions configuration
-    plugin.config.swrOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        exported: true,
-        name: '{{name}}Options',
-      },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
-      value: plugin.config.swrOptions,
-    });
-
-    // Resolve swrMutationOptions configuration
     plugin.config.swrMutationOptions = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
-        exported: true,
         name: '{{name}}Mutation',
       },
       mappers: {
@@ -61,20 +55,18 @@ export const defaultConfig: SwrPlugin['Config'] = {
       value: plugin.config.swrMutationOptions,
     });
 
-    // Resolve swrInfiniteOptions configuration
-    plugin.config.swrInfiniteOptions = context.valueToObject({
+    plugin.config.swrOptions = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
-        exported: true,
-        name: '{{name}}Infinite',
+        name: '{{name}}Options',
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),
         function: (name) => ({ name }),
         string: (name) => ({ name }),
       },
-      value: plugin.config.swrInfiniteOptions,
+      value: plugin.config.swrOptions,
     });
   },
 };

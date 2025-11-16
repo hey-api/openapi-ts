@@ -6,7 +6,7 @@ import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import { $ } from '~/ts-dsl';
 
-import type { PluginInstance } from '../types';
+import type { SwrPlugin } from '../types';
 import { useTypeData } from '../useType';
 
 /**
@@ -34,7 +34,7 @@ export const swrKeyStatement = ({
   symbol,
 }: {
   operation: IR.OperationObject;
-  plugin: PluginInstance;
+  plugin: SwrPlugin['Instance'];
   symbol: Symbol;
 }) => {
   const typeData = useTypeData({ operation, plugin });
@@ -91,7 +91,7 @@ export const registerSwrKey = ({
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: PluginInstance;
+  plugin: SwrPlugin['Instance'];
 }): Symbol => {
   const symbol = plugin.registerSymbol({
     exported: true,

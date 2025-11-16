@@ -12,6 +12,11 @@ export type UserConfig = Plugin.Name<'swr'> &
     /**
      * Add comments from SDK functions to the generated SWR code?
      *
+     * Duplicating comments this way is useful so you don't need to drill into
+     * the underlying SDK function to learn what it does or whether it's
+     * deprecated. You can set this option to `false` if you prefer less
+     * comment duplication.
+     *
      * @default true
      */
     comments?: boolean;
@@ -324,12 +329,6 @@ export type UserConfig = Plugin.Name<'swr'> &
            */
           enabled?: boolean;
           /**
-           * Whether to export generated symbols.
-           *
-           * @default true
-           */
-          exported?: boolean;
-          /**
            * Custom naming pattern for generated SWR key names. The name variable is
            * obtained from the SDK function name.
            *
@@ -364,12 +363,6 @@ export type UserConfig = Plugin.Name<'swr'> &
            */
           enabled?: boolean;
           /**
-           * Whether to export generated symbols.
-           *
-           * @default true
-           */
-          exported?: boolean;
-          /**
            * Custom naming pattern for generated useSWRMutation options names. The name variable is
            * obtained from the SDK function name.
            *
@@ -403,12 +396,6 @@ export type UserConfig = Plugin.Name<'swr'> &
            * @default true
            */
           enabled?: boolean;
-          /**
-           * Whether to export generated symbols.
-           *
-           * @default true
-           */
-          exported?: boolean;
           /**
            * Custom naming pattern for generated useSWR options names. The name variable is
            * obtained from the SDK function name.
@@ -592,12 +579,6 @@ export type Config = Plugin.Name<'swr'> &
        */
       enabled: boolean;
       /**
-       * Whether to export generated symbols.
-       *
-       * @default true
-       */
-      exported: boolean;
-      /**
        * Custom naming pattern for generated useSWRInfinite options names. The name variable is obtained from the SDK function name.
        *
        * @param operation - The operation object containing all available metadata
@@ -677,12 +658,6 @@ export type Config = Plugin.Name<'swr'> &
        */
       enabled: boolean;
       /**
-       * Whether to export generated symbols.
-       *
-       * @default true
-       */
-      exported: boolean;
-      /**
        * Custom naming pattern for generated SWR key names. The name variable is obtained from the SDK function name.
        *
        * @default '{{name}}Key'
@@ -705,12 +680,6 @@ export type Config = Plugin.Name<'swr'> &
        * @default true
        */
       enabled: boolean;
-      /**
-       * Whether to export generated symbols.
-       *
-       * @default true
-       */
-      exported: boolean;
       /**
        * Custom naming pattern for generated useSWRMutation options names. The name variable is obtained from the SDK function name.
        *
@@ -735,12 +704,6 @@ export type Config = Plugin.Name<'swr'> &
        */
       enabled: boolean;
       /**
-       * Whether to export generated symbols.
-       *
-       * @default true
-       */
-      exported: boolean;
-      /**
        * Custom naming pattern for generated useSWR options names. The name variable is obtained from the SDK function name.
        *
        * @default '{{name}}Options'
@@ -750,6 +713,3 @@ export type Config = Plugin.Name<'swr'> &
   };
 
 export type SwrPlugin = DefinePlugin<UserConfig, Config>;
-
-export type PluginHandler = SwrPlugin['Handler'];
-export type PluginInstance = Plugin.Instance<Config>;

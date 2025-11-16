@@ -11,7 +11,7 @@ import {
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
-import type { PluginInstance } from '../types';
+import type { SwrPlugin } from '../types';
 import { useTypeData } from '../useType';
 
 const optionsParamName = 'options';
@@ -75,7 +75,7 @@ export const createSwrInfiniteOptions = ({
   sdkFn,
 }: {
   operation: IR.OperationObject;
-  plugin: PluginInstance;
+  plugin: SwrPlugin['Instance'];
   sdkFn: string;
 }): void => {
   if (hasOperationSse({ operation })) {
@@ -206,9 +206,8 @@ export const createSwrInfiniteOptions = ({
     .prop('getKey', $(getKeyNode))
     .prop('fetcher', fetcherFunction);
 
-  // Register the infinite options symbol
   const symbolSwrInfiniteOptionsFn = plugin.registerSymbol({
-    exported: plugin.config.swrInfiniteOptions.exported,
+    exported: true,
     meta: {
       category: 'hook',
       resource: 'operation',

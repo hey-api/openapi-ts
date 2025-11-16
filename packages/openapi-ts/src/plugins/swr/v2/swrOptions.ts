@@ -8,7 +8,7 @@ import {
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
-import type { PluginInstance } from '../types';
+import type { SwrPlugin } from '../types';
 import { useTypeData } from '../useType';
 import { registerSwrKey } from './swrKey';
 
@@ -54,7 +54,7 @@ export const createSwrOptions = ({
   sdkFn,
 }: {
   operation: IR.OperationObject;
-  plugin: PluginInstance;
+  plugin: SwrPlugin['Instance'];
   sdkFn: string;
 }): void => {
   if (hasOperationSse({ operation })) {
@@ -114,7 +114,7 @@ export const createSwrOptions = ({
 
   // Register the options symbol
   const symbolSwrOptionsFn = plugin.registerSymbol({
-    exported: plugin.config.swrOptions.exported,
+    exported: true,
     meta: {
       category: 'hook',
       resource: 'operation',

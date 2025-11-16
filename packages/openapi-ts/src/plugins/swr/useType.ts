@@ -2,14 +2,14 @@ import type { IR } from '~/ir/types';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { operationOptionsType } from '~/plugins/@hey-api/sdk/shared/operation';
 
-import type { PluginInstance } from './types';
+import type { SwrPlugin } from './types';
 
 export const useTypeData = ({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: PluginInstance;
+  plugin: SwrPlugin['Instance'];
 }): string => {
   const pluginSdk = plugin.getPluginOrThrow('@hey-api/sdk');
   const typeData = operationOptionsType({ operation, plugin: pluginSdk });
@@ -21,7 +21,7 @@ export const useTypeError = ({
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: PluginInstance;
+  plugin: SwrPlugin['Instance'];
 }): string => {
   const client = getClientPlugin(plugin.context.config);
 
@@ -51,7 +51,7 @@ export const useTypeResponse = ({
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: PluginInstance;
+  plugin: SwrPlugin['Instance'];
 }): string => {
   const symbolResponseType = plugin.querySymbol({
     category: 'type',

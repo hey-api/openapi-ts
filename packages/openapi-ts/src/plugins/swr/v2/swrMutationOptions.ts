@@ -6,7 +6,7 @@ import { createOperationComment } from '~/plugins/shared/utils/operation';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
-import type { PluginInstance } from '../types';
+import type { SwrPlugin } from '../types';
 import { useTypeData } from '../useType';
 
 const optionsParamName = 'options';
@@ -42,7 +42,7 @@ export const createSwrMutationOptions = ({
   sdkFn,
 }: {
   operation: IR.OperationObject;
-  plugin: PluginInstance;
+  plugin: SwrPlugin['Instance'];
   sdkFn: string;
 }): void => {
   const typeData = useTypeData({ operation, plugin });
@@ -130,7 +130,7 @@ export const createSwrMutationOptions = ({
 
   // Register the mutation options symbol
   const symbolSwrMutationOptionsFn = plugin.registerSymbol({
-    exported: plugin.config.swrMutationOptions.exported,
+    exported: true,
     meta: {
       category: 'hook',
       resource: 'operation',
