@@ -8,7 +8,6 @@ import { OptionalMixin } from '../mixins/optional';
 
 export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
   private props: Array<TypePropTsDsl> = [];
-  private merges: Array<WithString<ts.Identifier>> = [];
 
   /** Adds a property signature (returns property builder). */
   prop(name: string, fn: (p: TypePropTsDsl) => void): this {
@@ -17,21 +16,8 @@ export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
     return this;
   }
 
-  /** Adds a type to merge (intersect) with the object literal. */
-  merge(type: WithString<ts.Identifier>): this {
-    this.merges.push(type);
-    return this;
-  }
-
   $render(): ts.TypeNode {
-    const literal = ts.factory.createTypeLiteralNode(this.$node(this.props));
-    if (this.merges.length > 0) {
-      return ts.factory.createIntersectionTypeNode([
-        ...this.merges.map((m) => this.$type(m)),
-        literal,
-      ]);
-    }
-    return literal;
+    return ts.factory.createTypeLiteralNode(this.$node(this.props));
   }
 }
 
