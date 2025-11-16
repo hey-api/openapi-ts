@@ -3,7 +3,7 @@ import ts from 'typescript';
 
 import { numberRegExp } from '~/utils/regexp';
 
-import type { MaybeTsDsl, WithString } from './base';
+import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { GetterTsDsl } from './getter';
 import { mixin } from './mixins/apply';
@@ -15,21 +15,21 @@ import { SetterTsDsl } from './setter';
 export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
   private props: Array<
     | {
-        expr: WithString<MaybeTsDsl<ts.Statement>>;
+        expr: string | MaybeTsDsl<ts.Statement>;
         kind: 'getter';
         name: string;
       }
-    | { expr: MaybeTsDsl<WithString>; kind: 'prop'; name: string }
+    | { expr: string | MaybeTsDsl<ts.Expression>; kind: 'prop'; name: string }
     | {
-        expr: WithString<MaybeTsDsl<ts.Statement>>;
+        expr: string | MaybeTsDsl<ts.Statement>;
         kind: 'setter';
         name: string;
       }
-    | { expr: MaybeTsDsl<WithString>; kind: 'spread' }
+    | { expr: string | MaybeTsDsl<ts.Expression>; kind: 'spread' }
   > = [];
 
   /** Adds a getter property (e.g. `{ get foo() { ... } }`). */
-  getter(name: string, expr: WithString<MaybeTsDsl<ts.Statement>>): this {
+  getter(name: string, expr: string | MaybeTsDsl<ts.Statement>): this {
     this.props.push({ expr, kind: 'getter', name });
     return this;
   }
@@ -45,19 +45,19 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
   }
 
   /** Adds a property assignment. */
-  prop(name: string, expr: MaybeTsDsl<WithString>): this {
+  prop(name: string, expr: string | MaybeTsDsl<ts.Expression>): this {
     this.props.push({ expr, kind: 'prop', name });
     return this;
   }
 
   /** Adds a setter property (e.g. `{ set foo(v) { ... } }`). */
-  setter(name: string, expr: WithString<MaybeTsDsl<ts.Statement>>): this {
+  setter(name: string, expr: string | MaybeTsDsl<ts.Statement>): this {
     this.props.push({ expr, kind: 'setter', name });
     return this;
   }
 
   /** Adds a spread property (e.g. `{ ...options }`). */
-  spread(expr: MaybeTsDsl<WithString>): this {
+  spread(expr: string | MaybeTsDsl<ts.Expression>): this {
     this.props.push({ expr, kind: 'spread' });
     return this;
   }

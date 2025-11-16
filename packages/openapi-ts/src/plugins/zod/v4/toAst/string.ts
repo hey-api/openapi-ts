@@ -72,7 +72,7 @@ export const stringToAst = ({
     chain = $(z.placeholder)
       .attr(identifiers.literal)
       .call($.literal(schema.const));
-    result.expression = chain.$render();
+    result.expression = chain;
     return result as Omit<Ast, 'typeName'>;
   }
 
@@ -101,6 +101,6 @@ export const stringToAst = ({
     chain = chain.attr(identifiers.regex).call($.regexp(schema.pattern));
   }
 
-  result.expression = chain.$render();
+  result.expression = chain;
   return result as Omit<Ast, 'typeName'>;
 };

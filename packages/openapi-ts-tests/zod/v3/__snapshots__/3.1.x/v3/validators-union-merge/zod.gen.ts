@@ -22,9 +22,9 @@ export const zDogDetails = z.object({
 
 export const zCatDetails = z.object({
     furLength: z.enum([
-        'short',
-        'medium',
-        'long'
+        "short",
+        "medium",
+        "long"
     ]),
     purrs: z.boolean()
 });
@@ -32,10 +32,7 @@ export const zCatDetails = z.object({
 export const zPetStore = z.object({
     animals: z.array(z.object({
         name: z.string(),
-        type: z.enum([
-            'dog',
-            'cat'
-        ]).optional(),
+        type: z.enum(["dog", "cat"]).optional(),
         details: z.union([
             zDogDetails,
             zCatDetails

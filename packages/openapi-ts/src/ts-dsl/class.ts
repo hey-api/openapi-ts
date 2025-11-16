@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from './base';
+import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { FieldTsDsl } from './field';
 import { InitTsDsl } from './init';
@@ -37,12 +37,12 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
   }
 
   /** Adds a base class to extend from. */
-  extends(base?: WithString | false | null): this {
+  extends(base?: string | ts.Expression | false | null): this {
     if (!base) return this;
     this.heritageClauses.push(
       ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, [
         ts.factory.createExpressionWithTypeArguments(
-          this.$expr(base),
+          this.$maybeId(base),
           undefined,
         ),
       ]),
@@ -82,7 +82,7 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
     const body = this.$node(this.body) as ReadonlyArray<ts.ClassElement>;
     return ts.factory.createClassDeclaration(
       [...this.$decorators(), ...this.modifiers.list()],
-      this.$expr(this.name),
+      this.name,
       this.$generics(),
       this.heritageClauses,
       body,

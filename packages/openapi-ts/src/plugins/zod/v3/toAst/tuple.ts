@@ -1,8 +1,6 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
@@ -26,32 +24,18 @@ export const tupleToAst = ({
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
-      tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: z.placeholder,
-          name: identifiers.literal,
-        }),
-        parameters: [tsc.valueToExpression({ value })],
-      }),
+      $(z.placeholder).attr(identifiers.literal).call($.toExpr(value)),
     );
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.tuple,
-      }),
-      parameters: [
-        tsc.arrayLiteralExpression({
-          elements: tupleElements,
-        }),
-      ],
-    });
+    const expression = $(z.placeholder)
+      .attr(identifiers.tuple)
+      .call($.array(...tupleElements));
     return {
       expression,
       hasLazyExpression,
     };
   }
 
-  const tupleElements: Array<ts.Expression> = [];
+  const tupleElements: Array<ReturnType<typeof $.call | typeof $.expr>> = [];
 
   if (schema.items) {
     schema.items.forEach((item, index) => {
@@ -70,17 +54,10 @@ export const tupleToAst = ({
     });
   }
 
-  const expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: z.placeholder,
-      name: identifiers.tuple,
-    }),
-    parameters: [
-      tsc.arrayLiteralExpression({
-        elements: tupleElements,
-      }),
-    ],
-  });
+  const expression = $(z.placeholder)
+    .attr(identifiers.tuple)
+    .call($.array(...tupleElements));
+
   return {
     expression,
     hasLazyExpression,

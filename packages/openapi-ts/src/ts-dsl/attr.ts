@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from './base';
+import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { AssignmentMixin } from './mixins/assignment';
@@ -12,12 +12,12 @@ import { OptionalMixin } from './mixins/optional';
 export class AttrTsDsl extends TsDsl<
   ts.PropertyAccessExpression | ts.ElementAccessExpression
 > {
-  private left: MaybeTsDsl<WithString>;
-  private right: WithString<ts.MemberName> | number;
+  private left: string | MaybeTsDsl<ts.Expression>;
+  private right: string | ts.MemberName | number;
 
   constructor(
-    left: MaybeTsDsl<WithString>,
-    right: WithString<ts.MemberName> | number,
+    left: string | MaybeTsDsl<ts.Expression>,
+    right: string | ts.MemberName | number,
   ) {
     super();
     this.left = left;
@@ -43,12 +43,12 @@ export class AttrTsDsl extends TsDsl<
       return ts.factory.createPropertyAccessChain(
         leftNode,
         ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-        this.$expr(this.right),
+        this.$maybeId(this.right),
       );
     }
     return ts.factory.createPropertyAccessExpression(
       leftNode,
-      this.$expr(this.right),
+      this.$maybeId(this.right),
     );
   }
 }

@@ -1,29 +1,29 @@
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from './base';
+import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 
 export class TernaryTsDsl extends TsDsl<ts.ConditionalExpression> {
-  private _condition?: MaybeTsDsl<WithString>;
-  private _then?: MaybeTsDsl<WithString>;
-  private _else?: MaybeTsDsl<WithString>;
+  private _condition?: string | MaybeTsDsl<ts.Expression>;
+  private _then?: string | MaybeTsDsl<ts.Expression>;
+  private _else?: string | MaybeTsDsl<ts.Expression>;
 
-  constructor(condition?: MaybeTsDsl<WithString>) {
+  constructor(condition?: string | MaybeTsDsl<ts.Expression>) {
     super();
     if (condition) this.condition(condition);
   }
 
-  condition(condition: MaybeTsDsl<WithString>) {
+  condition(condition: string | MaybeTsDsl<ts.Expression>) {
     this._condition = condition;
     return this;
   }
 
-  do(expr: MaybeTsDsl<WithString>) {
+  do(expr: string | MaybeTsDsl<ts.Expression>) {
     this._then = expr;
     return this;
   }
 
-  otherwise(expr: MaybeTsDsl<WithString>) {
+  otherwise(expr: string | MaybeTsDsl<ts.Expression>) {
     this._else = expr;
     return this;
   }
