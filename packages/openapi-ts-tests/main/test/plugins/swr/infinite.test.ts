@@ -58,7 +58,11 @@ describe('SWR Infinite Plugin', () => {
       if (fileContent.includes('Infinite =')) {
         expect(fileContent).toContain('getKey:');
         expect(fileContent).toContain('pageIndex');
+        // previousPageData should only appear in comments
         expect(fileContent).toContain('previousPageData');
+        expect(fileContent).toContain(
+          'To implement pagination stop conditions',
+        );
       }
     }
   });

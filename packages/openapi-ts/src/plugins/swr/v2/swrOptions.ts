@@ -71,6 +71,13 @@ export const createSwrOptions = ({
 
   const typeData = useTypeData({ operation, plugin });
 
+  // Check if operation has parameters
+  const hasParams =
+    (operation.parameters?.path &&
+      Object.keys(operation.parameters.path).length > 0) ||
+    (operation.parameters?.query &&
+      Object.keys(operation.parameters.query).length > 0);
+
   // Create the SDK function call
   const awaitSdkFn = $(sdkFn)
     .call(
@@ -89,10 +96,15 @@ export const createSwrOptions = ({
     );
   }
 
+  // Build the key call - only pass options if operation has parameters
+  const keyCall = hasParams
+    ? $(symbolSwrKey.placeholder).call(optionsParamName)
+    : $(symbolSwrKey.placeholder).call();
+
   // Build the options object
   const swrOptionsObj = $.object()
     .pretty()
-    .prop('key', $(symbolSwrKey.placeholder).call(optionsParamName))
+    .prop('key', keyCall)
     .prop(
       'fetcher',
       $.func()

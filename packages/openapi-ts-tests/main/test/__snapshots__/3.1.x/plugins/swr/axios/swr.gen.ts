@@ -6,10 +6,10 @@ import type { ApiVVersionODataControllerCountData, CallToTestOrderOfParamsData, 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 ;
 
-export const exportKey = (options?: Options<ExportData>) => ["/api/v{api-version}/no+tag"];
+export const exportKey = () => ["/api/v{api-version}/no+tag"];
 
 export const exportOptions = (options?: Options<ExportData>) => ({
-    key: exportKey(options),
+    key: exportKey(),
     fetcher: async () => {
         const { data } = await export_({ ...options, throwOnError: true });
         return data;
@@ -58,10 +58,10 @@ export const fooWowMutation = (options?: Options<FooWowData>) => ({
     }
 });
 
-export const apiVVersionODataControllerCountKey = (options?: Options<ApiVVersionODataControllerCountData>) => ["/api/v{api-version}/simple/$count"];
+export const apiVVersionODataControllerCountKey = () => ["/api/v{api-version}/simple/$count"];
 
 export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVersionODataControllerCountData>) => ({
-    key: apiVVersionODataControllerCountKey(options),
+    key: apiVVersionODataControllerCountKey(),
     fetcher: async () => {
         const { data } = await apiVVersionODataControllerCount({ ...options, throwOnError: true });
         return data;
@@ -92,10 +92,10 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Options
     }
 });
 
-export const getCallWithoutParametersAndResponseKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => ["/api/v{api-version}/simple"];
+export const getCallWithoutParametersAndResponseKey = () => ["/api/v{api-version}/simple"];
 
 export const getCallWithoutParametersAndResponseOptions = (options?: Options<GetCallWithoutParametersAndResponseData>) => ({
-    key: getCallWithoutParametersAndResponseKey(options),
+    key: getCallWithoutParametersAndResponseKey(),
     fetcher: async () => {
         const { data } = await getCallWithoutParametersAndResponse({ ...options, throwOnError: true });
         return data;
@@ -228,7 +228,15 @@ export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOpti
 });
 
 export const getCallWithOptionalParamInfinite = (options: Options<GetCallWithOptionalParamData>) => ({
-    getKey: (pageIndex: number, previousPageData: unknown | null) => ["/api/v{api-version}/parameters", { ...options, query: { ...options.query, page: pageIndex } }],
+    getKey: /**
+     * To implement pagination stop conditions, wrap this function and check previousPageData.
+     * Example:
+     *   const getKey = (pageIndex: number, previousPageData: ResponseType | null) => {
+     *     if (previousPageData && !previousPageData.hasMore) return null;
+     *     return baseGetKey(pageIndex);
+     *   };
+     */
+    (pageIndex: number) => ["/api/v{api-version}/parameters", { ...options, query: { ...options.query, page: pageIndex } }],
     fetcher: async (key: readonly [string, Options<GetCallWithOptionalParamData>]) => {
         const { data } = await getCallWithOptionalParam({ ...key[1], throwOnError: true });
         return data;
@@ -329,10 +337,10 @@ export const duplicateNameMutation = (options?: Options<DuplicateNameData>) => (
     }
 });
 
-export const duplicateName2Key = (options?: Options<DuplicateName2Data>) => ["/api/v{api-version}/duplicate"];
+export const duplicateName2Key = () => ["/api/v{api-version}/duplicate"];
 
 export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => ({
-    key: duplicateName2Key(options),
+    key: duplicateName2Key(),
     fetcher: async () => {
         const { data } = await duplicateName2({ ...options, throwOnError: true });
         return data;
@@ -367,50 +375,50 @@ export const duplicateName4Mutation = (options?: Options<DuplicateName4Data>) =>
     }
 });
 
-export const callWithNoContentResponseKey = (options?: Options<CallWithNoContentResponseData>) => ["/api/v{api-version}/no-content"];
+export const callWithNoContentResponseKey = () => ["/api/v{api-version}/no-content"];
 
 export const callWithNoContentResponseOptions = (options?: Options<CallWithNoContentResponseData>) => ({
-    key: callWithNoContentResponseKey(options),
+    key: callWithNoContentResponseKey(),
     fetcher: async () => {
         const { data } = await callWithNoContentResponse({ ...options, throwOnError: true });
         return data;
     }
 });
 
-export const callWithResponseAndNoContentResponseKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => ["/api/v{api-version}/multiple-tags/response-and-no-content"];
+export const callWithResponseAndNoContentResponseKey = () => ["/api/v{api-version}/multiple-tags/response-and-no-content"];
 
 export const callWithResponseAndNoContentResponseOptions = (options?: Options<CallWithResponseAndNoContentResponseData>) => ({
-    key: callWithResponseAndNoContentResponseKey(options),
+    key: callWithResponseAndNoContentResponseKey(),
     fetcher: async () => {
         const { data } = await callWithResponseAndNoContentResponse({ ...options, throwOnError: true });
         return data;
     }
 });
 
-export const dummyAKey = (options?: Options<DummyAData>) => ["/api/v{api-version}/multiple-tags/a"];
+export const dummyAKey = () => ["/api/v{api-version}/multiple-tags/a"];
 
 export const dummyAOptions = (options?: Options<DummyAData>) => ({
-    key: dummyAKey(options),
+    key: dummyAKey(),
     fetcher: async () => {
         const { data } = await dummyA({ ...options, throwOnError: true });
         return data;
     }
 });
 
-export const dummyBKey = (options?: Options<DummyBData>) => ["/api/v{api-version}/multiple-tags/b"];
+export const dummyBKey = () => ["/api/v{api-version}/multiple-tags/b"];
 
 export const dummyBOptions = (options?: Options<DummyBData>) => ({
-    key: dummyBKey(options),
+    key: dummyBKey(),
     fetcher: async () => {
         const { data } = await dummyB({ ...options, throwOnError: true });
         return data;
     }
 });
 
-export const callWithResponseKey = (options?: Options<CallWithResponseData>) => ["/api/v{api-version}/response"];
+export const callWithResponseKey = () => ["/api/v{api-version}/response"];
 
 export const callWithResponseOptions = (options?: Options<CallWithResponseData>) => ({
-    key: callWithResponseKey(options),
+    key: callWithResponseKey(),
     fetcher: async () => {
         const { data } = await callWithResponse({ ...options, throwOnError: true });
         return data;
@@ -499,10 +507,10 @@ export const complexTypesOptions = (options: Options<ComplexTypesData>) => ({
     }
 });
 
-export const multipartResponseKey = (options?: Options<MultipartResponseData>) => ["/api/v{api-version}/multipart"];
+export const multipartResponseKey = () => ["/api/v{api-version}/multipart"];
 
 export const multipartResponseOptions = (options?: Options<MultipartResponseData>) => ({
-    key: multipartResponseKey(options),
+    key: multipartResponseKey(),
     fetcher: async () => {
         const { data } = await multipartResponse({ ...options, throwOnError: true });
         return data;

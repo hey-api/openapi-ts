@@ -6,10 +6,10 @@ import type { FooBarPostData, FooBarPutData, FooPostData, FooPutData, GetFooBarD
 /* eslint-disable @typescript-eslint/no-unused-vars */
 ;
 
-export const getFooKey = (options?: Options<GetFooData>) => ["/foo"];
+export const getFooKey = () => ["/foo"];
 
 export const getFooOptions = (options?: Options<GetFooData>) => ({
-    key: getFooKey(options),
+    key: getFooKey(),
     fetcher: async () => {
         const { data } = await FooBazService.getFoo({ ...options, throwOnError: true });
         return data;
@@ -44,10 +44,10 @@ export const fooPutMutation = (options?: Options<FooPutData>) => ({
     }
 });
 
-export const getFooBarKey = (options?: Options<GetFooBarData>) => ["/foo/bar"];
+export const getFooBarKey = () => ["/foo/bar"];
 
 export const getFooBarOptions = (options?: Options<GetFooBarData>) => ({
-    key: getFooBarKey(options),
+    key: getFooBarKey(),
     fetcher: async () => {
         const { data } = await BarBazService.getFooBar({ ...options, throwOnError: true });
         return data;

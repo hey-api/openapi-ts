@@ -12,7 +12,7 @@ import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
 import type { PluginInstance } from '../types';
-import { useTypeData, useTypeResponse } from '../useType';
+import { useTypeData } from '../useType';
 
 const optionsParamName = 'options';
 
@@ -24,8 +24,8 @@ const optionsParamName = 'options';
  * - getKey: A function that generates SWR keys for each page
  * - fetcher: An async function that fetches a single page
  *
- * The getKey function signature matches SWR's requirements:
- * (pageIndex: number, previousPageData: ResponseType | null) => Key | null
+ * The getKey function signature is simplified to only accept pageIndex.
+ * Users should handle pagination stop conditions (using previousPageData) in their own code.
  *
  * The key structure uses object serialization (since SWR 1.1.0):
  * [path, { ...options, [paginationParam]: pageIndex }]
@@ -41,7 +41,7 @@ const optionsParamName = 'options';
  *
  * Without path params (optional):
  * export const getUsersInfinite = (options?: GetUsersData) => ({
- *   getKey: (pageIndex: number, previousPageData: GetUsersResponse | null) =>
+ *   getKey: (pageIndex: number) =>
  *     ['/users', { ...options, query: { ...options?.query, page: pageIndex } }],
  *   fetcher: async (key: readonly [string, GetUsersData]) => {
  *     const { data } = await getUsers({ ...key[1], throwOnError: true });
@@ -51,7 +51,7 @@ const optionsParamName = 'options';
  *
  * With path params (options required):
  * export const getOrgUsersInfinite = (options: GetOrgUsersData) => ({
- *   getKey: (pageIndex: number, previousPageData: GetOrgUsersResponse | null) =>
+ *   getKey: (pageIndex: number) =>
  *     ['/orgs/{orgId}/users', { ...options, query: { ...options.query, page: pageIndex } }],
  *   fetcher: async (key: readonly [string, GetOrgUsersData]) => {
  *     const { data } = await getOrgUsers({ ...key[1], throwOnError: true });
@@ -59,9 +59,15 @@ const optionsParamName = 'options';
  *   }
  * });
  *
- * Note: The getKey function always returns a key array for each page. Use conditional
- * logic within getKey (checking previousPageData) to stop pagination, not to disable
- * the entire query. The key itself is never null - only returned when pagination ends.
+ * Note: To implement pagination stop conditions, you need to wrap the getKey function
+ * and check previousPageData. For example:
+ *
+ * const { getKey: baseGetKey, fetcher } = getUsersInfinite();
+ * const getKey = (pageIndex: number, previousPageData: GetUsersResponse | null) => {
+ *   if (previousPageData && !previousPageData.hasMore) return null;
+ *   return baseGetKey(pageIndex);
+ * };
+ * useSWRInfinite(getKey, fetcher);
  */
 export const createSwrInfiniteOptions = ({
   operation,
@@ -93,12 +99,9 @@ export const createSwrInfiniteOptions = ({
   });
 
   const typeData = useTypeData({ operation, plugin });
-  const typeResponse = useTypeResponse({ operation, plugin });
 
   // Create the getKey function
-  // Following SWR's useSWRInfinite pattern with object serialization:
-  // getKey: (pageIndex: number, previousPageData: ResponseType | null) => Key | null
-  //
+  // Simplified signature that only accepts pageIndex
   // The getKey function returns: ['/path', { ...options, query: { ...query, page: pageIndex } }]
   // This leverages SWR 1.1.0+ automatic object serialization
   const getKeyStatements: Array<TsDsl<any>> = [];
@@ -147,8 +150,15 @@ export const createSwrInfiniteOptions = ({
 
   const getKeyFunction = $.func()
     .param('pageIndex', (p) => p.type('number'))
-    .param('previousPageData', (p) => p.type(`${typeResponse} | null`))
-    .do(...getKeyStatements);
+    .do(...getKeyStatements)
+    .describe([
+      'To implement pagination stop conditions, wrap this function and check previousPageData.',
+      'Example:',
+      '  const getKey = (pageIndex: number, previousPageData: ResponseType | null) => {',
+      '    if (previousPageData && !previousPageData.hasMore) return null;',
+      '    return baseGetKey(pageIndex);',
+      '  };',
+    ]);
 
   const getKeyNode = getKeyFunction.$render();
 

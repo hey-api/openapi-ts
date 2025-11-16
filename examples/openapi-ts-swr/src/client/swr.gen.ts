@@ -44,7 +44,6 @@ import type {
   UploadFileData,
 } from './types.gen';
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Add a new pet to the store.
  *
@@ -227,9 +226,7 @@ export const uploadFileMutation = (options?: Options<UploadFileData>) => ({
     : ['/pet/{petId}/uploadImage'],
 });
 
-export const getInventoryKey = (options?: Options<GetInventoryData>) => [
-  '/store/inventory',
-];
+export const getInventoryKey = () => ['/store/inventory'];
 
 /**
  * Returns pet inventories by status.
@@ -241,7 +238,7 @@ export const getInventoryOptions = (options?: Options<GetInventoryData>) => ({
     const { data } = await getInventory({ ...options, throwOnError: true });
     return data;
   },
-  key: getInventoryKey(options),
+  key: getInventoryKey(),
 });
 
 /**
@@ -380,9 +377,7 @@ export const loginUserOptions = (options?: Options<LoginUserData>) => ({
   key: loginUserKey(options),
 });
 
-export const logoutUserKey = (options?: Options<LogoutUserData>) => [
-  '/user/logout',
-];
+export const logoutUserKey = () => ['/user/logout'];
 
 /**
  * Logs out current logged in user session.
@@ -394,7 +389,7 @@ export const logoutUserOptions = (options?: Options<LogoutUserData>) => ({
     const { data } = await logoutUser({ ...options, throwOnError: true });
     return data;
   },
-  key: logoutUserKey(options),
+  key: logoutUserKey(),
 });
 
 /**
