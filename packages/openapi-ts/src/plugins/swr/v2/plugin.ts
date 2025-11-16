@@ -1,7 +1,7 @@
 import { operationClasses } from '~/plugins/@hey-api/sdk/shared/operation';
 import { stringCase } from '~/utils/stringCase';
 
-import type { PluginHandler } from '../types';
+import type { SwrPlugin } from '../types';
 import { createSwrInfiniteOptions } from './swrInfiniteOptions';
 import { createSwrMutationOptions } from './swrMutationOptions';
 import { createSwrOptions } from './swrOptions';
@@ -12,7 +12,7 @@ import { createSwrOptions } from './swrOptions';
  * This plugin generates useSWR and useSWRMutation options for each operation.
  * It follows SWR's official recommended patterns for key design and data fetching.
  */
-export const handlerV2: PluginHandler = ({ plugin }) => {
+export const handlerV2: SwrPlugin['Handler'] = ({ plugin }) => {
   // Register external symbols from axios (for error types)
   plugin.registerSymbol({
     external: 'axios',
