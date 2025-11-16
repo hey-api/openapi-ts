@@ -1,7 +1,6 @@
 import type ts from 'typescript';
 
 import type { SchemaWithType } from '~/plugins';
-import type { CallTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
@@ -12,7 +11,7 @@ const defaultFormatResolver = ({
   chain,
   plugin,
   schema,
-}: FormatResolverArgs): CallTsDsl => {
+}: FormatResolverArgs): ReturnType<typeof $.call> => {
   switch (schema.format) {
     case 'date':
       return chain.attr(identifiers.date).call();
@@ -50,7 +49,7 @@ export const stringToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
 }): ts.CallExpression => {
-  let chain: CallTsDsl;
+  let chain: ReturnType<typeof $.call>;
 
   const z = plugin.referenceSymbol({
     category: 'external',

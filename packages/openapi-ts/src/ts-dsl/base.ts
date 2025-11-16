@@ -141,6 +141,11 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
         : ts.factory.createFalse();
       return ts.factory.createLiteralTypeNode(literal) as TypeOfMaybe<I>;
     }
+    if (typeof input === 'number') {
+      return ts.factory.createLiteralTypeNode(
+        ts.factory.createNumericLiteral(input),
+      ) as TypeOfMaybe<I>;
+    }
     if (input instanceof Array) {
       return input.map((item) => this.$type(item, args)) as TypeOfMaybe<I>;
     }

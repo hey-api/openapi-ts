@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
 import { numberRegExp } from '~/utils/regexp';
@@ -7,6 +7,8 @@ import type { MaybeTsDsl, WithString } from './base';
 import { TsDsl } from './base';
 import { GetterTsDsl } from './getter';
 import { mixin } from './mixins/apply';
+import { ExprMixin } from './mixins/expr';
+import { HintMixin } from './mixins/hint';
 import { LayoutMixin } from './mixins/layout';
 import { SetterTsDsl } from './setter';
 
@@ -127,5 +129,10 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
   }
 }
 
-export interface ObjectTsDsl extends LayoutMixin {}
-mixin(ObjectTsDsl, LayoutMixin);
+export interface ObjectTsDsl extends ExprMixin, HintMixin, LayoutMixin {}
+mixin(
+  ObjectTsDsl,
+  ExprMixin,
+  [HintMixin, { overrideRender: true }],
+  LayoutMixin,
+);

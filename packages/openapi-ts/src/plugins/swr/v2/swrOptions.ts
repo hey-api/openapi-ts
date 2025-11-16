@@ -132,7 +132,7 @@ export const createSwrOptions = ({
     .export(symbolSwrOptionsFn.exported)
     .$if(
       plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.describe(v as Array<string>),
+      (c, v) => c.doc(v as Array<string>),
     )
     .assign(
       $.func()

@@ -3,9 +3,6 @@
 import { callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexTypes, deleteCallWithoutParametersAndResponse, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, fooWow, getCallWithoutParametersAndResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchApiVbyApiVersionNoTag, patchCallWithoutParametersAndResponse, postApiVbyApiVersionBody, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, serviceWithEmptyTag, testErrorCode, types } from './sdk.gen';
 import type { CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithNoContentResponseData, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseData, CallWithResponsesData, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexTypesData, DeleteCallWithoutParametersAndResponseData, DummyAData, DummyBData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, FooWowData, GetCallWithoutParametersAndResponseData, NonAsciiæøåÆøÅöôêÊ字符串Data, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionBodyData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, ServiceWithEmptyTagData, TestErrorCodeData, TypesData } from './types.gen';
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-;
-
 export const serviceWithEmptyTagKey = () => ["/api/v{api-version}/no+tag"];
 
 export const serviceWithEmptyTagOptions = (options?: Options<ServiceWithEmptyTagData>) => ({

@@ -43,11 +43,12 @@ export default defineConfig(() => {
             // 'full.yaml',
             // 'openai.yaml',
             // 'opencode.yaml',
+            'pagination-ref.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'type-format.yaml',
-            'validators.yaml',
+            // 'validators.yaml',
             // 'validators-circular-ref.json',
             // 'validators-circular-ref-2.yaml',
             // 'zoom-video-sdk.json',
@@ -268,7 +269,7 @@ export default defineConfig(() => {
           // signature: 'client',
           // signature: 'object',
           // transformer: '@hey-api/transformers',
-          transformer: true,
+          // transformer: true,
           validator: 'valibot',
           // validator: {
           //   request: 'zod',
@@ -291,7 +292,7 @@ export default defineConfig(() => {
         {
           // bigInt: true,
           dates: true,
-          name: '@hey-api/transformers',
+          // name: '@hey-api/transformers',
         },
         {
           // name: 'fastify',
@@ -306,16 +307,21 @@ export default defineConfig(() => {
           // infiniteQueryKeys: {
           //   name: '{{name}}IQK',
           // },
-          // infiniteQueryOptions: {
-          //   name: '{{name}}IQO',
-          // },
-          mutationOptions: {
-            // name: '{{name}}MO',
+          infiniteQueryOptions: {
             meta() {
               return {
                 custom: 'value',
               };
             },
+            // name: '{{name}}IQO',
+          },
+          mutationOptions: {
+            meta() {
+              return {
+                custom: 'value',
+              };
+            },
+            // name: '{{name}}MO',
           },
           name: '@tanstack/react-query',
           queryKeys: {

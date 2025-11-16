@@ -27,7 +27,7 @@ export const exportAst = ({
   const statement = $.const(symbol.placeholder)
     .export(symbol.exported)
     .$if(plugin.config.comments && createSchemaComment({ schema }), (c, v) =>
-      c.describe(v as ReadonlyArray<string>),
+      c.doc(v as ReadonlyArray<string>),
     )
     .$if(state.hasLazyExpression.value, (c) =>
       c.type(

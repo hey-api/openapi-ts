@@ -29,7 +29,7 @@ export const exportAst = ({
   const statement = $.const(symbol.placeholder)
     .export(symbol.exported)
     .$if(plugin.config.comments && createSchemaComment({ schema }), (c, v) =>
-      c.describe(v as ReadonlyArray<string>),
+      c.doc(v as ReadonlyArray<string>),
     )
     .$if(ast.typeName, (c, v) => c.type($.type(z.placeholder).attr(v)))
     .assign(ast.expression);
@@ -42,7 +42,7 @@ export const exportAst = ({
       .type(
         $.type(z.placeholder)
           .attr(identifiers.infer)
-          .generic($(symbol.placeholder).typeof()),
+          .generic($(symbol.placeholder).typeofType()),
       );
     plugin.setSymbolValue(typeInferSymbol, inferType);
   }

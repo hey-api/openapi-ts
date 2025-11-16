@@ -3,9 +3,6 @@
 import { apiVVersionODataControllerCount, callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexParams, complexTypes, deleteCallWithoutParametersAndResponse, deleteFoo, deprecatedCall, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, export_, fileResponse, fooWow, getApiVbyApiVersionSimpleOperation, getCallWithOptionalParam, getCallWithoutParametersAndResponse, import_, multipartRequest, multipartResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchApiVbyApiVersionNoTag, patchCallWithoutParametersAndResponse, postApiVbyApiVersionFormData, postApiVbyApiVersionRequestBody, postCallWithOptionalParam, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, putWithFormUrlEncoded, testErrorCode, types, uploadFile } from './sdk.gen';
 import type { ApiVVersionODataControllerCountData, CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithNoContentResponseData, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseData, CallWithResponsesData, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexParamsData, ComplexTypesData, DeleteCallWithoutParametersAndResponseData, DeleteFooData3, DeprecatedCallData, DummyAData, DummyBData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, ExportData, FileResponseData, FooWowData, GetApiVbyApiVersionSimpleOperationData, GetCallWithOptionalParamData, GetCallWithoutParametersAndResponseData, ImportData, MultipartRequestData, MultipartResponseData, NonAsciiæøåÆøÅöôêÊ字符串Data, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionFormDataData, PostApiVbyApiVersionRequestBodyData, PostCallWithOptionalParamData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, PutWithFormUrlEncodedData, TestErrorCodeData, TypesData, UploadFileData } from './types.gen';
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-;
-
 export const exportKey = () => ["/api/v{api-version}/no+tag"];
 
 export const exportOptions = (options?: Options<ExportData>) => ({
@@ -228,15 +225,7 @@ export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOpti
 });
 
 export const getCallWithOptionalParamInfinite = (options: Options<GetCallWithOptionalParamData>) => ({
-    getKey: /**
-     * To implement pagination stop conditions, wrap this function and check previousPageData.
-     * Example:
-     *   const getKey = (pageIndex: number, previousPageData: ResponseType | null) => {
-     *     if (previousPageData && !previousPageData.hasMore) return null;
-     *     return baseGetKey(pageIndex);
-     *   };
-     */
-    (pageIndex: number) => ["/api/v{api-version}/parameters", { ...options, query: { ...options.query, page: pageIndex } }],
+    getKey: (pageIndex: number) => ["/api/v{api-version}/parameters", { ...options, query: { ...options.query, page: pageIndex } }],
     fetcher: async (key: readonly [string, Options<GetCallWithOptionalParamData>]) => {
         const { data } = await getCallWithOptionalParam({ ...key[1], throwOnError: true });
         return data;

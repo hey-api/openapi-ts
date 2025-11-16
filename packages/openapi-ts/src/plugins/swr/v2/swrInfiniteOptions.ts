@@ -150,15 +150,7 @@ export const createSwrInfiniteOptions = ({
 
   const getKeyFunction = $.func()
     .param('pageIndex', (p) => p.type('number'))
-    .do(...getKeyStatements)
-    .describe([
-      'To implement pagination stop conditions, wrap this function and check previousPageData.',
-      'Example:',
-      '  const getKey = (pageIndex: number, previousPageData: ResponseType | null) => {',
-      '    if (previousPageData && !previousPageData.hasMore) return null;',
-      '    return baseGetKey(pageIndex);',
-      '  };',
-    ]);
+    .do(...getKeyStatements);
 
   const getKeyNode = getKeyFunction.$render();
 
@@ -226,7 +218,7 @@ export const createSwrInfiniteOptions = ({
     .export(symbolSwrInfiniteOptionsFn.exported)
     .$if(
       plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.describe(v as Array<string>),
+      (c, v) => c.doc(v as Array<string>),
     )
     .assign(
       $.func()

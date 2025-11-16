@@ -3,9 +3,6 @@
 import { BarBazService, FooBazService, type Options } from './sdk.gen';
 import type { FooBarPostData, FooBarPutData, FooPostData, FooPutData, GetFooBarData, GetFooData } from './types.gen';
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-;
-
 export const getFooKey = () => ["/foo"];
 
 export const getFooOptions = (options?: Options<GetFooData>) => ({
