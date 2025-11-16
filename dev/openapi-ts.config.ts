@@ -305,9 +305,10 @@ export default defineConfig(() => {
           // case: 'SCREAMING_SNAKE_CASE',
           // comments: false,
           exportFromIndex: true,
-          // infiniteQueryKeys: {
-          //   name: '{{name}}IQK',
-          // },
+          infiniteQueryKeys: {
+            // name: '{{name}}IQK',
+            name: 'options',
+          },
           infiniteQueryOptions: {
             meta() {
               return {
@@ -315,6 +316,7 @@ export default defineConfig(() => {
               };
             },
             // name: '{{name}}IQO',
+            name: 'options',
           },
           mutationOptions: {
             meta() {
@@ -323,10 +325,12 @@ export default defineConfig(() => {
               };
             },
             // name: '{{name}}MO',
+            name: 'options',
           },
           name: '@tanstack/react-query',
           queryKeys: {
             // name: '{{name}}QK',
+            name: 'options',
             tags: true,
           },
           // queryOptions: false,
@@ -336,7 +340,8 @@ export default defineConfig(() => {
             //     custom: 'value',
             //   }
             // },
-            name: '{{name}}QO',
+            // name: '{{name}}QO',
+            name: 'options',
           },
           useQuery: true,
           '~hooks': {
