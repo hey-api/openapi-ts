@@ -30,10 +30,16 @@ import { TemplateTsDsl } from './template';
 import { TernaryTsDsl } from './ternary';
 import { ThrowTsDsl } from './throw';
 import { TypeAliasTsDsl } from './type/alias';
+import { TypeAndTsDsl } from './type/and';
 import { TypeAttrTsDsl } from './type/attr';
 import { TypeExprTsDsl } from './type/expr';
+import { TypeIdxTsDsl } from './type/idx';
 import { TypeLiteralTsDsl } from './type/literal';
 import { TypeObjectTsDsl } from './type/object';
+import { TypeOrTsDsl } from './type/or';
+import { TypeParamTsDsl } from './type/param';
+import { TypeQueryTsDsl } from './type/query';
+import { TypeTupleTsDsl } from './type/tuple';
 import { TypeOfExprTsDsl } from './typeof';
 import { VarTsDsl } from './var';
 
@@ -186,6 +192,10 @@ const base = {
       alias: (...args: ConstructorParameters<typeof TypeAliasTsDsl>) =>
         new TypeAliasTsDsl(...args),
 
+      /** Creates an intersection type (e.g. `A & B`). */
+      and: (...args: ConstructorParameters<typeof TypeAndTsDsl>) =>
+        new TypeAndTsDsl(...args),
+
       /** Creates a qualified type reference (e.g. Foo.Bar). */
       attr: (...args: ConstructorParameters<typeof TypeAttrTsDsl>) =>
         new TypeAttrTsDsl(...args),
@@ -194,6 +204,10 @@ const base = {
       expr: (...args: ConstructorParameters<typeof TypeExprTsDsl>) =>
         new TypeExprTsDsl(...args),
 
+      /** Creates an indexed-access type (e.g. `Foo<T>[K]`). */
+      idx: (...args: ConstructorParameters<typeof TypeIdxTsDsl>) =>
+        new TypeIdxTsDsl(...args),
+
       /** Creates a literal type node (e.g. 'foo', 42, or true). */
       literal: (...args: ConstructorParameters<typeof TypeLiteralTsDsl>) =>
         new TypeLiteralTsDsl(...args),
@@ -201,6 +215,22 @@ const base = {
       /** Creates a type literal node (e.g. { foo: string }). */
       object: (...args: ConstructorParameters<typeof TypeObjectTsDsl>) =>
         new TypeObjectTsDsl(...args),
+
+      /** Represents a union type (e.g. `A | B | C`). */
+      or: (...args: ConstructorParameters<typeof TypeOrTsDsl>) =>
+        new TypeOrTsDsl(...args),
+
+      /** Creates a type parameter (e.g. `<T>`). */
+      param: (...args: ConstructorParameters<typeof TypeParamTsDsl>) =>
+        new TypeParamTsDsl(...args),
+
+      /** Creates a type query node (e.g. `typeof Foo`). */
+      query: (...args: ConstructorParameters<typeof TypeQueryTsDsl>) =>
+        new TypeQueryTsDsl(...args),
+
+      /** Creates a tuple type (e.g. [A, B, C]). */
+      tuple: (...args: ConstructorParameters<typeof TypeTupleTsDsl>) =>
+        new TypeTupleTsDsl(...args),
     },
   ),
 
