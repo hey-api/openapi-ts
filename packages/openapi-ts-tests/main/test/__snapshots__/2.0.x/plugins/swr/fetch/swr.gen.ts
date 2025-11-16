@@ -6,10 +6,10 @@ import type { CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData
 /* eslint-disable @typescript-eslint/no-unused-vars */
 ;
 
-export const serviceWithEmptyTagKey = (options?: Options<ServiceWithEmptyTagData>) => ["/api/v{api-version}/no+tag"];
+export const serviceWithEmptyTagKey = () => ["/api/v{api-version}/no+tag"];
 
 export const serviceWithEmptyTagOptions = (options?: Options<ServiceWithEmptyTagData>) => ({
-    key: serviceWithEmptyTagKey(options),
+    key: serviceWithEmptyTagKey(),
     fetcher: async () => {
         const { data } = await serviceWithEmptyTag({ ...options, throwOnError: true });
         return data;
@@ -58,10 +58,10 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Options
     }
 });
 
-export const getCallWithoutParametersAndResponseKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => ["/api/v{api-version}/simple"];
+export const getCallWithoutParametersAndResponseKey = () => ["/api/v{api-version}/simple"];
 
 export const getCallWithoutParametersAndResponseOptions = (options?: Options<GetCallWithoutParametersAndResponseData>) => ({
-    key: getCallWithoutParametersAndResponseKey(options),
+    key: getCallWithoutParametersAndResponseKey(),
     fetcher: async () => {
         const { data } = await getCallWithoutParametersAndResponse({ ...options, throwOnError: true });
         return data;
@@ -204,10 +204,10 @@ export const duplicateNameMutation = (options?: Options<DuplicateNameData>) => (
     }
 });
 
-export const duplicateName2Key = (options?: Options<DuplicateName2Data>) => ["/api/v{api-version}/duplicate"];
+export const duplicateName2Key = () => ["/api/v{api-version}/duplicate"];
 
 export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => ({
-    key: duplicateName2Key(options),
+    key: duplicateName2Key(),
     fetcher: async () => {
         const { data } = await duplicateName2({ ...options, throwOnError: true });
         return data;
@@ -242,50 +242,50 @@ export const duplicateName4Mutation = (options?: Options<DuplicateName4Data>) =>
     }
 });
 
-export const callWithNoContentResponseKey = (options?: Options<CallWithNoContentResponseData>) => ["/api/v{api-version}/no-content"];
+export const callWithNoContentResponseKey = () => ["/api/v{api-version}/no-content"];
 
 export const callWithNoContentResponseOptions = (options?: Options<CallWithNoContentResponseData>) => ({
-    key: callWithNoContentResponseKey(options),
+    key: callWithNoContentResponseKey(),
     fetcher: async () => {
         const { data } = await callWithNoContentResponse({ ...options, throwOnError: true });
         return data;
     }
 });
 
-export const callWithResponseAndNoContentResponseKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => ["/api/v{api-version}/multiple-tags/response-and-no-content"];
+export const callWithResponseAndNoContentResponseKey = () => ["/api/v{api-version}/multiple-tags/response-and-no-content"];
 
 export const callWithResponseAndNoContentResponseOptions = (options?: Options<CallWithResponseAndNoContentResponseData>) => ({
-    key: callWithResponseAndNoContentResponseKey(options),
+    key: callWithResponseAndNoContentResponseKey(),
     fetcher: async () => {
         const { data } = await callWithResponseAndNoContentResponse({ ...options, throwOnError: true });
         return data;
     }
 });
 
-export const dummyAKey = (options?: Options<DummyAData>) => ["/api/v{api-version}/multiple-tags/a"];
+export const dummyAKey = () => ["/api/v{api-version}/multiple-tags/a"];
 
 export const dummyAOptions = (options?: Options<DummyAData>) => ({
-    key: dummyAKey(options),
+    key: dummyAKey(),
     fetcher: async () => {
         const { data } = await dummyA({ ...options, throwOnError: true });
         return data;
     }
 });
 
-export const dummyBKey = (options?: Options<DummyBData>) => ["/api/v{api-version}/multiple-tags/b"];
+export const dummyBKey = () => ["/api/v{api-version}/multiple-tags/b"];
 
 export const dummyBOptions = (options?: Options<DummyBData>) => ({
-    key: dummyBKey(options),
+    key: dummyBKey(),
     fetcher: async () => {
         const { data } = await dummyB({ ...options, throwOnError: true });
         return data;
     }
 });
 
-export const callWithResponseKey = (options?: Options<CallWithResponseData>) => ["/api/v{api-version}/response"];
+export const callWithResponseKey = () => ["/api/v{api-version}/response"];
 
 export const callWithResponseOptions = (options?: Options<CallWithResponseData>) => ({
-    key: callWithResponseKey(options),
+    key: callWithResponseKey(),
     fetcher: async () => {
         const { data } = await callWithResponse({ ...options, throwOnError: true });
         return data;

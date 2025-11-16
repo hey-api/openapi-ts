@@ -69,13 +69,16 @@ export const swrKeyStatement = ({
     ]);
   }
 
+  const funcBuilder = $.func();
+
+  // Only add options parameter if there are actual parameters
+  if (hasParams) {
+    funcBuilder.param('options', (p) => p.optional(!isRequired).type(typeData));
+  }
+
   const statement = $.const(symbol.placeholder)
     .export(symbol.exported)
-    .assign(
-      $.func()
-        .param('options', (p) => p.optional(!isRequired).type(typeData))
-        .do($(keyExpression).return()),
-    );
+    .assign(funcBuilder.do($(keyExpression).return()));
 
   return statement.$render();
 };

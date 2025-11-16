@@ -1,5 +1,3 @@
-import ts from 'typescript';
-
 import { operationClasses } from '~/plugins/@hey-api/sdk/shared/operation';
 import { stringCase } from '~/utils/stringCase';
 
@@ -15,28 +13,6 @@ import { createSwrOptions } from './swrOptions';
  * It follows SWR's official recommended patterns for key design and data fetching.
  */
 export const handlerV2: PluginHandler = ({ plugin }) => {
-  // Add file-level eslint-disable comment for unused vars
-  // This is more stable than adding inline comments which can be misplaced by formatters
-  const eslintDisableSymbol = plugin.registerSymbol({
-    exported: false,
-    meta: {
-      category: 'utility',
-      resource: 'eslint-config',
-    },
-    name: '__eslintDisable',
-  });
-
-  // Create an empty statement with the eslint-disable comment
-  const eslintDisableComment = ts.factory.createEmptyStatement();
-  ts.addSyntheticLeadingComment(
-    eslintDisableComment,
-    ts.SyntaxKind.MultiLineCommentTrivia,
-    ' eslint-disable @typescript-eslint/no-unused-vars ',
-    true,
-  );
-
-  plugin.setSymbolValue(eslintDisableSymbol, eslintDisableComment);
-
   // Register external symbols from axios (for error types)
   plugin.registerSymbol({
     external: 'axios',
