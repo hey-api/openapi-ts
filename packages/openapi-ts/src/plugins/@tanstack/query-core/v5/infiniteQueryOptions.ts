@@ -7,7 +7,6 @@ import {
 } from '~/plugins/shared/utils/operation';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
-import { tsNodeToString } from '~/tsc/utils';
 
 import {
   createQueryKeyFunction,
@@ -159,8 +158,6 @@ export const createInfiniteQueryOptions = ({
   const typeQueryKey = `${symbolQueryKeyType.placeholder}<${typeData}>`;
   const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  // TODO: parser - this is a bit clunky, need to compile type to string because
-  // `tsc.returnFunctionCall()` accepts only strings, should be cleaned up
   const type = pluginTypeScript.api.schemaToType({
     plugin: pluginTypeScript,
     schema: pagination.schema,
@@ -170,10 +167,6 @@ export const createInfiniteQueryOptions = ({
       },
     },
   });
-  const typePageParam = `${tsNodeToString({
-    node: type,
-    unescape: true,
-  })} | ${typePageObjectParam}`;
 
   const symbolInfiniteQueryKey = plugin.registerSymbol({
     exported: true,
@@ -282,7 +275,7 @@ export const createInfiniteQueryOptions = ({
                 typeError || 'unknown',
                 `${symbolInfiniteDataType.placeholder}<${typeResponse}>`,
                 typeQueryKey,
-                typePageParam,
+                $.type.or(type, typePageObjectParam),
               ),
           ),
         ),
