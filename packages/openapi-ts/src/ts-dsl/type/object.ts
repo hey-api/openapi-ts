@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
 import { mixin } from '../mixins/apply';
+import { DocMixin } from '../mixins/doc';
 import { OptionalMixin } from '../mixins/optional';
 
 export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
@@ -61,5 +62,5 @@ class TypePropTsDsl extends TypeTsDsl<ts.TypeElement> {
   }
 }
 
-interface TypePropTsDsl extends OptionalMixin {}
-mixin(TypePropTsDsl, OptionalMixin);
+interface TypePropTsDsl extends DocMixin, OptionalMixin {}
+mixin(TypePropTsDsl, [DocMixin, { overrideRender: true }], OptionalMixin);

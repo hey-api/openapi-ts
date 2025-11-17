@@ -53,16 +53,19 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
     }
   }
 
+  /** Switches the function to an arrow function form. */
   arrow(): FuncTsDsl<'arrow'> {
     this.mode = 'arrow';
     return this as unknown as FuncTsDsl<'arrow'>;
   }
 
+  /** Switches the function to a function declaration form. */
   decl(): FuncTsDsl<'decl'> {
     this.mode = 'decl';
     return this as unknown as FuncTsDsl<'decl'>;
   }
 
+  /** Switches the function to a function expression form. */
   expr(): FuncTsDsl<'expr'> {
     this.mode = 'expr';
     return this as unknown as FuncTsDsl<'expr'>;

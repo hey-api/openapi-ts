@@ -53,9 +53,9 @@ export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<unk
     },
     queryKey: getFooQueryKey(options),
     meta: {
-        id: 'getFoo',
-        method: 'get',
-        path: '/foo'
+        id: "getFoo",
+        method: "get",
+        path: "/foo"
     }
 });
 
@@ -73,8 +73,8 @@ export const getBarOptions = (options?: Options<GetBarData>) => queryOptions<unk
     },
     queryKey: getBarQueryKey(options),
     meta: {
-        id: 'getBar',
-        method: 'get',
-        path: '/bar'
+        id: "getBar",
+        method: "get",
+        path: "/bar"
     }
 });

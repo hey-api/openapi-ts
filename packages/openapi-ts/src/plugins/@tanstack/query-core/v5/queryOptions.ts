@@ -103,7 +103,7 @@ export const createQueryOptions = ({
     )
     .prop('queryKey', $(symbolQueryKey.placeholder).call(optionsParamName))
     .$if(handleMeta(plugin, operation, 'queryOptions'), (o, v) =>
-      o.prop('meta', $(v)),
+      o.prop('meta', v),
     );
 
   const symbolQueryOptionsFn = plugin.registerSymbol({
