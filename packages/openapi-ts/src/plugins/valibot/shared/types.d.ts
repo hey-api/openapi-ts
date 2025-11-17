@@ -3,12 +3,13 @@ import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import type { ToRefs } from '~/plugins';
+import type { $ } from '~/ts-dsl';
 
 import type { ValibotPlugin } from '../types';
 
 export type Ast = {
   hasLazyExpression?: boolean;
-  pipes: Array<ts.Expression>;
+  pipes: Array<ReturnType<typeof $.call | typeof $.expr>>;
   typeName?: string | ts.Identifier;
 };
 

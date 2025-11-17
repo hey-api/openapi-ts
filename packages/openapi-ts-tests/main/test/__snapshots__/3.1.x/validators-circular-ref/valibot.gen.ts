@@ -3,18 +3,14 @@
 import * as v from 'valibot';
 
 export const vBar: v.GenericSchema = v.object({
-    bar: v.optional(v.array(v.lazy(() => {
-        return vBar;
-    })))
+    bar: v.optional(v.array(v.lazy(() => vBar)))
 });
 
 export const vFoo = v.object({
     foo: v.optional(vBar)
 });
 
-export const vBaz: v.GenericSchema = v.lazy(() => {
-    return vQux;
-});
+export const vBaz: v.GenericSchema = v.lazy(() => vQux);
 
 /**
  * description caused circular reference error

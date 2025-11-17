@@ -32,7 +32,7 @@ export const exportAst = ({
     .$if(state.hasLazyExpression.value, (c) =>
       c.type(
         $.type(v.placeholder).attr(
-          ast.typeName || identifiers.types.GenericSchema.text,
+          ast.typeName || identifiers.types.GenericSchema,
         ),
       ),
     )

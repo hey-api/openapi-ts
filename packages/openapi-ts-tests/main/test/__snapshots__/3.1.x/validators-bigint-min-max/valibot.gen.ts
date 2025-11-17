@@ -7,5 +7,5 @@ export const vFoo = v.object({
         v.number(),
         v.string(),
         v.bigint()
-    ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'), v.minValue(BigInt(0)), v.maxValue(BigInt(100))))
+    ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"), v.minValue(BigInt(0)), v.maxValue(BigInt(100))))
 });

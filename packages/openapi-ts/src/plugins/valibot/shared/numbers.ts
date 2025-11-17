@@ -1,4 +1,4 @@
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 export const INTEGER_FORMATS = {
   int16: {
@@ -75,7 +75,7 @@ export const numberParameter = ({
   isBigInt: boolean;
   value: unknown;
 }) => {
-  const expression = tsc.valueToExpression({ value });
+  const expression = $.toExpr(value);
 
   if (
     isBigInt &&
@@ -84,10 +84,7 @@ export const numberParameter = ({
       typeof value === 'string' ||
       typeof value === 'boolean')
   ) {
-    return tsc.callExpression({
-      functionName: 'BigInt',
-      parameters: [expression],
-    });
+    return $('BigInt').call(expression);
   }
 
   return expression;

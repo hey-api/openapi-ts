@@ -1,5 +1,3 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
@@ -52,7 +50,7 @@ export const stringToAst = ({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
-}): ts.Expression => {
+}): ReturnType<typeof $.call | typeof $.expr> => {
   const pipes: Array<ReturnType<typeof $.call>> = [];
 
   const v = plugin.referenceSymbol({
