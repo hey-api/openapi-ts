@@ -7,28 +7,7 @@ import {
 } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import {
-  addPet,
-  createUser,
-  createUsersWithListInput,
-  deleteOrder,
-  deletePet,
-  deleteUser,
-  findPetsByStatus,
-  findPetsByTags,
-  getInventory,
-  getOrderById,
-  getPetById,
-  getUserByName,
-  loginUser,
-  logoutUser,
-  type Options,
-  placeOrder,
-  updatePet,
-  updatePetWithForm,
-  updateUser,
-  uploadFile,
-} from '../sdk.gen';
+import { type Options, Sdk } from '../sdk.gen';
 import type {
   AddPetData,
   AddPetResponse,
@@ -40,12 +19,19 @@ import type {
   DeletePetData,
   DeleteUserData,
   FindPetsByStatusData,
+  FindPetsByStatusResponse,
   FindPetsByTagsData,
+  FindPetsByTagsResponse,
   GetInventoryData,
+  GetInventoryResponse,
   GetOrderByIdData,
+  GetOrderByIdResponse,
   GetPetByIdData,
+  GetPetByIdResponse,
   GetUserByNameData,
+  GetUserByNameResponse,
   LoginUserData,
+  LoginUserResponse,
   LogoutUserData,
   PlaceOrderData,
   PlaceOrderResponse,
@@ -72,7 +58,7 @@ export const addPetMutation = (
     Options<AddPetData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } = await addPet({
+      const { data } = await Sdk.__registry.get().addPet({
         ...options,
         ...fnOptions,
         throwOnError: true,
@@ -101,7 +87,7 @@ export const updatePetMutation = (
     Options<UpdatePetData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } = await updatePet({
+      const { data } = await Sdk.__registry.get().updatePet({
         ...options,
         ...fnOptions,
         throwOnError: true,
@@ -164,9 +150,14 @@ export const findPetsByStatusQueryKey = (
 export const findPetsByStatusOptions = (
   options: Options<FindPetsByStatusData>,
 ) =>
-  queryOptions({
+  queryOptions<
+    FindPetsByStatusResponse,
+    DefaultError,
+    FindPetsByStatusResponse,
+    ReturnType<typeof findPetsByStatusQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await findPetsByStatus({
+      const { data } = await Sdk.__registry.get().findPetsByStatus({
         ...options,
         ...queryKey[0],
         signal,
@@ -186,9 +177,14 @@ export const findPetsByTagsQueryKey = (options: Options<FindPetsByTagsData>) =>
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
 export const findPetsByTagsOptions = (options: Options<FindPetsByTagsData>) =>
-  queryOptions({
+  queryOptions<
+    FindPetsByTagsResponse,
+    DefaultError,
+    FindPetsByTagsResponse,
+    ReturnType<typeof findPetsByTagsQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await findPetsByTags({
+      const { data } = await Sdk.__registry.get().findPetsByTags({
         ...options,
         ...queryKey[0],
         signal,
@@ -213,7 +209,7 @@ export const deletePetMutation = (
     Options<DeletePetData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } = await deletePet({
+      const { data } = await Sdk.__registry.get().deletePet({
         ...options,
         ...fnOptions,
         throwOnError: true,
@@ -233,9 +229,14 @@ export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) =>
  * Returns a single pet.
  */
 export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
-  queryOptions({
+  queryOptions<
+    GetPetByIdResponse,
+    DefaultError,
+    GetPetByIdResponse,
+    ReturnType<typeof getPetByIdQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getPetById({
+      const { data } = await Sdk.__registry.get().getPetById({
         ...options,
         ...queryKey[0],
         signal,
@@ -264,7 +265,7 @@ export const updatePetWithFormMutation = (
     Options<UpdatePetWithFormData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } = await updatePetWithForm({
+      const { data } = await Sdk.__registry.get().updatePetWithForm({
         ...options,
         ...fnOptions,
         throwOnError: true,
@@ -293,7 +294,7 @@ export const uploadFileMutation = (
     Options<UploadFileData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } = await uploadFile({
+      const { data } = await Sdk.__registry.get().uploadFile({
         ...options,
         ...fnOptions,
         throwOnError: true,
@@ -313,9 +314,14 @@ export const getInventoryQueryKey = (options?: Options<GetInventoryData>) =>
  * Returns a map of status codes to quantities.
  */
 export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
-  queryOptions({
+  queryOptions<
+    GetInventoryResponse,
+    DefaultError,
+    GetInventoryResponse,
+    ReturnType<typeof getInventoryQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getInventory({
+      const { data } = await Sdk.__registry.get().getInventory({
         ...options,
         ...queryKey[0],
         signal,
@@ -344,7 +350,7 @@ export const placeOrderMutation = (
     Options<PlaceOrderData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } = await placeOrder({
+      const { data } = await Sdk.__registry.get().placeOrder({
         ...options,
         ...fnOptions,
         throwOnError: true,
@@ -369,7 +375,7 @@ export const deleteOrderMutation = (
     Options<DeleteOrderData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } = await deleteOrder({
+      const { data } = await Sdk.__registry.get().deleteOrder({
         ...options,
         ...fnOptions,
         throwOnError: true,
@@ -389,9 +395,14 @@ export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) =>
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  */
 export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
-  queryOptions({
+  queryOptions<
+    GetOrderByIdResponse,
+    DefaultError,
+    GetOrderByIdResponse,
+    ReturnType<typeof getOrderByIdQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getOrderById({
+      const { data } = await Sdk.__registry.get().getOrderById({
         ...options,
         ...queryKey[0],
         signal,
@@ -420,7 +431,7 @@ export const createUserMutation = (
     Options<CreateUserData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } = await createUser({
+      const { data } = await Sdk.__registry.get().createUser({
         ...options,
         ...fnOptions,
         throwOnError: true,
@@ -449,7 +460,7 @@ export const createUsersWithListInputMutation = (
     Options<CreateUsersWithListInputData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } = await createUsersWithListInput({
+      const { data } = await Sdk.__registry.get().createUsersWithListInput({
         ...options,
         ...fnOptions,
         throwOnError: true,
@@ -469,9 +480,14 @@ export const loginUserQueryKey = (options?: Options<LoginUserData>) =>
  * Log into the system.
  */
 export const loginUserOptions = (options?: Options<LoginUserData>) =>
-  queryOptions({
+  queryOptions<
+    LoginUserResponse,
+    DefaultError,
+    LoginUserResponse,
+    ReturnType<typeof loginUserQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await loginUser({
+      const { data } = await Sdk.__registry.get().loginUser({
         ...options,
         ...queryKey[0],
         signal,
@@ -491,9 +507,14 @@ export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
  * Log user out of the system.
  */
 export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
-  queryOptions({
+  queryOptions<
+    unknown,
+    DefaultError,
+    unknown,
+    ReturnType<typeof logoutUserQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await logoutUser({
+      const { data } = await Sdk.__registry.get().logoutUser({
         ...options,
         ...queryKey[0],
         signal,
@@ -518,7 +539,7 @@ export const deleteUserMutation = (
     Options<DeleteUserData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } = await deleteUser({
+      const { data } = await Sdk.__registry.get().deleteUser({
         ...options,
         ...fnOptions,
         throwOnError: true,
@@ -538,9 +559,14 @@ export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) =>
  * Get user detail based on username.
  */
 export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
-  queryOptions({
+  queryOptions<
+    GetUserByNameResponse,
+    DefaultError,
+    GetUserByNameResponse,
+    ReturnType<typeof getUserByNameQueryKey>
+  >({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getUserByName({
+      const { data } = await Sdk.__registry.get().getUserByName({
         ...options,
         ...queryKey[0],
         signal,
@@ -565,7 +591,7 @@ export const updateUserMutation = (
     Options<UpdateUserData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } = await updateUser({
+      const { data } = await Sdk.__registry.get().updateUser({
         ...options,
         ...fnOptions,
         throwOnError: true,

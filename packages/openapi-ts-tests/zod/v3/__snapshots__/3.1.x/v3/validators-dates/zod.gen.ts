@@ -14,12 +14,8 @@ export const zQux = z.record(z.object({
 export const zFoo: z.ZodTypeAny = z.union([
     z.object({
         foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
-        bar: z.lazy(() => {
-            return zBar;
-        }).optional(),
-        baz: z.array(z.lazy(() => {
-            return zFoo;
-        })).optional(),
+        bar: z.lazy(() => zBar).optional(),
+        baz: z.array(z.lazy(() => zFoo)).optional(),
         qux: z.number().int().gt(0).optional().default(0)
     }),
     z.null()
@@ -53,9 +49,7 @@ export const zPatchFooData = z.object({
             baz: z.string().optional()
         }).optional(),
         qux: z.string().date().optional(),
-        quux: z.string().datetime({
-            offset: true
-        }).optional()
+        quux: z.string().datetime({ offset: true }).optional()
     }).optional()
 });
 

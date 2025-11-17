@@ -1,19 +1,17 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import type { Expression } from 'typescript';
+import type ts from 'typescript';
 
 import { hasOperationDataRequired } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import { getClientBaseUrlKey } from '~/plugins/@hey-api/client-core/utils';
-import { type Property, tsc } from '~/tsc';
+import type { TsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
+import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
-import { useTypeData } from './useType';
 
 const TOptionsType = 'TOptions';
-
-const infiniteIdentifier = tsc.identifier({ text: 'infinite' });
-const optionsIdentifier = tsc.identifier({ text: 'options' });
 
 export const createQueryKeyFunction = ({
   plugin,
@@ -39,16 +37,6 @@ export const createQueryKeyFunction = ({
     tool: plugin.name,
   });
 
-  const returnType = tsc.indexedAccessTypeNode({
-    indexType: tsc.literalTypeNode({
-      literal: tsc.ots.number(0),
-    }),
-    objectType: tsc.typeReferenceNode({
-      typeArguments: [tsc.typeReferenceNode({ typeName: TOptionsType })],
-      typeName: symbolQueryKeyType.placeholder,
-    }),
-  });
-
   const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
 
   const symbolClient = plugin.getSymbol({
@@ -61,195 +49,47 @@ export const createQueryKeyFunction = ({
     tool: 'sdk',
   });
 
-  const fn = tsc.constVariable({
-    expression: tsc.arrowFunction({
-      multiLine: true,
-      parameters: [
-        {
-          name: 'id',
-          type: tsc.typeReferenceNode({ typeName: 'string' }),
-        },
-        {
-          isRequired: false,
-          name: 'options',
-          type: tsc.typeReferenceNode({ typeName: TOptionsType }),
-        },
-        {
-          isRequired: false,
-          name: 'infinite',
-          type: tsc.typeReferenceNode({ typeName: 'boolean' }),
-        },
-        {
-          isRequired: false,
-          name: 'tags',
-          type: tsc.typeReferenceNode({ typeName: 'ReadonlyArray<string>' }),
-        },
-      ],
-      returnType: tsc.typeTupleNode({
-        types: [returnType],
-      }),
-      statements: [
-        tsc.constVariable({
-          assertion: returnType,
-          expression: tsc.objectExpression({
-            multiLine: false,
-            obj: [
-              {
-                key: '_id',
-                value: tsc.identifier({ text: 'id' }),
-              },
-              {
-                key: baseUrlKey,
-                value: tsc.identifier({
-                  text: `options?.${baseUrlKey} || (options?.client ?? ${symbolClient?.placeholder}).getConfig().${baseUrlKey}`,
-                }),
-              },
-            ],
-          }),
-          name: 'params',
-          typeName: returnType,
-        }),
-        tsc.ifStatement({
-          expression: infiniteIdentifier,
-          thenStatement: tsc.block({
-            statements: [
-              tsc.expressionToStatement({
-                expression: tsc.binaryExpression({
-                  left: tsc.propertyAccessExpression({
-                    expression: 'params',
-                    name: '_infinite',
-                  }),
-                  right: infiniteIdentifier,
-                }),
-              }),
-            ],
-          }),
-        }),
-        tsc.ifStatement({
-          expression: tsc.identifier({ text: 'tags' }),
-          thenStatement: tsc.block({
-            statements: [
-              tsc.expressionToStatement({
-                expression: tsc.binaryExpression({
-                  left: tsc.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'tags',
-                  }),
-                  right: tsc.identifier({ text: 'tags' }),
-                }),
-              }),
-            ],
-          }),
-        }),
-        tsc.ifStatement({
-          expression: tsc.propertyAccessExpression({
-            expression: optionsIdentifier,
-            isOptional: true,
-            name: tsc.identifier({ text: 'body' }),
-          }),
-          thenStatement: tsc.block({
-            statements: [
-              tsc.expressionToStatement({
-                expression: tsc.binaryExpression({
-                  left: tsc.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'body',
-                  }),
-                  right: tsc.propertyAccessExpression({
-                    expression: 'options',
-                    name: 'body',
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-        tsc.ifStatement({
-          expression: tsc.propertyAccessExpression({
-            expression: optionsIdentifier,
-            isOptional: true,
-            name: tsc.identifier({ text: 'headers' }),
-          }),
-          thenStatement: tsc.block({
-            statements: [
-              tsc.expressionToStatement({
-                expression: tsc.binaryExpression({
-                  left: tsc.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'headers',
-                  }),
-                  right: tsc.propertyAccessExpression({
-                    expression: 'options',
-                    name: 'headers',
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-        tsc.ifStatement({
-          expression: tsc.propertyAccessExpression({
-            expression: optionsIdentifier,
-            isOptional: true,
-            name: tsc.identifier({ text: 'path' }),
-          }),
-          thenStatement: tsc.block({
-            statements: [
-              tsc.expressionToStatement({
-                expression: tsc.binaryExpression({
-                  left: tsc.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'path',
-                  }),
-                  right: tsc.propertyAccessExpression({
-                    expression: 'options',
-                    name: 'path',
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-        tsc.ifStatement({
-          expression: tsc.propertyAccessExpression({
-            expression: optionsIdentifier,
-            isOptional: true,
-            name: tsc.identifier({ text: 'query' }),
-          }),
-          thenStatement: tsc.block({
-            statements: [
-              tsc.expressionToStatement({
-                expression: tsc.binaryExpression({
-                  left: tsc.propertyAccessExpression({
-                    expression: 'params',
-                    name: 'query',
-                  }),
-                  right: tsc.propertyAccessExpression({
-                    expression: 'options',
-                    name: 'query',
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-        tsc.returnStatement({
-          expression: tsc.arrayLiteralExpression({
-            elements: [tsc.identifier({ text: 'params' })],
-          }),
-        }),
-      ],
-      types: [
-        {
-          extends: tsc.typeReferenceNode({
-            typeName: tsc.identifier({ text: symbolOptions.placeholder }),
-          }),
-          name: TOptionsType,
-        },
-      ],
-    }),
-    name: symbolCreateQueryKey.placeholder,
-  });
+  const returnType = $.type(symbolQueryKeyType.placeholder)
+    .generic(TOptionsType)
+    .idx(0);
+
+  const fn = $.const(symbolCreateQueryKey.placeholder).assign(
+    $.func()
+      .param('id', (p) => p.type('string'))
+      .param('options', (p) => p.optional().type(TOptionsType))
+      .param('infinite', (p) => p.optional().type('boolean'))
+      .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
+      .generic(TOptionsType, (g) => g.extends(symbolOptions.placeholder))
+      .returns($.type.tuple(returnType))
+      .do(
+        $.const('params')
+          .type(returnType)
+          .assign(
+            $.object()
+              .prop('_id', 'id')
+              .prop(
+                baseUrlKey,
+                `options?.${baseUrlKey} || (options?.client ?? ${symbolClient?.placeholder}).getConfig().${baseUrlKey}`,
+              )
+              .as(returnType),
+          ),
+        $.if('infinite').do($('params').attr('_infinite').assign('infinite')),
+        $.if('tags').do($('params').attr('tags').assign('tags')),
+        $.if($('options').attr('body').optional()).do(
+          $('params').attr('body').assign($('options').attr('body')),
+        ),
+        $.if($('options').attr('headers').optional()).do(
+          $('params').attr('headers').assign($('options').attr('headers')),
+        ),
+        $.if($('options').attr('path').optional()).do(
+          $('params').attr('path').assign($('options').attr('path')),
+        ),
+        $.if($('options').attr('query').optional()).do(
+          $('params').attr('query').assign($('options').attr('query')),
+        ),
+        $.return($.array().element($('params'))),
+      ),
+  );
   plugin.setSymbolValue(symbolCreateQueryKey, fn);
 };
 
@@ -267,50 +107,25 @@ const createQueryKeyLiteral = ({
   const config = isInfinite
     ? plugin.config.infiniteQueryKeys
     : plugin.config.queryKeys;
-  let tagsExpression: Expression | undefined;
+  let tagsArray: TsDsl<ts.ArrayLiteralExpression> | undefined;
   if (config.tags && operation.tags && operation.tags.length > 0) {
-    tagsExpression = tsc.arrayLiteralExpression({
-      elements: operation.tags.map((tag) => tsc.stringLiteral({ text: tag })),
-    });
+    tagsArray = $.array().elements(...operation.tags);
   }
-
   const symbolCreateQueryKey = plugin.referenceSymbol({
     category: 'utility',
     resource: 'createQueryKey',
     tool: plugin.name,
   });
-  const createQueryKeyCallExpression = tsc.callExpression({
-    functionName: symbolCreateQueryKey.placeholder,
-    parameters: [
-      tsc.ots.string(id),
-      'options',
-      isInfinite || tagsExpression
-        ? tsc.ots.boolean(Boolean(isInfinite))
-        : undefined,
-      tagsExpression,
-    ],
-  });
+  const createQueryKeyCallExpression = $(symbolCreateQueryKey.placeholder).call(
+    $.literal(id),
+    'options',
+    isInfinite || tagsArray ? $.literal(Boolean(isInfinite)) : undefined,
+    tagsArray,
+  );
   return createQueryKeyCallExpression;
 };
 
 export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
-  const properties: Array<Property> = [
-    {
-      name: '_id',
-      type: tsc.keywordTypeNode({ keyword: 'string' }),
-    },
-    {
-      isRequired: false,
-      name: '_infinite',
-      type: tsc.keywordTypeNode({ keyword: 'boolean' }),
-    },
-    {
-      isRequired: false,
-      name: 'tags',
-      type: tsc.typeReferenceNode({ typeName: 'ReadonlyArray<string>' }),
-    },
-  ];
-
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
     resource: 'client-options',
@@ -326,33 +141,24 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
     },
     name: 'QueryKey',
   });
-  const queryKeyType = tsc.typeAliasDeclaration({
-    exportType: symbolQueryKeyType.exported,
-    name: symbolQueryKeyType.placeholder,
-    type: tsc.typeTupleNode({
-      types: [
-        tsc.typeIntersectionNode({
-          types: [
-            tsc.typeReferenceNode({
-              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(plugin.context.config)}' | 'body' | 'headers' | 'path' | 'query'>`,
-            }),
-            tsc.typeInterfaceNode({
-              properties,
-              useLegacyResolution: true,
-            }),
-          ],
-        }),
-      ],
-    }),
-    typeParameters: [
-      {
-        extends: tsc.typeReferenceNode({
-          typeName: tsc.identifier({ text: symbolOptions.placeholder }),
-        }),
-        name: TOptionsType,
-      },
-    ],
-  });
+  const queryKeyType = $.type
+    .alias(symbolQueryKeyType.placeholder)
+    .export(symbolQueryKeyType.exported)
+    .generic(TOptionsType, (g) => g.extends(symbolOptions.placeholder))
+    .type(
+      $.type.tuple(
+        $.type.and(
+          $.type(
+            `Pick<${TOptionsType}, '${getClientBaseUrlKey(plugin.context.config)}' | 'body' | 'headers' | 'path' | 'query'>`,
+          ),
+          $.type
+            .object()
+            .prop('_id', (p) => p.type('string'))
+            .prop('_infinite', (p) => p.optional().type('boolean'))
+            .prop('tags', (p) => p.optional().type('ReadonlyArray<string>')),
+        ),
+      ),
+    );
   plugin.setSymbolValue(symbolQueryKeyType, queryKeyType);
 };
 
@@ -370,25 +176,22 @@ export const queryKeyStatement = ({
   typeQueryKey?: string;
 }) => {
   const typeData = useTypeData({ operation, plugin });
-  const statement = tsc.constVariable({
-    exportConst: symbol.exported,
-    expression: tsc.arrowFunction({
-      parameters: [
-        {
-          isRequired: hasOperationDataRequired(operation),
-          name: 'options',
-          type: typeData,
-        },
-      ],
-      returnType: isInfinite ? typeQueryKey : undefined,
-      statements: createQueryKeyLiteral({
-        id: operation.id,
-        isInfinite,
-        operation,
-        plugin,
-      }),
-    }),
-    name: symbol.placeholder,
-  });
+  const statement = $.const(symbol.placeholder)
+    .export(symbol.exported)
+    .assign(
+      $.func()
+        .param('options', (p) =>
+          p.optional(!hasOperationDataRequired(operation)).type(typeData),
+        )
+        .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
+        .do(
+          createQueryKeyLiteral({
+            id: operation.id,
+            isInfinite,
+            operation,
+            plugin,
+          }).return(),
+        ),
+    );
   return statement;
 };

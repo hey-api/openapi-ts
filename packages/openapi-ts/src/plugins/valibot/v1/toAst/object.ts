@@ -1,14 +1,59 @@
-import ts from 'typescript';
+import type ts from 'typescript';
 
 import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
-import { numberRegExp } from '~/utils/regexp';
+import { $ } from '~/ts-dsl';
 
 import { pipesToAst } from '../../shared/pipesToAst';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { ObjectBaseResolverArgs } from '../../types';
 import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
+
+function defaultObjectBaseResolver({
+  additional,
+  pipes,
+  plugin,
+  shape,
+}: ObjectBaseResolverArgs): number {
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
+
+  // Handle `additionalProperties: { type: 'never' }` → v.strictObject()
+  if (additional === null) {
+    return pipes.push(
+      $(v.placeholder).attr(identifiers.schemas.strictObject).call(shape),
+    );
+  }
+
+  // Handle additionalProperties as schema → v.record() or v.objectWithRest()
+  if (additional) {
+    if (shape.isEmpty) {
+      return pipes.push(
+        $(v.placeholder)
+          .attr(identifiers.schemas.record)
+          .call(
+            $(v.placeholder).attr(identifiers.schemas.string).call(),
+            additional,
+          ),
+      );
+    }
+
+    // If there are named properties, use v.objectWithRest() to validate both
+    return pipes.push(
+      $(v.placeholder)
+        .attr(identifiers.schemas.objectWithRest)
+        .call(shape, additional),
+    );
+  }
+
+  // Default case → v.object()
+  return pipes.push(
+    $(v.placeholder).attr(identifiers.schemas.object).call(shape),
+  );
+}
 
 export const objectToAst = ({
   plugin,
@@ -18,10 +63,11 @@ export const objectToAst = ({
   schema: SchemaWithType<'object'>;
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
+  const pipes: Array<ReturnType<typeof $.call>> = [];
 
   // TODO: parser - handle constants
-  const properties: Array<ts.PropertyAssignment> = [];
 
+  const shape = $.object().pretty();
   const required = schema.required ?? [];
 
   for (const name in schema.properties) {
@@ -37,109 +83,40 @@ export const objectToAst = ({
         path: toRef([...state.path.value, 'properties', name]),
       },
     });
-    if (propertyAst.hasLazyExpression) {
-      result.hasLazyExpression = true;
-    }
+    if (propertyAst.hasLazyExpression) result.hasLazyExpression = true;
 
-    numberRegExp.lastIndex = 0;
-    let propertyName;
-    if (numberRegExp.test(name)) {
-      // For numeric literals, we'll handle negative numbers by using a string literal
-      // instead of trying to use a PrefixUnaryExpression
-      propertyName = name.startsWith('-')
-        ? ts.factory.createStringLiteral(name)
-        : ts.factory.createNumericLiteral(name);
+    shape.prop(name, pipesToAst({ pipes: propertyAst.pipes, plugin }));
+  }
+
+  let additional: ts.Expression | null | undefined;
+  if (schema.additionalProperties && schema.additionalProperties.type) {
+    if (schema.additionalProperties.type === 'never') {
+      additional = null;
     } else {
-      propertyName = name;
+      const additionalAst = irSchemaToAst({
+        plugin,
+        schema: schema.additionalProperties,
+        state: {
+          ...state,
+          path: toRef([...state.path.value, 'additionalProperties']),
+        },
+      });
+      if (additionalAst.hasLazyExpression) result.hasLazyExpression = true;
+      additional = pipesToAst({ pipes: additionalAst.pipes, plugin });
     }
-    // TODO: parser - abstract safe property name logic
-    if (
-      ((name.match(/^[0-9]/) && name.match(/\D+/g)) || name.match(/\W/g)) &&
-      !name.startsWith("'") &&
-      !name.endsWith("'")
-    ) {
-      propertyName = `'${name}'`;
-    }
-    properties.push(
-      tsc.propertyAssignment({
-        initializer: pipesToAst({ pipes: propertyAst.pipes, plugin }),
-        name: propertyName,
-      }),
-    );
   }
 
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
+  const args: ObjectBaseResolverArgs = {
+    $,
+    additional,
+    pipes,
+    plugin,
+    schema,
+    shape,
+  };
+  const resolver = plugin.config['~resolvers']?.object?.base;
+  if (!resolver?.(args)) defaultObjectBaseResolver(args);
 
-  // Handle additionalProperties with a schema (not just true/false)
-  // This supports objects with dynamic keys (e.g., Record<string, T>)
-  if (
-    schema.additionalProperties &&
-    typeof schema.additionalProperties === 'object' &&
-    schema.additionalProperties.type !== undefined
-  ) {
-    const additionalAst = irSchemaToAst({
-      plugin,
-      schema: schema.additionalProperties,
-      state: {
-        ...state,
-        path: toRef([...state.path.value, 'additionalProperties']),
-      },
-    });
-    if (additionalAst.hasLazyExpression) {
-      result.hasLazyExpression = true;
-    }
-
-    // If there are no named properties, use v.record() directly
-    if (!Object.keys(properties).length) {
-      result.pipes = [
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: v.placeholder,
-            name: identifiers.schemas.record,
-          }),
-          parameters: [
-            tsc.callExpression({
-              functionName: tsc.propertyAccessExpression({
-                expression: v.placeholder,
-                name: identifiers.schemas.string,
-              }),
-              parameters: [],
-            }),
-            pipesToAst({ pipes: additionalAst.pipes, plugin }),
-          ],
-        }),
-      ];
-      return result as Omit<Ast, 'typeName'>;
-    }
-
-    // If there are named properties, use v.objectWithRest() to validate both
-    // The rest parameter is the schema for each additional property value
-    result.pipes = [
-      tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.schemas.objectWithRest,
-        }),
-        parameters: [
-          ts.factory.createObjectLiteralExpression(properties, true),
-          pipesToAst({ pipes: additionalAst.pipes, plugin }),
-        ],
-      }),
-    ];
-    return result as Omit<Ast, 'typeName'>;
-  }
-
-  result.pipes = [
-    tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.schemas.object,
-      }),
-      parameters: [ts.factory.createObjectLiteralExpression(properties, true)],
-    }),
-  ];
+  result.pipes = [pipesToAst({ pipes, plugin })];
   return result as Omit<Ast, 'typeName'>;
 };

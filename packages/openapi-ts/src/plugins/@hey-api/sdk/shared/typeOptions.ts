@@ -72,7 +72,7 @@ export const createTypeOptions = ({
                 'individual options. This might be also useful if you want to implement a',
                 'custom client.',
               ],
-              isRequired: !plugin.config.client,
+              isRequired: !plugin.config.client && !plugin.config.instance,
               name: 'client',
               type: tsc.typeReferenceNode({
                 typeName: symbolClient.placeholder,

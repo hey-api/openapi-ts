@@ -1,5 +1,5 @@
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
@@ -10,29 +10,23 @@ export const booleanToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'boolean'>;
 }): Omit<Ast, 'typeName'> => {
+  const result: Partial<Omit<Ast, 'typeName'>> = {};
+  let chain: ReturnType<typeof $.call>;
+
   const z = plugin.referenceSymbol({
     category: 'external',
     resource: 'zod.z',
   });
 
-  const result: Partial<Omit<Ast, 'typeName'>> = {};
-
   if (typeof schema.const === 'boolean') {
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.literal,
-      }),
-      parameters: [tsc.ots.boolean(schema.const)],
-    });
+    chain = $(z.placeholder)
+      .attr(identifiers.literal)
+      .call($.literal(schema.const));
+    result.expression = chain.$render();
     return result as Omit<Ast, 'typeName'>;
   }
 
-  result.expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: z.placeholder,
-      name: identifiers.boolean,
-    }),
-  });
+  chain = $(z.placeholder).attr(identifiers.boolean).call();
+  result.expression = chain.$render();
   return result as Omit<Ast, 'typeName'>;
 };

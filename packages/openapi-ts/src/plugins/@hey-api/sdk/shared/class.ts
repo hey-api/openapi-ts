@@ -1,11 +1,13 @@
-import type ts from 'typescript';
+import type { Symbol } from '@hey-api/codegen-core';
 
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
-import { tsc } from '~/tsc';
+import type { TsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
+import { toParameterDeclarations } from '~/tsc/types';
 import { stringCase } from '~/utils/stringCase';
 
 import type { HeyApiSdkPlugin } from '../types';
@@ -36,85 +38,119 @@ type SdkClassEntry = {
   /**
    * List of class nodes containing methods.
    */
-  nodes: Array<ts.ClassElement>;
+  nodes: Array<TsDsl>;
   /**
    * Is this a root class?
    */
   root: boolean;
 };
 
-const createClientClassNodes = ({
-  plugin,
+export const registryName = '__registry';
+
+const createRegistryClass = ({
+  sdkName,
+  symbol,
 }: {
   plugin: HeyApiSdkPlugin['Instance'];
-}): ReadonlyArray<ts.ClassElement> => {
-  const clientAssignmentStatement = tsc.expressionToStatement({
-    expression: tsc.binaryExpression({
-      left: tsc.propertyAccessExpression({
-        expression: tsc.this(),
-        name: '_client',
-      }),
-      operator: '=',
-      right: tsc.propertyAccessExpression({
-        expression: tsc.identifier({ text: 'args' }),
-        name: 'client',
-      }),
-    }),
-  });
+  sdkName: string;
+  symbol: Symbol;
+}): TsDsl => {
+  const defaultKey = 'defaultKey';
+  const instances = 'instances';
+  return $.class(symbol.placeholder)
+    .export(symbol.exported)
+    .generic('T')
+    .field(defaultKey, (f) =>
+      f.private().readonly().assign($.literal('default')),
+    )
+    .newline()
+    .field(instances, (f) =>
+      f
+        .private()
+        .readonly()
+        .type($.type('Map').generics('string', 'T'))
+        .assign($.new('Map')),
+    )
+    .newline()
+    .method('get', (m) =>
+      m
+        .returns('T')
+        .param('key', (p) => p.type('string').optional())
+        .do(
+          $.const('instance').assign(
+            $('this')
+              .attr('instances')
+              .attr('get')
+              .call($('key').coalesce($('this').attr(defaultKey))),
+          ),
+          $.if($.not('instance')).do(
+            $.throw('Error').message(
+              $.template('No SDK client found. Create one with "new ')
+                .add(sdkName)
+                .add('()" to fix this error.'),
+            ),
+          ),
+          $.return('instance'),
+        ),
+    )
+    .newline()
+    .method('set', (m) =>
+      m
+        .returns('void')
+        .param('value', (p) => p.type('T'))
+        .param('key', (p) => p.type('string').optional())
+        .do(
+          $('this')
+            .attr(instances)
+            .attr('set')
+            .call($('key').coalesce($('this').attr(defaultKey)), 'value'),
+        ),
+    );
+};
 
+const createClientClass = ({
+  plugin,
+  symbol,
+}: {
+  plugin: HeyApiSdkPlugin['Instance'];
+  symbol: Symbol;
+}): TsDsl => {
+  const symClient = plugin.getSymbol({
+    category: 'client',
+  });
+  const optionalClient = Boolean(plugin.config.client && symClient);
   const symbolClient = plugin.referenceSymbol({
     category: 'external',
     resource: 'client.Client',
   });
-  const symClient = plugin.getSymbol({
-    category: 'client',
-  });
-
-  return [
-    tsc.propertyDeclaration({
-      initializer: symClient
-        ? tsc.identifier({ text: symClient.placeholder })
-        : undefined,
-      modifier: 'protected',
-      name: '_client',
-      type: tsc.typeReferenceNode({ typeName: symbolClient.placeholder }),
-    }),
-    // @ts-expect-error
-    tsc.identifier({ text: '\n' }),
-    tsc.constructorDeclaration({
-      multiLine: true,
-      parameters: [
-        {
-          isRequired: !plugin.config.client,
-          name: 'args',
-          type: tsc.typeInterfaceNode({
-            properties: [
-              {
-                isRequired: !plugin.config.client,
-                name: 'client',
-                type: symbolClient.placeholder,
-              },
-            ],
-            useLegacyResolution: false,
-          }),
-        },
-      ],
-      statements: [
-        !plugin.config.client
-          ? clientAssignmentStatement
-          : tsc.ifStatement({
-              expression: tsc.propertyAccessExpression({
-                expression: tsc.identifier({ text: 'args' }),
-                isOptional: true,
-                name: 'client',
-              }),
-              thenStatement: tsc.block({
-                statements: [clientAssignmentStatement],
-              }),
-            }),
-      ],
-    }),
-  ];
+  return $.class(symbol.placeholder)
+    .export(symbol.exported)
+    .field('client', (f) => f.protected().type(symbolClient.placeholder))
+    .newline()
+    .init((i) =>
+      i
+        .param('args', (p) =>
+          p
+            .optional(optionalClient)
+            .type(
+              $.type
+                .object()
+                .prop('client', (p) =>
+                  p.optional(optionalClient).type(symbolClient.placeholder),
+                ),
+            ),
+        )
+        .do(
+          $('this')
+            .attr('client')
+            .assign(
+              $('args')
+                .attr('client')
+                .optional(optionalClient)
+                .$if(optionalClient, (a) => a.coalesce(symClient!.placeholder)),
+            ),
+        ),
+    );
 };
 
 export const generateClassSdk = ({
@@ -130,10 +166,6 @@ export const generateClassSdk = ({
    * Track unique added classes.
    */
   const generatedClasses = new Set<string>();
-
-  const clientClassNodes = plugin.config.instance
-    ? createClientClassNodes({ plugin })
-    : [];
 
   plugin.forEach(
     'operation',
@@ -222,60 +254,51 @@ export const generateClassSdk = ({
             operation,
             plugin,
           });
-          const functionNode = tsc.methodDeclaration({
-            accessLevel: 'public',
-            comment: createOperationComment({ operation }),
-            isStatic: isAngularClient ? false : !plugin.config.instance,
-            name: entry.methodName,
-            parameters: opParameters.parameters,
-            returnType: undefined,
-            statements,
-            types: isNuxtClient
-              ? [
-                  {
-                    default: tsc.ots.string('$fetch'),
-                    extends: tsc.typeNode(
-                      plugin.referenceSymbol({
-                        category: 'external',
-                        resource: 'client.Composable',
-                      }).placeholder,
+          const functionNode = $.method(entry.methodName, (m) =>
+            m
+              .$if(createOperationComment({ operation }), (m, v) =>
+                m.doc(v as ReadonlyArray<string>),
+              )
+              .public()
+              .static(!isAngularClient && !plugin.config.instance)
+              .$if(
+                isNuxtClient,
+                (m) =>
+                  m
+                    .generic(nuxtTypeComposable, (t) =>
+                      t
+                        .extends(
+                          plugin.referenceSymbol({
+                            category: 'external',
+                            resource: 'client.Composable',
+                          }).placeholder,
+                        )
+                        .default($.type.literal('$fetch')),
+                    )
+                    .generic(nuxtTypeDefault, (t) =>
+                      t.$if(symbolResponse, (t, s) =>
+                        t.extends(s.placeholder).default(s.placeholder),
+                      ),
                     ),
-                    name: nuxtTypeComposable,
-                  },
-                  {
-                    default: symbolResponse
-                      ? tsc.typeReferenceNode({
-                          typeName: symbolResponse.placeholder,
-                        })
-                      : tsc.typeNode('undefined'),
-                    extends: symbolResponse
-                      ? tsc.typeReferenceNode({
-                          typeName: symbolResponse.placeholder,
-                        })
-                      : undefined,
-                    name: nuxtTypeDefault,
-                  },
-                ]
-              : [
-                  {
-                    default:
-                      ('throwOnError' in client.config
-                        ? client.config.throwOnError
-                        : false) ?? false,
-                    extends: 'boolean',
-                    name: 'ThrowOnError',
-                  },
-                ],
-          });
+                (m) =>
+                  m.generic('ThrowOnError', (t) =>
+                    t
+                      .extends('boolean')
+                      .default(
+                        ('throwOnError' in client.config
+                          ? client.config.throwOnError
+                          : false) ?? false,
+                      ),
+                  ),
+              )
+              .params(...toParameterDeclarations(opParameters.parameters))
+              .do(...statements),
+          );
 
           if (!currentClass.nodes.length) {
             currentClass.nodes.push(functionNode);
           } else {
-            currentClass.nodes.push(
-              // @ts-expect-error
-              tsc.identifier({ text: '\n' }),
-              functionNode,
-            );
+            currentClass.nodes.push($.newline(), functionNode);
           }
 
           currentClass.methods.add(entry.methodName);
@@ -289,17 +312,32 @@ export const generateClassSdk = ({
     },
   );
 
-  const symbolHeyApiClient = plugin.registerSymbol({
-    exported: false,
-    kind: 'class',
-    meta: {
-      category: 'utility',
-      resource: 'class',
-      resourceId: '_HeyApiClient',
-      tool: 'sdk',
-    },
-    name: '_HeyApiClient',
-  });
+  const symbolHeyApiClient = plugin.config.instance
+    ? plugin.registerSymbol({
+        exported: false,
+        kind: 'class',
+        meta: {
+          category: 'utility',
+          resource: 'class',
+          resourceId: 'HeyApiClient',
+          tool: 'sdk',
+        },
+        name: 'HeyApiClient',
+      })
+    : undefined;
+  const symbolHeyApiRegistry = plugin.config.instance
+    ? plugin.registerSymbol({
+        exported: false,
+        kind: 'class',
+        meta: {
+          category: 'utility',
+          resource: 'class',
+          resourceId: 'HeyApiRegistry',
+          tool: 'sdk',
+        },
+        name: 'HeyApiRegistry',
+      })
+    : undefined;
 
   const generateClass = (currentClass: SdkClassEntry) => {
     if (generatedClasses.has(currentClass.className)) {
@@ -337,87 +375,51 @@ export const generateClassSdk = ({
         }
         currentClass.methods.add(memberName);
 
-        let subClassReferenceNode:
-          | ts.GetAccessorDeclaration
-          | ts.PropertyDeclaration;
-        if (plugin.isSymbolRegistered(refChildClass.id)) {
-          subClassReferenceNode = tsc.propertyDeclaration({
-            initializer: plugin.config.instance
-              ? tsc.newExpression({
-                  argumentsArray: plugin.config.instance
-                    ? [
-                        tsc.objectExpression({
-                          multiLine: false,
-                          obj: [
-                            {
-                              key: 'client',
-                              value: tsc.propertyAccessExpression({
-                                expression: tsc.this(),
-                                name: '_client',
-                              }),
-                            },
-                          ],
-                        }),
-                      ]
-                    : [],
-                  expression: tsc.identifier({
-                    text: refChildClass.placeholder,
-                  }),
-                })
-              : tsc.identifier({ text: refChildClass.placeholder }),
-            modifier: plugin.config.instance ? undefined : 'static',
-            name: memberName,
-          });
-        } else {
-          subClassReferenceNode = tsc.getAccessorDeclaration({
-            modifiers: plugin.config.instance
-              ? undefined
-              : ['public', 'static'],
-            name: memberName,
-            statements: plugin.config.instance
-              ? [
-                  tsc.returnStatement({
-                    expression: tsc.newExpression({
-                      argumentsArray: [
-                        tsc.objectExpression({
-                          multiLine: false,
-                          obj: [
-                            {
-                              key: 'client',
-                              value: tsc.propertyAccessExpression({
-                                expression: tsc.this(),
-                                name: '_client',
-                              }),
-                            },
-                          ],
-                        }),
-                      ],
-                      expression: tsc.identifier({
-                        text: refChildClass.placeholder,
-                      }),
-                    }),
-                  }),
-                ]
-              : [
-                  tsc.returnStatement({
-                    expression: tsc.identifier({
-                      text: refChildClass.placeholder,
-                    }),
-                  }),
-                ],
-          });
-        }
+        const subClassReferenceNode = plugin.isSymbolRegistered(
+          refChildClass.id,
+        )
+          ? $.field(memberName, (f) =>
+              f
+                .static(!plugin.config.instance)
+                .assign(
+                  plugin.config.instance
+                    ? $.new(refChildClass.placeholder).args(
+                        $.object().prop('client', $('this').attr('client')),
+                      )
+                    : $(refChildClass.placeholder),
+                ),
+            )
+          : $.getter(memberName, (g) =>
+              g
+                .$if(!plugin.config.instance, (g) => g.public().static())
+                .do(
+                  $.return(
+                    plugin.config.instance
+                      ? $.new(refChildClass.placeholder).args(
+                          $.object().prop('client', $('this').attr('client')),
+                        )
+                      : refChildClass.placeholder,
+                  ),
+                ),
+            );
 
         if (!currentClass.nodes.length) {
           currentClass.nodes.push(subClassReferenceNode);
         } else {
-          currentClass.nodes.push(
-            // @ts-expect-error
-            tsc.identifier({ text: '\n' }),
-            subClassReferenceNode,
-          );
+          currentClass.nodes.push($.newline(), subClassReferenceNode);
         }
       }
+    }
+
+    if (
+      symbolHeyApiClient &&
+      !plugin.gen.symbols.hasValue(symbolHeyApiClient.id)
+    ) {
+      const node = createClientClass({
+        plugin,
+        symbol: symbolHeyApiClient,
+      });
+      plugin.setSymbolValue(symbolHeyApiClient, node);
     }
 
     const symbol = plugin.registerSymbol({
@@ -431,39 +433,76 @@ export const generateClassSdk = ({
       },
       name: resourceId,
     });
-    const node = tsc.classDeclaration({
-      decorator:
-        currentClass.root && isAngularClient
-          ? {
-              args: [
-                {
-                  providedIn: 'root',
-                },
-              ],
-              name: plugin.referenceSymbol({
-                category: 'external',
-                resource: '@angular/core.Injectable',
-              }).placeholder,
-            }
-          : undefined,
-      exportClass: symbol.exported,
-      extendedClasses: plugin.config.instance
-        ? [symbolHeyApiClient.placeholder]
-        : undefined,
-      name: symbol.placeholder,
-      nodes: currentClass.nodes,
-    });
+
+    if (currentClass.root && symbolHeyApiRegistry) {
+      const symClient = plugin.getSymbol({
+        category: 'client',
+      });
+      const isClientRequired = !plugin.config.client || !symClient;
+      const symbolClient = plugin.referenceSymbol({
+        category: 'external',
+        resource: 'client.Client',
+      });
+      const ctor = $.init((i) =>
+        i
+          .param('args', (p) =>
+            p.optional(!isClientRequired).type(
+              $.type
+                .object()
+                .prop('client', (p) =>
+                  p.optional(!isClientRequired).type(symbolClient.placeholder),
+                )
+                .prop('key', (p) => p.optional().type('string')),
+            ),
+          )
+          .do(
+            $('super').call('args'),
+            $(symbol.placeholder)
+              .attr(registryName)
+              .attr('set')
+              .call('this', $('args').attr('key').optional(!isClientRequired)),
+          ),
+      );
+
+      if (!currentClass.nodes.length) {
+        currentClass.nodes.unshift(ctor);
+      } else {
+        currentClass.nodes.unshift(ctor, $.newline());
+      }
+
+      const node = createRegistryClass({
+        plugin,
+        sdkName: symbol.placeholder,
+        symbol: symbolHeyApiRegistry,
+      });
+      plugin.setSymbolValue(symbolHeyApiRegistry, node);
+      const registryNode = $.field(registryName, (f) =>
+        f
+          .public()
+          .static()
+          .readonly()
+          .assign(
+            $.new(symbolHeyApiRegistry.placeholder).generic(symbol.placeholder),
+          ),
+      );
+      currentClass.nodes.unshift(registryNode, $.newline());
+    }
+
+    const node = $.class(symbol.placeholder)
+      .export(symbol.exported)
+      .extends(symbolHeyApiClient?.placeholder)
+      .$if(currentClass.root && isAngularClient, (c) =>
+        c.decorator(
+          plugin.referenceSymbol({
+            category: 'external',
+            resource: '@angular/core.Injectable',
+          }).placeholder,
+          $.object().prop('providedIn', $.literal('root')),
+        ),
+      )
+      .do(...currentClass.nodes);
     plugin.setSymbolValue(symbol, node);
   };
-
-  if (clientClassNodes.length) {
-    const node = tsc.classDeclaration({
-      exportClass: symbolHeyApiClient.exported,
-      name: symbolHeyApiClient.placeholder,
-      nodes: clientClassNodes,
-    });
-    plugin.setSymbolValue(symbolHeyApiClient, node);
-  }
 
   for (const sdkClass of sdkClasses.values()) {
     generateClass(sdkClass);

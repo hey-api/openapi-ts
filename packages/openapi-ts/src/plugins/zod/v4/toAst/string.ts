@@ -1,8 +1,58 @@
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { FormatResolverArgs } from '../../types';
+
+const defaultFormatResolver = ({
+  chain,
+  plugin,
+  schema,
+}: FormatResolverArgs): ReturnType<typeof $.call> => {
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
+
+  switch (schema.format) {
+    case 'date':
+      return $(z.placeholder)
+        .attr(identifiers.iso)
+        .attr(identifiers.date)
+        .call();
+    case 'date-time': {
+      const obj = $.object()
+        .$if(plugin.config.dates.offset, (o) =>
+          o.prop('offset', $.literal(true)),
+        )
+        .$if(plugin.config.dates.local, (o) =>
+          o.prop('local', $.literal(true)),
+        );
+      return $(z.placeholder)
+        .attr(identifiers.iso)
+        .attr(identifiers.datetime)
+        .call(obj.hasProps() ? obj : undefined);
+    }
+    case 'email':
+      return $(z.placeholder).attr(identifiers.email).call();
+    case 'ipv4':
+      return $(z.placeholder).attr(identifiers.ipv4).call();
+    case 'ipv6':
+      return $(z.placeholder).attr(identifiers.ipv6).call();
+    case 'time':
+      return $(z.placeholder)
+        .attr(identifiers.iso)
+        .attr(identifiers.time)
+        .call();
+    case 'uri':
+      return $(z.placeholder).attr(identifiers.url).call();
+    case 'uuid':
+      return $(z.placeholder).attr(identifiers.uuid).call();
+    default:
+      return chain;
+  }
+};
 
 export const stringToAst = ({
   plugin,
@@ -11,6 +61,7 @@ export const stringToAst = ({
   schema: SchemaWithType<'string'>;
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
+  let chain: ReturnType<typeof $.call>;
 
   const z = plugin.referenceSymbol({
     category: 'external',
@@ -18,157 +69,38 @@ export const stringToAst = ({
   });
 
   if (typeof schema.const === 'string') {
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.literal,
-      }),
-      parameters: [tsc.ots.string(schema.const)],
-    });
+    chain = $(z.placeholder)
+      .attr(identifiers.literal)
+      .call($.literal(schema.const));
+    result.expression = chain.$render();
     return result as Omit<Ast, 'typeName'>;
   }
 
-  result.expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: z.placeholder,
-      name: identifiers.string,
-    }),
-  });
-
-  const dateTimeOptions: { key: string; value: boolean }[] = [];
-
-  if (plugin.config.dates.offset) {
-    dateTimeOptions.push({ key: 'offset', value: true });
-  }
-  if (plugin.config.dates.local) {
-    dateTimeOptions.push({ key: 'local', value: true });
-  }
+  chain = $(z.placeholder).attr(identifiers.string).call();
 
   if (schema.format) {
-    switch (schema.format) {
-      case 'date':
-        result.expression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: tsc.propertyAccessExpression({
-              expression: z.placeholder,
-              name: identifiers.iso,
-            }),
-            name: identifiers.date,
-          }),
-        });
-        break;
-      case 'date-time':
-        result.expression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: tsc.propertyAccessExpression({
-              expression: z.placeholder,
-              name: identifiers.iso,
-            }),
-            name: identifiers.datetime,
-          }),
-          parameters:
-            dateTimeOptions.length > 0
-              ? [
-                  tsc.objectExpression({
-                    obj: dateTimeOptions,
-                  }),
-                ]
-              : [],
-        });
-        break;
-      case 'email':
-        result.expression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.email,
-          }),
-        });
-        break;
-      case 'ipv4':
-        result.expression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.ipv4,
-          }),
-        });
-        break;
-      case 'ipv6':
-        result.expression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.ipv6,
-          }),
-        });
-        break;
-      case 'time':
-        result.expression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: tsc.propertyAccessExpression({
-              expression: z.placeholder,
-              name: identifiers.iso,
-            }),
-            name: identifiers.time,
-          }),
-        });
-        break;
-      case 'uri':
-        result.expression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.url,
-          }),
-        });
-        break;
-      case 'uuid':
-        result.expression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.uuid,
-          }),
-        });
-        break;
-    }
+    const args: FormatResolverArgs = { $, chain, plugin, schema };
+    const resolver =
+      plugin.config['~resolvers']?.string?.formats?.[schema.format];
+    chain = resolver?.(args) ?? defaultFormatResolver(args);
   }
 
   if (schema.minLength === schema.maxLength && schema.minLength !== undefined) {
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: result.expression,
-        name: identifiers.length,
-      }),
-      parameters: [tsc.valueToExpression({ value: schema.minLength })],
-    });
+    chain = chain.attr(identifiers.length).call($.literal(schema.minLength));
   } else {
     if (schema.minLength !== undefined) {
-      result.expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: result.expression,
-          name: identifiers.min,
-        }),
-        parameters: [tsc.valueToExpression({ value: schema.minLength })],
-      });
+      chain = chain.attr(identifiers.min).call($.literal(schema.minLength));
     }
 
     if (schema.maxLength !== undefined) {
-      result.expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: result.expression,
-          name: identifiers.max,
-        }),
-        parameters: [tsc.valueToExpression({ value: schema.maxLength })],
-      });
+      chain = chain.attr(identifiers.max).call($.literal(schema.maxLength));
     }
   }
 
   if (schema.pattern) {
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: result.expression,
-        name: identifiers.regex,
-      }),
-      parameters: [tsc.regularExpressionLiteral({ text: schema.pattern })],
-    });
+    chain = chain.attr(identifiers.regex).call($.regexp(schema.pattern));
   }
 
+  result.expression = chain.$render();
   return result as Omit<Ast, 'typeName'>;
 };

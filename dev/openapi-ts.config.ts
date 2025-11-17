@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars, arrow-body-style */
 // @ts-ignore
 import path from 'node:path';
 
@@ -13,7 +13,6 @@ import { myClientPlugin } from '../packages/openapi-ts-tests/main/test/custom/cl
 import { getSpecsPath } from '../packages/openapi-ts-tests/utils';
 
 // @ts-ignore
-// eslint-disable-next-line arrow-body-style
 export default defineConfig(() => {
   // ...
   return [
@@ -41,10 +40,10 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'invalid',
-            // 'openai.yaml',
             // 'full.yaml',
-            'opencode.yaml',
-            // 'sdk-circular-bug.yaml',
+            // 'openai.yaml',
+            // 'opencode.yaml',
+            'pagination-ref.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
@@ -217,8 +216,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          // name: '@hey-api/client-fetch',
-          // name: 'legacy/angular',
+          name: '@hey-api/client-fetch',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
@@ -256,7 +254,7 @@ export default defineConfig(() => {
           // classNameBuilder: '{{name}}',
           // classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
-          // client: false,
+          client: false,
           // getSignature: ({ fields, signature, operation }) => {
           //   // ...
           //   fields.unwrap('path')
@@ -265,14 +263,14 @@ export default defineConfig(() => {
           instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
-          paramsStructure: 'flat',
+          // paramsStructure: 'flat',
           // responseStyle: 'data',
           // signature: 'auto',
           // signature: 'client',
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          // validator: true,
+          validator: 'valibot',
           // validator: {
           //   request: 'zod',
           //   response: 'zod',
@@ -293,11 +291,14 @@ export default defineConfig(() => {
         },
         {
           // bigInt: true,
-          // dates: true,
+          dates: true,
           // name: '@hey-api/transformers',
         },
         {
           // name: 'fastify',
+        },
+        {
+          name: 'swr',
         },
         {
           // case: 'SCREAMING_SNAKE_CASE',
@@ -306,20 +307,36 @@ export default defineConfig(() => {
           // infiniteQueryKeys: {
           //   name: '{{name}}IQK',
           // },
-          // infiniteQueryOptions: {
-          //   name: '{{name}}IQO',
-          // },
-          // mutationOptions: {
-          //   name: '{{name}}MO',
-          // },
+          infiniteQueryOptions: {
+            meta() {
+              return {
+                custom: 'value',
+              };
+            },
+            // name: '{{name}}IQO',
+          },
+          mutationOptions: {
+            meta() {
+              return {
+                custom: 'value',
+              };
+            },
+            // name: '{{name}}MO',
+          },
           name: '@tanstack/react-query',
-          // queryKeys: {
-          //   name: '{{name}}QK',
-          // },
+          queryKeys: {
+            // name: '{{name}}QK',
+            tags: true,
+          },
           // queryOptions: false,
-          // queryOptions: {
-          //   name: '{{name}}QO',
-          // },
+          queryOptions: {
+            // meta() {
+            //   return {
+            //     custom: 'value',
+            //   }
+            // },
+            name: '{{name}}QO',
+          },
           useQuery: true,
           '~hooks': {
             operations: {
@@ -383,11 +400,38 @@ export default defineConfig(() => {
               // },
             },
           },
+          '~resolvers': {
+            object: {
+              // base({ $, additional, pipes, shape }) {
+              //   if (additional === undefined) {
+              //     return pipes.push($('v').attr('looseObject').call(shape));
+              //   }
+              //   return;
+              // },
+            },
+            string: {
+              formats: {
+                // date: ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
+                // 'date-time': ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
+              },
+            },
+            validator({ $, schema, v }) {
+              return [
+                $.const('parsed').assign(
+                  $(v.placeholder)
+                    .attr('safeParseAsync')
+                    .call(schema.placeholder, 'data')
+                    .await(),
+                ),
+                $('parsed').return(),
+              ];
+            },
+          },
         },
         {
           // case: 'snake_case',
           // comments: false,
-          compatibilityVersion: 4,
+          compatibilityVersion: 'mini',
           dates: {
             // local: true,
             // offset: true,
@@ -399,7 +443,7 @@ export default defineConfig(() => {
             //   },
           },
           // exportFromIndex: true,
-          // metadata: true,
+          metadata: true,
           name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
@@ -433,6 +477,34 @@ export default defineConfig(() => {
               //   }
               //   return;
               // },
+            },
+          },
+          '~resolvers': {
+            object: {
+              // base({ $, additional, shape }) {
+              //   if (!additional) {
+              //     // return $('z').attr('object').call(shape).attr('passthrough').call()
+              //     return $('z').attr('object').call(shape).attr('strict').call();
+              //   }
+              //   return;
+              // },
+            },
+            string: {
+              formats: {
+                // date: ({ $ }) => $('z').attr('date').call(),
+                // 'date-time': ({ $ }) => $('z').attr('date').call(),
+              },
+            },
+            validator({ $, schema }) {
+              return [
+                $.const('parsed').assign(
+                  $(schema.placeholder)
+                    .attr('safeParseAsync')
+                    .call('data')
+                    .await(),
+                ),
+                $('parsed').return(),
+              ];
             },
           },
         },

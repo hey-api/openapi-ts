@@ -4,7 +4,7 @@ import { type DefaultError, type MutationOptions, queryOptions } from '@tanstack
 
 import { client } from '../client.gen';
 import { fooBarPost, fooBarPut, fooPost, fooPut, getFoo, getFooBar, type Options } from '../sdk.gen';
-import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooData } from '../types.gen';
+import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooBarResponse, GetFooData, GetFooResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -36,27 +36,23 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     if (options?.query) {
         params.query = options.query;
     }
-    return [
-        params
-    ];
+    return [params];
 };
 
-export const getFooD = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
+export const getFooD = (options?: Options<GetFooData>) => createQueryKey("getFoo", options);
 
-export const getFooE = (options?: Options<GetFooData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await getFoo({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getFooD(options)
-    });
-};
+export const getFooE = (options?: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooD>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getFoo({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getFooD(options)
+});
 
 export const fooPostC = (options?: Partial<Options<FooPostData>>): MutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> => {
     const mutationOptions: MutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> = {
@@ -86,22 +82,20 @@ export const fooPutC = (options?: Partial<Options<FooPutData>>): MutationOptions
     return mutationOptions;
 };
 
-export const getFooBarD = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
+export const getFooBarD = (options?: Options<GetFooBarData>) => createQueryKey("getFooBar", options);
 
-export const getFooBarE = (options?: Options<GetFooBarData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await getFooBar({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getFooBarD(options)
-    });
-};
+export const getFooBarE = (options?: Options<GetFooBarData>) => queryOptions<GetFooBarResponse, DefaultError, GetFooBarResponse, ReturnType<typeof getFooBarD>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getFooBar({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getFooBarD(options)
+});
 
 export const fooBarPostC = (options?: Partial<Options<FooBarPostData>>): MutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> => {
     const mutationOptions: MutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> = {

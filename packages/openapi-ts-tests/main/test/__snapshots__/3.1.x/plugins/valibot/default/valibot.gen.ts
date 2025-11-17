@@ -415,13 +415,13 @@ export const vModelSquare = v.object({
 export const vCompositionWithOneOfDiscriminator = v.union([
     v.intersect([
         v.object({
-            kind: v.literal('circle')
+            kind: v.literal("circle")
         }),
         vModelCircle
     ]),
     v.intersect([
         v.object({
-            kind: v.literal('square')
+            kind: v.literal("square")
         }),
         vModelSquare
     ])
@@ -467,7 +467,7 @@ export const v3eNum1Период = v.picklist([
     'Dog'
 ]);
 
-export const vConstValue = v.literal('ConstValue');
+export const vConstValue = v.literal("ConstValue");
 
 /**
  * This is a model with one property with a 'any of' relationship where the options are not $ref
@@ -721,10 +721,10 @@ export const vFreeFormObjectWithAdditionalPropertiesEqTrue = v.record(v.string()
 export const vFreeFormObjectWithAdditionalPropertiesEqEmptyObject = v.record(v.string(), v.unknown());
 
 export const vModelWithConst = v.object({
-    String: v.optional(v.literal('String')),
+    String: v.optional(v.literal("String")),
     number: v.optional(v.literal(0)),
     null: v.optional(v.null()),
-    withType: v.optional(v.literal('Some string'))
+    withType: v.optional(v.literal("Some string"))
 });
 
 /**
@@ -993,17 +993,17 @@ export const vAdditionalPropertiesIntegerIssue = v.objectWithRest({
     value: v.pipe(v.number(), v.integer())
 }, v.pipe(v.number(), v.integer()));
 
-export const vGenericSchemaDuplicateIssue1SystemBoolean = v.objectWithRest({
+export const vGenericSchemaDuplicateIssue1SystemBoolean = v.strictObject({
     item: v.optional(v.boolean()),
     error: v.optional(v.union([
         v.string(),
         v.null()
     ])),
     hasError: v.optional(v.pipe(v.boolean(), v.readonly())),
-    data: v.optional(v.record(v.string(), v.never()))
-}, v.never());
+    data: v.optional(v.strictObject({}))
+});
 
-export const vGenericSchemaDuplicateIssue1SystemString = v.objectWithRest({
+export const vGenericSchemaDuplicateIssue1SystemString = v.strictObject({
     item: v.optional(v.union([
         v.string(),
         v.null()
@@ -1013,7 +1013,7 @@ export const vGenericSchemaDuplicateIssue1SystemString = v.objectWithRest({
         v.null()
     ])),
     hasError: v.optional(v.pipe(v.boolean(), v.readonly()))
-}, v.never());
+});
 
 export const vOneOfAllOfIssue = v.union([
     v.intersect([
@@ -1121,16 +1121,16 @@ export const vOneOfAllOfIssueWritable = v.union([
     vGenericSchemaDuplicateIssue1SystemString
 ]);
 
-export const vGenericSchemaDuplicateIssue1SystemBooleanWritable = v.objectWithRest({
+export const vGenericSchemaDuplicateIssue1SystemBooleanWritable = v.strictObject({
     item: v.optional(v.boolean()),
     error: v.optional(v.union([
         v.string(),
         v.null()
     ])),
-    data: v.optional(v.record(v.string(), v.never()))
-}, v.never());
+    data: v.optional(v.strictObject({}))
+});
 
-export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.objectWithRest({
+export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.strictObject({
     item: v.optional(v.union([
         v.string(),
         v.null()
@@ -1139,7 +1139,7 @@ export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.objectWithRes
         v.string(),
         v.null()
     ]))
-}, v.never());
+});
 
 /**
  * This is a reusable parameter
@@ -1148,12 +1148,12 @@ export const vSimpleParameter = v.string();
 
 export const vCompositionWithOneOfAndProperties = v.intersect([
     v.union([
-        v.objectWithRest({
+        v.strictObject({
             foo: vSimpleParameter
-        }, v.never()),
-        v.objectWithRest({
+        }),
+        v.strictObject({
             bar: vNonAsciiStringæøåÆøÅöôêÊ字符串
-        }, v.never())
+        })
     ]),
     v.object({
         baz: v.union([
@@ -1455,7 +1455,9 @@ export const vCallWithDefaultParametersData = v.object({
             'Error'
         ])),
         parameterModel: v.optional(v.union([
-            vModelWithString,
+            v.optional(vModelWithString, {
+                prop: 'Hello World!'
+            }),
             v.null()
         ]))
     }))
@@ -1473,7 +1475,9 @@ export const vCallWithDefaultOptionalParametersData = v.object({
             'Warning',
             'Error'
         ])),
-        parameterModel: v.optional(vModelWithString)
+        parameterModel: v.optional(vModelWithString, {
+            prop: 'Hello World!'
+        })
     }))
 });
 
@@ -1656,9 +1660,9 @@ export const vTypesData = v.object({
             v.null()
         ]),
         parameterEnum: v.union([
-            v.literal('Success'),
-            v.literal('Warning'),
-            v.literal('Error'),
+            v.literal("Success"),
+            v.literal("Warning"),
+            v.literal("Error"),
             v.null()
         ])
     })

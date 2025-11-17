@@ -48,6 +48,7 @@ export const tsc = {
   objectExpression: types.createObjectType,
   ots: utils.ots,
   parameterDeclaration: types.createParameterDeclaration,
+  prefixUnaryExpression: utils.createPrefixUnaryExpression,
   propertyAccessExpression: types.createPropertyAccessExpression,
   propertyAccessExpressions: transform.createPropertyAccessExpressions,
   propertyAssignment: types.createPropertyAssignment,

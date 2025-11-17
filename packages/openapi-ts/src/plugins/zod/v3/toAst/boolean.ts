@@ -1,5 +1,7 @@
+import type ts from 'typescript';
+
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
 import type { IrSchemaToAstOptions } from '../../shared/types';
@@ -9,28 +11,21 @@ export const booleanToAst = ({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'boolean'>;
-}) => {
+}): ts.CallExpression => {
+  let chain: ReturnType<typeof $.call>;
+
   const z = plugin.referenceSymbol({
     category: 'external',
     resource: 'zod.z',
   });
 
   if (typeof schema.const === 'boolean') {
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.literal,
-      }),
-      parameters: [tsc.ots.boolean(schema.const)],
-    });
-    return expression;
+    chain = $(z.placeholder)
+      .attr(identifiers.literal)
+      .call($.literal(schema.const));
+    return chain.$render();
   }
 
-  const expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: z.placeholder,
-      name: identifiers.boolean,
-    }),
-  });
-  return expression;
+  chain = $(z.placeholder).attr(identifiers.boolean).call();
+  return chain.$render();
 };

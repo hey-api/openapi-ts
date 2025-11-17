@@ -1,14 +1,12 @@
-import type ts from 'typescript';
+import type { TsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
-import { tsc } from '~/tsc';
-
-// import { identifiers } from '../constants';
 import type { ValidatorArgs } from '../shared/types';
 
 export const createRequestValidatorV2 = ({
   operation,
   plugin,
-}: ValidatorArgs): ts.ArrowFunction | undefined => {
+}: ValidatorArgs): TsDsl | undefined => {
   const symbol = plugin.getSymbol({
     category: 'schema',
     resource: 'operation',
@@ -33,35 +31,22 @@ export const createRequestValidatorV2 = ({
   //   console.log(`Hello, ${out.name}`)
   // }
   const dataParameterName = 'data';
-
-  return tsc.arrowFunction({
-    async: true,
-    parameters: [
-      {
-        name: dataParameterName,
-      },
-    ],
-    statements: [
-      tsc.returnStatement({
-        expression: tsc.awaitExpression({
-          expression: tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: symbol.placeholder,
-              name: 'parseAsync',
-              // name: identifiers.parseAsync,
-            }),
-            parameters: [tsc.identifier({ text: dataParameterName })],
-          }),
-        }),
-      }),
-    ],
-  });
+  return $.func()
+    .async()
+    .param(dataParameterName)
+    .do(
+      $(symbol.placeholder)
+        .attr('parseAsync')
+        .call(dataParameterName)
+        .await()
+        .return(),
+    );
 };
 
 export const createResponseValidatorV2 = ({
   operation,
   plugin,
-}: ValidatorArgs): ts.ArrowFunction | undefined => {
+}: ValidatorArgs): TsDsl | undefined => {
   const symbol = plugin.getSymbol({
     category: 'schema',
     resource: 'operation',
@@ -72,27 +57,14 @@ export const createResponseValidatorV2 = ({
   if (!symbol) return;
 
   const dataParameterName = 'data';
-
-  return tsc.arrowFunction({
-    async: true,
-    parameters: [
-      {
-        name: dataParameterName,
-      },
-    ],
-    statements: [
-      tsc.returnStatement({
-        expression: tsc.awaitExpression({
-          expression: tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: symbol.placeholder,
-              name: 'parseAsync',
-              // name: identifiers.parseAsync,
-            }),
-            parameters: [tsc.identifier({ text: dataParameterName })],
-          }),
-        }),
-      }),
-    ],
-  });
+  return $.func()
+    .async()
+    .param(dataParameterName)
+    .do(
+      $(symbol.placeholder)
+        .attr('parseAsync')
+        .call(dataParameterName)
+        .await()
+        .return(),
+    );
 };

@@ -1,10 +1,17 @@
+import type { Symbol } from '@hey-api/codegen-core';
+import type ts from 'typescript';
+
+import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
+import type { $, DollarTsDsl, TsDsl } from '~/ts-dsl';
 import type { StringCase, StringName } from '~/types/case';
+import type { MaybeArray } from '~/types/utils';
 
 import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'zod'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Resolvers & {
     /**
      * The casing convention to use for generated names.
      *
@@ -417,7 +424,8 @@ export type UserConfig = Plugin.Name<'zod'> &
   };
 
 export type Config = Plugin.Name<'zod'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Resolvers & {
     /**
      * The casing convention to use for generated names.
      *
@@ -738,5 +746,114 @@ export type Config = Plugin.Name<'zod'> &
       };
     };
   };
+
+type SharedResolverArgs = DollarTsDsl & {
+  /**
+   * The current fluent builder chain under construction for this resolver.
+   *
+   * Represents the in-progress call sequence (e.g., a Zod or DSL chain)
+   * that defines the current schema or expression being generated.
+   *
+   * This chain can be extended, transformed, or replaced entirely to customize
+   * the resulting output of the resolver.
+   */
+  chain?: ReturnType<typeof $.call>;
+  plugin: ZodPlugin['Instance'];
+};
+
+export type FormatResolverArgs = Required<SharedResolverArgs> & {
+  schema: IR.SchemaObject;
+};
+
+export type ObjectBaseResolverArgs = SharedResolverArgs & {
+  /** Null = never */
+  additional?: ts.Expression | null;
+  schema: IR.SchemaObject;
+  shape: ReturnType<typeof $.object>;
+};
+
+export type ValidatorResolverArgs = SharedResolverArgs & {
+  operation: IR.Operation;
+  schema: Symbol;
+};
+
+type ValidatorResolver = (
+  args: ValidatorResolverArgs,
+) => MaybeArray<TsDsl<ts.Statement>> | null | undefined;
+
+type Resolvers = Plugin.Resolvers<{
+  /**
+   * Resolvers for object schemas.
+   *
+   * Allows customization of how object types are rendered.
+   *
+   * Example path: `~resolvers.object.base`
+   *
+   * Returning `undefined` from a resolver will apply the default
+   * generation behavior for the object schema.
+   */
+  object?: {
+    /**
+     * Controls how object schemas are constructed.
+     *
+     * Called with the fully assembled shape (properties) and any additional
+     * property schema, allowing the resolver to choose the correct Zod
+     * base constructor and modify the schema chain if needed.
+     *
+     * Returning `undefined` will execute the default resolver logic.
+     */
+    base?: (
+      args: ObjectBaseResolverArgs,
+    ) => ReturnType<typeof $.call> | undefined;
+  };
+  /**
+   * Resolvers for string schemas.
+   *
+   * Allows customization of how string types are rendered, including
+   * per-format handling.
+   */
+  string?: {
+    /**
+     * Resolvers for string formats (e.g., `uuid`, `email`, `date-time`).
+     *
+     * Each key represents a specific format name with a custom
+     * resolver function that controls how that format is rendered.
+     *
+     * Example path: `~resolvers.string.formats.uuid`
+     *
+     * Returning `undefined` from a resolver will apply the default
+     * generation logic for that format.
+     */
+    formats?: Record<
+      string,
+      (args: FormatResolverArgs) => ReturnType<typeof $.call> | undefined
+    >;
+  };
+  /**
+   * Resolvers for request and response validators.
+   *
+   * Allow customization of validator function bodies.
+   *
+   * Example path: `~resolvers.validator.request` or `~resolvers.validator.response`
+   *
+   * Returning `undefined` from a resolver will apply the default generation logic.
+   */
+  validator?:
+    | ValidatorResolver
+    | {
+        /**
+         * Controls how the request validator function body is generated.
+         *
+         * Returning `undefined` will fall back to the default `.await().return()` logic.
+         */
+        request?: ValidatorResolver;
+        /**
+         * Controls how the response validator function body is generated.
+         *
+         * Returning `undefined` will fall back to the default `.await().return()` logic.
+         */
+        response?: ValidatorResolver;
+      };
+}>;
 
 export type ZodPlugin = DefinePlugin<UserConfig, Config, IApi>;

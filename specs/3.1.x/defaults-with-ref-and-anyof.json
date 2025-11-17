@@ -1,0 +1,76 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Defaults with $ref and anyOf",
+    "version": "1.0.0"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "AudioFormat": {
+        "type": "string",
+        "enum": ["pcm_16bit_44.1khz", "pcm_16bit_24khz"]
+      },
+      "Language": {
+        "type": "string",
+        "enum": ["en", "es", "fr"]
+      },
+      "NestedConfig": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "default": "gpt-4"
+          },
+          "temperature": {
+            "type": "number",
+            "default": 1
+          }
+        },
+        "required": ["model", "temperature"]
+      },
+      "TestSchema": {
+        "type": "object",
+        "properties": {
+          "primitiveDefault": {
+            "type": "number",
+            "default": 42
+          },
+          "refWithPrimitiveDefault": {
+            "$ref": "#/components/schemas/AudioFormat",
+            "default": "pcm_16bit_44.1khz"
+          },
+          "refWithObjectDefault": {
+            "$ref": "#/components/schemas/NestedConfig",
+            "default": {
+              "model": "gpt-4",
+              "temperature": 1
+            }
+          },
+          "anyOfWithNullDefault": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "default": null
+          },
+          "anyOfWithRefAndNullDefault": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/Language" },
+              { "type": "null" }
+            ],
+            "default": null
+          },
+          "optionalAnyOfWithDefault": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "default": null
+          }
+        },
+        "required": [
+          "primitiveDefault",
+          "refWithPrimitiveDefault",
+          "refWithObjectDefault",
+          "anyOfWithNullDefault",
+          "anyOfWithRefAndNullDefault"
+        ]
+      }
+    }
+  }
+}

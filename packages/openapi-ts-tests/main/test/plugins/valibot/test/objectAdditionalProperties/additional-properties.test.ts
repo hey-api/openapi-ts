@@ -247,4 +247,68 @@ describe('Object Additional Properties Tests', () => {
       }
     });
   });
+
+  describe('ObjectWithAdditionalPropertiesFalse', () => {
+    it('should accept object with only defined properties', () => {
+      const input = {
+        count: 42,
+        id: 'abc123',
+      };
+      const result = v.safeParse(
+        generatedSchemas.vObjectWithAdditionalPropertiesFalse,
+        input,
+      );
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.output).toEqual(input);
+      }
+    });
+
+    it('should reject object with additional properties', () => {
+      const input = {
+        count: 42,
+        extra: 'not allowed',
+        id: 'abc123',
+      };
+      const result = v.safeParse(
+        generatedSchemas.vObjectWithAdditionalPropertiesFalse,
+        input,
+      );
+      expect(result.success).toBe(false);
+    });
+  });
+
+  describe('ObjectWithNestedAdditionalPropertiesFalse', () => {
+    it('should accept object with correct nested properties', () => {
+      const input = {
+        membership: {
+          calendar_membership_tier_id: 'tier_id',
+          status: 'approved',
+        },
+      };
+      const result = v.safeParse(
+        generatedSchemas.vObjectWithNestedAdditionalPropertiesFalse,
+        input,
+      );
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.output).toEqual(input);
+      }
+    });
+
+    it('should reject object with additional properties in nested object', () => {
+      const input = {
+        membership: {
+          calendar_membership_tier_id: 'tier_id',
+          extra: 'not allowed',
+          status: 'approved',
+        },
+      };
+      const result = v.safeParse(
+        generatedSchemas.vObjectWithNestedAdditionalPropertiesFalse,
+        input,
+      );
+      expect(result.success).toBe(false);
+    });
+  });
 });

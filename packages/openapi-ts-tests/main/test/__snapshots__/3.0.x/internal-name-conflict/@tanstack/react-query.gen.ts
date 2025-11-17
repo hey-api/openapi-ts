@@ -36,27 +36,23 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     if (options?.query) {
         params.query = options.query;
     }
-    return [
-        params
-    ];
+    return [params];
 };
 
-export const createQueryKey2 = (options?: Options<CreateData>) => createQueryKey('create', options);
+export const createQueryKey2 = (options?: Options<CreateData>) => createQueryKey("create", options);
 
-export const createOptions = (options?: Options<CreateData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await create({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: createQueryKey2(options)
-    });
-};
+export const createOptions = (options?: Options<CreateData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof createQueryKey2>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await create({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: createQueryKey2(options)
+});
 
 export const create2Mutation = (options?: Partial<Options<Create2Data>>): UseMutationOptions<unknown, DefaultError, Options<Create2Data>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<Create2Data>> = {

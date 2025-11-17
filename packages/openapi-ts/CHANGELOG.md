@@ -1,5 +1,57 @@
 # @hey-api/openapi-ts
 
+## 0.87.5
+
+### Patch Changes
+
+- **client-ofetch**: fix FormData boundary mismatch ([#2940](https://github.com/hey-api/openapi-ts/pull/2940)) ([`b290ec9`](https://github.com/hey-api/openapi-ts/commit/b290ec9a944c4e536d204e481d942f79ac02c5b9)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+## 0.87.4
+
+### Patch Changes
+
+- **valibot**: expose validator resolvers ([#2980](https://github.com/hey-api/openapi-ts/pull/2980)) ([`6226f6f`](https://github.com/hey-api/openapi-ts/commit/6226f6fa271369b5ff06853c1f623557a2ebe837)) by [@mrlubos](https://github.com/mrlubos)
+
+- **zod**: expose validator resolvers ([#2980](https://github.com/hey-api/openapi-ts/pull/2980)) ([`6226f6f`](https://github.com/hey-api/openapi-ts/commit/6226f6fa271369b5ff06853c1f623557a2ebe837)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.87.3
+
+### Patch Changes
+
+- **valibot**: allow generating custom pipes with `~resolvers` ([#2975](https://github.com/hey-api/openapi-ts/pull/2975)) ([`62a4745`](https://github.com/hey-api/openapi-ts/commit/62a4745c2de331330480d77c9838aa9429e950d7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **zod**: allow generating custom chains with `~resolvers` ([#2975](https://github.com/hey-api/openapi-ts/pull/2975)) ([`62a4745`](https://github.com/hey-api/openapi-ts/commit/62a4745c2de331330480d77c9838aa9429e950d7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **@tanstack/query**: add type annotations to `queryOptions()` ([#2964](https://github.com/hey-api/openapi-ts/pull/2964)) ([`7e1b017`](https://github.com/hey-api/openapi-ts/commit/7e1b01794911b590febaf821369aae0d4d798301)) by [@NovakAnton](https://github.com/NovakAnton)
+
+- **client-fetch**: intercept AbortError ([#2970](https://github.com/hey-api/openapi-ts/pull/2970)) ([`9075309`](https://github.com/hey-api/openapi-ts/commit/90753091a72796f6c6dffb6789ef42ecc4fd4e6b)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **@tanstack/query**: prettier mutation options ([#2972](https://github.com/hey-api/openapi-ts/pull/2972)) ([`50266bd`](https://github.com/hey-api/openapi-ts/commit/50266bdb1524aec72e1fdf5e903bad6bebded5e5)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.87.2
+
+### Patch Changes
+
+- **clients**: add support for Ky client ([#2958](https://github.com/hey-api/openapi-ts/pull/2958)) ([`212fcaf`](https://github.com/hey-api/openapi-ts/commit/212fcaf5570ce05370dac6ace6e2751eecddb2d4)) by [@SebastiaanWouters](https://github.com/SebastiaanWouters)
+
+- **parser**: merge `default` keyword with `$ref` in OpenAPI 3.1 ([#2946](https://github.com/hey-api/openapi-ts/pull/2946)) ([`15a178d`](https://github.com/hey-api/openapi-ts/commit/15a178dd6a998bf88ebd17c64de151922e94765a)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **output**: run lint before format ([#2937](https://github.com/hey-api/openapi-ts/pull/2937)) ([`eb23ee8`](https://github.com/hey-api/openapi-ts/commit/eb23ee89fd09368385a07cd2a3885e3e5ce111e6)) by [@FloEdelmann](https://github.com/FloEdelmann)
+
+- **@pinia/colada**: correctly access instantiated SDKs ([#2942](https://github.com/hey-api/openapi-ts/pull/2942)) ([`c041e96`](https://github.com/hey-api/openapi-ts/commit/c041e962604765e0f342fda970a2550367aa2142)) by [@mrlubos](https://github.com/mrlubos)
+
+- **valibot**: use `.strictObject()` instead of `.objectWithRest()` when additional properties are not allowed ([#2945](https://github.com/hey-api/openapi-ts/pull/2945)) ([`3786d2b`](https://github.com/hey-api/openapi-ts/commit/3786d2b3b2316ddcc00b7d87f7dff15b61e29719)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **@tanstack/query**: prettier query options ([#2947](https://github.com/hey-api/openapi-ts/pull/2947)) ([`0b79b89`](https://github.com/hey-api/openapi-ts/commit/0b79b894bd263b2d28cbbb59dfab3aed4ba6736d)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.87.1
+
+### Patch Changes
+
+- fix(typescript): remove legacy options ([#2929](https://github.com/hey-api/openapi-ts/pull/2929)) ([`97c1f0e`](https://github.com/hey-api/openapi-ts/commit/97c1f0e94f8eb8ca2d74f4f5ebe51a53f347641b)) by [@mrlubos](https://github.com/mrlubos)
+
+- fix(tanstack-query): correctly access instantiated SDKs ([#2939](https://github.com/hey-api/openapi-ts/pull/2939)) ([`01a1fb4`](https://github.com/hey-api/openapi-ts/commit/01a1fb48a2e2d4e14a33cf3e81b44b5fad76e72a)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.87.0
 
 ### Minor Changes

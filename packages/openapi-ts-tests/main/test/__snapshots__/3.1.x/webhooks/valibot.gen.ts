@@ -3,16 +3,16 @@
 import * as v from 'valibot';
 
 export const vSessionUserPhoneCalloutRingingWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.string(),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.optional(v.pipe(v.union([
                     v.number(),
                     v.string(),
@@ -24,7 +24,7 @@ export const vSessionUserPhoneCalloutRingingWebhookRequest = v.object({
                 session_key: v.string(),
                 user_key: v.string(),
                 host_id: v.string(),
-                participant: v.objectWithRest({
+                participant: v.strictObject({
                     invitee_name: v.string(),
                     phone_number: v.pipe(v.union([
                         v.number(),
@@ -36,25 +36,25 @@ export const vSessionUserPhoneCalloutRingingWebhookRequest = v.object({
                         v.string(),
                         v.bigint()
                     ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))
-                }, v.never())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+                })
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionUserRoomSystemCalloutRingingWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.string(),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.optional(v.pipe(v.union([
                     v.number(),
                     v.string(),
@@ -70,15 +70,15 @@ export const vSessionUserRoomSystemCalloutRingingWebhookRequest = v.object({
                     call_type: v.string(),
                     device_ip: v.string()
                 }, v.unknown())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionRecordingStartedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.recording_started'
         ]),
@@ -87,9 +87,9 @@ export const vSessionRecordingStartedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.string(),
@@ -99,15 +99,15 @@ export const vSessionRecordingStartedWebhookRequest = v.object({
                     recording_start: v.optional(v.string()),
                     recording_end: v.optional(v.string())
                 })
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionRecordingResumedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.recording_resumed'
         ]),
@@ -116,9 +116,9 @@ export const vSessionRecordingResumedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.string(),
@@ -128,15 +128,15 @@ export const vSessionRecordingResumedWebhookRequest = v.object({
                     recording_start: v.optional(v.string()),
                     recording_end: v.optional(v.string())
                 })
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionLiveStreamingStoppedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.live_streaming_stopped'
         ]),
@@ -145,9 +145,9 @@ export const vSessionLiveStreamingStoppedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.string(),
                 session_id: v.string(),
                 session_name: v.string(),
@@ -168,15 +168,15 @@ export const vSessionLiveStreamingStoppedWebhookRequest = v.object({
                     }),
                     date_time: v.pipe(v.string(), v.isoTimestamp())
                 })
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionStreamIngestionStoppedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.stream_ingestion_stopped'
         ]),
@@ -185,9 +185,9 @@ export const vSessionStreamIngestionStoppedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.optional(v.string()),
@@ -199,24 +199,24 @@ export const vSessionStreamIngestionStoppedWebhookRequest = v.object({
                     stream_url: v.string(),
                     backup_stream_url: v.string()
                 })
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionUserRoomSystemCalloutRejectedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.string(),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.optional(v.pipe(v.union([
                     v.number(),
                     v.string(),
@@ -232,15 +232,15 @@ export const vSessionUserRoomSystemCalloutRejectedWebhookRequest = v.object({
                     call_type: v.string(),
                     device_ip: v.string()
                 }, v.unknown())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionAlertWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.alert'
         ]),
@@ -249,9 +249,9 @@ export const vSessionAlertWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.string(),
                 session_id: v.string(),
                 session_name: v.string(),
@@ -263,15 +263,15 @@ export const vSessionAlertWebhookRequest = v.object({
                     'High CPU occupation',
                     'Call Reconnection'
                 ]))
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionSharingEndedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.sharing_ended'
         ]),
@@ -280,18 +280,18 @@ export const vSessionSharingEndedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.string(),
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.optional(v.string()),
-                user: v.objectWithRest({
+                user: v.strictObject({
                     id: v.string(),
                     name: v.string(),
                     user_key: v.optional(v.string()),
-                    sharing_details: v.objectWithRest({
+                    sharing_details: v.strictObject({
                         content: v.picklist([
                             'application',
                             'whiteboard',
@@ -299,17 +299,17 @@ export const vSessionSharingEndedWebhookRequest = v.object({
                             'unknown'
                         ]),
                         date_time: v.pipe(v.string(), v.isoTimestamp())
-                    }, v.never())
-                }, v.never())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+                    })
+                })
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionRecordingPausedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.recording_paused'
         ]),
@@ -318,9 +318,9 @@ export const vSessionRecordingPausedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.string(),
@@ -330,15 +330,15 @@ export const vSessionRecordingPausedWebhookRequest = v.object({
                     recording_start: v.optional(v.string()),
                     recording_end: v.optional(v.string())
                 })
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionEndedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.ended'
         ]),
@@ -347,24 +347,24 @@ export const vSessionEndedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.string(),
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.optional(v.string()),
                 start_time: v.pipe(v.string(), v.isoTimestamp()),
                 end_time: v.pipe(v.string(), v.isoTimestamp())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionStartedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.started'
         ]),
@@ -373,23 +373,23 @@ export const vSessionStartedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.string(),
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.optional(v.string()),
                 start_time: v.pipe(v.string(), v.isoTimestamp())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionStreamIngestionUnbindWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.stream_ingestion_unbind'
         ]),
@@ -398,9 +398,9 @@ export const vSessionStreamIngestionUnbindWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.optional(v.string()),
@@ -412,15 +412,15 @@ export const vSessionStreamIngestionUnbindWebhookRequest = v.object({
                     stream_url: v.string(),
                     backup_stream_url: v.string()
                 })
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionLiveStreamingStartedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.live_streaming_started'
         ]),
@@ -429,9 +429,9 @@ export const vSessionLiveStreamingStartedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.string(),
                 session_id: v.string(),
                 session_name: v.string(),
@@ -452,24 +452,24 @@ export const vSessionLiveStreamingStartedWebhookRequest = v.object({
                     }),
                     date_time: v.pipe(v.string(), v.isoTimestamp())
                 })
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionUserRoomSystemCalloutMissedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.string(),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.optional(v.pipe(v.union([
                     v.number(),
                     v.string(),
@@ -485,24 +485,24 @@ export const vSessionUserRoomSystemCalloutMissedWebhookRequest = v.object({
                     call_type: v.string(),
                     device_ip: v.string()
                 }, v.unknown())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionUserPhoneCalloutAcceptedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.string(),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.optional(v.pipe(v.union([
                     v.number(),
                     v.string(),
@@ -514,7 +514,7 @@ export const vSessionUserPhoneCalloutAcceptedWebhookRequest = v.object({
                 session_key: v.string(),
                 user_key: v.string(),
                 host_id: v.string(),
-                participant: v.objectWithRest({
+                participant: v.strictObject({
                     invitee_name: v.string(),
                     phone_number: v.pipe(v.union([
                         v.number(),
@@ -526,16 +526,16 @@ export const vSessionUserPhoneCalloutAcceptedWebhookRequest = v.object({
                         v.string(),
                         v.bigint()
                     ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))
-                }, v.never())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+                })
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionUserLeftWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.user_left'
         ]),
@@ -544,14 +544,14 @@ export const vSessionUserLeftWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.string(),
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.optional(v.string()),
-                user: v.objectWithRest({
+                user: v.strictObject({
                     id: v.string(),
                     name: v.string(),
                     leave_time: v.pipe(v.string(), v.isoTimestamp()),
@@ -559,16 +559,16 @@ export const vSessionUserLeftWebhookRequest = v.object({
                     user_key: v.optional(v.string()),
                     phone_number: v.optional(v.string()),
                     participant_uuid: v.string()
-                }, v.never())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+                })
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionSharingStartedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.sharing_started'
         ]),
@@ -577,18 +577,18 @@ export const vSessionSharingStartedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.string(),
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.optional(v.string()),
-                user: v.objectWithRest({
+                user: v.strictObject({
                     id: v.string(),
                     name: v.string(),
                     user_key: v.optional(v.string()),
-                    sharing_details: v.objectWithRest({
+                    sharing_details: v.strictObject({
                         content: v.picklist([
                             'application',
                             'whiteboard',
@@ -596,31 +596,31 @@ export const vSessionSharingStartedWebhookRequest = v.object({
                             'unknown'
                         ]),
                         date_time: v.pipe(v.string(), v.isoTimestamp())
-                    }, v.never())
-                }, v.never())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+                    })
+                })
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionUserPhoneCalloutCanceledWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.string(),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.string(),
                 user_key: v.string(),
-                participant: v.objectWithRest({
+                participant: v.strictObject({
                     invitee_name: v.string(),
                     phone_number: v.pipe(v.union([
                         v.number(),
@@ -632,16 +632,16 @@ export const vSessionUserPhoneCalloutCanceledWebhookRequest = v.object({
                         v.string(),
                         v.bigint()
                     ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))
-                }, v.never())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+                })
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionRecordingTranscriptCompletedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.recording_transcript_completed'
         ]),
@@ -651,9 +651,9 @@ export const vSessionRecordingTranscriptCompletedWebhookRequest = v.object({
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         download_token: v.string(),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.string(),
@@ -710,15 +710,15 @@ export const vSessionRecordingTranscriptCompletedWebhookRequest = v.object({
                         'chat_message'
                     ]))
                 }))
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionRecordingDeletedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.recording_deleted'
         ]),
@@ -727,34 +727,34 @@ export const vSessionRecordingDeletedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
             operator: v.pipe(v.string(), v.email()),
             operator_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.string(),
                 start_time: v.pipe(v.string(), v.isoTimestamp()),
                 timezone: v.string()
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionUserRoomSystemCalloutFailedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.string(),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.optional(v.pipe(v.union([
                     v.number(),
                     v.string(),
@@ -771,15 +771,15 @@ export const vSessionUserRoomSystemCalloutFailedWebhookRequest = v.object({
                     call_type: v.string(),
                     device_ip: v.string()
                 }, v.unknown())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionRecordingCompletedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.recording_completed'
         ]),
@@ -789,9 +789,9 @@ export const vSessionRecordingCompletedWebhookRequest = v.object({
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         download_token: v.string(),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.string(),
@@ -923,15 +923,15 @@ export const vSessionRecordingCompletedWebhookRequest = v.object({
                     user_id: v.optional(v.string()),
                     user_key: v.optional(v.string())
                 })))
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionRecordingTranscriptFailedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.recording_transcript_failed'
         ]),
@@ -940,23 +940,23 @@ export const vSessionRecordingTranscriptFailedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.string(),
                 start_time: v.pipe(v.string(), v.isoTimestamp()),
                 timezone: v.string()
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionRecordingTrashedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.recording_trashed'
         ]),
@@ -965,25 +965,25 @@ export const vSessionRecordingTrashedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
             operator: v.pipe(v.string(), v.email()),
             operator_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.string(),
                 start_time: v.pipe(v.string(), v.isoTimestamp()),
                 timezone: v.string()
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionUserJoinedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.user_joined'
         ]),
@@ -992,30 +992,30 @@ export const vSessionUserJoinedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.string(),
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.optional(v.string()),
-                user: v.objectWithRest({
+                user: v.strictObject({
                     id: v.string(),
                     name: v.string(),
                     join_time: v.pipe(v.string(), v.isoTimestamp()),
                     user_key: v.optional(v.string()),
                     phone_number: v.optional(v.string()),
                     participant_uuid: v.string()
-                }, v.never())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+                })
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionStreamIngestionStartedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.stream_ingestion_started'
         ]),
@@ -1024,9 +1024,9 @@ export const vSessionStreamIngestionStartedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.optional(v.string()),
@@ -1038,15 +1038,15 @@ export const vSessionStreamIngestionStartedWebhookRequest = v.object({
                     stream_url: v.string(),
                     backup_stream_url: v.string()
                 })
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionStreamIngestionConnectedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.stream_ingestion_connected'
         ]),
@@ -1055,9 +1055,9 @@ export const vSessionStreamIngestionConnectedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.optional(v.string()),
@@ -1069,15 +1069,15 @@ export const vSessionStreamIngestionConnectedWebhookRequest = v.object({
                     stream_url: v.string(),
                     backup_stream_url: v.string()
                 })
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionStreamIngestionDisconnectedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.stream_ingestion_disconnected'
         ]),
@@ -1086,9 +1086,9 @@ export const vSessionStreamIngestionDisconnectedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.optional(v.string()),
@@ -1100,15 +1100,15 @@ export const vSessionStreamIngestionDisconnectedWebhookRequest = v.object({
                     stream_url: v.string(),
                     backup_stream_url: v.string()
                 })
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionRecordingRecoveredWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.recording_recovered'
         ]),
@@ -1117,34 +1117,34 @@ export const vSessionRecordingRecoveredWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
             operator: v.pipe(v.string(), v.email()),
             operator_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.string(),
                 start_time: v.pipe(v.string(), v.isoTimestamp()),
                 timezone: v.string()
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionUserPhoneCalloutMissedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.string(),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.optional(v.pipe(v.union([
                     v.number(),
                     v.string(),
@@ -1156,7 +1156,7 @@ export const vSessionUserPhoneCalloutMissedWebhookRequest = v.object({
                 session_key: v.string(),
                 user_key: v.string(),
                 host_id: v.string(),
-                participant: v.objectWithRest({
+                participant: v.strictObject({
                     invitee_name: v.string(),
                     phone_number: v.pipe(v.union([
                         v.number(),
@@ -1168,25 +1168,25 @@ export const vSessionUserPhoneCalloutMissedWebhookRequest = v.object({
                         v.string(),
                         v.bigint()
                     ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))
-                }, v.never())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+                })
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionUserPhoneCalloutRejectedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.string(),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.optional(v.pipe(v.union([
                     v.number(),
                     v.string(),
@@ -1198,7 +1198,7 @@ export const vSessionUserPhoneCalloutRejectedWebhookRequest = v.object({
                 session_key: v.string(),
                 user_key: v.string(),
                 host_id: v.string(),
-                participant: v.objectWithRest({
+                participant: v.strictObject({
                     invitee_name: v.string(),
                     phone_number: v.pipe(v.union([
                         v.number(),
@@ -1210,25 +1210,25 @@ export const vSessionUserPhoneCalloutRejectedWebhookRequest = v.object({
                         v.string(),
                         v.bigint()
                     ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))
-                }, v.never())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+                })
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionUserRoomSystemCalloutAcceptedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.string(),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 id: v.optional(v.pipe(v.union([
                     v.number(),
                     v.string(),
@@ -1244,15 +1244,15 @@ export const vSessionUserRoomSystemCalloutAcceptedWebhookRequest = v.object({
                     call_type: v.string(),
                     device_ip: v.string()
                 }, v.unknown())
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
 export const vSessionRecordingStoppedWebhookRequest = v.object({
-    body: v.optional(v.objectWithRest({
+    body: v.optional(v.strictObject({
         event: v.picklist([
             'session.recording_stopped'
         ]),
@@ -1261,9 +1261,9 @@ export const vSessionRecordingStoppedWebhookRequest = v.object({
             v.string(),
             v.bigint()
         ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
-        payload: v.objectWithRest({
+        payload: v.strictObject({
             account_id: v.string(),
-            object: v.objectWithRest({
+            object: v.strictObject({
                 session_id: v.string(),
                 session_name: v.string(),
                 session_key: v.string(),
@@ -1273,9 +1273,9 @@ export const vSessionRecordingStoppedWebhookRequest = v.object({
                     recording_start: v.optional(v.string()),
                     recording_end: v.optional(v.string())
                 })
-            }, v.never())
-        }, v.never())
-    }, v.never())),
+            })
+        })
+    })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });

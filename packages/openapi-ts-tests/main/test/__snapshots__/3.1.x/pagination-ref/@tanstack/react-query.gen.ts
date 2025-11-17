@@ -36,32 +36,26 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     if (options?.query) {
         params.query = options.query;
     }
-    return [
-        params
-    ];
+    return [params];
 };
 
-export const getFooQueryKey = (options: Options<GetFooData>) => createQueryKey('getFoo', options);
+export const getFooQueryKey = (options: Options<GetFooData>) => createQueryKey("getFoo", options);
 
-export const getFooOptions = (options: Options<GetFooData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await getFoo({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getFooQueryKey(options)
-    });
-};
+export const getFooOptions = (options: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getFoo({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getFooQueryKey(options)
+});
 
 const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>>(queryKey: QueryKey<Options>, page: K) => {
-    const params = {
-        ...queryKey[0]
-    };
+    const params = { ...queryKey[0] };
     if (page.body) {
         params.body = {
             ...queryKey[0].body as any,
@@ -89,31 +83,29 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
     return params as unknown as typeof page;
 };
 
-export const getFooInfiniteQueryKey = (options: Options<GetFooData>): QueryKey<Options<GetFooData>> => createQueryKey('getFoo', options, true);
+export const getFooInfiniteQueryKey = (options: Options<GetFooData>): QueryKey<Options<GetFooData>> => createQueryKey("getFoo", options, true);
 
-export const getFooInfiniteOptions = (options: Options<GetFooData>) => {
-    return infiniteQueryOptions<GetFooResponse, DefaultError, InfiniteData<GetFooResponse>, QueryKey<Options<GetFooData>>, number | null | Pick<QueryKey<Options<GetFooData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
-    // @ts-ignore
-    {
-        queryFn: async ({ pageParam, queryKey, signal }) => {
-            // @ts-ignore
-            const page: Pick<QueryKey<Options<GetFooData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
-                query: {
-                    'foo.page': pageParam
-                }
-            };
-            const params = createInfiniteParams(queryKey, page);
-            const { data } = await getFoo({
-                ...options,
-                ...params,
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: getFooInfiniteQueryKey(options)
-    });
-};
+export const getFooInfiniteOptions = (options: Options<GetFooData>) => infiniteQueryOptions<GetFooResponse, DefaultError, InfiniteData<GetFooResponse>, QueryKey<Options<GetFooData>>, number | null | Pick<QueryKey<Options<GetFooData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+// @ts-ignore
+{
+    queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<QueryKey<Options<GetFooData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === "object" ? pageParam : {
+            query: {
+                'foo.page': pageParam
+            }
+        };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getFoo({
+            ...options,
+            ...params,
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getFooInfiniteQueryKey(options)
+});
 
 export const postFooMutation = (options?: Partial<Options<PostFooData>>): UseMutationOptions<unknown, DefaultError, Options<PostFooData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostFooData>> = {

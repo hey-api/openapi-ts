@@ -4,43 +4,31 @@ import * as z from 'zod/mini';
 
 export const zFoo = z.object({
     get quux() {
-        return z.optional(z.lazy((): any => {
-            return zQuux;
-        }));
+        return z.optional(z.lazy((): any => zQuux));
     }
 });
 
 export const zBar = z.object({
     get bar() {
-        return z.optional(z.lazy((): any => {
-            return zBar;
-        }));
+        return z.optional(z.lazy((): any => zBar));
     },
     get baz() {
-        return z.optional(z.lazy((): any => {
-            return zBaz;
-        }));
+        return z.optional(z.lazy((): any => zBaz));
     }
 });
 
 export const zBaz = z.object({
     get quux() {
-        return z.optional(z.lazy((): any => {
-            return zQuux;
-        }));
+        return z.optional(z.lazy((): any => zQuux));
     }
 });
 
 export const zQux = z.union([
     z.intersection(z.object({
-        type: z.literal('struct')
-    }), z.lazy(() => {
-        return z.lazy((): any => {
-            return zCorge;
-        });
-    })),
+        type: z.literal("struct")
+    }), z.lazy(() => z.lazy((): any => zCorge))),
     z.intersection(z.object({
-        type: z.literal('array')
+        type: z.literal("array")
     }), zFoo)
 ]);
 
