@@ -1,7 +1,5 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
@@ -13,19 +11,15 @@ export const enumToAst = ({
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'enum'>;
-}): ts.CallExpression => {
-  const enumMembers: Array<ts.LiteralExpression> = [];
+}): ReturnType<typeof $.call> => {
+  const enumMembers: Array<ReturnType<typeof $.literal>> = [];
 
   let isNullable = false;
 
   for (const item of schema.items ?? []) {
     // Zod supports only string enums
     if (item.type === 'string' && typeof item.const === 'string') {
-      enumMembers.push(
-        tsc.stringLiteral({
-          text: item.const,
-        }),
-      );
+      enumMembers.push($.literal(item.const));
     } else if (item.type === 'null' || item.const === null) {
       isNullable = true;
     }
@@ -46,27 +40,14 @@ export const enumToAst = ({
     resource: 'valibot.v',
   });
 
-  let resultExpression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: v.placeholder,
-      name: identifiers.schemas.picklist,
-    }),
-    parameters: [
-      tsc.arrayLiteralExpression({
-        elements: enumMembers,
-        multiLine: false,
-      }),
-    ],
-  });
+  let resultExpression = $(v.placeholder)
+    .attr(identifiers.schemas.picklist)
+    .call($.array(...enumMembers));
 
   if (isNullable) {
-    resultExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.schemas.nullable,
-      }),
-      parameters: [resultExpression],
-    });
+    resultExpression = $(v.placeholder)
+      .attr(identifiers.schemas.nullable)
+      .call(resultExpression);
   }
 
   return resultExpression;

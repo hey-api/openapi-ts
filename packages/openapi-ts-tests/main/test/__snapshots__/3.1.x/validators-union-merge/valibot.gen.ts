@@ -2,21 +2,15 @@
 
 import * as v from 'valibot';
 
-export const vContact = v.union([
-    v.object({
+export const vContact = v.union([v.object({
         email: v.string()
-    }),
-    v.object({
+    }), v.object({
         phone: v.string()
-    })
-]);
+    })]);
 
-export const vUser = v.intersect([
-    vContact,
-    v.object({
+export const vUser = v.intersect([vContact, v.object({
         username: v.string()
-    })
-]);
+    })]);
 
 export const vDogDetails = v.object({
     breed: v.string(),
@@ -25,9 +19,9 @@ export const vDogDetails = v.object({
 
 export const vCatDetails = v.object({
     furLength: v.picklist([
-        'short',
-        'medium',
-        'long'
+        "short",
+        "medium",
+        "long"
     ]),
     purrs: v.boolean()
 });
@@ -35,13 +29,7 @@ export const vCatDetails = v.object({
 export const vPetStore = v.object({
     animals: v.array(v.object({
         name: v.string(),
-        type: v.optional(v.picklist([
-            'dog',
-            'cat'
-        ])),
-        details: v.union([
-            vDogDetails,
-            vCatDetails
-        ])
+        type: v.optional(v.picklist(["dog", "cat"])),
+        details: v.union([vDogDetails, vCatDetails])
     }))
 });
