@@ -266,7 +266,7 @@ export const createInfiniteQueryOptions = ({
                   )
                   .$if(
                     handleMeta(plugin, operation, 'infiniteQueryOptions'),
-                    (o, v) => o.prop('meta', $(v)),
+                    (o, v) => o.prop('meta', v),
                   ),
               )
               .generics(

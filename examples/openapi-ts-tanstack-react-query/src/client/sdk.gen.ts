@@ -128,12 +128,7 @@ export class Sdk extends HeyApiClient {
       AddPetErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet',
       ...options,
       headers: {
@@ -156,12 +151,7 @@ export class Sdk extends HeyApiClient {
       UpdatePetErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet',
       ...options,
       headers: {
@@ -184,12 +174,7 @@ export class Sdk extends HeyApiClient {
       FindPetsByStatusErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet/findByStatus',
       ...options,
     });
@@ -208,12 +193,7 @@ export class Sdk extends HeyApiClient {
       FindPetsByTagsErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet/findByTags',
       ...options,
     });
@@ -232,12 +212,7 @@ export class Sdk extends HeyApiClient {
       DeletePetErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet/{petId}',
       ...options,
     });
@@ -257,14 +232,8 @@ export class Sdk extends HeyApiClient {
       ThrowOnError
     >({
       security: [
-        {
-          name: 'api_key',
-          type: 'apiKey',
-        },
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
+        { name: 'api_key', type: 'apiKey' },
+        { scheme: 'bearer', type: 'http' },
       ],
       url: '/pet/{petId}',
       ...options,
@@ -284,12 +253,7 @@ export class Sdk extends HeyApiClient {
       UpdatePetWithFormErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet/{petId}',
       ...options,
     });
@@ -309,12 +273,7 @@ export class Sdk extends HeyApiClient {
       ThrowOnError
     >({
       bodySerializer: null,
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet/{petId}/uploadImage',
       ...options,
       headers: {
@@ -337,12 +296,7 @@ export class Sdk extends HeyApiClient {
       GetInventoryErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          name: 'api_key',
-          type: 'apiKey',
-        },
-      ],
+      security: [{ name: 'api_key', type: 'apiKey' }],
       url: '/store/inventory',
       ...options,
     });
@@ -382,10 +336,7 @@ export class Sdk extends HeyApiClient {
       DeleteOrderResponses,
       DeleteOrderErrors,
       ThrowOnError
-    >({
-      url: '/store/order/{orderId}',
-      ...options,
-    });
+    >({ url: '/store/order/{orderId}', ...options });
   }
 
   /**
@@ -400,10 +351,7 @@ export class Sdk extends HeyApiClient {
       GetOrderByIdResponses,
       GetOrderByIdErrors,
       ThrowOnError
-    >({
-      url: '/store/order/{orderId}',
-      ...options,
-    });
+    >({ url: '/store/order/{orderId}', ...options });
   }
 
   /**
@@ -462,10 +410,7 @@ export class Sdk extends HeyApiClient {
       LoginUserResponses,
       LoginUserErrors,
       ThrowOnError
-    >({
-      url: '/user/login',
-      ...options,
-    });
+    >({ url: '/user/login', ...options });
   }
 
   /**
@@ -480,10 +425,7 @@ export class Sdk extends HeyApiClient {
       LogoutUserResponses,
       LogoutUserErrors,
       ThrowOnError
-    >({
-      url: '/user/logout',
-      ...options,
-    });
+    >({ url: '/user/logout', ...options });
   }
 
   /**
@@ -498,10 +440,7 @@ export class Sdk extends HeyApiClient {
       DeleteUserResponses,
       DeleteUserErrors,
       ThrowOnError
-    >({
-      url: '/user/{username}',
-      ...options,
-    });
+    >({ url: '/user/{username}', ...options });
   }
 
   /**
@@ -516,10 +455,7 @@ export class Sdk extends HeyApiClient {
       GetUserByNameResponses,
       GetUserByNameErrors,
       ThrowOnError
-    >({
-      url: '/user/{username}',
-      ...options,
-    });
+    >({ url: '/user/{username}', ...options });
   }
 
   /**

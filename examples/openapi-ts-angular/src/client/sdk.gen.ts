@@ -96,12 +96,7 @@ export class PetService {
       AddPetErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet',
       ...options,
       headers: {
@@ -124,12 +119,7 @@ export class PetService {
       UpdatePetErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet',
       ...options,
       headers: {
@@ -152,12 +142,7 @@ export class PetService {
       FindPetsByStatusErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet/findByStatus',
       ...options,
     });
@@ -176,12 +161,7 @@ export class PetService {
       FindPetsByTagsErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet/findByTags',
       ...options,
     });
@@ -200,12 +180,7 @@ export class PetService {
       DeletePetErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet/{petId}',
       ...options,
     });
@@ -225,14 +200,8 @@ export class PetService {
       ThrowOnError
     >({
       security: [
-        {
-          name: 'api_key',
-          type: 'apiKey',
-        },
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
+        { name: 'api_key', type: 'apiKey' },
+        { scheme: 'bearer', type: 'http' },
       ],
       url: '/pet/{petId}',
       ...options,
@@ -252,12 +221,7 @@ export class PetService {
       UpdatePetWithFormErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet/{petId}',
       ...options,
     });
@@ -277,12 +241,7 @@ export class PetService {
       ThrowOnError
     >({
       bodySerializer: null,
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet/{petId}/uploadImage',
       ...options,
       headers: {
@@ -308,12 +267,7 @@ export class StoreService {
       GetInventoryErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          name: 'api_key',
-          type: 'apiKey',
-        },
-      ],
+      security: [{ name: 'api_key', type: 'apiKey' }],
       url: '/store/inventory',
       ...options,
     });
@@ -353,10 +307,7 @@ export class StoreService {
       DeleteOrderResponses,
       DeleteOrderErrors,
       ThrowOnError
-    >({
-      url: '/store/order/{orderId}',
-      ...options,
-    });
+    >({ url: '/store/order/{orderId}', ...options });
   }
 
   /**
@@ -371,10 +322,7 @@ export class StoreService {
       GetOrderByIdResponses,
       GetOrderByIdErrors,
       ThrowOnError
-    >({
-      url: '/store/order/{orderId}',
-      ...options,
-    });
+    >({ url: '/store/order/{orderId}', ...options });
   }
 }
 
@@ -436,10 +384,7 @@ export class UserService {
       LoginUserResponses,
       LoginUserErrors,
       ThrowOnError
-    >({
-      url: '/user/login',
-      ...options,
-    });
+    >({ url: '/user/login', ...options });
   }
 
   /**
@@ -454,10 +399,7 @@ export class UserService {
       LogoutUserResponses,
       LogoutUserErrors,
       ThrowOnError
-    >({
-      url: '/user/logout',
-      ...options,
-    });
+    >({ url: '/user/logout', ...options });
   }
 
   /**
@@ -472,10 +414,7 @@ export class UserService {
       DeleteUserResponses,
       DeleteUserErrors,
       ThrowOnError
-    >({
-      url: '/user/{username}',
-      ...options,
-    });
+    >({ url: '/user/{username}', ...options });
   }
 
   /**
@@ -490,10 +429,7 @@ export class UserService {
       GetUserByNameResponses,
       GetUserByNameErrors,
       ThrowOnError
-    >({
-      url: '/user/{username}',
-      ...options,
-    });
+    >({ url: '/user/{username}', ...options });
   }
 
   /**

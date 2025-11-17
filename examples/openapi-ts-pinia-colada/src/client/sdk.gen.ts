@@ -88,12 +88,7 @@ export const addPet = <ThrowOnError extends boolean = false>(
   options: Options<AddPetData, ThrowOnError>
 ) =>
   (options.client ?? client).post<AddPetResponses, AddPetErrors, ThrowOnError>({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http'
-      }
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet',
     ...options,
     headers: {
@@ -111,12 +106,7 @@ export const updatePet = <ThrowOnError extends boolean = false>(
   options: Options<UpdatePetData, ThrowOnError>
 ) =>
   (options.client ?? client).put<UpdatePetResponses, UpdatePetErrors, ThrowOnError>({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http'
-      }
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet',
     ...options,
     headers: {
@@ -134,12 +124,7 @@ export const findPetsByStatus = <ThrowOnError extends boolean = false>(
   options: Options<FindPetsByStatusData, ThrowOnError>
 ) =>
   (options.client ?? client).get<FindPetsByStatusResponses, FindPetsByStatusErrors, ThrowOnError>({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http'
-      }
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/findByStatus',
     ...options
   })
@@ -153,12 +138,7 @@ export const findPetsByTags = <ThrowOnError extends boolean = false>(
   options: Options<FindPetsByTagsData, ThrowOnError>
 ) =>
   (options.client ?? client).get<FindPetsByTagsResponses, FindPetsByTagsErrors, ThrowOnError>({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http'
-      }
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/findByTags',
     ...options
   })
@@ -172,12 +152,7 @@ export const deletePet = <ThrowOnError extends boolean = false>(
   options: Options<DeletePetData, ThrowOnError>
 ) =>
   (options.client ?? client).delete<DeletePetResponses, DeletePetErrors, ThrowOnError>({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http'
-      }
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/{petId}',
     ...options
   })
@@ -192,14 +167,8 @@ export const getPetById = <ThrowOnError extends boolean = false>(
 ) =>
   (options.client ?? client).get<GetPetByIdResponses, GetPetByIdErrors, ThrowOnError>({
     security: [
-      {
-        name: 'api_key',
-        type: 'apiKey'
-      },
-      {
-        scheme: 'bearer',
-        type: 'http'
-      }
+      { name: 'api_key', type: 'apiKey' },
+      { scheme: 'bearer', type: 'http' }
     ],
     url: '/pet/{petId}',
     ...options
@@ -218,12 +187,7 @@ export const updatePetWithForm = <ThrowOnError extends boolean = false>(
     UpdatePetWithFormErrors,
     ThrowOnError
   >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http'
-      }
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/{petId}',
     ...options
   })
@@ -238,12 +202,7 @@ export const uploadFile = <ThrowOnError extends boolean = false>(
 ) =>
   (options.client ?? client).post<UploadFileResponses, UploadFileErrors, ThrowOnError>({
     bodySerializer: null,
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http'
-      }
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/{petId}/uploadImage',
     ...options,
     headers: {
@@ -261,12 +220,7 @@ export const getInventory = <ThrowOnError extends boolean = false>(
   options?: Options<GetInventoryData, ThrowOnError>
 ) =>
   (options?.client ?? client).get<GetInventoryResponses, GetInventoryErrors, ThrowOnError>({
-    security: [
-      {
-        name: 'api_key',
-        type: 'apiKey'
-      }
-    ],
+    security: [{ name: 'api_key', type: 'apiKey' }],
     url: '/store/inventory',
     ...options
   })
