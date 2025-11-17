@@ -71,7 +71,7 @@ mixin(
   AsyncMixin,
   DecoratorMixin,
   DoMixin,
-  [DocMixin, { overrideRender: true }],
+  DocMixin,
   OptionalMixin,
   ParamMixin,
   PrivateMixin,

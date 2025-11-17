@@ -29,10 +29,13 @@ import { SetterTsDsl } from './setter';
 import { TemplateTsDsl } from './template';
 import { TernaryTsDsl } from './ternary';
 import { ThrowTsDsl } from './throw';
+import { toExpr } from './toExpr';
+import { toStmt } from './toStmt';
 import { TypeAliasTsDsl } from './type/alias';
 import { TypeAndTsDsl } from './type/and';
 import { TypeAttrTsDsl } from './type/attr';
 import { TypeExprTsDsl } from './type/expr';
+import { TypeFuncTsDsl } from './type/func';
 import { TypeIdxTsDsl } from './type/idx';
 import { TypeLiteralTsDsl } from './type/literal';
 import { TypeObjectTsDsl } from './type/object';
@@ -41,7 +44,6 @@ import { TypeParamTsDsl } from './type/param';
 import { TypeQueryTsDsl } from './type/query';
 import { TypeTupleTsDsl } from './type/tuple';
 import { TypeOfExprTsDsl } from './typeof';
-import { toExpr } from './utils';
 import { VarTsDsl } from './var';
 
 const base = {
@@ -199,6 +201,9 @@ const base = {
   /** Converts a runtime value into a corresponding expression node. */
   toExpr: (...args: Parameters<typeof toExpr>) => toExpr(...args),
 
+  /** Converts a runtime value into a corresponding statement node. */
+  toStmt: (...args: Parameters<typeof toStmt>) => toStmt(...args),
+
   /** Creates a basic type reference or type expression (e.g. Foo or Foo<T>). */
   type: Object.assign(
     (...args: ConstructorParameters<typeof TypeExprTsDsl>) =>
@@ -219,6 +224,10 @@ const base = {
       /** Creates a basic type reference or type expression (e.g. Foo or Foo<T>). */
       expr: (...args: ConstructorParameters<typeof TypeExprTsDsl>) =>
         new TypeExprTsDsl(...args),
+
+      /** Creates a function type node (e.g. `(a: string) => number`). */
+      func: (...args: ConstructorParameters<typeof TypeFuncTsDsl>) =>
+        new TypeFuncTsDsl(...args),
 
       /** Creates an indexed-access type (e.g. `Foo<T>[K]`). */
       idx: (...args: ConstructorParameters<typeof TypeIdxTsDsl>) =>

@@ -5,11 +5,6 @@ import type { TypeExprTsDsl } from '../type/expr';
 import type { TypeQueryTsDsl } from '../type/query';
 import type { TypeOfExprTsDsl } from '../typeof';
 
-/**
- * Lazily register factory callbacks to avoid circular imports and
- * ensure predictable mixin application order.
- */
-
 type TypeExprFactory = (
   nameOrFn?: string | ((t: TypeExprTsDsl) => void),
   fn?: (t: TypeExprTsDsl) => void,

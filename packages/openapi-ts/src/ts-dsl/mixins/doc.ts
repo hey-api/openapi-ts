@@ -4,21 +4,24 @@ import { DocTsDsl } from '../doc';
 export function DocMixin<
   TBase extends new (...args: ReadonlyArray<any>) => ITsDsl,
 >(Base: TBase) {
-  const Mixin = class extends Base {
+  const $renderBase = Base.prototype.$render;
+
+  class Mixin extends Base {
     _doc?: DocTsDsl;
 
     doc(lines?: MaybeArray<string>, fn?: (d: DocTsDsl) => void): this {
       this._doc = new DocTsDsl(lines, fn);
       return this;
     }
-  };
 
-  const originalFn = Base.prototype.$render;
+    override $render(...args: Parameters<ITsDsl['$render']>) {
+      const node = $renderBase.apply(this, args);
+      return this._doc ? this._doc.apply(node) : node;
+    }
+  }
 
-  Mixin.prototype.$render = function (...args: Parameters<ITsDsl['$render']>) {
-    const node = originalFn.apply(this, args);
-    return this._doc ? this._doc.apply(node) : node;
-  };
+  // @ts-expect-error
+  Mixin.prototype.$render.mixin = true;
 
   return Mixin;
 }

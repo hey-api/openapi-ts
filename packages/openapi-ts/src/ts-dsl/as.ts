@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from './base';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
-import { ExprMixin, registerLazyAccessAsFactory } from './mixins/expr';
+import { AsMixin, registerLazyAccessAsFactory } from './mixins/as';
+import { ExprMixin } from './mixins/expr';
 
 export class AsTsDsl extends TsDsl<ts.AsExpression> {
   private expr: string | MaybeTsDsl<ts.Expression>;
@@ -27,7 +28,7 @@ export class AsTsDsl extends TsDsl<ts.AsExpression> {
   }
 }
 
-export interface AsTsDsl extends ExprMixin {}
-mixin(AsTsDsl, ExprMixin);
+export interface AsTsDsl extends AsMixin, ExprMixin {}
+mixin(AsTsDsl, AsMixin, ExprMixin);
 
 registerLazyAccessAsFactory((...args) => new AsTsDsl(...args));
