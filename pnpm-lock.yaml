@@ -119,8 +119,8 @@ importers:
         specifier: workspace:*
         version: link:../packages/openapi-ts
       '@pinia/colada':
-        specifier: 0.17.7
-        version: 0.17.7(pinia@3.0.3(typescript@5.9.3)(vue@3.5.23(typescript@5.9.3)))(vue@3.5.23(typescript@5.9.3))
+        specifier: 0.17.8
+        version: 0.17.8(pinia@3.0.3(typescript@5.9.3)(vue@3.5.23(typescript@5.9.3)))(vue@3.5.23(typescript@5.9.3))
       '@tanstack/angular-query-experimental':
         specifier: 5.73.3
         version: 5.73.3(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.15(rxjs@7.8.2)(zone.js@0.15.1))
@@ -1449,8 +1449,8 @@ importers:
         specifier: workspace:*
         version: link:../../openapi-ts
       '@pinia/colada':
-        specifier: 0.17.7
-        version: 0.17.7(pinia@3.0.3(typescript@5.9.3)(vue@3.5.23(typescript@5.9.3)))(vue@3.5.23(typescript@5.9.3))
+        specifier: 0.17.8
+        version: 0.17.8(pinia@3.0.3(typescript@5.9.3)(vue@3.5.23(typescript@5.9.3)))(vue@3.5.23(typescript@5.9.3))
       '@tanstack/angular-query-experimental':
         specifier: 5.73.3
         version: 5.73.3(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.15(rxjs@7.8.2)(zone.js@0.15.1))
@@ -4949,8 +4949,8 @@ packages:
       pinia: ^2.2.6 || ^3.0.0
       vue: ^3.5.17
 
-  '@pinia/colada@0.17.7':
-    resolution: {integrity: sha512-BCcM8gTdaLZHm/5VjWCchEPqHXpGPR5B42VQLB8J6mJrX2S2gPRVrjPHmLd+4QfLPSrc4bZf7ERXelsJ7n9JAw==}
+  '@pinia/colada@0.17.8':
+    resolution: {integrity: sha512-xJ2LzQvkG7ztWhJBlU/3hsQPc8OYwmJcOrqRLrKykO2fSX2LNW7UQbo8rqg35XmNzBf6Unz0dW84kz1TldSnYQ==}
     peerDependencies:
       pinia: ^2.2.6 || ^3.0.0
       vue: ^3.5.17
@@ -18856,7 +18856,7 @@ snapshots:
       pinia: 3.0.3(typescript@5.8.3)(vue@3.5.13(typescript@5.8.3))
       vue: 3.5.13(typescript@5.8.3)
 
-  '@pinia/colada@0.17.7(pinia@3.0.3(typescript@5.9.3)(vue@3.5.23(typescript@5.9.3)))(vue@3.5.23(typescript@5.9.3))':
+  '@pinia/colada@0.17.8(pinia@3.0.3(typescript@5.9.3)(vue@3.5.23(typescript@5.9.3)))(vue@3.5.23(typescript@5.9.3))':
     dependencies:
       '@vue/devtools-api': 8.0.3
       pinia: 3.0.3(typescript@5.9.3)(vue@3.5.23(typescript@5.9.3))
