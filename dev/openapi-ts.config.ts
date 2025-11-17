@@ -86,26 +86,26 @@ export default defineConfig(() => {
       },
       // name: 'foo',
       output: [
-        // {
-        //   // case: 'snake_case',
-        //   clean: true,
-        //   fileName: {
-        //     // case: 'snake_case',
-        //     // name: '{{name}}.renamed',
-        //     suffix: '.meh',
-        //   },
-        //   // format: 'prettier',
-        //   importFileExtension: '.ts',
-        //   // indexFile: false,
-        //   // lint: 'eslint',
-        //   path: path.resolve(__dirname, '.gen'),
-        //   tsConfigPath: path.resolve(
-        //     __dirname,
-        //     'tsconfig',
-        //     'tsconfig.nodenext.json',
-        //   ),
-        // },
-        '.gen',
+        {
+          // case: 'snake_case',
+          // clean: true,
+          // fileName: {
+          //   // case: 'snake_case',
+          //   // name: '{{name}}.renamed',
+          //   suffix: '.meh',
+          // },
+          // format: 'prettier',
+          // importFileExtension: '.ts',
+          // indexFile: false,
+          // lint: 'eslint',
+          path: path.resolve(__dirname, '.gen'),
+          tsConfigPath: path.resolve(
+            __dirname,
+            'tsconfig',
+            'tsconfig.nodenext.json',
+          ),
+        },
+        // '.gen',
       ],
       parser: {
         filters: {
@@ -216,7 +216,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          name: '@hey-api/client-fetch',
+          name: '@hey-api/client-nuxt',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
@@ -249,7 +249,7 @@ export default defineConfig(() => {
           // },
         },
         {
-          asClass: true,
+          // asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}',
           // classNameBuilder: '{{name}}Service',
@@ -260,7 +260,7 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          instance: true,
+          // instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
           // paramsStructure: 'flat',

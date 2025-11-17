@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
+import { mixin } from './mixins/apply';
+import { ExprMixin } from './mixins/expr';
 
 type Operator =
   | '!='
@@ -79,3 +82,6 @@ export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
     return token;
   }
 }
+
+export interface BinaryTsDsl extends ExprMixin {}
+mixin(BinaryTsDsl, ExprMixin);

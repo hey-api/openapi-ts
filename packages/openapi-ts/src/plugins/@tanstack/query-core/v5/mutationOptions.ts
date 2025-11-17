@@ -49,7 +49,6 @@ export const createMutationOptions = ({
     );
   }
 
-  const meta = handleMeta(plugin, operation, 'mutationOptions');
   const mutationOptionsFn = 'mutationOptions';
   const symbolMutationOptions = plugin.registerSymbol({
     exported: true,
@@ -81,7 +80,9 @@ export const createMutationOptions = ({
                     .param(fnOptions)
                     .do(...statements),
                 )
-                .$if(meta, (c, v) => c.prop('meta', v)),
+                .$if(handleMeta(plugin, operation, 'mutationOptions'), (c, v) =>
+                  c.prop('meta', v),
+                ),
             ),
           $(mutationOptionsFn).return(),
         ),

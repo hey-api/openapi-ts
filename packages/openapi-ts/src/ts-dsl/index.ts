@@ -103,6 +103,10 @@ const base = {
     (fn: (f: FuncTsDsl<'arrow'>) => void): FuncTsDsl<'arrow'>;
     (name: string): FuncTsDsl<'decl'>;
     (name: string, fn: (f: FuncTsDsl<'decl'>) => void): FuncTsDsl<'decl'>;
+    (
+      name?: string,
+      fn?: (f: FuncTsDsl<'decl'>) => void,
+    ): FuncTsDsl<'arrow'> | FuncTsDsl<'decl'>;
   },
 
   /** Creates a getter method declaration. */

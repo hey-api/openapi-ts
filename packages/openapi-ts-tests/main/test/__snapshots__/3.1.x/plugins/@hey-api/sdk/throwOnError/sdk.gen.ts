@@ -18,401 +18,189 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const export_ = <ThrowOnError extends boolean = true>(options?: Options<ExportData, ThrowOnError>) => {
-    return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/no+tag',
-        ...options
-    });
-};
+export const export_ = <ThrowOnError extends boolean = true>(options?: Options<ExportData, ThrowOnError>) => (options?.client ?? client).get<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/no+tag", ...options });
 
-export const patchApiVbyApiVersionNoTag = <ThrowOnError extends boolean = true>(options?: Options<PatchApiVbyApiVersionNoTagData, ThrowOnError>) => {
-    return (options?.client ?? client).patch<PatchApiVbyApiVersionNoTagResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/no+tag',
-        ...options
-    });
-};
+export const patchApiVbyApiVersionNoTag = <ThrowOnError extends boolean = true>(options?: Options<PatchApiVbyApiVersionNoTagData, ThrowOnError>) => (options?.client ?? client).patch<PatchApiVbyApiVersionNoTagResponses, unknown, ThrowOnError>({ url: "/api/v{api-version}/no+tag", ...options });
 
-export const import_ = <ThrowOnError extends boolean = true>(options: Options<ImportData, ThrowOnError>) => {
-    return (options.client ?? client).post<ImportResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/no+tag',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const import_ = <ThrowOnError extends boolean = true>(options: Options<ImportData, ThrowOnError>) => (options.client ?? client).post<ImportResponses, unknown, ThrowOnError>({
+    url: "/api/v{api-version}/no+tag",
+    ...options,
+    headers: {
+        'Content-Type': "application/json",
+        ...options.headers
+    }
+});
 
-export const fooWow = <ThrowOnError extends boolean = true>(options?: Options<FooWowData, ThrowOnError>) => {
-    return (options?.client ?? client).put<FooWowResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/no+tag',
-        ...options
-    });
-};
+export const fooWow = <ThrowOnError extends boolean = true>(options?: Options<FooWowData, ThrowOnError>) => (options?.client ?? client).put<FooWowResponses, unknown, ThrowOnError>({ url: "/api/v{api-version}/no+tag", ...options });
 
-export const apiVVersionODataControllerCount = <ThrowOnError extends boolean = true>(options?: Options<ApiVVersionODataControllerCountData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ApiVVersionODataControllerCountResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/simple/$count',
-        ...options
-    });
-};
+export const apiVVersionODataControllerCount = <ThrowOnError extends boolean = true>(options?: Options<ApiVVersionODataControllerCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionODataControllerCountResponses, unknown, ThrowOnError>({ url: "/api/v{api-version}/simple/$count", ...options });
 
-export const getApiVbyApiVersionSimpleOperation = <ThrowOnError extends boolean = true>(options: Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetApiVbyApiVersionSimpleOperationResponses, GetApiVbyApiVersionSimpleOperationErrors, ThrowOnError>({
-        url: '/api/v{api-version}/simple:operation',
-        ...options
-    });
-};
+export const getApiVbyApiVersionSimpleOperation = <ThrowOnError extends boolean = true>(options: Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError>) => (options.client ?? client).get<GetApiVbyApiVersionSimpleOperationResponses, GetApiVbyApiVersionSimpleOperationErrors, ThrowOnError>({ url: "/api/v{api-version}/simple:operation", ...options });
 
-export const deleteCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError>) => {
-    return (options?.client ?? client).delete<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const deleteCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError>) => (options?.client ?? client).delete<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/simple", ...options });
 
-export const getCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<GetCallWithoutParametersAndResponseData, ThrowOnError>) => {
-    return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const getCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<GetCallWithoutParametersAndResponseData, ThrowOnError>) => (options?.client ?? client).get<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/simple", ...options });
 
-export const headCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<HeadCallWithoutParametersAndResponseData, ThrowOnError>) => {
-    return (options?.client ?? client).head<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const headCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<HeadCallWithoutParametersAndResponseData, ThrowOnError>) => (options?.client ?? client).head<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/simple", ...options });
 
-export const optionsCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<OptionsCallWithoutParametersAndResponseData, ThrowOnError>) => {
-    return (options?.client ?? client).options<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const optionsCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<OptionsCallWithoutParametersAndResponseData, ThrowOnError>) => (options?.client ?? client).options<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/simple", ...options });
 
-export const patchCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<PatchCallWithoutParametersAndResponseData, ThrowOnError>) => {
-    return (options?.client ?? client).patch<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const patchCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<PatchCallWithoutParametersAndResponseData, ThrowOnError>) => (options?.client ?? client).patch<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/simple", ...options });
 
-export const postCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<PostCallWithoutParametersAndResponseData, ThrowOnError>) => {
-    return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const postCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<PostCallWithoutParametersAndResponseData, ThrowOnError>) => (options?.client ?? client).post<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/simple", ...options });
 
-export const putCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<PutCallWithoutParametersAndResponseData, ThrowOnError>) => {
-    return (options?.client ?? client).put<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const putCallWithoutParametersAndResponse = <ThrowOnError extends boolean = true>(options?: Options<PutCallWithoutParametersAndResponseData, ThrowOnError>) => (options?.client ?? client).put<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/simple", ...options });
 
-export const deleteFoo = <ThrowOnError extends boolean = true>(options: Options<DeleteFooData3, ThrowOnError>) => {
-    return (options.client ?? client).delete<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}',
-        ...options
-    });
-};
+export const deleteFoo = <ThrowOnError extends boolean = true>(options: Options<DeleteFooData3, ThrowOnError>) => (options.client ?? client).delete<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/foo/{foo_param}/bar/{BarParam}", ...options });
 
-export const callWithDescriptions = <ThrowOnError extends boolean = true>(options?: Options<CallWithDescriptionsData, ThrowOnError>) => {
-    return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/descriptions',
-        ...options
-    });
-};
+export const callWithDescriptions = <ThrowOnError extends boolean = true>(options?: Options<CallWithDescriptionsData, ThrowOnError>) => (options?.client ?? client).post<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/descriptions", ...options });
 
 /**
  * @deprecated
  */
-export const deprecatedCall = <ThrowOnError extends boolean = true>(options: Options<DeprecatedCallData, ThrowOnError>) => {
-    return (options.client ?? client).post<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/parameters/deprecated',
-        ...options
-    });
-};
+export const deprecatedCall = <ThrowOnError extends boolean = true>(options: Options<DeprecatedCallData, ThrowOnError>) => (options.client ?? client).post<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/parameters/deprecated", ...options });
 
-export const callWithParameters = <ThrowOnError extends boolean = true>(options: Options<CallWithParametersData, ThrowOnError>) => {
-    return (options.client ?? client).post<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/parameters/{parameterPath}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const callWithParameters = <ThrowOnError extends boolean = true>(options: Options<CallWithParametersData, ThrowOnError>) => (options.client ?? client).post<unknown, unknown, ThrowOnError>({
+    url: "/api/v{api-version}/parameters/{parameterPath}",
+    ...options,
+    headers: {
+        'Content-Type': "application/json",
+        ...options.headers
+    }
+});
 
-export const callWithWeirdParameterNames = <ThrowOnError extends boolean = true>(options: Options<CallWithWeirdParameterNamesData, ThrowOnError>) => {
-    return (options.client ?? client).post<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const callWithWeirdParameterNames = <ThrowOnError extends boolean = true>(options: Options<CallWithWeirdParameterNamesData, ThrowOnError>) => (options.client ?? client).post<unknown, unknown, ThrowOnError>({
+    url: "/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}",
+    ...options,
+    headers: {
+        'Content-Type': "application/json",
+        ...options.headers
+    }
+});
 
-export const getCallWithOptionalParam = <ThrowOnError extends boolean = true>(options: Options<GetCallWithOptionalParamData, ThrowOnError>) => {
-    return (options.client ?? client).get<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/parameters',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const getCallWithOptionalParam = <ThrowOnError extends boolean = true>(options: Options<GetCallWithOptionalParamData, ThrowOnError>) => (options.client ?? client).get<unknown, unknown, ThrowOnError>({
+    url: "/api/v{api-version}/parameters",
+    ...options,
+    headers: {
+        'Content-Type': "application/json",
+        ...options.headers
+    }
+});
 
-export const postCallWithOptionalParam = <ThrowOnError extends boolean = true>(options: Options<PostCallWithOptionalParamData, ThrowOnError>) => {
-    return (options.client ?? client).post<PostCallWithOptionalParamResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/parameters',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const postCallWithOptionalParam = <ThrowOnError extends boolean = true>(options: Options<PostCallWithOptionalParamData, ThrowOnError>) => (options.client ?? client).post<PostCallWithOptionalParamResponses, unknown, ThrowOnError>({
+    url: "/api/v{api-version}/parameters",
+    ...options,
+    headers: {
+        'Content-Type': "application/json",
+        ...options.headers
+    }
+});
 
-export const postApiVbyApiVersionRequestBody = <ThrowOnError extends boolean = true>(options?: Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError>) => {
-    return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/requestBody',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options?.headers
-        }
-    });
-};
+export const postApiVbyApiVersionRequestBody = <ThrowOnError extends boolean = true>(options?: Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError>) => (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+    url: "/api/v{api-version}/requestBody",
+    ...options,
+    headers: {
+        'Content-Type': "application/json",
+        ...options?.headers
+    }
+});
 
-export const postApiVbyApiVersionFormData = <ThrowOnError extends boolean = true>(options?: Options<PostApiVbyApiVersionFormDataData, ThrowOnError>) => {
-    return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-        ...formDataBodySerializer,
-        url: '/api/v{api-version}/formData',
-        ...options,
-        headers: {
-            'Content-Type': null,
-            ...options?.headers
-        }
-    });
-};
+export const postApiVbyApiVersionFormData = <ThrowOnError extends boolean = true>(options?: Options<PostApiVbyApiVersionFormDataData, ThrowOnError>) => (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+    ...formDataBodySerializer,
+    url: "/api/v{api-version}/formData",
+    ...options,
+    headers: {
+        'Content-Type': null,
+        ...options?.headers
+    }
+});
 
-export const callWithDefaultParameters = <ThrowOnError extends boolean = true>(options?: Options<CallWithDefaultParametersData, ThrowOnError>) => {
-    return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/defaults',
-        ...options
-    });
-};
+export const callWithDefaultParameters = <ThrowOnError extends boolean = true>(options?: Options<CallWithDefaultParametersData, ThrowOnError>) => (options?.client ?? client).get<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/defaults", ...options });
 
-export const callWithDefaultOptionalParameters = <ThrowOnError extends boolean = true>(options?: Options<CallWithDefaultOptionalParametersData, ThrowOnError>) => {
-    return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/defaults',
-        ...options
-    });
-};
+export const callWithDefaultOptionalParameters = <ThrowOnError extends boolean = true>(options?: Options<CallWithDefaultOptionalParametersData, ThrowOnError>) => (options?.client ?? client).post<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/defaults", ...options });
 
-export const callToTestOrderOfParams = <ThrowOnError extends boolean = true>(options: Options<CallToTestOrderOfParamsData, ThrowOnError>) => {
-    return (options.client ?? client).put<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/defaults',
-        ...options
-    });
-};
+export const callToTestOrderOfParams = <ThrowOnError extends boolean = true>(options: Options<CallToTestOrderOfParamsData, ThrowOnError>) => (options.client ?? client).put<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/defaults", ...options });
 
-export const duplicateName = <ThrowOnError extends boolean = true>(options?: Options<DuplicateNameData, ThrowOnError>) => {
-    return (options?.client ?? client).delete<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/duplicate',
-        ...options
-    });
-};
+export const duplicateName = <ThrowOnError extends boolean = true>(options?: Options<DuplicateNameData, ThrowOnError>) => (options?.client ?? client).delete<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/duplicate", ...options });
 
-export const duplicateName2 = <ThrowOnError extends boolean = true>(options?: Options<DuplicateName2Data, ThrowOnError>) => {
-    return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/duplicate',
-        ...options
-    });
-};
+export const duplicateName2 = <ThrowOnError extends boolean = true>(options?: Options<DuplicateName2Data, ThrowOnError>) => (options?.client ?? client).get<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/duplicate", ...options });
 
-export const duplicateName3 = <ThrowOnError extends boolean = true>(options?: Options<DuplicateName3Data, ThrowOnError>) => {
-    return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/duplicate',
-        ...options
-    });
-};
+export const duplicateName3 = <ThrowOnError extends boolean = true>(options?: Options<DuplicateName3Data, ThrowOnError>) => (options?.client ?? client).post<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/duplicate", ...options });
 
-export const duplicateName4 = <ThrowOnError extends boolean = true>(options?: Options<DuplicateName4Data, ThrowOnError>) => {
-    return (options?.client ?? client).put<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/duplicate',
-        ...options
-    });
-};
+export const duplicateName4 = <ThrowOnError extends boolean = true>(options?: Options<DuplicateName4Data, ThrowOnError>) => (options?.client ?? client).put<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/duplicate", ...options });
 
-export const callWithNoContentResponse = <ThrowOnError extends boolean = true>(options?: Options<CallWithNoContentResponseData, ThrowOnError>) => {
-    return (options?.client ?? client).get<CallWithNoContentResponseResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/no-content',
-        ...options
-    });
-};
+export const callWithNoContentResponse = <ThrowOnError extends boolean = true>(options?: Options<CallWithNoContentResponseData, ThrowOnError>) => (options?.client ?? client).get<CallWithNoContentResponseResponses, unknown, ThrowOnError>({ url: "/api/v{api-version}/no-content", ...options });
 
-export const callWithResponseAndNoContentResponse = <ThrowOnError extends boolean = true>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>) => {
-    return (options?.client ?? client).get<CallWithResponseAndNoContentResponseResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/multiple-tags/response-and-no-content',
-        ...options
-    });
-};
+export const callWithResponseAndNoContentResponse = <ThrowOnError extends boolean = true>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>) => (options?.client ?? client).get<CallWithResponseAndNoContentResponseResponses, unknown, ThrowOnError>({ url: "/api/v{api-version}/multiple-tags/response-and-no-content", ...options });
 
-export const dummyA = <ThrowOnError extends boolean = true>(options?: Options<DummyAData, ThrowOnError>) => {
-    return (options?.client ?? client).get<DummyAResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/multiple-tags/a',
-        ...options
-    });
-};
+export const dummyA = <ThrowOnError extends boolean = true>(options?: Options<DummyAData, ThrowOnError>) => (options?.client ?? client).get<DummyAResponses, unknown, ThrowOnError>({ url: "/api/v{api-version}/multiple-tags/a", ...options });
 
-export const dummyB = <ThrowOnError extends boolean = true>(options?: Options<DummyBData, ThrowOnError>) => {
-    return (options?.client ?? client).get<DummyBResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/multiple-tags/b',
-        ...options
-    });
-};
+export const dummyB = <ThrowOnError extends boolean = true>(options?: Options<DummyBData, ThrowOnError>) => (options?.client ?? client).get<DummyBResponses, unknown, ThrowOnError>({ url: "/api/v{api-version}/multiple-tags/b", ...options });
 
-export const callWithResponse = <ThrowOnError extends boolean = true>(options?: Options<CallWithResponseData, ThrowOnError>) => {
-    return (options?.client ?? client).get<CallWithResponseResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/response',
-        ...options
-    });
-};
+export const callWithResponse = <ThrowOnError extends boolean = true>(options?: Options<CallWithResponseData, ThrowOnError>) => (options?.client ?? client).get<CallWithResponseResponses, unknown, ThrowOnError>({ url: "/api/v{api-version}/response", ...options });
 
-export const callWithDuplicateResponses = <ThrowOnError extends boolean = true>(options?: Options<CallWithDuplicateResponsesData, ThrowOnError>) => {
-    return (options?.client ?? client).post<CallWithDuplicateResponsesResponses, CallWithDuplicateResponsesErrors, ThrowOnError>({
-        url: '/api/v{api-version}/response',
-        ...options
-    });
-};
+export const callWithDuplicateResponses = <ThrowOnError extends boolean = true>(options?: Options<CallWithDuplicateResponsesData, ThrowOnError>) => (options?.client ?? client).post<CallWithDuplicateResponsesResponses, CallWithDuplicateResponsesErrors, ThrowOnError>({ url: "/api/v{api-version}/response", ...options });
 
-export const callWithResponses = <ThrowOnError extends boolean = true>(options?: Options<CallWithResponsesData, ThrowOnError>) => {
-    return (options?.client ?? client).put<CallWithResponsesResponses, CallWithResponsesErrors, ThrowOnError>({
-        url: '/api/v{api-version}/response',
-        ...options
-    });
-};
+export const callWithResponses = <ThrowOnError extends boolean = true>(options?: Options<CallWithResponsesData, ThrowOnError>) => (options?.client ?? client).put<CallWithResponsesResponses, CallWithResponsesErrors, ThrowOnError>({ url: "/api/v{api-version}/response", ...options });
 
-export const collectionFormat = <ThrowOnError extends boolean = true>(options: Options<CollectionFormatData, ThrowOnError>) => {
-    return (options.client ?? client).get<unknown, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/collectionFormat',
-        ...options
-    });
-};
+export const collectionFormat = <ThrowOnError extends boolean = true>(options: Options<CollectionFormatData, ThrowOnError>) => (options.client ?? client).get<unknown, unknown, ThrowOnError>({ url: "/api/v{api-version}/collectionFormat", ...options });
 
-export const types = <ThrowOnError extends boolean = true>(options: Options<TypesData, ThrowOnError>) => {
-    return (options.client ?? client).get<TypesResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/types',
-        ...options
-    });
-};
+export const types = <ThrowOnError extends boolean = true>(options: Options<TypesData, ThrowOnError>) => (options.client ?? client).get<TypesResponses, unknown, ThrowOnError>({ url: "/api/v{api-version}/types", ...options });
 
-export const uploadFile = <ThrowOnError extends boolean = true>(options: Options<UploadFileData, ThrowOnError>) => {
-    return (options.client ?? client).post<UploadFileResponses, unknown, ThrowOnError>({
-        ...urlSearchParamsBodySerializer,
-        url: '/api/v{api-version}/upload',
-        ...options,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            ...options.headers
-        }
-    });
-};
+export const uploadFile = <ThrowOnError extends boolean = true>(options: Options<UploadFileData, ThrowOnError>) => (options.client ?? client).post<UploadFileResponses, unknown, ThrowOnError>({
+    ...urlSearchParamsBodySerializer,
+    url: "/api/v{api-version}/upload",
+    ...options,
+    headers: {
+        'Content-Type': "application/x-www-form-urlencoded",
+        ...options.headers
+    }
+});
 
-export const fileResponse = <ThrowOnError extends boolean = true>(options: Options<FileResponseData, ThrowOnError>) => {
-    return (options.client ?? client).get<FileResponseResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/file/{id}',
-        ...options
-    });
-};
+export const fileResponse = <ThrowOnError extends boolean = true>(options: Options<FileResponseData, ThrowOnError>) => (options.client ?? client).get<FileResponseResponses, unknown, ThrowOnError>({ url: "/api/v{api-version}/file/{id}", ...options });
 
-export const complexTypes = <ThrowOnError extends boolean = true>(options: Options<ComplexTypesData, ThrowOnError>) => {
-    return (options.client ?? client).get<ComplexTypesResponses, ComplexTypesErrors, ThrowOnError>({
-        querySerializer: {
-            parameters: {
-                parameterObject: {
-                    object: {
-                        style: 'form'
-                    }
-                }
-            }
-        },
-        url: '/api/v{api-version}/complex',
-        ...options
-    });
-};
+export const complexTypes = <ThrowOnError extends boolean = true>(options: Options<ComplexTypesData, ThrowOnError>) => (options.client ?? client).get<ComplexTypesResponses, ComplexTypesErrors, ThrowOnError>({
+    querySerializer: { parameters: { parameterObject: { object: { style: "form" } } } },
+    url: "/api/v{api-version}/complex",
+    ...options
+});
 
-export const multipartResponse = <ThrowOnError extends boolean = true>(options?: Options<MultipartResponseData, ThrowOnError>) => {
-    return (options?.client ?? client).get<MultipartResponseResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/multipart',
-        ...options
-    });
-};
+export const multipartResponse = <ThrowOnError extends boolean = true>(options?: Options<MultipartResponseData, ThrowOnError>) => (options?.client ?? client).get<MultipartResponseResponses, unknown, ThrowOnError>({ url: "/api/v{api-version}/multipart", ...options });
 
-export const multipartRequest = <ThrowOnError extends boolean = true>(options?: Options<MultipartRequestData, ThrowOnError>) => {
-    return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-        ...formDataBodySerializer,
-        url: '/api/v{api-version}/multipart',
-        ...options,
-        headers: {
-            'Content-Type': null,
-            ...options?.headers
-        }
-    });
-};
+export const multipartRequest = <ThrowOnError extends boolean = true>(options?: Options<MultipartRequestData, ThrowOnError>) => (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+    ...formDataBodySerializer,
+    url: "/api/v{api-version}/multipart",
+    ...options,
+    headers: {
+        'Content-Type': null,
+        ...options?.headers
+    }
+});
 
-export const complexParams = <ThrowOnError extends boolean = true>(options: Options<ComplexParamsData, ThrowOnError>) => {
-    return (options.client ?? client).put<ComplexParamsResponses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/complex/{id}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json-patch+json',
-            ...options.headers
-        }
-    });
-};
+export const complexParams = <ThrowOnError extends boolean = true>(options: Options<ComplexParamsData, ThrowOnError>) => (options.client ?? client).put<ComplexParamsResponses, unknown, ThrowOnError>({
+    url: "/api/v{api-version}/complex/{id}",
+    ...options,
+    headers: {
+        'Content-Type': "application/json-patch+json",
+        ...options.headers
+    }
+});
 
-export const callWithResultFromHeader = <ThrowOnError extends boolean = true>(options?: Options<CallWithResultFromHeaderData, ThrowOnError>) => {
-    return (options?.client ?? client).post<CallWithResultFromHeaderResponses, CallWithResultFromHeaderErrors, ThrowOnError>({
-        url: '/api/v{api-version}/header',
-        ...options
-    });
-};
+export const callWithResultFromHeader = <ThrowOnError extends boolean = true>(options?: Options<CallWithResultFromHeaderData, ThrowOnError>) => (options?.client ?? client).post<CallWithResultFromHeaderResponses, CallWithResultFromHeaderErrors, ThrowOnError>({ url: "/api/v{api-version}/header", ...options });
 
-export const testErrorCode = <ThrowOnError extends boolean = true>(options: Options<TestErrorCodeData, ThrowOnError>) => {
-    return (options.client ?? client).post<TestErrorCodeResponses, TestErrorCodeErrors, ThrowOnError>({
-        url: '/api/v{api-version}/error',
-        ...options
-    });
-};
+export const testErrorCode = <ThrowOnError extends boolean = true>(options: Options<TestErrorCodeData, ThrowOnError>) => (options.client ?? client).post<TestErrorCodeResponses, TestErrorCodeErrors, ThrowOnError>({ url: "/api/v{api-version}/error", ...options });
 
-export const nonAsciiæøåÆøÅöôêÊ字符串 = <ThrowOnError extends boolean = true>(options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError>) => {
-    return (options.client ?? client).post<NonAsciiæøåÆøÅöôêÊ字符串Responses, unknown, ThrowOnError>({
-        url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
-        ...options
-    });
-};
+export const nonAsciiæøåÆøÅöôêÊ字符串 = <ThrowOnError extends boolean = true>(options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError>) => (options.client ?? client).post<NonAsciiæøåÆøÅöôêÊ字符串Responses, unknown, ThrowOnError>({ url: "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串", ...options });
 
 /**
  * Login User
  */
-export const putWithFormUrlEncoded = <ThrowOnError extends boolean = true>(options: Options<PutWithFormUrlEncodedData, ThrowOnError>) => {
-    return (options.client ?? client).put<unknown, unknown, ThrowOnError>({
-        ...urlSearchParamsBodySerializer,
-        url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
-        ...options,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            ...options.headers
-        }
-    });
-};
+export const putWithFormUrlEncoded = <ThrowOnError extends boolean = true>(options: Options<PutWithFormUrlEncodedData, ThrowOnError>) => (options.client ?? client).put<unknown, unknown, ThrowOnError>({
+    ...urlSearchParamsBodySerializer,
+    url: "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串",
+    ...options,
+    headers: {
+        'Content-Type': "application/x-www-form-urlencoded",
+        ...options.headers
+    }
+});
