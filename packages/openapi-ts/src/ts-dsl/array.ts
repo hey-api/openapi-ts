@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { LiteralTsDsl } from './literal';
 import { mixin } from './mixins/apply';
+import { AsMixin } from './mixins/as';
 import { LayoutMixin } from './mixins/layout';
 
 export class ArrayTsDsl extends TsDsl<ts.ArrayLiteralExpression> {
@@ -63,5 +64,5 @@ export class ArrayTsDsl extends TsDsl<ts.ArrayLiteralExpression> {
   }
 }
 
-export interface ArrayTsDsl extends LayoutMixin {}
-mixin(ArrayTsDsl, LayoutMixin);
+export interface ArrayTsDsl extends AsMixin, LayoutMixin {}
+mixin(ArrayTsDsl, AsMixin, LayoutMixin);

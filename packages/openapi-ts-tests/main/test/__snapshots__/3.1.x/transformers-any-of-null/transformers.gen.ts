@@ -19,9 +19,7 @@ const fooSchemaResponseTransformer = (data: any) => {
 };
 
 export const getFooResponseTransformer = async (data: any): Promise<GetFooResponse> => {
-    data = data.map((item: any) => {
-        return fooSchemaResponseTransformer(item);
-    });
+    data = data.map((item: any) => fooSchemaResponseTransformer(item));
     return data;
 };
 

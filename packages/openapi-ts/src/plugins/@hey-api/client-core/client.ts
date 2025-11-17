@@ -1,5 +1,5 @@
 import { clientFolderAbsolutePath } from '~/generate/client';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 import { parseUrl } from '~/utils/url';
 
 import type { PluginHandler } from './types';
@@ -51,7 +51,7 @@ export const createClient: PluginHandler = ({ plugin }) => {
       })
     : undefined;
 
-  const defaultValues: Array<unknown> = [];
+  const defaultVals = $.object();
 
   const resolvedBaseUrl = resolveBaseUrlString({
     plugin: plugin as any,
@@ -59,60 +59,46 @@ export const createClient: PluginHandler = ({ plugin }) => {
   if (resolvedBaseUrl) {
     const url = parseUrl(resolvedBaseUrl);
     if (url.protocol && url.host && !resolvedBaseUrl.includes('{')) {
-      defaultValues.push({
-        key: getClientBaseUrlKey(plugin.context.config),
-        value: resolvedBaseUrl,
-      });
+      defaultVals.prop(
+        getClientBaseUrlKey(plugin.context.config),
+        $.literal(resolvedBaseUrl),
+      );
     } else if (resolvedBaseUrl !== '/' && resolvedBaseUrl.startsWith('/')) {
       const baseUrl = resolvedBaseUrl.endsWith('/')
         ? resolvedBaseUrl.slice(0, -1)
         : resolvedBaseUrl;
-      defaultValues.push({
-        key: getClientBaseUrlKey(plugin.context.config),
-        value: baseUrl,
-      });
+      defaultVals.prop(
+        getClientBaseUrlKey(plugin.context.config),
+        $.literal(baseUrl),
+      );
     }
   }
 
   if ('throwOnError' in plugin.config && plugin.config.throwOnError) {
-    defaultValues.push({
-      key: 'throwOnError',
-      value: true,
-    });
+    defaultVals.prop('throwOnError', $.literal(true));
   }
 
   const createConfigParameters = [
-    tsc.callExpression({
-      functionName: symbolCreateConfig.placeholder,
-      parameters: defaultValues.length
-        ? [tsc.objectExpression({ obj: defaultValues })]
-        : undefined,
-      types: [
-        tsc.typeReferenceNode({ typeName: symbolClientOptions.placeholder }),
-      ],
-    }),
+    $(symbolCreateConfig.placeholder)
+      .call(defaultVals.hasProps() ? defaultVals : undefined)
+      .generic(symbolClientOptions.placeholder),
   ];
 
   const symbolClient = plugin.registerSymbol({
+    exported: true,
     meta: {
       category: 'client',
     },
     name: 'client',
   });
-  const statement = tsc.constVariable({
-    exportConst: true,
-    expression: tsc.callExpression({
-      functionName: symbolCreateClient.placeholder,
-      parameters: symbolCreateClientConfig
-        ? [
-            tsc.callExpression({
-              functionName: symbolCreateClientConfig.placeholder,
-              parameters: createConfigParameters,
-            }),
-          ]
-        : createConfigParameters,
-    }),
-    name: symbolClient.placeholder,
-  });
+  const statement = $.const(symbolClient.placeholder)
+    .export(symbolClient.exported)
+    .assign(
+      $(symbolCreateClient.placeholder).$if(
+        symbolCreateClientConfig,
+        (c, s) => c.call($(s.placeholder).call(...createConfigParameters)),
+        (c) => c.call(...createConfigParameters),
+      ),
+    );
   plugin.setSymbolValue(symbolClient, statement);
 };

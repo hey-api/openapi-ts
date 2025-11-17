@@ -53,7 +53,7 @@ mixin(
   AbstractMixin,
   DecoratorMixin,
   DoMixin,
-  [DocMixin, { overrideRender: true }],
+  DocMixin,
   ParamMixin,
   PrivateMixin,
   ProtectedMixin,

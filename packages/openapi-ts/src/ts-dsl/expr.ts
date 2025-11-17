@@ -4,6 +4,8 @@ import type ts from 'typescript';
 import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
+import { AsMixin } from './mixins/as';
+import { AssignmentMixin } from './mixins/assignment';
 import { ExprMixin } from './mixins/expr';
 import { OperatorMixin } from './mixins/operator';
 import { TypeExprMixin } from './mixins/type-expr';
@@ -21,5 +23,17 @@ export class ExprTsDsl extends TsDsl<ts.Expression> {
   }
 }
 
-export interface ExprTsDsl extends ExprMixin, OperatorMixin, TypeExprMixin {}
-mixin(ExprTsDsl, ExprMixin, OperatorMixin, TypeExprMixin);
+export interface ExprTsDsl
+  extends AsMixin,
+    AssignmentMixin,
+    ExprMixin,
+    OperatorMixin,
+    TypeExprMixin {}
+mixin(
+  ExprTsDsl,
+  AsMixin,
+  AssignmentMixin,
+  ExprMixin,
+  OperatorMixin,
+  TypeExprMixin,
+);

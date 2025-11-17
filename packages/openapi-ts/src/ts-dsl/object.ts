@@ -7,6 +7,7 @@ import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { GetterTsDsl } from './getter';
 import { mixin } from './mixins/apply';
+import { AsMixin } from './mixins/as';
 import { ExprMixin } from './mixins/expr';
 import { HintMixin } from './mixins/hint';
 import { LayoutMixin } from './mixins/layout';
@@ -143,10 +144,9 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
   }
 }
 
-export interface ObjectTsDsl extends ExprMixin, HintMixin, LayoutMixin {}
-mixin(
-  ObjectTsDsl,
-  ExprMixin,
-  [HintMixin, { overrideRender: true }],
-  LayoutMixin,
-);
+export interface ObjectTsDsl
+  extends AsMixin,
+    ExprMixin,
+    HintMixin,
+    LayoutMixin {}
+mixin(ObjectTsDsl, AsMixin, ExprMixin, HintMixin, LayoutMixin);
