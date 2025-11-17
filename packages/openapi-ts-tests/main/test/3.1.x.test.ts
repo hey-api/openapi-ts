@@ -805,6 +805,22 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-array-date-ref.json',
+        output: 'transformers-array-date-ref',
+        plugins: [
+          '@hey-api/client-fetch',
+          {
+            name: '@hey-api/sdk',
+            transformer: true,
+          },
+          '@hey-api/transformers',
+        ],
+      }),
+      description:
+        'transforms array of dates with $ref and collection endpoints',
+    },
+    {
+      config: createConfig({
         input: 'transformers-recursive.json',
         output: 'transformers-recursive',
         plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
