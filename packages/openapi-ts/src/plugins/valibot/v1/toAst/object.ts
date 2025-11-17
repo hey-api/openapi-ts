@@ -1,5 +1,3 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
 import { $ } from '~/ts-dsl';
@@ -88,7 +86,7 @@ export const objectToAst = ({
     shape.prop(name, pipesToAst({ pipes: propertyAst.pipes, plugin }));
   }
 
-  let additional: ts.Expression | null | undefined;
+  let additional: ReturnType<typeof $.call | typeof $.expr> | null | undefined;
   if (schema.additionalProperties && schema.additionalProperties.type) {
     if (schema.additionalProperties.type === 'never') {
       additional = null;
