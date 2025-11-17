@@ -41,7 +41,7 @@ export default defineConfig(() => {
             // 'dutchie.json',
             // 'invalid',
             // 'full.yaml',
-            // 'openai.yaml',
+            'openai.yaml',
             // 'opencode.yaml',
             // 'pagination-ref.yaml',
             // 'sdk-instance.yaml',

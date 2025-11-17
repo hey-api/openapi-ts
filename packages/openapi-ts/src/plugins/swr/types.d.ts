@@ -1,4 +1,3 @@
-import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { StringCase, StringName } from '~/types/case';
 
@@ -29,9 +28,7 @@ export type UserConfig = Plugin.Name<'swr'> &
      */
     exportFromIndex?: boolean;
     /**
-     * Configuration for generated infinite query key helpers.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
+     * Configuration for generated useSWRInfinite options helpers.
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -40,7 +37,7 @@ export type UserConfig = Plugin.Name<'swr'> &
      *
      * @default true
      */
-    infiniteQueryKeys?:
+    swrInfiniteOptions?:
       | boolean
       | StringName
       | {
@@ -51,93 +48,21 @@ export type UserConfig = Plugin.Name<'swr'> &
            */
           case?: StringCase;
           /**
-           * Whether to generate infinite query key helpers.
+           * Whether to generate useSWRInfinite options helpers.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated infinite query key names. The name variable is
+           * Custom naming pattern for generated useSWRInfinite options names. The name variable is
            * obtained from the SDK function name.
            *
-           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
-           *
-           * @default '{{name}}InfiniteQueryKey'
-           */
-          name?: StringName;
-          /**
-           * Whether to include operation tags in infinite query keys.
-           * This will make query keys larger but provides better cache invalidation capabilities.
-           *
-           * @default false
-           */
-          tags?: boolean;
-        };
-    /**
-     * Configuration for generated infinite query options helpers.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
-     *
-     * Can be:
-     * - `boolean`: Shorthand for `{ enabled: boolean }`
-     * - `string` or `function`: Shorthand for `{ name: string | function }`
-     * - `object`: Full configuration object
-     *
-     * @default true
-     */
-    infiniteQueryOptions?:
-      | boolean
-      | StringName
-      | {
-          /**
-           * The casing convention to use for generated names.
-           *
-           * @default 'camelCase'
-           */
-          case?: StringCase;
-          /**
-           * Whether to generate infinite query options helpers.
-           *
-           * @default true
-           */
-          enabled?: boolean;
-          /**
-           * Custom function to generate metadata for the operation.
-           * Can return any valid meta object that will be included in the generated infinite query options.
-           *
-           * @param operation - The operation object containing all available metadata
-           * @returns A meta object with any properties you want to include
-           *
-           * @example
-           * ```typescript
-           * meta: (operation) => ({
-           *   customField: operation.id,
-           *   isDeprecated: operation.deprecated,
-           *   tags: operation.tags,
-           *   customObject: {
-           *     method: operation.method,
-           *     path: operation.path
-           *   }
-           * })
-           * ```
-           *
-           * @default undefined
-           */
-          meta?: (operation: IR.OperationObject) => Record<string, unknown>;
-          /**
-           * Custom naming pattern for generated infinite query options names. The name variable is
-           * obtained from the SDK function name.
-           *
-           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
-           *
-           * @default '{{name}}InfiniteOptions'
+           * @default '{{name}}Infinite'
            */
           name?: StringName;
         };
     /**
-     * Configuration for generated mutation options helpers.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
+     * Configuration for generated SWR keys.
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -146,7 +71,7 @@ export type UserConfig = Plugin.Name<'swr'> &
      *
      * @default true
      */
-    mutationOptions?:
+    swrKeys?:
       | boolean
       | StringName
       | {
@@ -157,48 +82,55 @@ export type UserConfig = Plugin.Name<'swr'> &
            */
           case?: StringCase;
           /**
-           * Whether to generate mutation options helpers.
+           * Whether to generate SWR keys.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom function to generate metadata for the operation.
-           * Can return any valid meta object that will be included in the generated mutation options.
-           *
-           * @param operation - The operation object containing all available metadata
-           * @returns A meta object with any properties you want to include
-           *
-           * @example
-           * ```typescript
-           * meta: (operation) => ({
-           *   customField: operation.id,
-           *   isDeprecated: operation.deprecated,
-           *   tags: operation.tags,
-           *   customObject: {
-           *     method: operation.method,
-           *     path: operation.path
-           *   }
-           * })
-           * ```
-           *
-           * @default undefined
-           */
-          meta?: (operation: IR.OperationObject) => Record<string, unknown>;
-          /**
-           * Custom naming pattern for generated mutation options names. The name variable is
+           * Custom naming pattern for generated SWR key names. The name variable is
            * obtained from the SDK function name.
            *
-           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
+           * @default '{{name}}Key'
+           */
+          name?: StringName;
+        };
+    /**
+     * Configuration for generated useSWRMutation options helpers.
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default true
+     */
+    swrMutationOptions?:
+      | boolean
+      | StringName
+      | {
+          /**
+           * The casing convention to use for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: StringCase;
+          /**
+           * Whether to generate useSWRMutation options helpers.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Custom naming pattern for generated useSWRMutation options names. The name variable is
+           * obtained from the SDK function name.
            *
            * @default '{{name}}Mutation'
            */
           name?: StringName;
         };
     /**
-     * Configuration for generated query keys.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryKey queryKey}
+     * Configuration for generated useSWR options helpers.
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -207,7 +139,7 @@ export type UserConfig = Plugin.Name<'swr'> &
      *
      * @default true
      */
-    queryKeys?:
+    swrOptions?:
       | boolean
       | StringName
       | {
@@ -218,130 +150,16 @@ export type UserConfig = Plugin.Name<'swr'> &
            */
           case?: StringCase;
           /**
-           * Whether to generate query keys.
+           * Whether to generate useSWR options helpers.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated query key names. The name variable is
+           * Custom naming pattern for generated useSWR options names. The name variable is
            * obtained from the SDK function name.
-           *
-           * See {@link https://tanstack.com/query/v5/docs/framework/react/guides/query-keys Query Keys}
-           *
-           * @default '{{name}}QueryKey'
-           */
-          name?: StringName;
-          /**
-           * Whether to include operation tags in query keys.
-           * This will make query keys larger but provides better cache invalidation capabilities.
-           *
-           * @default false
-           */
-          tags?: boolean;
-        };
-    /**
-     * Configuration for generated query options helpers.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions queryOptions}
-     *
-     * Can be:
-     * - `boolean`: Shorthand for `{ enabled: boolean }`
-     * - `string` or `function`: Shorthand for `{ name: string | function }`
-     * - `object`: Full configuration object
-     *
-     * @default true
-     */
-    queryOptions?:
-      | boolean
-      | StringName
-      | {
-          /**
-           * The casing convention to use for generated names.
-           *
-           * @default 'camelCase'
-           */
-          case?: StringCase;
-          /**
-           * Whether to generate query options helpers.
-           *
-           * @default true
-           */
-          enabled?: boolean;
-          /**
-           * Whether to export generated symbols.
-           *
-           * @default true
-           */
-          exported?: boolean;
-          /**
-           * Custom function to generate metadata for the operation.
-           * Can return any valid meta object that will be included in the generated query options.
-           *
-           * @param operation - The operation object containing all available metadata
-           * @returns A meta object with any properties you want to include
-           *
-           * @example
-           * ```typescript
-           * meta: (operation) => ({
-           *   customField: operation.id,
-           *   isDeprecated: operation.deprecated,
-           *   tags: operation.tags,
-           *   customObject: {
-           *     method: operation.method,
-           *     path: operation.path
-           *   }
-           * })
-           * ```
-           *
-           * @default undefined
-           */
-          meta?: (operation: IR.OperationObject) => Record<string, unknown>;
-          /**
-           * Custom naming pattern for generated query options names. The name variable is
-           * obtained from the SDK function name.
-           *
-           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions queryOptions}
            *
            * @default '{{name}}Options'
-           */
-          name?: StringName;
-        };
-    /**
-     * Configuration for generated `useSwr()` function helpers.
-     *
-     * See {@link https://swr.vercel.app/docs/api API}
-     *
-     * Can be:
-     * - `boolean`: Shorthand for `{ enabled: boolean }`
-     * - `string` or `function`: Shorthand for `{ name: string | function }`
-     * - `object`: Full configuration object
-     *
-     * @default true
-     */
-    useSwr?:
-      | boolean
-      | StringName
-      | {
-          /**
-           * The casing convention to use for generated names.
-           *
-           * @default 'camelCase'
-           */
-          case?: StringCase;
-          /**
-           * Whether to generate `useSwr()` function helpers.
-           *
-           * @default true
-           */
-          enabled?: boolean;
-          /**
-           * Custom naming pattern for generated `useSwr()` function names. The name variable is
-           * obtained from the SDK function name.
-           *
-           * See {@link https://swr.vercel.app/docs/api API}
-           *
-           * @default 'use{{name}}'
            */
           name?: StringName;
         };
@@ -368,11 +186,9 @@ export type Config = Plugin.Name<'swr'> &
      */
     exportFromIndex: boolean;
     /**
-     * Resolved configuration for generated infinite query key helpers.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
+     * Resolved configuration for generated useSWRInfinite options helpers.
      */
-    infiniteQueryKeys: {
+    swrInfiniteOptions: {
       /**
        * The casing convention to use for generated names.
        *
@@ -380,83 +196,22 @@ export type Config = Plugin.Name<'swr'> &
        */
       case: StringCase;
       /**
-       * Whether to generate infinite query key helpers.
+       * Whether to generate useSWRInfinite options helpers.
        *
        * @default true
        */
       enabled: boolean;
       /**
-       * Custom naming pattern for generated infinite query key names. The name variable is obtained from the SDK function name.
+       * Custom naming pattern for generated useSWRInfinite options names. The name variable is obtained from the SDK function name.
        *
-       * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
-       *
-       * @default '{{name}}InfiniteQueryKey'
-       */
-      name: StringName;
-      /**
-       * Whether to include operation tags in infinite query keys.
-       * This will make query keys larger but provides better cache invalidation capabilities.
-       *
-       * @default false
-       */
-      tags: boolean;
-    };
-    /**
-     * Resolved configuration for generated infinite query options helpers.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
-     */
-    infiniteQueryOptions: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: StringCase;
-      /**
-       * Whether to generate infinite query options helpers.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom function to generate metadata for the operation.
-       * Can return any valid meta object that will be included in the generated infinite query options.
-       *
-       * @param operation - The operation object containing all available metadata
-       * @returns A meta object with any properties you want to include
-       *
-       * @example
-       * ```typescript
-       * meta: (operation) => ({
-       *   customField: operation.id,
-       *   isDeprecated: operation.deprecated,
-       *   tags: operation.tags,
-       *   customObject: {
-       *     method: operation.method,
-       *     path: operation.path
-       *   }
-       * })
-       * ```
-       *
-       * @default undefined
-       */
-      meta: (operation: IR.OperationObject) => Record<string, unknown>;
-      /**
-       * Custom naming pattern for generated infinite query options names. The name variable is obtained from the SDK function name.
-       *
-       * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
-       *
-       * @default '{{name}}InfiniteOptions'
+       * @default '{{name}}Infinite'
        */
       name: StringName;
     };
     /**
-     * Resolved configuration for generated mutation options helpers.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
+     * Resolved configuration for generated SWR keys.
      */
-    mutationOptions: {
+    swrKeys: {
       /**
        * The casing convention to use for generated names.
        *
@@ -464,49 +219,45 @@ export type Config = Plugin.Name<'swr'> &
        */
       case: StringCase;
       /**
-       * Whether to generate mutation options helpers.
+       * Whether to generate SWR keys.
        *
        * @default true
        */
       enabled: boolean;
       /**
-       * Custom function to generate metadata for the operation.
-       * Can return any valid meta object that will be included in the generated mutation options.
+       * Custom naming pattern for generated SWR key names. The name variable is obtained from the SDK function name.
        *
-       * @param operation - The operation object containing all available metadata
-       * @returns A meta object with any properties you want to include
-       *
-       * @example
-       * ```typescript
-       * meta: (operation) => ({
-       *   customField: operation.id,
-       *   isDeprecated: operation.deprecated,
-       *   tags: operation.tags,
-       *   customObject: {
-       *     method: operation.method,
-       *     path: operation.path
-       *   }
-       * })
-       * ```
-       *
-       * @default undefined
+       * @default '{{name}}Key'
        */
-      meta: (operation: IR.OperationObject) => Record<string, unknown>;
+      name: StringName;
+    };
+    /**
+     * Resolved configuration for generated useSWRMutation options helpers.
+     */
+    swrMutationOptions: {
       /**
-       * Custom naming pattern for generated mutation options names. The name variable is obtained from the SDK function name.
+       * The casing convention to use for generated names.
        *
-       * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
+       * @default 'camelCase'
+       */
+      case: StringCase;
+      /**
+       * Whether to generate useSWRMutation options helpers.
+       *
+       * @default true
+       */
+      enabled: boolean;
+      /**
+       * Custom naming pattern for generated useSWRMutation options names. The name variable is obtained from the SDK function name.
        *
        * @default '{{name}}Mutation'
        */
       name: StringName;
     };
     /**
-     * Resolved configuration for generated query keys.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/guides/query-keys Query Keys}
+     * Resolved configuration for generated useSWR options helpers.
      */
-    queryKeys: {
+    swrOptions: {
       /**
        * The casing convention to use for generated names.
        *
@@ -514,108 +265,15 @@ export type Config = Plugin.Name<'swr'> &
        */
       case: StringCase;
       /**
-       * Whether to generate query keys.
+       * Whether to generate useSWR options helpers.
        *
        * @default true
        */
       enabled: boolean;
       /**
-       * Custom naming pattern for generated query key names. The name variable is obtained from the SDK function name.
-       *
-       * See {@link https://tanstack.com/query/v5/docs/framework/react/guides/query-keys Query Keys}
-       *
-       * @default '{{name}}QueryKey'
-       */
-      name: StringName;
-      /**
-       * Whether to include operation tags in query keys.
-       * This will make query keys larger but provides better cache invalidation capabilities.
-       *
-       * @default false
-       */
-      tags: boolean;
-    };
-    /**
-     * Resolved configuration for generated query options helpers.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions queryOptions}
-     */
-    queryOptions: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: StringCase;
-      /**
-       * Whether to generate query options helpers.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Whether to export generated symbols.
-       *
-       * @default true
-       */
-      exported: boolean;
-      /**
-       * Custom function to generate metadata for the operation.
-       * Can return any valid meta object that will be included in the generated query options.
-       *
-       * @param operation - The operation object containing all available metadata
-       * @returns A meta object with any properties you want to include
-       *
-       * @example
-       * ```typescript
-       * meta: (operation) => ({
-       *   customField: operation.id,
-       *   isDeprecated: operation.deprecated,
-       *   tags: operation.tags,
-       *   customObject: {
-       *     method: operation.method,
-       *     path: operation.path
-       *   }
-       * })
-       * ```
-       *
-       * @default undefined
-       */
-      meta: (operation: IR.OperationObject) => Record<string, unknown>;
-      /**
-       * Custom naming pattern for generated query options names. The name variable is obtained from the SDK function name.
-       *
-       * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions queryOptions}
+       * Custom naming pattern for generated useSWR options names. The name variable is obtained from the SDK function name.
        *
        * @default '{{name}}Options'
-       */
-      name: StringName;
-    };
-    /**
-     * Configuration for generated `useSwr()` function helpers.
-     *
-     * See {@link https://swr.vercel.app/docs/api API}
-     */
-    useSwr: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: StringCase;
-      /**
-       * Whether to generate `useSwr()` function helpers.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated `useSwr()` function names. The name variable is
-       * obtained from the SDK function name.
-       *
-       * See {@link https://swr.vercel.app/docs/api API}
-       *
-       * @default 'use{{name}}'
        */
       name: StringName;
     };
