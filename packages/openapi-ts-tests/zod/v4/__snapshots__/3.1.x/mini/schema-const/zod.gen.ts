@@ -11,7 +11,7 @@ export const zFoo = z.object({
         z.literal(1),
         z.literal(2),
         z.literal(3),
-        z.literal('foo'),
+        z.literal("foo"),
         z.literal(true)
     ])),
     corge: z.optional(z.record(z.string(), z.unknown())),

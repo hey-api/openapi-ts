@@ -1,5 +1,3 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
 import { $ } from '~/ts-dsl';
@@ -60,13 +58,13 @@ export const objectToAst = ({
     }
 
     if (propertyAst.hasLazyExpression) {
-      shape.getter(name, $(propertyAst.expression).return());
+      shape.getter(name, propertyAst.expression.return());
     } else {
       shape.prop(name, propertyAst.expression);
     }
   }
 
-  let additional: ts.Expression | null | undefined;
+  let additional: ReturnType<typeof $.call | typeof $.expr> | null | undefined;
   if (
     schema.additionalProperties &&
     (!schema.properties || !Object.keys(schema.properties).length)
@@ -93,7 +91,7 @@ export const objectToAst = ({
   };
   const resolver = plugin.config['~resolvers']?.object?.base;
   const chain = resolver?.(args) ?? defaultObjectBaseResolver(args);
-  result.expression = chain.$render();
+  result.expression = chain;
 
   // Return with typeName for circular references
   if (result.hasLazyExpression) {

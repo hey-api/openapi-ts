@@ -1,13 +1,13 @@
 import type ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
 export class ValueMixin extends TsDsl {
-  private value?: MaybeTsDsl<WithString>;
+  private value?: string | MaybeTsDsl<ts.Expression>;
 
   /** Sets the initializer expression (e.g. `= expr`). */
-  assign<T extends this>(this: T, expr: MaybeTsDsl<WithString>): T {
+  assign<T extends this>(this: T, expr: string | MaybeTsDsl<ts.Expression>): T {
     this.value = expr;
     return this;
   }

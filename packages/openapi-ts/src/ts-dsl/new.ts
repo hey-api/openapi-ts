@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from './base';
+import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { ArgsMixin } from './mixins/args';
@@ -9,11 +9,11 @@ import { ExprMixin } from './mixins/expr';
 import { TypeArgsMixin } from './mixins/type-args';
 
 export class NewTsDsl extends TsDsl<ts.NewExpression> {
-  private classExpr: MaybeTsDsl<WithString>;
+  private classExpr: string | MaybeTsDsl<ts.Expression>;
 
   constructor(
-    classExpr: MaybeTsDsl<WithString>,
-    ...args: ReadonlyArray<MaybeTsDsl<WithString>>
+    classExpr: string | MaybeTsDsl<ts.Expression>,
+    ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression>>
   ) {
     super();
     this.classExpr = classExpr;

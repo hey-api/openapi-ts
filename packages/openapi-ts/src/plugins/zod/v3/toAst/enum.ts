@@ -1,7 +1,5 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
 import type { IrSchemaToAstOptions } from '../../shared/types';
@@ -13,14 +11,14 @@ export const enumToAst = ({
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'enum'>;
-}): ts.CallExpression => {
+}): ReturnType<typeof $.call> => {
   const z = plugin.referenceSymbol({
     category: 'external',
     resource: 'zod.z',
   });
 
-  const enumMembers: Array<ts.LiteralExpression> = [];
-  const literalMembers: Array<ts.CallExpression> = [];
+  const enumMembers: Array<ReturnType<typeof $.literal>> = [];
+  const literalMembers: Array<ReturnType<typeof $.call>> = [];
 
   let isNullable = false;
   let allStrings = true;
@@ -28,45 +26,25 @@ export const enumToAst = ({
   for (const item of schema.items ?? []) {
     // Zod supports string, number, and boolean enums
     if (item.type === 'string' && typeof item.const === 'string') {
-      const stringLiteral = tsc.stringLiteral({
-        text: item.const,
-      });
-      enumMembers.push(stringLiteral);
+      const literal = $.literal(item.const);
+      enumMembers.push(literal);
       literalMembers.push(
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.literal,
-          }),
-          parameters: [stringLiteral],
-        }),
+        $(z.placeholder).attr(identifiers.literal).call(literal),
       );
     } else if (
       (item.type === 'number' || item.type === 'integer') &&
       typeof item.const === 'number'
     ) {
       allStrings = false;
-      const numberLiteral = tsc.ots.number(item.const);
+      const literal = $.literal(item.const);
       literalMembers.push(
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.literal,
-          }),
-          parameters: [numberLiteral],
-        }),
+        $(z.placeholder).attr(identifiers.literal).call(literal),
       );
     } else if (item.type === 'boolean' && typeof item.const === 'boolean') {
       allStrings = false;
-      const booleanLiteral = tsc.ots.boolean(item.const);
+      const literal = $.literal(item.const);
       literalMembers.push(
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.literal,
-          }),
-          parameters: [booleanLiteral],
-        }),
+        $(z.placeholder).attr(identifiers.literal).call(literal),
       );
     } else if (item.type === 'null' || item.const === null) {
       isNullable = true;
@@ -84,45 +62,22 @@ export const enumToAst = ({
   }
 
   // Use z.enum() for pure string enums, z.union() for mixed or non-string types
-  let enumExpression: ts.CallExpression;
+  let enumExpression: ReturnType<typeof $.call>;
   if (allStrings && enumMembers.length > 0) {
-    enumExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.enum,
-      }),
-      parameters: [
-        tsc.arrayLiteralExpression({
-          elements: enumMembers,
-          multiLine: false,
-        }),
-      ],
-    });
+    enumExpression = $(z.placeholder)
+      .attr(identifiers.enum)
+      .call($.array(...enumMembers));
   } else if (literalMembers.length === 1) {
     // For single-member unions, use the member directly instead of wrapping in z.union()
     enumExpression = literalMembers[0]!;
   } else {
-    enumExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.union,
-      }),
-      parameters: [
-        tsc.arrayLiteralExpression({
-          elements: literalMembers,
-          multiLine: literalMembers.length > 3,
-        }),
-      ],
-    });
+    enumExpression = $(z.placeholder)
+      .attr(identifiers.union)
+      .call($.array(...literalMembers));
   }
 
   if (isNullable) {
-    enumExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: enumExpression,
-        name: identifiers.nullable,
-      }),
-    });
+    enumExpression = enumExpression.attr(identifiers.nullable).call();
   }
 
   return enumExpression;

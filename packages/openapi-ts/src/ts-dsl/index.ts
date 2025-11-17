@@ -18,11 +18,11 @@ import { LiteralTsDsl } from './literal';
 import { MethodTsDsl } from './method';
 import { NewTsDsl } from './new';
 import { NewlineTsDsl } from './newline';
-import { NotTsDsl } from './not';
 import { NoteTsDsl } from './note';
 import { ObjectTsDsl } from './object';
 import { ParamTsDsl } from './param';
 import { PatternTsDsl } from './pattern';
+import { PrefixTsDsl } from './prefix';
 import { RegExpTsDsl } from './regexp';
 import { ReturnTsDsl } from './return';
 import { SetterTsDsl } from './setter';
@@ -41,6 +41,7 @@ import { TypeParamTsDsl } from './type/param';
 import { TypeQueryTsDsl } from './type/query';
 import { TypeTupleTsDsl } from './type/tuple';
 import { TypeOfExprTsDsl } from './typeof';
+import { toExpr } from './utils';
 import { VarTsDsl } from './var';
 
 const base = {
@@ -131,6 +132,10 @@ const base = {
   method: (...args: ConstructorParameters<typeof MethodTsDsl>) =>
     new MethodTsDsl(...args),
 
+  /** Creates a negation expression (`-x`). */
+  neg: (...args: ConstructorParameters<typeof PrefixTsDsl>) =>
+    new PrefixTsDsl(...args).neg(),
+
   /** Creates a new expression (e.g. `new ClassName()`). */
   new: (...args: ConstructorParameters<typeof NewTsDsl>) =>
     new NewTsDsl(...args),
@@ -139,9 +144,9 @@ const base = {
   newline: (...args: ConstructorParameters<typeof NewlineTsDsl>) =>
     new NewlineTsDsl(...args),
 
-  /** Creates a logical NOT expression (e.g. `!expr`). */
-  not: (...args: ConstructorParameters<typeof NotTsDsl>) =>
-    new NotTsDsl(...args),
+  /** Creates a logical NOT expression (`!x`). */
+  not: (...args: ConstructorParameters<typeof PrefixTsDsl>) =>
+    new PrefixTsDsl(...args).not(),
 
   /** Creates a block comment (/* ... *\/). */
   note: (...args: ConstructorParameters<typeof NoteTsDsl>) =>
@@ -158,6 +163,10 @@ const base = {
   /** Creates a pattern for destructuring or matching. */
   pattern: (...args: ConstructorParameters<typeof PatternTsDsl>) =>
     new PatternTsDsl(...args),
+
+  /** Creates a prefix unary expression (e.g. `-x`, `!x`, `~x`). */
+  prefix: (...args: ConstructorParameters<typeof PrefixTsDsl>) =>
+    new PrefixTsDsl(...args),
 
   /** Creates a regular expression literal (e.g. `/foo/gi`). */
   regexp: (...args: ConstructorParameters<typeof RegExpTsDsl>) =>
@@ -182,6 +191,9 @@ const base = {
   /** Creates a throw statement. */
   throw: (...args: ConstructorParameters<typeof ThrowTsDsl>) =>
     new ThrowTsDsl(...args),
+
+  /** Converts a runtime value into a corresponding expression node. */
+  toExpr: (...args: Parameters<typeof toExpr>) => toExpr(...args),
 
   /** Creates a basic type reference or type expression (e.g. Foo or Foo<T>). */
   type: Object.assign(

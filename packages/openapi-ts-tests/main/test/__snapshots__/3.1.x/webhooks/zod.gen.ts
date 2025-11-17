@@ -55,9 +55,7 @@ export const zSessionUserRoomSystemCalloutRingingWebhookRequest = z.object({
 
 export const zSessionRecordingStartedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.recording_started'
-        ]),
+        event: z.enum(["session.recording_started"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -80,9 +78,7 @@ export const zSessionRecordingStartedWebhookRequest = z.object({
 
 export const zSessionRecordingResumedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.recording_resumed'
-        ]),
+        event: z.enum(["session.recording_resumed"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -105,9 +101,7 @@ export const zSessionRecordingResumedWebhookRequest = z.object({
 
 export const zSessionLiveStreamingStoppedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.live_streaming_stopped'
-        ]),
+        event: z.enum(["session.live_streaming_stopped"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -119,10 +113,10 @@ export const zSessionLiveStreamingStoppedWebhookRequest = z.object({
                 start_time: z.iso.datetime(),
                 live_streaming: z.object({
                     service: z.enum([
-                        'Facebook',
-                        'Workplace_by_Facebook',
-                        'YouTube',
-                        'Custom_Live_Streaming_Service'
+                        "Facebook",
+                        "Workplace_by_Facebook",
+                        "YouTube",
+                        "Custom_Live_Streaming_Service"
                     ]),
                     custom_live_streaming_settings: z.object({
                         stream_url: z.string(),
@@ -141,9 +135,7 @@ export const zSessionLiveStreamingStoppedWebhookRequest = z.object({
 
 export const zSessionStreamIngestionStoppedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.stream_ingestion_stopped'
-        ]),
+        event: z.enum(["session.stream_ingestion_stopped"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -193,9 +185,7 @@ export const zSessionUserRoomSystemCalloutRejectedWebhookRequest = z.object({
 
 export const zSessionAlertWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.alert'
-        ]),
+        event: z.enum(["session.alert"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -205,11 +195,11 @@ export const zSessionAlertWebhookRequest = z.object({
                 session_name: z.string(),
                 session_key: z.optional(z.string()),
                 issues: z.array(z.enum([
-                    'Unstable audio quality',
-                    'Unstable video quality',
-                    'Unstable screen share quality',
-                    'High CPU occupation',
-                    'Call Reconnection'
+                    "Unstable audio quality",
+                    "Unstable video quality",
+                    "Unstable screen share quality",
+                    "High CPU occupation",
+                    "Call Reconnection"
                 ]))
             })
         })
@@ -220,9 +210,7 @@ export const zSessionAlertWebhookRequest = z.object({
 
 export const zSessionSharingEndedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.sharing_ended'
-        ]),
+        event: z.enum(["session.sharing_ended"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -237,10 +225,10 @@ export const zSessionSharingEndedWebhookRequest = z.object({
                     user_key: z.optional(z.string()),
                     sharing_details: z.object({
                         content: z.enum([
-                            'application',
-                            'whiteboard',
-                            'desktop',
-                            'unknown'
+                            "application",
+                            "whiteboard",
+                            "desktop",
+                            "unknown"
                         ]),
                         date_time: z.iso.datetime()
                     })
@@ -254,9 +242,7 @@ export const zSessionSharingEndedWebhookRequest = z.object({
 
 export const zSessionRecordingPausedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.recording_paused'
-        ]),
+        event: z.enum(["session.recording_paused"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -279,9 +265,7 @@ export const zSessionRecordingPausedWebhookRequest = z.object({
 
 export const zSessionEndedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.ended'
-        ]),
+        event: z.enum(["session.ended"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -301,9 +285,7 @@ export const zSessionEndedWebhookRequest = z.object({
 
 export const zSessionStartedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.started'
-        ]),
+        event: z.enum(["session.started"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -322,9 +304,7 @@ export const zSessionStartedWebhookRequest = z.object({
 
 export const zSessionStreamIngestionUnbindWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.stream_ingestion_unbind'
-        ]),
+        event: z.enum(["session.stream_ingestion_unbind"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -349,9 +329,7 @@ export const zSessionStreamIngestionUnbindWebhookRequest = z.object({
 
 export const zSessionLiveStreamingStartedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.live_streaming_started'
-        ]),
+        event: z.enum(["session.live_streaming_started"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -363,10 +341,10 @@ export const zSessionLiveStreamingStartedWebhookRequest = z.object({
                 start_time: z.iso.datetime(),
                 live_streaming: z.object({
                     service: z.enum([
-                        'Facebook',
-                        'Workplace_by_Facebook',
-                        'YouTube',
-                        'Custom_Live_Streaming_Service'
+                        "Facebook",
+                        "Workplace_by_Facebook",
+                        "YouTube",
+                        "Custom_Live_Streaming_Service"
                     ]),
                     custom_live_streaming_settings: z.object({
                         stream_url: z.string(),
@@ -436,9 +414,7 @@ export const zSessionUserPhoneCalloutAcceptedWebhookRequest = z.object({
 
 export const zSessionUserLeftWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.user_left'
-        ]),
+        event: z.enum(["session.user_left"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -465,9 +441,7 @@ export const zSessionUserLeftWebhookRequest = z.object({
 
 export const zSessionSharingStartedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.sharing_started'
-        ]),
+        event: z.enum(["session.sharing_started"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -482,10 +456,10 @@ export const zSessionSharingStartedWebhookRequest = z.object({
                     user_key: z.optional(z.string()),
                     sharing_details: z.object({
                         content: z.enum([
-                            'application',
-                            'whiteboard',
-                            'desktop',
-                            'unknown'
+                            "application",
+                            "whiteboard",
+                            "desktop",
+                            "unknown"
                         ]),
                         date_time: z.iso.datetime()
                     })
@@ -522,9 +496,7 @@ export const zSessionUserPhoneCalloutCanceledWebhookRequest = z.object({
 
 export const zSessionRecordingTranscriptCompletedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.recording_transcript_completed'
-        ]),
+        event: z.enum(["session.recording_transcript_completed"]),
         event_ts: z.coerce.bigint(),
         download_token: z.string(),
         payload: z.object({
@@ -542,48 +514,46 @@ export const zSessionRecordingTranscriptCompletedWebhookRequest = z.object({
                     file_name: z.optional(z.string()),
                     file_path: z.optional(z.string()),
                     file_type: z.optional(z.enum([
-                        'MP4',
-                        'M4A',
-                        'CHAT',
-                        'TRANSCRIPT',
-                        'CSV',
-                        'CC',
-                        'TB',
-                        'CHAT_MESSAGE',
-                        'TIMELINE'
+                        "MP4",
+                        "M4A",
+                        "CHAT",
+                        "TRANSCRIPT",
+                        "CSV",
+                        "CC",
+                        "TB",
+                        "CHAT_MESSAGE",
+                        "TIMELINE"
                     ])),
                     file_size: z.optional(z.number()),
                     file_extension: z.optional(z.enum([
-                        'MP4',
-                        'M4A',
-                        'TXT',
-                        'VTT',
-                        'CSV',
-                        'JSON',
-                        'JPG'
+                        "MP4",
+                        "M4A",
+                        "TXT",
+                        "VTT",
+                        "CSV",
+                        "JSON",
+                        "JPG"
                     ])),
                     download_url: z.optional(z.string()),
-                    status: z.optional(z.enum([
-                        'completed'
-                    ])),
+                    status: z.optional(z.enum(["completed"])),
                     recording_type: z.optional(z.enum([
-                        'shared_screen_with_speaker_view(CC)',
-                        'shared_screen_with_speaker_view',
-                        'shared_screen_with_gallery_view',
-                        'gallery_view',
-                        'shared_screen',
-                        'audio_only',
-                        'audio_transcript',
-                        'chat_file',
-                        'active_speaker',
-                        'host_video',
-                        'audio_only_each_participant',
-                        'cc_transcript',
-                        'closed_caption',
-                        'poll',
-                        'timeline',
-                        'thumbnail',
-                        'chat_message'
+                        "shared_screen_with_speaker_view(CC)",
+                        "shared_screen_with_speaker_view",
+                        "shared_screen_with_gallery_view",
+                        "gallery_view",
+                        "shared_screen",
+                        "audio_only",
+                        "audio_transcript",
+                        "chat_file",
+                        "active_speaker",
+                        "host_video",
+                        "audio_only_each_participant",
+                        "cc_transcript",
+                        "closed_caption",
+                        "poll",
+                        "timeline",
+                        "thumbnail",
+                        "chat_message"
                     ]))
                 }))
             })
@@ -595,9 +565,7 @@ export const zSessionRecordingTranscriptCompletedWebhookRequest = z.object({
 
 export const zSessionRecordingDeletedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.recording_deleted'
-        ]),
+        event: z.enum(["session.recording_deleted"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -658,9 +626,7 @@ export const zSessionUserRoomSystemCalloutFailedWebhookRequest = z.object({
 
 export const zSessionRecordingCompletedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.recording_completed'
-        ]),
+        event: z.enum(["session.recording_completed"]),
         event_ts: z.coerce.bigint(),
         download_token: z.string(),
         payload: z.object({
@@ -678,47 +644,45 @@ export const zSessionRecordingCompletedWebhookRequest = z.object({
                     file_name: z.optional(z.string()),
                     file_path: z.optional(z.string()),
                     file_type: z.optional(z.enum([
-                        'MP4',
-                        'M4A',
-                        'CHAT',
-                        'TRANSCRIPT',
-                        'CSV',
-                        'CC',
-                        'TB',
-                        'CHAT_MESSAGE'
+                        "MP4",
+                        "M4A",
+                        "CHAT",
+                        "TRANSCRIPT",
+                        "CSV",
+                        "CC",
+                        "TB",
+                        "CHAT_MESSAGE"
                     ])),
                     file_size: z.optional(z.number()),
                     file_extension: z.optional(z.enum([
-                        'MP4',
-                        'M4A',
-                        'TXT',
-                        'VTT',
-                        'CSV',
-                        'JSON',
-                        'JPG'
+                        "MP4",
+                        "M4A",
+                        "TXT",
+                        "VTT",
+                        "CSV",
+                        "JSON",
+                        "JPG"
                     ])),
                     download_url: z.optional(z.string()),
-                    status: z.optional(z.enum([
-                        'completed'
-                    ])),
+                    status: z.optional(z.enum(["completed"])),
                     recording_type: z.optional(z.enum([
-                        'shared_screen_with_speaker_view(CC)',
-                        'shared_screen_with_speaker_view',
-                        'shared_screen_with_gallery_view',
-                        'gallery_view',
-                        'shared_screen',
-                        'audio_only',
-                        'audio_transcript',
-                        'chat_file',
-                        'active_speaker',
-                        'host_video',
-                        'audio_only_each_participant',
-                        'cc_transcript',
-                        'closed_caption',
-                        'poll',
-                        'timeline',
-                        'thumbnail',
-                        'chat_message'
+                        "shared_screen_with_speaker_view(CC)",
+                        "shared_screen_with_speaker_view",
+                        "shared_screen_with_gallery_view",
+                        "gallery_view",
+                        "shared_screen",
+                        "audio_only",
+                        "audio_transcript",
+                        "chat_file",
+                        "active_speaker",
+                        "host_video",
+                        "audio_only_each_participant",
+                        "cc_transcript",
+                        "closed_caption",
+                        "poll",
+                        "timeline",
+                        "thumbnail",
+                        "chat_message"
                     ]))
                 })),
                 participant_audio_files: z.optional(z.array(z.object({
@@ -728,47 +692,45 @@ export const zSessionRecordingCompletedWebhookRequest = z.object({
                     file_name: z.optional(z.string()),
                     file_path: z.optional(z.string()),
                     file_type: z.optional(z.enum([
-                        'MP4',
-                        'M4A',
-                        'CHAT',
-                        'TRANSCRIPT',
-                        'CSV',
-                        'CC',
-                        'TB',
-                        'CHAT_MESSAGE'
+                        "MP4",
+                        "M4A",
+                        "CHAT",
+                        "TRANSCRIPT",
+                        "CSV",
+                        "CC",
+                        "TB",
+                        "CHAT_MESSAGE"
                     ])),
                     file_size: z.optional(z.number()),
                     file_extension: z.optional(z.enum([
-                        'MP4',
-                        'M4A',
-                        'TXT',
-                        'VTT',
-                        'CSV',
-                        'JSON',
-                        'JPG'
+                        "MP4",
+                        "M4A",
+                        "TXT",
+                        "VTT",
+                        "CSV",
+                        "JSON",
+                        "JPG"
                     ])),
                     download_url: z.optional(z.string()),
-                    status: z.optional(z.enum([
-                        'completed'
-                    ])),
+                    status: z.optional(z.enum(["completed"])),
                     recording_type: z.optional(z.enum([
-                        'shared_screen_with_speaker_view(CC)',
-                        'shared_screen_with_speaker_view',
-                        'shared_screen_with_gallery_view',
-                        'gallery_view',
-                        'shared_screen',
-                        'audio_only',
-                        'audio_transcript',
-                        'chat_file',
-                        'active_speaker',
-                        'host_video',
-                        'audio_only_each_participant',
-                        'cc_transcript',
-                        'closed_caption',
-                        'poll',
-                        'timeline',
-                        'thumbnail',
-                        'chat_message'
+                        "shared_screen_with_speaker_view(CC)",
+                        "shared_screen_with_speaker_view",
+                        "shared_screen_with_gallery_view",
+                        "gallery_view",
+                        "shared_screen",
+                        "audio_only",
+                        "audio_transcript",
+                        "chat_file",
+                        "active_speaker",
+                        "host_video",
+                        "audio_only_each_participant",
+                        "cc_transcript",
+                        "closed_caption",
+                        "poll",
+                        "timeline",
+                        "thumbnail",
+                        "chat_message"
                     ])),
                     user_id: z.optional(z.string()),
                     user_key: z.optional(z.string())
@@ -779,21 +741,12 @@ export const zSessionRecordingCompletedWebhookRequest = z.object({
                     recording_end: z.optional(z.string()),
                     file_name: z.optional(z.string()),
                     file_path: z.optional(z.string()),
-                    file_type: z.optional(z.enum([
-                        'MP4'
-                    ])),
+                    file_type: z.optional(z.enum(["MP4"])),
                     file_size: z.optional(z.number()),
-                    file_extension: z.optional(z.enum([
-                        'MP4'
-                    ])),
+                    file_extension: z.optional(z.enum(["MP4"])),
                     download_url: z.optional(z.string()),
-                    status: z.optional(z.enum([
-                        'completed'
-                    ])),
-                    recording_type: z.optional(z.enum([
-                        'individual_user',
-                        'individual_shared_screen'
-                    ])),
+                    status: z.optional(z.enum(["completed"])),
+                    recording_type: z.optional(z.enum(["individual_user", "individual_shared_screen"])),
                     user_id: z.optional(z.string()),
                     user_key: z.optional(z.string())
                 })))
@@ -806,9 +759,7 @@ export const zSessionRecordingCompletedWebhookRequest = z.object({
 
 export const zSessionRecordingTranscriptFailedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.recording_transcript_failed'
-        ]),
+        event: z.enum(["session.recording_transcript_failed"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -827,9 +778,7 @@ export const zSessionRecordingTranscriptFailedWebhookRequest = z.object({
 
 export const zSessionRecordingTrashedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.recording_trashed'
-        ]),
+        event: z.enum(["session.recording_trashed"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -850,9 +799,7 @@ export const zSessionRecordingTrashedWebhookRequest = z.object({
 
 export const zSessionUserJoinedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.user_joined'
-        ]),
+        event: z.enum(["session.user_joined"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -878,9 +825,7 @@ export const zSessionUserJoinedWebhookRequest = z.object({
 
 export const zSessionStreamIngestionStartedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.stream_ingestion_started'
-        ]),
+        event: z.enum(["session.stream_ingestion_started"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -905,9 +850,7 @@ export const zSessionStreamIngestionStartedWebhookRequest = z.object({
 
 export const zSessionStreamIngestionConnectedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.stream_ingestion_connected'
-        ]),
+        event: z.enum(["session.stream_ingestion_connected"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -932,9 +875,7 @@ export const zSessionStreamIngestionConnectedWebhookRequest = z.object({
 
 export const zSessionStreamIngestionDisconnectedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.stream_ingestion_disconnected'
-        ]),
+        event: z.enum(["session.stream_ingestion_disconnected"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -959,9 +900,7 @@ export const zSessionStreamIngestionDisconnectedWebhookRequest = z.object({
 
 export const zSessionRecordingRecoveredWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.recording_recovered'
-        ]),
+        event: z.enum(["session.recording_recovered"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),
@@ -1059,9 +998,7 @@ export const zSessionUserRoomSystemCalloutAcceptedWebhookRequest = z.object({
 
 export const zSessionRecordingStoppedWebhookRequest = z.object({
     body: z.optional(z.object({
-        event: z.enum([
-            'session.recording_stopped'
-        ]),
+        event: z.enum(["session.recording_stopped"]),
         event_ts: z.coerce.bigint(),
         payload: z.object({
             account_id: z.string(),

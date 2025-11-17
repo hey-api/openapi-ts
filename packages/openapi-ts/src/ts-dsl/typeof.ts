@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from './base';
+import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { OperatorMixin } from './mixins/operator';
 
 export class TypeOfExprTsDsl extends TsDsl<ts.TypeOfExpression> {
-  private _expr: MaybeTsDsl<WithString>;
+  private _expr: string | MaybeTsDsl<ts.Expression>;
 
-  constructor(expr: MaybeTsDsl<WithString>) {
+  constructor(expr: string | MaybeTsDsl<ts.Expression>) {
     super();
     this._expr = expr;
   }

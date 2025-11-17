@@ -1,12 +1,12 @@
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
 
 export class TypeQueryTsDsl extends TypeTsDsl<ts.TypeQueryNode> {
-  private expr: MaybeTsDsl<WithString>;
+  private expr: string | MaybeTsDsl<ts.Expression>;
 
-  constructor(expr: MaybeTsDsl<WithString>) {
+  constructor(expr: string | MaybeTsDsl<ts.Expression>) {
     super();
     this.expr = expr;
   }

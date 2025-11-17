@@ -13,6 +13,13 @@ export class ArrayTsDsl extends TsDsl<ts.ArrayLiteralExpression> {
     | { expr: MaybeTsDsl<ts.Expression>; kind: 'spread' }
   > = [];
 
+  constructor(
+    ...exprs: Array<string | number | boolean | MaybeTsDsl<ts.Expression>>
+  ) {
+    super();
+    this.elements(...exprs);
+  }
+
   /** Adds a single array element. */
   element(expr: string | number | boolean | MaybeTsDsl<ts.Expression>): this {
     const node =
@@ -44,9 +51,6 @@ export class ArrayTsDsl extends TsDsl<ts.ArrayLiteralExpression> {
   $render(): ts.ArrayLiteralExpression {
     const elements = this._elements.map((item) => {
       const node = this.$node(item.expr);
-      if (!ts.isExpression(node)) {
-        throw new Error('Invalid array element: must be an expression.');
-      }
       return item.kind === 'spread'
         ? ts.factory.createSpreadElement(node)
         : node;

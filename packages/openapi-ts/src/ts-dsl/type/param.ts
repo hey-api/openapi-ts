@@ -1,15 +1,15 @@
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
 
 export class TypeParamTsDsl extends TypeTsDsl<ts.TypeParameterDeclaration> {
-  protected name?: WithString<ts.Identifier>;
-  protected constraint?: WithString<MaybeTsDsl<TypeTsDsl>> | boolean;
-  protected defaultValue?: WithString<MaybeTsDsl<TypeTsDsl>> | boolean;
+  protected name?: string | ts.Identifier;
+  protected constraint?: string | MaybeTsDsl<TypeTsDsl> | boolean;
+  protected defaultValue?: string | MaybeTsDsl<TypeTsDsl> | boolean;
 
   constructor(
-    name?: WithString<ts.Identifier>,
+    name?: string | ts.Identifier,
     fn?: (name: TypeParamTsDsl) => void,
   ) {
     super();
@@ -17,12 +17,12 @@ export class TypeParamTsDsl extends TypeTsDsl<ts.TypeParameterDeclaration> {
     fn?.(this);
   }
 
-  default(value: WithString<MaybeTsDsl<TypeTsDsl>> | boolean): this {
+  default(value: string | MaybeTsDsl<TypeTsDsl> | boolean): this {
     this.defaultValue = value;
     return this;
   }
 
-  extends(constraint: WithString<MaybeTsDsl<TypeTsDsl>> | boolean): this {
+  extends(constraint: string | MaybeTsDsl<TypeTsDsl> | boolean): this {
     this.constraint = constraint;
     return this;
   }
@@ -31,7 +31,7 @@ export class TypeParamTsDsl extends TypeTsDsl<ts.TypeParameterDeclaration> {
     if (!this.name) throw new Error('Missing type name');
     return ts.factory.createTypeParameterDeclaration(
       undefined,
-      this.$expr(this.name),
+      this.$maybeId(this.name),
       this.$type(this.constraint),
       this.$type(this.defaultValue),
     );

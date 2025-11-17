@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from './base';
+import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 
 type Operator =
@@ -22,14 +22,14 @@ type Operator =
   | '||';
 
 export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
-  private left: MaybeTsDsl<WithString>;
+  private left: string | MaybeTsDsl<ts.Expression>;
   private operator: Operator | ts.BinaryOperator;
-  private right: MaybeTsDsl<WithString>;
+  private right: string | MaybeTsDsl<ts.Expression>;
 
   constructor(
-    left: MaybeTsDsl<WithString>,
+    left: string | MaybeTsDsl<ts.Expression>,
     operator: Operator | ts.BinaryOperator,
-    right: MaybeTsDsl<WithString>,
+    right: string | MaybeTsDsl<ts.Expression>,
   ) {
     super();
     this.left = left;

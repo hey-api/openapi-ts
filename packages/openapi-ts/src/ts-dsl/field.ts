@@ -37,7 +37,7 @@ export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
   $render(): ts.PropertyDeclaration {
     return ts.factory.createPropertyDeclaration(
       [...this.$decorators(), ...this.modifiers.list()],
-      this.$expr(this.name),
+      this.name,
       undefined,
       this.$type(this._type),
       this.$value(),
