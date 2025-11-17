@@ -3,6 +3,7 @@ import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from './base';
 import { mixin } from './mixins/apply';
+import { AsMixin } from './mixins/as';
 import { DecoratorMixin } from './mixins/decorator';
 import { DoMixin } from './mixins/do';
 import { DocMixin } from './mixins/doc';
@@ -126,6 +127,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
 
 interface ImplFuncTsDsl
   extends AbstractMixin,
+    AsMixin,
     AsyncMixin,
     DecoratorMixin,
     DoMixin,
@@ -140,10 +142,11 @@ interface ImplFuncTsDsl
 mixin(
   ImplFuncTsDsl,
   AbstractMixin,
+  AsMixin,
   AsyncMixin,
   DecoratorMixin,
   DoMixin,
-  [DocMixin, { overrideRender: true }],
+  DocMixin,
   OptionalMixin,
   ParamMixin,
   PrivateMixin,

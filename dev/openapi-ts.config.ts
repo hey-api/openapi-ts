@@ -40,13 +40,13 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'invalid',
-            'full.yaml',
+            // 'full.yaml',
             // 'openai.yaml',
             // 'opencode.yaml',
             // 'pagination-ref.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
-            // 'transformers.json',
+            'transformers.json',
             // 'type-format.yaml',
             // 'validators.yaml',
             // 'validators-circular-ref.json',
@@ -216,7 +216,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          name: '@hey-api/client-nuxt',
+          name: '@hey-api/client-fetch',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
@@ -292,7 +292,7 @@ export default defineConfig(() => {
         {
           // bigInt: true,
           dates: true,
-          // name: '@hey-api/transformers',
+          name: '@hey-api/transformers',
         },
         {
           // name: 'fastify',

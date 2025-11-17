@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging, @typescript-eslint/no-empty-object-type */
 import ts from 'typescript';
 
 import { TsDsl } from './base';
+import { mixin } from './mixins/apply';
+import { AsMixin } from './mixins/as';
 import { PrefixTsDsl } from './prefix';
 
 export class LiteralTsDsl extends TsDsl<ts.LiteralTypeNode['literal']> {
@@ -28,3 +31,6 @@ export class LiteralTsDsl extends TsDsl<ts.LiteralTypeNode['literal']> {
     throw new Error(`Unsupported literal: ${String(this.value)}`);
   }
 }
+
+export interface LiteralTsDsl extends AsMixin {}
+mixin(LiteralTsDsl, AsMixin);

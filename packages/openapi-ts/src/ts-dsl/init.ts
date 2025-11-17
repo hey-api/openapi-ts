@@ -44,7 +44,7 @@ mixin(
   InitTsDsl,
   DecoratorMixin,
   DoMixin,
-  [DocMixin, { overrideRender: true }],
+  DocMixin,
   ParamMixin,
   PrivateMixin,
   ProtectedMixin,

@@ -102,7 +102,7 @@ mixin(
   AbstractMixin,
   DecoratorMixin,
   DefaultMixin,
-  [DocMixin, { overrideRender: true }],
+  DocMixin,
   ExportMixin,
   TypeParamsMixin,
 );

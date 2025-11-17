@@ -4,21 +4,24 @@ import { NoteTsDsl } from '../note';
 export function NoteMixin<
   TBase extends new (...args: ReadonlyArray<any>) => ITsDsl,
 >(Base: TBase) {
-  const Mixin = class extends Base {
+  const $renderBase = Base.prototype.$render;
+
+  class Mixin extends Base {
     _note?: NoteTsDsl;
 
     note(lines?: MaybeArray<string>, fn?: (h: NoteTsDsl) => void): this {
       this._note = new NoteTsDsl(lines, fn);
       return this;
     }
-  };
 
-  const originalFn = Base.prototype.$render;
+    override $render(...args: Parameters<ITsDsl['$render']>) {
+      const node = $renderBase.apply(this, args);
+      return this._note ? this._note.apply(node) : node;
+    }
+  }
 
-  Mixin.prototype.$render = function (...args: Parameters<ITsDsl['$render']>) {
-    const node = originalFn.apply(this, args);
-    return this._note ? this._note.apply(node) : node;
-  };
+  // @ts-expect-error
+  Mixin.prototype.$render.mixin = true;
 
   return Mixin;
 }

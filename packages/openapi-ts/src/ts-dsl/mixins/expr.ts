@@ -1,26 +1,10 @@
 import type ts from 'typescript';
 
-import type { AsTsDsl } from '../as';
 import type { AttrTsDsl } from '../attr';
 import type { AwaitTsDsl } from '../await';
-import type { MaybeTsDsl, TypeTsDsl } from '../base';
+import type { MaybeTsDsl } from '../base';
 import type { CallTsDsl } from '../call';
 import type { ReturnTsDsl } from '../return';
-
-/**
- * Lazily register factory callbacks to avoid circular imports and
- * ensure predictable mixin application order.
- */
-
-type AsFactory = (
-  expr: string | MaybeTsDsl<ts.Expression>,
-  type: string | TypeTsDsl,
-) => AsTsDsl;
-let asFactory: AsFactory | undefined;
-/** Registers the As DSL factory after its module has finished evaluating. */
-export function registerLazyAccessAsFactory(factory: AsFactory): void {
-  asFactory = factory;
-}
 
 type AttrFactory = (
   expr: string | MaybeTsDsl<ts.Expression>,
@@ -57,14 +41,6 @@ export function registerLazyAccessReturnFactory(factory: ReturnFactory): void {
 }
 
 export class ExprMixin {
-  /** Creates an `as` type assertion expression (e.g. `value as Type`). */
-  as(
-    this: string | MaybeTsDsl<ts.Expression>,
-    type: string | TypeTsDsl,
-  ): AsTsDsl {
-    return asFactory!(this, type);
-  }
-
   /** Accesses a property on the current expression (e.g. `this.foo`). */
   attr(
     this: string | MaybeTsDsl<ts.Expression>,

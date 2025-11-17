@@ -63,4 +63,4 @@ class TypePropTsDsl extends TypeTsDsl<ts.TypeElement> {
 }
 
 interface TypePropTsDsl extends DocMixin, OptionalMixin {}
-mixin(TypePropTsDsl, [DocMixin, { overrideRender: true }], OptionalMixin);
+mixin(TypePropTsDsl, DocMixin, OptionalMixin);

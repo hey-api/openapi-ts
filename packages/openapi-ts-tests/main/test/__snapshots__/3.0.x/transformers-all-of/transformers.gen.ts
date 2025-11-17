@@ -3,16 +3,12 @@
 import type { GetFooResponse } from './types.gen';
 
 const fooSchemaResponseTransformer = (data: any) => {
-    data.foo = data.foo.map((item: any) => {
-        return barSchemaResponseTransformer(item);
-    });
+    data.foo = data.foo.map((item: any) => barSchemaResponseTransformer(item));
     return data;
 };
 
 const barSchemaResponseTransformer = (data: any) => {
-    data.foo = data.foo.map((item: any) => {
-        return bazSchemaResponseTransformer(item);
-    });
+    data.foo = data.foo.map((item: any) => bazSchemaResponseTransformer(item));
     return data;
 };
 
