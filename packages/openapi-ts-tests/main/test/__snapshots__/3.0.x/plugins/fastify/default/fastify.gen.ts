@@ -7,7 +7,7 @@ import type { ApiVVersionODataControllerCountResponses, CallToTestOrderOfParamsD
 export type RouteHandlers = {
     import: RouteHandler<{
         Body: ImportData['body'];
-        Reply: Omit<ImportResponses, 'default'>;
+        Reply: Omit<ImportResponses, "default">;
     }>;
     apiVVersionODataControllerCount: RouteHandler<{
         Reply: ApiVVersionODataControllerCountResponses;
@@ -43,16 +43,16 @@ export type RouteHandlers = {
         Querystring?: GetCallWithOptionalParamData['query'];
     }>;
     postCallWithOptionalParam: RouteHandler<{
-        Body: PostCallWithOptionalParamData['body'];
+        Body?: PostCallWithOptionalParamData['body'];
         Querystring: PostCallWithOptionalParamData['query'];
         Reply: PostCallWithOptionalParamResponses;
     }>;
     postApiVbyApiVersionRequestBody: RouteHandler<{
-        Body: PostApiVbyApiVersionRequestBodyData['body'];
+        Body?: PostApiVbyApiVersionRequestBodyData['body'];
         Querystring?: PostApiVbyApiVersionRequestBodyData['query'];
     }>;
     postApiVbyApiVersionFormData: RouteHandler<{
-        Body: PostApiVbyApiVersionFormDataData['body'];
+        Body?: PostApiVbyApiVersionFormDataData['body'];
         Querystring?: PostApiVbyApiVersionFormDataData['query'];
     }>;
     callWithDefaultParameters: RouteHandler<{
@@ -77,10 +77,10 @@ export type RouteHandlers = {
         Reply: DummyBResponses;
     }>;
     callWithDuplicateResponses: RouteHandler<{
-        Reply: Omit<CallWithDuplicateResponsesErrors, 'default'> & CallWithDuplicateResponsesResponses;
+        Reply: Omit<CallWithDuplicateResponsesErrors, "default"> & CallWithDuplicateResponsesResponses;
     }>;
     callWithResponses: RouteHandler<{
-        Reply: Omit<CallWithResponsesErrors, 'default'> & CallWithResponsesResponses;
+        Reply: Omit<CallWithResponsesErrors, "default"> & CallWithResponsesResponses;
     }>;
     collectionFormat: RouteHandler<{
         Querystring: CollectionFormatData['query'];
@@ -107,10 +107,10 @@ export type RouteHandlers = {
         Reply: MultipartResponseResponses;
     }>;
     multipartRequest: RouteHandler<{
-        Body: MultipartRequestData['body'];
+        Body?: MultipartRequestData['body'];
     }>;
     complexParams: RouteHandler<{
-        Body: ComplexParamsData['body'];
+        Body?: ComplexParamsData['body'];
         Params: ComplexParamsData['path'];
         Reply: ComplexParamsResponses;
     }>;
