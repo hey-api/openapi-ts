@@ -41,10 +41,10 @@ export type RouteHandlers = {
         Reply: DummyBResponses;
     }>;
     callWithDuplicateResponses: RouteHandler<{
-        Reply: Omit<CallWithDuplicateResponsesErrors, 'default'> & CallWithDuplicateResponsesResponses;
+        Reply: Omit<CallWithDuplicateResponsesErrors, "default"> & CallWithDuplicateResponsesResponses;
     }>;
     callWithResponses: RouteHandler<{
-        Reply: Omit<CallWithResponsesErrors, 'default'> & CallWithResponsesResponses;
+        Reply: Omit<CallWithResponsesErrors, "default"> & CallWithResponsesResponses;
     }>;
     collectionFormat: RouteHandler<{
         Querystring: CollectionFormatData['query'];

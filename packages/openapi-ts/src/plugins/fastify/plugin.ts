@@ -1,9 +1,7 @@
-import type ts from 'typescript';
-
 import { operationResponsesMap } from '~/ir/operation';
 import { hasParameterGroupObjectRequired } from '~/ir/parameter';
 import type { IR } from '~/ir/types';
-import { type Property, tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import type { FastifyPlugin } from './types';
 
@@ -13,8 +11,8 @@ const operationToRouteHandler = ({
 }: {
   operation: IR.OperationObject;
   plugin: FastifyPlugin['Instance'];
-}): Property | undefined => {
-  const properties: Array<Property> = [];
+}) => {
+  const type = $.type.object();
 
   const symbolDataType = plugin.querySymbol({
     category: 'type',
@@ -25,49 +23,49 @@ const operationToRouteHandler = ({
   });
   if (symbolDataType) {
     if (operation.body) {
-      properties.push({
-        isRequired: operation.body.required,
-        name: 'Body',
-        type: `${symbolDataType.placeholder}['body']`,
-      });
+      type.prop('Body', (p) =>
+        p
+          .optional(!operation.body!.required)
+          .type(`${symbolDataType.placeholder}['body']`),
+      );
     }
 
     if (operation.parameters) {
       if (operation.parameters.header) {
-        properties.push({
-          isRequired: hasParameterGroupObjectRequired(
-            operation.parameters.header,
-          ),
-          name: 'Headers',
-          type: `${symbolDataType.placeholder}['headers']`,
-        });
+        type.prop('Headers', (p) =>
+          p
+            .optional(
+              !hasParameterGroupObjectRequired(operation.parameters!.header),
+            )
+            .type(`${symbolDataType.placeholder}['headers']`),
+        );
       }
 
       if (operation.parameters.path) {
-        properties.push({
-          isRequired: hasParameterGroupObjectRequired(
-            operation.parameters.path,
-          ),
-          name: 'Params',
-          type: `${symbolDataType.placeholder}['path']`,
-        });
+        type.prop('Params', (p) =>
+          p
+            .optional(
+              !hasParameterGroupObjectRequired(operation.parameters!.path),
+            )
+            .type(`${symbolDataType.placeholder}['path']`),
+        );
       }
 
       if (operation.parameters.query) {
-        properties.push({
-          isRequired: hasParameterGroupObjectRequired(
-            operation.parameters.query,
-          ),
-          name: 'Querystring',
-          type: `${symbolDataType.placeholder}['query']`,
-        });
+        type.prop('Querystring', (p) =>
+          p
+            .optional(
+              !hasParameterGroupObjectRequired(operation.parameters!.query),
+            )
+            .type(`${symbolDataType.placeholder}['query']`),
+        );
       }
     }
   }
 
   const { errors, responses } = operationResponsesMap(operation);
 
-  let errorsTypeReference: ts.TypeReferenceNode | undefined = undefined;
+  let errorsTypeReference: ReturnType<typeof $.type> | undefined;
   const symbolErrorType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
@@ -79,25 +77,19 @@ const operationToRouteHandler = ({
     if (keys.length) {
       const hasDefaultResponse = keys.includes('default');
       if (!hasDefaultResponse) {
-        errorsTypeReference = tsc.typeReferenceNode({
-          typeName: symbolErrorType.placeholder,
-        });
+        errorsTypeReference = $.type(symbolErrorType.placeholder);
       } else if (keys.length > 1) {
-        const errorsType = tsc.typeReferenceNode({
-          typeName: symbolErrorType.placeholder,
-        });
-        const defaultType = tsc.literalTypeNode({
-          literal: tsc.stringLiteral({ text: 'default' }),
-        });
-        errorsTypeReference = tsc.typeReferenceNode({
-          typeArguments: [errorsType, defaultType],
-          typeName: 'Omit',
-        });
+        errorsTypeReference = $.type('Omit', (t) =>
+          t.generics(
+            $.type(symbolErrorType.placeholder),
+            $.type.literal('default'),
+          ),
+        );
       }
     }
   }
 
-  let responsesTypeReference: ts.TypeReferenceNode | undefined = undefined;
+  let responsesTypeReference: ReturnType<typeof $.type> | undefined = undefined;
   const symbolResponseType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
@@ -109,37 +101,26 @@ const operationToRouteHandler = ({
     if (keys.length) {
       const hasDefaultResponse = keys.includes('default');
       if (!hasDefaultResponse) {
-        responsesTypeReference = tsc.typeReferenceNode({
-          typeName: symbolResponseType.placeholder,
-        });
+        responsesTypeReference = $.type(symbolResponseType.placeholder);
       } else if (keys.length > 1) {
-        const responsesType = tsc.typeReferenceNode({
-          typeName: symbolResponseType.placeholder,
-        });
-        const defaultType = tsc.literalTypeNode({
-          literal: tsc.stringLiteral({ text: 'default' }),
-        });
-        responsesTypeReference = tsc.typeReferenceNode({
-          typeArguments: [responsesType, defaultType],
-          typeName: 'Omit',
-        });
+        responsesTypeReference = $.type('Omit', (t) =>
+          t.generics(
+            $.type(symbolResponseType.placeholder),
+            $.type.literal('default'),
+          ),
+        );
       }
     }
   }
 
   const replyTypes = [errorsTypeReference, responsesTypeReference].filter(
-    Boolean,
+    (t): t is ReturnType<typeof $.type> => t !== undefined,
   );
   if (replyTypes.length) {
-    properties.push({
-      name: 'Reply',
-      type: tsc.typeIntersectionNode({
-        types: replyTypes,
-      }),
-    });
+    type.prop('Reply', (p) => p.type($.type.and(...replyTypes)));
   }
 
-  if (!properties.length) {
+  if (type.isEmpty) {
     return;
   }
 
@@ -148,19 +129,10 @@ const operationToRouteHandler = ({
     resource: 'route-handler',
     tool: 'fastify',
   });
-  const routeHandler: Property = {
+  return {
     name: operation.id,
-    type: tsc.typeReferenceNode({
-      typeArguments: [
-        tsc.typeInterfaceNode({
-          properties,
-          useLegacyResolution: false,
-        }),
-      ],
-      typeName: symbolRouteHandler.placeholder,
-    }),
+    type: $.type(symbolRouteHandler.placeholder, (t) => t.generic(type)),
   };
-  return routeHandler;
 };
 
 export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
@@ -181,14 +153,14 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
     name: 'RouteHandlers',
   });
 
-  const routeHandlers: Array<Property> = [];
+  const type = $.type.object();
 
   plugin.forEach(
     'operation',
     ({ operation }) => {
       const routeHandler = operationToRouteHandler({ operation, plugin });
       if (routeHandler) {
-        routeHandlers.push(routeHandler);
+        type.prop(routeHandler.name, (p) => p.type(routeHandler.type));
       }
     },
     {
@@ -196,13 +168,9 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
     },
   );
 
-  const node = tsc.typeAliasDeclaration({
-    exportType: symbolRouteHandlers.exported,
-    name: symbolRouteHandlers.placeholder,
-    type: tsc.typeInterfaceNode({
-      properties: routeHandlers,
-      useLegacyResolution: false,
-    }),
-  });
+  const node = $.type
+    .alias(symbolRouteHandlers.placeholder)
+    .export(symbolRouteHandlers.exported)
+    .type(type);
   plugin.setSymbolValue(symbolRouteHandlers, node);
 };
