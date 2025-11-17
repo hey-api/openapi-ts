@@ -30,4 +30,4 @@ export class AsTsDsl extends TsDsl<ts.AsExpression> {
 export interface AsTsDsl extends ExprMixin {}
 mixin(AsTsDsl, ExprMixin);
 
-registerLazyAccessAsFactory((expr, type) => new AsTsDsl(expr, type));
+registerLazyAccessAsFactory((...args) => new AsTsDsl(...args));

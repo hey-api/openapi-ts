@@ -1,9 +1,13 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
 import { mixin } from '../mixins/apply';
 import { TypeArgsMixin } from '../mixins/type-args';
+import {
+  registerLazyAccessTypeExprFactory,
+  TypeExprMixin,
+} from '../mixins/type-expr';
 import { TypeAttrTsDsl } from './attr';
 import { TypeIdxTsDsl } from './idx';
 
@@ -52,5 +56,10 @@ export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
   }
 }
 
-export interface TypeExprTsDsl extends TypeArgsMixin {}
-mixin(TypeExprTsDsl, TypeArgsMixin);
+export interface TypeExprTsDsl extends TypeArgsMixin, TypeExprMixin {}
+mixin(TypeExprTsDsl, TypeArgsMixin, TypeExprMixin);
+
+registerLazyAccessTypeExprFactory(
+  (...args) =>
+    new TypeExprTsDsl(...(args as ConstructorParameters<typeof TypeExprTsDsl>)),
+);

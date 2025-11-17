@@ -5,7 +5,7 @@ import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins/shared/types/schema';
 import { toRefs } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { exportAst } from '../shared/export';
@@ -43,27 +43,14 @@ export const irSchemaToAst = ({
     };
     const refSymbol = plugin.referenceSymbol(query);
     if (plugin.isSymbolRegistered(query)) {
-      const ref = tsc.identifier({ text: refSymbol.placeholder });
+      const ref = $(refSymbol.placeholder);
       ast.expression = ref;
     } else {
-      const lazyExpression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          // expression: z.placeholder,
-          expression: 'TODO',
-          name: 'TODO',
-          // name: identifiers.lazy,
-        }),
-        parameters: [
-          tsc.arrowFunction({
-            returnType: tsc.keywordTypeNode({ keyword: 'any' }),
-            statements: [
-              tsc.returnStatement({
-                expression: tsc.identifier({ text: refSymbol.placeholder }),
-              }),
-            ],
-          }),
-        ],
-      });
+      // expression: z.placeholder,
+      // name: identifiers.lazy,
+      const lazyExpression = $('TODO')
+        .attr('TODO')
+        .call($.func().returns('any').do($.return(refSymbol.placeholder)));
       ast.expression = lazyExpression;
       ast.hasLazyExpression = true;
       state.hasLazyExpression.value = true;

@@ -15,6 +15,11 @@ import { SetterTsDsl } from './setter';
 export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
   private props: Array<
     | {
+        expr: string | MaybeTsDsl<ts.Expression>;
+        kind: 'computed';
+        name: string;
+      }
+    | {
         expr: string | MaybeTsDsl<ts.Statement>;
         kind: 'getter';
         name: string;
@@ -27,6 +32,12 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
       }
     | { expr: string | MaybeTsDsl<ts.Expression>; kind: 'spread' }
   > = [];
+
+  /** Adds a computed property (e.g. `{ [expr]: value }`). */
+  computed(name: string, expr: string | MaybeTsDsl<ts.Expression>): this {
+    this.props.push({ expr, kind: 'computed', name });
+    return this;
+  }
 
   /** Adds a getter property (e.g. `{ get foo() { ... } }`). */
   getter(name: string, expr: string | MaybeTsDsl<ts.Statement>): this {
@@ -94,8 +105,11 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
           'Invalid property: object property value must be an expression, not a statement.',
         );
       }
+      const name = this.safePropertyName(p.name);
       return ts.factory.createPropertyAssignment(
-        this.safePropertyName(p.name),
+        p.kind === 'computed'
+          ? ts.factory.createComputedPropertyName(this.$node(name as string))
+          : name,
         node,
       );
     });

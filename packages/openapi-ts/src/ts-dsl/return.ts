@@ -22,4 +22,4 @@ export class ReturnTsDsl extends TsDsl<ts.ReturnStatement> {
 export interface ReturnTsDsl extends ExprMixin {}
 mixin(ReturnTsDsl, ExprMixin);
 
-registerLazyAccessReturnFactory((expr) => new ReturnTsDsl(expr));
+registerLazyAccessReturnFactory((...args) => new ReturnTsDsl(...args));
