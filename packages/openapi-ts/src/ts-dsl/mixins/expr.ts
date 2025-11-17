@@ -8,10 +8,8 @@ import type { CallTsDsl } from '../call';
 import type { ReturnTsDsl } from '../return';
 
 /**
- * Access helpers depend on other DSL classes that are initialized later in the
- * module graph. We store factory callbacks here and let each class lazily
- * register its own implementation once it has finished evaluation. This keeps
- * mixin application order predictable and avoids circular import crashes.
+ * Lazily register factory callbacks to avoid circular imports and
+ * ensure predictable mixin application order.
  */
 
 type AsFactory = (
@@ -19,7 +17,7 @@ type AsFactory = (
   type: string | TypeTsDsl,
 ) => AsTsDsl;
 let asFactory: AsFactory | undefined;
-/** Registers the Attr DSL factory after its module has finished evaluating. */
+/** Registers the As DSL factory after its module has finished evaluating. */
 export function registerLazyAccessAsFactory(factory: AsFactory): void {
   asFactory = factory;
 }

@@ -60,4 +60,4 @@ export interface AttrTsDsl
     OptionalMixin {}
 mixin(AttrTsDsl, AssignmentMixin, ExprMixin, OperatorMixin, OptionalMixin);
 
-registerLazyAccessAttrFactory((expr, name) => new AttrTsDsl(expr, name));
+registerLazyAccessAttrFactory((...args) => new AttrTsDsl(...args));

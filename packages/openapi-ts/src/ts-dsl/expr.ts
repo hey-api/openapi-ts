@@ -6,9 +6,7 @@ import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { ExprMixin } from './mixins/expr';
 import { OperatorMixin } from './mixins/operator';
-import { TypeExprTsDsl } from './type/expr';
-import { TypeQueryTsDsl } from './type/query';
-import { TypeOfExprTsDsl } from './typeof';
+import { TypeExprMixin } from './mixins/type-expr';
 
 export class ExprTsDsl extends TsDsl<ts.Expression> {
   private _exprInput: string | MaybeTsDsl<ts.Expression>;
@@ -18,22 +16,10 @@ export class ExprTsDsl extends TsDsl<ts.Expression> {
     this._exprInput = id;
   }
 
-  returnType(): TypeExprTsDsl {
-    return new TypeExprTsDsl('ReturnType').generic(this.typeofType());
-  }
-
-  typeofExpr(): TypeOfExprTsDsl {
-    return new TypeOfExprTsDsl(this);
-  }
-
-  typeofType(): TypeQueryTsDsl {
-    return new TypeQueryTsDsl(this);
-  }
-
   $render(): ts.Expression {
     return this.$node(this._exprInput);
   }
 }
 
-export interface ExprTsDsl extends ExprMixin, OperatorMixin {}
-mixin(ExprTsDsl, ExprMixin, OperatorMixin);
+export interface ExprTsDsl extends ExprMixin, OperatorMixin, TypeExprMixin {}
+mixin(ExprTsDsl, ExprMixin, OperatorMixin, TypeExprMixin);

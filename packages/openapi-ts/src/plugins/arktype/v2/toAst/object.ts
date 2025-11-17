@@ -1,9 +1,6 @@
-import ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins/shared/types/schema';
 import { toRef } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
-import { numberRegExp } from '~/utils/regexp';
+import { $ } from '~/ts-dsl';
 
 // import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
@@ -19,8 +16,8 @@ export const objectToAst = ({
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
   // TODO: parser - handle constants
-  const properties: Array<ts.PropertyAssignment | ts.GetAccessorDeclaration> =
-    [];
+
+  const shape = $.object().pretty();
 
   const required = schema.required ?? [];
 
@@ -40,12 +37,6 @@ export const objectToAst = ({
     if (propertyAst.hasLazyExpression) {
       result.hasLazyExpression = true;
     }
-
-    let propertyName:
-      | ts.ComputedPropertyName
-      | ts.StringLiteral
-      | ts.NumericLiteral
-      | string = isRequired ? name : `${name}?`;
 
     // if (propertyAst.hasCircularReference) {
     //   properties.push(
@@ -76,38 +67,11 @@ export const objectToAst = ({
     //   );
     // }
 
-    if (propertyName.endsWith('?')) {
-      propertyName = ts.factory.createComputedPropertyName(
-        tsc.stringLiteral({ text: propertyName }),
-      );
+    if (isRequired) {
+      shape.prop(name, propertyAst.expression);
     } else {
-      // TODO: parser - abstract safe property name logic
-      if (
-        ((propertyName.match(/^[0-9]/) && propertyName.match(/\D+/g)) ||
-          propertyName.match(/\W/g)) &&
-        !propertyName.startsWith("'") &&
-        !propertyName.endsWith("'")
-      ) {
-        propertyName = `'${propertyName}'`;
-      }
-
-      numberRegExp.lastIndex = 0;
-      if (numberRegExp.test(propertyName)) {
-        // For numeric literals, we'll handle negative numbers by using a string literal
-        // instead of trying to use a PrefixUnaryExpression
-        propertyName = propertyName.startsWith('-')
-          ? tsc.stringLiteral({ text: name })
-          : ts.factory.createNumericLiteral(name);
-      } else {
-        propertyName = name;
-      }
+      shape.computed(`${name}?`, propertyAst.expression);
     }
-    properties.push(
-      tsc.propertyAssignment({
-        initializer: propertyAst.expression,
-        name: propertyName,
-      }),
-    );
   }
 
   if (
@@ -122,24 +86,12 @@ export const objectToAst = ({
         path: toRef([...state.path.value, 'additionalProperties']),
       },
     });
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: 'TODO',
-        name: 'record',
-        // name: identifiers.record,
-      }),
-      parameters: [
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: 'TODO',
-            name: 'string',
-            // name: identifiers.string,
-          }),
-          parameters: [],
-        }),
-        additionalAst.expression,
-      ],
-    });
+    // name: identifiers.record,
+    result.expression = $('TODO').attr('record').call(
+      // name: identifiers.string,
+      $('TODO').attr('string').call(),
+      additionalAst.expression,
+    );
     if (additionalAst.hasLazyExpression) {
       result.hasLazyExpression = true;
     }
@@ -155,10 +107,7 @@ export const objectToAst = ({
     return result as Omit<Ast, 'typeName'>;
   }
 
-  result.expression = ts.factory.createObjectLiteralExpression(
-    properties,
-    true,
-  );
+  result.expression = shape;
 
   // return with typeName for circular references
   if (result.hasLazyExpression) {

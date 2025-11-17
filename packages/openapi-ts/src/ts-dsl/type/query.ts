@@ -2,22 +2,20 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
+import { registerLazyAccessTypeQueryFactory } from '../mixins/type-expr';
 
 export class TypeQueryTsDsl extends TypeTsDsl<ts.TypeQueryNode> {
-  private expr: string | MaybeTsDsl<ts.Expression>;
+  private _expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>;
 
-  constructor(expr: string | MaybeTsDsl<ts.Expression>) {
+  constructor(expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>) {
     super();
-    this.expr = expr;
+    this._expr = expr;
   }
 
   $render(): ts.TypeQueryNode {
-    const exprName = this.$node(this.expr);
-    if (!ts.isEntityName(exprName)) {
-      throw new Error(
-        'TypeQueryTsDsl: expression must resolve to an EntityName',
-      );
-    }
-    return ts.factory.createTypeQueryNode(exprName);
+    const expr = this.$node(this._expr);
+    return ts.factory.createTypeQueryNode(expr as unknown as ts.EntityName);
   }
 }
+
+registerLazyAccessTypeQueryFactory((...args) => new TypeQueryTsDsl(...args));

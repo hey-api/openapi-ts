@@ -20,9 +20,7 @@ export class TypeArgsMixin extends TsDsl {
     return this;
   }
 
-  /**
-   * Returns the type arguments as an array of ts.TypeNode nodes.
-   */
+  /** Returns the type arguments as an array of ts.TypeNode nodes. */
   protected $generics(): ReadonlyArray<ts.TypeNode> | undefined {
     return this.$type(this._generics);
   }
