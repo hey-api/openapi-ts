@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
+import { validTypescriptIdentifierRegExp } from '~/utils/regexp';
+
 import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
+import { LiteralTsDsl } from './literal';
 import { mixin } from './mixins/apply';
+import { AsMixin } from './mixins/as';
 import { AssignmentMixin } from './mixins/assignment';
 import { ExprMixin, registerLazyAccessAttrFactory } from './mixins/expr';
 import { OperatorMixin } from './mixins/operator';
@@ -26,23 +30,31 @@ export class AttrTsDsl extends TsDsl<
 
   $render(): ts.PropertyAccessExpression | ts.ElementAccessExpression {
     const leftNode = this.$node(this.left);
-    if (typeof this.right === 'number') {
-      if (this.isOptional) {
+    validTypescriptIdentifierRegExp.lastIndex = 0;
+    const questionToken = this.isOptional
+      ? ts.factory.createToken(ts.SyntaxKind.QuestionDotToken)
+      : undefined;
+    if (
+      typeof this.right === 'number' ||
+      (typeof this.right === 'string' &&
+        !validTypescriptIdentifierRegExp.test(this.right))
+    ) {
+      if (questionToken) {
         return ts.factory.createElementAccessChain(
           leftNode,
-          ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-          ts.factory.createNumericLiteral(this.right),
+          questionToken,
+          this.$node(new LiteralTsDsl(this.right)),
         );
       }
       return ts.factory.createElementAccessExpression(
         leftNode,
-        ts.factory.createNumericLiteral(this.right),
+        this.$node(new LiteralTsDsl(this.right)),
       );
     }
-    if (this.isOptional) {
+    if (questionToken) {
       return ts.factory.createPropertyAccessChain(
         leftNode,
-        ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
+        questionToken,
         this.$maybeId(this.right),
       );
     }
@@ -54,10 +66,18 @@ export class AttrTsDsl extends TsDsl<
 }
 
 export interface AttrTsDsl
-  extends AssignmentMixin,
+  extends AsMixin,
+    AssignmentMixin,
     ExprMixin,
     OperatorMixin,
     OptionalMixin {}
-mixin(AttrTsDsl, AssignmentMixin, ExprMixin, OperatorMixin, OptionalMixin);
+mixin(
+  AttrTsDsl,
+  AsMixin,
+  AssignmentMixin,
+  ExprMixin,
+  OperatorMixin,
+  OptionalMixin,
+);
 
 registerLazyAccessAttrFactory((...args) => new AttrTsDsl(...args));

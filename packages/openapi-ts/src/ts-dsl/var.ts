@@ -77,9 +77,9 @@ export interface VarTsDsl
 mixin(
   VarTsDsl,
   DefaultMixin,
-  [DocMixin, { overrideRender: true }],
+  DocMixin,
   ExportMixin,
-  [HintMixin, { overrideRender: true }],
+  HintMixin,
   PatternMixin,
   ValueMixin,
 );

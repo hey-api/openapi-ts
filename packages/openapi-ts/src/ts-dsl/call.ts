@@ -5,6 +5,7 @@ import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { ArgsMixin } from './mixins/args';
+import { AsMixin } from './mixins/as';
 import { ExprMixin, registerLazyAccessCallFactory } from './mixins/expr';
 import { TypeArgsMixin } from './mixins/type-args';
 
@@ -31,7 +32,11 @@ export class CallTsDsl extends TsDsl<ts.CallExpression> {
   }
 }
 
-export interface CallTsDsl extends ArgsMixin, ExprMixin, TypeArgsMixin {}
-mixin(CallTsDsl, ArgsMixin, ExprMixin, TypeArgsMixin);
+export interface CallTsDsl
+  extends ArgsMixin,
+    AsMixin,
+    ExprMixin,
+    TypeArgsMixin {}
+mixin(CallTsDsl, ArgsMixin, AsMixin, ExprMixin, TypeArgsMixin);
 
 registerLazyAccessCallFactory((expr, args) => new CallTsDsl(expr, ...args));

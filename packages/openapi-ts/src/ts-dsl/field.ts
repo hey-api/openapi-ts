@@ -57,7 +57,7 @@ export interface FieldTsDsl
 mixin(
   FieldTsDsl,
   DecoratorMixin,
-  [DocMixin, { overrideRender: true }],
+  DocMixin,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,

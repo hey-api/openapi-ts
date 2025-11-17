@@ -5,7 +5,7 @@ import type { OpenApiV3_0_XTypes } from '~/openApi/3.0.x';
 import type { OpenApiV3_1_XTypes } from '~/openApi/3.1.x';
 import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
 import type { OpenApi } from '~/openApi/types';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import type { HeyApiSchemasPlugin } from './types';
 
@@ -383,12 +383,15 @@ const schemasV2_0_X = ({
       plugin,
       schema,
     });
-    const statement = tsc.constVariable({
-      assertion: 'const',
-      exportConst: symbol.exported,
-      expression: tsc.objectExpression({ obj }),
-      name: symbol.placeholder,
-    });
+    const statement = $.const(symbol.placeholder)
+      .export(symbol.exported)
+      .assign(
+        $(
+          $.toExpr(obj, {
+            layout: 'pretty',
+          })!,
+        ).as('const'),
+      );
     plugin.setSymbolValue(symbol, statement);
   }
 };
@@ -421,12 +424,15 @@ const schemasV3_0_X = ({
       plugin,
       schema,
     });
-    const statement = tsc.constVariable({
-      assertion: 'const',
-      exportConst: symbol.exported,
-      expression: tsc.objectExpression({ obj }),
-      name: symbol.placeholder,
-    });
+    const statement = $.const(symbol.placeholder)
+      .export(symbol.exported)
+      .assign(
+        $(
+          $.toExpr(obj, {
+            layout: 'pretty',
+          })!,
+        ).as('const'),
+      );
     plugin.setSymbolValue(symbol, statement);
   }
 };
@@ -459,12 +465,15 @@ const schemasV3_1_X = ({
       plugin,
       schema,
     });
-    const statement = tsc.constVariable({
-      assertion: 'const',
-      exportConst: symbol.exported,
-      expression: tsc.objectExpression({ obj }),
-      name: symbol.placeholder,
-    });
+    const statement = $.const(symbol.placeholder)
+      .export(symbol.exported)
+      .assign(
+        $(
+          $.toExpr(obj, {
+            layout: 'pretty',
+          })!,
+        ).as('const'),
+      );
     plugin.setSymbolValue(symbol, statement);
   }
 };

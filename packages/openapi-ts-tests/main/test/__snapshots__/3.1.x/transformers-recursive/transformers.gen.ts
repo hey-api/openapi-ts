@@ -7,16 +7,12 @@ const treeNodeSchemaResponseTransformer = (data: any) => {
         data.createdAt = new Date(data.createdAt);
     }
     if (data.children) {
-        data.children = data.children.map((item: any) => {
-            return treeNodeSchemaResponseTransformer(item);
-        });
+        data.children = data.children.map((item: any) => treeNodeSchemaResponseTransformer(item));
     }
     return data;
 };
 
 export const getTreeResponseTransformer = async (data: any): Promise<GetTreeResponse> => {
-    data = data.map((item: any) => {
-        return treeNodeSchemaResponseTransformer(item);
-    });
+    data = data.map((item: any) => treeNodeSchemaResponseTransformer(item));
     return data;
 };

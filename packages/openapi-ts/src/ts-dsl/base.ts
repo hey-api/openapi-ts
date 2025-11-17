@@ -1,5 +1,7 @@
 import ts from 'typescript';
 
+import { toStmt } from './toStmt';
+
 export type MaybeArray<T> = T | ReadonlyArray<T>;
 
 export interface ITsDsl<T extends ts.Node = ts.Node> {
@@ -116,9 +118,7 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return arr.map((item) => {
       const node =
         typeof item === 'string' ? this.$id(item) : this._render(item);
-      return ts.isExpression(node)
-        ? ts.factory.createExpressionStatement(node)
-        : node;
+      return toStmt(node);
     });
   }
 
