@@ -22,9 +22,7 @@ export class TypeParamsMixin extends TsDsl {
     return this;
   }
 
-  /**
-   * Returns the type parameters as an array of ts.TypeParameterDeclaration nodes.
-   */
+  /** Returns the type parameters as an array of ts.TypeParameterDeclaration nodes. */
   protected $generics():
     | ReadonlyArray<ts.TypeParameterDeclaration>
     | undefined {

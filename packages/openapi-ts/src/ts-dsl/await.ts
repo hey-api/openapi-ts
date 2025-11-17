@@ -22,4 +22,4 @@ export class AwaitTsDsl extends TsDsl<ts.AwaitExpression> {
 export interface AwaitTsDsl extends ExprMixin {}
 mixin(AwaitTsDsl, ExprMixin);
 
-registerLazyAccessAwaitFactory((expr) => new AwaitTsDsl(expr));
+registerLazyAccessAwaitFactory((...args) => new AwaitTsDsl(...args));
