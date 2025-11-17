@@ -357,9 +357,9 @@ export default defineConfig(() => {
         },
         {
           name: 'arktype',
-          // types: {
-          //   infer: true,
-          // },
+          types: {
+            infer: true,
+          },
         },
         {
           // case: 'SCREAMING_SNAKE_CASE',

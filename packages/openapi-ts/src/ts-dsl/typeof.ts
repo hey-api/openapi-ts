@@ -5,6 +5,7 @@ import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { OperatorMixin } from './mixins/operator';
+import { registerLazyAccessTypeOfExprFactory } from './mixins/type-expr';
 
 export class TypeOfExprTsDsl extends TsDsl<ts.TypeOfExpression> {
   private _expr: string | MaybeTsDsl<ts.Expression>;
@@ -21,3 +22,5 @@ export class TypeOfExprTsDsl extends TsDsl<ts.TypeOfExpression> {
 
 export interface TypeOfExprTsDsl extends OperatorMixin {}
 mixin(TypeOfExprTsDsl, OperatorMixin);
+
+registerLazyAccessTypeOfExprFactory((...args) => new TypeOfExprTsDsl(...args));
