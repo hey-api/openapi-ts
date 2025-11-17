@@ -1,25 +1,30 @@
 import ts from 'typescript';
 
 import { TsDsl } from './base';
+import { PrefixTsDsl } from './prefix';
 
 export class LiteralTsDsl extends TsDsl<ts.LiteralTypeNode['literal']> {
-  private value: string | number | boolean;
+  private value: string | number | boolean | null;
 
-  constructor(value: string | number | boolean) {
+  constructor(value: string | number | boolean | null) {
     super();
     this.value = value;
   }
 
   $render(): ts.LiteralTypeNode['literal'] {
-    switch (typeof this.value) {
-      case 'boolean':
-        return this.value ? ts.factory.createTrue() : ts.factory.createFalse();
-      case 'number':
-        return ts.factory.createNumericLiteral(this.value);
-      case 'string':
-        return ts.factory.createStringLiteral(this.value);
-      default:
-        throw new Error(`Unsupported literal: ${String(this.value)}`);
+    if (typeof this.value === 'boolean') {
+      return this.value ? ts.factory.createTrue() : ts.factory.createFalse();
     }
+    if (typeof this.value === 'number') {
+      const expr = ts.factory.createNumericLiteral(Math.abs(this.value));
+      return this.value < 0 ? this.$node(new PrefixTsDsl(expr).neg()) : expr;
+    }
+    if (typeof this.value === 'string') {
+      return ts.factory.createStringLiteral(this.value);
+    }
+    if (this.value === null) {
+      return ts.factory.createNull();
+    }
+    throw new Error(`Unsupported literal: ${String(this.value)}`);
   }
 }

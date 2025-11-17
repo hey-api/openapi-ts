@@ -48,12 +48,11 @@ export const irSchemaToAst = ({
     };
     const refSymbol = plugin.referenceSymbol(query);
     if (plugin.isSymbolRegistered(query)) {
-      ast.expression = $(refSymbol.placeholder).$render();
+      ast.expression = $(refSymbol.placeholder);
     } else {
       ast.expression = $(z.placeholder)
         .attr(identifiers.lazy)
-        .call($.func().returns('any').do($(refSymbol.placeholder).return()))
-        .$render();
+        .call($.func().returns('any').do($(refSymbol.placeholder).return()));
       ast.hasLazyExpression = true;
       state.hasLazyExpression.value = true;
     }
@@ -67,15 +66,14 @@ export const irSchemaToAst = ({
     ast.hasLazyExpression = typeAst.hasLazyExpression;
 
     if (plugin.config.metadata && schema.description) {
-      ast.expression = $(ast.expression)
+      ast.expression = ast.expression
         .attr(identifiers.register)
         .call(
           $(z.placeholder).attr(identifiers.globalRegistry),
           $.object()
             .pretty()
             .prop('description', $.literal(schema.description)),
-        )
-        .$render();
+        );
     }
   } else if (schema.items) {
     schema = deduplicateSchema({ schema });
@@ -103,8 +101,7 @@ export const irSchemaToAst = ({
         ) {
           ast.expression = $(z.placeholder)
             .attr(identifiers.intersection)
-            .call(...itemSchemas.map((schema) => schema.expression))
-            .$render();
+            .call(...itemSchemas.map((schema) => schema.expression));
         } else {
           ast.expression = itemSchemas[0]!.expression;
           itemSchemas.slice(1).forEach((schema) => {
@@ -115,10 +112,9 @@ export const irSchemaToAst = ({
                 schema.hasLazyExpression
                   ? $(z.placeholder)
                       .attr(identifiers.lazy)
-                      .call($.func().do($(schema.expression).return()))
+                      .call($.func().do(schema.expression.return()))
                   : schema.expression,
-              )
-              .$render();
+              );
           });
         }
       } else {
@@ -128,8 +124,7 @@ export const irSchemaToAst = ({
             $.array()
               .pretty()
               .elements(...itemSchemas.map((schema) => schema.expression)),
-          )
-          .$render();
+          );
       }
     } else {
       ast = irSchemaToAst({ plugin, schema, state });
@@ -150,15 +145,13 @@ export const irSchemaToAst = ({
     if (schema.accessScope === 'read') {
       ast.expression = $(z.placeholder)
         .attr(identifiers.readonly)
-        .call(ast.expression)
-        .$render();
+        .call(ast.expression);
     }
 
     if (optional) {
       ast.expression = $(z.placeholder)
         .attr(identifiers.optional)
-        .call(ast.expression)
-        .$render();
+        .call(ast.expression);
       ast.typeName = identifiers.ZodMiniOptional;
     }
 
@@ -171,8 +164,7 @@ export const irSchemaToAst = ({
       if (callParameter) {
         ast.expression = $(z.placeholder)
           .attr(identifiers._default)
-          .call(ast.expression, callParameter)
-          .$render();
+          .call(ast.expression, callParameter);
       }
     }
   }

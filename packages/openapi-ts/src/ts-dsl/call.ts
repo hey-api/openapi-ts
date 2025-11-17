@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from './base';
+import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { ArgsMixin } from './mixins/args';
@@ -9,11 +9,11 @@ import { ExprMixin, registerLazyAccessCallFactory } from './mixins/expr';
 import { TypeArgsMixin } from './mixins/type-args';
 
 export class CallTsDsl extends TsDsl<ts.CallExpression> {
-  private _callee: MaybeTsDsl<WithString>;
+  private _callee: string | MaybeTsDsl<ts.Expression>;
 
   constructor(
-    callee: MaybeTsDsl<WithString>,
-    ...args: ReadonlyArray<MaybeTsDsl<WithString> | undefined>
+    callee: string | MaybeTsDsl<ts.Expression>,
+    ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression> | undefined>
   ) {
     super();
     this._callee = callee;

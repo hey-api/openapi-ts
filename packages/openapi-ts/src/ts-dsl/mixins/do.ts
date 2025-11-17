@@ -1,16 +1,16 @@
 import type ts from 'typescript';
 
-import type { MaybeTsDsl, WithStatement } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
 /**
  * Adds `.do()` for appending statements or expressions to a body.
  */
 export class DoMixin extends TsDsl {
-  private _do?: Array<MaybeTsDsl<WithStatement>>;
+  private _do?: Array<MaybeTsDsl<ts.Expression | ts.Statement>>;
 
   /** Adds one or more expressions/statements to the body. */
-  do(...items: ReadonlyArray<MaybeTsDsl<WithStatement>>): this {
+  do(...items: ReadonlyArray<MaybeTsDsl<ts.Expression | ts.Statement>>): this {
     (this._do ??= []).push(...items);
     return this;
   }

@@ -1,17 +1,16 @@
 import ts from 'typescript';
 
-import type { WithString } from '../base';
 import { TypeTsDsl } from '../base';
 
 export class TypeOrTsDsl extends TypeTsDsl<ts.UnionTypeNode> {
-  private _types: Array<WithString<ts.TypeNode> | TypeTsDsl> = [];
+  private _types: Array<string | ts.TypeNode | TypeTsDsl> = [];
 
-  constructor(...nodes: Array<WithString<ts.TypeNode> | TypeTsDsl>) {
+  constructor(...nodes: Array<string | ts.TypeNode | TypeTsDsl>) {
     super();
     this.types(...nodes);
   }
 
-  types(...nodes: Array<WithString<ts.TypeNode> | TypeTsDsl>): this {
+  types(...nodes: Array<string | ts.TypeNode | TypeTsDsl>): this {
     this._types.push(...nodes);
     return this;
   }

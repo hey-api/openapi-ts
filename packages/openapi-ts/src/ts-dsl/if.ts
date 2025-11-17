@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from './base';
+import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { DoMixin } from './mixins/do';
 
 export class IfTsDsl extends TsDsl<ts.IfStatement> {
-  private _condition?: MaybeTsDsl<WithString>;
+  private _condition?: string | MaybeTsDsl<ts.Expression>;
   private _else?: ReadonlyArray<MaybeTsDsl<ts.Statement>>;
 
-  constructor(condition?: MaybeTsDsl<WithString>) {
+  constructor(condition?: string | MaybeTsDsl<ts.Expression>) {
     super();
     if (condition) this.condition(condition);
   }
 
-  condition(condition: MaybeTsDsl<WithString>): this {
+  condition(condition: string | MaybeTsDsl<ts.Expression>): this {
     this._condition = condition;
     return this;
   }

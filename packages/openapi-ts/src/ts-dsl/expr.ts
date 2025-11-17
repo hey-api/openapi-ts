@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from './base';
+import type { MaybeTsDsl } from './base';
 import { TsDsl } from './base';
 import { mixin } from './mixins/apply';
 import { ExprMixin } from './mixins/expr';
@@ -11,9 +11,9 @@ import { TypeQueryTsDsl } from './type/query';
 import { TypeOfExprTsDsl } from './typeof';
 
 export class ExprTsDsl extends TsDsl<ts.Expression> {
-  private _exprInput: MaybeTsDsl<WithString>;
+  private _exprInput: string | MaybeTsDsl<ts.Expression>;
 
-  constructor(id: MaybeTsDsl<WithString>) {
+  constructor(id: string | MaybeTsDsl<ts.Expression>) {
     super();
     this._exprInput = id;
   }

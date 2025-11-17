@@ -1,17 +1,16 @@
 import ts from 'typescript';
 
-import type { WithString } from '../base';
 import { TypeTsDsl } from '../base';
 
 export class TypeTupleTsDsl extends TypeTsDsl<ts.TupleTypeNode> {
-  private _elements: Array<WithString<ts.TypeNode> | TypeTsDsl> = [];
+  private _elements: Array<string | ts.TypeNode | TypeTsDsl> = [];
 
-  constructor(...nodes: Array<WithString<ts.TypeNode> | TypeTsDsl>) {
+  constructor(...nodes: Array<string | ts.TypeNode | TypeTsDsl>) {
     super();
     this.elements(...nodes);
   }
 
-  elements(...types: Array<WithString<ts.TypeNode> | TypeTsDsl>): this {
+  elements(...types: Array<string | ts.TypeNode | TypeTsDsl>): this {
     this._elements.push(...types);
     return this;
   }
