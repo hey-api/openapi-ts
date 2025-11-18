@@ -2,7 +2,7 @@ import { operationResponsesMap } from '~/ir/operation';
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { irSchemaToAst } from '../v1/plugin';
 import type { IrSchemaToAstOptions } from './types';
@@ -137,16 +137,16 @@ const operationToDataType = ({
       name: operation.id,
     }),
   });
-  const type = irSchemaToAst({
-    plugin,
-    schema: data,
-    state,
-  });
-  const node = tsc.typeAliasDeclaration({
-    exportType: symbol.exported,
-    name: symbol.placeholder,
-    type,
-  });
+  const node = $.type
+    .alias(symbol.placeholder)
+    .export(symbol.exported)
+    .type(
+      irSchemaToAst({
+        plugin,
+        schema: data,
+        state,
+      }),
+    );
   plugin.setSymbolValue(symbol, node);
 };
 
@@ -180,16 +180,16 @@ export const operationToType = ({
         name: operation.id,
       }),
     });
-    const type = irSchemaToAst({
-      plugin,
-      schema: errors,
-      state,
-    });
-    const node = tsc.typeAliasDeclaration({
-      exportType: symbolErrors.exported,
-      name: symbolErrors.placeholder,
-      type,
-    });
+    const node = $.type
+      .alias(symbolErrors.placeholder)
+      .export(symbolErrors.exported)
+      .type(
+        irSchemaToAst({
+          plugin,
+          schema: errors,
+          state,
+        }),
+      );
     plugin.setSymbolValue(symbolErrors, node);
 
     if (error) {
@@ -213,20 +213,14 @@ export const operationToType = ({
           name: operation.id,
         }),
       });
-      const type = tsc.indexedAccessTypeNode({
-        indexType: tsc.typeOperatorNode({
-          operator: 'keyof',
-          type: tsc.typeReferenceNode({ typeName: symbolErrors.placeholder }),
-        }),
-        objectType: tsc.typeReferenceNode({
-          typeName: symbolErrors.placeholder,
-        }),
-      });
-      const node = tsc.typeAliasDeclaration({
-        exportType: symbol.exported,
-        name: symbol.placeholder,
-        type,
-      });
+      const node = $.type
+        .alias(symbol.placeholder)
+        .export(symbol.exported)
+        .type(
+          $.type(symbolErrors.placeholder).idx(
+            $.type(symbolErrors.placeholder).keyof(),
+          ),
+        );
       plugin.setSymbolValue(symbol, node);
     }
   }
@@ -249,16 +243,16 @@ export const operationToType = ({
         name: operation.id,
       }),
     });
-    const type = irSchemaToAst({
-      plugin,
-      schema: responses,
-      state,
-    });
-    const node = tsc.typeAliasDeclaration({
-      exportType: symbolResponses.exported,
-      name: symbolResponses.placeholder,
-      type,
-    });
+    const node = $.type
+      .alias(symbolResponses.placeholder)
+      .export(symbolResponses.exported)
+      .type(
+        irSchemaToAst({
+          plugin,
+          schema: responses,
+          state,
+        }),
+      );
     plugin.setSymbolValue(symbolResponses, node);
 
     if (response) {
@@ -282,22 +276,14 @@ export const operationToType = ({
           name: operation.id,
         }),
       });
-      const type = tsc.indexedAccessTypeNode({
-        indexType: tsc.typeOperatorNode({
-          operator: 'keyof',
-          type: tsc.typeReferenceNode({
-            typeName: symbolResponses.placeholder,
-          }),
-        }),
-        objectType: tsc.typeReferenceNode({
-          typeName: symbolResponses.placeholder,
-        }),
-      });
-      const node = tsc.typeAliasDeclaration({
-        exportType: symbol.exported,
-        name: symbol.placeholder,
-        type,
-      });
+      const node = $.type
+        .alias(symbol.placeholder)
+        .export(symbol.exported)
+        .type(
+          $.type(symbolResponses.placeholder).idx(
+            $.type(symbolResponses.placeholder).keyof(),
+          ),
+        );
       plugin.setSymbolValue(symbol, node);
     }
   }

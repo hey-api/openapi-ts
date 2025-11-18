@@ -7,7 +7,7 @@ import { TsDsl } from '../base';
  * Adds `.arg()` and `.args()` for managing expression arguments in call-like nodes.
  */
 export class ArgsMixin extends TsDsl {
-  private _args?: Array<string | MaybeTsDsl<ts.Expression>>;
+  protected _args?: Array<string | MaybeTsDsl<ts.Expression>>;
 
   /** Adds a single expression argument. */
   arg(arg: string | MaybeTsDsl<ts.Expression>): this {

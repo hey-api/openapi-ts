@@ -7373,10 +7373,7 @@ export type ImageGenToolCall = {
  * for `gpt-image-1`. Supports `high` and `low`. Defaults to `low`.
  *
  */
-export const ImageInputFidelity = {
-  HIGH: 'high',
-  LOW: 'low',
-} as const;
+export const ImageInputFidelity = { HIGH: 'high', LOW: 'low' } as const;
 
 /**
  * Control how much effort the model will exert to match the style and features,
@@ -16101,9 +16098,7 @@ export type TranscriptTextUsageTokens = {
  */
 export type TranscriptionChunkingStrategy = 'auto' | VadConfig;
 
-export const TranscriptionInclude = {
-  LOGPROBS: 'logprobs',
-} as const;
+export const TranscriptionInclude = { LOGPROBS: 'logprobs' } as const;
 
 export type TranscriptionInclude =
   (typeof TranscriptionInclude)[keyof typeof TranscriptionInclude];

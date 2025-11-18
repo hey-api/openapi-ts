@@ -1,7 +1,6 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import type { TypeTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
@@ -10,9 +9,7 @@ export const undefinedToAst = (
   _args: IrSchemaToAstOptions & {
     schema: SchemaWithType<'undefined'>;
   },
-): ts.TypeNode => {
-  const node = tsc.keywordTypeNode({
-    keyword: 'undefined',
-  });
+): TypeTsDsl => {
+  const node = $.type('undefined');
   return node;
 };

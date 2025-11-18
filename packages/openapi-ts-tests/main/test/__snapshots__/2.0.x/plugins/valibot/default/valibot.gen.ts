@@ -280,11 +280,11 @@ export const vModelWithProperties = v.object({
     number: v.optional(v.number()),
     boolean: v.optional(v.boolean()),
     reference: v.optional(vModelWithString),
-    'property with space': v.optional(v.string()),
+    "property with space": v.optional(v.string()),
     default: v.optional(v.string()),
     try: v.optional(v.string()),
-    '@namespace.string': v.optional(v.pipe(v.string(), v.readonly())),
-    '@namespace.integer': v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly()))
+    "@namespace.string": v.optional(v.pipe(v.string(), v.readonly())),
+    "@namespace.integer": v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly()))
 });
 
 /**
@@ -409,7 +409,7 @@ export const vModelWithPropertiesWritable = v.object({
     number: v.optional(v.number()),
     boolean: v.optional(v.boolean()),
     reference: v.optional(vModelWithString),
-    'property with space': v.optional(v.string()),
+    "property with space": v.optional(v.string()),
     default: v.optional(v.string()),
     try: v.optional(v.string())
 });
@@ -511,7 +511,7 @@ export const vCallWithParametersData = v.object({
     body: v.optional(v.never()),
     path: v.object({
         parameterPath: v.string(),
-        'api-version': v.string()
+        "api-version": v.string()
     }),
     query: v.object({
         parameterQuery: v.string()
@@ -524,17 +524,17 @@ export const vCallWithParametersData = v.object({
 export const vCallWithWeirdParameterNamesData = v.object({
     body: v.string(),
     path: v.object({
-        'parameter.path.1': v.optional(v.string()),
-        'parameter-path-2': v.optional(v.string()),
-        'PARAMETER-PATH-3': v.optional(v.string()),
-        'api-version': v.string()
+        "parameter.path.1": v.optional(v.string()),
+        "parameter-path-2": v.optional(v.string()),
+        "PARAMETER-PATH-3": v.optional(v.string()),
+        "api-version": v.string()
     }),
     query: v.object({
         default: v.optional(v.string()),
-        'parameter-query': v.string()
+        "parameter-query": v.string()
     }),
     headers: v.object({
-        'parameter.header': v.string()
+        "parameter.header": v.string()
     })
 });
 
@@ -666,8 +666,8 @@ export const vCallWithResponsesData = v.object({
 
 export const vCallWithResponsesResponse = v.union([
     v.object({
-        '@namespace.string': v.optional(v.pipe(v.string(), v.readonly())),
-        '@namespace.integer': v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly())),
+        "@namespace.string": v.optional(v.pipe(v.string(), v.readonly())),
+        "@namespace.integer": v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly())),
         value: v.optional(v.pipe(v.array(vModelWithString), v.readonly()))
     }),
     vModelThatExtends,
@@ -752,7 +752,7 @@ export const vNonAsciiæøåÆøÅöôêÊ字符串Data = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
-        'nonAsciiParamæøåÆØÅöôêÊ': v.pipe(v.number(), v.integer())
+        nonAsciiParamæøåÆØÅöôêÊ: v.pipe(v.number(), v.integer())
     })
 });
 

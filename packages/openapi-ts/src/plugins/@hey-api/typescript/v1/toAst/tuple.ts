@@ -1,8 +1,7 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
+import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -13,14 +12,11 @@ export const tupleToAst = ({
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'tuple'>;
-}): ts.TypeNode => {
-  let itemTypes: Array<ts.Expression | ts.TypeNode> = [];
+}): MaybeTsDsl<TypeTsDsl> => {
+  let itemTypes: Array<MaybeTsDsl<TypeTsDsl>> = [];
 
   if (schema.const && Array.isArray(schema.const)) {
-    itemTypes = schema.const.map((value) => {
-      const expression = tsc.valueToExpression({ value });
-      return expression ?? tsc.identifier({ text: plugin.config.topType });
-    });
+    itemTypes = schema.const.map((value) => $.type.fromValue(value));
   } else if (schema.items) {
     schema.items.forEach((item, index) => {
       const type = irSchemaToAst({
@@ -35,7 +31,5 @@ export const tupleToAst = ({
     });
   }
 
-  return tsc.typeTupleNode({
-    types: itemTypes,
-  });
+  return $.type.tuple(...itemTypes);
 };

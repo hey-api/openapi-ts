@@ -138,7 +138,7 @@ export const vArrayWithStrings = v.optional(v.array(v.string()), ["test"]);
  * This is a simple array with properties
  */
 export const vArrayWithProperties = v.array(v.object({
-    '16x16': v.optional(vCamelCaseCommentWithBreaks),
+    "16x16": v.optional(vCamelCaseCommentWithBreaks),
     bar: v.optional(v.string())
 }));
 
@@ -247,7 +247,7 @@ export const vModelWithNullableString = v.object({
     nullableRequiredProp1: v.union([v.string(), v.null()]),
     nullableProp2: v.optional(v.union([v.string(), v.null()])),
     nullableRequiredProp2: v.union([v.string(), v.null()]),
-    'foo_bar-enum': v.optional(v.picklist([
+    "foo_bar-enum": v.optional(v.picklist([
         "Success",
         "Warning",
         "Error",
@@ -259,7 +259,7 @@ export const vModelWithNullableString = v.object({
  * This is a model with one enum
  */
 export const vModelWithEnum = v.object({
-    'foo_bar-enum': v.optional(v.picklist([
+    "foo_bar-enum": v.optional(v.picklist([
         "Success",
         "Warning",
         "Error",
@@ -280,7 +280,7 @@ export const vModelWithEnum = v.object({
  * This is a model with one enum with escaped name
  */
 export const vModelWithEnumWithHyphen = v.object({
-    'foo-bar-baz-qux': v.optional(v.picklist(["3.0"]))
+    "foo-bar-baz-qux": v.optional(v.picklist(["3.0"]))
 });
 
 /**
@@ -306,7 +306,7 @@ export const vModelWithNestedEnums = v.object({
         "Error"
     ]))),
     arrayWithDescription: v.optional(v.array(v.pipe(v.number(), v.integer()))),
-    'foo_bar-enum': v.optional(v.picklist([
+    "foo_bar-enum": v.optional(v.picklist([
         "Success",
         "Warning",
         "Error",
@@ -532,11 +532,11 @@ export const vModelWithProperties = v.object({
     number: v.optional(v.number()),
     boolean: v.optional(v.boolean()),
     reference: v.optional(vModelWithString),
-    'property with space': v.optional(v.string()),
+    "property with space": v.optional(v.string()),
     default: v.optional(v.string()),
     try: v.optional(v.string()),
-    '@namespace.string': v.optional(v.pipe(v.string(), v.readonly())),
-    '@namespace.integer': v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly()))
+    "@namespace.string": v.optional(v.pipe(v.string(), v.readonly())),
+    "@namespace.integer": v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly()))
 });
 
 /**
@@ -811,22 +811,22 @@ export const vModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = v.tuple([v.un
 
 export const vSchemaWithFormRestrictedKeys = v.object({
     description: v.optional(v.string()),
-    'x-enum-descriptions': v.optional(v.string()),
-    'x-enum-varnames': v.optional(v.string()),
-    'x-enumNames': v.optional(v.string()),
+    "x-enum-descriptions": v.optional(v.string()),
+    "x-enum-varnames": v.optional(v.string()),
+    "x-enumNames": v.optional(v.string()),
     title: v.optional(v.string()),
     object: v.optional(v.object({
         description: v.optional(v.string()),
-        'x-enum-descriptions': v.optional(v.string()),
-        'x-enum-varnames': v.optional(v.string()),
-        'x-enumNames': v.optional(v.string()),
+        "x-enum-descriptions": v.optional(v.string()),
+        "x-enum-varnames": v.optional(v.string()),
+        "x-enumNames": v.optional(v.string()),
         title: v.optional(v.string())
     })),
     array: v.optional(v.array(v.object({
         description: v.optional(v.string()),
-        'x-enum-descriptions': v.optional(v.string()),
-        'x-enum-varnames': v.optional(v.string()),
-        'x-enumNames': v.optional(v.string()),
+        "x-enum-descriptions": v.optional(v.string()),
+        "x-enum-varnames": v.optional(v.string()),
+        "x-enumNames": v.optional(v.string()),
         title: v.optional(v.string())
     })))
 });
@@ -892,7 +892,7 @@ export const vModelWithPropertiesWritable = v.object({
     number: v.optional(v.number()),
     boolean: v.optional(v.boolean()),
     reference: v.optional(vModelWithString),
-    'property with space': v.optional(v.string()),
+    "property with space": v.optional(v.string()),
     default: v.optional(v.string()),
     try: v.optional(v.string())
 });
@@ -1080,7 +1080,7 @@ export const vDeleteFooData3 = v.object({
     }),
     query: v.optional(v.never()),
     headers: v.object({
-        'x-Foo-Bar': vModelWithString
+        "x-Foo-Bar": vModelWithString
     })
 });
 
@@ -1110,7 +1110,7 @@ export const vCallWithParametersData = v.object({
     body: v.union([v.record(v.string(), v.unknown()), v.null()]),
     path: v.object({
         parameterPath: v.union([v.string(), v.null()]),
-        'api-version': v.union([v.string(), v.null()])
+        "api-version": v.union([v.string(), v.null()])
     }),
     query: v.object({
         foo_ref_enum: v.optional(vModelWithNestedArrayEnumsDataFoo),
@@ -1125,17 +1125,17 @@ export const vCallWithParametersData = v.object({
 export const vCallWithWeirdParameterNamesData = v.object({
     body: v.union([vModelWithString, v.null()]),
     path: v.object({
-        'parameter.path.1': v.optional(v.string()),
-        'parameter-path-2': v.optional(v.string()),
-        'PARAMETER-PATH-3': v.optional(v.string()),
-        'api-version': v.union([v.string(), v.null()])
+        "parameter.path.1": v.optional(v.string()),
+        "parameter-path-2": v.optional(v.string()),
+        "PARAMETER-PATH-3": v.optional(v.string()),
+        "api-version": v.union([v.string(), v.null()])
     }),
     query: v.object({
         default: v.optional(v.string()),
-        'parameter-query': v.union([v.string(), v.null()])
+        "parameter-query": v.union([v.string(), v.null()])
     }),
     headers: v.object({
-        'parameter.header': v.union([v.string(), v.null()])
+        "parameter.header": v.union([v.string(), v.null()])
     })
 });
 
@@ -1308,8 +1308,8 @@ export const vCallWithResponsesData = v.object({
 
 export const vCallWithResponsesResponse = v.union([
     v.object({
-        '@namespace.string': v.optional(v.pipe(v.string(), v.readonly())),
-        '@namespace.integer': v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly())),
+        "@namespace.string": v.optional(v.pipe(v.string(), v.readonly())),
+        "@namespace.integer": v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly())),
         value: v.optional(v.pipe(v.array(vModelWithString), v.readonly()))
     }),
     vModelThatExtends,
@@ -1358,7 +1358,7 @@ export const vTypesResponse = v.union([
 export const vUploadFileData = v.object({
     body: v.string(),
     path: v.object({
-        'api-version': v.union([v.string(), v.null()])
+        "api-version": v.union([v.string(), v.null()])
     }),
     query: v.optional(v.never())
 });
@@ -1369,7 +1369,7 @@ export const vFileResponseData = v.object({
     body: v.optional(v.never()),
     path: v.object({
         id: v.string(),
-        'api-version': v.string()
+        "api-version": v.string()
     }),
     query: v.optional(v.never())
 });
@@ -1450,7 +1450,7 @@ export const vComplexParamsData = v.object({
     })),
     path: v.object({
         id: v.pipe(v.number(), v.integer(), v.minValue(-2147483648, "Invalid value: Expected int32 to be >= -2^31"), v.maxValue(2147483647, "Invalid value: Expected int32 to be <= 2^31-1")),
-        'api-version': v.string()
+        "api-version": v.string()
     }),
     query: v.optional(v.never())
 });
@@ -1478,7 +1478,7 @@ export const vNonAsciiæøåÆøÅöôêÊ字符串Data = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
-        'nonAsciiParamæøåÆØÅöôêÊ': v.pipe(v.number(), v.integer())
+        nonAsciiParamæøåÆØÅöôêÊ: v.pipe(v.number(), v.integer())
     })
 });
 

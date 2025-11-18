@@ -10,7 +10,7 @@ export type PostFooData = {
     query?: {
         foo?: Array<string>;
     };
-    url: '/foo';
+    url: "/foo";
 };
 
 export type PostFooResponses = {

@@ -15,7 +15,7 @@ export type GetTreeData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/tree';
+    url: "/tree";
 };
 
 export type GetTreeResponses = {

@@ -9,10 +9,9 @@ import {
   TypeExprMixin,
 } from '../mixins/type-expr';
 import { TypeAttrTsDsl } from './attr';
-import { TypeIdxTsDsl } from './idx';
 
 export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
-  private _exprInput?: string | ts.Identifier | TypeAttrTsDsl;
+  protected _exprInput?: string | ts.Identifier | TypeAttrTsDsl;
 
   constructor();
   constructor(fn: (t: TypeExprTsDsl) => void);
@@ -38,11 +37,6 @@ export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
         ? right.base(this._exprInput)
         : new TypeAttrTsDsl(this._exprInput!, right);
     return this;
-  }
-
-  /** Creates an indexed-access type (e.g. `Foo<T>[K]`). */
-  idx(index: string | ts.TypeNode | number): TypeIdxTsDsl {
-    return new TypeIdxTsDsl(this, index);
   }
 
   $render(): ts.TypeReferenceNode {

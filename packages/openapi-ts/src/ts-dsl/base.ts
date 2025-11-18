@@ -1,7 +1,5 @@
 import ts from 'typescript';
 
-import { toStmt } from './toStmt';
-
 export type MaybeArray<T> = T | ReadonlyArray<T>;
 
 export interface ITsDsl<T extends ts.Node = ts.Node> {
@@ -106,20 +104,9 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
       return this.$id(value) as NodeOfMaybe<I>;
     }
     if (value instanceof Array) {
-      return value.map((item) => this._render(item)) as NodeOfMaybe<I>;
+      return value.map((item) => this.unwrap(item)) as NodeOfMaybe<I>;
     }
-    return this._render(value as any) as NodeOfMaybe<I>;
-  }
-
-  protected $stmt(
-    value: MaybeArray<string | MaybeTsDsl<ts.Expression | ts.Statement>>,
-  ): ReadonlyArray<ts.Statement> {
-    const arr = value instanceof Array ? value : [value];
-    return arr.map((item) => {
-      const node =
-        typeof item === 'string' ? this.$id(item) : this._render(item);
-      return toStmt(node);
-    });
+    return this.unwrap(value as any) as NodeOfMaybe<I>;
   }
 
   protected $type<I>(
@@ -146,10 +133,10 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     if (value instanceof Array) {
       return value.map((item) => this.$type(item, args)) as TypeOfMaybe<I>;
     }
-    return this._render(value as any) as TypeOfMaybe<I>;
+    return this.unwrap(value as any) as TypeOfMaybe<I>;
   }
 
-  private _render<I>(value: I): I extends TsDsl<infer N> ? N : I {
+  protected unwrap<I>(value: I): I extends TsDsl<infer N> ? N : I {
     return (
       value instanceof TsDsl ? value.$render() : value
     ) as I extends TsDsl<infer N> ? N : I;
@@ -172,26 +159,18 @@ type NodeOf<I> =
           : never;
 
 export type MaybeTsDsl<T> =
-  // if T includes string
-  string extends T
-    ? Exclude<T, string> extends ts.Node
-      ? string | Exclude<T, string> | TsDsl<Exclude<T, string>>
-      : string
-    : // if it's a DSL itself
-      T extends TsDsl<any>
-      ? T
-      : // otherwise if it’s a Node
-        T extends ts.Node
-        ? T | TsDsl<T>
-        : never;
-
-export type TypeOfTsDsl<T> = T extends TsDsl<infer U> ? U : never;
+  T extends TsDsl<infer U>
+    ? U | TsDsl<U>
+    : T extends ts.Node
+      ? T | TsDsl<T>
+      : never;
 
 export abstract class TypeTsDsl<
   T extends
-    | ts.TypeNode
-    | ts.TypeElement
     | ts.LiteralTypeNode
+    | ts.QualifiedName
+    | ts.TypeElement
+    | ts.TypeNode
     | ts.TypeParameterDeclaration = ts.TypeNode,
 > extends TsDsl<T> {}
 

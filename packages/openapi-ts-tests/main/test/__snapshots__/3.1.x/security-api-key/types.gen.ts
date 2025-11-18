@@ -8,7 +8,7 @@ export type GetFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/foo';
+    url: "/foo";
 };
 
 export type GetFooResponses = {
@@ -22,7 +22,7 @@ export type GetBarData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/bar';
+    url: "/bar";
 };
 
 export type GetBarResponses = {

@@ -20,7 +20,7 @@ export type GetFooData = {
     query: {
         foo: Bar;
     };
-    url: '/foo';
+    url: "/foo";
 };
 
 export type GetFooResponses = {
@@ -36,7 +36,7 @@ export type PostFooData = {
     body: Foo;
     path?: never;
     query?: never;
-    url: '/foo';
+    url: "/foo";
 };
 
 export type PostFooResponses = {

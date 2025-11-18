@@ -16,7 +16,7 @@ export type ExpressionTransformer = ({
     | ReturnType<typeof $.expr | typeof $.attr>
     | string;
   schema: IR.SchemaObject;
-}) => Array<NonNullable<ReturnType<typeof $.toExpr>>> | undefined;
+}) => Array<ReturnType<typeof $.fromValue>> | undefined;
 
 export const bigIntExpressions: ExpressionTransformer = ({
   dataExpression,

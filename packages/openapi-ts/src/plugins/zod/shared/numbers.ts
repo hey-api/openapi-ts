@@ -6,8 +6,8 @@ export const numberParameter = ({
 }: {
   isBigInt: boolean;
   value: unknown;
-}): ReturnType<typeof $.call> | ReturnType<typeof $.toExpr> | undefined => {
-  const expr = $.toExpr(value);
+}): ReturnType<typeof $.call | typeof $.fromValue> => {
+  const expr = $.fromValue(value);
 
   if (
     isBigInt &&

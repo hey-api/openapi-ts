@@ -1,18 +1,22 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
-import { DocMixin } from '../mixins/doc';
-import { OptionalMixin } from '../mixins/optional';
+import { TypeIdxSigTsDsl } from './idx-sig';
+import { TypePropTsDsl } from './prop';
 
 export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
-  private props: Array<TypePropTsDsl> = [];
+  protected props: Array<TypePropTsDsl | TypeIdxSigTsDsl> = [];
 
   /** Returns true if object has at least one property or spread. */
   hasProps(): boolean {
     return this.props.length > 0;
+  }
+
+  /** Adds an index signature to the object type. */
+  idxSig(name: string, fn: (i: TypeIdxSigTsDsl) => void): this {
+    const idx = new TypeIdxSigTsDsl(name, fn);
+    this.props.push(idx);
+    return this;
   }
 
   /** Returns true if object has no properties or spreads. */
@@ -22,8 +26,8 @@ export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
 
   /** Adds a property signature (returns property builder). */
   prop(name: string, fn: (p: TypePropTsDsl) => void): this {
-    const propTsDsl = new TypePropTsDsl(name, fn);
-    this.props.push(propTsDsl);
+    const prop = new TypePropTsDsl(name, fn);
+    this.props.push(prop);
     return this;
   }
 
@@ -31,36 +35,3 @@ export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
     return ts.factory.createTypeLiteralNode(this.$node(this.props));
   }
 }
-
-class TypePropTsDsl extends TypeTsDsl<ts.TypeElement> {
-  private name: string;
-  private _type?: string | MaybeTsDsl<ts.TypeNode>;
-
-  constructor(name: string, fn: (p: TypePropTsDsl) => void) {
-    super();
-    this.name = name;
-    fn(this);
-  }
-
-  /** Sets the property type. */
-  type(type: string | MaybeTsDsl<ts.TypeNode>): this {
-    this._type = type;
-    return this;
-  }
-
-  /** Builds and returns the property signature. */
-  $render(): ts.TypeElement {
-    if (!this._type) {
-      throw new Error(`Type not specified for property '${this.name}'`);
-    }
-    return ts.factory.createPropertySignature(
-      undefined,
-      this.name,
-      this.questionToken,
-      this.$type(this._type),
-    );
-  }
-}
-
-interface TypePropTsDsl extends DocMixin, OptionalMixin {}
-mixin(TypePropTsDsl, DocMixin, OptionalMixin);

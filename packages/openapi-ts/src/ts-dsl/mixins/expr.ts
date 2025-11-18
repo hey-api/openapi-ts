@@ -1,10 +1,10 @@
 import type ts from 'typescript';
 
-import type { AttrTsDsl } from '../attr';
-import type { AwaitTsDsl } from '../await';
 import type { MaybeTsDsl } from '../base';
-import type { CallTsDsl } from '../call';
-import type { ReturnTsDsl } from '../return';
+import type { AttrTsDsl } from '../expr/attr';
+import type { AwaitTsDsl } from '../expr/await';
+import type { CallTsDsl } from '../expr/call';
+import type { ReturnTsDsl } from '../stmt/return';
 
 type AttrFactory = (
   expr: string | MaybeTsDsl<ts.Expression>,

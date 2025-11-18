@@ -24,7 +24,9 @@ export const tupleToAst = ({
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
-      $(v.placeholder).attr(identifiers.schemas.literal).call($.toExpr(value)),
+      $(v.placeholder)
+        .attr(identifiers.schemas.literal)
+        .call($.fromValue(value)),
     );
     result.pipes = [
       $(v.placeholder)

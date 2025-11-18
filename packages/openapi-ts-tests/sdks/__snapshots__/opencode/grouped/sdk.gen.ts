@@ -50,7 +50,7 @@ export const sessionCreate = <ThrowOnError extends boolean = false>(options?: Op
     url: "/session",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options?.headers
     }
 });
@@ -72,7 +72,7 @@ export const sessionUpdate = <ThrowOnError extends boolean = false>(options: Opt
     url: "/session/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -89,7 +89,7 @@ export const sessionInit = <ThrowOnError extends boolean = false>(options: Optio
     url: "/session/{id}/init",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -116,7 +116,7 @@ export const sessionSummarize = <ThrowOnError extends boolean = false>(options: 
     url: "/session/{id}/summarize",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -133,7 +133,7 @@ export const sessionChat = <ThrowOnError extends boolean = false>(options: Optio
     url: "/session/{id}/message",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -150,7 +150,7 @@ export const sessionShell = <ThrowOnError extends boolean = false>(options: Opti
     url: "/session/{id}/shell",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -162,7 +162,7 @@ export const sessionRevert = <ThrowOnError extends boolean = false>(options: Opt
     url: "/session/{id}/revert",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -179,7 +179,7 @@ export const postSessionByIdPermissionsByPermissionId = <ThrowOnError extends bo
     url: "/session/{id}/permissions/{permissionID}",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -221,7 +221,7 @@ export const appLog = <ThrowOnError extends boolean = false>(options?: Options<A
     url: "/log",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options?.headers
     }
 });
@@ -238,7 +238,7 @@ export const tuiAppendPrompt = <ThrowOnError extends boolean = false>(options?: 
     url: "/tui/append-prompt",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options?.headers
     }
 });
@@ -280,7 +280,7 @@ export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(options?
     url: "/tui/execute-command",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options?.headers
     }
 });
@@ -292,7 +292,7 @@ export const tuiShowToast = <ThrowOnError extends boolean = false>(options?: Opt
     url: "/tui/show-toast",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options?.headers
     }
 });
@@ -304,7 +304,7 @@ export const authSet = <ThrowOnError extends boolean = false>(options: Options<A
     url: "/auth/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });

@@ -1,7 +1,7 @@
 import type ts from 'typescript';
 
-import type { AsTsDsl } from '../as';
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
+import type { AsTsDsl } from '../expr/as';
 
 type AsFactory = (
   expr: string | MaybeTsDsl<ts.Expression>,

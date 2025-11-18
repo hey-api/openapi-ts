@@ -56,7 +56,7 @@ export const sessionCreate = <ThrowOnError extends boolean = false>(parameters?:
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -104,7 +104,7 @@ export const sessionUpdate = <ThrowOnError extends boolean = false>(parameters: 
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -145,7 +145,7 @@ export const sessionInit = <ThrowOnError extends boolean = false>(parameters: {
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -212,7 +212,7 @@ export const sessionSummarize = <ThrowOnError extends boolean = false>(parameter
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -247,11 +247,11 @@ export const sessionChat = <ThrowOnError extends boolean = false>(parameters: {
         [key: string]: boolean;
     };
     parts?: Array<({
-        type: 'text';
+        type: "text";
     } & TextPartInput) | ({
-        type: 'file';
+        type: "file";
     } & FilePartInput) | ({
-        type: 'agent';
+        type: "agent";
     } & AgentPartInput)>;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [
@@ -269,7 +269,7 @@ export const sessionChat = <ThrowOnError extends boolean = false>(parameters: {
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -309,7 +309,7 @@ export const sessionShell = <ThrowOnError extends boolean = false>(parameters: {
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -334,7 +334,7 @@ export const sessionRevert = <ThrowOnError extends boolean = false>(parameters: 
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -361,7 +361,7 @@ export const sessionUnrevert = <ThrowOnError extends boolean = false>(parameters
 export const postSessionByIdPermissionsByPermissionId = <ThrowOnError extends boolean = false>(parameters: {
     id: string;
     permissionID: string;
-    response?: 'once' | 'always' | 'reject';
+    response?: "once" | "always" | "reject";
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [
         { in: "path", key: "id" },
@@ -373,7 +373,7 @@ export const postSessionByIdPermissionsByPermissionId = <ThrowOnError extends bo
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -451,7 +451,7 @@ export const fileStatus = <ThrowOnError extends boolean = false>(options?: Optio
  */
 export const appLog = <ThrowOnError extends boolean = false>(parameters?: {
     service?: string;
-    level?: 'debug' | 'info' | 'error' | 'warn';
+    level?: "debug" | "info" | "error" | "warn";
     message?: string;
     extra?: {
         [key: string]: unknown;
@@ -468,7 +468,7 @@ export const appLog = <ThrowOnError extends boolean = false>(parameters?: {
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -492,7 +492,7 @@ export const tuiAppendPrompt = <ThrowOnError extends boolean = false>(parameters
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -541,7 +541,7 @@ export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(paramete
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -554,7 +554,7 @@ export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(paramete
 export const tuiShowToast = <ThrowOnError extends boolean = false>(parameters?: {
     title?: string;
     message?: string;
-    variant?: 'info' | 'success' | 'warning' | 'error';
+    variant?: "info" | "success" | "warning" | "error";
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [
         { in: "body", key: "title" },
@@ -566,7 +566,7 @@ export const tuiShowToast = <ThrowOnError extends boolean = false>(parameters?: 
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -586,7 +586,7 @@ export const authSet = <ThrowOnError extends boolean = false>(parameters: {
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }

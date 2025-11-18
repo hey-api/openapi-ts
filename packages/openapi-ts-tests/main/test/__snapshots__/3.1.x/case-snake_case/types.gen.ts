@@ -72,7 +72,7 @@ export type get_foo_data = {
          */
         qux_quux: string;
     };
-    url: '/foo';
+    url: "/foo";
 };
 
 export type get_foo_responses = {
