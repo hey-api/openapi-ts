@@ -1,7 +1,6 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import type { TypeTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
@@ -9,14 +8,10 @@ export const booleanToAst = ({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'boolean'>;
-}): ts.TypeNode => {
+}): TypeTsDsl => {
   if (schema.const !== undefined) {
-    return tsc.literalTypeNode({
-      literal: tsc.ots.boolean(schema.const as boolean),
-    });
+    return $.type.literal(schema.const as boolean);
   }
 
-  return tsc.keywordTypeNode({
-    keyword: 'boolean',
-  });
+  return $.type('boolean');
 };

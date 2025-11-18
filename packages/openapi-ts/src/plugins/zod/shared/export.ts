@@ -28,8 +28,8 @@ export const exportAst = ({
 
   const statement = $.const(symbol.placeholder)
     .export(symbol.exported)
-    .$if(plugin.config.comments && createSchemaComment({ schema }), (c, v) =>
-      c.doc(v as ReadonlyArray<string>),
+    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
+      c.doc(v),
     )
     .$if(ast.typeName, (c, v) => c.type($.type(z.placeholder).attr(v)))
     .assign(ast.expression);

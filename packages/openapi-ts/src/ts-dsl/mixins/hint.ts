@@ -1,5 +1,5 @@
 import type { ITsDsl, MaybeArray } from '../base';
-import { HintTsDsl } from '../hint';
+import { HintTsDsl } from '../layout/hint';
 
 export function HintMixin<
   TBase extends new (...args: ReadonlyArray<any>) => ITsDsl,

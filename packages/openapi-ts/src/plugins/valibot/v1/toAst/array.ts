@@ -86,20 +86,20 @@ export const arrayToAst = ({
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
     const expression = $(v.placeholder)
       .attr(identifiers.actions.length)
-      .call($.toExpr(schema.minItems));
+      .call($.fromValue(schema.minItems));
     result.pipes.push(expression);
   } else {
     if (schema.minItems !== undefined) {
       const expression = $(v.placeholder)
         .attr(identifiers.actions.minLength)
-        .call($.toExpr(schema.minItems));
+        .call($.fromValue(schema.minItems));
       result.pipes.push(expression);
     }
 
     if (schema.maxItems !== undefined) {
       const expression = $(v.placeholder)
         .attr(identifiers.actions.maxLength)
-        .call($.toExpr(schema.maxItems));
+        .call($.fromValue(schema.maxItems));
       result.pipes.push(expression);
     }
   }

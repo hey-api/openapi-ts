@@ -30,7 +30,7 @@ export const numberToAst = ({
   // Return early if const is defined since we can create a literal type directly without additional validation
   if (schema.const !== undefined && schema.const !== null) {
     const constValue = schema.const;
-    let literalValue: ReturnType<typeof $.toExpr>;
+    let literalValue: ReturnType<typeof $.fromValue>;
 
     // Case 1: Number with no format -> generate literal with the number
     if (typeof constValue === 'number' && !format) {
@@ -65,7 +65,7 @@ export const numberToAst = ({
     }
     // Default case: use value as-is for other types
     else {
-      literalValue = $.toExpr(constValue);
+      literalValue = $.fromValue(constValue);
     }
 
     return $(v.placeholder)

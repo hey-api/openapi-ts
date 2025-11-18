@@ -182,25 +182,26 @@ export class TypeScriptRenderer implements Renderer {
     return relativePath;
   }
 
+  private getBodyLine(value: unknown, lines: Array<string>): void {
+    if (value instanceof TsDsl) {
+      const node = value.$render();
+      lines.push(tsNodeToString({ node, unescape: true }));
+    } else if (typeof value === 'string') {
+      lines.push(value);
+    } else if (value instanceof Array) {
+      for (const node of value) {
+        this.getBodyLine(node, lines);
+      }
+    } else if (value !== undefined && value !== null) {
+      lines.push(tsNodeToString({ node: value as any, unescape: true }));
+    }
+  }
+
   private getBodyLines(file: File, project: IProject): Array<string> {
     const lines: Array<string> = [];
-
     for (const symbolId of file.symbols.body) {
-      const value = project.symbols.getValue(symbolId);
-      if (value instanceof TsDsl) {
-        const node = value.$render();
-        lines.push(tsNodeToString({ node, unescape: true }));
-      } else if (typeof value === 'string') {
-        lines.push(value);
-      } else if (value instanceof Array) {
-        for (const node of value) {
-          lines.push(tsNodeToString({ node, unescape: true }));
-        }
-      } else if (value !== undefined && value !== null) {
-        lines.push(tsNodeToString({ node: value as any, unescape: true }));
-      }
+      this.getBodyLine(project.symbols.getValue(symbolId), lines);
     }
-
     return lines;
   }
 

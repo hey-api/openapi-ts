@@ -1,6 +1,5 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
+import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { arrayToAst } from './array';
@@ -21,7 +20,7 @@ export const irSchemaWithTypeToAst = ({
   ...args
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType;
-}): ts.TypeNode => {
+}): MaybeTsDsl<TypeTsDsl> => {
   const transformersPlugin = args.plugin.getPlugin('@hey-api/transformers');
   if (transformersPlugin?.config.typeTransformers) {
     for (const typeTransformer of transformersPlugin.config.typeTransformers) {

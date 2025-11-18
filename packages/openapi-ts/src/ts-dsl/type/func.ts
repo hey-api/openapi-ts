@@ -9,7 +9,7 @@ import { TypeParamsMixin } from '../mixins/type-params';
 import { TypeExprTsDsl } from './expr';
 
 export class TypeFuncTsDsl extends TypeTsDsl<ts.FunctionTypeNode> {
-  private _returns?: TypeTsDsl;
+  protected _returns?: TypeTsDsl;
 
   /** Sets the return type. */
   returns(type: string | TypeTsDsl): this {

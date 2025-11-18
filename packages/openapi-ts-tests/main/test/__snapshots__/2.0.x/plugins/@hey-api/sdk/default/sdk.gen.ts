@@ -46,7 +46,7 @@ export const callWithWeirdParameterNames = <ThrowOnError extends boolean = false
     url: "/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -121,7 +121,7 @@ export const postApiVbyApiVersionBody = <ThrowOnError extends boolean = false>(o
     url: "/api/v{api-version}/body",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });

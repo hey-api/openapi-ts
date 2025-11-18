@@ -1,11 +1,10 @@
-import type ts from 'typescript';
-
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
 import { toRefs } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
+import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { createClientOptions } from '../shared/clientOptions';
@@ -23,14 +22,14 @@ export const irSchemaToAst = ({
   state,
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
-}): ts.TypeNode => {
+}): MaybeTsDsl<TypeTsDsl> => {
   if (schema.$ref) {
     const symbol = plugin.referenceSymbol({
       category: 'type',
       resource: 'definition',
       resourceId: schema.$ref,
     });
-    return tsc.typeReferenceNode({ typeName: symbol.placeholder });
+    return $.type(symbol.placeholder);
   }
 
   if (schema.type) {
@@ -44,16 +43,12 @@ export const irSchemaToAst = ({
   if (schema.items) {
     schema = deduplicateSchema({ detectFormat: false, schema });
     if (schema.items) {
-      const itemTypes: Array<ts.TypeNode> = [];
-
-      for (const item of schema.items) {
-        const type = irSchemaToAst({ plugin, schema: item, state });
-        itemTypes.push(type);
-      }
-
+      const itemTypes = schema.items.map((item) =>
+        irSchemaToAst({ plugin, schema: item, state }),
+      );
       return schema.logicalOperator === 'and'
-        ? tsc.typeIntersectionNode({ types: itemTypes })
-        : tsc.typeUnionNode({ types: itemTypes });
+        ? $.type.and(...itemTypes)
+        : $.type.or(...itemTypes);
     }
 
     return irSchemaToAst({ plugin, schema, state });

@@ -5,9 +5,9 @@ export type ClientOptions = {
 };
 
 export type Foo = ({
-    type: 'Bar';
+    type: "Bar";
 } & Bar) | ({
-    type: 'Baz';
+    type: "Baz";
 } & Baz);
 
 export type Baz = Qux;
@@ -21,12 +21,12 @@ export type Qux = {
     type: Quux;
 };
 
-export type Quux = 'Bar' | 'Baz';
+export type Quux = "Bar" | "Baz";
 
 export type Quuz = ({
-    type: 'bar';
+    type: "bar";
 } & Bar) | ({
-    type: 'baz';
+    type: "baz";
 } & Baz) | ({
-    type: 'non-ascii';
+    type: "non-ascii";
 } & Spæcial);

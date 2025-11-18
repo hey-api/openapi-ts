@@ -387,9 +387,9 @@ const schemasV2_0_X = ({
       .export(symbol.exported)
       .assign(
         $(
-          $.toExpr(obj, {
+          $.fromValue(obj, {
             layout: 'pretty',
-          })!,
+          }),
         ).as('const'),
       );
     plugin.setSymbolValue(symbol, statement);
@@ -428,9 +428,9 @@ const schemasV3_0_X = ({
       .export(symbol.exported)
       .assign(
         $(
-          $.toExpr(obj, {
+          $.fromValue(obj, {
             layout: 'pretty',
-          })!,
+          }),
         ).as('const'),
       );
     plugin.setSymbolValue(symbol, statement);
@@ -469,9 +469,9 @@ const schemasV3_1_X = ({
       .export(symbol.exported)
       .assign(
         $(
-          $.toExpr(obj, {
+          $.fromValue(obj, {
             layout: 'pretty',
-          })!,
+          }),
         ).as('const'),
       );
     plugin.setSymbolValue(symbol, statement);

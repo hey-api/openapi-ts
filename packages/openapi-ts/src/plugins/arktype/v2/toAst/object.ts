@@ -67,11 +67,7 @@ export const objectToAst = ({
     //   );
     // }
 
-    if (isRequired) {
-      shape.prop(name, propertyAst.expression);
-    } else {
-      shape.computed(`${name}?`, propertyAst.expression);
-    }
+    shape.prop(isRequired ? name : `${name}?`, propertyAst.expression);
   }
 
   if (

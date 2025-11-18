@@ -74,8 +74,8 @@ export const numberParameter = ({
 }: {
   isBigInt: boolean;
   value: unknown;
-}) => {
-  const expression = $.toExpr(value);
+}): ReturnType<typeof $.call | typeof $.fromValue> => {
+  const expression = $.fromValue(value);
 
   if (
     isBigInt &&

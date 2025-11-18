@@ -205,7 +205,7 @@ export const createInfiniteQueryOptions = ({
       .type(typePageObjectParam)
       .hint('@ts-ignore')
       .assign(
-        $.ternary($('pageParam').typeofExpr().eq($.literal('object')))
+        $.ternary($('pageParam').typeof().eq($.literal('object')))
           .do('pageParam')
           .otherwise(
             $.object()

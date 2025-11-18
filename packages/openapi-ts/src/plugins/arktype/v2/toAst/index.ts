@@ -94,7 +94,7 @@ export const irSchemaWithTypeToAst = ({
     $.object()
       .prop('name', $.literal('string'))
       .prop('platform', $.literal("'android' | 'ios'"))
-      .computed('versions?', $.literal('(number | string)[]')),
+      .prop('versions?', $.literal('(number | string)[]')),
   );
 
   return {

@@ -15,7 +15,7 @@ export type PostFooData = {
             number
         ];
     };
-    url: '/foo';
+    url: "/foo";
 };
 
 export type PostFooResponses = {

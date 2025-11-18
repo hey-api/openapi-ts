@@ -1,6 +1,5 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
+import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -11,7 +10,7 @@ export const enumToAst = ({
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'enum'>;
-}): ts.TypeNode => {
+}): MaybeTsDsl<TypeTsDsl> => {
   const type = irSchemaToAst({
     plugin,
     schema: {

@@ -23,7 +23,7 @@ export const postFoo = <ThrowOnError extends boolean = false>(options: Options<P
     url: "/foo",
     ...options,
     headers: {
-        'Content-Type': "text/plain",
+        "Content-Type": "text/plain",
         ...options.headers
     }
 });

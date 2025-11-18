@@ -2,10 +2,10 @@ import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { DecoratorTsDsl } from '../decorator';
+import { DecoratorTsDsl } from '../decl/decorator';
 
 export class DecoratorMixin extends TsDsl {
-  private decorators?: Array<DecoratorTsDsl>;
+  protected decorators?: Array<DecoratorTsDsl>;
 
   /** Adds a decorator (e.g. `@sealed({ in: 'root' })`). */
   decorator(

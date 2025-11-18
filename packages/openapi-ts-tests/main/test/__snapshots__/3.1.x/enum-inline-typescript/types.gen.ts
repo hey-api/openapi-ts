@@ -13,24 +13,24 @@ export type Bar = {
 };
 
 export enum Baz {
-    QUX = 'qux',
-    QUUX = 'quux'
+    QUX = "qux",
+    QUUX = "quux"
 }
 
 export enum FooEnum {
-    FOO = 'foo',
-    BAR = 'bar'
+    FOO = "foo",
+    BAR = "bar"
 }
 
 export enum FooEnum2 {
-    BAZ = 'baz'
+    BAZ = "baz"
 }
 
 export type GetFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/foo';
+    url: "/foo";
 };
 
 export type GetFooResponses = {
@@ -48,7 +48,7 @@ export type PostFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/foo';
+    url: "/foo";
 };
 
 export type PostFooResponses = {
@@ -66,7 +66,7 @@ export type PutFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/foo';
+    url: "/foo";
 };
 
 export type PutFooResponses = {
