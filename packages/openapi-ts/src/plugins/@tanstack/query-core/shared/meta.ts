@@ -7,12 +7,12 @@ export const handleMeta = (
   plugin: PluginInstance,
   operation: IR.OperationObject,
   configPath: 'queryOptions' | 'infiniteQueryOptions' | 'mutationOptions',
-): ReturnType<typeof $.toExpr> | undefined => {
+): ReturnType<typeof $.fromValue> | undefined => {
   const metaFn = plugin.config[configPath].meta;
   if (!metaFn) return;
 
   const metaObject = metaFn(operation);
   if (!Object.keys(metaObject).length) return;
 
-  return $.toExpr(metaObject);
+  return $.fromValue(metaObject);
 };

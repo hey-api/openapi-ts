@@ -1,9 +1,8 @@
-import type ts from 'typescript';
-
 import { deduplicateSchema } from '~/ir/schema';
 import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
+import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -14,16 +13,14 @@ export const arrayToAst = ({
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'array'>;
-}): ts.TypeNode => {
+}): TypeTsDsl => {
   if (!schema.items) {
-    return tsc.typeArrayNode(
-      tsc.keywordTypeNode({ keyword: plugin.config.topType }),
-    );
+    return $.type('Array').generic($.type(plugin.config.topType));
   }
 
   schema = deduplicateSchema({ detectFormat: true, schema });
 
-  const itemTypes: Array<ts.TypeNode> = [];
+  const itemTypes: Array<MaybeTsDsl<TypeTsDsl>> = [];
 
   if (schema.items) {
     schema.items.forEach((item, index) => {
@@ -40,12 +37,10 @@ export const arrayToAst = ({
   }
 
   if (itemTypes.length === 1) {
-    return tsc.typeArrayNode(itemTypes[0]!);
+    return $.type('Array').generic(itemTypes[0]!);
   }
 
-  if (schema.logicalOperator === 'and') {
-    return tsc.typeArrayNode(tsc.typeIntersectionNode({ types: itemTypes }));
-  }
-
-  return tsc.typeArrayNode(tsc.typeUnionNode({ types: itemTypes }));
+  return schema.logicalOperator === 'and'
+    ? $.type('Array').generic($.type.and(...itemTypes))
+    : $.type('Array').generic($.type.or(...itemTypes));
 };

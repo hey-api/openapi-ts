@@ -1,7 +1,7 @@
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { irSchemaToAst } from '../v1/plugin';
 import type { IrSchemaToAstOptions } from './types';
@@ -43,17 +43,17 @@ const operationToDataType = ({
         name: operation.id,
       }),
     });
-    const type = irSchemaToAst({
-      plugin,
-      schema: operation.body.schema,
-      state,
-    });
-    const node = tsc.typeAliasDeclaration({
-      comment: createSchemaComment({ schema: operation.body.schema }),
-      exportType: symbolWebhookPayload.exported,
-      name: symbolWebhookPayload.placeholder,
-      type,
-    });
+    const node = $.type
+      .alias(symbolWebhookPayload.placeholder)
+      .export(symbolWebhookPayload.exported)
+      .$if(createSchemaComment(operation.body.schema), (t, v) => t.doc(v))
+      .type(
+        irSchemaToAst({
+          plugin,
+          schema: operation.body.schema,
+          state,
+        }),
+      );
     plugin.setSymbolValue(symbolWebhookPayload, node);
 
     plugin.registerSymbol({
@@ -104,16 +104,16 @@ const operationToDataType = ({
       name: operation.id,
     }),
   });
-  const type = irSchemaToAst({
-    plugin,
-    schema: data,
-    state,
-  });
-  const node = tsc.typeAliasDeclaration({
-    exportType: symbolWebhookRequest.exported,
-    name: symbolWebhookRequest.placeholder,
-    type,
-  });
+  const node = $.type
+    .alias(symbolWebhookRequest.placeholder)
+    .export(symbolWebhookRequest.exported)
+    .type(
+      irSchemaToAst({
+        plugin,
+        schema: data,
+        state,
+      }),
+    );
   plugin.setSymbolValue(symbolWebhookRequest, node);
 
   return symbolWebhookRequest.placeholder;

@@ -1,5 +1,5 @@
 import type { ITsDsl, MaybeArray } from '../base';
-import { DocTsDsl } from '../doc';
+import { DocTsDsl } from '../layout/doc';
 
 export function DocMixin<
   TBase extends new (...args: ReadonlyArray<any>) => ITsDsl,

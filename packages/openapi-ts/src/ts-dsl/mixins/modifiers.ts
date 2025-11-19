@@ -74,6 +74,36 @@ export class AsyncMixin {
 }
 
 /**
+ * Mixin that adds a `const` modifier to a node.
+ */
+export class ConstMixin {
+  /**
+   * Adds the `const` keyword modifier if the condition is true.
+   *
+   * @param condition - Whether to add the modifier (default: true).
+   * @returns The target object for chaining.
+   */
+  const<T extends Target>(this: T, condition: boolean = true): T {
+    return this._m!(ts.SyntaxKind.ConstKeyword, condition) as T;
+  }
+}
+
+/**
+ * Mixin that adds a `declare` modifier to a node.
+ */
+export class DeclareMixin {
+  /**
+   * Adds the `declare` keyword modifier if the condition is true.
+   *
+   * @param condition - Whether to add the modifier (default: true).
+   * @returns The target object for chaining.
+   */
+  declare<T extends Target>(this: T, condition: boolean = true): T {
+    return this._m!(ts.SyntaxKind.DeclareKeyword, condition) as T;
+  }
+}
+
+/**
  * Mixin that adds a `default` modifier to a node.
  */
 export class DefaultMixin {
@@ -100,6 +130,21 @@ export class ExportMixin {
    */
   export<T extends Target>(this: T, condition: boolean = true): T {
     return this._m!(ts.SyntaxKind.ExportKeyword, condition) as T;
+  }
+}
+
+/**
+ * Mixin that adds an `override` modifier to a node.
+ */
+export class OverrideMixin {
+  /**
+   * Adds the `override` keyword modifier if the condition is true.
+   *
+   * @param condition - Whether to add the modifier (default: true).
+   * @returns The target object for chaining.
+   */
+  override<T extends Target>(this: T, condition: boolean = true): T {
+    return this._m!(ts.SyntaxKind.OverrideKeyword, condition) as T;
   }
 }
 

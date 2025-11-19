@@ -22,7 +22,7 @@ export const postApiV1AccountingCompanies = <ThrowOnError extends boolean = fals
     url: "/api/v1/accounting-companies",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -33,7 +33,7 @@ export const postApiV1AccountingCompaniesById = <ThrowOnError extends boolean = 
     url: "/api/v1/accounting-companies/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -46,7 +46,7 @@ export const putApiV1AccountingCompanyMemberships = <ThrowOnError extends boolea
     url: "/api/v1/accounting-company-memberships",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -61,7 +61,7 @@ export const putApiV1BankAccounts = <ThrowOnError extends boolean = false>(optio
     url: "/api/v1/bank-accounts",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -76,7 +76,7 @@ export const putApiV1BusinessAccountantAssignments = <ThrowOnError extends boole
     url: "/api/v1/business-accountant-assignments",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -94,7 +94,7 @@ export const postApiV1BusinessDocuments = <ThrowOnError extends boolean = false>
     url: "/api/v1/business-documents",
     ...options,
     headers: {
-        'Content-Type': null,
+        "Content-Type": null,
         ...options?.headers
     }
 });
@@ -105,7 +105,7 @@ export const putApiV1BusinessDocumentsById = <ThrowOnError extends boolean = fal
     url: "/api/v1/business-documents/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -120,7 +120,7 @@ export const postApiV1BusinessDocumentsByIdMoveToBusiness = <ThrowOnError extend
     url: "/api/v1/business-documents/{id}/move-to-business",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -149,7 +149,7 @@ export const postApiV1Businesses = <ThrowOnError extends boolean = false>(option
     url: "/api/v1/businesses",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -160,7 +160,7 @@ export const putApiV1BusinessesById = <ThrowOnError extends boolean = false>(opt
     url: "/api/v1/businesses/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -169,7 +169,7 @@ export const putApiV1BusinessesByIdContact = <ThrowOnError extends boolean = fal
     url: "/api/v1/businesses/{id}/contact",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -188,7 +188,7 @@ export const putApiV1BusinessMemberships = <ThrowOnError extends boolean = false
     url: "/api/v1/business-memberships",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -201,7 +201,7 @@ export const postApiV1Counterparties = <ThrowOnError extends boolean = false>(op
     url: "/api/v1/counterparties",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -212,7 +212,7 @@ export const patchApiV1CounterpartiesById = <ThrowOnError extends boolean = fals
     url: "/api/v1/counterparties/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -225,7 +225,7 @@ export const putApiV1DataBoxCredentials = <ThrowOnError extends boolean = false>
     url: "/api/v1/data-box-credentials",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -266,7 +266,7 @@ export const deleteApiV1NotificationsDeviceTokens = <ThrowOnError extends boolea
     url: "/api/v1/notifications/device-tokens",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -275,7 +275,7 @@ export const putApiV1NotificationsDeviceTokens = <ThrowOnError extends boolean =
     url: "/api/v1/notifications/device-tokens",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -288,7 +288,7 @@ export const postApiV1Feedback = <ThrowOnError extends boolean = false>(options?
     url: "/api/v1/feedback",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -297,7 +297,7 @@ export const postApiV1Invitations = <ThrowOnError extends boolean = false>(optio
     url: "/api/v1/invitations",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -306,7 +306,7 @@ export const postApiV1InvitationsByIdAccept = <ThrowOnError extends boolean = fa
     url: "/api/v1/invitations/{id}/accept",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -319,7 +319,7 @@ export const patchApiV1InvitationsById = <ThrowOnError extends boolean = false>(
     url: "/api/v1/invitations/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -332,7 +332,7 @@ export const postApiV1Invoices = <ThrowOnError extends boolean = false>(options?
     url: "/api/v1/invoices",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -343,7 +343,7 @@ export const patchApiV1InvoicesById = <ThrowOnError extends boolean = false>(opt
     url: "/api/v1/invoices/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -354,7 +354,7 @@ export const postApiV1InvoicesByIdSend = <ThrowOnError extends boolean = false>(
     url: "/api/v1/invoices/{id}/send",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -369,7 +369,7 @@ export const putApiV1InvoiceSettings = <ThrowOnError extends boolean = false>(op
     url: "/api/v1/invoice-settings",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -386,7 +386,7 @@ export const postApiV1NotificationsTest = <ThrowOnError extends boolean = false>
     url: "/api/v1/notifications/test",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -398,7 +398,7 @@ export const postApiV1PersonalDocuments = <ThrowOnError extends boolean = false>
     url: "/api/v1/personal-documents",
     ...options,
     headers: {
-        'Content-Type': null,
+        "Content-Type": null,
         ...options?.headers
     }
 });
@@ -407,7 +407,7 @@ export const postApiV1PersonalDocumentsByIdMoveToBusiness = <ThrowOnError extend
     url: "/api/v1/personal-documents/{id}/move-to-business",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -424,7 +424,7 @@ export const postApiV1RecurringTasks = <ThrowOnError extends boolean = false>(op
     url: "/api/v1/recurring-tasks",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -435,7 +435,7 @@ export const patchApiV1RecurringTasksById = <ThrowOnError extends boolean = fals
     url: "/api/v1/recurring-tasks/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -450,7 +450,7 @@ export const postApiV1Tasks = <ThrowOnError extends boolean = false>(options?: O
     url: "/api/v1/tasks",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -459,7 +459,7 @@ export const putApiV1TasksById = <ThrowOnError extends boolean = false>(options:
     url: "/api/v1/tasks/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -468,7 +468,7 @@ export const postApiV1TasksByIdSubmit = <ThrowOnError extends boolean = false>(o
     url: "/api/v1/tasks/{id}/submit",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -479,7 +479,7 @@ export const postApiV1TasksByIdReject = <ThrowOnError extends boolean = false>(o
     url: "/api/v1/tasks/{id}/reject",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });
@@ -500,7 +500,7 @@ export const postApiV1UserRegister = <ThrowOnError extends boolean = false>(opti
     url: "/api/v1/user/register",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -509,7 +509,7 @@ export const postApiV1UserLogin = <ThrowOnError extends boolean = false>(options
     url: "/api/v1/user/login",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -518,7 +518,7 @@ export const postApiV1UserRefresh = <ThrowOnError extends boolean = false>(optio
     url: "/api/v1/user/refresh",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -529,7 +529,7 @@ export const postApiV1UserResendConfirmationEmail = <ThrowOnError extends boolea
     url: "/api/v1/user/resendConfirmationEmail",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -538,7 +538,7 @@ export const postApiV1UserForgotPassword = <ThrowOnError extends boolean = false
     url: "/api/v1/user/forgotPassword",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -547,7 +547,7 @@ export const postApiV1UserResetPassword = <ThrowOnError extends boolean = false>
     url: "/api/v1/user/resetPassword",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -556,7 +556,7 @@ export const postApiV1UserManage2Fa = <ThrowOnError extends boolean = false>(opt
     url: "/api/v1/user/manage/2fa",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -567,7 +567,7 @@ export const postApiV1UserManageInfo = <ThrowOnError extends boolean = false>(op
     url: "/api/v1/user/manage/info",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -576,7 +576,7 @@ export const postApiV1UserLogout = <ThrowOnError extends boolean = false>(option
     url: "/api/v1/user/logout",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options?.headers
     }
 });
@@ -594,7 +594,7 @@ export const patchApiV1UsersById = <ThrowOnError extends boolean = false>(option
     url: "/api/v1/users/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+        "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
         ...options.headers
     }
 });

@@ -1,11 +1,11 @@
 import type ts from 'typescript';
 
-import type { MaybeTsDsl, TypeOfTsDsl } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { TypeParamTsDsl } from '../type/param';
 
 export class TypeParamsMixin extends TsDsl {
-  protected _generics?: Array<string | MaybeTsDsl<TypeOfTsDsl<TypeParamTsDsl>>>;
+  protected _generics?: Array<string | MaybeTsDsl<TypeParamTsDsl>>;
 
   /** Adds a single type parameter (e.g. `T` in `Array<T>`). */
   generic(...args: ConstructorParameters<typeof TypeParamTsDsl>): this {
@@ -15,10 +15,8 @@ export class TypeParamsMixin extends TsDsl {
   }
 
   /** Adds type parameters (e.g. `Map<string, T>`). */
-  generics(
-    ...args: ReadonlyArray<string | MaybeTsDsl<TypeOfTsDsl<TypeParamTsDsl>>>
-  ): this {
-    this._generics = [...args];
+  generics(...args: ReadonlyArray<string | MaybeTsDsl<TypeParamTsDsl>>): this {
+    (this._generics ??= []).push(...args);
     return this;
   }
 

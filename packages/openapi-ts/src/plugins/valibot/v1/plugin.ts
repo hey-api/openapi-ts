@@ -126,18 +126,16 @@ export const irSchemaToAst = ({
       ast.pipes.push(readonlyExpression);
     }
 
-    let callParameter: ReturnType<typeof $.toExpr> | undefined;
+    let callParameter: ReturnType<typeof $.fromValue> | undefined;
 
     if (schema.default !== undefined) {
       const isBigInt = schema.type === 'integer' && schema.format === 'int64';
       callParameter = numberParameter({ isBigInt, value: schema.default });
-      if (callParameter) {
-        ast.pipes = [
-          $(v.placeholder)
-            .attr(identifiers.schemas.optional)
-            .call(pipesToAst({ pipes: ast.pipes, plugin }), callParameter),
-        ];
-      }
+      ast.pipes = [
+        $(v.placeholder)
+          .attr(identifiers.schemas.optional)
+          .call(pipesToAst({ pipes: ast.pipes, plugin }), callParameter),
+      ];
     }
 
     if (optional && !callParameter) {

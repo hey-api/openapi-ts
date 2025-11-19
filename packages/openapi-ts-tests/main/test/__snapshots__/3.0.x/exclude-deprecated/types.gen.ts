@@ -10,7 +10,7 @@ export type PostFooData = {
     body: Foo;
     path?: never;
     query?: never;
-    url: '/foo';
+    url: "/foo";
 };
 
 export type PostFooResponses = {

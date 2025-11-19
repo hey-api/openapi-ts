@@ -308,11 +308,11 @@ export const zModelWithProperties = z.object({
     number: z.optional(z.number()),
     boolean: z.optional(z.boolean()),
     reference: z.optional(zModelWithString),
-    'property with space': z.optional(z.string()),
+    "property with space": z.optional(z.string()),
     default: z.optional(z.string()),
     try: z.optional(z.string()),
-    '@namespace.string': z.optional(z.string().readonly()),
-    '@namespace.integer': z.optional(z.int().readonly())
+    "@namespace.string": z.optional(z.string().readonly()),
+    "@namespace.integer": z.optional(z.int().readonly())
 });
 
 /**
@@ -433,7 +433,7 @@ export const zModelWithPropertiesWritable = z.object({
     number: z.optional(z.number()),
     boolean: z.optional(z.boolean()),
     reference: z.optional(zModelWithString),
-    'property with space': z.optional(z.string()),
+    "property with space": z.optional(z.string()),
     default: z.optional(z.string()),
     try: z.optional(z.string())
 });
@@ -535,7 +535,7 @@ export const zCallWithParametersData = z.object({
     body: z.optional(z.never()),
     path: z.object({
         parameterPath: z.string(),
-        'api-version': z.string()
+        "api-version": z.string()
     }),
     query: z.object({
         parameterQuery: z.string()
@@ -548,17 +548,17 @@ export const zCallWithParametersData = z.object({
 export const zCallWithWeirdParameterNamesData = z.object({
     body: z.string(),
     path: z.object({
-        'parameter.path.1': z.optional(z.string()),
-        'parameter-path-2': z.optional(z.string()),
-        'PARAMETER-PATH-3': z.optional(z.string()),
-        'api-version': z.string()
+        "parameter.path.1": z.optional(z.string()),
+        "parameter-path-2": z.optional(z.string()),
+        "PARAMETER-PATH-3": z.optional(z.string()),
+        "api-version": z.string()
     }),
     query: z.object({
         default: z.optional(z.string()),
-        'parameter-query': z.string()
+        "parameter-query": z.string()
     }),
     headers: z.object({
-        'parameter.header': z.string()
+        "parameter.header": z.string()
     })
 });
 
@@ -699,8 +699,8 @@ export const zCallWithResponsesData = z.object({
 
 export const zCallWithResponsesResponse = z.union([
     z.object({
-        '@namespace.string': z.optional(z.string().readonly()),
-        '@namespace.integer': z.optional(z.int().readonly()),
+        "@namespace.string": z.optional(z.string().readonly()),
+        "@namespace.integer": z.optional(z.int().readonly()),
         value: z.optional(z.array(zModelWithString).readonly())
     }),
     zModelThatExtends,
@@ -785,7 +785,7 @@ export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        'nonAsciiParamæøåÆØÅöôêÊ': z.int()
+        nonAsciiParamæøåÆØÅöôêÊ: z.int()
     })
 });
 

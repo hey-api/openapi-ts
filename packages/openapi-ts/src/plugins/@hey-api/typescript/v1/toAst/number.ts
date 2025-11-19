@@ -1,7 +1,6 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import type { TypeTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
@@ -10,21 +9,17 @@ export const numberToAst = ({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'integer' | 'number'>;
-}): ts.TypeNode => {
+}): TypeTsDsl => {
   if (schema.const !== undefined) {
-    return tsc.literalTypeNode({
-      literal: tsc.ots.number(schema.const as number),
-    });
+    return $.type.literal(schema.const as number);
   }
 
   if (schema.type === 'integer' && schema.format === 'int64') {
     // TODO: parser - add ability to skip type transformers
     if (plugin.getPlugin('@hey-api/transformers')?.config.bigInt) {
-      return tsc.typeReferenceNode({ typeName: 'bigint' });
+      return $.type('bigint');
     }
   }
 
-  return tsc.keywordTypeNode({
-    keyword: 'number',
-  });
+  return $.type('number');
 };

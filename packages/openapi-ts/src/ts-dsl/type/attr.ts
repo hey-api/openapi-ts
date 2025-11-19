@@ -2,13 +2,13 @@
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { TypeTsDsl } from '../base';
 import { mixin } from '../mixins/apply';
 import { TypeExprMixin } from '../mixins/type-expr';
 
-export class TypeAttrTsDsl extends TsDsl<ts.QualifiedName> {
-  private _base?: string | MaybeTsDsl<ts.EntityName>;
-  private right: string | ts.Identifier;
+export class TypeAttrTsDsl extends TypeTsDsl<ts.QualifiedName> {
+  protected _base?: string | MaybeTsDsl<ts.EntityName>;
+  protected right: string | ts.Identifier;
 
   constructor(
     base: string | MaybeTsDsl<ts.EntityName>,

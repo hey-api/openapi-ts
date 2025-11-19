@@ -1,9 +1,9 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
-import { tsc } from '~/tsc';
+import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 import { numberRegExp } from '~/utils/regexp';
 import { stringCase } from '~/utils/stringCase';
 
@@ -69,9 +69,8 @@ const schemaToEnumObject = ({
     }
 
     return {
-      comments: createSchemaComment({ schema: item }),
       key,
-      value: item.const,
+      schema: item,
     };
   });
 
@@ -90,7 +89,7 @@ export const exportType = ({
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: IR.SchemaObject;
   symbol: Symbol;
-  type: ts.TypeNode;
+  type: MaybeTsDsl<TypeTsDsl>;
 }) => {
   // root enums have an additional export
   if (schema.type === 'enum' && plugin.config.enums.enabled) {
@@ -102,35 +101,33 @@ export const exportType = ({
         plugin.config.enums.constantsIgnoreNull &&
         enumObject.typeofItems.includes('object')
       ) {
-        enumObject.obj = enumObject.obj.filter((item) => item.value !== null);
+        enumObject.obj = enumObject.obj.filter(
+          (item) => item.schema.const !== null,
+        );
       }
 
-      const objectNode = tsc.constVariable({
-        assertion: 'const',
-        comment: createSchemaComment({ schema }),
-        exportConst: true,
-        expression: tsc.objectExpression({
-          multiLine: true,
-          obj: enumObject.obj,
-        }),
-        name: symbol.placeholder,
-      });
+      const objectNode = $.const(symbol.placeholder)
+        .export()
+        .$if(createSchemaComment(schema), (c, v) => c.doc(v))
+        .assign(
+          $.object(
+            ...enumObject.obj.map((item) =>
+              $.prop({ kind: 'prop', name: item.key })
+                .$if(createSchemaComment(item.schema), (p, v) => p.doc(v))
+                .value($.fromValue(item.schema.const)),
+            ),
+          ).as('const'),
+        );
 
-      const typeofType = tsc.typeOfExpression({
-        text: symbol.placeholder,
-      }) as unknown as ts.TypeNode;
-      const node = tsc.typeAliasDeclaration({
-        comment: createSchemaComment({ schema }),
-        exportType: true,
-        name: symbol.placeholder,
-        type: tsc.indexedAccessTypeNode({
-          indexType: tsc.typeOperatorNode({
-            operator: 'keyof',
-            type: typeofType,
-          }),
-          objectType: typeofType,
-        }),
-      });
+      const node = $.type
+        .alias(symbol.placeholder)
+        .export()
+        .$if(createSchemaComment(schema), (t, v) => t.doc(v))
+        .type(
+          $.type(symbol.placeholder)
+            .idx($.type(symbol.placeholder).typeof().keyof())
+            .typeof(),
+        );
       plugin.setSymbolValue(symbol, [objectNode, node]);
       return;
     } else if (
@@ -142,23 +139,27 @@ export const exportType = ({
         (type) => type !== 'number' && type !== 'string',
       );
       if (shouldCreateTypeScriptEnum) {
-        const enumNode = tsc.enumDeclaration({
-          asConst: plugin.config.enums.mode === 'typescript-const',
-          leadingComment: createSchemaComment({ schema }),
-          name: symbol.placeholder,
-          obj: enumObject.obj,
-        });
+        const enumNode = $.enum(symbol.placeholder)
+          .export()
+          .$if(createSchemaComment(schema), (e, v) => e.doc(v))
+          .const(plugin.config.enums.mode === 'typescript-const')
+          .members(
+            ...enumObject.obj.map((item) =>
+              $.member(item.key)
+                .$if(createSchemaComment(item.schema), (m, v) => m.doc(v))
+                .value($.fromValue(item.schema.const)),
+            ),
+          );
         plugin.setSymbolValue(symbol, enumNode);
         return;
       }
     }
   }
 
-  const node = tsc.typeAliasDeclaration({
-    comment: createSchemaComment({ schema }),
-    exportType: symbol.exported,
-    name: symbol.placeholder,
-    type,
-  });
+  const node = $.type
+    .alias(symbol.placeholder)
+    .export(symbol.exported)
+    .$if(createSchemaComment(schema), (t, v) => t.doc(v))
+    .type(type);
   plugin.setSymbolValue(symbol, node);
 };

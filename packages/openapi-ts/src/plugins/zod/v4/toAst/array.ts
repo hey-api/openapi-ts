@@ -94,18 +94,18 @@ export const arrayToAst = ({
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
     result.expression = result.expression
       .attr(identifiers.length)
-      .call($.toExpr(schema.minItems));
+      .call($.fromValue(schema.minItems));
   } else {
     if (schema.minItems !== undefined) {
       result.expression = result.expression
         .attr(identifiers.min)
-        .call($.toExpr(schema.minItems));
+        .call($.fromValue(schema.minItems));
     }
 
     if (schema.maxItems !== undefined) {
       result.expression = result.expression
         .attr(identifiers.max)
-        .call($.toExpr(schema.maxItems));
+        .call($.fromValue(schema.maxItems));
     }
   }
 

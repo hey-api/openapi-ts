@@ -1,11 +1,17 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
+import { mixin } from '../mixins/apply';
+import {
+  registerLazyAccessTypeIdxFactory,
+  TypeExprMixin,
+} from '../mixins/type-expr';
 
 export class TypeIdxTsDsl extends TypeTsDsl<ts.IndexedAccessTypeNode> {
-  private _base: string | MaybeTsDsl<ts.TypeNode>;
-  private _index: string | MaybeTsDsl<ts.TypeNode> | number;
+  protected _base: string | MaybeTsDsl<ts.TypeNode>;
+  protected _index: string | MaybeTsDsl<ts.TypeNode> | number;
 
   constructor(
     base: string | MaybeTsDsl<ts.TypeNode>,
@@ -33,3 +39,8 @@ export class TypeIdxTsDsl extends TypeTsDsl<ts.IndexedAccessTypeNode> {
     );
   }
 }
+
+export interface TypeIdxTsDsl extends TypeExprMixin {}
+mixin(TypeIdxTsDsl, TypeExprMixin);
+
+registerLazyAccessTypeIdxFactory((...args) => new TypeIdxTsDsl(...args));

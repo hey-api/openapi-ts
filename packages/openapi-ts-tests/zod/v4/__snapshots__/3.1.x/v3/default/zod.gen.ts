@@ -166,7 +166,7 @@ export const zArrayWithStrings = z.array(z.string()).default(["test"]);
  * This is a simple array with properties
  */
 export const zArrayWithProperties = z.array(z.object({
-    '16x16': zCamelCaseCommentWithBreaks.optional(),
+    "16x16": zCamelCaseCommentWithBreaks.optional(),
     bar: z.string().optional()
 }));
 
@@ -298,7 +298,7 @@ export const zModelWithNullableString = z.object({
         z.string(),
         z.null()
     ]),
-    'foo_bar-enum': z.enum([
+    "foo_bar-enum": z.enum([
         "Success",
         "Warning",
         "Error",
@@ -310,7 +310,7 @@ export const zModelWithNullableString = z.object({
  * This is a model with one enum
  */
 export const zModelWithEnum = z.object({
-    'foo_bar-enum': z.enum([
+    "foo_bar-enum": z.enum([
         "Success",
         "Warning",
         "Error",
@@ -331,7 +331,7 @@ export const zModelWithEnum = z.object({
  * This is a model with one enum with escaped name
  */
 export const zModelWithEnumWithHyphen = z.object({
-    'foo-bar-baz-qux': z.enum(["3.0"]).optional()
+    "foo-bar-baz-qux": z.enum(["3.0"]).optional()
 });
 
 /**
@@ -357,7 +357,7 @@ export const zModelWithNestedEnums = z.object({
         "Error"
     ])).optional(),
     arrayWithDescription: z.array(z.number().int()).optional(),
-    'foo_bar-enum': z.enum([
+    "foo_bar-enum": z.enum([
         "Success",
         "Warning",
         "Error",
@@ -602,11 +602,11 @@ export const zModelWithProperties = z.object({
     number: z.number().optional(),
     boolean: z.boolean().optional(),
     reference: zModelWithString.optional(),
-    'property with space': z.string().optional(),
+    "property with space": z.string().optional(),
     default: z.string().optional(),
     try: z.string().optional(),
-    '@namespace.string': z.string().readonly().optional(),
-    '@namespace.integer': z.number().int().readonly().optional()
+    "@namespace.string": z.string().readonly().optional(),
+    "@namespace.integer": z.number().int().readonly().optional()
 });
 
 /**
@@ -922,22 +922,22 @@ export const zModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = z.tuple([z.un
 
 export const zSchemaWithFormRestrictedKeys = z.object({
     description: z.string().optional(),
-    'x-enum-descriptions': z.string().optional(),
-    'x-enum-varnames': z.string().optional(),
-    'x-enumNames': z.string().optional(),
+    "x-enum-descriptions": z.string().optional(),
+    "x-enum-varnames": z.string().optional(),
+    "x-enumNames": z.string().optional(),
     title: z.string().optional(),
     object: z.object({
         description: z.string().optional(),
-        'x-enum-descriptions': z.string().optional(),
-        'x-enum-varnames': z.string().optional(),
-        'x-enumNames': z.string().optional(),
+        "x-enum-descriptions": z.string().optional(),
+        "x-enum-varnames": z.string().optional(),
+        "x-enumNames": z.string().optional(),
         title: z.string().optional()
     }).optional(),
     array: z.array(z.object({
         description: z.string().optional(),
-        'x-enum-descriptions': z.string().optional(),
-        'x-enum-varnames': z.string().optional(),
-        'x-enumNames': z.string().optional(),
+        "x-enum-descriptions": z.string().optional(),
+        "x-enum-varnames": z.string().optional(),
+        "x-enumNames": z.string().optional(),
         title: z.string().optional()
     })).optional()
 });
@@ -1033,7 +1033,7 @@ export const zModelWithPropertiesWritable = z.object({
     number: z.number().optional(),
     boolean: z.boolean().optional(),
     reference: zModelWithString.optional(),
-    'property with space': z.string().optional(),
+    "property with space": z.string().optional(),
     default: z.string().optional(),
     try: z.string().optional()
 });
@@ -1272,7 +1272,7 @@ export const zDeleteFooData3 = z.object({
     }),
     query: z.never().optional(),
     headers: z.object({
-        'x-Foo-Bar': zModelWithString
+        "x-Foo-Bar": zModelWithString
     })
 });
 
@@ -1311,7 +1311,7 @@ export const zCallWithParametersData = z.object({
             z.string(),
             z.null()
         ]),
-        'api-version': z.union([
+        "api-version": z.union([
             z.string(),
             z.null()
         ])
@@ -1338,23 +1338,23 @@ export const zCallWithWeirdParameterNamesData = z.object({
         z.null()
     ]),
     path: z.object({
-        'parameter.path.1': z.string().optional(),
-        'parameter-path-2': z.string().optional(),
-        'PARAMETER-PATH-3': z.string().optional(),
-        'api-version': z.union([
+        "parameter.path.1": z.string().optional(),
+        "parameter-path-2": z.string().optional(),
+        "PARAMETER-PATH-3": z.string().optional(),
+        "api-version": z.union([
             z.string(),
             z.null()
         ])
     }),
     query: z.object({
         default: z.string().optional(),
-        'parameter-query': z.union([
+        "parameter-query": z.union([
             z.string(),
             z.null()
         ])
     }),
     headers: z.object({
-        'parameter.header': z.union([
+        "parameter.header": z.union([
             z.string(),
             z.null()
         ])
@@ -1560,8 +1560,8 @@ export const zCallWithResponsesData = z.object({
 
 export const zCallWithResponsesResponse = z.union([
     z.object({
-        '@namespace.string': z.string().readonly().optional(),
-        '@namespace.integer': z.number().int().readonly().optional(),
+        "@namespace.string": z.string().readonly().optional(),
+        "@namespace.integer": z.number().int().readonly().optional(),
         value: z.array(zModelWithString).readonly().optional()
     }),
     zModelThatExtends,
@@ -1641,7 +1641,7 @@ export const zTypesResponse = z.union([
 export const zUploadFileData = z.object({
     body: z.string(),
     path: z.object({
-        'api-version': z.union([
+        "api-version": z.union([
             z.string(),
             z.null()
         ])
@@ -1655,7 +1655,7 @@ export const zFileResponseData = z.object({
     body: z.never().optional(),
     path: z.object({
         id: z.string(),
-        'api-version': z.string()
+        "api-version": z.string()
     }),
     query: z.never().optional()
 });
@@ -1754,7 +1754,7 @@ export const zComplexParamsData = z.object({
     }).optional(),
     path: z.object({
         id: z.number().int(),
-        'api-version': z.string()
+        "api-version": z.string()
     }),
     query: z.never().optional()
 });
@@ -1782,7 +1782,7 @@ export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
     body: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
-        'nonAsciiParamæøåÆØÅöôêÊ': z.number().int()
+        nonAsciiParamæøåÆØÅöôêÊ: z.number().int()
     })
 });
 

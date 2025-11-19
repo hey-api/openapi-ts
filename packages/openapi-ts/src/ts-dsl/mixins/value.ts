@@ -4,7 +4,7 @@ import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
 export class ValueMixin extends TsDsl {
-  private value?: string | MaybeTsDsl<ts.Expression>;
+  protected value?: string | MaybeTsDsl<ts.Expression>;
 
   /** Sets the initializer expression (e.g. `= expr`). */
   assign<T extends this>(this: T, expr: string | MaybeTsDsl<ts.Expression>): T {

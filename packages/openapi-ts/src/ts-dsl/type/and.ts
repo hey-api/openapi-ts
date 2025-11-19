@@ -3,7 +3,7 @@ import ts from 'typescript';
 import { TypeTsDsl } from '../base';
 
 export class TypeAndTsDsl extends TypeTsDsl<ts.IntersectionTypeNode> {
-  private _types: Array<string | ts.TypeNode | TypeTsDsl> = [];
+  protected _types: Array<string | ts.TypeNode | TypeTsDsl> = [];
 
   constructor(...nodes: Array<string | ts.TypeNode | TypeTsDsl>) {
     super();

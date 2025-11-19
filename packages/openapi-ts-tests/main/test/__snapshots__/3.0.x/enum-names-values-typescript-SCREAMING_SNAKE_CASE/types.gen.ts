@@ -5,35 +5,35 @@ export type ClientOptions = {
 };
 
 export enum _110 {
-    '1_10' = '1-10',
-    '11_20' = '11-20'
+    "1_10" = "1-10",
+    "11_20" = "11-20"
 }
 
 export enum MyFoo {
-    MY_FOO = 'myFoo',
-    MY_BAR = 'myBar'
+    MY_FOO = "myFoo",
+    MY_BAR = "myBar"
 }
 
 export enum MyFoo2 {
-    MY_FOO = 'MyFoo',
-    MY_BAR = 'MyBar'
+    MY_FOO = "MyFoo",
+    MY_BAR = "MyBar"
 }
 
-export type Foo = 'foo' | 'bar' | null | '' | true | false;
+export type Foo = "foo" | "bar" | null | "" | true | false;
 
 export enum Numbers {
     _100 = 100,
     _200 = 200,
     _300 = 300,
-    '_-100' = -100,
-    '_-200' = -200,
-    '_-300' = -300
+    "_-100" = -100,
+    "_-200" = -200,
+    "_-300" = -300
 }
 
 export type Arrays = [
-    'foo'
+    "foo"
 ] | [
-    'bar'
+    "bar"
 ] | [
-    'baz'
+    "baz"
 ];

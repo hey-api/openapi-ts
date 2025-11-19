@@ -2,13 +2,13 @@ import type ts from 'typescript';
 
 import type { MaybeArray } from '../base';
 import { TsDsl } from '../base';
-import { PatternTsDsl } from '../pattern';
+import { PatternTsDsl } from '../decl/pattern';
 
 /**
  * Mixin providing `.array()`, `.object()`, and `.spread()` methods for defining destructuring patterns.
  */
 export class PatternMixin extends TsDsl {
-  private pattern?: PatternTsDsl;
+  protected pattern?: PatternTsDsl;
 
   /** Defines an array binding pattern. */
   array(...props: ReadonlyArray<string> | [ReadonlyArray<string>]): this {

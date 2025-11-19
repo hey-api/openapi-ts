@@ -9,9 +9,9 @@ import { createModifierAccessor, ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 
 export class TypeAliasTsDsl extends TsDsl<ts.TypeAliasDeclaration> {
-  private value?: MaybeTsDsl<ts.TypeNode>;
-  private modifiers = createModifierAccessor(this);
-  private name: string;
+  protected value?: MaybeTsDsl<ts.TypeNode>;
+  protected modifiers = createModifierAccessor(this);
+  protected name: string;
 
   constructor(name: string, fn?: (t: TypeAliasTsDsl) => void) {
     super();
