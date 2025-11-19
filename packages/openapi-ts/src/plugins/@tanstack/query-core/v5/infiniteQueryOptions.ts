@@ -239,13 +239,12 @@ export const createInfiniteQueryOptions = ({
   });
   const statement = $.const(symbolInfiniteQueryOptionsFn.placeholder)
     .export(symbolInfiniteQueryOptionsFn.exported)
-    .$if(
-      plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.doc(v as ReadonlyArray<string>),
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
+      c.doc(v),
     )
     .assign(
       $.func()
-        .param('options', (p) => p.optional(!isRequiredOptions).type(typeData))
+        .param('options', (p) => p.required(isRequiredOptions).type(typeData))
         .do(
           $.return(
             $(symbolInfiniteQueryOptions.placeholder)
