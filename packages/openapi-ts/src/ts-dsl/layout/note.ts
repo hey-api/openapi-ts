@@ -2,6 +2,7 @@ import ts from 'typescript';
 
 import type { MaybeArray } from '../base';
 import { TsDsl } from '../base';
+import { IdTsDsl } from '../expr/id';
 
 export class NoteTsDsl extends TsDsl<ts.Node> {
   protected _lines: Array<string> = [];
@@ -41,6 +42,6 @@ export class NoteTsDsl extends TsDsl<ts.Node> {
     // this class does not build a standalone node;
     // it modifies other nodes via `apply()`.
     // Return a dummy comment node for compliance.
-    return ts.factory.createIdentifier('');
+    return this.$node(new IdTsDsl(''));
   }
 }

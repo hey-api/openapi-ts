@@ -2,6 +2,7 @@ import ts from 'typescript';
 
 import type { MaybeArray } from '../base';
 import { TsDsl } from '../base';
+import { IdTsDsl } from '../expr/id';
 import { TokenTsDsl } from '../token';
 
 /**
@@ -83,7 +84,7 @@ export class PatternTsDsl extends TsDsl<ts.BindingName> {
       ? ts.factory.createBindingElement(
           this.$node(new TokenTsDsl().spread()),
           undefined,
-          ts.factory.createIdentifier(this._spread),
+          this.$node(new IdTsDsl(this._spread)),
         )
       : undefined;
   }
