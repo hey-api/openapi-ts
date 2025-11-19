@@ -20,7 +20,7 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
         node-version: ['20.19.0', '22.12.0', '24.10.0']
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v5.0.1
         with:
           fetch-depth: 0
 
