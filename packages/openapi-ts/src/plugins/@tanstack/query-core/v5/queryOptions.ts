@@ -103,7 +103,7 @@ export const createQueryOptions = ({
     )
     .prop('queryKey', $(symbolQueryKey.placeholder).call(optionsParamName))
     .$if(handleMeta(plugin, operation, 'queryOptions'), (o, v) =>
-      o.prop('meta', $(v)),
+      o.prop('meta', v),
     );
 
   const symbolQueryOptionsFn = plugin.registerSymbol({
@@ -126,7 +126,7 @@ export const createQueryOptions = ({
     .export(symbolQueryOptionsFn.exported)
     .$if(
       plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.describe(v as ReadonlyArray<string>),
+      (c, v) => c.doc(v as ReadonlyArray<string>),
     )
     .assign(
       $.func()

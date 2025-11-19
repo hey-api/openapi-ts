@@ -1,7 +1,4 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
-import type { CallTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
@@ -12,8 +9,8 @@ export const booleanToAst = ({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'boolean'>;
-}): ts.CallExpression => {
-  let chain: CallTsDsl;
+}): ReturnType<typeof $.call> => {
+  let chain: ReturnType<typeof $.call>;
 
   const z = plugin.referenceSymbol({
     category: 'external',
@@ -24,9 +21,9 @@ export const booleanToAst = ({
     chain = $(z.placeholder)
       .attr(identifiers.literal)
       .call($.literal(schema.const));
-    return chain.$render();
+    return chain;
   }
 
   chain = $(z.placeholder).attr(identifiers.boolean).call();
-  return chain.$render();
+  return chain;
 };

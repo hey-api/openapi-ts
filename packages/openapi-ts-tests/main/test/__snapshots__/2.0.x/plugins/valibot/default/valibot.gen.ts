@@ -74,12 +74,12 @@ export const vSimpleStringWithPattern = v.pipe(v.string(), v.maxLength(64), v.re
  * This is a simple enum with strings
  */
 export const vEnumWithStrings = v.picklist([
-    'Success',
-    'Warning',
-    'Error',
+    "Success",
+    "Warning",
+    "Error",
     "'Single Quote'",
-    '"Double Quotes"',
-    'Non-ascii: øæåôöØÆÅÔÖ字符串'
+    "\"Double Quotes\"",
+    "Non-ascii: øæåôöØÆÅÔÖ字符串"
 ]);
 
 /**
@@ -197,14 +197,8 @@ export const vModelWithStringError = v.object({
  * This is a model with one string property
  */
 export const vModelWithNullableString = v.object({
-    nullableProp: v.optional(v.union([
-        v.string(),
-        v.null()
-    ])),
-    nullableRequiredProp: v.union([
-        v.string(),
-        v.null()
-    ])
+    nullableProp: v.optional(v.union([v.string(), v.null()])),
+    nullableRequiredProp: v.union([v.string(), v.null()])
 });
 
 /**
@@ -212,18 +206,18 @@ export const vModelWithNullableString = v.object({
  */
 export const vModelWithEnum = v.object({
     test: v.optional(v.picklist([
-        'Success',
-        'Warning',
-        'Error',
-        'ØÆÅ字符串'
+        "Success",
+        "Warning",
+        "Error",
+        "ØÆÅ字符串"
     ])),
     statusCode: v.optional(v.picklist([
-        '100',
-        '200 FOO',
-        '300 FOO_BAR',
-        '400 foo-bar',
-        '500 foo.bar',
-        '600 foo&bar'
+        "100",
+        "200 FOO",
+        "300 FOO_BAR",
+        "400 foo-bar",
+        "500 foo.bar",
+        "600 foo&bar"
     ])),
     bool: v.optional(v.unknown())
 });
@@ -240,15 +234,15 @@ export const vModelWithEnumFromDescription = v.object({
  */
 export const vModelWithNestedEnums = v.object({
     dictionaryWithEnum: v.optional(v.record(v.string(), v.picklist([
-        'Success',
-        'Warning',
-        'Error'
+        "Success",
+        "Warning",
+        "Error"
     ]))),
     dictionaryWithEnumFromDescription: v.optional(v.record(v.string(), v.pipe(v.number(), v.integer()))),
     arrayWithEnum: v.optional(v.array(v.picklist([
-        'Success',
-        'Warning',
-        'Error'
+        "Success",
+        "Warning",
+        "Error"
     ]))),
     arrayWithDescription: v.optional(v.array(v.pipe(v.number(), v.integer())))
 });
@@ -273,9 +267,7 @@ export const vModelWithDictionary = v.object({
  * This is a model with one property containing a circular reference
  */
 export const vModelWithCircularReference: v.GenericSchema = v.object({
-    prop: v.optional(v.lazy(() => {
-        return vModelWithCircularReference;
-    }))
+    prop: v.optional(v.lazy(() => vModelWithCircularReference))
 });
 
 /**
@@ -288,11 +280,11 @@ export const vModelWithProperties = v.object({
     number: v.optional(v.number()),
     boolean: v.optional(v.boolean()),
     reference: v.optional(vModelWithString),
-    'property with space': v.optional(v.string()),
+    "property with space": v.optional(v.string()),
     default: v.optional(v.string()),
     try: v.optional(v.string()),
-    '@namespace.string': v.optional(v.pipe(v.string(), v.readonly())),
-    '@namespace.integer': v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly()))
+    "@namespace.string": v.optional(v.pipe(v.string(), v.readonly())),
+    "@namespace.integer": v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly()))
 });
 
 /**
@@ -341,13 +333,10 @@ export const vModelWithDuplicateImports = v.object({
 /**
  * This is a model that extends another model
  */
-export const vModelThatExtends = v.intersect([
-    vModelWithString,
-    v.object({
+export const vModelThatExtends = v.intersect([vModelWithString, v.object({
         propExtendsA: v.optional(v.string()),
         propExtendsB: v.optional(vModelWithString)
-    })
-]);
+    })]);
 
 /**
  * This is a model that extends another model
@@ -420,7 +409,7 @@ export const vModelWithPropertiesWritable = v.object({
     number: v.optional(v.number()),
     boolean: v.optional(v.boolean()),
     reference: v.optional(vModelWithString),
-    'property with space': v.optional(v.string()),
+    "property with space": v.optional(v.string()),
     default: v.optional(v.string()),
     try: v.optional(v.string())
 });
@@ -522,7 +511,7 @@ export const vCallWithParametersData = v.object({
     body: v.optional(v.never()),
     path: v.object({
         parameterPath: v.string(),
-        'api-version': v.string()
+        "api-version": v.string()
     }),
     query: v.object({
         parameterQuery: v.string()
@@ -535,17 +524,17 @@ export const vCallWithParametersData = v.object({
 export const vCallWithWeirdParameterNamesData = v.object({
     body: v.string(),
     path: v.object({
-        'parameter.path.1': v.optional(v.string()),
-        'parameter-path-2': v.optional(v.string()),
-        'PARAMETER-PATH-3': v.optional(v.string()),
-        'api-version': v.string()
+        "parameter.path.1": v.optional(v.string()),
+        "parameter-path-2": v.optional(v.string()),
+        "PARAMETER-PATH-3": v.optional(v.string()),
+        "api-version": v.string()
     }),
     query: v.object({
         default: v.optional(v.string()),
-        'parameter-query': v.string()
+        "parameter-query": v.string()
     }),
     headers: v.object({
-        'parameter.header': v.string()
+        "parameter.header": v.string()
     })
 });
 
@@ -553,19 +542,17 @@ export const vCallWithDefaultParametersData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
-        parameterString: v.optional(v.string(), 'Hello World!'),
+        parameterString: v.optional(v.string(), "Hello World!"),
         parameterNumber: v.optional(v.number(), 123),
         parameterBoolean: v.optional(v.boolean(), true),
         parameterEnum: v.picklist([
-            'Success',
-            'Warning',
-            'Error'
+            "Success",
+            "Warning",
+            "Error"
         ]),
         parameterModel: v.optional(v.object({
             prop: v.optional(v.string())
-        }), {
-            prop: 'Hello World!'
-        })
+        }), { prop: "Hello World!" })
     })
 });
 
@@ -573,13 +560,13 @@ export const vCallWithDefaultOptionalParametersData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
-        parameterString: v.optional(v.string(), 'Hello World!'),
+        parameterString: v.optional(v.string(), "Hello World!"),
         parameterNumber: v.optional(v.number(), 123),
         parameterBoolean: v.optional(v.boolean(), true),
         parameterEnum: v.optional(v.picklist([
-            'Success',
-            'Warning',
-            'Error'
+            "Success",
+            "Warning",
+            "Error"
         ]))
     }))
 });
@@ -588,20 +575,14 @@ export const vCallToTestOrderOfParamsData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
-        parameterOptionalStringWithDefault: v.optional(v.string(), 'Hello World!'),
-        parameterOptionalStringWithEmptyDefault: v.optional(v.string(), ''),
+        parameterOptionalStringWithDefault: v.optional(v.string(), "Hello World!"),
+        parameterOptionalStringWithEmptyDefault: v.optional(v.string(), ""),
         parameterOptionalStringWithNoDefault: v.optional(v.string()),
-        parameterStringWithDefault: v.optional(v.string(), 'Hello World!'),
-        parameterStringWithEmptyDefault: v.optional(v.string(), ''),
+        parameterStringWithDefault: v.optional(v.string(), "Hello World!"),
+        parameterStringWithEmptyDefault: v.optional(v.string(), ""),
         parameterStringWithNoDefault: v.string(),
-        parameterStringNullableWithNoDefault: v.optional(v.union([
-            v.string(),
-            v.null()
-        ])),
-        parameterStringNullableWithDefault: v.optional(v.union([
-            v.string(),
-            v.null()
-        ]), null)
+        parameterStringNullableWithNoDefault: v.optional(v.union([v.string(), v.null()])),
+        parameterStringNullableWithDefault: v.optional(v.union([v.string(), v.null()]), null)
     })
 });
 
@@ -641,10 +622,7 @@ export const vCallWithResponseAndNoContentResponseData = v.object({
     query: v.optional(v.never())
 });
 
-export const vCallWithResponseAndNoContentResponseResponse = v.union([
-    v.number(),
-    v.unknown()
-]);
+export const vCallWithResponseAndNoContentResponseResponse = v.union([v.number(), v.unknown()]);
 
 export const vDummyAData = v.object({
     body: v.optional(v.never()),
@@ -688,8 +666,8 @@ export const vCallWithResponsesData = v.object({
 
 export const vCallWithResponsesResponse = v.union([
     v.object({
-        '@namespace.string': v.optional(v.pipe(v.string(), v.readonly())),
-        '@namespace.integer': v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly())),
+        "@namespace.string": v.optional(v.pipe(v.string(), v.readonly())),
+        "@namespace.integer": v.optional(v.pipe(v.pipe(v.number(), v.integer()), v.readonly())),
         value: v.optional(v.pipe(v.array(vModelWithString), v.readonly()))
     }),
     vModelThatExtends,
@@ -711,18 +689,18 @@ export const vCollectionFormatData = v.object({
 export const vTypesData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.object({
-        id: v.optional(v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2^31'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2^31-1')))
+        id: v.optional(v.pipe(v.number(), v.integer(), v.minValue(-2147483648, "Invalid value: Expected int32 to be >= -2^31"), v.maxValue(2147483647, "Invalid value: Expected int32 to be <= 2^31-1")))
     })),
     query: v.object({
         parameterNumber: v.optional(v.number(), 123),
-        parameterString: v.optional(v.string(), 'default'),
+        parameterString: v.optional(v.string(), "default"),
         parameterBoolean: v.optional(v.boolean(), true),
         parameterArray: v.array(v.string()),
         parameterDictionary: v.record(v.string(), v.unknown()),
         parameterEnum: v.picklist([
-            'Success',
-            'Warning',
-            'Error'
+            "Success",
+            "Warning",
+            "Error"
         ])
     })
 });
@@ -774,7 +752,7 @@ export const vNonAsciiæøåÆøÅöôêÊ字符串Data = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
-        'nonAsciiParamæøåÆØÅöôêÊ': v.pipe(v.number(), v.integer())
+        nonAsciiParamæøåÆØÅöôêÊ: v.pipe(v.number(), v.integer())
     })
 });
 

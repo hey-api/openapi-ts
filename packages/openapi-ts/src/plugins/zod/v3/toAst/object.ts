@@ -1,8 +1,5 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
 import { toRef } from '~/plugins/shared/utils/refs';
-import type { CallTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
@@ -14,7 +11,7 @@ function defaultObjectBaseResolver({
   additional,
   plugin,
   shape,
-}: ObjectBaseResolverArgs): CallTsDsl {
+}: ObjectBaseResolverArgs): ReturnType<typeof $.call> {
   const z = plugin.referenceSymbol({
     category: 'external',
     resource: 'zod.z',
@@ -62,7 +59,7 @@ export const objectToAst = ({
     shape.prop(name, propertyExpression.expression);
   }
 
-  let additional: ts.Expression | null | undefined;
+  let additional: ReturnType<typeof $.call | typeof $.expr> | null | undefined;
   const result: Partial<Omit<Ast, 'typeName'>> = {};
   if (
     schema.additionalProperties &&
@@ -90,7 +87,7 @@ export const objectToAst = ({
   };
   const resolver = plugin.config['~resolvers']?.object?.base;
   const chain = resolver?.(args) ?? defaultObjectBaseResolver(args);
-  result.expression = chain.$render();
+  result.expression = chain;
 
   return {
     anyType: 'AnyZodObject',

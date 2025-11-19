@@ -1,9 +1,8 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../constants';
 import type { ArktypePlugin } from '../types';
@@ -27,38 +26,31 @@ export const exportAst = ({
     resource: 'arktype.type',
   });
 
-  const statement = tsc.constVariable({
-    comment: plugin.config.comments
-      ? createSchemaComment({ schema })
-      : undefined,
-    exportConst: symbol.exported,
-    expression: tsc.callExpression({
-      functionName: type.placeholder,
-      parameters: [
-        ast.def ? tsc.stringLiteral({ text: ast.def }) : ast.expression,
-      ],
-    }),
-    name: symbol.placeholder,
-    // typeName: ast.typeName
-    //   ? (tsc.propertyAccessExpression({
-    //       expression: z.placeholder,
-    //       name: ast.typeName,
-    //     }) as unknown as ts.TypeNode)
-    //   : undefined,
-  });
+  const statement = $.const(symbol.placeholder)
+    .export(symbol.exported)
+    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
+      c.doc(v),
+    )
+    // .type(
+    //   ast.typeName
+    //     ? (tsc.propertyAccessExpression({
+    //         expression: z.placeholder,
+    //         name: ast.typeName,
+    //       }) as unknown as ts.TypeNode)
+    //     : undefined,
+    // )
+    .assign(
+      $(type.placeholder).call(ast.def ? $.literal(ast.def) : ast.expression),
+    );
   plugin.setSymbolValue(symbol, statement);
 
   if (typeInferSymbol) {
-    const inferType = tsc.typeAliasDeclaration({
-      exportType: typeInferSymbol.exported,
-      name: typeInferSymbol.placeholder,
-      type: ts.factory.createTypeQueryNode(
-        ts.factory.createQualifiedName(
-          ts.factory.createIdentifier(symbol.placeholder),
-          identifiers.type.infer,
-        ),
-      ),
-    });
+    const inferType = $.type
+      .alias(typeInferSymbol.placeholder)
+      .export(typeInferSymbol.exported)
+      .type(
+        $.type(symbol.placeholder).attr(identifiers.type.infer).typeofType(),
+      );
     plugin.setSymbolValue(typeInferSymbol, inferType);
   }
 };

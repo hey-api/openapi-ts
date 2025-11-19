@@ -1,7 +1,6 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import type { TypeTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
@@ -10,9 +9,7 @@ export const nullToAst = (
   _args: IrSchemaToAstOptions & {
     schema: SchemaWithType<'null'>;
   },
-): ts.TypeNode => {
-  const node = tsc.literalTypeNode({
-    literal: tsc.null(),
-  });
+): TypeTsDsl => {
+  const node = $.type.literal(null);
   return node;
 };

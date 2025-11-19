@@ -48,12 +48,11 @@ export const irSchemaToAst = ({
     };
     const refSymbol = plugin.referenceSymbol(query);
     if (plugin.isSymbolRegistered(query)) {
-      ast.expression = $(refSymbol.placeholder).$render();
+      ast.expression = $(refSymbol.placeholder);
     } else {
       ast.expression = $(z.placeholder)
         .attr(identifiers.lazy)
-        .call($.func().do($(refSymbol.placeholder).return()))
-        .$render();
+        .call($.func().do($(refSymbol.placeholder).return()));
       ast.hasLazyExpression = true;
       state.hasLazyExpression.value = true;
     }
@@ -67,10 +66,9 @@ export const irSchemaToAst = ({
     ast.typeName = typeAst.anyType;
 
     if (plugin.config.metadata && schema.description) {
-      ast.expression = $(ast.expression)
+      ast.expression = ast.expression
         .attr(identifiers.describe)
-        .call($.literal(schema.description))
-        .$render();
+        .call($.literal(schema.description));
     }
   } else if (schema.items) {
     schema = deduplicateSchema({ schema });
@@ -99,15 +97,11 @@ export const irSchemaToAst = ({
         ) {
           ast.expression = $(z.placeholder)
             .attr(identifiers.intersection)
-            .call(...itemTypes)
-            .$render();
+            .call(...itemTypes);
         } else {
           ast.expression = itemTypes[0];
           itemTypes.slice(1).forEach((item) => {
-            ast.expression = $(ast.expression!)
-              .attr(identifiers.and)
-              .call(item)
-              .$render();
+            ast.expression = ast.expression!.attr(identifiers.and).call(item);
           });
         }
       } else {
@@ -117,8 +111,7 @@ export const irSchemaToAst = ({
             $.array()
               .pretty()
               .elements(...itemTypes),
-          )
-          .$render();
+          );
       }
     } else {
       ast = irSchemaToAst({ plugin, schema, state });
@@ -138,31 +131,21 @@ export const irSchemaToAst = ({
 
   if (ast.expression) {
     if (schema.accessScope === 'read') {
-      ast.expression = $(ast.expression)
-        .attr(identifiers.readonly)
-        .call()
-        .$render();
+      ast.expression = ast.expression.attr(identifiers.readonly).call();
     }
 
     if (optional) {
-      ast.expression = $(ast.expression)
-        .attr(identifiers.optional)
-        .call()
-        .$render();
+      ast.expression = ast.expression.attr(identifiers.optional).call();
     }
 
     if (schema.default !== undefined) {
       const isBigInt = schema.type === 'integer' && schema.format === 'int64';
-      const callParameter = numberParameter({
-        isBigInt,
-        value: schema.default,
-      });
-      if (callParameter) {
-        ast.expression = $(ast.expression)
-          .attr(identifiers.default)
-          .call(callParameter)
-          .$render();
-      }
+      ast.expression = ast.expression.attr(identifiers.default).call(
+        numberParameter({
+          isBigInt,
+          value: schema.default,
+        }),
+      );
     }
   }
 

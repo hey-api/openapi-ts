@@ -26,13 +26,13 @@ export const exportAst = ({
 
   const statement = $.const(symbol.placeholder)
     .export(symbol.exported)
-    .$if(plugin.config.comments && createSchemaComment({ schema }), (c, v) =>
-      c.describe(v as ReadonlyArray<string>),
+    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
+      c.doc(v),
     )
     .$if(state.hasLazyExpression.value, (c) =>
       c.type(
         $.type(v.placeholder).attr(
-          ast.typeName || identifiers.types.GenericSchema.text,
+          ast.typeName || identifiers.types.GenericSchema,
         ),
       ),
     )

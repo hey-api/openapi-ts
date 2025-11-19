@@ -1,20 +1,23 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from '../base';
-import { TsDsl } from '../base';
+import type { MaybeTsDsl } from '../base';
+import { TypeTsDsl } from '../base';
+import { mixin } from '../mixins/apply';
+import { TypeExprMixin } from '../mixins/type-expr';
 
-export class TypeAttrTsDsl extends TsDsl<ts.QualifiedName> {
-  private _base?: WithString<MaybeTsDsl<ts.EntityName>>;
-  private right: WithString<ts.Identifier>;
+export class TypeAttrTsDsl extends TypeTsDsl<ts.QualifiedName> {
+  protected _base?: string | MaybeTsDsl<ts.EntityName>;
+  protected right: string | ts.Identifier;
 
   constructor(
-    base: WithString<MaybeTsDsl<ts.EntityName>>,
-    right: WithString<ts.Identifier>,
+    base: string | MaybeTsDsl<ts.EntityName>,
+    right: string | ts.Identifier,
   );
-  constructor(right: WithString<ts.Identifier>);
+  constructor(right: string | ts.Identifier);
   constructor(
-    baseOrRight: WithString<MaybeTsDsl<ts.EntityName>>,
-    maybeRight?: WithString<ts.Identifier>,
+    baseOrRight: string | MaybeTsDsl<ts.EntityName>,
+    maybeRight?: string | ts.Identifier,
   ) {
     super();
     if (maybeRight) {
@@ -22,11 +25,11 @@ export class TypeAttrTsDsl extends TsDsl<ts.QualifiedName> {
       this.right = maybeRight;
     } else {
       this.base(undefined);
-      this.right = baseOrRight as WithString<ts.Identifier>;
+      this.right = baseOrRight as string | ts.Identifier;
     }
   }
 
-  base(base?: WithString<MaybeTsDsl<ts.EntityName>>): this {
+  base(base?: string | MaybeTsDsl<ts.EntityName>): this {
     this._base = base;
     return this;
   }
@@ -39,7 +42,10 @@ export class TypeAttrTsDsl extends TsDsl<ts.QualifiedName> {
     if (!ts.isEntityName(left)) {
       throw new Error('TypeAttrTsDsl: base must be an EntityName');
     }
-    const right = this.$expr(this.right);
+    const right = this.$maybeId(this.right);
     return ts.factory.createQualifiedName(left, right);
   }
 }
+
+export interface TypeAttrTsDsl extends TypeExprMixin {}
+mixin(TypeAttrTsDsl, TypeExprMixin);

@@ -1,6 +1,5 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
+import type { $ } from '~/ts-dsl';
 
 import { pipesToAst } from '../../shared/pipesToAst';
 import type { IrSchemaToAstOptions } from '../../shared/types';
@@ -24,7 +23,7 @@ export const irSchemaWithTypeToAst = ({
   schema: SchemaWithType;
 }): {
   anyType?: string;
-  expression: ts.Expression;
+  expression: ReturnType<typeof $.call | typeof $.expr>;
 } => {
   switch (schema.type) {
     case 'array':

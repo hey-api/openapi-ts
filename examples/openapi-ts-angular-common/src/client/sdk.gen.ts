@@ -94,12 +94,7 @@ export const addPet = <ThrowOnError extends boolean = true>(
     'data'
   >({
     responseStyle: 'data',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet',
     ...options,
     headers: {
@@ -123,12 +118,7 @@ export const updatePet = <ThrowOnError extends boolean = true>(
     'data'
   >({
     responseStyle: 'data',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet',
     ...options,
     headers: {
@@ -152,12 +142,7 @@ export const findPetsByStatus = <ThrowOnError extends boolean = true>(
     'data'
   >({
     responseStyle: 'data',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/findByStatus',
     ...options,
   });
@@ -177,12 +162,7 @@ export const findPetsByTags = <ThrowOnError extends boolean = true>(
     'data'
   >({
     responseStyle: 'data',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/findByTags',
     ...options,
   });
@@ -202,12 +182,7 @@ export const deletePet = <ThrowOnError extends boolean = true>(
     'data'
   >({
     responseStyle: 'data',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/{petId}',
     ...options,
   });
@@ -228,14 +203,8 @@ export const getPetById = <ThrowOnError extends boolean = true>(
   >({
     responseStyle: 'data',
     security: [
-      {
-        name: 'api_key',
-        type: 'apiKey',
-      },
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
+      { name: 'api_key', type: 'apiKey' },
+      { scheme: 'bearer', type: 'http' },
     ],
     url: '/pet/{petId}',
     ...options,
@@ -256,12 +225,7 @@ export const updatePetWithForm = <ThrowOnError extends boolean = true>(
     'data'
   >({
     responseStyle: 'data',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/{petId}',
     ...options,
   });
@@ -282,12 +246,7 @@ export const uploadFile = <ThrowOnError extends boolean = true>(
   >({
     bodySerializer: null,
     responseStyle: 'data',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/{petId}/uploadImage',
     ...options,
     headers: {
@@ -311,12 +270,7 @@ export const getInventory = <ThrowOnError extends boolean = true>(
     'data'
   >({
     responseStyle: 'data',
-    security: [
-      {
-        name: 'api_key',
-        type: 'apiKey',
-      },
-    ],
+    security: [{ name: 'api_key', type: 'apiKey' }],
     url: '/store/inventory',
     ...options,
   });

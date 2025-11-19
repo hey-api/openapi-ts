@@ -2,10 +2,6 @@ import ts from 'typescript';
 
 export type MaybeArray<T> = T | ReadonlyArray<T>;
 
-export type WithStatement<T = ts.Expression> = T | ts.Statement;
-
-export type WithString<T = ts.Expression> = T | string;
-
 export interface ITsDsl<T extends ts.Node = ts.Node> {
   $render(): T;
 }
@@ -13,10 +9,8 @@ export interface ITsDsl<T extends ts.Node = ts.Node> {
 export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
   abstract $render(): T;
 
-  protected $expr<T>(expr: WithString<T>): T {
-    return typeof expr === 'string'
-      ? (ts.factory.createIdentifier(expr) as T)
-      : expr;
+  protected $id(text: string): ts.Identifier {
+    return ts.factory.createIdentifier(text);
   }
 
   /** Conditionally applies a callback to this builder. */
@@ -94,61 +88,58 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return this;
   }
 
-  protected $node<I>(input: I): NodeOfMaybe<I> {
-    if (input === undefined) {
-      return undefined as NodeOfMaybe<I>;
-    }
-    if (typeof input === 'string') {
-      return this.$expr(input) as NodeOfMaybe<I>;
-    }
-    if (typeof input === 'boolean') {
-      return (
-        input ? ts.factory.createTrue() : ts.factory.createFalse()
-      ) as NodeOfMaybe<I>;
-    }
-    if (input instanceof Array) {
-      return input.map((item) => this._render(item)) as NodeOfMaybe<I>;
-    }
-    return this._render(input as any) as NodeOfMaybe<I>;
+  protected $maybeId<T extends string | ts.Expression>(
+    expr: T,
+  ): T extends string ? ts.Identifier : T {
+    return (
+      typeof expr === 'string' ? this.$id(expr) : expr
+    ) as T extends string ? ts.Identifier : T;
   }
 
-  protected $stmt(
-    input: MaybeArray<MaybeTsDsl<WithString<WithStatement>>>,
-  ): ReadonlyArray<ts.Statement> {
-    const arr = input instanceof Array ? input : [input];
-    return arr.map((item) => {
-      const node =
-        typeof item === 'string' ? this.$expr(item) : this._render(item as any);
-      return ts.isExpression(node)
-        ? ts.factory.createExpressionStatement(node)
-        : (node as ts.Statement);
-    });
+  protected $node<I>(value: I): NodeOfMaybe<I> {
+    if (value === undefined) {
+      return undefined as NodeOfMaybe<I>;
+    }
+    if (typeof value === 'string') {
+      return this.$id(value) as NodeOfMaybe<I>;
+    }
+    if (value instanceof Array) {
+      return value.map((item) => this.unwrap(item)) as NodeOfMaybe<I>;
+    }
+    return this.unwrap(value as any) as NodeOfMaybe<I>;
   }
 
   protected $type<I>(
-    input: I,
+    value: I,
     args?: ReadonlyArray<ts.TypeNode>,
   ): TypeOfMaybe<I> {
-    if (input === undefined) {
+    if (value === undefined) {
       return undefined as TypeOfMaybe<I>;
     }
-    if (typeof input === 'string') {
-      return ts.factory.createTypeReferenceNode(input, args) as TypeOfMaybe<I>;
+    if (typeof value === 'string') {
+      return ts.factory.createTypeReferenceNode(value, args) as TypeOfMaybe<I>;
     }
-    if (typeof input === 'boolean') {
-      const literal = input
+    if (typeof value === 'boolean') {
+      const literal = value
         ? ts.factory.createTrue()
         : ts.factory.createFalse();
       return ts.factory.createLiteralTypeNode(literal) as TypeOfMaybe<I>;
     }
-    if (input instanceof Array) {
-      return input.map((item) => this.$type(item, args)) as TypeOfMaybe<I>;
+    if (typeof value === 'number') {
+      return ts.factory.createLiteralTypeNode(
+        ts.factory.createNumericLiteral(value),
+      ) as TypeOfMaybe<I>;
     }
-    return this._render(input as any) as TypeOfMaybe<I>;
+    if (value instanceof Array) {
+      return value.map((item) => this.$type(item, args)) as TypeOfMaybe<I>;
+    }
+    return this.unwrap(value as any) as TypeOfMaybe<I>;
   }
 
-  private _render<T extends ts.Node>(value: MaybeTsDsl<T>): T {
-    return (value instanceof TsDsl ? value.$render() : value) as T;
+  protected unwrap<I>(value: I): I extends TsDsl<infer N> ? N : I {
+    return (
+      value instanceof TsDsl ? value.$render() : value
+    ) as I extends TsDsl<infer N> ? N : I;
   }
 }
 
@@ -161,35 +152,25 @@ type NodeOf<I> =
     ? ReadonlyArray<U extends TsDsl<infer N> ? N : U>
     : I extends string
       ? ts.Expression
-      : I extends boolean
-        ? ts.Expression
-        : I extends TsDsl<infer N>
-          ? N
-          : I extends ts.Node
-            ? I
-            : never;
+      : I extends TsDsl<infer N>
+        ? N
+        : I extends ts.Node
+          ? I
+          : never;
 
 export type MaybeTsDsl<T> =
-  // if T includes string
-  string extends T
-    ? Exclude<T, string> extends ts.Node
-      ? string | Exclude<T, string> | TsDsl<Exclude<T, string>>
-      : string
-    : // if it's a DSL itself
-      T extends TsDsl<any>
-      ? T
-      : // otherwise if it’s a Node
-        T extends ts.Node
-        ? T | TsDsl<T>
-        : never;
-
-export type TypeOfTsDsl<T> = T extends TsDsl<infer U> ? U : never;
+  T extends TsDsl<infer U>
+    ? U | TsDsl<U>
+    : T extends ts.Node
+      ? T | TsDsl<T>
+      : never;
 
 export abstract class TypeTsDsl<
   T extends
-    | ts.TypeNode
-    | ts.TypeElement
     | ts.LiteralTypeNode
+    | ts.QualifiedName
+    | ts.TypeElement
+    | ts.TypeNode
     | ts.TypeParameterDeclaration = ts.TypeNode,
 > extends TsDsl<T> {}
 

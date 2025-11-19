@@ -527,7 +527,7 @@ export const operationStatements = ({
 
   const auth = operationAuth({ context: plugin.context, operation, plugin });
   if (auth.length) {
-    reqOptions.prop('security', $.toExpr(auth)!);
+    reqOptions.prop('security', $.fromValue(auth));
   }
 
   reqOptions.prop('url', $.literal(operation.path));
@@ -624,19 +624,22 @@ export const operationStatements = ({
       })
     : undefined;
 
-  const clientExpression = $('options')
+  let clientExpression: ReturnType<typeof $.attr | typeof $.binary>;
+  const optionsClient = $('options')
     .attr('client')
-    .optional(!isRequiredOptions)
-    .$if(plugin.config.instance !== undefined, (c) =>
-      c.coalesce($('this').attr('client')),
-    )
-    .$if(symbolClient !== undefined, (c) =>
-      c.coalesce(symbolClient!.placeholder),
-    );
+    .optional(!isRequiredOptions);
+  if (plugin.config.instance) {
+    clientExpression = optionsClient.coalesce($('this').attr('client'));
+  } else if (symbolClient) {
+    clientExpression = optionsClient.coalesce(symbolClient.placeholder);
+  } else {
+    clientExpression = optionsClient;
+  }
 
-  const functionName = hasServerSentEvents
-    ? clientExpression.attr('sse').attr(operation.method)
-    : clientExpression.attr(operation.method);
+  let functionName = hasServerSentEvents
+    ? clientExpression.attr('sse')
+    : clientExpression;
+  functionName = functionName.attr(operation.method);
 
   statements.push(
     $.return(

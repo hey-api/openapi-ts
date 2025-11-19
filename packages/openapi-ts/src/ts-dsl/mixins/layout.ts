@@ -1,6 +1,6 @@
 export class LayoutMixin {
-  private static readonly DEFAULT_THRESHOLD = 3;
-  private layout: boolean | number | undefined;
+  protected static readonly DEFAULT_THRESHOLD = 3;
+  protected layout: boolean | number | undefined;
 
   /** Sets automatic line output with optional threshold (default: 3). */
   auto(threshold: number = LayoutMixin.DEFAULT_THRESHOLD): this {

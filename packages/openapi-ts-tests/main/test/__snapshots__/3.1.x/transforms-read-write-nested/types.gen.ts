@@ -9,7 +9,7 @@ export type CreateItemRequest = {
 };
 
 export type Payload = {
-    kind: 'jpeg';
+    kind: "jpeg";
 };
 
 export type CreateItemRequestWritable = {
@@ -17,7 +17,7 @@ export type CreateItemRequestWritable = {
 };
 
 export type PayloadWritable = {
-    kind: 'jpeg';
+    kind: "jpeg";
     /**
      * Data required on write
      */
@@ -28,7 +28,7 @@ export type ItemCreateData = {
     body: CreateItemRequestWritable;
     path?: never;
     query?: never;
-    url: '/items';
+    url: "/items";
 };
 
 export type ItemCreateResponses = {

@@ -1,14 +1,17 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { WithString } from '../base';
 import { TypeTsDsl } from '../base';
 import { mixin } from '../mixins/apply';
 import { TypeArgsMixin } from '../mixins/type-args';
+import {
+  registerLazyAccessTypeExprFactory,
+  TypeExprMixin,
+} from '../mixins/type-expr';
 import { TypeAttrTsDsl } from './attr';
 
 export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
-  private _exprInput?: WithString<ts.Identifier> | TypeAttrTsDsl;
+  protected _exprInput?: string | ts.Identifier | TypeAttrTsDsl;
 
   constructor();
   constructor(fn: (t: TypeExprTsDsl) => void);
@@ -28,7 +31,7 @@ export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
   }
 
   /** Accesses a nested type (e.g. `Foo.Bar`). */
-  attr(right: WithString<ts.Identifier> | TypeAttrTsDsl): this {
+  attr(right: string | ts.Identifier | TypeAttrTsDsl): this {
     this._exprInput =
       right instanceof TypeAttrTsDsl
         ? right.base(this._exprInput)
@@ -47,5 +50,10 @@ export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
   }
 }
 
-export interface TypeExprTsDsl extends TypeArgsMixin {}
-mixin(TypeExprTsDsl, TypeArgsMixin);
+export interface TypeExprTsDsl extends TypeArgsMixin, TypeExprMixin {}
+mixin(TypeExprTsDsl, TypeArgsMixin, TypeExprMixin);
+
+registerLazyAccessTypeExprFactory(
+  (...args) =>
+    new TypeExprTsDsl(...(args as ConstructorParameters<typeof TypeExprTsDsl>)),
+);

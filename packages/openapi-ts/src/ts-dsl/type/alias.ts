@@ -4,13 +4,14 @@ import ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { mixin } from '../mixins/apply';
+import { DocMixin } from '../mixins/doc';
 import { createModifierAccessor, ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 
 export class TypeAliasTsDsl extends TsDsl<ts.TypeAliasDeclaration> {
-  private value?: MaybeTsDsl<ts.TypeNode>;
-  private modifiers = createModifierAccessor(this);
-  private name: string;
+  protected value?: MaybeTsDsl<ts.TypeNode>;
+  protected modifiers = createModifierAccessor(this);
+  protected name: string;
 
   constructor(name: string, fn?: (t: TypeAliasTsDsl) => void) {
     super();
@@ -37,5 +38,8 @@ export class TypeAliasTsDsl extends TsDsl<ts.TypeAliasDeclaration> {
   }
 }
 
-export interface TypeAliasTsDsl extends ExportMixin, TypeParamsMixin {}
-mixin(TypeAliasTsDsl, ExportMixin, TypeParamsMixin);
+export interface TypeAliasTsDsl
+  extends DocMixin,
+    ExportMixin,
+    TypeParamsMixin {}
+mixin(TypeAliasTsDsl, DocMixin, ExportMixin, TypeParamsMixin);

@@ -4,7 +4,7 @@ import { client } from './client.gen.js';
 import { type Client, type Composable, formDataBodySerializer, type Options as Options2, type TDataShape, urlSearchParamsBodySerializer } from './client/index.js';
 import type { ApiVVersionODataControllerCountData, ApiVVersionODataControllerCountResponse, CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithNoContentResponseResponse, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, CallWithResponseData, CallWithResponseResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexParamsData, ComplexParamsResponse, ComplexTypesData, ComplexTypesResponse, DeleteCallWithoutParametersAndResponseData, DeleteFooData3, DeprecatedCallData, DummyAData, DummyAResponse, DummyBData, DummyBResponse, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, ExportData, FileResponseData, FileResponseResponse, FooWowData, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationError, GetApiVbyApiVersionSimpleOperationResponse, GetCallWithOptionalParamData, GetCallWithoutParametersAndResponseData, HeadCallWithoutParametersAndResponseData, ImportData, ImportResponse, MultipartRequestData, MultipartResponseData, MultipartResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, OptionsCallWithoutParametersAndResponseData, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionFormDataData, PostApiVbyApiVersionRequestBodyData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, PutWithFormUrlEncodedData, TestErrorCodeData, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from './types.gen.js';
 
-export type Options<TComposable extends Composable = '$fetch', TData extends TDataShape = TDataShape, ResT = unknown, DefaultT = undefined> = Options2<TComposable, TData, ResT, DefaultT> & {
+export type Options<TComposable extends Composable = "$fetch", TData extends TDataShape = TDataShape, ResT = unknown, DefaultT = undefined> = Options2<TComposable, TData, ResT, DefaultT> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -18,401 +18,189 @@ export type Options<TComposable extends Composable = '$fetch', TData extends TDa
     meta?: Record<string, unknown>;
 };
 
-export const export_ = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, ExportData, unknown, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/no+tag',
-        ...options
-    });
-};
+export const export_ = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, ExportData, unknown, DefaultT>) => (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/no+tag", ...options });
 
-export const patchApiVbyApiVersionNoTag = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PatchApiVbyApiVersionNoTagData, unknown, DefaultT>) => {
-    return (options.client ?? client).patch<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/no+tag',
-        ...options
-    });
-};
+export const patchApiVbyApiVersionNoTag = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, PatchApiVbyApiVersionNoTagData, unknown, DefaultT>) => (options.client ?? client).patch<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/no+tag", ...options });
 
-export const import_ = <TComposable extends Composable = '$fetch', DefaultT extends ImportResponse = ImportResponse>(options: Options<TComposable, ImportData, ImportResponse, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, ImportResponse | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/no+tag',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const import_ = <TComposable extends Composable = "$fetch", DefaultT extends ImportResponse = ImportResponse>(options: Options<TComposable, ImportData, ImportResponse, DefaultT>) => (options.client ?? client).post<TComposable, ImportResponse | DefaultT, unknown, DefaultT>({
+    url: "/api/v{api-version}/no+tag",
+    ...options,
+    headers: {
+        "Content-Type": "application/json",
+        ...options.headers
+    }
+});
 
-export const fooWow = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, FooWowData, unknown, DefaultT>) => {
-    return (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/no+tag',
-        ...options
-    });
-};
+export const fooWow = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, FooWowData, unknown, DefaultT>) => (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/no+tag", ...options });
 
-export const apiVVersionODataControllerCount = <TComposable extends Composable = '$fetch', DefaultT extends ApiVVersionODataControllerCountResponse = ApiVVersionODataControllerCountResponse>(options: Options<TComposable, ApiVVersionODataControllerCountData, ApiVVersionODataControllerCountResponse, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, ApiVVersionODataControllerCountResponse | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/simple/$count',
-        ...options
-    });
-};
+export const apiVVersionODataControllerCount = <TComposable extends Composable = "$fetch", DefaultT extends ApiVVersionODataControllerCountResponse = ApiVVersionODataControllerCountResponse>(options: Options<TComposable, ApiVVersionODataControllerCountData, ApiVVersionODataControllerCountResponse, DefaultT>) => (options.client ?? client).get<TComposable, ApiVVersionODataControllerCountResponse | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/simple/$count", ...options });
 
-export const getApiVbyApiVersionSimpleOperation = <TComposable extends Composable = '$fetch', DefaultT extends GetApiVbyApiVersionSimpleOperationResponse = GetApiVbyApiVersionSimpleOperationResponse>(options: Options<TComposable, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationResponse, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, GetApiVbyApiVersionSimpleOperationResponse | DefaultT, GetApiVbyApiVersionSimpleOperationError, DefaultT>({
-        url: '/api/v{api-version}/simple:operation',
-        ...options
-    });
-};
+export const getApiVbyApiVersionSimpleOperation = <TComposable extends Composable = "$fetch", DefaultT extends GetApiVbyApiVersionSimpleOperationResponse = GetApiVbyApiVersionSimpleOperationResponse>(options: Options<TComposable, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationResponse, DefaultT>) => (options.client ?? client).get<TComposable, GetApiVbyApiVersionSimpleOperationResponse | DefaultT, GetApiVbyApiVersionSimpleOperationError, DefaultT>({ url: "/api/v{api-version}/simple:operation", ...options });
 
-export const deleteCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DeleteCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
-    return (options.client ?? client).delete<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const deleteCallWithoutParametersAndResponse = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, DeleteCallWithoutParametersAndResponseData, unknown, DefaultT>) => (options.client ?? client).delete<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/simple", ...options });
 
-export const getCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, GetCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const getCallWithoutParametersAndResponse = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, GetCallWithoutParametersAndResponseData, unknown, DefaultT>) => (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/simple", ...options });
 
-export const headCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, HeadCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
-    return (options.client ?? client).head<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const headCallWithoutParametersAndResponse = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, HeadCallWithoutParametersAndResponseData, unknown, DefaultT>) => (options.client ?? client).head<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/simple", ...options });
 
-export const optionsCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, OptionsCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
-    return (options.client ?? client).options<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const optionsCallWithoutParametersAndResponse = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, OptionsCallWithoutParametersAndResponseData, unknown, DefaultT>) => (options.client ?? client).options<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/simple", ...options });
 
-export const patchCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PatchCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
-    return (options.client ?? client).patch<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const patchCallWithoutParametersAndResponse = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, PatchCallWithoutParametersAndResponseData, unknown, DefaultT>) => (options.client ?? client).patch<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/simple", ...options });
 
-export const postCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PostCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const postCallWithoutParametersAndResponse = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, PostCallWithoutParametersAndResponseData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/simple", ...options });
 
-export const putCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PutCallWithoutParametersAndResponseData, unknown, DefaultT>) => {
-    return (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/simple',
-        ...options
-    });
-};
+export const putCallWithoutParametersAndResponse = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, PutCallWithoutParametersAndResponseData, unknown, DefaultT>) => (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/simple", ...options });
 
-export const deleteFoo = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DeleteFooData3, unknown, DefaultT>) => {
-    return (options.client ?? client).delete<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}',
-        ...options
-    });
-};
+export const deleteFoo = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, DeleteFooData3, unknown, DefaultT>) => (options.client ?? client).delete<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/foo/{foo_param}/bar/{BarParam}", ...options });
 
-export const callWithDescriptions = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallWithDescriptionsData, unknown, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/descriptions',
-        ...options
-    });
-};
+export const callWithDescriptions = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, CallWithDescriptionsData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/descriptions", ...options });
 
 /**
  * @deprecated
  */
-export const deprecatedCall = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DeprecatedCallData, unknown, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/parameters/deprecated',
-        ...options
-    });
-};
+export const deprecatedCall = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, DeprecatedCallData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/parameters/deprecated", ...options });
 
-export const callWithParameters = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallWithParametersData, unknown, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/parameters/{parameterPath}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const callWithParameters = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, CallWithParametersData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+    url: "/api/v{api-version}/parameters/{parameterPath}",
+    ...options,
+    headers: {
+        "Content-Type": "application/json",
+        ...options.headers
+    }
+});
 
-export const callWithWeirdParameterNames = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallWithWeirdParameterNamesData, unknown, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const callWithWeirdParameterNames = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, CallWithWeirdParameterNamesData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+    url: "/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}",
+    ...options,
+    headers: {
+        "Content-Type": "application/json",
+        ...options.headers
+    }
+});
 
-export const getCallWithOptionalParam = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, GetCallWithOptionalParamData, unknown, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/parameters',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const getCallWithOptionalParam = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, GetCallWithOptionalParamData, unknown, DefaultT>) => (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
+    url: "/api/v{api-version}/parameters",
+    ...options,
+    headers: {
+        "Content-Type": "application/json",
+        ...options.headers
+    }
+});
 
-export const postCallWithOptionalParam = <TComposable extends Composable = '$fetch', DefaultT extends PostCallWithOptionalParamResponse = PostCallWithOptionalParamResponse>(options: Options<TComposable, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, PostCallWithOptionalParamResponse | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/parameters',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const postCallWithOptionalParam = <TComposable extends Composable = "$fetch", DefaultT extends PostCallWithOptionalParamResponse = PostCallWithOptionalParamResponse>(options: Options<TComposable, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, DefaultT>) => (options.client ?? client).post<TComposable, PostCallWithOptionalParamResponse | DefaultT, unknown, DefaultT>({
+    url: "/api/v{api-version}/parameters",
+    ...options,
+    headers: {
+        "Content-Type": "application/json",
+        ...options.headers
+    }
+});
 
-export const postApiVbyApiVersionRequestBody = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PostApiVbyApiVersionRequestBodyData, unknown, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/requestBody',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const postApiVbyApiVersionRequestBody = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, PostApiVbyApiVersionRequestBodyData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+    url: "/api/v{api-version}/requestBody",
+    ...options,
+    headers: {
+        "Content-Type": "application/json",
+        ...options.headers
+    }
+});
 
-export const postApiVbyApiVersionFormData = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PostApiVbyApiVersionFormDataData, unknown, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        ...formDataBodySerializer,
-        url: '/api/v{api-version}/formData',
-        ...options,
-        headers: {
-            'Content-Type': null,
-            ...options.headers
-        }
-    });
-};
+export const postApiVbyApiVersionFormData = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, PostApiVbyApiVersionFormDataData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+    ...formDataBodySerializer,
+    url: "/api/v{api-version}/formData",
+    ...options,
+    headers: {
+        "Content-Type": null,
+        ...options.headers
+    }
+});
 
-export const callWithDefaultParameters = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallWithDefaultParametersData, unknown, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/defaults',
-        ...options
-    });
-};
+export const callWithDefaultParameters = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, CallWithDefaultParametersData, unknown, DefaultT>) => (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/defaults", ...options });
 
-export const callWithDefaultOptionalParameters = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallWithDefaultOptionalParametersData, unknown, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/defaults',
-        ...options
-    });
-};
+export const callWithDefaultOptionalParameters = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, CallWithDefaultOptionalParametersData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/defaults", ...options });
 
-export const callToTestOrderOfParams = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallToTestOrderOfParamsData, unknown, DefaultT>) => {
-    return (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/defaults',
-        ...options
-    });
-};
+export const callToTestOrderOfParams = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, CallToTestOrderOfParamsData, unknown, DefaultT>) => (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/defaults", ...options });
 
-export const duplicateName = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DuplicateNameData, unknown, DefaultT>) => {
-    return (options.client ?? client).delete<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/duplicate',
-        ...options
-    });
-};
+export const duplicateName = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, DuplicateNameData, unknown, DefaultT>) => (options.client ?? client).delete<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/duplicate", ...options });
 
-export const duplicateName2 = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DuplicateName2Data, unknown, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/duplicate',
-        ...options
-    });
-};
+export const duplicateName2 = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, DuplicateName2Data, unknown, DefaultT>) => (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/duplicate", ...options });
 
-export const duplicateName3 = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DuplicateName3Data, unknown, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/duplicate',
-        ...options
-    });
-};
+export const duplicateName3 = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, DuplicateName3Data, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/duplicate", ...options });
 
-export const duplicateName4 = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DuplicateName4Data, unknown, DefaultT>) => {
-    return (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/duplicate',
-        ...options
-    });
-};
+export const duplicateName4 = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, DuplicateName4Data, unknown, DefaultT>) => (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/duplicate", ...options });
 
-export const callWithNoContentResponse = <TComposable extends Composable = '$fetch', DefaultT extends CallWithNoContentResponseResponse = CallWithNoContentResponseResponse>(options: Options<TComposable, CallWithNoContentResponseData, CallWithNoContentResponseResponse, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, CallWithNoContentResponseResponse | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/no-content',
-        ...options
-    });
-};
+export const callWithNoContentResponse = <TComposable extends Composable = "$fetch", DefaultT extends CallWithNoContentResponseResponse = CallWithNoContentResponseResponse>(options: Options<TComposable, CallWithNoContentResponseData, CallWithNoContentResponseResponse, DefaultT>) => (options.client ?? client).get<TComposable, CallWithNoContentResponseResponse | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/no-content", ...options });
 
-export const callWithResponseAndNoContentResponse = <TComposable extends Composable = '$fetch', DefaultT extends CallWithResponseAndNoContentResponseResponse = CallWithResponseAndNoContentResponseResponse>(options: Options<TComposable, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, CallWithResponseAndNoContentResponseResponse | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/multiple-tags/response-and-no-content',
-        ...options
-    });
-};
+export const callWithResponseAndNoContentResponse = <TComposable extends Composable = "$fetch", DefaultT extends CallWithResponseAndNoContentResponseResponse = CallWithResponseAndNoContentResponseResponse>(options: Options<TComposable, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, DefaultT>) => (options.client ?? client).get<TComposable, CallWithResponseAndNoContentResponseResponse | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/multiple-tags/response-and-no-content", ...options });
 
-export const dummyA = <TComposable extends Composable = '$fetch', DefaultT extends DummyAResponse = DummyAResponse>(options: Options<TComposable, DummyAData, DummyAResponse, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, DummyAResponse | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/multiple-tags/a',
-        ...options
-    });
-};
+export const dummyA = <TComposable extends Composable = "$fetch", DefaultT extends DummyAResponse = DummyAResponse>(options: Options<TComposable, DummyAData, DummyAResponse, DefaultT>) => (options.client ?? client).get<TComposable, DummyAResponse | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/multiple-tags/a", ...options });
 
-export const dummyB = <TComposable extends Composable = '$fetch', DefaultT extends DummyBResponse = DummyBResponse>(options: Options<TComposable, DummyBData, DummyBResponse, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, DummyBResponse | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/multiple-tags/b',
-        ...options
-    });
-};
+export const dummyB = <TComposable extends Composable = "$fetch", DefaultT extends DummyBResponse = DummyBResponse>(options: Options<TComposable, DummyBData, DummyBResponse, DefaultT>) => (options.client ?? client).get<TComposable, DummyBResponse | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/multiple-tags/b", ...options });
 
-export const callWithResponse = <TComposable extends Composable = '$fetch', DefaultT extends CallWithResponseResponse = CallWithResponseResponse>(options: Options<TComposable, CallWithResponseData, CallWithResponseResponse, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, CallWithResponseResponse | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/response',
-        ...options
-    });
-};
+export const callWithResponse = <TComposable extends Composable = "$fetch", DefaultT extends CallWithResponseResponse = CallWithResponseResponse>(options: Options<TComposable, CallWithResponseData, CallWithResponseResponse, DefaultT>) => (options.client ?? client).get<TComposable, CallWithResponseResponse | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/response", ...options });
 
-export const callWithDuplicateResponses = <TComposable extends Composable = '$fetch', DefaultT extends CallWithDuplicateResponsesResponse = CallWithDuplicateResponsesResponse>(options: Options<TComposable, CallWithDuplicateResponsesData, CallWithDuplicateResponsesResponse, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, CallWithDuplicateResponsesResponse | DefaultT, CallWithDuplicateResponsesError, DefaultT>({
-        url: '/api/v{api-version}/response',
-        ...options
-    });
-};
+export const callWithDuplicateResponses = <TComposable extends Composable = "$fetch", DefaultT extends CallWithDuplicateResponsesResponse = CallWithDuplicateResponsesResponse>(options: Options<TComposable, CallWithDuplicateResponsesData, CallWithDuplicateResponsesResponse, DefaultT>) => (options.client ?? client).post<TComposable, CallWithDuplicateResponsesResponse | DefaultT, CallWithDuplicateResponsesError, DefaultT>({ url: "/api/v{api-version}/response", ...options });
 
-export const callWithResponses = <TComposable extends Composable = '$fetch', DefaultT extends CallWithResponsesResponse = CallWithResponsesResponse>(options: Options<TComposable, CallWithResponsesData, CallWithResponsesResponse, DefaultT>) => {
-    return (options.client ?? client).put<TComposable, CallWithResponsesResponse | DefaultT, CallWithResponsesError, DefaultT>({
-        url: '/api/v{api-version}/response',
-        ...options
-    });
-};
+export const callWithResponses = <TComposable extends Composable = "$fetch", DefaultT extends CallWithResponsesResponse = CallWithResponsesResponse>(options: Options<TComposable, CallWithResponsesData, CallWithResponsesResponse, DefaultT>) => (options.client ?? client).put<TComposable, CallWithResponsesResponse | DefaultT, CallWithResponsesError, DefaultT>({ url: "/api/v{api-version}/response", ...options });
 
-export const collectionFormat = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CollectionFormatData, unknown, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/collectionFormat',
-        ...options
-    });
-};
+export const collectionFormat = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, CollectionFormatData, unknown, DefaultT>) => (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/collectionFormat", ...options });
 
-export const types = <TComposable extends Composable = '$fetch', DefaultT extends TypesResponse = TypesResponse>(options: Options<TComposable, TypesData, TypesResponse, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, TypesResponse | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/types',
-        ...options
-    });
-};
+export const types = <TComposable extends Composable = "$fetch", DefaultT extends TypesResponse = TypesResponse>(options: Options<TComposable, TypesData, TypesResponse, DefaultT>) => (options.client ?? client).get<TComposable, TypesResponse | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/types", ...options });
 
-export const uploadFile = <TComposable extends Composable = '$fetch', DefaultT extends UploadFileResponse = UploadFileResponse>(options: Options<TComposable, UploadFileData, UploadFileResponse, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, UploadFileResponse | DefaultT, unknown, DefaultT>({
-        ...urlSearchParamsBodySerializer,
-        url: '/api/v{api-version}/upload',
-        ...options,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            ...options.headers
-        }
-    });
-};
+export const uploadFile = <TComposable extends Composable = "$fetch", DefaultT extends UploadFileResponse = UploadFileResponse>(options: Options<TComposable, UploadFileData, UploadFileResponse, DefaultT>) => (options.client ?? client).post<TComposable, UploadFileResponse | DefaultT, unknown, DefaultT>({
+    ...urlSearchParamsBodySerializer,
+    url: "/api/v{api-version}/upload",
+    ...options,
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        ...options.headers
+    }
+});
 
-export const fileResponse = <TComposable extends Composable = '$fetch', DefaultT extends FileResponseResponse = FileResponseResponse>(options: Options<TComposable, FileResponseData, FileResponseResponse, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, FileResponseResponse | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/file/{id}',
-        ...options
-    });
-};
+export const fileResponse = <TComposable extends Composable = "$fetch", DefaultT extends FileResponseResponse = FileResponseResponse>(options: Options<TComposable, FileResponseData, FileResponseResponse, DefaultT>) => (options.client ?? client).get<TComposable, FileResponseResponse | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/file/{id}", ...options });
 
-export const complexTypes = <TComposable extends Composable = '$fetch', DefaultT extends ComplexTypesResponse = ComplexTypesResponse>(options: Options<TComposable, ComplexTypesData, ComplexTypesResponse, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, ComplexTypesResponse | DefaultT, unknown, DefaultT>({
-        querySerializer: {
-            parameters: {
-                parameterObject: {
-                    object: {
-                        style: 'form'
-                    }
-                }
-            }
-        },
-        url: '/api/v{api-version}/complex',
-        ...options
-    });
-};
+export const complexTypes = <TComposable extends Composable = "$fetch", DefaultT extends ComplexTypesResponse = ComplexTypesResponse>(options: Options<TComposable, ComplexTypesData, ComplexTypesResponse, DefaultT>) => (options.client ?? client).get<TComposable, ComplexTypesResponse | DefaultT, unknown, DefaultT>({
+    querySerializer: { parameters: { parameterObject: { object: { style: "form" } } } },
+    url: "/api/v{api-version}/complex",
+    ...options
+});
 
-export const multipartResponse = <TComposable extends Composable = '$fetch', DefaultT extends MultipartResponseResponse = MultipartResponseResponse>(options: Options<TComposable, MultipartResponseData, MultipartResponseResponse, DefaultT>) => {
-    return (options.client ?? client).get<TComposable, MultipartResponseResponse | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/multipart',
-        ...options
-    });
-};
+export const multipartResponse = <TComposable extends Composable = "$fetch", DefaultT extends MultipartResponseResponse = MultipartResponseResponse>(options: Options<TComposable, MultipartResponseData, MultipartResponseResponse, DefaultT>) => (options.client ?? client).get<TComposable, MultipartResponseResponse | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/multipart", ...options });
 
-export const multipartRequest = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, MultipartRequestData, unknown, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        ...formDataBodySerializer,
-        url: '/api/v{api-version}/multipart',
-        ...options,
-        headers: {
-            'Content-Type': null,
-            ...options.headers
-        }
-    });
-};
+export const multipartRequest = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, MultipartRequestData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+    ...formDataBodySerializer,
+    url: "/api/v{api-version}/multipart",
+    ...options,
+    headers: {
+        "Content-Type": null,
+        ...options.headers
+    }
+});
 
-export const complexParams = <TComposable extends Composable = '$fetch', DefaultT extends ComplexParamsResponse = ComplexParamsResponse>(options: Options<TComposable, ComplexParamsData, ComplexParamsResponse, DefaultT>) => {
-    return (options.client ?? client).put<TComposable, ComplexParamsResponse | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/complex/{id}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json-patch+json',
-            ...options.headers
-        }
-    });
-};
+export const complexParams = <TComposable extends Composable = "$fetch", DefaultT extends ComplexParamsResponse = ComplexParamsResponse>(options: Options<TComposable, ComplexParamsData, ComplexParamsResponse, DefaultT>) => (options.client ?? client).put<TComposable, ComplexParamsResponse | DefaultT, unknown, DefaultT>({
+    url: "/api/v{api-version}/complex/{id}",
+    ...options,
+    headers: {
+        "Content-Type": "application/json-patch+json",
+        ...options.headers
+    }
+});
 
-export const callWithResultFromHeader = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, CallWithResultFromHeaderData, unknown, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/header',
-        ...options
-    });
-};
+export const callWithResultFromHeader = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, CallWithResultFromHeaderData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/header", ...options });
 
-export const testErrorCode = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, TestErrorCodeData, unknown, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/error',
-        ...options
-    });
-};
+export const testErrorCode = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, TestErrorCodeData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/error", ...options });
 
-export const nonAsciiæøåÆøÅöôêÊ字符串 = <TComposable extends Composable = '$fetch', DefaultT extends NonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiæøåÆøÅöôêÊ字符串Response>(options: Options<TComposable, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultT>) => {
-    return (options.client ?? client).post<TComposable, NonAsciiæøåÆøÅöôêÊ字符串Response | DefaultT, unknown, DefaultT>({
-        url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
-        ...options
-    });
-};
+export const nonAsciiæøåÆøÅöôêÊ字符串 = <TComposable extends Composable = "$fetch", DefaultT extends NonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiæøåÆøÅöôêÊ字符串Response>(options: Options<TComposable, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultT>) => (options.client ?? client).post<TComposable, NonAsciiæøåÆøÅöôêÊ字符串Response | DefaultT, unknown, DefaultT>({ url: "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串", ...options });
 
 /**
  * Login User
  */
-export const putWithFormUrlEncoded = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PutWithFormUrlEncodedData, unknown, DefaultT>) => {
-    return (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({
-        ...urlSearchParamsBodySerializer,
-        url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
-        ...options,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            ...options.headers
-        }
-    });
-};
+export const putWithFormUrlEncoded = <TComposable extends Composable = "$fetch", DefaultT = undefined>(options: Options<TComposable, PutWithFormUrlEncodedData, unknown, DefaultT>) => (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({
+    ...urlSearchParamsBodySerializer,
+    url: "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串",
+    ...options,
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        ...options.headers
+    }
+});

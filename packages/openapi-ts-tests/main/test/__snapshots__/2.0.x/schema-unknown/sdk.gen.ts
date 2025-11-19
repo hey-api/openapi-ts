@@ -21,13 +21,11 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 /**
  * Send a single email
  */
-export const sendEmail = <ThrowOnError extends boolean = false>(options: Options<SendEmailData, ThrowOnError>) => {
-    return (options.client ?? client).post<SendEmailResponses, SendEmailErrors, ThrowOnError>({
-        url: '/email',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const sendEmail = <ThrowOnError extends boolean = false>(options: Options<SendEmailData, ThrowOnError>) => (options.client ?? client).post<SendEmailResponses, SendEmailErrors, ThrowOnError>({
+    url: "/email",
+    ...options,
+    headers: {
+        "Content-Type": "application/json",
+        ...options.headers
+    }
+});

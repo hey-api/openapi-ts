@@ -50,13 +50,13 @@ export const sessionCreate = <ThrowOnError extends boolean = false>(parameters?:
     parentID?: string;
     title?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "body", key: "parentID" }, { in: "body", key: "title" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "body", key: "parentID" }, { in: "body", key: "title" }] }]);
     return (options?.client ?? client).post<SessionCreateResponses, SessionCreateErrors, ThrowOnError>({
         url: "/session",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -69,7 +69,7 @@ export const sessionCreate = <ThrowOnError extends boolean = false>(parameters?:
 export const sessionDelete = <ThrowOnError extends boolean = false>(parameters: {
     id: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "path", key: "id" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "path", key: "id" }] }]);
     return (options?.client ?? client).delete<SessionDeleteResponses, unknown, ThrowOnError>({
         url: "/session/{id}",
         ...options,
@@ -83,7 +83,7 @@ export const sessionDelete = <ThrowOnError extends boolean = false>(parameters: 
 export const sessionGet = <ThrowOnError extends boolean = false>(parameters: {
     id: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "path", key: "id" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "path", key: "id" }] }]);
     return (options?.client ?? client).get<SessionGetResponses, unknown, ThrowOnError>({
         url: "/session/{id}",
         ...options,
@@ -98,13 +98,13 @@ export const sessionUpdate = <ThrowOnError extends boolean = false>(parameters: 
     id: string;
     title?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "path", key: "id" }, { in: "body", key: "title" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "path", key: "id" }, { in: "body", key: "title" }] }]);
     return (options?.client ?? client).patch<SessionUpdateResponses, unknown, ThrowOnError>({
         url: "/session/{id}",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -117,7 +117,7 @@ export const sessionUpdate = <ThrowOnError extends boolean = false>(parameters: 
 export const sessionChildren = <ThrowOnError extends boolean = false>(parameters: {
     id: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "path", key: "id" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "path", key: "id" }] }]);
     return (options?.client ?? client).get<SessionChildrenResponses, unknown, ThrowOnError>({
         url: "/session/{id}/children",
         ...options,
@@ -134,18 +134,18 @@ export const sessionInit = <ThrowOnError extends boolean = false>(parameters: {
     providerID?: string;
     modelID?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [
-        { in: "path", key: "id" },
-        { in: "body", key: "messageID" },
-        { in: "body", key: "providerID" },
-        { in: "body", key: "modelID" }
-    ]);
+    const params = buildClientParams([parameters], [{ args: [
+                { in: "path", key: "id" },
+                { in: "body", key: "messageID" },
+                { in: "body", key: "providerID" },
+                { in: "body", key: "modelID" }
+            ] }]);
     return (options?.client ?? client).post<SessionInitResponses, unknown, ThrowOnError>({
         url: "/session/{id}/init",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -158,7 +158,7 @@ export const sessionInit = <ThrowOnError extends boolean = false>(parameters: {
 export const sessionAbort = <ThrowOnError extends boolean = false>(parameters: {
     id: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "path", key: "id" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "path", key: "id" }] }]);
     return (options?.client ?? client).post<SessionAbortResponses, unknown, ThrowOnError>({
         url: "/session/{id}/abort",
         ...options,
@@ -172,7 +172,7 @@ export const sessionAbort = <ThrowOnError extends boolean = false>(parameters: {
 export const sessionUnshare = <ThrowOnError extends boolean = false>(parameters: {
     id: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "path", key: "id" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "path", key: "id" }] }]);
     return (options?.client ?? client).delete<SessionUnshareResponses, unknown, ThrowOnError>({
         url: "/session/{id}/share",
         ...options,
@@ -186,7 +186,7 @@ export const sessionUnshare = <ThrowOnError extends boolean = false>(parameters:
 export const sessionShare = <ThrowOnError extends boolean = false>(parameters: {
     id: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "path", key: "id" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "path", key: "id" }] }]);
     return (options?.client ?? client).post<SessionShareResponses, unknown, ThrowOnError>({
         url: "/session/{id}/share",
         ...options,
@@ -202,17 +202,17 @@ export const sessionSummarize = <ThrowOnError extends boolean = false>(parameter
     providerID?: string;
     modelID?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [
-        { in: "path", key: "id" },
-        { in: "body", key: "providerID" },
-        { in: "body", key: "modelID" }
-    ]);
+    const params = buildClientParams([parameters], [{ args: [
+                { in: "path", key: "id" },
+                { in: "body", key: "providerID" },
+                { in: "body", key: "modelID" }
+            ] }]);
     return (options?.client ?? client).post<SessionSummarizeResponses, unknown, ThrowOnError>({
         url: "/session/{id}/summarize",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -225,7 +225,7 @@ export const sessionSummarize = <ThrowOnError extends boolean = false>(parameter
 export const sessionMessages = <ThrowOnError extends boolean = false>(parameters: {
     id: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "path", key: "id" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "path", key: "id" }] }]);
     return (options?.client ?? client).get<SessionMessagesResponses, unknown, ThrowOnError>({
         url: "/session/{id}/message",
         ...options,
@@ -247,29 +247,29 @@ export const sessionChat = <ThrowOnError extends boolean = false>(parameters: {
         [key: string]: boolean;
     };
     parts?: Array<({
-        type: 'text';
+        type: "text";
     } & TextPartInput) | ({
-        type: 'file';
+        type: "file";
     } & FilePartInput) | ({
-        type: 'agent';
+        type: "agent";
     } & AgentPartInput)>;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [
-        { in: "path", key: "id" },
-        { in: "body", key: "messageID" },
-        { in: "body", key: "providerID" },
-        { in: "body", key: "modelID" },
-        { in: "body", key: "agent" },
-        { in: "body", key: "system" },
-        { in: "body", key: "tools" },
-        { in: "body", key: "parts" }
-    ]);
+    const params = buildClientParams([parameters], [{ args: [
+                { in: "path", key: "id" },
+                { in: "body", key: "messageID" },
+                { in: "body", key: "providerID" },
+                { in: "body", key: "modelID" },
+                { in: "body", key: "agent" },
+                { in: "body", key: "system" },
+                { in: "body", key: "tools" },
+                { in: "body", key: "parts" }
+            ] }]);
     return (options?.client ?? client).post<SessionChatResponses, unknown, ThrowOnError>({
         url: "/session/{id}/message",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -283,7 +283,7 @@ export const sessionMessage = <ThrowOnError extends boolean = false>(parameters:
     id: string;
     messageID: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "path", key: "id" }, { in: "path", key: "messageID" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "path", key: "id" }, { in: "path", key: "messageID" }] }]);
     return (options?.client ?? client).get<SessionMessageResponses, unknown, ThrowOnError>({
         url: "/session/{id}/message/{messageID}",
         ...options,
@@ -299,17 +299,17 @@ export const sessionShell = <ThrowOnError extends boolean = false>(parameters: {
     agent?: string;
     command?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [
-        { in: "path", key: "id" },
-        { in: "body", key: "agent" },
-        { in: "body", key: "command" }
-    ]);
+    const params = buildClientParams([parameters], [{ args: [
+                { in: "path", key: "id" },
+                { in: "body", key: "agent" },
+                { in: "body", key: "command" }
+            ] }]);
     return (options?.client ?? client).post<SessionShellResponses, unknown, ThrowOnError>({
         url: "/session/{id}/shell",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -324,17 +324,17 @@ export const sessionRevert = <ThrowOnError extends boolean = false>(parameters: 
     messageID?: string;
     partID?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [
-        { in: "path", key: "id" },
-        { in: "body", key: "messageID" },
-        { in: "body", key: "partID" }
-    ]);
+    const params = buildClientParams([parameters], [{ args: [
+                { in: "path", key: "id" },
+                { in: "body", key: "messageID" },
+                { in: "body", key: "partID" }
+            ] }]);
     return (options?.client ?? client).post<SessionRevertResponses, unknown, ThrowOnError>({
         url: "/session/{id}/revert",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -347,7 +347,7 @@ export const sessionRevert = <ThrowOnError extends boolean = false>(parameters: 
 export const sessionUnrevert = <ThrowOnError extends boolean = false>(parameters: {
     id: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "path", key: "id" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "path", key: "id" }] }]);
     return (options?.client ?? client).post<SessionUnrevertResponses, unknown, ThrowOnError>({
         url: "/session/{id}/unrevert",
         ...options,
@@ -361,19 +361,19 @@ export const sessionUnrevert = <ThrowOnError extends boolean = false>(parameters
 export const postSessionByIdPermissionsByPermissionId = <ThrowOnError extends boolean = false>(parameters: {
     id: string;
     permissionID: string;
-    response?: 'once' | 'always' | 'reject';
+    response?: "once" | "always" | "reject";
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [
-        { in: "path", key: "id" },
-        { in: "path", key: "permissionID" },
-        { in: "body", key: "response" }
-    ]);
+    const params = buildClientParams([parameters], [{ args: [
+                { in: "path", key: "id" },
+                { in: "path", key: "permissionID" },
+                { in: "body", key: "response" }
+            ] }]);
     return (options?.client ?? client).post<PostSessionByIdPermissionsByPermissionIdResponses, unknown, ThrowOnError>({
         url: "/session/{id}/permissions/{permissionID}",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -391,7 +391,7 @@ export const configProviders = <ThrowOnError extends boolean = false>(options?: 
 export const findText = <ThrowOnError extends boolean = false>(parameters: {
     pattern: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "query", key: "pattern" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "query", key: "pattern" }] }]);
     return (options?.client ?? client).get<FindTextResponses, unknown, ThrowOnError>({
         url: "/find",
         ...options,
@@ -405,7 +405,7 @@ export const findText = <ThrowOnError extends boolean = false>(parameters: {
 export const findFiles = <ThrowOnError extends boolean = false>(parameters: {
     query: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "query", key: "query" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "query", key: "query" }] }]);
     return (options?.client ?? client).get<FindFilesResponses, unknown, ThrowOnError>({
         url: "/find/file",
         ...options,
@@ -419,7 +419,7 @@ export const findFiles = <ThrowOnError extends boolean = false>(parameters: {
 export const findSymbols = <ThrowOnError extends boolean = false>(parameters: {
     query: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "query", key: "query" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "query", key: "query" }] }]);
     return (options?.client ?? client).get<FindSymbolsResponses, unknown, ThrowOnError>({
         url: "/find/symbol",
         ...options,
@@ -433,7 +433,7 @@ export const findSymbols = <ThrowOnError extends boolean = false>(parameters: {
 export const fileRead = <ThrowOnError extends boolean = false>(parameters: {
     path: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "query", key: "path" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "query", key: "path" }] }]);
     return (options?.client ?? client).get<FileReadResponses, unknown, ThrowOnError>({
         url: "/file",
         ...options,
@@ -451,24 +451,24 @@ export const fileStatus = <ThrowOnError extends boolean = false>(options?: Optio
  */
 export const appLog = <ThrowOnError extends boolean = false>(parameters?: {
     service?: string;
-    level?: 'debug' | 'info' | 'error' | 'warn';
+    level?: "debug" | "info" | "error" | "warn";
     message?: string;
     extra?: {
         [key: string]: unknown;
     };
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [
-        { in: "body", key: "service" },
-        { in: "body", key: "level" },
-        { in: "body", key: "message" },
-        { in: "body", key: "extra" }
-    ]);
+    const params = buildClientParams([parameters], [{ args: [
+                { in: "body", key: "service" },
+                { in: "body", key: "level" },
+                { in: "body", key: "message" },
+                { in: "body", key: "extra" }
+            ] }]);
     return (options?.client ?? client).post<AppLogResponses, unknown, ThrowOnError>({
         url: "/log",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -486,13 +486,13 @@ export const appAgents = <ThrowOnError extends boolean = false>(options?: Option
 export const tuiAppendPrompt = <ThrowOnError extends boolean = false>(parameters?: {
     text?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "body", key: "text" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "body", key: "text" }] }]);
     return (options?.client ?? client).post<TuiAppendPromptResponses, unknown, ThrowOnError>({
         url: "/tui/append-prompt",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -535,13 +535,13 @@ export const tuiClearPrompt = <ThrowOnError extends boolean = false>(options?: O
 export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(parameters?: {
     command?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "body", key: "command" }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "body", key: "command" }] }]);
     return (options?.client ?? client).post<TuiExecuteCommandResponses, unknown, ThrowOnError>({
         url: "/tui/execute-command",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -554,19 +554,19 @@ export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(paramete
 export const tuiShowToast = <ThrowOnError extends boolean = false>(parameters?: {
     title?: string;
     message?: string;
-    variant?: 'info' | 'success' | 'warning' | 'error';
+    variant?: "info" | "success" | "warning" | "error";
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [
-        { in: "body", key: "title" },
-        { in: "body", key: "message" },
-        { in: "body", key: "variant" }
-    ]);
+    const params = buildClientParams([parameters], [{ args: [
+                { in: "body", key: "title" },
+                { in: "body", key: "message" },
+                { in: "body", key: "variant" }
+            ] }]);
     return (options?.client ?? client).post<TuiShowToastResponses, unknown, ThrowOnError>({
         url: "/tui/show-toast",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }
@@ -580,13 +580,13 @@ export const authSet = <ThrowOnError extends boolean = false>(parameters: {
     id: string;
     auth?: Auth;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ in: "path", key: "id" }, {}]);
+    const params = buildClientParams([parameters], [{ args: [{ in: "path", key: "id" }, {}] }]);
     return (options?.client ?? client).put<AuthSetResponses, AuthSetErrors, ThrowOnError>({
         url: "/auth/{id}",
         ...options,
         ...params,
         headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             ...options?.headers,
             ...params.headers
         }

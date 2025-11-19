@@ -8,7 +8,7 @@ export type GetFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/foo';
+    url: "/foo";
 };
 
 export type GetFooResponses = {
@@ -24,7 +24,7 @@ export type FooPostData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/foo';
+    url: "/foo";
 };
 
 export type FooPostResponses = {
@@ -40,7 +40,7 @@ export type FooPutData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/foo';
+    url: "/foo";
 };
 
 export type FooPutResponses = {
@@ -56,7 +56,7 @@ export type GetFooBarData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/foo/bar';
+    url: "/foo/bar";
 };
 
 export type GetFooBarResponses = {
@@ -72,7 +72,7 @@ export type FooBarPostData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/foo/bar';
+    url: "/foo/bar";
 };
 
 export type FooBarPostResponses = {
@@ -88,7 +88,7 @@ export type FooBarPutData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/foo/bar';
+    url: "/foo/bar";
 };
 
 export type FooBarPutResponses = {

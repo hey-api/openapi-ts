@@ -414,12 +414,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/assistants',
       ...options,
     });
@@ -438,12 +433,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/assistants',
       ...options,
       headers: {
@@ -466,12 +456,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/assistants/{assistant_id}',
       ...options,
     });
@@ -490,12 +475,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/assistants/{assistant_id}',
       ...options,
     });
@@ -514,12 +494,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/assistants/{assistant_id}',
       ...options,
       headers: {
@@ -542,12 +517,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/audio/speech',
       ...options,
       headers: {
@@ -571,12 +541,7 @@ export class OpenAi extends HeyApiClient {
       ThrowOnError
     >({
       ...formDataBodySerializer,
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/audio/transcriptions',
       ...options,
       headers: {
@@ -600,12 +565,7 @@ export class OpenAi extends HeyApiClient {
       ThrowOnError
     >({
       ...formDataBodySerializer,
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/audio/translations',
       ...options,
       headers: {
@@ -628,12 +588,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/batches',
       ...options,
     });
@@ -652,12 +607,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/batches',
       ...options,
       headers: {
@@ -680,12 +630,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/batches/{batch_id}',
       ...options,
     });
@@ -704,12 +649,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/batches/{batch_id}/cancel',
       ...options,
     });
@@ -730,12 +670,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/chat/completions',
       ...options,
     });
@@ -769,12 +704,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/chat/completions',
       ...options,
       headers: {
@@ -799,12 +729,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/chat/completions/{completion_id}',
       ...options,
     });
@@ -825,12 +750,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/chat/completions/{completion_id}',
       ...options,
     });
@@ -852,12 +772,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/chat/completions/{completion_id}',
       ...options,
       headers: {
@@ -883,12 +798,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/chat/completions/{completion_id}/messages',
       ...options,
     });
@@ -907,12 +817,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/completions',
       ...options,
       headers: {
@@ -935,12 +840,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers',
       ...options,
     });
@@ -959,12 +859,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers',
       ...options,
       headers: {
@@ -987,12 +882,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}',
       ...options,
     });
@@ -1011,12 +901,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}',
       ...options,
     });
@@ -1035,12 +920,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}/files',
       ...options,
     });
@@ -1063,12 +943,7 @@ export class OpenAi extends HeyApiClient {
       ThrowOnError
     >({
       ...formDataBodySerializer,
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}/files',
       ...options,
       headers: {
@@ -1091,12 +966,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}/files/{file_id}',
       ...options,
     });
@@ -1115,12 +985,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}/files/{file_id}',
       ...options,
     });
@@ -1139,12 +1004,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}/files/{file_id}/content',
       ...options,
     });
@@ -1163,12 +1023,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/embeddings',
       ...options,
       headers: {
@@ -1192,12 +1047,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals',
       ...options,
     });
@@ -1219,12 +1069,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals',
       ...options,
       headers: {
@@ -1248,12 +1093,7 @@ export class OpenAi extends HeyApiClient {
       DeleteEvalErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}',
       ...options,
     });
@@ -1273,12 +1113,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}',
       ...options,
     });
@@ -1298,12 +1133,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}',
       ...options,
       headers: {
@@ -1327,12 +1157,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs',
       ...options,
     });
@@ -1352,12 +1177,7 @@ export class OpenAi extends HeyApiClient {
       CreateEvalRunErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs',
       ...options,
       headers: {
@@ -1381,12 +1201,7 @@ export class OpenAi extends HeyApiClient {
       DeleteEvalRunErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs/{run_id}',
       ...options,
     });
@@ -1406,12 +1221,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs/{run_id}',
       ...options,
     });
@@ -1431,12 +1241,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs/{run_id}',
       ...options,
     });
@@ -1456,12 +1261,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs/{run_id}/output_items',
       ...options,
     });
@@ -1481,12 +1281,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs/{run_id}/output_items/{output_item_id}',
       ...options,
     });
@@ -1505,12 +1300,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/files',
       ...options,
     });
@@ -1539,12 +1329,7 @@ export class OpenAi extends HeyApiClient {
       ThrowOnError
     >({
       ...formDataBodySerializer,
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/files',
       ...options,
       headers: {
@@ -1567,12 +1352,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/files/{file_id}',
       ...options,
     });
@@ -1591,12 +1371,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/files/{file_id}',
       ...options,
     });
@@ -1615,12 +1390,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/files/{file_id}/content',
       ...options,
     });
@@ -1640,12 +1410,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/alpha/graders/run',
       ...options,
       headers: {
@@ -1669,12 +1434,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/alpha/graders/validate',
       ...options,
       headers: {
@@ -1700,12 +1460,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions',
       ...options,
     });
@@ -1727,12 +1482,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions',
       ...options,
       headers: {
@@ -1758,12 +1508,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions/{permission_id}',
       ...options,
     });
@@ -1783,12 +1528,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs',
       ...options,
     });
@@ -1812,12 +1552,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs',
       ...options,
       headers: {
@@ -1843,12 +1578,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs/{fine_tuning_job_id}',
       ...options,
     });
@@ -1868,12 +1598,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs/{fine_tuning_job_id}/cancel',
       ...options,
     });
@@ -1893,12 +1618,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs/{fine_tuning_job_id}/checkpoints',
       ...options,
     });
@@ -1918,12 +1638,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs/{fine_tuning_job_id}/events',
       ...options,
     });
@@ -1943,12 +1658,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs/{fine_tuning_job_id}/pause',
       ...options,
     });
@@ -1968,12 +1678,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs/{fine_tuning_job_id}/resume',
       ...options,
     });
@@ -1993,12 +1698,7 @@ export class OpenAi extends HeyApiClient {
       ThrowOnError
     >({
       ...formDataBodySerializer,
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/images/edits',
       ...options,
       headers: {
@@ -2022,12 +1722,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/images/generations',
       ...options,
       headers: {
@@ -2051,12 +1746,7 @@ export class OpenAi extends HeyApiClient {
       ThrowOnError
     >({
       ...formDataBodySerializer,
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/images/variations',
       ...options,
       headers: {
@@ -2079,12 +1769,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/models',
       ...options,
     });
@@ -2103,12 +1788,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/models/{model}',
       ...options,
     });
@@ -2127,12 +1807,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/models/{model}',
       ...options,
     });
@@ -2153,12 +1828,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/moderations',
       ...options,
       headers: {
@@ -2181,12 +1851,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/admin_api_keys',
       ...options,
     });
@@ -2205,12 +1870,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/admin_api_keys',
       ...options,
       headers: {
@@ -2233,12 +1893,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/admin_api_keys/{key_id}',
       ...options,
     });
@@ -2257,12 +1912,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/admin_api_keys/{key_id}',
       ...options,
     });
@@ -2282,20 +1932,9 @@ export class OpenAi extends HeyApiClient {
       ThrowOnError
     >({
       querySerializer: {
-        parameters: {
-          effective_at: {
-            object: {
-              style: 'form',
-            },
-          },
-        },
+        parameters: { effective_at: { object: { style: 'form' } } },
       },
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/audit_logs',
       ...options,
     });
@@ -2314,12 +1953,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates',
       ...options,
     });
@@ -2341,12 +1975,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates',
       ...options,
       headers: {
@@ -2372,12 +2001,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates/activate',
       ...options,
       headers: {
@@ -2403,12 +2027,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates/deactivate',
       ...options,
       headers: {
@@ -2434,12 +2053,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates/{certificate_id}',
       ...options,
     });
@@ -2461,12 +2075,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates/{certificate_id}',
       ...options,
     });
@@ -2486,12 +2095,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates/{certificate_id}',
       ...options,
       headers: {
@@ -2514,12 +2118,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/costs',
       ...options,
     });
@@ -2538,12 +2137,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/invites',
       ...options,
     });
@@ -2562,12 +2156,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/invites',
       ...options,
       headers: {
@@ -2590,12 +2179,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/invites/{invite_id}',
       ...options,
     });
@@ -2614,12 +2198,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/invites/{invite_id}',
       ...options,
     });
@@ -2638,12 +2217,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects',
       ...options,
     });
@@ -2662,12 +2236,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects',
       ...options,
       headers: {
@@ -2690,12 +2259,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}',
       ...options,
     });
@@ -2714,12 +2278,7 @@ export class OpenAi extends HeyApiClient {
       ModifyProjectErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}',
       ...options,
       headers: {
@@ -2742,12 +2301,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/api_keys',
       ...options,
     });
@@ -2766,12 +2320,7 @@ export class OpenAi extends HeyApiClient {
       DeleteProjectApiKeyErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/api_keys/{key_id}',
       ...options,
     });
@@ -2790,12 +2339,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/api_keys/{key_id}',
       ...options,
     });
@@ -2814,12 +2358,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/archive',
       ...options,
     });
@@ -2838,12 +2377,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/certificates',
       ...options,
     });
@@ -2865,12 +2399,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/certificates/activate',
       ...options,
       headers: {
@@ -2895,12 +2424,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/certificates/deactivate',
       ...options,
       headers: {
@@ -2923,12 +2447,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/rate_limits',
       ...options,
     });
@@ -2947,12 +2466,7 @@ export class OpenAi extends HeyApiClient {
       UpdateProjectRateLimitsErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/rate_limits/{rate_limit_id}',
       ...options,
       headers: {
@@ -2975,12 +2489,7 @@ export class OpenAi extends HeyApiClient {
       ListProjectServiceAccountsErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/service_accounts',
       ...options,
     });
@@ -2999,12 +2508,7 @@ export class OpenAi extends HeyApiClient {
       CreateProjectServiceAccountErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/service_accounts',
       ...options,
       headers: {
@@ -3027,12 +2531,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/service_accounts/{service_account_id}',
       ...options,
     });
@@ -3051,12 +2550,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/service_accounts/{service_account_id}',
       ...options,
     });
@@ -3075,12 +2569,7 @@ export class OpenAi extends HeyApiClient {
       ListProjectUsersErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/users',
       ...options,
     });
@@ -3099,12 +2588,7 @@ export class OpenAi extends HeyApiClient {
       CreateProjectUserErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/users',
       ...options,
       headers: {
@@ -3127,12 +2611,7 @@ export class OpenAi extends HeyApiClient {
       DeleteProjectUserErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/users/{user_id}',
       ...options,
     });
@@ -3151,12 +2630,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/users/{user_id}',
       ...options,
     });
@@ -3175,12 +2649,7 @@ export class OpenAi extends HeyApiClient {
       ModifyProjectUserErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/users/{user_id}',
       ...options,
       headers: {
@@ -3203,12 +2672,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/audio_speeches',
       ...options,
     });
@@ -3227,12 +2691,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/audio_transcriptions',
       ...options,
     });
@@ -3251,12 +2710,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/code_interpreter_sessions',
       ...options,
     });
@@ -3275,12 +2729,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/completions',
       ...options,
     });
@@ -3299,12 +2748,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/embeddings',
       ...options,
     });
@@ -3323,12 +2767,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/images',
       ...options,
     });
@@ -3347,12 +2786,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/moderations',
       ...options,
     });
@@ -3371,12 +2805,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/vector_stores',
       ...options,
     });
@@ -3395,12 +2824,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/users',
       ...options,
     });
@@ -3419,12 +2843,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/users/{user_id}',
       ...options,
     });
@@ -3443,12 +2862,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/users/{user_id}',
       ...options,
     });
@@ -3467,12 +2881,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/users/{user_id}',
       ...options,
       headers: {
@@ -3502,12 +2911,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/realtime/sessions',
       ...options,
       headers: {
@@ -3537,12 +2941,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/realtime/transcription_sessions',
       ...options,
       headers: {
@@ -3572,12 +2971,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/responses',
       ...options,
       headers: {
@@ -3601,12 +2995,7 @@ export class OpenAi extends HeyApiClient {
       DeleteResponseErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/responses/{response_id}',
       ...options,
     });
@@ -3626,12 +3015,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/responses/{response_id}',
       ...options,
     });
@@ -3653,12 +3037,7 @@ export class OpenAi extends HeyApiClient {
       CancelResponseErrors,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/responses/{response_id}/cancel',
       ...options,
     });
@@ -3677,12 +3056,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/responses/{response_id}/input_items',
       ...options,
     });
@@ -3701,12 +3075,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads',
       ...options,
       headers: {
@@ -3729,12 +3098,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/runs',
       ...options,
       headers: {
@@ -3757,12 +3121,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}',
       ...options,
     });
@@ -3781,12 +3140,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}',
       ...options,
     });
@@ -3805,12 +3159,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}',
       ...options,
       headers: {
@@ -3833,12 +3182,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/messages',
       ...options,
     });
@@ -3857,12 +3201,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/messages',
       ...options,
       headers: {
@@ -3885,12 +3224,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/messages/{message_id}',
       ...options,
     });
@@ -3909,12 +3243,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/messages/{message_id}',
       ...options,
     });
@@ -3933,12 +3262,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/messages/{message_id}',
       ...options,
       headers: {
@@ -3961,12 +3285,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs',
       ...options,
     });
@@ -3985,12 +3304,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs',
       ...options,
       headers: {
@@ -4013,12 +3327,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs/{run_id}',
       ...options,
     });
@@ -4037,12 +3346,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs/{run_id}',
       ...options,
       headers: {
@@ -4065,12 +3369,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs/{run_id}/cancel',
       ...options,
     });
@@ -4089,12 +3388,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs/{run_id}/steps',
       ...options,
     });
@@ -4113,12 +3407,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs/{run_id}/steps/{step_id}',
       ...options,
     });
@@ -4138,12 +3427,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs/{run_id}/submit_tool_outputs',
       ...options,
       headers: {
@@ -4183,12 +3467,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/uploads',
       ...options,
       headers: {
@@ -4212,12 +3491,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/uploads/{upload_id}/cancel',
       ...options,
     });
@@ -4243,12 +3517,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/uploads/{upload_id}/complete',
       ...options,
       headers: {
@@ -4277,12 +3546,7 @@ export class OpenAi extends HeyApiClient {
       ThrowOnError
     >({
       ...formDataBodySerializer,
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/uploads/{upload_id}/parts',
       ...options,
       headers: {
@@ -4305,12 +3569,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores',
       ...options,
     });
@@ -4329,12 +3588,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores',
       ...options,
       headers: {
@@ -4357,12 +3611,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}',
       ...options,
     });
@@ -4381,12 +3630,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}',
       ...options,
     });
@@ -4405,12 +3649,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}',
       ...options,
       headers: {
@@ -4433,12 +3672,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/file_batches',
       ...options,
       headers: {
@@ -4461,12 +3695,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/file_batches/{batch_id}',
       ...options,
     });
@@ -4485,12 +3714,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel',
       ...options,
     });
@@ -4509,12 +3733,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/file_batches/{batch_id}/files',
       ...options,
     });
@@ -4533,12 +3752,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/files',
       ...options,
     });
@@ -4557,12 +3771,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/files',
       ...options,
       headers: {
@@ -4585,12 +3794,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/files/{file_id}',
       ...options,
     });
@@ -4609,12 +3813,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/files/{file_id}',
       ...options,
     });
@@ -4633,12 +3832,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/files/{file_id}',
       ...options,
       headers: {
@@ -4661,12 +3855,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/files/{file_id}/content',
       ...options,
     });
@@ -4685,12 +3874,7 @@ export class OpenAi extends HeyApiClient {
       unknown,
       ThrowOnError
     >({
-      security: [
-        {
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
+      security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/search',
       ...options,
       headers: {

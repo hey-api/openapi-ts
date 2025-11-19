@@ -40,14 +40,16 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'invalid',
-            // 'full.yaml',
+            'full.yaml',
+            // 'object-property-names.yaml',
             // 'openai.yaml',
             // 'opencode.yaml',
+            // 'pagination-ref.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'type-format.yaml',
-            'validators.yaml',
+            // 'validators.yaml',
             // 'validators-circular-ref.json',
             // 'validators-circular-ref-2.yaml',
             // 'zoom-video-sdk.json',
@@ -85,26 +87,26 @@ export default defineConfig(() => {
       },
       // name: 'foo',
       output: [
-        // {
-        //   // case: 'snake_case',
-        //   clean: true,
-        //   fileName: {
-        //     // case: 'snake_case',
-        //     // name: '{{name}}.renamed',
-        //     suffix: '.meh',
-        //   },
-        //   // format: 'prettier',
-        //   importFileExtension: '.ts',
-        //   // indexFile: false,
-        //   // lint: 'eslint',
-        //   path: path.resolve(__dirname, '.gen'),
-        //   tsConfigPath: path.resolve(
-        //     __dirname,
-        //     'tsconfig',
-        //     'tsconfig.nodenext.json',
-        //   ),
-        // },
-        '.gen',
+        {
+          // case: 'snake_case',
+          // clean: true,
+          // fileName: {
+          //   // case: 'snake_case',
+          //   // name: '{{name}}.renamed',
+          //   suffix: '.meh',
+          // },
+          // format: 'prettier',
+          // importFileExtension: '.ts',
+          // indexFile: false,
+          // lint: 'eslint',
+          path: path.resolve(__dirname, '.gen'),
+          tsConfigPath: path.resolve(
+            __dirname,
+            'tsconfig',
+            'tsconfig.nodenext.json',
+          ),
+        },
+        // '.gen',
       ],
       parser: {
         filters: {
@@ -224,17 +226,17 @@ export default defineConfig(() => {
         {
           // case: 'snake_case',
           // definitions: '你_snake_{{name}}',
-          // enums: {
-          //   // case: 'PascalCase',
-          //   // constantsIgnoreNull: true,
-          //   // enabled: false,
-          //   mode: 'javascript',
-          // },
+          enums: {
+            // case: 'PascalCase',
+            // constantsIgnoreNull: true,
+            // enabled: false,
+            // mode: 'typescript',
+          },
           // errors: {
           //   error: '他們_error_{{name}}',
           //   name: '你們_errors_{{name}}',
           // },
-          // name: '@hey-api/typescript',
+          name: '@hey-api/typescript',
           // requests: '我們_data_{{name}}',
           // responses: {
           //   name: '我_responses_{{name}}',
@@ -248,7 +250,7 @@ export default defineConfig(() => {
           // },
         },
         {
-          asClass: true,
+          // asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}',
           // classNameBuilder: '{{name}}Service',
@@ -259,7 +261,7 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          instance: true,
+          // instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
           // paramsStructure: 'flat',
@@ -268,7 +270,7 @@ export default defineConfig(() => {
           // signature: 'client',
           // signature: 'object',
           // transformer: '@hey-api/transformers',
-          transformer: true,
+          // transformer: true,
           validator: 'valibot',
           // validator: {
           //   request: 'zod',
@@ -306,16 +308,21 @@ export default defineConfig(() => {
           // infiniteQueryKeys: {
           //   name: '{{name}}IQK',
           // },
-          // infiniteQueryOptions: {
-          //   name: '{{name}}IQO',
-          // },
-          mutationOptions: {
-            // name: '{{name}}MO',
+          infiniteQueryOptions: {
             meta() {
               return {
                 custom: 'value',
               };
             },
+            // name: '{{name}}IQO',
+          },
+          mutationOptions: {
+            meta() {
+              return {
+                custom: 'value',
+              };
+            },
+            // name: '{{name}}MO',
           },
           name: '@tanstack/react-query',
           queryKeys: {
@@ -351,9 +358,9 @@ export default defineConfig(() => {
         },
         {
           name: 'arktype',
-          // types: {
-          //   infer: true,
-          // },
+          types: {
+            infer: true,
+          },
         },
         {
           // case: 'SCREAMING_SNAKE_CASE',
@@ -425,7 +432,7 @@ export default defineConfig(() => {
         {
           // case: 'snake_case',
           // comments: false,
-          compatibilityVersion: 'mini',
+          compatibilityVersion: 4,
           dates: {
             // local: true,
             // offset: true,

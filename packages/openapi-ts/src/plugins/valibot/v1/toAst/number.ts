@@ -1,7 +1,5 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import {
   INTEGER_FORMATS,
@@ -32,23 +30,20 @@ export const numberToAst = ({
   // Return early if const is defined since we can create a literal type directly without additional validation
   if (schema.const !== undefined && schema.const !== null) {
     const constValue = schema.const;
-    let literalValue;
+    let literalValue: ReturnType<typeof $.fromValue>;
 
     // Case 1: Number with no format -> generate literal with the number
     if (typeof constValue === 'number' && !format) {
-      literalValue = tsc.ots.number(constValue);
+      literalValue = $.literal(constValue);
     }
     // Case 2: Number with format -> check if format needs BigInt, generate appropriate literal
     else if (typeof constValue === 'number' && format) {
       if (isBigInt) {
         // Format requires BigInt, convert number to BigInt
-        literalValue = tsc.callExpression({
-          functionName: 'BigInt',
-          parameters: [tsc.ots.string(constValue.toString())],
-        });
+        literalValue = $('BigInt').call($.literal(constValue));
       } else {
         // Regular format, use number as-is
-        literalValue = tsc.ots.number(constValue);
+        literalValue = $.literal(constValue);
       }
     }
     // Case 3: Format that allows string -> generate BigInt literal (for int64/uint64 formats)
@@ -57,10 +52,7 @@ export const numberToAst = ({
       const cleanString = constValue.endsWith('n')
         ? constValue.slice(0, -1)
         : constValue;
-      literalValue = tsc.callExpression({
-        functionName: 'BigInt',
-        parameters: [tsc.ots.string(cleanString)],
-      });
+      literalValue = $('BigInt').call($.literal(cleanString));
     }
     // Case 4: Const is typeof bigint (literal) -> transform from literal to BigInt()
     else if (typeof constValue === 'bigint') {
@@ -69,98 +61,49 @@ export const numberToAst = ({
       const cleanString = bigintString.endsWith('n')
         ? bigintString.slice(0, -1)
         : bigintString;
-      literalValue = tsc.callExpression({
-        functionName: 'BigInt',
-        parameters: [tsc.ots.string(cleanString)],
-      });
+      literalValue = $('BigInt').call($.literal(cleanString));
     }
     // Default case: use value as-is for other types
     else {
-      literalValue = tsc.valueToExpression({ value: constValue });
+      literalValue = $.fromValue(constValue);
     }
 
-    return tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.schemas.literal,
-      }),
-      parameters: [literalValue],
-    });
+    return $(v.placeholder)
+      .attr(identifiers.schemas.literal)
+      .call(literalValue);
   }
 
-  const pipes: Array<ts.CallExpression> = [];
+  const pipes: Array<ReturnType<typeof $.call>> = [];
 
   // For bigint formats (int64, uint64), create union of number, string, and bigint with transform
   if (isBigInt) {
-    const unionExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.schemas.union,
-      }),
-      parameters: [
-        tsc.arrayLiteralExpression({
-          elements: [
-            tsc.callExpression({
-              functionName: tsc.propertyAccessExpression({
-                expression: v.placeholder,
-                name: identifiers.schemas.number,
-              }),
-            }),
-            tsc.callExpression({
-              functionName: tsc.propertyAccessExpression({
-                expression: v.placeholder,
-                name: identifiers.schemas.string,
-              }),
-            }),
-            tsc.callExpression({
-              functionName: tsc.propertyAccessExpression({
-                expression: v.placeholder,
-                name: identifiers.schemas.bigInt,
-              }),
-            }),
-          ],
-          multiLine: false,
-        }),
-      ],
-    });
+    const unionExpression = $(v.placeholder)
+      .attr(identifiers.schemas.union)
+      .call(
+        $.array(
+          $(v.placeholder).attr(identifiers.schemas.number).call(),
+          $(v.placeholder).attr(identifiers.schemas.string).call(),
+          $(v.placeholder).attr(identifiers.schemas.bigInt).call(),
+        ),
+      );
     pipes.push(unionExpression);
 
     // Add transform to convert to BigInt
-    const transformExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.actions.transform,
-      }),
-      parameters: [
-        tsc.arrowFunction({
-          parameters: [{ name: 'x' }],
-          statements: tsc.callExpression({
-            functionName: 'BigInt',
-            parameters: [tsc.identifier({ text: 'x' })],
-          }),
-        }),
-      ],
-    });
+    const transformExpression = $(v.placeholder)
+      .attr(identifiers.actions.transform)
+      .call($.func().param('x').do($('BigInt').call('x').return()));
     pipes.push(transformExpression);
   } else {
     // For regular number formats, use number schema
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.schemas.number,
-      }),
-    });
+    const expression = $(v.placeholder).attr(identifiers.schemas.number).call();
     pipes.push(expression);
   }
 
   // Add integer validation for integer types (except when using bigint union)
   if (!isBigInt && isInteger) {
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.actions.integer,
-      }),
-    });
+    const expression = $(v.placeholder)
+      .attr(identifiers.actions.integer)
+      .call();
     pipes.push(expression);
   }
 
@@ -172,83 +115,45 @@ export const numberToAst = ({
     const maxErrorMessage = formatInfo.maxError;
 
     // Add minimum value validation
-    const minExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.actions.minValue,
-      }),
-      parameters: [
-        isBigInt
-          ? tsc.callExpression({
-              functionName: 'BigInt',
-              parameters: [tsc.ots.string(minValue.toString())],
-            })
-          : tsc.ots.number(minValue as number),
-        tsc.ots.string(minErrorMessage),
-      ],
-    });
+    const minExpression = $(v.placeholder)
+      .attr(identifiers.actions.minValue)
+      .call(
+        isBigInt ? $('BigInt').call($.literal(minValue)) : $.literal(minValue),
+        $.literal(minErrorMessage),
+      );
     pipes.push(minExpression);
 
     // Add maximum value validation
-    const maxExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.actions.maxValue,
-      }),
-      parameters: [
-        isBigInt
-          ? tsc.callExpression({
-              functionName: 'BigInt',
-              parameters: [tsc.ots.string(maxValue.toString())],
-            })
-          : tsc.ots.number(maxValue as number),
-        tsc.ots.string(maxErrorMessage),
-      ],
-    });
+    const maxExpression = $(v.placeholder)
+      .attr(identifiers.actions.maxValue)
+      .call(
+        isBigInt ? $('BigInt').call($.literal(maxValue)) : $.literal(maxValue),
+        $.literal(maxErrorMessage),
+      );
     pipes.push(maxExpression);
   }
 
   if (schema.exclusiveMinimum !== undefined) {
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.actions.gtValue,
-      }),
-      parameters: [
-        numberParameter({ isBigInt, value: schema.exclusiveMinimum }),
-      ],
-    });
+    const expression = $(v.placeholder)
+      .attr(identifiers.actions.gtValue)
+      .call(numberParameter({ isBigInt, value: schema.exclusiveMinimum }));
     pipes.push(expression);
   } else if (schema.minimum !== undefined) {
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.actions.minValue,
-      }),
-      parameters: [numberParameter({ isBigInt, value: schema.minimum })],
-    });
+    const expression = $(v.placeholder)
+      .attr(identifiers.actions.minValue)
+      .call(numberParameter({ isBigInt, value: schema.minimum }));
     pipes.push(expression);
   }
 
   if (schema.exclusiveMaximum !== undefined) {
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.actions.ltValue,
-      }),
-      parameters: [
-        numberParameter({ isBigInt, value: schema.exclusiveMaximum }),
-      ],
-    });
+    const expression = $(v.placeholder)
+      .attr(identifiers.actions.ltValue)
+      .call(numberParameter({ isBigInt, value: schema.exclusiveMaximum }));
     pipes.push(expression);
   } else if (schema.maximum !== undefined) {
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.actions.maxValue,
-      }),
-      parameters: [numberParameter({ isBigInt, value: schema.maximum })],
-    });
+    const expression = $(v.placeholder)
+      .attr(identifiers.actions.maxValue)
+      .call(numberParameter({ isBigInt, value: schema.maximum }));
     pipes.push(expression);
   }
 

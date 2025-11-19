@@ -1,15 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-function-type */
-export function mixin(
-  target: Function,
-  ...sources: ReadonlyArray<Function | [Function, { overrideRender?: boolean }]>
-) {
+export function mixin(target: Function, ...sources: ReadonlyArray<Function>) {
   const targetProto = target.prototype;
   for (const src of sources) {
-    const [source, options] = src instanceof Array ? src : [src];
-    let resolvedSource = source;
-    if (typeof source === 'function') {
+    let resolvedSource = src;
+    if (typeof src === 'function') {
       try {
-        const candidate = source(target);
+        const candidate = src(target);
         if (candidate?.prototype) {
           resolvedSource = candidate;
         }
@@ -23,7 +19,7 @@ export function mixin(
       Object.getOwnPropertyDescriptors(sourceProto),
     )) {
       if (key === 'constructor') continue;
-      if (key === '$render' && !options?.overrideRender) continue;
+      if (key === '$render' && !descriptor.value.mixin) continue;
       Object.defineProperty(targetProto, key, descriptor);
     }
   }

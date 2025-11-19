@@ -1,5 +1,4 @@
 import type { SchemaWithType } from '~/plugins';
-import type { CallTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
@@ -10,7 +9,7 @@ const defaultFormatResolver = ({
   chain,
   plugin,
   schema,
-}: FormatResolverArgs): CallTsDsl => {
+}: FormatResolverArgs): ReturnType<typeof $.call> => {
   const z = plugin.referenceSymbol({
     category: 'external',
     resource: 'zod.z',
@@ -62,7 +61,7 @@ export const stringToAst = ({
   schema: SchemaWithType<'string'>;
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
-  let chain: CallTsDsl;
+  let chain: ReturnType<typeof $.call>;
 
   const z = plugin.referenceSymbol({
     category: 'external',
@@ -73,7 +72,7 @@ export const stringToAst = ({
     chain = $(z.placeholder)
       .attr(identifiers.literal)
       .call($.literal(schema.const));
-    result.expression = chain.$render();
+    result.expression = chain;
     return result as Omit<Ast, 'typeName'>;
   }
 
@@ -86,7 +85,7 @@ export const stringToAst = ({
     chain = resolver?.(args) ?? defaultFormatResolver(args);
   }
 
-  const checks: Array<CallTsDsl> = [];
+  const checks: Array<ReturnType<typeof $.call>> = [];
 
   if (schema.minLength === schema.maxLength && schema.minLength !== undefined) {
     checks.push(
@@ -122,6 +121,6 @@ export const stringToAst = ({
     chain = chain.attr(identifiers.check).call(...checks);
   }
 
-  result.expression = chain.$render();
+  result.expression = chain;
   return result as Omit<Ast, 'typeName'>;
 };

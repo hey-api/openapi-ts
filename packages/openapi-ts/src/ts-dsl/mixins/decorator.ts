@@ -1,16 +1,16 @@
 import type ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { DecoratorTsDsl } from '../decorator';
+import { DecoratorTsDsl } from '../decl/decorator';
 
 export class DecoratorMixin extends TsDsl {
-  private decorators?: Array<DecoratorTsDsl>;
+  protected decorators?: Array<DecoratorTsDsl>;
 
   /** Adds a decorator (e.g. `@sealed({ in: 'root' })`). */
   decorator(
-    name: WithString,
-    ...args: ReadonlyArray<MaybeTsDsl<WithString>>
+    name: string | ts.Expression,
+    ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression>>
   ): this {
     (this.decorators ??= []).push(new DecoratorTsDsl(name, ...args));
     return this;

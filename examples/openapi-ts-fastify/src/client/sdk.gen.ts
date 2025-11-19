@@ -41,10 +41,7 @@ export const listPets = <ThrowOnError extends boolean = false>(
     ListPetsResponses,
     ListPetsErrors,
     ThrowOnError
-  >({
-    url: '/pets',
-    ...options,
-  });
+  >({ url: '/pets', ...options });
 
 /**
  * Create a pet
@@ -56,10 +53,7 @@ export const createPets = <ThrowOnError extends boolean = false>(
     CreatePetsResponses,
     CreatePetsErrors,
     ThrowOnError
-  >({
-    url: '/pets',
-    ...options,
-  });
+  >({ url: '/pets', ...options });
 
 /**
  * Info for a specific pet
@@ -71,7 +65,4 @@ export const showPetById = <ThrowOnError extends boolean = false>(
     ShowPetByIdResponses,
     ShowPetByIdErrors,
     ThrowOnError
-  >({
-    url: '/pets/{petId}',
-    ...options,
-  });
+  >({ url: '/pets/{petId}', ...options });

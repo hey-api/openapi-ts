@@ -1,22 +1,22 @@
 import type ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
 /**
  * Adds `.arg()` and `.args()` for managing expression arguments in call-like nodes.
  */
 export class ArgsMixin extends TsDsl {
-  private _args?: Array<MaybeTsDsl<WithString>>;
+  protected _args?: Array<string | MaybeTsDsl<ts.Expression>>;
 
   /** Adds a single expression argument. */
-  arg(arg: MaybeTsDsl<WithString>): this {
+  arg(arg: string | MaybeTsDsl<ts.Expression>): this {
     (this._args ??= []).push(arg);
     return this;
   }
 
   /** Adds one or more expression arguments. */
-  args(...args: ReadonlyArray<MaybeTsDsl<WithString>>): this {
+  args(...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression>>): this {
     (this._args ??= []).push(...args);
     return this;
   }
@@ -24,7 +24,7 @@ export class ArgsMixin extends TsDsl {
   /** Renders the arguments into an array of `Expression`s. */
   protected $args(): ReadonlyArray<ts.Expression> {
     if (!this._args) return [];
-    return this.$node(this._args).map((arg) => this.$expr(arg));
+    return this.$node(this._args).map((arg) => this.$maybeId(arg));
   }
 
   $render(): ts.Node {

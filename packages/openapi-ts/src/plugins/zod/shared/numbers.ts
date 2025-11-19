@@ -1,6 +1,4 @@
-import type ts from 'typescript';
-
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 export const numberParameter = ({
   isBigInt,
@@ -8,8 +6,8 @@ export const numberParameter = ({
 }: {
   isBigInt: boolean;
   value: unknown;
-}): ts.Expression | undefined => {
-  const expression = tsc.valueToExpression({ value });
+}): ReturnType<typeof $.call | typeof $.fromValue> => {
+  const expr = $.fromValue(value);
 
   if (
     isBigInt &&
@@ -18,11 +16,8 @@ export const numberParameter = ({
       typeof value === 'string' ||
       typeof value === 'boolean')
   ) {
-    return tsc.callExpression({
-      functionName: 'BigInt',
-      parameters: [expression],
-    });
+    return $('BigInt').call(expr);
   }
 
-  return expression;
+  return expr;
 };

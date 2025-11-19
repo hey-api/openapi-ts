@@ -1,23 +1,29 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import ts from 'typescript';
 
-import type { MaybeTsDsl, TsDsl } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
+import { mixin } from '../mixins/apply';
+import {
+  registerLazyAccessTypeQueryFactory,
+  TypeExprMixin,
+} from '../mixins/type-expr';
 
 export class TypeQueryTsDsl extends TypeTsDsl<ts.TypeQueryNode> {
-  private expr: string | MaybeTsDsl<TsDsl>;
+  protected _expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>;
 
-  constructor(expr: string | MaybeTsDsl<TsDsl>) {
+  constructor(expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>) {
     super();
-    this.expr = expr;
+    this._expr = expr;
   }
 
   $render(): ts.TypeQueryNode {
-    const exprName = this.$node(this.expr);
-    if (!ts.isEntityName(exprName)) {
-      throw new Error(
-        'TypeQueryTsDsl: expression must resolve to an EntityName',
-      );
-    }
-    return ts.factory.createTypeQueryNode(exprName);
+    const expr = this.$node(this._expr);
+    return ts.factory.createTypeQueryNode(expr as unknown as ts.EntityName);
   }
 }
+
+export interface TypeQueryTsDsl extends TypeExprMixin {}
+mixin(TypeQueryTsDsl, TypeExprMixin);
+
+registerLazyAccessTypeQueryFactory((...args) => new TypeQueryTsDsl(...args));

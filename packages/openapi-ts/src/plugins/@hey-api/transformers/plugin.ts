@@ -4,7 +4,8 @@ import ts from 'typescript';
 import { createOperationKey, operationResponsesMap } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
+import { TsDsl } from '~/ts-dsl';
 import { refToName } from '~/utils/ref';
 
 import type { HeyApiTransformersPlugin } from './types';
@@ -15,20 +16,23 @@ const dataVariableName = 'data';
 // can emit calls to transformers that will be implemented later.
 const buildingSymbols = new Set<number>();
 
+type Expr = ReturnType<typeof $.fromValue | typeof $.return | typeof $.if>;
+
 const ensureStatements = (
-  nodes: Array<ts.Expression | ts.Statement>,
-): Array<ts.Statement> =>
-  nodes.map((node) =>
-    ts.isStatement(node)
-      ? node
-      : tsc.expressionToStatement({ expression: node }),
-  );
+  nodes: Array<Expr | ts.Expression | ts.Statement>,
+): Array<ts.Statement | ReturnType<typeof $.return>> =>
+  nodes.map((node) => $.stmt(node).$render());
 
 const isNodeReturnStatement = ({
   node,
 }: {
-  node: ts.Expression | ts.Statement;
-}) => node.kind === ts.SyntaxKind.ReturnStatement;
+  node: ts.Expression | ts.Statement | Expr;
+}) => {
+  if (node instanceof TsDsl) {
+    node = node.$render();
+  }
+  return node.kind === ts.SyntaxKind.ReturnStatement;
+};
 
 const schemaResponseTransformerNodes = ({
   plugin,
@@ -36,19 +40,18 @@ const schemaResponseTransformerNodes = ({
 }: {
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
-}): Array<ts.Expression | ts.Statement> => {
-  const identifierData = tsc.identifier({ text: dataVariableName });
+}): Array<ts.Expression | ts.Statement | Expr> => {
   const nodes = processSchemaType({
-    dataExpression: identifierData,
+    dataExpression: $(dataVariableName),
     plugin,
     schema,
   });
   // append return statement if one does not already exist
-  if (
-    nodes.length &&
-    !isNodeReturnStatement({ node: nodes[nodes.length - 1]! })
-  ) {
-    nodes.push(tsc.returnStatement({ expression: identifierData }));
+  if (nodes.length) {
+    const last = nodes[nodes.length - 1]!;
+    if (!isNodeReturnStatement({ node: last })) {
+      nodes.push($.return(dataVariableName));
+    }
   }
   return nodes;
 };
@@ -58,10 +61,13 @@ const processSchemaType = ({
   plugin,
   schema,
 }: {
-  dataExpression?: ts.Expression | string;
+  dataExpression?:
+    | ts.Expression
+    | string
+    | ReturnType<typeof $.attr | typeof $.expr>;
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
-}): Array<ts.Expression | ts.Statement> => {
+}): Array<Expr | ts.Expression | ts.Statement> => {
   if (schema.$ref) {
     const query: SymbolMeta = {
       category: 'transform',
@@ -106,21 +112,12 @@ const processSchemaType = ({
         });
 
         if (nodes.length) {
-          const node = tsc.constVariable({
-            expression: tsc.arrowFunction({
-              async: false,
-              multiLine: true,
-              parameters: [
-                {
-                  name: dataVariableName,
-                  // TODO: parser - add types, generate types without transforms
-                  type: tsc.keywordTypeNode({ keyword: 'any' }),
-                },
-              ],
-              statements: ensureStatements(nodes),
-            }),
-            name: symbol.placeholder,
-          });
+          const node = $.const(symbol.placeholder).assign(
+            // TODO: parser - add types, generate types without transforms
+            $.func()
+              .param(dataVariableName, (p) => p.type('any'))
+              .do(...ensureStatements(nodes)),
+          );
           plugin.setSymbolValue(symbol, node);
         }
       } finally {
@@ -134,28 +131,18 @@ const processSchemaType = ({
     const currentValue = plugin.gen.symbols.getValue(symbol.id);
     if (currentValue || buildingSymbols.has(symbol.id)) {
       const ref = plugin.referenceSymbol(query);
-      const callExpression = tsc.callExpression({
-        functionName: ref.placeholder,
-        parameters: [dataExpression],
-      });
+      const callExpression = $(ref.placeholder).call(dataExpression);
 
       if (dataExpression) {
         // In a map callback, the item needs to be returned, not just the transformation result
         if (typeof dataExpression === 'string' && dataExpression === 'item') {
-          return [
-            tsc.returnStatement({
-              expression: callExpression,
-            }),
-          ];
+          return [$.return(callExpression)];
         }
 
         return [
           typeof dataExpression === 'string'
             ? callExpression
-            : tsc.assignment({
-                left: dataExpression,
-                right: callExpression,
-              }),
+            : $(dataExpression).assign(callExpression),
         ];
       }
     }
@@ -193,48 +180,31 @@ const processSchemaType = ({
     );
 
     if (!hasReturnStatement) {
-      mapCallbackStatements.push(
-        tsc.returnStatement({
-          expression: tsc.identifier({ text: 'item' }),
-        }),
-      );
+      mapCallbackStatements.push($.return('item'));
     }
 
     return [
-      tsc.assignment({
-        left: dataExpression,
-        right: tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: dataExpression,
-            name: 'map',
-          }),
-          parameters: [
-            tsc.arrowFunction({
-              multiLine: true,
-              parameters: [
-                {
-                  name: 'item',
-                  type: 'any',
-                },
-              ],
-              statements: mapCallbackStatements,
-            }),
-          ],
-        }),
-      }),
+      $(dataExpression).assign(
+        $(dataExpression)
+          .attr('map')
+          .call(
+            $.func()
+              .param('item', (p) => p.type('any'))
+              .do(...mapCallbackStatements),
+          ),
+      ),
     ];
   }
 
   if (schema.type === 'object') {
-    let nodes: Array<ts.Expression | ts.Statement> = [];
+    let nodes: Array<ts.Expression | ts.Statement | Expr> = [];
     const required = schema.required ?? [];
 
     for (const name in schema.properties) {
       const property = schema.properties[name]!;
-      const propertyAccessExpression = tsc.propertyAccessExpression({
-        expression: dataExpression || dataVariableName,
-        name,
-      });
+      const propertyAccessExpression = $(
+        dataExpression || dataVariableName,
+      ).attr(name);
       const propertyNodes = processSchemaType({
         dataExpression: propertyAccessExpression,
         plugin,
@@ -256,12 +226,7 @@ const processSchemaType = ({
           // todo: Probably, it would make more sense to go with if(x !== undefined && x !== null) instead of if(x)
           // this place influences all underlying transformers, while it's not exactly transformer itself
           // Keep in mind that !!0 === false, so it already makes output for Bigint undesirable
-          tsc.ifStatement({
-            expression: propertyAccessExpression,
-            thenStatement: tsc.block({
-              statements: ensureStatements(propertyNodes),
-            }),
-          }),
+          $.if(propertyAccessExpression).do(...ensureStatements(propertyNodes)),
         );
       }
     }
@@ -278,7 +243,7 @@ const processSchemaType = ({
       });
     }
 
-    let arrayNodes: Array<ts.Expression | ts.Statement> = [];
+    let arrayNodes: Array<ts.Expression | ts.Statement | Expr> = [];
     // process 2 items if one of them is null
     if (
       schema.logicalOperator === 'and' ||
@@ -297,16 +262,10 @@ const processSchemaType = ({
           if (dataExpression) {
             arrayNodes = arrayNodes.concat(nodes);
           } else {
-            const identifierItem = tsc.identifier({ text: 'item' });
             // processed means the item was transformed
             arrayNodes.push(
-              tsc.ifStatement({
-                expression: identifierItem,
-                thenStatement: tsc.block({
-                  statements: ensureStatements(nodes),
-                }),
-              }),
-              tsc.returnStatement({ expression: identifierItem }),
+              $.if('item').do(...ensureStatements(nodes)),
+              $.return('item'),
             );
           }
         }
@@ -393,28 +352,16 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
           name: operation.id,
         }),
       });
-      const value = tsc.constVariable({
-        exportConst: symbol.exported,
-        expression: tsc.arrowFunction({
-          async: true,
-          multiLine: true,
-          parameters: [
-            {
-              name: dataVariableName,
-              // TODO: parser - add types, generate types without transforms
-              type: tsc.keywordTypeNode({ keyword: 'any' }),
-            },
-          ],
-          returnType: tsc.typeReferenceNode({
-            typeArguments: [
-              tsc.typeReferenceNode({ typeName: symbolResponse.placeholder }),
-            ],
-            typeName: 'Promise',
-          }),
-          statements: ensureStatements(nodes),
-        }),
-        name: symbol.placeholder,
-      });
+      const value = $.const(symbol.placeholder)
+        .export(symbol.exported)
+        .assign(
+          // TODO: parser - add types, generate types without transforms
+          $.func()
+            .async()
+            .param(dataVariableName, (p) => p.type('any'))
+            .returns($.type('Promise').generic(symbolResponse.placeholder))
+            .do(...ensureStatements(nodes)),
+        );
       plugin.setSymbolValue(symbol, value);
     },
     {

@@ -7,7 +7,6 @@ import {
 } from '~/plugins/shared/utils/operation';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
-import { toParameterDeclarations } from '~/tsc/types';
 import { stringCase } from '~/utils/stringCase';
 
 import type { HeyApiSdkPlugin } from '../types';
@@ -257,7 +256,7 @@ export const generateClassSdk = ({
           const functionNode = $.method(entry.methodName, (m) =>
             m
               .$if(createOperationComment({ operation }), (m, v) =>
-                m.describe(v as ReadonlyArray<string>),
+                m.doc(v as ReadonlyArray<string>),
               )
               .public()
               .static(!isAngularClient && !plugin.config.instance)
@@ -291,7 +290,7 @@ export const generateClassSdk = ({
                       ),
                   ),
               )
-              .params(...toParameterDeclarations(opParameters.parameters))
+              .params(...opParameters.parameters)
               .do(...statements),
           );
 

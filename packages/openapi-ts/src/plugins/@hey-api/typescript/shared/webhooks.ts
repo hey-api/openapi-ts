@@ -1,6 +1,6 @@
 import type { Symbol } from '@hey-api/codegen-core';
 
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import type { HeyApiTypeScriptPlugin } from '../types';
 
@@ -15,15 +15,9 @@ export const createWebhooks = ({
 }) => {
   if (!webhookNames.length) return;
 
-  const type = tsc.typeUnionNode({
-    types: webhookNames.map((name) =>
-      tsc.typeReferenceNode({ typeName: name }),
-    ),
-  });
-  const node = tsc.typeAliasDeclaration({
-    exportType: symbolWebhooks.exported,
-    name: symbolWebhooks.placeholder,
-    type,
-  });
+  const node = $.type
+    .alias(symbolWebhooks.placeholder)
+    .export(symbolWebhooks.exported)
+    .type($.type.or(...webhookNames));
   plugin.setSymbolValue(symbolWebhooks, node);
 };

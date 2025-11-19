@@ -8,14 +8,14 @@ export type GetFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/foo';
+    url: "/foo";
 };
 
 export type GetFooResponses = {
     /**
      * OK
      */
-    200: 'First line.\n\nSecond line.\n\nPS: I love you.';
+    200: "First line.\n\nSecond line.\n\nPS: I love you.";
 };
 
 export type GetFooResponse = GetFooResponses[keyof GetFooResponses];

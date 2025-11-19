@@ -1,12 +1,11 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
-import type ts from 'typescript';
 
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
 import { toRef, toRefs } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { exportAst } from '../shared/export';
@@ -51,24 +50,12 @@ export const irSchemaToAst = ({
     };
     const refSymbol = plugin.referenceSymbol(query);
     if (plugin.isSymbolRegistered(query)) {
-      const ref = tsc.identifier({ text: refSymbol.placeholder });
+      const ref = $(refSymbol.placeholder);
       ast.pipes.push(ref);
     } else {
-      const lazyExpression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.schemas.lazy,
-        }),
-        parameters: [
-          tsc.arrowFunction({
-            statements: [
-              tsc.returnStatement({
-                expression: tsc.identifier({ text: refSymbol.placeholder }),
-              }),
-            ],
-          }),
-        ],
-      });
+      const lazyExpression = $(v.placeholder)
+        .attr(identifiers.schemas.lazy)
+        .call($.func().do($(refSymbol.placeholder).return()));
       ast.pipes.push(lazyExpression);
       state.hasLazyExpression.value = true;
     }
@@ -82,22 +69,9 @@ export const irSchemaToAst = ({
     ast.pipes.push(typeAst.expression);
 
     if (plugin.config.metadata && schema.description) {
-      const expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.actions.metadata,
-        }),
-        parameters: [
-          tsc.objectExpression({
-            obj: [
-              {
-                key: 'description',
-                value: tsc.stringLiteral({ text: schema.description }),
-              },
-            ],
-          }),
-        ],
-      });
+      const expression = $(v.placeholder)
+        .attr(identifiers.actions.metadata)
+        .call($.object().prop('description', $.literal(schema.description)));
       ast.pipes.push(expression);
     }
   } else if (schema.items) {
@@ -117,30 +91,14 @@ export const irSchemaToAst = ({
       });
 
       if (schema.logicalOperator === 'and') {
-        const intersectExpression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: v.placeholder,
-            name: identifiers.schemas.intersect,
-          }),
-          parameters: [
-            tsc.arrayLiteralExpression({
-              elements: itemsAst,
-            }),
-          ],
-        });
+        const intersectExpression = $(v.placeholder)
+          .attr(identifiers.schemas.intersect)
+          .call($.array(...itemsAst));
         ast.pipes.push(intersectExpression);
       } else {
-        const unionExpression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: v.placeholder,
-            name: identifiers.schemas.union,
-          }),
-          parameters: [
-            tsc.arrayLiteralExpression({
-              elements: itemsAst,
-            }),
-          ],
-        });
+        const unionExpression = $(v.placeholder)
+          .attr(identifiers.schemas.union)
+          .call($.array(...itemsAst));
         ast.pipes.push(unionExpression);
       }
     } else {
@@ -162,45 +120,29 @@ export const irSchemaToAst = ({
 
   if (ast.pipes.length) {
     if (schema.accessScope === 'read') {
-      const readonlyExpression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.actions.readonly,
-        }),
-      });
+      const readonlyExpression = $(v.placeholder)
+        .attr(identifiers.actions.readonly)
+        .call();
       ast.pipes.push(readonlyExpression);
     }
 
-    let callParameter: ts.Expression | undefined;
+    let callParameter: ReturnType<typeof $.fromValue> | undefined;
 
     if (schema.default !== undefined) {
       const isBigInt = schema.type === 'integer' && schema.format === 'int64';
       callParameter = numberParameter({ isBigInt, value: schema.default });
-      if (callParameter) {
-        ast.pipes = [
-          tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: v.placeholder,
-              name: identifiers.schemas.optional,
-            }),
-            parameters: [
-              pipesToAst({ pipes: ast.pipes, plugin }),
-              callParameter,
-            ],
-          }),
-        ];
-      }
+      ast.pipes = [
+        $(v.placeholder)
+          .attr(identifiers.schemas.optional)
+          .call(pipesToAst({ pipes: ast.pipes, plugin }), callParameter),
+      ];
     }
 
     if (optional && !callParameter) {
       ast.pipes = [
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: v.placeholder,
-            name: identifiers.schemas.optional,
-          }),
-          parameters: [pipesToAst({ pipes: ast.pipes, plugin })],
-        }),
+        $(v.placeholder)
+          .attr(identifiers.schemas.optional)
+          .call(pipesToAst({ pipes: ast.pipes, plugin })),
       ];
     }
   }

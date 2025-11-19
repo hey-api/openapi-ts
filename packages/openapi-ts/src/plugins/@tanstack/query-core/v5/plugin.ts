@@ -2,9 +2,9 @@ import { registryName } from '~/plugins/@hey-api/sdk/shared/class';
 import { operationClasses } from '~/plugins/@hey-api/sdk/shared/operation';
 import { stringCase } from '~/utils/stringCase';
 
-import { createInfiniteQueryOptions } from '../infiniteQueryOptions';
-import { createMutationOptions } from '../mutationOptions';
 import type { PluginHandler } from '../types';
+import { createInfiniteQueryOptions } from './infiniteQueryOptions';
+import { createMutationOptions } from './mutationOptions';
 import { createQueryOptions } from './queryOptions';
 import { createUseQuery } from './useQuery';
 

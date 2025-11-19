@@ -2,7 +2,7 @@
 
 import * as z from 'zod/v4-mini';
 
-export const zBaz = z._default(z.readonly(z.string().check(z.regex(/foo\nbar/))), 'baz');
+export const zBaz = z._default(z.readonly(z.string().check(z.regex(/foo\nbar/))), "baz");
 
 export const zQux = z.record(z.string(), z.object({
     qux: z.optional(z.string())

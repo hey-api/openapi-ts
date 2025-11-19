@@ -74,12 +74,12 @@ export const zSimpleStringWithPattern = z.string().check(z.maxLength(64), z.rege
  * This is a simple enum with strings
  */
 export const zEnumWithStrings = z.enum([
-    'Success',
-    'Warning',
-    'Error',
+    "Success",
+    "Warning",
+    "Error",
     "'Single Quote'",
-    '"Double Quotes"',
-    'Non-ascii: øæåôöØÆÅÔÖ字符串'
+    "\"Double Quotes\"",
+    "Non-ascii: øæåôöØÆÅÔÖ字符串"
 ]);
 
 /**
@@ -232,18 +232,18 @@ export const zModelWithNullableString = z.object({
  */
 export const zModelWithEnum = z.object({
     test: z.optional(z.enum([
-        'Success',
-        'Warning',
-        'Error',
-        'ØÆÅ字符串'
+        "Success",
+        "Warning",
+        "Error",
+        "ØÆÅ字符串"
     ])),
     statusCode: z.optional(z.enum([
-        '100',
-        '200 FOO',
-        '300 FOO_BAR',
-        '400 foo-bar',
-        '500 foo.bar',
-        '600 foo&bar'
+        "100",
+        "200 FOO",
+        "300 FOO_BAR",
+        "400 foo-bar",
+        "500 foo.bar",
+        "600 foo&bar"
     ])),
     bool: z.optional(z.literal(true))
 });
@@ -260,15 +260,15 @@ export const zModelWithEnumFromDescription = z.object({
  */
 export const zModelWithNestedEnums = z.object({
     dictionaryWithEnum: z.optional(z.record(z.string(), z.enum([
-        'Success',
-        'Warning',
-        'Error'
+        "Success",
+        "Warning",
+        "Error"
     ]))),
     dictionaryWithEnumFromDescription: z.optional(z.record(z.string(), z.int())),
     arrayWithEnum: z.optional(z.array(z.enum([
-        'Success',
-        'Warning',
-        'Error'
+        "Success",
+        "Warning",
+        "Error"
     ]))),
     arrayWithDescription: z.optional(z.array(z.int()))
 });
@@ -308,11 +308,11 @@ export const zModelWithProperties = z.object({
     number: z.optional(z.number()),
     boolean: z.optional(z.boolean()),
     reference: z.optional(zModelWithString),
-    'property with space': z.optional(z.string()),
+    "property with space": z.optional(z.string()),
     default: z.optional(z.string()),
     try: z.optional(z.string()),
-    '@namespace.string': z.optional(z.readonly(z.string())),
-    '@namespace.integer': z.optional(z.readonly(z.int()))
+    "@namespace.string": z.optional(z.readonly(z.string())),
+    "@namespace.integer": z.optional(z.readonly(z.int()))
 });
 
 /**
@@ -433,7 +433,7 @@ export const zModelWithPropertiesWritable = z.object({
     number: z.optional(z.number()),
     boolean: z.optional(z.boolean()),
     reference: z.optional(zModelWithString),
-    'property with space': z.optional(z.string()),
+    "property with space": z.optional(z.string()),
     default: z.optional(z.string()),
     try: z.optional(z.string())
 });
@@ -535,7 +535,7 @@ export const zCallWithParametersData = z.object({
     body: z.optional(z.never()),
     path: z.object({
         parameterPath: z.string(),
-        'api-version': z.string()
+        "api-version": z.string()
     }),
     query: z.object({
         parameterQuery: z.string()
@@ -548,17 +548,17 @@ export const zCallWithParametersData = z.object({
 export const zCallWithWeirdParameterNamesData = z.object({
     body: z.string(),
     path: z.object({
-        'parameter.path.1': z.optional(z.string()),
-        'parameter-path-2': z.optional(z.string()),
-        'PARAMETER-PATH-3': z.optional(z.string()),
-        'api-version': z.string()
+        "parameter.path.1": z.optional(z.string()),
+        "parameter-path-2": z.optional(z.string()),
+        "PARAMETER-PATH-3": z.optional(z.string()),
+        "api-version": z.string()
     }),
     query: z.object({
         default: z.optional(z.string()),
-        'parameter-query': z.string()
+        "parameter-query": z.string()
     }),
     headers: z.object({
-        'parameter.header': z.string()
+        "parameter.header": z.string()
     })
 });
 
@@ -566,19 +566,17 @@ export const zCallWithDefaultParametersData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        parameterString: z._default(z.string(), 'Hello World!'),
+        parameterString: z._default(z.string(), "Hello World!"),
         parameterNumber: z._default(z.number(), 123),
         parameterBoolean: z._default(z.boolean(), true),
         parameterEnum: z.enum([
-            'Success',
-            'Warning',
-            'Error'
+            "Success",
+            "Warning",
+            "Error"
         ]),
         parameterModel: z._default(z.object({
             prop: z.optional(z.string())
-        }), {
-            prop: 'Hello World!'
-        })
+        }), { prop: "Hello World!" })
     })
 });
 
@@ -586,13 +584,13 @@ export const zCallWithDefaultOptionalParametersData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.optional(z.object({
-        parameterString: z._default(z.optional(z.string()), 'Hello World!'),
+        parameterString: z._default(z.optional(z.string()), "Hello World!"),
         parameterNumber: z._default(z.optional(z.number()), 123),
         parameterBoolean: z._default(z.optional(z.boolean()), true),
         parameterEnum: z.optional(z.enum([
-            'Success',
-            'Warning',
-            'Error'
+            "Success",
+            "Warning",
+            "Error"
         ]))
     }))
 });
@@ -601,11 +599,11 @@ export const zCallToTestOrderOfParamsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        parameterOptionalStringWithDefault: z._default(z.optional(z.string()), 'Hello World!'),
-        parameterOptionalStringWithEmptyDefault: z._default(z.optional(z.string()), ''),
+        parameterOptionalStringWithDefault: z._default(z.optional(z.string()), "Hello World!"),
+        parameterOptionalStringWithEmptyDefault: z._default(z.optional(z.string()), ""),
         parameterOptionalStringWithNoDefault: z.optional(z.string()),
-        parameterStringWithDefault: z._default(z.string(), 'Hello World!'),
-        parameterStringWithEmptyDefault: z._default(z.string(), ''),
+        parameterStringWithDefault: z._default(z.string(), "Hello World!"),
+        parameterStringWithEmptyDefault: z._default(z.string(), ""),
         parameterStringWithNoDefault: z.string(),
         parameterStringNullableWithNoDefault: z.optional(z.union([
             z.string(),
@@ -701,8 +699,8 @@ export const zCallWithResponsesData = z.object({
 
 export const zCallWithResponsesResponse = z.union([
     z.object({
-        '@namespace.string': z.optional(z.readonly(z.string())),
-        '@namespace.integer': z.optional(z.readonly(z.int())),
+        "@namespace.string": z.optional(z.readonly(z.string())),
+        "@namespace.integer": z.optional(z.readonly(z.int())),
         value: z.optional(z.readonly(z.array(zModelWithString)))
     }),
     zModelThatExtends,
@@ -728,14 +726,14 @@ export const zTypesData = z.object({
     })),
     query: z.object({
         parameterNumber: z._default(z.number(), 123),
-        parameterString: z._default(z.string(), 'default'),
+        parameterString: z._default(z.string(), "default"),
         parameterBoolean: z._default(z.boolean(), true),
         parameterArray: z.array(z.string()),
         parameterDictionary: z.record(z.string(), z.unknown()),
         parameterEnum: z.enum([
-            'Success',
-            'Warning',
-            'Error'
+            "Success",
+            "Warning",
+            "Error"
         ])
     })
 });
@@ -787,7 +785,7 @@ export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        'nonAsciiParamæøåÆØÅöôêÊ': z.int()
+        nonAsciiParamæøåÆØÅöôêÊ: z.int()
     })
 });
 
