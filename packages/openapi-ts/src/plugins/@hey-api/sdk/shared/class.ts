@@ -255,9 +255,7 @@ export const generateClassSdk = ({
           });
           const functionNode = $.method(entry.methodName, (m) =>
             m
-              .$if(createOperationComment({ operation }), (m, v) =>
-                m.doc(v as ReadonlyArray<string>),
-              )
+              .$if(createOperationComment(operation), (m, v) => m.doc(v))
               .public()
               .static(!isAngularClient && !plugin.config.instance)
               .$if(
@@ -445,11 +443,11 @@ export const generateClassSdk = ({
       const ctor = $.init((i) =>
         i
           .param('args', (p) =>
-            p.optional(!isClientRequired).type(
+            p.required(isClientRequired).type(
               $.type
                 .object()
                 .prop('client', (p) =>
-                  p.optional(!isClientRequired).type(symbolClient.placeholder),
+                  p.required(isClientRequired).type(symbolClient.placeholder),
                 )
                 .prop('key', (p) => p.optional().type('string')),
             ),
@@ -459,7 +457,7 @@ export const generateClassSdk = ({
             $(symbol.placeholder)
               .attr(registryName)
               .attr('set')
-              .call('this', $('args').attr('key').optional(!isClientRequired)),
+              .call('this', $('args').attr('key').required(isClientRequired)),
           ),
       );
 

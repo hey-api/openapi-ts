@@ -2,14 +2,11 @@ import type { Context } from '~/ir/context';
 import { hasOperationDataRequired } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import type { Comments } from '~/tsc';
 import { escapeComment } from '~/utils/escape';
 
-export const createOperationComment = ({
-  operation,
-}: {
-  operation: IR.OperationObject;
-}): Comments | undefined => {
+export const createOperationComment = (
+  operation: IR.OperationObject,
+): ReadonlyArray<string> | undefined => {
   const comments: Array<string> = [];
 
   if (operation.summary) {
@@ -32,11 +29,7 @@ export const createOperationComment = ({
     comments.push('@deprecated');
   }
 
-  if (!comments.length) {
-    return;
-  }
-
-  return comments;
+  return comments.length ? comments : undefined;
 };
 
 export const isOperationOptionsRequired = ({

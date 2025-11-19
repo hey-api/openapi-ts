@@ -50,9 +50,8 @@ export const createUseSwr = ({
 
   const statement = $.const(symbolUseQueryFn.placeholder)
     .export(symbolUseQueryFn.exported)
-    .$if(
-      plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.doc(v as ReadonlyArray<string>),
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
+      c.doc(v),
     )
     .assign(
       $.func().do(

@@ -181,7 +181,7 @@ export const queryKeyStatement = ({
     .assign(
       $.func()
         .param('options', (p) =>
-          p.optional(!hasOperationDataRequired(operation)).type(typeData),
+          p.required(hasOperationDataRequired(operation)).type(typeData),
         )
         .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
         .do(

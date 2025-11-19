@@ -36,7 +36,7 @@ export const objectToAst = ({
       p
         .$if(createSchemaComment(property), (p, v) => p.doc(v))
         .readonly(property.accessScope === 'read')
-        .optional(!isRequired)
+        .required(isRequired)
         .type(propertyType),
     );
     indexSchemas.push(property);
