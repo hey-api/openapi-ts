@@ -1,12 +1,12 @@
 import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
-import { LiteralTsDsl } from '../literal';
+import { LiteralTsDsl } from '../expr/literal';
 
 export class TypeLiteralTsDsl extends TypeTsDsl<ts.LiteralTypeNode> {
-  private value: string | number | boolean;
+  protected value: string | number | boolean | null;
 
-  constructor(value: string | number | boolean) {
+  constructor(value: string | number | boolean | null) {
     super();
     this.value = value;
   }

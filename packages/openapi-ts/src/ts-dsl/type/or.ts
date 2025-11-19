@@ -3,7 +3,7 @@ import ts from 'typescript';
 import { TypeTsDsl } from '../base';
 
 export class TypeOrTsDsl extends TypeTsDsl<ts.UnionTypeNode> {
-  private _types: Array<string | ts.TypeNode | TypeTsDsl> = [];
+  protected _types: Array<string | ts.TypeNode | TypeTsDsl> = [];
 
   constructor(...nodes: Array<string | ts.TypeNode | TypeTsDsl>) {
     super();

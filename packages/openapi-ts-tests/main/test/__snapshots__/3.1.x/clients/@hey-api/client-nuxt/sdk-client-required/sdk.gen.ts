@@ -25,7 +25,7 @@ export const import_ = <TComposable extends Composable = "$fetch", DefaultT exte
     url: "/api/v{api-version}/no+tag",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -63,7 +63,7 @@ export const callWithParameters = <TComposable extends Composable = "$fetch", De
     url: "/api/v{api-version}/parameters/{parameterPath}",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -72,7 +72,7 @@ export const callWithWeirdParameterNames = <TComposable extends Composable = "$f
     url: "/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -81,7 +81,7 @@ export const getCallWithOptionalParam = <TComposable extends Composable = "$fetc
     url: "/api/v{api-version}/parameters",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -90,7 +90,7 @@ export const postCallWithOptionalParam = <TComposable extends Composable = "$fet
     url: "/api/v{api-version}/parameters",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -99,7 +99,7 @@ export const postApiVbyApiVersionRequestBody = <TComposable extends Composable =
     url: "/api/v{api-version}/requestBody",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -109,7 +109,7 @@ export const postApiVbyApiVersionFormData = <TComposable extends Composable = "$
     url: "/api/v{api-version}/formData",
     ...options,
     headers: {
-        'Content-Type': null,
+        "Content-Type": null,
         ...options.headers
     }
 });
@@ -151,7 +151,7 @@ export const uploadFile = <TComposable extends Composable = "$fetch", DefaultT e
     url: "/api/v{api-version}/upload",
     ...options,
     headers: {
-        'Content-Type': "application/x-www-form-urlencoded",
+        "Content-Type": "application/x-www-form-urlencoded",
         ...options.headers
     }
 });
@@ -171,7 +171,7 @@ export const multipartRequest = <TComposable extends Composable = "$fetch", Defa
     url: "/api/v{api-version}/multipart",
     ...options,
     headers: {
-        'Content-Type': null,
+        "Content-Type": null,
         ...options.headers
     }
 });
@@ -180,7 +180,7 @@ export const complexParams = <TComposable extends Composable = "$fetch", Default
     url: "/api/v{api-version}/complex/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json-patch+json",
+        "Content-Type": "application/json-patch+json",
         ...options.headers
     }
 });
@@ -199,7 +199,7 @@ export const putWithFormUrlEncoded = <TComposable extends Composable = "$fetch",
     url: "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串",
     ...options,
     headers: {
-        'Content-Type': "application/x-www-form-urlencoded",
+        "Content-Type": "application/x-www-form-urlencoded",
         ...options.headers
     }
 });

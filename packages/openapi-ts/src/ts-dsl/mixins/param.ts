@@ -1,10 +1,10 @@
 import type ts from 'typescript';
 
 import { type MaybeTsDsl, TsDsl } from '../base';
-import { ParamTsDsl } from '../param';
+import { ParamTsDsl } from '../decl/param';
 
 export class ParamMixin extends TsDsl {
-  private _params?: Array<MaybeTsDsl<ts.ParameterDeclaration>>;
+  protected _params?: Array<MaybeTsDsl<ts.ParameterDeclaration>>;
 
   /** Adds a parameter. */
   param(

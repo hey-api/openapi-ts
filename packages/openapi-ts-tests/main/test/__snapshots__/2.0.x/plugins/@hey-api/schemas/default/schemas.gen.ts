@@ -2,12 +2,12 @@
 
 export const ExternalRefASchema = {
     description: "External ref to shared model (A)",
-    '$ref': "#/definitions/external-shared_ExternalSharedModel"
+    $ref: "#/definitions/external-shared_ExternalSharedModel"
 } as const;
 
 export const ExternalRefBSchema = {
     description: "External ref to shared model (B)",
-    '$ref': "#/definitions/external-shared_ExternalSharedModel"
+    $ref: "#/definitions/external-shared_ExternalSharedModel"
 } as const;
 
 export const CommentWithBreaksSchema = {
@@ -73,7 +73,7 @@ export const SimpleFileSchema = {
 
 export const SimpleReferenceSchema = {
     description: "This is a simple reference",
-    '$ref': "#/definitions/ModelWithString"
+    $ref: "#/definitions/ModelWithString"
 } as const;
 
 export const SimpleStringWithPatternSchema = {
@@ -128,12 +128,12 @@ export const EnumWithExtensionsSchema = {
         400,
         500
     ],
-    'x-enum-varnames': [
+    "x-enum-varnames": [
         "CUSTOM_SUCCESS",
         "CUSTOM_WARNING",
         "CUSTOM_ERROR"
     ],
-    'x-enum-descriptions': [
+    "x-enum-descriptions": [
         "Used when the status of something is successful",
         "Used when the status of something has a warning",
         "Used when the status of something has an error"
@@ -168,7 +168,7 @@ export const ArrayWithReferencesSchema = {
     description: "This is a simple array with references",
     type: "array",
     items: {
-        '$ref': "#/definitions/ModelWithString"
+        $ref: "#/definitions/ModelWithString"
     }
 } as const;
 
@@ -178,7 +178,7 @@ export const ArrayWithArraySchema = {
     items: {
         type: "array",
         items: {
-            '$ref': "#/definitions/ModelWithString"
+            $ref: "#/definitions/ModelWithString"
         }
     }
 } as const;
@@ -211,7 +211,7 @@ export const DictionaryWithReferenceSchema = {
     description: "This is a string reference",
     type: "object",
     additionalProperties: {
-        '$ref': "#/definitions/ModelWithString"
+        $ref: "#/definitions/ModelWithString"
     }
 } as const;
 
@@ -221,7 +221,7 @@ export const DictionaryWithArraySchema = {
     additionalProperties: {
         type: "array",
         items: {
-            '$ref': "#/definitions/ModelWithString"
+            $ref: "#/definitions/ModelWithString"
         }
     }
 } as const;
@@ -312,12 +312,12 @@ export const ModelWithNullableStringSchema = {
         nullableProp: {
             description: "This is a simple string property",
             type: "string",
-            'x-nullable': true
+            "x-nullable": true
         },
         nullableRequiredProp: {
             description: "This is a simple string property",
             type: "string",
-            'x-nullable': true
+            "x-nullable": true
         }
     }
 } as const;
@@ -413,7 +413,7 @@ export const ModelWithReferenceSchema = {
     type: "object",
     properties: {
         prop: {
-            '$ref': "#/definitions/ModelWithProperties"
+            $ref: "#/definitions/ModelWithProperties"
         }
     }
 } as const;
@@ -425,7 +425,7 @@ export const ModelWithArraySchema = {
         prop: {
             type: "array",
             items: {
-                '$ref': "#/definitions/ModelWithString"
+                $ref: "#/definitions/ModelWithString"
             }
         },
         propWithFile: {
@@ -462,7 +462,7 @@ export const ModelWithCircularReferenceSchema = {
     type: "object",
     properties: {
         prop: {
-            '$ref': "#/definitions/ModelWithCircularReference"
+            $ref: "#/definitions/ModelWithCircularReference"
         }
     }
 } as const;
@@ -492,9 +492,9 @@ export const ModelWithPropertiesSchema = {
             type: "boolean"
         },
         reference: {
-            '$ref': "#/definitions/ModelWithString"
+            $ref: "#/definitions/ModelWithString"
         },
-        'property with space': {
+        "property with space": {
             type: "string"
         },
         default: {
@@ -503,11 +503,11 @@ export const ModelWithPropertiesSchema = {
         try: {
             type: "string"
         },
-        '@namespace.string': {
+        "@namespace.string": {
             type: "string",
             readOnly: true
         },
-        '@namespace.integer': {
+        "@namespace.integer": {
             type: "integer",
             readOnly: true
         }
@@ -551,7 +551,7 @@ export const ModelWithDuplicatePropertiesSchema = {
     type: "object",
     properties: {
         prop: {
-            '$ref': "#/definitions/ModelWithString"
+            $ref: "#/definitions/ModelWithString"
         }
     }
 } as const;
@@ -577,13 +577,13 @@ export const ModelWithDuplicateImportsSchema = {
     type: "object",
     properties: {
         propA: {
-            '$ref': "#/definitions/ModelWithString"
+            $ref: "#/definitions/ModelWithString"
         },
         propB: {
-            '$ref': "#/definitions/ModelWithString"
+            $ref: "#/definitions/ModelWithString"
         },
         propC: {
-            '$ref': "#/definitions/ModelWithString"
+            $ref: "#/definitions/ModelWithString"
         }
     }
 } as const;
@@ -593,7 +593,7 @@ export const ModelThatExtendsSchema = {
     type: "object",
     allOf: [
         {
-            '$ref': "#/definitions/ModelWithString"
+            $ref: "#/definitions/ModelWithString"
         },
         {
             type: "object",
@@ -602,7 +602,7 @@ export const ModelThatExtendsSchema = {
                     type: "string"
                 },
                 propExtendsB: {
-                    '$ref': "#/definitions/ModelWithString"
+                    $ref: "#/definitions/ModelWithString"
                 }
             }
         }
@@ -614,10 +614,10 @@ export const ModelThatExtendsExtendsSchema = {
     type: "object",
     allOf: [
         {
-            '$ref': "#/definitions/ModelWithString"
+            $ref: "#/definitions/ModelWithString"
         },
         {
-            '$ref': "#/definitions/ModelThatExtends"
+            $ref: "#/definitions/ModelThatExtends"
         },
         {
             type: "object",
@@ -626,7 +626,7 @@ export const ModelThatExtendsExtendsSchema = {
                     type: "string"
                 },
                 propExtendsD: {
-                    '$ref': "#/definitions/ModelWithString"
+                    $ref: "#/definitions/ModelWithString"
                 }
             }
         }
@@ -768,7 +768,7 @@ export const ModelWithReferenceWritableSchema = {
     type: "object",
     properties: {
         prop: {
-            '$ref': "#/definitions/ModelWithPropertiesWritable"
+            $ref: "#/definitions/ModelWithPropertiesWritable"
         }
     }
 } as const;
@@ -793,9 +793,9 @@ export const ModelWithPropertiesWritableSchema = {
             type: "boolean"
         },
         reference: {
-            '$ref': "#/definitions/ModelWithString"
+            $ref: "#/definitions/ModelWithString"
         },
-        'property with space': {
+        "property with space": {
             type: "string"
         },
         default: {

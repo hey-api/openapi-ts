@@ -334,7 +334,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/accounting-companies",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -349,7 +349,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/accounting-companies/{id}",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -360,7 +360,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/accounting-company-memberships",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -375,7 +375,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/bank-accounts",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -390,7 +390,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/business-accountant-assignments",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -410,7 +410,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/business-documents",
             ...options,
             headers: {
-                'Content-Type': null,
+                "Content-Type": null,
                 ...options?.headers
             }
         });
@@ -425,7 +425,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/business-documents/{id}",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -448,7 +448,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/business-documents/{id}/move-to-business",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -463,7 +463,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/businesses",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -478,7 +478,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/businesses/{id}",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -489,7 +489,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/businesses/{id}/contact",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -504,7 +504,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/business-memberships",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -515,7 +515,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/counterparties",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -530,7 +530,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/counterparties/{id}",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -541,7 +541,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/data-box-credentials",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -608,7 +608,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/notifications/device-tokens",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -619,7 +619,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/notifications/device-tokens",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -630,7 +630,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/feedback",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -641,7 +641,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/invitations",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -652,7 +652,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/invitations/{id}/accept",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -671,7 +671,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/invitations/{id}",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -682,7 +682,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/invoices",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -697,7 +697,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/invoices/{id}",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -712,7 +712,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/invoices/{id}/send",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -727,7 +727,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/invoice-settings",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -738,7 +738,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/notifications/test",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -754,7 +754,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/personal-documents",
             ...options,
             headers: {
-                'Content-Type': null,
+                "Content-Type": null,
                 ...options?.headers
             }
         });
@@ -765,7 +765,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/personal-documents/{id}/move-to-business",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -784,7 +784,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/recurring-tasks",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -799,7 +799,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/recurring-tasks/{id}",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -814,7 +814,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/tasks",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -825,7 +825,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/tasks/{id}",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -836,7 +836,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/tasks/{id}/submit",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -851,7 +851,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/tasks/{id}/reject",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });
@@ -870,7 +870,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/user/register",
             ...options,
             headers: {
-                'Content-Type': "application/json",
+                "Content-Type": "application/json",
                 ...options.headers
             }
         });
@@ -881,7 +881,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/user/login",
             ...options,
             headers: {
-                'Content-Type': "application/json",
+                "Content-Type": "application/json",
                 ...options.headers
             }
         });
@@ -892,7 +892,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/user/refresh",
             ...options,
             headers: {
-                'Content-Type': "application/json",
+                "Content-Type": "application/json",
                 ...options.headers
             }
         });
@@ -903,7 +903,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/user/resendConfirmationEmail",
             ...options,
             headers: {
-                'Content-Type': "application/json",
+                "Content-Type": "application/json",
                 ...options.headers
             }
         });
@@ -914,7 +914,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/user/forgotPassword",
             ...options,
             headers: {
-                'Content-Type': "application/json",
+                "Content-Type": "application/json",
                 ...options.headers
             }
         });
@@ -925,7 +925,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/user/resetPassword",
             ...options,
             headers: {
-                'Content-Type': "application/json",
+                "Content-Type": "application/json",
                 ...options.headers
             }
         });
@@ -936,7 +936,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/user/manage/2fa",
             ...options,
             headers: {
-                'Content-Type': "application/json",
+                "Content-Type": "application/json",
                 ...options.headers
             }
         });
@@ -951,7 +951,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/user/manage/info",
             ...options,
             headers: {
-                'Content-Type': "application/json",
+                "Content-Type": "application/json",
                 ...options.headers
             }
         });
@@ -962,7 +962,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/user/logout",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options?.headers
             }
         });
@@ -988,7 +988,7 @@ export class Sdk extends HeyApiClient {
             url: "/api/v1/users/{id}",
             ...options,
             headers: {
-                'Content-Type': "application/json;odata.metadata=minimal;odata.streaming=true",
+                "Content-Type": "application/json;odata.metadata=minimal;odata.streaming=true",
                 ...options.headers
             }
         });

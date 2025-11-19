@@ -24,7 +24,7 @@ export const patchFoo = <ThrowOnError extends boolean = false>(options?: Options
     url: "/foo",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options?.headers
     }
 });
@@ -33,7 +33,7 @@ export const postFoo = <ThrowOnError extends boolean = false>(options: Options<P
     url: "/foo",
     ...options,
     headers: {
-        'content-type': "application/json",
+        "content-type": "application/json",
         ...options.headers
     }
 });
@@ -42,7 +42,7 @@ export const putFoo = <ThrowOnError extends boolean = false>(options: Options<Pu
     url: "/foo",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });

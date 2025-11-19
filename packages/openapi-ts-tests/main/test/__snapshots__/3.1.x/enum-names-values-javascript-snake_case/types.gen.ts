@@ -4,32 +4,23 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
-export const _110 = {
-    '1_10': '1-10',
-    '11_20': '11-20'
-} as const;
+export const _110 = { "1_10": "1-10", "11_20": "11-20" } as const;
 
 export type _110 = typeof _110[keyof typeof _110];
 
-export const MyFoo = {
-    my_foo: 'myFoo',
-    my_bar: 'myBar'
-} as const;
+export const MyFoo = { my_foo: "myFoo", my_bar: "myBar" } as const;
 
 export type MyFoo = typeof MyFoo[keyof typeof MyFoo];
 
-export const MyFoo2 = {
-    my_foo: 'MyFoo',
-    my_bar: 'MyBar'
-} as const;
+export const MyFoo2 = { my_foo: "MyFoo", my_bar: "MyBar" } as const;
 
 export type MyFoo2 = typeof MyFoo2[keyof typeof MyFoo2];
 
 export const Foo = {
-    foo: 'foo',
-    bar: 'bar',
+    foo: "foo",
+    bar: "bar",
     null: null,
-    '': '',
+    "": "",
     true: true,
     false: false
 } as const;
@@ -40,17 +31,17 @@ export const Numbers = {
     100: 100,
     200: 200,
     300: 300,
-    '-100': -100,
-    '-200': -200,
-    '-300': -300
+    "-100": -100,
+    "-200": -200,
+    "-300": -300
 } as const;
 
 export type Numbers = typeof Numbers[keyof typeof Numbers];
 
 export const Arrays = {
-    0: ['foo'],
-    1: ['bar'],
-    2: ['baz']
+    0: ["foo"],
+    1: ["bar"],
+    2: ["baz"]
 } as const;
 
 export type Arrays = typeof Arrays[keyof typeof Arrays];

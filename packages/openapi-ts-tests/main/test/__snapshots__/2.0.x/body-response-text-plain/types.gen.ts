@@ -8,7 +8,7 @@ export type PostFooData = {
     body: string;
     path?: never;
     query?: never;
-    url: '/foo';
+    url: "/foo";
 };
 
 export type PostFooResponses = {

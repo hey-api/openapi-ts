@@ -48,7 +48,7 @@ export type SendEmailRequest = {
     /**
      * Replace links in content to enable "click tracking" stats. Default is 'null', which uses the server's LinkTracking setting'.
      */
-    TrackLinks?: 'None' | 'HtmlAndText' | 'HtmlOnly' | 'TextOnly';
+    TrackLinks?: "None" | "HtmlAndText" | "HtmlOnly" | "TextOnly";
     Headers?: HeaderCollection;
     Attachments?: AttachmentCollection;
 };
@@ -106,11 +106,11 @@ export type SendEmailData = {
         /**
          * The token associated with the Server on which this request will operate.
          */
-        'X-Postmark-Server-Token': string;
+        "X-Postmark-Server-Token": string;
     };
     path?: never;
     query?: never;
-    url: '/email';
+    url: "/email";
 };
 
 export type SendEmailErrors = {

@@ -157,15 +157,15 @@ export const irSchemaToAst = ({
 
     if (schema.default !== undefined) {
       const isBigInt = schema.type === 'integer' && schema.format === 'int64';
-      const callParameter = numberParameter({
-        isBigInt,
-        value: schema.default,
-      });
-      if (callParameter) {
-        ast.expression = $(z.placeholder)
-          .attr(identifiers._default)
-          .call(ast.expression, callParameter);
-      }
+      ast.expression = $(z.placeholder)
+        .attr(identifiers._default)
+        .call(
+          ast.expression,
+          numberParameter({
+            isBigInt,
+            value: schema.default,
+          }),
+        );
     }
   }
 

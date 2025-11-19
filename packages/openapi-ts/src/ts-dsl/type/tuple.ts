@@ -3,7 +3,7 @@ import ts from 'typescript';
 import { TypeTsDsl } from '../base';
 
 export class TypeTupleTsDsl extends TypeTsDsl<ts.TupleTypeNode> {
-  private _elements: Array<string | ts.TypeNode | TypeTsDsl> = [];
+  protected _elements: Array<string | ts.TypeNode | TypeTsDsl> = [];
 
   constructor(...nodes: Array<string | ts.TypeNode | TypeTsDsl>) {
     super();

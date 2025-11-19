@@ -27,7 +27,7 @@ export const import_ = <ThrowOnError extends boolean = false>(options: Options<I
     url: "/api/v{api-version}/no+tag",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -73,7 +73,7 @@ export const callWithParameters = <ThrowOnError extends boolean = false>(options
     url: "/api/v{api-version}/parameters/{parameterPath}",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -82,7 +82,7 @@ export const callWithWeirdParameterNames = <ThrowOnError extends boolean = false
     url: "/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -91,7 +91,7 @@ export const getCallWithOptionalParam = <ThrowOnError extends boolean = false>(o
     url: "/api/v{api-version}/parameters",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -101,7 +101,7 @@ export const postCallWithOptionalParam = <ThrowOnError extends boolean = false>(
     url: "/api/v{api-version}/parameters",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });
@@ -110,7 +110,7 @@ export const postApiVbyApiVersionRequestBody = <ThrowOnError extends boolean = f
     url: "/api/v{api-version}/requestBody",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options?.headers
     }
 });
@@ -120,7 +120,7 @@ export const postApiVbyApiVersionFormData = <ThrowOnError extends boolean = fals
     url: "/api/v{api-version}/formData",
     ...options,
     headers: {
-        'Content-Type': null,
+        "Content-Type": null,
         ...options?.headers
     }
 });
@@ -183,7 +183,7 @@ export const uploadFile = <ThrowOnError extends boolean = false>(options: Option
     url: "/api/v{api-version}/upload",
     ...options,
     headers: {
-        'Content-Type': "application/x-www-form-urlencoded",
+        "Content-Type": "application/x-www-form-urlencoded",
         ...options.headers
     }
 });
@@ -208,7 +208,7 @@ export const multipartRequest = <ThrowOnError extends boolean = false>(options?:
     url: "/api/v{api-version}/multipart",
     ...options,
     headers: {
-        'Content-Type': null,
+        "Content-Type": null,
         ...options?.headers
     }
 });
@@ -218,7 +218,7 @@ export const complexParams = <ThrowOnError extends boolean = false>(options: Opt
     url: "/api/v{api-version}/complex/{id}",
     ...options,
     headers: {
-        'Content-Type': "application/json-patch+json",
+        "Content-Type": "application/json-patch+json",
         ...options.headers
     }
 });
@@ -241,7 +241,7 @@ export const putWithFormUrlEncoded = <ThrowOnError extends boolean = false>(opti
     url: "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串",
     ...options,
     headers: {
-        'Content-Type': "application/x-www-form-urlencoded",
+        "Content-Type": "application/x-www-form-urlencoded",
         ...options.headers
     }
 });

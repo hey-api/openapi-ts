@@ -26,12 +26,12 @@ export type NestedPatternObject = {
 };
 
 export type UnionPatternObject = {
-    type?: 'user' | 'admin' | 'guest';
+    type?: "user" | "admin" | "guest";
     [key: string]: ({
         [key: string]: unknown;
     } & {
         level?: number;
-    }) | string | number | 'user' | 'admin' | 'guest' | undefined;
+    }) | string | number | "user" | "admin" | "guest" | undefined;
 };
 
 export type PatternPropertiesResponse = {
@@ -43,7 +43,7 @@ export type PostPatternTestData = {
     body: PatternPropertiesTest;
     path?: never;
     query?: never;
-    url: '/pattern-test';
+    url: "/pattern-test";
 };
 
 export type PostPatternTestResponses = {

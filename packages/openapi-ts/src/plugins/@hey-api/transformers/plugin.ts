@@ -16,19 +16,12 @@ const dataVariableName = 'data';
 // can emit calls to transformers that will be implemented later.
 const buildingSymbols = new Set<number>();
 
-type Expr = NonNullable<
-  ReturnType<typeof $.toExpr | typeof $.return | typeof $.if>
->;
+type Expr = ReturnType<typeof $.fromValue | typeof $.return | typeof $.if>;
 
 const ensureStatements = (
   nodes: Array<Expr | ts.Expression | ts.Statement>,
 ): Array<ts.Statement | ReturnType<typeof $.return>> =>
-  nodes.map((node) => {
-    if (node instanceof TsDsl) {
-      node = node.$render();
-    }
-    return $.toStmt(node);
-  });
+  nodes.map((node) => $.stmt(node).$render());
 
 const isNodeReturnStatement = ({
   node,

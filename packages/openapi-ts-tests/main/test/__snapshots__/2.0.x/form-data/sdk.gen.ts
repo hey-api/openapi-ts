@@ -23,7 +23,7 @@ export const postV1Foo = <ThrowOnError extends boolean = false>(options: Options
     url: "/v1/foo",
     ...options,
     headers: {
-        'Content-Type': null,
+        "Content-Type": null,
         ...options.headers
     }
 });

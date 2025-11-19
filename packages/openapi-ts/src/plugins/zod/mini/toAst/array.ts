@@ -95,14 +95,16 @@ export const arrayToAst = ({
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
     checks.push(
-      $(z.placeholder).attr(identifiers.length).call($.toExpr(schema.minItems)),
+      $(z.placeholder)
+        .attr(identifiers.length)
+        .call($.fromValue(schema.minItems)),
     );
   } else {
     if (schema.minItems !== undefined) {
       checks.push(
         $(z.placeholder)
           .attr(identifiers.minLength)
-          .call($.toExpr(schema.minItems)),
+          .call($.fromValue(schema.minItems)),
       );
     }
 
@@ -110,7 +112,7 @@ export const arrayToAst = ({
       checks.push(
         $(z.placeholder)
           .attr(identifiers.maxLength)
-          .call($.toExpr(schema.maxItems)),
+          .call($.fromValue(schema.maxItems)),
       );
     }
   }

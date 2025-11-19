@@ -8,4 +8,4 @@ export type Foo = {
     type?: TypeEnum;
 };
 
-export type TypeEnum = 'foo' | 'bar';
+export type TypeEnum = "foo" | "bar";

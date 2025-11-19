@@ -24,7 +24,7 @@ export const postFoo = <ThrowOnError extends boolean = false>(options: Options<P
     url: "/foo",
     ...options,
     headers: {
-        'Content-Type': "application/json",
+        "Content-Type": "application/json",
         ...options.headers
     }
 });

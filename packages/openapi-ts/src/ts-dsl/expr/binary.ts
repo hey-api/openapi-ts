@@ -1,0 +1,171 @@
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import ts from 'typescript';
+
+import type { MaybeTsDsl } from '../base';
+import { TsDsl } from '../base';
+import { mixin } from '../mixins/apply';
+import { AsMixin } from '../mixins/as';
+import { ExprMixin } from '../mixins/expr';
+
+type Expr = string | MaybeTsDsl<ts.Expression>;
+type Op = Operator | ts.BinaryOperator;
+type Operator =
+  | '!='
+  | '!=='
+  | '&&'
+  | '*'
+  | '+'
+  | '-'
+  | '/'
+  | '<'
+  | '<='
+  | '='
+  | '=='
+  | '==='
+  | '>'
+  | '>='
+  | '??'
+  | '||';
+
+export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
+  protected _base: Expr;
+  protected _expr?: Expr;
+  protected _op?: Op;
+
+  constructor(base: Expr, op?: Op, expr?: Expr) {
+    super();
+    this._base = base;
+    this._op = op;
+    this._expr = expr;
+  }
+
+  /** Logical AND — `this && expr` */
+  and(expr: Expr): this {
+    return this.opAndExpr('&&', expr);
+  }
+
+  /** Creates an assignment expression (e.g. `this = expr`). */
+  assign(expr: Expr): this {
+    return this.opAndExpr('=', expr);
+  }
+
+  /** Nullish coalescing — `this ?? expr` */
+  coalesce(expr: Expr): this {
+    return this.opAndExpr('??', expr);
+  }
+
+  /** Division — `this / expr` */
+  div(expr: Expr): this {
+    return this.opAndExpr('/', expr);
+  }
+
+  /** Strict equality — `this === expr` */
+  eq(expr: Expr): this {
+    return this.opAndExpr('===', expr);
+  }
+
+  /** Greater than — `this > expr` */
+  gt(expr: Expr): this {
+    return this.opAndExpr('>', expr);
+  }
+
+  /** Greater than or equal — `this >= expr` */
+  gte(expr: Expr): this {
+    return this.opAndExpr('>=', expr);
+  }
+
+  /** Loose equality — `this == expr` */
+  looseEq(expr: Expr): this {
+    return this.opAndExpr('==', expr);
+  }
+
+  /** Loose inequality — `this != expr` */
+  looseNeq(expr: Expr): this {
+    return this.opAndExpr('!=', expr);
+  }
+
+  /** Less than — `this < expr` */
+  lt(expr: Expr): this {
+    return this.opAndExpr('<', expr);
+  }
+
+  /** Less than or equal — `this <= expr` */
+  lte(expr: Expr): this {
+    return this.opAndExpr('<=', expr);
+  }
+
+  /** Subtraction — `this - expr` */
+  minus(expr: Expr): this {
+    return this.opAndExpr('-', expr);
+  }
+
+  /** Strict inequality — `this !== expr` */
+  neq(expr: Expr): this {
+    return this.opAndExpr('!==', expr);
+  }
+
+  /** Logical OR — `this || expr` */
+  or(expr: Expr): this {
+    return this.opAndExpr('||', expr);
+  }
+
+  /** Addition — `this + expr` */
+  plus(expr: Expr): this {
+    return this.opAndExpr('+', expr);
+  }
+
+  /** Multiplication — `this * expr` */
+  times(expr: Expr): this {
+    return this.opAndExpr('*', expr);
+  }
+
+  $render(): ts.BinaryExpression {
+    if (!this._op) {
+      throw new Error('BinaryTsDsl: missing operator');
+    }
+    if (this._expr === undefined) {
+      throw new Error('BinaryTsDsl: missing right-hand expression');
+    }
+    const base = this.$node(this._base);
+    const expr = this.$node(this._expr);
+    const operator =
+      typeof this._op === 'string' ? this.opToToken(this._op) : this._op;
+    return ts.factory.createBinaryExpression(base, operator, expr);
+  }
+
+  /** Sets the binary operator and right-hand operand for this expression. */
+  private opAndExpr(op: Op, expr: Expr): this {
+    this._expr = expr;
+    this._op = op;
+    return this;
+  }
+
+  private opToToken(op: Operator): ts.BinaryOperator | ts.BinaryOperatorToken {
+    const tokenMap: Record<Operator, ts.BinaryOperator> = {
+      '!=': ts.SyntaxKind.ExclamationEqualsToken,
+      '!==': ts.SyntaxKind.ExclamationEqualsEqualsToken,
+      '&&': ts.SyntaxKind.AmpersandAmpersandToken,
+      '*': ts.SyntaxKind.AsteriskToken,
+      '+': ts.SyntaxKind.PlusToken,
+      '-': ts.SyntaxKind.MinusToken,
+      '/': ts.SyntaxKind.SlashToken,
+      '<': ts.SyntaxKind.LessThanToken,
+      '<=': ts.SyntaxKind.LessThanEqualsToken,
+      '=': ts.SyntaxKind.EqualsToken,
+      '==': ts.SyntaxKind.EqualsEqualsToken,
+      '===': ts.SyntaxKind.EqualsEqualsEqualsToken,
+      '>': ts.SyntaxKind.GreaterThanToken,
+      '>=': ts.SyntaxKind.GreaterThanEqualsToken,
+      '??': ts.SyntaxKind.QuestionQuestionToken,
+      '||': ts.SyntaxKind.BarBarToken,
+    };
+    const token = tokenMap[op];
+    if (!token) {
+      throw new Error(`Unsupported operator: ${op}`);
+    }
+    return token;
+  }
+}
+
+export interface BinaryTsDsl extends AsMixin, ExprMixin {}
+mixin(BinaryTsDsl, AsMixin, ExprMixin);

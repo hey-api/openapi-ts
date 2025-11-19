@@ -527,7 +527,7 @@ export const operationStatements = ({
 
   const auth = operationAuth({ context: plugin.context, operation, plugin });
   if (auth.length) {
-    reqOptions.prop('security', $.toExpr(auth)!);
+    reqOptions.prop('security', $.fromValue(auth));
   }
 
   reqOptions.prop('url', $.literal(operation.path));
