@@ -153,7 +153,7 @@ export const createQueryOptions = ({
   if (meta) {
     queryOptionsObj.push({
       key: 'meta',
-      value: meta,
+      value: meta.$render(),
     });
   }
 

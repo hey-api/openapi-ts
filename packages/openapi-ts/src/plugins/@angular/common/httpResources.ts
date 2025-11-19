@@ -1,5 +1,4 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
@@ -8,7 +7,7 @@ import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 import { stringCase } from '~/utils/stringCase';
 
 import type { AngularCommonPlugin } from './types';
@@ -17,7 +16,7 @@ interface AngularServiceClassEntry {
   className: string;
   classes: Set<string>;
   methods: Set<string>;
-  nodes: Array<ts.ClassElement>;
+  nodes: Array<ReturnType<typeof $.method | typeof $.field | typeof $.newline>>;
   root: boolean;
 }
 
@@ -88,8 +87,7 @@ const generateAngularClassServices = ({
           if (!currentClass.nodes.length) {
             currentClass.nodes.push(methodNode);
           } else {
-            // @ts-expect-error
-            currentClass.nodes.push(tsc.identifier({ text: '\n' }), methodNode);
+            currentClass.nodes.push($.newline(), methodNode);
           }
 
           currentClass.methods.add(resourceMethodName);
@@ -113,24 +111,22 @@ const generateAngularClassServices = ({
         generateClass(childClass);
 
         currentClass.nodes.push(
-          tsc.propertyDeclaration({
-            initializer: tsc.newExpression({
-              argumentsArray: [],
-              expression: tsc.identifier({
-                text: buildName({
-                  config: {
-                    case: 'preserve',
-                    name: plugin.config.httpResources.classNameBuilder,
-                  },
-                  name: childClass.className,
-                }),
-              }),
-            }),
-            name: stringCase({
+          $.field(
+            stringCase({
               case: 'camelCase',
               value: childClass.className,
             }),
-          }),
+          ).assign(
+            $.new(
+              buildName({
+                config: {
+                  case: 'preserve',
+                  name: plugin.config.httpResources.classNameBuilder,
+                },
+                name: childClass.className,
+              }),
+            ),
+          ),
         );
       }
     }
@@ -149,17 +145,15 @@ const generateAngularClassServices = ({
         name: currentClass.className,
       }),
     });
-    const node = tsc.classDeclaration({
-      decorator: currentClass.root
-        ? {
-            args: [{ providedIn: 'root' }],
-            name: symbolInjectable.placeholder,
-          }
-        : undefined,
-      exportClass: symbolClass.exported,
-      name: symbolClass.placeholder,
-      nodes: currentClass.nodes,
-    });
+    const node = $.class(symbolClass.placeholder)
+      .export(symbolClass.exported)
+      .$if(currentClass.root, (c) =>
+        c.decorator(
+          symbolInjectable.placeholder,
+          $.object().prop('providedIn', $.literal('root')),
+        ),
+      )
+      .do(...currentClass.nodes);
     plugin.setSymbolValue(symbolClass, node);
 
     generatedClasses.add(currentClass.className);
@@ -247,62 +241,43 @@ const generateResourceCallExpression = ({
         category: 'external',
         resource: '@angular/core.inject',
       });
-      let methodAccess: ts.Expression = tsc.callExpression({
-        functionName: symbolInject.placeholder,
-        parameters: [tsc.identifier({ text: symbolClass.placeholder })],
-      });
+      let methodAccess: ReturnType<typeof $.attr | typeof $.call> = $(
+        symbolInject.placeholder,
+      ).call(symbolClass.placeholder);
 
       // Navigate through the class hierarchy
       for (let i = 1; i < firstEntry.path.length; i++) {
         const className = firstEntry.path[i];
         if (className) {
-          methodAccess = tsc.propertyAccessExpression({
-            expression: methodAccess,
-            name: stringCase({
+          methodAccess = methodAccess.attr(
+            stringCase({
               case: 'camelCase',
               value: className,
             }),
-          });
+          );
         }
       }
 
-      methodAccess = tsc.propertyAccessExpression({
-        expression: methodAccess,
-        name: plugin.config.httpRequests.methodNameBuilder(operation),
-      });
+      methodAccess = methodAccess.attr(
+        plugin.config.httpRequests.methodNameBuilder(operation),
+      );
 
-      return tsc.callExpression({
-        functionName: symbolHttpResource.placeholder,
-        parameters: [
-          tsc.arrowFunction({
-            parameters: [],
-            statements: [
-              tsc.constVariable({
-                expression: tsc.conditionalExpression({
-                  condition: tsc.identifier({ text: 'options' }),
-                  whenFalse: tsc.identifier({ text: 'undefined' }),
-                  whenTrue: tsc.callExpression({
-                    functionName: 'options',
-                    parameters: [],
-                  }),
-                }),
-                name: 'opts',
-              }),
-              tsc.returnStatement({
-                expression: tsc.conditionalExpression({
-                  condition: tsc.identifier({ text: 'opts' }),
-                  whenFalse: tsc.identifier({ text: 'undefined' }),
-                  whenTrue: tsc.callExpression({
-                    functionName: methodAccess,
-                    parameters: [tsc.identifier({ text: 'opts' })],
-                  }),
-                }),
-              }),
-            ],
-          }),
-        ],
-        types: [tsc.typeNode(responseType)],
-      });
+      return $(symbolHttpResource.placeholder)
+        .call(
+          $.func().do(
+            $.const('opts').assign(
+              $.ternary('options')
+                .do($('options').call())
+                .otherwise($.id('undefined')),
+            ),
+            $.return(
+              $.ternary('opts')
+                .do(methodAccess.call('opts'))
+                .otherwise($.id('undefined')),
+            ),
+          ),
+        )
+        .generic(responseType);
     }
   } else {
     const symbolHttpRequest = plugin.referenceSymbol({
@@ -313,55 +288,30 @@ const generateResourceCallExpression = ({
       tool: 'angular',
     });
 
-    return tsc.callExpression({
-      functionName: symbolHttpResource.placeholder,
-      parameters: [
-        tsc.arrowFunction({
-          parameters: [],
-          statements: [
-            tsc.constVariable({
-              expression: tsc.conditionalExpression({
-                condition: tsc.identifier({ text: 'options' }),
-                whenFalse: tsc.identifier({ text: 'undefined' }),
-                whenTrue: tsc.callExpression({
-                  functionName: 'options',
-                  parameters: [],
-                }),
-              }),
-              name: 'opts',
-            }),
-            tsc.returnStatement({
-              expression: tsc.conditionalExpression({
-                condition: tsc.identifier({ text: 'opts' }),
-                whenFalse: tsc.identifier({ text: 'undefined' }),
-                whenTrue: tsc.callExpression({
-                  functionName: symbolHttpRequest.placeholder,
-                  parameters: [tsc.identifier({ text: 'opts' })],
-                }),
-              }),
-            }),
-          ],
-        }),
-      ],
-      types: [tsc.typeNode(responseType)],
-    });
+    return $(symbolHttpResource.placeholder)
+      .call(
+        $.func().do(
+          $.const('opts').assign(
+            $.ternary('options')
+              .do($('options').call())
+              .otherwise($.id('undefined')),
+          ),
+          $.return(
+            $.ternary('opts')
+              .do($(symbolHttpRequest.placeholder).call('opts'))
+              .otherwise($.id('undefined')),
+          ),
+        ),
+      )
+      .generic(responseType);
   }
 
   // Fallback return (should not reach here)
-  return tsc.callExpression({
-    functionName: symbolHttpResource.placeholder,
-    parameters: [
-      tsc.arrowFunction({
-        parameters: [],
-        statements: [
-          tsc.returnStatement({
-            expression: tsc.identifier({ text: 'undefined' }),
-          }),
-        ],
-      }),
-    ],
-    types: [tsc.typeNode(responseType)],
-  });
+  return $(symbolHttpResource.placeholder).call(
+    $.func()
+      .do($.return($.id('undefined')))
+      .generic(responseType),
+  );
 };
 
 const generateAngularResourceMethod = ({
@@ -390,34 +340,27 @@ const generateAngularResourceMethod = ({
   });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
-  return tsc.methodDeclaration({
-    accessLevel: 'public',
-    comment: createOperationComment({ operation }),
-    name: methodName,
-    parameters: [
-      {
-        isRequired: isRequiredOptions,
-        name: 'options',
-        type: `() => ${symbolOptions.placeholder}<${dataType}, ThrowOnError> | undefined`,
-      },
-    ],
-    returnType: undefined,
-    statements: [
-      tsc.returnStatement({
-        expression: generateResourceCallExpression({
+  return $.method(methodName)
+    .public()
+    .$if(createOperationComment({ operation }), (c, v) =>
+      c.doc(v as ReadonlyArray<string>),
+    )
+    .param('options', (p) =>
+      p
+        .optional(!isRequiredOptions)
+        .type(
+          `() => ${symbolOptions.placeholder}<${dataType}, ThrowOnError> | undefined`,
+        ),
+    )
+    .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
+    .do(
+      $.return(
+        generateResourceCallExpression({
           operation,
           plugin,
         }),
-      }),
-    ],
-    types: [
-      {
-        default: false,
-        extends: 'boolean',
-        name: 'ThrowOnError',
-      },
-    ],
-  });
+      ),
+    );
 };
 
 const generateAngularResourceFunction = ({
@@ -446,35 +389,30 @@ const generateAngularResourceFunction = ({
   });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
-  return tsc.constVariable({
-    comment: createOperationComment({ operation }),
-    exportConst: symbol.exported,
-    expression: tsc.arrowFunction({
-      parameters: [
-        {
-          isRequired: isRequiredOptions,
-          name: 'options',
-          type: `() => ${symbolOptions.placeholder}<${dataType}, ThrowOnError> | undefined`,
-        },
-      ],
-      statements: [
-        tsc.returnStatement({
-          expression: generateResourceCallExpression({
-            operation,
-            plugin,
-          }),
-        }),
-      ],
-      types: [
-        {
-          default: false,
-          extends: 'boolean',
-          name: 'ThrowOnError',
-        },
-      ],
-    }),
-    name: symbol.placeholder,
-  });
+  return $.const(symbol.placeholder)
+    .export(symbol.exported)
+    .$if(createOperationComment({ operation }), (c, v) =>
+      c.doc(v as ReadonlyArray<string>),
+    )
+    .assign(
+      $.func()
+        .param('options', (p) =>
+          p
+            .optional(!isRequiredOptions)
+            .type(
+              `() => ${symbolOptions.placeholder}<${dataType}, ThrowOnError> | undefined`,
+            ),
+        )
+        .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
+        .do(
+          $.return(
+            generateResourceCallExpression({
+              operation,
+              plugin,
+            }),
+          ),
+        ),
+    );
 };
 
 export const createHttpResources: AngularCommonPlugin['Handler'] = ({
