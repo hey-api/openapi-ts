@@ -4,6 +4,7 @@
   "cleanUrls": true,
   "devCommand": "pnpm --filter @docs/openapi-ts dev",
   "framework": "vitepress",
+  "installCommand": "pnpm install --filter @docs/openapi-ts",
   "outputDirectory": "docs/.vitepress/dist",
   "redirects": [
     {
