@@ -1,9 +1,7 @@
-import type ts from 'typescript';
-
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import { createOperationComment } from '~/plugins/shared/utils/operation';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { handleMeta } from './meta';
 import type { PiniaColadaPlugin } from './types';
@@ -38,78 +36,41 @@ export const createMutationOptions = ({
 
   const fnOptions = 'fnOptions';
 
-  const awaitSdkExpression = tsc.awaitExpression({
-    expression: tsc.callExpression({
-      functionName: queryFn,
-      parameters: [
-        tsc.objectExpression({
-          multiLine: true,
-          obj: [
-            {
-              spread: 'options',
-            },
-            {
-              spread: fnOptions,
-            },
-            {
-              key: 'throwOnError',
-              value: true,
-            },
-          ],
-        }),
-      ],
-    }),
-  });
+  const awaitSdkFn = $(queryFn)
+    .call(
+      $.object()
+        .pretty()
+        .spread('options')
+        .spread(fnOptions)
+        .prop('throwOnError', $.literal(true)),
+    )
+    .await();
 
-  const statements: Array<ts.Statement> = [];
+  const statements: Array<ReturnType<typeof $.var | typeof $.return>> = [];
 
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
-    statements.push(
-      tsc.returnVariable({
-        expression: awaitSdkExpression,
-      }),
-    );
+    statements.push($.return(awaitSdkFn));
   } else {
     statements.push(
-      tsc.constVariable({
-        destructure: true,
-        expression: awaitSdkExpression,
-        name: 'data',
-      }),
-      tsc.returnVariable({
-        expression: 'data',
-      }),
+      $.const().object('data').assign(awaitSdkFn),
+      $.return('data'),
     );
   }
 
-  const mutationOptionsObj: Array<{ key: string; value: ts.Expression }> = [
-    {
-      key: 'mutation',
-      value: tsc.arrowFunction({
-        async: true,
-        multiLine: true,
-        parameters: [
-          isNuxtClient
-            ? {
-                name: fnOptions,
-                type: `Partial<${strippedTypeData}>`,
-              }
-            : { name: fnOptions },
-        ],
-        statements,
-      }),
-    },
-  ];
-
-  const meta = handleMeta(plugin, operation, 'mutationOptions');
-
-  if (meta) {
-    mutationOptionsObj.push({
-      key: 'meta',
-      value: meta.$render(),
-    });
-  }
-
+  const mutationOpts = $.object()
+    .pretty()
+    .prop(
+      'mutation',
+      $.func()
+        .async()
+        .param(fnOptions, (p) =>
+          p.$if(isNuxtClient, (f) => f.type(`Partial<${strippedTypeData}>`)),
+        )
+        .do(...statements),
+    )
+    .$if(handleMeta(plugin, operation, 'mutationOptions'), (o, v) =>
+      o.prop('meta', v),
+    );
   const symbolMutationOptions = plugin.registerSymbol({
     exported: true,
     name: buildName({
@@ -117,29 +78,18 @@ export const createMutationOptions = ({
       name: operation.id,
     }),
   });
-  const statement = tsc.constVariable({
-    comment: plugin.config.comments
-      ? createOperationComment({ operation })
-      : undefined,
-    exportConst: symbolMutationOptions.exported,
-    expression: tsc.arrowFunction({
-      parameters: [
-        {
-          isRequired: false,
-          name: 'options',
-          type: `Partial<${strippedTypeData}>`,
-        },
-      ],
-      returnType: mutationType,
-      statements: [
-        tsc.returnStatement({
-          expression: tsc.objectExpression({
-            obj: mutationOptionsObj,
-          }),
-        }),
-      ],
-    }),
-    name: symbolMutationOptions.placeholder,
-  });
+  const statement = $.const(symbolMutationOptions.placeholder)
+    .export(symbolMutationOptions.exported)
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
+      c.doc(v),
+    )
+    .assign(
+      $.func()
+        .param('options', (p) =>
+          p.optional().type(`Partial<${strippedTypeData}>`),
+        )
+        .returns(mutationType)
+        .do($.return(mutationOpts)),
+    );
   plugin.setSymbolValue(symbolMutationOptions, statement);
 };

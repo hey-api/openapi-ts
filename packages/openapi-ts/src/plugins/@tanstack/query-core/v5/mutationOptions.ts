@@ -59,9 +59,8 @@ export const createMutationOptions = ({
   });
   const statement = $.const(symbolMutationOptions.placeholder)
     .export(symbolMutationOptions.exported)
-    .$if(
-      plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.doc(v as ReadonlyArray<string>),
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
+      c.doc(v),
     )
     .assign(
       $.func()

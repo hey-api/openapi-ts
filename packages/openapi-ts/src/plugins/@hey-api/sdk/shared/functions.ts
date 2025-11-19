@@ -84,9 +84,7 @@ export const generateFlatSdk = ({
       });
       const node = $.const(symbol.placeholder)
         .export(symbol.exported)
-        .$if(createOperationComment({ operation }), (c, v) =>
-          c.doc(v as ReadonlyArray<string>),
-        )
+        .$if(createOperationComment(operation), (c, v) => c.doc(v))
         .assign(
           $.func()
             .params(...opParameters.parameters)
