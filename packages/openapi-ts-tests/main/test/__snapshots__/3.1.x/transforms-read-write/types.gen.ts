@@ -97,7 +97,7 @@ export type PostFooReadWriteData = {
     body: FooReadWriteWritable;
     path?: never;
     query?: never;
-    url: "/foo-read-write";
+    url: '/foo-read-write';
 };
 
 export type PostFooReadWriteResponses = {
@@ -113,7 +113,7 @@ export type PostFooReadData = {
     body: FooReadWritable;
     path?: never;
     query?: never;
-    url: "/foo-read";
+    url: '/foo-read';
 };
 
 export type PostFooReadResponses = {
@@ -129,7 +129,7 @@ export type PostFooWriteData = {
     body: FooWriteWritable;
     path?: never;
     query?: never;
-    url: "/foo-write";
+    url: '/foo-write';
 };
 
 export type PostFooWriteResponses = {
@@ -153,7 +153,7 @@ export type PutFooWriteData = {
          */
         foo?: string;
     };
-    url: "/foo-write";
+    url: '/foo-write';
 };
 
 export type PutFooWriteResponses = {

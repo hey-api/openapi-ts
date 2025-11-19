@@ -2,7 +2,7 @@
 
 import { z } from 'zod/v4';
 
-export const zBaz = z.string().regex(/foo\nbar/).readonly().default("baz");
+export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
 
 export const zFoo = z.union([
     z.object({

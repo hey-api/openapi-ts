@@ -2,8 +2,8 @@
 
 import * as v from 'valibot';
 
-export const vFoo = v.nullable(v.picklist(["foo", "bar"]));
+export const vFoo = v.nullable(v.picklist(['foo', 'bar']));
 
-export const vBar = v.picklist(["foo", "bar"]);
+export const vBar = v.picklist(['foo', 'bar']);
 
-export const vBaz = v.picklist(["foo", "bar"]);
+export const vBaz = v.picklist(['foo', 'bar']);

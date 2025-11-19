@@ -8,6 +8,7 @@ import { SetterTsDsl } from '../decl/setter';
 import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
 import { safePropName } from '../utils/prop';
+import { IdTsDsl } from './id';
 
 type Expr = string | MaybeTsDsl<ts.Expression>;
 type Stmt = string | MaybeTsDsl<ts.Statement>;
@@ -72,7 +73,9 @@ export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
     }
     return ts.factory.createPropertyAssignment(
       this.meta.kind === 'computed'
-        ? ts.factory.createComputedPropertyName(this.$id(this.meta.name))
+        ? ts.factory.createComputedPropertyName(
+            this.$node(new IdTsDsl(this.meta.name)),
+          )
         : safePropName(this.meta.name),
       node,
     );
