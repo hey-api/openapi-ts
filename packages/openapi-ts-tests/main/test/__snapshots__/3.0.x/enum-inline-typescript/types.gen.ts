@@ -9,6 +9,6 @@ export type Foo = {
 };
 
 export enum TypeEnum {
-    FOO = "foo",
-    BAR = "bar"
+    FOO = 'foo',
+    BAR = 'bar'
 }

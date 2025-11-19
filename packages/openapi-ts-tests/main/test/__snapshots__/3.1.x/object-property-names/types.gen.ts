@@ -4,7 +4,7 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
-export type Foo = "foo" | "bar";
+export type Foo = 'foo' | 'bar';
 
 export type Bar = {
     [key in Foo]?: string;

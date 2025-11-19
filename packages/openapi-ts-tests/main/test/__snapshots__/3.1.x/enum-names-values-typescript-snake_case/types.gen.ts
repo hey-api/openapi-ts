@@ -5,37 +5,37 @@ export type ClientOptions = {
 };
 
 export enum _110 {
-    "1_10" = "1-10",
-    "11_20" = "11-20"
+    '1_10' = '1-10',
+    '11_20' = '11-20'
 }
 
 export enum MyFoo {
-    my_foo = "myFoo",
-    my_bar = "myBar"
+    my_foo = 'myFoo',
+    my_bar = 'myBar'
 }
 
 export enum MyFoo2 {
-    my_foo = "MyFoo",
-    my_bar = "MyBar"
+    my_foo = 'MyFoo',
+    my_bar = 'MyBar'
 }
 
-export type Foo = "foo" | "bar" | null | "" | true | false;
+export type Foo = 'foo' | 'bar' | null | '' | true | false;
 
 export enum Numbers {
     _100 = 100,
     _200 = 200,
     _300 = 300,
-    "_-100" = -100,
-    "_-200" = -200,
-    "_-300" = -300
+    '_-100' = -100,
+    '_-200' = -200,
+    '_-300' = -300
 }
 
 export type Arrays = [
-    "foo"
+    'foo'
 ] | [
-    "bar"
+    'bar'
 ] | [
-    "baz"
+    'baz'
 ];
 
 export type MyFooRef = {

@@ -114,7 +114,6 @@ export type { ExpressionTransformer } from '~/plugins/@hey-api/transformers/expr
 export type { TypeTransformer } from '~/plugins/@hey-api/transformers/types';
 export { definePluginConfig } from '~/plugins/shared/utils/config';
 export * from '~/ts-dsl';
-export { compiler, tsc } from '~/tsc';
 export type { UserConfig } from '~/types/config';
 export { utils } from '~/utils/exports';
 export { Logger } from '~/utils/logger';

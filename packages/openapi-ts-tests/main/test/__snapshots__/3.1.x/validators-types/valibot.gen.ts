@@ -2,7 +2,7 @@
 
 import * as v from 'valibot';
 
-export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), "baz");
+export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), 'baz');
 
 export const vQux = v.record(v.string(), v.object({
     qux: v.optional(v.string())

@@ -2,6 +2,7 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
+import { LiteralTsDsl } from '../expr/literal';
 
 export class ThrowTsDsl extends TsDsl<ts.ThrowStatement> {
   protected error: string | MaybeTsDsl<ts.Expression>;
@@ -22,7 +23,7 @@ export class ThrowTsDsl extends TsDsl<ts.ThrowStatement> {
   $render(): ts.ThrowStatement {
     const errorNode = this.$node(this.error);
     const messageNode = this.$node(this.msg ? [this.msg] : []).map((expr) =>
-      typeof expr === 'string' ? ts.factory.createStringLiteral(expr) : expr,
+      typeof expr === 'string' ? new LiteralTsDsl(expr).$render() : expr,
     );
     if (this.useNew) {
       return ts.factory.createThrowStatement(

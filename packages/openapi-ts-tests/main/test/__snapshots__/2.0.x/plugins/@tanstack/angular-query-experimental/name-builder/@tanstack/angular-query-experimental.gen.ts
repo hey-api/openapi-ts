@@ -39,7 +39,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const getFooD = (options?: Options<GetFooData>) => createQueryKey("getFoo", options);
+export const getFooD = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
 
 export const getFooE = (options?: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooD>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -82,7 +82,7 @@ export const fooPutC = (options?: Partial<Options<FooPutData>>): MutationOptions
     return mutationOptions;
 };
 
-export const getFooBarD = (options?: Options<GetFooBarData>) => createQueryKey("getFooBar", options);
+export const getFooBarD = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
 
 export const getFooBarE = (options?: Options<GetFooBarData>) => queryOptions<GetFooBarResponse, DefaultError, GetFooBarResponse, ReturnType<typeof getFooBarD>>({
     queryFn: async ({ queryKey, signal }) => {

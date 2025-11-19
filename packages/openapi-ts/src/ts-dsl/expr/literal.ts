@@ -23,7 +23,7 @@ export class LiteralTsDsl extends TsDsl<ts.LiteralTypeNode['literal']> {
       return this.value < 0 ? this.$node(new PrefixTsDsl(expr).neg()) : expr;
     }
     if (typeof this.value === 'string') {
-      return ts.factory.createStringLiteral(this.value);
+      return ts.factory.createStringLiteral(this.value, true);
     }
     if (this.value === null) {
       return ts.factory.createNull();

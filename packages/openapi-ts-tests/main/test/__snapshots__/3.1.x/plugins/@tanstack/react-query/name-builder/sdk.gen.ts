@@ -18,14 +18,14 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const getFoo = <ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) => (options?.client ?? client).get<GetFooResponses, unknown, ThrowOnError>({ url: "/foo", ...options });
+export const getFoo = <ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) => (options?.client ?? client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
 
-export const fooPost = <ThrowOnError extends boolean = false>(options?: Options<FooPostData, ThrowOnError>) => (options?.client ?? client).post<FooPostResponses, unknown, ThrowOnError>({ url: "/foo", ...options });
+export const fooPost = <ThrowOnError extends boolean = false>(options?: Options<FooPostData, ThrowOnError>) => (options?.client ?? client).post<FooPostResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
 
-export const fooPut = <ThrowOnError extends boolean = false>(options?: Options<FooPutData, ThrowOnError>) => (options?.client ?? client).put<FooPutResponses, unknown, ThrowOnError>({ url: "/foo", ...options });
+export const fooPut = <ThrowOnError extends boolean = false>(options?: Options<FooPutData, ThrowOnError>) => (options?.client ?? client).put<FooPutResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
 
-export const getFooBar = <ThrowOnError extends boolean = false>(options?: Options<GetFooBarData, ThrowOnError>) => (options?.client ?? client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: "/foo/bar", ...options });
+export const getFooBar = <ThrowOnError extends boolean = false>(options?: Options<GetFooBarData, ThrowOnError>) => (options?.client ?? client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
 
-export const fooBarPost = <ThrowOnError extends boolean = false>(options?: Options<FooBarPostData, ThrowOnError>) => (options?.client ?? client).post<FooBarPostResponses, unknown, ThrowOnError>({ url: "/foo/bar", ...options });
+export const fooBarPost = <ThrowOnError extends boolean = false>(options?: Options<FooBarPostData, ThrowOnError>) => (options?.client ?? client).post<FooBarPostResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
 
-export const fooBarPut = <ThrowOnError extends boolean = false>(options?: Options<FooBarPutData, ThrowOnError>) => (options?.client ?? client).put<FooBarPutResponses, unknown, ThrowOnError>({ url: "/foo/bar", ...options });
+export const fooBarPut = <ThrowOnError extends boolean = false>(options?: Options<FooBarPutData, ThrowOnError>) => (options?.client ?? client).put<FooBarPutResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });

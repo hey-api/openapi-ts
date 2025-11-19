@@ -5,21 +5,21 @@ export type ClientOptions = {
 };
 
 export type Foo = ({
-    foo: "one" | "two";
+    foo: 'one' | 'two';
 } & Bar) | ({
-    foo: "three";
+    foo: 'three';
 } & Baz) | ({
-    foo: "four";
+    foo: 'four';
 } & Spæcial);
 
 export type Bar = {
-    foo?: "one" | "two";
+    foo?: 'one' | 'two';
 };
 
 export type Baz = {
-    foo?: "three";
+    foo?: 'three';
 };
 
 export type Spæcial = {
-    foo?: "four";
+    foo?: 'four';
 };

@@ -9,10 +9,6 @@ export interface ITsDsl<T extends ts.Node = ts.Node> {
 export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
   abstract $render(): T;
 
-  protected $id(text: string): ts.Identifier {
-    return ts.factory.createIdentifier(text);
-  }
-
   /** Conditionally applies a callback to this builder. */
   $if<T extends TsDsl, V, R extends TsDsl = T>(
     this: T,
@@ -92,7 +88,7 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     expr: T,
   ): T extends string ? ts.Identifier : T {
     return (
-      typeof expr === 'string' ? this.$id(expr) : expr
+      typeof expr === 'string' ? ts.factory.createIdentifier(expr) : expr
     ) as T extends string ? ts.Identifier : T;
   }
 
@@ -101,7 +97,7 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
       return undefined as NodeOfMaybe<I>;
     }
     if (typeof value === 'string') {
-      return this.$id(value) as NodeOfMaybe<I>;
+      return ts.factory.createIdentifier(value) as NodeOfMaybe<I>;
     }
     if (value instanceof Array) {
       return value.map((item) => this.unwrap(item)) as NodeOfMaybe<I>;

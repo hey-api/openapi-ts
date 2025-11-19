@@ -26,6 +26,6 @@ export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<
     requestValidator: async (data) => await v.parseAsync(vPostFooData, data),
     responseTransformer: postFooResponseTransformer,
     responseValidator: async (data) => await v.parseAsync(vPostFooResponse, data),
-    url: "/foo",
+    url: '/foo',
     ...options
 });
