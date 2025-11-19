@@ -18,6 +18,7 @@ import { BinaryTsDsl } from './expr/binary';
 import { CallTsDsl } from './expr/call';
 import { ExprTsDsl } from './expr/expr';
 import { fromValue as exprValue } from './expr/fromValue';
+import { IdTsDsl } from './expr/id';
 import { LiteralTsDsl } from './expr/literal';
 import { NewTsDsl } from './expr/new';
 import { ObjectTsDsl } from './expr/object';
@@ -133,6 +134,9 @@ const base = {
   /** Creates a single-line comment (//). */
   hint: (...args: ConstructorParameters<typeof HintTsDsl>) =>
     new HintTsDsl(...args),
+
+  /** Creates an identifier (e.g. `foo`). */
+  id: (...args: ConstructorParameters<typeof IdTsDsl>) => new IdTsDsl(...args),
 
   /** Creates an if statement. */
   if: (...args: ConstructorParameters<typeof IfTsDsl>) => new IfTsDsl(...args),
