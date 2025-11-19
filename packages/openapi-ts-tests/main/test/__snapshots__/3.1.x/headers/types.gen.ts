@@ -7,11 +7,11 @@ export type ClientOptions = {
 export type GetFooData = {
     body: string;
     headers: {
-        "Content-Type": string;
+        'Content-Type': string;
     };
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type GetFooResponses = {
@@ -26,11 +26,11 @@ export type GetFooResponse = GetFooResponses[keyof GetFooResponses];
 export type PatchFooData = {
     body?: string;
     headers?: {
-        "Content-Type"?: string;
+        'Content-Type'?: string;
     };
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type PatchFooResponses = {
@@ -45,11 +45,11 @@ export type PatchFooResponse = PatchFooResponses[keyof PatchFooResponses];
 export type PostFooData = {
     body: string;
     headers?: {
-        "content-type"?: string;
+        'content-type'?: string;
     };
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type PostFooResponses = {
@@ -65,7 +65,7 @@ export type PutFooData = {
     body: string;
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type PutFooResponses = {

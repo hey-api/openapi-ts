@@ -2,8 +2,8 @@
 
 import * as z from 'zod/v4-mini';
 
-export const zFoo = z.nullable(z.enum(["foo", "bar"]));
+export const zFoo = z.nullable(z.enum(['foo', 'bar']));
 
-export const zBar = z.enum(["foo", "bar"]);
+export const zBar = z.enum(['foo', 'bar']);
 
-export const zBaz = z.enum(["foo", "bar"]);
+export const zBaz = z.enum(['foo', 'bar']);

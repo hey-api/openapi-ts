@@ -214,7 +214,7 @@ export type GetExternalModelData = {
     query?: {
         uuid?: ExternalSharedExternalSharedModelWithUuid;
     };
-    url: "/external-model";
+    url: '/external-model';
 };
 
 export type GetExternalModelErrors = {
@@ -242,7 +242,7 @@ export type PostExternalModelData = {
     body: ExternalModelBody;
     path?: never;
     query?: never;
-    url: "/external-model";
+    url: '/external-model';
 };
 
 export type PostExternalModelErrors = {
@@ -269,7 +269,7 @@ export type GetExternalUuidData = {
     query?: {
         uuid?: ExternalSharedExternalSharedModelWithUuid;
     };
-    url: "/external-uuid";
+    url: '/external-uuid';
 };
 
 export type GetExternalUuidResponses = {
@@ -288,7 +288,7 @@ export type PutExternalUuidData = {
     body?: ExternalUuidBody;
     path?: never;
     query?: never;
-    url: "/external-uuid";
+    url: '/external-uuid';
 };
 
 export type PutExternalUuidResponses = {
@@ -307,7 +307,7 @@ export type GetExternalNestedData = {
     };
     path?: never;
     query?: never;
-    url: "/external-nested";
+    url: '/external-nested';
 };
 
 export type GetExternalNestedResponses = {
@@ -326,7 +326,7 @@ export type PostExternalNestedData = {
     body?: ExternalNestedBody;
     path?: never;
     query?: never;
-    url: "/external-nested";
+    url: '/external-nested';
 };
 
 export type PostExternalNestedResponses = {
@@ -350,7 +350,7 @@ export type GetExternalMixedData = {
         uuid?: ExternalSharedExternalSharedModelWithUuid;
         numeric?: ExternalShared1;
     };
-    url: "/external-mixed";
+    url: '/external-mixed';
 };
 
 export type GetExternalMixedResponses = {
@@ -369,7 +369,7 @@ export type PostExternalMixedData = {
     body?: ExternalMixedBody;
     path?: never;
     query?: never;
-    url: "/external-mixed";
+    url: '/external-mixed';
 };
 
 export type PostExternalMixedResponses = {
@@ -385,7 +385,7 @@ export type GetExternalArrayData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/external-array";
+    url: '/external-array';
 };
 
 export type GetExternalArrayResponses = {
@@ -401,7 +401,7 @@ export type PostExternalArrayData = {
     body: Array<ExternalSharedExternalSharedModel>;
     path?: never;
     query?: never;
-    url: "/external-array";
+    url: '/external-array';
 };
 
 export type PostExternalArrayResponses = {
@@ -417,7 +417,7 @@ export type GetExternalUnionData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/external-union";
+    url: '/external-union';
 };
 
 export type GetExternalUnionResponses = {
@@ -433,7 +433,7 @@ export type PostExternalUnionData = {
     body: ExternalSharedExternalSharedModel | ExternalSharedExternalSharedModelWithUuid | ExternalSharedExternalNested;
     path?: never;
     query?: never;
-    url: "/external-union";
+    url: '/external-union';
 };
 
 export type PostExternalUnionResponses = {
@@ -456,7 +456,7 @@ export type GetExternalPropertiesByIdData = {
     query?: {
         uuid?: ExternalSharedExternalSharedModelWithUuid;
     };
-    url: "/external-properties/{id}";
+    url: '/external-properties/{id}';
 };
 
 export type GetExternalPropertiesByIdResponses = {

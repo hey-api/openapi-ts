@@ -3,7 +3,7 @@
 import * as v from 'valibot';
 
 export const vFoo = v.object({
-    foo: v.optional(v.literal("foo")),
+    foo: v.optional(v.literal('foo')),
     bar: v.optional(v.literal(3.2)),
     baz: v.optional(v.literal(-1)),
     qux: v.optional(v.literal(true)),
@@ -11,11 +11,11 @@ export const vFoo = v.object({
         v.literal(1),
         v.literal(2),
         v.literal(3),
-        v.literal("foo"),
+        v.literal('foo'),
         v.literal(true)
     ])),
     corge: v.optional(v.record(v.string(), v.unknown())),
-    garply: v.optional(v.literal(BigInt("10"))),
+    garply: v.optional(v.literal(BigInt('10'))),
     numberInt8: v.optional(v.literal(100)),
     numberInt16: v.optional(v.literal(1000)),
     numberInt32: v.optional(v.literal(100000)),
@@ -31,7 +31,7 @@ export const vFoo = v.object({
     integerUint8: v.optional(v.literal(255)),
     integerUint16: v.optional(v.literal(65535)),
     integerUint32: v.optional(v.literal(4294967295)),
-    integerUint64: v.optional(v.literal(BigInt("18446744073709551615"))),
-    stringInt64: v.optional(v.literal(BigInt("-9223372036854775808"))),
-    stringUint64: v.optional(v.literal(BigInt("18446744073709551615")))
+    integerUint64: v.optional(v.literal(BigInt('18446744073709551615'))),
+    stringInt64: v.optional(v.literal(BigInt('-9223372036854775808'))),
+    stringUint64: v.optional(v.literal(BigInt('18446744073709551615')))
 });

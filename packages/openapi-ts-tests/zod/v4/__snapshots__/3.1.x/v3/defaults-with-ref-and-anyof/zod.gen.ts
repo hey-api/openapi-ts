@@ -2,23 +2,23 @@
 
 import { z } from 'zod/v3';
 
-export const zAudioFormat = z.enum(["pcm_16bit_44.1khz", "pcm_16bit_24khz"]);
+export const zAudioFormat = z.enum(['pcm_16bit_44.1khz', 'pcm_16bit_24khz']);
 
 export const zLanguage = z.enum([
-    "en",
-    "es",
-    "fr"
+    'en',
+    'es',
+    'fr'
 ]);
 
 export const zNestedConfig = z.object({
-    model: z.string().default("gpt-4"),
+    model: z.string().default('gpt-4'),
     temperature: z.number().default(1)
 });
 
 export const zTestSchema = z.object({
     primitiveDefault: z.number().default(42),
-    refWithPrimitiveDefault: zAudioFormat.default("pcm_16bit_44.1khz"),
-    refWithObjectDefault: zNestedConfig.default({ model: "gpt-4", temperature: 1 }),
+    refWithPrimitiveDefault: zAudioFormat.default('pcm_16bit_44.1khz'),
+    refWithObjectDefault: zNestedConfig.default({ model: 'gpt-4', temperature: 1 }),
     anyOfWithNullDefault: z.union([
         z.number(),
         z.null()

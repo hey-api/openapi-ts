@@ -20,6 +20,6 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 
 export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>) => (options?.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
     querySerializer: { parameters: { foo: { array: { explode: false } } } },
-    url: "/foo",
+    url: '/foo',
     ...options
 });

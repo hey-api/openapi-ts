@@ -22,10 +22,10 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  * Send a single email
  */
 export const sendEmail = <ThrowOnError extends boolean = false>(options: Options<SendEmailData, ThrowOnError>) => (options.client ?? client).post<SendEmailResponses, SendEmailErrors, ThrowOnError>({
-    url: "/email",
+    url: '/email',
     ...options,
     headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...options.headers
     }
 });

@@ -24,7 +24,7 @@ export type GetFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type GetFooResponses = {
@@ -40,7 +40,7 @@ export type NestedDateObjectData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/nested-date-object";
+    url: '/api/nested-date-object';
 };
 
 export type NestedDateObjectResponses = {

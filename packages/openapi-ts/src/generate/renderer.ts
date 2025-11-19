@@ -13,9 +13,48 @@ import { createBinding, mergeBindings, renderIds } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
-import { TsDsl } from '~/ts-dsl';
-import { tsc } from '~/tsc';
-import { tsNodeToString } from '~/tsc/utils';
+import { $, TsDsl } from '~/ts-dsl';
+
+const printer = ts.createPrinter({
+  newLine: ts.NewLineKind.LineFeed,
+  removeComments: false,
+});
+
+const createSourceFile = (sourceText: string): ts.SourceFile =>
+  ts.createSourceFile(
+    '',
+    sourceText,
+    ts.ScriptTarget.ESNext,
+    false,
+    ts.ScriptKind.TS,
+  );
+
+const blankSourceFile = createSourceFile('');
+
+const unescapeUnicode = (value: string) =>
+  value.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex: string) =>
+    String.fromCharCode(Number.parseInt(hex, 16)),
+  );
+
+/** Print a TypeScript node to a string. */
+function nodeToString(node: ts.Node): string {
+  const result = printer.printNode(
+    ts.EmitHint.Unspecified,
+    node,
+    blankSourceFile,
+  );
+
+  try {
+    /**
+     * TypeScript Compiler API escapes unicode characters by default and there
+     * is no way to disable this behavior
+     * {@link https://github.com/microsoft/TypeScript/issues/36174}
+     */
+    return unescapeUnicode(result);
+  } catch {
+    return result;
+  }
+}
 
 const nodeBuiltins = new Set([
   'buffer',
@@ -185,7 +224,7 @@ export class TypeScriptRenderer implements Renderer {
   private getBodyLine(value: unknown, lines: Array<string>): void {
     if (value instanceof TsDsl) {
       const node = value.$render();
-      lines.push(tsNodeToString({ node, unescape: true }));
+      lines.push(nodeToString(node));
     } else if (typeof value === 'string') {
       lines.push(value);
     } else if (value instanceof Array) {
@@ -193,7 +232,7 @@ export class TypeScriptRenderer implements Renderer {
         this.getBodyLine(node, lines);
       }
     } else if (value !== undefined && value !== null) {
-      lines.push(tsNodeToString({ node: value as any, unescape: true }));
+      lines.push(nodeToString(value as any));
     }
   }
 
@@ -269,17 +308,15 @@ export class TypeScriptRenderer implements Renderer {
           }
           const specifier = ts.factory.createExportSpecifier(
             isTypeOnly ? false : (value.typeNames?.includes(name) ?? false),
-            finalAlias ? tsc.identifier({ text: finalAlias }) : undefined,
-            tsc.identifier({ text: finalName }),
+            finalAlias ? $.id(finalAlias).$render() : undefined,
+            $.id(finalName).$render(),
           );
           specifiers.push(specifier);
         }
       }
 
       const exportClause = namespaceBinding
-        ? ts.factory.createNamespaceExport(
-            tsc.identifier({ text: namespaceBinding }),
-          )
+        ? ts.factory.createNamespaceExport($.id(namespaceBinding).$render())
         : specifiers.length
           ? ts.factory.createNamedExports(specifiers)
           : undefined;
@@ -288,9 +325,9 @@ export class TypeScriptRenderer implements Renderer {
         undefined,
         isTypeOnly,
         exportClause,
-        tsc.stringLiteral({ isSingleQuote: true, text: from }),
+        $.literal(from).$render(),
       );
-      lines.push(tsNodeToString({ node, unescape: true }));
+      lines.push(nodeToString(node));
     }
 
     return lines;
@@ -351,7 +388,7 @@ export class TypeScriptRenderer implements Renderer {
             return this.replacerFn({ file, project, symbol });
           },
         );
-        defaultBinding = tsc.identifier({ text: processedDefaultBinding });
+        defaultBinding = $.id(processedDefaultBinding).$render();
         if (value.typeDefaultBinding) {
           isTypeOnly = true;
         }
@@ -412,9 +449,7 @@ export class TypeScriptRenderer implements Renderer {
               ? false
               : (value.typeNames?.includes(name) ?? false),
             name: finalName,
-            propertyName: finalAlias
-              ? tsc.identifier({ text: finalAlias })
-              : undefined,
+            propertyName: finalAlias ? $.id(finalAlias).$render() : undefined,
           });
         }
 
@@ -424,7 +459,7 @@ export class TypeScriptRenderer implements Renderer {
             ts.factory.createImportSpecifier(
               isTypeOnly,
               propertyName,
-              tsc.identifier({ text: name }),
+              $.id(name).$render(),
             ),
           );
       }
@@ -433,9 +468,7 @@ export class TypeScriptRenderer implements Renderer {
         isTypeOnly,
         defaultBinding,
         namespaceBinding
-          ? ts.factory.createNamespaceImport(
-              tsc.identifier({ text: namespaceBinding }),
-            )
+          ? ts.factory.createNamespaceImport($.id(namespaceBinding).$render())
           : specifiers.length
             ? ts.factory.createNamedImports(specifiers)
             : undefined,
@@ -444,14 +477,14 @@ export class TypeScriptRenderer implements Renderer {
       const node = ts.factory.createImportDeclaration(
         undefined,
         importClause,
-        tsc.stringLiteral({ isSingleQuote: true, text: value.from }),
+        $.literal(value.from).$render(),
       );
 
       if (lastGroup !== -1 && value.k[0] !== lastGroup) {
         lines.push(''); // add empty line between groups
       }
 
-      lines.push(tsNodeToString({ node, unescape: true }));
+      lines.push(nodeToString(node));
       lastGroup = value.k[0];
     }
 

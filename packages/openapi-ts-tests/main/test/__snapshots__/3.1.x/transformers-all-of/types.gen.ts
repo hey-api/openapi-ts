@@ -10,15 +10,15 @@ export type Foo = {
 
 export type Bar = {
     foo: Array<Baz>;
-    bar: "foo" | "bar" | "baz";
+    bar: 'foo' | 'bar' | 'baz';
 };
 
 export type Baz = Qux & {
-    id: "Baz";
+    id: 'Baz';
 } & {
     foo: number;
     bar: Date;
-    baz: "foo" | "bar" | "baz";
+    baz: 'foo' | 'bar' | 'baz';
     qux: number;
 };
 
@@ -33,7 +33,7 @@ export type GetFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type GetFooResponses = {

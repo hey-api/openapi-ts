@@ -32,7 +32,7 @@ export type ItemListData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/items";
+    url: '/items';
 };
 
 export type ItemListResponses = {

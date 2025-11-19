@@ -6,63 +6,63 @@ import type { ApiVVersionODataControllerCountResponses, CallToTestOrderOfParamsD
 
 export type RouteHandlers = {
     import: RouteHandler<{
-        Body: ImportData["body"];
-        Reply: Omit<ImportResponses, "default">;
+        Body: ImportData['body'];
+        Reply: Omit<ImportResponses, 'default'>;
     }>;
     apiVVersionODataControllerCount: RouteHandler<{
         Reply: ApiVVersionODataControllerCountResponses;
     }>;
     getApiVbyApiVersionSimpleOperation: RouteHandler<{
-        Params: GetApiVbyApiVersionSimpleOperationData["path"];
+        Params: GetApiVbyApiVersionSimpleOperationData['path'];
         Reply: GetApiVbyApiVersionSimpleOperationResponses;
     }>;
     deleteFoo: RouteHandler<{
-        Headers: DeleteFooData3["headers"];
-        Params: DeleteFooData3["path"];
+        Headers: DeleteFooData3['headers'];
+        Params: DeleteFooData3['path'];
     }>;
     callWithDescriptions: RouteHandler<{
-        Querystring?: CallWithDescriptionsData["query"];
+        Querystring?: CallWithDescriptionsData['query'];
     }>;
     deprecatedCall: RouteHandler<{
-        Headers: DeprecatedCallData["headers"];
+        Headers: DeprecatedCallData['headers'];
     }>;
     callWithParameters: RouteHandler<{
-        Body: CallWithParametersData["body"];
-        Headers: CallWithParametersData["headers"];
-        Params: CallWithParametersData["path"];
-        Querystring: CallWithParametersData["query"];
+        Body: CallWithParametersData['body'];
+        Headers: CallWithParametersData['headers'];
+        Params: CallWithParametersData['path'];
+        Querystring: CallWithParametersData['query'];
     }>;
     callWithWeirdParameterNames: RouteHandler<{
-        Body: CallWithWeirdParameterNamesData["body"];
-        Headers: CallWithWeirdParameterNamesData["headers"];
-        Params: CallWithWeirdParameterNamesData["path"];
-        Querystring: CallWithWeirdParameterNamesData["query"];
+        Body: CallWithWeirdParameterNamesData['body'];
+        Headers: CallWithWeirdParameterNamesData['headers'];
+        Params: CallWithWeirdParameterNamesData['path'];
+        Querystring: CallWithWeirdParameterNamesData['query'];
     }>;
     getCallWithOptionalParam: RouteHandler<{
-        Body: GetCallWithOptionalParamData["body"];
-        Querystring?: GetCallWithOptionalParamData["query"];
+        Body: GetCallWithOptionalParamData['body'];
+        Querystring?: GetCallWithOptionalParamData['query'];
     }>;
     postCallWithOptionalParam: RouteHandler<{
-        Body?: PostCallWithOptionalParamData["body"];
-        Querystring: PostCallWithOptionalParamData["query"];
+        Body?: PostCallWithOptionalParamData['body'];
+        Querystring: PostCallWithOptionalParamData['query'];
         Reply: PostCallWithOptionalParamResponses;
     }>;
     postApiVbyApiVersionRequestBody: RouteHandler<{
-        Body?: PostApiVbyApiVersionRequestBodyData["body"];
-        Querystring?: PostApiVbyApiVersionRequestBodyData["query"];
+        Body?: PostApiVbyApiVersionRequestBodyData['body'];
+        Querystring?: PostApiVbyApiVersionRequestBodyData['query'];
     }>;
     postApiVbyApiVersionFormData: RouteHandler<{
-        Body?: PostApiVbyApiVersionFormDataData["body"];
-        Querystring?: PostApiVbyApiVersionFormDataData["query"];
+        Body?: PostApiVbyApiVersionFormDataData['body'];
+        Querystring?: PostApiVbyApiVersionFormDataData['query'];
     }>;
     callWithDefaultParameters: RouteHandler<{
-        Querystring?: CallWithDefaultParametersData["query"];
+        Querystring?: CallWithDefaultParametersData['query'];
     }>;
     callWithDefaultOptionalParameters: RouteHandler<{
-        Querystring?: CallWithDefaultOptionalParametersData["query"];
+        Querystring?: CallWithDefaultOptionalParametersData['query'];
     }>;
     callToTestOrderOfParams: RouteHandler<{
-        Querystring: CallToTestOrderOfParamsData["query"];
+        Querystring: CallToTestOrderOfParamsData['query'];
     }>;
     callWithNoContentResponse: RouteHandler<{
         Reply: CallWithNoContentResponseResponses;
@@ -77,55 +77,55 @@ export type RouteHandlers = {
         Reply: DummyBResponses;
     }>;
     callWithDuplicateResponses: RouteHandler<{
-        Reply: Omit<CallWithDuplicateResponsesErrors, "default"> & CallWithDuplicateResponsesResponses;
+        Reply: Omit<CallWithDuplicateResponsesErrors, 'default'> & CallWithDuplicateResponsesResponses;
     }>;
     callWithResponses: RouteHandler<{
-        Reply: Omit<CallWithResponsesErrors, "default"> & CallWithResponsesResponses;
+        Reply: Omit<CallWithResponsesErrors, 'default'> & CallWithResponsesResponses;
     }>;
     collectionFormat: RouteHandler<{
-        Querystring: CollectionFormatData["query"];
+        Querystring: CollectionFormatData['query'];
     }>;
     types: RouteHandler<{
-        Params?: TypesData["path"];
-        Querystring: TypesData["query"];
+        Params?: TypesData['path'];
+        Querystring: TypesData['query'];
         Reply: TypesResponses;
     }>;
     uploadFile: RouteHandler<{
-        Body: UploadFileData["body"];
-        Params: UploadFileData["path"];
+        Body: UploadFileData['body'];
+        Params: UploadFileData['path'];
         Reply: UploadFileResponses;
     }>;
     fileResponse: RouteHandler<{
-        Params: FileResponseData["path"];
+        Params: FileResponseData['path'];
         Reply: FileResponseResponses;
     }>;
     complexTypes: RouteHandler<{
-        Querystring: ComplexTypesData["query"];
+        Querystring: ComplexTypesData['query'];
         Reply: ComplexTypesErrors & ComplexTypesResponses;
     }>;
     multipartResponse: RouteHandler<{
         Reply: MultipartResponseResponses;
     }>;
     multipartRequest: RouteHandler<{
-        Body?: MultipartRequestData["body"];
+        Body?: MultipartRequestData['body'];
     }>;
     complexParams: RouteHandler<{
-        Body?: ComplexParamsData["body"];
-        Params: ComplexParamsData["path"];
+        Body?: ComplexParamsData['body'];
+        Params: ComplexParamsData['path'];
         Reply: ComplexParamsResponses;
     }>;
     callWithResultFromHeader: RouteHandler<{
         Reply: CallWithResultFromHeaderErrors & CallWithResultFromHeaderResponses;
     }>;
     testErrorCode: RouteHandler<{
-        Querystring: TestErrorCodeData["query"];
+        Querystring: TestErrorCodeData['query'];
         Reply: TestErrorCodeErrors & TestErrorCodeResponses;
     }>;
     nonAsciiæøåÆøÅöôêÊ字符串: RouteHandler<{
-        Querystring: NonAsciiæøåÆøÅöôêÊ字符串Data["query"];
+        Querystring: NonAsciiæøåÆøÅöôêÊ字符串Data['query'];
         Reply: NonAsciiæøåÆøÅöôêÊ字符串Responses;
     }>;
     putWithFormUrlEncoded: RouteHandler<{
-        Body: PutWithFormUrlEncodedData["body"];
+        Body: PutWithFormUrlEncodedData['body'];
     }>;
 };

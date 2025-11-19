@@ -4,7 +4,7 @@ import type { Client, Composable, Options as Options2, TDataShape } from './clie
 import { client } from './client.gen';
 import type { EventSubscribeData, EventSubscribeResponse } from './types.gen';
 
-export type Options<TComposable extends Composable = "$fetch", TData extends TDataShape = TDataShape, ResT = unknown, DefaultT = undefined> = Options2<TComposable, TData, ResT, DefaultT> & {
+export type Options<TComposable extends Composable = '$fetch', TData extends TDataShape = TDataShape, ResT = unknown, DefaultT = undefined> = Options2<TComposable, TData, ResT, DefaultT> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -21,4 +21,4 @@ export type Options<TComposable extends Composable = "$fetch", TData extends TDa
 /**
  * Get events
  */
-export const eventSubscribe = <TComposable extends Composable = "$fetch", DefaultT extends EventSubscribeResponse = EventSubscribeResponse>(options: Options<TComposable, EventSubscribeData, EventSubscribeResponse, DefaultT>) => (options.client ?? client).sse.get<TComposable, EventSubscribeResponse | DefaultT, unknown, DefaultT>({ url: "/event", ...options });
+export const eventSubscribe = <TComposable extends Composable = '$fetch', DefaultT extends EventSubscribeResponse = EventSubscribeResponse>(options: Options<TComposable, EventSubscribeData, EventSubscribeResponse, DefaultT>) => (options.client ?? client).sse.get<TComposable, EventSubscribeResponse | DefaultT, unknown, DefaultT>({ url: '/event', ...options });
