@@ -9,7 +9,7 @@ export const vSessionUserPhoneCalloutRingingWebhookRequest = v.object({
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -17,7 +17,7 @@ export const vSessionUserPhoneCalloutRingingWebhookRequest = v.object({
                     v.number(),
                     v.string(),
                     v.bigint()
-                ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))),
+                ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))),
                 uuid: v.optional(v.string()),
                 session_id: v.string(),
                 session_name: v.string(),
@@ -30,12 +30,12 @@ export const vSessionUserPhoneCalloutRingingWebhookRequest = v.object({
                         v.number(),
                         v.string(),
                         v.bigint()
-                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
                     from_number: v.pipe(v.union([
                         v.number(),
                         v.string(),
                         v.bigint()
-                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))
+                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))
                 })
             })
         })
@@ -51,7 +51,7 @@ export const vSessionUserRoomSystemCalloutRingingWebhookRequest = v.object({
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -59,7 +59,7 @@ export const vSessionUserRoomSystemCalloutRingingWebhookRequest = v.object({
                     v.number(),
                     v.string(),
                     v.bigint()
-                ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))),
+                ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))),
                 uuid: v.optional(v.string()),
                 session_id: v.string(),
                 session_name: v.string(),
@@ -79,12 +79,12 @@ export const vSessionUserRoomSystemCalloutRingingWebhookRequest = v.object({
 
 export const vSessionRecordingStartedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.recording_started"]),
+        event: v.picklist(['session.recording_started']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -106,12 +106,12 @@ export const vSessionRecordingStartedWebhookRequest = v.object({
 
 export const vSessionRecordingResumedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.recording_resumed"]),
+        event: v.picklist(['session.recording_resumed']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -133,12 +133,12 @@ export const vSessionRecordingResumedWebhookRequest = v.object({
 
 export const vSessionLiveStreamingStoppedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.live_streaming_stopped"]),
+        event: v.picklist(['session.live_streaming_stopped']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -149,10 +149,10 @@ export const vSessionLiveStreamingStoppedWebhookRequest = v.object({
                 start_time: v.pipe(v.string(), v.isoTimestamp()),
                 live_streaming: v.object({
                     service: v.picklist([
-                        "Facebook",
-                        "Workplace_by_Facebook",
-                        "YouTube",
-                        "Custom_Live_Streaming_Service"
+                        'Facebook',
+                        'Workplace_by_Facebook',
+                        'YouTube',
+                        'Custom_Live_Streaming_Service'
                     ]),
                     custom_live_streaming_settings: v.object({
                         stream_url: v.string(),
@@ -171,12 +171,12 @@ export const vSessionLiveStreamingStoppedWebhookRequest = v.object({
 
 export const vSessionStreamIngestionStoppedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.stream_ingestion_stopped"]),
+        event: v.picklist(['session.stream_ingestion_stopped']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -205,7 +205,7 @@ export const vSessionUserRoomSystemCalloutRejectedWebhookRequest = v.object({
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -213,7 +213,7 @@ export const vSessionUserRoomSystemCalloutRejectedWebhookRequest = v.object({
                     v.number(),
                     v.string(),
                     v.bigint()
-                ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))),
+                ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))),
                 uuid: v.optional(v.string()),
                 session_id: v.string(),
                 session_name: v.string(),
@@ -233,12 +233,12 @@ export const vSessionUserRoomSystemCalloutRejectedWebhookRequest = v.object({
 
 export const vSessionAlertWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.alert"]),
+        event: v.picklist(['session.alert']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -247,11 +247,11 @@ export const vSessionAlertWebhookRequest = v.object({
                 session_name: v.string(),
                 session_key: v.optional(v.string()),
                 issues: v.array(v.picklist([
-                    "Unstable audio quality",
-                    "Unstable video quality",
-                    "Unstable screen share quality",
-                    "High CPU occupation",
-                    "Call Reconnection"
+                    'Unstable audio quality',
+                    'Unstable video quality',
+                    'Unstable screen share quality',
+                    'High CPU occupation',
+                    'Call Reconnection'
                 ]))
             })
         })
@@ -262,12 +262,12 @@ export const vSessionAlertWebhookRequest = v.object({
 
 export const vSessionSharingEndedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.sharing_ended"]),
+        event: v.picklist(['session.sharing_ended']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -281,10 +281,10 @@ export const vSessionSharingEndedWebhookRequest = v.object({
                     user_key: v.optional(v.string()),
                     sharing_details: v.strictObject({
                         content: v.picklist([
-                            "application",
-                            "whiteboard",
-                            "desktop",
-                            "unknown"
+                            'application',
+                            'whiteboard',
+                            'desktop',
+                            'unknown'
                         ]),
                         date_time: v.pipe(v.string(), v.isoTimestamp())
                     })
@@ -298,12 +298,12 @@ export const vSessionSharingEndedWebhookRequest = v.object({
 
 export const vSessionRecordingPausedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.recording_paused"]),
+        event: v.picklist(['session.recording_paused']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -325,12 +325,12 @@ export const vSessionRecordingPausedWebhookRequest = v.object({
 
 export const vSessionEndedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.ended"]),
+        event: v.picklist(['session.ended']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -349,12 +349,12 @@ export const vSessionEndedWebhookRequest = v.object({
 
 export const vSessionStartedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.started"]),
+        event: v.picklist(['session.started']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -372,12 +372,12 @@ export const vSessionStartedWebhookRequest = v.object({
 
 export const vSessionStreamIngestionUnbindWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.stream_ingestion_unbind"]),
+        event: v.picklist(['session.stream_ingestion_unbind']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -401,12 +401,12 @@ export const vSessionStreamIngestionUnbindWebhookRequest = v.object({
 
 export const vSessionLiveStreamingStartedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.live_streaming_started"]),
+        event: v.picklist(['session.live_streaming_started']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -417,10 +417,10 @@ export const vSessionLiveStreamingStartedWebhookRequest = v.object({
                 start_time: v.pipe(v.string(), v.isoTimestamp()),
                 live_streaming: v.object({
                     service: v.picklist([
-                        "Facebook",
-                        "Workplace_by_Facebook",
-                        "YouTube",
-                        "Custom_Live_Streaming_Service"
+                        'Facebook',
+                        'Workplace_by_Facebook',
+                        'YouTube',
+                        'Custom_Live_Streaming_Service'
                     ]),
                     custom_live_streaming_settings: v.object({
                         stream_url: v.string(),
@@ -444,7 +444,7 @@ export const vSessionUserRoomSystemCalloutMissedWebhookRequest = v.object({
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -452,7 +452,7 @@ export const vSessionUserRoomSystemCalloutMissedWebhookRequest = v.object({
                     v.number(),
                     v.string(),
                     v.bigint()
-                ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))),
+                ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))),
                 uuid: v.optional(v.string()),
                 session_id: v.string(),
                 session_name: v.string(),
@@ -477,7 +477,7 @@ export const vSessionUserPhoneCalloutAcceptedWebhookRequest = v.object({
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -485,7 +485,7 @@ export const vSessionUserPhoneCalloutAcceptedWebhookRequest = v.object({
                     v.number(),
                     v.string(),
                     v.bigint()
-                ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))),
+                ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))),
                 uuid: v.optional(v.string()),
                 session_id: v.string(),
                 session_name: v.string(),
@@ -498,12 +498,12 @@ export const vSessionUserPhoneCalloutAcceptedWebhookRequest = v.object({
                         v.number(),
                         v.string(),
                         v.bigint()
-                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
                     from_number: v.pipe(v.union([
                         v.number(),
                         v.string(),
                         v.bigint()
-                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))
+                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))
                 })
             })
         })
@@ -514,12 +514,12 @@ export const vSessionUserPhoneCalloutAcceptedWebhookRequest = v.object({
 
 export const vSessionUserLeftWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.user_left"]),
+        event: v.picklist(['session.user_left']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -545,12 +545,12 @@ export const vSessionUserLeftWebhookRequest = v.object({
 
 export const vSessionSharingStartedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.sharing_started"]),
+        event: v.picklist(['session.sharing_started']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -564,10 +564,10 @@ export const vSessionSharingStartedWebhookRequest = v.object({
                     user_key: v.optional(v.string()),
                     sharing_details: v.strictObject({
                         content: v.picklist([
-                            "application",
-                            "whiteboard",
-                            "desktop",
-                            "unknown"
+                            'application',
+                            'whiteboard',
+                            'desktop',
+                            'unknown'
                         ]),
                         date_time: v.pipe(v.string(), v.isoTimestamp())
                     })
@@ -586,7 +586,7 @@ export const vSessionUserPhoneCalloutCanceledWebhookRequest = v.object({
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -600,12 +600,12 @@ export const vSessionUserPhoneCalloutCanceledWebhookRequest = v.object({
                         v.number(),
                         v.string(),
                         v.bigint()
-                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
                     from_number: v.pipe(v.union([
                         v.number(),
                         v.string(),
                         v.bigint()
-                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))
+                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))
                 })
             })
         })
@@ -616,12 +616,12 @@ export const vSessionUserPhoneCalloutCanceledWebhookRequest = v.object({
 
 export const vSessionRecordingTranscriptCompletedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.recording_transcript_completed"]),
+        event: v.picklist(['session.recording_transcript_completed']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         download_token: v.string(),
         payload: v.strictObject({
             account_id: v.string(),
@@ -638,46 +638,46 @@ export const vSessionRecordingTranscriptCompletedWebhookRequest = v.object({
                     file_name: v.optional(v.string()),
                     file_path: v.optional(v.string()),
                     file_type: v.optional(v.picklist([
-                        "MP4",
-                        "M4A",
-                        "CHAT",
-                        "TRANSCRIPT",
-                        "CSV",
-                        "CC",
-                        "TB",
-                        "CHAT_MESSAGE",
-                        "TIMELINE"
+                        'MP4',
+                        'M4A',
+                        'CHAT',
+                        'TRANSCRIPT',
+                        'CSV',
+                        'CC',
+                        'TB',
+                        'CHAT_MESSAGE',
+                        'TIMELINE'
                     ])),
                     file_size: v.optional(v.number()),
                     file_extension: v.optional(v.picklist([
-                        "MP4",
-                        "M4A",
-                        "TXT",
-                        "VTT",
-                        "CSV",
-                        "JSON",
-                        "JPG"
+                        'MP4',
+                        'M4A',
+                        'TXT',
+                        'VTT',
+                        'CSV',
+                        'JSON',
+                        'JPG'
                     ])),
                     download_url: v.optional(v.string()),
-                    status: v.optional(v.picklist(["completed"])),
+                    status: v.optional(v.picklist(['completed'])),
                     recording_type: v.optional(v.picklist([
-                        "shared_screen_with_speaker_view(CC)",
-                        "shared_screen_with_speaker_view",
-                        "shared_screen_with_gallery_view",
-                        "gallery_view",
-                        "shared_screen",
-                        "audio_only",
-                        "audio_transcript",
-                        "chat_file",
-                        "active_speaker",
-                        "host_video",
-                        "audio_only_each_participant",
-                        "cc_transcript",
-                        "closed_caption",
-                        "poll",
-                        "timeline",
-                        "thumbnail",
-                        "chat_message"
+                        'shared_screen_with_speaker_view(CC)',
+                        'shared_screen_with_speaker_view',
+                        'shared_screen_with_gallery_view',
+                        'gallery_view',
+                        'shared_screen',
+                        'audio_only',
+                        'audio_transcript',
+                        'chat_file',
+                        'active_speaker',
+                        'host_video',
+                        'audio_only_each_participant',
+                        'cc_transcript',
+                        'closed_caption',
+                        'poll',
+                        'timeline',
+                        'thumbnail',
+                        'chat_message'
                     ]))
                 }))
             })
@@ -689,12 +689,12 @@ export const vSessionRecordingTranscriptCompletedWebhookRequest = v.object({
 
 export const vSessionRecordingDeletedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.recording_deleted"]),
+        event: v.picklist(['session.recording_deleted']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             operator: v.pipe(v.string(), v.email()),
@@ -719,7 +719,7 @@ export const vSessionUserRoomSystemCalloutFailedWebhookRequest = v.object({
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -727,7 +727,7 @@ export const vSessionUserRoomSystemCalloutFailedWebhookRequest = v.object({
                     v.number(),
                     v.string(),
                     v.bigint()
-                ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))),
+                ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))),
                 uuid: v.optional(v.string()),
                 session_id: v.string(),
                 session_name: v.string(),
@@ -748,12 +748,12 @@ export const vSessionUserRoomSystemCalloutFailedWebhookRequest = v.object({
 
 export const vSessionRecordingCompletedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.recording_completed"]),
+        event: v.picklist(['session.recording_completed']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         download_token: v.string(),
         payload: v.strictObject({
             account_id: v.string(),
@@ -770,45 +770,45 @@ export const vSessionRecordingCompletedWebhookRequest = v.object({
                     file_name: v.optional(v.string()),
                     file_path: v.optional(v.string()),
                     file_type: v.optional(v.picklist([
-                        "MP4",
-                        "M4A",
-                        "CHAT",
-                        "TRANSCRIPT",
-                        "CSV",
-                        "CC",
-                        "TB",
-                        "CHAT_MESSAGE"
+                        'MP4',
+                        'M4A',
+                        'CHAT',
+                        'TRANSCRIPT',
+                        'CSV',
+                        'CC',
+                        'TB',
+                        'CHAT_MESSAGE'
                     ])),
                     file_size: v.optional(v.number()),
                     file_extension: v.optional(v.picklist([
-                        "MP4",
-                        "M4A",
-                        "TXT",
-                        "VTT",
-                        "CSV",
-                        "JSON",
-                        "JPG"
+                        'MP4',
+                        'M4A',
+                        'TXT',
+                        'VTT',
+                        'CSV',
+                        'JSON',
+                        'JPG'
                     ])),
                     download_url: v.optional(v.string()),
-                    status: v.optional(v.picklist(["completed"])),
+                    status: v.optional(v.picklist(['completed'])),
                     recording_type: v.optional(v.picklist([
-                        "shared_screen_with_speaker_view(CC)",
-                        "shared_screen_with_speaker_view",
-                        "shared_screen_with_gallery_view",
-                        "gallery_view",
-                        "shared_screen",
-                        "audio_only",
-                        "audio_transcript",
-                        "chat_file",
-                        "active_speaker",
-                        "host_video",
-                        "audio_only_each_participant",
-                        "cc_transcript",
-                        "closed_caption",
-                        "poll",
-                        "timeline",
-                        "thumbnail",
-                        "chat_message"
+                        'shared_screen_with_speaker_view(CC)',
+                        'shared_screen_with_speaker_view',
+                        'shared_screen_with_gallery_view',
+                        'gallery_view',
+                        'shared_screen',
+                        'audio_only',
+                        'audio_transcript',
+                        'chat_file',
+                        'active_speaker',
+                        'host_video',
+                        'audio_only_each_participant',
+                        'cc_transcript',
+                        'closed_caption',
+                        'poll',
+                        'timeline',
+                        'thumbnail',
+                        'chat_message'
                     ]))
                 })),
                 participant_audio_files: v.optional(v.array(v.object({
@@ -818,45 +818,45 @@ export const vSessionRecordingCompletedWebhookRequest = v.object({
                     file_name: v.optional(v.string()),
                     file_path: v.optional(v.string()),
                     file_type: v.optional(v.picklist([
-                        "MP4",
-                        "M4A",
-                        "CHAT",
-                        "TRANSCRIPT",
-                        "CSV",
-                        "CC",
-                        "TB",
-                        "CHAT_MESSAGE"
+                        'MP4',
+                        'M4A',
+                        'CHAT',
+                        'TRANSCRIPT',
+                        'CSV',
+                        'CC',
+                        'TB',
+                        'CHAT_MESSAGE'
                     ])),
                     file_size: v.optional(v.number()),
                     file_extension: v.optional(v.picklist([
-                        "MP4",
-                        "M4A",
-                        "TXT",
-                        "VTT",
-                        "CSV",
-                        "JSON",
-                        "JPG"
+                        'MP4',
+                        'M4A',
+                        'TXT',
+                        'VTT',
+                        'CSV',
+                        'JSON',
+                        'JPG'
                     ])),
                     download_url: v.optional(v.string()),
-                    status: v.optional(v.picklist(["completed"])),
+                    status: v.optional(v.picklist(['completed'])),
                     recording_type: v.optional(v.picklist([
-                        "shared_screen_with_speaker_view(CC)",
-                        "shared_screen_with_speaker_view",
-                        "shared_screen_with_gallery_view",
-                        "gallery_view",
-                        "shared_screen",
-                        "audio_only",
-                        "audio_transcript",
-                        "chat_file",
-                        "active_speaker",
-                        "host_video",
-                        "audio_only_each_participant",
-                        "cc_transcript",
-                        "closed_caption",
-                        "poll",
-                        "timeline",
-                        "thumbnail",
-                        "chat_message"
+                        'shared_screen_with_speaker_view(CC)',
+                        'shared_screen_with_speaker_view',
+                        'shared_screen_with_gallery_view',
+                        'gallery_view',
+                        'shared_screen',
+                        'audio_only',
+                        'audio_transcript',
+                        'chat_file',
+                        'active_speaker',
+                        'host_video',
+                        'audio_only_each_participant',
+                        'cc_transcript',
+                        'closed_caption',
+                        'poll',
+                        'timeline',
+                        'thumbnail',
+                        'chat_message'
                     ])),
                     user_id: v.optional(v.string()),
                     user_key: v.optional(v.string())
@@ -867,12 +867,12 @@ export const vSessionRecordingCompletedWebhookRequest = v.object({
                     recording_end: v.optional(v.string()),
                     file_name: v.optional(v.string()),
                     file_path: v.optional(v.string()),
-                    file_type: v.optional(v.picklist(["MP4"])),
+                    file_type: v.optional(v.picklist(['MP4'])),
                     file_size: v.optional(v.number()),
-                    file_extension: v.optional(v.picklist(["MP4"])),
+                    file_extension: v.optional(v.picklist(['MP4'])),
                     download_url: v.optional(v.string()),
-                    status: v.optional(v.picklist(["completed"])),
-                    recording_type: v.optional(v.picklist(["individual_user", "individual_shared_screen"])),
+                    status: v.optional(v.picklist(['completed'])),
+                    recording_type: v.optional(v.picklist(['individual_user', 'individual_shared_screen'])),
                     user_id: v.optional(v.string()),
                     user_key: v.optional(v.string())
                 })))
@@ -885,12 +885,12 @@ export const vSessionRecordingCompletedWebhookRequest = v.object({
 
 export const vSessionRecordingTranscriptFailedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.recording_transcript_failed"]),
+        event: v.picklist(['session.recording_transcript_failed']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -908,12 +908,12 @@ export const vSessionRecordingTranscriptFailedWebhookRequest = v.object({
 
 export const vSessionRecordingTrashedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.recording_trashed"]),
+        event: v.picklist(['session.recording_trashed']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             operator: v.pipe(v.string(), v.email()),
@@ -933,12 +933,12 @@ export const vSessionRecordingTrashedWebhookRequest = v.object({
 
 export const vSessionUserJoinedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.user_joined"]),
+        event: v.picklist(['session.user_joined']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -963,12 +963,12 @@ export const vSessionUserJoinedWebhookRequest = v.object({
 
 export const vSessionStreamIngestionStartedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.stream_ingestion_started"]),
+        event: v.picklist(['session.stream_ingestion_started']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -992,12 +992,12 @@ export const vSessionStreamIngestionStartedWebhookRequest = v.object({
 
 export const vSessionStreamIngestionConnectedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.stream_ingestion_connected"]),
+        event: v.picklist(['session.stream_ingestion_connected']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -1021,12 +1021,12 @@ export const vSessionStreamIngestionConnectedWebhookRequest = v.object({
 
 export const vSessionStreamIngestionDisconnectedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.stream_ingestion_disconnected"]),
+        event: v.picklist(['session.stream_ingestion_disconnected']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -1050,12 +1050,12 @@ export const vSessionStreamIngestionDisconnectedWebhookRequest = v.object({
 
 export const vSessionRecordingRecoveredWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.recording_recovered"]),
+        event: v.picklist(['session.recording_recovered']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             operator: v.pipe(v.string(), v.email()),
@@ -1080,7 +1080,7 @@ export const vSessionUserPhoneCalloutMissedWebhookRequest = v.object({
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -1088,7 +1088,7 @@ export const vSessionUserPhoneCalloutMissedWebhookRequest = v.object({
                     v.number(),
                     v.string(),
                     v.bigint()
-                ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))),
+                ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))),
                 uuid: v.optional(v.string()),
                 session_id: v.string(),
                 session_name: v.string(),
@@ -1101,12 +1101,12 @@ export const vSessionUserPhoneCalloutMissedWebhookRequest = v.object({
                         v.number(),
                         v.string(),
                         v.bigint()
-                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
                     from_number: v.pipe(v.union([
                         v.number(),
                         v.string(),
                         v.bigint()
-                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))
+                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))
                 })
             })
         })
@@ -1122,7 +1122,7 @@ export const vSessionUserPhoneCalloutRejectedWebhookRequest = v.object({
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -1130,7 +1130,7 @@ export const vSessionUserPhoneCalloutRejectedWebhookRequest = v.object({
                     v.number(),
                     v.string(),
                     v.bigint()
-                ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))),
+                ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))),
                 uuid: v.optional(v.string()),
                 session_id: v.string(),
                 session_name: v.string(),
@@ -1143,12 +1143,12 @@ export const vSessionUserPhoneCalloutRejectedWebhookRequest = v.object({
                         v.number(),
                         v.string(),
                         v.bigint()
-                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
                     from_number: v.pipe(v.union([
                         v.number(),
                         v.string(),
                         v.bigint()
-                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))
+                    ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))
                 })
             })
         })
@@ -1164,7 +1164,7 @@ export const vSessionUserRoomSystemCalloutAcceptedWebhookRequest = v.object({
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({
@@ -1172,7 +1172,7 @@ export const vSessionUserRoomSystemCalloutAcceptedWebhookRequest = v.object({
                     v.number(),
                     v.string(),
                     v.bigint()
-                ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1"))),
+                ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1'))),
                 uuid: v.optional(v.string()),
                 session_id: v.string(),
                 session_name: v.string(),
@@ -1192,12 +1192,12 @@ export const vSessionUserRoomSystemCalloutAcceptedWebhookRequest = v.object({
 
 export const vSessionRecordingStoppedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist(["session.recording_stopped"]),
+        event: v.picklist(['session.recording_stopped']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
             v.bigint()
-        ]), v.transform(x => BigInt(x)), v.minValue(BigInt("-9223372036854775808"), "Invalid value: Expected int64 to be >= -2^63"), v.maxValue(BigInt("9223372036854775807"), "Invalid value: Expected int64 to be <= 2^63-1")),
+        ]), v.transform(x => BigInt(x)), v.minValue(BigInt('-9223372036854775808'), 'Invalid value: Expected int64 to be >= -2^63'), v.maxValue(BigInt('9223372036854775807'), 'Invalid value: Expected int64 to be <= 2^63-1')),
         payload: v.strictObject({
             account_id: v.string(),
             object: v.strictObject({

@@ -96,7 +96,7 @@ export type SessionUserPhoneCalloutRingingWebhookPayload = {
 
 export type SessionUserPhoneCalloutRingingWebhookRequest = {
     body: SessionUserPhoneCalloutRingingWebhookPayload;
-    key: "session.user_phone_callout_ringing";
+    key: 'session.user_phone_callout_ringing';
     path?: never;
     query?: never;
 };
@@ -187,7 +187,7 @@ export type SessionUserRoomSystemCalloutRingingWebhookPayload = {
 
 export type SessionUserRoomSystemCalloutRingingWebhookRequest = {
     body: SessionUserRoomSystemCalloutRingingWebhookPayload;
-    key: "session.user_room_system_callout_ringing";
+    key: 'session.user_room_system_callout_ringing';
     path?: never;
     query?: never;
 };
@@ -222,7 +222,7 @@ export type SessionRecordingStartedWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.recording_started";
+    event: 'session.recording_started';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -272,7 +272,7 @@ export type SessionRecordingStartedWebhookPayload = {
 
 export type SessionRecordingStartedWebhookRequest = {
     body: SessionRecordingStartedWebhookPayload;
-    key: "session.recording_started";
+    key: 'session.recording_started';
     path?: never;
     query?: never;
 };
@@ -307,7 +307,7 @@ export type SessionRecordingResumedWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.recording_resumed";
+    event: 'session.recording_resumed';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -357,7 +357,7 @@ export type SessionRecordingResumedWebhookPayload = {
 
 export type SessionRecordingResumedWebhookRequest = {
     body: SessionRecordingResumedWebhookPayload;
-    key: "session.recording_resumed";
+    key: 'session.recording_resumed';
     path?: never;
     query?: never;
 };
@@ -386,7 +386,7 @@ export type SessionLiveStreamingStoppedWebhookPayload = {
     /**
      * The name of the event.
      */
-    event: "session.live_streaming_stopped";
+    event: 'session.live_streaming_stopped';
     /**
      * Timestamp (in milliseconds since epoch) at which the event occurred. The value of this field is returned in long(int64) format.
      */
@@ -429,7 +429,7 @@ export type SessionLiveStreamingStoppedWebhookPayload = {
                 /**
                  * The name of the Live Streaming service.
                  */
-                service: "Facebook" | "Workplace_by_Facebook" | "YouTube" | "Custom_Live_Streaming_Service";
+                service: 'Facebook' | 'Workplace_by_Facebook' | 'YouTube' | 'Custom_Live_Streaming_Service';
                 /**
                  * The live stream settings.
                  */
@@ -462,7 +462,7 @@ export type SessionLiveStreamingStoppedWebhookPayload = {
 
 export type SessionLiveStreamingStoppedWebhookRequest = {
     body: SessionLiveStreamingStoppedWebhookPayload;
-    key: "session.live_streaming_stopped";
+    key: 'session.live_streaming_stopped';
     path?: never;
     query?: never;
 };
@@ -485,7 +485,7 @@ export type SessionStreamIngestionStoppedWebhookPayload = {
     /**
      * Event name.
      */
-    event: "session.stream_ingestion_stopped";
+    event: 'session.stream_ingestion_stopped';
     /**
      * Timestamp (in milliseconds since epoch) when the event occurred. The value of this field is returned in long (int64) format.
      */
@@ -546,7 +546,7 @@ export type SessionStreamIngestionStoppedWebhookPayload = {
 
 export type SessionStreamIngestionStoppedWebhookRequest = {
     body: SessionStreamIngestionStoppedWebhookPayload;
-    key: "session.stream_ingestion_stopped";
+    key: 'session.stream_ingestion_stopped';
     path?: never;
     query?: never;
 };
@@ -637,7 +637,7 @@ export type SessionUserRoomSystemCalloutRejectedWebhookPayload = {
 
 export type SessionUserRoomSystemCalloutRejectedWebhookRequest = {
     body: SessionUserRoomSystemCalloutRejectedWebhookPayload;
-    key: "session.user_room_system_callout_rejected";
+    key: 'session.user_room_system_callout_rejected';
     path?: never;
     query?: never;
 };
@@ -673,7 +673,7 @@ export type SessionAlertWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.alert";
+    event: 'session.alert';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -706,14 +706,14 @@ export type SessionAlertWebhookPayload = {
             /**
              * Issues that occurred during the session.
              */
-            issues: Array<"Unstable audio quality" | "Unstable video quality" | "Unstable screen share quality" | "High CPU occupation" | "Call Reconnection">;
+            issues: Array<'Unstable audio quality' | 'Unstable video quality' | 'Unstable screen share quality' | 'High CPU occupation' | 'Call Reconnection'>;
         };
     };
 };
 
 export type SessionAlertWebhookRequest = {
     body: SessionAlertWebhookPayload;
-    key: "session.alert";
+    key: 'session.alert';
     path?: never;
     query?: never;
 };
@@ -742,7 +742,7 @@ export type SessionSharingEndedWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.sharing_ended";
+    event: 'session.sharing_ended';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -801,7 +801,7 @@ export type SessionSharingEndedWebhookPayload = {
                      * * desktop — A user's desktop.
                      * * unknown — An unrecognized application, such as a third party app.
                      */
-                    content: "application" | "whiteboard" | "desktop" | "unknown";
+                    content: 'application' | 'whiteboard' | 'desktop' | 'unknown';
                     /**
                      * The session's screen sharing date and time.
                      */
@@ -814,7 +814,7 @@ export type SessionSharingEndedWebhookPayload = {
 
 export type SessionSharingEndedWebhookRequest = {
     body: SessionSharingEndedWebhookPayload;
-    key: "session.sharing_ended";
+    key: 'session.sharing_ended';
     path?: never;
     query?: never;
 };
@@ -849,7 +849,7 @@ export type SessionRecordingPausedWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.recording_paused";
+    event: 'session.recording_paused';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -899,7 +899,7 @@ export type SessionRecordingPausedWebhookPayload = {
 
 export type SessionRecordingPausedWebhookRequest = {
     body: SessionRecordingPausedWebhookPayload;
-    key: "session.recording_paused";
+    key: 'session.recording_paused';
     path?: never;
     query?: never;
 };
@@ -928,7 +928,7 @@ export type SessionEndedWebhookPayload = {
     /**
      * The name of the event.
      */
-    event: "session.ended";
+    event: 'session.ended';
     /**
      * Timestamp at which the event occurred, in milliseconds since epoch. The value of this field is returned in long(int64) format.
      */
@@ -974,7 +974,7 @@ export type SessionEndedWebhookPayload = {
 
 export type SessionEndedWebhookRequest = {
     body: SessionEndedWebhookPayload;
-    key: "session.ended";
+    key: 'session.ended';
     path?: never;
     query?: never;
 };
@@ -1003,7 +1003,7 @@ export type SessionStartedWebhookPayload = {
     /**
      * The name of the event.
      */
-    event: "session.started";
+    event: 'session.started';
     /**
      * Timestamp (in milliseconds since epoch) at which the event occurred. The value of this field is returned in long(int64) format.
      */
@@ -1045,7 +1045,7 @@ export type SessionStartedWebhookPayload = {
 
 export type SessionStartedWebhookRequest = {
     body: SessionStartedWebhookPayload;
-    key: "session.started";
+    key: 'session.started';
     path?: never;
     query?: never;
 };
@@ -1068,7 +1068,7 @@ export type SessionStreamIngestionUnbindWebhookPayload = {
     /**
      * Event name.
      */
-    event: "session.stream_ingestion_unbind";
+    event: 'session.stream_ingestion_unbind';
     /**
      * Timestamp (in milliseconds since epoch) at which the event occurred. The value of this field is returned in long (int64) format.
      */
@@ -1129,7 +1129,7 @@ export type SessionStreamIngestionUnbindWebhookPayload = {
 
 export type SessionStreamIngestionUnbindWebhookRequest = {
     body: SessionStreamIngestionUnbindWebhookPayload;
-    key: "session.stream_ingestion_unbind";
+    key: 'session.stream_ingestion_unbind';
     path?: never;
     query?: never;
 };
@@ -1158,7 +1158,7 @@ export type SessionLiveStreamingStartedWebhookPayload = {
     /**
      * Name of the event.
      */
-    event: "session.live_streaming_started";
+    event: 'session.live_streaming_started';
     /**
      * Timestamp (in milliseconds since epoch) at which the event occurred. The value of this field is returned in long(int64) format.
      */
@@ -1201,7 +1201,7 @@ export type SessionLiveStreamingStartedWebhookPayload = {
                 /**
                  * The name of the Live Streaming service.
                  */
-                service: "Facebook" | "Workplace_by_Facebook" | "YouTube" | "Custom_Live_Streaming_Service";
+                service: 'Facebook' | 'Workplace_by_Facebook' | 'YouTube' | 'Custom_Live_Streaming_Service';
                 /**
                  * The live stream settings.
                  */
@@ -1234,7 +1234,7 @@ export type SessionLiveStreamingStartedWebhookPayload = {
 
 export type SessionLiveStreamingStartedWebhookRequest = {
     body: SessionLiveStreamingStartedWebhookPayload;
-    key: "session.live_streaming_started";
+    key: 'session.live_streaming_started';
     path?: never;
     query?: never;
 };
@@ -1325,7 +1325,7 @@ export type SessionUserRoomSystemCalloutMissedWebhookPayload = {
 
 export type SessionUserRoomSystemCalloutMissedWebhookRequest = {
     body: SessionUserRoomSystemCalloutMissedWebhookPayload;
-    key: "session.user_room_system_callout_missed";
+    key: 'session.user_room_system_callout_missed';
     path?: never;
     query?: never;
 };
@@ -1419,7 +1419,7 @@ export type SessionUserPhoneCalloutAcceptedWebhookPayload = {
 
 export type SessionUserPhoneCalloutAcceptedWebhookRequest = {
     body: SessionUserPhoneCalloutAcceptedWebhookPayload;
-    key: "session.user_phone_callout_accepted";
+    key: 'session.user_phone_callout_accepted';
     path?: never;
     query?: never;
 };
@@ -1445,7 +1445,7 @@ export type SessionUserLeftWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.user_left";
+    event: 'session.user_left';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -1526,7 +1526,7 @@ export type SessionUserLeftWebhookPayload = {
 
 export type SessionUserLeftWebhookRequest = {
     body: SessionUserLeftWebhookPayload;
-    key: "session.user_left";
+    key: 'session.user_left';
     path?: never;
     query?: never;
 };
@@ -1554,7 +1554,7 @@ export type SessionSharingStartedWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.sharing_started";
+    event: 'session.sharing_started';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -1611,7 +1611,7 @@ export type SessionSharingStartedWebhookPayload = {
                      * * desktop — A user's desktop.
                      * * unknown — An unrecognized application, such as a third party app.
                      */
-                    content: "application" | "whiteboard" | "desktop" | "unknown";
+                    content: 'application' | 'whiteboard' | 'desktop' | 'unknown';
                     /**
                      * The session's screen sharing date and time.
                      */
@@ -1624,7 +1624,7 @@ export type SessionSharingStartedWebhookPayload = {
 
 export type SessionSharingStartedWebhookRequest = {
     body: SessionSharingStartedWebhookPayload;
-    key: "session.sharing_started";
+    key: 'session.sharing_started';
     path?: never;
     query?: never;
 };
@@ -1700,7 +1700,7 @@ export type SessionUserPhoneCalloutCanceledWebhookPayload = {
 
 export type SessionUserPhoneCalloutCanceledWebhookRequest = {
     body: SessionUserPhoneCalloutCanceledWebhookPayload;
-    key: "session.user_phone_callout_canceled";
+    key: 'session.user_phone_callout_canceled';
     path?: never;
     query?: never;
 };
@@ -1735,7 +1735,7 @@ export type SessionRecordingTranscriptCompletedWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.recording_transcript_completed";
+    event: 'session.recording_transcript_completed';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -1828,7 +1828,7 @@ export type SessionRecordingTranscriptCompletedWebhookPayload = {
                  * A recording file object with file type of either CC or TIMELINE **does not have** the following properties:<br>
                  * id, status, file_size, recording_type.
                  */
-                file_type?: "MP4" | "M4A" | "CHAT" | "TRANSCRIPT" | "CSV" | "CC" | "TB" | "CHAT_MESSAGE" | "TIMELINE";
+                file_type?: 'MP4' | 'M4A' | 'CHAT' | 'TRANSCRIPT' | 'CSV' | 'CC' | 'TB' | 'CHAT_MESSAGE' | 'TIMELINE';
                 /**
                  * The recording file size.
                  */
@@ -1836,7 +1836,7 @@ export type SessionRecordingTranscriptCompletedWebhookPayload = {
                 /**
                  * The archived file's file extension.
                  */
-                file_extension?: "MP4" | "M4A" | "TXT" | "VTT" | "CSV" | "JSON" | "JPG";
+                file_extension?: 'MP4' | 'M4A' | 'TXT' | 'VTT' | 'CSV' | 'JSON' | 'JPG';
                 /**
                  * The URL at which to download the the recording.
                  *
@@ -1863,11 +1863,11 @@ export type SessionRecordingTranscriptCompletedWebhookPayload = {
                 /**
                  * The recording status.
                  */
-                status?: "completed";
+                status?: 'completed';
                 /**
                  * The recording type. The value of this field can be one of the following:<br>shared_screen_with_speaker_view(CC)<br>shared_screen_with_speaker_view<br>shared_screen_with_gallery_view<br>speaker_view<br>gallery_view<br>shared_screen<br>audio_only<br>audio_transcript<br>chat_file<br>active_speaker<br>poll<br>timeline<br>closed_caption
                  */
-                recording_type?: "shared_screen_with_speaker_view(CC)" | "shared_screen_with_speaker_view" | "shared_screen_with_gallery_view" | "gallery_view" | "shared_screen" | "audio_only" | "audio_transcript" | "chat_file" | "active_speaker" | "host_video" | "audio_only_each_participant" | "cc_transcript" | "closed_caption" | "poll" | "timeline" | "thumbnail" | "chat_message";
+                recording_type?: 'shared_screen_with_speaker_view(CC)' | 'shared_screen_with_speaker_view' | 'shared_screen_with_gallery_view' | 'gallery_view' | 'shared_screen' | 'audio_only' | 'audio_transcript' | 'chat_file' | 'active_speaker' | 'host_video' | 'audio_only_each_participant' | 'cc_transcript' | 'closed_caption' | 'poll' | 'timeline' | 'thumbnail' | 'chat_message';
             }>;
         };
     };
@@ -1875,7 +1875,7 @@ export type SessionRecordingTranscriptCompletedWebhookPayload = {
 
 export type SessionRecordingTranscriptCompletedWebhookRequest = {
     body: SessionRecordingTranscriptCompletedWebhookPayload;
-    key: "session.recording_transcript_completed";
+    key: 'session.recording_transcript_completed';
     path?: never;
     query?: never;
 };
@@ -1913,7 +1913,7 @@ export type SessionRecordingDeletedWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.recording_deleted";
+    event: 'session.recording_deleted';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -1961,7 +1961,7 @@ export type SessionRecordingDeletedWebhookPayload = {
 
 export type SessionRecordingDeletedWebhookRequest = {
     body: SessionRecordingDeletedWebhookPayload;
-    key: "session.recording_deleted";
+    key: 'session.recording_deleted';
     path?: never;
     query?: never;
 };
@@ -2071,7 +2071,7 @@ export type SessionUserRoomSystemCalloutFailedWebhookPayload = {
 
 export type SessionUserRoomSystemCalloutFailedWebhookRequest = {
     body: SessionUserRoomSystemCalloutFailedWebhookPayload;
-    key: "session.user_room_system_callout_failed";
+    key: 'session.user_room_system_callout_failed';
     path?: never;
     query?: never;
 };
@@ -2106,7 +2106,7 @@ export type SessionRecordingCompletedWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.recording_completed";
+    event: 'session.recording_completed';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -2189,7 +2189,7 @@ export type SessionRecordingCompletedWebhookPayload = {
                  * A recording file object with file type of either CC or TIMELINE **does not have** the following properties:<br>
                  * id, status, file_size, recording_type.
                  */
-                file_type?: "MP4" | "M4A" | "CHAT" | "TRANSCRIPT" | "CSV" | "CC" | "TB" | "CHAT_MESSAGE";
+                file_type?: 'MP4' | 'M4A' | 'CHAT' | 'TRANSCRIPT' | 'CSV' | 'CC' | 'TB' | 'CHAT_MESSAGE';
                 /**
                  * The recording file size.
                  */
@@ -2197,7 +2197,7 @@ export type SessionRecordingCompletedWebhookPayload = {
                 /**
                  * The archived file's file extension.
                  */
-                file_extension?: "MP4" | "M4A" | "TXT" | "VTT" | "CSV" | "JSON" | "JPG";
+                file_extension?: 'MP4' | 'M4A' | 'TXT' | 'VTT' | 'CSV' | 'JSON' | 'JPG';
                 /**
                  * The URL at which to download the the recording.
                  *
@@ -2214,11 +2214,11 @@ export type SessionRecordingCompletedWebhookPayload = {
                 /**
                  * The recording status.
                  */
-                status?: "completed";
+                status?: 'completed';
                 /**
                  * The recording type. The value of this field can be one of the following:<br>shared_screen_with_speaker_view(CC)<br>shared_screen_with_speaker_view<br>shared_screen_with_gallery_view<br>speaker_view<br>gallery_view<br>shared_screen<br>audio_only<br>audio_transcript<br>chat_file<br>active_speaker<br>poll<br>timeline<br>closed_caption
                  */
-                recording_type?: "shared_screen_with_speaker_view(CC)" | "shared_screen_with_speaker_view" | "shared_screen_with_gallery_view" | "gallery_view" | "shared_screen" | "audio_only" | "audio_transcript" | "chat_file" | "active_speaker" | "host_video" | "audio_only_each_participant" | "cc_transcript" | "closed_caption" | "poll" | "timeline" | "thumbnail" | "chat_message";
+                recording_type?: 'shared_screen_with_speaker_view(CC)' | 'shared_screen_with_speaker_view' | 'shared_screen_with_gallery_view' | 'gallery_view' | 'shared_screen' | 'audio_only' | 'audio_transcript' | 'chat_file' | 'active_speaker' | 'host_video' | 'audio_only_each_participant' | 'cc_transcript' | 'closed_caption' | 'poll' | 'timeline' | 'thumbnail' | 'chat_message';
             }>;
             /**
              * Recording file List
@@ -2258,7 +2258,7 @@ export type SessionRecordingCompletedWebhookPayload = {
                  * A recording file object with file type of either CC or TIMELINE **does not have** the following properties:<br>
                  * id, status, file_size, recording_type.
                  */
-                file_type?: "MP4" | "M4A" | "CHAT" | "TRANSCRIPT" | "CSV" | "CC" | "TB" | "CHAT_MESSAGE";
+                file_type?: 'MP4' | 'M4A' | 'CHAT' | 'TRANSCRIPT' | 'CSV' | 'CC' | 'TB' | 'CHAT_MESSAGE';
                 /**
                  * The recording file size.
                  */
@@ -2266,7 +2266,7 @@ export type SessionRecordingCompletedWebhookPayload = {
                 /**
                  * The archived file's file extension.
                  */
-                file_extension?: "MP4" | "M4A" | "TXT" | "VTT" | "CSV" | "JSON" | "JPG";
+                file_extension?: 'MP4' | 'M4A' | 'TXT' | 'VTT' | 'CSV' | 'JSON' | 'JPG';
                 /**
                  * The URL at which to download the the recording.
                  *
@@ -2283,11 +2283,11 @@ export type SessionRecordingCompletedWebhookPayload = {
                 /**
                  * The recording status.
                  */
-                status?: "completed";
+                status?: 'completed';
                 /**
                  * The recording type. The value of this field can be one of the following:<br>shared_screen_with_speaker_view(CC)<br>shared_screen_with_speaker_view<br>shared_screen_with_gallery_view<br>speaker_view<br>gallery_view<br>shared_screen<br>audio_only<br>audio_transcript<br>chat_file<br>active_speaker<br>poll<br>timeline<br>closed_caption
                  */
-                recording_type?: "shared_screen_with_speaker_view(CC)" | "shared_screen_with_speaker_view" | "shared_screen_with_gallery_view" | "gallery_view" | "shared_screen" | "audio_only" | "audio_transcript" | "chat_file" | "active_speaker" | "host_video" | "audio_only_each_participant" | "cc_transcript" | "closed_caption" | "poll" | "timeline" | "thumbnail" | "chat_message";
+                recording_type?: 'shared_screen_with_speaker_view(CC)' | 'shared_screen_with_speaker_view' | 'shared_screen_with_gallery_view' | 'gallery_view' | 'shared_screen' | 'audio_only' | 'audio_transcript' | 'chat_file' | 'active_speaker' | 'host_video' | 'audio_only_each_participant' | 'cc_transcript' | 'closed_caption' | 'poll' | 'timeline' | 'thumbnail' | 'chat_message';
                 /**
                  * The participant's session user ID. This value is assigned to a participant upon joining a session and is only valid for the duration of the session.
                  */
@@ -2329,7 +2329,7 @@ export type SessionRecordingCompletedWebhookPayload = {
                  * The recording file type. The value of this field could be one of the following:<br>
                  * MP4: Video file of the recording.
                  */
-                file_type?: "MP4";
+                file_type?: 'MP4';
                 /**
                  * The recording file size.
                  */
@@ -2337,7 +2337,7 @@ export type SessionRecordingCompletedWebhookPayload = {
                 /**
                  * The archived file's file extension.
                  */
-                file_extension?: "MP4";
+                file_extension?: 'MP4';
                 /**
                  * The URL at which to download the the recording.
                  *
@@ -2354,11 +2354,11 @@ export type SessionRecordingCompletedWebhookPayload = {
                 /**
                  * The recording status.
                  */
-                status?: "completed";
+                status?: 'completed';
                 /**
                  * The recording type. The value of this field can be one of the following:<br>shared_screen_with_speaker_view(CC)<br>shared_screen_with_speaker_view<br>shared_screen_with_gallery_view<br>speaker_view<br>gallery_view<br>shared_screen<br>audio_only<br>audio_transcript<br>chat_file<br>active_speaker<br>poll<br>timeline<br>closed_caption
                  */
-                recording_type?: "individual_user" | "individual_shared_screen";
+                recording_type?: 'individual_user' | 'individual_shared_screen';
                 /**
                  * The participant's session user ID. This value is assigned to a participant upon joining a session and is only valid for the duration of the session.
                  */
@@ -2374,7 +2374,7 @@ export type SessionRecordingCompletedWebhookPayload = {
 
 export type SessionRecordingCompletedWebhookRequest = {
     body: SessionRecordingCompletedWebhookPayload;
-    key: "session.recording_completed";
+    key: 'session.recording_completed';
     path?: never;
     query?: never;
 };
@@ -2409,7 +2409,7 @@ export type SessionRecordingTranscriptFailedWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.recording_transcript_failed";
+    event: 'session.recording_transcript_failed';
     /**
      * A timestamp, in milliseconds since epoch, when the event occurred.
      */
@@ -2449,7 +2449,7 @@ export type SessionRecordingTranscriptFailedWebhookPayload = {
 
 export type SessionRecordingTranscriptFailedWebhookRequest = {
     body: SessionRecordingTranscriptFailedWebhookPayload;
-    key: "session.recording_transcript_failed";
+    key: 'session.recording_transcript_failed';
     path?: never;
     query?: never;
 };
@@ -2487,7 +2487,7 @@ export type SessionRecordingTrashedWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.recording_trashed";
+    event: 'session.recording_trashed';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -2535,7 +2535,7 @@ export type SessionRecordingTrashedWebhookPayload = {
 
 export type SessionRecordingTrashedWebhookRequest = {
     body: SessionRecordingTrashedWebhookPayload;
-    key: "session.recording_trashed";
+    key: 'session.recording_trashed';
     path?: never;
     query?: never;
 };
@@ -2564,7 +2564,7 @@ export type SessionUserJoinedWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.user_joined";
+    event: 'session.user_joined';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -2629,7 +2629,7 @@ export type SessionUserJoinedWebhookPayload = {
 
 export type SessionUserJoinedWebhookRequest = {
     body: SessionUserJoinedWebhookPayload;
-    key: "session.user_joined";
+    key: 'session.user_joined';
     path?: never;
     query?: never;
 };
@@ -2652,7 +2652,7 @@ export type SessionStreamIngestionStartedWebhookPayload = {
     /**
      * Event name.
      */
-    event: "session.stream_ingestion_started";
+    event: 'session.stream_ingestion_started';
     /**
      * Timestamp (in milliseconds since epoch) when the event occurred. The value of this field is returned in long (int64) format.
      */
@@ -2713,7 +2713,7 @@ export type SessionStreamIngestionStartedWebhookPayload = {
 
 export type SessionStreamIngestionStartedWebhookRequest = {
     body: SessionStreamIngestionStartedWebhookPayload;
-    key: "session.stream_ingestion_started";
+    key: 'session.stream_ingestion_started';
     path?: never;
     query?: never;
 };
@@ -2736,7 +2736,7 @@ export type SessionStreamIngestionConnectedWebhookPayload = {
     /**
      * Name of the event.
      */
-    event: "session.stream_ingestion_connected";
+    event: 'session.stream_ingestion_connected';
     /**
      * Timestamp (in milliseconds since epoch) when the event occurred. The value of this field is returned in long (int64) format.
      */
@@ -2797,7 +2797,7 @@ export type SessionStreamIngestionConnectedWebhookPayload = {
 
 export type SessionStreamIngestionConnectedWebhookRequest = {
     body: SessionStreamIngestionConnectedWebhookPayload;
-    key: "session.stream_ingestion_connected";
+    key: 'session.stream_ingestion_connected';
     path?: never;
     query?: never;
 };
@@ -2820,7 +2820,7 @@ export type SessionStreamIngestionDisconnectedWebhookPayload = {
     /**
      * Name of the event.
      */
-    event: "session.stream_ingestion_disconnected";
+    event: 'session.stream_ingestion_disconnected';
     /**
      * Timestamp (in milliseconds since epoch) when the event occurred. The value of this field is returned in long (int64) format.
      */
@@ -2881,7 +2881,7 @@ export type SessionStreamIngestionDisconnectedWebhookPayload = {
 
 export type SessionStreamIngestionDisconnectedWebhookRequest = {
     body: SessionStreamIngestionDisconnectedWebhookPayload;
-    key: "session.stream_ingestion_disconnected";
+    key: 'session.stream_ingestion_disconnected';
     path?: never;
     query?: never;
 };
@@ -2919,7 +2919,7 @@ export type SessionRecordingRecoveredWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.recording_recovered";
+    event: 'session.recording_recovered';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -2967,7 +2967,7 @@ export type SessionRecordingRecoveredWebhookPayload = {
 
 export type SessionRecordingRecoveredWebhookRequest = {
     body: SessionRecordingRecoveredWebhookPayload;
-    key: "session.recording_recovered";
+    key: 'session.recording_recovered';
     path?: never;
     query?: never;
 };
@@ -3062,7 +3062,7 @@ export type SessionUserPhoneCalloutMissedWebhookPayload = {
 
 export type SessionUserPhoneCalloutMissedWebhookRequest = {
     body: SessionUserPhoneCalloutMissedWebhookPayload;
-    key: "session.user_phone_callout_missed";
+    key: 'session.user_phone_callout_missed';
     path?: never;
     query?: never;
 };
@@ -3157,7 +3157,7 @@ export type SessionUserPhoneCalloutRejectedWebhookPayload = {
 
 export type SessionUserPhoneCalloutRejectedWebhookRequest = {
     body: SessionUserPhoneCalloutRejectedWebhookPayload;
-    key: "session.user_phone_callout_rejected";
+    key: 'session.user_phone_callout_rejected';
     path?: never;
     query?: never;
 };
@@ -3248,7 +3248,7 @@ export type SessionUserRoomSystemCalloutAcceptedWebhookPayload = {
 
 export type SessionUserRoomSystemCalloutAcceptedWebhookRequest = {
     body: SessionUserRoomSystemCalloutAcceptedWebhookPayload;
-    key: "session.user_room_system_callout_accepted";
+    key: 'session.user_room_system_callout_accepted';
     path?: never;
     query?: never;
 };
@@ -3283,7 +3283,7 @@ export type SessionRecordingStoppedWebhookPayload = {
     /**
      * The event's name.
      */
-    event: "session.recording_stopped";
+    event: 'session.recording_stopped';
     /**
      * A timestamp, in milliseconds since epoch, at which the event occurred.
      */
@@ -3333,7 +3333,7 @@ export type SessionRecordingStoppedWebhookPayload = {
 
 export type SessionRecordingStoppedWebhookRequest = {
     body: SessionRecordingStoppedWebhookPayload;
-    key: "session.recording_stopped";
+    key: 'session.recording_stopped';
     path?: never;
     query?: never;
 };

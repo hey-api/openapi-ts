@@ -7,233 +7,233 @@ import type { Options } from '../sdk.gen';
 import type { CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, CallWithResponseData, CallWithResponseResponse, CallWithResponsesData, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexTypesData, ComplexTypesResponse, DeleteCallWithoutParametersAndResponseData, DummyAData, DummyBData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, FooWowData, GetCallWithoutParametersAndResponseData, HeadCallWithoutParametersAndResponseData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, OptionsCallWithoutParametersAndResponseData, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, ServiceWithEmptyTagData, TestErrorCodeData, TypesData, TypesResponse } from '../types.gen';
 
 export const serviceWithEmptyTagRequest = <ThrowOnError extends boolean = false>(options?: Options<ServiceWithEmptyTagData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "GET",
-    url: "/api/v{api-version}/no+tag",
+    responseStyle: 'data',
+    method: 'GET',
+    url: '/api/v{api-version}/no+tag',
     ...options
 });
 
 export const patchApiVbyApiVersionNoTagRequest = <ThrowOnError extends boolean = false>(options?: Options<PatchApiVbyApiVersionNoTagData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "PATCH",
-    url: "/api/v{api-version}/no+tag",
+    responseStyle: 'data',
+    method: 'PATCH',
+    url: '/api/v{api-version}/no+tag',
     ...options
 });
 
 export const fooWowRequest = <ThrowOnError extends boolean = false>(options?: Options<FooWowData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "PUT",
-    url: "/api/v{api-version}/no+tag",
+    responseStyle: 'data',
+    method: 'PUT',
+    url: '/api/v{api-version}/no+tag',
     ...options
 });
 
 export const deleteCallWithoutParametersAndResponseRequest = <ThrowOnError extends boolean = false>(options?: Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "DELETE",
-    url: "/api/v{api-version}/simple",
+    responseStyle: 'data',
+    method: 'DELETE',
+    url: '/api/v{api-version}/simple',
     ...options
 });
 
 export const getCallWithoutParametersAndResponseRequest = <ThrowOnError extends boolean = false>(options?: Options<GetCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "GET",
-    url: "/api/v{api-version}/simple",
+    responseStyle: 'data',
+    method: 'GET',
+    url: '/api/v{api-version}/simple',
     ...options
 });
 
 export const headCallWithoutParametersAndResponseRequest = <ThrowOnError extends boolean = false>(options?: Options<HeadCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "HEAD",
-    url: "/api/v{api-version}/simple",
+    responseStyle: 'data',
+    method: 'HEAD',
+    url: '/api/v{api-version}/simple',
     ...options
 });
 
 export const optionsCallWithoutParametersAndResponseRequest = <ThrowOnError extends boolean = false>(options?: Options<OptionsCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "OPTIONS",
-    url: "/api/v{api-version}/simple",
+    responseStyle: 'data',
+    method: 'OPTIONS',
+    url: '/api/v{api-version}/simple',
     ...options
 });
 
 export const patchCallWithoutParametersAndResponseRequest = <ThrowOnError extends boolean = false>(options?: Options<PatchCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "PATCH",
-    url: "/api/v{api-version}/simple",
+    responseStyle: 'data',
+    method: 'PATCH',
+    url: '/api/v{api-version}/simple',
     ...options
 });
 
 export const postCallWithoutParametersAndResponseRequest = <ThrowOnError extends boolean = false>(options?: Options<PostCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "POST",
-    url: "/api/v{api-version}/simple",
+    responseStyle: 'data',
+    method: 'POST',
+    url: '/api/v{api-version}/simple',
     ...options
 });
 
 export const putCallWithoutParametersAndResponseRequest = <ThrowOnError extends boolean = false>(options?: Options<PutCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "PUT",
-    url: "/api/v{api-version}/simple",
+    responseStyle: 'data',
+    method: 'PUT',
+    url: '/api/v{api-version}/simple',
     ...options
 });
 
 export const callWithDescriptionsRequest = <ThrowOnError extends boolean = false>(options?: Options<CallWithDescriptionsData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "POST",
-    url: "/api/v{api-version}/descriptions/",
+    responseStyle: 'data',
+    method: 'POST',
+    url: '/api/v{api-version}/descriptions/',
     ...options
 });
 
 export const callWithParametersRequest = <ThrowOnError extends boolean = false>(options: Options<CallWithParametersData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "POST",
-    url: "/api/v{api-version}/parameters/{parameterPath}",
+    responseStyle: 'data',
+    method: 'POST',
+    url: '/api/v{api-version}/parameters/{parameterPath}',
     ...options
 });
 
 export const callWithWeirdParameterNamesRequest = <ThrowOnError extends boolean = false>(options: Options<CallWithWeirdParameterNamesData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "POST",
-    url: "/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}",
+    responseStyle: 'data',
+    method: 'POST',
+    url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
     ...options
 });
 
 export const callWithDefaultParametersRequest = <ThrowOnError extends boolean = false>(options: Options<CallWithDefaultParametersData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "GET",
-    url: "/api/v{api-version}/defaults",
+    responseStyle: 'data',
+    method: 'GET',
+    url: '/api/v{api-version}/defaults',
     ...options
 });
 
 export const callWithDefaultOptionalParametersRequest = <ThrowOnError extends boolean = false>(options?: Options<CallWithDefaultOptionalParametersData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "POST",
-    url: "/api/v{api-version}/defaults",
+    responseStyle: 'data',
+    method: 'POST',
+    url: '/api/v{api-version}/defaults',
     ...options
 });
 
 export const callToTestOrderOfParamsRequest = <ThrowOnError extends boolean = false>(options: Options<CallToTestOrderOfParamsData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "PUT",
-    url: "/api/v{api-version}/defaults",
+    responseStyle: 'data',
+    method: 'PUT',
+    url: '/api/v{api-version}/defaults',
     ...options
 });
 
 export const duplicateNameRequest = <ThrowOnError extends boolean = false>(options?: Options<DuplicateNameData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "DELETE",
-    url: "/api/v{api-version}/duplicate",
+    responseStyle: 'data',
+    method: 'DELETE',
+    url: '/api/v{api-version}/duplicate',
     ...options
 });
 
 export const duplicateName2Request = <ThrowOnError extends boolean = false>(options?: Options<DuplicateName2Data, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "GET",
-    url: "/api/v{api-version}/duplicate",
+    responseStyle: 'data',
+    method: 'GET',
+    url: '/api/v{api-version}/duplicate',
     ...options
 });
 
 export const duplicateName3Request = <ThrowOnError extends boolean = false>(options?: Options<DuplicateName3Data, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "POST",
-    url: "/api/v{api-version}/duplicate",
+    responseStyle: 'data',
+    method: 'POST',
+    url: '/api/v{api-version}/duplicate',
     ...options
 });
 
 export const duplicateName4Request = <ThrowOnError extends boolean = false>(options?: Options<DuplicateName4Data, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "PUT",
-    url: "/api/v{api-version}/duplicate",
+    responseStyle: 'data',
+    method: 'PUT',
+    url: '/api/v{api-version}/duplicate',
     ...options
 });
 
 export const callWithNoContentResponseRequest = <ThrowOnError extends boolean = false>(options?: Options<CallWithNoContentResponseData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "GET",
-    url: "/api/v{api-version}/no-content",
+    responseStyle: 'data',
+    method: 'GET',
+    url: '/api/v{api-version}/no-content',
     ...options
 });
 
 export const callWithResponseAndNoContentResponseRequest = <ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "GET",
-    url: "/api/v{api-version}/multiple-tags/response-and-no-content",
+    responseStyle: 'data',
+    method: 'GET',
+    url: '/api/v{api-version}/multiple-tags/response-and-no-content',
     ...options
 });
 
 export const dummyARequest = <ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "GET",
-    url: "/api/v{api-version}/multiple-tags/a",
+    responseStyle: 'data',
+    method: 'GET',
+    url: '/api/v{api-version}/multiple-tags/a',
     ...options
 });
 
 export const dummyBRequest = <ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "GET",
-    url: "/api/v{api-version}/multiple-tags/b",
+    responseStyle: 'data',
+    method: 'GET',
+    url: '/api/v{api-version}/multiple-tags/b',
     ...options
 });
 
 export const callWithResponseRequest = <ThrowOnError extends boolean = false>(options?: Options<CallWithResponseData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "GET",
-    url: "/api/v{api-version}/response",
+    responseStyle: 'data',
+    method: 'GET',
+    url: '/api/v{api-version}/response',
     ...options
 });
 
 export const callWithDuplicateResponsesRequest = <ThrowOnError extends boolean = false>(options?: Options<CallWithDuplicateResponsesData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "POST",
-    url: "/api/v{api-version}/response",
+    responseStyle: 'data',
+    method: 'POST',
+    url: '/api/v{api-version}/response',
     ...options
 });
 
 export const callWithResponsesRequest = <ThrowOnError extends boolean = false>(options?: Options<CallWithResponsesData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "PUT",
-    url: "/api/v{api-version}/response",
+    responseStyle: 'data',
+    method: 'PUT',
+    url: '/api/v{api-version}/response',
     ...options
 });
 
 export const collectionFormatRequest = <ThrowOnError extends boolean = false>(options: Options<CollectionFormatData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "GET",
-    url: "/api/v{api-version}/collectionFormat",
+    responseStyle: 'data',
+    method: 'GET',
+    url: '/api/v{api-version}/collectionFormat',
     ...options
 });
 
 export const typesRequest = <ThrowOnError extends boolean = false>(options: Options<TypesData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "GET",
-    url: "/api/v{api-version}/types",
+    responseStyle: 'data',
+    method: 'GET',
+    url: '/api/v{api-version}/types',
     ...options
 });
 
 export const complexTypesRequest = <ThrowOnError extends boolean = false>(options: Options<ComplexTypesData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "GET",
-    url: "/api/v{api-version}/complex",
+    responseStyle: 'data',
+    method: 'GET',
+    url: '/api/v{api-version}/complex',
     ...options
 });
 
 export const callWithResultFromHeaderRequest = <ThrowOnError extends boolean = false>(options?: Options<CallWithResultFromHeaderData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "POST",
-    url: "/api/v{api-version}/header",
+    responseStyle: 'data',
+    method: 'POST',
+    url: '/api/v{api-version}/header',
     ...options
 });
 
 export const testErrorCodeRequest = <ThrowOnError extends boolean = false>(options: Options<TestErrorCodeData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "POST",
-    url: "/api/v{api-version}/error",
+    responseStyle: 'data',
+    method: 'POST',
+    url: '/api/v{api-version}/error',
     ...options
 });
 
 export const nonAsciiæøåÆøÅöôêÊ字符串Request = <ThrowOnError extends boolean = false>(options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "POST",
-    url: "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串",
+    responseStyle: 'data',
+    method: 'POST',
+    url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
     ...options
 });
 
@@ -243,9 +243,9 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Request = <ThrowOnError extend
  * Body should not be unknown
  */
 export const postApiVbyApiVersionBodyRequest = <ThrowOnError extends boolean = false>(options: Options<PostApiVbyApiVersionBodyData, ThrowOnError>): HttpRequest<unknown> => (options?.client ?? client).requestOptions({
-    responseStyle: "data",
-    method: "POST",
-    url: "/api/v{api-version}/body",
+    responseStyle: 'data',
+    method: 'POST',
+    url: '/api/v{api-version}/body',
     ...options
 });
 

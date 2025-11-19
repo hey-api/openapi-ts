@@ -20,10 +20,10 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 
 export const postV1Foo = <ThrowOnError extends boolean = false>(options: Options<PostV1FooData, ThrowOnError>) => (options.client ?? client).post<PostV1FooResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
-    url: "/v1/foo",
+    url: '/v1/foo',
     ...options,
     headers: {
-        "Content-Type": null,
+        'Content-Type': null,
         ...options.headers
     }
 });

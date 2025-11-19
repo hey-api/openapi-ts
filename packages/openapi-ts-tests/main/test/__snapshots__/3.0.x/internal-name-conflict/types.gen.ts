@@ -8,7 +8,7 @@ export type CreateData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type CreateResponses = {
@@ -22,7 +22,7 @@ export type Create2Data = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type Create2Responses = {
@@ -36,7 +36,7 @@ export type Create3Data = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type Create3Responses = {

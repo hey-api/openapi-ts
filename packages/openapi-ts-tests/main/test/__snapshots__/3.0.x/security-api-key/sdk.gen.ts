@@ -20,20 +20,20 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 
 export const getFoo = <ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) => (options?.client ?? client).get<GetFooResponses, unknown, ThrowOnError>({
     security: [{
-            in: "query",
-            name: "foo",
-            type: "apiKey"
+            in: 'query',
+            name: 'foo',
+            type: 'apiKey'
         }],
-    url: "/foo",
+    url: '/foo',
     ...options
 });
 
 export const getBar = <ThrowOnError extends boolean = false>(options?: Options<GetBarData, ThrowOnError>) => (options?.client ?? client).get<GetBarResponses, unknown, ThrowOnError>({
     security: [{
-            in: "cookie",
-            name: "bar",
-            type: "apiKey"
+            in: 'cookie',
+            name: 'bar',
+            type: 'apiKey'
         }],
-    url: "/bar",
+    url: '/bar',
     ...options
 });
