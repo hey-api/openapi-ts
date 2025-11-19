@@ -55,14 +55,13 @@ export const createUseQuery = ({
   });
   const statement = $.const(symbolUseQueryFn.placeholder)
     .export(symbolUseQueryFn.exported)
-    .$if(
-      plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.doc(v as ReadonlyArray<string>),
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
+      c.doc(v),
     )
     .assign(
       $.func()
         .param(optionsParamName, (p) =>
-          p.optional(!isRequiredOptions).type(typeData),
+          p.required(isRequiredOptions).type(typeData),
         )
         .do(
           $(symbolUseQuery.placeholder)

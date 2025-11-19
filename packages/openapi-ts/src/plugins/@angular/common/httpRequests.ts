@@ -265,12 +265,10 @@ const generateAngularRequestMethod = ({
 
   return $.method(methodName)
     .public()
-    .$if(createOperationComment({ operation }), (c, v) =>
-      c.doc(v as ReadonlyArray<string>),
-    )
+    .$if(createOperationComment(operation), (c, v) => c.doc(v))
     .param('options', (p) =>
       p
-        .optional(!isRequiredOptions)
+        .required(isRequiredOptions)
         .type(`${symbolOptions.placeholder}<${dataType}, ThrowOnError>`),
     )
     .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
@@ -318,14 +316,12 @@ const generateAngularRequestFunction = ({
 
   return $.const(symbol.placeholder)
     .export(symbol.exported)
-    .$if(createOperationComment({ operation }), (c, v) =>
-      c.doc(v as ReadonlyArray<string>),
-    )
+    .$if(createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
         .param('options', (p) =>
           p
-            .optional(!isRequiredOptions)
+            .required(isRequiredOptions)
             .type(`${symbolOptions.placeholder}<${dataType}, ThrowOnError>`),
         )
         .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
