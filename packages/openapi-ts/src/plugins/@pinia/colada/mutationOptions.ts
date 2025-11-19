@@ -106,7 +106,7 @@ export const createMutationOptions = ({
   if (meta) {
     mutationOptionsObj.push({
       key: 'meta',
-      value: meta,
+      value: meta.$render(),
     });
   }
 
