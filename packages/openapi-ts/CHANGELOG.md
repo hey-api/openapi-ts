@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.88.0
+
+### Minor Changes
+
+- **output**: use TypeScript DSL ([#2986](https://github.com/hey-api/openapi-ts/pull/2986)) ([`37ff4ab`](https://github.com/hey-api/openapi-ts/commit/37ff4ab6bc89463778bf3709687ab84d3dab0618)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed `compiler` and `tsc` exports
+
+This release removes the `compiler` utility functions. Instead, it introduces a new TypeScript DSL exposed under the `$` symbol. All plugins now use this interface, so you may notice slight changes in the generated output.
+
 ## 0.87.5
 
 ### Patch Changes
