@@ -202,15 +202,19 @@ export const createSseClient = <TData = unknown>({
                 }
               }
 
-              onSseEvent?.({
+              const baseSseEvent = {
                 data,
                 event: eventName,
-                id: lastEventId,
+                id: lastEventId
+              }
+
+              onSseEvent?.({
+                ...baseSseEvent,
                 retry: retryDelay
               })
 
               if (dataLines.length) {
-                yield data as any
+                yield baseSseEvent as any
               }
             }
           }
